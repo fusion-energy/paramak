@@ -1,0 +1,36 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+
+
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: openmcworkshop/paramak_dependencies
+      
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run:
+          name: install
+          command:
+            python setup.py install
+
+      # run tests!
+      - run:
+          name: run tests
+          command: 
+
+            pytest tests -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      - store_test_results:
+          path: test-reports
+
+      - store_artifacts:
+          path: test-reports
+
+      - run: curl -s https://codecov.io/bash | bash
+
