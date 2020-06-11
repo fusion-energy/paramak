@@ -1,0 +1,17 @@
+*.html
+*.json
+*.pov
+*.stp
+*.step
+*.stl
+rings_splines.json
+rings_straights.json
+__pycache__/*
+__pycache__
+.cache/
+venv
+.eggs/
+coverage.xml
+.coverage
+examples/output
+paramak.egg-info/

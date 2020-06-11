@@ -1,0 +1,11 @@
+pytest
+plotly
+scipy
+numpy
+tqdm
+matplotlib
+trimesh
+pyrender
+uncertainties
+importlib_resources
+
