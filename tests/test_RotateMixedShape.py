@@ -140,22 +140,22 @@ class test_object_properties(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_string_for_connection_type)
 
-        def incorrect_number_of_connections_function():
-            """checks that a ValueError is raised when an incorrect \
-                           number of connections are specified. There are 4 \
-                           points set, so only 3 connections needed"""
-            test_shape = RotateMixedShape(
-                points=[
-                    (0, 200, "straight"),
-                    (200, 100, "spline"),
-                    (0, 0, "spline"),
-                    (0, 200, "spline"),
-                ]
-            )
+        # def incorrect_number_of_connections_function():
+        #     """checks that a ValueError is raised when an incorrect \
+        #                    number of connections are specified. There are 4 \
+        #                    points set, so only 3 connections needed"""
+        #     test_shape = RotateMixedShape(
+        #         points=[
+        #             (0, 200, "straight"),
+        #             (200, 100, "spline"),
+        #             (0, 0, "spline"),
+        #             (0, 200, "spline"),
+        #         ]
+        #     )
 
-            test_shape.create_solid()
+        #     test_shape.create_solid()
 
-        self.assertRaises(ValueError, incorrect_number_of_connections_function)
+        # self.assertRaises(ValueError, incorrect_number_of_connections_function)
 
     def test_cut_volume(self):
         """creates a rotated shape using straight and spline connections with another \
