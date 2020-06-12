@@ -1,0 +1,337 @@
+"""
+This file is part of PARAMAK which is a design tool capable
+of creating 3D CAD models compatible with automated neutronics
+analysis.
+
+PARAMAK is released under GNU General Public License v3.0.
+Go to https://github.com/ukaea/paramak/blob/master/LICENSE
+for full license details.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Copyright (C) 2019  UKAEA
+
+THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+"""
+
+import json
+import math
+from pathlib import Path
+
+import cadquery as cq
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
+
+import plotly.graph_objects as go
+import pyrender
+from paramak.shape import Shape
+
+
+class Reactor(list):
+    """The Reactor object allows Shapes to be added and then collective 
+    opperations to be performed on all the Shapes within the Reactor.
+    Combining all the shapes is required for creating images of the whole reactor and 
+    creating a Graveyard (bounding box) that is needed for neutronics simulations.
+    """
+
+    def __init__(self):
+
+        self.graveyard = None
+
+    def add_shape(self, shape):
+        """Adds a Shape to the Reactor object so that collective operations
+        can be performed on all the shapes in the reactor.
+        """
+
+        # if shape.stp_filename is None:
+        #     print(
+        #         "Warning this Shape has no .stp_filename value so the \
+        #           Reactor.export_stp() method won't work"
+        #     )
+
+        # if shape.material_tag is None:
+        #     print(
+        #         "Warning this Shape has no .material_tag value so the \
+        #            Reactor.export_neutronics_description won't work"
+        #     )
+
+        # if shape.name is None:
+        #     print(
+        #         "Warning this Shape has no .name value so the \
+        #            Reactor.export_html will use 'Shape not named' \
+        #            for the legend"
+        #     )
+
+        self.append(shape)
+        # print("Added Shape to the reactor")
+
+    def neutronics_description(self):
+        """A descirption of the reactor containing materials and the filenames,
+           this is used for neutronics simulations
+
+        :return: a dictionary of materials and filenames for the reactor
+        :rtype: dictionary
+        """
+
+        neutronics_description = []
+
+        for entry in self:
+
+            if entry.stp_filename is None:
+                raise ValueError(
+                    "Set Shape.stp_filename for all the \
+                                  Reactor entries before using this method"
+                )
+
+            if entry.material_tag is None:
+                raise ValueError(
+                    "set Shape.material_tag for all the \
+                                  Reactor entries before using this method"
+                )
+
+            Shape_neutronics_description = entry.neutronics_description(
+                stp_filename=entry.stp_filename, material_tag=entry.material_tag
+            )
+
+            neutronics_description.append(Shape_neutronics_description)
+
+        # This add the neutronics descirption for the graveyard which is unique as
+        # it is automatically calculated instead of being added by the user.
+        # Also the graveyard must have 'Graveyard' as the material name
+        if self.graveyard is None:
+            self.make_graveyard()
+        neutronics_description.append(
+            self.graveyard.neutronics_description(
+                stp_filename="Graveyard.stp", material_tag="Graveyard"
+            )
+        )
+
+        return neutronics_description
+
+    def export_neutronics_description(self, filename="manifest.json"):
+        """Saves neutronics description to a json file, this contains a list of
+        dictionaries. With each entry comprising of a material and a filename.
+        This can then be used with the neutronics workflows to create a neutronics
+        model. If the filename does not end with .json then .json will be added.
+        ...
+        :param filename: the filename used to save the neutronics description
+        :type filename: str
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".json":
+            Pfilename = Pfilename.with_suffix(".json")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        with open(filename, "w") as outfile:
+            json.dump(self.neutronics_description(), outfile, indent=4)
+
+        print("saved geometry description to ", Pfilename)
+
+        return filename
+
+    def export_stp(self, output_folder=""):
+        """Writes stp files (CAD geometry) for each Shape object in the reactor
+
+        :param output_folder: the folder for saving the stp files to
+        :type output_folder: str
+        ...
+        :return: a list of stp filenames created
+        :rtype: list
+        """
+
+        filenames = []
+        for entry in self:
+            if entry.stp_filename is None:
+                raise ValueError(
+                    "set .stp_filename property for \
+                                 Shapes before using the export_stp method"
+                )
+            filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
+            entry.export_stp(Path(output_folder) / Path(entry.stp_filename))
+
+        # creates a graveyard (bounding shell volume) which is needed for nuetronics simulations
+        self.make_graveyard()
+        filenames.append(str(Path(output_folder) / Path(self.graveyard.stp_filename)))
+        self.graveyard.export_stp(
+            Path(output_folder) / Path(self.graveyard.stp_filename)
+        )
+
+        print("exported stp files ", filenames)
+
+        return filenames
+
+    def make_graveyard(self):
+        """Creates a graveyard volume (bounding box) that encapsulates all
+           volumes. This is required by DAGMC when performing neutronics
+           simulations.
+
+        :return: graveyard 3d volume object
+        :rtype: CadQuery solid
+        """
+
+        for component in self:
+            if component.solid is None:
+                component.create_solid()
+
+        # finds the largest dimenton in all the Shapes that are in the reactor
+        largest_dimension = 0
+        for component in self:
+            if component.solid.largestDimension() > largest_dimension:
+                largest_dimension = component.solid.largestDimension()
+
+        # creates a small box that surrounds the geometry
+        inner_box = cq.Workplane("front").box(
+            largest_dimension, largest_dimension, largest_dimension
+        )
+        offset = 500
+
+        # creates a large box that surrounds the smaller box
+        outer_box = cq.Workplane("front").box(
+            largest_dimension + offset,
+            largest_dimension + offset,
+            largest_dimension + offset,
+        )
+
+        # subtracts the two boxes to leave a hollow box
+        graveyard_part = outer_box.cut(inner_box)
+
+        graveyard_shape = Shape()
+        graveyard_shape.name = "Graveyard"
+        graveyard_shape.material_tag = "Graveyard"
+        graveyard_shape.stp_filename = "Graveyard.stp"
+        graveyard_shape.solid = graveyard_part
+
+        self.graveyard = graveyard_shape
+
+        return graveyard_shape
+
+    def export_2d_image(
+        self, filename="2d_slice.png", xmin=0.0, xmax=900.0, ymin=-600.0, ymax=600.0
+    ):
+        """Creates a 2D slice image (png) of the reactor
+        :param filename: output filename of the image created
+        :type filename: str
+        ...
+        :return: Png filename created
+        :rtype: str
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".png":
+            Pfilename = Pfilename.with_suffix(".png")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        fig, ax = plt.subplots()
+
+        # creates indvidual patches for each Shape which are combined together
+        for entry in self:
+            p = entry._create_patch()
+            ax.add_collection(p)
+
+        ax.axis("equal")
+        ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax))
+        ax.set_aspect("equal", "box")
+
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
+        plt.savefig(filename, dpi=100)
+        plt.close()
+
+        print("\n saved 2d image to ", str(Pfilename))
+
+        return str(Pfilename)
+
+    def export_3d_image(self, filename="3d_render.png", tolerance=0.1):
+        """Creates a 3D rendered image (png) of the reactor
+
+        :param filename: output filename of the image created
+        :type filename: [ParamType](, optional)
+        :param tolerance: the mesh tolerance
+        :type float
+        ...
+        :return: filename of the created image
+        :rtype: str
+        """
+
+        scene = pyrender.Scene(ambient_light=np.array([0.1, 0.1, 0.1, 1.0]))
+        for entry in self:
+            if entry.render_mesh is None:
+                scene.add(entry._create_render_mesh(tolerance))
+
+        # sets the field of view (fov) and the aspect ratio of the image
+        camera = pyrender.camera.PerspectiveCamera(
+            yfov=math.radians(90.0), aspectRatio=2.0
+        )
+
+        # sets the position of the camera using a matrix
+        c = 2 ** -0.5
+        camera_pose = np.array(
+            [[1, 0, 0, 0], [0, c, -c, -1200], [0, c, c, 1200], [0, 0, 0, 1]]
+        )
+        scene.add(camera, pose=camera_pose)
+
+        # adds some basic lighting to the scene
+        light = pyrender.DirectionalLight(color=np.ones(3), intensity=1.0)
+        scene.add(light, pose=camera_pose)
+
+        # Render the scene
+        renderer = pyrender.OffscreenRenderer(1000, 500)
+        colours, depth = renderer.render(scene)
+
+        image = Image.fromarray(colours, "RGB")
+
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
+        image.save(filename, "PNG")
+        print("\n saved 3d image to ", filename)
+
+        return filename
+
+    def export_html(self, filename="reactor.html"):
+        """Creates a html graph representation of the points
+           for the Shape objects that make up the reactor.
+
+         Note:
+             If provided filename doesn't end with .html with will be appended
+
+        :param filename: the filename to save the html graph
+        :type filename: str
+
+        :return: figure object
+        :rtype: plotly figure
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".html":
+            Pfilename = Pfilename.with_suffix(".html")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        fig = go.Figure()
+        fig.update_layout(
+            {"title": "coordinates of components", "hovermode": "closest"}
+        )
+
+        # accesses the Shape traces for each Shape and adds them to the figure
+        for entry in self:
+            fig.add_trace(entry._trace())
+
+        fig.write_html(str(Pfilename))
+        print("Exported html graph to ", str(Pfilename))
+
+        return fig
