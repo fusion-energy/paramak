@@ -99,7 +99,7 @@ Parametric shapes are wrapped versions of the eight basic shapes where parameter
 
 ## Usage - reactor creation
 
-A reactor object provides a container object for all the Shape objects created and allows operations on the whole collection of Shapes such as creation of a bounding box (DAGMC graveyard) which is needed for neutronics simulations.
+A reactor object provides a container object for all the Shape objects created and allows operations on the whole collection of Shapes.
 
 Import the Reactor object
 
@@ -123,7 +123,42 @@ A html graph of the combined Shapes can be created
 
 `my_reactor.export_html('reactor.html')`
 
-Once all your Shapes have been added reactor methods can be used to create and simulate the neutronics model using additional tools, the currently codes to learn are [DAGMC](https://svalinn.github.io/DAGMC/), [Trelis](https://www.csimsoft.com/trelis) and [OpenMC](https://openmc.readthedocs.io/). A DAGMC graveyard can be constructed using the `Reactor.export_graveard()`
+
+## Usage - neutroncis model creation
+
+A DAGMC graveyard can be constructed for a reactor using the export_graveyard method
+`my_reactor = Reactor()`
+`my_reactor.add(my_shape)`
+`my_reactor.add(my_plasma)`
+`my_reactor.export_graveyard()`
+
+If shapes have been assigned stp_filename properties the Reactor.export_stp can be used to export the whole reactor to step files along with the DAGMC graveyard.
+`my_reactor = Reactor()`
+`my_shape.stp_filename = 'my_shape.stp'`
+`my_plasma.stp_filename = 'my_plasma.stp'`
+`my_reactor.add(my_shape)`
+`my_reactor.add(my_plasma)`
+`my_reactor.export_stp()`
+
+If shapes have been assigned stp_filename and material_tag properties the Reactor.export_neutronics_description() can be used to export a neutronics description neutronics description json file. This is useful when building a neutronics geometry with Trelis.
+`my_shape.stp_filename = 'my_shape.stp'`
+`my_plasma.stp_filename = 'my_plasma.stp'`
+`my_shape.material_tag = 'eurofer'`
+`my_plasma.material_tag = 'DT_plasma'`
+`my_reactor.add(my_shape)`
+`my_reactor.add(my_plasma)`
+`my_reactor.export_stp()`
+`my_reactor.export_neutronics_description()`
+
+Once you step files and the neutronics description has been exported then [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in UKAEA openmc workshop which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py) and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal
+
+`trelis make_faceteted_neutronics_model.py`
+
+Alternativly to run this without the GUI in batch mode 
+
+`trelis -batch -nographics make_faceteted_neutronics_model.py`
+
+Further information on DAGMC neutronics can be found here [DAGMC](https://svalinn.github.io/DAGMC/) and information [OpenMC](https://openmc.readthedocs.io/) which can be used in conjunction with DAGMC to simulate on faceteted CAD models.
 
 
 # Example scripts
