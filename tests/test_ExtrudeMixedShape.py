@@ -202,6 +202,16 @@ class test_object_properties(unittest.TestCase):
         test_shape.solid
         assert test_shape.hash_value != initial_hash_value
 
+    def test_mixed_shape_with_straight_and_circle(self):
+        """tests the construction of a shape with straight and circular edges"""
+        test_shape = ExtrudeMixedShape(points=[(10, 20, 'straight'),
+                                                (10, 10, 'straight'),
+                                                (20, 10, 'circle'),
+                                                (22, 15, 'circle'),
+                                                (20, 20, 'straight'),
+                                                ], distance = 10
+                                        )
+        assert test_shape.volume > 10 * 10 * 10
 
 if __name__ == "__main__":
     unittest.main()

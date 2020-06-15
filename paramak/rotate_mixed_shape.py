@@ -186,6 +186,11 @@ class RotateMixedShape(Shape):
                 solid = solid.spline(listOfXYTuple=list(entry.values())[0])
             if list(entry.keys())[0] == "straight":
                 solid = solid.polyline(list(entry.values())[0])
+            if list(entry.keys())[0] == "circle":
+                p0 = list(entry.values())[0][0]
+                p1 = list(entry.values())[0][1]
+                p2 = list(entry.values())[0][2]
+                solid = solid.moveTo(p0[0],p0[1]).threePointArc(p1, p2)
 
         solid = solid.close().revolve(self.rotation_angle)
 

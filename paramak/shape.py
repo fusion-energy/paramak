@@ -205,7 +205,7 @@ class Shape:
 
                 # Checks that only straight and spline are in the connections part of points
                 if len(value) == 3:
-                    if value[2] not in ["straight", "spline"]:
+                    if value[2] not in ["straight", "spline", "circle"]:
                         raise ValueError(
                             'individual connections must be either "straight" or "spline"'
                         )
