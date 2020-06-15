@@ -42,10 +42,10 @@ class RotateStraightShape(Shape):
        :param name: The legend name used when exporting a html graph of the shape
        :type name: str
        :param color: the color to use when exporting as html graphs or png images
-       :param material_tag: The material name to use when exporting the neutronics description
-       :type material_tag: str
        :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
             3 or 4 floats respectively each in the range 0-1
+       :param material_tag: The material name to use when exporting the neutronics description
+       :type material_tag: str
        :param stp_filename: the filename used when saving stp files as part of a reactor
        :type stp_filename: str
        :param azimuth_placement_angle: the angle or angles to use when rotating the 

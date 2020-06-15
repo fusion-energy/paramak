@@ -33,22 +33,21 @@ from paramak import Shape
 
 
 class ExtrudeStraightShape(Shape):
-    """Extrude a 3d CadQuery solid from points connected with
-       a straight lines
+    """Extrude a 3d CadQuery solid from points connected with straight lines
 
        :param points: A list of XZ coordinates and connection types where the last
-        entry has the same XZ coordinates as the first entry. For example [(2.,1.),
-        (2.,2.), (1.,2., (1.,1., (2.,1.]
+            entry has the same XZ coordinates as the first entry. For example [(2.,1.),
+            (2.,2.), (1.,2.), (1.,1.), (2.,1.)].
        :type points: a list of tuples each containing X (float), Z (float)
        :param stp_filename: the filename used when saving stp files as part of a reactor
        :type stp_filename: str
        :param color: the color to use when exporting as html graphs or png images
        :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-        3 or 4 floats respectively each in the range 0-1
+            3 or 4 floats respectively each in the range 0-1
        :param distance: The extrude distance to use (cm units if used for neutronics)
        :type distance: float
        :param azimuth_placement_angle: the angle or angles to use when rotating the 
-        shape on the azimuthal axis
+            shape on the azimuthal axis
        :type azimuth_placement_angle: float or iterable of floats
        :param cut: An optional cadquery object to perform a boolean cut with this object
        :type cut: cadquery object
@@ -113,7 +112,7 @@ class ExtrudeStraightShape(Shape):
 
     def create_solid(self):
         """Creates a 3d solid using points with straight connections
-        edges, azimuth_placement_angle and rotation angle.
+        edges, azimuth_placement_angle and rotation_angle.
 
         :return: a 3d solid volume
         :rtype: a cadquery solid

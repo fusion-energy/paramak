@@ -35,26 +35,26 @@ class ExtrudeSplineShape(Shape):
     """Extrude a 3d CadQuery solid from points connected with
        a spline connections
 
-        :param points: A list of XZ coordinates and connection types where the last
+       :param points: A list of XZ coordinates and connection types where the last
             entry has the same XZ coordinates as the first entry. For example [(2.,1.),
-            (2.,2.), (1.,2., (1.,1., (2.,1.]
-        :type points: a list of tuples each containing X (float), Z (float)
-        :param stp_filename: the filename used when saving stp files as part of a reactor
-        :type stp_filename: str
-        :param color: the color to use when exporting as html graphs or png images
-        :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-        3 or 4 floats respectively each in the range 0-1
-        :param distance: The extrude distance to use (cm units if used for neutronics)
-        :type distance: float
-        :param azimuth_placement_angle: the angle or angles to use when rotating the 
-        shape on the azimuthal axis
-        :type azimuth_placement_angle: float or iterable of floats
-        :param cut: An optional cadquery object to perform a boolean cut with this object
-        :type cut: cadquery object
-        :param material_tag: The material name to use when exporting the neutronics description
-        :type material_tag: str
-        :param name: The legend name used when exporting a html graph of the shape
-        :type name: str
+            (2.,2.), (1.,2.), (1.,1.), (2.,1.)].
+       :type points: a list of tuples each containing X (float), Z (float)
+       :param stp_filename: the filename used when saving stp files as part of a reactor
+       :type stp_filename: str
+       :param color: the color to use when exporting as html graphs or png images
+       :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
+            3 or 4 floats respectively each in the range 0-1
+       :param distance: The extrude distance to use (cm units if used for neutronics)
+       :type distance: float
+       :param azimuth_placement_angle: the angle or angles to use when rotating the 
+            shape on the azimuthal axis
+       :type azimuth_placement_angle: float or iterable of floats
+       :param cut: An optional cadquery object to perform a boolean cut with this object
+       :type cut: cadquery object
+       :param material_tag: The material name to use when exporting the neutronics description
+       :type material_tag: str
+       :param name: The legend name used when exporting a html graph of the shape
+       :type name: str
     """
 
     def __init__(

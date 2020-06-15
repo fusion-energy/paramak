@@ -35,8 +35,8 @@ from paramak import Shape
 class ExtrudeCircleShape(Shape):
     """Extrude a circular 3d CadQuery solid from a central point and a radius
 
-       :param points: A list of a single XZ coordinates which is the central
-        point of the circle. For example [(10, 10)]
+       :param points: A list of a single XZ coordinate which is the central
+            point of the circle. For example, [(10, 10)].
        :type points: a tuple containing X (float), Z (float) value for the central point
        :param radius: The radius of the circle
        :type radius: float
@@ -44,11 +44,11 @@ class ExtrudeCircleShape(Shape):
        :type stp_filename: str
        :param color: the color to use when exporting as html graphs or png images
        :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-        3 or 4 floats respectively each in the range 0-1
+            3 or 4 floats respectively each in the range 0-1
        :param distance: The extrude distance to use (cm units if used for neutronics)
        :type distance: float
        :param azimuth_placement_angle: the angle or angles to use when rotating the 
-        shape on the azimuthal axis
+            shape on the azimuthal axis
        :type azimuth_placement_angle: float or iterable of floats
        :param cut: An optional cadquery object to perform a boolean cut with this object
        :type cut: cadquery object
