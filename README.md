@@ -90,8 +90,11 @@ Parametric shapes are wrapped versions of the eight basic shapes where parameter
 `from paramak.parametric_shapes import PlasmaShape`
 
 `my_plasma = PlasmaShape(major_radius =620`
+
 `                        minor_radius =210`
+
 `                        triangularity = 0.33`
+
 `                        elongation = 1.85)`
 
 `my_plasma.export_stp('plasma.stp')`
@@ -124,33 +127,37 @@ A html graph of the combined Shapes can be created
 `my_reactor.export_html('reactor.html')`
 
 
-## Usage - neutroncis model creation
+## Usage - neutronics model creation
 
-A DAGMC graveyard can be constructed for a reactor using the export_graveyard method
-`my_reactor = Reactor()`
-`my_reactor.add(my_shape)`
-`my_reactor.add(my_plasma)`
-`my_reactor.export_graveyard()`
+First assign a stp_filenames to each of the Shape objects that were created earlier on.
 
-If shapes have been assigned stp_filename properties the Reactor.export_stp can be used to export the whole reactor to step files along with the DAGMC graveyard.
-`my_reactor = Reactor()`
 `my_shape.stp_filename = 'my_shape.stp'`
-`my_plasma.stp_filename = 'my_plasma.stp'`
-`my_reactor.add(my_shape)`
-`my_reactor.add(my_plasma)`
-`my_reactor.export_stp()`
 
-If shapes have been assigned stp_filename and material_tag properties the Reactor.export_neutronics_description() can be used to export a neutronics description neutronics description json file. This is useful when building a neutronics geometry with Trelis.
-`my_shape.stp_filename = 'my_shape.stp'`
 `my_plasma.stp_filename = 'my_plasma.stp'`
+
+The assign material_tags to each of the Shape objects
+
 `my_shape.material_tag = 'eurofer'`
+
 `my_plasma.material_tag = 'DT_plasma'`
-`my_reactor.add(my_shape)`
-`my_reactor.add(my_plasma)`
+
+Now add the Shape objects to a new reactor
+
+`new_reactor = Reactor()`
+
+`new_reactor.add(my_shape)`
+
+`new_reactor.add(my_plasma)`
+
+The entire reactor can now be exported as step files. This also generates a DAGMC graveyard automatically.
+
 `my_reactor.export_stp()`
+
+A manifest.json file that contains all the step filenames and materials can now be created
+
 `my_reactor.export_neutronics_description()`
 
-Once you step files and the neutronics description has been exported then [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in UKAEA openmc workshop which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py) and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal
+Once you step files and the neutronics description has been exported then [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in [task 12 of the UKAEA openmc workshop](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12) which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py) and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal
 
 `trelis make_faceteted_neutronics_model.py`
 
@@ -158,7 +165,9 @@ Alternativly to run this without the GUI in batch mode
 
 `trelis -batch -nographics make_faceteted_neutronics_model.py`
 
-Further information on DAGMC neutronics can be found here [DAGMC](https://svalinn.github.io/DAGMC/) and information [OpenMC](https://openmc.readthedocs.io/) which can be used in conjunction with DAGMC to simulate on faceteted CAD models.
+This should export a h5m file for use in DAGMC.
+
+Further information on DAGMC neutronics can be found here [DAGMC](https://svalinn.github.io/DAGMC/) and information [OpenMC](https://openmc.readthedocs.io/) which can be used in conjunction with DAGMC to simulate on faceteted CAD models. The openmc workshop also has two tasks that might be of interest [task 10 of the UKAEA openmc workshop](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10) and [task 12 of the UKAEA openmc workshop](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12)
 
 
 # Example scripts
