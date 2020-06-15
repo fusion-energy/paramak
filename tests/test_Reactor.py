@@ -65,6 +65,26 @@ class test_object_properties(unittest.TestCase):
 
         assert type(test_reactor.graveyard) == Shape
 
+    def test_exported_graveyard_creates_stp_file(self):
+        """checks that export_graveyard() creates stp file in the \
+                specified location"""
+
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape.rotation_angle = 360
+        os.system("rm my_graveyard.stp")
+        os.system("rm Graveyard.stp")
+        test_shape.stp_filename = "test_shape.stp"
+        test_reactor = Reactor()
+        test_reactor.add_shape(test_shape)
+
+        test_reactor.export_graveyard()
+        test_reactor.export_graveyard(filename="my_graveyard.stp")
+
+        for filepath in ["Graveyard.stp", "my_graveyard.stp"]:
+            assert Path(filepath).exists() is True
+            os.system("rm " + filepath)
+
+
     def test_exported_stp_files_exist(self):
         """checks that export_stp() creates stp file in the \
                 specified location"""

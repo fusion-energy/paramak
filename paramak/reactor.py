@@ -54,25 +54,6 @@ class Reactor(list):
         can be performed on all the shapes in the reactor.
         """
 
-        # if shape.stp_filename is None:
-        #     print(
-        #         "Warning this Shape has no .stp_filename value so the \
-        #           Reactor.export_stp() method won't work"
-        #     )
-
-        # if shape.material_tag is None:
-        #     print(
-        #         "Warning this Shape has no .material_tag value so the \
-        #            Reactor.export_neutronics_description won't work"
-        #     )
-
-        # if shape.name is None:
-        #     print(
-        #         "Warning this Shape has no .name value so the \
-        #            Reactor.export_html will use 'Shape not named' \
-        #            for the legend"
-        #     )
-
         self.append(shape)
         # print("Added Shape to the reactor")
 
@@ -173,6 +154,20 @@ class Reactor(list):
         print("exported stp files ", filenames)
 
         return filenames
+
+    def export_graveyard(self, filename="Graveyard.stp"):
+        """Writes a stp file (CAD geometry) for the reactor graveyard.
+           Thich is needed for DAGMC simulations
+
+        :param filename: the filename for saving the stp file to
+        :type filename: str
+        ...
+        :return: the stp filename created
+        :rtype: str
+        """
+        self.make_graveyard()
+        self.graveyard.export_stp(Path(filename))
+        return filename
 
     def make_graveyard(self):
         """Creates a graveyard volume (bounding box) that encapsulates all

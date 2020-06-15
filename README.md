@@ -67,12 +67,12 @@ The different families of shapes that can be made with the Paramak are shown in 
   
 There are a collection of Python scripts in the example folder than demonstrate simple shape construction, visualisation creation and reactor construction. However here is a quick example of a RotatedStraightShape 
 
-After importing the class the user then sets the points. Points should be a list of x,z points where the last point is the same as the first point.
+After importing the class the user then sets the points. Points should be a list of x,z points. In this case the points are connected with straight lines.
 
 
 `from paramak import RotatedStraightShape`
 
-`my_shape = RotatedStraightShape(points = [(20,0),  (20,100), (100,0), (20,0)])` 
+`my_shape = RotatedStraightShape(points = [(20,0),  (20,100), (100,0)])` 
 
 
 Once these properties have been set then users can write 3D volumes in CAD STP or STL formats
@@ -82,24 +82,17 @@ Once these properties have been set then users can write 3D volumes in CAD STP o
 `my_shape.export_stl('example.stl')`
 
 
-## Creating a plasma
+## Creating a parametric shapes
 
-The plasma also inherits from the Shape object so has access to the same methods like export_stp() and export_stl().
+Parametric shapes are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerious parametric shapes for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma shape. Users could also constructed a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric shape called PlasmaShape is available to construct a plasma from more convenient parameters. Parametric shapes also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
 
-The plasma requires additional inputs and a simple plasma shape can be created in the following manner.
 
 `from paramak.parametric_shapes import PlasmaShape`
 
-
-`my_plasma = PlasmaShape()`
-
-`my_plasma.major_radius =620`
-
-`my_plasma.minor_radius =210`
-
-`my_plasma.triangularity = 0.33`
-
-`my_plasma.elongation = 1.85`
+`my_plasma = PlasmaShape(major_radius =620`
+`                        minor_radius =210`
+`                        triangularity = 0.33`
+`                        elongation = 1.85)`
 
 `my_plasma.export_stp('plasma.stp')`
 
@@ -126,7 +119,11 @@ A 3D rendering of the combined Shapes can be created
 
 `my_reactor.export_3d_image('reactor.png')`
 
-Once all your Shapes have been added reactor methods can be used to create and simulate the neutronics model using additional tools, the currently codes to learn are [DAGMC](https://svalinn.github.io/DAGMC/), [Trelis](https://www.csimsoft.com/trelis) and [OpenMC](https://openmc.readthedocs.io/).
+A html graph of the combined Shapes can be created
+
+`my_reactor.export_html('reactor.html')`
+
+Once all your Shapes have been added reactor methods can be used to create and simulate the neutronics model using additional tools, the currently codes to learn are [DAGMC](https://svalinn.github.io/DAGMC/), [Trelis](https://www.csimsoft.com/trelis) and [OpenMC](https://openmc.readthedocs.io/). A DAGMC graveyard can be constructed using the `Reactor.export_graveard()`
 
 
 # Example scripts
