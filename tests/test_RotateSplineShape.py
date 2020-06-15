@@ -37,7 +37,7 @@ class test_object_properties(unittest.TestCase):
                 the volume is correct"""
 
         test_shape = RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
 
         test_shape.rotation_angle = 360
@@ -51,23 +51,23 @@ class test_object_properties(unittest.TestCase):
                 cut out and checks the volume is correct"""
 
         inner_shape = RotateSplineShape(
-            points=[(5, 5), (5, 10), (10, 10), (10, 5), (5, 5)], rotation_angle=180
+            points=[(5, 5), (5, 10), (10, 10), (10, 5)], rotation_angle=180
         )
 
         outer_shape = RotateSplineShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3), (3, 3)], rotation_angle=180
+            points=[(3, 3), (3, 12), (12, 12), (12, 3)], rotation_angle=180
         )
 
         outer_shape_with_cut = RotateSplineShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3), (3, 3)],
+            points=[(3, 3), (3, 12), (12, 12), (12, 3)],
             cut=inner_shape,
             rotation_angle=180,
         )
 
-        assert inner_shape.volume == pytest.approx(900.8867073)
-        assert outer_shape.volume == pytest.approx(2881.75624)
+        assert inner_shape.volume == pytest.approx(839.39, abs=0.1)
+        assert outer_shape.volume == pytest.approx(2719.63, abs=0.1)
         assert outer_shape_with_cut.volume == pytest.approx(
-            2881.75624 - 900.8867073, abs=0.1
+            2719.63 - 839.39, abs=0.1
         )
 
 
