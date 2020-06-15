@@ -26,10 +26,6 @@ ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
 
 from paramak import RotateStraightShape
 
-# at the moment, we have repeated methods in the user-classes and the parametric shapes
-# we need the solid method to be repeated with the new check for solid
-# the super only inherits attributes, not methods, so its only inheriting the .solid attribute, not the .solid method, so it needs to be repeated here?
-
 
 class CenterColumnShieldCylinder(RotateStraightShape):
     def __init__(
