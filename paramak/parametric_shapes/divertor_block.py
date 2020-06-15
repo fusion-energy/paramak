@@ -233,6 +233,4 @@ class DivertorBlock(RotateMixedShape):
         # changes the last point to a straght conenctor
         points[-1][-1] = "straight"
 
-        points.append([points[0][0], points[0][1]])
-
         self.points = points

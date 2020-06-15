@@ -45,7 +45,7 @@ from paramak import (
 
 # this makes a rectangle and rotates it to make a solid
 rotated_straights = RotateStraightShape(
-    points=[(400, 100), (400, 200), (600, 200), (600, 100), (400, 100)]
+    points=[(400, 100), (400, 200), (600, 200), (600, 100)]
 )
 rotated_straights.rotation_angle = 180
 rotated_straights.export_stp("rotated_straights.stp")
@@ -63,7 +63,6 @@ rotated_spline = RotateSplineShape(
         (300, 300),
         (400, 300),
         (500, 20),
-        (500, 0),
     ]
 )
 rotated_spline.rotation_angle = 180
@@ -80,7 +79,6 @@ rotated_mixed = RotateMixedShape(
         (400, 300, "spline"),
         (500, 0, "spline"),
         (400, -300, "straight"),
-        (300, -300),
     ]
 )
 rotated_mixed.rotation_angle = 180
@@ -106,7 +104,6 @@ extruded_straight = ExtrudeStraightShape(
         (400, 300),
         (500, 0),
         (400, -300),
-        (300, -300),
     ],
     distance=200,
 )
@@ -124,7 +121,6 @@ extruded_spline = ExtrudeSplineShape(
         (300, 300),
         (400, 300),
         (500, 20),
-        (500, 0),
     ],
     distance=200,
 )
@@ -141,7 +137,6 @@ extruded_mixed = ExtrudeMixedShape(
         (400, 300, "spline"),
         (500, 0, "spline"),
         (400, -300, "straight"),
-        (300, -300),
     ],
     distance=200,
 )
