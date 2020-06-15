@@ -210,6 +210,7 @@ class Shape:
                             'individual connections must be either "straight" or "spline"'
                         )
 
+            # checks that the entries in the points are either all 2 long or all 3 long, not a mixture
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
                     raise ValueError(

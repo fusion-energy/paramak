@@ -1,4 +1,8 @@
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ae6f1fc12dd2df43370aab6eaf656ad7e9175438
 [![CircleCI](https://circleci.com/gh/ukaea/paramak.svg?style=svg)](https://circleci.com/gh/ukaea/paramak)
 
 [![codecov](https://codecov.io/gh/Shimwell/paramak/branch/master/graph/badge.svg)](https://codecov.io/gh/Shimwell/paramak)
