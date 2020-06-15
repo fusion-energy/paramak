@@ -1,8 +1,4 @@
 
-<<<<<<< HEAD
-=======
-
->>>>>>> ae6f1fc12dd2df43370aab6eaf656ad7e9175438
 [![CircleCI](https://circleci.com/gh/ukaea/paramak.svg?style=svg)](https://circleci.com/gh/ukaea/paramak)
 
 [![codecov](https://codecov.io/gh/Shimwell/paramak/branch/master/graph/badge.svg)](https://codecov.io/gh/Shimwell/paramak)
@@ -65,6 +61,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 | Points connected with straight lines                    | <p align="center"><img src="examples/images/rotated_straights.png" height="100"></p> `RotateStraightShape()` | <p align="center"><img src="examples/images/extruded_straights.png" height="100"></p>  `ExtrudeStraightShape()` |
 | Points connected with spline curves                     | <p align="center"><img src="examples/images/rotated_splines.png" height="100"></p>  `RotateSplineShape()`      | <p align="center"><img src="examples/images/extruded_splines.png" height="100"></p>  `ExtrudeSplineShape()`       |
 | Points connected with a mixture (splines and straights) | <p align="center"><img src="examples/images/rotated_mixed.png" height="100"></p>  `RotateMixedShape()`         | <p align="center"><img src="examples/images/extruded_mixed.png" height="100"></p>  `ExtrudeMixedShape()`          |
+| Circular shapes                                         | <p align="center"><img src="examples/images/rotated_circle.png" height="100"></p> `RotateCircleShape()`      | <p align="center"><img src="examples/images/extruded_circle.png" height="100"></p> `ExtrudeCircleShape()`         |
 
 ## Usage - shape creation
   
