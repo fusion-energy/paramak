@@ -56,6 +56,7 @@ class PoloidalFieldCoil(RotateStraightShape):
         name=None,
         material_tag=None,
         cut=None,
+        hash_value=None,
     ):
 
         super().__init__(
@@ -69,6 +70,7 @@ class PoloidalFieldCoil(RotateStraightShape):
             solid,
             rotation_angle,
             cut,
+            hash_value,
         )
 
         self.center_point = center_point
@@ -86,7 +88,11 @@ class PoloidalFieldCoil(RotateStraightShape):
 
     @property
     def solid(self):
-        self.create_solid()
+        if self.get_hash() != self.hash_value:
+            print('hash values are different')
+            self.create_solid()
+        if self.get_hash() == self.hash_value:
+            print('hash values are equal')
         return self._solid
 
     @solid.setter
