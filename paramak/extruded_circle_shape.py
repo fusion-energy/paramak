@@ -31,6 +31,8 @@ import cadquery as cq
 
 from paramak import Shape
 
+from hashlib import blake2b
+
 
 class ExtrudeCircleShape(Shape):
     """Extrude a circular 3d CadQuery solid from a central point and a radius
@@ -73,6 +75,7 @@ class ExtrudeCircleShape(Shape):
         cut=None,
         material_tag=None,
         name=None,
+        hash_value=None,
     ):
 
         super().__init__(
@@ -85,10 +88,11 @@ class ExtrudeCircleShape(Shape):
             workplane,
         )
 
+        self.cut = cut
         self.radius = radius
         self.distance = distance
+        self.hash_value = hash_value
         self.solid = solid
-        self.cut = cut
 
     @property
     def cut(self):
@@ -100,7 +104,11 @@ class ExtrudeCircleShape(Shape):
 
     @property
     def solid(self):
-        self.create_solid()
+        if self.get_hash() != self.hash_value:
+            print('hash values are different')
+            self.create_solid()
+        if self.get_hash() == self.hash_value:
+            print('hash values are equal')
         return self._solid
 
     @solid.setter
@@ -123,6 +131,30 @@ class ExtrudeCircleShape(Shape):
     def distance(self, value):
         self._distance = value
 
+    @property
+    def hash_value(self):
+        return self._hash_value
+
+    @hash_value.setter
+    def hash_value(self, value):
+        self._hash_value = value
+
+    def get_hash(self):
+        hash_object = blake2b()
+        hash_object.update(str(self.points).encode('utf-8') +
+                           str(self.distance).encode('utf-8') +
+                           str(self.radius).encode('utf-8') +
+                           str(self.workplane).encode('utf-8') +
+                           str(self.name).encode('utf-8') +
+                           str(self.color).encode('utf-8') +
+                           str(self.material_tag).encode('utf-8') +
+                           str(self.stp_filename).encode('utf-8') +
+                           str(self.azimuth_placement_angle).encode('utf-8') +
+                           str(self.cut).encode('utf-8')
+        )
+        value = hash_object.hexdigest()
+        return value
+
     def create_solid(self):
         """Creates a 3d solid using points with straight connections
         edges, azimuth_placement_angle and rotation angle.
@@ -130,6 +162,11 @@ class ExtrudeCircleShape(Shape):
         :return: a 3d solid volume
         :rtype: a cadquery solid
         """
+
+        # print('create_solid() has been called')
+
+        # Creates hash value for current solid
+        self.hash_value = self.get_hash()
 
         # Creates a cadquery solid from points and revolves
         solid = (

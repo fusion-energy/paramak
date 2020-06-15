@@ -44,6 +44,7 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         material_tag="center_column_material",
         azimuth_placement_angle=0,
         cut=None,
+        hash_value=None,
     ):
 
         super().__init__(
@@ -57,6 +58,7 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
             solid,
             rotation_angle,
             cut,
+            hash_value,
         )
 
         self.height = height
@@ -75,7 +77,11 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
 
     @property
     def solid(self):
-        self.create_solid()
+        if self.get_hash() != self.hash_value:
+            print('hash values are different')
+            self.create_solid()
+        if self.get_hash() == self.hash_value:
+            print('hash values are equal')
         return self._solid
 
     @solid.setter

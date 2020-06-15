@@ -43,6 +43,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         material_tag=None,
         azimuth_placement_angle=0,
         cut=None,
+        hash_value=None,
     ):
 
         super().__init__(
@@ -56,6 +57,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             solid,
             rotation_angle,
             cut,
+            hash_value,
         )
 
         self.height = height
@@ -73,7 +75,11 @@ class CenterColumnShieldCylinder(RotateStraightShape):
 
     @property
     def solid(self):
-        self.create_solid()
+        if self.get_hash() != self.hash_value:
+            print('hash values are different')
+            self.create_solid()
+        if self.get_hash() == self.hash_value:
+            print('hash values are equal')
         return self._solid
 
     @solid.setter

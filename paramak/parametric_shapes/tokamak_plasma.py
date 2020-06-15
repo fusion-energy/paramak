@@ -65,6 +65,7 @@ class PlasmaShape(RotateSplineShape):
         rotation_angle=360,
         azimuth_placement_angle=0,
         cut=None,
+        hash_value=None,
     ):
 
         super().__init__(
@@ -78,6 +79,7 @@ class PlasmaShape(RotateSplineShape):
             solid,
             rotation_angle,
             cut,
+            hash_value,
         )
 
         # properties needed for plasma shapes
@@ -94,15 +96,6 @@ class PlasmaShape(RotateSplineShape):
         self.stp_filename = stp_filename
 
     @property
-    def solid(self):
-        self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
-
-    @property
     def points(self):
         self.find_points()
         return self._points
@@ -110,6 +103,19 @@ class PlasmaShape(RotateSplineShape):
     @points.setter
     def points(self, value):
         self._points = value
+
+    @property
+    def solid(self):
+        if self.get_hash() != self.hash_value:
+            print('hash values are different')
+            self.create_solid()
+        if self.get_hash() == self.hash_value:
+            print('hash values are equal')
+        return self._solid
+
+    @solid.setter
+    def solid(self, value):
+        self._solid = value
 
     @property
     def rotation_angle(self):
