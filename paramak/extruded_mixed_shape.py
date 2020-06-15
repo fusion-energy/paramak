@@ -209,7 +209,12 @@ class ExtrudeMixedShape(Shape):
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
-            solid = solid.cut(self.cut.solid)
+            # Allows for multiple cuts to be applied
+            if isinstance(self.cut, Iterable):
+                for cutting_solid in self.cut:
+                    solid = solid.cut(cutting_solid.solid)
+            else:
+                solid = solid.cut(self.cut.solid)
 
         self.solid = solid
 
