@@ -89,7 +89,7 @@ Parametric shapes are wrapped versions of the eight basic shapes where parameter
 
 `from paramak.parametric_shapes import PlasmaShape`
 
-`my_plasma = PlasmaShape(major_radius =620, minor_radius =210, triangularity = 0.33, elongation = 1.85)`
+`my_plasma = PlasmaShape(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)`
 
 `my_plasma.export_stp('plasma.stp')`
 
@@ -151,7 +151,7 @@ A manifest.json file that contains all the step filenames and materials can now 
 
 `my_reactor.export_neutronics_description()`
 
-Once you step files and the neutronics description has been exported then [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in [task 12 of the UKAEA openmc workshop](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12) which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py) and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal.
+Once you step files and the neutronics description has been exported then [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in task 12 of the UKAEA openmc workshop which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py) and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal. You will need to have previously installed the [DAGMC plugin](https://github.com/svalinn/Trelis-plugin) for Trelis.
 
 `trelis make_faceteted_neutronics_model.py`
 
