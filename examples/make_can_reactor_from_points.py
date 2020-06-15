@@ -50,7 +50,6 @@ centre_column = RotateMixedShape(
         (171.0, -459.9232, "straight"),
         (171.0, -687.0, "straight"),
         (74.6, -687.0, "straight"),
-        (74.6, 687.0),
     ]
 )
 centre_column.stp_filename = "centre_column.stp"
@@ -66,7 +65,6 @@ blanket = RotateMixedShape(
         (389.9263, -138.1335, "spline"),
         (404.5108, 0, "spline"),
         (389.9263, 138.1335, "spline"),
-        (325.4886, 300.5),
     ]
 )
 blanket.stp_filename = "blanket.stp"
@@ -85,7 +83,6 @@ firstwall = RotateMixedShape(
         (387.4263, -138.1335, "spline"),
         (402.0108, 0, "spline"),
         (387.4263, 138.1335, "spline"),
-        (322.9528, 300.5),
     ]
 )
 firstwall.stp_filename = "firstwall.stp"
@@ -105,7 +102,6 @@ divertor_bottom = RotateMixedShape(
         (362.4986, -602.3905, "straight"),
         (372.5012, -580.5742, "spline"),
         (237.48395, -497.21782, "spline"),
-        (192.4782, -447.204),
     ]
 )
 divertor_bottom.stp_filename = "divertor_bottom.stp"
@@ -125,7 +121,6 @@ divertor_top = RotateMixedShape(
         (362.4986, 602.3905, "straight"),
         (372.5012, 580.5742, "spline"),
         (237.48395, 497.21782, "spline"),
-        (192.4782, 447.204),
     ]
 )
 divertor_top.stp_filename = "divertor_top.stp"
@@ -133,7 +128,7 @@ divertor_top.rotation_angle = 180
 
 
 core = RotateStraightShape(
-    points=[(0, 687.0), (74.6, 687.0), (74.6, -687.0), (0, -687.0), (0, 687.0)]
+    points=[(0, 687.0), (74.6, 687.0), (74.6, -687.0), (0, -687.0)]
 )
 core.stp_filename = "core.stp"
 core.rotation_angle = 180
