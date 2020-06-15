@@ -41,16 +41,14 @@ class test_object_properties(unittest.TestCase):
                 (0, 0, "straight"),
                 (0, 20, "straight"),
                 (20, 20, "spline"),
-                (20, 0, "spline"),
-                (0, 0),
+                (20, 0, "spline")
             ],
             distance=30,
         )
 
-        test_shape.create_solid()
-
         assert test_shape.solid is not None
-        assert test_shape.volume > 20 * 20 * 30
+        print(test_shape.volume)
+        assert test_shape.volume >= 20 * 20 * 30
 
     def test_extruded_shape_relative_volume(self):
         """creates two extruded shapes with different placement angles using \
@@ -63,8 +61,7 @@ class test_object_properties(unittest.TestCase):
                 (5, 20, "straight"),
                 (10, 20, "spline"),
                 (20, 10, "spline"),
-                (10, 0, "straight"),
-                (5, 0),
+                (10, 0, "straight")
             ],
             distance=10,
         )
@@ -79,8 +76,7 @@ class test_object_properties(unittest.TestCase):
                 (5, 20, "straight"),
                 (10, 20, "spline"),
                 (20, 10, "spline"),
-                (10, 0, "straight"),
-                (5, 0),
+                (10, 0, "straight")
             ],
             distance=10,
         )
@@ -98,8 +94,7 @@ class test_object_properties(unittest.TestCase):
                 (5, 5, "straight"),
                 (5, 10, "spline"),
                 (10, 10, "spline"),
-                (10, 5, "spline"),
-                (5, 5),
+                (10, 5, "spline")
             ],
             distance=30,
         )
@@ -109,8 +104,7 @@ class test_object_properties(unittest.TestCase):
                 (3, 3, "straight"),
                 (3, 12, "spline"),
                 (12, 12, "spline"),
-                (12, 3, "spline"),
-                (3, 3),
+                (12, 3, "spline")
             ],
             distance=30,
         )
@@ -120,16 +114,15 @@ class test_object_properties(unittest.TestCase):
                 (3, 3, "straight"),
                 (3, 12, "spline"),
                 (12, 12, "spline"),
-                (12, 3, "spline"),
-                (3, 3),
+                (12, 3, "spline")
             ],
             cut=inner_shape,
             distance=30,
         )
 
-        assert inner_shape.volume == pytest.approx(1068.75)
-        assert outer_shape.volume == pytest.approx(3462.75)
-        assert outer_shape_with_cut.volume == pytest.approx(3462.75 - 1068.75, abs=0.1)
+        assert inner_shape.volume == pytest.approx(1068, abs=2)
+        assert outer_shape.volume == pytest.approx(3462, abs=2)
+        assert outer_shape_with_cut.volume == pytest.approx(3462 - 1068, abs=2)
 
     def test_initial_solid_construction(self):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
@@ -139,7 +132,7 @@ class test_object_properties(unittest.TestCase):
                     (0, 20, "spline"),
                     (20, 20, "spline"),
                     (20, 0, "straight"),
-                    (0, 0)],
+                    ],
             distance=20
         )
 
@@ -156,7 +149,7 @@ class test_object_properties(unittest.TestCase):
                     (0, 20, "spline"),
                     (20, 20, "spline"),
                     (20, 0, "straight"),
-                    (0, 0)],
+                    ],
             distance=20
         )
 
@@ -175,7 +168,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0, "straight"),
                     (0, 20, "spline"),
                     (20, 20, "spline"),
-                    (0, 0)],
+                    ],
             distance=20
         )
 
@@ -196,7 +189,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0, "straight"),
                     (0, 20, "spline"),
                     (20, 20, "spline"),
-                    (0, 0)],
+                    ],
             distance=20
         )
         test_shape.solid

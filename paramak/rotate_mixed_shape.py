@@ -159,7 +159,7 @@ class RotateMixedShape(Shape):
         XZ_points = [(p[0], p[1]) for p in self.points]
 
         # obtains the last values of the points list
-        connections = [p[2] for p in self.points[:-1]]
+        connections = [p[2] for p in self.points]
 
         current_linetype = connections[0]
         current_points_list = []

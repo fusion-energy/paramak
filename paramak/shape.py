@@ -210,20 +210,15 @@ class Shape:
                             'individual connections must be either "straight" or "spline"'
                         )
 
-            # if len(values[-1]) != 2:
-            #     raise ValueError(
-            #         "The last entry in points should be a tuple of X, Y values and not include a connection type",
-            #         values[-1],
-            #     )
+            # checks that the entries in the points are either all 2 long or all 3 long, not a mixture
+            if not all(len(entry) == 2 for entry in values):
+                if not all(len(entry) == 3 for entry in values):
+                    raise ValueError(
+                        "The points list should contain entries of length 2 or 3 but not a mixture of 2 and 3")
 
-            if values[-1][0] != values[0][0] or values[-1][1] != values[0][1]:
-                # print('last point is not the same as the first point, adding connecting point to close the loop')
-                values.append((values[0][0],values[0][1]))
-            #     raise ValueError(
-            #         "the points must be a closed list, the first and the last XZ values in point must be the same",
-            #         values[0],
-            #         values[-1],
-            #     )
+            if len(values) > 1 and values[-1][0] == values[0][0] and values[-1][1] == values[0][1]:
+                raise ValueError("The coordinates of the last and first points are the same.")
+
             self._points = values
 
     @property

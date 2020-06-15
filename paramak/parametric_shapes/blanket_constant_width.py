@@ -32,7 +32,34 @@ import numpy as np
 from paramak import RotateMixedShape
 
 
-class DivertorBlock(RotateMixedShape):
+class BlanketConstantThickness(RotateMixedShape):
+    """An outboard blanket volume that follows the curvature of the plasma
+    with a fixed offset from the plasma and a constant blanket thickness.
+    The blanket volume has start and stop angles that allow the blanket 
+    coverage to be increased or decreased.
+
+    :param major_radius: the major radius of the plasma (cm)
+    :type major_radius: float
+    :param minor_radius: the minor radius of the plasma (cm)
+    :type minor_radius: float
+    :param triangularity: the triangularity of the plasma
+    :type triangularity: float
+    :param elongation: the elongation of the plasma
+    :type elongation: float
+    :param thickness:  the thickness of the blanket (cm)
+    :type thickness: float
+    :param stop_angle: the angle in degrees to stop the blanket, measured anti clockwise from 3 o'clock
+    :type stop_angle: float
+    :param start_angle: the angle in degrees to start the blanket, measured anti clockwise from 3 o'clock
+    :type start_angle: float
+    :param offset_from_plasma: the distance bettwen the plasma and the blanket (cm)
+    :type offset_from_plasma: float
+
+
+    :return: a shape object that has generic functionality
+    :rtype: paramak shape object
+    """
+
     def __init__(
         self,
         major_radius,
@@ -41,19 +68,18 @@ class DivertorBlock(RotateMixedShape):
         elongation,
         thickness,
         stop_angle,
+        start_angle,
         offset_from_plasma,
-        start_x_value,
         workplane="XZ",
         points=None,
-        name=None,
+        stp_filename=None,
         rotation_angle=360,
-        solid=None,
-        stp_filename="divertor.stp",
-        color=None,
         azimuth_placement_angle=0,
+        solid=None,
+        color=None,
+        name=None,
         material_tag=None,
         cut=None,
-        hash_value=None,
     ):
 
         super().__init__(
@@ -67,7 +93,6 @@ class DivertorBlock(RotateMixedShape):
             solid,
             rotation_angle,
             cut,
-            hash_value,
         )
 
         self.major_radius = major_radius
@@ -76,8 +101,9 @@ class DivertorBlock(RotateMixedShape):
         self.elongation = elongation
         self.thickness = thickness
         self.stop_angle = stop_angle
+        self.start_angle = start_angle
         self.offset_from_plasma = offset_from_plasma
-        self.start_x_value = start_x_value
+        self.points = points
 
     @property
     def points(self):
@@ -90,11 +116,7 @@ class DivertorBlock(RotateMixedShape):
 
     @property
     def solid(self):
-        if self.get_hash() != self.hash_value:
-            print('hash values are different')
-            self.create_solid()
-        if self.get_hash() == self.hash_value:
-            print('hash values are equal')
+        self.create_solid()
         return self._solid
 
     @solid.setter
@@ -150,6 +172,14 @@ class DivertorBlock(RotateMixedShape):
         self._stop_angle = stop_angle
 
     @property
+    def start_angle(self):
+        return self._start_angle
+
+    @start_angle.setter
+    def start_angle(self, start_angle):
+        self._start_angle = start_angle
+
+    @property
     def offset_from_plasma(self):
         return self._offset_from_plasma
 
@@ -158,12 +188,12 @@ class DivertorBlock(RotateMixedShape):
         self._offset_from_plasma = offset_from_plasma
 
     @property
-    def start_x_value(self):
-        return self._start_x_value
+    def inner_limit(self):
+        return self._inner_limit
 
-    @start_x_value.setter
-    def start_x_value(self, start_x_value):
-        self._start_x_value = start_x_value
+    @inner_limit.setter
+    def inner_limit(self, inner_limit):
+        self._inner_limit = inner_limit
 
     def find_points(self):
         """Finds the XZ points and connection types (straight and spline) that
@@ -187,56 +217,34 @@ class DivertorBlock(RotateMixedShape):
             - self.minor_radius * (self.triangularity ** 2 + self.elongation ** 2 - 1)
         ) / (2 * (1 + self.triangularity))
 
-        # this is the distance between the x_limit and the x_position_for_outside_arc
-        triangle_adjacent = x_position_for_outside_arc - self.start_x_value
-        triangle_hyp = radius_of_front_curve
-
-        start_angle = math.acos(triangle_adjacent / triangle_hyp)  # this is in radians
-        if self.stop_angle > 180:
-            start_angle = math.radians(360) - start_angle
-
-        # stop angle is converted from degrees to radians
         angles = np.linspace(
-            min(start_angle, math.radians(self.stop_angle)),
-            max(start_angle, math.radians(self.stop_angle)),
-            10,
+            math.radians(self.start_angle), math.radians(self.stop_angle), 100
         )
 
         xs = -(radius_of_front_curve * scipy.cos(angles) - x_position_for_outside_arc)
         zs = radius_of_front_curve * scipy.sin(angles)
 
         points = []
-        connections = []
         for x, z, in zip(xs, zs):
             points.append([x, z, "spline"])
 
-        points[-1][-1] = "straight"
+        points[-1][2] = "straight"
 
         # This section finds the points on the rear face of the divertor
         radius_of_back_curve = radius_of_front_curve + self.thickness
 
-        # this is the distnace between the x_limit and the x_position_for_outside_arc
-        triangle_hyp = radius_of_back_curve
-        print("triangle_adjacent/triangle_hyp", triangle_adjacent, triangle_hyp)
-        start_angle = math.acos(triangle_adjacent / triangle_hyp)
-        if self.stop_angle > 180:
-            start_angle = math.radians(360) - start_angle
-
         # stop angle is converted from degrees to radians
         angles = np.linspace(
-            min(start_angle, math.radians(self.stop_angle)),
-            max(start_angle, math.radians(self.stop_angle)),
-            10,
+            math.radians(self.stop_angle), math.radians(self.start_angle), 100
         )
-        # angles = np.linspace(start_angle,math.radians(self.stop_angle),100)
 
         xs = -(radius_of_back_curve * scipy.cos(angles) - x_position_for_outside_arc)
         zs = radius_of_back_curve * scipy.sin(angles)
 
-        for x, z, in zip(reversed(xs), reversed(zs)):
+        for x, z, in zip(xs, zs):
             points.append([x, z, "spline"])
 
         # changes the last point to a straght conenctor
-        points[-1][-1] = "straight"
+        points[-1][2] = "straight"
 
         self.points = points
