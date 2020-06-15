@@ -132,7 +132,7 @@ class test_object_properties(unittest.TestCase):
                     (0, 20, "spline"),
                     (20, 20, "spline"),
                     (20, 0, "straight"),
-                    (0, 0)],
+                    ],
             distance=20
         )
 
@@ -149,7 +149,7 @@ class test_object_properties(unittest.TestCase):
                     (0, 20, "spline"),
                     (20, 20, "spline"),
                     (20, 0, "straight"),
-                    (0, 0)],
+                    ],
             distance=20
         )
 
@@ -168,7 +168,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0, "straight"),
                     (0, 20, "spline"),
                     (20, 20, "spline"),
-                    (0, 0)],
+                    ],
             distance=20
         )
 
@@ -189,7 +189,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0, "straight"),
                     (0, 20, "spline"),
                     (20, 20, "spline"),
-                    (0, 0)],
+                    ],
             distance=20
         )
         test_shape.solid

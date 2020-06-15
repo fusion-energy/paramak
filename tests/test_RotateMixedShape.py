@@ -136,14 +136,13 @@ class test_object_properties(unittest.TestCase):
 
         def incorrect_number_of_connections_function():
             """checks that a ValueError is raised when an incorrect \
-                           number of connections are specified. There are 4 \
+                           number of connections are specified. There are 3 \
                            points set, so only 4 connections are needed"""
             test_shape = RotateMixedShape(
                 points=[
                     (0, 200, "straight"),
-                    (200, 100, "spline"),
+                    (200, 100),
                     (0, 0, "spline"),
-                    (0, 200),
                 ]
             )
 
@@ -198,7 +197,7 @@ class test_object_properties(unittest.TestCase):
                     (0, 20, "spline"),
                     (20, 20, "spline"),
                     (20, 0, "straight"),
-                    (0, 0)],
+                    ],
             rotation_angle=360
         )
 
@@ -215,7 +214,7 @@ class test_object_properties(unittest.TestCase):
                     (0, 20, "spline"),
                     (20, 20, "spline"),
                     (20, 0, "straight"),
-                    (0, 0)],
+                    ],
             rotation_angle=360
         )
 
@@ -234,7 +233,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0, "straight"),
                     (0, 20, "spline"),
                     (20, 20, "spline"),
-                    (0, 0)],
+                    ],
             rotation_angle=360
         )
 
@@ -255,7 +254,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0, "straight"),
                     (0, 20, "spline"),
                     (20, 20, "spline"),
-                    (0, 0)],
+                    ],
             rotation_angle=360
         )
         test_shape.solid

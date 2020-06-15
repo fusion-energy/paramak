@@ -92,7 +92,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
 
         test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)],
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
             distance=20
         )
 
@@ -105,7 +105,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
 
         test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)],
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
             distance=20
         )
 
@@ -121,7 +121,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (0, 0)],
+            points=[(0, 0), (0, 20), (20, 20)],
             distance=20
         )
 
@@ -139,7 +139,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (0, 0)],
+            points=[(0, 0), (0, 20), (20, 20)],
             distance=20
         )
         test_shape.solid

@@ -210,6 +210,11 @@ class Shape:
                             'individual connections must be either "straight" or "spline"'
                         )
 
+            if not all(len(entry) == 2 for entry in values):
+                if not all(len(entry) == 3 for entry in values):
+                    raise ValueError(
+                        "The points list should contain entries of length 2 or 3 but not a mixture of 2 and 3")
+
             if len(values) > 1 and values[-1][0] == values[0][0] and values[-1][1] == values[0][1]:
                 raise ValueError("The coordinates of the last and first points are the same.")
 
