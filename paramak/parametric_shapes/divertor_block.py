@@ -53,6 +53,7 @@ class DivertorBlock(RotateMixedShape):
         azimuth_placement_angle=0,
         material_tag=None,
         cut=None,
+        hash_value=None,
     ):
 
         super().__init__(
@@ -66,6 +67,7 @@ class DivertorBlock(RotateMixedShape):
             solid,
             rotation_angle,
             cut,
+            hash_value,
         )
 
         self.major_radius = major_radius
@@ -88,7 +90,11 @@ class DivertorBlock(RotateMixedShape):
 
     @property
     def solid(self):
-        self.create_solid()
+        if self.get_hash() != self.hash_value:
+            print('hash values are different')
+            self.create_solid()
+        if self.get_hash() == self.hash_value:
+            print('hash values are equal')
         return self._solid
 
     @solid.setter

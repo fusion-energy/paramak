@@ -31,6 +31,8 @@ import cadquery as cq
 
 from paramak import Shape
 
+from hashlib import blake2b
+
 
 class ExtrudeStraightShape(Shape):
     """Extrude a 3d CadQuery solid from points connected with
@@ -70,6 +72,7 @@ class ExtrudeStraightShape(Shape):
         cut=None,
         material_tag=None,
         name=None,
+        hash_value=None
     ):
 
         super().__init__(
@@ -82,9 +85,10 @@ class ExtrudeStraightShape(Shape):
             workplane,
         )
 
-        self.distance = distance
-        self.solid = solid
         self.cut = cut
+        self.distance = distance
+        self.hash_value = hash_value
+        self.solid = solid
 
     @property
     def cut(self):
@@ -96,7 +100,11 @@ class ExtrudeStraightShape(Shape):
 
     @property
     def solid(self):
-        self.create_solid()
+        if self.get_hash() != self.hash_value:
+            print('hash values are different')
+            self.create_solid()
+        if self.get_hash() == self.hash_value:
+            print('hash values are equal')
         return self._solid
 
     @solid.setter
@@ -111,6 +119,29 @@ class ExtrudeStraightShape(Shape):
     def distance(self, value):
         self._distance = value
 
+    @property
+    def hash_value(self):
+        return self._hash_value
+
+    @hash_value.setter
+    def hash_value(self, value):
+        self._hash_value = value
+
+    def get_hash(self):
+        hash_object = blake2b()
+        hash_object.update(str(self.points).encode('utf-8') +
+                           str(self.workplane).encode('utf-8') +
+                           str(self.name).encode('utf-8') +
+                           str(self.color).encode('utf-8') +
+                           str(self.material_tag).encode('utf-8') +
+                           str(self.stp_filename).encode('utf-8') +
+                           str(self.azimuth_placement_angle).encode('utf-8') +
+                           str(self.distance).encode('utf-8') +
+                           str(self.cut).encode('utf-8')
+        )
+        value = hash_object.hexdigest()
+        return value
+
     def create_solid(self):
         """Creates a 3d solid using points with straight connections
         edges, azimuth_placement_angle and rotation angle.
@@ -118,6 +149,11 @@ class ExtrudeStraightShape(Shape):
         :return: a 3d solid volume
         :rtype: a cadquery solid
         """
+
+        # print('create_solid() has been called')
+
+        # Creates hash value for current solid
+        self.hash_value = self.get_hash()
 
         # Creates a cadquery solid from points and revolves
         solid = (
@@ -144,7 +180,12 @@ class ExtrudeStraightShape(Shape):
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
-            solid = solid.cut(self.cut.solid)
+            # Allows for multiple cuts to be applied
+            if isinstance(self.cut, Iterable):
+                for cutting_solid in self.cut:
+                    solid = solid.cut(cutting_solid.solid)
+            else:
+                solid = solid.cut(self.cut.solid)
 
         self.solid = solid
 

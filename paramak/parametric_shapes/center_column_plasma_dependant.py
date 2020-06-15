@@ -51,6 +51,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         inner_radius=None,
         mid_offset=None,
         edge_offset=None,
+        hash_value=None,
     ):
 
         super().__init__(
@@ -64,6 +65,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             solid,
             rotation_angle,
             cut,
+            hash_value,
         )
 
         self.major_radius = major_radius
@@ -77,15 +79,6 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         self.edge_offset = edge_offset
 
     @property
-    def solid(self):
-        self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, solid):
-        self._solid = solid
-
-    @property
     def points(self):
         self.find_points()
         return self._points
@@ -93,6 +86,19 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
     @points.setter
     def points(self, points):
         self._points = points
+
+    @property
+    def solid(self):
+        if self.get_hash() != self.hash_value:
+            print('hash values are different')
+            self.create_solid()
+        if self.get_hash() == self.hash_value:
+            print('hash values are equal')
+        return self._solid
+
+    @solid.setter
+    def solid(self, solid):
+        self._solid = solid
 
     @property
     def major_radius(self):
