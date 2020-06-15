@@ -36,8 +36,7 @@ blanket = RotateMixedShape(
         (538, -305, "straight"),
         (322, -305, "spline"),
         (470, 0, "spline"),
-        (322, 305, "straight"),
-        (538, 305),
+        (322, 305, "straight")
     ]
 )
 
