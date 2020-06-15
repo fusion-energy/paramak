@@ -122,7 +122,8 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         self._width = width
 
     def find_points(self):
-        """Finds the XZ points that describe the 2D profile of the blanket shape."""
+        """Finds the XZ points joined by straight connections that describe the 2D
+        profile of the poloidal field coil case shape."""
 
         points = [
             (

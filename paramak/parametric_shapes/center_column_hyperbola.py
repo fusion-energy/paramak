@@ -28,6 +28,22 @@ from paramak import RotateMixedShape
 
 
 class CenterColumnShieldHyperbola(RotateMixedShape):
+    """A center column shield volume with a hyperbolic outer profile and constant
+    cylindrical inner profile.
+
+    :param height: height of the center column shield
+    :type height: float
+    :param inner_radius: inner radius of the center column shield
+    :type inner_radius: float
+    :param mid_radius: inner radius of the outer hyperbolic profile of the center column shield
+    :type mid_radius: float
+    :param outer_radius: outer_radius of the center column shield
+    :type outer_radius: float
+
+    :return: a shape object that has generic functionality
+    :rtype: a paramak shape
+    """
+
     def __init__(
         self,
         height,
@@ -116,7 +132,7 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
 
     def find_points(self):
         """Finds the XZ points and connection types (straight and spline) that
-        describe the 2D profile of the blanket shape."""
+        describe the 2D profile of the center column shield shape."""
 
         if self.inner_radius >= self.outer_radius:
             raise ValueError(
