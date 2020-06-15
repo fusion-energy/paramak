@@ -41,8 +41,7 @@ class test_object_properties(unittest.TestCase):
                 (0, 0, "straight"),
                 (0, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 0, "spline"),
-                (0, 0),
+                (20, 0, "spline")
             ]
         )
 
@@ -57,8 +56,7 @@ class test_object_properties(unittest.TestCase):
                 (0, 0, "straight"),
                 (0, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 0, "spline"),
-                (0, 0),
+                (20, 0, "spline")
             ]
         )
 
@@ -77,8 +75,7 @@ class test_object_properties(unittest.TestCase):
                 (1, 1, "straight"),
                 (1, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 1, "spline"),
-                (1, 1),
+                (20, 1, "spline")
             ]
         )
 
@@ -94,8 +91,7 @@ class test_object_properties(unittest.TestCase):
                 (1, 1, "straight"),
                 (1, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 1, "spline"),
-                (1, 1),
+                (20, 1, "spline")
             ]
         )
 
@@ -111,8 +107,7 @@ class test_object_properties(unittest.TestCase):
                 (1, 1, "straight"),
                 (1, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 1, "spline"),
-                (1, 1),
+                (20, 1, "spline")
             ]
         )
 
@@ -133,29 +128,28 @@ class test_object_properties(unittest.TestCase):
                     (0, 0, "straight"),
                     (0, 20, "spline"),
                     (20, 20, "spline"),
-                    (20, 0, "not_a_valid_entry"),
-                    (0, 0),
+                    (20, 0, "not_a_valid_entry")
                 ]
             )
 
         self.assertRaises(ValueError, incorrect_string_for_connection_type)
 
-        # def incorrect_number_of_connections_function():
-        #     """checks that a ValueError is raised when an incorrect \
-        #                    number of connections are specified. There are 4 \
-        #                    points set, so only 3 connections needed"""
-        #     test_shape = RotateMixedShape(
-        #         points=[
-        #             (0, 200, "straight"),
-        #             (200, 100, "spline"),
-        #             (0, 0, "spline"),
-        #             (0, 200, "spline"),
-        #         ]
-        #     )
+        def incorrect_number_of_connections_function():
+            """checks that a ValueError is raised when an incorrect \
+                           number of connections are specified. There are 4 \
+                           points set, so only 4 connections are needed"""
+            test_shape = RotateMixedShape(
+                points=[
+                    (0, 200, "straight"),
+                    (200, 100, "spline"),
+                    (0, 0, "spline"),
+                    (0, 200),
+                ]
+            )
 
-        #     test_shape.create_solid()
+            test_shape.create_solid()
 
-        # self.assertRaises(ValueError, incorrect_number_of_connections_function)
+        self.assertRaises(ValueError, incorrect_number_of_connections_function)
 
     def test_cut_volume(self):
         """creates a rotated shape using straight and spline connections with another \
@@ -166,8 +160,7 @@ class test_object_properties(unittest.TestCase):
                 (5, 5, "straight"),
                 (5, 10, "spline"),
                 (10, 10, "spline"),
-                (10, 5, "spline"),
-                (5, 5),
+                (10, 5, "spline")
             ],
             rotation_angle=180,
         )
@@ -177,8 +170,7 @@ class test_object_properties(unittest.TestCase):
                 (3, 3, "straight"),
                 (3, 12, "spline"),
                 (12, 12, "spline"),
-                (12, 3, "spline"),
-                (3, 3),
+                (12, 3, "spline")
             ],
             rotation_angle=180,
         )
@@ -188,8 +180,7 @@ class test_object_properties(unittest.TestCase):
                 (3, 3, "straight"),
                 (3, 12, "spline"),
                 (12, 12, "spline"),
-                (12, 3, "spline"),
-                (3, 3),
+                (12, 3, "spline")
             ],
             cut=inner_shape,
             rotation_angle=180,

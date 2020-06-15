@@ -44,7 +44,7 @@ class test_object_properties(unittest.TestCase):
         """creates a Reactor object and checks that shapes \
                 can be added to it"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = Reactor()
@@ -56,7 +56,7 @@ class test_object_properties(unittest.TestCase):
         """checks that make_graveyard() creates a graveyard \
                 using the shapes in the Reactor object"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = Reactor()
@@ -69,7 +69,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stp() creates stp file in the \
                 specified location"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_reactor/test_shape.stp")
         os.system("rm test_reactor/Graveyard.stp")
@@ -88,7 +88,7 @@ class test_object_properties(unittest.TestCase):
             """checks that a ValueError is raised when the neutronics description \
                         is exported without material_tag"""
 
-            test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+            test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
             test_shape.rotation_angle = 360
             test_shape.stp_filename = "test.stp"
             test_reactor = Reactor()
@@ -101,7 +101,7 @@ class test_object_properties(unittest.TestCase):
             """checks that a ValueError is raised when the neutronics description \
                         is exported without stp_filename"""
 
-            test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+            test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
             test_shape.rotation_angle = 360
             test_shape.material_tag = "test_material"
             test_reactor = Reactor()
@@ -114,7 +114,7 @@ class test_object_properties(unittest.TestCase):
         """checks that the neutronics description is exported with correct \
                 material_tag and filename"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
@@ -136,7 +136,7 @@ class test_object_properties(unittest.TestCase):
 
         os.system("rm manifest_test.json")
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
@@ -164,7 +164,7 @@ class test_object_properties(unittest.TestCase):
                 the correct filename"""
 
         os.system("rm 2d_test_image.png")
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = Reactor()
         test_reactor.add_shape(test_shape)
@@ -178,7 +178,7 @@ class test_object_properties(unittest.TestCase):
                 the correct filename"""
 
         os.system("rm test_html.html")
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (0, 0)])
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = Reactor()
         test_reactor.add_shape(test_shape)

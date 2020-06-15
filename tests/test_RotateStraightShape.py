@@ -74,7 +74,7 @@ class test_object_properties(unittest.TestCase):
                 volume is correct"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
 
         test_shape.rotation_angle = 360
@@ -88,13 +88,13 @@ class test_object_properties(unittest.TestCase):
                 is half the volume of a shape which is double its size"""
 
         test_shape_1 = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
         test_shape_1.rotation_angle = 180
         test_shape_1.create_solid()
 
         test_shape_2 = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
         test_shape_2.rotation_angle = 360
         test_shape_2.create_solid()
@@ -105,7 +105,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stp() exports stp files with the correct suffix"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
         test_shape.rotation_angle = 360
         os.system("rm filename.stp filename.step")
@@ -122,7 +122,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stl() exports stl files with the correct suffix"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
         test_shape.rotation_angle = 360
         os.system("rm filename.stl")
@@ -137,7 +137,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_svg() exports svg files with the correct suffix"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
         test_shape.rotation_angle = 360
         os.system("rm filename.svg")
@@ -153,15 +153,15 @@ class test_object_properties(unittest.TestCase):
                 cut out and checks the volume is correct"""
 
         inner_shape = RotateStraightShape(
-            points=[(5, 5), (5, 10), (10, 10), (10, 5), (5, 5)], rotation_angle=180
+            points=[(5, 5), (5, 10), (10, 10), (10, 5)], rotation_angle=180
         )
 
         outer_shape = RotateStraightShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3), (3, 3)], rotation_angle=180
+            points=[(3, 3), (3, 12), (12, 12), (12, 3)], rotation_angle=180
         )
 
         outer_shape_with_cut = RotateStraightShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3), (3, 3)],
+            points=[(3, 3), (3, 12), (12, 12), (12, 3)],
             cut=inner_shape,
             rotation_angle=180,
         )
