@@ -84,7 +84,7 @@ Once these properties have been set then users can write 3D volumes in CAD STP o
 
 ## Creating a parametric shapes
 
-Parametric shapes are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerious parametric shapes for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma shape. Users could also constructed a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric shape called PlasmaShape is available to construct a plasma from more convenient parameters. Parametric shapes also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
+Parametric shapes are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerious parametric shapes for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma shape. Users could also constructed a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric shape called PlasmaShape can construct a plasma from more convenient parameters. Parametric shapes also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
 
 
 `from paramak.parametric_shapes import PlasmaShape`
@@ -99,7 +99,7 @@ Parametric shapes are wrapped versions of the eight basic shapes where parameter
 
 ## Usage - reactor creation
 
-A reactor object provides a contain object for all the Shape objects created and allows operations on the whole collection of Shapes such as creation of a bounding box (DGMC graveyard) which is needed for neutronics simulations.
+A reactor object provides a container object for all the Shape objects created and allows operations on the whole collection of Shapes such as creation of a bounding box (DAGMC graveyard) which is needed for neutronics simulations.
 
 Import the Reactor object
 
