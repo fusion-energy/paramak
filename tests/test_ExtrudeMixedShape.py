@@ -48,7 +48,7 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.solid is not None
         print(test_shape.volume)
-        assert test_shape.volume > 20 * 20 * 30
+        assert test_shape.volume >= 20 * 20 * 30
 
     def test_extruded_shape_relative_volume(self):
         """creates two extruded shapes with different placement angles using \
@@ -120,9 +120,9 @@ class test_object_properties(unittest.TestCase):
             distance=30,
         )
 
-        assert inner_shape.volume == pytest.approx(515, abs=2)
+        assert inner_shape.volume == pytest.approx(1068, abs=2)
         assert outer_shape.volume == pytest.approx(3462, abs=2)
-        assert outer_shape_with_cut.volume == pytest.approx(3462 - 515, abs=2)
+        assert outer_shape_with_cut.volume == pytest.approx(3462 - 1068, abs=2)
 
     def test_initial_solid_construction(self):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""

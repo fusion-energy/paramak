@@ -40,7 +40,6 @@ blanket = RotateMixedShape(
         (blanket_front, -height / 2.0, "spline"),
         (blanket_mid_point, 0, "spline"),
         (blanket_front, height / 2.0, "straight"),
-        (blanket_rear, height / 2.0),
     ]
 )
 
