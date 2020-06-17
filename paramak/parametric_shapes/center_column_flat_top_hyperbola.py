@@ -182,7 +182,6 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
             (self.outer_radius, -self.arc_height / 2, "straight"),
             (self.outer_radius, -self.height / 2, "straight"),
             (self.inner_radius, -self.height / 2, "straight"),
-            (self.inner_radius, 0),
         ]
 
         self.points = points
