@@ -105,7 +105,7 @@ class Reactor(list):
         dictionaries. With each entry comprising of a material and a filename.
         This can then be used with the neutronics workflows to create a neutronics
         model. If the filename does not end with .json then .json will be added.
-        ...
+
         :param filename: the filename used to save the neutronics description
         :type filename: str
         """
@@ -129,7 +129,7 @@ class Reactor(list):
 
         :param output_folder: the folder for saving the stp files to
         :type output_folder: str
-        ...
+
         :return: a list of stp filenames created
         :rtype: list
         """
@@ -220,7 +220,7 @@ class Reactor(list):
         """Creates a 2D slice image (png) of the reactor
         :param filename: output filename of the image created
         :type filename: str
-        ...
+
         :return: Png filename created
         :rtype: str
         """
@@ -257,8 +257,8 @@ class Reactor(list):
         :param filename: output filename of the image created
         :type filename: [ParamType](, optional)
         :param tolerance: the mesh tolerance
-        :type float
-        ...
+        :type tolerance: float
+
         :return: filename of the created image
         :rtype: str
         """

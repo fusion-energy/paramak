@@ -36,22 +36,22 @@ from hashlib import blake2b
 class RotateCircleShape(Shape):
     """Rotates a circular 3d CadQuery solid from a central point and a radius
 
-       :param points: A list of a single XZ coordinates which is the central
-        point of the circle. For example [(10, 10)]
+       :param points: A list of a single XZ coordinate which is the central
+            point of the circle. For example, [(10, 10)]
        :type points: a list of tuples each containing X (float), Z (float)
        :param radius: The radius of the circle
        :type radius: float
        :param name: The legend name used when exporting a html graph of the shape
        :type name: str
        :param color: the color to use when exporting as html graphs or png images
+       :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
+            3 or 4 floats respectively each in the range 0-1
        :param material_tag: The material name to use when exporting the neutronics description
        :type material_tag: str
-       :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-        3 or 4 floats respectively each in the range 0-1
        :param stp_filename: the filename used when saving stp files as part of a reactor
        :type stp_filename: str
        :param azimuth_placement_angle: the angle or angles to use when rotating the 
-        shape on the azimuthal axis
+            shape on the azimuthal axis
        :type azimuth_placement_angle: float or iterable of floats
        :param rotation_angle: The rotation_angle to use when revoling the solid (degrees)
        :type rotation_angle: float
@@ -153,7 +153,12 @@ class RotateCircleShape(Shape):
         return value
 
     def create_solid(self):
-        """Insert docstring"""
+        """Creates a 3d solid using points, radius, azimuth_placement_angle and
+        rotation_angle.
+        
+        :return: a 3d solid volume
+        :rtype: a cadquery solid
+        """
 
         # print('create_solid() has been called')
 

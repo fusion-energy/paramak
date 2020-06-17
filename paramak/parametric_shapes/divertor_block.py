@@ -33,6 +33,29 @@ from paramak import RotateMixedShape
 
 
 class DivertorBlock(RotateMixedShape):
+    """A divertor block volume with parameters controlled by the plasma. The dimensions
+    and position of the divertor block are determined by the plasma parameters and a
+    specified offset, stop angle and START_X_VALUE.
+
+    :param major_radius: the major radius of the plasma
+    :type major_radius: float
+    :param minor_radius: the minor radius of the plasma
+    :type minor_radius: float
+    :param triangularity: the triangularity of the plasma
+    :type triangularity: float
+    :param elongation: the elongation of the plasma
+    :type elongation: float
+    :param thickness: INSERT DESCRIPTION OF THICKNESS
+    :type thickness: float
+    :param stop_angle: INSERT DESCRIPTION OF STOP ANGLE
+    :type stop_angle: float
+    :param start_x_value: INSERT DESCRIPTION OF START_X_VALUE
+    :type start_x_value: float
+
+    :return: a shape object that has generic functionality
+    :rtype: a paramak shape object
+    """
+
     def __init__(
         self,
         major_radius,
@@ -167,7 +190,7 @@ class DivertorBlock(RotateMixedShape):
 
     def find_points(self):
         """Finds the XZ points and connection types (straight and spline) that
-        describe the 2D profile of the blanket shape."""
+        describe the 2D profile of the divertor shape."""
 
         # This section finds the points on the front face of the divertor
         radius_of_front_curve = (

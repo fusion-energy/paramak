@@ -28,6 +28,19 @@ from paramak import RotateStraightShape
 
 
 class CenterColumnShieldCylinder(RotateStraightShape):
+    """A cylindrical center column shield volume with constant thickness.
+
+    :param height: height of the center column shield
+    :type height: float
+    :param inner_radius: the inner radius of the center column shield
+    :type inner_radius: float
+    :param outer_radius: the outer radius of the center column shield
+    :type outer_radius: float
+
+    :return: a shape object that has generic functionality
+    :rtype: a paramak shape object
+    """
+
     def __init__(
         self,
         height,
@@ -111,7 +124,8 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         self._outer_radius = outer_radius
 
     def find_points(self):
-        """Finds the XZ points that describe the 2D profile of the blanket shape."""
+        """Finds the XZ points joined by straight connections that describe the 2D
+        profile of the center column shield shape."""
 
         if self.inner_radius >= self.outer_radius:
             raise ValueError(

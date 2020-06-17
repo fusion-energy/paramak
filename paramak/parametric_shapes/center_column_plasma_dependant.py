@@ -29,7 +29,25 @@ from paramak.parametric_shapes import PlasmaShape
 
 
 class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
-    """Creates a center column that follows the plasma shape"""
+    """A center column shield volume with a curvature controlled by the shape of the
+    plasma and offsets specified at the plasma center and edges. Shield thickness is
+    controlled by the relative values of the shield offsets and inner radius.
+
+    :param major_radius: the major radius of the plasma
+    :type major_radius: float
+    :param minor_radius: the minor radius of the plasma
+    :type minor_radius: float
+    :param triangularity: the triangularity of the plasma
+    :type triangularity: float
+    :param elongation: the elongation of the plasma
+    :type elongation: float
+    :param inner_radius: the inner radius of the center column shield
+    :type inner_radius: float
+    :param mid_offset: the offset of the shield from the plasma at the plasma center
+    :type mid_offset: float
+    :param edge_offset: the offset of the shield from the plasma at the plasma edge
+    :type edge_offset: float
+    """
 
     def __init__(
         self,
@@ -166,7 +184,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
 
     def find_points(self):
         """Finds the XZ points and connection types (straight and spline) that
-        describe the 2D profile of the blanket shape."""
+        describe the 2D profile of the center column shield shape."""
 
         plasma = PlasmaShape()
 
