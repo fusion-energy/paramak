@@ -26,15 +26,16 @@ ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
 
 import json
 import math
+from collections import Iterable
 from pathlib import Path
 
 import cadquery as cq
 import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
-
 import plotly.graph_objects as go
 import pyrender
+from PIL import Image
+
 from paramak.shape import Shape
 
 
@@ -49,13 +50,15 @@ class Reactor(list):
 
         self.graveyard = None
 
-    def add_shape(self, shape):
-        """Adds a Shape to the Reactor object so that collective operations
-        can be performed on all the shapes in the reactor.
+    def add_shape(self, shapes):
+        """Adds a Shape or list of Shapes to the Reactor object so that
+        collective operations can be performed on all the shapes in the reactor.
         """
-
-        self.append(shape)
-        # print("Added Shape to the reactor")
+        if isinstance(shapes, Iterable):
+            for shape in shapes:
+                self.append(shape)
+        else:
+            self.append(shapes)
 
     def neutronics_description(self):
         """A descirption of the reactor containing materials and the filenames,
