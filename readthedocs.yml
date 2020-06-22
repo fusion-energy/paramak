@@ -1,0 +1,23 @@
+# .readthedocs.yml
+# Read the Docs configuration file
+
+# Required
+version: 1
+
+# Build documentation in the docs/ directory with Sphinx
+sphinx:
+  configuration: docs/source/conf.py
+
+# Optional additional build formats
+# formats:
+#   - pdf
+
+# this is not needed if using conda environment
+# python:
+#   version: 3.7
+#   install:
+#     - requirements: requirements.txt
+
+# specify conda environment needed for build
+conda:
+  file: environment.yml
