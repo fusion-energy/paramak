@@ -83,7 +83,7 @@ class test_object_properties(unittest.TestCase):
         )
 
         assert inner_shape.volume == pytest.approx(1165, abs=2)
-        assert outer_shape.volume == pytest.approx(3462, abs=2)
+        assert outer_shape.volume == pytest.approx(3775, abs=2)
         assert outer_shape_with_cut.volume == pytest.approx(
             3462 - 1068, abs=2
         )
