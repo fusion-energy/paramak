@@ -1,7 +1,7 @@
 
-[![CircleCI](https://circleci.com/gh/ukaea/paramak.svg?style=svg)](https://circleci.com/gh/ukaea/paramak)
+[![CircleCI](https://circleci.com/gh/ukaea/paramak.svg?branch=develop)](https://circleci.com/gh/ukaea/paramak)
 
-[![codecov](https://codecov.io/gh/Shimwell/paramak/branch/master/graph/badge.svg)](https://codecov.io/gh/Shimwell/paramak)
+[![codecov](https://codecov.io/gh/ukaea/paramak/branch/master/graph/badge.svg)](https://codecov.io/gh/Shimwell/paramak)
 
 
 
