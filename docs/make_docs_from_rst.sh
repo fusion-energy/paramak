@@ -1,2 +1,2 @@
-sphinx-build -b html ./source/rst/ ./build/html/
+sphinx-build -b html ./source/ ./build/html/
 firefox ./build/html/index.html
