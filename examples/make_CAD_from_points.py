@@ -75,7 +75,8 @@ rotated_mixed = RotateMixedShape(
     points=[
         (300, -300, "spline"),
         (400, 0, "spline"),
-        (300, 300, "straight"),
+        (300, 300, "circle"),
+        (350, 350, "circle"),
         (400, 300, "spline"),
         (500, 0, "spline"),
         (400, -300, "straight"),
@@ -133,7 +134,8 @@ extruded_mixed = ExtrudeMixedShape(
     points=[
         (300, -300, "spline"),
         (400, 0, "spline"),
-        (300, 300, "straight"),
+        (300, 300, "circle"),
+        (350, 350, "circle"),
         (400, 300, "spline"),
         (500, 0, "spline"),
         (400, -300, "straight"),
