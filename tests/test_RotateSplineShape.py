@@ -64,10 +64,10 @@ class test_object_properties(unittest.TestCase):
             rotation_angle=180,
         )
 
-        assert inner_shape.volume == pytest.approx(839.39, abs=0.1)
-        assert outer_shape.volume == pytest.approx(2719.63, abs=0.1)
+        assert inner_shape.volume == pytest.approx(900.88, abs=0.1)
+        assert outer_shape.volume == pytest.approx(2881.76, abs=0.1)
         assert outer_shape_with_cut.volume == pytest.approx(
-            2719.63 - 839.39, abs=0.1
+            2881.76 - 900.88, abs=0.2
         )
 
     def test_initial_solid_construction(self):
