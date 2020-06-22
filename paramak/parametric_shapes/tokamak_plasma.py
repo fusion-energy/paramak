@@ -43,6 +43,9 @@ class PlasmaShape(RotateSplineShape):
     :type triangularity: float
     :param elongation: the elongation of the plasma
     :type elongation: float
+    :param vertical_displacement: the vertical_displacement of the plasma (cm)
+    :type vertical_displacement: float
+    
 
     :return: a shape object that has generic functionality
     :rtype: paramak shape object
@@ -59,6 +62,7 @@ class PlasmaShape(RotateSplineShape):
         minor_radius=150,
         single_null=True,
         triangularity=0.55,
+        vertical_displacement=0,
         solid=None,
         stp_filename="plasma.stp",
         color=None,
@@ -88,6 +92,7 @@ class PlasmaShape(RotateSplineShape):
         self.minor_radius = minor_radius
         self.single_null = single_null
         self.triangularity = triangularity
+        self.vertical_displacement = vertical_displacement
         self.azimuth_placement_angle = azimuth_placement_angle
         self.rotation_angle = rotation_angle
         self.color = color
@@ -103,6 +108,14 @@ class PlasmaShape(RotateSplineShape):
     @points.setter
     def points(self, value):
         self._points = value
+
+    @property
+    def vertical_displacement(self):
+        return self._vertical_displacement
+
+    @vertical_displacement.setter
+    def vertical_displacement(self, value):
+        self._vertical_displacement = value
 
     @property
     def solid(self):
@@ -287,7 +300,7 @@ class PlasmaShape(RotateSplineShape):
             self.radius_of_outside_arc * scipy.cos(angles)
             - self.x_position_for_outside_arc
         )
-        zs = self.radius_of_outside_arc * scipy.sin(angles)
+        zs = self.radius_of_outside_arc * scipy.sin(angles) - self.vertical_displacement
 
         self.xs_outer_arc = xs
         self.zs_outer_arc = zs
@@ -318,7 +331,7 @@ class PlasmaShape(RotateSplineShape):
             self.radius_of_inside_arc * scipy.cos(angles)
             - self.x_position_for_inside_arc
         )
-        zs = self.radius_of_inside_arc * scipy.sin(angles)
+        zs = self.radius_of_inside_arc * scipy.sin(angles) - self.vertical_displacement
 
         self.xs_inner_arc = xs
         self.zs_inner_arc = zs
