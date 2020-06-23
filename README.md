@@ -1,9 +1,9 @@
 
-[![CircleCI](https://circleci.com/gh/ukaea/paramak.svg?branch=develop)](https://circleci.com/gh/ukaea/paramak)
+[![CircleCI](https://circleci.com/gh/ukaea/paramak/tree/develop.svg?style=svg)](https://circleci.com/gh/ukaea/paramak/tree/develop)
+[![codecov](https://codecov.io/gh/ukaea/paramak/branch/develop/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
 
-[![codecov](https://codecov.io/gh/ukaea/paramak/branch/master/graph/badge.svg)](https://codecov.io/gh/Shimwell/paramak)
-
-
+[![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=latest)](https://paramak.readthedocs.io/en/latest/?badge=latest)
+      
 
 
 # Paramak
