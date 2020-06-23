@@ -1,5 +1,4 @@
-
-__doc__ = ""
+""""""
 
 """
 This file is part of PARAMAK which is a design tool capable
