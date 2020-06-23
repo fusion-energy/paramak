@@ -1,0 +1,19 @@
+name: docs-environment
+
+channels:
+  - conda-forge
+  - cadquery
+
+dependencies:
+  - pytest
+  - plotly
+  - scipy
+  - numpy
+  - tqdm
+  - matplotlib
+  - trimesh
+  - uncertainties
+  - importlib_resources
+  - cadquery=2
+  - pip:
+    - pyrender

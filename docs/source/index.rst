@@ -52,7 +52,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
 |                                                           | Rotate                                                    | Extrude                                                    |
 +===========================================================+===========================================================+============================================================+
-| Points connected with straight lines                      | .. image:: ../../../examples/images/rotated_straights.png | .. image:: ../../../examples/images/extruded_straights.png |
+| Points connected with straight lines                      | .. image:: ../../examples/images/rotated_straights.png    | .. image:: ../../examples/images/extruded_straights.png    |
 |                                                           |     :width: 120px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
 |                                                           |     :height: 70px                                         |     :height: 150px                                         |
@@ -61,7 +61,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 |                                                           |                                                           |                                                            |
 |                                                           |     RotateStraightShape()                                 |     ExtrudeStraightShape()                                 |
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with spline curves                       | .. image:: ../../../examples/images/rotated_splines.png   | .. image:: ../../../examples/images/extruded_splines.png   |
+| Points connected with spline curves                       | .. image:: ../../examples/images/rotated_splines.png      | .. image:: ../../examples/images/extruded_splines.png      |
 |                                                           |     :width: 100px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
 |                                                           |     :height: 70px                                         |     :height: 150px                                         |
@@ -70,7 +70,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 |                                                           |                                                           |                                                            |
 |                                                           |     RotateSplineShape()                                   |     ExtrudeSplineShape()                                   |
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with a mixture (splines and straights)   | .. image:: ../../../examples/images/rotated_mixed.png     | .. image:: ../../../examples/images/extruded_splines.png   |
+| Points connected with a mixture (splines and straights)   | .. image:: ../../examples/images/rotated_mixed.png        | .. image:: ../../examples/images/extruded_splines.png      |
 |                                                           |     :width: 100px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
 |                                                           |     :height: 70px                                         |     :height: 150px                                         |

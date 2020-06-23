@@ -1,7 +1,6 @@
 Parametric Shapes
 =================
 
-Insert a description of what these parametric shapes are.
 They are the other modules wrapped and produce specific shapes from parameters.
 Allows easy production of shapes commonly used in fusion modelling.
 Could possibly include images of each shape.

@@ -14,12 +14,8 @@
 #
 import os
 import sys
-
-# this is the path to the main paramak directory in relation to the conf.py file
-sys.path.append(os.path.abspath('../../..'))
-# this is the tests folder that is required to import the test modules (not sure why this is the case)
-sys.path.append(os.path.abspath('../../../tests'))
-
+sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../../tests'))
 
 # -- Project information -----------------------------------------------------
 
