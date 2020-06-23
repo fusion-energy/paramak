@@ -16,7 +16,7 @@ The Paramak python package allows rapid production of 3D CAD models of fusion re
 
 Features have been added to address particular needs and the software is by no means a finished product. Contributions are welcome. CadQuery functions provide the majority the features, and incorporating additional capabilities is straight forward for developers with Python knowledge.
 
-  
+
   
 
 ## Prerequisites
@@ -34,19 +34,9 @@ To run the example parametric geometry creation scripts you will need to Python 
 
 ## Installation
 
-Download the repository using the [download link](https://github.com/Shimwell/freecad_parametric_example/archive/master.zip) or clone the repository using [git](https://git-scm.com/downloads).
+Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/) can be found in the User's Guide.
 
-  `git clone https://github.com/Shimwell/paramak.git`
-
-Navigate to the paramak repository and within the terminal install the paramak package and the dependencies using pip3.
-
-`pip install .`
-
-Alternatively you can install the paramak with following command.
-
-`python setup.py install`
-
-  
+ 
 
 ## Features
 

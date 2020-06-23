@@ -55,7 +55,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 | Points connected with straight lines                      | .. image:: ../../examples/images/rotated_straights.png    | .. image:: ../../examples/images/extruded_straights.png    |
 |                                                           |     :width: 120px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
-|                                                           |     :height: 70px                                         |     :height: 150px                                         |
+|                                                           |     :height: 100px                                        |     :height: 100px                                         |
 |                                                           |                                                           |                                                            |
 |                                                           | ::                                                        | ::                                                         |
 |                                                           |                                                           |                                                            |
@@ -64,22 +64,30 @@ The different families of shapes that can be made with the Paramak are shown in 
 | Points connected with spline curves                       | .. image:: ../../examples/images/rotated_splines.png      | .. image:: ../../examples/images/extruded_splines.png      |
 |                                                           |     :width: 100px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
-|                                                           |     :height: 70px                                         |     :height: 150px                                         |
+|                                                           |     :height: 100px                                        |     :height: 100px                                         |
 |                                                           |                                                           |                                                            |
 |                                                           | ::                                                        | ::                                                         |
 |                                                           |                                                           |                                                            |
 |                                                           |     RotateSplineShape()                                   |     ExtrudeSplineShape()                                   |
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with a mixture (splines and straights)   | .. image:: ../../examples/images/rotated_mixed.png        | .. image:: ../../examples/images/extruded_splines.png      |
+| Points connected with a circles                           | .. image:: ../../examples/images/rotated_circle.png       | .. image:: ../../examples/images/extruded_circle.png       |
 |                                                           |     :width: 100px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
-|                                                           |     :height: 70px                                         |     :height: 150px                                         |
+|                                                           |     :height: 100px                                        |     :height: 100px                                         |
+|                                                           |                                                           |                                                            |
+|                                                           | ::                                                        | ::                                                         |
+|                                                           |                                                           |                                                            |
+|                                                           |     RotateCircleShape()                                   |     ExtrudeCircleShape()                                   |
++-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
+| Points connected with a mixture                           | .. image:: ../../examples/images/rotated_mixed.png        | .. image:: ../../examples/images/extruded_mixed.png        |
+| (splines, straights and circles)                          |     :width: 100px                                         |     :width: 100px                                          |
+|                                                           |     :align: center                                        |     :align: center                                         |
+|                                                           |     :height: 100px                                        |     :height: 100px                                         |
 |                                                           |                                                           |                                                            |
 |                                                           | ::                                                        | ::                                                         |
 |                                                           |                                                           |                                                            |
 |                                                           |     RotateMixedShape()                                    |     ExtrudeMixedShape()                                    |
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-
 
 
 Usage - Shape creation
