@@ -7,8 +7,11 @@ Features have been added to address particular needs and the software is by no m
 
 .. toctree::
    :maxdepth: 1
+
+   paramak
+   parametric_shapes
+   tests
    
-   modules
 
 Prerequisites
 -------------

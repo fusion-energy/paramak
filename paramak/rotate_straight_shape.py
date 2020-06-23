@@ -1,3 +1,6 @@
+
+__doc__ = ""
+
 """
 This file is part of PARAMAK which is a design tool capable
 of creating 3D CAD models compatible with automated neutronics
