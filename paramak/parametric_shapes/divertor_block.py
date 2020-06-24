@@ -26,6 +26,8 @@ class DivertorBlock(RotateMixedShape):
     :type stop_angle: float
     :param start_x_value: INSERT DESCRIPTION OF START_X_VALUE
     :type start_x_value: float
+    :param offset_from_plasma: INSERT DESCRIPTION OF OFFSET_FROM_PLASMA
+    :type offset_from_plasma: float
 
     :return: a shape object that has generic functionality
     :rtype: a paramak shape object
