@@ -90,15 +90,6 @@ class BlanketConstantThickness(RotateMixedShape):
         self._points = points
 
     @property
-    def solid(self):
-        self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, solid):
-        self._solid = solid
-
-    @property
     def major_radius(self):
         return self._major_radius
 

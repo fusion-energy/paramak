@@ -94,19 +94,6 @@ class PlasmaShape(RotateSplineShape):
         self._vertical_displacement = value
 
     @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            print('hash values are different')
-            self.create_solid()
-        if self.get_hash() == self.hash_value:
-            print('hash values are equal')
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
-
-    @property
     def rotation_angle(self):
         return self._rotation_angle
 
