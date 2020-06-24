@@ -62,19 +62,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         self._points = points
 
     @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            print('hash values are different')
-            self.create_solid()
-        if self.get_hash() == self.hash_value:
-            print('hash values are equal')
-        return self._solid
-
-    @solid.setter
-    def solid(self, solid):
-        self._solid = solid
-
-    @property
     def height(self):
         return self._height
 

@@ -63,18 +63,19 @@ class PlasmaShape(RotateSplineShape):
         )
 
         # properties needed for plasma shapes
+        # some of these properties may not be required here
         self.elongation = elongation
         self.major_radius = major_radius
         self.minor_radius = minor_radius
         self.single_null = single_null
         self.triangularity = triangularity
         self.vertical_displacement = vertical_displacement
-        self.azimuth_placement_angle = azimuth_placement_angle
-        self.rotation_angle = rotation_angle
-        self.color = color
-        self.solid = solid
+        # self.azimuth_placement_angle = azimuth_placement_angle   # Inherited by super
+        # self.rotation_angle = rotation_angle   # Inherited by super
+        # self.color = color   # Inherited by super
+        # self.solid = solid   # Inherited by super
+        # self.stp_filename = stp_filename   # Inherited by super
         self.points = points
-        self.stp_filename = stp_filename
 
     @property
     def points(self):
@@ -93,26 +94,14 @@ class PlasmaShape(RotateSplineShape):
     def vertical_displacement(self, value):
         self._vertical_displacement = value
 
-    @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            print('hash values are different')
-            self.create_solid()
-        if self.get_hash() == self.hash_value:
-            print('hash values are equal')
-        return self._solid
+    # inherited from super
+    # @property
+    # def rotation_angle(self):
+    #     return self._rotation_angle
 
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
-
-    @property
-    def rotation_angle(self):
-        return self._rotation_angle
-
-    @rotation_angle.setter
-    def rotation_angle(self, value):
-        self._rotation_angle = value
+    # @rotation_angle.setter
+    # def rotation_angle(self, value):
+    #     self._rotation_angle = value
 
     @property
     def openmc_install_directory(self):

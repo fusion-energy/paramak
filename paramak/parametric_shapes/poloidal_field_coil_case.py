@@ -66,19 +66,6 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         self._points = value
 
     @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            print('hash values are different')
-            self.create_solid()
-        if self.get_hash() == self.hash_value:
-            print('hash values are equal')
-        return self._solid
-
-    @solid.setter
-    def solid(self, solid):
-        self._solid = solid
-
-    @property
     def center_point(self):
         return self._center_point
 

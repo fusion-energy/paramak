@@ -26,6 +26,8 @@ class DivertorBlock(RotateMixedShape):
     :type stop_angle: float
     :param start_x_value: INSERT DESCRIPTION OF START_X_VALUE
     :type start_x_value: float
+    :param offset_from_plasma: INSERT DESCRIPTION OF OFFSET_FROM_PLASMA
+    :type offset_from_plasma: float
 
     :return: a shape object that has generic functionality
     :rtype: a paramak shape object
@@ -85,19 +87,6 @@ class DivertorBlock(RotateMixedShape):
     @points.setter
     def points(self, points):
         self._points = points
-
-    @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            print('hash values are different')
-            self.create_solid()
-        if self.get_hash() == self.hash_value:
-            print('hash values are equal')
-        return self._solid
-
-    @solid.setter
-    def solid(self, solid):
-        self._solid = solid
 
     @property
     def major_radius(self):

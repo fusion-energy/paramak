@@ -22,6 +22,9 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
     :type mid_offset: float
     :param edge_offset: the offset of the shield from the plasma at the plasma edge
     :type edge_offset: float
+
+    :return: a shape object that has generic functionality
+    :rtype: a paramak shape
     """
 
     def __init__(
@@ -79,19 +82,6 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
     @points.setter
     def points(self, points):
         self._points = points
-
-    @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            print('hash values are different')
-            self.create_solid()
-        if self.get_hash() == self.hash_value:
-            print('hash values are equal')
-        return self._solid
-
-    @solid.setter
-    def solid(self, solid):
-        self._solid = solid
 
     @property
     def major_radius(self):
