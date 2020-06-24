@@ -22,6 +22,9 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
     :type mid_offset: float
     :param edge_offset: the offset of the shield from the plasma at the plasma edge
     :type edge_offset: float
+
+    :return: a shape object that has generic functionality
+    :rtype: a paramak shape
     """
 
     def __init__(
