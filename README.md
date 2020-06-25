@@ -12,27 +12,15 @@
 <!---R nit: Minor formatting now, but lines should be hard-wrapped at 79
 characters for ease of viewing in traditional text editors. -->
 
-The Paramak python package allows rapid production of 3D CAD models of fusion reactors. The original purpose of the Paramak was to provide geometry for parametric neutronics studies as the STP files produced can be automaticallya converted to DAGMC compatable neutronics models.
-
-Features have been added to address particular needs and the software is by no means a finished product. Contributions are welcome. CadQuery functions provide the majority the features, and incorporating additional capabilities is straight forward for developers with Python knowledge.
+The Paramak python package allows rapid production of 3D CAD models of fusion reactors. The purpose of the Paramak is to provide geometry for parametric studies. It is possible to use the created geometry in engineering and neutronics studies as the STP files produced can be automatically converted to DAGMC compatable neutronics models or meshed and used in finite element analysis codes.
 
 
-  
-
-## Prerequisites
-
-  
-
-To run the example parametric geometry creation scripts you will need to Python 3 and CadQuery 2.0 or newer installed.
-
--  [Python 3](https://www.python.org/downloads/)
-
--  [CadQuery 2.0](https://github.com/CadQuery/cadquery)
-
-
-  
 
 ## Installation
+
+To install the Paramak you need to have [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), [Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and [Pip](https://anaconda.org/anaconda/pip). If you have these three dependancies already then you can install the Paramak using Pip
+
+```pip install paramak```
 
 Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/) can be found in the User's Guide.
 
@@ -42,9 +30,17 @@ Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/) 
 
 In general the Paramak takes points and connection information in 2D space (x,z) and performs operations on them to create 3D volumes. The points and connections can be provided by the user or when using parametric_shapes the points and connections are calculated by the software.
 
-Once points and connections between the points are provided the user has options to perform CAD operations (rotate or extrude) to create a 3D volume and boolean operations like cut.
+Once points and connections between the points are provided the user has options to perform CAD operations (rotate or extrude on different orientations) to create a 3D volume and boolean operations like cut.
 
-The different families of shapes that can be made with the Paramak are shown in the table below. The CadQuery objects created  can be combined and modified using CadQueries powerful filtering capabilties to create more complex models (e.g. a Tokamak).
+The different families of shapes that can be made with the Paramak are shown in the table below. The CadQuery objects created can be combined and modified (e.g. fillet corners) using CadQueries powerful filtering capabilties to create more complex models (e.g. a Tokamak). The Tokamak images below are coloured based on the shape family that the component is made from. There are also parametric shapes which provide convenient fusion relevent shapes for common reactor components.
+
+<p align="center">
+<img src="https://drive.google.com/uc?export=view&id=1CZZqAM6Ae1YEYBswM7cZ_vWwAXbHkoff" width="150" height="200">
+<img src="https://drive.google.com/uc?export=view&id=1CiN7Bv6WE1xd4BViw6C2d9V4nPWhMnQt" width="150" height="200">
+<img src="https://drive.google.com/uc?export=view&id=1PO8IwBV6IcSpW4zNftRWmsKpHQLdM3Uc" width="150" height="200">
+<img src="https://drive.google.com/uc?export=view&id=1-3TaOxN0QiFGblf7o_uDn8seuHm-Q3PU" width="150" height="200">
+</p>
+
 
 |                                                         | Rotate                                                                                                                                 | Extrude                                                                                                                                   |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
