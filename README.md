@@ -31,8 +31,11 @@ To run the example parametric geometry creation scripts you will need to Python 
 
 
   
-
 ## Installation
+
+To install the Paramak you need to have [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), [Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and [Pip](https://anaconda.org/anaconda/pip). If you have these three dependancies already then you can install the Paramak using Pip
+
+```pip install paramak```
 
 Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/) can be found in the User's Guide.
 
@@ -45,6 +48,16 @@ In general the Paramak takes points and connection information in 2D space (x,z)
 Once points and connections between the points are provided the user has options to perform CAD operations (rotate or extrude) to create a 3D volume and boolean operations like cut.
 
 The different families of shapes that can be made with the Paramak are shown in the table below. The CadQuery objects created  can be combined and modified using CadQueries powerful filtering capabilties to create more complex models (e.g. a Tokamak).
+
+There are also parametric shapes which provide convenient fusion relevent shapes for common reactor components.
+
+<p align="center">
+<img src="https://drive.google.com/uc?export=view&id=1CZZqAM6Ae1YEYBswM7cZ_vWwAXbHkoff" width="300" height="400">
+<img src="https://drive.google.com/uc?export=view&id=1CiN7Bv6WE1xd4BViw6C2d9V4nPWhMnQt" width="300" height="400">
+<img src="https://drive.google.com/uc?export=view&id=1PO8IwBV6IcSpW4zNftRWmsKpHQLdM3Uc" width="300" height="400">
+<img src="https://drive.google.com/uc?export=view&id=1-3TaOxN0QiFGblf7o_uDn8seuHm-Q3PU" width="300" height="400">
+</p>
+
 
 |                                                         | Rotate                                                                                                                                 | Extrude                                                                                                                                   |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
