@@ -123,6 +123,7 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
             (self.mid_radius, 0, "spline"),
             (self.outer_radius, -self.height / 2, "straight"),
             (self.inner_radius, -self.height / 2, "straight"),
+            (self.inner_radius, 0, "straight"),
         ]
 
         self.points = points
