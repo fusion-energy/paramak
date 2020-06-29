@@ -80,10 +80,7 @@ class ExtrudeCircleShape(Shape):
     @property
     def solid(self):
         if self.get_hash() != self.hash_value:
-            print('hash values are different')
             self.create_solid()
-        if self.get_hash() == self.hash_value:
-            print('hash values are equal')
         return self._solid
 
     @solid.setter
