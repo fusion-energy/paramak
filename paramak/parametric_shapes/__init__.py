@@ -11,3 +11,4 @@ from .center_column_plasma_dependant import CenterColumnShieldPlasmaHyperbola
 
 from .poloidal_field_coil import PoloidalFieldCoil
 from .poloidal_field_coil_case import PoloidalFieldCoilCase
+from .poloidal_field_coil_case import PoloidalFieldCoilCaseFromCoil
