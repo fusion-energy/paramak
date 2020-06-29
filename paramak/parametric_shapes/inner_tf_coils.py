@@ -4,23 +4,24 @@ import math
 from paramak import ExtrudeMixedShape
 
 class InnerTfCoils(ExtrudeMixedShape):
-    """Insert description of shape
+    """A tf coil volume with cylindrical inner and outer profiles and
+    constant gaps between each coil.
 
-    # :param height: insert description
-    # :type height: float
-    :param inner_radius: insert description
+    :param height: height of tf coils
+    :type height: float
+    :param inner_radius: inner radius of tf coils
     :type inner_radius: float
-    :param outer_radius: insert description
+    :param outer_radius: outer radius of tf coils
     :type outer_radius: float
-    :param number_of_coils: insert description
+    :param number_of_coils: number of tf coils
     :type number_of_coils: int
-    :param gap_size: insert description
+    :param gap_size: gap between adjacent tf coils
     :type gap_size: float
     """
 
     def __init__(
         self,
-        # height,
+        height,
         inner_radius,
         outer_radius,
         number_of_coils,
@@ -52,11 +53,12 @@ class InnerTfCoils(ExtrudeMixedShape):
             hash_value
         )
 
-        # self.height = height
+        self.height = height
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
         self.number_of_coils = number_of_coils
         self.gap_size = gap_size
+        self.distance = height
 
     @property
     def points(self):
@@ -67,7 +69,21 @@ class InnerTfCoils(ExtrudeMixedShape):
     def points(self, points):
         self._points = points
 
-    # also control azimuth placement angle with a new getter/setter pair
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, height):
+        self._height = height
+
+    @property
+    def distance(self):
+        return self._distance
+
+    @distance.setter
+    def distance(self, distance):
+        self._distance = distance
 
     @property
     def azimuth_placement_angle(self):
@@ -111,7 +127,7 @@ class InnerTfCoils(ExtrudeMixedShape):
         self._gap_size = gap_size
 
     def find_points(self):
-        """insert docstring"""
+        """Finds the points that describe the 2D profile of the tf coil shape"""
 
         theta_inner = ((2*math.pi*self.inner_radius) - (self.gap_size*self.number_of_coils))/(self.inner_radius*self.number_of_coils)
         omega_inner = math.asin(self.gap_size/(2*self.inner_radius))
@@ -130,18 +146,18 @@ class InnerTfCoils(ExtrudeMixedShape):
         point_6 = (self.outer_radius*math.cos(theta_outer)*math.cos(-omega_outer) + self.outer_radius*math.sin(theta_outer)*math.sin(-omega_outer)), (-self.outer_radius*math.cos(theta_outer)*math.sin(-omega_outer) + self.outer_radius*math.sin(theta_outer)*math.cos(-omega_outer))
 
         points = [
-            (point_1[0], point_1[1], "straight"),
-            (point_2[0], point_2[1], "straight"),
+            (point_1[0], point_1[1], "circle"),
+            (point_2[0], point_2[1], "circle"),
             (point_3[0], point_3[1], "straight"),
-            (point_6[0], point_6[1], "straight"),
-            (point_5[0], point_5[1], "straight"),
-            (point_4[0], point_4[1], "straight")
-        ]
+            (point_6[0], point_6[1], "circle"),
+            (point_5[0], point_5[1], "circle"),
+            (point_4[0], point_4[1], "straight"),
+            (point_1[0], point_1[1], "straight")]   # we have overwritten the setter which automatically adds the endpoint=first point, so we need to specify it explicitely
 
         self.points = points
 
     def find_azimuth_placement_angle(self):
-        """insert docstring"""
+        """Calculates the azimuth placement angles based on the number of tf coils"""
 
         angles = np.linspace(0, 360, self.number_of_coils, endpoint=False)
 
