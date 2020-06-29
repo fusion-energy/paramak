@@ -29,7 +29,6 @@ Conda environments are activated using Anaconda or Miniconda.
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
 
 Once you have activated a conda environment, Cadquery 2.0 can be installed using the command:
-Note, the conda environment must also contain Python 3?
 
 ::
 
@@ -43,7 +42,13 @@ A more detailed description of installing Cadquery 2.0 can be found here:
 Installation
 ------------
 
-Download the repository using the `download link <https://github.com/Shimwell/freecad_parametric_example/archive/master.zip>`_ or clone the repository using `git <https://git-scm.com/downloads>`_.
+The quickest way to install the Paramak is to use pip. In the terminal type...
+
+::
+
+   pip install paramak
+
+Alternativly you can download the repository using the `download link <https://github.com/Shimwell/freecad_parametric_example/archive/master.zip>`_ or clone the repository using `git <https://git-scm.com/downloads>`_.
 
 ::
 
