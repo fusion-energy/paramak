@@ -39,6 +39,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 <img src="https://drive.google.com/uc?export=view&id=1CiN7Bv6WE1xd4BViw6C2d9V4nPWhMnQt" width="150" height="200">
 <img src="https://drive.google.com/uc?export=view&id=1PO8IwBV6IcSpW4zNftRWmsKpHQLdM3Uc" width="150" height="200">
 <img src="https://drive.google.com/uc?export=view&id=1-3TaOxN0QiFGblf7o_uDn8seuHm-Q3PU" width="150" height="200">
+<img src="https://drive.google.com/uc?export=view&id=1w8_vSN3nKsgUXOMzaOKBg06-6WrYmKIg" width="150" height="200">
 </p>
 
 
