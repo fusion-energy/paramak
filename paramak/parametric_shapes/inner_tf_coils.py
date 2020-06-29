@@ -165,7 +165,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
 
 
 class InnerTfCoilsFlat(ExtrudeStraightShape):
-    """A tf coil volume with cylindrical inner and outer profiles and
+    """A tf coil volume with straight inner and outer profiles and
     constant gaps between each coil.
 
     :param height: height of tf coils
