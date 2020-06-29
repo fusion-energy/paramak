@@ -9,7 +9,7 @@ from paramak.parametric_shapes import (
     DivertorBlock,
     CenterColumnShieldCylinder,
     PoloidalFieldCoil,
-    PoloidalFieldCoilCase,
+    PoloidalFieldCoilCaseFromCoil,
 )
 
 
@@ -26,11 +26,11 @@ def make_reactor(
     blanket_offset_from_plasma=80,
     blanket_start_angle=110,
     blanket_stop_angle=250,
-    plasma_color=[0.95, 0.41, 0.7, 0.8],
-    firstwall_color=[0.2, 0.2, 0.2],
+    plasma_color=[152/255, 78/255, 163/255],
+    firstwall_color=[77/255, 175/255, 74/255],
     blanket_color=[0.4, 0.1, 0.4],
     divertor_color=[0.1, 0.35, 0.1],
-    blanket_rear_wall_color=[0.2, 0.2, 0.2],
+    blanket_rear_wall_color=[77/255, 175/255, 74/255],
     centre_column_color=[0.15, 0.15, 0.45],
     poloidal_magnet_color=[0.45, 0.31, 0.8],
     poloidal_magnet_case_color=[0.9, 0.31, 0.2],
@@ -139,11 +139,9 @@ def make_reactor(
     my_reactor.add_shape(pf_coil_1)
 
     # creates a PF coil (casing)
-    pf_coil_1_case = PoloidalFieldCoilCase(
+    pf_coil_1_case = PoloidalFieldCoilCaseFromCoil(
+        pf_coil=pf_coil_1,
         casing_thickness=10,
-        coil_height=30,
-        coil_width=30,
-        center_point=(600, 500),
         rotation_angle=rotation_angle,
         color=poloidal_magnet_case_color,
         stp_filename="pf_coil_case_1.stp",
@@ -161,11 +159,9 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_2)
 
-    pf_coil_2_case = PoloidalFieldCoilCase(
+    pf_coil_2_case = PoloidalFieldCoilCaseFromCoil(
+        pf_coil=pf_coil_2,
         casing_thickness=10,
-        coil_height=30,
-        coil_width=30,
-        center_point=(600, -500),
         rotation_angle=rotation_angle,
         color=poloidal_magnet_case_color,
         stp_filename="pf_coil_case_2.stp",
@@ -183,11 +179,9 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_3)
 
-    pf_coil_3_case = PoloidalFieldCoilCase(
+    pf_coil_3_case = PoloidalFieldCoilCaseFromCoil(
+        pf_coil=pf_coil_3,
         casing_thickness=10,
-        coil_height=30,
-        coil_width=30,
-        center_point=(800, -200),
         rotation_angle=rotation_angle,
         color=poloidal_magnet_case_color,
         stp_filename="pf_coil_case_3.stp",
@@ -205,11 +199,9 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_4)
 
-    pf_coil_4_case = PoloidalFieldCoilCase(
+    pf_coil_4_case = PoloidalFieldCoilCaseFromCoil(
+        pf_coil=pf_coil_4,
         casing_thickness=10,
-        coil_height=30,
-        coil_width=30,
-        center_point=(800, 200),
         rotation_angle=rotation_angle,
         color=poloidal_magnet_case_color,
         stp_filename="pf_coil_case_4.stp",

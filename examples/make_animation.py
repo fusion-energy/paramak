@@ -31,6 +31,8 @@ for i in tqdm(range(args.number_of_models)):
     print(str(args.number_of_models), "models made")
 
 os.system("convert -delay 40 output_for_animation_2d/*.png 2d.gif")
-os.system("convert -delay 40 output_for_animation_3d/*.png 3d.gif")
+# convert -coalesce -repage 0x0 -gravity Center -crop 300x250+0+0 +repage -delay 40 output_for_animation_3d/*.png 3d.gif
+
+os.system("convert 3d.gif -coalesce -repage 0x0 -gravity Center -crop 300x250+0+0 +repage -delay 40 output_for_animation_3d/*.png 3d.gif")
 
 print("animation file made 2d.gif and 3d.gif")
