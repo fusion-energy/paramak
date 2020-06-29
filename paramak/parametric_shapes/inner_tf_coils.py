@@ -1,13 +1,13 @@
 
 import numpy as np
 import math
-from paramak import ExtrudeStraightShape   # change to mixed once circles available
+from paramak import ExtrudeMixedShape
 
-class InnerTfCoils(ExtrudeStraightShape):   # change to mixed once circles available
-    """Insert docstring.
+class InnerTfCoils(ExtrudeMixedShape):
+    """Insert description of shape
 
-    :param height: insert description
-    :type height: float
+    # :param height: insert description
+    # :type height: float
     :param inner_radius: insert description
     :type inner_radius: float
     :param outer_radius: insert description
@@ -20,7 +20,7 @@ class InnerTfCoils(ExtrudeStraightShape):   # change to mixed once circles avail
 
     def __init__(
         self,
-        # height,   # we use the distance parameter from ExtrudeStraightShape, but we could wrap this to use height
+        # height,
         inner_radius,
         outer_radius,
         number_of_coils,
@@ -130,12 +130,12 @@ class InnerTfCoils(ExtrudeStraightShape):   # change to mixed once circles avail
         point_6 = (self.outer_radius*math.cos(theta_outer)*math.cos(-omega_outer) + self.outer_radius*math.sin(theta_outer)*math.sin(-omega_outer)), (-self.outer_radius*math.cos(theta_outer)*math.sin(-omega_outer) + self.outer_radius*math.sin(theta_outer)*math.cos(-omega_outer))
 
         points = [
-            point_1,
-            point_2,
-            point_3,
-            point_6,
-            point_5,
-            point_4,
+            (point_1[0], point_1[1], "straight"),
+            (point_2[0], point_2[1], "straight"),
+            (point_3[0], point_3[1], "straight"),
+            (point_6[0], point_6[1], "straight"),
+            (point_5[0], point_5[1], "straight"),
+            (point_4[0], point_4[1], "straight")
         ]
 
         self.points = points
