@@ -16,11 +16,29 @@ Features have been added to address particular needs and the software is by no m
 Prerequisites
 -------------
 
-To run the example parametric geometry creation scripts you will need to Python 3 and CadQuery 2.0 or newer installed.
+To use the paramak tool you will need Python 3 and Cadquery 2.0 or newer installed.
 
 * `Python 3 <https://www.python.org/downloads/>`_
 
 * `CadQuery 2.0 <https://github.com/CadQuery/cadquery>`_
+
+Cadquery 2.0 must be installed in a conda environment via conda-forge.
+Conda environments are activated using Anaconda or Miniconda. 
+
+* `Anaconda <https://www.anaconda.com/>`_
+* `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
+
+Once you have activated a conda environment, Cadquery 2.0 can be installed using the command:
+Note, the conda environment must also contain Python 3?
+
+::
+
+   conda install -c conda-forge -c cadquery cadquery=2
+
+A more detailed description of installing Cadquery 2.0 can be found here:
+
+* `Cadquery 2.0 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
+
 
 Installation
 ------------
