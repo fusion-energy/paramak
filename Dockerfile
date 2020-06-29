@@ -11,7 +11,7 @@ FROM ubuntu:18.04
 RUN apt-get update && yes|apt-get upgrade
 
 # Adding wget and bzip2
-RUN apt-get install -y wget bzip2
+RUN apt-get install -y wget bzip2 git
 
 # Anaconda installing
 RUN wget https://repo.continuum.io/archive/Anaconda3-2020.02-Linux-x86_64.sh
