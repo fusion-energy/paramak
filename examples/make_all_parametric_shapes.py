@@ -112,14 +112,26 @@ shape = PoloidalFieldCoilCase(
 shape.export_stp('poloidal_field_coil_case.stp')
 
 
-from paramak.parametric_shapes import InnerTfCoils
+from paramak.parametric_shapes import InnerTfCoilsCircular
 
-shape = InnerTfCoils(
-            inner_radius = 40,
-            outer_radius = 180,
-            number_of_coils = 10,
-            gap_size = 10,
-            height = 600
-)
+shape = InnerTfCoilsCircular(
+                             inner_radius = 40,
+                             outer_radius = 180,
+                             number_of_coils = 10,
+                             gap_size = 10,
+                             height = 600
+                            )
 
-shape.export_stp('inner_tf_coils.stp')
+shape.export_stp('inner_tf_coils_circular.stp')
+
+from paramak.parametric_shapes import InnerTfCoilsFlat
+
+shape = InnerTfCoilsFlat(
+                         height=600,
+                         inner_radius=40,
+                         outer_radius=180,
+                         number_of_coils=10,
+                         gap_size=10
+                        )
+
+shape.export_stp('inner_tf_coils_flat.stp')
