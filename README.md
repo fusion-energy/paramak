@@ -58,14 +58,14 @@ There are several example scripts in the [examples folder](https://github.com/uk
 
 ## Usage - shape creation
   
-There are a collection of Python scripts in the example folder than demonstrate simple shape construction, visualisation creation and reactor construction. However here is a quick example of a RotatedStraightShape 
+There are a collection of Python scripts in the example folder than demonstrate simple shape construction, visualisation creation and reactor construction. However here is a quick example of a RotateStraightShape 
 
 After importing the class the user then sets the points. Points should be a list of x,z points. In this case the points are connected with straight lines.
 
 
-`from paramak import RotatedStraightShape`
+`from paramak import RotateStraightShape`
 
-`my_shape = RotatedStraightShape(points = [(20,0),  (20,100), (100,0)])` 
+`my_shape = RotateStraightShape(points = [(20,0),  (20,100), (100,0)])` 
 
 
 Once these properties have been set then users can write 3D volumes in CAD STP or STL formats
@@ -77,7 +77,7 @@ Once these properties have been set then users can write 3D volumes in CAD STP o
 
 ## Creating a parametric shapes
 
-Parametric shapes are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerious parametric shapes for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma shape. Users could also constructed a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric shape called PlasmaShape can construct a plasma from more convenient parameters. Parametric shapes also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
+Parametric shapes are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerous parametric shapes for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma shape. Users could also constructed a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric shape called PlasmaShape can construct a plasma from more convenient parameters. Parametric shapes also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
 
 
 `from paramak.parametric_shapes import PlasmaShape`
