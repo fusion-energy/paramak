@@ -1,11 +1,11 @@
 Paramak Modules
 ===============
 
-User Modules
-------------
+Main shape families (user-classes)
+----------------------------------
 
-rotate\_straight\_shape()
-^^^^^^^^^^^^^^^^^^^^^^^^^
+RotateStraightShape()
+^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86246786-767a2080-bba3-11ea-90e7-22d816690caa.png
    :width: 250
@@ -17,8 +17,8 @@ rotate\_straight\_shape()
    :undoc-members:
    :show-inheritance:
 
-rotate\_spline\_shape()
-^^^^^^^^^^^^^^^^^^^^^^^
+RotateSplineShape()
+^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86246785-7548f380-bba3-11ea-90b7-03249be41a00.png
    :width: 250
@@ -30,8 +30,8 @@ rotate\_spline\_shape()
    :undoc-members:
    :show-inheritance:
 
-rotate\_mixed\_shape()
-^^^^^^^^^^^^^^^^^^^^^^
+RotateMixedShape()
+^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86246781-737f3000-bba3-11ea-847c-38c94e4a65d7.png
    :width: 250
@@ -43,8 +43,8 @@ rotate\_mixed\_shape()
    :undoc-members:
    :show-inheritance:
 
-rotate\_circle\_shape()
-^^^^^^^^^^^^^^^^^^^^^^^
+RotateCircleShape()
+^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86246778-72e69980-bba3-11ea-9b33-d74e2c2d084b.png
    :width: 250
@@ -56,8 +56,8 @@ rotate\_circle\_shape()
    :undoc-members:
    :show-inheritance:
 
-extruded\_straight\_shape()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ExtrudeStraightShape()
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86246776-724e0300-bba3-11ea-91c9-0fd239225206.png
    :width: 200
@@ -69,8 +69,8 @@ extruded\_straight\_shape()
    :undoc-members:
    :show-inheritance:
 
-extruded\_spline\_shape()
-^^^^^^^^^^^^^^^^^^^^^^^^^
+ExtrudeSplineShape()
+^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86246774-71b56c80-bba3-11ea-94cb-d2496365ff18.png
    :width: 200
@@ -82,8 +82,8 @@ extruded\_spline\_shape()
    :undoc-members:
    :show-inheritance:
 
-extruded\_mixed\_shape()
-^^^^^^^^^^^^^^^^^^^^^^^^
+ExtrudeMixedShape()
+^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86246772-711cd600-bba3-11ea-9d98-4af6a4427222.png
    :width: 200
@@ -95,8 +95,8 @@ extruded\_mixed\_shape()
    :undoc-members:
    :show-inheritance:
 
-extruded\_circle\_shape()
-^^^^^^^^^^^^^^^^^^^^^^^^^
+ExtrudeCircleShape()
+^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86246768-6feba900-bba3-11ea-81a8-0d77a843b943.png
    :width: 250
@@ -108,24 +108,21 @@ extruded\_circle\_shape()
    :undoc-members:
    :show-inheritance:
 
-Non-User-Facing Modules
------------------------
+Other modules
+-------------
 
-paramak.shape
-^^^^^^^^^^^^^
+Shape()
+^^^^^^^
 
 .. automodule:: paramak.shape
    :members:
    :undoc-members:
    :show-inheritance:
 
-paramak.reactor
-^^^^^^^^^^^^^^^
+Reactor()
+^^^^^^^^^
 
 .. automodule:: paramak.reactor
    :members:
    :undoc-members:
    :show-inheritance:
-
-
-
