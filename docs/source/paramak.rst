@@ -14,7 +14,6 @@ RotateStraightShape()
 
 .. automodule:: paramak.rotate_straight_shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 RotateSplineShape()
@@ -27,7 +26,6 @@ RotateSplineShape()
 
 .. automodule:: paramak.rotate_spline_shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 RotateMixedShape()
@@ -40,7 +38,6 @@ RotateMixedShape()
 
 .. automodule:: paramak.rotate_mixed_shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 RotateCircleShape()
@@ -53,7 +50,6 @@ RotateCircleShape()
 
 .. automodule:: paramak.rotate_circle_shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 ExtrudeStraightShape()
@@ -66,7 +62,6 @@ ExtrudeStraightShape()
 
 .. automodule:: paramak.extruded_straight_shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 ExtrudeSplineShape()
@@ -79,7 +74,6 @@ ExtrudeSplineShape()
 
 .. automodule:: paramak.extruded_spline_shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 ExtrudeMixedShape()
@@ -92,7 +86,6 @@ ExtrudeMixedShape()
 
 .. automodule:: paramak.extruded_mixed_shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 ExtrudeCircleShape()
@@ -105,7 +98,6 @@ ExtrudeCircleShape()
 
 .. automodule:: paramak.extruded_circle_shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 Other modules
@@ -116,7 +108,6 @@ Shape()
 
 .. automodule:: paramak.shape
    :members:
-   :undoc-members:
    :show-inheritance:
 
 Reactor()
@@ -124,5 +115,4 @@ Reactor()
 
 .. automodule:: paramak.reactor
    :members:
-   :undoc-members:
    :show-inheritance:

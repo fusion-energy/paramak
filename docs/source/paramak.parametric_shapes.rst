@@ -14,7 +14,6 @@ BlanketConstantThickness()
 
 .. automodule:: paramak.parametric_shapes.blanket_constant_width
    :members:
-   :undoc-members:
    :show-inheritance:
 
 CenterColumnShieldCylinder()
@@ -27,7 +26,6 @@ CenterColumnShieldCylinder()
 
 .. automodule:: paramak.parametric_shapes.center_column_cylinder
    :members:
-   :undoc-members:
    :show-inheritance:
 
 CenterColumnShieldHyperbola()
@@ -40,7 +38,6 @@ CenterColumnShieldHyperbola()
 
 .. automodule:: paramak.parametric_shapes.center_column_hyperbola
    :members:
-   :undoc-members:
    :show-inheritance:
 
 CenterColumnShieldFlatTopHyperbola()
@@ -53,7 +50,6 @@ CenterColumnShieldFlatTopHyperbola()
 
 .. automodule:: paramak.parametric_shapes.center_column_flat_top_hyperbola
    :members:
-   :undoc-members:
    :show-inheritance:
 
 CenterColumnShieldPlasmaHyperbola()
@@ -66,7 +62,6 @@ CenterColumnShieldPlasmaHyperbola()
 
 .. automodule:: paramak.parametric_shapes.center_column_plasma_dependant
    :members:
-   :undoc-members:
    :show-inheritance:
 
 DivertorBlock()
@@ -74,7 +69,6 @@ DivertorBlock()
 
 .. automodule:: paramak.parametric_shapes.divertor_block
    :members:
-   :undoc-members:
    :show-inheritance:
 
 InnerTfCoilsCircular()
@@ -87,7 +81,6 @@ InnerTfCoilsCircular()
 
 .. automodule:: paramak.parametric_shapes.inner_tf_coils_circular
    :members:
-   :undoc-members:
    :show-inheritance:
 
 InnerTfCoilsFlat()
@@ -100,7 +93,6 @@ InnerTfCoilsFlat()
 
 .. automodule:: paramak.parametric_shapes.inner_tf_coils_flat
    :members:
-   :undoc-members:
    :show-inheritance:
 
 PoloidalFieldCoil()
@@ -113,7 +105,6 @@ PoloidalFieldCoil()
 
 .. automodule:: paramak.parametric_shapes.poloidal_field_coil
    :members:
-   :undoc-members:
    :show-inheritance:
 
 PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFromCoil() )
@@ -126,7 +117,6 @@ PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFromCoil() )
 
 .. automodule:: paramak.parametric_shapes.poloidal_field_coil_case
    :members:
-   :undoc-members:
    :show-inheritance:
 
 PlasmaShape()
@@ -139,5 +129,4 @@ PlasmaShape()
 
 .. automodule:: paramak.parametric_shapes.tokamak_plasma
    :members:
-   :undoc-members:
    :show-inheritance:
