@@ -33,7 +33,7 @@ RotateSplineShape()
 RotateMixedShape()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246781-737f3000-bba3-11ea-847c-38c94e4a65d7.png
+.. image:: https://user-images.githubusercontent.com/8583900/86258771-17240c80-bbb3-11ea-990f-e87de26b1589.png
    :width: 250
    :height: 250
    :align: center
@@ -85,7 +85,7 @@ ExtrudeSplineShape()
 ExtrudeMixedShape()
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246772-711cd600-bba3-11ea-9d98-4af6a4427222.png
+.. image:: https://user-images.githubusercontent.com/8583900/86261239-34a6a580-bbb6-11ea-812c-ac6fa6a8f0e2.png
    :width: 200
    :height: 270
    :align: center
