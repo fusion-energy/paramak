@@ -77,20 +77,28 @@ divertor\_block
    :undoc-members:
    :show-inheritance:
 
-inner_tf_coils
-^^^^^^^^^^^^^^
+inner_tf_coils_circular
+^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241469-d9b38500-bb9a-11ea-935f-8644fa01ab8c.png
     :width: 180px
     :height: 200px
     :align: center
 
+.. automodule:: paramak.parametric_shapes.inner_tf_coils_circular
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+inner_tf_coils_flat
+^^^^^^^^^^^^^^^^^^^
+
 .. image:: https://user-images.githubusercontent.com/56687624/86241472-db7d4880-bb9a-11ea-8fb9-325b3342fe11.png
     :width: 180px
     :height: 200px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.inner_tf_coils
+.. automodule:: paramak.parametric_shapes.inner_tf_coils_flat
    :members:
    :undoc-members:
    :show-inheritance:
@@ -111,7 +119,7 @@ poloidal\_field\_coil
 poloidal\_field\_coil\_case
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: .https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
+.. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
     :width: 220px
     :height: 180px
     :align: center
