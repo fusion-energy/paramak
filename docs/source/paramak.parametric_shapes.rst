@@ -3,8 +3,6 @@ Parametric Shapes
 
 They are the other modules wrapped and produce specific shapes from parameters.
 Allows easy production of shapes commonly used in fusion modelling.
-Could possibly include images of each shape.
-There are more to add once everything is merged together in the new repository.
 
 blanket\_constant\_width
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -50,6 +48,14 @@ divertor\_block
 ^^^^^^^^^^^^^^^
 
 .. automodule:: paramak.parametric_shapes.divertor_block
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+inner_tf_coils
+^^^^^^^^^^^^^^
+
+.. automodule:: paramak.parametric_shapes.inner_tf_coils
    :members:
    :undoc-members:
    :show-inheritance:
