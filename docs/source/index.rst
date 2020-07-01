@@ -75,10 +75,21 @@ Once points and connections between the points are provided the user has options
 
 The different families of shapes that can be made with the Paramak are shown in the table below. The CadQuery objects created can be combined and modified using CadQueries powerful filtering capabilties to create more complex models (e.g. a Tokamak).
 
+
+.. |rotatestraight| image:: https://user-images.githubusercontent.com/8583900/86246786-767a2080-bba3-11ea-90e7-22d816690caa.png
+.. |extrudestraight| image:: https://user-images.githubusercontent.com/8583900/86246776-724e0300-bba3-11ea-91c9-0fd239225206.png
+.. |rotatespline| image:: https://user-images.githubusercontent.com/8583900/86246785-7548f380-bba3-11ea-90b7-03249be41a00.png
+.. |extrudespline| image:: https://user-images.githubusercontent.com/8583900/86246774-71b56c80-bba3-11ea-94cb-d2496365ff18.png
+.. |rotatecircle| image:: https://user-images.githubusercontent.com/8583900/86246778-72e69980-bba3-11ea-9b33-d74e2c2d084b.png
+.. |extrudecircle| image:: https://user-images.githubusercontent.com/8583900/86246768-6feba900-bba3-11ea-81a8-0d77a843b943.png
+.. |rotatemixed| image:: https://user-images.githubusercontent.com/8583900/86258771-17240c80-bbb3-11ea-990f-e87de26b1589.png
+.. |extrudemixed| image:: https://user-images.githubusercontent.com/8583900/86261239-34a6a580-bbb6-11ea-812c-ac6fa6a8f0e2.png
+
+
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
 |                                                           | Rotate                                                    | Extrude                                                    |
 +===========================================================+===========================================================+============================================================+
-| Points connected with straight lines                      | .. image:: ../../examples/images/rotated_straights.png    | .. image:: ../../examples/images/extruded_straights.png    |
+| Points connected with straight lines                      | |rotatestraight|                                          | |extrudestraight|                                          |
 |                                                           |     :width: 120px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
 |                                                           |     :height: 100px                                        |     :height: 100px                                         |
@@ -87,7 +98,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 |                                                           |                                                           |                                                            |
 |                                                           |     RotateStraightShape()                                 |     ExtrudeStraightShape()                                 |
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with spline curves                       | .. image:: ../../examples/images/rotated_splines.png      | .. image:: ../../examples/images/extruded_splines.png      |
+| Points connected with spline curves                       | |rotatespline|                                            | |extrudespline|                                            |
 |                                                           |     :width: 100px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
 |                                                           |     :height: 100px                                        |     :height: 100px                                         |
@@ -96,7 +107,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 |                                                           |                                                           |                                                            |
 |                                                           |     RotateSplineShape()                                   |     ExtrudeSplineShape()                                   |
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with a circles                           | .. image:: ../../examples/images/rotated_circle.png       | .. image:: ../../examples/images/extruded_circle.png       |
+| Points connected with a circles                           | |rotatecircle|                                            | |extrudecircle|                                            |
 |                                                           |     :width: 100px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
 |                                                           |     :height: 100px                                        |     :height: 100px                                         |
@@ -105,7 +116,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 |                                                           |                                                           |                                                            |
 |                                                           |     RotateCircleShape()                                   |     ExtrudeCircleShape()                                   |
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with a mixture                           | .. image:: ../../examples/images/rotated_mixed.png        | .. image:: ../../examples/images/extruded_mixed.png        |
+| Points connected with a mixture                           | |rotatemixed|                                             | |extrudemixed|                                             |
 | (splines, straights and circles)                          |     :width: 100px                                         |     :width: 100px                                          |
 |                                                           |     :align: center                                        |     :align: center                                         |
 |                                                           |     :height: 100px                                        |     :height: 100px                                         |
