@@ -135,3 +135,13 @@ shape = InnerTfCoilsFlat(
                         )
 
 shape.export_stp('inner_tf_coils_flat.stp')
+
+from paramak.parametric_shapes import ConstantThicknessArc
+shape = ConstantThicknessArc(                
+                         inner_lower_point=(300,-200),
+                         inner_mid_point=(500,0),
+                         inner_upper_point=(300,200),
+                         thickness=20,
+                         rotation_angle=180
+                        )
+shape.export_stp('blanket_arc.stp')

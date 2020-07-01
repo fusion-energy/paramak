@@ -6,6 +6,65 @@ import numpy as np
 
 from paramak import RotateMixedShape
 
+class ConstantThicknessArc(RotateMixedShape):
+
+    def __init__(
+        self,
+        inner_mid_point,
+        inner_upper_point,
+        inner_lower_point,
+        thickness,
+        workplane="XZ",
+        points=None,
+        stp_filename=None,
+        rotation_angle=360,
+        azimuth_placement_angle=0,
+        solid=None,
+        color=None,
+        name=None,
+        material_tag=None,
+        cut=None,
+    ):
+
+        super().__init__(
+            points,
+            workplane,
+            name,
+            color,
+            material_tag,
+            stp_filename,
+            azimuth_placement_angle,
+            solid,
+            rotation_angle,
+            cut,
+        )
+    
+        self.inner_upper_point = inner_upper_point
+        self.inner_lower_point = inner_lower_point
+        self.inner_mid_point = inner_mid_point
+        self.thickness = thickness
+
+    @property
+    def points(self):
+        self.find_points()
+        return self._points
+
+    @points.setter
+    def points(self, points):
+        self._points = points
+
+    def find_points(self):
+
+        self.points = [
+            (self.inner_upper_point[0], self.inner_upper_point[1], 'circle'),
+            (self.inner_mid_point[0], self.inner_mid_point[1], 'circle'),
+            (self.inner_lower_point[0], self.inner_lower_point[1], 'straight'),
+            (self.inner_lower_point[0], self.inner_lower_point[1]-self.thickness, 'circle'),
+            (self.inner_mid_point[0]+self.thickness, self.inner_mid_point[1], 'circle'),
+            (self.inner_upper_point[0], self.inner_upper_point[1]+self.thickness, 'straight'),
+            (self.inner_upper_point[0], self.inner_upper_point[1]),
+        ]
+
 
 class BlanketConstantThickness(RotateMixedShape):
     """An outboard blanket volume that follows the curvature of the plasma
