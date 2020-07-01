@@ -35,11 +35,11 @@ Once points and connections between the points are provided the user has options
 The different families of shapes that can be made with the Paramak are shown in the table below. The CadQuery objects created can be combined and modified (e.g. fillet corners) using CadQueries powerful filtering capabilties to create more complex models (e.g. a Tokamak). The Tokamak images below are coloured based on the shape family that the component is made from. There are also parametric shapes which provide convenient fusion relevent shapes for common reactor components.
 
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=1CZZqAM6Ae1YEYBswM7cZ_vWwAXbHkoff" width="150" height="200">
-<img src="https://drive.google.com/uc?export=view&id=1CiN7Bv6WE1xd4BViw6C2d9V4nPWhMnQt" width="150" height="200">
-<img src="https://drive.google.com/uc?export=view&id=1PO8IwBV6IcSpW4zNftRWmsKpHQLdM3Uc" width="150" height="200">
-<img src="https://drive.google.com/uc?export=view&id=1-3TaOxN0QiFGblf7o_uDn8seuHm-Q3PU" width="150" height="200">
-<img src="https://drive.google.com/uc?export=view&id=1w8_vSN3nKsgUXOMzaOKBg06-6WrYmKIg" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237379-90136c00-bb93-11ea-80fb-54e2dab74819.gif" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237165-2c893e80-bb93-11ea-8fcd-838eb3180c95.png" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237161-2b581180-bb93-11ea-99ff-01cc1cec62ef.png" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237158-2abf7b00-bb93-11ea-9a78-a987f20359a3.png" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237155-28f5b780-bb93-11ea-9465-2c3ec843e444.png" width="150" height="200">
 </p>
 
 
