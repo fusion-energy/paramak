@@ -1,6 +1,7 @@
 from .tokamak_plasma import PlasmaShape
 
 from .blanket_constant_width import BlanketConstantThickness
+from .blanket_constant_width import ConstantThicknessArc
 
 from .divertor_block import DivertorBlock
 
