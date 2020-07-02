@@ -9,6 +9,9 @@ from .center_column_hyperbola import CenterColumnShieldHyperbola
 from .center_column_flat_top_hyperbola import CenterColumnShieldFlatTopHyperbola
 from .center_column_plasma_dependant import CenterColumnShieldPlasmaHyperbola
 
+from .center_column_circular import CenterColumnShieldCircular
+from .center_column_flat_top_circular import CenterColumnShieldFlatTopCircular
+
 from .poloidal_field_coil import PoloidalFieldCoil
 from .poloidal_field_coil_case import PoloidalFieldCoilCase
 from .poloidal_field_coil_case import PoloidalFieldCoilCaseFromCoil
