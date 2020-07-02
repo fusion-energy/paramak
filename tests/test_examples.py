@@ -75,6 +75,30 @@ class test_object_properties(unittest.TestCase):
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
+    def test_make_all_parametric_components(self):
+        """ Runs the example and checks the output files are produced"""
+        os.chdir(Path(cwd))
+        os.chdir(Path("examples"))
+        output_filenames = [
+            "blanket_constant_thickness.stp",
+            "center_column_shield_cylinder.stp",
+            "center_column_shield_hyperbola.stp",
+            "center_column_shield_flat_top_hyperbola.stp",
+            "center_column_shield_plasma_hyperbola.stp",
+            "poloidal_field_coil.stp",
+            "poloidal_field_coil_case.stp",
+            "inner_tf_coils_circular.stp",
+            "inner_tf_coils_flat.stp",
+            "blanket_arc_v.stp",
+        ]
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        os.system("python make_all_parametric_components.py")
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
+
     def test_make_can_reactor_from_parameters(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
