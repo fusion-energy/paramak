@@ -6,7 +6,18 @@ import numpy as np
 
 from paramak import RotateMixedShape
 
-class ConstantThicknessArc(RotateMixedShape):
+class ConstantThicknessArcV(RotateMixedShape):
+    """An outboard blanket volume that follows the curvature of a circular
+    arc and a constant blanket thickness. The upper and lower edges continue
+    verticall for the thickness of the blanket to back of the blanket.
+
+    :param inner_mid_point: the distance bettwen the plasma and the blanket (cm)
+    :type inner_mid_point: float
+
+
+    :return: a shape object that has generic functionality
+    :rtype: paramak shape object
+    """
 
     def __init__(
         self,
@@ -38,7 +49,7 @@ class ConstantThicknessArc(RotateMixedShape):
             rotation_angle,
             cut,
         )
-    
+
         self.inner_upper_point = inner_upper_point
         self.inner_lower_point = inner_lower_point
         self.inner_mid_point = inner_mid_point
@@ -59,9 +70,9 @@ class ConstantThicknessArc(RotateMixedShape):
             (self.inner_upper_point[0], self.inner_upper_point[1], 'circle'),
             (self.inner_mid_point[0], self.inner_mid_point[1], 'circle'),
             (self.inner_lower_point[0], self.inner_lower_point[1], 'straight'),
-            (self.inner_lower_point[0], self.inner_lower_point[1]-self.thickness, 'circle'),
+            (self.inner_lower_point[0], self.inner_lower_point[1]-abs(self.thickness), 'circle'),
             (self.inner_mid_point[0]+self.thickness, self.inner_mid_point[1], 'circle'),
-            (self.inner_upper_point[0], self.inner_upper_point[1]+self.thickness, 'straight'),
+            (self.inner_upper_point[0], self.inner_upper_point[1]+abs(self.thickness), 'straight'),
             (self.inner_upper_point[0], self.inner_upper_point[1]),
         ]
 
