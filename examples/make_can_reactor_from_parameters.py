@@ -6,7 +6,7 @@ import paramak
 outer_most_x = 900
 blanket_height = 300
 
-plasma = paramak.PlasmaShape()
+plasma = paramak.Plasma()
 plasma.major_radius = 250
 plasma.minor_radius = 100
 plasma.triangularity = 0.5

@@ -71,7 +71,7 @@ def plot_plasma(plasma, name=""):
 def make_plasma(major_radius, minor_radius, triangularity, elongation, name, color):
     """Creates a plasma object from argument inputs"""
 
-    plasma = paramak.PlasmaShape()
+    plasma = paramak.Plasma()
     plasma.name = "plasma"
     plasma.stp_filename = name + ".stp"
     plasma.major_radius = major_radius

@@ -167,18 +167,6 @@ class test_object_properties(unittest.TestCase):
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
-    def test_make_plasma_dependant_center_column(self):
-        """ Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
-        output_filenames = ["test_shape_1.stp", "test_shape_2.stp"]
-        for output_filename in output_filenames:
-            os.system("rm " + output_filename)
-        os.system("python make_plasma_dependant_center_column_shield.py")
-        for output_filename in output_filenames:
-            assert Path(output_filename).exists() is True
-            os.system("rm " + output_filename)
-
 
 if __name__ == "__main__":
     unittest.main()

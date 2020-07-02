@@ -1,6 +1,6 @@
 
 from paramak import RotateMixedShape
-from paramak import PlasmaShape
+from paramak import Plasma
 
 
 class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
@@ -151,7 +151,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         """Finds the XZ points and connection types (straight and spline) that
         describe the 2D profile of the center column shield shape."""
 
-        plasma = PlasmaShape()
+        plasma = Plasma()
 
         plasma.major_radius = self.major_radius
         plasma.minor_radius = self.minor_radius

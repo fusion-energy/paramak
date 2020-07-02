@@ -12,7 +12,7 @@ from .parametric_shapes.rotate_mixed_shape import RotateMixedShape
 from .parametric_shapes.rotate_circle_shape import RotateCircleShape
 
 
-from .parametric_components.tokamak_plasma import PlasmaShape
+from .parametric_components.tokamak_plasma import Plasma
 
 from .parametric_components.blanket_constant_width import BlanketConstantThickness
 from .parametric_components.blanket_constant_width import ConstantThicknessArcV

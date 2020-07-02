@@ -142,7 +142,7 @@ shape.export_stp('poloidal_field_coil_case.stp')
 
 
 
-shape = paramak.PlasmaShape(
+shape = paramak.Plasma(
     # default parameters
     rotation_angle = rot_angle
 )
@@ -150,7 +150,7 @@ shape.export_stp('plasma_shape.stp')
 
 
 
-shape = paramak.ConstantThicknessArcV(                
+shape = paramak.ConstantThicknessArcV(
                          inner_lower_point=(300,-200),
                          inner_mid_point=(500,0),
                          inner_upper_point=(300,200),

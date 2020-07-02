@@ -4,7 +4,7 @@ from points to create an example reactor"""
 
 import paramak
 
-plasma = paramak.PlasmaShape()
+plasma = paramak.Plasma()
 plasma.major_radius = 250
 plasma.minor_radius = 100
 plasma.triangularity = 0.5

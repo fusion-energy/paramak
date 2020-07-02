@@ -41,7 +41,7 @@ def make_reactor(
 
     # initiates a reactor object to store the shapes
     my_reactor = paramak.Reactor()
-    plasma = paramak.PlasmaShape(
+    plasma = paramak.Plasma(
         major_radius=major_radius,
         minor_radius=minor_radius,
         triangularity=triangularity,
