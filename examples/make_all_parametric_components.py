@@ -133,3 +133,14 @@ shape = PlasmaShape(
 )
 shape.export_stp('plasma_shape.stp')
 
+
+from paramak.parametric_shapes import ConstantThicknessArcV
+
+shape = ConstantThicknessArcV(                
+                         inner_lower_point=(300,-200),
+                         inner_mid_point=(500,0),
+                         inner_upper_point=(300,200),
+                         thickness=20,
+                         rotation_angle=rot_angle
+                        )
+shape.export_stp('blanket_arc_v.stp')
