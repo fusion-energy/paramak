@@ -4,7 +4,7 @@ from pathlib import Path
 import unittest
 import json
 
-from paramak import RotateStraightShape, Shape, Reactor
+from paramak import *
 
 
 class test_object_properties(unittest.TestCase):

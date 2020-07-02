@@ -1,6 +1,6 @@
 
 from paramak import RotateMixedShape
-from paramak.parametric_shapes import PlasmaShape
+from paramak import PlasmaShape
 
 
 class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):

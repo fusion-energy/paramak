@@ -2,8 +2,7 @@ import numpy as np
 import plotly.graph_objects as go
 import math
 
-from paramak.parametric_shapes import PlasmaShape
-
+import paramak
 
 def plot_plasma(plasma, name=""):
     """Extract points that make up the plasma and creates a plotly trace"""
@@ -72,7 +71,7 @@ def plot_plasma(plasma, name=""):
 def make_plasma(major_radius, minor_radius, triangularity, elongation, name, color):
     """Creates a plasma object from argument inputs"""
 
-    plasma = PlasmaShape()
+    plasma = paramak.PlasmaShape()
     plasma.name = "plasma"
     plasma.stp_filename = name + ".stp"
     plasma.major_radius = major_radius

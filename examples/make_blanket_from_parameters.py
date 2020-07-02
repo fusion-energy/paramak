@@ -1,14 +1,14 @@
 
 __doc__ = "This python script demonstrates the parametric creation of a breeder blanket"
 
-from paramak import RotateMixedShape
+import paramak
 
 height = 700
 blanket_rear = 400
 blanket_front = 300
 blanket_mid_point = 350
 
-blanket = RotateMixedShape(
+blanket = paramak.RotateMixedShape(
     points=[
         (blanket_rear, height / 2.0, "straight"),
         (blanket_rear, -height / 2.0, "straight"),

@@ -5,16 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from paramak.parametric_shapes import BlanketConstantThickness
-from paramak.parametric_shapes import ConstantThicknessArcV
-from paramak.parametric_shapes import PoloidalFieldCoilCase
-from paramak.parametric_shapes import DivertorBlock
-from paramak.parametric_shapes import CenterColumnShieldHyperbola
-from paramak.parametric_shapes import CenterColumnShieldCylinder
-from paramak.parametric_shapes import PoloidalFieldCoil
-from paramak.parametric_shapes import CenterColumnShieldFlatTopHyperbola
-from paramak.parametric_shapes import CenterColumnShieldPlasmaHyperbola
-from paramak.parametric_shapes import PlasmaShape
+from paramak import *
 
 class test_ConstantThicknessArcV(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):

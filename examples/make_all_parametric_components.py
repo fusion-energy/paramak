@@ -1,9 +1,10 @@
 
+import paramak
+
 rot_angle = 180
 
-from paramak.parametric_shapes import BlanketConstantThickness
 
-shape = BlanketConstantThickness(
+shape = paramak.BlanketConstantThickness(
     major_radius = 800,
     minor_radius = 400,
     triangularity = 1.2,
@@ -17,9 +18,8 @@ shape = BlanketConstantThickness(
 shape.export_stp('blanket_constant_thickness.stp')
 
 
-from paramak.parametric_shapes import CenterColumnShieldCylinder
 
-shape = CenterColumnShieldCylinder(
+shape = paramak.CenterColumnShieldCylinder(
     inner_radius = 80,
     outer_radius = 100,
     height = 300,
@@ -28,9 +28,8 @@ shape = CenterColumnShieldCylinder(
 shape.export_stp('center_column_shield_cylinder.stp')
 
 
-from paramak.parametric_shapes import CenterColumnShieldHyperbola 
 
-shape = CenterColumnShieldHyperbola(
+shape = paramak.CenterColumnShieldHyperbola(
     inner_radius = 50,
     mid_radius = 75,
     outer_radius = 100,
@@ -40,9 +39,8 @@ shape = CenterColumnShieldHyperbola(
 shape.export_stp('center_column_shield_hyperbola.stp')
 
 
-from paramak.parametric_shapes import CenterColumnShieldCircular
 
-shape = CenterColumnShieldCircular(
+shape = paramak.CenterColumnShieldCircular(
     inner_radius = 50,
     mid_radius = 75,
     outer_radius = 100,
@@ -52,9 +50,8 @@ shape = CenterColumnShieldCircular(
 shape.export_stp('center_column_shield_circular.stp')
 
 
-from paramak.parametric_shapes import CenterColumnShieldFlatTopHyperbola
 
-shape = CenterColumnShieldFlatTopHyperbola(
+shape = paramak.CenterColumnShieldFlatTopHyperbola(
     inner_radius = 50,
     mid_radius = 75,
     outer_radius = 100,
@@ -65,9 +62,8 @@ shape = CenterColumnShieldFlatTopHyperbola(
 shape.export_stp('center_column_shield_flat_top_hyperbola.stp')
 
 
-from paramak.parametric_shapes import CenterColumnShieldFlatTopCircular
 
-shape = CenterColumnShieldFlatTopCircular(
+shape = paramak.CenterColumnShieldFlatTopCircular(
     inner_radius = 50,
     mid_radius = 75,
     outer_radius = 100,
@@ -78,9 +74,8 @@ shape = CenterColumnShieldFlatTopCircular(
 shape.export_stp('center_column_shield_flat_top_Circular.stp')
 
 
-from paramak.parametric_shapes import CenterColumnShieldPlasmaHyperbola
 
-shape = CenterColumnShieldPlasmaHyperbola(
+shape = paramak.CenterColumnShieldPlasmaHyperbola(
     inner_radius = 150,
     mid_offset = 50,
     edge_offset = 40,
@@ -90,9 +85,9 @@ shape = CenterColumnShieldPlasmaHyperbola(
 shape.export_stp('center_column_shield_plasma_hyperbola.stp')
 
 
-# from paramak.parametric_shapes import DivertorBlock
+#
 
-# shape = DivertorBlock(
+# shape = paramak.DivertorBlock(
 #     major_radius = 800,
 #     minor_radius = 400,
 #     triangularity = 1.2,
@@ -103,9 +98,8 @@ shape.export_stp('center_column_shield_plasma_hyperbola.stp')
 # )
 
 
-from paramak.parametric_shapes import InnerTfCoilsCircular
 
-shape = InnerTfCoilsCircular(
+shape = paramak.InnerTfCoilsCircular(
     inner_radius = 25,
     outer_radius = 100,
     number_of_coils = 10,
@@ -115,9 +109,8 @@ shape = InnerTfCoilsCircular(
 shape.export_stp('inner_tf_coils_circular.stp')
 
 
-from paramak.parametric_shapes import InnerTfCoilsFlat
 
-shape = InnerTfCoilsFlat(
+shape = paramak.InnerTfCoilsFlat(
     inner_radius = 25,
     outer_radius = 100,
     number_of_coils = 10,
@@ -127,9 +120,8 @@ shape = InnerTfCoilsFlat(
 shape.export_stp('inner_tf_coils_flat.stp')
 
 
-from paramak.parametric_shapes import PoloidalFieldCoil
 
-shape = PoloidalFieldCoil(
+shape = paramak.PoloidalFieldCoil(
     center_point = (100, 100),
     height = 20,
     width = 20,
@@ -138,9 +130,8 @@ shape = PoloidalFieldCoil(
 shape.export_stp('poloidal_field_coil.stp')
 
 
-from paramak.parametric_shapes import PoloidalFieldCoilCase
 
-shape = PoloidalFieldCoilCase(
+shape = paramak.PoloidalFieldCoilCase(
     center_point = (100, 100),
     coil_height = 20,
     coil_width = 20,
@@ -150,18 +141,16 @@ shape = PoloidalFieldCoilCase(
 shape.export_stp('poloidal_field_coil_case.stp')
 
 
-from paramak.parametric_shapes import PlasmaShape
 
-shape = PlasmaShape(
+shape = paramak.PlasmaShape(
     # default parameters
     rotation_angle = rot_angle
 )
 shape.export_stp('plasma_shape.stp')
 
 
-from paramak.parametric_shapes import ConstantThicknessArcV
 
-shape = ConstantThicknessArcV(                
+shape = paramak.ConstantThicknessArcV(                
                          inner_lower_point=(300,-200),
                          inner_mid_point=(500,0),
                          inner_upper_point=(300,200),
