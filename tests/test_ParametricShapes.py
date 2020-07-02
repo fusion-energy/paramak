@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from paramak.parametric_shapes import BlanketConstantThickness
+from paramak.parametric_shapes import ConstantThicknessArcV
 from paramak.parametric_shapes import PoloidalFieldCoilCase
 from paramak.parametric_shapes import DivertorBlock
 from paramak.parametric_shapes import CenterColumnShieldHyperbola
@@ -15,6 +16,20 @@ from paramak.parametric_shapes import CenterColumnShieldFlatTopHyperbola
 from paramak.parametric_shapes import CenterColumnShieldPlasmaHyperbola
 from paramak.parametric_shapes import PlasmaShape
 
+class test_ConstantThicknessArcV(unittest.TestCase):
+    def test_BlanketConstantThickness_creation(self):
+        """creates blanket from parametric shape and checks a solid is created"""
+
+        test_shape = ConstantThicknessArcV(                
+                         inner_lower_point=(300,-200),
+                         inner_mid_point=(500,0),
+                         inner_upper_point=(300,200),
+                         thickness=20,
+                         rotation_angle = 180
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
 
 class test_BlanketConstantThickness(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
