@@ -40,6 +40,18 @@ shape = CenterColumnShieldHyperbola(
 shape.export_stp('center_column_shield_hyperbola.stp')
 
 
+from paramak.parametric_shapes import CenterColumnShieldCircular
+
+shape = CenterColumnShieldCircular(
+    inner_radius = 50,
+    mid_radius = 75,
+    outer_radius = 100,
+    height = 300,
+    rotation_angle = rot_angle
+)
+shape.export_stp('center_column_shield_circular.stp')
+
+
 from paramak.parametric_shapes import CenterColumnShieldFlatTopHyperbola
 
 shape = CenterColumnShieldFlatTopHyperbola(
@@ -51,6 +63,19 @@ shape = CenterColumnShieldFlatTopHyperbola(
     rotation_angle = rot_angle
 )
 shape.export_stp('center_column_shield_flat_top_hyperbola.stp')
+
+
+from paramak.parametric_shapes import CenterColumnShieldFlatTopCircular
+
+shape = CenterColumnShieldFlatTopCircular(
+    inner_radius = 50,
+    mid_radius = 75,
+    outer_radius = 100,
+    arc_height = 220,
+    height = 300,
+    rotation_angle = rot_angle
+)
+shape.export_stp('center_column_shield_flat_top_Circular.stp')
 
 
 from paramak.parametric_shapes import CenterColumnShieldPlasmaHyperbola
