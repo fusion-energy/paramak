@@ -14,5 +14,5 @@ from .poloidal_field_coil import PoloidalFieldCoil
 from .poloidal_field_coil_case import PoloidalFieldCoilCase
 from .poloidal_field_coil_case import PoloidalFieldCoilCaseFromCoil
 
-from .inner_tf_coils import InnerTfCoilsCircular
-from .inner_tf_coils import InnerTfCoilsFlat
+from .inner_tf_coils_circular import InnerTfCoilsCircular
+from .inner_tf_coils_flat import InnerTfCoilsFlat

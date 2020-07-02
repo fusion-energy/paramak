@@ -35,20 +35,20 @@ Once points and connections between the points are provided the user has options
 The different families of shapes that can be made with the Paramak are shown in the table below. The CadQuery objects created can be combined and modified (e.g. fillet corners) using CadQueries powerful filtering capabilties to create more complex models (e.g. a Tokamak). The Tokamak images below are coloured based on the shape family that the component is made from. There are also parametric shapes which provide convenient fusion relevent shapes for common reactor components.
 
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=1CZZqAM6Ae1YEYBswM7cZ_vWwAXbHkoff" width="150" height="200">
-<img src="https://drive.google.com/uc?export=view&id=1CiN7Bv6WE1xd4BViw6C2d9V4nPWhMnQt" width="150" height="200">
-<img src="https://drive.google.com/uc?export=view&id=1PO8IwBV6IcSpW4zNftRWmsKpHQLdM3Uc" width="150" height="200">
-<img src="https://drive.google.com/uc?export=view&id=1-3TaOxN0QiFGblf7o_uDn8seuHm-Q3PU" width="150" height="200">
-<img src="https://drive.google.com/uc?export=view&id=1w8_vSN3nKsgUXOMzaOKBg06-6WrYmKIg" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237379-90136c00-bb93-11ea-80fb-54e2dab74819.gif" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237165-2c893e80-bb93-11ea-8fcd-838eb3180c95.png" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237161-2b581180-bb93-11ea-99ff-01cc1cec62ef.png" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237158-2abf7b00-bb93-11ea-9a78-a987f20359a3.png" width="150" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/86237155-28f5b780-bb93-11ea-9465-2c3ec843e444.png" width="150" height="200">
 </p>
 
 
 |                                                         | Rotate                                                                                                                                 | Extrude                                                                                                                                   |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| Points connected with straight lines                    | <p align="center"><img src="examples/images/rotated_straights.png" height="100"></p> `RotateStraightShape()` | <p align="center"><img src="examples/images/extruded_straights.png" height="100"></p>  `ExtrudeStraightShape()` |
-| Points connected with spline curves                     | <p align="center"><img src="examples/images/rotated_splines.png" height="100"></p>  `RotateSplineShape()`      | <p align="center"><img src="examples/images/extruded_splines.png" height="100"></p>  `ExtrudeSplineShape()`       |
-| Points connected with a mixture (splines, straights and circles) | <p align="center"><img src="examples/images/rotated_mixed.png" height="100"></p>  `RotateMixedShape()`         | <p align="center"><img src="examples/images/extruded_mixed.png" height="100"></p>  `ExtrudeMixedShape()`          |
-| Circular shapes                                         | <p align="center"><img src="examples/images/rotated_circle.png" height="100"></p> `RotateCircleShape()`      | <p align="center"><img src="examples/images/extruded_circle.png" height="100"></p> `ExtrudeCircleShape()`         |
+| Points connected with straight lines                    | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246786-767a2080-bba3-11ea-90e7-22d816690caa.png" height="120"></p> `RotateStraightShape()` | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246776-724e0300-bba3-11ea-91c9-0fd239225206.png" height="120"></p>  `ExtrudeStraightShape()` |
+| Points connected with spline curves                     | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246785-7548f380-bba3-11ea-90b7-03249be41a00.png" height="120"></p>  `RotateSplineShape()`      | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246774-71b56c80-bba3-11ea-94cb-d2496365ff18.png" height="120"></p>  `ExtrudeSplineShape()`       |
+| Points connected with a mixture (splines, straights and circles) | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86258771-17240c80-bbb3-11ea-990f-e87de26b1589.png" height="120"></p>  `RotateMixedShape()`         | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86261239-34a6a580-bbb6-11ea-812c-ac6fa6a8f0e2.png" height="120"></p>  `ExtrudeMixedShape()`          |
+| Circular shapes                                         | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246778-72e69980-bba3-11ea-9b33-d74e2c2d084b.png" height="120"></p> `RotateCircleShape()`      | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246768-6feba900-bba3-11ea-81a8-0d77a843b943.png" height="120"></p> `ExtrudeCircleShape()`         |
 
 
 # Example scripts
@@ -58,14 +58,14 @@ There are several example scripts in the [examples folder](https://github.com/uk
 
 ## Usage - shape creation
   
-There are a collection of Python scripts in the example folder than demonstrate simple shape construction, visualisation creation and reactor construction. However here is a quick example of a RotatedStraightShape 
+There are a collection of Python scripts in the example folder than demonstrate simple shape construction, visualisation creation and reactor construction. However here is a quick example of a RotateStraightShape 
 
 After importing the class the user then sets the points. Points should be a list of x,z points. In this case the points are connected with straight lines.
 
 
-`from paramak import RotatedStraightShape`
+`from paramak import RotateStraightShape`
 
-`my_shape = RotatedStraightShape(points = [(20,0),  (20,100), (100,0)])` 
+`my_shape = RotateStraightShape(points = [(20,0),  (20,100), (100,0)])` 
 
 
 Once these properties have been set then users can write 3D volumes in CAD STP or STL formats
@@ -77,7 +77,7 @@ Once these properties have been set then users can write 3D volumes in CAD STP o
 
 ## Creating a parametric shapes
 
-Parametric shapes are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerious parametric shapes for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma shape. Users could also constructed a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric shape called PlasmaShape can construct a plasma from more convenient parameters. Parametric shapes also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
+Parametric shapes are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerous parametric shapes for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma shape. Users could also constructed a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric shape called PlasmaShape can construct a plasma from more convenient parameters. Parametric shapes also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
 
 
 `from paramak.parametric_shapes import PlasmaShape`

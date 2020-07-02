@@ -45,16 +45,16 @@ rotated_spline.export_stp("rotated_spline.stp")
 rotated_spline.export_html("rotated_spline.html")
 
 
-# this makes a banana shape with straight top and bottom edges and rotates it to make a solid
+# this makes a shape with straight, spline and circular edges and rotates it to make a solid
 rotated_mixed = RotateMixedShape(
     points=[
-        (300, -300, "spline"),
-        (400, 0, "spline"),
-        (300, 300, "circle"),
-        (350, 350, "circle"),
-        (400, 300, "spline"),
-        (500, 0, "spline"),
-        (400, -300, "straight"),
+        (100, 0, 'straight'),
+        (200, 0, 'circle'),
+        (250, 50, 'circle'),
+        (200, 100, 'straight'),
+        (150, 100, 'spline'),
+        (140, 75, 'spline'),
+        (110, 45, 'spline'),
     ]
 )
 rotated_mixed.rotation_angle = 180
@@ -107,15 +107,15 @@ extruded_spline.export_html("extruded_spline.html")
 # this makes a banana shape straight top and bottom edges and extrudes it to make a solid
 extruded_mixed = ExtrudeMixedShape(
     points=[
-        (300, -300, "spline"),
-        (400, 0, "spline"),
-        (300, 300, "circle"),
-        (350, 350, "circle"),
-        (400, 300, "spline"),
-        (500, 0, "spline"),
-        (400, -300, "straight"),
+        (100, 0, 'straight'),
+        (200, 0, 'circle'),
+        (250, 50, 'circle'),
+        (200, 100, 'straight'),
+        (150, 100, 'spline'),
+        (140, 75, 'spline'),
+        (110, 45, 'spline'),
     ],
-    distance=200,
+    distance=100,
 )
 extruded_mixed.export_stp("extruded_mixed.stp")
 extruded_mixed.export_html("extruded_mixed.html")
