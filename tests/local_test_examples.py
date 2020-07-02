@@ -1,9 +1,10 @@
 
 import os
+import json
 import unittest
 from pathlib import Path
-
-from paramak import RotateStraightShape
+import pytest
+import paramak
 
 cwd = os.getcwd()
 
@@ -61,8 +62,8 @@ class test_object_properties(unittest.TestCase):
     def test_RotateStraightShape_export_3d_image(self):
         """checks that export_3d_image() exports png files with the correct suffix"""
 
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0), (0, 0)]
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
         test_shape.rotation_angle = 360
         os.system("rm filename.png")
@@ -73,6 +74,17 @@ class test_object_properties(unittest.TestCase):
         assert Path("filename.png").exists() is True
         os.system("rm filename.png")
 
+    def test_neutronics_cell_tally(self):
+        """ Runs the neutronics example and checks the TBR"""
+        os.chdir(Path(cwd))
+        os.chdir(Path("examples/neutronics"))
+        output_filename = "simulation_result.json"
+        os.system("rm " + output_filename)
+        os.system("python make_simple_paramak_neutronics_model.py")
+        with open(output_filename) as json_file:
+            data = json.load(json_file)
+        assert data['TBR'] == pytest.approx(0.456, abs=0.01)
+        os.system("rm " + output_filename)
 
 if __name__ == "__main__":
     unittest.main()
