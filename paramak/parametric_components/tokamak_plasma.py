@@ -8,7 +8,7 @@ import scipy
 from paramak import RotateSplineShape
 
 
-class PlasmaShape(RotateSplineShape):
+class Plasma(RotateSplineShape):
     """Creates a tokamak plasma shape that is controlled by 4 shaping parameters.
 
     :param major_radius: the major radius of the plasma (cm)
@@ -21,7 +21,7 @@ class PlasmaShape(RotateSplineShape):
     :type elongation: float
     :param vertical_displacement: the vertical_displacement of the plasma (cm)
     :type vertical_displacement: float
-    
+
 
     :return: a shape object that has generic functionality
     :rtype: paramak shape object

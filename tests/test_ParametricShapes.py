@@ -5,16 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from paramak.parametric_shapes import BlanketConstantThickness
-from paramak.parametric_shapes import ConstantThicknessArcV
-from paramak.parametric_shapes import PoloidalFieldCoilCase
-from paramak.parametric_shapes import DivertorBlock
-from paramak.parametric_shapes import CenterColumnShieldHyperbola
-from paramak.parametric_shapes import CenterColumnShieldCylinder
-from paramak.parametric_shapes import PoloidalFieldCoil
-from paramak.parametric_shapes import CenterColumnShieldFlatTopHyperbola
-from paramak.parametric_shapes import CenterColumnShieldPlasmaHyperbola
-from paramak.parametric_shapes import PlasmaShape
+from paramak import *
 
 class test_ConstantThicknessArcV(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
@@ -61,11 +52,11 @@ class test_PoloidalFieldCoilCase(unittest.TestCase):
         assert test_shape.volume > 1000
 
 
-class test_PlasmaShape(unittest.TestCase):
+class test_Plasma(unittest.TestCase):
     def test_plasma_elongation_type(self):
         """creates a plasma object and checks elongation is type float"""
 
-        test_plasma = PlasmaShape()
+        test_plasma = Plasma()
 
         assert type(test_plasma.elongation) == float
 
@@ -86,7 +77,7 @@ class test_PlasmaShape(unittest.TestCase):
     def test_export_plasma_source(self):
         """checks that export_stp() exports plasma stp file"""
 
-        test_plasma = PlasmaShape()
+        test_plasma = Plasma()
 
         os.system("rm plasma.stp")
 

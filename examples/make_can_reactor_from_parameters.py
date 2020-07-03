@@ -1,20 +1,19 @@
 __doc__ = """This script creates a can shaped reactor with plasma,
              center column, blanket, firstwall, divertor and core."""
 
-from paramak import RotateMixedShape, RotateStraightShape, Reactor
-from paramak.parametric_shapes import PlasmaShape
+import paramak
 
 outer_most_x = 900
 blanket_height = 300
 
-plasma = PlasmaShape()
+plasma = paramak.Plasma()
 plasma.major_radius = 250
 plasma.minor_radius = 100
 plasma.triangularity = 0.5
 plasma.elongation = 2.5
 plasma.rotation_angle = 180
 
-centre_column = RotateMixedShape(
+centre_column = paramak.RotateMixedShape(
     points=[
         (74.6, 687.0, "straight"),
         (171.0, 687.0, "straight"),
@@ -31,7 +30,7 @@ centre_column.stp_filename = "centre_column.stp"
 centre_column.rotation_angle = 180
 
 
-blanket = RotateMixedShape(
+blanket = paramak.RotateMixedShape(
     points=[
         (325.4528, blanket_height, "straight"),
         (outer_most_x, blanket_height, "straight"),
@@ -46,7 +45,7 @@ blanket.stp_filename = "blanket.stp"
 blanket.rotation_angle = 180
 
 
-firstwall = RotateMixedShape(
+firstwall = paramak.RotateMixedShape(
     points=[
         (322.9528, blanket_height, "straight"),
         (325.4528, blanket_height, "spline"),
@@ -64,7 +63,7 @@ firstwall.stp_filename = "firstwall.stp"
 firstwall.rotation_angle = 180
 
 
-divertor_bottom = RotateMixedShape(
+divertor_bottom = paramak.RotateMixedShape(
     points=[
         (192.4782, -447.204, "spline"),
         (272.4957, -370.5, "spline"),
@@ -83,7 +82,7 @@ divertor_bottom.stp_filename = "divertor_bottom.stp"
 divertor_bottom.rotation_angle = 180
 
 
-divertor_top = RotateMixedShape(
+divertor_top = paramak.RotateMixedShape(
     points=[
         (192.4782, 447.204, "spline"),
         (272.4957, 370.5, "spline"),
@@ -102,7 +101,7 @@ divertor_top.stp_filename = "divertor_top.stp"
 divertor_top.rotation_angle = 180
 
 
-core = RotateStraightShape(
+core = paramak.RotateStraightShape(
     points=[(0, 687.0), (74.6, 687.0), (74.6, -687.0), (0, -687.0)]
 )
 core.stp_filename = "core.stp"
@@ -110,7 +109,7 @@ core.rotation_angle = 180
 
 
 # initiates a reactor object
-myreactor = Reactor()
+myreactor = paramak.Reactor()
 
 # adds components to the reactor
 myreactor.add_shape(plasma)

@@ -1,17 +1,6 @@
 """ This example uses parametric_shapes to constuct a simple ball reactor geometry"""
 
-from paramak import Reactor
-
-# imports several parametric shapes that are used later
-from paramak.parametric_shapes import (
-    PlasmaShape,
-    BlanketConstantThickness,
-    DivertorBlock,
-    CenterColumnShieldCylinder,
-    PoloidalFieldCoil,
-    PoloidalFieldCoilCaseFromCoil,
-)
-
+import paramak
 
 def make_reactor(
     output_folder="ball_reactor",
@@ -51,8 +40,8 @@ def make_reactor(
     divertor_offset_from_plasma = blanket_offset_from_plasma
 
     # initiates a reactor object to store the shapes
-    my_reactor = Reactor()
-    plasma = PlasmaShape(
+    my_reactor = paramak.Reactor()
+    plasma = paramak.Plasma(
         major_radius=major_radius,
         minor_radius=minor_radius,
         triangularity=triangularity,
@@ -65,7 +54,7 @@ def make_reactor(
     my_reactor.add_shape(plasma)
 
     # creates a blanket from the parametric shape
-    blanket = BlanketConstantThickness(
+    blanket = paramak.BlanketConstantThickness(
         major_radius=major_radius,
         minor_radius=minor_radius,
         triangularity=triangularity,
@@ -82,7 +71,7 @@ def make_reactor(
     my_reactor.add_shape(blanket)
 
     # creates an upper divertor from the parametric shape
-    divertor_upper = DivertorBlock(
+    divertor_upper = paramak.DivertorBlock(
         major_radius=major_radius,
         minor_radius=minor_radius,
         triangularity=triangularity,
@@ -99,7 +88,7 @@ def make_reactor(
     my_reactor.add_shape(divertor_upper)
 
     # creates a lower divertor from the parametric shape
-    divertor_lower = DivertorBlock(
+    divertor_lower = paramak.DivertorBlock(
         major_radius=major_radius,
         minor_radius=minor_radius,
         triangularity=triangularity,
@@ -116,7 +105,7 @@ def make_reactor(
     my_reactor.add_shape(divertor_lower)
 
     # The height of this center column is calculated using CadQuery commands
-    center_column_shield = CenterColumnShieldCylinder(
+    center_column_shield = paramak.CenterColumnShieldCylinder(
         height=divertor_upper.solid.vertices(">Z").val().Vertices()[0].Z * 2.0,
         inner_radius=center_column_shield_inner_radius,
         outer_radius=center_column_shield_outer_radius,
@@ -128,7 +117,7 @@ def make_reactor(
     my_reactor.add_shape(center_column_shield)
 
     # creates a PF coil (internal)
-    pf_coil_1 = PoloidalFieldCoil(
+    pf_coil_1 = paramak.PoloidalFieldCoil(
         height=30,
         width=30,
         center_point=(600, 500),
@@ -139,7 +128,7 @@ def make_reactor(
     my_reactor.add_shape(pf_coil_1)
 
     # creates a PF coil (casing)
-    pf_coil_1_case = PoloidalFieldCoilCaseFromCoil(
+    pf_coil_1_case = paramak.PoloidalFieldCoilCaseFromCoil(
         pf_coil=pf_coil_1,
         casing_thickness=10,
         rotation_angle=rotation_angle,
@@ -149,7 +138,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_1_case)
 
-    pf_coil_2 = PoloidalFieldCoil(
+    pf_coil_2 = paramak.PoloidalFieldCoil(
         height=30,
         width=30,
         center_point=(600, -500),
@@ -159,7 +148,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_2)
 
-    pf_coil_2_case = PoloidalFieldCoilCaseFromCoil(
+    pf_coil_2_case = paramak.PoloidalFieldCoilCaseFromCoil(
         pf_coil=pf_coil_2,
         casing_thickness=10,
         rotation_angle=rotation_angle,
@@ -169,7 +158,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_2_case)
 
-    pf_coil_3 = PoloidalFieldCoil(
+    pf_coil_3 = paramak.PoloidalFieldCoil(
         height=30,
         width=30,
         center_point=(800, -200),
@@ -179,7 +168,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_3)
 
-    pf_coil_3_case = PoloidalFieldCoilCaseFromCoil(
+    pf_coil_3_case = paramak.PoloidalFieldCoilCaseFromCoil(
         pf_coil=pf_coil_3,
         casing_thickness=10,
         rotation_angle=rotation_angle,
@@ -189,7 +178,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_3_case)
 
-    pf_coil_4 = PoloidalFieldCoil(
+    pf_coil_4 = paramak.PoloidalFieldCoil(
         height=30,
         width=30,
         center_point=(800, 200),
@@ -199,7 +188,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_4)
 
-    pf_coil_4_case = PoloidalFieldCoilCaseFromCoil(
+    pf_coil_4_case = paramak.PoloidalFieldCoilCaseFromCoil(
         pf_coil=pf_coil_4,
         casing_thickness=10,
         rotation_angle=rotation_angle,
