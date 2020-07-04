@@ -14,8 +14,9 @@ from .parametric_shapes.rotate_circle_shape import RotateCircleShape
 
 from .parametric_components.tokamak_plasma import Plasma
 
-from .parametric_components.blanket_constant_width import BlanketConstantThickness
-from .parametric_components.blanket_constant_width import ConstantThicknessArcV
+from .parametric_components.blanket_constant_thickness_arc_h import BlanketConstantThicknessArcH
+from .parametric_components.blanket_constant_thickness_arc_v import BlanketConstantThicknessArcV
+from .parametric_components.blanket_constant_thickness_fp import BlanketConstantThicknessFP
 
 from .parametric_components.divertor_block import DivertorBlock
 
@@ -29,7 +30,7 @@ from .parametric_components.center_column_flat_top_circular import CenterColumnS
 
 from .parametric_components.poloidal_field_coil import PoloidalFieldCoil
 from .parametric_components.poloidal_field_coil_case import PoloidalFieldCoilCase
-from .parametric_components.poloidal_field_coil_case import PoloidalFieldCoilCaseFromCoil
+from .parametric_components.poloidal_field_coil_case_fc import PoloidalFieldCoilCaseFC
 
 from .parametric_components.inner_tf_coils_circular import InnerTfCoilsCircular
 from .parametric_components.inner_tf_coils_flat import InnerTfCoilsFlat

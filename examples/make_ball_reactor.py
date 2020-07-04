@@ -54,11 +54,8 @@ def make_reactor(
     my_reactor.add_shape(plasma)
 
     # creates a blanket from the parametric shape
-    blanket = paramak.BlanketConstantThickness(
-        major_radius=major_radius,
-        minor_radius=minor_radius,
-        triangularity=triangularity,
-        elongation=elongation,
+    blanket = paramak.BlanketConstantThicknessFP(
+        plasma=plasma,
         thickness=blanket_thickness,
         start_angle=blanket_start_angle,
         stop_angle=blanket_stop_angle,
@@ -128,7 +125,7 @@ def make_reactor(
     my_reactor.add_shape(pf_coil_1)
 
     # creates a PF coil (casing)
-    pf_coil_1_case = paramak.PoloidalFieldCoilCaseFromCoil(
+    pf_coil_1_case = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil_1,
         casing_thickness=10,
         rotation_angle=rotation_angle,
@@ -148,7 +145,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_2)
 
-    pf_coil_2_case = paramak.PoloidalFieldCoilCaseFromCoil(
+    pf_coil_2_case = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil_2,
         casing_thickness=10,
         rotation_angle=rotation_angle,
@@ -168,7 +165,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_3)
 
-    pf_coil_3_case = paramak.PoloidalFieldCoilCaseFromCoil(
+    pf_coil_3_case = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil_3,
         casing_thickness=10,
         rotation_angle=rotation_angle,
@@ -188,7 +185,7 @@ def make_reactor(
     )
     my_reactor.add_shape(pf_coil_4)
 
-    pf_coil_4_case = paramak.PoloidalFieldCoilCaseFromCoil(
+    pf_coil_4_case = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil_4,
         casing_thickness=10,
         rotation_angle=rotation_angle,

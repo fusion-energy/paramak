@@ -1,15 +1,11 @@
 from paramak import RotateStraightShape
 
 
-class PoloidalFieldCoilCase(RotateStraightShape):
+class PoloidalFieldCoilCaseFC(RotateStraightShape):
     """Creates a casing for a reactangular coil
 
-    :param height: the vertical (Z axis) height of the coil (cm)
-    :type height: float
-    :param width: the horizontal (X axis) width of the coil (cm)
-    :type width: float
-    :param center_point: the center of the coil (X,Z) values (cm)
-    :type center_point: tuple of floats
+    :param pf_coil: a pf coil object with a set width, heigh and center point
+    :type pf_coil: PoloidalFieldCoil object
     :param casing_thickness: the thickness of the coil casing (cm)
     :type casing_thickness: tuple of floats
 
@@ -19,10 +15,8 @@ class PoloidalFieldCoilCase(RotateStraightShape):
 
     def __init__(
         self,
+        pf_coil,
         casing_thickness,
-        coil_height,
-        coil_width,
-        center_point,
         workplane="XZ",
         rotation_angle=360,
         solid=None,
@@ -50,9 +44,9 @@ class PoloidalFieldCoilCase(RotateStraightShape):
             hash_value,
         )
 
-        self.center_point = center_point
-        self.height = coil_height
-        self.width = coil_width
+        self.center_point = pf_coil.center_point
+        self.height = pf_coil.height
+        self.width = pf_coil.width
         self.casing_thickness = casing_thickness
 
     @property
