@@ -86,10 +86,12 @@ class test_object_properties(unittest.TestCase):
             "center_column_shield_flat_top_hyperbola.stp",
             "center_column_shield_plasma_hyperbola.stp",
             "poloidal_field_coil.stp",
+            "poloidal_field_coil_case_fc.stp",
             "poloidal_field_coil_case.stp",
             "inner_tf_coils_circular.stp",
             "inner_tf_coils_flat.stp",
             "blanket_arc_v.stp",
+            "blanket_arc_h.stp",
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)

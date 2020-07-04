@@ -3,12 +3,15 @@ import paramak
 
 rot_angle = 180
 
+shape = paramak.Plasma(
+    # default parameters
+    rotation_angle = rot_angle
+)
+shape.export_stp('plasma_shape.stp')
 
-shape = paramak.BlanketConstantThickness(
-    major_radius = 800,
-    minor_radius = 400,
-    triangularity = 1.2,
-    elongation = 0.9,
+
+shape = paramak.BlanketConstantThicknessFP(
+    plasma=shape,
     thickness = 70,
     start_angle = 30,
     stop_angle = 330,
@@ -18,7 +21,6 @@ shape = paramak.BlanketConstantThickness(
 shape.export_stp('blanket_constant_thickness.stp')
 
 
-
 shape = paramak.CenterColumnShieldCylinder(
     inner_radius = 80,
     outer_radius = 100,
@@ -26,7 +28,6 @@ shape = paramak.CenterColumnShieldCylinder(
     rotation_angle = rot_angle
 )
 shape.export_stp('center_column_shield_cylinder.stp')
-
 
 
 shape = paramak.CenterColumnShieldHyperbola(
@@ -39,7 +40,6 @@ shape = paramak.CenterColumnShieldHyperbola(
 shape.export_stp('center_column_shield_hyperbola.stp')
 
 
-
 shape = paramak.CenterColumnShieldCircular(
     inner_radius = 50,
     mid_radius = 75,
@@ -48,7 +48,6 @@ shape = paramak.CenterColumnShieldCircular(
     rotation_angle = rot_angle
 )
 shape.export_stp('center_column_shield_circular.stp')
-
 
 
 shape = paramak.CenterColumnShieldFlatTopHyperbola(
@@ -62,7 +61,6 @@ shape = paramak.CenterColumnShieldFlatTopHyperbola(
 shape.export_stp('center_column_shield_flat_top_hyperbola.stp')
 
 
-
 shape = paramak.CenterColumnShieldFlatTopCircular(
     inner_radius = 50,
     mid_radius = 75,
@@ -72,7 +70,6 @@ shape = paramak.CenterColumnShieldFlatTopCircular(
     rotation_angle = rot_angle
 )
 shape.export_stp('center_column_shield_flat_top_Circular.stp')
-
 
 
 shape = paramak.CenterColumnShieldPlasmaHyperbola(
@@ -109,7 +106,6 @@ shape = paramak.InnerTfCoilsCircular(
 shape.export_stp('inner_tf_coils_circular.stp')
 
 
-
 shape = paramak.InnerTfCoilsFlat(
     inner_radius = 25,
     outer_radius = 100,
@@ -120,7 +116,6 @@ shape = paramak.InnerTfCoilsFlat(
 shape.export_stp('inner_tf_coils_flat.stp')
 
 
-
 shape = paramak.PoloidalFieldCoil(
     center_point = (100, 100),
     height = 20,
@@ -129,6 +124,13 @@ shape = paramak.PoloidalFieldCoil(
 )
 shape.export_stp('poloidal_field_coil.stp')
 
+
+shape = paramak.PoloidalFieldCoilCaseFC(
+    pf_coil=shape,
+    casing_thickness = 10,
+    rotation_angle = rot_angle
+)
+shape.export_stp('poloidal_field_coil_case_fc.stp')
 
 
 shape = paramak.PoloidalFieldCoilCase(
@@ -141,20 +143,20 @@ shape = paramak.PoloidalFieldCoilCase(
 shape.export_stp('poloidal_field_coil_case.stp')
 
 
-
-shape = paramak.Plasma(
-    # default parameters
-    rotation_angle = rot_angle
-)
-shape.export_stp('plasma_shape.stp')
-
-
-
-shape = paramak.ConstantThicknessArcV(
+shape = paramak.BlanketConstantThicknessArcV(
                          inner_lower_point=(300,-200),
                          inner_mid_point=(500,0),
                          inner_upper_point=(300,200),
-                         thickness=20,
+                         thickness=100,
                          rotation_angle=rot_angle
                         )
 shape.export_stp('blanket_arc_v.stp')
+
+shape = paramak.BlanketConstantThicknessArcH(
+                         inner_lower_point=(300,-200),
+                         inner_mid_point=(400,0),
+                         inner_upper_point=(300,200),
+                         thickness=100,
+                         rotation_angle=rot_angle
+                        )
+shape.export_stp('blanket_arc_h.stp')

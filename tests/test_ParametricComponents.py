@@ -5,13 +5,14 @@ from pathlib import Path
 
 import pytest
 
-from paramak import *
+import paramak
+
 
 class test_ConstantThicknessArcV(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
         """creates blanket from parametric shape and checks a solid is created"""
 
-        test_shape = ConstantThicknessArcV(                
+        test_shape = paramak.BlanketConstantThicknessArcV(
                          inner_lower_point=(300,-200),
                          inner_mid_point=(500,0),
                          inner_upper_point=(300,200),
@@ -25,12 +26,14 @@ class test_ConstantThicknessArcV(unittest.TestCase):
 class test_BlanketConstantThickness(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
         """creates blanket from parametric shape and checks a solid is created"""
-
-        test_shape = BlanketConstantThickness(
+        plasma = paramak.Plasma(
             major_radius=300,
             minor_radius=50,
             triangularity=0.5,
             elongation=2,
+        )
+        test_shape = paramak.BlanketConstantThicknessFP(
+            plasma=plasma,
             thickness=200,
             stop_angle=90,
             start_angle=270,
@@ -44,7 +47,7 @@ class test_BlanketConstantThickness(unittest.TestCase):
 class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
         """creates a poloidal field coil from parametric shape and checks a solid is created"""
-        test_shape = PoloidalFieldCoilCase(
+        test_shape = paramak.PoloidalFieldCoilCase(
             casing_thickness=5, coil_height=50, coil_width=50, center_point=(1000, 500)
         )
 
@@ -56,7 +59,7 @@ class test_Plasma(unittest.TestCase):
     def test_plasma_elongation_type(self):
         """creates a plasma object and checks elongation is type float"""
 
-        test_plasma = Plasma()
+        test_plasma = paramak.Plasma()
 
         assert type(test_plasma.elongation) == float
 
@@ -77,7 +80,7 @@ class test_Plasma(unittest.TestCase):
     def test_export_plasma_source(self):
         """checks that export_stp() exports plasma stp file"""
 
-        test_plasma = Plasma()
+        test_plasma = paramak.Plasma()
 
         os.system("rm plasma.stp")
 
@@ -106,7 +109,7 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
     def test_CenterColumnShieldFlatTopHyperbola_creation(self):
         """creates a CenterColumnShieldFlatTopHyperbola object and checks a solid is created"""
 
-        test_shape = CenterColumnShieldFlatTopHyperbola(
+        test_shape = paramak.CenterColumnShieldFlatTopHyperbola(
             height=500,
             arc_height=300,
             inner_radius=50,
@@ -122,7 +125,7 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
     def test_CenterColumnShieldPlasmaHyperbola_creation(self):
         """creates a CenterColumnShieldPlasmaHyperbola object and checks a solid is created"""
 
-        test_shape = CenterColumnShieldPlasmaHyperbola(
+        test_shape = paramak.CenterColumnShieldPlasmaHyperbola(
             inner_radius=50, height=800, mid_offset=40, edge_offset=30
         )
 
@@ -134,7 +137,7 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
     def test_CenterColumnShieldHyperbola_creation(self):
         """creates a CenterColumnShieldHyperbola object and checks a solid is created"""
 
-        test_shape = CenterColumnShieldHyperbola(
+        test_shape = paramak.CenterColumnShieldHyperbola(
             height=100, inner_radius=50, mid_radius=80, outer_radius=100
         )
 
@@ -146,7 +149,8 @@ class test_PoloidalFieldCoil(unittest.TestCase):
     def test_PoloidalFieldCoil_creation(self):
         """creates a PoloidalFieldCoil object and checks a solid is created"""
 
-        test_shape = PoloidalFieldCoil(height=50, width=60, center_point=(1000, 500))
+        test_shape = paramak.PoloidalFieldCoil(
+            height=50, width=60, center_point=(1000, 500))
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
@@ -156,7 +160,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
     def test_CenterColumnShieldCylinder_creation(self):
         """creates a CenterColumnShieldCylinder object and checks a solid is created"""
 
-        test_shape = CenterColumnShieldCylinder(
+        test_shape = paramak.CenterColumnShieldCylinder(
             height=600, inner_radius=100, outer_radius=200
         )
 
@@ -166,7 +170,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
     def test_volume_CenterColumnShieldCylinder(self):
         """creates a CenterColumnShieldCylinder object and checks that the volume is correct"""
 
-        test_shape = CenterColumnShieldCylinder(
+        test_shape = paramak.CenterColumnShieldCylinder(
             rotation_angle=360,
             height=15,
             inner_radius=5,
@@ -176,7 +180,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
 
         assert test_shape.volume == pytest.approx(3534.29)
 
-        test_shape = CenterColumnShieldCylinder(
+        test_shape = paramak.CenterColumnShieldCylinder(
             rotation_angle=180,
             height=15,
             inner_radius=5,
@@ -189,7 +193,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
     def test_export_stp_CenterColumnShieldCylinder(self):
         """checks that export_stp() can export an stp file of a CenterColumnShieldCylinder object"""
 
-        test_shape = CenterColumnShieldCylinder(
+        test_shape = paramak.CenterColumnShieldCylinder(
             rotation_angle=360,
             height=15,
             inner_radius=5,
