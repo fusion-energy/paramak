@@ -1,5 +1,5 @@
-from .reactor import Reactor
 from .shape import Shape
+from .reactor import Reactor
 
 from .parametric_shapes.extruded_spline_shape import ExtrudeSplineShape
 from .parametric_shapes.extruded_straight_shape import ExtrudeStraightShape
@@ -34,3 +34,6 @@ from .parametric_components.poloidal_field_coil_case_fc import PoloidalFieldCoil
 
 from .parametric_components.inner_tf_coils_circular import InnerTfCoilsCircular
 from .parametric_components.inner_tf_coils_flat import InnerTfCoilsFlat
+
+
+from .parametric_reactors.ball_reactor import BallReactor

@@ -13,7 +13,7 @@ from PIL import Image
 
 from paramak.shape import Shape
 
-class Reactor(list):
+class Reactor():
     """The Reactor object allows Shapes to be added and then collective 
     opperations to be performed on all the Shapes within the Reactor.
     Combining all the shapes is required for creating images of the whole reactor and 
@@ -23,16 +23,19 @@ class Reactor(list):
     def __init__(self):
 
         self.graveyard = None
+        self.shapes_and_components = []
 
-    def add_shape(self, shapes):
-        """Adds a Shape or list of Shapes to the Reactor object so that
-        collective operations can be performed on all the shapes in the reactor.
+    def add_shape_or_component(self, shapes):
+        """Adds a parametric shape(s) or a parametric component(s) to the Reactor 
+        object. An individual shape/component or a list of shapes/ components are
+        added to the Reactor object so that collective operations can be performed
+        on all the shapes in the reactor.
         """
         if isinstance(shapes, Iterable):
             for shape in shapes:
-                self.append(shape)
+                self.shapes_and_components.append(shape)
         else:
-            self.append(shapes)
+            self.shapes_and_components.append(shapes)
 
     def neutronics_description(self):
         """A descirption of the reactor containing materials and the filenames,
@@ -44,7 +47,7 @@ class Reactor(list):
 
         neutronics_description = []
 
-        for entry in self:
+        for entry in self.shapes_and_components:
 
             if entry.stp_filename is None:
                 raise ValueError(
@@ -112,7 +115,7 @@ class Reactor(list):
         """
 
         filenames = []
-        for entry in self:
+        for entry in self.shapes_and_components:
             if entry.stp_filename is None:
                 raise ValueError(
                     "set .stp_filename property for \
@@ -155,13 +158,13 @@ class Reactor(list):
         :rtype: CadQuery solid
         """
 
-        for component in self:
+        for component in self.shapes_and_components:
             if component.solid is None:
                 component.create_solid()
 
         # finds the largest dimenton in all the Shapes that are in the reactor
         largest_dimension = 0
-        for component in self:
+        for component in self.shapes_and_components:
             if component.solid.largestDimension() > largest_dimension:
                 largest_dimension = component.solid.largestDimension()
 
@@ -212,7 +215,7 @@ class Reactor(list):
         fig, ax = plt.subplots()
 
         # creates indvidual patches for each Shape which are combined together
-        for entry in self:
+        for entry in self.shapes_and_components:
             p = entry._create_patch()
             ax.add_collection(p)
 
@@ -241,7 +244,7 @@ class Reactor(list):
         """
 
         scene = pyrender.Scene(ambient_light=np.array([0.1, 0.1, 0.1, 1.0]))
-        for entry in self:
+        for entry in self.shapes_and_components:
             if entry.render_mesh is None:
                 scene.add(entry._create_render_mesh(tolerance))
 
@@ -300,7 +303,7 @@ class Reactor(list):
         )
 
         # accesses the Shape traces for each Shape and adds them to the figure
-        for entry in self:
+        for entry in self.shapes_and_components:
             fig.add_trace(entry._trace())
 
         fig.write_html(str(Pfilename))
