@@ -1,5 +1,5 @@
-Paramak Modules
-===============
+Paramak Shapes
+==============
 
 Main shape families (user-classes)
 ----------------------------------
