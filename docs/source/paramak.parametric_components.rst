@@ -4,7 +4,31 @@ Parametric Components
 They are the other modules wrapped and produce specific shapes from parameters.
 Allows easy production of shapes commonly used in fusion modelling.
 
-BlanketConstantThickness()
+BlanketConstantThicknessArcH()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86519778-32eb1500-be36-11ea-9794-0383b66624c5.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_h
+   :members:
+   :show-inheritance:
+
+BlanketConstantThicknessArcV()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_v
+   :members:
+   :show-inheritance:
+
+BlanketConstantThicknessFP
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241428-c56f8800-bb9a-11ea-9d97-d45ff7089f92.png
@@ -12,7 +36,7 @@ BlanketConstantThickness()
    :height: 200
    :align: center
 
-.. automodule:: paramak.parametric_components.blanket_constant_width
+.. automodule:: paramak.parametric_components.blanket_constant_thickness_fp
    :members:
    :show-inheritance:
 
