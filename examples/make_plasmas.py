@@ -1,8 +1,10 @@
-import numpy as np
-import plotly.graph_objects as go
 import math
 
+import numpy as np
+
 import paramak
+import plotly.graph_objects as go
+
 
 def plot_plasma(plasma, name=""):
     """Extract points that make up the plasma and creates a plotly trace"""
@@ -63,6 +65,16 @@ def plot_plasma(plasma, name=""):
             y=plasma.zs_outer_arc,
             mode="markers",
             name="outer arc points",
+            marker={"color": plasma.color},
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=[plasma.x_point],
+            y=[plasma.z_point],
+            mode="markers",
+            name="x and z points",
             marker={"color": plasma.color},
         )
     )

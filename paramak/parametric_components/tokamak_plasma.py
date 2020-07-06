@@ -30,8 +30,8 @@ class Plasma(RotateSplineShape):
     def __init__(
         self,
         points=None,
-        name=None,
-        material_tag=None,
+        name='plasma',
+        material_tag='DT_plasma',
         workplane="XZ",
         elongation=2.0,
         major_radius=450,
@@ -70,12 +70,28 @@ class Plasma(RotateSplineShape):
         self.single_null = single_null
         self.triangularity = triangularity
         self.vertical_displacement = vertical_displacement
-        # self.azimuth_placement_angle = azimuth_placement_angle   # Inherited by super
-        # self.rotation_angle = rotation_angle   # Inherited by super
         # self.color = color   # Inherited by super
         # self.solid = solid   # Inherited by super
         # self.stp_filename = stp_filename   # Inherited by super
         self.points = points
+        self.x_point = None
+        self.z_point = None
+
+    @property
+    def x_point(self):
+        return self._x_point
+
+    @x_point.setter
+    def x_point(self, value):
+        self._x_point = value
+
+    @property
+    def z_point(self):
+        return self._z_point
+
+    @z_point.setter
+    def z_point(self, value):
+        self._z_point = value
 
     @property
     def points(self):
@@ -93,15 +109,6 @@ class Plasma(RotateSplineShape):
     @vertical_displacement.setter
     def vertical_displacement(self, value):
         self._vertical_displacement = value
-
-    # inherited from super
-    # @property
-    # def rotation_angle(self):
-    #     return self._rotation_angle
-
-    # @rotation_angle.setter
-    # def rotation_angle(self, value):
-    #     self._rotation_angle = value
 
     @property
     def openmc_install_directory(self):
@@ -243,6 +250,26 @@ class Plasma(RotateSplineShape):
 
         return x_point
 
+    def find_z_point(self):
+        """Finds the point on the Z axis where the inner arc and outer
+        arc meet. This useful when finding the height of the plasma
+
+        :return: the Z value of the intersection
+        :rtype: float
+        """
+
+        length_of_triangle_base = self.x_point - self.x_position_for_inside_arc
+
+        # hypotenuse of triange is self.radius_of_inside_arc
+
+        # trigonometry
+        z_point = math.pow( math.pow(self.radius_of_inside_arc,2) - math.pow(length_of_triangle_base,2), 0.5 )
+
+        self.z_point = z_point
+
+        return z_point
+
+
     def find_points_on_outer_arc(self):
         """Finds the XZ points on the outer arc of the plasma
 
@@ -315,6 +342,8 @@ class Plasma(RotateSplineShape):
         self.find_inside_outside_radius()
 
         self.find_x_point()
+
+        self.find_z_point() # optional but useful for finding height
 
         self.find_points_on_outer_arc()
 
