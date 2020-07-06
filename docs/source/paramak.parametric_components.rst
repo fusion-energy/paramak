@@ -28,8 +28,8 @@ BlanketConstantThicknessArcV()
    :members:
    :show-inheritance:
 
-BlanketConstantThicknessFP
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlanketConstantThicknessFP()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241428-c56f8800-bb9a-11ea-9d97-d45ff7089f92.png
    :width: 250
