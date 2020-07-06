@@ -1,18 +1,42 @@
-Parametric Shapes
-=================
+Parametric Components
+=====================
 
 They are the other modules wrapped and produce specific shapes from parameters.
 Allows easy production of shapes commonly used in fusion modelling.
 
-BlanketConstantThickness()
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlanketConstantThicknessArcH()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86519778-32eb1500-be36-11ea-9794-0383b66624c5.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_h
+   :members:
+   :show-inheritance:
+
+BlanketConstantThicknessArcV()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_v
+   :members:
+   :show-inheritance:
+
+BlanketConstantThicknessFP()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241428-c56f8800-bb9a-11ea-9d97-d45ff7089f92.png
    :width: 250
    :height: 200
    :align: center
 
-.. automodule:: paramak.parametric_shapes.blanket_constant_width
+.. automodule:: paramak.parametric_components.blanket_constant_thickness_fp
    :members:
    :show-inheritance:
 
@@ -24,7 +48,7 @@ CenterColumnShieldCylinder()
     :height: 200px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.center_column_cylinder
+.. automodule:: paramak.parametric_components.center_column_cylinder
    :members:
    :show-inheritance:
 
@@ -36,7 +60,7 @@ CenterColumnShieldHyperbola()
     :height: 220px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.center_column_hyperbola
+.. automodule:: paramak.parametric_components.center_column_hyperbola
    :members:
    :show-inheritance:
 
@@ -48,7 +72,7 @@ CenterColumnShieldFlatTopHyperbola()
     :height: 220px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.center_column_flat_top_hyperbola
+.. automodule:: paramak.parametric_components.center_column_flat_top_hyperbola
    :members:
    :show-inheritance:
 
@@ -60,14 +84,14 @@ CenterColumnShieldPlasmaHyperbola()
     :height: 220px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.center_column_plasma_dependant
+.. automodule:: paramak.parametric_components.center_column_plasma_dependant
    :members:
    :show-inheritance:
 
 DivertorBlock()
 ^^^^^^^^^^^^^^^
 
-.. automodule:: paramak.parametric_shapes.divertor_block
+.. automodule:: paramak.parametric_components.divertor_block
    :members:
    :show-inheritance:
 
@@ -79,7 +103,7 @@ InnerTfCoilsCircular()
     :height: 200px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.inner_tf_coils_circular
+.. automodule:: paramak.parametric_components.inner_tf_coils_circular
    :members:
    :show-inheritance:
 
@@ -91,7 +115,7 @@ InnerTfCoilsFlat()
     :height: 200px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.inner_tf_coils_flat
+.. automodule:: paramak.parametric_components.inner_tf_coils_flat
    :members:
    :show-inheritance:
 
@@ -103,30 +127,30 @@ PoloidalFieldCoil()
     :height: 180px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.poloidal_field_coil
+.. automodule:: paramak.parametric_components.poloidal_field_coil
    :members:
    :show-inheritance:
 
-PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFromCoil() )
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFC() )
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
     :width: 220px
     :height: 180px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.poloidal_field_coil_case
+.. automodule:: paramak.parametric_components.poloidal_field_coil_case
    :members:
    :show-inheritance:
 
-PlasmaShape()
-^^^^^^^^^^^^^
+Plasma()
+^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241481-dddfa280-bb9a-11ea-95c7-408c935c6763.png
     :width: 220px
     :height: 200px
     :align: center
 
-.. automodule:: paramak.parametric_shapes.tokamak_plasma
+.. automodule:: paramak.parametric_components.tokamak_plasma
    :members:
    :show-inheritance:

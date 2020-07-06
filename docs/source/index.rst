@@ -9,7 +9,7 @@ Features have been added to address particular needs and the software is by no m
    :maxdepth: 1
 
    paramak
-   paramak.parametric_shapes
+   paramak.parametric_components
    tests
    
 
