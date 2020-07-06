@@ -12,7 +12,7 @@ RotateStraightShape()
    :height: 200
    :align: center
 
-.. automodule:: paramak.rotate_straight_shape
+.. automodule:: paramak.parametric_shapes.rotate_straight_shape
    :members:
    :show-inheritance:
 
@@ -24,7 +24,7 @@ RotateSplineShape()
    :height: 240
    :align: center
 
-.. automodule:: paramak.rotate_spline_shape
+.. automodule:: paramak.parametric_shapes.rotate_spline_shape
    :members:
    :show-inheritance:
 
@@ -36,7 +36,7 @@ RotateMixedShape()
    :height: 250
    :align: center
 
-.. automodule:: paramak.rotate_mixed_shape
+.. automodule:: paramak.parametric_shapes.rotate_mixed_shape
    :members:
    :show-inheritance:
 
@@ -48,7 +48,7 @@ RotateCircleShape()
    :height: 200
    :align: center
 
-.. automodule:: paramak.rotate_circle_shape
+.. automodule:: paramak.parametric_shapes.rotate_circle_shape
    :members:
    :show-inheritance:
 
@@ -60,7 +60,7 @@ ExtrudeStraightShape()
    :height: 270
    :align: center
 
-.. automodule:: paramak.extruded_straight_shape
+.. automodule:: paramak.parametric_shapes.extruded_straight_shape
    :members:
    :show-inheritance:
 
@@ -72,7 +72,7 @@ ExtrudeSplineShape()
    :height: 270
    :align: center
 
-.. automodule:: paramak.extruded_spline_shape
+.. automodule:: paramak.parametric_shapes.extruded_spline_shape
    :members:
    :show-inheritance:
 
@@ -84,7 +84,7 @@ ExtrudeMixedShape()
    :height: 270
    :align: center
 
-.. automodule:: paramak.extruded_mixed_shape
+.. automodule:: paramak.parametric_shapes.extruded_mixed_shape
    :members:
    :show-inheritance:
 
@@ -96,7 +96,7 @@ ExtrudeCircleShape()
    :height: 180
    :align: center
 
-.. automodule:: paramak.extruded_circle_shape
+.. automodule:: paramak.parametric_shapes.extruded_circle_shape
    :members:
    :show-inheritance:
 
