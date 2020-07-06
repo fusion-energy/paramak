@@ -131,7 +131,7 @@ PoloidalFieldCoil()
    :members:
    :show-inheritance:
 
-PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFromCoil() )
+PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFC() )
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
@@ -143,7 +143,7 @@ PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFromCoil() )
    :members:
    :show-inheritance:
 
-PlasmaShape()
+Plasma()
 ^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241481-dddfa280-bb9a-11ea-95c7-408c935c6763.png
