@@ -1,27 +1,26 @@
-
 from paramak import ExtrudeStraightShape
 import numpy as np
+
 
 class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     """Creates a rectangular poloidal field coil
 
     :param inner_upper_point: the (x,z) coordinates of the inner
-    upper point (cm)
+     upper point (cm)
     :type inner_upper_point: tuple of two float
     :param inner_mid_point: the (x,z) coordinates of the inner
-    mid point (cm)
+     mid point (cm)
     :type inner_mid_point: tuple of two float
     :param inner_lower_point: the (x,z) coordinates of the inner
-    lower point (cm)
+     lower point (cm)
     :type inner_lower_point: tuple of two float
     :param thickness: the thickness of the toroidal field coil
     :type thickness: float
     :param distance: the extrusion distance
     :type distance: float
     :param number_of_coils: the number of tf coils, this changes the
-    azimuth_placement_angle dividing up 360 degrees by the number of coils 
+     azimuth_placement_angle dividing up 360 degrees by the number of coils 
     :type distance: int
-
 
     :return: a shape object that has generic functionality
     :rtype: paramak shape object
@@ -59,7 +58,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             cut,
             material_tag,
             name,
-            hash_value
+            hash_value,
         )
 
         self.inner_upper_point = inner_upper_point
@@ -87,7 +86,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     def azimuth_placement_angle(self, azimuth_placement_angle):
         self._azimuth_placement_angle = azimuth_placement_angle
 
-
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the 2D
         profile of the poloidal field coil shape."""
@@ -98,15 +96,20 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             # (self.inner_mid_point),
             (self.inner_mid_point[0], self.inner_lower_point[1]),
             (self.inner_lower_point),
-            (self.inner_lower_point[0], self.inner_lower_point[1]-self.thickness),
-            (self.inner_mid_point[0]+self.thickness, self.inner_lower_point[1]-self.thickness),
-            (self.inner_mid_point[0]+self.thickness, self.inner_mid_point[1]),
-            (self.inner_mid_point[0]+self.thickness, self.inner_upper_point[1]+self.thickness),
-            (self.inner_upper_point[0], self.inner_upper_point[1]+self.thickness),
+            (self.inner_lower_point[0], self.inner_lower_point[1] - self.thickness),
+            (
+                self.inner_mid_point[0] + self.thickness,
+                self.inner_lower_point[1] - self.thickness,
+            ),
+            (self.inner_mid_point[0] + self.thickness, self.inner_mid_point[1]),
+            (
+                self.inner_mid_point[0] + self.thickness,
+                self.inner_upper_point[1] + self.thickness,
+            ),
+            (self.inner_upper_point[0], self.inner_upper_point[1] + self.thickness),
         ]
 
         self.points = points
-
 
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of tf coils"""

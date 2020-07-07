@@ -166,6 +166,6 @@ shape = paramak.ToroidalFieldCoilRectangle(
             inner_mid_point=(800,0),
             inner_lower_point=(100,-700),
             thickness=150,
-            distance=6,
-            number_of_coils=8)
+            distance=60,
+            number_of_coils=6)
 shape.export_stp('tf_coil_rectangle.stp')

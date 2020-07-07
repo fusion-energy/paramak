@@ -1,4 +1,3 @@
-
 from collections import Iterable
 
 import cadquery as cq
@@ -102,15 +101,16 @@ class ExtrudeMixedShape(Shape):
 
     def get_hash(self):
         hash_object = blake2b()
-        hash_object.update(str(self.points).encode('utf-8') +
-                           str(self.workplane).encode('utf-8') +
-                           str(self.name).encode('utf-8') +
-                           str(self.color).encode('utf-8') +
-                           str(self.material_tag).encode('utf-8') +
-                           str(self.stp_filename).encode('utf-8') +
-                           str(self.azimuth_placement_angle).encode('utf-8') +
-                           str(self.distance).encode('utf-8') +
-                           str(self.cut).encode('utf-8')
+        hash_object.update(
+            str(self.points).encode("utf-8")
+            + str(self.workplane).encode("utf-8")
+            + str(self.name).encode("utf-8")
+            + str(self.color).encode("utf-8")
+            + str(self.material_tag).encode("utf-8")
+            + str(self.stp_filename).encode("utf-8")
+            + str(self.azimuth_placement_angle).encode("utf-8")
+            + str(self.distance).encode("utf-8")
+            + str(self.cut).encode("utf-8")
         )
         value = hash_object.hexdigest()
         return value
@@ -164,7 +164,7 @@ class ExtrudeMixedShape(Shape):
                 p0 = list(entry.values())[0][0]
                 p1 = list(entry.values())[0][1]
                 p2 = list(entry.values())[0][2]
-                solid = solid.moveTo(p0[0],p0[1]).threePointArc(p1, p2)
+                solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
         # performs extrude in both directions, hence distance / 2
         solid = solid.close().extrude(distance=-self.distance / 2.0, both=True)

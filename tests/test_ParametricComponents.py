@@ -164,7 +164,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
                         inner_mid_point=(800,0),
                         inner_lower_point=(100,-700),
                         thickness=150,
-                        distance=6,
+                        distance=50,
                         number_of_coils=8)
         assert test_shape.solid is not None
         assert test_shape.volume > 1000

@@ -1,4 +1,3 @@
-
 from paramak import RotateStraightShape
 
 
@@ -88,7 +87,7 @@ class PoloidalFieldCoil(RotateStraightShape):
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the 2D
         profile of the poloidal field coil shape."""
-        
+
         points = [
             (
                 self.center_point[0] + self.width / 2.0,

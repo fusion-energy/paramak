@@ -1,5 +1,5 @@
-
 from paramak import RotateMixedShape
+
 
 class CenterColumnShieldCircular(RotateMixedShape):
     """A center column shield volume with a circular outer profile and constant
@@ -59,7 +59,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
     @property
     def points(self):
         self.find_points()
-        return self._points 
+        return self._points
 
     @points.setter
     def points(self, points):

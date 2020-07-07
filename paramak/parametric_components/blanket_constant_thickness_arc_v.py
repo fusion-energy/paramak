@@ -1,10 +1,10 @@
-
 import scipy
 import math
 
 import numpy as np
 
 from paramak import RotateMixedShape
+
 
 class BlanketConstantThicknessArcV(RotateMixedShape):
     """An outboard blanket volume that follows the curvature of a circular
@@ -91,11 +91,23 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
     def find_points(self):
 
         self.points = [
-            (self.inner_upper_point[0], self.inner_upper_point[1], 'circle'),
-            (self.inner_mid_point[0], self.inner_mid_point[1], 'circle'),
-            (self.inner_lower_point[0], self.inner_lower_point[1], 'straight'),
-            (self.inner_lower_point[0], self.inner_lower_point[1]-abs(self.thickness), 'circle'),
-            (self.inner_mid_point[0]+self.thickness, self.inner_mid_point[1], 'circle'),
-            (self.inner_upper_point[0], self.inner_upper_point[1]+abs(self.thickness), 'straight'),
+            (self.inner_upper_point[0], self.inner_upper_point[1], "circle"),
+            (self.inner_mid_point[0], self.inner_mid_point[1], "circle"),
+            (self.inner_lower_point[0], self.inner_lower_point[1], "straight"),
+            (
+                self.inner_lower_point[0],
+                self.inner_lower_point[1] - abs(self.thickness),
+                "circle",
+            ),
+            (
+                self.inner_mid_point[0] + self.thickness,
+                self.inner_mid_point[1],
+                "circle",
+            ),
+            (
+                self.inner_upper_point[0],
+                self.inner_upper_point[1] + abs(self.thickness),
+                "straight",
+            ),
             (self.inner_upper_point[0], self.inner_upper_point[1]),
         ]
