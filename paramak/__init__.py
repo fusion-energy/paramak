@@ -34,3 +34,6 @@ from .parametric_components.poloidal_field_coil_case_fc import PoloidalFieldCoil
 
 from .parametric_components.inner_tf_coils_circular import InnerTfCoilsCircular
 from .parametric_components.inner_tf_coils_flat import InnerTfCoilsFlat
+
+from .parametric_components.toroidal_field_coil_coat_hanger import ToroidalFieldCoilCoatHanger
+from .parametric_components.toroidal_field_coil_rectangle import ToroidalFieldCoilRectangle

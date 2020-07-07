@@ -155,6 +155,20 @@ class test_PoloidalFieldCoil(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
+class test_ToroidalFieldCoilRectangle(unittest.TestCase):
+    def test_ToroidalFieldCoilRectangle_creation(self):
+        """creates a ToroidalFieldCoilRectangle object and checks a solid is created"""
+
+        test_shape = paramak.ToroidalFieldCoilRectangle(
+                        inner_upper_point=(100,700),
+                        inner_mid_point=(800,0),
+                        inner_lower_point=(100,-700),
+                        thickness=150,
+                        distance=6,
+                        number_of_coils=8)
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
 
 class test_CenterColumnShieldCylinder(unittest.TestCase):
     def test_CenterColumnShieldCylinder_creation(self):

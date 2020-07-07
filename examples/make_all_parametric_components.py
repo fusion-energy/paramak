@@ -160,3 +160,12 @@ shape = paramak.BlanketConstantThicknessArcH(
                          rotation_angle=rot_angle
                         )
 shape.export_stp('blanket_arc_h.stp')
+
+shape = paramak.ToroidalFieldCoilRectangle(
+            inner_upper_point=(100,700),
+            inner_mid_point=(800,0),
+            inner_lower_point=(100,-700),
+            thickness=150,
+            distance=6,
+            number_of_coils=8)
+shape.export_stp('tf_coil_rectangle.stp')
