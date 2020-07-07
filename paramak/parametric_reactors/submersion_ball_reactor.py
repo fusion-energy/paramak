@@ -122,6 +122,10 @@ class SubmersionBallReactor(Reactor):
             rotation_angle=self.rotation_angle,
             cut=[plasma, inboard_firstwall, outboard_firstwall]
         )
+
+        # this takes the first solid from the compound
+        submersion_blanket.solid = submersion_blanket.solid.solids().first()
+
         self.add_shape_or_component(submersion_blanket)
 
         blanket_casing = paramak.RotateMixedShape(
@@ -137,5 +141,8 @@ class SubmersionBallReactor(Reactor):
             rotation_angle=self.rotation_angle,
             cut=[plasma, inboard_firstwall, outboard_firstwall, submersion_blanket]
         )
+
+        # this takes the first solid from the compound
+        blanket_casing.solid = blanket_casing.solid.solids().first()
 
         self.add_shape_or_component(blanket_casing)
