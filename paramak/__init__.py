@@ -37,3 +37,4 @@ from .parametric_components.inner_tf_coils_flat import InnerTfCoilsFlat
 
 
 from .parametric_reactors.ball_reactor import BallReactor
+from .parametric_reactors.submersion_ball_reactor import SubmersionBallReactor
