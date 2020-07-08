@@ -21,7 +21,7 @@ class BallReactor(Reactor):
         center_column_shield_inner_radius,
         center_column_shield_outer_radius,
         number_of_tf_coils,
-        rotation_angle = 180
+        rotation_angle = 360
     ):
 
         super().__init__()

@@ -8,11 +8,27 @@ import pytest
 import paramak
 
 
-class test_ConstantThicknessArcV(unittest.TestCase):
+class test_BlanketConstantThicknessArcV(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
         """creates blanket from parametric shape and checks a solid is created"""
 
         test_shape = paramak.BlanketConstantThicknessArcV(
+                         inner_lower_point=(300,-200),
+                         inner_mid_point=(500,0),
+                         inner_upper_point=(300,200),
+                         thickness=20,
+                         rotation_angle = 180
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+
+class test_BlanketConstantThicknessArcH(unittest.TestCase):
+    def test_BlanketConstantThickness_creation(self):
+        """creates blanket from parametric shape and checks a solid is created"""
+
+        test_shape = paramak.BlanketConstantThicknessArcH(
                          inner_lower_point=(300,-200),
                          inner_mid_point=(500,0),
                          inner_upper_point=(300,200),
@@ -170,6 +186,30 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_shape.volume > 1000
 
 
+class test_CenterColumnShieldCircular(unittest.TestCase):
+    def test_CenterColumnShieldCircular_creation(self):
+        """creates a CenterColumnShieldCircular object and checks a solid is created"""
+
+        test_shape = paramak.CenterColumnShieldCircular(
+            height=600, inner_radius=100, mid_radius=150, outer_radius=200
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+
+class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
+    def test_CenterColumnShieldFlatTopCircular_creation(self):
+        """creates a CenterColumnShieldFlatTopCircular object and checks a solid is created"""
+
+        test_shape = paramak.CenterColumnShieldFlatTopCircular(
+            height=600, arc_height=200, inner_radius=100, mid_radius=150, outer_radius=200
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+
 class test_CenterColumnShieldCylinder(unittest.TestCase):
     def test_CenterColumnShieldCylinder_creation(self):
         """creates a CenterColumnShieldCylinder object and checks a solid is created"""
@@ -223,6 +263,49 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
 
         os.system("rm center_column_shield.stp")
 
+
+class test_PoloidalFieldCoilCaseFC(unittest.TestCase):
+    def test_PoloidalFieldCoilCaseFC_creation(self):
+        """creates a PoloidalFieldCoilCaseFC object and checks a solid is created"""
+
+        pf_coil = paramak.PoloidalFieldCoil(
+            height=50, width=60, center_point=(1000, 500))
+
+        test_shape = paramak.PoloidalFieldCoilCaseFC(
+            pf_coil=pf_coil, casing_thickness=5)
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+class test_InnerTfCoilsFlat(unittest.TestCase):
+    def test_InnerTfCoilsFlat_creation(self):
+        """creates a InnerTfCoilsFlat object and checks a solid is created"""
+
+        test_shape = paramak.InnerTfCoilsFlat(
+                    height=500,
+                    inner_radius=50,
+                    outer_radius=150,
+                    number_of_coils=6,
+                    gap_size=5,
+            )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+class test_InnerTfCoilsCircular(unittest.TestCase):
+    def test_InnerTfCoilsCircular_creation(self):
+        """creates a InnerTfCoilsCircular object and checks a solid is created"""
+
+        test_shape = paramak.InnerTfCoilsCircular(
+                    height=500,
+                    inner_radius=50,
+                    outer_radius=150,
+                    number_of_coils=6,
+                    gap_size=5,
+            )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
 
 if __name__ == "__main__":
     unittest.main()
