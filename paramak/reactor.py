@@ -1,4 +1,3 @@
-
 import json
 import math
 from collections import Iterable
@@ -13,7 +12,9 @@ from PIL import Image
 
 from paramak.shape import Shape
 
+
 class Reactor():
+
     """The Reactor object allows Shapes to be added and then collective 
     opperations to be performed on all the Shapes within the Reactor.
     Combining all the shapes is required for creating images of the whole reactor and 

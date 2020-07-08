@@ -1,132 +1,118 @@
-Parametric Shapes
-=================
+Paramak Shapes
+==============
 
-They are the other modules wrapped and produce specific shapes from parameters.
-Allows easy production of shapes commonly used in fusion modelling.
+Main shape families (user-classes)
+----------------------------------
 
-BlanketConstantThickness()
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+RotateStraightShape()
+^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241428-c56f8800-bb9a-11ea-9d97-d45ff7089f92.png
+.. image:: https://user-images.githubusercontent.com/8583900/86246786-767a2080-bba3-11ea-90e7-22d816690caa.png
    :width: 250
    :height: 200
    :align: center
 
-.. automodule:: paramak.parametric_shapes.blanket_constant_width
+.. automodule:: paramak.parametric_shapes.rotate_straight_shape
    :members:
    :show-inheritance:
 
-CenterColumnShieldCylinder()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/56687624/86241438-caccd280-bb9a-11ea-9548-b199759a6dbc.png
-    :width: 180px
-    :height: 200px
-    :align: center
-
-.. automodule:: paramak.parametric_shapes.center_column_cylinder
-   :members:
-   :show-inheritance:
-
-CenterColumnShieldHyperbola()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/56687624/86241456-d0c2b380-bb9a-11ea-9728-88fe4081345f.png
-    :width: 180px
-    :height: 220px
-    :align: center
-
-.. automodule:: paramak.parametric_shapes.center_column_hyperbola
-   :members:
-   :show-inheritance:
-
-CenterColumnShieldFlatTopHyperbola()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
-    :width: 180px
-    :height: 220px
-    :align: center
-
-.. automodule:: paramak.parametric_shapes.center_column_flat_top_hyperbola
-   :members:
-   :show-inheritance:
-
-CenterColumnShieldPlasmaHyperbola()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/56687624/86241464-d3bda400-bb9a-11ea-83b4-a3ff0bf630c4.png
-    :width: 180px
-    :height: 220px
-    :align: center
-
-.. automodule:: paramak.parametric_shapes.center_column_plasma_dependant
-   :members:
-   :show-inheritance:
-
-DivertorBlock()
-^^^^^^^^^^^^^^^
-
-.. automodule:: paramak.parametric_shapes.divertor_block
-   :members:
-   :show-inheritance:
-
-InnerTfCoilsCircular()
-^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/56687624/86241469-d9b38500-bb9a-11ea-935f-8644fa01ab8c.png
-    :width: 180px
-    :height: 200px
-    :align: center
-
-.. automodule:: paramak.parametric_shapes.inner_tf_coils_circular
-   :members:
-   :show-inheritance:
-
-InnerTfCoilsFlat()
-^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/56687624/86241472-db7d4880-bb9a-11ea-8fb9-325b3342fe11.png
-    :width: 180px
-    :height: 200px
-    :align: center
-
-.. automodule:: paramak.parametric_shapes.inner_tf_coils_flat
-   :members:
-   :show-inheritance:
-
-PoloidalFieldCoil()
+RotateSplineShape()
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241487-dfa96600-bb9a-11ea-96ba-54f22ecef1ef.png
-    :width: 220px
-    :height: 180px
-    :align: center
+.. image:: https://user-images.githubusercontent.com/8583900/86246785-7548f380-bba3-11ea-90b7-03249be41a00.png
+   :width: 250
+   :height: 240
+   :align: center
 
-.. automodule:: paramak.parametric_shapes.poloidal_field_coil
+.. automodule:: paramak.parametric_shapes.rotate_spline_shape
    :members:
    :show-inheritance:
 
-PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFromCoil() )
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RotateMixedShape()
+^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
-    :width: 220px
-    :height: 180px
-    :align: center
+.. image:: https://user-images.githubusercontent.com/8583900/86258771-17240c80-bbb3-11ea-990f-e87de26b1589.png
+   :width: 250
+   :height: 250
+   :align: center
 
-.. automodule:: paramak.parametric_shapes.poloidal_field_coil_case
+.. automodule:: paramak.parametric_shapes.rotate_mixed_shape
    :members:
    :show-inheritance:
 
-PlasmaShape()
-^^^^^^^^^^^^^
+RotateCircleShape()
+^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241481-dddfa280-bb9a-11ea-95c7-408c935c6763.png
-    :width: 220px
-    :height: 200px
-    :align: center
+.. image:: https://user-images.githubusercontent.com/8583900/86246778-72e69980-bba3-11ea-9b33-d74e2c2d084b.png
+   :width: 250
+   :height: 200
+   :align: center
 
-.. automodule:: paramak.parametric_shapes.tokamak_plasma
+.. automodule:: paramak.parametric_shapes.rotate_circle_shape
+   :members:
+   :show-inheritance:
+
+ExtrudeStraightShape()
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86246776-724e0300-bba3-11ea-91c9-0fd239225206.png
+   :width: 200
+   :height: 270
+   :align: center
+
+.. automodule:: paramak.parametric_shapes.extruded_straight_shape
+   :members:
+   :show-inheritance:
+
+ExtrudeSplineShape()
+^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86246774-71b56c80-bba3-11ea-94cb-d2496365ff18.png
+   :width: 200
+   :height: 270
+   :align: center
+
+.. automodule:: paramak.parametric_shapes.extruded_spline_shape
+   :members:
+   :show-inheritance:
+
+ExtrudeMixedShape()
+^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86261239-34a6a580-bbb6-11ea-812c-ac6fa6a8f0e2.png
+   :width: 200
+   :height: 270
+   :align: center
+
+.. automodule:: paramak.parametric_shapes.extruded_mixed_shape
+   :members:
+   :show-inheritance:
+
+ExtrudeCircleShape()
+^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86246768-6feba900-bba3-11ea-81a8-0d77a843b943.png
+   :width: 250
+   :height: 180
+   :align: center
+
+.. automodule:: paramak.parametric_shapes.extruded_circle_shape
+   :members:
+   :show-inheritance:
+
+Other modules
+-------------
+
+Shape()
+^^^^^^^
+
+.. automodule:: paramak.shape
+   :members:
+   :show-inheritance:
+
+Reactor()
+^^^^^^^^^
+
+.. automodule:: paramak.reactor
    :members:
    :show-inheritance:

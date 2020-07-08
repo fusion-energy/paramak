@@ -1,8 +1,7 @@
-
 from paramak import RotateMixedShape
 
-class CenterColumnShieldFlatTopCircular(RotateMixedShape):
 
+class CenterColumnShieldFlatTopCircular(RotateMixedShape):
     def __init__(
         self,
         height,

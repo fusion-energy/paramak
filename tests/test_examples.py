@@ -92,6 +92,7 @@ class test_object_properties(unittest.TestCase):
             "inner_tf_coils_flat.stp",
             "blanket_arc_v.stp",
             "blanket_arc_h.stp",
+            "tf_coil_rectangle.stp",
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)

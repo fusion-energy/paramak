@@ -49,7 +49,7 @@ Parametric Shape Tests
 test\_ParametricShapes
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: test_ParametricShapes
+.. automodule:: test_ParametricComponents
    :members:
    :show-inheritance:
 

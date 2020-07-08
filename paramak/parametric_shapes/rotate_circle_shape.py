@@ -1,4 +1,3 @@
-
 from collections import Iterable
 
 import cadquery as cq
@@ -110,16 +109,17 @@ class RotateCircleShape(Shape):
 
     def get_hash(self):
         hash_object = blake2b()
-        hash_object.update(str(self.points).encode('utf-8') +
-                           str(self.radius).encode('utf-8') +
-                           str(self.workplane).encode('utf-8') +
-                           str(self.name).encode('utf-8') +
-                           str(self.color).encode('utf-8') +
-                           str(self.material_tag).encode('utf-8') +
-                           str(self.stp_filename).encode('utf-8') +
-                           str(self.azimuth_placement_angle).encode('utf-8') +
-                           str(self.rotation_angle).encode('utf-8') +
-                           str(self.cut).encode('utf-8')
+        hash_object.update(
+            str(self.points).encode("utf-8")
+            + str(self.radius).encode("utf-8")
+            + str(self.workplane).encode("utf-8")
+            + str(self.name).encode("utf-8")
+            + str(self.color).encode("utf-8")
+            + str(self.material_tag).encode("utf-8")
+            + str(self.stp_filename).encode("utf-8")
+            + str(self.azimuth_placement_angle).encode("utf-8")
+            + str(self.rotation_angle).encode("utf-8")
+            + str(self.cut).encode("utf-8")
         )
         value = hash_object.hexdigest()
         return value

@@ -1,5 +1,5 @@
-
 from paramak import RotateMixedShape
+
 
 class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
     """A center column shield volume with a hyperbolic outer profile joined to flat profiles
