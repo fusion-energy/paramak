@@ -131,8 +131,22 @@ PoloidalFieldCoil()
    :members:
    :show-inheritance:
 
-PoloidalFieldCoilCase() ( + PoloidalFieldCoilCaseFC() )
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+PoloidalFieldCoilCaseFC()
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
+    :width: 220px
+    :height: 180px
+    :align: center
+
+.. automodule:: paramak.parametric_components.poloidal_field_coil_case_fc
+   :members:
+   :show-inheritance:
+
+
+PoloidalFieldCoilCase()
+^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
     :width: 220px
@@ -152,5 +166,17 @@ Plasma()
     :align: center
 
 .. automodule:: paramak.parametric_components.tokamak_plasma
+   :members:
+   :show-inheritance:
+
+ToroidalFieldCoilRectangle()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/86822598-bcdbed80-c083-11ea-820e-f6c13d639170.png
+    :width: 220px
+    :height: 200px
+    :align: center
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_rectangle
    :members:
    :show-inheritance:

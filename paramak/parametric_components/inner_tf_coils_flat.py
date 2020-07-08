@@ -1,7 +1,7 @@
-
 import numpy as np
 import math
 from paramak import ExtrudeStraightShape
+
 
 class InnerTfCoilsFlat(ExtrudeStraightShape):
     """A tf coil volume with straight inner and outer profiles and
@@ -50,7 +50,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             cut,
             material_tag,
             name,
-            hash_value
+            hash_value,
         )
 
         self.height = height
@@ -129,26 +129,55 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     def find_points(self):
         """Finds the points that describe the 2D profile of the tf coil shape"""
 
-        theta_inner = ((2*math.pi*self.inner_radius) - (self.gap_size*self.number_of_coils))/(self.inner_radius*self.number_of_coils)
-        omega_inner = math.asin(self.gap_size/(2*self.inner_radius))
+        theta_inner = (
+            (2 * math.pi * self.inner_radius) - (self.gap_size * self.number_of_coils)
+        ) / (self.inner_radius * self.number_of_coils)
+        omega_inner = math.asin(self.gap_size / (2 * self.inner_radius))
 
-        theta_outer = ((2*math.pi*self.outer_radius) - (self.gap_size*self.number_of_coils))/(self.outer_radius*self.number_of_coils)
-        omega_outer = math.asin(self.gap_size/(2*self.outer_radius))
+        theta_outer = (
+            (2 * math.pi * self.outer_radius) - (self.gap_size * self.number_of_coils)
+        ) / (self.outer_radius * self.number_of_coils)
+        omega_outer = math.asin(self.gap_size / (2 * self.outer_radius))
 
         # inner points
-        point_1 = (self.inner_radius*math.cos(-omega_inner)), (-self.inner_radius*math.sin(-omega_inner))
-        point_3 = (self.inner_radius*math.cos(theta_inner)*math.cos(-omega_inner) + self.inner_radius*math.sin(theta_inner)*math.sin(-omega_inner)), (-self.inner_radius*math.cos(theta_inner)*math.sin(-omega_inner) + self.inner_radius*math.sin(theta_inner)*math.cos(-omega_inner))
+        point_1 = (
+            (self.inner_radius * math.cos(-omega_inner)),
+            (-self.inner_radius * math.sin(-omega_inner)),
+        )
+        point_3 = (
+            (
+                self.inner_radius * math.cos(theta_inner) * math.cos(-omega_inner)
+                + self.inner_radius * math.sin(theta_inner) * math.sin(-omega_inner)
+            ),
+            (
+                -self.inner_radius * math.cos(theta_inner) * math.sin(-omega_inner)
+                + self.inner_radius * math.sin(theta_inner) * math.cos(-omega_inner)
+            ),
+        )
 
         # outer points
-        point_4 = (self.outer_radius*math.cos(-omega_outer)), (-self.outer_radius*math.sin(-omega_outer))
-        point_6 = (self.outer_radius*math.cos(theta_outer)*math.cos(-omega_outer) + self.outer_radius*math.sin(theta_outer)*math.sin(-omega_outer)), (-self.outer_radius*math.cos(theta_outer)*math.sin(-omega_outer) + self.outer_radius*math.sin(theta_outer)*math.cos(-omega_outer))
+        point_4 = (
+            (self.outer_radius * math.cos(-omega_outer)),
+            (-self.outer_radius * math.sin(-omega_outer)),
+        )
+        point_6 = (
+            (
+                self.outer_radius * math.cos(theta_outer) * math.cos(-omega_outer)
+                + self.outer_radius * math.sin(theta_outer) * math.sin(-omega_outer)
+            ),
+            (
+                -self.outer_radius * math.cos(theta_outer) * math.sin(-omega_outer)
+                + self.outer_radius * math.sin(theta_outer) * math.cos(-omega_outer)
+            ),
+        )
 
         points = [
             (point_1[0], point_1[1]),
             (point_3[0], point_3[1]),
             (point_6[0], point_6[1]),
             (point_4[0], point_4[1]),
-            (point_1[0], point_1[1])]   # we have overwritten the setter which automatically adds the endpoint=first point, so we need to specify it explicitely
+            (point_1[0], point_1[1]),
+        ]  # we have overwritten the setter which automatically adds the endpoint=first point, so we need to specify it explicitely
 
         self.points = points
 

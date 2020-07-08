@@ -1,4 +1,3 @@
-
 import json
 import math
 from collections import Iterable
@@ -12,6 +11,7 @@ import pyrender
 from PIL import Image
 
 from paramak.shape import Shape
+
 
 class Reactor(list):
     """The Reactor object allows Shapes to be added and then collective 

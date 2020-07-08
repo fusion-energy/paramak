@@ -1,4 +1,3 @@
-
 from paramak import RotateMixedShape
 from paramak import Plasma
 
