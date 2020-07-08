@@ -112,13 +112,13 @@ core.rotation_angle = 180
 myreactor = paramak.Reactor()
 
 # adds components to the reactor
-myreactor.add_shape(plasma)
-myreactor.add_shape(blanket)
-myreactor.add_shape(core)
-myreactor.add_shape(divertor_top)
-myreactor.add_shape(divertor_bottom)
-myreactor.add_shape(firstwall)
-myreactor.add_shape(centre_column)
+myreactor.add_shape_or_component(plasma)
+myreactor.add_shape_or_component(blanket)
+myreactor.add_shape_or_component(core)
+myreactor.add_shape_or_component(divertor_top)
+myreactor.add_shape_or_component(divertor_bottom)
+myreactor.add_shape_or_component(firstwall)
+myreactor.add_shape_or_component(centre_column)
 
 myreactor.export_stp(output_folder="can_reactor_from_parameters")
 myreactor.export_html(filename="can_reactor_from_parameters/reactor.html")

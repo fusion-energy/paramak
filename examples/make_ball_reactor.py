@@ -51,7 +51,7 @@ def make_reactor(
         stp_filename="plasma.stp",
         material_tag="DT_plasma",
     )
-    my_reactor.add_shape(plasma)
+    my_reactor.add_shape_or_component(plasma)
 
     # creates a blanket from the parametric shape
     blanket = paramak.BlanketConstantThicknessFP(
@@ -65,7 +65,7 @@ def make_reactor(
         stp_filename="blanket.stp",
         material_tag="blanket_material",
     )
-    my_reactor.add_shape(blanket)
+    my_reactor.add_shape_or_component(blanket)
 
     # creates an upper divertor from the parametric shape
     divertor_upper = paramak.DivertorBlock(
@@ -82,7 +82,7 @@ def make_reactor(
         stp_filename="divertor_upper.stp",
         material_tag="divertor_material",
     )
-    my_reactor.add_shape(divertor_upper)
+    my_reactor.add_shape_or_component(divertor_upper)
 
     # creates a lower divertor from the parametric shape
     divertor_lower = paramak.DivertorBlock(
@@ -99,7 +99,7 @@ def make_reactor(
         stp_filename="divertor_lower.stp",
         material_tag="divertor_material",
     )
-    my_reactor.add_shape(divertor_lower)
+    my_reactor.add_shape_or_component(divertor_lower)
 
     # The height of this center column is calculated using CadQuery commands
     center_column_shield = paramak.CenterColumnShieldCylinder(
@@ -111,7 +111,7 @@ def make_reactor(
         stp_filename="center_column_shield.stp",
         material_tag="center_column_material",
     )
-    my_reactor.add_shape(center_column_shield)
+    my_reactor.add_shape_or_component(center_column_shield)
 
     # creates a PF coil (internal)
     pf_coil_1 = paramak.PoloidalFieldCoil(
@@ -122,7 +122,7 @@ def make_reactor(
         stp_filename="pf_coil_1.stp",
         material_tag="pf_coil_material",
     )
-    my_reactor.add_shape(pf_coil_1)
+    my_reactor.add_shape_or_component(pf_coil_1)
 
     # creates a PF coil (casing)
     pf_coil_1_case = paramak.PoloidalFieldCoilCaseFC(
@@ -133,7 +133,7 @@ def make_reactor(
         stp_filename="pf_coil_case_1.stp",
         material_tag="pf_coil_material",
     )
-    my_reactor.add_shape(pf_coil_1_case)
+    my_reactor.add_shape_or_component(pf_coil_1_case)
 
     pf_coil_2 = paramak.PoloidalFieldCoil(
         height=30,
@@ -143,7 +143,7 @@ def make_reactor(
         stp_filename="pf_coil_2.stp",
         material_tag="pf_coil_material",
     )
-    my_reactor.add_shape(pf_coil_2)
+    my_reactor.add_shape_or_component(pf_coil_2)
 
     pf_coil_2_case = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil_2,
@@ -153,7 +153,7 @@ def make_reactor(
         stp_filename="pf_coil_case_2.stp",
         material_tag="pf_coil_material",
     )
-    my_reactor.add_shape(pf_coil_2_case)
+    my_reactor.add_shape_or_component(pf_coil_2_case)
 
     pf_coil_3 = paramak.PoloidalFieldCoil(
         height=30,
@@ -163,7 +163,7 @@ def make_reactor(
         stp_filename="pf_coil_3.stp",
         material_tag="pf_coil_material",
     )
-    my_reactor.add_shape(pf_coil_3)
+    my_reactor.add_shape_or_component(pf_coil_3)
 
     pf_coil_3_case = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil_3,
@@ -173,7 +173,7 @@ def make_reactor(
         stp_filename="pf_coil_case_3.stp",
         material_tag="pf_coil_material",
     )
-    my_reactor.add_shape(pf_coil_3_case)
+    my_reactor.add_shape_or_component(pf_coil_3_case)
 
     pf_coil_4 = paramak.PoloidalFieldCoil(
         height=30,
@@ -183,7 +183,7 @@ def make_reactor(
         stp_filename="pf_coil_4.stp",
         material_tag="pf_coil_material",
     )
-    my_reactor.add_shape(pf_coil_4)
+    my_reactor.add_shape_or_component(pf_coil_4)
 
     pf_coil_4_case = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil_4,
@@ -193,7 +193,7 @@ def make_reactor(
         stp_filename="pf_coil_case_4.stp",
         material_tag="pf_coil_material",
     )
-    my_reactor.add_shape(pf_coil_4_case)
+    my_reactor.add_shape_or_component(pf_coil_4_case)
 
     return my_reactor
 

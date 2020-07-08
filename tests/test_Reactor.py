@@ -4,15 +4,14 @@ from pathlib import Path
 import unittest
 import json
 
-from paramak import *
-
+import paramak
 
 class test_object_properties(unittest.TestCase):
     def test_reactor_creation_with_default_properties(self):
         """creates a Reactor object and checks that it has \
                 no default properties"""
 
-        test_reactor = Reactor()
+        test_reactor = paramak.Reactor()
 
         assert test_reactor is not None
 
@@ -20,38 +19,41 @@ class test_object_properties(unittest.TestCase):
         """creates a Reactor object and checks that shapes \
                 can be added to it"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = Reactor()
-        assert len(test_reactor) == 0
-        test_reactor.add_shape(test_shape)
-        assert len(test_reactor) == 1
+        test_reactor = paramak.Reactor()
+        assert len(test_reactor.shapes_and_components) == 0
+        test_reactor.add_shape_or_component(test_shape)
+        assert len(test_reactor.shapes_and_components) == 1
 
     def test_Graveyard_exists(self):
         """checks that make_graveyard() creates a graveyard \
                 using the shapes in the Reactor object"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = Reactor()
-        test_reactor.add_shape(test_shape)
+        test_reactor = paramak.Reactor()
+        test_reactor.add_shape_or_component(test_shape)
         test_reactor.make_graveyard()
 
-        assert type(test_reactor.graveyard) == Shape
+        assert type(test_reactor.graveyard) == paramak.Shape
 
     def test_exported_graveyard_creates_stp_file(self):
         """checks that export_graveyard() creates stp file in the \
                 specified location"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm my_graveyard.stp")
         os.system("rm Graveyard.stp")
         test_shape.stp_filename = "test_shape.stp"
-        test_reactor = Reactor()
-        test_reactor.add_shape(test_shape)
+        test_reactor = paramak.Reactor()
+        test_reactor.add_shape_or_component(test_shape)
 
         test_reactor.export_graveyard()
         test_reactor.export_graveyard(filename="my_graveyard.stp")
@@ -65,13 +67,14 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stp() creates stp file in the \
                 specified location"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_reactor/test_shape.stp")
         os.system("rm test_reactor/Graveyard.stp")
         test_shape.stp_filename = "test_shape.stp"
-        test_reactor = Reactor()
-        test_reactor.add_shape(test_shape)
+        test_reactor = paramak.Reactor()
+        test_reactor.add_shape_or_component(test_shape)
 
         test_reactor.export_stp(output_folder="test_reactor")
 
@@ -84,11 +87,12 @@ class test_object_properties(unittest.TestCase):
             """checks that a ValueError is raised when the neutronics description \
                         is exported without material_tag"""
 
-            test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
             test_shape.rotation_angle = 360
             test_shape.stp_filename = "test.stp"
-            test_reactor = Reactor()
-            test_reactor.add_shape(test_shape)
+            test_reactor = paramak.Reactor()
+            test_reactor.add_shape_or_component(test_shape)
             neutronics_description = test_reactor.neutronics_description()
 
         self.assertRaises(ValueError, test_neutronics_description_without_material_tag)
@@ -97,11 +101,12 @@ class test_object_properties(unittest.TestCase):
             """checks that a ValueError is raised when the neutronics description \
                         is exported without stp_filename"""
 
-            test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
             test_shape.rotation_angle = 360
             test_shape.material_tag = "test_material"
-            test_reactor = Reactor()
-            test_reactor.add_shape(test_shape)
+            test_reactor = paramak.Reactor()
+            test_reactor.add_shape_or_component(test_shape)
             neutronics_description = test_reactor.neutronics_description()
 
         self.assertRaises(ValueError, test_neutronics_description_without_stp_filename)
@@ -110,12 +115,13 @@ class test_object_properties(unittest.TestCase):
         """checks that the neutronics description is exported with correct \
                 material_tag and filename"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
-        test_reactor = Reactor()
-        test_reactor.add_shape(test_shape)
+        test_reactor = paramak.Reactor()
+        test_reactor.add_shape_or_component(test_shape)
         neutronics_description = test_reactor.neutronics_description()
 
         assert len(neutronics_description) == 2
@@ -132,12 +138,13 @@ class test_object_properties(unittest.TestCase):
 
         os.system("rm manifest_test.json")
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
-        test_reactor = Reactor()
-        test_reactor.add_shape(test_shape)
+        test_reactor = paramak.Reactor()
+        test_reactor.add_shape_or_component(test_shape)
         returned_filename = test_reactor.export_neutronics_description(
             filename="manifest_test.json"
         )
@@ -160,10 +167,11 @@ class test_object_properties(unittest.TestCase):
                 the correct filename"""
 
         os.system("rm 2d_test_image.png")
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
-        test_reactor = Reactor()
-        test_reactor.add_shape(test_shape)
+        test_reactor = paramak.Reactor()
+        test_reactor.add_shape_or_component(test_shape)
         returned_filename = test_reactor.export_2d_image(filename="2d_test_image.png")
 
         assert Path(returned_filename).exists() is True
@@ -174,10 +182,11 @@ class test_object_properties(unittest.TestCase):
                 the correct filename"""
 
         os.system("rm test_html.html")
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
-        test_reactor = Reactor()
-        test_reactor.add_shape(test_shape)
+        test_reactor = paramak.Reactor()
+        test_reactor.add_shape_or_component(test_shape)
         test_reactor.export_html(filename="test_html.html")
 
         assert Path("test_html.html").exists() is True

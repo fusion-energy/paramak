@@ -46,8 +46,8 @@ def make_cad_model_with_paramak():
     blanket.material_tag = 'blanket_material'
     pf_coil.material_tag = 'pf_coil_material'
 
-    my_reactor.add_shape(blanket)
-    my_reactor.add_shape(pf_coil)
+    my_reactor.add_shape_or_component(blanket)
+    my_reactor.add_shape_or_component(pf_coil)
 
 
     my_reactor.export_neutronics_description()
