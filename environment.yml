@@ -17,3 +17,5 @@ dependencies:
   - cadquery=2
   - pip:
     - pyrender
+    - openmc
+    - neutronics-material-maker
