@@ -1,4 +1,6 @@
-""" This example uses parametric_shapes to constuct a simple ball reactor geometry"""
+"""
+This example uses parametric_shapes to constuct a simple ball reactor geometry
+"""
 
 import paramak
 
