@@ -15,7 +15,7 @@ dependencies:
   - uncertainties
   - importlib_resources
   - cadquery=2
+  - openmc
   - pip:
     - pyrender
-    - openmc
     - neutronics-material-maker
