@@ -12,6 +12,8 @@ import plotly.graph_objects as go
 def plot_plasma(plasma, name=""):
     """Extract points that make up the plasma and creates a plotly trace"""
 
+    fig = go.Figure()
+
     fig.add_trace(
         go.Scatter(
             x=[plasma.x_position_for_outside_arc],

@@ -10,7 +10,7 @@ class test_object_properties(unittest.TestCase):
     def test_make_ball_rector(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
+        os.chdir(Path("examples/example_parametric_reactors"))
         output_filenames = [
             "ball_reactor/plasma.stp",
             "ball_reactor/blanket.stp",
@@ -39,7 +39,7 @@ class test_object_properties(unittest.TestCase):
     def test_make_blanket_from_points(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
+        os.chdir(Path("examples/example_parametric_shapes"))
         output_filename = "blanket_from_points.stp"
         os.system("rm " + output_filename)
         os.system("python make_blanket_from_points.py")
@@ -49,7 +49,7 @@ class test_object_properties(unittest.TestCase):
     def test_make_blanket_parametrically(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
+        os.chdir(Path("examples/example_parametric_shapes"))
         output_filename = "blanket_from_parameters.stp"
         os.system("rm " + output_filename)
         os.system("python make_blanket_from_parameters.py")
@@ -59,7 +59,7 @@ class test_object_properties(unittest.TestCase):
     def test_make_CAD_from_points(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
+        os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
             "extruded_mixed.stp",
             "extruded_straight.stp",
@@ -78,7 +78,7 @@ class test_object_properties(unittest.TestCase):
     def test_make_all_parametric_components(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
+        os.chdir(Path("examples/example_parametric_components"))
         output_filenames = [
             "blanket_constant_thickness.stp",
             "center_column_shield_cylinder.stp",
@@ -106,7 +106,7 @@ class test_object_properties(unittest.TestCase):
     def test_make_can_reactor_from_parameters(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
+        os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
             "can_reactor_from_parameters/plasma.stp",
             "can_reactor_from_parameters/centre_column.stp",
@@ -127,7 +127,7 @@ class test_object_properties(unittest.TestCase):
     def test_make_can_reactor_from_points(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
+        os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
             "can_reactor_from_points/plasma.stp",
             "can_reactor_from_points/centre_column.stp",
@@ -148,7 +148,7 @@ class test_object_properties(unittest.TestCase):
     def test_make_plasma(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
-        os.chdir(Path("examples"))
+        os.chdir(Path("examples/example_parametric_components"))
         output_filenames = [
             "ITER_plasma.html",
             "EU_DEMO_plasma.html",
