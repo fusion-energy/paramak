@@ -80,28 +80,28 @@ Once points and connections between the points are provided the user has options
 The different families of shapes that can be made with the Paramak are shown in the table below. The CadQuery objects created can be combined and modified using CadQueries powerful filtering capabilties to create more complex models (e.g. a Tokamak).
 
 
-.. |rotatestraight| image:: https://user-images.githubusercontent.com/8583900/86246786-767a2080-bba3-11ea-90e7-22d816690caa.png 
+.. |rotatestraight| image:: https://user-images.githubusercontent.com/56687624/87055469-4f070180-c1fc-11ea-9679-a29e37a90e15.png
                           :height: 200px
 
-.. |extrudestraight| image:: https://user-images.githubusercontent.com/8583900/86246776-724e0300-bba3-11ea-91c9-0fd239225206.png
+.. |extrudestraight| image:: https://user-images.githubusercontent.com/56687624/87055493-56c6a600-c1fc-11ea-8c58-f5b62ae72e0e.png
                           :height: 200px
 
-.. |rotatespline| image:: https://user-images.githubusercontent.com/8583900/86246785-7548f380-bba3-11ea-90b7-03249be41a00.png
+.. |rotatespline| image:: https://user-images.githubusercontent.com/56687624/87055473-50382e80-c1fc-11ea-95dd-b4932b1e78d9.png
                           :height: 200px
 
-.. |extrudespline| image:: https://user-images.githubusercontent.com/8583900/86246774-71b56c80-bba3-11ea-94cb-d2496365ff18.png
+.. |extrudespline| image:: https://user-images.githubusercontent.com/56687624/87055500-58906980-c1fc-11ea-879c-9f1845be3b57.png
                           :height: 200px
 
-.. |rotatecircle| image:: https://user-images.githubusercontent.com/8583900/86246778-72e69980-bba3-11ea-9b33-d74e2c2d084b.png
+.. |rotatecircle| image:: https://user-images.githubusercontent.com/56687624/87055489-54fce280-c1fc-11ea-9545-a61582aea20a.png
                           :height: 200px
 
-.. |extrudecircle| image:: https://user-images.githubusercontent.com/8583900/86246768-6feba900-bba3-11ea-81a8-0d77a843b943.png
+.. |extrudecircle| image:: https://user-images.githubusercontent.com/56687624/87055517-5b8b5a00-c1fc-11ea-83ef-d4329c6815f7.png
                           :height: 200px
 
-.. |rotatemixed| image:: https://user-images.githubusercontent.com/8583900/86258771-17240c80-bbb3-11ea-990f-e87de26b1589.png
+.. |rotatemixed| image:: https://user-images.githubusercontent.com/56687624/87055483-53cbb580-c1fc-11ea-878d-92835684c8ff.png
                           :height: 200px
 
-.. |extrudemixed| image:: https://user-images.githubusercontent.com/8583900/86261239-34a6a580-bbb6-11ea-812c-ac6fa6a8f0e2.png
+.. |extrudemixed| image:: https://user-images.githubusercontent.com/56687624/87055511-59c19680-c1fc-11ea-8740-8c7987745c45.png
                           :height: 200px
 
 
