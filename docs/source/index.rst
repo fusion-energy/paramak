@@ -10,6 +10,10 @@ Features have been added to address particular needs and the software is by no m
 
    paramak.parametric_shapes
    paramak.parametric_components
+   example_parametric_shapes
+   example_parametric_components
+   example_parametric_reactors
+   example_neutronics_simulations
    tests
    
 

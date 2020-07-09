@@ -1,10 +1,13 @@
+"""
+This python script demonstrates the creation of plasmas
+"""
+
 import math
 
 import numpy as np
 
 import paramak
 import plotly.graph_objects as go
-
 
 def plot_plasma(plasma, name=""):
     """Extract points that make up the plasma and creates a plotly trace"""
@@ -101,46 +104,52 @@ def make_plasma(major_radius, minor_radius, triangularity, elongation, name, col
     return plasma
 
 
-ITER_plasma = make_plasma(
-    name="ITER_plasma",
-    major_radius=620,
-    minor_radius=210,
-    triangularity=0.33,
-    elongation=1.85,
-    color="blue",
-)
+def main():
 
-EU_DEMO_plasma = make_plasma(
-    name="EU_DEMO_plasma",
-    major_radius=910,
-    minor_radius=290,
-    triangularity=0.33,
-    elongation=1.59,
-    color="red",
-)
+    ITER_plasma = make_plasma(
+        name="ITER_plasma",
+        major_radius=620,
+        minor_radius=210,
+        triangularity=0.33,
+        elongation=1.85,
+        color="blue",
+    )
 
-ST_plasma = make_plasma(
-    name="ST_plasma",
-    major_radius=170,
-    minor_radius=129,
-    triangularity=0.55,
-    elongation=2.3,
-    color="green",
-)
+    EU_DEMO_plasma = make_plasma(
+        name="EU_DEMO_plasma",
+        major_radius=910,
+        minor_radius=290,
+        triangularity=0.33,
+        elongation=1.59,
+        color="red",
+    )
 
-AST_plasma = make_plasma(
-    name="AST_plasma",
-    major_radius=170,
-    minor_radius=129,
-    triangularity=-0.55,
-    elongation=2.3,
-    color="black",
-)
+    ST_plasma = make_plasma(
+        name="ST_plasma",
+        major_radius=170,
+        minor_radius=129,
+        triangularity=0.55,
+        elongation=2.3,
+        color="green",
+    )
 
-fig = go.Figure()
-plot_plasma(plasma=ITER_plasma)
-plot_plasma(plasma=EU_DEMO_plasma)
-plot_plasma(plasma=ST_plasma)
-plot_plasma(plasma=AST_plasma)
-fig.show()
-fig.write_html("all_plasma_and_points.html")
+    AST_plasma = make_plasma(
+        name="AST_plasma",
+        major_radius=170,
+        minor_radius=129,
+        triangularity=-0.55,
+        elongation=2.3,
+        color="black",
+    )
+
+    fig = go.Figure()
+    plot_plasma(plasma=ITER_plasma)
+    plot_plasma(plasma=EU_DEMO_plasma)
+    plot_plasma(plasma=ST_plasma)
+    plot_plasma(plasma=AST_plasma)
+    fig.show()
+    fig.write_html("all_plasma_and_points.html")
+
+
+if __name__ == "__main__":
+    main()
