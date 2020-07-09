@@ -9,15 +9,15 @@ def main():
 
     rot_angle = 180
 
-    shape = paramak.Plasma(
+    plasma = paramak.Plasma(
         # default parameters
         rotation_angle = rot_angle
     )
-    shape.export_stp('plasma_shape.stp')
+    plasma.export_stp('plasma_shape.stp')
 
 
     shape = paramak.BlanketConstantThicknessFP(
-        plasma=shape,
+        plasma=plasma,
         thickness = 70,
         start_angle = 30,
         stop_angle = 330,
@@ -25,6 +25,17 @@ def main():
         rotation_angle = rot_angle
     )
     shape.export_stp('blanket_constant_thickness.stp')
+
+
+    shape=paramak.ToroidalFieldCoilCoatHanger(
+        horizontal_start_point=(200,500),
+        horizontal_length=400,
+        vertical_start_point=(700,50),
+        vertical_length=500,
+        thickness=50,
+        distance=50,
+        number_of_coils=5)
+    shape.export_stp('toroidal_field_coil_coat_hanger.stp')
 
 
     shape = paramak.CenterColumnShieldCylinder(

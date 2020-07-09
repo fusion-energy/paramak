@@ -180,3 +180,15 @@ ToroidalFieldCoilRectangle()
 .. automodule:: paramak.parametric_components.toroidal_field_coil_rectangle
    :members:
    :show-inheritance:
+
+ToroidalFieldCoilCoatHanger()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/87075236-f04f8100-c217-11ea-9ffa-4791b722b9e7.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_coat_hanger
+   :members:
+   :show-inheritance:

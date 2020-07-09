@@ -1,15 +1,30 @@
-from paramak import ExtrudeMixedShape
+from paramak import ExtrudeStraightShape
+
+import numpy as np
 
 
-class ToroidalFieldCoilCoatHanger(ExtrudeMixedShape):
+class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
     """Creates a rectangular poloidal field coil
 
-    :param height: the vertical (Z axis) height of the coil (cm)
-    :type height: float
-    :param width: the horizontal (X axis) width of the coil (cm)
-    :type width: float
-    :param center_point: the center of the coil (X,Z) values (cm)
-    :type center_point: tuple of floats
+    :param horizontal_start_point: the (x,z) coordinates of the inner
+     upper point (cm)
+    :type horizontal_start_point: tuple of two floats
+    :param horizontal_length: the radial length of the horizontal
+     section of the TF coil (cm)
+    :type horizontal_length: tuple of two floats
+    :param vertical_mid_point: the (x,z) coordinates of the mid point
+     of the vertical section (cm)
+    :type vertical_mid_point: tuple of two floats
+    :param vertical_length: the (x,z) coordinates of the inner
+     lower point (cm)
+    :type vertical_length: tuple of two floats
+    :param thickness: the thickness of the toroidal field coil
+    :type thickness: float
+    :param distance: the extrusion distance
+    :type distance: float
+    :param number_of_coils: the number of tf coils, this changes the
+     azimuth_placement_angle dividing up 360 degrees by the number of coils 
+    :type distance: int
 
     :return: a shape object that has generic functionality
     :rtype: paramak shape object
@@ -17,14 +32,13 @@ class ToroidalFieldCoilCoatHanger(ExtrudeMixedShape):
 
     def __init__(
         self,
-        inner_upper_point,
-        upper_length,
-        inner_mid_point,
-        mid_length,
-        inner_lower_point,
-        lower_length,
+        horizontal_start_point,
+        horizontal_length,
+        vertical_start_point,
+        vertical_length,
         thickness,
         distance,
+        number_of_coils,
         workplane="XZ",
         rotation_angle=360,
         solid=None,
@@ -52,14 +66,13 @@ class ToroidalFieldCoilCoatHanger(ExtrudeMixedShape):
             hash_value,
         )
 
-        self.inner_upper_point = inner_upper_point
-        self.upper_length = upper_length
-        self.inner_mid_point = inner_mid_point
-        self.mid_length = mid_length
-        self.inner_lower_point = inner_lower_point
-        self.lower_length = lower_length
+        self.horizontal_start_point = horizontal_start_point
+        self.horizontal_length = horizontal_length
+        self.vertical_start_point = vertical_start_point
+        self.vertical_length = vertical_length
         self.thickness = thickness
         self.distance = distance
+        self.number_of_coils = number_of_coils
 
     @property
     def points(self):
@@ -70,18 +83,41 @@ class ToroidalFieldCoilCoatHanger(ExtrudeMixedShape):
     def points(self, points):
         self._points = points
 
+    @property
+    def azimuth_placement_angle(self):
+        self.find_azimuth_placement_angle()
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, azimuth_placement_angle):
+        self._azimuth_placement_angle = azimuth_placement_angle
+
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the 2D
         profile of the poloidal field coil shape."""
 
-        points = [
-            (self.inner_lower_point),
-            (
-                self.inner_lower_point[0] + self.upper_length,
-                self.inner_lower_point[1] + self.upper_length,
-            ),
-            # (),
-            # (,),
+        points = [self.horizontal_start_point,# upper right inner
+                  (self.horizontal_start_point[0]+self.horizontal_length, self.horizontal_start_point[1]), 
+                  (self.vertical_start_point[0],self.vertical_start_point[1]+0.5*self.vertical_length),# upper inner horizontal section 
+                  (self.vertical_start_point[0],self.vertical_start_point[1]-0.5*self.vertical_length), # lower inner horizontal section
+                  (self.horizontal_start_point[0]+self.horizontal_length, -self.horizontal_start_point[1]),# lower left vertical section
+                  (self.horizontal_start_point[0], -self.horizontal_start_point[1]),# lower right vertical section
+
+                  (self.horizontal_start_point[0], -self.horizontal_start_point[1]-self.thickness),
+                  (self.horizontal_start_point[0]+self.horizontal_length, -self.horizontal_start_point[1]-self.thickness),
+                  (self.horizontal_start_point[0]+self.horizontal_length+self.thickness, -self.horizontal_start_point[1]),# lower left vertical section
+                  (self.vertical_start_point[0]+self.thickness,self.vertical_start_point[1]-0.5*self.vertical_length), # lower inner horizontal section
+                  (self.vertical_start_point[0]+self.thickness,self.vertical_start_point[1]+0.5*self.vertical_length),# upper inner horizontal section 
+                  (self.horizontal_start_point[0]+self.horizontal_length+ self.thickness, self.horizontal_start_point[1]), 
+                  (self.horizontal_start_point[0]+self.horizontal_length, self.horizontal_start_point[1]+self.thickness), 
+                  (self.horizontal_start_point[0], self.horizontal_start_point[1] + self.thickness)# upper right inner
         ]
 
         self.points = points
+
+    def find_azimuth_placement_angle(self):
+        """Calculates the azimuth placement angles based on the number of tf coils"""
+
+        angles = np.linspace(0, 360, self.number_of_coils, endpoint=False)
+
+        self.azimuth_placement_angle = angles
