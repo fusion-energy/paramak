@@ -1,27 +1,42 @@
 Examples - Parametric Shapes
 ============================
 
-`make_CAD_from_points.py <https://github.com/ukaea/paramak/blob/moving_examples_around/examples/example_parametric_shapes/make_CAD_from_points.py/>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+make_CAD_from_points.py
+^^^^^^^^^^^^^^^^^^^^^^^
 
-This python script demonstrates the creation of 3D volumnes from points using extrude and rotate methods
+.. image:: https://user-images.githubusercontent.com/56687624/87046793-81f7c800-c1f1-11ea-94c1-4c447bb18ff4.gif
+   :width: 450
+   :height: 250
+   :align: center
 
-`make_blanket_from_parameters.py <https://github.com/ukaea/paramak/blob/moving_examples_around/examples/example_parametric_shapes/make_blanket_from_parameters.py>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: examples.example_parametric_shapes.make_CAD_from_points
+   :members:
+   :show-inheritance:
 
-This python script demonstrates the parametric creation of a breeder blanket
+make_blanket_from_points.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`make_blanket_from_points.py <https://github.com/ukaea/paramak/blob/moving_examples_around/examples/example_parametric_shapes/make_blanket_from_points.py>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: examples.example_parametric_shapes.make_blanket_from_points
+   :members:
+   :show-inheritance:
 
-This python script demonstrates the creation of a breeder blanket from points
+make_blanket_from_parameters.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`make_can_reactor_from_parameters.py <https://github.com/ukaea/paramak/blob/moving_examples_around/examples/example_parametric_shapes/make_can_reactor_from_parameters.py>`_ 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: examples.example_parametric_shapes.make_blanket_from_parameters
+   :members:
+   :show-inheritance:
 
-This script creates a can shaped reactor with plasma, center column, blanket, first wall, divertor and core
+make_can_reactor_from_points.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`make_can_reactor_from_points.py <https://github.com/ukaea/paramak/blob/moving_examples_around/examples/example_parametric_shapes/make_can_reactor_from_points.py>`_ 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: examples.example_parametric_shapes.make_can_reactor_from_points
+   :members:
+   :show-inheritance:
 
-This python script demonstrates the creation of 3D volumnes from points to create an example reactor
+make_can_reactor_from_parameters.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: examples.example_parametric_shapes.make_can_reactor_from_parameters
+   :members:
+   :show-inheritance:
