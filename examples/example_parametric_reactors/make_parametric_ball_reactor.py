@@ -14,10 +14,9 @@ def main():
                                     center_column_shield_inner_radius=120,
                                     number_of_tf_coils=16,
                                     number_of_pf_coils=5,
-                                    pf_coil_height= 20
-                                    pf_coil_width= 20
-                                    pf_case_thickness=10
-                                    
+                                    pf_coil_height=20,
+                                    pf_coil_width=20,
+                                    pf_case_thickness=10,
                                     )
 
     my_reactor.export_stp()
