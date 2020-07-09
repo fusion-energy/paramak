@@ -4,7 +4,7 @@ import numpy as np
 
 
 class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
-    """Creates a rectangular poloidal field coil
+    """Creates a coat hanger shaped toroidal field coil
 
     :param horizontal_start_point: the (x,z) coordinates of the inner
      upper point (cm)
