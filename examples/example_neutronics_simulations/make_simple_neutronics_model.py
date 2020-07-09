@@ -1,3 +1,6 @@
+"""
+Example which creates a simple neutronics model using parametric shapes
+"""
 
 import os
 
