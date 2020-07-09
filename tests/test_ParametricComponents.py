@@ -23,6 +23,22 @@ class test_BlanketConstantThicknessArcV(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
+class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
+    def test_ToroidalFieldCoilCoatHanger_creation(self):
+        """creates blanket from parametric shape and checks a solid is created"""
+
+        test_shape=paramak.ToroidalFieldCoilCoatHanger(
+            horizontal_start_point=(200,500),
+            horizontal_length=400,
+            vertical_start_point=(700,50),
+            vertical_length=500,
+            thickness=50,
+            distance=50,
+            number_of_coils=5)
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
 
 class test_BlanketConstantThicknessArcH(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
