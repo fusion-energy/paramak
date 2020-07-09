@@ -7,7 +7,6 @@ import paramak
 
 def main():
 
-
     rot_angle = 180
 
     shape = paramak.Plasma(
@@ -178,5 +177,5 @@ def main():
     shape.export_stp('tf_coil_rectangle.stp')
 
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     main()

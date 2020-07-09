@@ -151,5 +151,5 @@ def main():
     fig.write_html("all_plasma_and_points.html")
 
 
-if __name__ == "__main__"":
+if __name__ == "__main__":
     main()
