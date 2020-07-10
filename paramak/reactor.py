@@ -166,7 +166,7 @@ class Reactor():
 
         :param filename: the filename for saving the stp file to
         :type filename: str
-        ...
+
         :return: the stp filename created
         :rtype: str
         """

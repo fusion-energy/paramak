@@ -3,7 +3,7 @@ import numpy as np
 
 
 class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
-    """Creates a rectangular toroidal field coil
+    """Creates a rectangular shaped toroidal field coil
 
     :param inner_upper_point: the (x,z) coordinates of the inner
      upper point (cm)

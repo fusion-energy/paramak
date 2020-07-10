@@ -2,6 +2,10 @@ from paramak import RotateMixedShape
 
 
 class CenterColumnShieldFlatTopCircular(RotateMixedShape):
+    """A center column shield volume with a circular outer profile joined to flat profiles
+    at the top and bottom of the shield, and a constant cylindrical inner profile.
+    """
+
     def __init__(
         self,
         height,
