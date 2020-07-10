@@ -2,7 +2,8 @@ from paramak import RotateStraightShape
 
 
 class PoloidalFieldCoilCaseFC(RotateStraightShape):
-    """Creates a casing for a reactangular coil
+    """Creates a casing for a reactangular poloidal field coil by building
+    around an existing coil (which is passed as an argument on construction)
 
     :param pf_coil: a pf coil object with a set width, heigh and center point
     :type pf_coil: PoloidalFieldCoil object

@@ -8,7 +8,8 @@ from paramak import RotateSplineShape
 
 
 class Plasma(RotateSplineShape):
-    """Creates a tokamak plasma shape that is controlled by 4 shaping parameters.
+    """Creates a double null tokamak plasma shape that is controlled
+     by 4 shaping parameters.
 
     :param major_radius: the major radius of the plasma (cm)
     :type major_radius: float

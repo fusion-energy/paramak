@@ -2,7 +2,8 @@ from paramak import RotateStraightShape
 
 
 class PoloidalFieldCoilCase(RotateStraightShape):
-    """Creates a casing for a reactangular coil
+    """Creates a casing for a reactangular coil from inputs that
+    describe the existing coil and the thickness of the casing required
 
     :param height: the vertical (Z axis) height of the coil (cm)
     :type height: float
