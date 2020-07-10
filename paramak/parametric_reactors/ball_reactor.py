@@ -1,7 +1,8 @@
-from paramak import Reactor
-import paramak
 
-class BallReactor(Reactor):
+import paramak
+import cadquery as cq
+
+class BallReactor(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,
     cylindical center column shielding, square toroidal field coils
 
@@ -21,7 +22,8 @@ class BallReactor(Reactor):
         center_column_shield_inner_radius,
         center_column_shield_outer_radius,
         number_of_tf_coils,
-        rotation_angle = 360
+        divertor_width,
+        rotation_angle = 180
     ):
 
         super().__init__()
@@ -34,6 +36,7 @@ class BallReactor(Reactor):
         self.center_column_shield_inner_radius = center_column_shield_inner_radius
         self.center_column_shield_outer_radius = center_column_shield_outer_radius
         self.number_of_tf_coils = number_of_tf_coils
+        self.divertor_width = divertor_width
 
         self.create_components()
 
@@ -62,6 +65,37 @@ class BallReactor(Reactor):
 
         self.add_shape_or_component(blanket)
 
+        space_for_divertor = plasma.x_point - self.center_column_shield_outer_radius
+
+        print('space_for_divertor', space_for_divertor)
+
+        divertor_upper_part = paramak.RotateStraightShape(points=[
+            (self.center_column_shield_outer_radius,(plasma.z_point + self.offset_from_plasma + self.blanket_thickness)),
+            (self.center_column_shield_outer_radius,(plasma.z_point + self.offset_from_plasma)),
+            (plasma.x_point, (plasma.z_point + self.offset_from_plasma)),
+            (plasma.x_point, plasma.z_point + self.offset_from_plasma+ self.blanket_thickness),
+            ],
+            stp_filename='divertor_upper.stp',
+            rotation_angle=self.rotation_angle,
+            material_tag='divertor_material'
+            )
+
+        self.add_shape_or_component(divertor_upper_part)
+
+        divertor_lower_part = paramak.RotateStraightShape(points=[
+            (self.center_column_shield_outer_radius,-(plasma.z_point + self.offset_from_plasma + self.blanket_thickness)),
+            (self.center_column_shield_outer_radius,-(plasma.z_point + self.offset_from_plasma)),
+            (plasma.x_point, -(plasma.z_point + self.offset_from_plasma)),
+            (plasma.x_point, -(plasma.z_point + self.offset_from_plasma+ self.blanket_thickness)),
+            ],
+            stp_filename='divertor_lower.stp',
+            rotation_angle=self.rotation_angle,
+            material_tag='divertor_material'
+            )
+
+        self.add_shape_or_component(divertor_lower_part)
+
+
         # The height of this center column is calculated using CadQuery commands
         center_column_shield = paramak.CenterColumnShieldCylinder(
             height=2*(plasma.z_point + self.offset_from_plasma + self.blanket_thickness),
@@ -85,3 +119,5 @@ class BallReactor(Reactor):
         )
 
         self.add_shape_or_component(inboard_tf_coils)
+
+        self.solid = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
