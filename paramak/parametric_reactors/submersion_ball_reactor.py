@@ -1,7 +1,8 @@
-from paramak import Reactor
-import paramak
 
-class SubmersionBallReactor(Reactor):
+import paramak
+import cadquery as cq
+
+class SubmersionBallReactor(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,
     cylindical center column shielding, square toroidal field coils and
     a submersion blanket.
@@ -126,6 +127,9 @@ class SubmersionBallReactor(Reactor):
         # this takes the first solid from the compound
         submersion_blanket.solid = submersion_blanket.solid.solids().first()
 
+        #another way to do this is using selectors
+        # submersion_blanket.solid = submersion_blanket.solid.solids(cq.selectors.NearestToPointSelector((1000, 0, 0)))
+
         self.add_shape_or_component(submersion_blanket)
 
         blanket_casing = paramak.RotateMixedShape(
@@ -146,3 +150,5 @@ class SubmersionBallReactor(Reactor):
         blanket_casing.solid = blanket_casing.solid.solids().first()
 
         self.add_shape_or_component(blanket_casing)
+
+        self.solid = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])

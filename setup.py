@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="paramak",
-    version="0.0.2",
+    version="0.0.3",
     author="Jonathan Shimwell",
     author_email="jonathan.shimwell@ukaea.uk",
     description="Create 3D fusion reactor CAD models based on input parameters",
