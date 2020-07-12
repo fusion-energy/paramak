@@ -26,7 +26,7 @@ def main():
     )
     shape.export_stp('blanket_constant_thickness.stp')
 
-    shape = paramak.BlanketConstantThicknessPlasma(
+    shape = paramak.BlanketConstantThicknessFP(
         plasma=plasma,
         thickness=100,
         stop_angle=250,
@@ -36,7 +36,7 @@ def main():
     )
     shape.export_stp('blanket_constant_thickness_plasma.stp')
 
-    shape = paramak.BlanketConstantThicknessPlasma(
+    shape = paramak.BlanketConstantThicknessFP(
         thickness=80, start_angle=-40, stop_angle=230,
         minor_radius=200, major_radius=620, triangularity=0.55,
         elongation=1.85, rotation_angle=180)

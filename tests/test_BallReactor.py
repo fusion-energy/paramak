@@ -20,7 +20,8 @@ class test_BallReactor(unittest.TestCase):
             center_column_shield_outer_radius=180,
             center_column_shield_inner_radius=120,
             number_of_tf_coils=16,
+            divertor_width=100,
             rotation_angle = 180
         )
 
-        assert len(test_shape.shapes_and_components) == 4
+        assert len(test_shape.shapes_and_components) == 6
