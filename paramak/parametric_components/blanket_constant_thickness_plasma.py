@@ -42,11 +42,12 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
         thickness,
         start_angle,
         stop_angle,
-        minor_radius=None,
-        major_radius=None,
-        triangularity=None,
-        elongation=None,
         plasma=None,
+        minor_radius=150,
+        major_radius=450,
+        triangularity=0.55,
+        elongation=2.0,
+        vertical_displacement=0,
         offset_from_plasma=0,
         num_points=50,
         workplane="XZ",
@@ -78,6 +79,7 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
         self.start_angle = start_angle
         self.stop_angle = stop_angle
         self.plasma = plasma
+        self.vertical_displacement = vertical_displacement
         if plasma is None:
             self.minor_radius = minor_radius
             self.major_radius = major_radius
@@ -126,7 +128,8 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
                 theta + self.triangularity*pkg.sin(theta))
 
         def Z(theta, pkg=np):
-            return self.elongation*self.minor_radius*pkg.sin(theta)
+            return self.elongation*self.minor_radius*pkg.sin(theta) + \
+                self.vertical_displacement
         # create array of angles theta
         thetas = np.linspace(
                     self.start_angle*conversion_factor,
