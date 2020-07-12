@@ -76,6 +76,42 @@ class test_BlanketConstantThickness(unittest.TestCase):
         assert test_shape.volume > 1000
 
 
+class test_BlanketConstantThicknessPlasma(unittest.TestCase):
+    def test_BlanketConstantThicknessPlasma_creation_plasma(self):
+        """creates blanket from parametric shape and checks a solid is created"""
+        plasma = paramak.Plasma(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+        )
+        test_shape = paramak.BlanketConstantThicknessPlasma(
+            plasma=plasma,
+            thickness=200,
+            stop_angle=90,
+            start_angle=270,
+            offset_from_plasma=30,
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+    def test_BlanketConstantThicknessPlasma_creation_noplasma(self):
+        """creates blanket from parametric shape and checks a solid is created"""
+
+        test_shape = paramak.BlanketConstantThicknessPlasma(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=90,
+            start_angle=270,
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
 class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
         """creates a poloidal field coil from parametric shape and checks a solid is created"""

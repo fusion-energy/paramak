@@ -26,6 +26,21 @@ def main():
     )
     shape.export_stp('blanket_constant_thickness.stp')
 
+    shape = paramak.BlanketConstantThicknessPlasma(
+        plasma=plasma,
+        thickness=100,
+        stop_angle=250,
+        start_angle=-90,
+        offset_from_plasma=30,
+        rotation_angle=180
+    )
+    shape.export_stp('blanket_constant_thickness_plasma.stp')
+
+    shape = paramak.BlanketConstantThicknessPlasma(
+        thickness=80, start_angle=-40, stop_angle=230,
+        minor_radius=200, major_radius=620, triangularity=0.55,
+        elongation=1.85, rotation_angle=180)
+    shape.export_stp('blanket_constant_thickness_plasma_from_parameters.stp')
 
     shape=paramak.ToroidalFieldCoilCoatHanger(
         horizontal_start_point=(200,500),
