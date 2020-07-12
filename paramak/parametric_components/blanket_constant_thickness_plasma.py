@@ -107,7 +107,7 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
 
     def find_points(self):
         conversion_factor = 2*np.pi/360
-        precision = 0.1
+        num = 50
 
         def R(theta, pkg=np):
             return self.major_radius + self.minor_radius*pkg.cos(
@@ -124,23 +124,24 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
         Z_derivative = sp.diff(Z_sp, theta_sp)
 
         # create array of angles theta
-        thetas = np.arange(
+        thetas = np.linspace(
                     self.start_angle*conversion_factor,
                     self.stop_angle*conversion_factor,
-                    precision)
+                    num=num,
+                    endpoint=True)
 
         # create inner points
         inner_points_R = R(thetas)
         inner_points_Z = Z(thetas)
 
         points = [
-            (inner_points_R[i], inner_points_Z[i], 'straight')
+            [inner_points_R[i], inner_points_Z[i], 'spline']
             for i in range(len(thetas))
             ]
+        points[-1][2] = 'straight'
 
         # compute outer points
-        for i in range(len(thetas)):
-            theta = thetas[-(i+1)]
+        for theta in np.flip(thetas):
             # get local value of derivatives
             val_R_derivative = float(R_derivative.subs(theta_sp, theta))
             val_Z_derivative = float(Z_derivative.subs(theta_sp, theta))
@@ -158,5 +159,6 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
             val_R_outer = R(theta) + self.thickness*nx
             val_Z_outer = Z(theta) + self.thickness*ny
 
-            points.append((float(val_R_outer), float(val_Z_outer), 'straight'))
+            points.append([float(val_R_outer), float(val_Z_outer), 'spline'])
+        points[-2][2] = 'straight'
         self.points = points
