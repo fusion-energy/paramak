@@ -47,7 +47,7 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
         triangularity,
         elongation,
         plasma=None,
-        plasma_offset=0,
+        offset_from_plasma=0,
         num_points=50,
         workplane="XZ",
         points=None,
@@ -83,13 +83,13 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
             self.major_radius = major_radius
             self.triangularity = triangularity
             self.elongation = elongation
-            self.plasma_offset = 0
+            self.offset_from_plasma = 0
         else:  # if plasma object is given, use its parameters
             self.minor_radius = plasma.minor_radius
             self.major_radius = plasma.major_radius
             self.triangularity = plasma.triangularity
             self.elongation = plasma.elongation
-            self.plasma_offset = plasma_offset
+            self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
         self.points = points
 
@@ -157,14 +157,14 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
             points = self.create_offset_points(
                 thetas, R, Z,
                 R_derivative, Z_derivative,
-                self.plasma_offset)
+                self.offset_from_plasma)
         points[-1][2] = 'straight'
 
         # compute outer points
         outer_points = self.create_offset_points(
             thetas, R, Z,
             R_derivative, Z_derivative,
-            self.thickness + self.plasma_offset, flip=True)
+            self.thickness + self.offset_from_plasma, flip=True)
         points = points + outer_points
         points[-2][2] = 'straight'
         self.points = points
