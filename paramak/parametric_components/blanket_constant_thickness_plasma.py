@@ -10,8 +10,26 @@ class BlanketConstantThicknessPlasma(RotateMixedShape):
     """
     :param thickness:  the thickness of the blanket (cm)
     :type thickness: float
-    :param thickness:  the thickness of the blanket (cm)
-    :type thickness: float
+    :param stop_angle: the angle in degrees to stop the blanket, measured anti
+     clockwise from 3 o'clock
+    :type stop_angle: float
+    :param start_angle: the angle in degrees to start the blanket, measured
+     anti clockwise from 3 o'clock
+    :type start_angle: float
+    :param minor_radius: the minor radius of the plasma (cm)
+    :type minor_radius: float
+    :param major_radius: the major radius of the plasma (cm)
+    :type major_radius: float
+    :param triangularity: the triangularity of the plasma
+    :type triangularity: float
+    :param elongation: the elongation of the plasma
+    :type elongation: float
+    :param vertical_displacement: the vertical_displacement of the plasma (cm)
+    :type vertical_displacement: float
+    :param offset_from_plasma: the distance bettwen the plasma and the blanket (cm)
+    :type offset_from_plasma: float
+    :param num_points: number of points that will describe the shape
+    :type num_points: int
     :param name: The legend name used when exporting a html graph of the shape
     :type name: str
     :param color: the color to use when exporting as html graphs or png images
