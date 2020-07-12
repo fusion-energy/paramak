@@ -25,6 +25,7 @@ setuptools.setup(
         "pyglet",
         "plotly",
         "scipy",
+        "sympy",
         "numpy",
         "tqdm",
         "matplotlib",
