@@ -31,18 +31,6 @@ BlanketConstantThicknessArcV()
 BlanketConstantThicknessFP()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241428-c56f8800-bb9a-11ea-9d97-d45ff7089f92.png
-   :width: 250
-   :height: 200
-   :align: center
-
-.. automodule:: paramak.parametric_components.blanket_constant_thickness_fp
-   :members:
-   :show-inheritance:
-
-BlanketConstantThicknessPlasma()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 .. image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
    :width: 250
    :height: 200
