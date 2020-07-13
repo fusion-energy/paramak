@@ -24,7 +24,8 @@ class Plasma(RotateSplineShape):
     :param num_points: number of points to described the shape
     :type num_points: int
 
-    :return: a shape object that has generic functionality
+    :return: a shape object that has generic functionality with 4 attributes
+     outer_equatorial_point, inner_equatorial_point, high_point, low_point
     :rtype: paramak shape object
     """
 
@@ -75,6 +76,11 @@ class Plasma(RotateSplineShape):
         self.points = points
         self.x_point = None
         self.z_point = None
+        self.outer_equatorial_point = None
+        self.inner_equatorial_point = None
+        self.high_point = None
+        self.low_point = None
+
 
     @property
     def points(self):
@@ -161,3 +167,15 @@ class Plasma(RotateSplineShape):
 
         # set self.points
         self.points = list(points)
+
+        # set the points of interest
+        self.high_point = (
+            self.major_radius-self.triangularity*self.minor_radius,
+            self.elongation*self.minor_radius)
+        self.low_point = (
+            self.major_radius-self.triangularity*self.minor_radius,
+            -self.elongation*self.minor_radius)
+        self.outer_equatorial_point = (
+            self.major_radius + self.minor_radius, 0)
+        self.inner_equatorial_point = (
+            self.major_radius - self.minor_radius, 0)
