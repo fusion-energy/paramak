@@ -1,6 +1,10 @@
 Paramak Module Test Package
 ===========================
 
+The tests are run automatically with every commit to the github repository and 
+the results are available on Circle Ci. Running the tests locally is also possible
+by running  pytest tests from the paramak based directory.
+
 test\_RotateStraightShape
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
