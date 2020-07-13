@@ -165,7 +165,7 @@ PoloidalFieldCoilCase()
 Plasma()
 ^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241481-dddfa280-bb9a-11ea-95c7-408c935c6763.png
+.. image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
     :width: 220px
     :height: 200px
     :align: center
