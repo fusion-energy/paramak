@@ -24,6 +24,10 @@ BlanketConstantThicknessArcV()
    :width: 250
    :height: 200
    :align: center
+.. image:: https://user-images.githubusercontent.com/8583900/87306205-94367680-c50f-11ea-81f9-f668be3416a7.png
+   :width: 250
+   :height: 200
+   :align: center
 
 .. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_v
    :members:
