@@ -1,5 +1,5 @@
-Parametric Components
-=====================
+Examples - Parametric Components
+================================
 
 These are components that represent a selection of the components found in fusion
 reactors and are created from parameters. These componets all inherit from the 

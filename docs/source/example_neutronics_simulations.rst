@@ -1,5 +1,5 @@
-Examples - Neutronics Simulations
-=================================
+Neutronics Simulations
+======================
 
 make_simple_neutronics_model.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
