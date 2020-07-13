@@ -64,7 +64,6 @@ class Plasma(RotateSplineShape):
         )
 
         # properties needed for plasma shapes
-        # some of these properties may not be required here
         self.elongation = elongation
         self.major_radius = major_radius
         self.minor_radius = minor_radius
@@ -72,9 +71,6 @@ class Plasma(RotateSplineShape):
         self.triangularity = triangularity
         self.vertical_displacement = vertical_displacement
         self.num_points = num_points
-        # self.color = color   # Inherited by super
-        # self.solid = solid   # Inherited by super
-        # self.stp_filename = stp_filename   # Inherited by super
         self.points = points
         self.x_point = None
         self.z_point = None
@@ -106,17 +102,6 @@ class Plasma(RotateSplineShape):
             raise ValueError("openmc_install_directory is out of range")
         else:
             self._openmc_install_directory = openmc_install_directory
-
-    @property
-    def single_null(self):
-        return self._single_null
-
-    @single_null.setter
-    def single_null(self, single_null):
-        if type(single_null) != bool:
-            raise ValueError("single_null must be True or False")
-        else:
-            self._single_null = single_null
 
     @property
     def minor_radius(self):
