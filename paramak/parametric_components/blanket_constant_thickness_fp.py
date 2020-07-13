@@ -8,8 +8,9 @@ from paramak import RotateMixedShape
 
 
 class BlanketConstantThicknessFP(RotateMixedShape):
-    """
-    :param thickness:  the thickness of the blanket (cm)
+    """A blanket volume created from plasma parameters.
+
+    :param thickness: the thickness of the blanket (cm)
     :type thickness: float
     :param stop_angle: the angle in degrees to stop the blanket, measured anti
      clockwise from 3 o'clock
@@ -195,22 +196,27 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             self, thetas, R_fun, Z_fun, R_derivative, Z_derivative, offset,
             flip=False):
         """generates a list of points following parametric equations with an
-            offset.
+            offset
+        
+        :param thetas: list of angles (radians)
+        :type thetas: list
+        :param R_fun: parametric function for R coordinate (cm)
+        :type R_fun: callable
+        :param Z_fun: parametric function for Z coordinate (cm)
+        :type Z_fun: callable
+        :param R_derivative: derivative of R over theta (cm/rad)
+        :type R_derivative: sympy.Mul
+        :param Z_derivative: derivative of Z over theta (cm/rad)
+        :type Z_derivative: sympy.Mul
+        :param offset: offset value (cm). offset=0 will follow the parametric
+            equations.
+        :type offset: float
+        :param flip: if True thetas will be iterated from the end. Defaults
+            to False.
+        :type flip: bool
 
-        Args:
-            thetas (list): list of angles (radiants)
-            R_fun (callable): parametric function for R coordinate (cm)
-            Z_fun ([type]): parametric function for Z coordinate (cm)
-            R_derivative (sympy.Mul): derivative of R over theta (cm/rad)
-            Z_derivative (sympy.Mul): derivative of Z over theta (cm/rad)
-            offset (float): offset value (cm). offset=0 will follow the
-                parametric equations.
-            flip (bool, optional): If True thetas will be iterated from the
-                end. Defaults to False.
-
-        Returns:
-            list: list of points
-                [[R1, Z1, connection1], [R2, Z2, connection2], ...]
+        :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2], ...]
+        :rtype: list
         """
 
         points = []
