@@ -1,8 +1,7 @@
 Paramak Shapes
 ==============
 
-Main shape families (user-classes)
-----------------------------------
+
 
 RotateStraightShape()
 ^^^^^^^^^^^^^^^^^^^^^
@@ -97,22 +96,5 @@ ExtrudeCircleShape()
    :align: center
 
 .. automodule:: paramak.parametric_shapes.extruded_circle_shape
-   :members:
-   :show-inheritance:
-
-Other modules
--------------
-
-Shape()
-^^^^^^^
-
-.. automodule:: paramak.shape
-   :members:
-   :show-inheritance:
-
-Reactor()
-^^^^^^^^^
-
-.. automodule:: paramak.reactor
    :members:
    :show-inheritance:
