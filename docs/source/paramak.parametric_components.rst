@@ -1,8 +1,9 @@
-Parametric Components
-=====================
+Examples - Parametric Components
+================================
 
-They are the other modules wrapped and produce specific shapes from parameters.
-Allows easy production of shapes commonly used in fusion modelling.
+These are components that represent a selection of the components found in fusion
+reactors and are created from parameters. These componets all inherit from the 
+parametric shape classes.
 
 BlanketConstantThicknessArcH()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -20,6 +21,10 @@ BlanketConstantThicknessArcV()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
+   :width: 250
+   :height: 200
+   :align: center
+.. image:: https://user-images.githubusercontent.com/8583900/87306205-94367680-c50f-11ea-81f9-f668be3416a7.png
    :width: 250
    :height: 200
    :align: center
