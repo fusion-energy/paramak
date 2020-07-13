@@ -150,7 +150,8 @@ class Plasma(RotateSplineShape):
                 theta + self.triangularity*np.sin(theta))
 
         def Z(theta):
-            return self.elongation*self.minor_radius*np.sin(theta)
+            return self.elongation*self.minor_radius*np.sin(theta) + \
+                self.vertical_displacement
 
         # R and Z coordinates
         R_points, Z_points = R(theta), Z(theta)
