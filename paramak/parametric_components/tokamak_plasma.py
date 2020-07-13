@@ -21,7 +21,8 @@ class Plasma(RotateSplineShape):
     :type elongation: float
     :param vertical_displacement: the vertical_displacement of the plasma (cm)
     :type vertical_displacement: float
-
+    :param num_points: number of points to described the shape
+    :type num_points: int
 
     :return: a shape object that has generic functionality
     :rtype: paramak shape object
