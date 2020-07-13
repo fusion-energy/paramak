@@ -25,7 +25,8 @@ class Plasma(RotateSplineShape):
     :type num_points: int
 
     :return: a shape object that has generic functionality with 4 attributes
-     outer_equatorial_point, inner_equatorial_point, high_point, low_point
+     (outer_equatorial_point, inner_equatorial_point, high_point, low_point)
+      as tuples of 2 floats
     :rtype: paramak shape object
     """
 
