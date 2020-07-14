@@ -299,23 +299,29 @@ class Shape:
 
         return str(Pfilename)
 
-    def export_stp(self, filename):
+    def export_stp(self, filename=None):
         """Exports an stp file for the Shape.solid.
         If the provided filename doesn't end with
-        .stp or .step then .stp will be added
+        .stp or .step then .stp will be added. If a
+        filename is not provided and the shapes 
+        stp_filename property is not None the stp_filename
+        will be used as the export filename
 
         :param filename: the filename of the stp
         :type filename: str
         """
 
-        Pfilename = Path(filename)
+        if filename != None:
+            Pfilename = Path(filename)
 
-        if Pfilename.suffix == ".stp" or Pfilename.suffix == ".step":
-            pass
-        else:
-            Pfilename = Pfilename.with_suffix(".stp")
+            if Pfilename.suffix == ".stp" or Pfilename.suffix == ".step":
+                pass
+            else:
+                Pfilename = Pfilename.with_suffix(".stp")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+            Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        elif self.stp_filename != None:
+            Pfilename = Path(self.stp_filename)
 
         with open(Pfilename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)

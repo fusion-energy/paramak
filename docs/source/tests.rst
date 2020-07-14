@@ -1,5 +1,5 @@
-Paramak Module Test Package
-===========================
+Test Suite
+==========
 
 The tests are run automatically with every commit to the github repository and 
 the results are available on Circle Ci. Running the tests locally is also possible
