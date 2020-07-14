@@ -124,8 +124,8 @@ class test_PoloidalFieldCoilCase(unittest.TestCase):
 
 
 class test_Plasma(unittest.TestCase):
-    def test_plasma_elongation_type(self):
-        """creates a plasma object and checks elongation is type float"""
+    def test_plasma_attributes(self):
+        """creates a plasma object and checks its attributes"""
 
         test_plasma = paramak.Plasma()
 
@@ -144,6 +144,54 @@ class test_Plasma(unittest.TestCase):
             test_plasma.elongation = 400
 
         self.assertRaises(ValueError, test_plasma_elongation_max_setting)
+
+    def test_plasma_x_points(self):
+        """Checks the location of the x point for various plasma configurations
+        """
+        triangularity = -0.7
+        elongation = 1.6
+        minor_radius = 200
+        major_radius = 600
+        for triangularity, elongation, minor_radius, major_radius in zip(
+                [-0.7, 0, 0.5],  # triangularity
+                [1, 1.5, 2],  # elongation
+                [100, 200, 300],  # minor radius
+                [300, 400, 600]):  # major radius
+
+            for config in ["non-null", "single-null", "double-null"]:
+
+                # Run
+                test_plasma = paramak.Plasma(
+                    configuration=config,
+                    triangularity=triangularity,
+                    elongation=elongation,
+                    minor_radius=minor_radius,
+                    major_radius=major_radius)
+
+                # Expected
+                expected_lower_x_point, expected_upper_x_point = None, None
+                if config == "single-null" or \
+                   config == "double-null":
+                    expected_lower_x_point = (
+                        1-(1+test_plasma.x_point_shift)*triangularity *
+                        minor_radius,
+                        (1+test_plasma.x_point_shift)*elongation *
+                        minor_radius
+                    )
+
+                    if config == "double-null":
+                        expected_upper_x_point = (
+                            expected_lower_x_point[0],
+                            -expected_lower_x_point[1]
+                        )
+
+                # Check
+                for point, expected_point in zip(
+                        [test_plasma.lower_x_point,
+                            test_plasma.upper_x_point],
+                        [expected_lower_x_point,
+                            expected_upper_x_point]):
+                    assert point == expected_point
 
     def test_export_plasma_source(self):
         """checks that export_stp() exports plasma stp file"""
