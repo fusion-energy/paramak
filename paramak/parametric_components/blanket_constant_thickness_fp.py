@@ -192,11 +192,8 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         points[-2][2] = 'straight'
         self.points = points
 
-    def create_offset_points(
-            self, thetas, R_fun, Z_fun, R_derivative, Z_derivative, offset,
-            flip=False):
-        """generates a list of points following parametric equations with an
-            offset
+    def create_offset_points(self, thetas, R_fun, Z_fun, R_derivative, Z_derivative, offset, flip=False):
+        """generates a list of points following parametric equations with an offset
         
         :param thetas: list of angles (radians)
         :type thetas: list
@@ -209,10 +206,10 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         :param Z_derivative: derivative of Z over theta (cm/rad)
         :type Z_derivative: sympy.Mul
         :param offset: offset value (cm). offset=0 will follow the parametric
-            equations.
+         equations.
         :type offset: float
         :param flip: if True thetas will be iterated from the end. Defaults
-            to False.
+         to False.
         :type flip: bool
 
         :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2], ...]
@@ -243,4 +240,5 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             val_Z_outer = Z_fun(theta) + offset*ny
 
             points.append([float(val_R_outer), float(val_Z_outer), 'spline'])
+            
         return points
