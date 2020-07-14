@@ -42,6 +42,7 @@ class Plasma(RotateSplineShape):
         triangularity=0.55,
         vertical_displacement=0,
         num_points=50,
+        configuration="non-null",
         solid=None,
         stp_filename="plasma.stp",
         color=None,
@@ -73,10 +74,13 @@ class Plasma(RotateSplineShape):
         self.vertical_displacement = vertical_displacement
         self.num_points = num_points
         self.points = points
+        self.configuration = configuration
+
         self.outer_equatorial_point = None
         self.inner_equatorial_point = None
         self.high_point = None
         self.low_point = None
+        self.lower_x_point, self.upper_x_point = None, None
 
 
     @property
