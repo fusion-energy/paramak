@@ -19,3 +19,4 @@ dependencies:
   - pip:
     - pyrender
     - neutronics-material-maker
+    - sympy
