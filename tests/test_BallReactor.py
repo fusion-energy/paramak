@@ -15,6 +15,8 @@ class test_BallReactor(unittest.TestCase):
         test_shape = paramak.BallReactor(
             major_radius=300,
             minor_radius=100,
+            elongation=2,
+            triangularity=0.9,
             offset_from_plasma=20,
             blanket_thickness=100,
             center_column_shield_outer_radius=180,
@@ -23,5 +25,7 @@ class test_BallReactor(unittest.TestCase):
             divertor_width=100,
             rotation_angle = 180
         )
+
+        test_shape.export_stp()
 
         assert len(test_shape.shapes_and_components) == 6

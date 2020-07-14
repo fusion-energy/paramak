@@ -130,5 +130,3 @@ class BallReactor(paramak.Reactor):
         )
 
         self.add_shape_or_component(inboard_tf_coils)
-
-        # self.solid = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])

@@ -22,6 +22,8 @@ class SubmersionBallReactor(paramak.Reactor):
         self,
         major_radius,
         minor_radius,
+        elongation,
+        triangularity,
         offset_from_plasma,
         blanket_thickness,
         firstwall_thickness,
@@ -36,6 +38,8 @@ class SubmersionBallReactor(paramak.Reactor):
 
         self.major_radius = major_radius
         self.minor_radius = minor_radius
+        self.elongation = elongation
+        self.triangularity = triangularity
         self.offset_from_plasma = offset_from_plasma
         self.blanket_thickness = blanket_thickness
         self.firstwall_thickness = firstwall_thickness
@@ -52,69 +56,61 @@ class SubmersionBallReactor(paramak.Reactor):
 
         plasma = paramak.Plasma(major_radius=self.major_radius,
                                 minor_radius=self.minor_radius,
+                                elongation=self.elongation,
+                                triangularity=self.triangularity,
                                 rotation_angle=self.rotation_angle)
         plasma.create_solid()
 
         self.add_shape_or_component(plasma)
 
-        outboard_firstwall = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=tuple(map(operator.add, 
-                plasma.outer_equatorial_point,
-                (self.offset_from_plasma, 0))),
-            inner_upper_point=tuple(map(operator.add, 
-                plasma.high_point,
-                (0, self.offset_from_plasma))),
-            inner_lower_point=tuple(map(operator.add, 
-                plasma.low_point,
-                (0, -self.offset_from_plasma))),
+        inboard_firstwall = paramak.BlanketConstantThicknessFP(
+            plasma=plasma,
+            start_angle=90,
+            stop_angle=270,
+            offset_from_plasma=self.offset_from_plasma,
+            thickness=self.firstwall_thickness,
+            rotation_angle=self.rotation_angle,
+            stp_filename='inboard_firstwall.stp'
+        )
+
+
+        self.add_shape_or_component(inboard_firstwall)
+
+        outboard_firstwall = paramak.BlanketConstantThicknessFP(
+            plasma=plasma,
+            stop_angle=-70,
+            start_angle=70,
+            offset_from_plasma=self.offset_from_plasma,
             thickness=self.firstwall_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='outboard_firstwall.stp'
         )
 
-
         self.add_shape_or_component(outboard_firstwall)
 
-        inboard_firstwall = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=tuple(map(operator.add, 
-                plasma.inner_equatorial_point,
-                (self.offset_from_plasma, 0))),
-            inner_upper_point=tuple(map(operator.add, 
-                plasma.high_point,
-                (0, self.offset_from_plasma))),
-            inner_lower_point=tuple(map(operator.add, 
-                plasma.low_point,
-                (0, -self.offset_from_plasma))),
-            thickness=-self.firstwall_thickness,
+        # The height of this center column is calculated using CadQuery commands
+        center_column_shield = paramak.CenterColumnShieldCylinder(
+            height=2*(plasma.high_point[1] + self.offset_from_plasma),
+            inner_radius=self.center_column_shield_inner_radius,
+            outer_radius=self.center_column_shield_outer_radius,
             rotation_angle=self.rotation_angle,
-            stp_filename='inboard_firstwall.stp'
+            # color=centre_column_color,
+            stp_filename="center_column_shield.stp",
+            material_tag="center_column_material",
+        )
+        self.add_shape_or_component(center_column_shield)
+
+        inboard_tf_coils = paramak.InnerTfCoilsCircular(
+            height=2*(plasma.high_point[1] + self.offset_from_plasma),
+            outer_radius = self.center_column_shield_inner_radius,
+            inner_radius = 30,
+            number_of_coils = self.number_of_tf_coils,
+            gap_size=5,
+            stp_filename="inboard_tf_coils.stp",
+            material_tag="inboard_tf_coils_material",
         )
 
-        self.add_shape_or_component(inboard_firstwall)
-
-        # # The height of this center column is calculated using CadQuery commands
-        # center_column_shield = paramak.CenterColumnShieldCylinder(
-        #     height=2*(plasma.z_point + self.offset_from_plasma),
-        #     inner_radius=self.center_column_shield_inner_radius,
-        #     outer_radius=self.center_column_shield_outer_radius,
-        #     rotation_angle=self.rotation_angle,
-        #     # color=centre_column_color,
-        #     stp_filename="center_column_shield.stp",
-        #     material_tag="center_column_material",
-        # )
-        # self.add_shape_or_component(center_column_shield)
-
-        # inboard_tf_coils = paramak.InnerTfCoilsCircular(
-        #     height=2*(plasma.z_point + self.offset_from_plasma),
-        #     outer_radius = self.center_column_shield_inner_radius,
-        #     inner_radius = 30,
-        #     number_of_coils = self.number_of_tf_coils,
-        #     gap_size=5,
-        #     stp_filename="inboard_tf_coils.stp",
-        #     material_tag="inboard_tf_coils_material",
-        # )
-
-        # self.add_shape_or_component(inboard_tf_coils)
+        self.add_shape_or_component(inboard_tf_coils)
 
         # submersion_blanket = paramak.RotateMixedShape(
         #     points=[
@@ -156,5 +152,3 @@ class SubmersionBallReactor(paramak.Reactor):
         # blanket_casing.solid = blanket_casing.solid.solids().first()
 
         # self.add_shape_or_component(blanket_casing)
-
-        # self.solid = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
