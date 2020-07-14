@@ -39,7 +39,6 @@ class Plasma(RotateSplineShape):
         elongation=2.0,
         major_radius=450,
         minor_radius=150,
-        single_null=True,
         triangularity=0.55,
         vertical_displacement=0,
         num_points=50,
@@ -70,13 +69,10 @@ class Plasma(RotateSplineShape):
         self.elongation = elongation
         self.major_radius = major_radius
         self.minor_radius = minor_radius
-        self.single_null = single_null
         self.triangularity = triangularity
         self.vertical_displacement = vertical_displacement
         self.num_points = num_points
         self.points = points
-        self.x_point = None
-        self.z_point = None
         self.outer_equatorial_point = None
         self.inner_equatorial_point = None
         self.high_point = None
