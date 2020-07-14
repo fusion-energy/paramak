@@ -23,6 +23,12 @@ class Plasma(RotateSplineShape):
     :type vertical_displacement: float
     :param num_points: number of points to described the shape
     :type num_points: int
+    :param configuration: plasma configuration
+     ("non-null", "single-null", "double-null"). Defaults to "non-null")
+    :type configuration: str
+    :param x_point_shift: Shift parameters for locating the X points in [0, 1].
+     Default to 0.1.
+    :type x_point_shift: float
 
     :return: a shape object that has generic functionality with 4 attributes
        (outer_equatorial_point, inner_equatorial_point, high_point, low_point)
@@ -43,6 +49,7 @@ class Plasma(RotateSplineShape):
         vertical_displacement=0,
         num_points=50,
         configuration="non-null",
+        x_point_shift=0.1,
         solid=None,
         stp_filename="plasma.stp",
         color=None,
@@ -75,13 +82,49 @@ class Plasma(RotateSplineShape):
         self.num_points = num_points
         self.points = points
         self.configuration = configuration
+        self.x_point_shift = x_point_shift
 
         self.outer_equatorial_point = None
         self.inner_equatorial_point = None
         self.high_point = None
         self.low_point = None
-        self.lower_x_point, self.upper_x_point = None, None
+        self.lower_x_point, self.upper_x_point = self.compute_x_points(
+            (minor_radius, major_radius), elongation, triangularity,
+            x_point_shift
+        )
 
+    def compute_x_points(self, radii, elongation, triangularity, shift):
+        """Computes the location of X points based on plasma parameters and
+         configuration
+
+        Args:
+            radii ((float, float)): minor and major radii
+            elongation (float): elongation
+            triangularity (float): triangularity
+            shift (float): shift for estimating X points locations
+
+        Returns:
+            ((float, float), (float, float)): lower and upper x points
+             coordinates. None if no x points
+        """
+        lower_x_point, upper_x_point = None, None  # non-null config
+        minor_radius, major_radius = radii
+
+        if self.configuration == "single-null" or \
+           self.configuration == "double-null":
+            # no X points for non-null config
+            lower_x_point = (
+                1-(1+shift)*triangularity*minor_radius,
+                (1+shift)*elongation*minor_radius
+            )
+
+            if self.configuration == "double-null":
+                # upper_x_point is up-down symmetrical
+                upper_x_point = (
+                    lower_x_point[0],
+                    -lower_x_point[1]
+                )
+        return lower_x_point, upper_x_point
 
     @property
     def points(self):
