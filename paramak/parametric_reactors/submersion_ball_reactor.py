@@ -36,6 +36,7 @@ class SubmersionBallReactor(paramak.Reactor):
 
         super().__init__()
 
+        self.inner_bore = 30
         self.major_radius = major_radius
         self.minor_radius = minor_radius
         self.elongation = elongation
@@ -103,7 +104,7 @@ class SubmersionBallReactor(paramak.Reactor):
         inboard_tf_coils = paramak.InnerTfCoilsCircular(
             height=2*(plasma.high_point[1] + self.offset_from_plasma),
             outer_radius = self.center_column_shield_inner_radius,
-            inner_radius = 30,
+            inner_radius = self.inner_bore,
             number_of_coils = self.number_of_tf_coils,
             gap_size=5,
             stp_filename="inboard_tf_coils.stp",
