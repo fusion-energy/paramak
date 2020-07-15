@@ -80,9 +80,9 @@ class test_object_properties(unittest.TestCase):
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_components"))
         output_filenames = [
-            "blanket_constant_thickness.stp",
+            "blanket_constant_thickness_outboard_plasma.stp",
+            "blanket_constant_thickness_inboard_plasma.stp",
             "blanket_constant_thickness_plasma.stp",
-            "blanket_constant_thickness_plasma_from_parameters.stp",
             "center_column_shield_cylinder.stp",
             "center_column_shield_hyperbola.stp",
             "center_column_shield_flat_top_hyperbola.stp",

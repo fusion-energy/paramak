@@ -15,5 +15,6 @@ coverage.xml
 .coverage
 examples/output
 paramak.egg-info/
-.jou
-.h5m
+*.jou
+*.h5m
+*.svg

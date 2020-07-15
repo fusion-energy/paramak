@@ -23,4 +23,4 @@ class test_SubmersionBallReactor(unittest.TestCase):
                                  casing_thickness=10
                                  )
 
-        assert len(test_shape.shapes_and_components) == 7
+        assert len(test_shape.shapes_and_components) == 3
