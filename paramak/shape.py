@@ -13,6 +13,8 @@ import plotly.graph_objects as go
 import pyrender
 import trimesh
 
+import json
+
 
 class Shape:
     """A shape object that represents a 3d volume and can have materials and
@@ -50,6 +52,7 @@ class Shape:
         stp_filename=None,
         azimuth_placement_angle=0,
         workplane="XZ",
+        look_up_table=None,
     ):
 
         self.points = points
@@ -68,6 +71,8 @@ class Shape:
         self.solid = None
         self.render_mesh = None
         # self.volume = None
+
+        self.look_up_table = look_up_table
 
     @property
     def workplane(self):
@@ -337,6 +342,15 @@ class Shape:
         with open(Pfilename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)
         print("Saved file as ", Pfilename)
+
+        # saving look up table
+        if self.look_up_table is not None:
+            if filename.endswith('.stp'):
+                prefix = filename[:-4]
+            json_filename = '{}_lookup_table.json'.format(prefix)
+            with open(json_filename, 'w+') as outfile:
+                json.dump(self.look_up_table, outfile)
+            print("Saved look-up table as {}".format(json_filename))
 
         return str(Pfilename)
 
