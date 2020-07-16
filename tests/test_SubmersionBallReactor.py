@@ -20,7 +20,9 @@ class test_SubmersionBallReactor(unittest.TestCase):
                                  center_column_shield_outer_radius=160,
                                  center_column_shield_inner_radius=100,
                                  number_of_tf_coils=16,
-                                 casing_thickness=10
+                                 casing_thickness=10,
+                                 elongation=2,
+                                 triangularity=0.55,
                                  )
 
-        assert len(test_shape.shapes_and_components) == 3
+        assert len(test_shape.shapes_and_components) == 5

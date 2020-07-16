@@ -242,6 +242,7 @@ class test_object_properties(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
+        test_shape.tet_mesh = "size 60"
         test_reactor = paramak.Reactor()
         test_reactor.add_shape_or_component(test_shape)
         returned_filename = test_reactor.export_neutronics_description(
@@ -255,8 +256,10 @@ class test_object_properties(unittest.TestCase):
         assert len(neutronics_description) == 2
         assert "filename" in neutronics_description[0].keys()
         assert "material" in neutronics_description[0].keys()
+        assert "tet_mesh" in neutronics_description[0].keys()
         assert neutronics_description[0]["material"] == "test_material"
         assert neutronics_description[0]["filename"] == "test.stp"
+        assert neutronics_description[0]["tet_mesh"] == "size 60"
         assert neutronics_description[1]["material"] == "Graveyard"
         assert neutronics_description[1]["filename"] == "Graveyard.stp"
         os.system("rm manifest_test.json")

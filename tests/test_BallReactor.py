@@ -13,17 +13,16 @@ class test_BallReactor(unittest.TestCase):
         """creates blanket from parametric shape and checks a solid is created"""
 
         test_shape = paramak.BallReactor(
-            major_radius=300,
-            minor_radius=100,
-            elongation=2,
-            triangularity=0.9,
-            offset_from_plasma=20,
-            blanket_thickness=100,
-            center_column_shield_outer_radius=180,
-            center_column_shield_inner_radius=120,
-            number_of_tf_coils=16,
-            divertor_width=100,
-            rotation_angle = 180
+                        inner_bore_radial_thickness=50,
+                        inboard_tf_leg_radial_thickness = 200,
+                        center_column_radial_thickness= 50,
+                        inner_plasma_gap_radial_thickness = 200,
+                        plasma_radial_thickness = 100,
+                        outer_plasma_gap_radial_thickness = 50,
+                        blanket_radial_thickness=100,
+                        elongation=2,
+                        triangularity=0.55,
+                        number_of_tf_coils=16,
         )
 
         test_shape.export_stp()

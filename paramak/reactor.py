@@ -29,6 +29,14 @@ class Reactor():
         self.stp_filenames = []
         self.solid = None
 
+    @property
+    def solid(self):
+        return cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
+
+    @solid.setter
+    def solid(self, value):
+        self._solid = value
+
     def add_shape_or_component(self, shapes):
         """Adds a parametric shape(s) or a parametric component(s) to the Reactor 
         object. An individual shape/component or a list of shapes/ components are
@@ -62,8 +70,6 @@ class Reactor():
                 else:
                     self.stp_filenames.append(shapes.stp_filename)
             self.shapes_and_components.append(shapes)
-        
-        self.solid = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
 
     def neutronics_description(self):
         """A descirption of the reactor containing materials and the filenames,
@@ -89,9 +95,17 @@ class Reactor():
                                   Reactor entries before using this method"
                 )
 
-            Shape_neutronics_description = entry.neutronics_description(
-                stp_filename=entry.stp_filename, material_tag=entry.material_tag
-            )
+            if entry.tet_mesh == None:
+                Shape_neutronics_description = entry.neutronics_description(
+                    stp_filename=entry.stp_filename,
+                    material_tag=entry.material_tag 
+                )
+            else:
+                Shape_neutronics_description = entry.neutronics_description(
+                    stp_filename=entry.stp_filename,
+                    material_tag=entry.material_tag,
+                    tet_mesh=entry.tet_mesh 
+                )
 
             neutronics_description.append(Shape_neutronics_description)
 
