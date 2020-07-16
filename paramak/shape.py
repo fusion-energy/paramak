@@ -355,7 +355,31 @@ class Shape:
                 print("Look-up table not found for shape {}".format(self.name))
 
         return str(Pfilename)
+    def export_look_up_table(self, filename):
+        """Exports a JSON file containing a look up table
+        which is useful for identifying faces. If provided
+        filename doesn't end with .json then .json will be added.
 
+        :param filename: the filename to save the json look up table
+        :type filename: str
+
+        :param filename: the filename of the json file
+        :type filename: str
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".json":
+            Pfilename = Pfilename.with_suffix(".json")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        with open(filename, "w") as outfile:
+            json.dump(self.look_up_table(), outfile, indent=4)
+
+        print("saved geometry description to ", Pfilename)
+
+        return filename
     def export_svg(self, filename):
         """Exports an svg file for the Shape.solid.
         If the provided filename doesn't end with .svg it will be added
