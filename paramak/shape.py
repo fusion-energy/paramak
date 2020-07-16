@@ -52,7 +52,6 @@ class Shape:
         stp_filename=None,
         azimuth_placement_angle=0,
         workplane="XZ",
-        look_up_table=None,
     ):
 
         self.points = points
@@ -72,7 +71,7 @@ class Shape:
         self.render_mesh = None
         # self.volume = None
 
-        self.look_up_table = look_up_table
+        self.look_up_table = None
 
     @property
     def workplane(self):
