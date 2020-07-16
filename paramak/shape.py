@@ -319,7 +319,7 @@ class Shape:
         """Exports an stp file for the Shape.solid.
         If the provided filename doesn't end with
         .stp or .step then .stp will be added. If a
-        filename is not provided and the shapes 
+        filename is not provided and the shapes
         stp_filename property is not None the stp_filename
         will be used as the export filename
 
@@ -327,7 +327,7 @@ class Shape:
         :type filename: str
         """
 
-        if filename != None:
+        if filename is not None:
             Pfilename = Path(filename)
 
             if Pfilename.suffix == ".stp" or Pfilename.suffix == ".step":
@@ -336,7 +336,7 @@ class Shape:
                 Pfilename = Pfilename.with_suffix(".stp")
 
             Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
-        elif self.stp_filename != None:
+        elif self.stp_filename is not None:
             Pfilename = Path(self.stp_filename)
 
         with open(Pfilename, "w") as f:
