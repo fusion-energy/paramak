@@ -342,18 +342,8 @@ class Shape:
             exporters.exportShape(self.solid, "STEP", f)
         print("Saved file as ", Pfilename)
 
-        # saving look up table
         if export_look_up_table:
-            if self.look_up_table is not None:
-                if filename.endswith('.stp'):
-                    prefix = filename[:-4]
-                json_filename = '{}_lookup_table.json'.format(prefix)
-                with open(json_filename, 'w+') as outfile:
-                    json.dump(self.look_up_table, outfile)
-                print("Saved look-up table as {}".format(json_filename))
-            else:
-                print("Look-up table not found for shape {}".format(self.name))
-
+            self.export_look_up_table(filename=Pfilename.with_suffix(".json"))
         return str(Pfilename)
 
     def export_look_up_table(self, filename):
