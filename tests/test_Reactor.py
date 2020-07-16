@@ -181,6 +181,22 @@ class test_object_properties(unittest.TestCase):
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
+    def test_exported_svg_files_exist(self):
+        """checks that export_stp() creates stp file in the \
+                specified location"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape.rotation_angle = 360
+        os.system("rm test_svg_image.svg")
+        test_reactor = paramak.Reactor()
+        test_reactor.add_shape_or_component(test_shape)
+
+        test_reactor.export_svg("test_svg_image.svg")
+
+        assert Path("test_svg_image.svg").exists() is True
+        os.system("rm test_svg_image.svg")
+
     def test_neutronics_desscription(self):
         def test_neutronics_description_without_material_tag():
             """checks that a ValueError is raised when the neutronics description \
