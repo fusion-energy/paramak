@@ -315,7 +315,7 @@ class Shape:
 
         return str(Pfilename)
 
-    def export_stp(self, filename=None):
+    def export_stp(self, filename=None, export_look_up_table=False):
         """Exports an stp file for the Shape.solid.
         If the provided filename doesn't end with
         .stp or .step then .stp will be added. If a
@@ -344,13 +344,16 @@ class Shape:
         print("Saved file as ", Pfilename)
 
         # saving look up table
-        if self.look_up_table is not None:
-            if filename.endswith('.stp'):
-                prefix = filename[:-4]
-            json_filename = '{}_lookup_table.json'.format(prefix)
-            with open(json_filename, 'w+') as outfile:
-                json.dump(self.look_up_table, outfile)
-            print("Saved look-up table as {}".format(json_filename))
+        if export_look_up_table:
+            if self.look_up_table is not None:
+                if filename.endswith('.stp'):
+                    prefix = filename[:-4]
+                json_filename = '{}_lookup_table.json'.format(prefix)
+                with open(json_filename, 'w+') as outfile:
+                    json.dump(self.look_up_table, outfile)
+                print("Saved look-up table as {}".format(json_filename))
+            else:
+                print("Look-up table not found for shape {}".format(self.name))
 
         return str(Pfilename)
 
