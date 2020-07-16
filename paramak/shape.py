@@ -56,19 +56,17 @@ class Shape:
         self.stp_filename = stp_filename
         self.color = color
         self.name = name
-        self.material_tag = material_tag
+
         self.azimuth_placement_angle = azimuth_placement_angle
         self.workplane = workplane
 
         # neutronics specific properties
-        self.material = None
-        self.neutronics_material = None
-        self.tallies = []
+        self.material_tag = material_tag
+        self.tet_mesh = None
 
         # properties calculated internally by the class
         self.solid = None
         self.render_mesh = None
-        self.mesh = None
         # self.volume = None
 
     @property
@@ -109,6 +107,19 @@ class Shape:
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
+
+    @property
+    def tet_mesh(self):
+        return self._tet_mesh
+
+    @tet_mesh.setter
+    def tet_mesh(self, value):
+        if value is None:
+            self._tet_mesh = value
+        elif type(value) == str:
+            self._tet_mesh = value
+        else:
+            raise ValueError("Shape.tet_mesh must be a string", value)
 
     @property
     def name(self):
@@ -579,13 +590,20 @@ class Shape:
         self.patch = p
         return p
 
-    def neutronics_description(self, stp_filename, material_tag):
+    def neutronics_description(self, stp_filename, material_tag, tet_mesh=None):
         """Returns a neutronics description of the Shape object.
-        This is needed for the geomPipeline.py which imprints and
-        merges the geometry.
+        This is needed for the use with automated neutronics model
+        methods which require linkage between the stp files and
+        materials. If tet meshing of the volume is required then
+        Trelis meshing commands can optinally be specificed as
+        the tet_mesh argument.
 
         :return: a dictionary of the step filename and material name.
         :rtype: dictionary
         """
 
-        return {"material": self.material_tag, "filename": self.stp_filename}
+        neutronics_description = {"material": self.material_tag,
+                                  "filename": self.stp_filename}
+        if self.tet_mesh != None:
+            neutronics_description['tet_mesh'] = self.tet_mesh
+        return neutronics_description

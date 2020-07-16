@@ -95,9 +95,17 @@ class Reactor():
                                   Reactor entries before using this method"
                 )
 
-            Shape_neutronics_description = entry.neutronics_description(
-                stp_filename=entry.stp_filename, material_tag=entry.material_tag
-            )
+            if entry.tet_mesh == None:
+                Shape_neutronics_description = entry.neutronics_description(
+                    stp_filename=entry.stp_filename,
+                    material_tag=entry.material_tag 
+                )
+            else:
+                Shape_neutronics_description = entry.neutronics_description(
+                    stp_filename=entry.stp_filename,
+                    material_tag=entry.material_tag,
+                    tet_mesh=entry.tet_mesh 
+                )
 
             neutronics_description.append(Shape_neutronics_description)
 
