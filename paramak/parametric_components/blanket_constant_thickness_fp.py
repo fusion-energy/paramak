@@ -188,7 +188,6 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             thetas, R, Z,
             R_derivative, Z_derivative,
             self.thickness + self.offset_from_plasma, flip=True)
-        points = inner_points + outer_points
 
         def diff_between_angles(a, b):
             c = (b - a) % 360
@@ -198,6 +197,8 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         # if full coverage close the shape
         if diff_between_angles(self.start_angle, self.stop_angle) == 0:
             points.append(outer_points[0])
+        else:
+            points = inner_points + outer_points
 
         points[-2][2] = 'straight'
         self.points = points
