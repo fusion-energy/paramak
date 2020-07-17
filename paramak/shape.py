@@ -345,8 +345,6 @@ class Shape:
             exporters.exportShape(self.solid, "STEP", f)
         print("Saved file as ", Pfilename)
 
-        if export_look_up_table:
-            self.export_look_up_table(filename=Pfilename.with_suffix(".json"))
         return str(Pfilename)
 
     def export_look_up_table(self, filename):
