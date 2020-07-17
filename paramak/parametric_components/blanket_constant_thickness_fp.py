@@ -246,12 +246,17 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         return points
 
     def create_physical_groups(self):
+        """Creates the physical groups for STP files
+
+        Returns:
+            list: list of dicts containing the physical groups
+        """
+
         def diff_between_angles(a, b):
             c = (b - a) % 360
             if c > 180:
                 c -= 360
             return c
-
         groups = []
         nb_volumes = 1  # only one volume
         nb_surfaces = 2  # inner and outer
