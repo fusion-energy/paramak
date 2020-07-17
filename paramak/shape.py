@@ -362,11 +362,14 @@ class Shape:
             Pfilename = Pfilename.with_suffix(".json")
 
         Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        if self.physical_groups is not None:
+            with open(filename, "w") as outfile:
+                json.dump(self.physical_groups, outfile, indent=4)
 
-        with open(filename, "w") as outfile:
-            json.dump(self.physical_groups, outfile, indent=4)
-
-        print("Saved physical_groups description to ", Pfilename)
+            print("Saved physical_groups description to ", Pfilename)
+        else:
+            print("Warning: physical_groups attribute is None \
+                for {}".format(self.name))
 
         return filename
 
