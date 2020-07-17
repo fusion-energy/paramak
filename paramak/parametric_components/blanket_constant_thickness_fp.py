@@ -171,24 +171,24 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             inner_points_R = R(thetas)
             inner_points_Z = Z(thetas)
 
-            points = [
+            inner_points = [
                 [inner_points_R[i], inner_points_Z[i], 'spline']
                 for i in range(len(thetas))
                 ]
         else:
             # if a plasma is given
-            points = self.create_offset_points(
+            inner_points = self.create_offset_points(
                 thetas, R, Z,
                 R_derivative, Z_derivative,
                 self.offset_from_plasma)
-        points[-1][2] = 'straight'
+        inner_points[-1][2] = 'straight'
 
         # compute outer points
         outer_points = self.create_offset_points(
             thetas, R, Z,
             R_derivative, Z_derivative,
             self.thickness + self.offset_from_plasma, flip=True)
-        points = points + outer_points
+        points = inner_points + outer_points
 
         def diff_between_angles(a, b):
             c = (b - a) % 360
