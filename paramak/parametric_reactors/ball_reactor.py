@@ -217,7 +217,8 @@ class BallReactor(paramak.Reactor):
                 (plasma.high_point[0], blanket_start_height),
                 ],
                 rotation_angle=self.rotation_angle,
-                stp_filename='extra_blanket_upper.stp')
+                stp_filename='extra_blanket_upper.stp',
+                material_tag='blanket_material')
             self.add_shape_or_component(extra_blanket_upper)
 
             extra_firstwall_upper = paramak.RotateStraightShape(points=[
@@ -227,7 +228,8 @@ class BallReactor(paramak.Reactor):
                 (plasma.high_point[0], firstwall_start_height),
                 ],
                 rotation_angle=self.rotation_angle,
-                stp_filename='extra_firstwall_upper.stp')
+                stp_filename='extra_firstwall_upper.stp',
+                material_tag='firstwall_material')
             self.add_shape_or_component(extra_firstwall_upper)
 
             extra_blanket_rear_wall_upper = paramak.RotateStraightShape(points=[
@@ -237,7 +239,8 @@ class BallReactor(paramak.Reactor):
                 (plasma.high_point[0], blanket_rear_wall_start_height),
                 ],
                 rotation_angle=self.rotation_angle,
-                stp_filename='extra_blanket_rear_wall_upper.stp')
+                stp_filename='extra_blanket_rear_wall_upper.stp',
+                material_tag='blanket_rear_wall_material')
             self.add_shape_or_component(extra_blanket_rear_wall_upper)
 
 
@@ -248,7 +251,8 @@ class BallReactor(paramak.Reactor):
                 (plasma.high_point[0], -blanket_start_height),
                 ],
                 rotation_angle=self.rotation_angle,
-                stp_filename='extra_blanket_lower.stp')
+                stp_filename='extra_blanket_lower.stp',
+                material_tag='blanket_material')
             self.add_shape_or_component(extra_blanket_lower)
 
             extra_firstwall_lower = paramak.RotateStraightShape(points=[
@@ -258,7 +262,8 @@ class BallReactor(paramak.Reactor):
                 (plasma.high_point[0], -firstwall_start_height),
                 ],
                 rotation_angle=self.rotation_angle,
-                stp_filename='extra_firstwall_lower.stp')
+                stp_filename='extra_firstwall_lower.stp',
+                material_tag='firstwall_material')
             self.add_shape_or_component(extra_firstwall_lower)
 
             extra_blanket_rear_wall_lower = paramak.RotateStraightShape(points=[
@@ -268,7 +273,8 @@ class BallReactor(paramak.Reactor):
                 (plasma.high_point[0], -blanket_rear_wall_start_height),
                 ],
                 rotation_angle=self.rotation_angle,
-                stp_filename='extra_blanket_rear_wall_lower.stp')
+                stp_filename='extra_blanket_rear_wall_lower.stp',
+                material_tag='blanket_rear_wall_material')
             self.add_shape_or_component(extra_blanket_rear_wall_lower)
 
         firstwall = paramak.BlanketConstantThicknessArcV(
