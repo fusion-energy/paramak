@@ -112,6 +112,23 @@ class test_BlanketConstantThicknessFP(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
+    def test_BlanketConstantThicknessFP_full_cov_stp_export(self):
+        """creates blanket from parametric shape and checks the STP export
+        with full coverage"""
+
+        test_shape = paramak.BlanketConstantThicknessFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=360,
+            start_angle=0,
+        )
+
+        test_shape.export_stp()
+
+
 class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
         """creates a poloidal field coil from parametric shape and checks a solid is created"""
