@@ -146,7 +146,7 @@ class Reactor():
 
         return filename
 
-    def export_stp(self, output_folder="", export_look_up_tables=False):
+    def export_stp(self, output_folder=""):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
 
         :param output_folder: the folder for saving the stp files to
