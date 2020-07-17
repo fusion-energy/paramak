@@ -71,7 +71,7 @@ class Shape:
         self.render_mesh = None
         # self.volume = None
 
-        self.look_up_table = None
+        self.physical_groups = None
 
     @property
     def workplane(self):
@@ -344,9 +344,9 @@ class Shape:
 
         return str(Pfilename)
 
-    def export_look_up_table(self, filename):
+    def export_physical_groups(self, filename):
         """Exports a JSON file containing a look up table
-        which is useful for identifying faces. If provided
+        which is useful for identifying faces and volumes. If provided
         filename doesn't end with .json then .json will be added.
 
         :param filename: the filename to save the json look up table
@@ -364,9 +364,9 @@ class Shape:
         Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
 
         with open(filename, "w") as outfile:
-            json.dump(self.look_up_table, outfile, indent=4)
+            json.dump(self.physical_groups, outfile, indent=4)
 
-        print("saved geometry description to ", Pfilename)
+        print("Saved physical_groups description to ", Pfilename)
 
         return filename
 
