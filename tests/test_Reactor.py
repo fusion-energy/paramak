@@ -28,7 +28,7 @@ class test_object_properties(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
             material_tag='mat1')
-        test_shape2= paramak.RotateStraightShape(
+        test_shape2= paramak.RotateSplineShape(
             points=[(0, 0), (0, 20), (20, 20)],
             material_tag='mat2')
         test_shape.rotation_angle = 360
@@ -64,7 +64,7 @@ class test_object_properties(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
             stp_filename='filename.stp')
-        test_shape2 = paramak.RotateStraightShape(
+        test_shape2 = paramak.RotateSplineShape(
             points=[(0, 0), (0, 20), (20, 20)],
             stp_filename='filename2.stp')
         test_shape.rotation_angle = 360
@@ -87,7 +87,7 @@ class test_object_properties(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
             stp_filename='filename.stp')
-        test_shape2 = paramak.RotateStraightShape(
+        test_shape2 = paramak.RotateSplineShape(
             points=[(0, 0), (0, 20), (20, 20)],
             stp_filename='filename.stp')
         test_shape.rotation_angle = 360
@@ -220,6 +220,7 @@ class test_object_properties(unittest.TestCase):
                 points=[(0, 0), (0, 20), (20, 20)])
             test_shape.rotation_angle = 360
             test_shape.material_tag = "test_material"
+            test_shape.stp_filename = None
             test_reactor = paramak.Reactor()
             test_reactor.add_shape_or_component(test_shape)
             neutronics_description = test_reactor.neutronics_description()
