@@ -4,6 +4,7 @@ from collections import Iterable
 from pathlib import Path
 
 import cadquery as cq
+from cadquery import exporters
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
@@ -202,6 +203,25 @@ class Reactor():
             filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
             entry.export_physical_groups(Path(output_folder) / Path(entry.stp_filename))
         return filenames
+
+    def export_svg(self, filename):
+        """Exports an svg file for the Reactor.solid.
+        If the provided filename doesn't end with .svg it will be added
+
+        :param filename: the filename of the svg
+        :type filename: str
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".svg":
+            Pfilename = Pfilename.with_suffix(".svg")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        with open(Pfilename, "w") as f:
+            exporters.exportShape(self.solid, "SVG", f)
+        print("Saved file as ", Pfilename)
 
     def export_graveyard(self, filename="Graveyard.stp"):
         """Writes a stp file (CAD geometry) for the reactor graveyard.
