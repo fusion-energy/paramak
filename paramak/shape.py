@@ -314,7 +314,7 @@ class Shape:
 
         return str(Pfilename)
 
-    def export_stp(self, filename=None, export_look_up_table=False):
+    def export_stp(self, filename=None:
         """Exports an stp file for the Shape.solid.
         If the provided filename doesn't end with
         .stp or .step then .stp will be added. If a
