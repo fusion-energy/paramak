@@ -126,7 +126,7 @@ class test_BlanketConstantThicknessFP(unittest.TestCase):
             start_angle=0,
         )
 
-        test_shape.export_stp()
+        test_shape.export_stp("test_blanket_full_cov")
 
 
 class test_PoloidalFieldCoilCase(unittest.TestCase):
