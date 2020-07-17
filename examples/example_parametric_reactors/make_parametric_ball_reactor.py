@@ -16,6 +16,7 @@ def main():
                                     outer_plasma_gap_radial_thickness = 50,
                                     firstwall_radial_thickness=5,
                                     blanket_radial_thickness=100,
+                                    blanket_rear_wall_thickness=10,
                                     elongation=2,
                                     triangularity=0.55,
                                     number_of_tf_coils=16,

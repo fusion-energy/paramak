@@ -27,6 +27,7 @@ class BallReactor(paramak.Reactor):
         outer_plasma_gap_radial_thickness,
         firstwall_radial_thickness,
         blanket_radial_thickness,
+        blanket_rear_wall_thickness,
 
         elongation,
         triangularity,
@@ -46,6 +47,7 @@ class BallReactor(paramak.Reactor):
         self.outer_plasma_gap_radial_thickness = outer_plasma_gap_radial_thickness
         self.firstwall_radial_thickness = firstwall_radial_thickness
         self.blanket_radial_thickness = blanket_radial_thickness
+        self.blanket_rear_wall_thickness = blanket_rear_wall_thickness
 
         # self.outer_equatorial_point = outer_equatorial_point
         # self.inner_equatorial_point = inner_equatorial_point
@@ -86,6 +88,7 @@ class BallReactor(paramak.Reactor):
         # the inner bore is the first measurement
 
         reactor_radius = self.inner_bore_radial_thickness
+        
 
         inboard_tf_coils = paramak.InnerTfCoilsCircular(
             height=plasma.high_point[1] + abs(plasma.low_point[1]) + 2*self.outer_plasma_gap_radial_thickness + 2*self.blanket_radial_thickness,
@@ -124,10 +127,13 @@ class BallReactor(paramak.Reactor):
 
         reactor_radius = reactor_radius + self.outer_plasma_gap_radial_thickness
 
+        reactor_height = plasma.high_point[1]+self.outer_plasma_gap_radial_thickness
+        reactor_depth = plasma.low_point[1]-self.outer_plasma_gap_radial_thickness
+
         firstwall = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(reactor_radius, 0),
-            inner_upper_point=(plasma.high_point[0], plasma.high_point[1]+self.outer_plasma_gap_radial_thickness),
-            inner_lower_point=(plasma.low_point[0], plasma.low_point[1]-self.outer_plasma_gap_radial_thickness),
+            inner_upper_point=(plasma.high_point[0], reactor_height),
+            inner_lower_point=(plasma.low_point[0], reactor_depth),
             thickness=self.firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='firstwall.stp'
@@ -137,17 +143,36 @@ class BallReactor(paramak.Reactor):
 
         reactor_radius = reactor_radius + self.firstwall_radial_thickness
 
+        reactor_height = reactor_height + self.firstwall_radial_thickness
+        reactor_depth = reactor_depth - self.firstwall_radial_thickness
+
         blanket = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(reactor_radius, 0),
-            inner_upper_point=(plasma.high_point[0], plasma.high_point[1]+self.outer_plasma_gap_radial_thickness+self.firstwall_radial_thickness),
-            inner_lower_point=(plasma.low_point[0], plasma.low_point[1]-(self.outer_plasma_gap_radial_thickness+self.firstwall_radial_thickness)),
+            inner_upper_point=(plasma.high_point[0], reactor_height),
+            inner_lower_point=(plasma.low_point[0], reactor_depth),
             thickness=self.blanket_radial_thickness,
             rotation_angle=self.rotation_angle
         )
 
         reactor_radius = reactor_radius + self.blanket_radial_thickness
 
+        reactor_height = reactor_height + self.blanket_radial_thickness
+        reactor_depth = reactor_depth - self.blanket_radial_thickness
+
         self.add_shape_or_component(blanket)
+
+        blanket_rear_casing = paramak.BlanketConstantThicknessArcV(
+            inner_mid_point=(reactor_radius, 0),
+            inner_upper_point=(plasma.high_point[0], reactor_height),
+            inner_lower_point=(plasma.low_point[0], reactor_depth),
+            thickness=self.blanket_rear_wall_thickness,
+            rotation_angle=self.rotation_angle,
+            stp_filename='blanket_rear_wall.stp'
+        )
+
+        reactor_radius = reactor_radius + self.blanket_rear_wall_thickness
+
+        self.add_shape_or_component(blanket_rear_casing)
 
         # space_for_divertor = plasma.x_point - self.center_column_radial_thickness
 
