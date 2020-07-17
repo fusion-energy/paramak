@@ -40,7 +40,7 @@ class RotateSplineShape(Shape):
         name=None,
         color=None,
         material_tag=None,
-        stp_filename=None,
+        stp_filename="RotateSplineShape.stp",
         azimuth_placement_angle=0,
         solid=None,
         rotation_angle=360,

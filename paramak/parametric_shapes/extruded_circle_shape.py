@@ -42,7 +42,7 @@ class ExtrudeCircleShape(Shape):
         distance,
         radius,
         workplane="XZ",
-        stp_filename=None,
+        stp_filename='ExtrudeCircleShape.stp',
         solid=None,
         color=None,
         azimuth_placement_angle=0,

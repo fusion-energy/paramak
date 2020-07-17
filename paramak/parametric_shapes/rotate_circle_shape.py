@@ -38,7 +38,7 @@ class RotateCircleShape(Shape):
         points,
         radius,
         workplane="XZ",
-        stp_filename=None,
+        stp_filename="RotateCircleShape.stp",
         solid=None,
         color=None,
         azimuth_placement_angle=0,
