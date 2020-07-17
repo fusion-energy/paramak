@@ -65,11 +65,8 @@ class BallReactor(paramak.Reactor):
         self.triangularity = triangularity
         self.rotation_angle = rotation_angle
 
-        # self.offset_from_plasma = offset_from_plasma
-        # self.blanket_thickness = blanket_thickness
-        
-
-
+        self.diverter_radial_thickness =  self.firstwall_radial_thickness + self.blanket_radial_thickness + self.blanket_rear_wall_thickness
+      
         self.number_of_tf_coils = number_of_tf_coils
         # self.divertor_width = divertor_width
 
@@ -85,15 +82,55 @@ class BallReactor(paramak.Reactor):
                                 rotation_angle=self.rotation_angle)
         plasma.create_solid()
 
-        # the inner bore is the first measurement
+        self.add_shape_or_component(plasma)
 
-        reactor_radius = self.inner_bore_radial_thickness
-        
+
+        # this is the radial build sequence, where one componet stops and another starts
+        inner_bore_start_radius = 0
+        inner_bore_end_radius = inner_bore_start_radius + self.inner_bore_radial_thickness
+
+        inboard_tf_coils_start_radius = inner_bore_end_radius
+        inboard_tf_coils_end_radius = inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
+
+        center_column_shield_start_radius = inboard_tf_coils_end_radius
+        center_column_shield_end_radius = center_column_shield_start_radius + self.center_column_radial_thickness
+
+        divertor_start_radius = center_column_shield_end_radius
+
+        firstwall_start_radius = center_column_shield_end_radius \
+                                 + self.inner_plasma_gap_radial_thickness \
+                                 + self.plasma_radial_thickness \
+                                 + self.outer_plasma_gap_radial_thickness 
+        firstwall_end_radius = firstwall_start_radius + self.firstwall_radial_thickness
+
+        blanket_start_radius = firstwall_end_radius
+        blanket_end_radius = blanket_start_radius + self.blanket_radial_thickness
+
+        blanket_read_wall_start_radius = blanket_end_radius 
+        blanket_read_wall_end_radius = blanket_read_wall_start_radius + self.blanket_rear_wall_thickness 
+
+        #this is the vertical build sequence, componets build on each other in a similar manner to the radial build
+
+        divertor_start_height = plasma.high_point[1]+self.outer_plasma_gap_radial_thickness
+        divertor_end_height = divertor_start_height + self.diverter_radial_thickness
+
+        firstwall_start_height = divertor_start_height
+        firstwall_end_height = firstwall_start_height + self.firstwall_radial_thickness
+
+        blanket_start_height = firstwall_end_height
+        blanket_end_height = blanket_start_height + self.blanket_radial_thickness
+
+        blanket_rear_wall_start_height = blanket_end_height
+        blanket_rear_wall_end_height = blanket_rear_wall_start_height + self.blanket_rear_wall_thickness
+
+        tf_coil_height = blanket_rear_wall_end_height * 2
+        center_column_shield_height = blanket_rear_wall_end_height * 2
+
 
         inboard_tf_coils = paramak.InnerTfCoilsCircular(
-            height=plasma.high_point[1] + abs(plasma.low_point[1]) + 2*self.outer_plasma_gap_radial_thickness + 2*self.blanket_radial_thickness,
-            inner_radius = reactor_radius,
-            outer_radius = reactor_radius+self.inboard_tf_leg_radial_thickness,
+            height=tf_coil_height,
+            inner_radius = inboard_tf_coils_start_radius,
+            outer_radius = inboard_tf_coils_end_radius,
             number_of_coils = self.number_of_tf_coils,
             gap_size=10,
             stp_filename="inboard_tf_coils.stp",
@@ -102,12 +139,11 @@ class BallReactor(paramak.Reactor):
 
         self.add_shape_or_component(inboard_tf_coils)
 
-        reactor_radius = reactor_radius + self.inboard_tf_leg_radial_thickness
 
         center_column_shield = paramak.CenterColumnShieldCylinder(
-            height=plasma.high_point[1] + abs(plasma.low_point[1]) + 2*self.outer_plasma_gap_radial_thickness + 2*self.blanket_radial_thickness,
-            inner_radius=reactor_radius,
-            outer_radius=reactor_radius+self.center_column_radial_thickness,
+            height=center_column_shield_height,
+            inner_radius=center_column_shield_start_radius,
+            outer_radius=center_column_shield_end_radius,
             rotation_angle=self.rotation_angle,
             # color=centre_column_color,
             stp_filename="center_column_shield.stp",
@@ -115,97 +151,64 @@ class BallReactor(paramak.Reactor):
         )
         self.add_shape_or_component(center_column_shield)
 
-        reactor_radius = reactor_radius+self.center_column_radial_thickness
-        
-        reactor_radius = reactor_radius+self.inner_plasma_gap_radial_thickness
-
-        # The plasma would go here but other components need the plasma height so it had to go earlier
-
-        self.add_shape_or_component(plasma)
-
-        reactor_radius = reactor_radius + self.plasma_radial_thickness
-
-        reactor_radius = reactor_radius + self.outer_plasma_gap_radial_thickness
-
-        reactor_height = plasma.high_point[1]+self.outer_plasma_gap_radial_thickness
-        reactor_depth = plasma.low_point[1]-self.outer_plasma_gap_radial_thickness
-
-        firstwall = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(reactor_radius, 0),
-            inner_upper_point=(plasma.high_point[0], reactor_height),
-            inner_lower_point=(plasma.low_point[0], reactor_depth),
-            thickness=self.firstwall_radial_thickness,
-            rotation_angle=self.rotation_angle,
-            stp_filename='firstwall.stp'
-        )
-
-        self.add_shape_or_component(firstwall)
-
-        reactor_radius = reactor_radius + self.firstwall_radial_thickness
-
-        reactor_height = reactor_height + self.firstwall_radial_thickness
-        reactor_depth = reactor_depth - self.firstwall_radial_thickness
-
-        blanket = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(reactor_radius, 0),
-            inner_upper_point=(plasma.high_point[0], reactor_height),
-            inner_lower_point=(plasma.low_point[0], reactor_depth),
-            thickness=self.blanket_radial_thickness,
-            rotation_angle=self.rotation_angle
-        )
-
-        reactor_radius = reactor_radius + self.blanket_radial_thickness
-
-        reactor_height = reactor_height + self.blanket_radial_thickness
-        reactor_depth = reactor_depth - self.blanket_radial_thickness
-
-        self.add_shape_or_component(blanket)
-
-        blanket_rear_casing = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(reactor_radius, 0),
-            inner_upper_point=(plasma.high_point[0], reactor_height),
-            inner_lower_point=(plasma.low_point[0], reactor_depth),
-            thickness=self.blanket_rear_wall_thickness,
-            rotation_angle=self.rotation_angle,
-            stp_filename='blanket_rear_wall.stp'
-        )
-
-        reactor_radius = reactor_radius + self.blanket_rear_wall_thickness
-
-        self.add_shape_or_component(blanket_rear_casing)
-
-        # space_for_divertor = plasma.x_point - self.center_column_radial_thickness
-
-        # print('space_for_divertor', space_for_divertor)
 
         divertor_upper_part = paramak.RotateStraightShape(points=[
-            (self.center_column_radial_thickness + self.inboard_tf_leg_radial_thickness + self.inner_bore_radial_thickness, plasma.high_point[1] + self.outer_plasma_gap_radial_thickness + self.firstwall_radial_thickness + self.blanket_radial_thickness),
-            (self.center_column_radial_thickness + self.inboard_tf_leg_radial_thickness + self.inner_bore_radial_thickness, plasma.high_point[1] + self.outer_plasma_gap_radial_thickness),
-            (plasma.high_point[0], plasma.high_point[1] + self.outer_plasma_gap_radial_thickness),
-            (plasma.high_point[0], plasma.high_point[1] + self.outer_plasma_gap_radial_thickness+self.firstwall_radial_thickness+ self.blanket_radial_thickness),
+            (divertor_start_radius, divertor_end_height),
+            (divertor_start_radius, divertor_start_height),
+            (plasma.high_point[0], divertor_start_height),
+            (plasma.high_point[0], divertor_end_height),
             ],
             stp_filename='divertor_upper.stp',
             rotation_angle=self.rotation_angle,
             material_tag='divertor_material'
             )
-
         self.add_shape_or_component(divertor_upper_part)
 
+        # negative signs used as this is in the negative side of the Z axis 
         divertor_lower_part = paramak.RotateStraightShape(points=[
-            (self.center_column_radial_thickness+self.inboard_tf_leg_radial_thickness+self.inner_bore_radial_thickness,plasma.low_point[1] - (self.outer_plasma_gap_radial_thickness  + self.firstwall_radial_thickness + self.blanket_radial_thickness)),
-            (self.center_column_radial_thickness+self.inboard_tf_leg_radial_thickness+self.inner_bore_radial_thickness,plasma.low_point[1] - self.outer_plasma_gap_radial_thickness),
-            (plasma.low_point[0], plasma.low_point[1] - self.outer_plasma_gap_radial_thickness),
-            (plasma.low_point[0], plasma.low_point[1] - (self.outer_plasma_gap_radial_thickness+self.firstwall_radial_thickness+ self.blanket_radial_thickness)),
+            (divertor_start_radius, -divertor_end_height),
+            (divertor_start_radius, -divertor_start_height),
+            (plasma.low_point[0], -divertor_start_height),
+            (plasma.low_point[0], -divertor_end_height),
             ],
             stp_filename='divertor_lower.stp',
             rotation_angle=self.rotation_angle,
             material_tag='divertor_material'
             )
-
         self.add_shape_or_component(divertor_lower_part)
 
 
-        # The height of this center column is calculated using the plasma high
+        firstwall = paramak.BlanketConstantThicknessArcV(
+            inner_mid_point=(firstwall_start_radius, 0),
+            inner_upper_point=(plasma.high_point[0], firstwall_start_height),
+            inner_lower_point=(plasma.low_point[0], -firstwall_start_height),
+            thickness=self.firstwall_radial_thickness,
+            rotation_angle=self.rotation_angle,
+            stp_filename='firstwall.stp'
+        )
+        self.add_shape_or_component(firstwall)
 
 
+        blanket = paramak.BlanketConstantThicknessArcV(
+            inner_mid_point=(blanket_start_radius, 0),
+            inner_upper_point=(plasma.high_point[0], blanket_start_height),
+            inner_lower_point=(plasma.low_point[0], -blanket_start_height),
+            thickness=self.blanket_radial_thickness,
+            rotation_angle=self.rotation_angle
+        )
+        self.add_shape_or_component(blanket)
 
+
+        blanket_rear_casing = paramak.BlanketConstantThicknessArcV(
+            inner_mid_point=(blanket_read_wall_start_radius, 0),
+            inner_upper_point=(plasma.high_point[0], blanket_rear_wall_start_height),
+            inner_lower_point=(plasma.low_point[0], -blanket_rear_wall_start_height),
+            thickness=self.blanket_rear_wall_thickness,
+            rotation_angle=self.rotation_angle,
+            stp_filename='blanket_rear_wall.stp'
+        )
+        self.add_shape_or_component(blanket_rear_casing)
+
+        # space_for_divertor = plasma.x_point - self.center_column_radial_thickness
+
+        # print('space_for_divertor', space_for_divertor)
