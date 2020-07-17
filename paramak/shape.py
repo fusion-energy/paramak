@@ -324,9 +324,6 @@ class Shape:
 
         :param filename: the filename of the stp
         :type filename: str
-        :param export_look_up_table: if set to True, the look up table
-            will be exported. Defaults to False.
-        :type filename: bool
         """
 
         if filename is not None:
