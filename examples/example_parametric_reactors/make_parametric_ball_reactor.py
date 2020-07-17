@@ -6,23 +6,20 @@ import paramak
 
 def main():
 
-    my_reactor = paramak.BallReactor(major_radius=300,
-                                    minor_radius=100,
+
+    my_reactor = paramak.BallReactor(
+                                    inner_bore_radial_thickness=50,
+                                    inboard_tf_leg_radial_thickness = 200,
+                                    center_column_radial_thickness= 50,
+                                    inner_plasma_gap_radial_thickness = 50,
+                                    plasma_radial_thickness = 100,
+                                    outer_plasma_gap_radial_thickness = 50,
+                                    firstwall_radial_thickness=5,
+                                    blanket_radial_thickness=100,
                                     elongation=2,
                                     triangularity=0.55,
-                                    offset_from_plasma=20,
-                                    blanket_thickness=100,
-                                    center_column_shield_outer_radius=180,
-                                    center_column_shield_inner_radius=120,
                                     number_of_tf_coils=16,
-                                    divertor_width=100
     )
-                                     
-                                     # number_of_pf_coils=5,
-                                     # pf_coil_height=20,
-                                     # pf_coil_width=20,
-                                     # pf_case_thickness=10,
-                                    # )
 
     my_reactor.export_stp()
 
