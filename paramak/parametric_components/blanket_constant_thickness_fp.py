@@ -263,16 +263,44 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         if self.rotation_angle != 360:
             nb_surfaces += 2
             surface_names += ["left_section", "right_section"]
+            full_rot = False
+        else:
+            full_rot = True
 
         # add two surfaces between blanket and div if they exist
         if diff_between_angles(self.start_angle, self.stop_angle) != 0:
             nb_surfaces += 2
             surface_names += ["inner_section", "outer_section"]
+            stop_equals_start = False
+        else:
+            stop_equals_start = True
 
         # rearrange order
-        # TODO: make this generic
-        surface_names = ["inner", "inner_section", "outer", "outer_section",
-                         "lef_section", "right_section"]
+        # TODO: fix issue #86
+        if full_rot:
+            if stop_equals_start:
+                print("Warning: If start_angle = stop_angle surfaces will not\
+                     be handled correctly")
+                new_order = [0, 1, 2, 3]
+            else:
+                # from ["inner", "outer", "inner_section", "outer_section"]
+
+                # to ["inner", "inner_section", "outer", "outer_section"]
+                new_order = [0, 2, 1, 3]
+        else:
+            if stop_equals_start:
+                print("Warning: If start_angle = stop_angle surfaces will not\
+                     be handled correctly")
+                new_order = [0, 1, 2, 3]
+            else:
+                # from ['inner', 'outer', 'left_section', 'right_section',
+                #           'inner_section', 'outer_section']
+
+                # to ["inner", "inner_section", "outer", "outer_section",
+                #         "left_section", "right_section"]
+                new_order = [0, 4,  1, 5, 2, 3]
+        surface_names = [surface_names[i] for i in new_order]
+
         for i in range(1, nb_volumes+1):
             group = {
                 "dim": 3,
