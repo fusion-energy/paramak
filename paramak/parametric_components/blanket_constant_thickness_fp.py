@@ -114,7 +114,16 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
         self.points = points
-        self.physical_groups = self.create_physical_groups()
+        self.physical_groups = None
+
+    @property
+    def physical_groups(self):
+        self.create_physical_groups()
+        return self._physical_groups
+
+    @physical_groups.setter
+    def physical_groups(self, physical_groups):
+        self._physical_groups = physical_groups
 
     @property
     def points(self):
