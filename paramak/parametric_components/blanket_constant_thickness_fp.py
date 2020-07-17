@@ -114,6 +114,7 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
         self.points = points
+        self.physical_groups = self.create_physical_groups()
 
     @property
     def points(self):
@@ -190,6 +191,7 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             self.thickness + self.offset_from_plasma, flip=True)
         points = points + outer_points
         points[-2][2] = 'straight'
+
         self.points = points
 
     def create_offset_points(self, thetas, R_fun, Z_fun, R_derivative, Z_derivative, offset, flip=False):
@@ -242,3 +244,47 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             points.append([float(val_R_outer), float(val_Z_outer), 'spline'])
             
         return points
+
+    def create_physical_groups(self):
+        def diff_between_angles(a, b):
+            c = (b - a) % 360
+            if c > 180:
+                c -= 360
+            return c
+
+        groups = []
+        nb_volumes = 1  # only one volume
+        nb_surfaces = 2  # inner and outer
+
+        surface_names = ["inner", "outer"]
+        volumes_names = ["inside"]
+
+        # add two cut sections if they exist
+        if self.rotation_angle != 360:
+            nb_surfaces += 2
+            surface_names += ["left_section", "right_section"]
+
+        # add two surfaces between blanket and div if they exist
+        if diff_between_angles(self.start_angle, self.stop_angle) != 0:
+            nb_surfaces += 2
+            surface_names += ["inner_section", "outer_section"]
+
+        # rearrange order
+        # TODO: make this generic
+        surface_names = ["inner", "inner_section", "outer", "outer_section",
+                         "lef_section", "right_section"]
+        for i in range(1, nb_volumes+1):
+            group = {
+                "dim": 3,
+                "id": i,
+                "name": volumes_names[i-1]
+            }
+            groups.append(group)
+        for i in range(1, nb_surfaces+1):
+            group = {
+                "dim": 2,
+                "id": i,
+                "name": surface_names[i-1]
+            }
+            groups.append(group)
+        return groups
