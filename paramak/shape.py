@@ -13,6 +13,8 @@ import plotly.graph_objects as go
 import pyrender
 import trimesh
 
+import json
+
 
 class Shape:
     """A shape object that represents a 3d volume and can have materials and
@@ -68,6 +70,8 @@ class Shape:
         self.solid = None
         self.render_mesh = None
         # self.volume = None
+
+        self.physical_groups = None
 
     @property
     def workplane(self):
@@ -314,7 +318,7 @@ class Shape:
         """Exports an stp file for the Shape.solid.
         If the provided filename doesn't end with
         .stp or .step then .stp will be added. If a
-        filename is not provided and the shapes 
+        filename is not provided and the shapes
         stp_filename property is not None the stp_filename
         will be used as the export filename
 
@@ -322,7 +326,7 @@ class Shape:
         :type filename: str
         """
 
-        if filename != None:
+        if filename is not None:
             Pfilename = Path(filename)
 
             if Pfilename.suffix == ".stp" or Pfilename.suffix == ".step":
@@ -331,7 +335,7 @@ class Shape:
                 Pfilename = Pfilename.with_suffix(".stp")
 
             Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
-        elif self.stp_filename != None:
+        elif self.stp_filename is not None:
             Pfilename = Path(self.stp_filename)
 
         with open(Pfilename, "w") as f:
@@ -339,6 +343,35 @@ class Shape:
         print("Saved file as ", Pfilename)
 
         return str(Pfilename)
+
+    def export_physical_groups(self, filename):
+        """Exports a JSON file containing a look up table
+        which is useful for identifying faces and volumes. If provided
+        filename doesn't end with .json then .json will be added.
+
+        :param filename: the filename to save the json look up table
+        :type filename: str
+
+        :param filename: the filename of the json file
+        :type filename: str
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".json":
+            Pfilename = Pfilename.with_suffix(".json")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        if self.physical_groups is not None:
+            with open(filename, "w") as outfile:
+                json.dump(self.physical_groups, outfile, indent=4)
+
+            print("Saved physical_groups description to ", Pfilename)
+        else:
+            print("Warning: physical_groups attribute is None \
+                for {}".format(self.name))
+
+        return filename
 
     def export_svg(self, filename):
         """Exports an svg file for the Shape.solid.

@@ -178,6 +178,32 @@ class Reactor():
 
         return filenames
 
+    def export_physical_groups(self, output_folder=""):
+        """Exports several JSON files containing a look up table
+        which is useful for identifying faces and volumes. The
+        output file names are generated from .stp_filename properties.
+
+        Args:
+            output_folder (str, optional): directory of outputfiles.
+                Defaults to "".
+
+        Raises:
+            ValueError: if one .stp_filename property is set to None
+
+        Returns:
+            list: list of output file names
+        """
+        filenames = []
+        for entry in self.shapes_and_components:
+            if entry.stp_filename is None:
+                raise ValueError(
+                    "set .stp_filename property for \
+                                 Shapes before using the export_stp method"
+                )
+            filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
+            entry.export_physical_groups(Path(output_folder) / Path(entry.stp_filename))
+        return filenames
+
     def export_svg(self, filename):
         """Exports an svg file for the Reactor.solid.
         If the provided filename doesn't end with .svg it will be added
