@@ -164,7 +164,7 @@ class Reactor():
                                  Shapes before using the export_stp method"
                 )
             filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
-            entry.export_stp(Path(output_folder) / Path(entry.stp_filename), export_look_up_table=export_look_up_tables)
+            entry.export_stp(Path(output_folder) / Path(entry.stp_filename))
 
         # creates a graveyard (bounding shell volume) which is needed for nuetronics simulations
         self.make_graveyard()
