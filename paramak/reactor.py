@@ -108,39 +108,6 @@ class Reactor():
     def solid(self, value):
         self._solid = value
 
-    # def add_shapes_or_components(self, shapes):
-    #     """Adds parametric shapes or parametric components to the Reactor 
-    #     object. A list of shapes or components are added to the Reactor
-    #     object so that collective operations can be performed on all the
-    #     shapes in the reactor. When adding a shape or componet the 
-    #     stp_filename for the shape or component should be unique.
-    #     """
-    #     for shape in shapes:
-    #         if shape.stp_filename != None:
-    #             if shape.stp_filename in self.stp_filenames:
-    #                 raise ValueError(
-    #                     "Set Reactor already contains a shape or component \
-    #                             with this stp_filename", shapes.stp_filename
-    #                 )
-    #         self.shapes_and_components.append(shape)
-
-
-    # def add_shape_or_component(self, shapes):
-    #     """Adds a single parametric shape or a parametric component to the Reactor 
-    #     object. An individual shape or component is added to the Reactor object
-    #     so that collective operations can be performed on all the shapes in the
-    #     reactor. When adding a shape or componet the stp_filename for the shape
-    #     or component should be unique.
-    #     """
-    #     if shapes.stp_filename != None:
-    #         if shapes.stp_filename in self.stp_filenames:
-    #             raise ValueError(
-    #                 "Set Reactor already contains a shape or component \
-    #                         with this stp_filename", shapes.stp_filename,
-    #                         self.stp_filenames
-    #             )
-    #     self.shapes_and_components.append(shapes)
-
     def neutronics_description(self, include_plasma=False):
         """A description of the reactor containing materials tags,
         stp filenames, tet mesh instructions. This is can be used
