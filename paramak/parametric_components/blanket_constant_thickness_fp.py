@@ -28,7 +28,8 @@ class BlanketConstantThicknessFP(RotateMixedShape):
     :type elongation: float
     :param vertical_displacement: the vertical_displacement of the plasma (cm)
     :type vertical_displacement: float
-    :param offset_from_plasma: the distance bettwen the plasma and the blanket (cm)
+    :param offset_from_plasma: the distance bettwen the plasma and the blanket
+        (cm)
     :type offset_from_plasma: float
     :param num_points: number of points that will describe the shape
     :type num_points: int
@@ -184,8 +185,9 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         self.points = points
 
     def create_offset_points(self, thetas, R_fun, Z_fun, offset):
-        """generates a list of points following parametric equations with an offset
-        
+        """generates a list of points following parametric equations with an
+        offset
+
         :param thetas: list of angles (radians)
         :type thetas: list
         :param R_fun: parametric function for R coordinate (cm)
@@ -195,7 +197,8 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         :param offset: offset value (cm). offset=0 will follow the parametric
          equations.
 
-        :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2], ...]
+        :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
+            ...]
         :rtype: list
         """
         # create sympy objects and derivatives
