@@ -20,6 +20,7 @@ def main():
                                     elongation=2,
                                     triangularity=0.55,
                                     number_of_tf_coils=16,
+                                    rotation_angle=180
     )
 
     my_reactor.export_stp()

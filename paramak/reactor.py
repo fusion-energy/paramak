@@ -4,13 +4,14 @@ from collections import Iterable
 from pathlib import Path
 
 import cadquery as cq
-from cadquery import exporters
 import matplotlib.pyplot as plt
 import numpy as np
-import plotly.graph_objects as go
-import pyrender
+from cadquery import exporters
 from PIL import Image
 
+import paramak
+import plotly.graph_objects as go
+import pyrender
 from paramak.shape import Shape
 
 
@@ -72,9 +73,16 @@ class Reactor():
                     self.stp_filenames.append(shapes.stp_filename)
             self.shapes_and_components.append(shapes)
 
-    def neutronics_description(self):
-        """A descirption of the reactor containing materials and the filenames,
-           this is used for neutronics simulations
+    def neutronics_description(self, include_plasma=False):
+        """A description of the reactor containing materials tags,
+        stp filenames, tet mesh instructions. This is can be used
+        for neutronics simulations which require linkage between
+        volumes, materials and identification of which volumes to
+        tet mesh. The plasma geometry is not included by default
+        as it is typically not included in neutronics simulations.
+        The reason for this is that the low number density results
+        in minimal interaction with neutrons. However it can be added
+        if the include_plasma argument is set to True
 
         :return: a dictionary of materials and filenames for the reactor
         :rtype: dictionary
@@ -83,6 +91,9 @@ class Reactor():
         neutronics_description = []
 
         for entry in self.shapes_and_components:
+
+            if include_plasma==False and isinstance(entry,paramak.Plasma) == True:
+                continue
 
             if entry.stp_filename is None:
                 raise ValueError(
@@ -123,11 +134,21 @@ class Reactor():
 
         return neutronics_description
 
-    def export_neutronics_description(self, filename="manifest.json"):
-        """Saves neutronics description to a json file, this contains a list of
-        dictionaries. With each entry comprising of a material and a filename.
-        This can then be used with the neutronics workflows to create a neutronics
-        model. If the filename does not end with .json then .json will be added.
+    def export_neutronics_description(self, filename="manifest.json", include_plasma=False):
+        """Saves Reactor.neutronics_description to a json file.
+        The resulting json file contains a list of dictionaries.
+        Each dictionary entry comprising of a material and a
+        filename and optionally a tet_mesh instruction. The json
+        file can then be used with the neutronics workflows to
+        create a neutronics model. Creation of the netronics
+        model requires linkage between volumes, materials and
+        identifcation of which volumes to tet_mesh. If the 
+        filename does not end with .json then .json will be added.
+        The plasma geometry is not included by default as it is
+        typically not included in neutronics simulations. The 
+        reason for this is that the low number density results
+        in minimal interaction with neutrons. However the plasma
+        can be added if the include_plasma argument is set to True
 
         :param filename: the filename used to save the neutronics description
         :type filename: str
@@ -141,7 +162,7 @@ class Reactor():
         Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
 
         with open(filename, "w") as outfile:
-            json.dump(self.neutronics_description(), outfile, indent=4)
+            json.dump(self.neutronics_description(include_plasma=include_plasma), outfile, indent=4)
 
         print("saved geometry description to ", Pfilename)
 
