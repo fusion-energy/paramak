@@ -189,18 +189,9 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             R_derivative, Z_derivative,
             self.thickness + self.offset_from_plasma, flip=True)
 
-        def diff_between_angles(a, b):
-            c = (b - a) % 360
-            if c > 180:
-                c -= 360
-            return c
-        # if full coverage close the shape
-        if diff_between_angles(self.start_angle, self.stop_angle) == 0:
-            points.append(outer_points[0])
-        else:
-            points = inner_points + outer_points
-
-        points[-2][2] = 'straight'
+        points = inner_points + outer_points
+        points[-1][2] = 'straight'
+        points.append(inner_points[0])
         self.points = points
 
     def create_offset_points(self, thetas, R_fun, Z_fun, R_derivative, Z_derivative, offset, flip=False):
@@ -218,10 +209,6 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         :type Z_derivative: sympy.Mul
         :param offset: offset value (cm). offset=0 will follow the parametric
          equations.
-        :type offset: float
-        :param flip: if True thetas will be iterated from the end. Defaults
-         to False.
-        :type flip: bool
 
         :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2], ...]
         :rtype: list
@@ -251,5 +238,4 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             val_Z_outer = Z_fun(theta) + offset*ny
 
             points.append([float(val_R_outer), float(val_Z_outer), 'spline'])
-            
         return points
