@@ -38,7 +38,7 @@ class ExtrudeStraightShape(Shape):
         points,
         distance,
         workplane="XZ",
-        stp_filename=None,
+        stp_filename="ExtrudeStraightShape.stp",
         solid=None,
         color=None,
         azimuth_placement_angle=0,

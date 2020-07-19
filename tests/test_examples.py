@@ -36,6 +36,31 @@ class test_object_properties(unittest.TestCase):
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
+    def test_make_parametric_ball_rector(self):
+        """ Runs the example and checks the output files are produced"""
+        os.chdir(Path(cwd))
+        os.chdir(Path("examples/example_parametric_reactors"))
+        output_filenames = ['plasma.stp',
+            'inboard_tf_coils.stp',
+            'center_column_shield.stp',
+            'divertor_upper.stp',
+            'divertor_lower.stp',
+            'extra_blanket_upper.stp',
+            'extra_firstwall_upper.stp',
+            'extra_blanket_rear_wall_upper.stp',
+            'extra_blanket_lower.stp',
+            'extra_firstwall_lower.stp',
+            'extra_blanket_rear_wall_lower.stp',
+            'firstwall.stp', 'blanket.stp',
+            'blanket_rear_wall.stp',
+            'Graveyard.stp']
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        os.system("python make_parametric_ball_reactor.py")
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
     def test_make_blanket_from_points(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
