@@ -157,14 +157,6 @@ class BlanketConstantThicknessFP(RotateMixedShape):
                     num=self.num_points,
                     endpoint=True)
 
-        # create sympy objects and derivatives
-        theta_sp = sp.Symbol("theta")
-
-        R_sp = R(theta_sp, pkg=sp)
-        Z_sp = Z(theta_sp, pkg=sp)
-
-        R_derivative = sp.diff(R_sp, theta_sp)
-        Z_derivative = sp.diff(Z_sp, theta_sp)
         # create inner points
         if self.plasma is None:
             # if no plasma object is given simply use the equation
@@ -179,22 +171,19 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             # if a plasma is given
             inner_points = self.create_offset_points(
                 thetas, R, Z,
-                R_derivative, Z_derivative,
                 self.offset_from_plasma)
         inner_points[-1][2] = 'straight'
 
         # compute outer points
         outer_points = self.create_offset_points(
-            thetas, R, Z,
-            R_derivative, Z_derivative,
-            self.thickness + self.offset_from_plasma, flip=True)
-
+            np.flip(thetas), R, Z,
+            self.thickness + self.offset_from_plasma)
         points = inner_points + outer_points
         points[-1][2] = 'straight'
         points.append(inner_points[0])
         self.points = points
 
-    def create_offset_points(self, thetas, R_fun, Z_fun, R_derivative, Z_derivative, offset, flip=False):
+    def create_offset_points(self, thetas, R_fun, Z_fun, offset):
         """generates a list of points following parametric equations with an offset
         
         :param thetas: list of angles (radians)
@@ -203,23 +192,23 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         :type R_fun: callable
         :param Z_fun: parametric function for Z coordinate (cm)
         :type Z_fun: callable
-        :param R_derivative: derivative of R over theta (cm/rad)
-        :type R_derivative: sympy.Mul
-        :param Z_derivative: derivative of Z over theta (cm/rad)
-        :type Z_derivative: sympy.Mul
         :param offset: offset value (cm). offset=0 will follow the parametric
          equations.
 
         :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2], ...]
         :rtype: list
         """
+        # create sympy objects and derivatives
+        theta_sp = sp.Symbol("theta")
 
+        R_sp = R_fun(theta_sp, pkg=sp)
+        Z_sp = Z_fun(theta_sp, pkg=sp)
+
+        R_derivative = sp.diff(R_sp, theta_sp)
+        Z_derivative = sp.diff(Z_sp, theta_sp)
         points = []
-        list_of_thetas = thetas
-        if flip:
-            list_of_thetas = np.flip(thetas)
 
-        for theta in list_of_thetas:
+        for theta in thetas:
             # get local value of derivatives
             val_R_derivative = float(R_derivative.subs('theta', theta))
             val_Z_derivative = float(Z_derivative.subs('theta', theta))
