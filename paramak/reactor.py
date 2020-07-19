@@ -27,7 +27,7 @@ class Reactor():
 
         self.graveyard = None
         self.shapes_and_components = []
-        self.material_tags = []
+        self.material_tags = set()
         self.stp_filenames = []
         self.solid = None
 
@@ -50,7 +50,7 @@ class Reactor():
         if isinstance(shapes, Iterable):
             for shape in shapes:
                 if shape.material_tag != None:
-                    self.material_tags.append(shape.material_tag)
+                    self.material_tags.add(shape.material_tag)
                 if shape.stp_filename != None:
                     if shape.stp_filename in self.stp_filenames:
                         raise ValueError(
@@ -62,7 +62,7 @@ class Reactor():
                 self.shapes_and_components.append(shape)
         else:
             if shapes.material_tag != None:
-                self.material_tags.append(shapes.material_tag)
+                self.material_tags.add(shapes.material_tag)
             if shapes.stp_filename != None:
                 if shapes.stp_filename in self.stp_filenames:
                     raise ValueError(
