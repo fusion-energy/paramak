@@ -50,12 +50,8 @@ def make_cad_model_with_paramak():
     )
     blanket.solid
 
-    # creates a reactor object
-    my_reactor = paramak.Reactor()
-
-    # addes parametric shapes to reactor
-    my_reactor.add_shape_or_component(blanket)
-    my_reactor.add_shape_or_component(pf_coil)
+    # creates a reactor object from the two components
+    my_reactor = paramak.Reactor([blanket, pf_coil])
 
     # exports neutronics description and stp files
     my_reactor.export_neutronics_description()
