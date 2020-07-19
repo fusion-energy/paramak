@@ -1,13 +1,6 @@
 Examples - Parametric Reactors
 ==============================
 
-make_ball_reactor.py
-^^^^^^^^^^^^^^^^^^^^
-
-.. automodule:: examples.example_parametric_reactors.make_ball_reactor
-   :members:
-   :show-inheritance:
-
 make_parametric_ball_reactor.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

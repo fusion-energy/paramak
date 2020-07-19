@@ -9,36 +9,44 @@ import paramak
 class BallReactor(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,
     cylindical center column shielding, square toroidal field coils.
-    There is not inboard breeder blanket on this ball reactor like
+    There is no inboard breeder blanket on this ball reactor like
     most spherical reactors.
 
-    :param inner_bore_radial_thickness:
+    :param inner_bore_radial_thickness: the radial thickness of 
+     the inner bore (cm)
     :type inner_bore_radial_thickness: float
-    :inboard_tf_leg_radial_thickness:
+    :inboard_tf_leg_radial_thickness: the radial thickness of the
+     inner leg of the toroidal field coils (cm)
     :type inboard_tf_leg_radial_thickness: float
-    :center_column_radial_thickness:
-    :type center_column_radial_thickness: float
-    :divertor_radial_thickness:
+    :center_column_shield_radial_thickness: the radial thickness
+     of the center column shield (cm)
+    :type center_column_shield_radial_thickness: float
+    :divertor_radial_thickness: the radial thickness of the divertor
+     (cm), this fills the gap between the center column shield and blanket
     :type divertor_radial_thickness: float
-    :inner_plasma_gap_radial_thickness:
+    :inner_plasma_gap_radial_thickness: the radial thickness of the
+     inboard gap between the plasma and the center column shield (cm)
     :type inner_plasma_gap_radial_thickness: float
-    :plasma_radial_thickness:
+    :plasma_radial_thickness: the radial thickness of the plasma (cm),
+     this is double the minor radius
     :type plasma_radial_thickness: float
-    :outer_plasma_gap_radial_thickness:
+    :outer_plasma_gap_radial_thickness: the radial thickness of the
+     outboard gap between the plasma and the firstwall (cm)
     :type outer_plasma_gap_radial_thickness: float
-    :firstwall_radial_thickness:
+    :firstwall_radial_thickness: the radial thickness of the first wall (cm)
     :type firstwall_radial_thickness: float
-    :blanket_radial_thickness:
+    :blanket_radial_thickness: the radial thickness of the blanket (cm)
     :type blanket_radial_thickness: float
-    :blanket_rear_wall_thickness:
+    :blanket_rear_wall_thickness: the radial thickness of the rear wall
+     of the blanket (cm)
     :type blanket_rear_wall_thickness: float
-    :elongation:
+    :elongation: the elongation of the plasma
     :type elongation: float
-    :triangularity:
+    :triangularity: the triangularity of the plasma
     :type triangularity: float
-    :number_of_tf_coils:
+    :number_of_tf_coils: the number of tf coils
     :type number_of_tf_coils: int
-    :rotation_angle:
+    :rotation_angle: the angle of the sector that is desired
     :type rotation_angle: int
 
     :return: a Reactor object that has generic functionality
@@ -49,7 +57,7 @@ class BallReactor(paramak.Reactor):
         self,
         inner_bore_radial_thickness,
         inboard_tf_leg_radial_thickness,
-        center_column_radial_thickness,
+        center_column_shield_radial_thickness,
         divertor_radial_thickness,
         inner_plasma_gap_radial_thickness,
         plasma_radial_thickness,
@@ -67,7 +75,7 @@ class BallReactor(paramak.Reactor):
 
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
-        self.center_column_radial_thickness = center_column_radial_thickness
+        self.center_column_shield_radial_thickness = center_column_shield_radial_thickness
         self.divertor_radial_thickness = divertor_radial_thickness
         self.inner_plasma_gap_radial_thickness = inner_plasma_gap_radial_thickness
         self.plasma_radial_thickness = plasma_radial_thickness
@@ -79,7 +87,7 @@ class BallReactor(paramak.Reactor):
 
         # sets major raduis and minor radius from equatorial_points to allow a radial build
         # this helps avoid the plasma overlapping the center column and such things
-        inner_equatorial_point = inner_bore_radial_thickness + inboard_tf_leg_radial_thickness + center_column_radial_thickness + inner_plasma_gap_radial_thickness
+        inner_equatorial_point = inner_bore_radial_thickness + inboard_tf_leg_radial_thickness + center_column_shield_radial_thickness + inner_plasma_gap_radial_thickness
         outer_equatorial_point = inner_equatorial_point + plasma_radial_thickness
         self.major_radius = (inner_equatorial_point + plasma_radial_thickness + inner_equatorial_point) /2
         self.minor_radius = ((outer_equatorial_point + inner_equatorial_point) /2 )-inner_equatorial_point
@@ -114,7 +122,7 @@ class BallReactor(paramak.Reactor):
         inboard_tf_coils_end_radius = inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
 
         center_column_shield_start_radius = inboard_tf_coils_end_radius
-        center_column_shield_end_radius = center_column_shield_start_radius + self.center_column_radial_thickness
+        center_column_shield_end_radius = center_column_shield_start_radius + self.center_column_shield_radial_thickness
 
         divertor_start_radius = center_column_shield_end_radius
         divertor_end_radius = center_column_shield_end_radius + self.divertor_radial_thickness
