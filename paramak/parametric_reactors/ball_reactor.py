@@ -126,6 +126,20 @@ class BallReactor(paramak.Reactor):
         tf_coil_height = blanket_rear_wall_end_height * 2
         center_column_shield_height = blanket_rear_wall_end_height * 2
 
+        if self.rotation_angle < 360:
+            max_high = 3 * center_column_shield_height
+            max_width = 3 * blanket_read_wall_end_radius
+            cutting_slice = paramak.RotateStraightShape(points=[
+                    (0,max_high),
+                    (max_width, max_high),
+                    (max_width, -max_high),
+                    (0, -max_high),
+                ],
+                rotation_angle=360-self.rotation_angle,
+                azimuth_placement_angle=360-self.rotation_angle
+            )
+        else:
+            cutting_slice=None
 
         inboard_tf_coils = paramak.InnerTfCoilsCircular(
             height=tf_coil_height,
@@ -135,6 +149,7 @@ class BallReactor(paramak.Reactor):
             gap_size=10,
             stp_filename="inboard_tf_coils.stp",
             material_tag="inboard_tf_coils_material",
+            cut=cutting_slice
         )
 
         self.add_shape_or_component(inboard_tf_coils)
