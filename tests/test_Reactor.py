@@ -291,8 +291,8 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)],
             rotation_angle = 360,
             material_tag = "test_material",
-            stp_filename = "test.stp",
-            tet_mesh = "size 60",)
+            stp_filename = "test.stp")
+        test_shape.tet_mesh = "size 60"
         test_plasma = paramak.Plasma(major_radius=500,
                                      minor_radius=100,
                                      stp_filename='plasma.stp',
@@ -332,8 +332,8 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)],
             rotation_angle = 360,
             material_tag = "test_material",
-            stp_filename = "test.stp",
-            tet_mesh = "size 60",)
+            stp_filename = "test.stp")
+        test_shape.tet_mesh = "size 60"
         test_plasma = paramak.Plasma(major_radius=500,
                                      minor_radius=100)
         test_reactor = paramak.Reactor()
