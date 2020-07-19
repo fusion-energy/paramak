@@ -17,19 +17,88 @@ from paramak.shape import Shape
 
 class Reactor():
 
-    """The Reactor object allows Shapes to be added and then collective 
-    opperations to be performed on all the Shapes within the Reactor.
-    Combining all the shapes is required for creating images of the whole reactor and 
-    creating a Graveyard (bounding box) that is needed for neutronics simulations.
+    """The Reactor object allows shapes and components to be added and then collective 
+    opperations to be performed on them. Combining all the shapes is required for creating
+    images of the whole reactor and creating a Graveyard (bounding box) that is needed 
+    for neutronics simulations.
     """
 
-    def __init__(self):
+    def __init__(self, shapes_and_components):
 
-        self.graveyard = None
-        self.shapes_and_components = []
-        self.material_tags = set()
+        self.shapes_and_components = shapes_and_components
+
+        # calculated internally
+        self.material_tags = []
         self.stp_filenames = []
+        self.tet_meshes = []
+        self.graveyard = None
         self.solid = None
+
+
+    @property
+    def stp_filenames(self):
+        values=[]
+        for shape_or_componet in self.shapes_and_components:
+            values.append(shape_or_componet.stp_filename)
+        return values
+
+    @stp_filenames.setter
+    def stp_filenames(self, value):
+        self._stp_filenames = value
+
+    @property
+    def material_tags(self):
+        values=[]
+        for shape_or_componet in self.shapes_and_components:
+            values.append(shape_or_componet.material_tag)
+        return values
+
+    @material_tags.setter
+    def material_tags(self, value):
+        self._material_tags = value
+
+    @property
+    def tet_meshes(self):
+        values=[]
+        for shape_or_componet in self.shapes_and_components:
+            values.append(shape_or_componet.tet_mesh)
+        return values
+
+    @tet_meshes.setter
+    def tet_meshes(self, value):
+        self._tet_meshes = value
+
+    @property
+    def shapes_and_components(self):
+        return self._shapes_and_components
+
+    @shapes_and_components.setter
+    def shapes_and_components(self, value):
+        """Adds a list of parametric shape(s) and or parametric component(s)
+        to the Reactor object. This allows collective operations can be performed
+        on all the shapes in the reactor. When adding a shape or componet the 
+        stp_filename of the shape or component should be unique.
+        """
+        shapes_and_components = []
+        if not isinstance(value, Iterable):
+            raise ValueError(
+                "shapes_and_components must be a list"
+            )
+
+        stp_filenames = []
+
+        for shape in value:
+            if shape.stp_filename != None:
+                if shape.stp_filename in stp_filenames:
+                    raise ValueError(
+                        "Set Reactor already contains a shape or component \
+                         with this stp_filename", shape.stp_filename
+                    )
+                else:
+                    stp_filenames.append(shape.stp_filename)
+
+        self._shapes_and_components = value
+
 
     @property
     def solid(self):
@@ -39,39 +108,38 @@ class Reactor():
     def solid(self, value):
         self._solid = value
 
-    def add_shape_or_component(self, shapes):
-        """Adds a parametric shape(s) or a parametric component(s) to the Reactor 
-        object. An individual shape/component or a list of shapes/ components are
-        added to the Reactor object so that collective operations can be performed
-        on all the shapes in the reactor. When adding a shape or componet the 
-        stp_filename for the shape or compnent should not already be used in the 
-        reactor.
-        """
-        if isinstance(shapes, Iterable):
-            for shape in shapes:
-                if shape.material_tag != None:
-                    self.material_tags.add(shape.material_tag)
-                if shape.stp_filename != None:
-                    if shape.stp_filename in self.stp_filenames:
-                        raise ValueError(
-                            "Set Reactor already contains a shape or component \
-                                 with this stp_filename", shapes.stp_filename
-                        )
-                    else:
-                        self.stp_filenames.append(shape.stp_filename)
-                self.shapes_and_components.append(shape)
-        else:
-            if shapes.material_tag != None:
-                self.material_tags.add(shapes.material_tag)
-            if shapes.stp_filename != None:
-                if shapes.stp_filename in self.stp_filenames:
-                    raise ValueError(
-                        "Set Reactor already contains a shape or component \
-                                with this stp_filename", shapes.stp_filename
-                    )
-                else:
-                    self.stp_filenames.append(shapes.stp_filename)
-            self.shapes_and_components.append(shapes)
+    # def add_shapes_or_components(self, shapes):
+    #     """Adds parametric shapes or parametric components to the Reactor 
+    #     object. A list of shapes or components are added to the Reactor
+    #     object so that collective operations can be performed on all the
+    #     shapes in the reactor. When adding a shape or componet the 
+    #     stp_filename for the shape or component should be unique.
+    #     """
+    #     for shape in shapes:
+    #         if shape.stp_filename != None:
+    #             if shape.stp_filename in self.stp_filenames:
+    #                 raise ValueError(
+    #                     "Set Reactor already contains a shape or component \
+    #                             with this stp_filename", shapes.stp_filename
+    #                 )
+    #         self.shapes_and_components.append(shape)
+
+
+    # def add_shape_or_component(self, shapes):
+    #     """Adds a single parametric shape or a parametric component to the Reactor 
+    #     object. An individual shape or component is added to the Reactor object
+    #     so that collective operations can be performed on all the shapes in the
+    #     reactor. When adding a shape or componet the stp_filename for the shape
+    #     or component should be unique.
+    #     """
+    #     if shapes.stp_filename != None:
+    #         if shapes.stp_filename in self.stp_filenames:
+    #             raise ValueError(
+    #                 "Set Reactor already contains a shape or component \
+    #                         with this stp_filename", shapes.stp_filename,
+    #                         self.stp_filenames
+    #             )
+    #     self.shapes_and_components.append(shapes)
 
     def neutronics_description(self, include_plasma=False):
         """A description of the reactor containing materials tags,
@@ -107,30 +175,14 @@ class Reactor():
                                   Reactor entries before using this method"
                 )
 
-            if entry.tet_mesh == None:
-                Shape_neutronics_description = entry.neutronics_description(
-                    stp_filename=entry.stp_filename,
-                    material_tag=entry.material_tag 
-                )
-            else:
-                Shape_neutronics_description = entry.neutronics_description(
-                    stp_filename=entry.stp_filename,
-                    material_tag=entry.material_tag,
-                    tet_mesh=entry.tet_mesh 
-                )
+            neutronics_description.append(entry.neutronics_description())
 
-            neutronics_description.append(Shape_neutronics_description)
-
-        # This add the neutronics descirption for the graveyard which is unique as
+        # This add the neutronics description for the graveyard which is unique as
         # it is automatically calculated instead of being added by the user.
         # Also the graveyard must have 'Graveyard' as the material name
         if self.graveyard is None:
             self.make_graveyard()
-        neutronics_description.append(
-            self.graveyard.neutronics_description(
-                stp_filename="Graveyard.stp", material_tag="Graveyard"
-            )
-        )
+        neutronics_description.append(self.graveyard.neutronics_description())
 
         return neutronics_description
 
@@ -258,12 +310,17 @@ class Reactor():
         self.graveyard.export_stp(Path(filename))
         return filename
 
-    def make_graveyard(self):
+    def make_graveyard(self, offset = 500.):
         """Creates a graveyard volume (bounding box) that encapsulates all
            volumes. This is required by DAGMC when performing neutronics
            simulations.
 
-        :return: graveyard 3d volume object
+        :param offset: the offset between the largest edge of the geometry
+        and the bounding shell created
+        :type offset: float
+
+        :return: A shell volume that bounds the geometry referred to as a
+         graveyard in DAGMC
         :rtype: CadQuery solid
         """
 
@@ -281,7 +338,6 @@ class Reactor():
         inner_box = cq.Workplane("front").box(
             largest_dimension, largest_dimension, largest_dimension
         )
-        offset = 500
 
         # creates a large box that surrounds the smaller box
         outer_box = cq.Workplane("front").box(

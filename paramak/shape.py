@@ -623,7 +623,7 @@ class Shape:
         self.patch = p
         return p
 
-    def neutronics_description(self, stp_filename, material_tag, tet_mesh=None):
+    def neutronics_description(self):
         """Returns a neutronics description of the Shape object.
         This is needed for the use with automated neutronics model
         methods which require linkage between the stp files and
