@@ -20,7 +20,7 @@ class test_object_properties(unittest.TestCase):
         assert len(test_reactor.material_tags) == 0
         test_reactor.add_shape_or_component(test_shape)
         assert len(test_reactor.material_tags) == 1
-        assert test_reactor.material_tags[0] == 'mat1'
+        assert test_reactor.material_tags == {'mat1'}
 
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
         """adds a shape to the reactor and checks that the material_tag
@@ -37,11 +37,10 @@ class test_object_properties(unittest.TestCase):
         assert len(test_reactor.material_tags) == 0
         test_reactor.add_shape_or_component(test_shape)
         assert len(test_reactor.material_tags) == 1
-        assert test_reactor.material_tags[0] == 'mat1'
+        assert test_reactor.material_tags == {'mat1'}
         test_reactor.add_shape_or_component(test_shape2)
         assert len(test_reactor.material_tags) == 2
-        assert test_reactor.material_tags[0] == 'mat1'
-        assert test_reactor.material_tags[1] == 'mat2'
+        assert test_reactor.material_tags == {'mat1', 'mat2'}
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """adds a shape to the reactor and checks that the stp_filename
@@ -104,7 +103,7 @@ class test_object_properties(unittest.TestCase):
             test_reactor.add_shape_or_component(test_shape2)
 
         self.assertRaises(ValueError, test_stp_filename_duplication)  
-    
+
 
     def test_reactor_creation_with_default_properties(self):
         """creates a Reactor object and checks that it has \
