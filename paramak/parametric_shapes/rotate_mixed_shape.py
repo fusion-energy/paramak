@@ -11,27 +11,21 @@ class RotateMixedShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with
        a mixture of straight lines and splines.
 
-       :param points: A list of XZ coordinates and connection types where the last entry 
-            has the same XZ coordinates as the first entry. Also the connection types are 
-            either 'spline' or 'straight'. For example [(2.,1.,'straight'), (2.,2.,'straight'), 
-            (1.,2.,'spline'), (1.,1.,'spline'), (2.,1.,'spline')].
-       :type points: a list of tuples each containing X (float), Z (float), connection
-       :param name: The legend name used when exporting a html graph of the shape
-       :type name: str
-       :param color: the color to use when exporting as html graphs or png images
-       :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-            3 or 4 floats respectively each in the range 0-1
-       :param material_tag: The material name to use when exporting the neutronics description
-       :type material_tag: str
-       :param stp_filename: the filename used when saving stp files as part of a reactor
-       :type stp_filename: str
-       :param azimuth_placement_angle: the angle or angles to use when rotating the 
-            shape on the azimuthal axis
-       :type azimuth_placement_angle: float or iterable of floats
-       :param rotation_angle: The rotation_angle to use when revoling the solid (degrees)
-       :type rotation_angle: float
-       :param cut: An optional cadquery object to perform a boolean cut with this object
-       :type cut: cadquery object
+       Args:
+          points (list of tuples each containing X (float), Z (float), connection): 
+             A list of XZ coordinates and connection types where the last entry has 
+             the same XZ coordinates as the first entry. Also the connection types are 
+             either 'spline' or 'straight'. For example [(2.,1.,'straight'), (2.,2.,'straight'), 
+             (1.,2.,'spline'), (1.,1.,'spline'), (2.,1.,'spline')].
+          name (str): The legend name used when exporting a html graph of the shape.
+          color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
+              The color to use when exporting as html graphs or png images.
+          material_tag (str): The material name to use when exporting the neutronics description.
+          stp_filename (str): The filename used when saving stp files as part of a reactor
+          azimuth_placement_angle (float or iterable of floats): the angle or angles to use when 
+              rotating the shape on the azimuthal axis.
+          rotation_angle (float): The rotation_angle to use when revoling the solid (degrees).
+          cut (CadQuery object): An optional cadquery object to perform a boolean cut with this object.
     """
 
     def __init__(
