@@ -9,7 +9,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
     :type height: float
     :param inner_radius: inner radius of the center column shield
     :type inner_radius: float
-    :param mid_radius: inner radius of the outer hyperbolic 
+    :param mid_radius: inner radius of the outer hyperbolic
      profile of the center column shield
     :type mid_radius: float
     :param outer_radius: outer_radius of the center column shield

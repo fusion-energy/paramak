@@ -120,6 +120,23 @@ class test_BlanketConstantThicknessFP(unittest.TestCase):
             start_angle=270,)
         test_shape.export_physical_groups('tests/blanket.json')
 
+    def test_BlanketConstantThicknessFP_full_cov_stp_export(self):
+        """creates blanket from parametric shape and checks the STP export
+        with full coverage"""
+
+        test_shape = paramak.BlanketConstantThicknessFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=360,
+            start_angle=0,
+            rotation_angle=180
+        )
+
+        test_shape.export_stp("tests/test_blanket_full_cov")
+
 
 class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
