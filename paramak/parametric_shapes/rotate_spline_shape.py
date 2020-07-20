@@ -12,19 +12,18 @@ class RotateSplineShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with splines
 
        Args:
-          points (list of tuples): A list of XZ coordinates and connection types where
-             the last entry has the same XZ coordinates as the first entry. For example 
-             [(2., 1.), (2., 2.), (1., 2.), (1., 1.), (2., 1.)].
-          name (str): The legend name used when exporting a html graph of the shape
-          color (Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-             3 or 4 floats respectively each in the range 0-1): The color to use when 
-             exporting as html graphs or png images
-          material_tag (str): The material name to use when exporting the neutronics description
-          stp_filename (str): The filename used when saving stp files as part of a reactor
+          points (list of tuples each containing X (float), Z (float)): A list of XZ coordinates 
+            connected by straight connections where the last entry has the same XZ coordinates as 
+            the first entry. For example [(2., 1.), (2., 2.), (1., 2.), (1., 1.), (2., 1.)].
+          name (str): The legend name used when exporting a html graph of the shape.
+          color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1): 
+             The color to use when exporting as html graphs or png images.
+          material_tag (str): The material name to use when exporting the neutronics description.
+          stp_filename (str): The filename used when saving stp files as part of a reactor.
           azimuth_placement_angle (float or iterable of floats): the angle or angles to use when 
-             rotating the shape on the azimuthal axis
-          rotation_angle (float): The rotation_angle to use when revoling the solid (degrees)
-          cut (CadQuery object): An optional cadquery object to perform a boolean cut with this object
+             rotating the shape on the azimuthal axis.
+          rotation_angle (float): The rotation_angle to use when revoling the solid (degrees).
+          cut (CadQuery object): An optional cadquery object to perform a boolean cut with this object.
     """
 
     def __init__(
