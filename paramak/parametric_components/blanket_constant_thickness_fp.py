@@ -119,7 +119,8 @@ class BlanketConstantThicknessFP(RotateMixedShape):
 
     @property
     def physical_groups(self):
-        return self.create_physical_groups()
+        self.create_physical_groups()
+        return self._physical_groups
 
     @physical_groups.setter
     def physical_groups(self, physical_groups):
@@ -277,7 +278,7 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             stop_equals_start = True
 
         # rearrange order
-        # TODO: fix issue #86
+        # TODO: fix issue #86 (full coverage)
         if full_rot:
             if stop_equals_start:
                 print("Warning: If start_angle = stop_angle surfaces will not\
@@ -316,4 +317,4 @@ class BlanketConstantThicknessFP(RotateMixedShape):
                 "name": surface_names[i-1]
             }
             groups.append(group)
-        return groups
+        self.physical_groups = groups
