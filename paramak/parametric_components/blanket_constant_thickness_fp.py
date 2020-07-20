@@ -119,8 +119,7 @@ class BlanketConstantThicknessFP(RotateMixedShape):
 
     @property
     def physical_groups(self):
-        self.create_physical_groups()
-        return self._physical_groups
+        return self.create_physical_groups()
 
     @physical_groups.setter
     def physical_groups(self, physical_groups):
