@@ -16,11 +16,9 @@ class test_object_properties(unittest.TestCase):
             material_tag='mat1')
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = paramak.Reactor()
-        assert len(test_reactor.material_tags) == 0
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
         assert len(test_reactor.material_tags) == 1
-        assert test_reactor.material_tags == {'mat1'}
+        assert test_reactor.material_tags[0] == 'mat1'
 
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
         """adds a shape to the reactor and checks that the material_tag
@@ -33,14 +31,10 @@ class test_object_properties(unittest.TestCase):
             material_tag='mat2')
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = paramak.Reactor()
-        assert len(test_reactor.material_tags) == 0
-        test_reactor.add_shape_or_component(test_shape)
-        assert len(test_reactor.material_tags) == 1
-        assert test_reactor.material_tags == {'mat1'}
-        test_reactor.add_shape_or_component(test_shape2)
+        test_reactor = paramak.Reactor([test_shape, test_shape2])
         assert len(test_reactor.material_tags) == 2
-        assert test_reactor.material_tags == {'mat1', 'mat2'}
+        assert test_reactor.material_tags[0] == 'mat1'
+        assert test_reactor.material_tags[1] == 'mat2'
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """adds a shape to the reactor and checks that the stp_filename
@@ -50,9 +44,7 @@ class test_object_properties(unittest.TestCase):
             stp_filename='filename.stp')
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = paramak.Reactor()
-        assert len(test_reactor.stp_filenames) == 0
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
         assert len(test_reactor.stp_filenames) == 1
         assert test_reactor.stp_filenames[0] == 'filename.stp'
 
@@ -68,12 +60,7 @@ class test_object_properties(unittest.TestCase):
             stp_filename='filename2.stp')
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = paramak.Reactor()
-        assert len(test_reactor.stp_filenames) == 0
-        test_reactor.add_shape_or_component(test_shape)
-        assert len(test_reactor.stp_filenames) == 1
-        assert test_reactor.stp_filenames[0] == 'filename.stp'
-        test_reactor.add_shape_or_component(test_shape2)
+        test_reactor = paramak.Reactor([test_shape,test_shape2])
         assert len(test_reactor.stp_filenames) == 2
         assert test_reactor.stp_filenames[0] == 'filename.stp'
         assert test_reactor.stp_filenames[1] == 'filename2.stp'
@@ -83,24 +70,18 @@ class test_object_properties(unittest.TestCase):
 
         """adds a shape to the reactor and checks that the stp_filename
         property works as designed"""
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            stp_filename='filename.stp')
-        test_shape2 = paramak.RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            stp_filename='filename.stp')
-        test_shape.rotation_angle = 360
-        test_shape.create_solid()
-        test_reactor = paramak.Reactor()
-        assert len(test_reactor.stp_filenames) == 0
-        test_reactor.add_shape_or_component(test_shape)
-        assert len(test_reactor.stp_filenames) == 1
-        assert test_reactor.stp_filenames[0] == 'filename.stp'
 
         def test_stp_filename_duplication():
             """checks ValueError is raised when an elongation < 0 is specified"""
-
-            test_reactor.add_shape_or_component(test_shape2)
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stp_filename='filename.stp')
+            test_shape2 = paramak.RotateSplineShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stp_filename='filename.stp')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            test_reactor = paramak.Reactor([test_shape, test_shape2])
 
         self.assertRaises(ValueError, test_stp_filename_duplication)  
 
@@ -109,7 +90,7 @@ class test_object_properties(unittest.TestCase):
         """creates a Reactor object and checks that it has \
                 no default properties"""
 
-        test_reactor = paramak.Reactor()
+        test_reactor = paramak.Reactor([])
 
         assert test_reactor is not None
 
@@ -121,9 +102,9 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = paramak.Reactor()
+        test_reactor = paramak.Reactor([])
         assert len(test_reactor.shapes_and_components) == 0
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
         assert len(test_reactor.shapes_and_components) == 1
 
     def test_Graveyard_exists(self):
@@ -134,8 +115,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
         test_reactor.make_graveyard()
 
         assert type(test_reactor.graveyard) == paramak.Shape
@@ -150,8 +130,7 @@ class test_object_properties(unittest.TestCase):
         os.system("rm my_graveyard.stp")
         os.system("rm Graveyard.stp")
         test_shape.stp_filename = "test_shape.stp"
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
 
         test_reactor.export_graveyard()
         test_reactor.export_graveyard(filename="my_graveyard.stp")
@@ -171,8 +150,7 @@ class test_object_properties(unittest.TestCase):
         os.system("rm test_reactor/test_shape.stp")
         os.system("rm test_reactor/Graveyard.stp")
         test_shape.stp_filename = "test_shape.stp"
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
 
         test_reactor.export_stp(output_folder="test_reactor")
 
@@ -188,8 +166,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_svg_image.svg")
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
 
         test_reactor.export_svg("test_svg_image.svg")
 
@@ -205,8 +182,7 @@ class test_object_properties(unittest.TestCase):
                 points=[(0, 0), (0, 20), (20, 20)])
             test_shape.rotation_angle = 360
             test_shape.stp_filename = "test.stp"
-            test_reactor = paramak.Reactor()
-            test_reactor.add_shape_or_component(test_shape)
+            test_reactor = paramak.Reactor([test_shape])
             neutronics_description = test_reactor.neutronics_description()
 
         self.assertRaises(ValueError, test_neutronics_description_without_material_tag)
@@ -220,8 +196,7 @@ class test_object_properties(unittest.TestCase):
             test_shape.rotation_angle = 360
             test_shape.material_tag = "test_material"
             test_shape.stp_filename = None
-            test_reactor = paramak.Reactor()
-            test_reactor.add_shape_or_component(test_shape)
+            test_reactor = paramak.Reactor([test_shape])
             neutronics_description = test_reactor.neutronics_description()
 
         self.assertRaises(ValueError, test_neutronics_description_without_stp_filename)
@@ -235,8 +210,7 @@ class test_object_properties(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
         neutronics_description = test_reactor.neutronics_description()
 
         assert len(neutronics_description) == 2
@@ -259,8 +233,7 @@ class test_object_properties(unittest.TestCase):
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
         test_shape.tet_mesh = "size 60"
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
         returned_filename = test_reactor.export_neutronics_description(
             filename="manifest_test.json"
         )
@@ -296,9 +269,7 @@ class test_object_properties(unittest.TestCase):
                                      minor_radius=100,
                                      stp_filename='plasma.stp',
                                      material_tag='DT_plasma')
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
-        test_reactor.add_shape_or_component(test_plasma)
+        test_reactor = paramak.Reactor([test_shape, test_plasma])
         returned_filename = test_reactor.export_neutronics_description(include_plasma=True)
         with open("manifest.json") as json_file:
             neutronics_description = json.load(json_file)
@@ -335,9 +306,7 @@ class test_object_properties(unittest.TestCase):
         test_shape.tet_mesh = "size 60"
         test_plasma = paramak.Plasma(major_radius=500,
                                      minor_radius=100)
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
-        test_reactor.add_shape_or_component(test_plasma)
+        test_reactor = paramak.Reactor([test_shape, test_plasma])
         returned_filename = test_reactor.export_neutronics_description()
         with open("manifest.json") as json_file:
             neutronics_description = json.load(json_file)
@@ -363,8 +332,7 @@ class test_object_properties(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
         returned_filename = test_reactor.export_2d_image(filename="2d_test_image.png")
 
         assert Path(returned_filename).exists() is True
@@ -378,8 +346,7 @@ class test_object_properties(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
-        test_reactor = paramak.Reactor()
-        test_reactor.add_shape_or_component(test_shape)
+        test_reactor = paramak.Reactor([test_shape])
         test_reactor.export_html(filename="test_html.html")
 
         assert Path("test_html.html").exists() is True

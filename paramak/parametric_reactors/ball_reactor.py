@@ -68,10 +68,10 @@ class BallReactor(paramak.Reactor):
         elongation,
         triangularity,
         number_of_tf_coils,
-        rotation_angle = 180
+        rotation_angle = 180,
     ):
 
-        super().__init__()
+        super().__init__([])
 
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
@@ -104,6 +104,8 @@ class BallReactor(paramak.Reactor):
 
     def create_components(self):
 
+        shapes_or_components = []
+    
         plasma = paramak.Plasma(major_radius=self.major_radius,
                                 minor_radius=self.minor_radius,
                                 elongation=self.elongation,
@@ -111,7 +113,7 @@ class BallReactor(paramak.Reactor):
                                 rotation_angle=self.rotation_angle)
         plasma.create_solid()
 
-        self.add_shape_or_component(plasma)
+        shapes_or_components.append(plasma)
 
 
         # this is the radial build sequence, where one componet stops and another starts
@@ -183,7 +185,7 @@ class BallReactor(paramak.Reactor):
             cut=cutting_slice
         )
 
-        self.add_shape_or_component(inboard_tf_coils)
+        shapes_or_components.append(inboard_tf_coils)
 
 
         center_column_shield = paramak.CenterColumnShieldCylinder(
@@ -195,7 +197,7 @@ class BallReactor(paramak.Reactor):
             stp_filename="center_column_shield.stp",
             material_tag="center_column_material",
         )
-        self.add_shape_or_component(center_column_shield)
+        shapes_or_components.append(center_column_shield)
 
 
         divertor_upper_part = paramak.RotateStraightShape(points=[
@@ -208,12 +210,7 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             material_tag='divertor_material'
             )
-        self.add_shape_or_component(divertor_upper_part)
-
-        print(            (divertor_start_radius, -divertor_end_height),
-            (divertor_start_radius, -divertor_start_height),
-            (divertor_end_radius, -divertor_start_height),
-            (divertor_end_radius, -divertor_end_height))
+        shapes_or_components.append(divertor_upper_part)
 
         # negative signs used as this is in the negative side of the Z axis 
         divertor_lower_part = paramak.RotateStraightShape(points=[
@@ -226,7 +223,7 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             material_tag='divertor_material'
             )
-        self.add_shape_or_component(divertor_lower_part)
+        shapes_or_components.append(divertor_lower_part)
 
         space_for_divertor = plasma.high_point[0] - center_column_shield_end_radius
 
@@ -242,7 +239,7 @@ class BallReactor(paramak.Reactor):
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_blanket_upper.stp',
                 material_tag='blanket_material')
-            self.add_shape_or_component(extra_blanket_upper)
+            shapes_or_components.append(extra_blanket_upper)
 
             extra_firstwall_upper = paramak.RotateStraightShape(points=[
                 (divertor_end_radius, firstwall_start_height),
@@ -253,7 +250,7 @@ class BallReactor(paramak.Reactor):
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_firstwall_upper.stp',
                 material_tag='firstwall_material')
-            self.add_shape_or_component(extra_firstwall_upper)
+            shapes_or_components.append(extra_firstwall_upper)
 
             extra_blanket_rear_wall_upper = paramak.RotateStraightShape(points=[
                 (divertor_end_radius, blanket_rear_wall_start_height),
@@ -264,7 +261,7 @@ class BallReactor(paramak.Reactor):
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_blanket_rear_wall_upper.stp',
                 material_tag='blanket_rear_wall_material')
-            self.add_shape_or_component(extra_blanket_rear_wall_upper)
+            shapes_or_components.append(extra_blanket_rear_wall_upper)
 
 
             extra_blanket_lower = paramak.RotateStraightShape(points=[
@@ -276,7 +273,7 @@ class BallReactor(paramak.Reactor):
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_blanket_lower.stp',
                 material_tag='blanket_material')
-            self.add_shape_or_component(extra_blanket_lower)
+            shapes_or_components.append(extra_blanket_lower)
 
             extra_firstwall_lower = paramak.RotateStraightShape(points=[
                 (divertor_end_radius, -firstwall_start_height),
@@ -287,7 +284,7 @@ class BallReactor(paramak.Reactor):
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_firstwall_lower.stp',
                 material_tag='firstwall_material')
-            self.add_shape_or_component(extra_firstwall_lower)
+            shapes_or_components.append(extra_firstwall_lower)
 
             extra_blanket_rear_wall_lower = paramak.RotateStraightShape(points=[
                 (divertor_end_radius, -blanket_rear_wall_start_height),
@@ -298,7 +295,7 @@ class BallReactor(paramak.Reactor):
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_blanket_rear_wall_lower.stp',
                 material_tag='blanket_rear_wall_material')
-            self.add_shape_or_component(extra_blanket_rear_wall_lower)
+            shapes_or_components.append(extra_blanket_rear_wall_lower)
 
         firstwall = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(firstwall_start_radius, 0),
@@ -308,7 +305,7 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='firstwall.stp'
         )
-        self.add_shape_or_component(firstwall)
+        shapes_or_components.append(firstwall)
 
 
         blanket = paramak.BlanketConstantThicknessArcV(
@@ -318,7 +315,7 @@ class BallReactor(paramak.Reactor):
             thickness=self.blanket_radial_thickness,
             rotation_angle=self.rotation_angle
         )
-        self.add_shape_or_component(blanket)
+        shapes_or_components.append(blanket)
 
 
         blanket_rear_casing = paramak.BlanketConstantThicknessArcV(
@@ -329,5 +326,6 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='blanket_rear_wall.stp'
         )
-        self.add_shape_or_component(blanket_rear_casing)
+        shapes_or_components.append(blanket_rear_casing)
 
+        self.shapes_and_components = shapes_or_components
