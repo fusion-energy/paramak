@@ -112,6 +112,14 @@ class test_BlanketConstantThicknessFP(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
+    def test_BlanketConstantThicknessFP_physical_groups(self):
+        """Creates default blanket and checks the exports of physical groups
+        """
+        test_shape = paramak.BlanketConstantThicknessFP(
+            100, stop_angle=90,
+            start_angle=270,)
+        test_shape.export_physical_groups('tests/blanket.json')
+
     def test_BlanketConstantThicknessFP_full_cov_stp_export(self):
         """creates blanket from parametric shape and checks the STP export
         with full coverage"""
