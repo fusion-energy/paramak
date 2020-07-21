@@ -338,5 +338,5 @@ if __name__ == "__main__":
                                                 inboard_tf_coils_coolant_temperature_C = -200,
                                                 inboard_tf_coils_coolant_pressure_Pa = 1e6)
 
-        with open(str(uuid.uuid4()), 'w') as outfile:
+        with open(str(uuid.uuid4())+'.json', 'w') as outfile:
             json.dump({**geometry_parameters, **material_parameters_and_results}, outfile)
