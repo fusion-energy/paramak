@@ -110,10 +110,10 @@ class RotateMixedShape(Shape):
 
     def create_solid(self):
         """Creates a 3d solid using points with straight and spline
-        connections edges, azimuth_placement_angle and distance.
+           connections edges, azimuth_placement_angle and distance.
 
-        :return: a 3d solid volume
-        :rtype: a cadquery solid
+           Returns:
+              A CadQuery solid: A 3D solid volume
         """
 
         # print('create_solid() has been called')
