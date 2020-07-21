@@ -198,7 +198,8 @@ class ITERtypeDivertor(RotateMixedShape):
 
         # casing
         casing_points = self.create_casing_points(
-            anchors=(self.IVT_anchor, self.OVT_anchor), C=IVT_points[-1][:2], F=OVT_points[0][:2],
+            anchors=(self.IVT_anchor, self.OVT_anchor),
+            C=IVT_points[-1][:2], F=OVT_points[0][:2],
             targets_lengths=(self.IVT_length, self.OVT_length))
 
         points = IVT_points + dome_points + OVT_points + casing_points
