@@ -53,6 +53,10 @@ class ITERtypeDivertor(RotateMixedShape):
         coverages,
         radii,
         lengths,
+        dome_height,
+        dome_length,
+        dome_thickness,
+        dome_pos=0.5,
         tilts=(0, 0),
         rotation_angle=360,
         workplane="XZ",
@@ -84,6 +88,10 @@ class ITERtypeDivertor(RotateMixedShape):
         self.IVT_radius, self.OVT_radius = radii
         self.IVT_length, self.OVT_length = lengths
         self.IVT_tilt, self.OVT_tilt = tilts
+        self.dome_length = dome_length
+        self.dome_height = dome_height
+        self.dome_pos = dome_pos
+        self.dome_thickness = dome_thickness
     @property
     def points(self):
         self.find_points()
@@ -134,10 +142,10 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([H[0], H[1], 'straight'])
         return points
 
-    def create_dome_points(self, C, F, dome_length, dome_height, dome_thickness, dome_x_pos):
+    def create_dome_points(self, C, F, dome_length, dome_height, dome_thickness, dome_pos):
         points = []
 
-        dome_base = extend(C, F, dome_x_pos)
+        dome_base = extend(C, F, dome_pos*distance_between_two_points(F, C))
         dome_lower_point = extend(dome_base, rotate(dome_base, C, -math.pi/2), dome_height)
 
         D_prime = extend(dome_base, dome_lower_point, dome_height + dome_thickness)
@@ -181,11 +189,8 @@ class ITERtypeDivertor(RotateMixedShape):
         OVT_points = self.create_OVT_points(self.OVT_anchor, self.OVT_coverage, self.OVT_tilt, self.OVT_radius, self.OVT_length)
 
         # Dome
-        dome_length = distance_between_two_points((468, -347), (529, -374))
-        dome_height = distance_between_two_points((470, -411), (493, -374))
-        dome_thickness = 15
-        dome_x_pos = distance_between_two_points((470, -411), (411, -371))
-        dome_points = self.create_dome_points(IVT_points[-1][:2], OVT_points[0][:2], dome_length, dome_height, dome_thickness, dome_x_pos)
+
+        dome_points = self.create_dome_points(IVT_points[-1][:2], OVT_points[0][:2], self.dome_length, self.dome_height, self.dome_thickness, self.dome_pos)
 
         # casing
         casing_points = self.create_casing_points(B=self.IVT_anchor, C=IVT_points[-1][:2], F=OVT_points[0][:2], G=self.OVT_anchor, targets_lengths=(self.IVT_length, self.OVT_length))
