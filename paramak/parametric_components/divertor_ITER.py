@@ -152,7 +152,8 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([E[0], E[1], 'straight'])
         return points
 
-    def create_casing_points(self, B, C, F, G, targets_lengths):
+    def create_casing_points(self, anchors, C, F, targets_lengths):
+        B, G = anchors
         h1, h2 = targets_lengths
         points = []
         # I
@@ -184,7 +185,7 @@ class ITERtypeDivertor(RotateMixedShape):
         OVT_points = self.create_vertical_target_points(
             self.OVT_anchor, -self.OVT_coverage, self.OVT_tilt,
             self.OVT_radius, self.OVT_length)
-        connections = ['straight'] * 2 + ['circle']*2
+        connections = ['straight'] + ['circle']*2 + ['straight']
         for i, connection in enumerate(connections):
             OVT_points[i].append(connection)
         OVT_points = \
@@ -197,8 +198,7 @@ class ITERtypeDivertor(RotateMixedShape):
 
         # casing
         casing_points = self.create_casing_points(
-            B=self.IVT_anchor, C=IVT_points[-1][:2], F=OVT_points[0][:2],
-            G=self.OVT_anchor,
+            anchors=(self.IVT_anchor, self.OVT_anchor), C=IVT_points[-1][:2], F=OVT_points[0][:2],
             targets_lengths=(self.IVT_length, self.OVT_length))
 
         points = IVT_points + dome_points + OVT_points + casing_points
