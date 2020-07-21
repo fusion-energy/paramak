@@ -108,7 +108,10 @@ class Shape:
         if value is None:
             self._material_tag = value
         elif type(value) == str:
-            self._material_tag = value
+            if len(value) > 27:
+                raise ValueError("Shape.material_tag must be less than 28 characters", value)
+            else:
+                self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
 

@@ -91,6 +91,14 @@ class test_object_properties(unittest.TestCase):
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
 
+    def test_material_tag(self):
+        """checks that an error is raised when material tag is too long"""
+
+        test_shape = Shape()
+        # test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        with pytest.raises(ValueError):
+            test_shape.material_tag = "material_tag_too_long_123456"
+
 
 if __name__ == "__main__":
     unittest.main()
