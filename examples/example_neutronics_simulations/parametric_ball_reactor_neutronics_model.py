@@ -18,14 +18,14 @@ def make_cad_model_with_paramak():
     my_reactor = paramak.BallReactor(
                                     inner_bore_radial_thickness=50,
                                     inboard_tf_leg_radial_thickness = 200,
-                                    center_column_radial_thickness= 50,
+                                    center_column_shield_radial_thickness= 50,
                                     divertor_radial_thickness=50,
                                     inner_plasma_gap_radial_thickness = 50,
                                     plasma_radial_thickness = 100,
                                     outer_plasma_gap_radial_thickness = 50,
                                     firstwall_radial_thickness=5,
                                     blanket_radial_thickness=100,
-                                    blanket_rear_wall_thickness=10,
+                                    blanket_rear_wall_radial_thickness=10,
                                     elongation=2,
                                     triangularity=0.55,
                                     number_of_tf_coils=16,
@@ -57,25 +57,27 @@ def make_other_aspects_of_neutronics_model(my_reactor):
     the materials with the same tags as the DAGMC neutronics
     geometry. The model also specifies the computational
     intensity (particles and batches) and the tally to record
-        """
+    """
+
+    # these materials are overly simplified to keep the example short
     firstwall_mat = Material(material_name='eurofer',
-                             material_tag='firstwall_material').openmc_material
+                             material_tag='firstwall_mat').openmc_material
 
     inboard_tf_coils_mat = Material(material_name='WC',
-                                    material_tag='inboard_tf_coils_material').openmc_material
+                                    material_tag='inboard_tf_coils_mat').openmc_material
 
     center_column_mat = Material(material_name='WC',
-                                material_tag='center_column_material').openmc_material
+                                material_tag='center_column_shield_mat').openmc_material
 
     divertor_mat = Material(material_name='eurofer',
-                            material_tag='divertor_material').openmc_material
+                            material_tag='divertor_mat').openmc_material
 
     blanket_mat = Material(material_name='Li4SiO4',
                         enrichment=60,
-                        material_tag='blanket_material').openmc_material
+                        material_tag='blanket_mat').openmc_material
 
     blanket_rear_wall_mat = Material(material_name='eurofer',
-                             material_tag='blanket_rear_wall_material').openmc_material
+                             material_tag='blanket_rear_wall_mat').openmc_material
 
     mats = openmc.Materials([
                             firstwall_mat,
