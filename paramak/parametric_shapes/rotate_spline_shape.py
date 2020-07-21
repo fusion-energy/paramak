@@ -108,10 +108,10 @@ class RotateSplineShape(Shape):
 
     def create_solid(self):
         """Creates a 3d solid using points with straight connections
-        edges, azimuth_placement_angle and rotation angle.
+           edges, azimuth_placement_angle and rotation angle.
 
-        :return: a 3d solid volume
-        :rtype: a cadquery solid
+           Returns:
+              A CadQuery solid: A 3D solid volume
         """
 
         # print('create_solid() has been called')
