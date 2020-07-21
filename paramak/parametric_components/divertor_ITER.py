@@ -66,7 +66,7 @@ class ITERtypeDivertor(RotateMixedShape):
             vertical targets (0 inner, 1 outer). Ex: 0.5 will place the dome
             in between the targets. Defaults to 0.5.
         tilts ((float, float), optional): Tilt angles (anticlockwise) in
-            degrees for the vertical targets. Defaults to (0, 0).
+            degrees for the vertical targets. Defaults to (-27, 0).
         Others: see paramak.RotateMixedShape() arguments.
 
     Attributes:
@@ -76,7 +76,7 @@ class ITERtypeDivertor(RotateMixedShape):
         coverages (float, float): coverages (anticlockwise) in degrees of the
             circular parts of vertical targets. Defaults to (90, 180).
         radii (float, float): radii (cm) of circular parts of the vertical
-            targets. Defaults to (20, 30).
+            targets. Defaults to (50, 25).
         lengths (float, float): leg length (cm) of the vertical targets.
             Defaults to (78, 87).
         dome_height (float): distance (cm) between the dome base and lower
@@ -87,7 +87,7 @@ class ITERtypeDivertor(RotateMixedShape):
             vertical targets (0 inner, 1 outer). Ex: 0.5 will place the dome
             in between the targets. Defaults to 0.5.
         tilts ((float, float), optional): Tilt angles (anticlockwise) in
-            degrees for the vertical targets. Defaults to (0, 0).
+            degrees for the vertical targets. Defaults to (-27, 0).
         Others: see paramak.RotateMixedShape() attributes.
     """
 
@@ -95,13 +95,13 @@ class ITERtypeDivertor(RotateMixedShape):
         self,
         anchors=((450, -300), (561, -367)),
         coverages=(90, 180),
-        radii=(20, 30),
+        radii=(50, 25),
         lengths=(78, 87),
         dome_height=43,
         dome_length=66,
         dome_thickness=10,
         dome_pos=0.5,
-        tilts=(0, 0),
+        tilts=(-27, 0),
         rotation_angle=360,
         workplane="XZ",
         points=None,
