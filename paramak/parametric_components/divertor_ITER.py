@@ -174,8 +174,8 @@ class ITERtypeDivertor(RotateMixedShape):
 
         # IVT
         IVT_points = self.create_vertical_target_points(
-            self.IVT_anchor, self.IVT_coverage, self.IVT_tilt,
-            -self.IVT_radius, self.IVT_length)
+            self.IVT_anchor, math.radians(self.IVT_coverage),
+            math.radians(self.IVT_tilt), -self.IVT_radius, self.IVT_length)
 
         connections = ['circle'] * 2 + ['straight']*2
         for i, connection in enumerate(connections):
@@ -183,8 +183,8 @@ class ITERtypeDivertor(RotateMixedShape):
 
         # OVT
         OVT_points = self.create_vertical_target_points(
-            self.OVT_anchor, -self.OVT_coverage, self.OVT_tilt,
-            self.OVT_radius, self.OVT_length)
+            self.OVT_anchor, -math.radians(self.OVT_coverage),
+            math.radians(self.OVT_tilt), self.OVT_radius, self.OVT_length)
         connections = ['straight'] + ['circle']*2 + ['straight']
         for i, connection in enumerate(connections):
             OVT_points[i].append(connection)
