@@ -101,45 +101,24 @@ class ITERtypeDivertor(RotateMixedShape):
     def points(self, points):
         self._points = points
 
-    def create_IVT_points(self, B, coverage, tilt, R, h):
+    def create_vertical_target_points(self, anchor, coverage, tilt, radius, length):
         points = []
-        base_circle_inner = B[0] - R, B[1]
-        A = rotate(base_circle_inner, B, coverage)
-        A_prime = rotate(base_circle_inner, B, coverage/2)
-        C = (B[0], B[1] - h)
+        base_circle_inner = anchor[0] + radius, anchor[1]
+        A = rotate(base_circle_inner, anchor, coverage)
+        A_prime = rotate(base_circle_inner, anchor, coverage/2)
+        C = (anchor[0], anchor[1] - length)
 
-        A = rotate(B, A, tilt)
-        A_prime = rotate(B, A_prime, tilt)
-        C = rotate(B, C, tilt)
+        A = rotate(anchor, A, tilt)
+        A_prime = rotate(anchor, A_prime, tilt)
+        C = rotate(anchor, C, tilt)
         # upper inner A
-        points.append([A[0], A[1], 'circle'])
+        points.append([A[0], A[1]])
         # A'
-        points.append([A_prime[0], A_prime[1], 'circle'])
+        points.append([A_prime[0], A_prime[1]])
         # B
-        points.append([B[0], B[1], 'straight'])
+        points.append([anchor[0], anchor[1]])
         # C
-        points.append([C[0], C[1], 'straight'])
-        return points
-
-    def create_OVT_points(self, G, coverage, tilt, R, h):
-        points = []
-        base_circle_outer = G[0] + R, G[1]
-        F = G[0], G[1] - h
-        G_prime = rotate(base_circle_outer, G, -coverage/2)
-        H = rotate(base_circle_outer, G, -coverage)
-
-        H = rotate(G, H, tilt)
-        G_prime = rotate(G, G_prime, tilt)
-        F = rotate(G, F, tilt)
-
-        # F
-        points.append([F[0], F[1], 'straight'])
-        # G
-        points.append([G[0], G[1], 'circle'])
-        # G'
-        points.append([G_prime[0], G_prime[1], 'circle'])
-        # H
-        points.append([H[0], H[1], 'straight'])
+        points.append([C[0], C[1]])
         return points
 
     def create_dome_points(self, C, F, dome_length,
@@ -191,14 +170,22 @@ class ITERtypeDivertor(RotateMixedShape):
     def find_points(self):
 
         # IVT
-        IVT_points = self.create_IVT_points(
+        IVT_points = self.create_vertical_target_points(
             self.IVT_anchor, self.IVT_coverage, self.IVT_tilt,
-            self.IVT_radius, self.IVT_length)
+            -self.IVT_radius, self.IVT_length)
+
+        connections = ['circle'] * 2 + ['straight']*2
+        for i, connection in enumerate(connections):
+            IVT_points[i].append(connection)
 
         # OVT
-        OVT_points = self.create_OVT_points(
-            self.OVT_anchor, self.OVT_coverage, self.OVT_tilt,
+        OVT_points = self.create_vertical_target_points(
+            self.OVT_anchor, -self.OVT_coverage, self.OVT_tilt,
             self.OVT_radius, self.OVT_length)
+        connections = ['straight'] * 2 + ['circle']*2
+        for i, connection in enumerate(connections):
+            OVT_points[i].append(connection)
+        OVT_points = [[float(e[0]), float(e[1]), e[2]] for e in np.flipud(OVT_points)]
 
         # Dome
         dome_points = self.create_dome_points(
