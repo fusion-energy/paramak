@@ -37,14 +37,6 @@ def distance_between_two_points(A, B):
     return np.linalg.norm(u_vec)
 
 
-def angle_between_two_vectors(u, v):
-    unit_u = u / np.linalg.norm(u)
-    unit_v = v / np.linalg.norm(v)
-    dot_product = np.dot(unit_u, unit_v)
-    angle = np.arccos(dot_product)
-    return angle
-
-
 class ITERtypeDivertor(RotateMixedShape):
     """Creates a ITER-like divertor with inner, vertical targets and dome
 
@@ -216,36 +208,39 @@ class ITERtypeDivertor(RotateMixedShape):
 
     def find_points(self):
 
-        # IVT
+        # IVT points
         IVT_points = self.create_vertical_target_points(
             self.IVT_anchor, math.radians(self.IVT_coverage),
             math.radians(self.IVT_tilt), -self.IVT_radius, self.IVT_length)
-
+        # add connections
         connections = ['circle'] * 2 + ['straight']*2
         for i, connection in enumerate(connections):
             IVT_points[i].append(connection)
 
-        # OVT
+        # OVT points
         OVT_points = self.create_vertical_target_points(
             self.OVT_anchor, -math.radians(self.OVT_coverage),
             math.radians(self.OVT_tilt), self.OVT_radius, self.OVT_length)
+        # add connections
         connections = ['straight'] + ['circle']*2 + ['straight']
         for i, connection in enumerate(connections):
             OVT_points[i].append(connection)
+        # OVT_points need to be fliped for correct connections
         OVT_points = \
             [[float(e[0]), float(e[1]), e[2]] for e in np.flipud(OVT_points)]
 
-        # Dome
+        # Dome points
         dome_points = self.create_dome_points(
             IVT_points[-1][:2], OVT_points[0][:2], self.dome_length,
             self.dome_height, self.dome_thickness, self.dome_pos)
 
-        # casing
+        # casing points
         casing_points = self.create_casing_points(
             anchors=(self.IVT_anchor, self.OVT_anchor),
             C=IVT_points[-1][:2], F=OVT_points[0][:2],
             targets_lengths=(self.IVT_length, self.OVT_length))
 
+        # append all points
         points = IVT_points + dome_points + OVT_points + casing_points
         points.append(points[0])  # don't know why it's needed
         self.points = points
