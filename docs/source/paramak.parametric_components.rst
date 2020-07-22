@@ -114,6 +114,13 @@ ITERtypeDivertor()
    :members:
    :show-inheritance:
 
+DivertorITERNoDome()
+^^^^^^^^^^^^^^^^^^^^
+.. image:: https://user-images.githubusercontent.com/40028739/88182309-5254b100-cc30-11ea-94ba-296aae346032.png
+    :width: 180px
+    :height: 220px
+    :align: center
+
 
 InnerTfCoilsCircular()
 ^^^^^^^^^^^^^^^^^^^^^^
