@@ -4,7 +4,7 @@ import numpy as np
 
 
 class ITERtypeDivertor(RotateMixedShape):
-    """Creates a ITER-like divertor with inner, vertical targets and dome
+    """Creates a ITER-like divertor with inner and outer vertical targets and dome
 
     Args:
         anchors ((float, float), (float, float)): xy coordinates of points at
@@ -221,7 +221,36 @@ class ITERtypeDivertor(RotateMixedShape):
 
 
 class ITERtypeDivertorNoDome(ITERtypeDivertor):
+    """Creates a ITER-like divertor with inner and outer vertical targets
 
+    Args:
+        anchors ((float, float), (float, float)): xy coordinates of points at
+            the top of vertical targets.
+            Defaults to ((450, -300), (561, -367)).
+        coverages (float, float): coverages (anticlockwise) in degrees of the
+            circular parts of vertical targets. Defaults to (90, 180).
+        radii (float, float): radii (cm) of circular parts of the vertical
+            targets. Defaults to (50, 25).
+        lengths (float, float): leg length (cm) of the vertical targets.
+            Defaults to (78, 87).
+        tilts ((float, float), optional): Tilt angles (anticlockwise) in
+            degrees for the vertical targets. Defaults to (-27, 0).
+        Others: see paramak.RotateMixedShape() arguments.
+
+    Attributes:
+        anchors ((float, float), (float, float)): xy coordinates of points at
+            the top of vertical targets.
+            Defaults to ((450, -300), (561, -367)).
+        coverages (float, float): coverages (anticlockwise) in degrees of the
+            circular parts of vertical targets. Defaults to (90, 180).
+        radii (float, float): radii (cm) of circular parts of the vertical
+            targets. Defaults to (50, 25).
+        lengths (float, float): leg length (cm) of the vertical targets.
+            Defaults to (78, 87).
+        tilts ((float, float), optional): Tilt angles (anticlockwise) in
+            degrees for the vertical targets. Defaults to (-27, 0).
+        Others: see paramak.RotateMixedShape() attributes.
+    """
     def __init__(
         self,
         anchors=((450, -300), (561, -367)),
