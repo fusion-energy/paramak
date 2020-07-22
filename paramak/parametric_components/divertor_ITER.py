@@ -1,10 +1,12 @@
-from paramak import RotateMixedShape, extend, rotate, distance_between_two_points
+from paramak import RotateMixedShape, extend, rotate, \
+    distance_between_two_points
 import math
 import numpy as np
 
 
 class ITERtypeDivertor(RotateMixedShape):
-    """Creates a ITER-like divertor with inner and outer vertical targets and dome
+    """Creates a ITER-like divertor with inner and outer vertical targets and
+    dome
 
     Args:
         anchors ((float, float), (float, float)): xy coordinates of points at
