@@ -26,7 +26,7 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
         azimuth_placement_angle=0,
         points=None,
         name=None,
-        material_tag="poloidal_field_coil_case_material",
+        material_tag="pf_coil_case_mat",
         cut=None,
         hash_value=None,
     ):
