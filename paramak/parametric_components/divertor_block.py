@@ -47,10 +47,10 @@ class DivertorBlock(RotateMixedShape):
         name=None,
         rotation_angle=360,
         solid=None,
-        stp_filename="divertor.stp",
+        stp_filename="DivertorBlock.stp",
         color=None,
         azimuth_placement_angle=0,
-        material_tag=None,
+        material_tag="divertor_material",
         cut=None,
         hash_value=None,
     ):

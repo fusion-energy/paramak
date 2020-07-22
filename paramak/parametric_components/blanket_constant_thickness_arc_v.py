@@ -51,7 +51,7 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         thickness,
         workplane="XZ",
         points=None,
-        stp_filename='blanket.stp',
+        stp_filename='BlanketConstantThicknessArcV.stp',
         rotation_angle=360,
         azimuth_placement_angle=0,
         solid=None,
