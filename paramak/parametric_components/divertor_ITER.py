@@ -218,7 +218,7 @@ class ITERtypeDivertor(RotateMixedShape):
 
         # append all points
         points = IVT_points + dome_points + OVT_points + casing_points
-        points.append(points[0])  # don't know why it's needed
+        points.append(points[0])  # close surface
         self.points = points
 
 
