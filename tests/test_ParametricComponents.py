@@ -256,6 +256,16 @@ class test_DivertorITER(unittest.TestCase):
         test_shape.export_stp("tests/ITER_div")
 
 
+class test_DivertorITERNoDome(unittest.TestCase):
+    def test_DivertorITER_creaction(self):
+        test_shape = paramak.ITERtypeDivertorNoDome()
+        assert test_shape.solid is not None
+
+    def test_DivertorITER_STP_export(self):
+        test_shape = paramak.ITERtypeDivertorNoDome()
+        test_shape.export_stp("tests/ITER_div_no_dome")
+
+
 class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
     def test_CenterColumnShieldFlatTopHyperbola_creation(self):
         """creates a CenterColumnShieldFlatTopHyperbola object and checks a solid is created"""
