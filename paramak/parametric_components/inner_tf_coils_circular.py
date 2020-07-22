@@ -34,7 +34,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         color=None,
         azimuth_placement_angle=0,
         cut=None,
-        material_tag="tf_coil_material",
+        material_tag="inner_tf_coil_mat",
         name=None,
         hash_value=None,
     ):
