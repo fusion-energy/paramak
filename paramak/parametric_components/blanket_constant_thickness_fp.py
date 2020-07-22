@@ -73,13 +73,13 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         num_points=50,
         workplane="XZ",
         points=None,
-        stp_filename=None,
+        stp_filename="BlanketConstantThicknessFP.stp",
         rotation_angle=360,
         azimuth_placement_angle=0,
         solid=None,
         color=None,
         name=None,
-        material_tag=None,
+        material_tag="blanket_mat",
         cut=None,
             ):
 
