@@ -26,7 +26,7 @@ from .parametric_components.blanket_constant_thickness_fp import (
 )
 
 from .parametric_components.divertor_block import DivertorBlock
-from .parametric_components.divertor_ITER import ITERtypeDivertor
+from .parametric_components.divertor_ITER import ITERtypeDivertor, ITERtypeDivertorNoDome
 
 from .parametric_components.center_column_cylinder import CenterColumnShieldCylinder
 from .parametric_components.center_column_hyperbola import CenterColumnShieldHyperbola
