@@ -47,7 +47,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         azimuth_placement_angle=0,
         points=None,
         name=None,
-        material_tag="toroidal_field_coil_material",
+        material_tag="outer_tf_coil_mat",
         cut=None,
         hash_value=None,
     ):
