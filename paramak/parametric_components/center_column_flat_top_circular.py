@@ -20,7 +20,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         color=None,
         points=None,
         name="center_column",
-        material_tag="center_column_shield_material",
+        material_tag="center_column_shield_mat",
         azimuth_placement_angle=0,
         cut=None,
         hash_value=None,
