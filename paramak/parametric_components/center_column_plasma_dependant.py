@@ -35,7 +35,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         points=None,
         name=None,
         color=None,
-        material_tag="center_column_shield_material",
+        material_tag="center_column_shield_mat",
         stp_filename="CenterColumnShieldPlasmaHyperbola.stp",
         workplane="XZ",
         azimuth_placement_angle=0,
