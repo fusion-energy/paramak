@@ -50,6 +50,8 @@ class ITERtypeDivertor(RotateMixedShape):
             targets. Defaults to (50, 25).
         lengths (float, float): leg length (cm) of the vertical targets.
             Defaults to (78, 87).
+        dome (bool, optional): If set to False, the dome will not be created.
+            Defaults to True.
         dome_height (float): distance (cm) between the dome base and lower
             points. Defaults to 43.
         dome_length (float): length of the dome. Defaults to 66.
@@ -71,6 +73,8 @@ class ITERtypeDivertor(RotateMixedShape):
             targets. Defaults to (50, 25).
         lengths (float, float): leg length (cm) of the vertical targets.
             Defaults to (78, 87).
+        dome (bool, optional): If set to False, the dome will not be created.
+            Defaults to True.
         dome_height (float): distance (cm) between the dome base and lower
             points. Defaults to 43.
         dome_length (float): length of the dome. Defaults to 66.
@@ -89,6 +93,7 @@ class ITERtypeDivertor(RotateMixedShape):
         coverages=(90, 180),
         radii=(50, 25),
         lengths=(78, 87),
+        dome=True,
         dome_height=43,
         dome_length=66,
         dome_thickness=10,
@@ -124,6 +129,7 @@ class ITERtypeDivertor(RotateMixedShape):
         self.IVT_radius, self.OVT_radius = radii
         self.IVT_length, self.OVT_length = lengths
         self.IVT_tilt, self.OVT_tilt = tilts
+        self.dome = dome
         self.dome_length = dome_length
         self.dome_height = dome_height
         self.dome_pos = dome_pos
@@ -230,9 +236,11 @@ class ITERtypeDivertor(RotateMixedShape):
             [[float(e[0]), float(e[1]), e[2]] for e in np.flipud(OVT_points)]
 
         # Dome points
-        dome_points = self.create_dome_points(
-            IVT_points[-1][:2], OVT_points[0][:2], self.dome_length,
-            self.dome_height, self.dome_thickness, self.dome_pos)
+        dome_points = []
+        if self.dome:
+            dome_points = self.create_dome_points(
+                IVT_points[-1][:2], OVT_points[0][:2], self.dome_length,
+                self.dome_height, self.dome_thickness, self.dome_pos)
 
         # casing points
         casing_points = self.create_casing_points(
