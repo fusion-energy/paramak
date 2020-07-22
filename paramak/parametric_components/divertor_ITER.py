@@ -284,7 +284,7 @@ class ITERtypeDivertorNoDome(ITERtypeDivertor):
             dome_pos=None,
             tilts=tilts,
             rotation_angle=rotation_angle,
-            workplane="XZ",
+            workplane=workplane,
             points=points,
             stp_filename=stp_filename,
             azimuth_placement_angle=azimuth_placement_angle,
