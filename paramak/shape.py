@@ -109,7 +109,7 @@ class Shape:
             self._material_tag = value
         elif type(value) == str:
             if len(value) > 27:
-                print("Warning: Shape.material_tag > 28 characters. Use with DAGMC may be affected.", value)
+                print("Warning: Shape.material_tag > 28 characters. Use with DAGMC will be affected.", value)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
