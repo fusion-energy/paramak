@@ -27,7 +27,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         stp_filename="CenterColumnShieldCylinder.stp",
         rotation_angle=360,
         solid=None,
-        material_tag="center_column_shield_material",
+        material_tag="center_column_shield_mat",
         azimuth_placement_angle=0,
         cut=None,
         hash_value=None,
