@@ -79,7 +79,7 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         solid=None,
         color=None,
         name=None,
-        material_tag="blanket_material",
+        material_tag="blanket_mat",
         cut=None,
             ):
 
