@@ -23,7 +23,7 @@ To install the Paramak you need to have [Conda](https://docs.conda.io/projects/c
 
 ```pip install paramak```
 
-Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/) can be found in the User's Guide.
+Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/#prerequisites) can be found in the User's Guide.
 
  
 
