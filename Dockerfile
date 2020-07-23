@@ -42,5 +42,6 @@ RUN pip uninstall pyglet
 RUN pip install pyglet
 
 RUN git clone https://github.com/ukaea/paramak
+RUN cd paramak && python setup.py install
 
-WORKDIR paramak
+WORKDIR paramak/examples
