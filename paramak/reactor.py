@@ -6,68 +6,118 @@ from pathlib import Path
 import cadquery as cq
 import matplotlib.pyplot as plt
 import numpy as np
-import plotly.graph_objects as go
-import pyrender
+from cadquery import exporters
 from PIL import Image
 
+import paramak
+import plotly.graph_objects as go
+import pyrender
 from paramak.shape import Shape
 
 
 class Reactor():
 
-    """The Reactor object allows Shapes to be added and then collective 
-    opperations to be performed on all the Shapes within the Reactor.
-    Combining all the shapes is required for creating images of the whole reactor and 
-    creating a Graveyard (bounding box) that is needed for neutronics simulations.
+    """The Reactor object allows shapes and components to be added and then collective 
+    opperations to be performed on them. Combining all the shapes is required for creating
+    images of the whole reactor and creating a Graveyard (bounding box) that is needed 
+    for neutronics simulations.
     """
 
-    def __init__(self):
+    def __init__(self, shapes_and_components):
 
-        self.graveyard = None
-        self.shapes_and_components = []
+        self.shapes_and_components = shapes_and_components
+
+        # calculated internally
         self.material_tags = []
         self.stp_filenames = []
+        self.tet_meshes = []
+        self.graveyard = None
         self.solid = None
 
-    def add_shape_or_component(self, shapes):
-        """Adds a parametric shape(s) or a parametric component(s) to the Reactor 
-        object. An individual shape/component or a list of shapes/ components are
-        added to the Reactor object so that collective operations can be performed
+
+    @property
+    def stp_filenames(self):
+        values=[]
+        for shape_or_componet in self.shapes_and_components:
+            values.append(shape_or_componet.stp_filename)
+        return values
+
+    @stp_filenames.setter
+    def stp_filenames(self, value):
+        self._stp_filenames = value
+
+    @property
+    def material_tags(self):
+        values=[]
+        for shape_or_componet in self.shapes_and_components:
+            values.append(shape_or_componet.material_tag)
+        return values
+
+    @material_tags.setter
+    def material_tags(self, value):
+        self._material_tags = value
+
+    @property
+    def tet_meshes(self):
+        values=[]
+        for shape_or_componet in self.shapes_and_components:
+            values.append(shape_or_componet.tet_mesh)
+        return values
+
+    @tet_meshes.setter
+    def tet_meshes(self, value):
+        self._tet_meshes = value
+
+    @property
+    def shapes_and_components(self):
+        return self._shapes_and_components
+
+    @shapes_and_components.setter
+    def shapes_and_components(self, value):
+        """Adds a list of parametric shape(s) and or parametric component(s)
+        to the Reactor object. This allows collective operations can be performed
         on all the shapes in the reactor. When adding a shape or componet the 
-        stp_filename for the shape or compnent should not already be used in the 
-        reactor.
+        stp_filename of the shape or component should be unique.
         """
-        if isinstance(shapes, Iterable):
-            for shape in shapes:
-                if shape.material_tag != None:
-                    self.material_tags.append(shape.material_tag)
-                if shape.stp_filename != None:
-                    if shape.stp_filename in self.stp_filenames:
-                        raise ValueError(
-                            "Set Reactor already contains a shape or component \
-                                 with this stp_filename"
-                        )
-                    else:
-                        self.stp_filenames.append(shape.stp_filename)
-                self.shapes_and_components.append(shape)
-        else:
-            if shapes.material_tag != None:
-                self.material_tags.append(shapes.material_tag)
-            if shapes.stp_filename != None:
-                if shapes.stp_filename in self.stp_filenames:
+        shapes_and_components = []
+        if not isinstance(value, Iterable):
+            raise ValueError(
+                "shapes_and_components must be a list"
+            )
+
+        stp_filenames = []
+
+        for shape in value:
+            if shape.stp_filename != None:
+                if shape.stp_filename in stp_filenames:
                     raise ValueError(
                         "Set Reactor already contains a shape or component \
-                                with this stp_filename"
+                         with this stp_filename", shape.stp_filename
                     )
                 else:
-                    self.stp_filenames.append(shapes.stp_filename)
-            self.shapes_and_components.append(shapes)
-        
-        self.solid = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
+                    stp_filenames.append(shape.stp_filename)
 
-    def neutronics_description(self):
-        """A descirption of the reactor containing materials and the filenames,
-           this is used for neutronics simulations
+        self._shapes_and_components = value
+
+
+    @property
+    def solid(self):
+        return cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
+
+    @solid.setter
+    def solid(self, value):
+        self._solid = value
+
+    def neutronics_description(self, include_plasma=False):
+        """A description of the reactor containing materials tags,
+        stp filenames, tet mesh instructions. This is can be used
+        for neutronics simulations which require linkage between
+        volumes, materials and identification of which volumes to
+        tet mesh. The plasma geometry is not included by default
+        as it is typically not included in neutronics simulations.
+        The reason for this is that the low number density results
+        in minimal interaction with neutrons. However it can be added
+        if the include_plasma argument is set to True
 
         :return: a dictionary of materials and filenames for the reactor
         :rtype: dictionary
@@ -76,6 +126,9 @@ class Reactor():
         neutronics_description = []
 
         for entry in self.shapes_and_components:
+
+            if include_plasma==False and isinstance(entry,paramak.Plasma) == True:
+                continue
 
             if entry.stp_filename is None:
                 raise ValueError(
@@ -89,30 +142,32 @@ class Reactor():
                                   Reactor entries before using this method"
                 )
 
-            Shape_neutronics_description = entry.neutronics_description(
-                stp_filename=entry.stp_filename, material_tag=entry.material_tag
-            )
+            neutronics_description.append(entry.neutronics_description())
 
-            neutronics_description.append(Shape_neutronics_description)
-
-        # This add the neutronics descirption for the graveyard which is unique as
+        # This add the neutronics description for the graveyard which is unique as
         # it is automatically calculated instead of being added by the user.
         # Also the graveyard must have 'Graveyard' as the material name
         if self.graveyard is None:
             self.make_graveyard()
-        neutronics_description.append(
-            self.graveyard.neutronics_description(
-                stp_filename="Graveyard.stp", material_tag="Graveyard"
-            )
-        )
+        neutronics_description.append(self.graveyard.neutronics_description())
 
         return neutronics_description
 
-    def export_neutronics_description(self, filename="manifest.json"):
-        """Saves neutronics description to a json file, this contains a list of
-        dictionaries. With each entry comprising of a material and a filename.
-        This can then be used with the neutronics workflows to create a neutronics
-        model. If the filename does not end with .json then .json will be added.
+    def export_neutronics_description(self, filename="manifest.json", include_plasma=False):
+        """Saves Reactor.neutronics_description to a json file.
+        The resulting json file contains a list of dictionaries.
+        Each dictionary entry comprising of a material and a
+        filename and optionally a tet_mesh instruction. The json
+        file can then be used with the neutronics workflows to
+        create a neutronics model. Creation of the netronics
+        model requires linkage between volumes, materials and
+        identifcation of which volumes to tet_mesh. If the 
+        filename does not end with .json then .json will be added.
+        The plasma geometry is not included by default as it is
+        typically not included in neutronics simulations. The 
+        reason for this is that the low number density results
+        in minimal interaction with neutrons. However the plasma
+        can be added if the include_plasma argument is set to True
 
         :param filename: the filename used to save the neutronics description
         :type filename: str
@@ -126,7 +181,7 @@ class Reactor():
         Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
 
         with open(filename, "w") as outfile:
-            json.dump(self.neutronics_description(), outfile, indent=4)
+            json.dump(self.neutronics_description(include_plasma=include_plasma), outfile, indent=4)
 
         print("saved geometry description to ", Pfilename)
 
@@ -163,6 +218,51 @@ class Reactor():
 
         return filenames
 
+    def export_physical_groups(self, output_folder=""):
+        """Exports several JSON files containing a look up table
+        which is useful for identifying faces and volumes. The
+        output file names are generated from .stp_filename properties.
+
+        Args:
+            output_folder (str, optional): directory of outputfiles.
+                Defaults to "".
+
+        Raises:
+            ValueError: if one .stp_filename property is set to None
+
+        Returns:
+            list: list of output file names
+        """
+        filenames = []
+        for entry in self.shapes_and_components:
+            if entry.stp_filename is None:
+                raise ValueError(
+                    "set .stp_filename property for \
+                                 Shapes before using the export_stp method"
+                )
+            filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
+            entry.export_physical_groups(Path(output_folder) / Path(entry.stp_filename))
+        return filenames
+
+    def export_svg(self, filename):
+        """Exports an svg file for the Reactor.solid.
+        If the provided filename doesn't end with .svg it will be added
+
+        :param filename: the filename of the svg
+        :type filename: str
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".svg":
+            Pfilename = Pfilename.with_suffix(".svg")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        with open(Pfilename, "w") as f:
+            exporters.exportShape(self.solid, "SVG", f)
+        print("Saved file as ", Pfilename)
+
     def export_graveyard(self, filename="Graveyard.stp"):
         """Writes a stp file (CAD geometry) for the reactor graveyard.
            Thich is needed for DAGMC simulations
@@ -177,12 +277,17 @@ class Reactor():
         self.graveyard.export_stp(Path(filename))
         return filename
 
-    def make_graveyard(self):
+    def make_graveyard(self, offset = 500.):
         """Creates a graveyard volume (bounding box) that encapsulates all
            volumes. This is required by DAGMC when performing neutronics
            simulations.
 
-        :return: graveyard 3d volume object
+        :param offset: the offset between the largest edge of the geometry
+        and the bounding shell created
+        :type offset: float
+
+        :return: A shell volume that bounds the geometry referred to as a
+         graveyard in DAGMC
         :rtype: CadQuery solid
         """
 
@@ -200,7 +305,6 @@ class Reactor():
         inner_box = cq.Workplane("front").box(
             largest_dimension, largest_dimension, largest_dimension
         )
-        offset = 500
 
         # creates a large box that surrounds the smaller box
         outer_box = cq.Workplane("front").box(

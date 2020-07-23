@@ -13,6 +13,8 @@ import plotly.graph_objects as go
 import pyrender
 import trimesh
 
+import json
+
 
 class Shape:
     """A shape object that represents a 3d volume and can have materials and
@@ -56,20 +58,20 @@ class Shape:
         self.stp_filename = stp_filename
         self.color = color
         self.name = name
-        self.material_tag = material_tag
+
         self.azimuth_placement_angle = azimuth_placement_angle
         self.workplane = workplane
 
         # neutronics specific properties
-        self.material = None
-        self.neutronics_material = None
-        self.tallies = []
+        self.material_tag = material_tag
+        self.tet_mesh = None
 
         # properties calculated internally by the class
         self.solid = None
         self.render_mesh = None
-        self.mesh = None
         # self.volume = None
+
+        self.physical_groups = None
 
     @property
     def workplane(self):
@@ -106,9 +108,24 @@ class Shape:
         if value is None:
             self._material_tag = value
         elif type(value) == str:
+            if len(value) > 27:
+                print("Warning: Shape.material_tag > 28 characters. Use with DAGMC will be affected.", value)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
+
+    @property
+    def tet_mesh(self):
+        return self._tet_mesh
+
+    @tet_mesh.setter
+    def tet_mesh(self, value):
+        if value is None:
+            self._tet_mesh = value
+        elif type(value) == str:
+            self._tet_mesh = value
+        else:
+            raise ValueError("Shape.tet_mesh must be a string", value)
 
     @property
     def name(self):
@@ -303,7 +320,7 @@ class Shape:
         """Exports an stp file for the Shape.solid.
         If the provided filename doesn't end with
         .stp or .step then .stp will be added. If a
-        filename is not provided and the shapes 
+        filename is not provided and the shapes
         stp_filename property is not None the stp_filename
         will be used as the export filename
 
@@ -311,7 +328,7 @@ class Shape:
         :type filename: str
         """
 
-        if filename != None:
+        if filename is not None:
             Pfilename = Path(filename)
 
             if Pfilename.suffix == ".stp" or Pfilename.suffix == ".step":
@@ -320,7 +337,7 @@ class Shape:
                 Pfilename = Pfilename.with_suffix(".stp")
 
             Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
-        elif self.stp_filename != None:
+        elif self.stp_filename is not None:
             Pfilename = Path(self.stp_filename)
 
         with open(Pfilename, "w") as f:
@@ -328,6 +345,35 @@ class Shape:
         print("Saved file as ", Pfilename)
 
         return str(Pfilename)
+
+    def export_physical_groups(self, filename):
+        """Exports a JSON file containing a look up table
+        which is useful for identifying faces and volumes. If provided
+        filename doesn't end with .json then .json will be added.
+
+        :param filename: the filename to save the json look up table
+        :type filename: str
+
+        :param filename: the filename of the json file
+        :type filename: str
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".json":
+            Pfilename = Pfilename.with_suffix(".json")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        if self.physical_groups is not None:
+            with open(filename, "w") as outfile:
+                json.dump(self.physical_groups, outfile, indent=4)
+
+            print("Saved physical_groups description to ", Pfilename)
+        else:
+            print("Warning: physical_groups attribute is None \
+                for {}".format(self.name))
+
+        return filename
 
     def export_svg(self, filename):
         """Exports an svg file for the Shape.solid.
@@ -579,13 +625,20 @@ class Shape:
         self.patch = p
         return p
 
-    def neutronics_description(self, stp_filename, material_tag):
+    def neutronics_description(self):
         """Returns a neutronics description of the Shape object.
-        This is needed for the geomPipeline.py which imprints and
-        merges the geometry.
+        This is needed for the use with automated neutronics model
+        methods which require linkage between the stp files and
+        materials. If tet meshing of the volume is required then
+        Trelis meshing commands can optinally be specificed as
+        the tet_mesh argument.
 
         :return: a dictionary of the step filename and material name.
         :rtype: dictionary
         """
 
-        return {"material": self.material_tag, "filename": self.stp_filename}
+        neutronics_description = {"material": self.material_tag,
+                                  "filename": self.stp_filename}
+        if self.tet_mesh != None:
+            neutronics_description['tet_mesh'] = self.tet_mesh
+        return neutronics_description

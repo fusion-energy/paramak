@@ -11,26 +11,22 @@ class RotateStraightShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with
        a straight lines
 
-       :param points: A list of XZ coordinates and connection types where the last 
-            entry has the same XZ coordinates as the first entry. For example [(2.,1.), 
-            (2.,2.), (1.,2.), (1.,1.), (2.,1.)].
-       :type points: a list of tuples each containing X (float), Z (float)
-       :param name: The legend name used when exporting a html graph of the shape
-       :type name: str
-       :param color: the color to use when exporting as html graphs or png images
-       :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-            3 or 4 floats respectively each in the range 0-1
-       :param material_tag: The material name to use when exporting the neutronics description
-       :type material_tag: str
-       :param stp_filename: the filename used when saving stp files as part of a reactor
-       :type stp_filename: str
-       :param azimuth_placement_angle: the angle or angles to use when rotating the 
-            shape on the azimuthal axis
-       :type azimuth_placement_angle: float or iterable of floats
-       :param rotation_angle: The rotation_angle to use when revoling the solid (degrees)
-       :type rotation_angle: float
-       :param cut: An optional cadquery object to perform a boolean cut with this object
-       :type cut: cadquery object
+       Args:
+          points (list of tuples each containing X (float), Z (float)): A list of XZ 
+             coordinates connected by straight connections where the last entry has the
+             same XZ coordinates as the first entry. For example [(2.,1.), (2.,2.), (1.,2.), 
+             (1.,1.), (2.,1.)].
+          name (str): The legend name used when exporting a html graph of the shape.
+          color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1): 
+             The color to use when exporting as html graphs or png images.
+          material_tag (str): The material name to use when exporting the neutronics 
+             description.
+          stp_filename (str): The filename used when saving stp files as part of a reactor.
+          azimuth_placement_angle (float or iterable of floats): The angle or angles 
+             to use when rotating the shape on the azimuthal axis.
+          rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
+          cut (CadQuery object): An optional cadquery object to perform a boolean cut with
+             this object.
     """
 
     def __init__(
@@ -40,7 +36,7 @@ class RotateStraightShape(Shape):
         name=None,
         color=None,
         material_tag=None,
-        stp_filename=None,
+        stp_filename='RotateStraightShape.stp',
         azimuth_placement_angle=0,
         solid=None,
         rotation_angle=360,
@@ -115,10 +111,10 @@ class RotateStraightShape(Shape):
 
     def create_solid(self):
         """Creates a 3d solid using points with straight connections
-        edges, azimuth_placement_angle and rotation angle.
+           edges, azimuth_placement_angle and rotation angle.
 
-        :return: a 3d solid volume
-        :rtype: a cadquery solid
+           Returns:
+              A CadQuery solid: A 3D solid volume
         """
 
         # print('create_solid() has been called')

@@ -100,6 +100,28 @@ DivertorBlock()
    :members:
    :show-inheritance:
 
+
+ITERtypeDivertor()
+^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/40028739/88180936-626b9100-cc2e-11ea-92df-1bac68b11e3b.png
+    :width: 180px
+    :height: 220px
+    :align: center
+
+
+.. automodule:: paramak.parametric_components.divertor_ITER
+   :members:
+   :show-inheritance:
+
+DivertorITERNoDome()
+^^^^^^^^^^^^^^^^^^^^
+.. image:: https://user-images.githubusercontent.com/40028739/88182309-5254b100-cc30-11ea-94ba-296aae346032.png
+    :width: 180px
+    :height: 220px
+    :align: center
+
+
 InnerTfCoilsCircular()
 ^^^^^^^^^^^^^^^^^^^^^^
 

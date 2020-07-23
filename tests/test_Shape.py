@@ -91,6 +91,5 @@ class test_object_properties(unittest.TestCase):
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
 
-
 if __name__ == "__main__":
     unittest.main()

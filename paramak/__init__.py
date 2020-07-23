@@ -1,5 +1,6 @@
 from .shape import Shape
 from .reactor import Reactor
+from .utils import rotate, extend, distance_between_two_points
 
 from .parametric_shapes.extruded_spline_shape import ExtrudeSplineShape
 from .parametric_shapes.extruded_straight_shape import ExtrudeStraightShape
@@ -25,6 +26,8 @@ from .parametric_components.blanket_constant_thickness_fp import (
 )
 
 from .parametric_components.divertor_block import DivertorBlock
+from .parametric_components.divertor_ITER import ITERtypeDivertor, \
+    ITERtypeDivertorNoDome
 
 from .parametric_components.center_column_cylinder import CenterColumnShieldCylinder
 from .parametric_components.center_column_hyperbola import CenterColumnShieldHyperbola

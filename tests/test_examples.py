@@ -7,31 +7,27 @@ cwd = os.getcwd()
 
 
 class test_object_properties(unittest.TestCase):
-    def test_make_ball_rector(self):
+    def test_make_parametric_ball_rector(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_reactors"))
-        output_filenames = [
-            "ball_reactor/plasma.stp",
-            "ball_reactor/blanket.stp",
-            "ball_reactor/divertor_upper.stp",
-            "ball_reactor/divertor_lower.stp",
-            "ball_reactor/center_column_shield.stp",
-            "ball_reactor/pf_coil_1.stp",
-            "ball_reactor/pf_coil_case_1.stp",
-            "ball_reactor/pf_coil_2.stp",
-            "ball_reactor/pf_coil_case_2.stp",
-            "ball_reactor/pf_coil_3.stp",
-            "ball_reactor/pf_coil_case_3.stp",
-            "ball_reactor/pf_coil_4.stp",
-            "ball_reactor/pf_coil_case_4.stp",
-            "ball_reactor/Graveyard.stp",
-            "ball_reactor/manifest.json",
-            "ball_reactor/reactor.html",
-        ]
+        output_filenames = ['plasma.stp',
+            'inboard_tf_coils.stp',
+            'center_column_shield.stp',
+            'divertor_upper.stp',
+            'divertor_lower.stp',
+            'extra_blanket_upper.stp',
+            'extra_firstwall_upper.stp',
+            'extra_blanket_rear_wall_upper.stp',
+            'extra_blanket_lower.stp',
+            'extra_firstwall_lower.stp',
+            'extra_blanket_rear_wall_lower.stp',
+            'firstwall.stp', 'blanket.stp',
+            'blanket_rear_wall.stp',
+            'Graveyard.stp']
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        os.system("python make_ball_reactor.py")
+        os.system("python make_parametric_ball_reactor.py")
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)

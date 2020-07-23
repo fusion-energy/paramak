@@ -9,7 +9,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
     :type height: float
     :param inner_radius: inner radius of the center column shield
     :type inner_radius: float
-    :param mid_radius: inner radius of the outer hyperbolic 
+    :param mid_radius: inner radius of the outer hyperbolic
      profile of the center column shield
     :type mid_radius: float
     :param outer_radius: outer_radius of the center column shield
@@ -28,11 +28,11 @@ class CenterColumnShieldCircular(RotateMixedShape):
         workplane="XZ",
         rotation_angle=360,
         solid=None,
-        stp_filename="center_column.stp",
+        stp_filename="CenterColumnShieldCircular.stp",
         color=None,
         points=None,
         name="center_column",
-        material_tag="center_column_material",
+        material_tag="center_column_shield_mat",
         azimuth_placement_angle=0,
         cut=None,
         hash_value=None,

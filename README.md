@@ -23,7 +23,7 @@ To install the Paramak you need to have [Conda](https://docs.conda.io/projects/c
 
 ```pip install paramak```
 
-Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/) can be found in the User's Guide.
+Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/#prerequisites) can be found in the User's Guide.
 
  
 
@@ -40,7 +40,6 @@ The different families of shapes that can be made with the Paramak are shown in 
 <img src="https://user-images.githubusercontent.com/8583900/86237165-2c893e80-bb93-11ea-8fcd-838eb3180c95.png" width="150" height="200">
 <img src="https://user-images.githubusercontent.com/8583900/86237161-2b581180-bb93-11ea-99ff-01cc1cec62ef.png" width="150" height="200">
 <img src="https://user-images.githubusercontent.com/8583900/86237158-2abf7b00-bb93-11ea-9a78-a987f20359a3.png" width="150" height="200">
-<img src="https://user-images.githubusercontent.com/8583900/86237155-28f5b780-bb93-11ea-9465-2c3ec843e444.png" width="150" height="200">
 </p>
 
 

@@ -112,6 +112,32 @@ class test_BlanketConstantThicknessFP(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
+    def test_BlanketConstantThicknessFP_physical_groups(self):
+        """Creates default blanket and checks the exports of physical groups
+        """
+        test_shape = paramak.BlanketConstantThicknessFP(
+            100, stop_angle=90,
+            start_angle=270,)
+        test_shape.export_physical_groups('tests/blanket.json')
+
+    def test_BlanketConstantThicknessFP_full_cov_stp_export(self):
+        """creates blanket from parametric shape and checks the STP export
+        with full coverage"""
+
+        test_shape = paramak.BlanketConstantThicknessFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=360,
+            start_angle=0,
+            rotation_angle=180
+        )
+
+        test_shape.export_stp("tests/test_blanket_full_cov")
+
+
 class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
         """creates a poloidal field coil from parametric shape and checks a solid is created"""
@@ -219,6 +245,25 @@ class test_Plasma(unittest.TestCase):
 
 #         assert test_shape.solid is not None
 #         assert test_shape.volume > 1000
+
+class test_DivertorITER(unittest.TestCase):
+    def test_DivertorITER_creaction(self):
+        test_shape = paramak.ITERtypeDivertor()
+        assert test_shape.solid is not None
+
+    def test_DivertorITER_STP_export(self):
+        test_shape = paramak.ITERtypeDivertor()
+        test_shape.export_stp("tests/ITER_div")
+
+
+class test_DivertorITERNoDome(unittest.TestCase):
+    def test_DivertorITER_creaction(self):
+        test_shape = paramak.ITERtypeDivertorNoDome()
+        assert test_shape.solid is not None
+
+    def test_DivertorITER_STP_export(self):
+        test_shape = paramak.ITERtypeDivertorNoDome()
+        test_shape.export_stp("tests/ITER_div_no_dome")
 
 
 class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):

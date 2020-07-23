@@ -75,7 +75,7 @@ with open('manifest.json') as json_file:
 
 input_locations = []
 for entry in data:
-    if 'mesh' in entry.keys():
+    if 'tet_mesh' in entry.keys():
         input_locations.append(entry)
 geometry_details = find_number_of_volumes_in_each_step_file(input_locations, str(os.path.abspath('.')))
 
@@ -92,7 +92,7 @@ for entry in geometry_details:
         cubit.cmd('volume '+str(volume)+' size auto factor 6') # this number is the size of the mesh 1 is small 10 is large
         cubit.cmd('volume all scheme tetmesh proximity layers off geometric sizing on')
         if "size" in entry['mesh']:
-            cubit.cmd('volume '+str(volume)+' '+entry['mesh']) #' size 0.5'
+            cubit.cmd('volume '+str(volume)+' '+entry['tet_mesh']) #' size 0.5'
         else:
             cubit.cmd('volume '+str(volume))
         cubit.cmd('mesh volume '+str(volume))

@@ -11,21 +11,30 @@ import paramak
 
 
 def make_cad_model_with_paramak():
+    """
+    Makes a reactor object from two parametric
+    shapes. Exports the neutronics description
+    and stp files for the reactor
+    """
 
     width=500
 
+    # creates a parametric shape
     pf_coil = paramak.RotateStraightShape(
         points=[
             (width, width),
             (550, width),
             (550, 550),
             (500, 550)
-        ]
+        ],
+        stp_filename = 'pf_coil.stp',
+        material_tag = 'pf_coil_material'
     )
 
     pf_coil.export_html('test.html')
 
 
+    # creates another parametric shape
     blanket = paramak.RotateMixedShape(
         points=[
             (538, 305, "straight"),
@@ -35,33 +44,39 @@ def make_cad_model_with_paramak():
             (322, 305, "straight")
         ],
         rotation_angle=40,
-        azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315]
+        azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315],
+        stp_filename = 'blanket.stp',
+        material_tag = 'blanket_material'
     )
     blanket.solid
 
+    # creates a reactor object from the two components
+    my_reactor = paramak.Reactor([blanket, pf_coil])
 
-
-    my_reactor = paramak.Reactor()
-
-    blanket.stp_filename = 'blanket.stp'
-    pf_coil.stp_filename = 'pf_coil.stp'
-
-    blanket.material_tag = 'blanket_material'
-    pf_coil.material_tag = 'pf_coil_material'
-
-    my_reactor.add_shape_or_component(blanket)
-    my_reactor.add_shape_or_component(pf_coil)
-
-
+    # exports neutronics description and stp files
     my_reactor.export_neutronics_description()
     my_reactor.export_stp()
 
 
-def convert_stp_files_to_neutronics_model():
+def convert_stp_files_to_neutronics_geometry():
+    """
+    Uses Trelis together with a python script to
+    reading the stp files assign material tags to
+    the volumes and create a watertight h5m DAGMC
+    file which can be used as neutronics geometry.
+    """
 
     os.system('trelis -batch -nographics make_faceteted_neutronics_model.py')
 
     os.system('make_watertight dagmc_notwatertight.h5m -o dagmc.h5m')
+
+def make_other_aspects_of_neutronics_model():
+    """
+    Makes and runs a simple OpenMC neutronics model with
+    the materials with the same tags as the DAGMC neutronics
+    geometry. The model also specifies the computational
+    intensity (particles and batches) and the tally to record
+    """
 
     universe = openmc.Universe()
     geom = openmc.Geometry(universe)
@@ -88,19 +103,25 @@ def convert_stp_files_to_neutronics_model():
     source.energy = openmc.stats.Discrete([14e6], [1])
     settings.source = source
 
-
     tallies = openmc.Tallies()
     tbr_tally = openmc.Tally(name='TBR')
     tbr_tally.scores = ['(n,Xt)'] # where X is a wild card
     tallies.append(tbr_tally)
 
-
     model = openmc.model.Model(geom, mats, settings, tallies)
 
-    statepoint_filename = model.run()
+    output_filename = model.run()
+
+    return output_filename
+
+def read_simulation_results(output_filename):
+    """
+    Reads the output file from the neutronics simulation
+    and prints the TBR tally result to screen
+    """
 
     # open the results file
-    sp = openmc.StatePoint(statepoint_filename)
+    sp = openmc.StatePoint(output_filename)
 
     # access the tally
     tbr_tally = sp.get_tally(name='TBR')
@@ -111,7 +132,10 @@ def convert_stp_files_to_neutronics_model():
     print('The tritium breeding ratio was found, TBR = ', tbr_tally_result)
     return tbr_tally_result
 
+
 if __name__ == "__main__":
 
     make_cad_model_with_paramak()
-    convert_stp_files_to_neutronics_model()
+    convert_stp_files_to_neutronics_geometry()
+    output_filename = make_other_aspects_of_neutronics_model()
+    read_simulation_results(output_filename)

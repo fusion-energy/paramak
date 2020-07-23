@@ -38,7 +38,7 @@ class ExtrudeStraightShape(Shape):
         points,
         distance,
         workplane="XZ",
-        stp_filename=None,
+        stp_filename="ExtrudeStraightShape.stp",
         solid=None,
         color=None,
         azimuth_placement_angle=0,
@@ -117,8 +117,8 @@ class ExtrudeStraightShape(Shape):
         """Creates a 3d solid using points with straight connections
         edges, azimuth_placement_angle and rotation_angle.
 
-        :return: a 3d solid volume
-        :rtype: a cadquery solid
+        Returns:
+           A CadQuery solid: A 3D solid volume
         """
 
         # print('create_solid() has been called')
