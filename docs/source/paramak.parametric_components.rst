@@ -8,10 +8,14 @@ parametric shape classes.
 BlanketConstantThicknessArcH()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86519778-32eb1500-be36-11ea-9794-0383b66624c5.png
+|BlanketConstantThicknessArcHstp| |BlanketConstantThicknessArcHsvg|
+
+.. |BlanketConstantThicknessArcHstp| image:: https://user-images.githubusercontent.com/8583900/86519778-32eb1500-be36-11ea-9794-0383b66624c5.png
    :width: 250
    :height: 200
-   :align: center
+.. |BlanketConstantThicknessArcHsvg| image:: https://user-images.githubusercontent.com/56687624/88293663-38c86d80-ccf3-11ea-9bfa-c166fc99c52c.png
+   :width: 300
+   :height: 200
 
 .. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_h
    :members:
@@ -20,14 +24,14 @@ BlanketConstantThicknessArcH()
 BlanketConstantThicknessArcV()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
+|BlanketConstantThicknessArcVstp| |BlanketConstantThicknessArcVsvg|
+
+.. |BlanketConstantThicknessArcVstp| image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
    :width: 250
    :height: 200
-   :align: center
-.. image:: https://user-images.githubusercontent.com/8583900/87306205-94367680-c50f-11ea-81f9-f668be3416a7.png
-   :width: 250
+.. |BlanketConstantThicknessArcVsvg| image:: https://user-images.githubusercontent.com/56687624/88293666-39f99a80-ccf3-11ea-8c8d-84275fd0e0ce.png
+   :width: 300
    :height: 200
-   :align: center
 
 .. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_v
    :members:
@@ -48,10 +52,14 @@ BlanketConstantThicknessFP()
 CenterColumnShieldCylinder()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241438-caccd280-bb9a-11ea-9548-b199759a6dbc.png
-    :width: 180px
-    :height: 200px
-    :align: center
+|CenterColumnShieldCylinderstp| |CenterColumnShieldCylindersvg| 
+
+.. |CenterColumnShieldCylinderstp| image:: https://user-images.githubusercontent.com/56687624/86241438-caccd280-bb9a-11ea-9548-b199759a6dbc.png
+   :width: 180px
+   :height: 200px
+.. |CenterColumnShieldCylindersvg| image:: https://user-images.githubusercontent.com/56687624/88293674-3c5bf480-ccf3-11ea-8197-8db75358ff36.png
+   :width: 250px
+   :height: 200px
 
 .. automodule:: paramak.parametric_components.center_column_cylinder
    :members:
@@ -60,10 +68,14 @@ CenterColumnShieldCylinder()
 CenterColumnShieldHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241456-d0c2b380-bb9a-11ea-9728-88fe4081345f.png
-    :width: 180px
-    :height: 220px
-    :align: center
+|CenterColumnShieldHyperbolastp| |CenterColumnShieldHyperbolasvg|
+
+.. |CenterColumnShieldHyperbolastp| image:: https://user-images.githubusercontent.com/56687624/86241456-d0c2b380-bb9a-11ea-9728-88fe4081345f.png
+   :width: 180px
+   :height: 220px
+.. |CenterColumnShieldHyperbolasvg| image:: https://user-images.githubusercontent.com/56687624/88293672-3b2ac780-ccf3-11ea-9907-b1c8fd1ba0f0.png
+   :width: 350px
+   :height: 220px
 
 .. automodule:: paramak.parametric_components.center_column_hyperbola
    :members:
@@ -72,14 +84,30 @@ CenterColumnShieldHyperbola()
 CenterColumnShieldFlatTopHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
-    :width: 180px
-    :height: 220px
-    :align: center
+|CenterColumnShieldFlatTopHyperbolastp| |CenterColumnShieldFlatTopHyperbolasvg|
+
+.. |CenterColumnShieldFlatTopHyperbolastp| image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
+   :width: 180px
+   :height: 220px
+.. |CenterColumnShieldFlatTopHyperbolasvg| image:: https://user-images.githubusercontent.com/56687624/88293680-3ebe4e80-ccf3-11ea-8603-b7a290e6bfb4.png
+   :width: 300px
+   :height: 220px
 
 .. automodule:: paramak.parametric_components.center_column_flat_top_hyperbola
    :members:
    :show-inheritance:
+
+CenterColumnShieldFlatTopCircular()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|CenterColumnShieldFlatTopCircularstp| |CenterColumnShieldFlatTopCircularsvg|
+
+.. |CenterColumnShieldFlatTopCircularstp| image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
+   :width: 180px
+   :height: 220px
+.. |CenterColumnShieldFlatTopCircularsvg| image:: https://user-images.githubusercontent.com/56687624/88293678-3d8d2180-ccf3-11ea-97f7-da9a46beddbf.png
+   :width: 300px
+   :height: 220px
 
 CenterColumnShieldPlasmaHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -125,10 +153,14 @@ DivertorITERNoDome()
 InnerTfCoilsCircular()
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241469-d9b38500-bb9a-11ea-935f-8644fa01ab8c.png
-    :width: 180px
-    :height: 200px
-    :align: center
+|InnerTfCoilsCircularstp| |InnerTfCoilsCircularsvg|
+
+.. |InnerTfCoilsCircularstp| image:: https://user-images.githubusercontent.com/56687624/86241469-d9b38500-bb9a-11ea-935f-8644fa01ab8c.png
+   :width: 200px
+   :height: 250px
+.. |InnerTFCoilsCircularsvg| image:: https://user-images.githubusercontent.com/56687624/88293695-41b93f00-ccf3-11ea-9ea8-338a64bb5566.png
+   :width: 300px
+   :height: 250px
 
 .. automodule:: paramak.parametric_components.inner_tf_coils_circular
    :members:
@@ -137,10 +169,14 @@ InnerTfCoilsCircular()
 InnerTfCoilsFlat()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241472-db7d4880-bb9a-11ea-8fb9-325b3342fe11.png
-    :width: 180px
-    :height: 200px
-    :align: center
+|InnerTfCoilsFlatstp| |InnerTfCoilsFlatsvg|
+
+.. |InnerTfCoilsFlatstp| image:: https://user-images.githubusercontent.com/56687624/86241472-db7d4880-bb9a-11ea-8fb9-325b3342fe11.png
+   :width: 200px
+   :height: 250px
+.. |InnerTfCoilsFlatsvg| image:: https://user-images.githubusercontent.com/56687624/88293697-42ea6c00-ccf3-11ea-9e92-dc698813f1ee.png
+   :width: 280px
+   :height: 250px
 
 .. automodule:: paramak.parametric_components.inner_tf_coils_flat
    :members:
