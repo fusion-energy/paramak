@@ -154,21 +154,37 @@ def make_neutronics_model(reactor,
                                        fracs = [firstwall_coolant_fraction, firstwall_structural_fraction, firstwall_armour_fraction],
                                        percent_type='vo', packing_fraction=1.0).openmc_material
 
-    blanket_material = MultiMaterial(material_tag='blanket_mat',
-                                     materials=[Material(material_name=blanket_coolant_material,
-                                                         temperature_in_C=blanket_coolant_temperature_C,
-                                                         pressure_in_Pa=blanket_coolant_pressure_Pa),
-                                                  Material(material_name=blanket_structural_material),
-                                                  Material(material_name=blanket_multiplier_material,
-                                                           packing_fraction=blanket_multiplier_packing_fraction),
-                                                  Material(material_name=blanket_breeder_material,
-                                                           enrichment=blanket_lithium6_enrichment_percent,
-                                                           packing_fraction=blanket_breeder_packing_fraction,
-                                                           temperature_in_C=blanket_breeder_temperature_C,
-                                                           pressure_in_Pa=blanket_breeder_pressure_Pa)],
-                                      fracs = [blanket_coolant_fraction, blanket_structural_fraction,
-                                               blanket_multiplier_fraction, blanket_breeder_fraction],
-                                      percent_type='vo', packing_fraction=1.0).openmc_material
+    if blanket_multiplier_material == None and blanket_multiplier_fraction == None and blanket_multiplier_packing_fraction == None:
+
+        blanket_material = MultiMaterial(material_tag='blanket_mat',
+                                        materials=[Material(material_name=blanket_coolant_material,
+                                                            temperature_in_C=blanket_coolant_temperature_C,
+                                                            pressure_in_Pa=blanket_coolant_pressure_Pa),
+                                                    Material(material_name=blanket_structural_material),
+                                                    Material(material_name=blanket_breeder_material,
+                                                            enrichment=blanket_lithium6_enrichment_percent,
+                                                            packing_fraction=blanket_breeder_packing_fraction,
+                                                            temperature_in_C=blanket_breeder_temperature_C,
+                                                            pressure_in_Pa=blanket_breeder_pressure_Pa)],
+                                        fracs = [blanket_coolant_fraction, blanket_structural_fraction,
+                                                 blanket_breeder_fraction],
+                                        percent_type='vo', packing_fraction=1.0).openmc_material
+    else:
+        blanket_material = MultiMaterial(material_tag='blanket_mat',
+                                        materials=[Material(material_name=blanket_coolant_material,
+                                                            temperature_in_C=blanket_coolant_temperature_C,
+                                                            pressure_in_Pa=blanket_coolant_pressure_Pa),
+                                                    Material(material_name=blanket_structural_material),
+                                                    Material(material_name=blanket_multiplier_material,
+                                                            packing_fraction=blanket_multiplier_packing_fraction),
+                                                    Material(material_name=blanket_breeder_material,
+                                                            enrichment=blanket_lithium6_enrichment_percent,
+                                                            packing_fraction=blanket_breeder_packing_fraction,
+                                                            temperature_in_C=blanket_breeder_temperature_C,
+                                                            pressure_in_Pa=blanket_breeder_pressure_Pa)],
+                                        fracs = [blanket_coolant_fraction, blanket_structural_fraction,
+                                                blanket_multiplier_fraction, blanket_breeder_fraction],
+                                        percent_type='vo', packing_fraction=1.0).openmc_material
 
 
     divertor_material = MultiMaterial(material_tag='divertor_mat',
@@ -271,41 +287,48 @@ if __name__ == "__main__":
 
     for blanket_radial_thickness in range(10, 300, 10):
 
-        geometry_parameters = make_neutronics_geometry(inner_bore_radial_thickness=50,
-                                            inboard_tf_leg_radial_thickness = 200,
-                                            center_column_shield_radial_thickness= 50,
+        geometry_parameters = make_neutronics_geometry(
+                                            inner_bore_radial_thickness=1,
+                                            inboard_tf_leg_radial_thickness = 30,
+                                            center_column_shield_radial_thickness= 60,
                                             divertor_radial_thickness=50,
-                                            inner_plasma_gap_radial_thickness = 50,
-                                            plasma_radial_thickness = 100,
-                                            outer_plasma_gap_radial_thickness = 50,
-                                            firstwall_radial_thickness=5,
-                                            blanket_radial_thickness=100,
-                                            blanket_rear_wall_radial_thickness=10,
-                                            elongation=2,
-                                            triangularity=0.55,
+                                            inner_plasma_gap_radial_thickness = 30,
+                                            plasma_radial_thickness = 300,
+                                            outer_plasma_gap_radial_thickness = 30,
+                                            firstwall_radial_thickness=3,
+                                            blanket_radial_thickness=blanket_radial_thickness,
+                                            blanket_rear_wall_radial_thickness=30,
+                                            elongation=2.75,
+                                            triangularity=0.5,
                                             number_of_tf_coils=16,
                                             rotation_angle=360)
 
         material_parameters_and_results = make_neutronics_model(reactor=geometry_parameters,
+
+                                                # based on http://www.euro-fusionscipub.org/wp-content/uploads/WPBBCP16_15535_submitted.pdf
                                                 firstwall_radial_thickness = 3.,
                                                 firstwall_armour_material = 'tungsten',
-                                                firstwall_coolant_material = 'H2O',
+                                                firstwall_coolant_material = 'He',
                                                 firstwall_structural_material = 'eurofer',
-                                                firstwall_armour_fraction = 0.1,
-                                                firstwall_coolant_fraction = 0.2,
-                                                firstwall_coolant_temperature_C = 500,
-                                                firstwall_coolant_pressure_Pa = 1e6,
-                                                firstwall_structural_fraction = 0.7,
-                                                blanket_rear_wall_coolant_material = 'H2O',
+                                                firstwall_armour_fraction = 0.106305,
+                                                firstwall_coolant_fraction = 0.333507,
+                                                firstwall_coolant_temperature_C = 400,
+                                                firstwall_coolant_pressure_Pa = 8e6,
+                                                firstwall_structural_fraction = 0.560188,
+
+                                                # based on https://www.sciencedirect.com/science/article/pii/S2352179118300437
+                                                blanket_rear_wall_coolant_material = 'H20',
                                                 blanket_rear_wall_structural_material = 'eurofer',
-                                                blanket_rear_wall_coolant_fraction = 0.2,
-                                                blanket_rear_wall_structural_fraction = 0.8,
-                                                blanket_rear_wall_coolant_temperature_C = 500,
+                                                blanket_rear_wall_coolant_fraction = 0.3,
+                                                blanket_rear_wall_structural_fraction = 0.7,
+                                                blanket_rear_wall_coolant_temperature_C = 200,
                                                 blanket_rear_wall_coolant_pressure_Pa = 1e6,
+
+                                                # based on https://www.sciencedirect.com/science/article/pii/S2352179118300437
                                                 blanket_lithium6_enrichment_percent = 60,
                                                 blanket_breeder_material = 'Li4SiO4',
-                                                blanket_coolant_material = 'H2O',
-                                                blanket_multiplier_material = 'Be12Ti',
+                                                blanket_coolant_material = 'He',
+                                                blanket_multiplier_material = 'Be',
                                                 blanket_structural_material = 'eurofer',
                                                 blanket_breeder_fraction = 0.15,
                                                 blanket_coolant_fraction = 0.05,
@@ -316,27 +339,33 @@ if __name__ == "__main__":
                                                 blanket_coolant_temperature_C = 500,
                                                 blanket_coolant_pressure_Pa = 1e6,
                                                 blanket_breeder_temperature_C = 600,
-                                                blanket_breeder_pressure_Pa = 1e6,
-                                                divertor_coolant_fraction = 0.05,
-                                                divertor_structural_fraction = 0.95,
+                                                blanket_breeder_pressure_Pa = 8e6,
+
+                                                # based on https://www.sciencedirect.com/science/article/pii/S2352179118300437
+                                                divertor_coolant_fraction = 0.57195798876,
+                                                divertor_structural_fraction = 0.42804201123,
                                                 divertor_coolant_material = 'H2O',
-                                                divertor_structural_material = 'eurofer',
-                                                divertor_coolant_temperature_C = 500,
-                                                divertor_coolant_pressure_Pa = 1e6,
-                                                center_column_shield_coolant_fraction = 0.1,
-                                                center_column_shield_structural_fraction = 0.9,
+                                                divertor_structural_material = 'tungsten',
+                                                divertor_coolant_temperature_C = 150,
+                                                divertor_coolant_pressure_Pa = 5e6,
+
+                                                # based on https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf?_ga=2.101398593.1139828080.1595493457-812289418.1595493457
+                                                center_column_shield_coolant_fraction = 0.13,
+                                                center_column_shield_structural_fraction = 0.57,
                                                 center_column_shield_coolant_material = 'H2O',
-                                                center_column_shield_structural_material = 'eurofer',
-                                                center_column_shield_coolant_temperature_C = 500,
-                                                center_column_shield_coolant_pressure_Pa = 1e6,
-                                                inboard_tf_coils_conductor_fraction = 0.8,
-                                                inboard_tf_coils_coolant_fraction = 0.1,
-                                                inboard_tf_coils_structure_fraction = 0.1,
-                                                inboard_tf_coils_conductor_material = 'ReBCO',
+                                                center_column_shield_structural_material = 'tungsten',
+                                                center_column_shield_coolant_temperature_C = 150,
+                                                center_column_shield_coolant_pressure_Pa = 5e6,
+
+                                                #based on https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf?_ga=2.101398593.1139828080.1595493457-812289418.1595493457
+                                                inboard_tf_coils_conductor_fraction = 0.57,
+                                                inboard_tf_coils_coolant_fraction = 0.05,
+                                                inboard_tf_coils_structure_fraction = 0.38,
+                                                inboard_tf_coils_conductor_material = 'Cu',
                                                 inboard_tf_coils_coolant_material = 'He',
-                                                inboard_tf_coils_structure_material = 'eurofer',
-                                                inboard_tf_coils_coolant_temperature_C = -200,
-                                                inboard_tf_coils_coolant_pressure_Pa = 1e6)
+                                                inboard_tf_coils_structure_material = 'SS316',
+                                                inboard_tf_coils_coolant_temperature_C = 30,
+                                                inboard_tf_coils_coolant_pressure_Pa = 8e6)
 
         with open(str(uuid.uuid4())+'.json', 'w') as outfile:
             json.dump({**geometry_parameters, **material_parameters_and_results}, outfile)
