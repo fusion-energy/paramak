@@ -175,19 +175,18 @@ class BallReactor(paramak.Reactor):
         else:
             cutting_slice=None
 
-        inboard_tf_coils = paramak.InnerTfCoilsCircular(
+        # shapes_or_components.append(inboard_tf_coils)
+        inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=tf_coil_height,
-            inner_radius = inboard_tf_coils_start_radius,
-            outer_radius = inboard_tf_coils_end_radius,
-            number_of_coils = self.number_of_tf_coils,
-            gap_size=10,
+            inner_radius=inboard_tf_coils_start_radius,
+            outer_radius=inboard_tf_coils_end_radius,
+            rotation_angle=self.rotation_angle,
+            # color=centre_column_color,
             stp_filename="inboard_tf_coils.stp",
+            name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
-            cut=cutting_slice
         )
-
         shapes_or_components.append(inboard_tf_coils)
-
 
         center_column_shield = paramak.CenterColumnShieldCylinder(
             height=center_column_shield_height,
@@ -196,6 +195,7 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             # color=centre_column_color,
             stp_filename="center_column_shield.stp",
+            name="center_column_shield",
             material_tag="center_column_shield_mat",
         )
         shapes_or_components.append(center_column_shield)
@@ -213,6 +213,7 @@ class BallReactor(paramak.Reactor):
                 ],
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_blanket_upper.stp',
+                name='extra_blanket_upper',
                 material_tag='blanket_mat')
             shapes_or_components.append(extra_blanket_upper)
 
@@ -224,6 +225,7 @@ class BallReactor(paramak.Reactor):
                 ],
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_firstwall_upper.stp',
+                name='extra_firstwall_upper',
                 material_tag='firstwall_mat')
             shapes_or_components.append(extra_firstwall_upper)
 
@@ -235,6 +237,7 @@ class BallReactor(paramak.Reactor):
                 ],
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_blanket_rear_wall_upper.stp',
+                name='extra_blanket_rear_wall_upper',
                 material_tag='blanket_rear_wall_mat')
             shapes_or_components.append(extra_blanket_rear_wall_upper)
 
@@ -247,6 +250,7 @@ class BallReactor(paramak.Reactor):
                 ],
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_blanket_lower.stp',
+                name='extra_blanket_lower',
                 material_tag='blanket_mat')
             shapes_or_components.append(extra_blanket_lower)
 
@@ -258,6 +262,7 @@ class BallReactor(paramak.Reactor):
                 ],
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_firstwall_lower.stp',
+                name='extra_firstwall_lower',
                 material_tag='firstwall_mat')
             shapes_or_components.append(extra_firstwall_lower)
 
@@ -269,6 +274,7 @@ class BallReactor(paramak.Reactor):
                 ],
                 rotation_angle=self.rotation_angle,
                 stp_filename='extra_blanket_rear_wall_lower.stp',
+                name='extra_blanket_rear_wall_lower',
                 material_tag='blanket_rear_wall_mat')
             shapes_or_components.append(extra_blanket_rear_wall_lower)
 
@@ -279,6 +285,7 @@ class BallReactor(paramak.Reactor):
                 (divertor_end_radius, divertor_end_height),
                 ],
                 stp_filename='divertor_upper.stp',
+                name='divertor_upper',
                 rotation_angle=self.rotation_angle,
                 material_tag='divertor_mat'
                 )
@@ -292,6 +299,7 @@ class BallReactor(paramak.Reactor):
                 (divertor_end_radius, -divertor_end_height),
                 ],
                 stp_filename='divertor_lower.stp',
+                name='divertor_lower',
                 rotation_angle=self.rotation_angle,
                 material_tag='divertor_mat'
                 )
@@ -325,6 +333,7 @@ class BallReactor(paramak.Reactor):
                 (divertor_start_radius+space_for_divertor, divertor_end_height, 'straight'),
                 ],
                 stp_filename='divertor_upper.stp',
+                name='divertor_upper',
                 rotation_angle=self.rotation_angle,
                 material_tag='divertor_mat'
                 )
@@ -342,6 +351,7 @@ class BallReactor(paramak.Reactor):
                 (divertor_start_radius+space_for_divertor, -divertor_end_height, 'straight'),
                 ],
                 stp_filename='divertor_lower.stp',
+                name='divertor_lower',
                 rotation_angle=self.rotation_angle,
                 material_tag='divertor_mat'
                 )
@@ -354,8 +364,9 @@ class BallReactor(paramak.Reactor):
             thickness=self.firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='firstwall.stp',
+            name='firstwall',
             material_tag='firstwall_mat',
-            cut=[divertor_lower_part, divertor_upper_part]
+            # cut=[divertor_lower_part, divertor_upper_part]
         )
         shapes_or_components.append(firstwall)
 
@@ -367,8 +378,9 @@ class BallReactor(paramak.Reactor):
             thickness=self.blanket_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='blanket.stp',
+            name='blanket',
             material_tag='blanket_mat',
-            cut=[divertor_lower_part, divertor_upper_part]
+            # cut=[divertor_lower_part, divertor_upper_part]
         )
         shapes_or_components.append(blanket)
 
@@ -380,6 +392,7 @@ class BallReactor(paramak.Reactor):
             thickness=self.blanket_rear_wall_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='blanket_rear_wall.stp',
+                  name='blanket_rear_wall',
             material_tag='blanket_rear_wall_mat',
             cut=[divertor_lower_part, divertor_upper_part]
         )
