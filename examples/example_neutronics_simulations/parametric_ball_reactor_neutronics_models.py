@@ -51,6 +51,7 @@ def make_neutronics_geometry(inner_bore_radial_thickness,
     )
 
     my_reactor.export_stp()
+    my_reactor.export_html('reactor.html')
 
     my_reactor.export_neutronics_description()
 
@@ -62,6 +63,7 @@ def make_neutronics_geometry(inner_bore_radial_thickness,
     """
 
     os.system('trelis -batch -nographics make_faceteted_neutronics_model.py')
+#     os.system('trelis make_faceteted_neutronics_model.py')
 
     os.system('make_watertight dagmc_notwatertight.h5m -o dagmc.h5m')
 
@@ -266,26 +268,31 @@ def make_neutronics_model(reactor,
     # open the results file
     sp = openmc.StatePoint(output_filename)
 
-    # access the tally
+    # access TBR tally
     tbr_tally = sp.get_tally(name='TBR')
     df = tbr_tally.get_pandas_dataframe()
     tbr_tally_result = df['mean'].sum()
+    tbr_tally_std_dev = df['std. dev.'].sum()
 
-    # access the tally
+    # access heating tally
     blanket_heating_tally = sp.get_tally(name='blanket_heating')
     df = blanket_heating_tally.get_pandas_dataframe()
     blanket_heating_tally_result = df['mean'].sum()/1e6
+    blanket_heating_tally_std_dev = df['std. dev.'].sum()/1e6
 
     # returns all the inputs and some extra reactor attributes, merged into a single dictionary
     return {**input_parameters,
             **{'tbr':tbr_tally_result,
-            'blanket_heating':blanket_heating_tally_result}}
+               'tbr_std_dev':tbr_tally_std_dev,
+               'blanket_heating':blanket_heating_tally_result,
+               'blanket_heating_std_dev':blanket_heating_tally_std_dev,
+            }}
 
 
 
 if __name__ == "__main__":
 
-    for blanket_radial_thickness in range(10, 300, 10):
+    for blanket_radial_thickness in range(15, 300, 10):
 
         geometry_parameters = make_neutronics_geometry(
                                             inner_bore_radial_thickness=1,
@@ -297,7 +304,7 @@ if __name__ == "__main__":
                                             outer_plasma_gap_radial_thickness = 30,
                                             firstwall_radial_thickness=3,
                                             blanket_radial_thickness=blanket_radial_thickness,
-                                            blanket_rear_wall_radial_thickness=30,
+                                            blanket_rear_wall_radial_thickness=3,
                                             elongation=2.75,
                                             triangularity=0.5,
                                             number_of_tf_coils=16,
@@ -317,7 +324,7 @@ if __name__ == "__main__":
                                                 firstwall_structural_fraction = 0.560188,
 
                                                 # based on https://www.sciencedirect.com/science/article/pii/S2352179118300437
-                                                blanket_rear_wall_coolant_material = 'H20',
+                                                blanket_rear_wall_coolant_material = 'H2O',
                                                 blanket_rear_wall_structural_material = 'eurofer',
                                                 blanket_rear_wall_coolant_fraction = 0.3,
                                                 blanket_rear_wall_structural_fraction = 0.7,
@@ -361,7 +368,7 @@ if __name__ == "__main__":
                                                 inboard_tf_coils_conductor_fraction = 0.57,
                                                 inboard_tf_coils_coolant_fraction = 0.05,
                                                 inboard_tf_coils_structure_fraction = 0.38,
-                                                inboard_tf_coils_conductor_material = 'Cu',
+                                                inboard_tf_coils_conductor_material = 'copper',
                                                 inboard_tf_coils_coolant_material = 'He',
                                                 inboard_tf_coils_structure_material = 'SS316',
                                                 inboard_tf_coils_coolant_temperature_C = 30,
