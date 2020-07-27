@@ -28,22 +28,28 @@ class Plasma_from_points(Plasma):
 
     def __init__(
         self,
-        points=None,
-        name='plasma',
-        material_tag='DT_plasma',
-        workplane="XZ",
         outer_equatorial_x_point,
         inner_equatorial_x_point,
         high_point,
+        name='plasma',
+        material_tag='DT_plasma',
         num_points=50,
-        solid=None,
         stp_filename="plasma.stp",
         color=None,
         rotation_angle=360,
         azimuth_placement_angle=0,
         cut=None,
-        hash_value=None,
+        **kwargs
     ):
+        default_dict = {'points':None,
+                        'workplane':"XZ",
+                        'solid':None,
+                        'hash_value':None
+        }
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
 
         minor_radius = (outer_equatorial_x_point - inner_equatorial_x_point) / 2.
         major_radius = inner_equatorial_x_point + minor_radius
@@ -51,10 +57,8 @@ class Plasma_from_points(Plasma):
         triangularity = high_point[0] / major_radius
 
         super().__init__(
-            points=None,
             name='plasma',
             material_tag='DT_plasma',
-            workplane="XZ",
             elongation=elongation,
             major_radius=major_radius,
             minor_radius=minor_radius,
@@ -63,11 +67,10 @@ class Plasma_from_points(Plasma):
             num_points=50,
             configuration="non-null",
             x_point_shift=0.1,
-            solid=None,
             stp_filename="plasma.stp",
             color=None,
             rotation_angle=360,
             azimuth_placement_angle=0,
             cut=None,
-            hash_value=None,
+            **default_dict
         )
