@@ -305,6 +305,7 @@ class BallReactor(paramak.Reactor):
                 )
             shapes_or_components.append(divertor_lower_part)
 
+        # curve divertor arround if it is larger than the horitonal space provided
         elif self.divertor_radial_thickness > space_for_divertor:
 
             length_of_curved_section = self.divertor_radial_thickness - space_for_divertor
@@ -356,6 +357,36 @@ class BallReactor(paramak.Reactor):
                 material_tag='divertor_mat'
                 )
             shapes_or_components.append(divertor_lower_part)
+
+        elif self.divertor_radial_thickness == space_for_divertor:
+
+            divertor_upper_part = paramak.RotateMixedShape(points=[
+                (divertor_start_radius, divertor_end_height, 'straight'),
+                (divertor_start_radius, divertor_start_height, 'straight'),
+                (divertor_start_radius+space_for_divertor, divertor_start_height, 'straight'),
+                (divertor_start_radius+space_for_divertor, divertor_end_height, 'straight'),
+                ],
+                stp_filename='divertor_upper.stp',
+                name='divertor_upper',
+                rotation_angle=self.rotation_angle,
+                material_tag='divertor_mat'
+                )
+            shapes_or_components.append(divertor_upper_part)
+
+            # negative signs used as this is in the negative side of the Z axis 
+            divertor_lower_part = paramak.RotateMixedShape(points=[
+                (divertor_start_radius, -divertor_end_height, 'straight'),
+                (divertor_start_radius, -divertor_start_height, 'straight'),
+                (divertor_start_radius+space_for_divertor, -divertor_start_height, 'straight'),
+                (divertor_start_radius+space_for_divertor, -divertor_end_height, 'straight'),
+                ],
+                stp_filename='divertor_lower.stp',
+                name='divertor_lower',
+                rotation_angle=self.rotation_angle,
+                material_tag='divertor_mat'
+                )
+            shapes_or_components.append(divertor_lower_part)
+
 
         firstwall = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(firstwall_start_radius, 0),
