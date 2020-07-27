@@ -74,3 +74,5 @@ class Plasma_from_points(Plasma):
             cut=None,
             **default_dict
         )
+
+    
