@@ -49,29 +49,34 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         inner_upper_point,
         inner_lower_point,
         thickness,
-        workplane="XZ",
-        points=None,
         stp_filename='BlanketConstantThicknessArcV.stp',
         rotation_angle=360,
         azimuth_placement_angle=0,
-        solid=None,
         color=None,
         name=None,
         material_tag='blanket_material',
         cut=None,
+        **kwargs
     ):
 
+        default_dict = {'points':None,
+                        'workplane':"XZ",
+                        'solid':None,
+                        'hash_value':None}
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
         super().__init__(
-            points,
-            workplane,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            solid,
-            rotation_angle,
-            cut,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            rotation_angle=rotation_angle,
+            cut=cut,
+            **default_dict
         )
 
         self.inner_upper_point = inner_upper_point

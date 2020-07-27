@@ -71,29 +71,34 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         vertical_displacement=0,
         offset_from_plasma=0,
         num_points=50,
-        workplane="XZ",
-        points=None,
         stp_filename="BlanketConstantThicknessFP.stp",
         rotation_angle=360,
         azimuth_placement_angle=0,
-        solid=None,
         color=None,
         name=None,
         material_tag="blanket_mat",
         cut=None,
-            ):
+        **kwargs
+    ):
+
+        default_dict = {'points':None,
+                        'workplane':"XZ",
+                        'solid':None,
+                        'hash_value':None}
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
 
         super().__init__(
-            points,
-            workplane,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            solid,
-            rotation_angle,
-            cut,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            rotation_angle=rotation_angle,
+            cut=cut,
+            **default_dict
         )
 
         self.thickness = thickness
@@ -114,7 +119,7 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             self.elongation = plasma.elongation
             self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
-        self.points = points
+        # self.points = points
         self.physical_groups = None
 
     @property
