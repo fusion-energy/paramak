@@ -7,9 +7,9 @@ import scipy
 from paramak import Plasma
 
 
-class Plasma(Plasma):
+class Plasma_from_points(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
-       by 4 shaping parameters.
+       by 3 coordinates.
 
     :param outer_equatorial_x_point: the x value of the outer equatorial of the plasma (cm)
     :type outer_equatorial_x_point: float
@@ -22,7 +22,7 @@ class Plasma(Plasma):
        (outer_equatorial_point, inner_equatorial_point, high_point, low_point)
         as tuples of 2 floats and 4 attributes of the plasma (major_radius, minor_radius,
         elongation, triangularity) as floats
-       
+
     :rtype: paramak shape object
     """
 
