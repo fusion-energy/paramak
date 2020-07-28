@@ -214,6 +214,12 @@ def main():
                 number_of_coils=6)
     all_components.append(component)
 
+    component = paramak.ITERtypeDivertor(
+        rotation_angle=rot_angle,
+        stp_filename='ITER_type_divertor.stp'
+    )
+    all_components.append(component)
+
     return all_components
 
 
