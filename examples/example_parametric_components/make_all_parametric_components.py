@@ -215,6 +215,7 @@ def main():
     all_components.append(component)
 
     component = paramak.ITERtypeDivertor(
+        # default parameters
         rotation_angle=rot_angle,
         stp_filename='ITER_type_divertor.stp'
     )
