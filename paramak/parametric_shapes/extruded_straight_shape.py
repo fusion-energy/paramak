@@ -11,9 +11,8 @@ from hashlib import blake2b
 class ExtrudeStraightShape(Shape):
     """Extrude a 3d CadQuery solid from points connected with straight lines
 
-       :param points: A list of XZ coordinates and connection types where the last
-            entry has the same XZ coordinates as the first entry. For example [(2.,1.),
-            (2.,2.), (1.,2.), (1.,1.), (2.,1.)].
+       :param points: A list of XZ coordinates connected by straight connections. For
+            example [(2.,1.), (2.,2.), (1.,2.), (1.,1.), (2.,1.)].
        :type points: a list of tuples each containing X (float), Z (float)
        :param stp_filename: the filename used when saving stp files as part of a reactor
        :type stp_filename: str

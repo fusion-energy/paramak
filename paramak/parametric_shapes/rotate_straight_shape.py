@@ -13,9 +13,8 @@ class RotateStraightShape(Shape):
 
        Args:
           points (list of tuples each containing X (float), Z (float)): A list of XZ 
-             coordinates connected by straight connections where the last entry has the
-             same XZ coordinates as the first entry. For example [(2.,1.), (2.,2.), (1.,2.), 
-             (1.,1.), (2.,1.)].
+             coordinates connected by straight connections. For example [(2., 1.), (2., 2.), 
+             (1., 2.), (1., 1.)].
           name (str): The legend name used when exporting a html graph of the shape.
           color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1): 
              The color to use when exporting as html graphs or png images.
