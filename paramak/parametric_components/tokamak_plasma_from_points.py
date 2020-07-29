@@ -7,7 +7,7 @@ import scipy
 from paramak import Plasma
 
 
-class Plasma_from_points(Plasma):
+class PlasmaFromPoints(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
        by 3 coordinates.
 
@@ -75,4 +75,12 @@ class Plasma_from_points(Plasma):
             **default_dict
         )
 
-    
+
+    @property
+    def points(self):
+        self.find_points()
+        return self._points
+
+    @points.setter
+    def points(self, value):
+        self._points = value
