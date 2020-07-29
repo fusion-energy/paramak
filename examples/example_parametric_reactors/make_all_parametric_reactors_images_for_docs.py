@@ -6,17 +6,16 @@ in the paramak tool
 import os
 import paramak
 from make_all_parametric_reactors import main
+from cadquery import exporters
 
 def export_images():
 
     all_reactors = main()
     
     for reactor in all_reactors:
-        reactor.solid = reactor.solid.rotate(startVector=(0,1,0), endVector=(0,0,1), angleDegrees=180)
-        reactor.export_svg(reactor.name+'.svg')
+        with open(reactor.name+'.svg', "w") as f:
+            exporters.exportShape(reactor.solid, "SVG", f)
+
 
 if __name__ == "__main__":
     export_images()
-
-
-

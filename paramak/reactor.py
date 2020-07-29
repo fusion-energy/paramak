@@ -102,7 +102,9 @@ class Reactor():
 
     @property
     def solid(self):
-        return cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
+        compound = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
+        compound = compound.rotate(startVector=(0,1,0), endVector=(0,0,1), angleDegrees=180)
+        return compound
 
     @solid.setter
     def solid(self, value):
