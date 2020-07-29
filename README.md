@@ -87,11 +87,6 @@ Parametric components are wrapped versions of the eight basic shapes where param
 `my_plasma.export_stp('plasma.stp')`
 
 
-## Usage - Parametric Reactors
-
-Parametric reactors 
-
-
 ## Usage - Reactor object
 
 A reactor object provides a container object for all Shape objects created, and allows operations to be performed on the whole collection of Shapes.
