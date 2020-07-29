@@ -68,28 +68,33 @@ class ITERtypeDivertor(RotateMixedShape):
         dome_pos=0.5,
         tilts=(-27, 0),
         rotation_angle=360,
-        workplane="XZ",
-        points=None,
         stp_filename=None,
         azimuth_placement_angle=0,
-        solid=None,
         color=None,
         name=None,
         material_tag=None,
         cut=None,
-            ):
+        **kwargs
+    ):
+
+        default_dict = {'points':None,
+                        'workplane':"XZ",
+                        'solid':None,
+                        'hash_value':None}
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
 
         super().__init__(
-            points,
-            workplane,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            solid,
-            rotation_angle,
-            cut,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            rotation_angle=rotation_angle,
+            cut=cut,
+            **default_dict
         )
 
         self.IVT_anchor, self.OVT_anchor = anchors
