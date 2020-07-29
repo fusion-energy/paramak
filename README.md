@@ -51,12 +51,6 @@ The different families of shapes that can be made with the Paramak are shown in 
 | Circular shapes                                         | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246778-72e69980-bba3-11ea-9b33-d74e2c2d084b.png" height="120"></p> `RotateCircleShape()`      | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246768-6feba900-bba3-11ea-81a8-0d77a843b943.png" height="120"></p> `ExtrudeCircleShape()`         |
 
 
-# Example scripts
-
-There are several example scripts in the [examples folder](https://github.com/ukaea/paramak/blob/develop/examples/). A good one to start with is [make_CAD_from_points.py](https://github.com/ukaea/paramak/blob/develop/examples/make_CAD_from_points.py) which makes simple examples of the different types of shapes (extrude, rotate) with different connection methods (splines, straight lines and circles).
-
-
-
 ## Usage - Parametric Shapes
   
 There are a collection of Python scripts in the example folder that demonstrate simple shape construction and visualisation. However here is a quick example of a RotateStraightShape.
@@ -147,3 +141,8 @@ Alternativly to run this without the GUI in batch mode type.
 This should export a h5m file for use in DAGMC.
 
 Further information on DAGMC neutronics can be found [here](https://svalinn.github.io/DAGMC/) and information on OpenMC can be found [here](https://openmc.readthedocs.io/). The two codes can be used together to simulate neutron transport on the h5m file created. The UKAEA openmc workshop also has two tasks that might be of interest [task 10](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10) and [task 12](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12).
+
+
+# Example scripts
+
+There are several example scripts in the [examples folder](https://github.com/ukaea/paramak/blob/develop/examples/). A good one to start with is [make_CAD_from_points.py](https://github.com/ukaea/paramak/blob/develop/examples/make_CAD_from_points.py) which makes simple examples of the different types of shapes (extrude, rotate) with different connection methods (splines, straight lines and circles).
