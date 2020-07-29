@@ -102,6 +102,10 @@ class Reactor():
 
     @property
     def solid(self):
+        """This combines all the parametric shapes and compents in th reactor object
+        and rotates the viewing angle so that .solid operations in jupyter notebook
+        and svg exports are better orientation.
+        """
         compound = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
         compound = compound.rotate(startVector=(0,1,0), endVector=(0,0,1), angleDegrees=180)
         return compound
