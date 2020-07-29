@@ -134,7 +134,7 @@ Once you step files and the neutronics description has been exported then [Treli
 
 `trelis make_faceteted_neutronics_model.py`
 
-Alternativly to run this without the GUI in batch mode type.
+Alternatively, run this without the GUI in batch mode using:
 
 `trelis -batch -nographics make_faceteted_neutronics_model.py`
 
