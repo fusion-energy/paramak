@@ -11,10 +11,9 @@ class ExtrudeMixedShape(Shape):
     """Extrude a 3d CadQuery solid from points connected with
        a mixture of straight lines and splines
 
-       :param points: A list of XZ coordinates and connection types where the last
-            entry has the same XZ coordinates as the first entry. Also the connections
-            types are either 'spline' or 'straight'. For example [(2.,1.,'straight'),
-            (2.,2.,'straight'), (1.,2.,'spline'), (1.,1.,'spline'), (2.,1.,'spline')]
+       :param points: A list of XZ coordinates and connection types. The connections
+            types are either 'straight', 'spline' or 'circle'. For example [(2.,1.,'straight'),
+            (2.,2.,'straight'), (1.,2.,'spline'), (1.,1.,'spline'), (2.,1.,'spline')].
        :type points: a list of tuples each containing X (float), Z (float), connection
             type (string) values 
        :param stp_filename: the filename used when saving stp files as part of a reactor

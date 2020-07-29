@@ -149,18 +149,18 @@ The different families of shapes that can be made with the Paramak are shown in 
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
 
 
-Usage - Shape creation
-----------------------
+Usage - Parametric Shapes
+-------------------------
 
-There are a collection of Python scripts in the example folder than demonstrate simple shape construction, visualisation creation and reactor construction. However here is a quick example of a RotatedStraightShape
+There are a collection of Python scripts in the example folder that demonstrate simple shape construction and visualisation. However here is a quick example of a RotateStraightShape.
 
-After importing the class the user then sets the points. Points should be a list of x,z points where the last point is the same as the first point.
+After importing the class the user then sets the points. By default, points should be a list of (x,z) points. In this case the points are connected with straight lines.
 
 ::
 
-   from paramak import RotatedStraightShape
+   from paramak import RotateStraightShape
 
-   my_shape = RotatedStraightShape(points = [(20, 0), (20, 100), (100, 0), (20, 0)])
+   my_shape = RotatedStraightShape(points = [(20,0), (20,100), (100,0), (20,0)])
 
 Once these properties have been set then users can write 3D volumes in CAD STP or STL formats
 
@@ -170,74 +170,110 @@ Once these properties have been set then users can write 3D volumes in CAD STP o
 
    my_shape.export_stl('example.stl')
 
+Usage - Parametric Components
+-----------------------------
 
-Usage - Creating a Plasma
--------------------------
-
-The plasma also inherits from the Shape object so has access to the same methods like export_stp() and export_stl().
-
-The plasma requires additional inputs and a simple plasma shape can be created in the following manner.
-
+Parametric components are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerous parametric components for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma. Users could also construct a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric component called Plasma can construct a plasma from more convenient parameters. Parametric components also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
 
 ::
 
-   from paramak.parametric_shapes import PlasmaShape
+   from paramak import Plasma
 
-   my_plasma = PlasmaShape()
-
-   my_plasma.major_radius =620
-
-   my_plasma.minor_radius =210
-
-   my_plasma.triangularity = 0.33
-
-   my_plasma.elongation = 1.85
+   my_plasma = Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
 
    my_plasma.export_stp('plasma.stp')
 
 
-Usage - Reactor creation
-------------------------
+Usage - Reactor object
+----------------------
 
-A reactor object provides a contain object for all the Shape objects created and allows operations on the whole collection of Shapes such as creation of a bounding box (DGMC graveyard) which is needed for neutronics simulations.
+A reactor object provides a container object for all Shape objects created, and allows operations to be performed on the whole collection of Shapes.
 
-Import the Reactor object
-
-::
-
-   from paramak import Reactor
-
-Initiate a Reactor object with an output folder
+Import the Reactor object.
 
 ::
 
-   my_reactor = Reactor()
+   from paramak import Reactor 
 
-Reactor inherites from dictionary so Shapes can be added to it in the same way you would add to a dictionary.
+Initiate a Reactor object and pass a list of all Shape objects to the shapes_and_components parameter.
 
 ::
 
-   my_reactor.add(my_shape)
+   my_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])
 
-   my_reactor.add(my_plasma)
-
-A 3D rendering of the combined Shapes can be created
+A 3D rendering of the combined Shapes can be created.
 
 ::
 
    my_reactor.export_3d_image('reactor.png')
 
+A html graph of the combined Shapes can be created.
 
-Once all your Shapes have been added reactor methods can be used to create and simulate the neutronics model using additional tools, the currently codes to learn are `DAGMC <https://svalinn.github.io/DAGMC/>`_ , `Trelis <https://www.csimsoft.com/trelis>`_ and `OpenMC <https://openmc.readthedocs.io/>`_ .
+::
+
+   my_reactor.export_html('reactor.html')
+
+
+Usage - Neutronics model creation
+---------------------------------
+
+First assign stp_filenames to each of the Shape objects that were created earlier on.
+
+::
+
+   my_shape.stp_filename = 'my_shape.stp'
+
+   my_plasma.stp_filename = 'my_plasma.stp'
+
+Then assign material_tags to each of the Shape objects.
+
+::
+
+   my_shape.material_tag = 'steel'
+
+   my_plasma.material_tag = 'DT_plasma'
+
+Note - Tetrahedral meshes can also be assigned to Shape objects.
+
+Now add the Shape objects to a freshly created reactor object.
+
+::
+
+   new_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])
+
+The entire reactor can now be exported as step files. This also generates a DAGMC graveyard automatically.
+
+:: 
+
+   my_reactor.export_stp()
+
+A manifest.json file that contains all the step filenames and materials can now be created.
+
+::
+
+   my_reactor.export_neutronics_description()
+
+Once you step files and the neutronics description has been exported then `Trelis <https://www.csimsoft.com/trelis>`_ can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in task 12 of the UKAEA openmc workshop which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download `this script <https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py>`_ and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal. You will need to have previously installed the `DAGMC plugin <https://github.com/svalinn/Trelis-plugin>`_ for Trelis.
+
+::
+
+   trelis make_faceteted_neutronics_model.py
+
+Alternatively, run this without the GUI in batch mode using:
+
+::
+
+   trelis -batch -nographics make_faceteted_neutronics_model.py
+
+This should export a h5m file for use in DAGMC.
+
+Further information on DAGMC neutronics can be found `here <https://svalinn.github.io/DAGMC/>`_ and information on OpenMC can be found `here <https://openmc.readthedocs.io/>`_ . The two codes can be used together to simulate neutron transport on the h5m file created. The UKAEA openmc workshop also has two tasks that might be of interest `task 10 <https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10>`_ and `task 12 <https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12>`_ .
 
 
 Example Scripts
 ---------------
 
-There are several example scripts in the examples folder the introduction, a good one to start with is
-
-* make_CAD_from_points.py examples of the different families of shapes (extrude, roate) and different connection methods (points connected with splines and or straights or a mixture) with different CAD operations (cut, union).
-
+There are several example scripts in the `examples folder <https://github.com/ukaea/paramak/blob/develop/examples/>`_ . A good one to start with is `make_CAD_from_points <https://github.com/ukaea/paramak/blob/develop/examples/make_CAD_from_points.py>`_ which makes simple examples of the different types of shapes (extrude, rotate) with different connection methods (splines, straight lines and circles).
 
 
 Indices and tables
