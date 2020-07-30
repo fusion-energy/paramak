@@ -98,9 +98,9 @@ Initiate a Reactor object and pass a list of all Shape objects to the shapes_and
 
 `my_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])`
 
-A 3D rendering of the combined Shapes can be created.
+<!-- A 3D rendering of the combined Shapes can be created. -->
 
-`my_reactor.export_3d_image('reactor.png')`
+<!-- `my_reactor.export_3d_image('reactor.png')` -->
 
 A html graph of the combined Shapes can be created.
 
