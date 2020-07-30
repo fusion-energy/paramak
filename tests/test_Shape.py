@@ -105,5 +105,17 @@ class test_object_properties(unittest.TestCase):
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
 
+    def test_export_stl(self):
+
+        test_shape = Shape()
+        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        test_shape.export_stl("tests/test.stl")
+
+    def test_create_render_mesh(self):
+
+        test_shape = Shape()
+        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        test_shape._create_render_mesh()
+
 if __name__ == "__main__":
     unittest.main()
