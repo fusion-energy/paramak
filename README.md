@@ -69,6 +69,8 @@ Once these properties have been set users can write 3D volumes in CAD STP or STL
 
 `my_shape.export_stl('example.stl')`
 
+<p align="center"><img src="https://user-images.githubusercontent.com/56687624/88935217-6aa07d80-d279-11ea-8893-dddb61fe4c3c.png" height="300"></p>
+
 
 ## Usage - Parametric Components
 
