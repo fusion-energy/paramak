@@ -6,13 +6,13 @@ These are reactors designs that can be created from parameters.
 BallReactor()
 ^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/88826475-b4795d00-d1c0-11ea-992e-5a93aa6a0e15.png
+.. image:: https://user-images.githubusercontent.com/56687624/88921452-79ca0000-d266-11ea-9f8f-5247e88b03cf.png
    :width: 450
-   :height: 380
+   :height: 450
    :align: center
-.. image:: https://user-images.githubusercontent.com/56687624/88823926-8e05f280-d1bd-11ea-8758-c79b49a8c5ac.png
+.. image:: https://user-images.githubusercontent.com/8583900/88866552-f1664380-d202-11ea-83ec-6891f2774e02.png
    :width: 450
-   :height: 470
+   :height: 490
    :align: center
 
 .. automodule:: paramak.parametric_reactors.ball_reactor
