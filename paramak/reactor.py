@@ -102,7 +102,13 @@ class Reactor():
 
     @property
     def solid(self):
-        return cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
+        """This combines all the parametric shapes and compents in th reactor object
+        and rotates the viewing angle so that .solid operations in jupyter notebook
+        and svg exports are better orientation.
+        """
+        compound = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
+        compound = compound.rotate(startVector=(0,1,0), endVector=(0,0,1), angleDegrees=180)
+        return compound
 
     @solid.setter
     def solid(self, value):
@@ -363,7 +369,7 @@ class Reactor():
 
         return str(Pfilename)
 
-    def export_3d_image(self, filename="3d_render.png", tolerance=0.1):
+    def export_3d_image(self, filename="3d_render.png", tolerance=0.005):
         """Creates a 3D rendered image (png) of the reactor
 
         :param filename: output filename of the image created
@@ -388,7 +394,7 @@ class Reactor():
         # sets the position of the camera using a matrix
         c = 2 ** -0.5
         camera_pose = np.array(
-            [[1, 0, 0, 0], [0, c, -c, -1200], [0, c, c, 1200], [0, 0, 0, 1]]
+            [[1, 0, 0, 0], [0, c, -c, -500], [0, c, c, 500], [0, 0, 0, 1]]
         )
         scene.add(camera, pose=camera_pose)
 

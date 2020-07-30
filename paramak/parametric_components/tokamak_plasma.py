@@ -38,10 +38,8 @@ class Plasma(RotateSplineShape):
 
     def __init__(
         self,
-        points=None,
         name='plasma',
         material_tag='DT_plasma',
-        workplane="XZ",
         elongation=2.0,
         major_radius=450,
         minor_radius=150,
@@ -50,27 +48,33 @@ class Plasma(RotateSplineShape):
         num_points=50,
         configuration="non-null",
         x_point_shift=0.1,
-        solid=None,
         stp_filename="plasma.stp",
         color=None,
         rotation_angle=360,
         azimuth_placement_angle=0,
         cut=None,
-        hash_value=None,
+        **kwargs
     ):
 
+        default_dict = {'points':None,
+                        'workplane':"XZ",
+                        'solid':None,
+                        'hash_value':None
+        }
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
         super().__init__(
-            points,
-            workplane,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            solid,
-            rotation_angle,
-            cut,
-            hash_value,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            rotation_angle=rotation_angle,
+            cut=cut,
+            **default_dict
         )
 
         # properties needed for plasma shapes
@@ -80,7 +84,7 @@ class Plasma(RotateSplineShape):
         self.triangularity = triangularity
         self.vertical_displacement = vertical_displacement
         self.num_points = num_points
-        self.points = points
+        # self.points = points
         self.configuration = configuration
         self.x_point_shift = x_point_shift
 
@@ -92,39 +96,6 @@ class Plasma(RotateSplineShape):
             (minor_radius, major_radius), elongation, triangularity,
             x_point_shift
         )
-
-    def compute_x_points(self, radii, elongation, triangularity, shift):
-        """Computes the location of X points based on plasma parameters and
-         configuration
-
-        Args:
-            radii ((float, float)): minor and major radii
-            elongation (float): elongation
-            triangularity (float): triangularity
-            shift (float): shift for estimating X points locations
-
-        Returns:
-            ((float, float), (float, float)): lower and upper x points
-             coordinates. None if no x points
-        """
-        lower_x_point, upper_x_point = None, None  # non-null config
-        minor_radius, major_radius = radii
-
-        if self.configuration == "single-null" or \
-           self.configuration == "double-null":
-            # no X points for non-null config
-            lower_x_point = (
-                1-(1+shift)*triangularity*minor_radius,
-                (1+shift)*elongation*minor_radius
-            )
-
-            if self.configuration == "double-null":
-                # upper_x_point is up-down symmetrical
-                upper_x_point = (
-                    lower_x_point[0],
-                    -lower_x_point[1]
-                )
-        return lower_x_point, upper_x_point
 
     @property
     def points(self):
@@ -186,6 +157,39 @@ class Plasma(RotateSplineShape):
             raise ValueError("elongation is out of range")
         else:
             self._elongation = elongation
+
+    def compute_x_points(self, radii, elongation, triangularity, shift):
+        """Computes the location of X points based on plasma parameters and
+         configuration
+
+        Args:
+            radii ((float, float)): minor and major radii
+            elongation (float): elongation
+            triangularity (float): triangularity
+            shift (float): shift for estimating X points locations
+
+        Returns:
+            ((float, float), (float, float)): lower and upper x points
+             coordinates. None if no x points
+        """
+        lower_x_point, upper_x_point = None, None  # non-null config
+        minor_radius, major_radius = radii
+
+        if self.configuration == "single-null" or \
+           self.configuration == "double-null":
+            # no X points for non-null config
+            lower_x_point = (
+                1-(1+shift)*triangularity*minor_radius,
+                (1+shift)*elongation*minor_radius
+            )
+
+            if self.configuration == "double-null":
+                # upper_x_point is up-down symmetrical
+                upper_x_point = (
+                    lower_x_point[0],
+                    -lower_x_point[1]
+                )
+        return lower_x_point, upper_x_point
 
     def find_points(self):
         """Finds the XZ points that describe the 2D profile of the plasma.

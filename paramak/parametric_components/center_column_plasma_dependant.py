@@ -32,35 +32,38 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         inner_radius,
         mid_offset,
         edge_offset,
-        points=None,
         name=None,
         color=None,
         material_tag="center_column_shield_mat",
         stp_filename="CenterColumnShieldPlasmaHyperbola.stp",
-        workplane="XZ",
         azimuth_placement_angle=0,
-        solid=None,
         rotation_angle=360,
         cut=None,
         major_radius=450,
         minor_radius=150,
         triangularity=0.55,
         elongation=2,
-        hash_value=None,
+        **kwargs
     ):
+    
+        default_dict = {'points':None,
+                        'workplane':"XZ",
+                        'solid':None,
+                        'hash_value':None}
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
 
         super().__init__(
-            points,
-            workplane,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            solid,
-            rotation_angle,
-            cut,
-            hash_value,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            rotation_angle=rotation_angle,
+            cut=cut,
+            **default_dict
         )
 
         self.major_radius = major_radius

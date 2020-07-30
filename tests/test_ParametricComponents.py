@@ -232,6 +232,21 @@ class test_Plasma(unittest.TestCase):
         os.system("rm plasma.stp")
 
 
+    def test_export_plasma_from_points_export(self):
+        """checks that export_stp() exports plasma stp file"""
+
+        test_plasma = paramak.PlasmaFromPoints(outer_equatorial_x_point=500,
+                                               inner_equatorial_x_point=300,
+                                               high_point=(400,200),
+                                               rotation_angle=180)
+
+        os.system("rm plasma.stp")
+
+        test_plasma.export_stp("plasma.stp")
+
+        assert Path("plasma.stp").exists() == True
+        os.system("rm plasma.stp")
+
 # class test_DivertorBlock(unittest.TestCase):
 # def test_DivertorBlock_creation(self):
 #         test_shape = DivertorBlock(major_radius = 300,
