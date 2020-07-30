@@ -57,8 +57,8 @@ class PlasmaFromPoints(Plasma):
         triangularity = high_point[0] / major_radius
 
         super().__init__(
-            name='plasma',
-            material_tag='DT_plasma',
+            name=name,
+            material_tag=material_tag,
             elongation=elongation,
             major_radius=major_radius,
             minor_radius=minor_radius,
@@ -69,12 +69,15 @@ class PlasmaFromPoints(Plasma):
             x_point_shift=0.1,
             stp_filename="plasma.stp",
             color=None,
-            rotation_angle=360,
-            azimuth_placement_angle=0,
+            rotation_angle=rotation_angle,
+            azimuth_placement_angle=azimuth_placement_angle,
             cut=None,
             **default_dict
         )
 
+        self.outer_equatorial_x_point = outer_equatorial_x_point
+        self.inner_equatorial_x_point = inner_equatorial_x_point
+        self.high_point = high_point
 
     @property
     def points(self):
@@ -84,3 +87,27 @@ class PlasmaFromPoints(Plasma):
     @points.setter
     def points(self, value):
         self._points = value
+
+    @property
+    def outer_equatorial_x_point(self):
+        return self._outer_equatorial_x_point
+
+    @outer_equatorial_x_point.setter
+    def outer_equatorial_x_point(self, value):
+        self._outer_equatorial_x_point = value
+
+    @property
+    def inner_equatorial_x_point(self):
+        return self._inner_equatorial_x_point
+
+    @inner_equatorial_x_point.setter
+    def inner_equatorial_x_point(self, value):
+        self._inner_equatorial_x_point = value
+
+    @property
+    def high_point(self):
+        return self._high_point
+
+    @high_point.setter
+    def high_point(self, value):
+        self._high_point = value

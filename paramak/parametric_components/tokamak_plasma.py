@@ -97,39 +97,6 @@ class Plasma(RotateSplineShape):
             x_point_shift
         )
 
-    def compute_x_points(self, radii, elongation, triangularity, shift):
-        """Computes the location of X points based on plasma parameters and
-         configuration
-
-        Args:
-            radii ((float, float)): minor and major radii
-            elongation (float): elongation
-            triangularity (float): triangularity
-            shift (float): shift for estimating X points locations
-
-        Returns:
-            ((float, float), (float, float)): lower and upper x points
-             coordinates. None if no x points
-        """
-        lower_x_point, upper_x_point = None, None  # non-null config
-        minor_radius, major_radius = radii
-
-        if self.configuration == "single-null" or \
-           self.configuration == "double-null":
-            # no X points for non-null config
-            lower_x_point = (
-                1-(1+shift)*triangularity*minor_radius,
-                (1+shift)*elongation*minor_radius
-            )
-
-            if self.configuration == "double-null":
-                # upper_x_point is up-down symmetrical
-                upper_x_point = (
-                    lower_x_point[0],
-                    -lower_x_point[1]
-                )
-        return lower_x_point, upper_x_point
-
     @property
     def points(self):
         self.find_points()
@@ -190,6 +157,39 @@ class Plasma(RotateSplineShape):
             raise ValueError("elongation is out of range")
         else:
             self._elongation = elongation
+
+    def compute_x_points(self, radii, elongation, triangularity, shift):
+        """Computes the location of X points based on plasma parameters and
+         configuration
+
+        Args:
+            radii ((float, float)): minor and major radii
+            elongation (float): elongation
+            triangularity (float): triangularity
+            shift (float): shift for estimating X points locations
+
+        Returns:
+            ((float, float), (float, float)): lower and upper x points
+             coordinates. None if no x points
+        """
+        lower_x_point, upper_x_point = None, None  # non-null config
+        minor_radius, major_radius = radii
+
+        if self.configuration == "single-null" or \
+           self.configuration == "double-null":
+            # no X points for non-null config
+            lower_x_point = (
+                1-(1+shift)*triangularity*minor_radius,
+                (1+shift)*elongation*minor_radius
+            )
+
+            if self.configuration == "double-null":
+                # upper_x_point is up-down symmetrical
+                upper_x_point = (
+                    lower_x_point[0],
+                    -lower_x_point[1]
+                )
+        return lower_x_point, upper_x_point
 
     def find_points(self):
         """Finds the XZ points that describe the 2D profile of the plasma.
