@@ -105,6 +105,13 @@ class test_object_properties(unittest.TestCase):
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
 
+    def test_export_stp(self):
+
+        test_shape = Shape()
+        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        test_shape.export_stp("tests/test.stp")
+        test_shape.export_stp()
+
     def test_export_stl(self):
 
         test_shape = Shape()
