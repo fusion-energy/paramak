@@ -11,7 +11,7 @@ setuptools.setup(
     description="Create 3D fusion reactor CAD models based on input parameters",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/shimwell/paramak",
+    url="https://github.com/ukaea/paramak",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -21,7 +21,6 @@ setuptools.setup(
     setup_requires=["pytest-runner"],
     tests_require=["pytest-cov",],
     install_requires=[
-        "pytest-cov",
         "pyglet",
         "plotly",
         "scipy",
