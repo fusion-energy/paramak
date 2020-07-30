@@ -86,10 +86,10 @@ class ITERtypeDivertor(RotateMixedShape):
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'hash_value':None}
+        default_dict = {'points': None,
+                        'workplane': "XZ",
+                        'solid': None,
+                        'hash_value': None}
 
         for arg in kwargs:
             if arg in default_dict:
