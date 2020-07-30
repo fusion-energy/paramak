@@ -69,6 +69,8 @@ Once these properties have been set users can write 3D volumes in CAD STP or STL
 
 `my_shape.export_stl('example.stl')`
 
+<p align="center"><img src="https://user-images.githubusercontent.com/56687624/88935761-ff0ae000-d279-11ea-8848-de9b486840d9.png" height="300"></p>
+
 
 ## Usage - Parametric Components
 
@@ -80,6 +82,8 @@ Parametric components are wrapped versions of the eight basic shapes where param
 `my_plasma = Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)`
 
 `my_plasma.export_stp('plasma.stp')`
+
+<p align="center"><img src="https://user-images.githubusercontent.com/56687624/88935871-1ea20880-d27a-11ea-82e1-1afa55ff9ba8.png" height="300"></p>
 
 
 ## Usage - Reactor object
@@ -94,9 +98,9 @@ Initiate a Reactor object and pass a list of all Shape objects to the shapes_and
 
 `my_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])`
 
-A 3D rendering of the combined Shapes can be created.
+<!-- A 3D rendering of the combined Shapes can be created. -->
 
-`my_reactor.export_3d_image('reactor.png')`
+<!-- `my_reactor.export_3d_image('reactor.png')` -->
 
 A html graph of the combined Shapes can be created.
 
