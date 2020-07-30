@@ -77,6 +77,20 @@ class test_object_properties(unittest.TestCase):
         assert Path("filename.png").exists() is True
         os.system("rm filename.png")
 
+    def test_export_3d_image(self):
+        """checks that export_3d_image() exports png files with the \
+                correct suffix"""
+
+        test_shape = Shape()
+        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        os.system("rm filename.png")
+        test_shape.export_2d_image("filename")
+        assert Path("filename.png").exists() is True
+        os.system("rm filename.png")
+        test_shape.export_2d_image("filename.png")
+        assert Path("filename.png").exists() is True
+        os.system("rm filename.png")
+
     def test_export_html_filename(self):
         """checks that export_html() exports html files with the \
                 correct suffix"""
