@@ -9,21 +9,23 @@ class ITERtypeDivertor(RotateMixedShape):
     dome
 
     Args:
-        anchors ((float, float), (float, float)): xy coordinates of points at
-            the top of vertical targets.
+        anchors ((float, float), (float, float), optional): xy coordinates of
+            points at the top of vertical targets.
             Defaults to ((450, -300), (561, -367)).
-        coverages (float, float): coverages (anticlockwise) in degrees of the
-            circular parts of vertical targets. Defaults to (90, 180).
-        radii (float, float): radii (cm) of circular parts of the vertical
-            targets. Defaults to (50, 25).
-        lengths (float, float): leg length (cm) of the vertical targets.
-            Defaults to (78, 87).
+        coverages ((float, float), optional): coverages (anticlockwise) in
+            degrees of the circular parts of vertical targets.
+            Defaults to (90, 180).
+        radii ((float, float), optional): radii (cm) of circular parts of the
+            vertical targets. Defaults to (50, 25).
+        lengths ((float, float), optional): leg length (cm) of the vertical
+            targets. Defaults to (78, 87).
         dome (bool, optional): If set to False, the dome will not be created.
             Defaults to True.
-        dome_height (float): distance (cm) between the dome base and lower
-            points. Defaults to 43.
-        dome_length (float): length of the dome. Defaults to 66.
-        dome_thickness (float): thickness of the dome. Defaults to 10.
+        dome_height (float, optional): distance (cm) between the dome base and
+            lower points. Defaults to 43.
+        dome_length (float, optional): length of the dome. Defaults to 66.
+        dome_thickness (float, optional): thickness of the dome.
+            Defaults to 10.
         dome_pos (float, optional): relative location of the dome between
             vertical targets (0 inner, 1 outer). Ex: 0.5 will place the dome
             in between the targets. Defaults to 0.5.
@@ -32,26 +34,33 @@ class ITERtypeDivertor(RotateMixedShape):
         Others: see paramak.RotateMixedShape() arguments.
 
     Attributes:
-        anchors ((float, float), (float, float)): xy coordinates of points at
-            the top of vertical targets.
-            Defaults to ((450, -300), (561, -367)).
-        coverages (float, float): coverages (anticlockwise) in degrees of the
-            circular parts of vertical targets. Defaults to (90, 180).
-        radii (float, float): radii (cm) of circular parts of the vertical
-            targets. Defaults to (50, 25).
-        lengths (float, float): leg length (cm) of the vertical targets.
-            Defaults to (78, 87).
-        dome (bool, optional): If set to False, the dome will not be created.
-            Defaults to True.
+        IVT_anchor (float, float): xy coordinates of points at
+            the top of inner vertical target.
+        OVT_anchor (float, float): xy coordinates of points at
+            the top of outer vertical target.
+        IVT_coverage (float): coverage (anticlockwise) in degrees of the
+            circular parts of inner vertical target.
+        OVT_coverage (float): coverage (anticlockwise) in degrees of the
+            circular parts of outer vertical target.
+        IVT_radius (float): radius (cm) of circular part of the inner vertical
+            target.
+        OVT_radius (float): radius (cm) of circular part of the outer vertical
+            target.
+        IVT_length (float): leg length (cm) of the inner vertical target.
+        OVT_length (float): leg length (cm) of the outer vertical target.
+        IVT_tilt (float): Tilt angles (anticlockwise) in
+            degrees for the inner vertical target.
+        OVT_tilt (float): Tilt angles (anticlockwise) in
+            degrees for the outer vertical target.
+        dome (bool): If set to False, the dome will not be created.
         dome_height (float): distance (cm) between the dome base and lower
-            points. Defaults to 43.
-        dome_length (float): length of the dome. Defaults to 66.
-        dome_thickness (float): thickness of the dome. Defaults to 10.
-        dome_pos (float, optional): relative location of the dome between
+            points.
+        dome_length (float): length of the dome.
+        dome_thickness (float): thickness of the dome.
+        dome_pos (float): relative location of the dome between
             vertical targets (0 inner, 1 outer). Ex: 0.5 will place the dome
-            in between the targets. Defaults to 0.5.
-        tilts ((float, float), optional): Tilt angles (anticlockwise) in
-            degrees for the vertical targets. Defaults to (-27, 0).
+            in between the targets.
+
         Others: see paramak.RotateMixedShape() attributes.
     """
 
