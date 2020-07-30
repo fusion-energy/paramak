@@ -1,20 +1,39 @@
+
+# graph files produced with export_html
 *.html
-*.json
+
 *.pov
+
+# geometry files
 *.stp
 *.step
 *.stl
-rings_splines.json
-rings_straights.json
+
+# output files such as neutronics description files
+*.json
+
+# python files
 __pycache__/*
 __pycache__
 .cache/
 venv
 .eggs/
+paramak.egg-info/
+
+# test coverage files
 coverage.xml
 .coverage
-examples/output
-paramak.egg-info/
+
+# trelis journal files
 *.jou
+*.log
+
+# neutronics geometry files
 *.h5m
+
+# images of the model
 *.svg
+*.png
+
+# sphinx built documetation
+docs/build/
