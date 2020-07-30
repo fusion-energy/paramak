@@ -119,6 +119,22 @@ class ITERtypeDivertor(RotateMixedShape):
 
     def create_vertical_target_points(
             self, anchor, coverage, tilt, radius, length):
+        """Creates a list of points for a vertical target
+
+        Args:
+            anchor (float, float): xy coordinates of point at
+                the top of the vertical target.
+            coverage (float): coverages (anticlockwise) in degrees of the
+                circular part of the vertical target.
+            tilt (float): Tilt angle (anticlockwise) in
+                degrees for the vertical target.
+            radius (float): radius (cm) of circular part of the vertical
+                target.
+            length (float): leg length (cm) of the vertical target.
+
+        Returns:
+            list: list of x y coordinates
+        """
         points = []
         base_circle_inner = anchor[0] + radius, anchor[1]
         A = rotate(base_circle_inner, anchor, coverage)
