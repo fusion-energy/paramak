@@ -170,6 +170,11 @@ Once these properties have been set then users can write 3D volumes in CAD STP o
 
    my_shape.export_stl('example.stl')
 
+.. image:: https://user-images.githubusercontent.com/56687624/88935761-ff0ae000-d279-11ea-8848-de9b486840d9.png
+   :width: 350
+   :height: 300
+   :align: center
+
 Usage - Parametric Components
 -----------------------------
 
@@ -182,6 +187,11 @@ Parametric components are wrapped versions of the eight basic shapes where param
    my_plasma = Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
 
    my_plasma.export_stp('plasma.stp')
+
+.. image:: https://user-images.githubusercontent.com/56687624/88935871-1ea20880-d27a-11ea-82e1-1afa55ff9ba8.png
+   :width: 350
+   :height: 300
+   :align: center
 
 
 Usage - Reactor object
