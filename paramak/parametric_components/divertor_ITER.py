@@ -119,6 +119,22 @@ class ITERtypeDivertor(RotateMixedShape):
 
     def create_vertical_target_points(
             self, anchor, coverage, tilt, radius, length):
+        """Creates a list of points for a vertical target
+
+        Args:
+            anchor (float, float): xy coordinates of point at
+                the top of the vertical target.
+            coverage (float): coverages (anticlockwise) in degrees of the
+                circular part of the vertical target.
+            tilt (float): Tilt angle (anticlockwise) in
+                degrees for the vertical target.
+            radius (float): radius (cm) of circular part of the vertical
+                target.
+            length (float): leg length (cm) of the vertical target.
+
+        Returns:
+            list: list of x y coordinates
+        """
         points = []
         base_circle_inner = anchor[0] + radius, anchor[1]
         A = rotate(base_circle_inner, anchor, coverage)
@@ -140,6 +156,21 @@ class ITERtypeDivertor(RotateMixedShape):
 
     def create_dome_points(self, C, F, dome_length,
                            dome_height, dome_thickness, dome_pos):
+        """Creates a list of points for the dome alongside with their
+        connectivity
+
+        Args:
+            C (float, float): coordinate of inner end of the dome
+            F (float, float): coordinate of outer end of the dome
+            dome_length (float): dome length (cm)
+            dome_height (float): dome height (cm)
+            dome_thickness (float): dome thickness (cm)
+            dome_pos (float): position of the dome between the two ends.
+
+        Returns:
+            list: list of points with connectivity
+                ([[x, y, 'connection_type'], [...]])
+        """
         points = []
 
         dome_base = extend(C, F, dome_pos*distance_between_two_points(F, C))
@@ -168,6 +199,20 @@ class ITERtypeDivertor(RotateMixedShape):
         return points
 
     def create_casing_points(self, anchors, C, F, targets_lengths):
+        """Creates a list of points for the casing alongside with their
+        connectivity
+
+        Args:
+            anchors ((float, float), (float, float)): xy coordinates of points
+                at the top of vertical targets.
+            C (float, float): coordinate of inner end of the dome
+            F (float, float): coordinate of outer end of the dome
+            targets_lengths (float, float): leg lengths of the vertical targets
+
+        Returns:
+            list: list of points with connectivity
+                ([[x, y, 'connection_type'], [...]])
+        """
         B, G = anchors
         h1, h2 = targets_lengths
         points = []
@@ -186,6 +231,9 @@ class ITERtypeDivertor(RotateMixedShape):
         return points
 
     def find_points(self):
+        """Finds the XZ points and connection types (straight and circle) that
+        describe the 2D profile of the ITER-like divertor
+        """
 
         # IVT points
         IVT_points = self.create_vertical_target_points(
