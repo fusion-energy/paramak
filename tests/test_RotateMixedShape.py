@@ -7,6 +7,7 @@ from paramak import RotateMixedShape
 import os
 from pathlib import Path
 
+
 class test_object_properties(unittest.TestCase):
     def test_absolute_shape_volume(self):
         """creates a rotated shape using straight and spline connections and \
