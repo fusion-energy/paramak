@@ -14,6 +14,7 @@ from .parametric_shapes.rotate_circle_shape import RotateCircleShape
 
 
 from .parametric_components.tokamak_plasma import Plasma
+from .parametric_components.tokamak_plasma_from_points import PlasmaFromPoints
 
 from .parametric_components.blanket_constant_thickness_arc_h import (
     BlanketConstantThicknessArcH,
