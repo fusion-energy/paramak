@@ -351,7 +351,10 @@ class test_object_properties(unittest.TestCase):
 
         assert Path("test_html.html").exists() is True
         os.system("rm test_html.html")
+        test_reactor.export_html(filename="test_html")
 
+        assert Path("test_html.html").exists() is True
+        os.system("rm test_html.html")
 
 if __name__ == "__main__":
     unittest.main()
