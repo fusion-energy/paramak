@@ -4,7 +4,6 @@ import unittest
 from pathlib import Path
 
 import pytest
-
 from paramak import Shape
 
 # test command
@@ -77,19 +76,6 @@ class test_object_properties(unittest.TestCase):
         assert Path("filename.png").exists() is True
         os.system("rm filename.png")
 
-    def test_export_html_filename(self):
-        """checks that export_html() exports html files with the \
-                correct suffix"""
-
-        test_shape = Shape()
-        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
-        os.system("rm filename.html")
-        test_shape.export_html("filename")
-        assert Path("filename.html").exists() is True
-        os.system("rm filename.html")
-        test_shape.export_html("filename.html")
-        assert Path("filename.html").exists() is True
-        os.system("rm filename.html")
 
 if __name__ == "__main__":
     unittest.main()
