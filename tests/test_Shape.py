@@ -77,6 +77,20 @@ class test_object_properties(unittest.TestCase):
         assert Path("filename.png").exists() is True
         os.system("rm filename.png")
 
+    def test_export_3d_image(self):
+        """checks that export_3d_image() exports png files with the \
+                correct suffix"""
+
+        test_shape = Shape()
+        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        os.system("rm filename.png")
+        test_shape.export_2d_image("filename")
+        assert Path("filename.png").exists() is True
+        os.system("rm filename.png")
+        test_shape.export_2d_image("filename.png")
+        assert Path("filename.png").exists() is True
+        os.system("rm filename.png")
+
     def test_export_html_filename(self):
         """checks that export_html() exports html files with the \
                 correct suffix"""
@@ -90,6 +104,25 @@ class test_object_properties(unittest.TestCase):
         test_shape.export_html("filename.html")
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
+
+    def test_export_stp(self):
+
+        test_shape = Shape()
+        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        test_shape.export_stp("tests/test.stp")
+        test_shape.export_stp()
+
+    def test_export_stl(self):
+
+        test_shape = Shape()
+        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        test_shape.export_stl("tests/test.stl")
+
+    def test_create_render_mesh(self):
+
+        test_shape = Shape()
+        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
+        test_shape._create_render_mesh()
 
 if __name__ == "__main__":
     unittest.main()
