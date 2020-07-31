@@ -194,7 +194,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.volume > 10 * 10 * 10
 
     def test_export_3d_image(self):
-        """Tests the method test_export_3d_image
+        """Tests the method export_3d_image
         """
         test_shape = ExtrudeMixedShape(
             points=[
@@ -215,7 +215,7 @@ class test_object_properties(unittest.TestCase):
         os.system("rm tests/export_3D.png")
 
     def test_export_stp(self):
-        """Tests the method test_export_stp
+        """Tests the method export_stp
         """
         test_shape = ExtrudeMixedShape(
             points=[
@@ -238,7 +238,7 @@ class test_object_properties(unittest.TestCase):
         os.system("rm tests/test.stp")
 
     def test_export_stl(self):
-        """Tests the method test_export_stl
+        """Tests the method export_stl
         """
         test_shape = ExtrudeMixedShape(
             points=[
