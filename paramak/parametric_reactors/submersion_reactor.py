@@ -92,10 +92,8 @@ class SubmersionTokamak(paramak.Reactor):
         divertor_radial_thickness,
         tf_coil_poloidal_thickness,
         plasma_high_point,
-        plasma_gap_vertical_thickness,
         divertor_vertical_thickness,
-        blanket_vertical_thickness,
-        blanket_rear_wall_vertical_thickness,
+
         tf_coil_to_rear_blanket_vertical_gap,
         tf_coil_vertical_thickness,
         pf_coil_vertical_thicknesses,
@@ -123,10 +121,8 @@ class SubmersionTokamak(paramak.Reactor):
         self.divertor_radial_thickness = divertor_radial_thickness
         self.tf_coil_poloidal_thickness = tf_coil_poloidal_thickness
         self.plasma_high_point = plasma_high_point
-        self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
         self.divertor_vertical_thickness = divertor_vertical_thickness
-        self.blanket_vertical_thickness = blanket_vertical_thickness
-        self.blanket_rear_wall_vertical_thickness = blanket_rear_wall_vertical_thickness
+
         self.tf_coil_to_rear_blanket_vertical_gap = tf_coil_to_rear_blanket_vertical_gap
         self.tf_coil_vertical_thickness = tf_coil_vertical_thickness
         self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
@@ -139,10 +135,8 @@ class SubmersionTokamak(paramak.Reactor):
         self.elongation = None
         self.triangularity = None
 
-        # self.find_points()
         self.create_components()
 
-    # def find_points(self):
     def create_components(self):
 
         # this is the radial build sequence, where one componet stops and another starts
@@ -214,7 +208,7 @@ class SubmersionTokamak(paramak.Reactor):
         print(plasma_end_height)
 
         plasma_to_divertor_gap_start_height = plasma_end_height
-        plasma_to_divertor_gap_end_height = plasma_to_divertor_gap_start_height + self.plasma_gap_vertical_thickness
+        plasma_to_divertor_gap_end_height = plasma_to_divertor_gap_start_height + self.outboard_plasma_gap_radial_thickness
         print(plasma_to_divertor_gap_end_height)
 
         #the firstwall is cut by the divertor but uses the same control points
@@ -225,14 +219,20 @@ class SubmersionTokamak(paramak.Reactor):
         firstwall_end_height = firstwall_start_height + self.firstwall_radial_thickness
 
         blanket_start_height = firstwall_end_height
-        blanket_end_height = blanket_start_height + self.blanket_vertical_thickness
+        blanket_end_height = blanket_start_height + self.outboard_blanket_radial_thickness
 
         blanket_rear_wall_start_height = blanket_end_height
-        blanket_rear_wall_end_height = blanket_rear_wall_start_height + self.blanket_rear_wall_vertical_thickness
+        blanket_rear_wall_end_height = blanket_rear_wall_start_height + self.blanket_rear_wall_radial_thickness
 
+        # ToDo
         # self.tf_coil_to_rear_blanket_vertical_gap = tf_coil_to_rear_blanket_vertical_gap
         # self.tf_coil_vertical_thickness = tf_coil_vertical_thickness
 
+        #ToDo, return error warning
+        if self.plasma_high_point[0] < plasma_start_radius:
+            print('The first value in plasma high_point is too small, it should be larger than',plasma_start_radius)
+        if self.plasma_high_point[0] > plasma_end_radius:
+            print('The first value in plasma high_point is too large, it should be smaller than',plasma_end_radius)
 
         shapes_or_components = []
 
@@ -242,7 +242,6 @@ class SubmersionTokamak(paramak.Reactor):
             inner_radius=inboard_tf_coils_start_radius,
             outer_radius=inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
-            # color=centre_column_color,
             stp_filename="inboard_tf_coils.stp",
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
@@ -254,44 +253,12 @@ class SubmersionTokamak(paramak.Reactor):
             inner_radius=center_column_shield_start_radius,
             outer_radius=center_column_shield_end_radius,
             rotation_angle=self.rotation_angle,
-            # color=centre_column_color,
             stp_filename="center_column_shield.stp",
             name="center_column_shield",
             material_tag="center_column_shield_mat",
         )
         shapes_or_components.append(center_column_shield)
 
-        inboard_blanket = paramak.RotateMixedShape(
-            points=[(self.plasma_high_point[0],blanket_start_height,'circle'),
-                    (inboard_blanket_end_radius,0,'circle'),
-                    (self.plasma_high_point[0],-blanket_start_height,'straight'),
-                    (self.plasma_high_point[0],-blanket_end_height,'straight'),
-                    (inboard_blanket_start_radius,-blanket_end_height,'straight'),
-                    (inboard_blanket_start_radius,blanket_end_height,'straight'),
-                    (self.plasma_high_point[0],blanket_end_height,'straight')
-                    ],
-            rotation_angle=self.rotation_angle,
-            stp_filename='inboard_blanket.stp',
-            name='inboard_blanket',
-            material_tag='blanket_mat',
-            # cut=[divertor_lower_part, divertor_upper_part]
-        )
-        shapes_or_components.append(inboard_blanket)
-
-
-        inboard_firstwall = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(inboard_firstwall_start_radius, 0),
-            inner_upper_point=(self.plasma_high_point[0], -firstwall_end_height),
-            inner_lower_point=(self.plasma_high_point[0], +firstwall_end_height),
-            thickness=self.firstwall_radial_thickness,
-            rotation_angle=self.rotation_angle,
-            stp_filename='inboard_firstwall.stp',
-            name='inboard_firstwall',
-            material_tag='firstwall_mat',
-            # cut=[divertor_lower_part, divertor_upper_part]
-        )
-        shapes_or_components.append(inboard_firstwall)
-        print('plasma_end_radius',plasma_end_radius)
         plasma = paramak.PlasmaFromPoints(outer_equatorial_x_point=plasma_end_radius,
                                           inner_equatorial_x_point=plasma_start_radius,
                                           high_point=self.plasma_high_point,
@@ -299,36 +266,102 @@ class SubmersionTokamak(paramak.Reactor):
 
         shapes_or_components.append(plasma)
 
-        outboard_firstwall = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(outboard_firstwall_start_radius, 0),
-            inner_upper_point=(self.plasma_high_point[0], firstwall_start_height),
-            inner_lower_point=(self.plasma_high_point[0], -firstwall_start_height),
+        inboard_firstwall = paramak.BlanketConstantThicknessFP(
+            plasma=plasma,
+            offset_from_plasma=self.inner_plasma_gap_radial_thickness,
+            start_angle=90,
+            stop_angle=270,
+            thickness=self.firstwall_radial_thickness,
+            rotation_angle=self.rotation_angle,
+            stp_filename='inboard_firstwall.stp',
+            name='inboard_firstwall',
+            material_tag='firstwall_mat',
+        )
+        shapes_or_components.append(inboard_firstwall)
+
+        inboard_blanket = paramak.CenterColumnShieldCylinder(
+            height=blanket_end_height * 2,
+            inner_radius=inboard_blanket_start_radius,
+            outer_radius=max([item[0] for item in inboard_firstwall.points]),
+            rotation_angle=self.rotation_angle,
+            # color=centre_column_color,
+            stp_filename='inboard_blanket.stp',
+            name='inboard_blanket',
+            material_tag='blanket_mat',
+            cut=inboard_firstwall
+        )
+
+        # this takes a single solid from a compound of solids by finding the solid nearest to a point
+        inboard_blanket.solid = inboard_blanket.solid.solids(cq.selectors.NearestToPointSelector((0, 0, 0)))
+
+        shapes_or_components.append(inboard_blanket)
+
+        outboard_firstwall = paramak.BlanketConstantThicknessFP(
+            plasma=plasma,
+            offset_from_plasma=self.outboard_plasma_gap_radial_thickness,
+            start_angle=90,
+            stop_angle=-90,
             thickness=self.firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='outboard_firstwall.stp',
             name='outboard_firstwall',
             material_tag='firstwall_mat',
-            # cut=[divertor_lower_part, divertor_upper_part]
         )
-        shapes_or_components.append(outboard_firstwall)  
+        shapes_or_components.append(outboard_firstwall)
 
-        outboard_blanket = paramak.RotateMixedShape(
-            points=[(self.plasma_high_point[0],blanket_start_height,'circle'),
-                    (outboard_blanket_start_radius,0,'circle'),
-                    (self.plasma_high_point[0],-blanket_start_height,'straight'),
-                    (self.plasma_high_point[0],-blanket_end_height,'circle'),
-                    # (outboard_blanket_end_radius,-blanket_end_height,'circle'),
-                    (outboard_blanket_end_radius,0,'circle'),
-                    (self.plasma_high_point[0],blanket_end_height,'straight')
-                    ],
+        outboard_blanket = paramak.BlanketConstantThicknessFP(
+            plasma=plasma,
+            start_angle=90,
+            stop_angle=-90,
+            offset_from_plasma=self.outboard_plasma_gap_radial_thickness +
+                               self.firstwall_radial_thickness,
+            thickness = self.outboard_blanket_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='outboard_blanket.stp',
             name='outboard_blanket',
             material_tag='blanket_mat',
-            # cut=[divertor_lower_part, divertor_upper_part]
-        )
+        )         
         shapes_or_components.append(outboard_blanket)
 
-        self.shapes_and_components = shapes_or_components
+        outboard_rear_blanket_wall = paramak.BlanketConstantThicknessFP(
+            plasma=plasma,
+            start_angle=90,
+            stop_angle=-90,
+            offset_from_plasma=self.outboard_plasma_gap_radial_thickness +
+                               self.firstwall_radial_thickness +
+                               self.outboard_blanket_radial_thickness,
+            thickness = self.blanket_rear_wall_radial_thickness,
+            rotation_angle=self.rotation_angle,
+            stp_filename='outboard_rear_blanket_wall.stp',
+            name='outboard_rear_blanket_wall',
+            material_tag='rear_blanket_wall_mat',
+        )         
+        shapes_or_components.append(outboard_rear_blanket_wall)
 
-        #blanket_end_height
+        outboard_rear_blanket_wall2 = paramak.RotateStraightShape(
+            points=[(center_column_shield_end_radius, blanket_rear_wall_start_height),
+                    (center_column_shield_end_radius,blanket_rear_wall_end_height),
+                    (max([item[0] for item in inboard_firstwall.points]),blanket_rear_wall_end_height),
+                    (max([item[0] for item in inboard_firstwall.points]),blanket_rear_wall_start_height),
+            ],
+            rotation_angle=self.rotation_angle,
+            stp_filename='outboard_rear_blanket_wall2.stp',
+            name='outboard_rear_blanket_wall2',
+            material_tag='rear_blanket_wall_mat',
+        )
+        shapes_or_components.append(outboard_rear_blanket_wall2)
+
+        outboard_rear_blanket_wall3 = paramak.RotateStraightShape(
+            points=[(center_column_shield_end_radius, -blanket_rear_wall_start_height),
+                    (center_column_shield_end_radius,-blanket_rear_wall_end_height),
+                    (max([item[0] for item in inboard_firstwall.points]),-blanket_rear_wall_end_height),
+                    (max([item[0] for item in inboard_firstwall.points]),-blanket_rear_wall_start_height),
+            ],
+            rotation_angle=self.rotation_angle,
+            stp_filename='outboard_rear_blanket_wall3.stp',
+            name='outboard_rear_blanket_wall3',
+            material_tag='rear_blanket_wall_mat',
+        )
+        shapes_or_components.append(outboard_rear_blanket_wall3)
+
+        self.shapes_and_components = shapes_or_components
