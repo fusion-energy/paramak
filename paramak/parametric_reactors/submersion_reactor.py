@@ -210,7 +210,7 @@ class SubmersionTokamak(paramak.Reactor):
         #this is the vertical build sequence, componets build on each other in a similar manner to the radial build
 
         plasma_start_height = 0
-        plasma_end_height = plasma_start_height + self.plasma_high_point[0]
+        plasma_end_height = plasma_start_height + self.plasma_high_point[1]
         print(plasma_end_height)
 
         plasma_to_divertor_gap_start_height = plasma_end_height
@@ -291,7 +291,7 @@ class SubmersionTokamak(paramak.Reactor):
             # cut=[divertor_lower_part, divertor_upper_part]
         )
         shapes_or_components.append(inboard_firstwall)
-
+        print('plasma_end_radius',plasma_end_radius)
         plasma = paramak.PlasmaFromPoints(outer_equatorial_x_point=plasma_end_radius,
                                           inner_equatorial_x_point=plasma_start_radius,
                                           high_point=self.plasma_high_point,
