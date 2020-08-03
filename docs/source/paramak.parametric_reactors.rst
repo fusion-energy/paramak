@@ -31,6 +31,6 @@ SubmersionTokamak()
    :height: 490
    :align: center
 
-.. automodule:: paramak.parametric_reactors.SubmersionTokamak
+.. automodule:: paramak.parametric_reactors.submersion_reactor
    :members:
    :show-inheritance:

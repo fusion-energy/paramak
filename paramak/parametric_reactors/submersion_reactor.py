@@ -22,9 +22,10 @@ class SubmersionTokamak(paramak.Reactor):
     :center_column_shield_radial_thickness: the radial thickness
      of the center column shield (cm)
     :type center_column_shield_radial_thickness: float
-    :divertor_radial_thickness: the radial thickness of the divertor
-     (cm), this fills the gap between the center column shield and blanket
-    :type divertor_radial_thickness: float
+    :inboard_blanket_radial_thickness: the radial thickness of the first wall (cm)
+    :type inboard_blanket_radial_thickness: float
+    :firstwall_radial_thickness: the radial thickness of the first wall (cm)
+    :type firstwall_radial_thickness: float
     :inner_plasma_gap_radial_thickness: the radial thickness of the
      inboard gap between the plasma and the center column shield (cm)
     :type inner_plasma_gap_radial_thickness: float
@@ -34,37 +35,12 @@ class SubmersionTokamak(paramak.Reactor):
     :outer_plasma_gap_radial_thickness: the radial thickness of the
      outboard gap between the plasma and the firstwall (cm)
     :type outer_plasma_gap_radial_thickness: float
-    :firstwall_radial_thickness: the radial thickness of the first wall (cm)
-    :type firstwall_radial_thickness: float
-    :blanket_radial_thickness: the radial thickness of the blanket (cm)
+    :outboard_blanket_radial_thickness: the radial thickness of the blanket (cm)
     :type blanket_radial_thickness: float
-    :blanket_rear_wall_radial_thickness: the radial thickness of the rear wall
+    :outboard_blanket_rear_wall_radial_thickness: the radial thickness of the rear wall
      of the blanket (cm)
     :type blanket_rear_wall_radial_thickness: float
-    :elongation: the elongation of the plasma
-    :type elongation: float
-    :triangularity: the triangularity of the plasma
-    :type triangularity: float
-    :number_of_tf_coils: the number of tf coils
-    :type number_of_tf_coils: int
-    :pf_coil_to_rear_blanket_radial_gap: the radial distance between the rear
-     blanket and the closest poloidal field coil (optional)
-    :type pf_coil_to_rear_blanket_radial_gap: float
-    :pf_coil_radial_thicknesses: the radial thickness of each poloidal field
-     coil (optional)
-    :type pf_coil_radial_thicknesses: list of floats
-    :pf_coil_vertical_thicknesses: the vertical thickness of each poloidal
-     field coil (optional)
-    :type pf_coil_vertical_thicknesses: list of floats
-    :pf_coil_to_tf_coil_radial_gap: the radial distance between the rear of
-     the poloidal field coil and the toroidal field coil (optional)
-    :type pf_coil_to_tf_coil_radial_gap: float
-    :tf_coil_radial_thickness: the radial thickness of the toroidal field
-     coil (optional)
-    :type tf_coil_radial_thickness: float
-    :tf_coil_poloidal_thickness: the poloidal thickness of the toroidal field
-     coil (optional)
-    :type tf_coil_poloidal_thickness: float
+
     :rotation_angle: the angle of the sector that is desired
     :type rotation_angle: int
 
@@ -82,22 +58,23 @@ class SubmersionTokamak(paramak.Reactor):
         inner_plasma_gap_radial_thickness,
         plasma_radial_thickness,
         outboard_plasma_gap_radial_thickness,
-
         outboard_blanket_radial_thickness,
         blanket_rear_wall_radial_thickness,
         pf_coil_to_rear_blanket_radial_gap,
         pf_coil_radial_thicknesses,
         pf_coil_to_tf_coil_radial_gap,
         tf_coil_radial_thickness,
-        divertor_radial_thickness,
+        #ToDo add divertor
+        # divertor_radial_thickness,
         tf_coil_poloidal_thickness,
         plasma_high_point,
-        divertor_vertical_thickness,
-
-        tf_coil_to_rear_blanket_vertical_gap,
-        tf_coil_vertical_thickness,
-        pf_coil_vertical_thicknesses,
-        number_of_tf_coils,
+        #ToDo add divertor
+        # divertor_vertical_thickness,
+        # ToDo add pf and tf coils
+        # tf_coil_to_rear_blanket_vertical_gap,
+        # tf_coil_vertical_thickness,
+        # pf_coil_vertical_thicknesses,
+        # number_of_tf_coils,
         rotation_angle = 360,
     ):
 
@@ -118,14 +95,16 @@ class SubmersionTokamak(paramak.Reactor):
         self.pf_coil_radial_thicknesses = pf_coil_radial_thicknesses
         self.pf_coil_to_tf_coil_radial_gap = pf_coil_to_tf_coil_radial_gap
         self.tf_coil_radial_thickness = tf_coil_radial_thickness
-        self.divertor_radial_thickness = divertor_radial_thickness
+        #ToDo add divertor
+        # self.divertor_radial_thickness = divertor_radial_thickness
         self.tf_coil_poloidal_thickness = tf_coil_poloidal_thickness
         self.plasma_high_point = plasma_high_point
         self.divertor_vertical_thickness = divertor_vertical_thickness
 
-        self.tf_coil_to_rear_blanket_vertical_gap = tf_coil_to_rear_blanket_vertical_gap
-        self.tf_coil_vertical_thickness = tf_coil_vertical_thickness
-        self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
+        # ToDo add pf and tf coils
+        # self.tf_coil_to_rear_blanket_vertical_gap = tf_coil_to_rear_blanket_vertical_gap
+        # self.tf_coil_vertical_thickness = tf_coil_vertical_thickness
+        # self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
         self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
 
@@ -263,6 +242,11 @@ class SubmersionTokamak(paramak.Reactor):
                                           inner_equatorial_x_point=plasma_start_radius,
                                           high_point=self.plasma_high_point,
                                           rotation_angle=self.rotation_angle)
+
+        self.major_radius = plasma.major_radius
+        self.minor_radius = plasma.minor_radius
+        self.elongation = plasma.elongation
+        self.triangularity = plasma.triangularity
 
         shapes_or_components.append(plasma)
 
