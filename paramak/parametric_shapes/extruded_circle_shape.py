@@ -47,6 +47,7 @@ class ExtrudeCircleShape(Shape):
         color=None,
         azimuth_placement_angle=0,
         cut=None,
+        intersect=None,
         material_tag=None,
         name=None,
         hash_value=None,
@@ -63,6 +64,7 @@ class ExtrudeCircleShape(Shape):
         )
 
         self.cut = cut
+        self.intersect = intersect
         self.radius = radius
         self.distance = distance
         self.hash_value = hash_value
@@ -75,6 +77,14 @@ class ExtrudeCircleShape(Shape):
     @cut.setter
     def cut(self, cut):
         self._cut = cut
+
+    @property
+    def intersect(self):
+        return self._intersect
+
+    @intersect.setter
+    def intersect(self, value):
+        self._intersect = value
 
     @property
     def solid(self):
@@ -166,6 +176,10 @@ class ExtrudeCircleShape(Shape):
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
             solid = cut_solid(solid, self.cut)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.intersect is not None:
+            solid = intersect_solid(solid, self.intersect)
 
         self.solid = solid
 

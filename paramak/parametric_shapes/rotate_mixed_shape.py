@@ -39,6 +39,7 @@ class RotateMixedShape(Shape):
         solid=None,
         rotation_angle=360,
         cut=None,
+        intersect=None,
         hash_value=None,
     ):
 
@@ -53,6 +54,7 @@ class RotateMixedShape(Shape):
         )
 
         self.cut = cut
+        self.intersect = intersect
         self.rotation_angle = rotation_angle
         self.hash_value = hash_value
         self.solid = solid
@@ -64,6 +66,14 @@ class RotateMixedShape(Shape):
     @cut.setter
     def cut(self, value):
         self._cut = value
+
+    @property
+    def intersect(self):
+        return self._intersect
+
+    @intersect.setter
+    def intersect(self, value):
+        self._intersect = value
 
     @property
     def solid(self):
@@ -177,6 +187,10 @@ class RotateMixedShape(Shape):
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
             solid = cut_solid(solid, self.cut)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.intersect is not None:
+            solid = intersect_solid(solid, self.intersect)
 
         self.solid = solid
 

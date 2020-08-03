@@ -52,14 +52,16 @@ class Plasma(RotateSplineShape):
         color=None,
         rotation_angle=360,
         azimuth_placement_angle=0,
-        cut=None,
+        intersect=None,
         **kwargs
     ):
 
         default_dict = {'points':None,
                         'workplane':"XZ",
                         'solid':None,
-                        'hash_value':None
+                        'hash_value':None,
+                        'intersect':None,
+                        'cut':None
         }
 
         for arg in kwargs:
@@ -73,7 +75,6 @@ class Plasma(RotateSplineShape):
             stp_filename=stp_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
-            cut=cut,
             **default_dict
         )
 

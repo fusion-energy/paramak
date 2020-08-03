@@ -40,14 +40,16 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         azimuth_placement_angle=0,
         name=None,
         material_tag="outer_tf_coil_mat",
-        cut=None,
         **kwargs
     ):
 
         default_dict = {'points':None,
                         'workplane':"XZ",
                         'solid':None,
-                        'hash_value':None}
+                        'hash_value':None,
+                        'intersect':None,
+                        'cut':None
+        }
 
         for arg in kwargs:
             if arg in default_dict:
@@ -58,7 +60,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             stp_filename=stp_filename,
             color=color,
             azimuth_placement_angle=azimuth_placement_angle,
-            cut=cut,
             material_tag=material_tag,
             name=name,
             **default_dict

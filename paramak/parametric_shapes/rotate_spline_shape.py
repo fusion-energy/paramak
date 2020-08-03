@@ -53,6 +53,7 @@ class RotateSplineShape(Shape):
 
         self.cut = cut
         self.intersect = intersect
+        self.intersect = intersect
         self.rotation_angle = rotation_angle
         self.hash_value = hash_value
         self.solid = solid
@@ -156,6 +157,7 @@ class RotateSplineShape(Shape):
         if self.cut is not None:
             solid = cut_solid(solid, self.cut)
 
+        # If an intersect is provided then perform a boolean intersect
         if self.intersect is not None:
             solid = intersect_solid(solid, self.intersect)
 

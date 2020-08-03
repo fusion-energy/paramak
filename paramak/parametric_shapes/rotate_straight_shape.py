@@ -160,6 +160,7 @@ class RotateStraightShape(Shape):
         if self.cut is not None:
             solid = cut_solid(solid, self.cut)
 
+        # If an intersect is provided then perform a boolean intersect
         if self.intersect is not None:
             solid = intersect_solid(solid, self.intersect)
 
