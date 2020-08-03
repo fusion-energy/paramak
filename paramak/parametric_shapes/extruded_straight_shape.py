@@ -5,7 +5,7 @@ from hashlib import blake2b
 import cadquery as cq
 
 from paramak import Shape
-from paramak.utils import cut_solid
+from paramak.utils import cut_solid, intersect_solid
 
 
 class ExtrudeStraightShape(Shape):
