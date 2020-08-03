@@ -45,7 +45,7 @@ The different families of shapes that can be made with the Paramak are shown in 
 </p>
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/88866536-e57a8180-d202-11ea-8e3f-2662973c6f69.gif" width="550" height="200">
+<img src="https://user-images.githubusercontent.com/8583900/88866536-e57a8180-d202-11ea-8e3f-2662973c6f69.gif" width="800" height="300">
 </p>
 
 
