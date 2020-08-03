@@ -5,20 +5,6 @@ The Paramak python package allows rapid production of 3D CAD models of fusion re
 
 Features have been added to address particular needs and the software is by no means a finished product. Contributions are welcome. CadQuery functions provide the majority the features, and incorporating additional capabilities is straight forward for developers with Python knowledge.
 
-.. toctree::
-   :maxdepth: 1
-
-   paramak.parametric_shapes
-   paramak.parametric_components
-   paramak.parametric_reactors
-   paramak.core_modules
-   example_parametric_shapes
-   example_parametric_components
-   example_parametric_reactors
-   example_neutronics_simulations
-   tests
-   
-
 Prerequisites
 -------------
 
