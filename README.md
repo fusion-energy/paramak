@@ -21,7 +21,9 @@ Documentation can be found on [ReadTheDocs](https://paramak.readthedocs.io/en/la
 
 To install the Paramak you need to have [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), [Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and [Pip](https://anaconda.org/anaconda/pip). If you have these three dependancies already then you can install the Paramak using Pip:
 
-```pip install paramak```
+```python
+pip install paramak
+```
 
 Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/#prerequisites) can be found in the User's Guide.
 
@@ -58,16 +60,19 @@ There are a collection of Python scripts in the example folder that demonstrate 
 
 After importing the class the user then sets the points. By default, points should be a list of (x,z) points. In this case the points are connected with straight lines.
 
-`from paramak import RotateStraightShape`
+```python
+from paramak import RotateStraightShape
 
-`my_shape = RotateStraightShape(points = [(20,0), (20,100), (100,0)])` 
-
+my_shape = RotateStraightShape(points = [(20,0), (20,100), (100,0)])
+```
 
 Once these properties have been set users can write 3D volumes in CAD STP or STL formats.
 
-`my_shape.export_stp('example.stp')`
+```python
+my_shape.export_stp('example.stp')
 
-`my_shape.export_stl('example.stl')`
+my_shape.export_stl('example.stl')
+```
 
 <p align="center"><img src="https://user-images.githubusercontent.com/56687624/88935761-ff0ae000-d279-11ea-8848-de9b486840d9.png" height="300"></p>
 
@@ -76,12 +81,13 @@ Once these properties have been set users can write 3D volumes in CAD STP or STL
 
 Parametric components are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerous parametric components for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma. Users could also construct a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric component called Plasma can construct a plasma from more convenient parameters. Parametric components also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
 
+```python
+from paramak import Plasma
 
-`from paramak import Plasma`
+my_plasma = Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
 
-`my_plasma = Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)`
-
-`my_plasma.export_stp('plasma.stp')`
+my_plasma.export_stp('plasma.stp')
+```
 
 <p align="center"><img src="https://user-images.githubusercontent.com/56687624/88935871-1ea20880-d27a-11ea-82e1-1afa55ff9ba8.png" height="300"></p>
 
@@ -127,11 +133,15 @@ A reactor object provides a container object for all Shape objects created, and 
 
 Import the Reactor object.
 
-`from paramak import Reactor`
+```python
+from paramak import Reactor
+```
 
 Initiate a Reactor object and pass a list of all Shape objects to the shapes_and_components parameter.
 
-`my_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])`
+```python
+my_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])
+```
 
 <!-- A 3D rendering of the combined Shapes can be created. -->
 
@@ -139,44 +149,60 @@ Initiate a Reactor object and pass a list of all Shape objects to the shapes_and
 
 A html graph of the combined Shapes can be created.
 
-`my_reactor.export_html('reactor.html')`
+```python
+my_reactor.export_html('reactor.html')
+```
 
 
 ## Usage - Neutronics model creation
 
 First assign stp_filenames to each of the Shape objects that were created earlier on.
 
-`my_shape.stp_filename = 'my_shape.stp'`
+```python
+my_shape.stp_filename = 'my_shape.stp'
 
-`my_plasma.stp_filename = 'my_plasma.stp'`
+my_plasma.stp_filename = 'my_plasma.stp'
+```
 
 Then assign material_tags to each of the Shape objects.
 
-`my_shape.material_tag = 'steel'`
+```python
+my_shape.material_tag = 'steel'
 
-`my_plasma.material_tag = 'DT_plasma'`
+my_plasma.material_tag = 'DT_plasma'
+```
 
 Note - Tetrahedral meshes can also be assigned to Shape objects
 
 Now add the Shape objects to a freshly created reactor object.
 
-`new_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])`
+```python
+new_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])
+```
 
 The entire reactor can now be exported as step files. This also generates a DAGMC graveyard automatically.
 
-`my_reactor.export_stp()`
+```python
+my_reactor.export_stp()
+```
 
 A manifest.json file that contains all the step filenames and materials can now be created.
 
-`my_reactor.export_neutronics_description()`
+```python
+my_reactor.export_neutronics_description()
+```
 
 Once you step files and the neutronics description has been exported then [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in task 12 of the UKAEA openmc workshop which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py) and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal. You will need to have previously installed the [DAGMC plugin](https://github.com/svalinn/Trelis-plugin) for Trelis.
 
-`trelis make_faceteted_neutronics_model.py`
+```python
+trelis make_faceteted_neutronics_model.py
+```
 
 Alternatively, run this without the GUI in batch mode using:
 
-`trelis -batch -nographics make_faceteted_neutronics_model.py`
+```python
+trelis -batch -nographics make_faceteted_neutronics_model.py
+```
 
 This should export a h5m file for use in DAGMC.
 
