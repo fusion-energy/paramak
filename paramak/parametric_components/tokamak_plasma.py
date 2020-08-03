@@ -130,30 +130,34 @@ class Plasma(RotateSplineShape):
         return self._minor_radius
 
     @minor_radius.setter
-    def minor_radius(self, minor_radius):
-        if minor_radius > 2000 or minor_radius < 1:
+    def minor_radius(self, value):
+        if value > 2000 or value < 1:
             raise ValueError("minor_radius is out of range")
         else:
-            self._minor_radius = minor_radius
+            self._minor_radius = value
 
     @property
     def major_radius(self):
         return self._major_radius
 
     @major_radius.setter
-    def major_radius(self, major_radius):
-        if major_radius > 2000 or major_radius < 1:
+    def major_radius(self, value):
+        if value > 2000 or value < 1:
             raise ValueError("major_radius is out of range")
         else:
-            self._major_radius = major_radius
+            self._major_radius = value
 
     @property
     def elongation(self):
         return self._elongation
 
     @elongation.setter
-    def elongation(self, elongation):
-        self._elongation = elongation
+    def elongation(self, value):
+        if value > 10 or value < 0:
+            raise ValueError("elongation is out of range")
+        else:
+            self._elongation = value
+
 
     def compute_x_points(self, radii, elongation, triangularity, shift):
         """Computes the location of X points based on plasma parameters and
