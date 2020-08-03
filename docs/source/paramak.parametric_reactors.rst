@@ -10,11 +10,27 @@ BallReactor()
    :width: 450
    :height: 450
    :align: center
-.. image:: https://user-images.githubusercontent.com/8583900/88866552-f1664380-d202-11ea-83ec-6891f2774e02.png
+.. image:: https://user-images.githubusercontent.com/8583900/89176602-bc028280-d581-11ea-8a16-dfc20833b8d9.png
    :width: 450
    :height: 490
    :align: center
 
 .. automodule:: paramak.parametric_reactors.ball_reactor
+   :members:
+   :show-inheritance:
+
+SubmersionTokamak()
+^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/89176534-a2613b00-d581-11ea-9ac1-528f13c56643.png
+   :width: 450
+   :height: 450
+   :align: center
+.. image:: https://user-images.githubusercontent.com/8583900/89176534-a2613b00-d581-11ea-9ac1-528f13c56643.png
+   :width: 450
+   :height: 490
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.SubmersionTokamak
    :members:
    :show-inheritance:

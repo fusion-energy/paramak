@@ -55,9 +55,38 @@ def main():
     my_reactor.name = 'BallReactor_with_pf_tf_coils'
     all_reactors.append(my_reactor)
 
+    my_reactor = paramak.SubmersionTokamak(
+        inner_bore_radial_thickness=25,
+        inboard_tf_leg_radial_thickness=50,
+        center_column_shield_radial_thickness=50,
+        inboard_blanket_radial_thickness=100,
+        firstwall_radial_thickness=50,
+        inner_plasma_gap_radial_thickness=70,
+        plasma_radial_thickness=300,
+        outboard_plasma_gap_radial_thickness=70,
+        outboard_blanket_radial_thickness=200,
+        blanket_rear_wall_radial_thickness=50,
+        pf_coil_to_rear_blanket_radial_gap=50,
+        pf_coil_radial_thicknesses=50,
+        pf_coil_to_tf_coil_radial_gap=50,
+        tf_coil_radial_thickness=50,
+        divertor_radial_thickness=50,
+        tf_coil_poloidal_thickness=50,
+        plasma_high_point=(50+50+50+100+50+50+100,350),
+        divertor_vertical_thickness=50,
+        tf_coil_to_rear_blanket_vertical_gap=50,
+        tf_coil_vertical_thickness=50,
+        pf_coil_vertical_thicknesses=50,
+        number_of_tf_coils=50,
+        rotation_angle=180
+)
+    my_reactor.name = 'SubmersionTokamak'
+    all_reactors.append(my_reactor)
+
+
     return all_reactors
 
 if __name__ == "__main__":
     all_reactors = main()
     for reactors in all_reactors:
-        reactors.export_stp()
+        reactors.export_stp(reactors.name)
