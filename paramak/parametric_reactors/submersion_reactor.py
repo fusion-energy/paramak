@@ -99,13 +99,13 @@ class SubmersionTokamak(paramak.Reactor):
         # self.divertor_radial_thickness = divertor_radial_thickness
         self.tf_coil_poloidal_thickness = tf_coil_poloidal_thickness
         self.plasma_high_point = plasma_high_point
-        self.divertor_vertical_thickness = divertor_vertical_thickness
+        # self.divertor_vertical_thickness = divertor_vertical_thickness
 
         # ToDo add pf and tf coils
         # self.tf_coil_to_rear_blanket_vertical_gap = tf_coil_to_rear_blanket_vertical_gap
         # self.tf_coil_vertical_thickness = tf_coil_vertical_thickness
         # self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
-        self.number_of_tf_coils = number_of_tf_coils
+        # self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
 
         # these are set later by the plasma when it is created
@@ -175,9 +175,9 @@ class SubmersionTokamak(paramak.Reactor):
         tf_coil_start_radius = pf_coil_to_tf_coil_gap_end_radius
         tf_coil_end_radius = tf_coil_start_radius + self.tf_coil_radial_thickness
 
-        # divertor is above the plasma x point
-        divertor_start_radius = self.plasma_high_point[0] - 0.5 * self.divertor_radial_thickness
-        divertor_end_radius = self.plasma_high_point[0] + 0.5 * self.divertor_radial_thickness
+        #ToDo divertor is above the plasma x point
+        # divertor_start_radius = self.plasma_high_point[0] - 0.5 * self.divertor_radial_thickness
+        # divertor_end_radius = self.plasma_high_point[0] + 0.5 * self.divertor_radial_thickness
 
 
         #this is the vertical build sequence, componets build on each other in a similar manner to the radial build
