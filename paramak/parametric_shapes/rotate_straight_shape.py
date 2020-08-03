@@ -1,10 +1,11 @@
+
 from collections import Iterable
+from hashlib import blake2b
 
 import cadquery as cq
 
 from paramak import Shape
-
-from hashlib import blake2b
+from paramak.utils import cut_solid
 
 
 class RotateStraightShape(Shape):
@@ -146,12 +147,8 @@ class RotateStraightShape(Shape):
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
-            # Allows for multiple cuts to be applied
-            if isinstance(self.cut, Iterable):
-                for cutting_solid in self.cut:
-                    solid = solid.cut(cutting_solid.solid)
-            else:
-                solid = solid.cut(self.cut.solid)
+            solid = cut_solid(solid, self.cut)
+
 
         self.solid = solid
 

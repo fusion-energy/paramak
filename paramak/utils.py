@@ -1,6 +1,26 @@
 import math
+from collections import Iterable
+
 import numpy as np
 
+
+def cut_solid(solid, cutter):
+    """
+    Performs a boolean cut of a solid with another solid or iterable of solids.
+    
+    Args:
+        solid Shape: the Shape that you want to cut from
+        cutter Shape: the Shape(s) that you want to be the cutting object
+    Returns:
+        Shape: the original shape cut with ther cutter shape(s)
+    """
+    # Allows for multiple cuts to be applied
+    if isinstance(cutter, Iterable):
+        for cutting_solid in cutter:
+            solid = solid.cut(cutting_solid.solid)
+    else:
+        solid = solid.cut(cutter.solid)
+    return solid
 
 def rotate(origin, point, angle):
     """
