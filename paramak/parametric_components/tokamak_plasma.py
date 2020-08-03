@@ -153,10 +153,7 @@ class Plasma(RotateSplineShape):
 
     @elongation.setter
     def elongation(self, elongation):
-        if elongation > 4 or elongation < 0:
-            raise ValueError("elongation is out of range")
-        else:
-            self._elongation = elongation
+        self._elongation = elongation
 
     def compute_x_points(self, radii, elongation, triangularity, shift):
         """Computes the location of X points based on plasma parameters and

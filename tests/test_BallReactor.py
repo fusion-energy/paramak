@@ -189,4 +189,3 @@ class test_BallReactor(unittest.TestCase):
         test_reactor.export_3d_image("tests/export_3D")
         assert Path("tests/export_3D.png").exists() is True
         os.system("rm tests/export_3D.png")
-
