@@ -92,10 +92,10 @@ Parametric Reactors are wrapped versions of a combination of parametric shapes a
 a submersion ball reactor. These allow full reactor models to be constructed by specifying a series of simple parameters. This example shows the construction of a simple ball reactor without the
 optional outer pf and tf coils.
 
-
-`from paramak import BallReactor`
-
 ```python
+
+from paramak import BallReactor
+
 my_reactor = BallReactor(
     inner_bore_radial_thickness = 50,
     inboard_tf_leg_radial_thickness = 50,
