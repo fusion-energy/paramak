@@ -5,7 +5,7 @@ from hashlib import blake2b
 import cadquery as cq
 
 from paramak import Shape
-from paramak.utils import cut_solid
+from paramak.utils import cut_solid, intersect_solid
 
 
 class RotateStraightShape(Shape):
@@ -41,6 +41,7 @@ class RotateStraightShape(Shape):
         solid=None,
         rotation_angle=360,
         cut=None,
+        intersect=None,
         hash_value=None,
     ):
 
@@ -55,6 +56,7 @@ class RotateStraightShape(Shape):
         )
 
         self.cut = cut
+        self.intersect = intersect
         self.rotation_angle = rotation_angle
         self.hash_value = hash_value
         self.solid = solid
@@ -66,6 +68,14 @@ class RotateStraightShape(Shape):
     @cut.setter
     def cut(self, value):
         self._cut = value
+
+    @property
+    def intersect(self):
+        return self._intersect
+
+    @intersect.setter
+    def intersect(self, value):
+        self._intersect = value
 
     @property
     def solid(self):
@@ -105,6 +115,7 @@ class RotateStraightShape(Shape):
             + str(self.azimuth_placement_angle).encode("utf-8")
             + str(self.rotation_angle).encode("utf-8")
             + str(self.cut).encode("utf-8")
+            + str(self.intersect).encode("utf-8")
         )
         value = hash_object.hexdigest()
         return value
@@ -149,6 +160,8 @@ class RotateStraightShape(Shape):
         if self.cut is not None:
             solid = cut_solid(solid, self.cut)
 
+        if self.intersect is not None:
+            solid = intersect_solid(solid, self.intersect)
 
         self.solid = solid
 
