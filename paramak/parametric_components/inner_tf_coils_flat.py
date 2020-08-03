@@ -36,7 +36,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     ):
 
         default_dict = {'points':None,
-                        'workplane':"XZ",
+                        'workplane':"XY",
                         'solid':None,
                         'hash_value':None,
                         'intersect':None,

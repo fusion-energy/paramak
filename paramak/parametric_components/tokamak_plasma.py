@@ -52,7 +52,6 @@ class Plasma(RotateSplineShape):
         color=None,
         rotation_angle=360,
         azimuth_placement_angle=0,
-        intersect=None,
         **kwargs
     ):
 

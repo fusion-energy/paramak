@@ -53,7 +53,6 @@ class RotateSplineShape(Shape):
 
         self.cut = cut
         self.intersect = intersect
-        self.intersect = intersect
         self.rotation_angle = rotation_angle
         self.hash_value = hash_value
         self.solid = solid
