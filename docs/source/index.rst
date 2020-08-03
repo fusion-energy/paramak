@@ -6,7 +6,7 @@ The Paramak python package allows rapid production of 3D CAD models of fusion re
 Features have been added to address particular needs and the software is by no means a finished product. Contributions are welcome. CadQuery functions provide the majority the features, and incorporating additional capabilities is straight forward for developers with Python knowledge.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    paramak.parametric_shapes
    paramak.parametric_components
@@ -193,6 +193,40 @@ Parametric components are wrapped versions of the eight basic shapes where param
    :height: 300
    :align: center
 
+Usage - Parametric Reactors
+---------------------------
+
+Parametric Reactors are wrapped versions of a combination of parametric shapes and components that comprise a particular reactor design. Some parametric reactors include a ball reactor and a submersion ball reactor. These allow full reactor models to be constructed by specifying a series of simple parameters. This example shows the construction of a simple ball reactor without the optional outer pf and tf coils.
+
+::
+
+   from paramak import BallReactor
+
+   my_reactor = paramak.BallReactor(
+      inner_bore_radial_thickness=50,
+      inboard_tf_leg_radial_thickness = 50,
+      center_column_shield_radial_thickness= 50,
+      divertor_radial_thickness = 100,
+      inner_plasma_gap_radial_thickness = 50,
+      plasma_radial_thickness = 200,
+      outer_plasma_gap_radial_thickness = 50,
+      firstwall_radial_thickness=50,
+      blanket_radial_thickness=100,
+      blanket_rear_wall_radial_thickness=50,
+      elongation=2,
+      triangularity=0.55,
+      number_of_tf_coils=16,
+      rotation_angle=180
+   )
+   
+   my_reactor.name = 'BallReactor'
+   
+   all_reactors.append(my_reactor)
+
+:: image:: https://user-images.githubusercontent.com/56687624/89203299-465fdc00-d5ac-11ea-8663-a5b7eecfb584.png
+   :width: 350
+   :height: 300
+   :align: center
 
 Usage - Reactor object
 ----------------------
