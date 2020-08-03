@@ -96,7 +96,7 @@ optional outer pf and tf coils.
 `from paramak import BallReactor`
 
 `my_reactor = BallReactor(`
-    `inner_bore_radial_thickness=50,`
+    `inner_bore_radial_thickness = 50,`
     `inboard_tf_leg_radial_thickness = 50,`
     `center_column_shield_radial_thickness= 50,`
     `divertor_radial_thickness = 100,`
