@@ -8,10 +8,9 @@ import paramak
 
 
 class SubmersionTokamak(paramak.Reactor):
-    """Creates geometry for a simple ball reactor including a plasma,
-    cylindical center column shielding, square toroidal field coils.
-    There is no inboard breeder blanket on this ball reactor like
-    most spherical reactors.
+    """Creates geometry for a simple submersion reactor including a
+    plasma, cylindical center column shielding, square toroidal field
+    coils. There is an inboard breeder blanket on this ball reactor.
 
     :param inner_bore_radial_thickness: the radial thickness of 
      the inner bore (cm)
