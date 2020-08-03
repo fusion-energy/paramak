@@ -157,9 +157,9 @@ After importing the class the user then sets the points. By default, points shou
 
 ::
 
-   from paramak import RotateStraightShape
+   import paramak
 
-   my_shape = RotatedStraightShape(points = [(20,0), (20,100), (100,0), (20,0)])
+   my_shape = paramak.RotateStraightShape(points = [(20,0), (20,100), (100,0)])
 
 Once these properties have been set then users can write 3D volumes in CAD STP or STL formats
 
@@ -181,9 +181,9 @@ Parametric components are wrapped versions of the eight basic shapes where param
 
 ::
 
-   from paramak import Plasma
+   import paramak
 
-   my_plasma = Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
+   my_plasma = paramak.Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
 
    my_plasma.export_stp('plasma.stp')
 
@@ -199,7 +199,7 @@ Parametric Reactors are wrapped versions of a combination of parametric shapes a
 
 ::
 
-   from paramak import BallReactor
+   import paramak
 
    my_reactor = paramak.BallReactor(
       inner_bore_radial_thickness = 50,
@@ -218,9 +218,7 @@ Parametric Reactors are wrapped versions of a combination of parametric shapes a
       rotation_angle = 180
    )
    
-   my_reactor.name = 'BallReactor'
-   
-   all_reactors.append(my_reactor)
+   my_reactor.export_stp()
 
 .. image:: https://user-images.githubusercontent.com/56687624/89203299-465fdc00-d5ac-11ea-8663-a5b7eecfb584.png
    :width: 350
@@ -236,13 +234,13 @@ Import the Reactor object.
 
 ::
 
-   from paramak import Reactor 
+   import paramak
 
 Initiate a Reactor object and pass a list of all Shape objects to the shapes_and_components parameter.
 
 ::
 
-   my_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])
+   my_reactor = paramak.Reactor(shapes_and_components = [my_shape, my_plasma])
 
 A 3D rendering of the combined Shapes can be created.
 
@@ -282,7 +280,7 @@ Now add the Shape objects to a freshly created reactor object.
 
 ::
 
-   new_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])
+   new_reactor = Reactor([my_shape, my_plasma])
 
 The entire reactor can now be exported as step files. This also generates a DAGMC graveyard automatically.
 
