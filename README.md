@@ -103,13 +103,13 @@ optional outer pf and tf coils.
     `inner_plasma_gap_radial_thickness = 50,`
     `plasma_radial_thickness = 200,`
     `outer_plasma_gap_radial_thickness = 50,`
-    `firstwall_radial_thickness=50,`
-    `blanket_radial_thickness=100,`
-    `blanket_rear_wall_radial_thickness=50,`
-    `elongation=2,`
-    `triangularity=0.55,`
-    `number_of_tf_coils=16,`
-    `rotation_angle=180`
+    `firstwall_radial_thickness = 50,`
+    `blanket_radial_thickness = 100,`
+    `blanket_rear_wall_radial_thickness = 50,`
+    `elongation = 2,`
+    `triangularity = 0.55,`
+    `number_of_tf_coils = 16,`
+    `rotation_angle = 180`
 `)`
 
 `my_reactor.name = 'BallReactor'`

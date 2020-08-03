@@ -202,20 +202,20 @@ Parametric Reactors are wrapped versions of a combination of parametric shapes a
    from paramak import BallReactor
 
    my_reactor = paramak.BallReactor(
-      inner_bore_radial_thickness=50,
+      inner_bore_radial_thickness = 50,
       inboard_tf_leg_radial_thickness = 50,
       center_column_shield_radial_thickness= 50,
       divertor_radial_thickness = 100,
       inner_plasma_gap_radial_thickness = 50,
       plasma_radial_thickness = 200,
       outer_plasma_gap_radial_thickness = 50,
-      firstwall_radial_thickness=50,
-      blanket_radial_thickness=100,
-      blanket_rear_wall_radial_thickness=50,
-      elongation=2,
-      triangularity=0.55,
-      number_of_tf_coils=16,
-      rotation_angle=180
+      firstwall_radial_thickness = 50,
+      blanket_radial_thickness = 100,
+      blanket_rear_wall_radial_thickness = 50,
+      elongation = 2,
+      triangularity = 0.55,
+      number_of_tf_coils = 16,
+      rotation_angle = 180
    )
    
    my_reactor.name = 'BallReactor'
