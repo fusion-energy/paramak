@@ -9,6 +9,27 @@ from pathlib import Path
 
 
 class test_object_properties(unittest.TestCase):
+
+    def test_union_volume_addition(self):
+        """ makes two volumes and then remakes the same two volumes as a
+        fused solid. Checks the volumes of these two options are the same.
+        """
+        inner_box = RotateMixedShape(points=[(100,100,'straight'),(100,200,'straight'),
+                                                (200,200,'straight'), (200,100,'straight')],
+                                                rotation_angle=20)
+
+        outer_box = RotateMixedShape(points=[(200,100,'straight'),(200,200,'straight'),
+                                                (500,200,'straight'), (500,100,'straight')],
+                                                rotation_angle=20)
+
+        outer_box_and_inner_box = RotateMixedShape(
+            points=[(200,100,'straight'),(200,200,'straight'),
+                    (500,200,'straight'), (500,100,'straight')],
+            rotation_angle=20, union=inner_box)
+
+        assert inner_box.volume + outer_box.volume == pytest.approx(outer_box_and_inner_box.volume)
+        
+
     def test_absolute_shape_volume(self):
         """creates a rotated shape using straight and spline connections and \
                 checks the volume is correct"""

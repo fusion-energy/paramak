@@ -4,7 +4,7 @@ from hashlib import blake2b
 import cadquery as cq
 
 from paramak import Shape
-from paramak.utils import cut_solid, intersect_solid
+from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class ExtrudeSplineShape(Shape):
@@ -43,6 +43,7 @@ class ExtrudeSplineShape(Shape):
         azimuth_placement_angle=0,
         cut=None,
         intersect=None,
+        union=None,
         material_tag=None,
         name=None,
         hash_value=None,
@@ -60,6 +61,7 @@ class ExtrudeSplineShape(Shape):
 
         self.cut = cut
         self.intersect = intersect
+        self.union = union
         self.distance = distance
         self.hash_value = hash_value
         self.solid = solid
@@ -79,6 +81,14 @@ class ExtrudeSplineShape(Shape):
     @intersect.setter
     def intersect(self, value):
         self._intersect = value
+
+    @property
+    def union(self):
+        return self._union
+
+    @union.setter
+    def union(self, value):
+        self._union = value
 
     @property
     def solid(self):
@@ -165,6 +175,10 @@ class ExtrudeSplineShape(Shape):
         # If an intersect is provided then perform a boolean intersect
         if self.intersect is not None:
             solid = intersect_solid(solid, self.intersect)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.union is not None:
+            solid = union_solid(solid, self.union)
 
         self.solid = solid
 

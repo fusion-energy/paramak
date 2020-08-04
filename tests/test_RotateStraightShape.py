@@ -9,6 +9,26 @@ from paramak import RotateStraightShape
 
 
 class test_object_properties(unittest.TestCase):
+
+    def test_union_volume_addition(self):
+        """ makes two volumes and then remakes the same two volumes as a
+        fused solid. Checks the volumes of these two options are the same.
+        """
+        inner_box = RotateStraightShape(points=[(100,100),(100,200),
+                                                (200,200), (200,100)],
+                                                rotation_angle=20)
+
+        outer_box = RotateStraightShape(points=[(200,100),(200,200),
+                                                (500,200), (500,100)],
+                                                rotation_angle=20)
+
+        outer_box_and_inner_box = RotateStraightShape(
+            points=[(200,100),(200,200),
+                    (500,200), (500,100)],
+            rotation_angle=20, union=inner_box)
+
+        assert inner_box.volume + outer_box.volume == pytest.approx(outer_box_and_inner_box.volume, rel=0.01)
+        
     def test_shape_rotation_angle_default(self):
         """"checks that the default rotation angle for a RotateStraightShape \
                 is 360 degrees"""

@@ -40,7 +40,8 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
                         'solid':None,
                         'hash_value':None,
                         'intersect':None,
-                        'cut':None
+                        'cut':None,
+                        'union':None
         }
 
         for arg in kwargs:
