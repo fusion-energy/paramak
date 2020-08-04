@@ -24,14 +24,16 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
         azimuth_placement_angle=0,
         name=None,
         material_tag="pf_coil_case_mat",
-        cut=None,
         **kwargs
     ):
 
         default_dict = {'points':None,
                         'workplane':"XZ",
                         'solid':None,
-                        'hash_value':None}
+                        'hash_value':None,
+                        'intersect':None,
+                        'cut':None
+        }
 
         for arg in kwargs:
             if arg in default_dict:
@@ -44,7 +46,6 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
             stp_filename=stp_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
-            cut=cut,
             **default_dict
         )
 

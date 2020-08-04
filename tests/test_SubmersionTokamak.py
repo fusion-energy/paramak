@@ -9,7 +9,7 @@ import paramak
 
 
 class test_SubmersionTokamak(unittest.TestCase):
-    def test_SubmersionTokamak_creation_with_extra_blanket_needed(self):
+    def test_SubmersionTokamak_creation_and_export(self):
         """creates blanket from parametric shape and checks a solid is created"""
 
         test_reactor = paramak.SubmersionTokamak(
@@ -20,15 +20,16 @@ class test_SubmersionTokamak(unittest.TestCase):
             firstwall_radial_thickness=50,
             inner_plasma_gap_radial_thickness=70,
             plasma_radial_thickness=300,
-            outboard_plasma_gap_radial_thickness=70,
+            divertor_radial_thickness=100,
+            outer_plasma_gap_radial_thickness=70,
             outboard_blanket_radial_thickness=200,
             blanket_rear_wall_radial_thickness=50,
-            pf_coil_to_rear_blanket_radial_gap=50,
-            pf_coil_radial_thicknesses=50,
-            pf_coil_to_tf_coil_radial_gap=50,
-            tf_coil_radial_thickness=50,
+            # pf_coil_to_rear_blanket_radial_gap=50,
+            # pf_coil_radial_thicknesses=50,
+            # pf_coil_to_tf_coil_radial_gap=50,
+            # tf_coil_radial_thickness=50,
             # divertor_radial_thickness=50,
-            tf_coil_poloidal_thickness=50,
+            # tf_coil_poloidal_thickness=50,
             plasma_high_point=(50+50+50+100+50+50+100,350),
             # divertor_vertical_thickness=50,
             # tf_coil_to_rear_blanket_vertical_gap=50,
@@ -40,7 +41,7 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         test_reactor.export_stp()
 
-        assert len(test_reactor.shapes_and_components) == 10
+        assert len(test_reactor.shapes_and_components) == 7
 
     def test_SubmersionTokamak_svg_creation(self):
         os.system("rm test_SubmersionTokamak_image.svg")
@@ -53,15 +54,16 @@ class test_SubmersionTokamak(unittest.TestCase):
             firstwall_radial_thickness=50,
             inner_plasma_gap_radial_thickness=70,
             plasma_radial_thickness=300,
-            outboard_plasma_gap_radial_thickness=70,
+            divertor_radial_thickness=100,
+            outer_plasma_gap_radial_thickness=70,
             outboard_blanket_radial_thickness=200,
             blanket_rear_wall_radial_thickness=50,
-            pf_coil_to_rear_blanket_radial_gap=50,
-            pf_coil_radial_thicknesses=50,
-            pf_coil_to_tf_coil_radial_gap=50,
-            tf_coil_radial_thickness=50,
+            # pf_coil_to_rear_blanket_radial_gap=50,
+            # pf_coil_radial_thicknesses=50,
+            # pf_coil_to_tf_coil_radial_gap=50,
+            # tf_coil_radial_thickness=50,
             # divertor_radial_thickness=50,
-            tf_coil_poloidal_thickness=50,
+            # tf_coil_poloidal_thickness=50,
             plasma_high_point=(50+50+50+100+50+50+100,350),
             # divertor_vertical_thickness=50,
             # tf_coil_to_rear_blanket_vertical_gap=50,

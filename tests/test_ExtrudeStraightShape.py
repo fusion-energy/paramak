@@ -7,6 +7,59 @@ from paramak import ExtrudeStraightShape
 
 
 class test_object_properties(unittest.TestCase):
+
+    def test_intersect_volume_2_shapes(self):
+        """creates two shapes with the second shape intersecting the first,
+            checks volume against calculated volume"""
+
+        test_shape1 = ExtrudeStraightShape(
+            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
+        )
+        test_shape = ExtrudeStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=30,
+            intersect=test_shape1
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25 )
+
+    def test_intersect_volume_3_shapes(self):
+        """creates three shapes with the second and third shape intersecting
+         the first, checks volume against calculated volume"""
+
+        test_shape1 = ExtrudeStraightShape(
+            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
+        )
+        test_shape2 = ExtrudeStraightShape(
+            points=[(0, 15), (0, 30), (30, 30), (30, 15)], distance=30
+        )
+        test_shape = ExtrudeStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=30,
+            intersect=[test_shape1, test_shape2]
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25 * 0.5)
+
+    def test_intersect_volume_3_extruded_shapes(self):
+        """creates three shapes with the second and third shape intersecting
+         the first, checks volume against calculated volume. Shapes differ
+         by their distance"""
+
+        test_shape1 = ExtrudeStraightShape(
+            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=10
+        )
+        test_shape2 = ExtrudeStraightShape(
+            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=3
+        )
+        test_shape = ExtrudeStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=30,
+            intersect=[test_shape1, test_shape2]
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25 * 0.1)
+
     def test_absolute_shape_volume(self):
         """creates an extruded shape with one placement angle using straight \
                 connections and checks the volume is correct"""

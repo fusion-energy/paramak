@@ -30,7 +30,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         stp_filename="InnerTfCoilsCircular.stp",
         color=None,
         azimuth_placement_angle=0,
-        cut=None,
         material_tag="inner_tf_coil_mat",
         name=None,
         **kwargs
@@ -39,7 +38,10 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         default_dict = {'points':None,
                         'workplane':"XY",
                         'solid':None,
-                        'hash_value':None}
+                        'hash_value':None,
+                        'intersect':None,
+                        'cut':None
+        }
 
         for arg in kwargs:
             if arg in default_dict:
@@ -50,7 +52,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             stp_filename=stp_filename,
             color=color,
             azimuth_placement_angle=azimuth_placement_angle,
-            cut=cut,
             material_tag=material_tag,
             name=name,
             **default_dict

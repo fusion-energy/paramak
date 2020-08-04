@@ -1,10 +1,10 @@
 from collections import Iterable
+from hashlib import blake2b
 
 import cadquery as cq
 
 from paramak import Shape
-
-from hashlib import blake2b
+from paramak.utils import cut_solid, intersect_solid
 
 
 class ExtrudeMixedShape(Shape):
@@ -44,6 +44,7 @@ class ExtrudeMixedShape(Shape):
         color=None,
         azimuth_placement_angle=0,
         cut=None,
+        intersect=None,
         material_tag=None,
         name=None,
         hash_value=None,
@@ -60,6 +61,7 @@ class ExtrudeMixedShape(Shape):
         )
 
         self.cut = cut
+        self.intersect = intersect
         self.distance = distance
         self.hash_value = hash_value
         self.solid = solid
@@ -71,6 +73,14 @@ class ExtrudeMixedShape(Shape):
     @cut.setter
     def cut(self, value):
         self._cut = value
+
+    @property
+    def intersect(self):
+        return self._intersect
+
+    @intersect.setter
+    def intersect(self, value):
+        self._intersect = value
 
     @property
     def solid(self):
@@ -185,12 +195,11 @@ class ExtrudeMixedShape(Shape):
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
-            # Allows for multiple cuts to be applied
-            if isinstance(self.cut, Iterable):
-                for cutting_solid in self.cut:
-                    solid = solid.cut(cutting_solid.solid)
-            else:
-                solid = solid.cut(self.cut.solid)
+            solid = cut_solid(solid, self.cut)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.intersect is not None:
+            solid = intersect_solid(solid, self.intersect)
 
         self.solid = solid
 
