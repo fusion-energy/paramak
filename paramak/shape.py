@@ -534,60 +534,6 @@ class Shape:
 
         return plt
 
-    def export_3d_image(self, filename, tolerance=0.001):
-        """Exports a 3d rendered image (png) of the reactor.
-        Components colored by their Shape.Color property.
-
-        Note: to make the reactor internals more visable consider
-        setting the Shape.rotation_angle to 180
-
-        :param filename: the filename of the saved png image
-        :type filename: str
-        :param tolerance: the tolerance of the mesh
-        :type tolerance: float
-
-        :return: a image object
-        :rtype: PIL image object
-        """
-
-        scene = pyrender.Scene(ambient_light=np.array([0.1, 0.1, 0.1, 1.0]))
-
-        if self.render_mesh is None:
-            scene.add(self._create_render_mesh(tolerance))
-
-        # sets the camera field of view (fov) and aspect ratio of the image
-        camera = pyrender.camera.PerspectiveCamera(
-            yfov=math.radians(90.0), aspectRatio=2.0
-        )
-        # sets the camera position using a matrix
-        c = 2 ** -0.5
-        camera_pose = np.array(
-            [[1, 0, 0, 0], [0, c, -c, -800], [0, c, c, 800], [0, 0, 0, 1]]
-        )
-        scene.add(camera, pose=camera_pose)
-
-        light = pyrender.DirectionalLight(color=[np.ones(3)], intensity=1.0)
-        scene.add(light, pose=camera_pose)
-
-        # Render the scene
-        renderer = pyrender.OffscreenRenderer(1000, 500)
-        colours, depth = renderer.render(scene)
-
-        image = Image.fromarray(colours, "RGB")
-
-        Pfilename = Path(filename)
-
-        if Pfilename.suffix != ".png":
-            Pfilename = Pfilename.with_suffix(".png")
-
-        Path(filename).parent.mkdir(parents=True, exist_ok=True)
-
-        image.save(Pfilename, "PNG")
-
-        print("\n saved 3d image to ", Pfilename)
-
-        return image
-
     def _create_patch(self):
         """Creates a matplotlib polygon patch from the Shape points.
         This is used when making 2d images of the Shape object.
