@@ -31,6 +31,7 @@ setuptools.setup(
         "matplotlib",
         "trimesh",
         "pyrender",
+        "plasmaboundaries",
         "uncertainties",
         "importlib_resources",
     ],

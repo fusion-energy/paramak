@@ -174,11 +174,59 @@ class test_Plasma(unittest.TestCase):
     def test_plasma_x_points(self):
         """Checks the location of the x point for various plasma configurations
         """
-        triangularity = -0.7
-        elongation = 1.6
-        minor_radius = 200
-        major_radius = 600
-        for triangularity, elongation, minor_radius, major_radius in zip(
+
+        for triangularity, elongation, minor_radius, major_radius, \
+                vertical_displacement in zip(
+                    [-0.7, 0, 0.5],  # triangularity
+                    [1, 1.5, 2],  # elongation
+                    [100, 200, 300],  # minor radius
+                    [300, 400, 600],  # major radius
+                    [0, -10, 5]):  # displacement
+
+            for config in ["non-null", "single-null", "double-null"]:
+
+                # Run
+                test_plasma = paramak.Plasma(
+                    configuration=config,
+                    triangularity=triangularity,
+                    elongation=elongation,
+                    minor_radius=minor_radius,
+                    major_radius=major_radius,
+                    vertical_displacement=vertical_displacement)
+
+                # Expected
+                expected_lower_x_point, expected_upper_x_point = None, None
+                if config == "single-null" or \
+                   config == "double-null":
+                    expected_lower_x_point = (
+                        1-(1+test_plasma.x_point_shift)*triangularity *
+                        minor_radius,
+                        -(1+test_plasma.x_point_shift)*elongation *
+                        minor_radius + vertical_displacement
+                    )
+
+                    if config == "double-null":
+                        expected_upper_x_point = (
+                            expected_lower_x_point[0],
+                            (1+test_plasma.x_point_shift)*elongation *
+                            minor_radius + vertical_displacement
+                        )
+
+                # Check
+                for point, expected_point in zip(
+                        [test_plasma.lower_x_point,
+                            test_plasma.upper_x_point],
+                        [expected_lower_x_point,
+                            expected_upper_x_point]):
+                    assert point == expected_point
+
+    def test_plasma_x_points_plasmaboundaries(self):
+        """Checks the location of the x point for various plasma configurations
+        for plasma from plasmaboundaries
+        """
+
+        for A, triangularity, elongation, minor_radius, major_radius in zip(
+                [0, 0.05, 0.05],  # A
                 [-0.7, 0, 0.5],  # triangularity
                 [1, 1.5, 2],  # elongation
                 [100, 200, 300],  # minor radius
@@ -187,8 +235,9 @@ class test_Plasma(unittest.TestCase):
             for config in ["non-null", "single-null", "double-null"]:
 
                 # Run
-                test_plasma = paramak.Plasma(
+                test_plasma = paramak.PlasmaBoundaries(
                     configuration=config,
+                    A=A,
                     triangularity=triangularity,
                     elongation=elongation,
                     minor_radius=minor_radius,
@@ -201,7 +250,7 @@ class test_Plasma(unittest.TestCase):
                     expected_lower_x_point = (
                         1-(1+test_plasma.x_point_shift)*triangularity *
                         minor_radius,
-                        (1+test_plasma.x_point_shift)*elongation *
+                        -(1+test_plasma.x_point_shift)*elongation *
                         minor_radius
                     )
 

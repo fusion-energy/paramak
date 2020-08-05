@@ -99,6 +99,27 @@ def make_plasma(major_radius, minor_radius, triangularity, elongation, name, col
     return plasma
 
 
+def make_plasma_plasmaboundaries(A, major_radius, minor_radius, triangularity,
+                                 elongation, name, color,
+                                 config='single-null'):
+    """Creates a plasma object from argument inputs"""
+
+    plasma = paramak.PlasmaBoundaries(
+                            A=A,
+                            major_radius=major_radius,
+                            minor_radius=minor_radius,
+                            triangularity=triangularity,
+                            elongation=elongation,
+                            configuration=config)
+    plasma.name = "plasma"
+    plasma.export_2d_image(name + ".png")
+    plasma.export_html(name + ".html")
+    plasma.export_stp(name + ".stp")
+    plasma.create_solid()
+
+    return plasma
+
+
 def main():
 
     ITER_plasma = make_plasma(
@@ -108,6 +129,16 @@ def main():
         triangularity=0.33,
         elongation=1.85,
         color="blue",
+    )
+
+    ITER_plasma_plasmaboundaries = make_plasma_plasmaboundaries(
+        name="ITER_plasma_plasmaboundaries",
+        A=-0.155,
+        major_radius=620,
+        minor_radius=210,
+        triangularity=0.33,
+        elongation=1.85,
+        color="orange",
     )
 
     EU_DEMO_plasma = make_plasma(
@@ -139,6 +170,7 @@ def main():
 
     fig = go.Figure()
     fig.add_traces(plot_plasma(plasma=ITER_plasma))
+    fig.add_traces(plot_plasma(plasma=ITER_plasma_plasmaboundaries))
     fig.add_traces(plot_plasma(plasma=EU_DEMO_plasma))
     fig.add_traces(plot_plasma(plasma=ST_plasma))
     fig.add_traces(plot_plasma(plasma=AST_plasma))

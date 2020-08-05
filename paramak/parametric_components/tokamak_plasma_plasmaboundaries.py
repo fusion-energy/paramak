@@ -3,23 +3,28 @@ from pathlib import Path
 
 import numpy as np
 import scipy
+from plasmaboundaries import get_separatrix_coordinates
 
-from paramak import RotateSplineShape
+from paramak import Plasma
 
 
-class Plasma(RotateSplineShape):
+class PlasmaBoundaries(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
-       by 4 shaping parameters.
+       by 5 shaping parameters using the plasmaboundaries package to calculate
+       points. For more details see:
+       http://github.com/RemiTheWarrior/plasma-boundaries
         Args:
+            A (float, optional): plasma parameter see plasmaboundaries doc.
+                Defaults to 0.05.
             elongation (float, optional): the elongation of the plasma.
                 Defaults to 2.0.
-            major_radius (int, optional): the major radius of the plasma (cm).
+            major_radius (float, optional): the major radius of the plasma (cm).
                 Defaults to 450.
-            minor_radius (int, optional): the minor radius of the plasma (cm).
+            minor_radius (float, optional): the minor radius of the plasma (cm).
                 Defaults to 150.
             triangularity (float, optional): the triangularity of the plasma.
                 Defaults to 0.55.
-            vertical_displacement (int, optional): the vertical_displacement
+            vertical_displacement (float, optional): the vertical_displacement
                 of the plasma (cm). Defaults to 0.
             num_points (int, optional): number of points to described the
                 shape. Defaults to 50.
@@ -31,33 +36,14 @@ class Plasma(RotateSplineShape):
             Others: see paramak.RotateSplineShape() arguments.
 
         Attributes:
-            elongation (float): the elongation of the plasma.
-            major_radius (int): the major radius of the plasma (cm).
-            minor_radius (int): the minor radius of the plasma (cm).
-            triangularity (float): the triangularity of the plasma.
-            vertical_displacement (int): the vertical_displacement
-                of the plasma (cm).
-            num_points (int): number of points to described the
-                shape.
-            configuration (str): plasma configuration
-                ("non-null", "single-null", "double-null").
-            x_point_shift (float): Shift parameters for locating the
-                X points in [0, 1].
-            outer_equatorial_point (float, float): coordinates for outer
-                equatorial point
-            inner_equatorial_point (float, float): coordinates for inner
-                equatorial point
-            high_point (float, float): coordinates for high point
-            low_point (float, float): coordinates for low point
-            lower_x_point (float, float): coordinates for lower x point (None
-                if doesn't exist)
-            upper_x_point (float, float): coordinates for upper x point (None
-                if doesn't exist)
-            Others: see paramak.RotateSplineShape() attributes.
+            A: plasma parameter see plasmaboundaries doc.
+            Others: see paramak.RotateSplineShape() and paramak.Plasma()
+                attributes.
     """
 
     def __init__(
         self,
+        A=0.05,
         elongation=2.0,
         major_radius=450,
         minor_radius=150,
@@ -80,8 +66,7 @@ class Plasma(RotateSplineShape):
                         'solid': None,
                         'hash_value': None,
                         'intersect': None,
-                        'cut': None,
-                        'union': None
+                        'cut': None
                         }
 
         for arg in kwargs:
@@ -99,6 +84,7 @@ class Plasma(RotateSplineShape):
         )
 
         # properties needed for plasma shapes
+        self.A = A
         self.elongation = elongation
         self.major_radius = major_radius
         self.minor_radius = minor_radius
@@ -175,60 +161,42 @@ class Plasma(RotateSplineShape):
         else:
             self._elongation = value
 
-    def compute_x_points(self):
-        """Computes the location of X points based on plasma parameters and
-         configuration
-
-        Returns:
-            ((float, float), (float, float)): lower and upper x points
-             coordinates. None if no x points
-        """
-        lower_x_point, upper_x_point = None, None  # non-null config
-        minor_radius, major_radius = self.minor_radius, self.major_radius
-        shift = self.x_point_shift
-        elongation = self.elongation
-        triangularity = self.triangularity
-        if self.configuration == "single-null" or \
-           self.configuration == "double-null":
-            # no X points for non-null config
-            lower_x_point = (
-                1-(1+shift)*triangularity*minor_radius,
-                -(1+shift)*elongation*minor_radius + self.vertical_displacement
-            )
-
-            if self.configuration == "double-null":
-                # upper_x_point is up-down symmetrical
-                upper_x_point = (
-                    lower_x_point[0],
-                    (1+shift)*elongation*minor_radius +
-                    self.vertical_displacement
-                )
-        return lower_x_point, upper_x_point
-
     def find_points(self):
         """Finds the XZ points that describe the 2D profile of the plasma.
         """
+        aspect_ratio = self.minor_radius/self.major_radius
+        params = {
+            "A": self.A,
+            "aspect_ratio": aspect_ratio,
+            "elongation": self.elongation,
+            "triangularity": self.triangularity
+        }
+        points = get_separatrix_coordinates(params, self.configuration)
+        # add vertical displacement
+        points[:, 1] += self.vertical_displacement
+        # rescale to cm
+        points[:] *= self.major_radius
 
-        # create array of angles theta
-        theta = np.linspace(0, 2*np.pi, num=self.num_points)
+        # remove unnecessary points
+        lower_x_point, upper_x_point = self.compute_x_points()
+        # if non-null these are the y bounds
+        lower_point_y = -self.elongation*self.minor_radius + \
+            self.vertical_displacement
+        upper_point_y = self.elongation*self.minor_radius + \
+            self.vertical_displacement
+        # else use x points
+        if self.configuration == "single-null" or \
+           self.configuration == "double-null":
+            lower_point_y = lower_x_point[1]
+            if self.configuration == "double-null":
+                upper_point_y = upper_x_point[1]
+        points2 = []
+        for p in points:
+            if p[1] >= lower_point_y and p[1] <= upper_point_y:
+                points2.append(p)
+        points = points2
 
-        # parametric equations for plasma
-        def R(theta):
-            return self.major_radius + self.minor_radius*np.cos(
-                theta + self.triangularity*np.sin(theta))
-
-        def Z(theta):
-            return self.elongation*self.minor_radius*np.sin(theta) + \
-                self.vertical_displacement
-
-        # R and Z coordinates
-        R_points, Z_points = R(theta), Z(theta)
-
-        # create a 2D array for points coordinates
-        points = np.stack((R_points, Z_points), axis=1)
-
-        # set self.points
-        self.points = list(points)
+        self.points = points
 
         # set the points of interest
         self.high_point = (
