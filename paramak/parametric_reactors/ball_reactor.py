@@ -172,11 +172,7 @@ class BallReactor(paramak.Reactor):
 
         #this is the vertical build sequence, componets build on each other in a similar manner to the radial build
 
-        divertor_start_height = plasma.high_point[1]+ self.outer_plasma_gap_radial_thickness
-        # make it the same hight as fw, blanket, rw
-        divertor_end_height = divertor_start_height + self.firstwall_radial_thickness + self.blanket_radial_thickness + self.blanket_rear_wall_radial_thickness
-
-        firstwall_start_height = divertor_start_height
+        firstwall_start_height = plasma.high_point[1]+ self.outer_plasma_gap_radial_thickness
         firstwall_end_height = firstwall_start_height + self.firstwall_radial_thickness
 
         blanket_start_height = firstwall_end_height
@@ -210,7 +206,7 @@ class BallReactor(paramak.Reactor):
                 tf_coil_start_radius = pf_coil_end_radius + self.pf_coil_to_rear_blanket_radial_gap 
                 tf_coil_end_radius = tf_coil_start_radius + self.outboard_tf_coil_radial_thickness
 
-
+        # makes a large cylinder that is used to cut the TF coils when the rotation angle is less than 360
         if self.rotation_angle < 360:
             max_high = 3 * center_column_shield_height
             max_width = 3 * blanket_read_wall_end_radius
@@ -226,7 +222,6 @@ class BallReactor(paramak.Reactor):
         else:
             cutting_slice=None
 
-        # shapes_or_components.append(inboard_tf_coils)
         inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=tf_coil_height * 2,
             inner_radius=inboard_tf_coils_start_radius,
@@ -251,191 +246,53 @@ class BallReactor(paramak.Reactor):
         )
         shapes_or_components.append(center_column_shield)
 
-        space_for_divertor = plasma.high_point[0] - center_column_shield_end_radius
+        extra_blanket_upper = paramak.RotateStraightShape(points=[
+            (center_column_shield_end_radius, blanket_start_height),
+            (center_column_shield_end_radius, blanket_end_height),
+            (plasma.high_point[0], blanket_end_height),
+            (plasma.high_point[0], blanket_start_height),
+            ],
+            rotation_angle=self.rotation_angle,)
 
-        #add blanket if the divertor doesn't take up all the space
-        if space_for_divertor > self.divertor_radial_thickness:
-            print('making extra blanket as there is space between the divertor and existing blanket')
-            extra_blanket_upper = paramak.RotateStraightShape(points=[
-                (divertor_end_radius, blanket_start_height),
-                (divertor_end_radius, blanket_end_height),
-                (plasma.high_point[0], blanket_end_height),
-                (plasma.high_point[0], blanket_start_height),
-                ],
-                rotation_angle=self.rotation_angle,
-                stp_filename='extra_blanket_upper.stp',
-                name='extra_blanket_upper',
-                material_tag='blanket_mat')
-            shapes_or_components.append(extra_blanket_upper)
+        extra_firstwall_upper = paramak.RotateStraightShape(points=[
+            (center_column_shield_end_radius, firstwall_start_height),
+            (center_column_shield_end_radius, firstwall_end_height),
+            (plasma.high_point[0], firstwall_end_height),
+            (plasma.high_point[0], firstwall_start_height),
+            ],
+            rotation_angle=self.rotation_angle,)
 
-            extra_firstwall_upper = paramak.RotateStraightShape(points=[
-                (divertor_end_radius, firstwall_start_height),
-                (divertor_end_radius, firstwall_end_height),
-                (plasma.high_point[0], firstwall_end_height),
-                (plasma.high_point[0], firstwall_start_height),
-                ],
-                rotation_angle=self.rotation_angle,
-                stp_filename='extra_firstwall_upper.stp',
-                name='extra_firstwall_upper',
-                material_tag='firstwall_mat')
-            shapes_or_components.append(extra_firstwall_upper)
+        extra_blanket_rear_wall_upper = paramak.RotateStraightShape(points=[
+            (center_column_shield_end_radius, blanket_rear_wall_start_height),
+            (center_column_shield_end_radius, blanket_rear_wall_end_height),
+            (plasma.high_point[0], blanket_rear_wall_end_height),
+            (plasma.high_point[0], blanket_rear_wall_start_height),
+            ],
+            rotation_angle=self.rotation_angle,)
 
-            extra_blanket_rear_wall_upper = paramak.RotateStraightShape(points=[
-                (divertor_end_radius, blanket_rear_wall_start_height),
-                (divertor_end_radius, blanket_rear_wall_end_height),
-                (plasma.high_point[0], blanket_rear_wall_end_height),
-                (plasma.high_point[0], blanket_rear_wall_start_height),
-                ],
-                rotation_angle=self.rotation_angle,
-                stp_filename='extra_blanket_rear_wall_upper.stp',
-                name='extra_blanket_rear_wall_upper',
-                material_tag='blanket_rear_wall_mat')
-            shapes_or_components.append(extra_blanket_rear_wall_upper)
+        extra_blanket_lower = paramak.RotateStraightShape(points=[
+            (center_column_shield_end_radius, -blanket_start_height),
+            (center_column_shield_end_radius, -blanket_end_height),
+            (plasma.high_point[0], -blanket_end_height),
+            (plasma.high_point[0], -blanket_start_height),
+            ],
+            rotation_angle=self.rotation_angle,)
 
-            extra_blanket_lower = paramak.RotateStraightShape(points=[
-                (divertor_end_radius, -blanket_start_height),
-                (divertor_end_radius, -blanket_end_height),
-                (plasma.high_point[0], -blanket_end_height),
-                (plasma.high_point[0], -blanket_start_height),
-                ],
-                rotation_angle=self.rotation_angle,
-                stp_filename='extra_blanket_lower.stp',
-                name='extra_blanket_lower',
-                material_tag='blanket_mat')
-            shapes_or_components.append(extra_blanket_lower)
+        extra_firstwall_lower = paramak.RotateStraightShape(points=[
+            (center_column_shield_end_radius, -firstwall_start_height),
+            (center_column_shield_end_radius, -firstwall_end_height),
+            (plasma.high_point[0], -firstwall_end_height),
+            (plasma.high_point[0], -firstwall_start_height),
+            ],
+            rotation_angle=self.rotation_angle,)
 
-            extra_firstwall_lower = paramak.RotateStraightShape(points=[
-                (divertor_end_radius, -firstwall_start_height),
-                (divertor_end_radius, -firstwall_end_height),
-                (plasma.high_point[0], -firstwall_end_height),
-                (plasma.high_point[0], -firstwall_start_height),
-                ],
-                rotation_angle=self.rotation_angle,
-                stp_filename='extra_firstwall_lower.stp',
-                name='extra_firstwall_lower',
-                material_tag='firstwall_mat')
-            shapes_or_components.append(extra_firstwall_lower)
-
-            extra_blanket_rear_wall_lower = paramak.RotateStraightShape(points=[
-                (divertor_end_radius, -blanket_rear_wall_start_height),
-                (divertor_end_radius, -blanket_rear_wall_end_height),
-                (plasma.high_point[0], -blanket_rear_wall_end_height),
-                (plasma.high_point[0], -blanket_rear_wall_start_height),
-                ],
-                rotation_angle=self.rotation_angle,
-                stp_filename='extra_blanket_rear_wall_lower.stp',
-                name='extra_blanket_rear_wall_lower',
-                material_tag='blanket_rear_wall_mat')
-            shapes_or_components.append(extra_blanket_rear_wall_lower)
-
-            divertor_upper_part = paramak.RotateStraightShape(points=[
-                (divertor_start_radius, divertor_end_height),
-                (divertor_start_radius, divertor_start_height),
-                (divertor_end_radius, divertor_start_height),
-                (divertor_end_radius, divertor_end_height),
-                ],
-                stp_filename='divertor_upper.stp',
-                name='divertor_upper',
-                rotation_angle=self.rotation_angle,
-                material_tag='divertor_mat'
-                )
-            shapes_or_components.append(divertor_upper_part)
-
-            # negative signs used as this is in the negative side of the Z axis 
-            divertor_lower_part = paramak.RotateStraightShape(points=[
-                (divertor_start_radius, -divertor_end_height),
-                (divertor_start_radius, -divertor_start_height),
-                (divertor_end_radius, -divertor_start_height),
-                (divertor_end_radius, -divertor_end_height),
-                ],
-                stp_filename='divertor_lower.stp',
-                name='divertor_lower',
-                rotation_angle=self.rotation_angle,
-                material_tag='divertor_mat'
-                )
-            shapes_or_components.append(divertor_lower_part)
-
-        # curve divertor arround if it is larger than the horitonal space provided
-        elif self.divertor_radial_thickness > space_for_divertor:
-
-            length_of_curved_section = self.divertor_radial_thickness - space_for_divertor
-
-            center_point, radius = paramak.utils.find_center_point_of_circle(point1=(firstwall_start_radius, 0),
-                                                      point2=(plasma.high_point[0], firstwall_start_height),
-                                                      point3=(plasma.low_point[0], -firstwall_start_height))
-
-            circumference = 2.*math.pi*radius
-
-            rotation_angle = (length_of_curved_section * 2 * math.pi) / circumference
-
-            new_point_x1, new_point_y1 = paramak.utils.rotate(center_point, (plasma.high_point[0], firstwall_start_height), -rotation_angle/2.)
-            new_point_x2, new_point_y2 = paramak.utils.rotate(center_point, (plasma.high_point[0], firstwall_start_height), -rotation_angle)
-            new_point_x3, new_point_y3 = paramak.utils.rotate(center_point, (plasma.high_point[0], blanket_rear_wall_end_height), -rotation_angle)
-            new_point_x4, new_point_y4 = paramak.utils.rotate(center_point, (plasma.high_point[0], blanket_rear_wall_end_height), -rotation_angle/2.)
-
-            divertor_upper_part = paramak.RotateMixedShape(points=[
-                (divertor_start_radius, divertor_end_height, 'straight'),
-                (divertor_start_radius, divertor_start_height, 'straight'),
-                (divertor_start_radius+space_for_divertor, divertor_start_height, 'circle'),
-                (new_point_x1, new_point_y1, 'circle'),
-                (new_point_x2, new_point_y2, 'straight'),
-                (new_point_x3, new_point_y3, 'circle'),
-                (new_point_x4, new_point_y4, 'circle'),
-                (divertor_start_radius+space_for_divertor, divertor_end_height, 'straight'),
-                ],
-                stp_filename='divertor_upper.stp',
-                name='divertor_upper',
-                rotation_angle=self.rotation_angle,
-                material_tag='divertor_mat'
-                )
-            shapes_or_components.append(divertor_upper_part)
-
-            # negative signs used as this is in the negative side of the Z axis 
-            divertor_lower_part = paramak.RotateMixedShape(points=[
-                (divertor_start_radius, -divertor_end_height, 'straight'),
-                (divertor_start_radius, -divertor_start_height, 'straight'),
-                (divertor_start_radius+space_for_divertor, -divertor_start_height, 'circle'),
-                (new_point_x1, -new_point_y1, 'circle'),
-                (new_point_x2, -new_point_y2, 'straight'),
-                (new_point_x3, -new_point_y3, 'circle'),
-                (new_point_x4, -new_point_y4, 'circle'),
-                (divertor_start_radius+space_for_divertor, -divertor_end_height, 'straight'),
-                ],
-                stp_filename='divertor_lower.stp',
-                name='divertor_lower',
-                rotation_angle=self.rotation_angle,
-                material_tag='divertor_mat'
-                )
-            shapes_or_components.append(divertor_lower_part)
-
-        elif self.divertor_radial_thickness == space_for_divertor:
-
-            divertor_upper_part = paramak.RotateMixedShape(points=[
-                (divertor_start_radius, divertor_end_height, 'straight'),
-                (divertor_start_radius, divertor_start_height, 'straight'),
-                (divertor_start_radius+space_for_divertor, divertor_start_height, 'straight'),
-                (divertor_start_radius+space_for_divertor, divertor_end_height, 'straight'),
-                ],
-                stp_filename='divertor_upper.stp',
-                name='divertor_upper',
-                rotation_angle=self.rotation_angle,
-                material_tag='divertor_mat'
-                )
-            shapes_or_components.append(divertor_upper_part)
-
-            # negative signs used as this is in the negative side of the Z axis 
-            divertor_lower_part = paramak.RotateMixedShape(points=[
-                (divertor_start_radius, -divertor_end_height, 'straight'),
-                (divertor_start_radius, -divertor_start_height, 'straight'),
-                (divertor_start_radius+space_for_divertor, -divertor_start_height, 'straight'),
-                (divertor_start_radius+space_for_divertor, -divertor_end_height, 'straight'),
-                ],
-                stp_filename='divertor_lower.stp',
-                name='divertor_lower',
-                rotation_angle=self.rotation_angle,
-                material_tag='divertor_mat'
-                )
-            shapes_or_components.append(divertor_lower_part)
+        extra_blanket_rear_wall_lower = paramak.RotateStraightShape(points=[
+            (center_column_shield_end_radius, -blanket_rear_wall_start_height),
+            (center_column_shield_end_radius, -blanket_rear_wall_end_height),
+            (plasma.high_point[0], -blanket_rear_wall_end_height),
+            (plasma.high_point[0], -blanket_rear_wall_start_height),
+            ],
+            rotation_angle=self.rotation_angle,)
 
         firstwall = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(firstwall_start_radius, 0),
@@ -446,9 +303,8 @@ class BallReactor(paramak.Reactor):
             stp_filename='firstwall.stp',
             name='firstwall',
             material_tag='firstwall_mat',
-            cut=[divertor_lower_part, divertor_upper_part]
+            union=[extra_firstwall_upper, extra_firstwall_lower]
         )
-        shapes_or_components.append(firstwall)
 
         blanket = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(blanket_start_radius, 0),
@@ -459,9 +315,8 @@ class BallReactor(paramak.Reactor):
             stp_filename='blanket.stp',
             name='blanket',
             material_tag='blanket_mat',
-            cut=[divertor_lower_part, divertor_upper_part]
+            union=[extra_blanket_upper, extra_blanket_lower]
         )
-        shapes_or_components.append(blanket)
 
         blanket_rear_casing = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(blanket_read_wall_start_radius, 0),
@@ -472,8 +327,37 @@ class BallReactor(paramak.Reactor):
             stp_filename='blanket_rear_wall.stp',
             name='blanket_rear_wall',
             material_tag='blanket_rear_wall_mat',
-            cut=[divertor_lower_part, divertor_upper_part]
+            union=[extra_blanket_rear_wall_upper, extra_blanket_rear_wall_lower]
         )
+
+        # used as an intersect when making the divertor
+        blanket_fw_rear_wall_envelope = paramak.BlanketConstantThicknessArcV(
+            inner_mid_point=(firstwall_start_radius, 0),
+            inner_upper_point=(plasma.high_point[0], firstwall_start_height),
+            inner_lower_point=(plasma.low_point[0], -firstwall_start_height),
+            thickness=self.firstwall_radial_thickness + self.blanket_radial_thickness + self.blanket_rear_wall_radial_thickness,
+            rotation_angle=self.rotation_angle,
+            union=[extra_blanket_upper, extra_firstwall_upper, extra_blanket_rear_wall_upper,
+                   extra_blanket_lower, extra_firstwall_lower, extra_blanket_rear_wall_lower],
+            stp_filename='test.stp'
+        )
+
+        divertor = paramak.CenterColumnShieldCylinder(
+            height=blanket_rear_wall_end_height*2,
+            inner_radius=divertor_start_radius,
+            outer_radius=divertor_end_radius,
+            intersect=blanket_fw_rear_wall_envelope,
+            stp_filename='divertor.stp',
+            name='divertor',
+            material_tag='divertor_mat',
+        )
+        shapes_or_components.append(divertor)
+
+        firstwall.solid = firstwall.solid.cut(divertor.solid)
+        blanket.solid = blanket.solid.cut(divertor.solid)
+        blanket_rear_casing.solid = blanket_rear_casing.solid.cut(divertor.solid)
+        shapes_or_components.append(firstwall)
+        shapes_or_components.append(blanket)
         shapes_or_components.append(blanket_rear_casing)
 
         if self.pf_coil_vertical_thicknesses!=None and self.pf_coil_radial_thicknesses !=None and self.pf_coil_to_rear_blanket_radial_gap !=None:
@@ -502,6 +386,9 @@ class BallReactor(paramak.Reactor):
                                                 thickness= self.outboard_tf_coil_radial_thickness,
                                                 number_of_coils=self.number_of_tf_coils,
                                                 distance=self.tf_coil_poloidal_thickness,
+                                                stp_filename='tf_coil.stp',
+                                                name='tf_coil',
+                                                material_tag='tf_coil_mat',
                                                 cut=cutting_slice)
 
                 shapes_or_components.append(tf_coil)

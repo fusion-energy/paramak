@@ -14,15 +14,9 @@ class test_object_properties(unittest.TestCase):
         output_filenames = ['plasma.stp',
             'inboard_tf_coils.stp',
             'center_column_shield.stp',
-            'divertor_upper.stp',
-            'divertor_lower.stp',
-            'extra_blanket_upper.stp',
-            'extra_firstwall_upper.stp',
-            'extra_blanket_rear_wall_upper.stp',
-            'extra_blanket_lower.stp',
-            'extra_firstwall_lower.stp',
-            'extra_blanket_rear_wall_lower.stp',
-            'firstwall.stp', 'blanket.stp',
+            'divertor.stp',
+            'firstwall.stp',
+            'blanket.stp',
             'blanket_rear_wall.stp',
             'Graveyard.stp']
         for output_filename in output_filenames:
