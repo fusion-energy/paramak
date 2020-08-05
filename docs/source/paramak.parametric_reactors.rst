@@ -18,7 +18,7 @@ The above image is colored by components, instead of by the type of Shape volume
    :height: 450
    :align: center
 
-The above image is colored by components with RotateStraightShape in red, ExtrudeStraightShape in orange, RotateSplineShape in purple, ExtrudeSplineShape in pink, RotateMixedShape in blue, ExtrudeMixedShape in green, RotateCircleShape in yellow and ExtrudeCircleShape in brown.
+The above image is colored by Shape type with RotateStraightShape in red, ExtrudeStraightShape in orange, RotateSplineShape in purple, ExtrudeSplineShape in pink, RotateMixedShape in blue, ExtrudeMixedShape in green, RotateCircleShape in yellow and ExtrudeCircleShape in brown.
 
 .. image:: https://user-images.githubusercontent.com/8583900/89176602-bc028280-d581-11ea-8a16-dfc20833b8d9.png
    :width: 450
