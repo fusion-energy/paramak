@@ -13,6 +13,9 @@ make_CAD_from_points.py
    :members:
    :show-inheritance:
 
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_shapes/make_CAD_from_points.py>`_
+
+
 make_blanket_from_points.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -24,6 +27,9 @@ make_blanket_from_points.py
 .. automodule:: examples.example_parametric_shapes.make_blanket_from_points
    :members:
    :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_shapes/make_blanket_from_points.py>`_
+
 
 make_blanket_from_parameters.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -37,6 +43,8 @@ make_blanket_from_parameters.py
    :members:
    :show-inheritance:
 
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_shapes/make_blanket_from_parameters.py>`_
+
 make_can_reactor_from_points.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -49,6 +57,9 @@ make_can_reactor_from_points.py
    :members:
    :show-inheritance:
 
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_shapes/make_can_reactor_from_points.py>`_
+
+
 make_can_reactor_from_parameters.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -60,3 +71,5 @@ make_can_reactor_from_parameters.py
 .. automodule:: examples.example_parametric_shapes.make_can_reactor_from_parameters
    :members:
    :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_shapes/make_can_reactor_from_parameters.py>`_
