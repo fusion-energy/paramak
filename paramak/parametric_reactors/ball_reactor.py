@@ -59,9 +59,9 @@ class BallReactor(paramak.Reactor):
     :pf_coil_to_tf_coil_radial_gap: the radial distance between the rear of
      the poloidal field coil and the toroidal field coil (optional)
     :type pf_coil_to_tf_coil_radial_gap: float
-    :tf_coil_radial_thickness: the radial thickness of the toroidal field
+    :outboard_tf_coil_radial_thickness: the radial thickness of the toroidal field
      coil (optional)
-    :type tf_coil_radial_thickness: float
+    :type outboard_tf_coil_radial_thickness: float
     :tf_coil_poloidal_thickness: the poloidal thickness of the toroidal field
      coil (optional)
     :type tf_coil_poloidal_thickness: float
@@ -91,7 +91,7 @@ class BallReactor(paramak.Reactor):
         pf_coil_radial_thicknesses = None,
         pf_coil_vertical_thicknesses = None,
         pf_coil_to_tf_coil_radial_gap = None,
-        tf_coil_radial_thickness = None,
+        outboard_tf_coil_radial_thickness = None,
         tf_coil_poloidal_thickness = None,
         rotation_angle = 360,
     ):
@@ -112,7 +112,7 @@ class BallReactor(paramak.Reactor):
         self.pf_coil_radial_thicknesses = pf_coil_radial_thicknesses
         self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
         self.pf_coil_to_tf_coil_radial_gap = pf_coil_to_tf_coil_radial_gap
-        self.tf_coil_radial_thickness = tf_coil_radial_thickness
+        self.outboard_tf_coil_radial_thickness = outboard_tf_coil_radial_thickness
         self.tf_coil_poloidal_thickness = tf_coil_poloidal_thickness
 
         # sets major raduis and minor radius from equatorial_points to allow a radial build
@@ -206,9 +206,9 @@ class BallReactor(paramak.Reactor):
             pf_coil_start_radius = blanket_read_wall_end_radius + self.pf_coil_to_rear_blanket_radial_gap
             pf_coil_end_radius = pf_coil_start_radius + max(self.pf_coil_radial_thicknesses)
         
-        if self.pf_coil_to_tf_coil_radial_gap !=None and self.tf_coil_radial_thickness !=None:
-            tf_coil_start_radius = pf_coil_end_radius + self.pf_coil_to_rear_blanket_radial_gap 
-            tf_coil_end_radius = tf_coil_start_radius + self.tf_coil_radial_thickness
+            if self.pf_coil_to_tf_coil_radial_gap !=None and self.outboard_tf_coil_radial_thickness !=None:
+                tf_coil_start_radius = pf_coil_end_radius + self.pf_coil_to_rear_blanket_radial_gap 
+                tf_coil_end_radius = tf_coil_start_radius + self.outboard_tf_coil_radial_thickness
 
 
         if self.rotation_angle < 360:
@@ -495,11 +495,11 @@ class BallReactor(paramak.Reactor):
                                                     material_tag='pf_coil_mat')
                 shapes_or_components.append(pf_coil)
         
-            if self.pf_coil_to_tf_coil_radial_gap !=None and self.tf_coil_radial_thickness !=None:
+            if self.pf_coil_to_tf_coil_radial_gap !=None and self.outboard_tf_coil_radial_thickness !=None:
                 tf_coil = paramak.ToroidalFieldCoilRectangle(inner_upper_point=(inboard_tf_coils_start_radius, tf_coil_height),
                                                 inner_lower_point=(inboard_tf_coils_start_radius, -tf_coil_height),
                                                 inner_mid_point=(tf_coil_start_radius, 0),
-                                                thickness= self.tf_coil_radial_thickness,
+                                                thickness= self.outboard_tf_coil_radial_thickness,
                                                 number_of_coils=self.number_of_tf_coils,
                                                 distance=self.tf_coil_poloidal_thickness,
                                                 cut=cutting_slice)
