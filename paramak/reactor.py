@@ -312,10 +312,63 @@ class Reactor:
 
         self.export_stl(tolerance=tolerance)
         material_dict = self.neutronics_description
-        print(material_dict())
 
-        ### code from gist goes here, but instead of opening a manifest.json file it uses the material_dict above
+        for item in manifest:
 
+            stl_filename = item['stl_filename']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            surface_set = mb.create_meshset()
+            volume_set = mb.create_meshset()
+
+            # recent versions of MOAB handle this automatically
+            # but best to go ahead and do it manually
+            mb.tag_set_data(tags['global_id'], volume_set, volume_id)
+            volume_id += 1
+            mb.tag_set_data(tags['global_id'], surface_set, surface_id)
+            surface_id += 1
+
+            # set geom IDs
+            mb.tag_set_data(tags['geom_dimension'], volume_set, 3)
+            mb.tag_set_data(tags['geom_dimension'], surface_set, 2)
+
+            # set category tag values
+            mb.tag_set_data(tags['category'], volume_set, "Volume")
+            mb.tag_set_data(tags['category'], surface_set, "Surface")
+
+            # establish parent-child relationship
+            mb.add_parent_child(volume_set, surface_set)
+
+            # set surface sense
+            sense_data = [volume_set, np.uint64(0)]
+            mb.tag_set_data(tags['surf_sense'], surface_set, sense_data)
+
+            # load the stl triangles/vertices into the surface set
+            mb.load_file(stl_filename, surface_set)
+
+            material_name = item['material']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            group_set = mb.create_meshset()
+            mb.tag_set_data(tags['category'], group_set, "Group")
+            print("mat:{}".format(material_name))
+            mb.tag_set_data(tags['name'], group_set, "mat:{}".format(material_name))
+            mb.tag_set_data(tags['geom_dimension'], group_set, 4)
+
+            # add the volume to this group set
+            mb.add_entity(group_set, volume_set)
+
+        all_sets = mb.get_entities_by_handle(0)
+
+        file_set = mb.create_meshset()
+
+        mb.add_entities(file_set, all_sets)
+
+        mb.write_file(filename)
 
         return filename
 
