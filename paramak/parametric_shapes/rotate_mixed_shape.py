@@ -42,16 +42,24 @@ class RotateMixedShape(Shape):
         intersect=None,
         union=None,
         hash_value=None,
+        **kwargs
     ):
 
+        default_dict = {'tet_mesh':None}
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
         super().__init__(
-            points,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            workplane,
+            points=points,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            workplane=workplane,
+            **default_dict
         )
 
         self.cut = cut
