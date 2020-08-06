@@ -66,13 +66,10 @@ class test_object_properties(unittest.TestCase):
         assert test_reactor.stp_filenames[1] == 'filename2.stp'
 
     def test_adding_shape_with_duplicate_stp_filename_to_reactor(self):
-        """creates a plasma object and checks elongation is type float"""
-
-        """adds a shape to the reactor and checks that the stp_filename
-        property works as designed"""
+        """creates reactor and addes to shapes with the same stp filename"""
 
         def test_stp_filename_duplication():
-            """checks ValueError is raised when an elongation < 0 is specified"""
+            """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 stp_filename='filename.stp')
@@ -81,14 +78,30 @@ class test_object_properties(unittest.TestCase):
                 stp_filename='filename.stp')
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            test_reactor = paramak.Reactor([test_shape, test_shape2])
+            paramak.Reactor([test_shape, test_shape2])
 
         self.assertRaises(ValueError, test_stp_filename_duplication)  
 
+    def test_adding_shape_with_duplicate_stl_filename_to_reactor(self):
+        """creates reactor and addes to shapes with the same stl filename"""
 
-        def test_stl_filename_duplication():
-            """checks ValueError is raised when an elongation < 0 is specified"""
+        def test_stl_filename_duplication_rotate_straight():
+            """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stl_filename='filename.stl')
+            test_shape2 = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stl_filename='filename.stl')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            paramak.Reactor([test_shape, test_shape2])
+
+        self.assertRaises(ValueError, test_stl_filename_duplication_rotate_straight)  
+
+        def test_stl_filename_duplication_rotate_spline():
+            """checks ValueError is raised when a duplicate filename is added"""
+            test_shape = paramak.RotateSplineShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 stl_filename='filename.stl')
             test_shape2 = paramak.RotateSplineShape(
@@ -96,9 +109,107 @@ class test_object_properties(unittest.TestCase):
                 stl_filename='filename.stl')
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            test_reactor = paramak.Reactor([test_shape, test_shape2])
+            paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stl_filename_duplication)  
+        self.assertRaises(ValueError, test_stl_filename_duplication_rotate_spline)  
+
+        def test_stl_filename_duplication_rotate_mixed():
+            """checks ValueError is raised when a duplicate filename is added"""
+            test_shape = paramak.RotateMixedShape(
+                points=[(0, 0, 'straight'), (0, 20, 'straight'), (20, 20, 'straight')],
+                stl_filename='filename.stl')
+            test_shape2 = paramak.RotateMixedShape(
+                points=[(0, 0, 'straight'), (0, 20, 'straight'), (20, 20, 'straight')],
+                stl_filename='filename.stl')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            paramak.Reactor([test_shape, test_shape2])
+
+        self.assertRaises(ValueError, test_stl_filename_duplication_rotate_mixed)
+
+        def test_stl_filename_duplication_Rotate_Circle():
+            """checks ValueError is raised when a duplicate filename is added"""
+            test_shape = paramak.RotateCircleShape(
+                points=[(20, 20)],
+                radius=10,
+                rotation_angle=180,
+                stl_filename='filename.stl')
+            test_shape2 = paramak.RotateCircleShape(
+                points=[(20, 20)],
+                radius=10,
+                rotation_angle=180,
+                stl_filename='filename.stl')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            paramak.Reactor([test_shape, test_shape2])
+
+        self.assertRaises(ValueError, test_stl_filename_duplication_Rotate_Circle)  
+
+        def test_stl_filename_duplication_Extrude_straight():
+            """checks ValueError is raised when a duplicate filename is added"""
+            test_shape = paramak.ExtrudeStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                distance=10,
+                stl_filename='filename.stl')
+            test_shape2 = paramak.ExtrudeStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                distance=10,
+                stl_filename='filename.stl')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            paramak.Reactor([test_shape, test_shape2])
+
+        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_straight)  
+
+        def test_stl_filename_duplication_Extrude_spline():
+            """checks ValueError is raised when a duplicate filename is added"""
+            test_shape = paramak.ExtrudeSplineShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                distance=10,
+                stl_filename='filename.stl')
+            test_shape2 = paramak.ExtrudeSplineShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                distance=10,
+                stl_filename='filename.stl')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            paramak.Reactor([test_shape, test_shape2])
+
+        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_spline)  
+
+        def test_stl_filename_duplication_Extrude_mixed():
+            """checks ValueError is raised when a duplicate filename is added"""
+            test_shape = paramak.ExtrudeMixedShape(
+                points=[(0, 0, 'straight'), (0, 20, 'straight'), (20, 20, 'straight')],
+                distance=10,
+                stl_filename='filename.stl')
+            test_shape2 = paramak.ExtrudeMixedShape(
+                points=[(0, 0, 'straight'), (0, 20, 'straight'), (20, 20, 'straight')],
+                distance=10,
+                stl_filename='filename.stl')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            paramak.Reactor([test_shape, test_shape2])
+
+        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_mixed)  
+
+        def test_stl_filename_duplication_Extrude_Circle():
+            """checks ValueError is raised when a duplicate filename is added"""
+            test_shape = paramak.ExtrudeCircleShape(
+                points=[(20, 20)],
+                radius=10,
+                distance=10,
+                stl_filename='filename.stl')
+            test_shape2 = paramak.ExtrudeCircleShape(
+                points=[(20, 20)],
+                radius=10,
+                distance=10,
+                stl_filename='filename.stl')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            paramak.Reactor([test_shape, test_shape2])
+
+        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_Circle)  
 
 
     def test_reactor_creation_with_default_properties(self):

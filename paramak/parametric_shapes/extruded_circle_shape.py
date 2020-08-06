@@ -68,6 +68,7 @@ class ExtrudeCircleShape(Shape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
             **default_dict

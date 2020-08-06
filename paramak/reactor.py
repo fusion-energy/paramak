@@ -95,13 +95,15 @@ class Reactor():
                         "Set Reactor already contains a shape or component \
                          with this stp_filename", shape.stp_filename
                     )
+                else:
+                    stp_filenames.append(shape.stp_filename)
+            if shape.stl_filename != None:
                 if shape.stl_filename in stl_filenames:
                     raise ValueError(
                         "Set Reactor already contains a shape or component \
                          with this stl_filename", shape.stl_filename
                     )
                 else:
-                    stp_filenames.append(shape.stp_filename)
                     stl_filenames.append(shape.stl_filename)
 
         self._shapes_and_components = value
