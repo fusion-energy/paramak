@@ -297,6 +297,25 @@ class Reactor():
         self.export_stl(tolerance=tolerance)
         material_dict = self.neutronics_description()
 
+        # create pymoab instance
+        mb = core.Core()
+
+        tags = dict()
+
+        SENSE_TAG_NAME = "GEOM_SENSE_2"
+        SENSE_TAG_SIZE = 2
+        tags['surf_sense'] = mb.tag_get_handle(SENSE_TAG_NAME, SENSE_TAG_SIZE, types.MB_TYPE_HANDLE, types.MB_TAG_SPARSE, create_if_missing=True)
+
+        tags['category'] = mb.tag_get_handle(types.CATEGORY_TAG_NAME, types.CATEGORY_TAG_SIZE, types.MB_TYPE_OPAQUE, types.MB_TAG_SPARSE, create_if_missing=True)
+        tags['name'] = mb.tag_get_handle(types.NAME_TAG_NAME, types.NAME_TAG_SIZE, types.MB_TYPE_OPAQUE, types.MB_TAG_SPARSE, create_if_missing=True)
+        tags['geom_dimension'] = mb.tag_get_handle(types.GEOM_DIMENSION_TAG_NAME, 1, types.MB_TYPE_INTEGER, types.MB_TAG_DENSE, create_if_missing=True)
+
+        # Global ID is a default tag, just need the name to retrieve
+        tags['global_id']= mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
+
+        surface_id = 1
+        volume_id = 1
+
         for item in material_dict:
 
             stl_filename = item['stl_filename']
