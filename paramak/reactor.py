@@ -295,7 +295,7 @@ class Reactor():
         Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
 
         self.export_stl(tolerance=tolerance)
-        material_dict = self.neutronics_description
+        material_dict = self.neutronics_description()
 
         for item in material_dict:
 
