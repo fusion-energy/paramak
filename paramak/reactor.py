@@ -271,7 +271,7 @@ class Reactor():
         return filenames
 
     def export_h5m(self, filename='dagmc.h5m', skip_graveyard=False, tolerance=0.001):
-        """Converts stl files into DAGMC compatible h5m file using PyMoab.
+        """Converts stl files into DAGMC compatible h5m file using PyMOAB.
         The DAGMC file produced has not been imprinted and merged unlike the other supported
         method which uses Trelis to produce an imprinted and merged DAGMC geometry
         If the provided filename doesn't end with .h5m it will be added
@@ -297,7 +297,7 @@ class Reactor():
         self.export_stl(tolerance=tolerance)
         material_dict = self.neutronics_description
 
-        for item in manifest:
+        for item in material_dict:
 
             stl_filename = item['stl_filename']
 
@@ -355,7 +355,6 @@ class Reactor():
         mb.write_file(filename)
 
         return filename
-
 
     def export_physical_groups(self, output_folder=""):
         """Exports several JSON files containing a look up table
