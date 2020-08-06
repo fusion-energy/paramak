@@ -42,7 +42,8 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
                         'hash_value':None,
                         'intersect':None,
                         'cut':None,
-                        'union':None
+                        'union':None,
+                        'tet_mesh':None,
         }
 
         for arg in kwargs:

@@ -66,8 +66,9 @@ class PlasmaBoundaries(Plasma):
                         'solid': None,
                         'hash_value': None,
                         'intersect': None,
-                        'cut': None
-                        }
+                        'cut': None,
+                        'tet_mesh':None,
+        }
 
         for arg in kwargs:
             if arg in default_dict:
