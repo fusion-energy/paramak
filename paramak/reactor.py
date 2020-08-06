@@ -14,6 +14,10 @@ import plotly.graph_objects as go
 import pyrender
 from paramak.shape import Shape
 
+try:
+    from pymoab import core, types
+except:
+    print('PyMoab not found, Reactor.export_h5m method not available')
 
 class Reactor:
 
@@ -25,14 +29,15 @@ class Reactor:
 
     def __init__(self, shapes_and_components):
 
-        self.shapes_and_components = shapes_and_components
-
         # calculated internally
         self.material_tags = []
         self.stp_filenames = []
+        self.stl_filenames = []
         self.tet_meshes = []
         self.graveyard = None
         self.solid = None
+
+        self.shapes_and_components = shapes_and_components
 
     @property
     def stp_filenames(self):
@@ -245,11 +250,13 @@ class Reactor:
 
         return filenames
 
-    def export_stl(self, output_folder=""):
+    def export_stl(self, output_folder="", tolerance=0.001):
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         :param output_folder: the folder for saving the stp files to
         :type output_folder: str
+        :param tolerance: the precision of the faceting
+        :type tolerance: float
 
         :return: a list of stl filenames created
         :rtype: list
@@ -264,7 +271,7 @@ class Reactor:
                 )
             filenames.append(
                 str(Path(output_folder) / Path(entry.stl_filename)))
-            entry.export_stl(Path(output_folder) / Path(entry.stl_filename))
+            entry.export_stl(Path(output_folder) / Path(entry.stl_filename), tolerance)
 
         # creates a graveyard (bounding shell volume) which is needed for
         # nuetronics simulations
@@ -278,6 +285,40 @@ class Reactor:
         print("exported stl files ", filenames)
 
         return filenames
+
+    def export_h5m(self, filename='dagmc.h5m', skip_graveyard=False, tolerance=0.001):
+        """Converts stl files into DAGMC compatible h5m file using PyMoab.
+        The DAGMC file produced has not been imprinted and merged unlike the other supported
+        method which uses Trelis to produce an imprinted and merged DAGMC geometry
+        If the provided filename doesn't end with .h5m it will be added
+
+            Args:
+                filename (str, optional): filename of h5m outputfile
+                    Defaults to "dagmc.h5m".
+                skip_graveyard (boolean, optional): filename of h5m outputfile
+                    Defaults to False.
+                tolerance (float, optional): the precision of the faceting
+                    Defaults to 0.001.
+        Returns:
+            filename: output h5m filename
+        """
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".h5m":
+            Pfilename = Pfilename.with_suffix(".h5m")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        self.export_stl(tolerance=tolerance)
+        material_dict = self.neutronics_description
+        print(material_dict())
+
+        ### code from gist goes here, but instead of opening a manifest.json file it uses the material_dict above
+
+
+        return filename
+
 
     def export_physical_groups(self, output_folder=""):
         """Exports several JSON files containing a look up table
