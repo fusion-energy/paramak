@@ -27,7 +27,6 @@ from .parametric_components.blanket_fp import (
     BlanketFP,
 )
 
-from .parametric_components.divertor_block import DivertorBlock
 from .parametric_components.divertor_ITER import ITERtypeDivertor, \
     ITERtypeDivertorNoDome
 

@@ -8,52 +8,54 @@ from paramak import RotateSplineShape
 
 
 class Plasma(RotateSplineShape):
-    """Creates a double null tokamak plasma shape that is controlled
-       by 4 shaping parameters.
-        Args:
-            elongation (float, optional): the elongation of the plasma.
-                Defaults to 2.0.
-            major_radius (int, optional): the major radius of the plasma (cm).
-                Defaults to 450.
-            minor_radius (int, optional): the minor radius of the plasma (cm).
-                Defaults to 150.
-            triangularity (float, optional): the triangularity of the plasma.
-                Defaults to 0.55.
-            vertical_displacement (int, optional): the vertical_displacement
-                of the plasma (cm). Defaults to 0.
-            num_points (int, optional): number of points to described the
-                shape. Defaults to 50.
-            configuration (str, optional): plasma configuration
-                ("non-null", "single-null", "double-null").
-                Defaults to "non-null".
-            x_point_shift (float, optional): Shift parameters for locating the
-                X points in [0, 1]. Defaults to 0.1.
-            Others: see paramak.RotateSplineShape() arguments.
+    """Creates a double null tokamak plasma shape that is controlled by 4
+    shaping parameters.
 
-        Attributes:
-            elongation (float): the elongation of the plasma.
-            major_radius (int): the major radius of the plasma (cm).
-            minor_radius (int): the minor radius of the plasma (cm).
-            triangularity (float): the triangularity of the plasma.
-            vertical_displacement (int): the vertical_displacement
-                of the plasma (cm).
-            num_points (int): number of points to described the
-                shape.
-            configuration (str): plasma configuration
-                ("non-null", "single-null", "double-null").
-            x_point_shift (float): Shift parameters for locating the
-                X points in [0, 1].
-            outer_equatorial_point (float, float): coordinates for outer
-                equatorial point
-            inner_equatorial_point (float, float): coordinates for inner
-                equatorial point
-            high_point (float, float): coordinates for high point
-            low_point (float, float): coordinates for low point
-            lower_x_point (float, float): coordinates for lower x point (None
-                if doesn't exist)
-            upper_x_point (float, float): coordinates for upper x point (None
-                if doesn't exist)
-            Others: see paramak.RotateSplineShape() attributes.
+    Args:
+        elongation (float, optional): the elongation of the plasma.
+            Defaults to 2.0.
+        major_radius (int, optional): the major radius of the plasma (cm).
+            Defaults to 450.
+        minor_radius (int, optional): the minor radius of the plasma (cm).
+            Defaults to 150.
+        triangularity (float, optional): the triangularity of the plasma.
+            Defaults to 0.55.
+        vertical_displacement (int, optional): the vertical_displacement
+            of the plasma (cm). Defaults to 0.
+        num_points (int, optional): number of points to described the
+            shape. Defaults to 50.
+        configuration (str, optional): plasma configuration
+            ("non-null", "single-null", "double-null").
+            Defaults to "non-null".
+        x_point_shift (float, optional): Shift parameters for locating the
+            X points in [0, 1]. Defaults to 0.1.
+        Others: see paramak.RotateSplineShape() arguments.
+
+    Attributes:
+        elongation (float): the elongation of the plasma.
+        major_radius (int): the major radius of the plasma (cm).
+        minor_radius (int): the minor radius of the plasma (cm).
+        triangularity (float): the triangularity of the plasma.
+        vertical_displacement (int): the vertical_displacement
+            of the plasma (cm).
+        num_points (int): number of points to described the
+            shape.
+        configuration (str): plasma configuration
+            ("non-null", "single-null", "double-null").
+        x_point_shift (float): Shift parameters for locating the
+            X points in [0, 1].
+        outer_equatorial_point (float, float): coordinates for outer
+            equatorial point
+        inner_equatorial_point (float, float): coordinates for inner
+            equatorial point
+        high_point (float, float): coordinates for high point
+        low_point (float, float): coordinates for low point
+        lower_x_point (float, float): coordinates for lower x point (None
+            if doesn't exist)
+        upper_x_point (float, float): coordinates for upper x point (None
+            if doesn't exist)
+        Others: see paramak.RotateSplineShape() attributes.
+
     """
 
     def __init__(

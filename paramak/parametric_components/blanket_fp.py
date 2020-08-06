@@ -76,7 +76,7 @@ class BlanketFP(RotateMixedShape):
         vertical_displacement=0,
         offset_from_plasma=0,
         num_points=50,
-        stp_filename="BlanketConstantThicknessFP.stp",
+        stp_filename="BlanketFP.stp",
         rotation_angle=360,
         azimuth_placement_angle=0,
         color=None,

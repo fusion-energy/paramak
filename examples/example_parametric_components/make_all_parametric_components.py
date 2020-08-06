@@ -17,7 +17,7 @@ def main():
     )
     all_components.append(plasma)
 
-    component = paramak.BlanketConstantThicknessFP(
+    component = paramak.BlanketFP(
         plasma=plasma,
         thickness=100,
         stop_angle=90,
@@ -28,7 +28,7 @@ def main():
     )
     all_components.append(component)
 
-    component = paramak.BlanketConstantThicknessFP(
+    component = paramak.BlanketFP(
         plasma=plasma,
         thickness=100,
         stop_angle=90,
@@ -39,7 +39,7 @@ def main():
     )
     all_components.append(component)
 
-    component = paramak.BlanketConstantThicknessFP(
+    component = paramak.BlanketFP(
         plasma=plasma,
         thickness=100,
         stop_angle=250,
