@@ -21,9 +21,9 @@ except:
 
 class Reactor():
 
-    """The Reactor object allows shapes and components to be added and then collective 
+    """The Reactor object allows shapes and components to be added and then collective
     opperations to be performed on them. Combining all the shapes is required for creating
-    images of the whole reactor and creating a Graveyard (bounding box) that is needed 
+    images of the whole reactor and creating a Graveyard (bounding box) that is needed
     for neutronics simulations.
     """
 
@@ -80,7 +80,7 @@ class Reactor():
     def shapes_and_components(self, value):
         """Adds a list of parametric shape(s) and or parametric component(s)
         to the Reactor object. This allows collective operations can be performed
-        on all the shapes in the reactor. When adding a shape or componet the 
+        on all the shapes in the reactor. When adding a shape or componet the
         stp_filename of the shape or component should be unique.
         """
         shapes_and_components = []
@@ -180,10 +180,10 @@ class Reactor():
         file can then be used with the neutronics workflows to
         create a neutronics model. Creation of the netronics
         model requires linkage between volumes, materials and
-        identifcation of which volumes to tet_mesh. If the 
+        identifcation of which volumes to tet_mesh. If the
         filename does not end with .json then .json will be added.
         The plasma geometry is not included by default as it is
-        typically not included in neutronics simulations. The 
+        typically not included in neutronics simulations. The
         reason for this is that the low number density results
         in minimal interaction with neutrons. However the plasma
         can be added if the include_plasma argument is set to True
@@ -296,10 +296,63 @@ class Reactor():
 
         self.export_stl(tolerance=tolerance)
         material_dict = self.neutronics_description
-        print(material_dict())
 
-        ### code from gist goes here, but instead of opening a manifest.json file it uses the material_dict above
+        for item in manifest:
 
+            stl_filename = item['stl_filename']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            surface_set = mb.create_meshset()
+            volume_set = mb.create_meshset()
+
+            # recent versions of MOAB handle this automatically
+            # but best to go ahead and do it manually
+            mb.tag_set_data(tags['global_id'], volume_set, volume_id)
+            volume_id += 1
+            mb.tag_set_data(tags['global_id'], surface_set, surface_id)
+            surface_id += 1
+
+            # set geom IDs
+            mb.tag_set_data(tags['geom_dimension'], volume_set, 3)
+            mb.tag_set_data(tags['geom_dimension'], surface_set, 2)
+
+            # set category tag values
+            mb.tag_set_data(tags['category'], volume_set, "Volume")
+            mb.tag_set_data(tags['category'], surface_set, "Surface")
+
+            # establish parent-child relationship
+            mb.add_parent_child(volume_set, surface_set)
+
+            # set surface sense
+            sense_data = [volume_set, np.uint64(0)]
+            mb.tag_set_data(tags['surf_sense'], surface_set, sense_data)
+
+            # load the stl triangles/vertices into the surface set
+            mb.load_file(stl_filename, surface_set)
+
+            material_name = item['material']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            group_set = mb.create_meshset()
+            mb.tag_set_data(tags['category'], group_set, "Group")
+            print("mat:{}".format(material_name))
+            mb.tag_set_data(tags['name'], group_set, "mat:{}".format(material_name))
+            mb.tag_set_data(tags['geom_dimension'], group_set, 4)
+
+            # add the volume to this group set
+            mb.add_entity(group_set, volume_set)
+
+        all_sets = mb.get_entities_by_handle(0)
+
+        file_set = mb.create_meshset()
+
+        mb.add_entities(file_set, all_sets)
+
+        mb.write_file(filename)
 
         return filename
 
