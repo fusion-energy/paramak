@@ -86,6 +86,21 @@ class test_object_properties(unittest.TestCase):
         self.assertRaises(ValueError, test_stp_filename_duplication)  
 
 
+        def test_stl_filename_duplication():
+            """checks ValueError is raised when an elongation < 0 is specified"""
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stl_filename='filename.stl')
+            test_shape2 = paramak.RotateSplineShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stl_filename='filename.stl')
+            test_shape.rotation_angle = 360
+            test_shape.create_solid()
+            test_reactor = paramak.Reactor([test_shape, test_shape2])
+
+        self.assertRaises(ValueError, test_stl_filename_duplication)  
+
+
     def test_reactor_creation_with_default_properties(self):
         """creates a Reactor object and checks that it has \
                 no default properties"""
@@ -139,7 +154,6 @@ class test_object_properties(unittest.TestCase):
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
-
     def test_exported_stp_files_exist(self):
         """checks that export_stp() creates stp file in the \
                 specified location"""
@@ -155,6 +169,24 @@ class test_object_properties(unittest.TestCase):
         test_reactor.export_stp(output_folder="test_reactor")
 
         for filepath in ["test_reactor/test_shape.stp", "test_reactor/Graveyard.stp"]:
+            assert Path(filepath).exists() is True
+            os.system("rm " + filepath)
+
+    def test_exported_stl_files_exist(self):
+        """checks that export_stl() creates stl file in the \
+                specified location"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape.rotation_angle = 360
+        os.system("rm test_reactor/test_shape.stl")
+        os.system("rm test_reactor/Graveyard.stl")
+        test_shape.stl_filename = "test_shape.stl"
+        test_reactor = paramak.Reactor([test_shape])
+
+        test_reactor.export_stl(output_folder="test_reactor")
+
+        for filepath in ["test_reactor/test_shape.stl", "test_reactor/Graveyard.stl"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
@@ -203,7 +235,7 @@ class test_object_properties(unittest.TestCase):
 
     def test_neutronics_description_without_plasma(self):
         """checks that the neutronics description is exported with correct \
-                material_tag and filename"""
+                material_tag and stp_filename"""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
@@ -214,16 +246,16 @@ class test_object_properties(unittest.TestCase):
         neutronics_description = test_reactor.neutronics_description()
 
         assert len(neutronics_description) == 2
-        assert "filename" in neutronics_description[0].keys()
+        assert "stp_filename" in neutronics_description[0].keys()
         assert "material" in neutronics_description[0].keys()
         assert neutronics_description[0]["material"] == "test_material"
-        assert neutronics_description[0]["filename"] == "test.stp"
+        assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
 
     def test_export_neutronics_description(self):
         """checks that the neutronics description is exported to a json file with \
-                the correct material name and filename"""
+                the correct material name and stp_filename"""
 
         os.system("rm manifest_test.json")
 
@@ -243,14 +275,14 @@ class test_object_properties(unittest.TestCase):
         assert returned_filename == "manifest_test.json"
         assert Path("manifest_test.json").exists() is True
         assert len(neutronics_description) == 2
-        assert "filename" in neutronics_description[0].keys()
+        assert "stp_filename" in neutronics_description[0].keys()
         assert "material" in neutronics_description[0].keys()
         assert "tet_mesh" in neutronics_description[0].keys()
         assert neutronics_description[0]["material"] == "test_material"
-        assert neutronics_description[0]["filename"] == "test.stp"
+        assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
         assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
         os.system("rm manifest_test.json")
 
     def test_export_neutronics_description_with_plasma(self):
@@ -277,19 +309,19 @@ class test_object_properties(unittest.TestCase):
         assert returned_filename == "manifest.json"
         assert Path("manifest.json").exists() is True
         assert len(neutronics_description) == 3
-        assert "filename" in neutronics_description[0].keys()
+        assert "stp_filename" in neutronics_description[0].keys()
         assert "material" in neutronics_description[0].keys()
         assert "tet_mesh" in neutronics_description[0].keys()
-        assert "filename" in neutronics_description[1].keys()
+        assert "stp_filename" in neutronics_description[1].keys()
         assert "material" in neutronics_description[1].keys()
         assert "tet_mesh" not in neutronics_description[1].keys()
         assert neutronics_description[0]["material"] == "test_material"
-        assert neutronics_description[0]["filename"] == "test.stp"
+        assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
         assert neutronics_description[1]["material"] == "DT_plasma"
-        assert neutronics_description[1]["filename"] == "plasma.stp"
+        assert neutronics_description[1]["stp_filename"] == "plasma.stp"
         assert neutronics_description[2]["material"] == "Graveyard"
-        assert neutronics_description[2]["filename"] == "Graveyard.stp"
+        assert neutronics_description[2]["stp_filename"] == "Graveyard.stp"
         os.system("rm manifest.json")
 
     def test_export_neutronics_description_without_plasma(self):
@@ -314,14 +346,14 @@ class test_object_properties(unittest.TestCase):
         assert returned_filename == "manifest.json"
         assert Path("manifest.json").exists() is True
         assert len(neutronics_description) == 2
-        assert "filename" in neutronics_description[0].keys()
+        assert "stp_filename" in neutronics_description[0].keys()
         assert "material" in neutronics_description[0].keys()
         assert "tet_mesh" in neutronics_description[0].keys()
         assert neutronics_description[0]["material"] == "test_material"
-        assert neutronics_description[0]["filename"] == "test.stp"
+        assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
         assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
         os.system("rm manifest.json")
 
     def test_export_2d_image(self):

@@ -15,6 +15,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         outer_radius,
         rotation_angle=360,
         stp_filename="CenterColumnShieldFlatTopCircular.stp",
+        stl_filename="CenterColumnShieldFlatTopCircular.stl",
         color=None,
         name="center_column",
         material_tag="center_column_shield_mat",
@@ -41,6 +42,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
             **default_dict

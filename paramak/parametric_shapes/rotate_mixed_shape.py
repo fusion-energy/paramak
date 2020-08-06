@@ -35,6 +35,7 @@ class RotateMixedShape(Shape):
         color=None,
         material_tag=None,
         stp_filename="RotateMixedShape.stp",
+        stl_filename="RotateMixedShape.stl",
         azimuth_placement_angle=0,
         solid=None,
         rotation_angle=360,

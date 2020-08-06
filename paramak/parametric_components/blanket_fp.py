@@ -77,6 +77,7 @@ class BlanketFP(RotateMixedShape):
         offset_from_plasma=0,
         num_points=50,
         stp_filename="BlanketFP.stp",
+        stl_filename="BlanketFP.stl",
         rotation_angle=360,
         azimuth_placement_angle=0,
         color=None,
@@ -104,6 +105,7 @@ class BlanketFP(RotateMixedShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
             **default_dict

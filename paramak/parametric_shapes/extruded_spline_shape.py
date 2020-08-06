@@ -38,6 +38,7 @@ class ExtrudeSplineShape(Shape):
         distance,
         workplane="XZ",
         stp_filename="ExtrudeSplineShape.stp",
+        stl_filename="ExtrudeSplineShape.stl",
         solid=None,
         color=None,
         azimuth_placement_angle=0,

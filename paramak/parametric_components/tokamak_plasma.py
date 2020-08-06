@@ -71,6 +71,7 @@ class Plasma(RotateSplineShape):
         name='plasma',
         material_tag='DT_plasma',
         stp_filename="plasma.stp",
+        stl_filename="plasma.stl",
         color=None,
         rotation_angle=360,
         azimuth_placement_angle=0,
@@ -96,6 +97,7 @@ class Plasma(RotateSplineShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
             **default_dict

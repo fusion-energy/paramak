@@ -36,6 +36,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         number_of_coils,
         rotation_angle=360,
         stp_filename="ToroidalFieldCoilRectangle.stp",
+        stl_filename="ToroidalFieldCoilRectangle.stl",
         color=None,
         azimuth_placement_angle=0,
         name=None,
@@ -60,6 +61,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         super().__init__(
             distance=distance,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             color=color,
             azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,

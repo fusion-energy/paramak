@@ -254,6 +254,7 @@ class SubmersionTokamak(paramak.Reactor):
             outer_radius=inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
             stp_filename="inboard_tf_coils.stp",
+            stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
         )
@@ -265,6 +266,7 @@ class SubmersionTokamak(paramak.Reactor):
             outer_radius=center_column_shield_end_radius,
             rotation_angle=self.rotation_angle,
             stp_filename="center_column_shield.stp",
+            stl_filename="center_column_shield.stl",
             name="center_column_shield",
             material_tag="center_column_shield_mat",
         )
@@ -314,6 +316,7 @@ class SubmersionTokamak(paramak.Reactor):
             thickness=self.firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='outboard_firstwall.stp',
+            stl_filename='outboard_firstwall.stl',
             name='outboard_firstwall',
             material_tag='firstwall_mat',
             union=inboard_firstwall,
@@ -325,6 +328,7 @@ class SubmersionTokamak(paramak.Reactor):
             outer_radius=divertor_end_radius,
             rotation_angle=self.rotation_angle,
             stp_filename="divertor.stp",
+            stl_filename="divertor.stl",
             name="divertor",
             material_tag="divertor_mat",
             intersect=firstwall
@@ -345,6 +349,7 @@ class SubmersionTokamak(paramak.Reactor):
             thickness = self.outboard_blanket_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='blanket.stp',
+            stl_filename='blanket.stl',
             name='blanket',
             material_tag='blanket_mat',
             union=inboard_blanket
@@ -356,6 +361,7 @@ class SubmersionTokamak(paramak.Reactor):
             outer_radius=support_end_radius,
             rotation_angle=self.rotation_angle,
             stp_filename="supports.stp",
+            stl_filename="supports.stl",
             name="supports",
             material_tag="supports_mat",
             intersect=blanket
@@ -396,6 +402,7 @@ class SubmersionTokamak(paramak.Reactor):
             thickness = self.blanket_rear_wall_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename='outboard_rear_blanket_wall.stp',
+            stl_filename='outboard_rear_blanket_wall.stl',
             name='outboard_rear_blanket_wall',
             material_tag='rear_blanket_wall_mat',
             union=[outboard_rear_blanket_wall_upper, outboard_rear_blanket_wall_lower]
@@ -411,6 +418,8 @@ class SubmersionTokamak(paramak.Reactor):
                                             thickness= self.outboard_tf_coil_radial_thickness,
                                             number_of_coils=self.number_of_tf_coils,
                                             distance=self.tf_coil_poloidal_thickness,
+                                            stp_filename='outboard_tf_coil.stp',
+                                            stl_filename='outboard_tf_coil.stl',
                                             cut=cutting_slice)
             shapes_or_components.append(tf_coil)
 
@@ -429,6 +438,7 @@ class SubmersionTokamak(paramak.Reactor):
                                                         center_point=(x_value,y_value),
                                                         rotation_angle=self.rotation_angle,
                                                         stp_filename='pf_coil_'+str(i)+'.stp',
+                                                        stl_filename='pf_coil_'+str(i)+'.stl',
                                                         name='pf_coil',
                                                         material_tag='pf_coil_mat')
                     shapes_or_components.append(pf_coil)

@@ -50,6 +50,7 @@ class Shape:
         color=None,
         material_tag=None,
         stp_filename=None,
+        stl_filename=None,
         azimuth_placement_angle=0,
         workplane="XZ",
         tet_mesh=None,
@@ -57,6 +58,7 @@ class Shape:
 
         self.points = points
         self.stp_filename = stp_filename
+        self.stl_filename = stl_filename
         self.color = color
         self.name = name
 
@@ -245,9 +247,37 @@ class Shape:
                 raise ValueError(
                     "Incorrect filename ending, filename must end with .stp or .step"
                 )
-
         else:
-            raise ValueError("stp_filename must be a string", type(value))
+            raise ValueError("stp_filename must be a string", value, type(value))
+
+    @property
+    def stl_filename(self):
+        return self._stl_filename
+
+    @stl_filename.setter
+    def stl_filename(self, value):
+        """Sets the Shape.stl_filename attributes which is used as the
+           filename when exporting the geometry to stp format. Note,
+           .stp will be added to filenames not ending with .step or .stp
+
+        :param value: the value to use as the stl_filename
+        :type value: str
+
+        :raises incorrect type: only str values are accepted
+        """
+        if value is None:
+            # print("stl_filename will need setting to use this shape in a Reactor")
+            self._stl_filename = value
+        elif type(value) == str:
+            if Path(value).suffix == ".stl" :
+                self._stl_filename = value
+            else:
+                raise ValueError(
+                    "Incorrect filename ending, filename must end with .stl"
+                )
+        else:
+            raise ValueError("stl_filename must be a string", value, type(value))
+
 
     def create_limits(self):
         """"Finds the x,y,z limits (min and max) of the points that make up the face of the shape.
@@ -639,8 +669,15 @@ class Shape:
         :rtype: dictionary
         """
 
-        neutronics_description = {"material": self.material_tag,
-                                  "filename": self.stp_filename}
+        neutronics_description = {"material": self.material_tag}
+
+        if self.stp_filename != None:
+            neutronics_description['stp_filename'] = self.stp_filename
+
         if self.tet_mesh != None:
             neutronics_description['tet_mesh'] = self.tet_mesh
+
+        if self.stl_filename != None:
+            neutronics_description['stl_filename'] = self.stl_filename
+
         return neutronics_description

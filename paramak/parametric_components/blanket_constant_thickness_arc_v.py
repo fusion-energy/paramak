@@ -50,6 +50,7 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         inner_lower_point,
         thickness,
         stp_filename='BlanketConstantThicknessArcV.stp',
+        stl_filename='BlanketConstantThicknessArcV.stl',
         rotation_angle=360,
         azimuth_placement_angle=0,
         color=None,
@@ -77,6 +78,7 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
             **default_dict

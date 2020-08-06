@@ -10,15 +10,15 @@ def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
     for entry in input_locations:
       #starting_group_id = starting_group_id +1
       current_vols = cubit.parse_cubit_list("volume", "all")
-      print(os.path.join(basefolder, entry['filename']))
-      if entry['filename'].endswith('.sat'):
+      print(os.path.join(basefolder, entry['stp_filename']))
+      if entry['stp_filename'].endswith('.sat'):
         import_type = 'acis'
-      if entry['filename'].endswith('.stp') or entry['filename'].endswith('.step'):
+      if entry['stp_filename'].endswith('.stp') or entry['stp_filename'].endswith('.step'):
         import_type = 'step'
-      short_file_name = os.path.split(entry['filename'])[-1]
+      short_file_name = os.path.split(entry['stp_filename'])[-1]
       #print('short_file_name',short_file_name)
-      #cubit.cmd('import '+import_type+' "' + entry['filename'] + '" separate_bodies no_surfaces no_curves no_vertices group "'+str(short_file_name)+'"')
-      cubit.cmd('import '+import_type+' "' + os.path.join(basefolder,entry['filename']) + '" separate_bodies no_surfaces no_curves no_vertices ')
+      #cubit.cmd('import '+import_type+' "' + entry['stp_filename'] + '" separate_bodies no_surfaces no_curves no_vertices group "'+str(short_file_name)+'"')
+      cubit.cmd('import '+import_type+' "' + os.path.join(basefolder,entry['stp_filename']) + '" separate_bodies no_surfaces no_curves no_vertices ')
       all_vols = cubit.parse_cubit_list("volume", "all")
       new_vols = set(current_vols).symmetric_difference(set(all_vols))
       new_vols = map(str, new_vols)
@@ -35,9 +35,6 @@ def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
       #cubit.cmd('group '+str(starting_group_id)+' copy rotate 45 about z repeat 7')
       entry['volumes'] = new_vols_after_unite
       cubit.cmd('group "'+short_file_name + '" add volume ' + ' '.join(entry['volumes']))
-      if 'surface_reflectivity' in entry.keys():
-        entry['surface_reflectivity'] = find_all_surfaces_of_reflecting_wedge(new_vols_after_unite)
-        print("entry['surface_reflectivity']", entry['surface_reflectivity'])
       #cubit.cmd('volume in group '+str(starting_group_id)+' copy rotate 45 about z repeat 7')
     cubit.cmd('separate body all')
     return input_locations

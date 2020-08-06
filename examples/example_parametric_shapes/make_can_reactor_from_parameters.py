@@ -30,6 +30,7 @@ def main():
         ]
     )
     centre_column.stp_filename = "centre_column.stp"
+    centre_column.stl_filename = "centre_column.stl"
     centre_column.rotation_angle = 180
 
 
@@ -45,6 +46,7 @@ def main():
         ]
     )
     blanket.stp_filename = "blanket.stp"
+    blanket.stl_filename = "blanket.stl"
     blanket.rotation_angle = 180
 
 
@@ -63,6 +65,7 @@ def main():
         ]
     )
     firstwall.stp_filename = "firstwall.stp"
+    firstwall.stl_filename = "firstwall.stl"
     firstwall.rotation_angle = 180
 
 
@@ -81,6 +84,7 @@ def main():
             (237.48395, -497.21782, "spline"),
         ]
     )
+    divertor_bottom.stl_filename = "divertor_bottom.stl"
     divertor_bottom.stp_filename = "divertor_bottom.stp"
     divertor_bottom.rotation_angle = 180
 
@@ -100,6 +104,7 @@ def main():
             (237.48395, 497.21782, "spline"),
         ]
     )
+    divertor_top.stl_filename = "divertor_top.stl"
     divertor_top.stp_filename = "divertor_top.stp"
     divertor_top.rotation_angle = 180
 

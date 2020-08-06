@@ -28,6 +28,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         gap_size,
         distance=None,
         stp_filename="InnerTfCoilsFlat.stp",
+        stl_filename="InnerTfCoilsFlat.stl",
         color=None,
         azimuth_placement_angle=0,
         material_tag="inner_tf_coil_mat",
@@ -52,6 +53,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         super().__init__(
             distance=distance,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             color=color,
             azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,

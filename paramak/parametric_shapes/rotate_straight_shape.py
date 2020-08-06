@@ -37,6 +37,7 @@ class RotateStraightShape(Shape):
         color=None,
         material_tag=None,
         stp_filename='RotateStraightShape.stp',
+        stl_filename='RotateStraightShape.stl',
         azimuth_placement_angle=0,
         solid=None,
         rotation_angle=360,

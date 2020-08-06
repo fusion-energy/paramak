@@ -23,6 +23,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         name=None,
         color=None,
         stp_filename="CenterColumnShieldCylinder.stp",
+        stl_filename="CenterColumnShieldCylinder.stl",
         rotation_angle=360,
         material_tag="center_column_shield_mat",
         azimuth_placement_angle=0,
@@ -48,6 +49,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
             **default_dict

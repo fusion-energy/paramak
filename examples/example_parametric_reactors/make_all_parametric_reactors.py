@@ -109,4 +109,7 @@ def main():
 if __name__ == "__main__":
     all_reactors = main()
     for reactors in all_reactors:
+
         reactors.export_stp(reactors.name)
+        reactors.export_stl(reactors.name)
+        reactors.export_neutronics_description()

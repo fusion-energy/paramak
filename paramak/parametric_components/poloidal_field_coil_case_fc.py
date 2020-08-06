@@ -20,6 +20,7 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
         casing_thickness,
         rotation_angle=360,
         stp_filename="PoloidalFieldCoilCaseFC.stp",
+        stl_filename="PoloidalFieldCoilCaseFC.stl",
         color=None,
         azimuth_placement_angle=0,
         name=None,
@@ -46,6 +47,7 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
             **default_dict

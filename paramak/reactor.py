@@ -86,6 +86,7 @@ class Reactor():
             )
 
         stp_filenames = []
+        stl_filenames = []
 
         for shape in value:
             if shape.stp_filename != None:
@@ -94,8 +95,14 @@ class Reactor():
                         "Set Reactor already contains a shape or component \
                          with this stp_filename", shape.stp_filename
                     )
+                if shape.stl_filename in stl_filenames:
+                    raise ValueError(
+                        "Set Reactor already contains a shape or component \
+                         with this stl_filename", shape.stl_filename
+                    )
                 else:
                     stp_filenames.append(shape.stp_filename)
+                    stl_filenames.append(shape.stl_filename)
 
         self._shapes_and_components = value
 
@@ -224,6 +231,37 @@ class Reactor():
 
         return filenames
 
+    def export_stl(self, output_folder=""):
+        """Writes stl files (CAD geometry) for each Shape object in the reactor
+
+        :param output_folder: the folder for saving the stp files to
+        :type output_folder: str
+
+        :return: a list of stl filenames created
+        :rtype: list
+        """
+        filenames = []
+        for entry in self.shapes_and_components:
+            print('entry.stl_filename',entry.stl_filename)
+            if entry.stl_filename is None:
+                raise ValueError(
+                    "set .stl_filename property for \
+                                 Shapes before using the export_stl method"
+                )
+            filenames.append(str(Path(output_folder) / Path(entry.stl_filename)))
+            entry.export_stl(Path(output_folder) / Path(entry.stl_filename))
+
+        # creates a graveyard (bounding shell volume) which is needed for nuetronics simulations
+        self.make_graveyard()
+        filenames.append(str(Path(output_folder) / Path(self.graveyard.stl_filename)))
+        self.graveyard.export_stl(
+            Path(output_folder) / Path(self.graveyard.stl_filename)
+        )
+
+        print("exported stl files ", filenames)
+
+        return filenames
+
     def export_physical_groups(self, output_folder=""):
         """Exports several JSON files containing a look up table
         which is useful for identifying faces and volumes. The
@@ -326,6 +364,7 @@ class Reactor():
         graveyard_shape.name = "Graveyard"
         graveyard_shape.material_tag = "Graveyard"
         graveyard_shape.stp_filename = "Graveyard.stp"
+        graveyard_shape.stl_filename = "Graveyard.stl"
         graveyard_shape.solid = graveyard_part
 
         self.graveyard = graveyard_shape

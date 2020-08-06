@@ -77,7 +77,8 @@ class ITERtypeDivertor(RotateMixedShape):
         dome_pos=0.5,
         tilts=(-27, 0),
         rotation_angle=360,
-        stp_filename=None,
+        stp_filename='ITERtypeDivertor.stp',
+        stl_filename='ITERtypeDivertor.stl',
         azimuth_placement_angle=0,
         color=None,
         name=None,
@@ -104,6 +105,7 @@ class ITERtypeDivertor(RotateMixedShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
             **default_dict

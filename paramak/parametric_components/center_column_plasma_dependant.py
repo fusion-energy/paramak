@@ -36,6 +36,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         color=None,
         material_tag="center_column_shield_mat",
         stp_filename="CenterColumnShieldPlasmaHyperbola.stp",
+        stl_filename="CenterColumnShieldPlasmaHyperbola.stl",
         azimuth_placement_angle=0,
         rotation_angle=360,
         major_radius=450,
@@ -64,6 +65,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
             **default_dict
