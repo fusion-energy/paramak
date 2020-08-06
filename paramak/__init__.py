@@ -23,8 +23,8 @@ from .parametric_components.blanket_constant_thickness_arc_h import (
 from .parametric_components.blanket_constant_thickness_arc_v import (
     BlanketConstantThicknessArcV,
 )
-from .parametric_components.blanket_constant_thickness_fp import (
-    BlanketConstantThicknessFP,
+from .parametric_components.blanket_fp import (
+    BlanketFP,
 )
 
 from .parametric_components.divertor_block import DivertorBlock
