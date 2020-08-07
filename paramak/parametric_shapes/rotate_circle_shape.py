@@ -41,7 +41,6 @@ class RotateCircleShape(Shape):
         union=None,
         material_tag=None,
         name=None,
-        hash_value=None,
         **kwargs
     ):
 
@@ -67,7 +66,7 @@ class RotateCircleShape(Shape):
         self.union = union
         self.radius = radius
         self.rotation_angle = rotation_angle
-        self.hash_value = hash_value
+        self.hash_value = None
         self.solid = solid
 
     @property
@@ -131,18 +130,12 @@ class RotateCircleShape(Shape):
 
     def get_hash(self):
         hash_object = blake2b()
-        hash_object.update(
-            str(self.points).encode("utf-8")
-            + str(self.radius).encode("utf-8")
-            + str(self.workplane).encode("utf-8")
-            + str(self.name).encode("utf-8")
-            + str(self.color).encode("utf-8")
-            + str(self.material_tag).encode("utf-8")
-            + str(self.stp_filename).encode("utf-8")
-            + str(self.azimuth_placement_angle).encode("utf-8")
-            + str(self.rotation_angle).encode("utf-8")
-            + str(self.cut).encode("utf-8")
-        )
+        shape_dict = dict(self.__dict__)
+        # set _solid and _hash_value to None to prevent unnecessary reconstruction
+        shape_dict['_solid'] = None
+        shape_dict['_hash_value'] = None
+
+        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()
         return value
 
@@ -154,10 +147,7 @@ class RotateCircleShape(Shape):
               A CadQuery solid: A 3D solid volume
         """
 
-        # print('create_solid() has been called')
-
-        # Creates hash value for current solid
-        self.hash_value = self.get_hash()
+        print('create_solid() has been called')
 
         solid = (
             cq.Workplane(self.workplane)
@@ -194,5 +184,8 @@ class RotateCircleShape(Shape):
             solid = union_solid(solid, self.union)
 
         self.solid = solid
+
+        # Calculate hash value for current solid
+        self.hash_value = self.get_hash()
 
         return solid
