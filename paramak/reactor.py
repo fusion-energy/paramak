@@ -14,10 +14,6 @@ import plotly.graph_objects as go
 import pyrender
 from paramak.shape import Shape
 
-try:
-    from pymoab import core, types
-except:
-    print('PyMoab not found, Reactor.export_h5m method not available')
 
 class Reactor:
 
@@ -302,6 +298,11 @@ class Reactor:
         Returns:
             filename: output h5m filename
         """
+
+        try:
+            from pymoab import core, types
+        except ImportError as err:
+            raise err('PyMoab not found, Reactor.export_h5m method not available')
 
         Pfilename = Path(filename)
 
