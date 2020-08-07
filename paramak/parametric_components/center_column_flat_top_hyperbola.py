@@ -39,7 +39,6 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         default_dict = {'points':None,
                         'workplane':"XZ",
                         'solid':None,
-                        'hash_value':None,
                         'intersect':None,
                         'cut':None,
                         'union':None,
@@ -57,6 +56,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
             stp_filename=stp_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
+            hash_value=None,
             **default_dict
         )
 

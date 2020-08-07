@@ -51,7 +51,6 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         default_dict = {'points':None,
                         'workplane':"XZ",
                         'solid':None,
-                        'hash_value':None,
                         'intersect':None,
                         'cut':None,
                         'union':None,
@@ -69,6 +68,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,
             name=name,
+            hash_value=None,
             **default_dict
         )
 
