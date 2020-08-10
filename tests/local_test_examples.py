@@ -34,7 +34,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + output_filename)
         os.system("python make_collarge.py")
         for output_filename in output_filenames:
-            assert Path(output_filename).exists() == True
+            assert Path(output_filename).exists()
             os.system("rm " + output_filename)
 
     def test_make_paramak_animation(self):
@@ -55,7 +55,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + output_filename)
         os.system("python make_animation.py -n 3")
         for output_filename in output_filenames:
-            assert Path(output_filename).exists() == True
+            assert Path(output_filename).exists()
             os.system("rm " + output_filename)
 
     def test_RotateStraightShape_export_3d_image(self):

@@ -35,7 +35,8 @@ class test_object_properties(unittest.TestCase):
         )
         test_shape_2.azimuth_placement_angle = [0, 90, 180, 270]
 
-        assert test_shape_1.volume * 4 == pytest.approx(test_shape_2.volume, rel=0.01)
+        assert test_shape_1.volume * \
+            4 == pytest.approx(test_shape_2.volume, rel=0.01)
 
     def test_cut_volume(self):
         """creates an extruded shape with one placement angle using spline \
@@ -88,7 +89,8 @@ class test_object_properties(unittest.TestCase):
     def test_conditional_solid_reconstruction(self):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
-        test_shape = ExtrudeSplineShape(points=[(0, 0), (0, 20), (20, 20)], distance=20)
+        test_shape = ExtrudeSplineShape(
+            points=[(0, 0), (0, 20), (20, 20)], distance=20)
 
         assert test_shape.solid is not None
         assert test_shape.hash_value is not None
@@ -103,7 +105,8 @@ class test_object_properties(unittest.TestCase):
     def test_hash_value_update(self):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
-        test_shape = ExtrudeSplineShape(points=[(0, 0), (0, 20), (20, 20)], distance=20)
+        test_shape = ExtrudeSplineShape(
+            points=[(0, 0), (0, 20), (20, 20)], distance=20)
         test_shape.solid
         assert test_shape.hash_value is not None
         initial_hash_value = test_shape.hash_value

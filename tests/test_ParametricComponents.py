@@ -154,8 +154,12 @@ class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
         """creates a poloidal field coil from parametric shape and checks a solid is created"""
         test_shape = paramak.PoloidalFieldCoilCase(
-            casing_thickness=5, coil_height=50, coil_width=50, center_point=(1000, 500)
-        )
+            casing_thickness=5,
+            coil_height=50,
+            coil_width=50,
+            center_point=(
+                1000,
+                500))
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
@@ -167,7 +171,7 @@ class test_Plasma(unittest.TestCase):
 
         test_plasma = paramak.Plasma()
 
-        assert type(test_plasma.elongation) == float
+        assert isinstance(test_plasma.elongation, float)
 
         def test_plasma_elongation_min_setting():
             """checks ValueError is raised when an elongation < 0 is specified"""
@@ -216,20 +220,25 @@ class test_Plasma(unittest.TestCase):
                 # Expected
                 expected_lower_x_point, expected_upper_x_point = None, None
                 if config == "single-null" or config == "double-null":
-                    expected_lower_x_point = (
-                        1
-                        - (1 + test_plasma.x_point_shift)
-                        * triangularity
-                        * minor_radius,
-                        -(1 + test_plasma.x_point_shift) * elongation * minor_radius
-                        + vertical_displacement,
-                    )
+                    expected_lower_x_point = (1 -
+                                              (1 +
+                                               test_plasma.x_point_shift) *
+                                              triangularity *
+                                              minor_radius, -
+                                              (1 +
+                                               test_plasma.x_point_shift) *
+                                              elongation *
+                                              minor_radius +
+                                              vertical_displacement, )
 
                     if config == "double-null":
                         expected_upper_x_point = (
                             expected_lower_x_point[0],
-                            (1 + test_plasma.x_point_shift) * elongation * minor_radius
-                            + vertical_displacement,
+                            (1 +
+                             test_plasma.x_point_shift) *
+                            elongation *
+                            minor_radius +
+                            vertical_displacement,
                         )
 
                 # Check
@@ -267,13 +276,15 @@ class test_Plasma(unittest.TestCase):
                 # Expected
                 expected_lower_x_point, expected_upper_x_point = None, None
                 if config == "single-null" or config == "double-null":
-                    expected_lower_x_point = (
-                        1
-                        - (1 + test_plasma.x_point_shift)
-                        * triangularity
-                        * minor_radius,
-                        -(1 + test_plasma.x_point_shift) * elongation * minor_radius,
-                    )
+                    expected_lower_x_point = (1 -
+                                              (1 +
+                                               test_plasma.x_point_shift) *
+                                              triangularity *
+                                              minor_radius, -
+                                              (1 +
+                                               test_plasma.x_point_shift) *
+                                              elongation *
+                                              minor_radius, )
 
                     if config == "double-null":
                         expected_upper_x_point = (
@@ -297,7 +308,7 @@ class test_Plasma(unittest.TestCase):
 
         test_plasma.export_stp("plasma.stp")
 
-        assert Path("plasma.stp").exists() == True
+        assert Path("plasma.stp").exists()
         os.system("rm plasma.stp")
 
     def test_export_plasma_from_points_export(self):
@@ -314,7 +325,7 @@ class test_Plasma(unittest.TestCase):
 
         test_plasma.export_stp("plasma.stp")
 
-        assert Path("plasma.stp").exists() == True
+        assert Path("plasma.stp").exists()
         os.system("rm plasma.stp")
 
 
@@ -498,7 +509,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
 
         test_shape.export_stp("center_column_shield.stp")
 
-        assert Path("center_column_shield.stp").exists() == True
+        assert Path("center_column_shield.stp").exists()
 
         os.system("rm center_column_shield.stp")
 

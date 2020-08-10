@@ -28,7 +28,7 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -135,24 +135,34 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
                 self.center_point[1] + self.height / 2.0,
             ),  # upper right
             (
-                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] + \
+                (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + \
+                (self.casing_thickness + self.height / 2.0),
             ),
             (
-                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] - (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] + \
+                (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] - \
+                (self.casing_thickness + self.height / 2.0),
             ),
             (
-                self.center_point[0] - (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] - (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] - \
+                (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] - \
+                (self.casing_thickness + self.height / 2.0),
             ),
             (
-                self.center_point[0] - (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] - \
+                (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + \
+                (self.casing_thickness + self.height / 2.0),
             ),
             (
-                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] + \
+                (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + \
+                (self.casing_thickness + self.height / 2.0),
             ),
             (
                 self.center_point[0] + self.width / 2.0,

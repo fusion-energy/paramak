@@ -11,7 +11,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
         mid_radius (float): the inner radius of the outer hyperbolic profile of the
             center colunn shield.
         outer_radius (float): the outer radius of the center column shield.
-    
+
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the shape.
         color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
@@ -30,7 +30,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(

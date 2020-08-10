@@ -97,7 +97,8 @@ def make_other_aspects_of_neutronics_model(my_reactor):
         ]
     )
 
-    # this is the underlying geometry container that is filled with the faceteted CAD model
+    # this is the underlying geometry container that is filled with the
+    # faceteted CAD model
     universe = openmc.Universe()
     geom = openmc.Geometry(universe)
 
@@ -116,7 +117,8 @@ def make_other_aspects_of_neutronics_model(my_reactor):
     source.energy = openmc.stats.Discrete([14e6], [1])
     settings.source = source
 
-    # details about what neutrons interactions to keep track of (called a tally)
+    # details about what neutrons interactions to keep track of (called a
+    # tally)
     tallies = openmc.Tallies()
     material_filter = openmc.MaterialFilter(blanket_mat)
     tbr_tally = openmc.Tally(name="TBR")

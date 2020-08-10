@@ -10,7 +10,8 @@ class test_object_properties(unittest.TestCase):
         """creates a rotated shape using spline connections and checks \
                 the volume is correct"""
 
-        test_shape = RotateSplineShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape = RotateSplineShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
 
         test_shape.rotation_angle = 360
         test_shape.create_solid()
@@ -38,7 +39,8 @@ class test_object_properties(unittest.TestCase):
 
         assert inner_shape.volume == pytest.approx(900.88, abs=0.1)
         assert outer_shape.volume == pytest.approx(2881.76, abs=0.1)
-        assert outer_shape_with_cut.volume == pytest.approx(2881.76 - 900.88, abs=0.2)
+        assert outer_shape_with_cut.volume == pytest.approx(
+            2881.76 - 900.88, abs=0.2)
 
     def test_initial_solid_construction(self):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""

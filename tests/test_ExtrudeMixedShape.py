@@ -143,7 +143,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = ExtrudeMixedShape(
-            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"),],
+            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"), ],
             distance=20,
         )
 
@@ -161,7 +161,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = ExtrudeMixedShape(
-            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"),],
+            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"), ],
             distance=20,
         )
         test_shape.solid

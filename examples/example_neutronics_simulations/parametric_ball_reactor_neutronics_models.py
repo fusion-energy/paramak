@@ -69,7 +69,8 @@ def make_neutronics_geometry(
 
     os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m")
 
-    # returns all the inputs and some extra reactor attributes, merged into a single dictionary
+    # returns all the inputs and some extra reactor attributes, merged into a
+    # single dictionary
     return {
         **input_parameters,
         **{
@@ -140,7 +141,8 @@ def make_neutronics_model(
     """
     input_parameters = locals()
 
-    # this is the underlying geometry container that is filled with the faceteted CAD model
+    # this is the underlying geometry container that is filled with the
+    # faceteted CAD model
     universe = openmc.Universe()
     geom = openmc.Geometry(universe)
 
@@ -183,9 +185,9 @@ def make_neutronics_model(
     ).openmc_material
 
     if (
-        blanket_multiplier_material == None
-        and blanket_multiplier_fraction == None
-        and blanket_multiplier_packing_fraction == None
+        blanket_multiplier_material is None
+        and blanket_multiplier_fraction is None
+        and blanket_multiplier_packing_fraction is None
     ):
 
         blanket_material = MultiMaterial(
@@ -327,7 +329,8 @@ def make_neutronics_model(
         True  # This line is required to switch on photons tracking
     )
 
-    # details about what neutrons interactions to keep track of (called a tally)
+    # details about what neutrons interactions to keep track of (called a
+    # tally)
     tallies = openmc.Tallies()
     material_filter = openmc.MaterialFilter(blanket_material)
     tbr_tally = openmc.Tally(name="TBR")
@@ -369,7 +372,8 @@ def make_neutronics_model(
     blanket_heating_tally_result = df["mean"].sum() / 1e6
     blanket_heating_tally_std_dev = df["std. dev."].sum() / 1e6
 
-    # returns all the inputs and some extra reactor attributes, merged into a single dictionary
+    # returns all the inputs and some extra reactor attributes, merged into a
+    # single dictionary
     return {
         **input_parameters,
         **{
@@ -404,7 +408,8 @@ if __name__ == "__main__":
 
         material_parameters_and_results = make_neutronics_model(
             reactor=geometry_parameters,
-            # based on http://www.euro-fusionscipub.org/wp-content/uploads/WPBBCP16_15535_submitted.pdf
+            # based on
+            # http://www.euro-fusionscipub.org/wp-content/uploads/WPBBCP16_15535_submitted.pdf
             firstwall_radial_thickness=3.0,
             firstwall_armour_material="tungsten",
             firstwall_coolant_material="He",
@@ -414,14 +419,16 @@ if __name__ == "__main__":
             firstwall_coolant_temperature_C=400,
             firstwall_coolant_pressure_Pa=8e6,
             firstwall_structural_fraction=0.560188,
-            # based on https://www.sciencedirect.com/science/article/pii/S2352179118300437
+            # based on
+            # https://www.sciencedirect.com/science/article/pii/S2352179118300437
             blanket_rear_wall_coolant_material="H2O",
             blanket_rear_wall_structural_material="eurofer",
             blanket_rear_wall_coolant_fraction=0.3,
             blanket_rear_wall_structural_fraction=0.7,
             blanket_rear_wall_coolant_temperature_C=200,
             blanket_rear_wall_coolant_pressure_Pa=1e6,
-            # based on https://www.sciencedirect.com/science/article/pii/S2352179118300437
+            # based on
+            # https://www.sciencedirect.com/science/article/pii/S2352179118300437
             blanket_lithium6_enrichment_percent=60,
             blanket_breeder_material="Li4SiO4",
             blanket_coolant_material="He",
@@ -437,21 +444,24 @@ if __name__ == "__main__":
             blanket_coolant_pressure_Pa=1e6,
             blanket_breeder_temperature_C=600,
             blanket_breeder_pressure_Pa=8e6,
-            # based on https://www.sciencedirect.com/science/article/pii/S2352179118300437
+            # based on
+            # https://www.sciencedirect.com/science/article/pii/S2352179118300437
             divertor_coolant_fraction=0.57195798876,
             divertor_structural_fraction=0.42804201123,
             divertor_coolant_material="H2O",
             divertor_structural_material="tungsten",
             divertor_coolant_temperature_C=150,
             divertor_coolant_pressure_Pa=5e6,
-            # based on https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf?_ga=2.101398593.1139828080.1595493457-812289418.1595493457
+            # based on
+            # https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf?_ga=2.101398593.1139828080.1595493457-812289418.1595493457
             center_column_shield_coolant_fraction=0.13,
             center_column_shield_structural_fraction=0.57,
             center_column_shield_coolant_material="H2O",
             center_column_shield_structural_material="tungsten",
             center_column_shield_coolant_temperature_C=150,
             center_column_shield_coolant_pressure_Pa=5e6,
-            # based on https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf?_ga=2.101398593.1139828080.1595493457-812289418.1595493457
+            # based on
+            # https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf?_ga=2.101398593.1139828080.1595493457-812289418.1595493457
             inboard_tf_coils_conductor_fraction=0.57,
             inboard_tf_coils_coolant_fraction=0.05,
             inboard_tf_coils_structure_fraction=0.38,
@@ -463,6 +473,5 @@ if __name__ == "__main__":
         )
 
         with open(str(uuid.uuid4()) + ".json", "w") as outfile:
-            json.dump(
-                {**geometry_parameters, **material_parameters_and_results}, outfile
-            )
+            json.dump({**geometry_parameters, **
+                       material_parameters_and_results}, outfile)

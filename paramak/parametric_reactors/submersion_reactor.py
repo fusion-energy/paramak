@@ -10,7 +10,7 @@ class SubmersionTokamak(paramak.Reactor):
     """Creates geometry for a simple submersion reactor including a
     plasma, cylindical center column shielding, square toroidal field
     coils. There is an inboard breeder blanket on this ball reactor.
-    :param inner_bore_radial_thickness: the radial thickness of 
+    :param inner_bore_radial_thickness: the radial thickness of
      the inner bore (cm)
     :type inner_bore_radial_thickness: float
     :inboard_tf_leg_radial_thickness: the radial thickness of the
@@ -130,7 +130,8 @@ class SubmersionTokamak(paramak.Reactor):
 
     def create_components(self):
 
-        # this is the radial build sequence, where one componet stops and another starts
+        # this is the radial build sequence, where one componet stops and
+        # another starts
         inner_bore_start_radius = 0
         inner_bore_end_radius = (
             inner_bore_start_radius + self.inner_bore_radial_thickness
@@ -138,8 +139,8 @@ class SubmersionTokamak(paramak.Reactor):
 
         inboard_tf_coils_start_radius = inner_bore_end_radius
         inboard_tf_coils_end_radius = (
-            inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
-        )
+            inboard_tf_coils_start_radius +
+            self.inboard_tf_leg_radial_thickness)
 
         center_column_shield_start_radius = inboard_tf_coils_end_radius
         center_column_shield_end_radius = (
@@ -149,8 +150,8 @@ class SubmersionTokamak(paramak.Reactor):
 
         inboard_blanket_start_radius = center_column_shield_end_radius
         inboard_blanket_end_radius = (
-            inboard_blanket_start_radius + self.inboard_blanket_radial_thickness
-        )
+            inboard_blanket_start_radius +
+            self.inboard_blanket_radial_thickness)
 
         inboard_firstwall_start_radius = inboard_blanket_end_radius
         inboard_firstwall_end_radius = (
@@ -159,16 +160,16 @@ class SubmersionTokamak(paramak.Reactor):
 
         inner_plasma_gap_start_radius = inboard_firstwall_end_radius
         inner_plasma_gap_end_radius = (
-            inner_plasma_gap_start_radius + self.inner_plasma_gap_radial_thickness
-        )
+            inner_plasma_gap_start_radius +
+            self.inner_plasma_gap_radial_thickness)
 
         plasma_start_radius = inner_plasma_gap_end_radius
         plasma_end_radius = plasma_start_radius + self.plasma_radial_thickness
 
         outer_plasma_gap_start_radius = plasma_end_radius
         outer_plasma_gap_end_radius = (
-            outer_plasma_gap_start_radius + self.outer_plasma_gap_radial_thickness
-        )
+            outer_plasma_gap_start_radius +
+            self.outer_plasma_gap_radial_thickness)
 
         outboard_firstwall_start_radius = outer_plasma_gap_end_radius
         outboard_firstwall_end_radius = (
@@ -177,33 +178,33 @@ class SubmersionTokamak(paramak.Reactor):
 
         outboard_blanket_start_radius = outboard_firstwall_end_radius
         outboard_blanket_end_radius = (
-            outboard_blanket_start_radius + self.outboard_blanket_radial_thickness
-        )
+            outboard_blanket_start_radius +
+            self.outboard_blanket_radial_thickness)
 
         blanket_rear_wall_start_radius = outboard_blanket_end_radius
         blanket_rear_wall_end_radius = (
-            blanket_rear_wall_start_radius + self.blanket_rear_wall_radial_thickness
-        )
+            blanket_rear_wall_start_radius +
+            self.blanket_rear_wall_radial_thickness)
 
         tf_info_provided = False
         if (
-            self.outboard_tf_coil_radial_thickness != None
-            and self.tf_coil_to_rear_blanket_radial_gap != None
-            and self.tf_coil_poloidal_thickness != None
+            self.outboard_tf_coil_radial_thickness is not None
+            and self.tf_coil_to_rear_blanket_radial_gap is not None
+            and self.tf_coil_poloidal_thickness is not None
         ):
             tf_info_provided = True
             outboard_tf_coil_start_radius = (
-                blanket_rear_wall_end_radius + self.tf_coil_to_rear_blanket_radial_gap
-            )
+                blanket_rear_wall_end_radius +
+                self.tf_coil_to_rear_blanket_radial_gap)
             outboard_tf_coil_end_radius = (
-                outboard_tf_coil_start_radius + self.outboard_tf_coil_radial_thickness
-            )
+                outboard_tf_coil_start_radius +
+                self.outboard_tf_coil_radial_thickness)
 
         pf_info_provided = False
         if (
-            self.pf_coil_vertical_thicknesses != None
-            and self.pf_coil_radial_thicknesses != None
-            and self.pf_coil_to_tf_coil_radial_gap != None
+            self.pf_coil_vertical_thicknesses is not None
+            and self.pf_coil_radial_thicknesses is not None
+            and self.pf_coil_to_tf_coil_radial_gap is not None
         ):
             pf_info_provided = True
 
@@ -221,14 +222,15 @@ class SubmersionTokamak(paramak.Reactor):
             self.plasma_high_point[0] + 0.5 * self.support_radial_thickness
         )
 
-        # this is the vertical build sequence, componets build on each other in a similar manner to the radial build
+        # this is the vertical build sequence, componets build on each other in
+        # a similar manner to the radial build
         plasma_start_height = 0
         plasma_end_height = plasma_start_height + self.plasma_high_point[1]
 
         plasma_to_divertor_gap_start_height = plasma_end_height
         plasma_to_divertor_gap_end_height = (
-            plasma_to_divertor_gap_start_height + self.outer_plasma_gap_radial_thickness
-        )
+            plasma_to_divertor_gap_start_height +
+            self.outer_plasma_gap_radial_thickness)
 
         # the firstwall is cut by the divertor but uses the same control points
         firstwall_start_height = plasma_to_divertor_gap_end_height
@@ -241,8 +243,8 @@ class SubmersionTokamak(paramak.Reactor):
 
         blanket_rear_wall_start_height = blanket_end_height
         blanket_rear_wall_end_height = (
-            blanket_rear_wall_start_height + self.blanket_rear_wall_radial_thickness
-        )
+            blanket_rear_wall_start_height +
+            self.blanket_rear_wall_radial_thickness)
 
         if tf_info_provided and pf_info_provided:
             number_of_pf_coils = len(self.pf_coil_vertical_thicknesses)
@@ -253,7 +255,8 @@ class SubmersionTokamak(paramak.Reactor):
 
             pf_coils_y_values = []
             pf_coils_x_values = []
-            # adds in coils with equal spacing strategy, should be updated to allow user positions
+            # adds in coils with equal spacing strategy, should be updated to
+            # allow user positions
             for i in range(number_of_pf_coils):
                 y_value = (
                     blanket_rear_wall_end_height
@@ -269,13 +272,14 @@ class SubmersionTokamak(paramak.Reactor):
                 pf_coils_x_values.append(x_value)
 
             pf_coil_start_radius = (
-                outboard_tf_coil_end_radius + self.pf_coil_to_tf_coil_radial_gap
-            )
+                outboard_tf_coil_end_radius +
+                self.pf_coil_to_tf_coil_radial_gap)
             pf_coil_end_radius = pf_coil_start_radius + max(
                 self.pf_coil_radial_thicknesses
             )
 
-        # raises an error if the plasma high point is not above part of the plasma
+        # raises an error if the plasma high point is not above part of the
+        # plasma
         if self.plasma_high_point[0] < plasma_start_radius:
             raise ValueError(
                 "The first value in plasma high_point is too small, it should be larger than",
@@ -344,7 +348,8 @@ class SubmersionTokamak(paramak.Reactor):
 
         shapes_or_components.append(plasma)
 
-        # this is used to cut the inboard blanket and then fused / unioned with the firstwall
+        # this is used to cut the inboard blanket and then fused / unioned with
+        # the firstwall
         inboard_firstwall = paramak.BlanketFP(
             plasma=plasma,
             offset_from_plasma=self.inner_plasma_gap_radial_thickness,
@@ -362,7 +367,8 @@ class SubmersionTokamak(paramak.Reactor):
             cut=inboard_firstwall,
         )
 
-        # this takes a single solid from a compound of solids by finding the solid nearest to a point
+        # this takes a single solid from a compound of solids by finding the
+        # solid nearest to a point
         inboard_blanket.solid = inboard_blanket.solid.solids(
             cq.selectors.NearestToPointSelector((0, 0, 0))
         )
@@ -394,7 +400,8 @@ class SubmersionTokamak(paramak.Reactor):
         )
         shapes_or_components.append(divertor)
 
-        # the divertor is cut away then the firstwall can be added to the reactor using CQ operations
+        # the divertor is cut away then the firstwall can be added to the
+        # reactor using CQ operations
         firstwall.solid = firstwall.solid.cut(divertor.solid)
         shapes_or_components.append(firstwall)
 
@@ -468,17 +475,20 @@ class SubmersionTokamak(paramak.Reactor):
         outboard_rear_blanket_wall = paramak.BlanketFP(
             plasma=plasma,
             start_angle=90,
-            stop_angle=-90,
-            offset_from_plasma=self.outer_plasma_gap_radial_thickness
-            + self.firstwall_radial_thickness
-            + self.outboard_blanket_radial_thickness,
+            stop_angle=-
+            90,
+            offset_from_plasma=self.outer_plasma_gap_radial_thickness +
+            self.firstwall_radial_thickness +
+            self.outboard_blanket_radial_thickness,
             thickness=self.blanket_rear_wall_radial_thickness,
             rotation_angle=self.rotation_angle,
             stp_filename="outboard_rear_blanket_wall.stp",
             stl_filename="outboard_rear_blanket_wall.stl",
             name="outboard_rear_blanket_wall",
             material_tag="rear_blanket_wall_mat",
-            union=[outboard_rear_blanket_wall_upper, outboard_rear_blanket_wall_lower],
+            union=[
+                outboard_rear_blanket_wall_upper,
+                outboard_rear_blanket_wall_lower],
         )
 
         shapes_or_components.append(outboard_rear_blanket_wall)

@@ -11,7 +11,7 @@ class ExtrudeSplineShape(Shape):
     """Extrude a 3d CadQuery solid from points connected with
        a spline connections
 
-       :param points: A list of XZ coordinates connected by spline connections. For example 
+       :param points: A list of XZ coordinates connected by spline connections. For example
             [(2.,1.), (2.,2.), (1.,2.), (1.,1.), (2.,1.)].
        :type points: a list of tuples each containing X (float), Z (float)
        :param stp_filename: the filename used when saving stp files as part of a reactor
@@ -21,7 +21,7 @@ class ExtrudeSplineShape(Shape):
             3 or 4 floats respectively each in the range 0-1
        :param distance: The extrude distance to use (cm units if used for neutronics)
        :type distance: float
-       :param azimuth_placement_angle: the angle or angles to use when rotating the 
+       :param azimuth_placement_angle: the angle or angles to use when rotating the
             shape on the azimuthal axis
        :type azimuth_placement_angle: float or iterable of floats
        :param cut: An optional cadquery object to perform a boolean cut with this object
@@ -128,7 +128,8 @@ class ExtrudeSplineShape(Shape):
     def get_hash(self):
         hash_object = blake2b()
         shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary reconstruction
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
         shape_dict["_solid"] = None
         shape_dict["_hash_value"] = None
 
@@ -159,7 +160,9 @@ class ExtrudeSplineShape(Shape):
             rotated_solids = []
             # Perform seperate rotations for each angle
             for angle in self.azimuth_placement_angle:
-                rotated_solids.append(solid.rotate((0, 0, -1), (0, 0, 1), angle))
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
             solid = cq.Workplane(self.workplane)
 
             # Joins the seperate solids together
@@ -167,7 +170,8 @@ class ExtrudeSplineShape(Shape):
                 solid = solid.union(i)
         else:
             # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate((0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:

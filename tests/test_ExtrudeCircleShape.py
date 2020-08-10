@@ -131,7 +131,8 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is created when the shape properties of points, radius or distance are changed"""
 
         # points
-        test_shape = paramak.ExtrudeCircleShape(points=[(30, 0)], radius=5, distance=20)
+        test_shape = paramak.ExtrudeCircleShape(
+            points=[(30, 0)], radius=5, distance=20)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.points = [(40, 0)]
@@ -140,7 +141,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
         # radius
-        test_shape = paramak.ExtrudeCircleShape(points=[(30, 0)], radius=5, distance=20)
+        test_shape = paramak.ExtrudeCircleShape(
+            points=[(30, 0)], radius=5, distance=20)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.radius = 10
@@ -149,7 +151,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
         # distance
-        test_shape = paramak.ExtrudeCircleShape(points=[(30, 0)], radius=5, distance=20)
+        test_shape = paramak.ExtrudeCircleShape(
+            points=[(30, 0)], radius=5, distance=20)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.distance = 30

@@ -14,9 +14,8 @@ def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
         print(os.path.join(basefolder, entry["stp_filename"]))
         if entry["stp_filename"].endswith(".sat"):
             import_type = "acis"
-        if entry["stp_filename"].endswith(".stp") or entry["stp_filename"].endswith(
-            ".step"
-        ):
+        if entry["stp_filename"].endswith(
+                ".stp") or entry["stp_filename"].endswith(".step"):
             import_type = "step"
         short_file_name = os.path.split(entry["stp_filename"])[-1]
         # print('short_file_name',short_file_name)
@@ -38,16 +37,22 @@ def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
         # print('volumes_in_group',volumes_in_group,type(volumes_in_group))
         if len(new_vols) > 1:
             cubit.cmd(
-                "unite vol " + " ".join(new_vols) + " with vol " + " ".join(new_vols)
-            )
+                "unite vol " +
+                " ".join(new_vols) +
+                " with vol " +
+                " ".join(new_vols))
         all_vols = cubit.parse_cubit_list("volume", "all")
-        new_vols_after_unite = set(current_vols).symmetric_difference(set(all_vols))
+        new_vols_after_unite = set(
+            current_vols).symmetric_difference(set(all_vols))
         new_vols_after_unite = map(str, new_vols_after_unite)
         # cubit.cmd('group '+str(starting_group_id)+' copy rotate 45 about z repeat 7')
         entry["volumes"] = new_vols_after_unite
         cubit.cmd(
-            'group "' + short_file_name + '" add volume ' + " ".join(entry["volumes"])
-        )
+            'group "' +
+            short_file_name +
+            '" add volume ' +
+            " ".join(
+                entry["volumes"]))
         # cubit.cmd('volume in group '+str(starting_group_id)+' copy rotate 45 about z repeat 7')
     cubit.cmd("separate body all")
     return input_locations
@@ -55,7 +60,8 @@ def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
 
 def byteify(input):
     if isinstance(input, dict):
-        return {byteify(key): byteify(value) for key, value in input.iteritems()}
+        return {byteify(key): byteify(value)
+                for key, value in input.iteritems()}
     elif isinstance(input, list):
         return [byteify(element) for element in input]
     elif isinstance(input, unicode):

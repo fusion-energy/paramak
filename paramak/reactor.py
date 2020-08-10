@@ -17,9 +17,9 @@ from paramak.shape import Shape
 
 class Reactor:
 
-    """The Reactor object allows shapes and components to be added and then collective 
+    """The Reactor object allows shapes and components to be added and then collective
     opperations to be performed on them. Combining all the shapes is required for creating
-    images of the whole reactor and creating a Graveyard (bounding box) that is needed 
+    images of the whole reactor and creating a Graveyard (bounding box) that is needed
     for neutronics simulations.
     """
 
@@ -75,7 +75,7 @@ class Reactor:
     def shapes_and_components(self, value):
         """Adds a list of parametric shape(s) and or parametric component(s)
         to the Reactor object. This allows collective operations can be performed
-        on all the shapes in the reactor. When adding a shape or componet the 
+        on all the shapes in the reactor. When adding a shape or componet the
         stp_filename of the shape or component should be unique.
         """
         shapes_and_components = []
@@ -86,7 +86,7 @@ class Reactor:
         stl_filenames = []
 
         for shape in value:
-            if shape.stp_filename != None:
+            if shape.stp_filename is not None:
                 if shape.stp_filename in stp_filenames:
                     raise ValueError(
                         "Set Reactor already contains a shape or component \
@@ -95,7 +95,7 @@ class Reactor:
                     )
                 else:
                     stp_filenames.append(shape.stp_filename)
-            if shape.stl_filename != None:
+            if shape.stl_filename is not None:
                 if shape.stl_filename in stl_filenames:
                     raise ValueError(
                         "Set Reactor already contains a shape or component \
@@ -144,7 +144,8 @@ class Reactor:
 
         for entry in self.shapes_and_components:
 
-            if include_plasma == False and isinstance(entry, paramak.Plasma) == True:
+            if include_plasma == False and isinstance(
+                    entry, paramak.Plasma) == True:
                 continue
 
             if entry.stp_filename is None:
@@ -180,10 +181,10 @@ class Reactor:
         file can then be used with the neutronics workflows to
         create a neutronics model. Creation of the netronics
         model requires linkage between volumes, materials and
-        identifcation of which volumes to tet_mesh. If the 
+        identifcation of which volumes to tet_mesh. If the
         filename does not end with .json then .json will be added.
         The plasma geometry is not included by default as it is
-        typically not included in neutronics simulations. The 
+        typically not included in neutronics simulations. The
         reason for this is that the low number density results
         in minimal interaction with neutrons. However the plasma
         can be added if the include_plasma argument is set to True
@@ -227,12 +228,15 @@ class Reactor:
                     "set .stp_filename property for \
                                  Shapes before using the export_stp method"
                 )
-            filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
+            filenames.append(
+                str(Path(output_folder) / Path(entry.stp_filename)))
             entry.export_stp(Path(output_folder) / Path(entry.stp_filename))
 
-        # creates a graveyard (bounding shell volume) which is needed for nuetronics simulations
+        # creates a graveyard (bounding shell volume) which is needed for
+        # nuetronics simulations
         self.make_graveyard()
-        filenames.append(str(Path(output_folder) / Path(self.graveyard.stp_filename)))
+        filenames.append(
+            str(Path(output_folder) / Path(self.graveyard.stp_filename)))
         self.graveyard.export_stp(
             Path(output_folder) / Path(self.graveyard.stp_filename)
         )
@@ -258,12 +262,15 @@ class Reactor:
                     "set .stl_filename property for \
                                  Shapes before using the export_stl method"
                 )
-            filenames.append(str(Path(output_folder) / Path(entry.stl_filename)))
+            filenames.append(
+                str(Path(output_folder) / Path(entry.stl_filename)))
             entry.export_stl(Path(output_folder) / Path(entry.stl_filename))
 
-        # creates a graveyard (bounding shell volume) which is needed for nuetronics simulations
+        # creates a graveyard (bounding shell volume) which is needed for
+        # nuetronics simulations
         self.make_graveyard()
-        filenames.append(str(Path(output_folder) / Path(self.graveyard.stl_filename)))
+        filenames.append(
+            str(Path(output_folder) / Path(self.graveyard.stl_filename)))
         self.graveyard.export_stl(
             Path(output_folder) / Path(self.graveyard.stl_filename)
         )
@@ -294,8 +301,10 @@ class Reactor:
                     "set .stp_filename property for \
                                  Shapes before using the export_stp method"
                 )
-            filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
-            entry.export_physical_groups(Path(output_folder) / Path(entry.stp_filename))
+            filenames.append(
+                str(Path(output_folder) / Path(entry.stp_filename)))
+            entry.export_physical_groups(
+                Path(output_folder) / Path(entry.stp_filename))
         return filenames
 
     def export_svg(self, filename):
@@ -382,8 +391,12 @@ class Reactor:
         return graveyard_shape
 
     def export_2d_image(
-        self, filename="2d_slice.png", xmin=0.0, xmax=900.0, ymin=-600.0, ymax=600.0
-    ):
+            self,
+            filename="2d_slice.png",
+            xmin=0.0,
+            xmax=900.0,
+            ymin=-600.0,
+            ymax=600.0):
         """Creates a 2D slice image (png) of the reactor
         :param filename: output filename of the image created
         :type filename: str

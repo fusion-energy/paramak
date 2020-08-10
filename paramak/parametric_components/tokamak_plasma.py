@@ -196,10 +196,16 @@ class Plasma(RotateSplineShape):
         triangularity = self.triangularity
         if self.configuration == "single-null" or self.configuration == "double-null":
             # no X points for non-null config
-            lower_x_point = (
-                1 - (1 + shift) * triangularity * minor_radius,
-                -(1 + shift) * elongation * minor_radius + self.vertical_displacement,
-            )
+            lower_x_point = (1 -
+                             (1 +
+                              shift) *
+                             triangularity *
+                             minor_radius, -
+                             (1 +
+                              shift) *
+                             elongation *
+                             minor_radius +
+                             self.vertical_displacement, )
 
             if self.configuration == "double-null":
                 # upper_x_point is up-down symmetrical
@@ -247,5 +253,7 @@ class Plasma(RotateSplineShape):
             self.major_radius - self.triangularity * self.minor_radius,
             -self.elongation * self.minor_radius,
         )
-        self.outer_equatorial_point = (self.major_radius + self.minor_radius, 0)
-        self.inner_equatorial_point = (self.major_radius - self.minor_radius, 0)
+        self.outer_equatorial_point = (
+            self.major_radius + self.minor_radius, 0)
+        self.inner_equatorial_point = (
+            self.major_radius - self.minor_radius, 0)

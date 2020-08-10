@@ -100,7 +100,8 @@ class test_object_properties(unittest.TestCase):
 
         test_shape.azimuth_placement_angle = [0, 90, 180, 270]
 
-        assert test_shape.volume == pytest.approx((10 * 20 * 10 * 4) - (5 * 20 * 5 * 4))
+        assert test_shape.volume == pytest.approx(
+            (10 * 20 * 10 * 4) - (5 * 20 * 5 * 4))
 
     def test_cut_volume(self):
         """creates an extruded shape with one placement angle using straight \
@@ -234,8 +235,9 @@ class test_object_properties(unittest.TestCase):
 
         # color
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20, color=[0.5, 0.5, 0.5],
-        )
+            points=[
+                (0, 0), (0, 20), (20, 20)], distance=20, color=[
+                0.5, 0.5, 0.5], )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.color = [0.1, 0.2, 0.8]
@@ -281,7 +283,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
         # cut
-        cut_shape = ExtrudeStraightShape(points=[(5, 5), (5, 15), (15, 15)], distance=5)
+        cut_shape = ExtrudeStraightShape(
+            points=[(5, 5), (5, 15), (15, 15)], distance=5)
 
         test_shape = ExtrudeStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], distance=20,

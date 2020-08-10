@@ -12,14 +12,14 @@ class RotateSplineShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with splines
 
        Args:
-          points (list of tuples each containing X (float), Z (float)): A list of XZ coordinates 
+          points (list of tuples each containing X (float), Z (float)): A list of XZ coordinates
             connected by spline connections. For example [(2., 1.), (2., 2.), (1., 2.), (1., 1.)].
           name (str): The legend name used when exporting a html graph of the shape.
-          color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1): 
+          color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
              The color to use when exporting as html graphs or png images.
           material_tag (str): The material name to use when exporting the neutronics description.
           stp_filename (str): The filename used when saving stp files as part of a reactor.
-          azimuth_placement_angle (float or iterable of floats): the angle or angles to use when 
+          azimuth_placement_angle (float or iterable of floats): the angle or angles to use when
              rotating the shape on the azimuthal axis.
           rotation_angle (float): The rotation_angle to use when revoling the solid (degrees).
           cut (CadQuery object): An optional cadquery object to perform a boolean cut with this object.
@@ -121,7 +121,8 @@ class RotateSplineShape(Shape):
     def get_hash(self):
         hash_object = blake2b()
         shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary reconstruction
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
         shape_dict["_solid"] = None
         shape_dict["_hash_value"] = None
 
@@ -152,7 +153,9 @@ class RotateSplineShape(Shape):
             rotated_solids = []
             # Perform seperate rotations for each angle
             for angle in self.azimuth_placement_angle:
-                rotated_solids.append(solid.rotate((0, 0, -1), (0, 0, 1), angle))
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
             solid = cq.Workplane(self.workplane)
 
             # Joins the seperate solids together
@@ -160,7 +163,8 @@ class RotateSplineShape(Shape):
                 solid = solid.union(i)
         else:
             # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate((0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:

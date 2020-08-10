@@ -32,7 +32,9 @@ class test_object_properties(unittest.TestCase):
 
             test_shape.points = [(0, 200), (200, 100), (0, 0), (0, 200)]
 
-        self.assertRaises(ValueError, incorrect_points_end_point_is_start_point)
+        self.assertRaises(
+            ValueError,
+            incorrect_points_end_point_is_start_point)
 
         def incorrect_points_missing_z_value():
             """checks a ValueError is raised when a point is missing \

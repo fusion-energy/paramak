@@ -69,7 +69,8 @@ class test_object_properties(unittest.TestCase):
         """creates a rotated shape using straight connections and checks that the \
                 volume is correct"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
 
         test_shape.rotation_angle = 360
         test_shape.create_solid()
@@ -81,11 +82,13 @@ class test_object_properties(unittest.TestCase):
         """creates a rotated shape using straight connections and checks the volume \
                 is half the volume of a shape which is double its size"""
 
-        test_shape_1 = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape_1 = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape_1.rotation_angle = 180
         test_shape_1.create_solid()
 
-        test_shape_2 = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape_2 = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape_2.rotation_angle = 360
         test_shape_2.create_solid()
 
@@ -94,7 +97,8 @@ class test_object_properties(unittest.TestCase):
     def test_export_stp(self):
         """checks that export_stp() exports stp files with the correct suffix"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape.rotation_angle = 360
         os.system("rm filename.stp filename.step")
         test_shape.export_stp("filename.stp")
@@ -109,7 +113,8 @@ class test_object_properties(unittest.TestCase):
     def test_export_stl(self):
         """checks that export_stl() exports stl files with the correct suffix"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape.rotation_angle = 360
         os.system("rm filename.stl")
         test_shape.export_stl("filename")
@@ -122,7 +127,8 @@ class test_object_properties(unittest.TestCase):
     def test_export_svg(self):
         """checks that export_svg() exports svg files with the correct suffix"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape.rotation_angle = 360
         os.system("rm filename.svg")
         test_shape.export_svg("filename")
@@ -152,7 +158,8 @@ class test_object_properties(unittest.TestCase):
 
         assert inner_shape.volume == pytest.approx(589.048622)
         assert outer_shape.volume == pytest.approx(1908.517537)
-        assert outer_shape_with_cut.volume == pytest.approx(1908.517537 - 589.048622)
+        assert outer_shape_with_cut.volume == pytest.approx(
+            1908.517537 - 589.048622)
 
     def test_initial_solid_construction(self):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""

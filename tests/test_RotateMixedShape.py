@@ -154,7 +154,7 @@ class test_object_properties(unittest.TestCase):
                            number of connections are specified. There are 3 \
                            points set, so only 4 connections are needed"""
             test_shape = RotateMixedShape(
-                points=[(0, 200, "straight"), (200, 100), (0, 0, "spline"),]
+                points=[(0, 200, "straight"), (200, 100), (0, 0, "spline"), ]
             )
 
             test_shape.create_solid()
@@ -243,7 +243,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = RotateMixedShape(
-            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"),],
+            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"), ],
             rotation_angle=360,
         )
 
@@ -261,7 +261,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = RotateMixedShape(
-            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"),],
+            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"), ],
             rotation_angle=360,
         )
         test_shape.solid

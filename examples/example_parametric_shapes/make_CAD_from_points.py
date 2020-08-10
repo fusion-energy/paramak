@@ -35,7 +35,8 @@ def main():
     rotated_spline.export_stp("rotated_spline.stp")
     rotated_spline.export_html("rotated_spline.html")
 
-    # this makes a shape with straight, spline and circular edges and rotates it to make a solid
+    # this makes a shape with straight, spline and circular edges and rotates
+    # it to make a solid
     rotated_mixed = paramak.RotateMixedShape(
         points=[
             (100, 0, "straight"),
@@ -61,9 +62,10 @@ def main():
 
     # extrude examples
 
-    # this makes a banana shape with straight edges and rotates it to make a solid
+    # this makes a banana shape with straight edges and rotates it to make a
+    # solid
     extruded_straight = paramak.ExtrudeStraightShape(
-        points=[(300, -300), (400, 0), (300, 300), (400, 300), (500, 0), (400, -300),],
+        points=[(300, -300), (400, 0), (300, 300), (400, 300), (500, 0), (400, -300), ],
         distance=200,
     )
     extruded_straight.export_stp("extruded_straight.stp")
@@ -86,7 +88,8 @@ def main():
     extruded_spline.export_stp("extruded_spline.stp")
     extruded_spline.export_html("extruded_spline.html")
 
-    # this makes a banana shape straight top and bottom edges and extrudes it to make a solid
+    # this makes a banana shape straight top and bottom edges and extrudes it
+    # to make a solid
     extruded_mixed = paramak.ExtrudeMixedShape(
         points=[
             (100, 0, "straight"),

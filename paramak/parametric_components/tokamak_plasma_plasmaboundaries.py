@@ -208,5 +208,7 @@ class PlasmaBoundaries(Plasma):
             self.major_radius - self.triangularity * self.minor_radius,
             -self.elongation * self.minor_radius,
         )
-        self.outer_equatorial_point = (self.major_radius + self.minor_radius, 0)
-        self.inner_equatorial_point = (self.major_radius - self.minor_radius, 0)
+        self.outer_equatorial_point = (
+            self.major_radius + self.minor_radius, 0)
+        self.inner_equatorial_point = (
+            self.major_radius - self.minor_radius, 0)

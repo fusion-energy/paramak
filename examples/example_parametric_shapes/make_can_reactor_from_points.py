@@ -104,9 +104,13 @@ def main():
     core.stp_filename = "core.stp"
     core.rotation_angle = 180
 
-    myreactor = paramak.Reactor(
-        [plasma, blanket, core, divertor_top, divertor_bottom, firstwall, centre_column]
-    )
+    myreactor = paramak.Reactor([plasma,
+                                 blanket,
+                                 core,
+                                 divertor_top,
+                                 divertor_bottom,
+                                 firstwall,
+                                 centre_column])
 
     myreactor.export_stp(output_folder="can_reactor_from_points")
     myreactor.export_html("can_reactor_from_points/reactor.html")

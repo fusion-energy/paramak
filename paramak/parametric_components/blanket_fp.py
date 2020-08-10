@@ -211,8 +211,10 @@ class BlanketFP(RotateMixedShape):
             if callable(self.thickness):
                 # use the function of angle
                 return (
-                    self.thickness(theta / conversion_factor) + self.offset_from_plasma
-                )
+                    self.thickness(
+                        theta /
+                        conversion_factor) +
+                    self.offset_from_plasma)
             elif isinstance(self.thickness, tuple):
                 # increase thickness linearly
                 start_thickness, stop_thickness = self.thickness
@@ -226,7 +228,8 @@ class BlanketFP(RotateMixedShape):
                 # use the constant value
                 return self.thickness + self.offset_from_plasma
 
-        outer_points = self.create_offset_points(np.flip(thetas), R, Z, new_offset)
+        outer_points = self.create_offset_points(
+            np.flip(thetas), R, Z, new_offset)
         points = inner_points + outer_points
         points[-1][2] = "straight"
         points.append(inner_points[0])

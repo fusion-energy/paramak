@@ -7,7 +7,7 @@ import numpy as np
 def union_solid(solid, joiner):
     """
     Performs a boolean union of a solid with another solid or iterable of solids.
-    
+
     Args:
         solid Shape: the Shape that you want to union from
         joiner Shape: the Shape(s) that you want to be the unionting object
@@ -26,7 +26,7 @@ def union_solid(solid, joiner):
 def cut_solid(solid, cutter):
     """
     Performs a boolean cut of a solid with another solid or iterable of solids.
-    
+
     Args:
         solid Shape: the Shape that you want to cut from
         cutter Shape: the Shape(s) that you want to be the cutting object
@@ -45,7 +45,7 @@ def cut_solid(solid, cutter):
 def intersect_solid(solid, intersecter):
     """
     Performs a boolean intersection of a solid with another solid or iterable of solids.
-    
+
     Args:
         solid Shape: the Shape that you want to intersect
         intersecter Shape: the Shape(s) that you want to be the intersecting object
@@ -92,7 +92,7 @@ def find_center_point_of_circle(point1, point2, point3):
         point2 (float, float): point 2 coordinates
         point3 (float, float): point 3 coordinates
     Returns:
-        float, float: center of the circle corrdinates or 
+        float, float: center of the circle corrdinates or
         None if 3 points on a line are input
     """
     temp = point2[0] * point2[0] + point2[1] * point2[1]

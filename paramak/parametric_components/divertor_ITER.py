@@ -131,7 +131,8 @@ class ITERtypeDivertor(RotateMixedShape):
     def points(self, points):
         self._points = points
 
-    def create_vertical_target_points(self, anchor, coverage, tilt, radius, length):
+    def create_vertical_target_points(
+            self, anchor, coverage, tilt, radius, length):
         """Creates a list of points for a vertical target
 
         Args:
@@ -192,7 +193,11 @@ class ITERtypeDivertor(RotateMixedShape):
             dome_base, rotate(dome_base, C, -math.pi / 2), dome_height
         )
 
-        D_prime = extend(dome_base, dome_lower_point, dome_height + dome_thickness)
+        D_prime = extend(
+            dome_base,
+            dome_lower_point,
+            dome_height +
+            dome_thickness)
         D = extend(
             dome_lower_point,
             rotate(dome_lower_point, D_prime, math.pi / 2),
@@ -277,7 +282,8 @@ class ITERtypeDivertor(RotateMixedShape):
         for i, connection in enumerate(connections):
             OVT_points[i].append(connection)
         # OVT_points need to be fliped for correct connections
-        OVT_points = [[float(e[0]), float(e[1]), e[2]] for e in np.flipud(OVT_points)]
+        OVT_points = [[float(e[0]), float(e[1]), e[2]]
+                      for e in np.flipud(OVT_points)]
 
         # Dome points
         dome_points = []

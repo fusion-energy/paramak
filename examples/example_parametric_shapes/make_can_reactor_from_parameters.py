@@ -112,9 +112,13 @@ def main():
     core.rotation_angle = 180
 
     # initiates a reactor object
-    myreactor = paramak.Reactor(
-        [plasma, blanket, core, divertor_top, divertor_bottom, firstwall, centre_column]
-    )
+    myreactor = paramak.Reactor([plasma,
+                                 blanket,
+                                 core,
+                                 divertor_top,
+                                 divertor_bottom,
+                                 firstwall,
+                                 centre_column])
 
     myreactor.export_stp(output_folder="can_reactor_from_parameters")
     myreactor.export_html(filename="can_reactor_from_parameters/reactor.html")
