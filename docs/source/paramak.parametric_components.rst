@@ -109,6 +109,10 @@ CenterColumnShieldFlatTopCircular()
    :width: 300px
    :height: 220px
 
+.. automodule:: paramak.parametric_components.center_column_flat_top_circular
+   :members:
+   :show-inheritance:
+
 CenterColumnShieldPlasmaHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
