@@ -7,16 +7,32 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     """A tf coil volume with straight inner and outer profiles and
     constant gaps between each coil.
 
-    :param height: height of tf coils
-    :type height: float
-    :param inner_radius: inner radius of tf coils
-    :type inner_radius: float
-    :param outer_radius: outer radius of tf coils
-    :type outer_radius: float
-    :param number_of_coils: number of tf coils
-    :type number_of_coils: int
-    :param gap_size: gap between adjacent tf coils
-    :type gap_size: float
+    Args:
+        height (float): height of tf coils.
+        inner_radius (float): inner radius of tf coils.
+        outer_radius (float): outer radius of tf coils.
+        number_of_coils (int): number of tf coils.
+        gap_size (float): gap between adjacent tf coils.
+
+    Keyword Args:
+        name (str): the legend name used when exporting a html graph of the shape.
+        color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
+            exportin as html graphs or png images.
+        material_tag (str): The material name to use when exporting the neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
+            rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
+        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
+            this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        tet_mesh (str): Insert description.
+        physical_groups (type): Insert description.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
     """
 
     def __init__(
