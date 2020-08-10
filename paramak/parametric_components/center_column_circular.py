@@ -5,18 +5,32 @@ class CenterColumnShieldCircular(RotateMixedShape):
     """A center column shield volume with a circular outer profile and constant
     cylindrical inner profile.
 
-    :param height: height of the center column shield
-    :type height: float
-    :param inner_radius: inner radius of the center column shield
-    :type inner_radius: float
-    :param mid_radius: inner radius of the outer hyperbolic
-     profile of the center column shield
-    :type mid_radius: float
-    :param outer_radius: outer_radius of the center column shield
-    :type outer_radius: float
+    Args:
+        height (float): height of the center column shield.
+        inner_radius (float): the inner radius of the center column shield.
+        mid_radius (float): the inner radius of the outer hyperbolic profile of the
+            center colunn shield.
+        outer_radius (float): the outer radius of the center column shield.
+    
+    Keyword Args:
+        name (str): the legend name used when exporting a html graph of the shape.
+        color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
+            exportin as html graphs or png images.
+        material_tag (str): The material name to use when exporting the neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
+            rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
+        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
+            this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        tet_mesh (str): Insert description.
+        physical_groups (type): Insert description.
 
-    :return: a shape object that has generic functionality
-    :rtype: a paramak shape
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
     """
 
     def __init__(

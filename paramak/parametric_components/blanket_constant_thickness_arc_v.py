@@ -11,36 +11,34 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
     arc and a constant blanket thickness. The upper and lower edges continue
     vertically for the thickness of the blanket to back of the blanket.
 
-    :param inner_mid_point: the x,z coordinates of the mid point on
-     the inner surface of the blanket.
-    :type inner_mid_point: tuple of 2 floats
-    :param inner_upper_point: the x,z coordinates of the upper point on
-     the inner surface of the blanket.
-    :type inner_upper_point: tuple of 2 floats
-    :param inner_lower_point: the x,z coordinates of the lower point on
-     the inner surface of the blanket.
-    :type inner_lower_point: tuple of 2 floats
-    :param thickness: the radial thickness of the blanket in cm
-    :type thickness: float
-    :param name: The legend name used when exporting a html graph of the shape
-    :type name: str
-    :param color: the color to use when exporting as html graphs or png images
-    :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-     3 or 4 floats respectively each in the range 0-1
-    :param material_tag: The material name to use when exporting the neutronics description
-    :type material_tag: str
-    :param stp_filename: the filename used when saving stp files as part of a reactor
-    :type stp_filename: str
-    :param azimuth_placement_angle: the angle or angles to use when rotating the 
-     shape on the azimuthal axis
-    :type azimuth_placement_angle: float or iterable of floats
-    :param rotation_angle: The rotation_angle to use when revoling the solid (degrees)
-    :type rotation_angle: float
-    :param cut: An optional cadquery object to perform a boolean cut with this object
-    :type cut: cadquery object
+    Arguments:
+        inner_mid_point (tuple of 2 floats): the x,z coordinates of the mid point
+            on the inner surface of the blanket.
+        inner_upper_point (tuple of 2 floats): the x,z coordinates of the upper
+            point on the inner surface of the blanket.
+        inner_lower_point (tuple of 2 floats): the x,z coordinates of the lower point
+            on the inner surface of the blanket.
+        thickness (float): the radial thickness of the blanket in cm.
 
-    :return: a shape object that has generic functionality
-    :rtype: paramak shape object
+    Keyword Args:
+        name (str): the legend name used when exporting a html graph of the shape.
+        color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
+            exportin as html graphs or png images.
+        material_tag (str): The material name to use when exporting the neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
+            rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
+        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
+            this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        tet_mesh (str): Insert description.
+        physical_groups (type): Insert description.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
     """
 
     def __init__(

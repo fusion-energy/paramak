@@ -4,15 +4,22 @@ from paramak import RotateStraightShape
 class CenterColumnShieldCylinder(RotateStraightShape):
     """A cylindrical center column shield volume with constant thickness.
 
-    :param height: height of the center column shield
-    :type height: float
-    :param inner_radius: the inner radius of the center column shield
-    :type inner_radius: float
-    :param outer_radius: the outer radius of the center column shield
-    :type outer_radius: float
+    Arguments:
+        height (float): height of the center column shield.
+        inner_radius (float): the inner radius of the center column shield.
+        outer_radius (float): the outer radius of the center column shield.
 
-    :return: a shape object that has generic functionality
-    :rtype: a paramak shape object
+    Keyword Args:
+        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
+            this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        tet_mesh (str): Insert description.
+        physical_groups (type): Insert description.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
     """
 
     def __init__(
