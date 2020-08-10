@@ -23,7 +23,7 @@ class ExtrudeCircleShape(Shape):
             3 or 4 floats respectively each in the range 0-1
        :param distance: The extrude distance to use (cm units if used for neutronics)
        :type distance: float
-       :param azimuth_placement_angle: the angle or angles to use when rotating the 
+       :param azimuth_placement_angle: the angle or angles to use when rotating the
             shape on the azimuthal axis
        :type azimuth_placement_angle: float or iterable of floats
        :param cut: An optional cadquery object to perform a boolean cut with this object
@@ -42,8 +42,8 @@ class ExtrudeCircleShape(Shape):
         distance,
         radius,
         workplane="XZ",
-        stp_filename='ExtrudeCircleShape.stp',
-        stl_filename='ExtrudeCircleShape.stl',
+        stp_filename="ExtrudeCircleShape.stp",
+        stl_filename="ExtrudeCircleShape.stl",
         solid=None,
         color=None,
         azimuth_placement_angle=0,
@@ -55,7 +55,7 @@ class ExtrudeCircleShape(Shape):
         **kwargs
     ):
 
-        default_dict = {'tet_mesh':None}
+        default_dict = {"tet_mesh": None}
 
         for arg in kwargs:
             if arg in default_dict:
@@ -142,9 +142,10 @@ class ExtrudeCircleShape(Shape):
     def get_hash(self):
         hash_object = blake2b()
         shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary reconstruction
-        shape_dict['_solid'] = None
-        shape_dict['_hash_value'] = None
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
 
         hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()
@@ -173,7 +174,9 @@ class ExtrudeCircleShape(Shape):
             rotated_solids = []
             # Perform seperate rotations for each angle
             for angle in self.azimuth_placement_angle:
-                rotated_solids.append(solid.rotate((0, 0, -1), (0, 0, 1), angle))
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
             solid = cq.Workplane(self.workplane)
 
             # Joins the seperate solids together
@@ -181,7 +184,8 @@ class ExtrudeCircleShape(Shape):
                 solid = solid.union(i)
         else:
             # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate((0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:

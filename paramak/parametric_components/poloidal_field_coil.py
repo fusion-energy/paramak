@@ -27,7 +27,7 @@ class PoloidalFieldCoil(RotateStraightShape):
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -40,20 +40,21 @@ class PoloidalFieldCoil(RotateStraightShape):
         stl_filename="PoloidalFieldCoil.stl",
         color=None,
         azimuth_placement_angle=0,
-        name='pf_coil',
+        name="pf_coil",
         material_tag="pf_coil_mat",
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
-        
+
         for arg in kwargs:
             if arg in default_dict:
                 default_dict[arg] = kwargs[arg]

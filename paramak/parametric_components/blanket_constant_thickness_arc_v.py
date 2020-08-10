@@ -38,7 +38,7 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -47,23 +47,24 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         inner_upper_point,
         inner_lower_point,
         thickness,
-        stp_filename='BlanketConstantThicknessArcV.stp',
-        stl_filename='BlanketConstantThicknessArcV.stl',
+        stp_filename="BlanketConstantThicknessArcV.stp",
+        stl_filename="BlanketConstantThicknessArcV.stl",
         rotation_angle=360,
         azimuth_placement_angle=0,
         color=None,
         name=None,
-        material_tag='blanket_material',
+        material_tag="blanket_material",
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
 
         for arg in kwargs:

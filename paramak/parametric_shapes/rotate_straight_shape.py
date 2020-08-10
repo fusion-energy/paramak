@@ -1,4 +1,3 @@
-
 from collections import Iterable
 from hashlib import blake2b
 
@@ -13,16 +12,16 @@ class RotateStraightShape(Shape):
        a straight lines
 
        Args:
-          points (list of tuples each containing X (float), Z (float)): A list of XZ 
-             coordinates connected by straight connections. For example [(2., 1.), (2., 2.), 
+          points (list of tuples each containing X (float), Z (float)): A list of XZ
+             coordinates connected by straight connections. For example [(2., 1.), (2., 2.),
              (1., 2.), (1., 1.)].
           name (str): The legend name used when exporting a html graph of the shape.
-          color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1): 
+          color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
              The color to use when exporting as html graphs or png images.
-          material_tag (str): The material name to use when exporting the neutronics 
+          material_tag (str): The material name to use when exporting the neutronics
              description.
           stp_filename (str): The filename used when saving stp files as part of a reactor.
-          azimuth_placement_angle (float or iterable of floats): The angle or angles 
+          azimuth_placement_angle (float or iterable of floats): The angle or angles
              to use when rotating the shape on the azimuthal axis.
           rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
           cut (CadQuery object): An optional cadquery object to perform a boolean cut with
@@ -36,8 +35,8 @@ class RotateStraightShape(Shape):
         name=None,
         color=None,
         material_tag=None,
-        stp_filename='RotateStraightShape.stp',
-        stl_filename='RotateStraightShape.stl',
+        stp_filename="RotateStraightShape.stp",
+        stl_filename="RotateStraightShape.stl",
         azimuth_placement_angle=0,
         solid=None,
         rotation_angle=360,
@@ -47,7 +46,7 @@ class RotateStraightShape(Shape):
         **kwargs
     ):
 
-        default_dict = {'tet_mesh':None}
+        default_dict = {"tet_mesh": None}
 
         for arg in kwargs:
             if arg in default_dict:
@@ -125,9 +124,10 @@ class RotateStraightShape(Shape):
     def get_hash(self):
         hash_object = blake2b()
         shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary reconstruction
-        shape_dict['_solid'] = None
-        shape_dict['_hash_value'] = None
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
 
         hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()
@@ -156,7 +156,9 @@ class RotateStraightShape(Shape):
             rotated_solids = []
             # Perform seperate rotations for each angle
             for angle in self.azimuth_placement_angle:
-                rotated_solids.append(solid.rotate((0, 0, -1), (0, 0, 1), angle))
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
             solid = cq.Workplane(self.workplane)
 
             # Joins the seperate solids together
@@ -164,7 +166,8 @@ class RotateStraightShape(Shape):
                 solid = solid.union(i)
         else:
             # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate((0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:

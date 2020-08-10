@@ -52,8 +52,8 @@ class PlasmaBoundaries(Plasma):
         num_points=50,
         configuration="non-null",
         x_point_shift=0.1,
-        name='plasma',
-        material_tag='DT_plasma',
+        name="plasma",
+        material_tag="DT_plasma",
         stp_filename="plasma.stp",
         color=None,
         rotation_angle=360,
@@ -61,12 +61,13 @@ class PlasmaBoundaries(Plasma):
         **kwargs
     ):
 
-        default_dict = {'points': None,
-                        'workplane': "XZ",
-                        'solid': None,
-                        'intersect': None,
-                        'cut': None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "tet_mesh": None,
         }
 
         for arg in kwargs:
@@ -165,12 +166,12 @@ class PlasmaBoundaries(Plasma):
     def find_points(self):
         """Finds the XZ points that describe the 2D profile of the plasma.
         """
-        aspect_ratio = self.minor_radius/self.major_radius
+        aspect_ratio = self.minor_radius / self.major_radius
         params = {
             "A": self.A,
             "aspect_ratio": aspect_ratio,
             "elongation": self.elongation,
-            "triangularity": self.triangularity
+            "triangularity": self.triangularity,
         }
         points = get_separatrix_coordinates(params, self.configuration)
         # add vertical displacement
@@ -181,13 +182,12 @@ class PlasmaBoundaries(Plasma):
         # remove unnecessary points
         lower_x_point, upper_x_point = self.compute_x_points()
         # if non-null these are the y bounds
-        lower_point_y = -self.elongation*self.minor_radius + \
-            self.vertical_displacement
-        upper_point_y = self.elongation*self.minor_radius + \
-            self.vertical_displacement
+        lower_point_y = (
+            -self.elongation * self.minor_radius + self.vertical_displacement
+        )
+        upper_point_y = self.elongation * self.minor_radius + self.vertical_displacement
         # else use x points
-        if self.configuration == "single-null" or \
-           self.configuration == "double-null":
+        if self.configuration == "single-null" or self.configuration == "double-null":
             lower_point_y = lower_x_point[1]
             if self.configuration == "double-null":
                 upper_point_y = upper_x_point[1]
@@ -201,11 +201,13 @@ class PlasmaBoundaries(Plasma):
 
         # set the points of interest
         self.high_point = (
-            self.major_radius-self.triangularity*self.minor_radius,
-            self.elongation*self.minor_radius)
+            self.major_radius - self.triangularity * self.minor_radius,
+            self.elongation * self.minor_radius,
+        )
         self.low_point = (
-            self.major_radius-self.triangularity*self.minor_radius,
-            -self.elongation*self.minor_radius)
+            self.major_radius - self.triangularity * self.minor_radius,
+            -self.elongation * self.minor_radius,
+        )
         self.outer_equatorial_point = (
             self.major_radius + self.minor_radius, 0)
         self.inner_equatorial_point = (

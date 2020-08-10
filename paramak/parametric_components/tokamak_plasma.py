@@ -68,8 +68,8 @@ class Plasma(RotateSplineShape):
         num_points=50,
         configuration="non-null",
         x_point_shift=0.1,
-        name='plasma',
-        material_tag='DT_plasma',
+        name="plasma",
+        material_tag="DT_plasma",
         stp_filename="plasma.stp",
         stl_filename="plasma.stl",
         color=None,
@@ -78,14 +78,15 @@ class Plasma(RotateSplineShape):
         **kwargs
     ):
 
-        default_dict = {'points': None,
-                        'workplane': "XZ",
-                        'solid': None,
-                        'intersect': None,
-                        'cut': None,
-                        'union': None,
-                        'tet_mesh':None,
-                        }
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+        }
 
         for arg in kwargs:
             if arg in default_dict:
@@ -193,20 +194,25 @@ class Plasma(RotateSplineShape):
         shift = self.x_point_shift
         elongation = self.elongation
         triangularity = self.triangularity
-        if self.configuration == "single-null" or \
-           self.configuration == "double-null":
+        if self.configuration == "single-null" or self.configuration == "double-null":
             # no X points for non-null config
-            lower_x_point = (
-                1-(1+shift)*triangularity*minor_radius,
-                -(1+shift)*elongation*minor_radius + self.vertical_displacement
-            )
+            lower_x_point = (1 -
+                             (1 +
+                              shift) *
+                             triangularity *
+                             minor_radius, -
+                             (1 +
+                              shift) *
+                             elongation *
+                             minor_radius +
+                             self.vertical_displacement, )
 
             if self.configuration == "double-null":
                 # upper_x_point is up-down symmetrical
                 upper_x_point = (
                     lower_x_point[0],
-                    (1+shift)*elongation*minor_radius +
-                    self.vertical_displacement
+                    (1 + shift) * elongation * minor_radius
+                    + self.vertical_displacement,
                 )
         return lower_x_point, upper_x_point
 
@@ -215,16 +221,19 @@ class Plasma(RotateSplineShape):
         """
 
         # create array of angles theta
-        theta = np.linspace(0, 2*np.pi, num=self.num_points)
+        theta = np.linspace(0, 2 * np.pi, num=self.num_points)
 
         # parametric equations for plasma
         def R(theta):
-            return self.major_radius + self.minor_radius*np.cos(
-                theta + self.triangularity*np.sin(theta))
+            return self.major_radius + self.minor_radius * np.cos(
+                theta + self.triangularity * np.sin(theta)
+            )
 
         def Z(theta):
-            return self.elongation*self.minor_radius*np.sin(theta) + \
-                self.vertical_displacement
+            return (
+                self.elongation * self.minor_radius * np.sin(theta)
+                + self.vertical_displacement
+            )
 
         # R and Z coordinates
         R_points, Z_points = R(theta), Z(theta)
@@ -237,11 +246,13 @@ class Plasma(RotateSplineShape):
 
         # set the points of interest
         self.high_point = (
-            self.major_radius-self.triangularity*self.minor_radius,
-            self.elongation*self.minor_radius)
+            self.major_radius - self.triangularity * self.minor_radius,
+            self.elongation * self.minor_radius,
+        )
         self.low_point = (
-            self.major_radius-self.triangularity*self.minor_radius,
-            -self.elongation*self.minor_radius)
+            self.major_radius - self.triangularity * self.minor_radius,
+            -self.elongation * self.minor_radius,
+        )
         self.outer_equatorial_point = (
             self.major_radius + self.minor_radius, 0)
         self.inner_equatorial_point = (

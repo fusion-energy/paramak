@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -9,26 +8,28 @@ from paramak import RotateStraightShape
 
 
 class test_object_properties(unittest.TestCase):
-
     def test_union_volume_addition(self):
         """ makes two volumes and then remakes the same two volumes as a
         fused solid. Checks the volumes of these two options are the same.
         """
-        inner_box = RotateStraightShape(points=[(100,100),(100,200),
-                                                (200,200), (200,100)],
-                                                rotation_angle=20)
+        inner_box = RotateStraightShape(
+            points=[(100, 100), (100, 200), (200, 200), (200, 100)], rotation_angle=20
+        )
 
-        outer_box = RotateStraightShape(points=[(200,100),(200,200),
-                                                (500,200), (500,100)],
-                                                rotation_angle=20)
+        outer_box = RotateStraightShape(
+            points=[(200, 100), (200, 200), (500, 200), (500, 100)], rotation_angle=20
+        )
 
         outer_box_and_inner_box = RotateStraightShape(
-            points=[(200,100),(200,200),
-                    (500,200), (500,100)],
-            rotation_angle=20, union=inner_box)
+            points=[(200, 100), (200, 200), (500, 200), (500, 100)],
+            rotation_angle=20,
+            union=inner_box,
+        )
 
-        assert inner_box.volume + outer_box.volume == pytest.approx(outer_box_and_inner_box.volume, rel=0.01)
-        
+        assert inner_box.volume + outer_box.volume == pytest.approx(
+            outer_box_and_inner_box.volume, rel=0.01
+        )
+
     def test_shape_rotation_angle_default(self):
         """"checks that the default rotation angle for a RotateStraightShape \
                 is 360 degrees"""
@@ -69,8 +70,7 @@ class test_object_properties(unittest.TestCase):
                 volume is correct"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
 
         test_shape.rotation_angle = 360
         test_shape.create_solid()
@@ -83,14 +83,12 @@ class test_object_properties(unittest.TestCase):
                 is half the volume of a shape which is double its size"""
 
         test_shape_1 = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape_1.rotation_angle = 180
         test_shape_1.create_solid()
 
         test_shape_2 = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape_2.rotation_angle = 360
         test_shape_2.create_solid()
 
@@ -100,8 +98,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stp() exports stp files with the correct suffix"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape.rotation_angle = 360
         os.system("rm filename.stp filename.step")
         test_shape.export_stp("filename.stp")
@@ -117,8 +114,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stl() exports stl files with the correct suffix"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape.rotation_angle = 360
         os.system("rm filename.stl")
         test_shape.export_stl("filename")
@@ -132,8 +128,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_svg() exports svg files with the correct suffix"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape.rotation_angle = 360
         os.system("rm filename.svg")
         test_shape.export_svg("filename")
@@ -163,14 +158,14 @@ class test_object_properties(unittest.TestCase):
 
         assert inner_shape.volume == pytest.approx(589.048622)
         assert outer_shape.volume == pytest.approx(1908.517537)
-        assert outer_shape_with_cut.volume == pytest.approx(1908.517537 - 589.048622)
+        assert outer_shape_with_cut.volume == pytest.approx(
+            1908.517537 - 589.048622)
 
     def test_initial_solid_construction(self):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
         )
 
         assert test_shape.hash_value is None
@@ -182,8 +177,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
         )
 
         assert test_shape.solid is not None
@@ -198,8 +192,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
         )
 
         assert test_shape.solid is not None
@@ -216,8 +209,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
         )
         test_shape.solid
         assert test_shape.hash_value is not None
@@ -232,9 +224,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is created when the shape properties of points, workplane, name, color, material_tag, stp_filename, azimuth_placement_angle, rotation_angle or cut are changed"""
 
         # points
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-        )
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)],)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.points = [(0, 0), (10, 30), (15, 50), (25, 5), (15, 0)]
@@ -244,8 +234,7 @@ class test_object_properties(unittest.TestCase):
 
         # workplane
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            workplane="XZ",
+            points=[(0, 0), (0, 20), (20, 20)], workplane="XZ",
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
@@ -253,23 +242,21 @@ class test_object_properties(unittest.TestCase):
         test_shape.solid
         assert test_shape.solid is not None
         assert test_shape.hash_value != initial_hash_value
-        
+
         # name
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            name='test_name',
+            points=[(0, 0), (0, 20), (20, 20)], name="test_name",
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
-        test_shape.name = 'new_name'
+        test_shape.name = "new_name"
         test_shape.solid
         assert test_shape.solid is not None
         assert test_shape.hash_value != initial_hash_value
 
         # color
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            color=[0.5, 0.5, 0.5],
+            points=[(0, 0), (0, 20), (20, 20)], color=[0.5, 0.5, 0.5],
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
@@ -280,32 +267,29 @@ class test_object_properties(unittest.TestCase):
 
         # material_tag
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='test_material',
-        )        
+            points=[(0, 0), (0, 20), (20, 20)], material_tag="test_material",
+        )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
-        test_shape.material_tag = 'new_material'
+        test_shape.material_tag = "new_material"
         test_shape.solid
         assert test_shape.solid is not None
         assert test_shape.hash_value != initial_hash_value
 
         # stp_filename
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            stp_filename='test_filename.stp',
+            points=[(0, 0), (0, 20), (20, 20)], stp_filename="test_filename.stp",
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
-        test_shape.stp_filename = 'new_filename.stp'
+        test_shape.stp_filename = "new_filename.stp"
         test_shape.solid
         assert test_shape.solid is not None
         assert test_shape.hash_value != initial_hash_value
 
         # azimuth_placement_angle
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            azimuth_placement_angle=0,
+            points=[(0, 0), (0, 20), (20, 20)], azimuth_placement_angle=0,
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
@@ -316,8 +300,7 @@ class test_object_properties(unittest.TestCase):
 
         # rotation_angle
         test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            rotation_angle=360,
+            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360,
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
@@ -327,13 +310,9 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
         # cut
-        cut_shape = RotateStraightShape(
-            points=[(5, 5), (5, 15), (15, 15)],
-        )
+        cut_shape = RotateStraightShape(points=[(5, 5), (5, 15), (15, 15)],)
 
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-        )
+        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)],)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.cut = cut_shape

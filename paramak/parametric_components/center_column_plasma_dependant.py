@@ -35,7 +35,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
 
     Returns:
         a paramak shape object: A shape object that has generic functionality with points determined by
-            the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
+            the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -57,14 +57,15 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         elongation=2,
         **kwargs
     ):
-    
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
 
         for arg in kwargs:
@@ -186,7 +187,8 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
                 )
             )
 
-        if self.inner_radius >= plasma.inner_equatorial_point[0] - self.mid_offset:
+        if self.inner_radius >= plasma.inner_equatorial_point[0] - \
+                self.mid_offset:
             raise ValueError("Inner radius is too large")
 
         points = [
@@ -194,7 +196,11 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             (self.inner_radius, self.height / 2, "straight"),
             (plasma.high_point[0] - self.edge_offset, self.height / 2, "straight"),
             (plasma.high_point[0] - self.edge_offset, plasma.high_point[1], "spline"),
-            (plasma.inner_equatorial_point[0] - self.mid_offset, plasma.inner_equatorial_point[1], "spline"),
+            (
+                plasma.inner_equatorial_point[0] - self.mid_offset,
+                plasma.inner_equatorial_point[1],
+                "spline",
+            ),
             (plasma.low_point[0] - self.edge_offset, plasma.low_point[1], "straight"),
             (plasma.low_point[0] - self.edge_offset, -1 * self.height / 2, "straight"),
             (self.inner_radius, -1 * self.height / 2, "straight"),

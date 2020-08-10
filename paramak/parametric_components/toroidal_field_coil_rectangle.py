@@ -16,7 +16,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         distance (float): the extrusion distance.
         number_of_coils (int): the number of tf coils. This changes by the azimuth_placement_angle
             dividing up 360 degrees by the number of coils.
-    
+
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the shape.
         color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
@@ -35,7 +35,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid. 
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -56,13 +56,14 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
 
         for arg in kwargs:
@@ -116,17 +117,20 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             # (self.inner_mid_point),
             (self.inner_mid_point[0], self.inner_lower_point[1]),
             (self.inner_lower_point),
-            (self.inner_lower_point[0], self.inner_lower_point[1] - self.thickness),
+            (self.inner_lower_point[0],
+             self.inner_lower_point[1] - self.thickness),
             (
                 self.inner_mid_point[0] + self.thickness,
                 self.inner_lower_point[1] - self.thickness,
             ),
-            (self.inner_mid_point[0] + self.thickness, self.inner_mid_point[1]),
+            (self.inner_mid_point[0] +
+             self.thickness, self.inner_mid_point[1]),
             (
                 self.inner_mid_point[0] + self.thickness,
                 self.inner_upper_point[1] + self.thickness,
             ),
-            (self.inner_upper_point[0], self.inner_upper_point[1] + self.thickness),
+            (self.inner_upper_point[0],
+             self.inner_upper_point[1] + self.thickness),
         ]
 
         self.points = points

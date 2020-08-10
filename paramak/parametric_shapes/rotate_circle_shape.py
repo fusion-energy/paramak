@@ -45,7 +45,7 @@ class RotateCircleShape(Shape):
         **kwargs
     ):
 
-        default_dict = {'tet_mesh':None}
+        default_dict = {"tet_mesh": None}
 
         for arg in kwargs:
             if arg in default_dict:
@@ -78,7 +78,6 @@ class RotateCircleShape(Shape):
     @cut.setter
     def cut(self, value):
         self._cut = value
-
 
     @property
     def intersect(self):
@@ -133,9 +132,10 @@ class RotateCircleShape(Shape):
     def get_hash(self):
         hash_object = blake2b()
         shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary reconstruction
-        shape_dict['_solid'] = None
-        shape_dict['_hash_value'] = None
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
 
         hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()
@@ -163,7 +163,9 @@ class RotateCircleShape(Shape):
             rotated_solids = []
             # Perform seperate rotations for each angle
             for angle in self.azimuth_placement_angle:
-                rotated_solids.append(solid.rotate((0, 0, -1), (0, 0, 1), angle))
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
             solid = cq.Workplane(self.workplane)
 
             # Joins the seperate solids together
@@ -171,7 +173,8 @@ class RotateCircleShape(Shape):
                 solid = solid.union(i)
         else:
             # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate((0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:

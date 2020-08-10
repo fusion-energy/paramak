@@ -69,8 +69,8 @@ class BlanketFP(RotateMixedShape):
         start_angle,
         stop_angle,
         plasma=None,
-        minor_radius=150.,
-        major_radius=450.,
+        minor_radius=150.0,
+        major_radius=450.0,
         triangularity=0.55,
         elongation=2.0,
         vertical_displacement=0,
@@ -86,13 +86,14 @@ class BlanketFP(RotateMixedShape):
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
 
         for arg in kwargs:
@@ -167,21 +168,26 @@ class BlanketFP(RotateMixedShape):
         self._thickness = thickness
 
     def find_points(self):
-        conversion_factor = 2*np.pi/360
+        conversion_factor = 2 * np.pi / 360
 
         def R(theta, pkg=np):
-            return self.major_radius + self.minor_radius*pkg.cos(
-                theta + self.triangularity*pkg.sin(theta))
+            return self.major_radius + self.minor_radius * pkg.cos(
+                theta + self.triangularity * pkg.sin(theta)
+            )
 
         def Z(theta, pkg=np):
-            return self.elongation*self.minor_radius*pkg.sin(theta) + \
-                self.vertical_displacement
+            return (
+                self.elongation * self.minor_radius * pkg.sin(theta)
+                + self.vertical_displacement
+            )
+
         # create array of angles theta
         thetas = np.linspace(
-                    self.start_angle*conversion_factor,
-                    self.stop_angle*conversion_factor,
-                    num=self.num_points,
-                    endpoint=True)
+            self.start_angle * conversion_factor,
+            self.stop_angle * conversion_factor,
+            num=self.num_points,
+            endpoint=True,
+        )
 
         # create inner points
         if self.plasma is None:
@@ -190,38 +196,42 @@ class BlanketFP(RotateMixedShape):
             inner_points_Z = Z(thetas)
 
             inner_points = [
-                [inner_points_R[i], inner_points_Z[i], 'spline']
+                [inner_points_R[i], inner_points_Z[i], "spline"]
                 for i in range(len(thetas))
-                ]
+            ]
         else:
             # if a plasma is given
             inner_points = self.create_offset_points(
-                thetas, R, Z,
-                self.offset_from_plasma)
-        inner_points[-1][2] = 'straight'
+                thetas, R, Z, self.offset_from_plasma
+            )
+        inner_points[-1][2] = "straight"
 
         # compute outer points
         def new_offset(theta):
             if callable(self.thickness):
                 # use the function of angle
-                return self.thickness(theta/conversion_factor) + \
-                    self.offset_from_plasma
+                return (
+                    self.thickness(
+                        theta /
+                        conversion_factor) +
+                    self.offset_from_plasma)
             elif isinstance(self.thickness, tuple):
                 # increase thickness linearly
                 start_thickness, stop_thickness = self.thickness
-                a = (stop_thickness - start_thickness) / \
-                    (self.stop_angle*conversion_factor -
-                        self.start_angle*conversion_factor)
-                b = start_thickness - self.start_angle*a
-                return a*theta + b + self.offset_from_plasma
+                a = (stop_thickness - start_thickness) / (
+                    self.stop_angle * conversion_factor
+                    - self.start_angle * conversion_factor
+                )
+                b = start_thickness - self.start_angle * a
+                return a * theta + b + self.offset_from_plasma
             else:
                 # use the constant value
                 return self.thickness + self.offset_from_plasma
+
         outer_points = self.create_offset_points(
-            np.flip(thetas), R, Z,
-            new_offset)
+            np.flip(thetas), R, Z, new_offset)
         points = inner_points + outer_points
-        points[-1][2] = 'straight'
+        points[-1][2] = "straight"
         points.append(inner_points[0])
         self.points = points
 
@@ -260,23 +270,23 @@ class BlanketFP(RotateMixedShape):
 
         for theta in thetas:
             # get local value of derivatives
-            val_R_derivative = float(R_derivative.subs('theta', theta))
-            val_Z_derivative = float(Z_derivative.subs('theta', theta))
+            val_R_derivative = float(R_derivative.subs("theta", theta))
+            val_Z_derivative = float(Z_derivative.subs("theta", theta))
 
             # get normal vector components
             nx = val_Z_derivative
             ny = -val_R_derivative
 
             # normalise normal vector
-            normal_vector_norm = (nx**2 + ny**2)**0.5
+            normal_vector_norm = (nx ** 2 + ny ** 2) ** 0.5
             nx /= normal_vector_norm
             ny /= normal_vector_norm
 
             # calculate outer points
-            val_R_outer = R_fun(theta) + new_offset(theta)*nx
-            val_Z_outer = Z_fun(theta) + new_offset(theta)*ny
+            val_R_outer = R_fun(theta) + new_offset(theta) * nx
+            val_Z_outer = Z_fun(theta) + new_offset(theta) * ny
 
-            points.append([float(val_R_outer), float(val_Z_outer), 'spline'])
+            points.append([float(val_R_outer), float(val_Z_outer), "spline"])
         return points
 
     def create_physical_groups(self):
@@ -291,6 +301,7 @@ class BlanketFP(RotateMixedShape):
             if c > 180:
                 c -= 360
             return c
+
         groups = []
         nb_volumes = 1  # only one volume
         nb_surfaces = 2  # inner and outer
@@ -318,8 +329,10 @@ class BlanketFP(RotateMixedShape):
         # TODO: fix issue #86 (full coverage)
         if full_rot:
             if stop_equals_start:
-                print("Warning: If start_angle = stop_angle surfaces will not\
-                     be handled correctly")
+                print(
+                    "Warning: If start_angle = stop_angle surfaces will not\
+                     be handled correctly"
+                )
                 new_order = [0, 1, 2, 3]
             else:
                 # from ["inner", "outer", "inner_section", "outer_section"]
@@ -328,8 +341,10 @@ class BlanketFP(RotateMixedShape):
                 new_order = [0, 2, 1, 3]
         else:
             if stop_equals_start:
-                print("Warning: If start_angle = stop_angle surfaces will not\
-                     be handled correctly")
+                print(
+                    "Warning: If start_angle = stop_angle surfaces will not\
+                     be handled correctly"
+                )
                 new_order = [0, 1, 2, 3]
             else:
                 # from ['inner', 'outer', 'left_section', 'right_section',
@@ -337,21 +352,13 @@ class BlanketFP(RotateMixedShape):
 
                 # to ["inner", "inner_section", "outer", "outer_section",
                 #         "left_section", "right_section"]
-                new_order = [0, 4,  1, 5, 2, 3]
+                new_order = [0, 4, 1, 5, 2, 3]
         surface_names = [surface_names[i] for i in new_order]
 
-        for i in range(1, nb_volumes+1):
-            group = {
-                "dim": 3,
-                "id": i,
-                "name": volumes_names[i-1]
-            }
+        for i in range(1, nb_volumes + 1):
+            group = {"dim": 3, "id": i, "name": volumes_names[i - 1]}
             groups.append(group)
-        for i in range(1, nb_surfaces+1):
-            group = {
-                "dim": 2,
-                "id": i,
-                "name": surface_names[i-1]
-            }
+        for i in range(1, nb_surfaces + 1):
+            group = {"dim": 2, "id": i, "name": surface_names[i - 1]}
             groups.append(group)
         self.physical_groups = groups
