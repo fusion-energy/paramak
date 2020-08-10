@@ -137,7 +137,7 @@ class RotateSplineShape(Shape):
               A CadQuery solid: A 3D solid volume
         """
 
-        print('create_solid() has been called')
+        # print('create_solid() has been called')
 
         # Creates a cadquery solid from points and revolves
         solid = (

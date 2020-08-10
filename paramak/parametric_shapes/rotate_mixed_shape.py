@@ -139,7 +139,7 @@ class RotateMixedShape(Shape):
               A CadQuery solid: A 3D solid volume
         """
 
-        print('create_solid() has been called')
+        # print('create_solid() has been called')
 
         # obtains the first two values of the points list
         XZ_points = [(p[0], p[1]) for p in self.points]
