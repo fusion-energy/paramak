@@ -68,7 +68,6 @@ class Shape:
         # neutronics specific properties
         self.material_tag = material_tag
         self.tet_mesh = tet_mesh
-                
 
         # properties calculated internally by the class
         self.solid = None
@@ -113,7 +112,10 @@ class Shape:
             self._material_tag = value
         elif type(value) == str:
             if len(value) > 27:
-                print("Warning: Shape.material_tag > 28 characters. Use with DAGMC will be affected.", value)
+                print(
+                    "Warning: Shape.material_tag > 28 characters. Use with DAGMC will be affected.",
+                    value,
+                )
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
@@ -269,7 +271,7 @@ class Shape:
             # print("stl_filename will need setting to use this shape in a Reactor")
             self._stl_filename = value
         elif type(value) == str:
-            if Path(value).suffix == ".stl" :
+            if Path(value).suffix == ".stl":
                 self._stl_filename = value
             else:
                 raise ValueError(
@@ -277,7 +279,6 @@ class Shape:
                 )
         else:
             raise ValueError("stl_filename must be a string", value, type(value))
-
 
     def create_limits(self):
         """"Finds the x,y,z limits (min and max) of the points that make up the face of the shape.
@@ -402,8 +403,12 @@ class Shape:
 
             print("Saved physical_groups description to ", Pfilename)
         else:
-            print("Warning: physical_groups attribute is None \
-                for {}".format(self.name))
+            print(
+                "Warning: physical_groups attribute is None \
+                for {}".format(
+                    self.name
+                )
+            )
 
         return filename
 
@@ -672,12 +677,12 @@ class Shape:
         neutronics_description = {"material": self.material_tag}
 
         if self.stp_filename != None:
-            neutronics_description['stp_filename'] = self.stp_filename
+            neutronics_description["stp_filename"] = self.stp_filename
 
         if self.tet_mesh != None:
-            neutronics_description['tet_mesh'] = self.tet_mesh
+            neutronics_description["tet_mesh"] = self.tet_mesh
 
         if self.stl_filename != None:
-            neutronics_description['stl_filename'] = self.stl_filename
+            neutronics_description["stl_filename"] = self.stl_filename
 
         return neutronics_description

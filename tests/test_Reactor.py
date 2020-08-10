@@ -1,4 +1,3 @@
-
 import os
 from pathlib import Path
 import unittest
@@ -6,64 +5,63 @@ import json
 
 import paramak
 
-class test_object_properties(unittest.TestCase):
 
+class test_object_properties(unittest.TestCase):
     def test_adding_shape_with_material_tag_to_reactor(self):
         """adds a shape to the reactor and checks that the material_tag
         property works as designed"""
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='mat1')
+            points=[(0, 0), (0, 20), (20, 20)], material_tag="mat1"
+        )
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
         assert len(test_reactor.material_tags) == 1
-        assert test_reactor.material_tags[0] == 'mat1'
+        assert test_reactor.material_tags[0] == "mat1"
 
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
         """adds a shape to the reactor and checks that the material_tag
         property works as designed"""
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='mat1')
-        test_shape2= paramak.RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='mat2')
+            points=[(0, 0), (0, 20), (20, 20)], material_tag="mat1"
+        )
+        test_shape2 = paramak.RotateSplineShape(
+            points=[(0, 0), (0, 20), (20, 20)], material_tag="mat2"
+        )
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape, test_shape2])
         assert len(test_reactor.material_tags) == 2
-        assert test_reactor.material_tags[0] == 'mat1'
-        assert test_reactor.material_tags[1] == 'mat2'
+        assert test_reactor.material_tags[0] == "mat1"
+        assert test_reactor.material_tags[1] == "mat2"
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """adds a shape to the reactor and checks that the stp_filename
         property works as designed"""
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            stp_filename='filename.stp')
+            points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename.stp"
+        )
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
         assert len(test_reactor.stp_filenames) == 1
-        assert test_reactor.stp_filenames[0] == 'filename.stp'
-
+        assert test_reactor.stp_filenames[0] == "filename.stp"
 
     def test_adding_multiple_shape_with_stp_filename_to_reactor(self):
         """adds a shape to the reactor and checks that the stp_filename
         property works as designed"""
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            stp_filename='filename.stp')
+            points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename.stp"
+        )
         test_shape2 = paramak.RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            stp_filename='filename2.stp')
+            points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename2.stp"
+        )
         test_shape.rotation_angle = 360
         test_shape.create_solid()
-        test_reactor = paramak.Reactor([test_shape,test_shape2])
+        test_reactor = paramak.Reactor([test_shape, test_shape2])
         assert len(test_reactor.stp_filenames) == 2
-        assert test_reactor.stp_filenames[0] == 'filename.stp'
-        assert test_reactor.stp_filenames[1] == 'filename2.stp'
+        assert test_reactor.stp_filenames[0] == "filename.stp"
+        assert test_reactor.stp_filenames[1] == "filename2.stp"
 
     def test_adding_shape_with_duplicate_stp_filename_to_reactor(self):
         """creates reactor and addes to shapes with the same stp filename"""
@@ -71,16 +69,16 @@ class test_object_properties(unittest.TestCase):
         def test_stp_filename_duplication():
             """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                stp_filename='filename.stp')
+                points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename.stp"
+            )
             test_shape2 = paramak.RotateSplineShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                stp_filename='filename.stp')
+                points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename.stp"
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stp_filename_duplication)  
+        self.assertRaises(ValueError, test_stp_filename_duplication)
 
     def test_adding_shape_with_duplicate_stl_filename_to_reactor(self):
         """creates reactor and addes to shapes with the same stl filename"""
@@ -88,39 +86,41 @@ class test_object_properties(unittest.TestCase):
         def test_stl_filename_duplication_rotate_straight():
             """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                stl_filename='filename.stl')
+                points=[(0, 0), (0, 20), (20, 20)], stl_filename="filename.stl"
+            )
             test_shape2 = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                stl_filename='filename.stl')
+                points=[(0, 0), (0, 20), (20, 20)], stl_filename="filename.stl"
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stl_filename_duplication_rotate_straight)  
+        self.assertRaises(ValueError, test_stl_filename_duplication_rotate_straight)
 
         def test_stl_filename_duplication_rotate_spline():
             """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.RotateSplineShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                stl_filename='filename.stl')
+                points=[(0, 0), (0, 20), (20, 20)], stl_filename="filename.stl"
+            )
             test_shape2 = paramak.RotateSplineShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                stl_filename='filename.stl')
+                points=[(0, 0), (0, 20), (20, 20)], stl_filename="filename.stl"
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stl_filename_duplication_rotate_spline)  
+        self.assertRaises(ValueError, test_stl_filename_duplication_rotate_spline)
 
         def test_stl_filename_duplication_rotate_mixed():
             """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.RotateMixedShape(
-                points=[(0, 0, 'straight'), (0, 20, 'straight'), (20, 20, 'straight')],
-                stl_filename='filename.stl')
+                points=[(0, 0, "straight"), (0, 20, "straight"), (20, 20, "straight")],
+                stl_filename="filename.stl",
+            )
             test_shape2 = paramak.RotateMixedShape(
-                points=[(0, 0, 'straight'), (0, 20, 'straight'), (20, 20, 'straight')],
-                stl_filename='filename.stl')
+                points=[(0, 0, "straight"), (0, 20, "straight"), (20, 20, "straight")],
+                stl_filename="filename.stl",
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
@@ -133,84 +133,87 @@ class test_object_properties(unittest.TestCase):
                 points=[(20, 20)],
                 radius=10,
                 rotation_angle=180,
-                stl_filename='filename.stl')
+                stl_filename="filename.stl",
+            )
             test_shape2 = paramak.RotateCircleShape(
                 points=[(20, 20)],
                 radius=10,
                 rotation_angle=180,
-                stl_filename='filename.stl')
+                stl_filename="filename.stl",
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stl_filename_duplication_Rotate_Circle)  
+        self.assertRaises(ValueError, test_stl_filename_duplication_Rotate_Circle)
 
         def test_stl_filename_duplication_Extrude_straight():
             """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.ExtrudeStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 distance=10,
-                stl_filename='filename.stl')
+                stl_filename="filename.stl",
+            )
             test_shape2 = paramak.ExtrudeStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 distance=10,
-                stl_filename='filename.stl')
+                stl_filename="filename.stl",
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_straight)  
+        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_straight)
 
         def test_stl_filename_duplication_Extrude_spline():
             """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.ExtrudeSplineShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 distance=10,
-                stl_filename='filename.stl')
+                stl_filename="filename.stl",
+            )
             test_shape2 = paramak.ExtrudeSplineShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 distance=10,
-                stl_filename='filename.stl')
+                stl_filename="filename.stl",
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_spline)  
+        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_spline)
 
         def test_stl_filename_duplication_Extrude_mixed():
             """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.ExtrudeMixedShape(
-                points=[(0, 0, 'straight'), (0, 20, 'straight'), (20, 20, 'straight')],
+                points=[(0, 0, "straight"), (0, 20, "straight"), (20, 20, "straight")],
                 distance=10,
-                stl_filename='filename.stl')
+                stl_filename="filename.stl",
+            )
             test_shape2 = paramak.ExtrudeMixedShape(
-                points=[(0, 0, 'straight'), (0, 20, 'straight'), (20, 20, 'straight')],
+                points=[(0, 0, "straight"), (0, 20, "straight"), (20, 20, "straight")],
                 distance=10,
-                stl_filename='filename.stl')
+                stl_filename="filename.stl",
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_mixed)  
+        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_mixed)
 
         def test_stl_filename_duplication_Extrude_Circle():
             """checks ValueError is raised when a duplicate filename is added"""
             test_shape = paramak.ExtrudeCircleShape(
-                points=[(20, 20)],
-                radius=10,
-                distance=10,
-                stl_filename='filename.stl')
+                points=[(20, 20)], radius=10, distance=10, stl_filename="filename.stl"
+            )
             test_shape2 = paramak.ExtrudeCircleShape(
-                points=[(20, 20)],
-                radius=10,
-                distance=10,
-                stl_filename='filename.stl')
+                points=[(20, 20)], radius=10, distance=10, stl_filename="filename.stl"
+            )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
             paramak.Reactor([test_shape, test_shape2])
 
-        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_Circle)  
-
+        self.assertRaises(ValueError, test_stl_filename_duplication_Extrude_Circle)
 
     def test_reactor_creation_with_default_properties(self):
         """creates a Reactor object and checks that it has \
@@ -224,8 +227,7 @@ class test_object_properties(unittest.TestCase):
         """creates a Reactor object and checks that shapes \
                 can be added to it"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([])
@@ -237,8 +239,7 @@ class test_object_properties(unittest.TestCase):
         """checks that make_graveyard() creates a graveyard \
                 using the shapes in the Reactor object"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
@@ -250,8 +251,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_graveyard() creates stp file in the \
                 specified location"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm my_graveyard.stp")
         os.system("rm Graveyard.stp")
@@ -269,8 +269,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stp() creates stp file in the \
                 specified location"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_reactor/test_shape.stp")
         os.system("rm test_reactor/Graveyard.stp")
@@ -287,8 +286,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stl() creates stl file in the \
                 specified location"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_reactor/test_shape.stl")
         os.system("rm test_reactor/Graveyard.stl")
@@ -305,8 +303,7 @@ class test_object_properties(unittest.TestCase):
         """checks that export_stp() creates stp file in the \
                 specified location"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_svg_image.svg")
         test_reactor = paramak.Reactor([test_shape])
@@ -321,8 +318,7 @@ class test_object_properties(unittest.TestCase):
             """checks that a ValueError is raised when the neutronics description \
                         is exported without material_tag"""
 
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
+            test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
             test_shape.rotation_angle = 360
             test_shape.stp_filename = "test.stp"
             test_reactor = paramak.Reactor([test_shape])
@@ -334,8 +330,7 @@ class test_object_properties(unittest.TestCase):
             """checks that a ValueError is raised when the neutronics description \
                         is exported without stp_filename"""
 
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
+            test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
             test_shape.rotation_angle = 360
             test_shape.material_tag = "test_material"
             test_shape.stp_filename = None
@@ -348,8 +343,7 @@ class test_object_properties(unittest.TestCase):
         """checks that the neutronics description is exported with correct \
                 material_tag and stp_filename"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
@@ -370,8 +364,7 @@ class test_object_properties(unittest.TestCase):
 
         os.system("rm manifest_test.json")
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
@@ -404,16 +397,21 @@ class test_object_properties(unittest.TestCase):
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
-            rotation_angle = 360,
-            material_tag = "test_material",
-            stp_filename = "test.stp")
+            rotation_angle=360,
+            material_tag="test_material",
+            stp_filename="test.stp",
+        )
         test_shape.tet_mesh = "size 60"
-        test_plasma = paramak.Plasma(major_radius=500,
-                                     minor_radius=100,
-                                     stp_filename='plasma.stp',
-                                     material_tag='DT_plasma')
+        test_plasma = paramak.Plasma(
+            major_radius=500,
+            minor_radius=100,
+            stp_filename="plasma.stp",
+            material_tag="DT_plasma",
+        )
         test_reactor = paramak.Reactor([test_shape, test_plasma])
-        returned_filename = test_reactor.export_neutronics_description(include_plasma=True)
+        returned_filename = test_reactor.export_neutronics_description(
+            include_plasma=True
+        )
         with open("manifest.json") as json_file:
             neutronics_description = json.load(json_file)
 
@@ -443,12 +441,12 @@ class test_object_properties(unittest.TestCase):
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
-            rotation_angle = 360,
-            material_tag = "test_material",
-            stp_filename = "test.stp")
+            rotation_angle=360,
+            material_tag="test_material",
+            stp_filename="test.stp",
+        )
         test_shape.tet_mesh = "size 60"
-        test_plasma = paramak.Plasma(major_radius=500,
-                                     minor_radius=100)
+        test_plasma = paramak.Plasma(major_radius=500, minor_radius=100)
         test_reactor = paramak.Reactor([test_shape, test_plasma])
         returned_filename = test_reactor.export_neutronics_description()
         with open("manifest.json") as json_file:
@@ -472,8 +470,7 @@ class test_object_properties(unittest.TestCase):
                 the correct filename"""
 
         os.system("rm 2d_test_image.png")
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
         returned_filename = test_reactor.export_2d_image(filename="2d_test_image.png")
@@ -486,8 +483,7 @@ class test_object_properties(unittest.TestCase):
                 the correct filename"""
 
         os.system("rm test_html.html")
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
         test_reactor.export_html(filename="test_html.html")
@@ -498,6 +494,7 @@ class test_object_properties(unittest.TestCase):
 
         assert Path("test_html.html").exists() is True
         os.system("rm test_html.html")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -4,6 +4,7 @@ This python script demonstrates the creation of a breeder blanket from points
 
 from paramak import RotateMixedShape
 
+
 def main():
 
     blanket = RotateMixedShape(
@@ -12,7 +13,7 @@ def main():
             (538, -305, "straight"),
             (322, -305, "spline"),
             (470, 0, "spline"),
-            (322, 305, "straight")
+            (322, 305, "straight"),
         ]
     )
 

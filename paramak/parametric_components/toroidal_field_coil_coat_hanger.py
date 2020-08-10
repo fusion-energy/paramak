@@ -60,13 +60,14 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
 
         for arg in kwargs:
@@ -115,21 +116,64 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         """Finds the XZ points joined by straight connections that describe the 2D
         profile of the poloidal field coil shape."""
 
-        points = [self.horizontal_start_point,# upper right inner
-                  (self.horizontal_start_point[0]+self.horizontal_length, self.horizontal_start_point[1]), 
-                  (self.vertical_start_point[0],self.vertical_start_point[1]+0.5*self.vertical_length),# upper inner horizontal section 
-                  (self.vertical_start_point[0],self.vertical_start_point[1]-0.5*self.vertical_length), # lower inner horizontal section
-                  (self.horizontal_start_point[0]+self.horizontal_length, -self.horizontal_start_point[1]),# lower left vertical section
-                  (self.horizontal_start_point[0], -self.horizontal_start_point[1]),# lower right vertical section
-
-                  (self.horizontal_start_point[0], -self.horizontal_start_point[1]-self.thickness),
-                  (self.horizontal_start_point[0]+self.horizontal_length, -self.horizontal_start_point[1]-self.thickness),
-                  (self.horizontal_start_point[0]+self.horizontal_length+self.thickness, -self.horizontal_start_point[1]),# lower left vertical section
-                  (self.vertical_start_point[0]+self.thickness,self.vertical_start_point[1]-0.5*self.vertical_length), # lower inner horizontal section
-                  (self.vertical_start_point[0]+self.thickness,self.vertical_start_point[1]+0.5*self.vertical_length),# upper inner horizontal section 
-                  (self.horizontal_start_point[0]+self.horizontal_length+ self.thickness, self.horizontal_start_point[1]), 
-                  (self.horizontal_start_point[0]+self.horizontal_length, self.horizontal_start_point[1]+self.thickness), 
-                  (self.horizontal_start_point[0], self.horizontal_start_point[1] + self.thickness)# upper right inner
+        points = [
+            self.horizontal_start_point,  # upper right inner
+            (
+                self.horizontal_start_point[0] + self.horizontal_length,
+                self.horizontal_start_point[1],
+            ),
+            (
+                self.vertical_start_point[0],
+                self.vertical_start_point[1] + 0.5 * self.vertical_length,
+            ),  # upper inner horizontal section
+            (
+                self.vertical_start_point[0],
+                self.vertical_start_point[1] - 0.5 * self.vertical_length,
+            ),  # lower inner horizontal section
+            (
+                self.horizontal_start_point[0] + self.horizontal_length,
+                -self.horizontal_start_point[1],
+            ),  # lower left vertical section
+            (
+                self.horizontal_start_point[0],
+                -self.horizontal_start_point[1],
+            ),  # lower right vertical section
+            (
+                self.horizontal_start_point[0],
+                -self.horizontal_start_point[1] - self.thickness,
+            ),
+            (
+                self.horizontal_start_point[0] + self.horizontal_length,
+                -self.horizontal_start_point[1] - self.thickness,
+            ),
+            (
+                self.horizontal_start_point[0]
+                + self.horizontal_length
+                + self.thickness,
+                -self.horizontal_start_point[1],
+            ),  # lower left vertical section
+            (
+                self.vertical_start_point[0] + self.thickness,
+                self.vertical_start_point[1] - 0.5 * self.vertical_length,
+            ),  # lower inner horizontal section
+            (
+                self.vertical_start_point[0] + self.thickness,
+                self.vertical_start_point[1] + 0.5 * self.vertical_length,
+            ),  # upper inner horizontal section
+            (
+                self.horizontal_start_point[0]
+                + self.horizontal_length
+                + self.thickness,
+                self.horizontal_start_point[1],
+            ),
+            (
+                self.horizontal_start_point[0] + self.horizontal_length,
+                self.horizontal_start_point[1] + self.thickness,
+            ),
+            (
+                self.horizontal_start_point[0],
+                self.horizontal_start_point[1] + self.thickness,
+            ),  # upper right inner
         ]
 
         self.points = points

@@ -52,7 +52,7 @@ class ExtrudeMixedShape(Shape):
         **kwargs
     ):
 
-        default_dict = {'tet_mesh':None}
+        default_dict = {"tet_mesh": None}
 
         for arg in kwargs:
             if arg in default_dict:
@@ -131,8 +131,8 @@ class ExtrudeMixedShape(Shape):
         hash_object = blake2b()
         shape_dict = dict(self.__dict__)
         # set _solid and _hash_value to None to prevent unnecessary reconstruction
-        shape_dict['_solid'] = None
-        shape_dict['_hash_value'] = None
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
 
         hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()

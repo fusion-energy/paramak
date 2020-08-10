@@ -1,4 +1,3 @@
-
 __doc__ = " This file creates a collarge of paramak images on a grid"
 
 import argparse

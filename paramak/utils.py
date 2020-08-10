@@ -3,6 +3,7 @@ from collections import Iterable
 
 import numpy as np
 
+
 def union_solid(solid, joiner):
     """
     Performs a boolean union of a solid with another solid or iterable of solids.
@@ -20,6 +21,7 @@ def union_solid(solid, joiner):
     else:
         solid = solid.union(joiner.solid)
     return solid
+
 
 def cut_solid(solid, cutter):
     """
@@ -39,6 +41,7 @@ def cut_solid(solid, cutter):
         solid = solid.cut(cutter.solid)
     return solid
 
+
 def intersect_solid(solid, intersecter):
     """
     Performs a boolean intersection of a solid with another solid or iterable of solids.
@@ -56,6 +59,7 @@ def intersect_solid(solid, intersecter):
     else:
         solid = solid.intersect(intersecter.solid)
     return solid
+
 
 def rotate(origin, point, angle):
     """
@@ -77,6 +81,7 @@ def rotate(origin, point, angle):
     qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
     return qx, qy
 
+
 def find_center_point_of_circle(point1, point2, point3):
     """
     Calculates the center and the radius of a circle
@@ -93,18 +98,21 @@ def find_center_point_of_circle(point1, point2, point3):
     temp = point2[0] * point2[0] + point2[1] * point2[1]
     bc = (point1[0] * point1[0] + point1[1] * point1[1] - temp) / 2
     cd = (temp - point3[0] * point3[0] - point3[1] * point3[1]) / 2
-    det = (point1[0] - point2[0]) * (point2[1] - point3[1]) - (point2[0] - point3[0]) * (point1[1] - point2[1])
+    det = (point1[0] - point2[0]) * (point2[1] - point3[1]) - (
+        point2[0] - point3[0]
+    ) * (point1[1] - point2[1])
 
     if abs(det) < 1.0e-6:
         return (None, np.inf)
 
     # Center of circle
-    cx = (bc*(point2[1] - point3[1]) - cd*(point1[1] - point2[1])) / det
+    cx = (bc * (point2[1] - point3[1]) - cd * (point1[1] - point2[1])) / det
     cy = ((point1[0] - point2[0]) * cd - (point2[0] - point3[0]) * bc) / det
 
-    radius = np.sqrt((cx - point1[0])**2 + (cy - point1[1])**2)
+    radius = np.sqrt((cx - point1[0]) ** 2 + (cy - point1[1]) ** 2)
 
     return (cx, cy), radius
+
 
 def extend(A, B, L):
     """Creates a point C in (AB) direction so that \|AC\| = L
@@ -119,11 +127,11 @@ def extend(A, B, L):
     """
     xa, ya = A
     xb, yb = B
-    u_vec = [xb-xa, yb-ya]
+    u_vec = [xb - xa, yb - ya]
     u_vec /= np.linalg.norm(u_vec)
 
-    xc = xa + L*u_vec[0]
-    yc = ya + L*u_vec[1]
+    xc = xa + L * u_vec[0]
+    yc = ya + L * u_vec[1]
     return xc, yc
 
 
@@ -139,5 +147,5 @@ def distance_between_two_points(A, B):
     """
     xa, ya = A
     xb, yb = B
-    u_vec = [xb-xa, yb-ya]
+    u_vec = [xb - xa, yb - ya]
     return np.linalg.norm(u_vec)

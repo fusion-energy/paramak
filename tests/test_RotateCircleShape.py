@@ -1,4 +1,3 @@
-
 import math
 
 import unittest
@@ -99,9 +98,7 @@ class test_object_properties(unittest.TestCase):
     def test_initial_solid_construction(self):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
 
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360
-        )
+        test_shape = RotateCircleShape(points=[(30, 0)], radius=5, rotation_angle=360)
 
         assert test_shape.hash_value is None
         assert test_shape.solid is not None
@@ -111,9 +108,7 @@ class test_object_properties(unittest.TestCase):
     def test_solid_return(self):
         """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
 
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360
-        )
+        test_shape = RotateCircleShape(points=[(30, 0)], radius=5, rotation_angle=360)
 
         assert test_shape.solid is not None
         assert test_shape.hash_value is not None
@@ -126,9 +121,7 @@ class test_object_properties(unittest.TestCase):
     def test_conditional_solid_reconstruction(self):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360
-        )
+        test_shape = RotateCircleShape(points=[(30, 0)], radius=5, rotation_angle=360)
 
         assert test_shape.solid is not None
         assert test_shape.hash_value is not None
@@ -143,9 +136,7 @@ class test_object_properties(unittest.TestCase):
     def test_hash_value_update(self):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360
-        )
+        test_shape = RotateCircleShape(points=[(30, 0)], radius=5, rotation_angle=360)
         test_shape.solid
         assert test_shape.hash_value is not None
         initial_hash_value = test_shape.hash_value
@@ -159,9 +150,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is created when the shape properties of points, radius or rotation angle are changed"""
 
         # points
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360
-        )
+        test_shape = RotateCircleShape(points=[(30, 0)], radius=5, rotation_angle=360)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.points = [(40, 0)]
@@ -170,9 +159,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
         # radius
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360
-        )
+        test_shape = RotateCircleShape(points=[(30, 0)], radius=5, rotation_angle=360)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.radius = 10
@@ -181,9 +168,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
         # rotation_angle
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360
-        )
+        test_shape = RotateCircleShape(points=[(30, 0)], radius=5, rotation_angle=360)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.rotation_angle = 180

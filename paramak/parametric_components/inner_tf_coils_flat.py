@@ -52,13 +52,14 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XY",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XY",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
 
         for arg in kwargs:

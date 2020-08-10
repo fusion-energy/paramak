@@ -1,4 +1,3 @@
-
 import math
 import unittest
 
@@ -12,7 +11,8 @@ class test_object_properties(unittest.TestCase):
         """creates extruded shapes using circles and checks the volumes are correct"""
 
         test_shape = paramak.ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=20)
+            points=[(30, 0)], radius=10, distance=20
+        )
 
         test_shape.create_solid()
 
@@ -20,7 +20,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.volume == pytest.approx(math.pi * 10 ** 2 * 20)
 
         test_shape2 = paramak.ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=10)
+            points=[(30, 0)], radius=10, distance=10
+        )
 
         test_shape2.create_solid()
 
@@ -49,10 +50,12 @@ class test_object_properties(unittest.TestCase):
             another shape cut out and checks the volume is correct"""
 
         inner_shape = paramak.ExtrudeCircleShape(
-            points=[(30, 0)], radius=5, distance=20)
+            points=[(30, 0)], radius=5, distance=20
+        )
 
         outer_shape = paramak.ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=20)
+            points=[(30, 0)], radius=10, distance=20
+        )
 
         outer_shape_with_cut = paramak.ExtrudeCircleShape(
             points=[(30, 0)], radius=10, distance=20, cut=inner_shape
@@ -68,9 +71,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
 
         test_shape = paramak.ExtrudeCircleShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            radius=10,
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], radius=10, distance=20
         )
 
         assert test_shape.hash_value is None
@@ -82,9 +83,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
 
         test_shape = paramak.ExtrudeCircleShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            radius=10,
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], radius=10, distance=20
         )
 
         assert test_shape.solid is not None
@@ -99,9 +98,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = paramak.ExtrudeCircleShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            radius=10,
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20)], radius=10, distance=20
         )
 
         assert test_shape.solid is not None
@@ -118,9 +115,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = paramak.ExtrudeCircleShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            radius=10,
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20)], radius=10, distance=20
         )
         test_shape.solid
         assert test_shape.hash_value is not None
@@ -136,9 +131,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is created when the shape properties of points, radius or distance are changed"""
 
         # points
-        test_shape = paramak.ExtrudeCircleShape(
-            points=[(30, 0)], radius=5, distance=20
-        )
+        test_shape = paramak.ExtrudeCircleShape(points=[(30, 0)], radius=5, distance=20)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.points = [(40, 0)]
@@ -147,9 +140,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
         # radius
-        test_shape = paramak.ExtrudeCircleShape(
-            points=[(30, 0)], radius=5, distance=20
-        )
+        test_shape = paramak.ExtrudeCircleShape(points=[(30, 0)], radius=5, distance=20)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.radius = 10
@@ -158,9 +149,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
         # distance
-        test_shape = paramak.ExtrudeCircleShape(
-            points=[(30, 0)], radius=5, distance=20
-        )
+        test_shape = paramak.ExtrudeCircleShape(points=[(30, 0)], radius=5, distance=20)
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.distance = 30

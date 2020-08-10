@@ -47,8 +47,8 @@ class PlasmaFromPoints(Plasma):
         high_point,
         x_point_shift=0.1,
         configuration="non-null",
-        name='plasma',
-        material_tag='DT_plasma',
+        name="plasma",
+        material_tag="DT_plasma",
         num_points=50,
         stp_filename="plasma.stp",
         color=None,
@@ -56,20 +56,21 @@ class PlasmaFromPoints(Plasma):
         azimuth_placement_angle=0,
         **kwargs
     ):
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
 
         for arg in kwargs:
             if arg in default_dict:
                 default_dict[arg] = kwargs[arg]
 
-        minor_radius = (outer_equatorial_x_point - inner_equatorial_x_point) / 2.
+        minor_radius = (outer_equatorial_x_point - inner_equatorial_x_point) / 2.0
         major_radius = inner_equatorial_x_point + minor_radius
         elongation = high_point[1] / minor_radius
         triangularity = (major_radius - high_point[0]) / minor_radius

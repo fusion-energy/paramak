@@ -9,6 +9,7 @@ from neutronics_material_maker import Material
 
 import paramak
 
+
 def make_cad_model_with_paramak():
     """
     Makes a reactor object from using theparametric
@@ -16,20 +17,20 @@ def make_cad_model_with_paramak():
     and stp files for the reactor
     """
     my_reactor = paramak.BallReactor(
-                                    inner_bore_radial_thickness=50,
-                                    inboard_tf_leg_radial_thickness = 200,
-                                    center_column_shield_radial_thickness= 50,
-                                    divertor_radial_thickness=50,
-                                    inner_plasma_gap_radial_thickness = 50,
-                                    plasma_radial_thickness = 100,
-                                    outer_plasma_gap_radial_thickness = 50,
-                                    firstwall_radial_thickness=5,
-                                    blanket_radial_thickness=100,
-                                    blanket_rear_wall_radial_thickness=10,
-                                    elongation=2,
-                                    triangularity=0.55,
-                                    number_of_tf_coils=16,
-                                    rotation_angle=360
+        inner_bore_radial_thickness=50,
+        inboard_tf_leg_radial_thickness=200,
+        center_column_shield_radial_thickness=50,
+        divertor_radial_thickness=50,
+        inner_plasma_gap_radial_thickness=50,
+        plasma_radial_thickness=100,
+        outer_plasma_gap_radial_thickness=50,
+        firstwall_radial_thickness=5,
+        blanket_radial_thickness=100,
+        blanket_rear_wall_radial_thickness=10,
+        elongation=2,
+        triangularity=0.55,
+        number_of_tf_coils=16,
+        rotation_angle=360,
     )
 
     my_reactor.export_stp()
@@ -37,6 +38,7 @@ def make_cad_model_with_paramak():
     my_reactor.export_neutronics_description()
 
     return my_reactor
+
 
 def convert_stp_files_to_neutronics_geometry():
     """
@@ -46,9 +48,9 @@ def convert_stp_files_to_neutronics_geometry():
     file which can be used as neutronics geometry.
     """
 
-    os.system('trelis -batch -nographics make_faceteted_neutronics_model.py')
+    os.system("trelis -batch -nographics make_faceteted_neutronics_model.py")
 
-    os.system('make_watertight dagmc_notwatertight.h5m -o dagmc.h5m')
+    os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m")
 
 
 def make_other_aspects_of_neutronics_model(my_reactor):
@@ -60,34 +62,40 @@ def make_other_aspects_of_neutronics_model(my_reactor):
     """
 
     # these materials are overly simplified to keep the example short
-    firstwall_mat = Material(material_name='eurofer',
-                             material_tag='firstwall_mat').openmc_material
+    firstwall_mat = Material(
+        material_name="eurofer", material_tag="firstwall_mat"
+    ).openmc_material
 
-    inboard_tf_coils_mat = Material(material_name='WC',
-                                    material_tag='inboard_tf_coils_mat').openmc_material
+    inboard_tf_coils_mat = Material(
+        material_name="WC", material_tag="inboard_tf_coils_mat"
+    ).openmc_material
 
-    center_column_mat = Material(material_name='WC',
-                                material_tag='center_column_shield_mat').openmc_material
+    center_column_mat = Material(
+        material_name="WC", material_tag="center_column_shield_mat"
+    ).openmc_material
 
-    divertor_mat = Material(material_name='eurofer',
-                            material_tag='divertor_mat').openmc_material
+    divertor_mat = Material(
+        material_name="eurofer", material_tag="divertor_mat"
+    ).openmc_material
 
-    blanket_mat = Material(material_name='Li4SiO4',
-                        enrichment=60,
-                        material_tag='blanket_mat').openmc_material
+    blanket_mat = Material(
+        material_name="Li4SiO4", enrichment=60, material_tag="blanket_mat"
+    ).openmc_material
 
-    blanket_rear_wall_mat = Material(material_name='eurofer',
-                             material_tag='blanket_rear_wall_mat').openmc_material
+    blanket_rear_wall_mat = Material(
+        material_name="eurofer", material_tag="blanket_rear_wall_mat"
+    ).openmc_material
 
-    mats = openmc.Materials([
-                            firstwall_mat,
-                            inboard_tf_coils_mat,
-                            center_column_mat,
-                            divertor_mat,
-                            blanket_mat,
-                            blanket_rear_wall_mat,
-                            ]
-                        )
+    mats = openmc.Materials(
+        [
+            firstwall_mat,
+            inboard_tf_coils_mat,
+            center_column_mat,
+            divertor_mat,
+            blanket_mat,
+            blanket_rear_wall_mat,
+        ]
+    )
 
     # this is the underlying geometry container that is filled with the faceteted CAD model
     universe = openmc.Universe()
@@ -98,8 +106,8 @@ def make_other_aspects_of_neutronics_model(my_reactor):
     settings.batches = 10
     settings.inactive = 0
     settings.particles = 100
-    settings.run_mode = 'fixed source'
-    settings.dagmc = True 
+    settings.run_mode = "fixed source"
+    settings.dagmc = True
 
     # details of the birth locations and energy of the neutronis
     source = openmc.Source()
@@ -111,9 +119,9 @@ def make_other_aspects_of_neutronics_model(my_reactor):
     # details about what neutrons interactions to keep track of (called a tally)
     tallies = openmc.Tallies()
     material_filter = openmc.MaterialFilter(blanket_mat)
-    tbr_tally = openmc.Tally(name='TBR')
+    tbr_tally = openmc.Tally(name="TBR")
     tbr_tally.filters = [material_filter]
-    tbr_tally.scores = ['(n,Xt)'] # where X is a wild card
+    tbr_tally.scores = ["(n,Xt)"]  # where X is a wild card
     tallies.append(tbr_tally)
 
     # make the model from gemonetry, materials, settings and tallies
@@ -123,6 +131,7 @@ def make_other_aspects_of_neutronics_model(my_reactor):
     output_filename = model.run()
 
     return output_filename
+
 
 def read_simulation_results(output_filename):
     """
@@ -134,12 +143,12 @@ def read_simulation_results(output_filename):
     sp = openmc.StatePoint(output_filename)
 
     # access the tally
-    tbr_tally = sp.get_tally(name='TBR')
+    tbr_tally = sp.get_tally(name="TBR")
     df = tbr_tally.get_pandas_dataframe()
-    tbr_tally_result = df['mean'].sum()
+    tbr_tally_result = df["mean"].sum()
 
     # print result
-    print('The tritium breeding ratio was found, TBR = ', tbr_tally_result)
+    print("The tritium breeding ratio was found, TBR = ", tbr_tally_result)
     # return tbr_tally_result
 
 

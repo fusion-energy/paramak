@@ -1,4 +1,3 @@
-
 import os
 import json
 import unittest
@@ -83,8 +82,9 @@ class test_object_properties(unittest.TestCase):
         os.system("python make_simple_neutronics_model.py")
         with open(output_filename) as json_file:
             data = json.load(json_file)
-        assert data['TBR'] == pytest.approx(0.456, abs=0.01)
+        assert data["TBR"] == pytest.approx(0.456, abs=0.01)
         os.system("rm " + output_filename)
+
 
 if __name__ == "__main__":
     unittest.main()

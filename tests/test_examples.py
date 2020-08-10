@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -11,14 +10,16 @@ class test_object_properties(unittest.TestCase):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_reactors"))
-        output_filenames = ['plasma.stp',
-            'inboard_tf_coils.stp',
-            'center_column_shield.stp',
-            'divertor.stp',
-            'firstwall.stp',
-            'blanket.stp',
-            'blanket_rear_wall.stp',
-            'Graveyard.stp']
+        output_filenames = [
+            "plasma.stp",
+            "inboard_tf_coils.stp",
+            "center_column_shield.stp",
+            "divertor.stp",
+            "firstwall.stp",
+            "blanket.stp",
+            "blanket_rear_wall.stp",
+            "Graveyard.stp",
+        ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
         os.system("python make_parametric_ball_reactor.py")
@@ -93,7 +94,6 @@ class test_object_properties(unittest.TestCase):
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
-
 
     def test_make_can_reactor_from_parameters(self):
         """ Runs the example and checks the output files are produced"""

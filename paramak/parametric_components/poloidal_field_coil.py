@@ -40,20 +40,21 @@ class PoloidalFieldCoil(RotateStraightShape):
         stl_filename="PoloidalFieldCoil.stl",
         color=None,
         azimuth_placement_angle=0,
-        name='pf_coil',
+        name="pf_coil",
         material_tag="pf_coil_mat",
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'intersect':None,
-                        'cut':None,
-                        'union':None,
-                        'tet_mesh':None,
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
         }
-        
+
         for arg in kwargs:
             if arg in default_dict:
                 default_dict[arg] = kwargs[arg]

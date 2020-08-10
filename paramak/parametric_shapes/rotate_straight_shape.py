@@ -1,4 +1,3 @@
-
 from collections import Iterable
 from hashlib import blake2b
 
@@ -36,8 +35,8 @@ class RotateStraightShape(Shape):
         name=None,
         color=None,
         material_tag=None,
-        stp_filename='RotateStraightShape.stp',
-        stl_filename='RotateStraightShape.stl',
+        stp_filename="RotateStraightShape.stp",
+        stl_filename="RotateStraightShape.stl",
         azimuth_placement_angle=0,
         solid=None,
         rotation_angle=360,
@@ -47,7 +46,7 @@ class RotateStraightShape(Shape):
         **kwargs
     ):
 
-        default_dict = {'tet_mesh':None}
+        default_dict = {"tet_mesh": None}
 
         for arg in kwargs:
             if arg in default_dict:
@@ -126,8 +125,8 @@ class RotateStraightShape(Shape):
         hash_object = blake2b()
         shape_dict = dict(self.__dict__)
         # set _solid and _hash_value to None to prevent unnecessary reconstruction
-        shape_dict['_solid'] = None
-        shape_dict['_hash_value'] = None
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
 
         hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()

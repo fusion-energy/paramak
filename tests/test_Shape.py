@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -57,7 +56,7 @@ class test_object_properties(unittest.TestCase):
             (20, 20),
             (20, 10),
             (20, 0),
-            (10, 0)
+            (10, 0),
         ]
 
         assert test_shape.create_limits() == (0.0, 20.0, 0.0, 20.0)
