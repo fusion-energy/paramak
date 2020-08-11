@@ -31,7 +31,7 @@ class Plasma(RotateSplineShape):
             X points in [0, 1]. Defaults to 0.1.
         Others: see paramak.RotateSplineShape() arguments.
 
-    Attributes:
+    Keyword Args:
         elongation (float): the elongation of the plasma.
         major_radius (int): the major radius of the plasma (cm).
         minor_radius (int): the minor radius of the plasma (cm).
@@ -56,6 +56,8 @@ class Plasma(RotateSplineShape):
             if doesn't exist)
         Others: see paramak.RotateSplineShape() attributes.
 
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(

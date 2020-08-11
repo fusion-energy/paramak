@@ -10,7 +10,6 @@ from paramak import RotateMixedShape
 class BlanketFP(RotateMixedShape):
     """A blanket volume created from plasma parameters.
 
-
     Args:
         thickness (float, (float, float), callable): the thickness of the
             blanket (cm). If float, constant thickness. If tuple of floats,
@@ -38,7 +37,7 @@ class BlanketFP(RotateMixedShape):
             shape. Defaults to 50.
         Others: see paramak.RotateMixedShape() arguments.
 
-    Attributes:
+    Keyword Args:
         thickness (float, (float, float), callable): the thickness of the
             blanket (cm). If float, constant thickness. If tuple of floats,
             thickness will vary linearly between the two values. If callable,
@@ -61,6 +60,9 @@ class BlanketFP(RotateMixedShape):
         num_points (int): number of points that will describe the
             shape.
         Others: see paramak.RotateMixedShape() attributes.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
