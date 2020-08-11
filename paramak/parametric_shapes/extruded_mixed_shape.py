@@ -52,7 +52,8 @@ class ExtrudeMixedShape(Shape):
         **kwargs
     ):
 
-        default_dict = {"tet_mesh": None}
+        default_dict = {"tet_mesh": None,
+                        "physical_groups": None}
 
         for arg in kwargs:
             if arg in default_dict:
