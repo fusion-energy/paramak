@@ -54,6 +54,7 @@ class Shape:
         azimuth_placement_angle=0,
         workplane="XZ",
         tet_mesh=None,
+        physical_groups=None,
     ):
 
         self.points = points
