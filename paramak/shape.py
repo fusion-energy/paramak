@@ -54,6 +54,7 @@ class Shape:
         azimuth_placement_angle=0,
         workplane="XZ",
         tet_mesh=None,
+        physical_groups=None,
     ):
 
         self.points = points
@@ -69,12 +70,12 @@ class Shape:
         self.material_tag = material_tag
         self.tet_mesh = tet_mesh
 
+        self.physical_groups = physical_groups
+
         # properties calculated internally by the class
         self.solid = None
         self.render_mesh = None
         # self.volume = None
-
-        self.physical_groups = None
 
     @property
     def workplane(self):
