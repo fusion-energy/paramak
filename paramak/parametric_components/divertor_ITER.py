@@ -32,7 +32,7 @@ class ITERtypeDivertor(RotateMixedShape):
             degrees for the vertical targets. Defaults to (-27, 0).
         Others: see paramak.RotateMixedShape() arguments.
 
-    Attributes:
+    Keyword Args:
         IVT_anchor (float, float): xy coordinates of points at
             the top of inner vertical target.
         OVT_anchor (float, float): xy coordinates of points at
@@ -61,6 +61,9 @@ class ITERtypeDivertor(RotateMixedShape):
             in between the targets.
 
         Others: see paramak.RotateMixedShape() attributes.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -329,9 +332,12 @@ class ITERtypeDivertorNoDome(ITERtypeDivertor):
             degrees for the vertical targets. Defaults to (-27, 0).
         Others: see paramak.RotateMixedShape() arguments.
 
-    Attributes:
+    Keyword Args:
         Others: see paramak.RotateMixedShape() and paramak.ITERtypeDivertor()
             attributes.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
