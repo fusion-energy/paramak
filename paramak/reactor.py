@@ -25,14 +25,15 @@ class Reactor:
 
     def __init__(self, shapes_and_components):
 
-        self.shapes_and_components = shapes_and_components
-
         # calculated internally
         self.material_tags = []
         self.stp_filenames = []
+        self.stl_filenames = []
         self.tet_meshes = []
         self.graveyard = None
         self.solid = None
+
+        self.shapes_and_components = shapes_and_components
 
     @property
     def stp_filenames(self):
@@ -245,11 +246,13 @@ class Reactor:
 
         return filenames
 
-    def export_stl(self, output_folder=""):
+    def export_stl(self, output_folder="", tolerance=0.001):
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         :param output_folder: the folder for saving the stp files to
         :type output_folder: str
+        :param tolerance: the precision of the faceting
+        :type tolerance: float
 
         :return: a list of stl filenames created
         :rtype: list
@@ -262,9 +265,14 @@ class Reactor:
                     "set .stl_filename property for \
                                  Shapes before using the export_stl method"
                 )
+
             filenames.append(
                 str(Path(output_folder) / Path(entry.stl_filename)))
-            entry.export_stl(Path(output_folder) / Path(entry.stl_filename))
+            entry.export_stl(
+                Path(output_folder) /
+                Path(
+                    entry.stl_filename),
+                tolerance)
 
         # creates a graveyard (bounding shell volume) which is needed for
         # nuetronics simulations
@@ -278,6 +286,143 @@ class Reactor:
         print("exported stl files ", filenames)
 
         return filenames
+
+    def export_h5m(
+            self,
+            filename='dagmc.h5m',
+            skip_graveyard=False,
+            tolerance=0.001):
+        """Converts stl files into DAGMC compatible h5m file using PyMOAB.
+        The DAGMC file produced has not been imprinted and merged unlike the other supported
+        method which uses Trelis to produce an imprinted and merged DAGMC geometry
+        If the provided filename doesn't end with .h5m it will be added
+
+            Args:
+                filename (str, optional): filename of h5m outputfile
+                    Defaults to "dagmc.h5m".
+                skip_graveyard (boolean, optional): filename of h5m outputfile
+                    Defaults to False.
+                tolerance (float, optional): the precision of the faceting
+                    Defaults to 0.001.
+        Returns:
+            filename: output h5m filename
+        """
+
+        try:
+            from pymoab import core, types
+        except ImportError as err:
+            raise err('PyMoab not found, Reactor.export_h5m method not available')
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".h5m":
+            Pfilename = Pfilename.with_suffix(".h5m")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        self.export_stl(tolerance=tolerance)
+        material_dict = self.neutronics_description()
+
+        # create pymoab instance
+        mb = core.Core()
+
+        tags = dict()
+
+        SENSE_TAG_NAME = "GEOM_SENSE_2"
+        SENSE_TAG_SIZE = 2
+        tags['surf_sense'] = mb.tag_get_handle(
+            SENSE_TAG_NAME,
+            SENSE_TAG_SIZE,
+            types.MB_TYPE_HANDLE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
+
+        tags['category'] = mb.tag_get_handle(
+            types.CATEGORY_TAG_NAME,
+            types.CATEGORY_TAG_SIZE,
+            types.MB_TYPE_OPAQUE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
+        tags['name'] = mb.tag_get_handle(
+            types.NAME_TAG_NAME,
+            types.NAME_TAG_SIZE,
+            types.MB_TYPE_OPAQUE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
+        tags['geom_dimension'] = mb.tag_get_handle(
+            types.GEOM_DIMENSION_TAG_NAME,
+            1,
+            types.MB_TYPE_INTEGER,
+            types.MB_TAG_DENSE,
+            create_if_missing=True)
+
+        # Global ID is a default tag, just need the name to retrieve
+        tags['global_id'] = mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
+
+        surface_id = 1
+        volume_id = 1
+
+        for item in material_dict:
+
+            stl_filename = item['stl_filename']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            surface_set = mb.create_meshset()
+            volume_set = mb.create_meshset()
+
+            # recent versions of MOAB handle this automatically
+            # but best to go ahead and do it manually
+            mb.tag_set_data(tags['global_id'], volume_set, volume_id)
+            volume_id += 1
+            mb.tag_set_data(tags['global_id'], surface_set, surface_id)
+            surface_id += 1
+
+            # set geom IDs
+            mb.tag_set_data(tags['geom_dimension'], volume_set, 3)
+            mb.tag_set_data(tags['geom_dimension'], surface_set, 2)
+
+            # set category tag values
+            mb.tag_set_data(tags['category'], volume_set, "Volume")
+            mb.tag_set_data(tags['category'], surface_set, "Surface")
+
+            # establish parent-child relationship
+            mb.add_parent_child(volume_set, surface_set)
+
+            # set surface sense
+            sense_data = [volume_set, np.uint64(0)]
+            mb.tag_set_data(tags['surf_sense'], surface_set, sense_data)
+
+            # load the stl triangles/vertices into the surface set
+            mb.load_file(stl_filename, surface_set)
+
+            material_name = item['material']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            group_set = mb.create_meshset()
+            mb.tag_set_data(tags['category'], group_set, "Group")
+            print("mat:{}".format(material_name))
+            mb.tag_set_data(
+                tags['name'],
+                group_set,
+                "mat:{}".format(material_name))
+            mb.tag_set_data(tags['geom_dimension'], group_set, 4)
+
+            # add the volume to this group set
+            mb.add_entity(group_set, volume_set)
+
+        all_sets = mb.get_entities_by_handle(0)
+
+        file_set = mb.create_meshset()
+
+        mb.add_entities(file_set, all_sets)
+
+        mb.write_file(filename)
+
+        return filename
 
     def export_physical_groups(self, output_folder=""):
         """Exports several JSON files containing a look up table

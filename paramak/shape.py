@@ -344,6 +344,8 @@ class Shape:
 
         :param filename: the filename of the stl
         :type filename: str
+        :param tolerance: the precision of the faceting
+        :type tolerance: float
         """
 
         Pfilename = Path(filename)

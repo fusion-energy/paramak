@@ -7,6 +7,40 @@ import paramak
 
 
 class test_object_properties(unittest.TestCase):
+
+    def test_export_h5m(self):
+        """Makes two shapes and adds them to a reactor for export as h5m files"""
+        os.system('rm small_dagmc.h5m')
+        os.system('rm small_dagmc_without_graveyard.h5m')
+        os.system('rm small_dagmc_with_graveyard.h5m')
+        os.system('rm large_dagmc.h5m')
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat1')
+        test_shape2 = paramak.RotateSplineShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat2')
+        test_shape.rotation_angle = 360
+        test_reactor = paramak.Reactor([test_shape, test_shape2])
+        test_reactor.export_h5m(filename='small_dagmc.h5m', tolerance=0.01)
+        test_reactor.export_h5m(
+            filename='small_dagmc_without_graveyard.h5m',
+            tolerance=0.01,
+            skip_graveyard=True)
+        test_reactor.export_h5m(
+            filename='small_dagmc_with_graveyard.h5m',
+            tolerance=0.01,
+            skip_graveyard=False)
+        test_reactor.export_h5m(filename='large_dagmc.h5m', tolerance=0.001)
+
+        assert Path("small_dagmc.h5m").exists() is True
+        assert Path("small_dagmc_with_graveyard.h5m").exists() is True
+        assert Path("large_dagmc.h5m").exists() is True
+        assert Path("large_dagmc.h5m").stat().st_size > Path(
+            "small_dagmc.h5m").stat().st_size
+        assert Path("small_dagmc_without_graveyard.h5m").stat(
+        ).st_size < Path("small_dagmc.h5m").stat().st_size
+
     def test_adding_shape_with_material_tag_to_reactor(self):
         """adds a shape to the reactor and checks that the material_tag
         property works as designed"""
