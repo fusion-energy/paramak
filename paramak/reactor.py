@@ -268,7 +268,11 @@ class Reactor:
 
             filenames.append(
                 str(Path(output_folder) / Path(entry.stl_filename)))
-            entry.export_stl(Path(output_folder) / Path(entry.stl_filename), tolerance)
+            entry.export_stl(
+                Path(output_folder) /
+                Path(
+                    entry.stl_filename),
+                tolerance)
 
         # creates a graveyard (bounding shell volume) which is needed for
         # nuetronics simulations
@@ -283,7 +287,11 @@ class Reactor:
 
         return filenames
 
-    def export_h5m(self, filename='dagmc.h5m', skip_graveyard=False, tolerance=0.001):
+    def export_h5m(
+            self,
+            filename='dagmc.h5m',
+            skip_graveyard=False,
+            tolerance=0.001):
         """Converts stl files into DAGMC compatible h5m file using PyMOAB.
         The DAGMC file produced has not been imprinted and merged unlike the other supported
         method which uses Trelis to produce an imprinted and merged DAGMC geometry
@@ -322,14 +330,34 @@ class Reactor:
 
         SENSE_TAG_NAME = "GEOM_SENSE_2"
         SENSE_TAG_SIZE = 2
-        tags['surf_sense'] = mb.tag_get_handle(SENSE_TAG_NAME, SENSE_TAG_SIZE, types.MB_TYPE_HANDLE, types.MB_TAG_SPARSE, create_if_missing=True)
+        tags['surf_sense'] = mb.tag_get_handle(
+            SENSE_TAG_NAME,
+            SENSE_TAG_SIZE,
+            types.MB_TYPE_HANDLE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
 
-        tags['category'] = mb.tag_get_handle(types.CATEGORY_TAG_NAME, types.CATEGORY_TAG_SIZE, types.MB_TYPE_OPAQUE, types.MB_TAG_SPARSE, create_if_missing=True)
-        tags['name'] = mb.tag_get_handle(types.NAME_TAG_NAME, types.NAME_TAG_SIZE, types.MB_TYPE_OPAQUE, types.MB_TAG_SPARSE, create_if_missing=True)
-        tags['geom_dimension'] = mb.tag_get_handle(types.GEOM_DIMENSION_TAG_NAME, 1, types.MB_TYPE_INTEGER, types.MB_TAG_DENSE, create_if_missing=True)
+        tags['category'] = mb.tag_get_handle(
+            types.CATEGORY_TAG_NAME,
+            types.CATEGORY_TAG_SIZE,
+            types.MB_TYPE_OPAQUE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
+        tags['name'] = mb.tag_get_handle(
+            types.NAME_TAG_NAME,
+            types.NAME_TAG_SIZE,
+            types.MB_TYPE_OPAQUE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
+        tags['geom_dimension'] = mb.tag_get_handle(
+            types.GEOM_DIMENSION_TAG_NAME,
+            1,
+            types.MB_TYPE_INTEGER,
+            types.MB_TAG_DENSE,
+            create_if_missing=True)
 
         # Global ID is a default tag, just need the name to retrieve
-        tags['global_id']= mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
+        tags['global_id'] = mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
 
         surface_id = 1
         volume_id = 1
@@ -377,7 +405,10 @@ class Reactor:
             group_set = mb.create_meshset()
             mb.tag_set_data(tags['category'], group_set, "Group")
             print("mat:{}".format(material_name))
-            mb.tag_set_data(tags['name'], group_set, "mat:{}".format(material_name))
+            mb.tag_set_data(
+                tags['name'],
+                group_set,
+                "mat:{}".format(material_name))
             mb.tag_set_data(tags['geom_dimension'], group_set, 4)
 
             # add the volume to this group set
