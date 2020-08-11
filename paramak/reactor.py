@@ -265,6 +265,7 @@ class Reactor:
                     "set .stl_filename property for \
                                  Shapes before using the export_stl method"
                 )
+
             filenames.append(
                 str(Path(output_folder) / Path(entry.stl_filename)))
             entry.export_stl(Path(output_folder) / Path(entry.stl_filename), tolerance)
