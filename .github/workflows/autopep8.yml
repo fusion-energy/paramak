@@ -14,7 +14,7 @@ jobs:
         id: autopep8
         uses: peter-evans/autopep8@v1
         with:
-          args: --exclude="make_faceteted_neutronics_model.py" --exit-code --recursive --in-place --aggressive --aggressive .
+          args: --exclude=make_faceteted_neutronics_model.py --exit-code --recursive --in-place --aggressive --aggressive .
       - name: Commit autopep8 changes
         if: steps.autopep8.outputs.exit-code == 2
         run: |
