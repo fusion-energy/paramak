@@ -1,4 +1,3 @@
-
 import unittest
 
 import pytest
@@ -7,7 +6,6 @@ from paramak import ExtrudeStraightShape
 
 
 class test_object_properties(unittest.TestCase):
-
     def test_intersect_volume_2_shapes(self):
         """creates two shapes with the second shape intersecting the first,
             checks volume against calculated volume"""
@@ -16,12 +14,13 @@ class test_object_properties(unittest.TestCase):
             points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
         )
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=30,
-            intersect=test_shape1
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
+            distance=30,
+            intersect=test_shape1,
         )
 
         assert test_shape.solid is not None
-        assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25 )
+        assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25)
 
     def test_intersect_volume_3_shapes(self):
         """creates three shapes with the second and third shape intersecting
@@ -34,8 +33,9 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 15), (0, 30), (30, 30), (30, 15)], distance=30
         )
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=30,
-            intersect=[test_shape1, test_shape2]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
+            distance=30,
+            intersect=[test_shape1, test_shape2],
         )
 
         assert test_shape.solid is not None
@@ -53,8 +53,9 @@ class test_object_properties(unittest.TestCase):
             points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=3
         )
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=30,
-            intersect=[test_shape1, test_shape2]
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
+            distance=30,
+            intersect=[test_shape1, test_shape2],
         )
 
         assert test_shape.solid is not None
@@ -99,7 +100,8 @@ class test_object_properties(unittest.TestCase):
 
         test_shape.azimuth_placement_angle = [0, 90, 180, 270]
 
-        assert test_shape.volume == pytest.approx((10 * 20 * 10 * 4) - (5 * 20 * 5 * 4))
+        assert test_shape.volume == pytest.approx(
+            (10 * 20 * 10 * 4) - (5 * 20 * 5 * 4))
 
     def test_cut_volume(self):
         """creates an extruded shape with one placement angle using straight \
@@ -115,9 +117,7 @@ class test_object_properties(unittest.TestCase):
         )
 
         outer_shape_with_cut = ExtrudeStraightShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3)],
-            cut=inner_shape,
-            distance=30,
+            points=[(3, 3), (3, 12), (12, 12), (12, 3)], cut=inner_shape, distance=30,
         )
 
         assert inner_shape.volume == pytest.approx(5 * 5 * 30)
@@ -130,8 +130,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
 
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=20
         )
 
         assert test_shape.hash_value is None
@@ -143,8 +142,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
 
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=20
         )
 
         assert test_shape.solid is not None
@@ -159,8 +157,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20)], distance=20
         )
 
         assert test_shape.solid is not None
@@ -177,8 +174,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20)], distance=20
         )
         test_shape.solid
         assert test_shape.hash_value is not None
@@ -195,8 +191,7 @@ class test_object_properties(unittest.TestCase):
 
         # points
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20)], distance=20
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
@@ -207,8 +202,7 @@ class test_object_properties(unittest.TestCase):
 
         # distance
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20)], distance=20
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
@@ -219,9 +213,7 @@ class test_object_properties(unittest.TestCase):
 
         # workplane
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20,
-            workplane="XZ",
+            points=[(0, 0), (0, 20), (20, 20)], distance=20, workplane="XZ",
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
@@ -229,26 +221,23 @@ class test_object_properties(unittest.TestCase):
         test_shape.solid
         assert test_shape.solid is not None
         assert test_shape.hash_value != initial_hash_value
-        
+
         # name
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20,
-            name='test_name',
+            points=[(0, 0), (0, 20), (20, 20)], distance=20, name="test_name",
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
-        test_shape.name = 'new_name'
+        test_shape.name = "new_name"
         test_shape.solid
         assert test_shape.solid is not None
         assert test_shape.hash_value != initial_hash_value
 
         # color
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20,
-            color=[0.5, 0.5, 0.5],
-        )
+            points=[
+                (0, 0), (0, 20), (20, 20)], distance=20, color=[
+                0.5, 0.5, 0.5], )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
         test_shape.color = [0.1, 0.2, 0.8]
@@ -260,11 +249,11 @@ class test_object_properties(unittest.TestCase):
         test_shape = ExtrudeStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
             distance=20,
-            material_tag='test_material',
-        )        
+            material_tag="test_material",
+        )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
-        test_shape.material_tag = 'new_material'
+        test_shape.material_tag = "new_material"
         test_shape.solid
         assert test_shape.solid is not None
         assert test_shape.hash_value != initial_hash_value
@@ -273,20 +262,18 @@ class test_object_properties(unittest.TestCase):
         test_shape = ExtrudeStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
             distance=20,
-            stp_filename='test_filename.stp',
+            stp_filename="test_filename.stp",
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
-        test_shape.stp_filename = 'new_filename.stp'
+        test_shape.stp_filename = "new_filename.stp"
         test_shape.solid
         assert test_shape.solid is not None
         assert test_shape.hash_value != initial_hash_value
 
         # azimuth_placement_angle
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20,
-            azimuth_placement_angle=0,
+            points=[(0, 0), (0, 20), (20, 20)], distance=20, azimuth_placement_angle=0,
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value
@@ -297,13 +284,10 @@ class test_object_properties(unittest.TestCase):
 
         # cut
         cut_shape = ExtrudeStraightShape(
-            points=[(5, 5), (5, 15), (15, 15)],
-            distance=5
-        )
+            points=[(5, 5), (5, 15), (15, 15)], distance=5)
 
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20,
+            points=[(0, 0), (0, 20), (20, 20)], distance=20,
         )
         test_shape.solid
         initial_hash_value = test_shape.hash_value

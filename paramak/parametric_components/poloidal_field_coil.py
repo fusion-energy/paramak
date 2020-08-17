@@ -2,17 +2,32 @@ from paramak import RotateStraightShape
 
 
 class PoloidalFieldCoil(RotateStraightShape):
-    """Creates a rectangular poloidal field coil
+    """Creates a rectangular poloidal field coil.
 
-    :param height: the vertical (Z axis) height of the coil (cm)
-    :type height: float
-    :param width: the horizontal (X axis) width of the coil (cm)
-    :type width: float
-    :param center_point: the center of the coil (X,Z) values (cm)
-    :type center_point: tuple of floats
+    Args:
+        height (float): the vertical (z axis) height of the coil (cm).
+        width (float): the horizontal (x axis) width of the coil (cm).
+        center_point (tuple of floats): the center of the coil (x,z) values (cm).
 
-    :return: a shape object that has generic functionality
-    :rtype: paramak shape object
+    Keyword Args:
+        name (str): the legend name used when exporting a html graph of the shape.
+        color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
+            exportin as html graphs or png images.
+        material_tag (str): The material name to use when exporting the neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
+            rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
+        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
+            this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        tet_mesh (str): Insert description.
+        physical_groups (type): Insert description.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -22,21 +37,25 @@ class PoloidalFieldCoil(RotateStraightShape):
         center_point,
         rotation_angle=360,
         stp_filename="PoloidalFieldCoil.stp",
+        stl_filename="PoloidalFieldCoil.stl",
         color=None,
         azimuth_placement_angle=0,
-        name='pf_coil',
+        name="pf_coil",
         material_tag="pf_coil_mat",
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'hash_value':None,
-                        'intersect':None,
-                        'cut':None
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
         }
-        
+
         for arg in kwargs:
             if arg in default_dict:
                 default_dict[arg] = kwargs[arg]
@@ -46,8 +65,10 @@ class PoloidalFieldCoil(RotateStraightShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
+            hash_value=None,
             **default_dict
         )
 

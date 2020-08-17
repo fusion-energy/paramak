@@ -4,15 +4,22 @@ from paramak import RotateStraightShape
 class CenterColumnShieldCylinder(RotateStraightShape):
     """A cylindrical center column shield volume with constant thickness.
 
-    :param height: height of the center column shield
-    :type height: float
-    :param inner_radius: the inner radius of the center column shield
-    :type inner_radius: float
-    :param outer_radius: the outer radius of the center column shield
-    :type outer_radius: float
+    Arguments:
+        height (float): height of the center column shield.
+        inner_radius (float): the inner radius of the center column shield.
+        outer_radius (float): the outer radius of the center column shield.
 
-    :return: a shape object that has generic functionality
-    :rtype: a paramak shape object
+    Keyword Args:
+        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
+            this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        tet_mesh (str): Insert description.
+        physical_groups (type): Insert description.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -23,18 +30,22 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         name=None,
         color=None,
         stp_filename="CenterColumnShieldCylinder.stp",
+        stl_filename="CenterColumnShieldCylinder.stl",
         rotation_angle=360,
         material_tag="center_column_shield_mat",
         azimuth_placement_angle=0,
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'hash_value':None,
-                        'intersect':None,
-                        'cut':None
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
         }
 
         for arg in kwargs:
@@ -46,8 +57,10 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
+            hash_value=None,
             **default_dict
         )
 
@@ -100,7 +113,8 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             )
 
         if self.height is None:
-            raise ValueError("height of the CenterColumnShieldBlock must be set")
+            raise ValueError(
+                "height of the CenterColumnShieldBlock must be set")
 
         points = [
             (self.inner_radius, self.height / 2),

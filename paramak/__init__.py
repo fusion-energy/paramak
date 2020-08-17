@@ -15,6 +15,7 @@ from .parametric_shapes.rotate_circle_shape import RotateCircleShape
 
 from .parametric_components.tokamak_plasma import Plasma
 from .parametric_components.tokamak_plasma_from_points import PlasmaFromPoints
+from .parametric_components.tokamak_plasma_plasmaboundaries import PlasmaBoundaries
 
 from .parametric_components.blanket_constant_thickness_arc_h import (
     BlanketConstantThicknessArcH,
@@ -22,13 +23,12 @@ from .parametric_components.blanket_constant_thickness_arc_h import (
 from .parametric_components.blanket_constant_thickness_arc_v import (
     BlanketConstantThicknessArcV,
 )
-from .parametric_components.blanket_constant_thickness_fp import (
-    BlanketConstantThicknessFP,
-)
+from .parametric_components.blanket_fp import BlanketFP
 
-from .parametric_components.divertor_block import DivertorBlock
-from .parametric_components.divertor_ITER import ITERtypeDivertor, \
-    ITERtypeDivertorNoDome
+from .parametric_components.divertor_ITER import (
+    ITERtypeDivertor,
+    ITERtypeDivertorNoDome,
+)
 
 from .parametric_components.center_column_cylinder import CenterColumnShieldCylinder
 from .parametric_components.center_column_hyperbola import CenterColumnShieldHyperbola

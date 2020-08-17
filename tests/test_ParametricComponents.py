@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -13,28 +12,30 @@ class test_BlanketConstantThicknessArcV(unittest.TestCase):
         """creates blanket from parametric shape and checks a solid is created"""
 
         test_shape = paramak.BlanketConstantThicknessArcV(
-                         inner_lower_point=(300,-200),
-                         inner_mid_point=(500,0),
-                         inner_upper_point=(300,200),
-                         thickness=20,
-                         rotation_angle = 180
+            inner_lower_point=(300, -200),
+            inner_mid_point=(500, 0),
+            inner_upper_point=(300, 200),
+            thickness=20,
+            rotation_angle=180,
         )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
+
 class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
     def test_ToroidalFieldCoilCoatHanger_creation(self):
         """creates blanket from parametric shape and checks a solid is created"""
 
-        test_shape=paramak.ToroidalFieldCoilCoatHanger(
-            horizontal_start_point=(200,500),
+        test_shape = paramak.ToroidalFieldCoilCoatHanger(
+            horizontal_start_point=(200, 500),
             horizontal_length=400,
-            vertical_start_point=(700,50),
+            vertical_start_point=(700, 50),
             vertical_length=500,
             thickness=50,
             distance=50,
-            number_of_coils=5)
+            number_of_coils=5,
+        )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
@@ -45,86 +46,39 @@ class test_BlanketConstantThicknessArcH(unittest.TestCase):
         """creates blanket from parametric shape and checks a solid is created"""
 
         test_shape = paramak.BlanketConstantThicknessArcH(
-                         inner_lower_point=(300,-200),
-                         inner_mid_point=(500,0),
-                         inner_upper_point=(300,200),
-                         thickness=20,
-                         rotation_angle = 180
+            inner_lower_point=(300, -200),
+            inner_mid_point=(500, 0),
+            inner_upper_point=(300, 200),
+            thickness=20,
+            rotation_angle=180,
         )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
-class test_BlanketConstantThickness(unittest.TestCase):
-    def test_BlanketConstantThickness_creation(self):
+
+class test_BlanketFP(unittest.TestCase):
+    def test_BlanketFP_creation_plasma(self):
         """creates blanket from parametric shape and checks a solid is created"""
         plasma = paramak.Plasma(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
-            elongation=2,
+            major_radius=300, minor_radius=50, triangularity=0.5, elongation=2,
         )
-        test_shape = paramak.BlanketConstantThicknessFP(
+        test_shape = paramak.BlanketFP(
             plasma=plasma,
             thickness=200,
             stop_angle=90,
             start_angle=270,
             offset_from_plasma=30,
+            rotation_angle=180,
         )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
-
-class test_BlanketConstantThicknessFP(unittest.TestCase):
-    def test_BlanketConstantThicknessFP_creation_plasma(self):
-        """creates blanket from parametric shape and checks a solid is created"""
-        plasma = paramak.Plasma(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
-            elongation=2,
-        )
-        test_shape = paramak.BlanketConstantThicknessFP(
-            plasma=plasma,
-            thickness=200,
-            stop_angle=90,
-            start_angle=270,
-            offset_from_plasma=30,
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.volume > 1000
-
-    def test_BlanketConstantThicknessFP_creation_noplasma(self):
+    def test_BlanketFP_creation_noplasma(self):
         """creates blanket from parametric shape and checks a solid is created"""
 
-        test_shape = paramak.BlanketConstantThicknessFP(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
-            elongation=2,
-            thickness=200,
-            stop_angle=90,
-            start_angle=270,
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.volume > 1000
-
-    def test_BlanketConstantThicknessFP_physical_groups(self):
-        """Creates default blanket and checks the exports of physical groups
-        """
-        test_shape = paramak.BlanketConstantThicknessFP(
-            100, stop_angle=90,
-            start_angle=270,)
-        test_shape.export_physical_groups('tests/blanket.json')
-
-    def test_BlanketConstantThicknessFP_full_cov_stp_export(self):
-        """creates blanket from parametric shape and checks the STP export
-        with full coverage"""
-
-        test_shape = paramak.BlanketConstantThicknessFP(
+        test_shape = paramak.BlanketFP(
             major_radius=300,
             minor_radius=50,
             triangularity=0.5,
@@ -132,7 +86,65 @@ class test_BlanketConstantThicknessFP(unittest.TestCase):
             thickness=200,
             stop_angle=360,
             start_angle=0,
-            rotation_angle=180
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+    def test_BlanketFP_creation_variable_thickness_from_tuple(self):
+        """creates blanket from parametric shape and checks a solid is created"""
+
+        test_shape = paramak.BlanketFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=(100, 200),
+            stop_angle=90,
+            start_angle=270,
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+    def test_BlanketFP_creation_variable_thickness_function(self):
+        """creates blanket from parametric shape and checks a solid is created"""
+
+        def thickness(theta):
+            return 100 + 3 * theta
+
+        test_shape = paramak.BlanketFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=thickness,
+            stop_angle=90,
+            start_angle=270,
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+    def test_BlanketFP_physical_groups(self):
+        """Creates default blanket and checks the exports of physical groups
+        """
+        test_shape = paramak.BlanketFP(100, stop_angle=90, start_angle=270,)
+        test_shape.export_physical_groups("tests/blanket.json")
+
+    def test_BlanketFP_full_cov_stp_export(self):
+        """creates blanket from parametric shape and checks the STP export
+        with full coverage"""
+
+        test_shape = paramak.BlanketFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=360,
+            start_angle=0,
+            rotation_angle=180,
         )
 
         test_shape.export_stp("tests/test_blanket_full_cov")
@@ -142,8 +154,12 @@ class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
         """creates a poloidal field coil from parametric shape and checks a solid is created"""
         test_shape = paramak.PoloidalFieldCoilCase(
-            casing_thickness=5, coil_height=50, coil_width=50, center_point=(1000, 500)
-        )
+            casing_thickness=5,
+            coil_height=50,
+            coil_width=50,
+            center_point=(
+                1000,
+                500))
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
@@ -155,7 +171,7 @@ class test_Plasma(unittest.TestCase):
 
         test_plasma = paramak.Plasma()
 
-        assert type(test_plasma.elongation) == float
+        assert isinstance(test_plasma.elongation, float)
 
         def test_plasma_elongation_min_setting():
             """checks ValueError is raised when an elongation < 0 is specified"""
@@ -174,15 +190,20 @@ class test_Plasma(unittest.TestCase):
     def test_plasma_x_points(self):
         """Checks the location of the x point for various plasma configurations
         """
-        triangularity = -0.7
-        elongation = 1.6
-        minor_radius = 200
-        major_radius = 600
-        for triangularity, elongation, minor_radius, major_radius in zip(
-                [-0.7, 0, 0.5],  # triangularity
-                [1, 1.5, 2],  # elongation
-                [100, 200, 300],  # minor radius
-                [300, 400, 600]):  # major radius
+
+        for (
+            triangularity,
+            elongation,
+            minor_radius,
+            major_radius,
+            vertical_displacement,
+        ) in zip(
+            [-0.7, 0, 0.5],  # triangularity
+            [1, 1.5, 2],  # elongation
+            [100, 200, 300],  # minor radius
+            [300, 400, 600],  # major radius
+            [0, -10, 5],
+        ):  # displacement
 
             for config in ["non-null", "single-null", "double-null"]:
 
@@ -192,31 +213,90 @@ class test_Plasma(unittest.TestCase):
                     triangularity=triangularity,
                     elongation=elongation,
                     minor_radius=minor_radius,
-                    major_radius=major_radius)
+                    major_radius=major_radius,
+                    vertical_displacement=vertical_displacement,
+                )
 
                 # Expected
                 expected_lower_x_point, expected_upper_x_point = None, None
-                if config == "single-null" or \
-                   config == "double-null":
-                    expected_lower_x_point = (
-                        1-(1+test_plasma.x_point_shift)*triangularity *
-                        minor_radius,
-                        (1+test_plasma.x_point_shift)*elongation *
-                        minor_radius
-                    )
+                if config == "single-null" or config == "double-null":
+                    expected_lower_x_point = (1 -
+                                              (1 +
+                                               test_plasma.x_point_shift) *
+                                              triangularity *
+                                              minor_radius, -
+                                              (1 +
+                                               test_plasma.x_point_shift) *
+                                              elongation *
+                                              minor_radius +
+                                              vertical_displacement, )
 
                     if config == "double-null":
                         expected_upper_x_point = (
                             expected_lower_x_point[0],
-                            -expected_lower_x_point[1]
+                            (1 +
+                             test_plasma.x_point_shift) *
+                            elongation *
+                            minor_radius +
+                            vertical_displacement,
                         )
 
                 # Check
                 for point, expected_point in zip(
-                        [test_plasma.lower_x_point,
-                            test_plasma.upper_x_point],
-                        [expected_lower_x_point,
-                            expected_upper_x_point]):
+                    [test_plasma.lower_x_point, test_plasma.upper_x_point],
+                    [expected_lower_x_point, expected_upper_x_point],
+                ):
+                    assert point == expected_point
+
+    def test_plasma_x_points_plasmaboundaries(self):
+        """Checks the location of the x point for various plasma configurations
+        for plasma from plasmaboundaries
+        """
+
+        for A, triangularity, elongation, minor_radius, major_radius in zip(
+            [0, 0.05, 0.05],  # A
+            [-0.7, 0, 0.5],  # triangularity
+            [1, 1.5, 2],  # elongation
+            [100, 200, 300],  # minor radius
+            [300, 400, 600],
+        ):  # major radius
+
+            for config in ["non-null", "single-null", "double-null"]:
+
+                # Run
+                test_plasma = paramak.PlasmaBoundaries(
+                    configuration=config,
+                    A=A,
+                    triangularity=triangularity,
+                    elongation=elongation,
+                    minor_radius=minor_radius,
+                    major_radius=major_radius,
+                )
+
+                # Expected
+                expected_lower_x_point, expected_upper_x_point = None, None
+                if config == "single-null" or config == "double-null":
+                    expected_lower_x_point = (1 -
+                                              (1 +
+                                               test_plasma.x_point_shift) *
+                                              triangularity *
+                                              minor_radius, -
+                                              (1 +
+                                               test_plasma.x_point_shift) *
+                                              elongation *
+                                              minor_radius, )
+
+                    if config == "double-null":
+                        expected_upper_x_point = (
+                            expected_lower_x_point[0],
+                            -expected_lower_x_point[1],
+                        )
+
+                # Check
+                for point, expected_point in zip(
+                    [test_plasma.lower_x_point, test_plasma.upper_x_point],
+                    [expected_lower_x_point, expected_upper_x_point],
+                ):
                     assert point == expected_point
 
     def test_export_plasma_source(self):
@@ -228,24 +308,26 @@ class test_Plasma(unittest.TestCase):
 
         test_plasma.export_stp("plasma.stp")
 
-        assert Path("plasma.stp").exists() == True
+        assert Path("plasma.stp").exists()
         os.system("rm plasma.stp")
-
 
     def test_export_plasma_from_points_export(self):
         """checks that export_stp() exports plasma stp file"""
 
-        test_plasma = paramak.PlasmaFromPoints(outer_equatorial_x_point=500,
-                                               inner_equatorial_x_point=300,
-                                               high_point=(400,200),
-                                               rotation_angle=180)
+        test_plasma = paramak.PlasmaFromPoints(
+            outer_equatorial_x_point=500,
+            inner_equatorial_x_point=300,
+            high_point=(400, 200),
+            rotation_angle=180,
+        )
 
         os.system("rm plasma.stp")
 
         test_plasma.export_stp("plasma.stp")
 
-        assert Path("plasma.stp").exists() == True
+        assert Path("plasma.stp").exists()
         os.system("rm plasma.stp")
+
 
 # class test_DivertorBlock(unittest.TestCase):
 # def test_DivertorBlock_creation(self):
@@ -260,6 +342,7 @@ class test_Plasma(unittest.TestCase):
 
 #         assert test_shape.solid is not None
 #         assert test_shape.volume > 1000
+
 
 class test_DivertorITER(unittest.TestCase):
     def test_DivertorITER_creaction(self):
@@ -326,22 +409,25 @@ class test_PoloidalFieldCoil(unittest.TestCase):
         """creates a PoloidalFieldCoil object and checks a solid is created"""
 
         test_shape = paramak.PoloidalFieldCoil(
-            height=50, width=60, center_point=(1000, 500))
+            height=50, width=60, center_point=(1000, 500)
+        )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+
 
 class test_ToroidalFieldCoilRectangle(unittest.TestCase):
     def test_ToroidalFieldCoilRectangle_creation(self):
         """creates a ToroidalFieldCoilRectangle object and checks a solid is created"""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
-                        inner_upper_point=(100,700),
-                        inner_mid_point=(800,0),
-                        inner_lower_point=(100,-700),
-                        thickness=150,
-                        distance=50,
-                        number_of_coils=8)
+            inner_upper_point=(100, 700),
+            inner_mid_point=(800, 0),
+            inner_lower_point=(100, -700),
+            thickness=150,
+            distance=50,
+            number_of_coils=8,
+        )
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
@@ -363,7 +449,11 @@ class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
         """creates a CenterColumnShieldFlatTopCircular object and checks a solid is created"""
 
         test_shape = paramak.CenterColumnShieldFlatTopCircular(
-            height=600, arc_height=200, inner_radius=100, mid_radius=150, outer_radius=200
+            height=600,
+            arc_height=200,
+            inner_radius=100,
+            mid_radius=150,
+            outer_radius=200,
         )
 
         assert test_shape.solid is not None
@@ -419,7 +509,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
 
         test_shape.export_stp("center_column_shield.stp")
 
-        assert Path("center_column_shield.stp").exists() == True
+        assert Path("center_column_shield.stp").exists()
 
         os.system("rm center_column_shield.stp")
 
@@ -429,43 +519,48 @@ class test_PoloidalFieldCoilCaseFC(unittest.TestCase):
         """creates a PoloidalFieldCoilCaseFC object and checks a solid is created"""
 
         pf_coil = paramak.PoloidalFieldCoil(
-            height=50, width=60, center_point=(1000, 500))
+            height=50, width=60, center_point=(1000, 500)
+        )
 
         test_shape = paramak.PoloidalFieldCoilCaseFC(
-            pf_coil=pf_coil, casing_thickness=5)
+            pf_coil=pf_coil, casing_thickness=5
+        )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+
 
 class test_InnerTfCoilsFlat(unittest.TestCase):
     def test_InnerTfCoilsFlat_creation(self):
         """creates a InnerTfCoilsFlat object and checks a solid is created"""
 
         test_shape = paramak.InnerTfCoilsFlat(
-                    height=500,
-                    inner_radius=50,
-                    outer_radius=150,
-                    number_of_coils=6,
-                    gap_size=5,
-            )
+            height=500,
+            inner_radius=50,
+            outer_radius=150,
+            number_of_coils=6,
+            gap_size=5,
+        )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+
 
 class test_InnerTfCoilsCircular(unittest.TestCase):
     def test_InnerTfCoilsCircular_creation(self):
         """creates a InnerTfCoilsCircular object and checks a solid is created"""
 
         test_shape = paramak.InnerTfCoilsCircular(
-                    height=500,
-                    inner_radius=50,
-                    outer_radius=150,
-                    number_of_coils=6,
-                    gap_size=5,
-            )
+            height=500,
+            inner_radius=50,
+            outer_radius=150,
+            number_of_coils=6,
+            gap_size=5,
+        )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+
 
 if __name__ == "__main__":
     unittest.main()

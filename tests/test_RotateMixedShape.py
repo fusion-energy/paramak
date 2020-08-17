@@ -1,4 +1,3 @@
-
 import unittest
 
 import pytest
@@ -9,6 +8,45 @@ from pathlib import Path
 
 
 class test_object_properties(unittest.TestCase):
+    def test_union_volume_addition(self):
+        """ makes two volumes and then remakes the same two volumes as a
+        fused solid. Checks the volumes of these two options are the same.
+        """
+        inner_box = RotateMixedShape(
+            points=[
+                (100, 100, "straight"),
+                (100, 200, "straight"),
+                (200, 200, "straight"),
+                (200, 100, "straight"),
+            ],
+            rotation_angle=20,
+        )
+
+        outer_box = RotateMixedShape(
+            points=[
+                (200, 100, "straight"),
+                (200, 200, "straight"),
+                (500, 200, "straight"),
+                (500, 100, "straight"),
+            ],
+            rotation_angle=20,
+        )
+
+        outer_box_and_inner_box = RotateMixedShape(
+            points=[
+                (200, 100, "straight"),
+                (200, 200, "straight"),
+                (500, 200, "straight"),
+                (500, 100, "straight"),
+            ],
+            rotation_angle=20,
+            union=inner_box,
+        )
+
+        assert inner_box.volume + outer_box.volume == pytest.approx(
+            outer_box_and_inner_box.volume
+        )
+
     def test_absolute_shape_volume(self):
         """creates a rotated shape using straight and spline connections and \
                 checks the volume is correct"""
@@ -18,7 +56,7 @@ class test_object_properties(unittest.TestCase):
                 (0, 0, "straight"),
                 (0, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 0, "spline")
+                (20, 0, "spline"),
             ]
         )
 
@@ -33,7 +71,7 @@ class test_object_properties(unittest.TestCase):
                 (0, 0, "straight"),
                 (0, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 0, "spline")
+                (20, 0, "spline"),
             ]
         )
 
@@ -52,7 +90,7 @@ class test_object_properties(unittest.TestCase):
                 (1, 1, "straight"),
                 (1, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 1, "spline")
+                (20, 1, "spline"),
             ]
         )
 
@@ -68,7 +106,7 @@ class test_object_properties(unittest.TestCase):
                 (1, 1, "straight"),
                 (1, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 1, "spline")
+                (20, 1, "spline"),
             ]
         )
 
@@ -84,7 +122,7 @@ class test_object_properties(unittest.TestCase):
                 (1, 1, "straight"),
                 (1, 20, "spline"),
                 (20, 20, "spline"),
-                (20, 1, "spline")
+                (20, 1, "spline"),
             ]
         )
 
@@ -105,7 +143,7 @@ class test_object_properties(unittest.TestCase):
                     (0, 0, "straight"),
                     (0, 20, "spline"),
                     (20, 20, "spline"),
-                    (20, 0, "not_a_valid_entry")
+                    (20, 0, "not_a_valid_entry"),
                 ]
             )
 
@@ -116,11 +154,7 @@ class test_object_properties(unittest.TestCase):
                            number of connections are specified. There are 3 \
                            points set, so only 4 connections are needed"""
             test_shape = RotateMixedShape(
-                points=[
-                    (0, 200, "straight"),
-                    (200, 100),
-                    (0, 0, "spline"),
-                ]
+                points=[(0, 200, "straight"), (200, 100), (0, 0, "spline"), ]
             )
 
             test_shape.create_solid()
@@ -136,7 +170,7 @@ class test_object_properties(unittest.TestCase):
                 (5, 5, "straight"),
                 (5, 10, "spline"),
                 (10, 10, "spline"),
-                (10, 5, "spline")
+                (10, 5, "spline"),
             ],
             rotation_angle=180,
         )
@@ -146,7 +180,7 @@ class test_object_properties(unittest.TestCase):
                 (3, 3, "straight"),
                 (3, 12, "spline"),
                 (12, 12, "spline"),
-                (12, 3, "spline")
+                (12, 3, "spline"),
             ],
             rotation_angle=180,
         )
@@ -156,7 +190,7 @@ class test_object_properties(unittest.TestCase):
                 (3, 3, "straight"),
                 (3, 12, "spline"),
                 (12, 12, "spline"),
-                (12, 3, "spline")
+                (12, 3, "spline"),
             ],
             cut=inner_shape,
             rotation_angle=180,
@@ -170,12 +204,13 @@ class test_object_properties(unittest.TestCase):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
 
         test_shape = RotateMixedShape(
-            points=[(0, 0, "straight"),
-                    (0, 20, "spline"),
-                    (20, 20, "spline"),
-                    (20, 0, "straight"),
-                    ],
-            rotation_angle=360
+            points=[
+                (0, 0, "straight"),
+                (0, 20, "spline"),
+                (20, 20, "spline"),
+                (20, 0, "straight"),
+            ],
+            rotation_angle=360,
         )
 
         assert test_shape.hash_value is None
@@ -187,12 +222,13 @@ class test_object_properties(unittest.TestCase):
         """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
 
         test_shape = RotateMixedShape(
-            points=[(0, 0, "straight"),
-                    (0, 20, "spline"),
-                    (20, 20, "spline"),
-                    (20, 0, "straight"),
-                    ],
-            rotation_angle=360
+            points=[
+                (0, 0, "straight"),
+                (0, 20, "spline"),
+                (20, 20, "spline"),
+                (20, 0, "straight"),
+            ],
+            rotation_angle=360,
         )
 
         assert test_shape.solid is not None
@@ -207,11 +243,8 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = RotateMixedShape(
-            points=[(0, 0, "straight"),
-                    (0, 20, "spline"),
-                    (20, 20, "spline"),
-                    ],
-            rotation_angle=360
+            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"), ],
+            rotation_angle=360,
         )
 
         assert test_shape.solid is not None
@@ -228,11 +261,8 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = RotateMixedShape(
-            points=[(0, 0, "straight"),
-                    (0, 20, "spline"),
-                    (20, 20, "spline"),
-                    ],
-            rotation_angle=360
+            points=[(0, 0, "straight"), (0, 20, "spline"), (20, 20, "spline"), ],
+            rotation_angle=360,
         )
         test_shape.solid
         assert test_shape.hash_value is not None
@@ -247,14 +277,14 @@ class test_object_properties(unittest.TestCase):
         """tests the construction of a shape with straight and circular edges"""
         test_shape = RotateMixedShape(
             points=[
-                (10, 20, 'straight'),
-                (10, 10, 'straight'),
-                (20, 10, 'circle'),
-                (40, 15, 'circle'),
-                (20, 20, 'straight'),
-                ],
-            rotation_angle=10
-            )
+                (10, 20, "straight"),
+                (10, 10, "straight"),
+                (20, 10, "circle"),
+                (40, 15, "circle"),
+                (20, 20, "straight"),
+            ],
+            rotation_angle=10,
+        )
         assert test_shape.volume > 10 * 10
 
     def test_export_stp(self):
@@ -262,20 +292,20 @@ class test_object_properties(unittest.TestCase):
         """
         test_shape = RotateMixedShape(
             points=[
-                (10, 20, 'straight'),
-                (10, 10, 'straight'),
-                (20, 10, 'circle'),
-                (40, 15, 'circle'),
-                (20, 20, 'straight'),
-                ],
-            rotation_angle=10
-            )
+                (10, 20, "straight"),
+                (10, 10, "straight"),
+                (20, 10, "circle"),
+                (40, 15, "circle"),
+                (20, 20, "straight"),
+            ],
+            rotation_angle=10,
+        )
         os.system("rm tests/test.stp")
         test_shape.export_stp("tests/test.stp")
         assert Path("tests/test.stp").exists() is True
         os.system("rm tests/test.stp")
 
-        test_shape.stp_filename = ("tests/test.stp")
+        test_shape.stp_filename = "tests/test.stp"
         test_shape.export_stp()
         assert Path("tests/test.stp").exists() is True
         os.system("rm tests/test.stp")
@@ -285,14 +315,14 @@ class test_object_properties(unittest.TestCase):
         """
         test_shape = RotateMixedShape(
             points=[
-                (10, 20, 'straight'),
-                (10, 10, 'straight'),
-                (20, 10, 'circle'),
-                (40, 15, 'circle'),
-                (20, 20, 'straight'),
-                ],
-            rotation_angle=10
-            )
+                (10, 20, "straight"),
+                (10, 10, "straight"),
+                (20, 10, "circle"),
+                (40, 15, "circle"),
+                (20, 20, "straight"),
+            ],
+            rotation_angle=10,
+        )
         os.system("rm tests/test.stl")
         test_shape.export_stl("tests/test.stl")
         assert Path("tests/test.stl").exists() is True
@@ -306,15 +336,16 @@ class test_object_properties(unittest.TestCase):
         """
         test_shape = RotateMixedShape(
             points=[
-                (10, 20, 'straight'),
-                (10, 10, 'straight'),
-                (20, 10, 'circle'),
-                (40, 15, 'circle'),
-                (20, 20, 'straight'),
-                ],
-            rotation_angle=10
-            )
+                (10, 20, "straight"),
+                (10, 10, "straight"),
+                (20, 10, "circle"),
+                (40, 15, "circle"),
+                (20, 20, "straight"),
+            ],
+            rotation_angle=10,
+        )
         test_shape._create_render_mesh()
+
 
 if __name__ == "__main__":
     unittest.main()

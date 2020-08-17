@@ -15,29 +15,29 @@ import pyrender
 from paramak.shape import Shape
 
 
-class Reactor():
+class Reactor:
 
-    """The Reactor object allows shapes and components to be added and then collective 
+    """The Reactor object allows shapes and components to be added and then collective
     opperations to be performed on them. Combining all the shapes is required for creating
-    images of the whole reactor and creating a Graveyard (bounding box) that is needed 
+    images of the whole reactor and creating a Graveyard (bounding box) that is needed
     for neutronics simulations.
     """
 
     def __init__(self, shapes_and_components):
 
-        self.shapes_and_components = shapes_and_components
-
         # calculated internally
         self.material_tags = []
         self.stp_filenames = []
+        self.stl_filenames = []
         self.tet_meshes = []
         self.graveyard = None
         self.solid = None
 
+        self.shapes_and_components = shapes_and_components
 
     @property
     def stp_filenames(self):
-        values=[]
+        values = []
         for shape_or_componet in self.shapes_and_components:
             values.append(shape_or_componet.stp_filename)
         return values
@@ -48,7 +48,7 @@ class Reactor():
 
     @property
     def material_tags(self):
-        values=[]
+        values = []
         for shape_or_componet in self.shapes_and_components:
             values.append(shape_or_componet.material_tag)
         return values
@@ -59,7 +59,7 @@ class Reactor():
 
     @property
     def tet_meshes(self):
-        values=[]
+        values = []
         for shape_or_componet in self.shapes_and_components:
             values.append(shape_or_componet.tet_mesh)
         return values
@@ -76,29 +76,37 @@ class Reactor():
     def shapes_and_components(self, value):
         """Adds a list of parametric shape(s) and or parametric component(s)
         to the Reactor object. This allows collective operations can be performed
-        on all the shapes in the reactor. When adding a shape or componet the 
+        on all the shapes in the reactor. When adding a shape or componet the
         stp_filename of the shape or component should be unique.
         """
         shapes_and_components = []
         if not isinstance(value, Iterable):
-            raise ValueError(
-                "shapes_and_components must be a list"
-            )
+            raise ValueError("shapes_and_components must be a list")
 
         stp_filenames = []
+        stl_filenames = []
 
         for shape in value:
-            if shape.stp_filename != None:
+            if shape.stp_filename is not None:
                 if shape.stp_filename in stp_filenames:
                     raise ValueError(
                         "Set Reactor already contains a shape or component \
-                         with this stp_filename", shape.stp_filename
+                         with this stp_filename",
+                        shape.stp_filename,
                     )
                 else:
                     stp_filenames.append(shape.stp_filename)
+            if shape.stl_filename is not None:
+                if shape.stl_filename in stl_filenames:
+                    raise ValueError(
+                        "Set Reactor already contains a shape or component \
+                         with this stl_filename",
+                        shape.stl_filename,
+                    )
+                else:
+                    stl_filenames.append(shape.stl_filename)
 
         self._shapes_and_components = value
-
 
     @property
     def solid(self):
@@ -106,8 +114,12 @@ class Reactor():
         and rotates the viewing angle so that .solid operations in jupyter notebook
         and svg exports are better orientation.
         """
-        compound = cq.Compound.makeCompound([a.solid.val() for a in self.shapes_and_components])
-        compound = compound.rotate(startVector=(0,1,0), endVector=(0,0,1), angleDegrees=180)
+        compound = cq.Compound.makeCompound(
+            [a.solid.val() for a in self.shapes_and_components]
+        )
+        compound = compound.rotate(
+            startVector=(0, 1, 0), endVector=(0, 0, 1), angleDegrees=180
+        )
         return compound
 
     @solid.setter
@@ -133,7 +145,8 @@ class Reactor():
 
         for entry in self.shapes_and_components:
 
-            if include_plasma==False and isinstance(entry,paramak.Plasma) == True:
+            if include_plasma == False and isinstance(
+                    entry, paramak.Plasma) == True:
                 continue
 
             if entry.stp_filename is None:
@@ -159,7 +172,9 @@ class Reactor():
 
         return neutronics_description
 
-    def export_neutronics_description(self, filename="manifest.json", include_plasma=False):
+    def export_neutronics_description(
+        self, filename="manifest.json", include_plasma=False
+    ):
         """Saves Reactor.neutronics_description to a json file.
         The resulting json file contains a list of dictionaries.
         Each dictionary entry comprising of a material and a
@@ -167,10 +182,10 @@ class Reactor():
         file can then be used with the neutronics workflows to
         create a neutronics model. Creation of the netronics
         model requires linkage between volumes, materials and
-        identifcation of which volumes to tet_mesh. If the 
+        identifcation of which volumes to tet_mesh. If the
         filename does not end with .json then .json will be added.
         The plasma geometry is not included by default as it is
-        typically not included in neutronics simulations. The 
+        typically not included in neutronics simulations. The
         reason for this is that the low number density results
         in minimal interaction with neutrons. However the plasma
         can be added if the include_plasma argument is set to True
@@ -187,7 +202,11 @@ class Reactor():
         Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
 
         with open(filename, "w") as outfile:
-            json.dump(self.neutronics_description(include_plasma=include_plasma), outfile, indent=4)
+            json.dump(
+                self.neutronics_description(include_plasma=include_plasma),
+                outfile,
+                indent=4,
+            )
 
         print("saved geometry description to ", Pfilename)
 
@@ -210,12 +229,15 @@ class Reactor():
                     "set .stp_filename property for \
                                  Shapes before using the export_stp method"
                 )
-            filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
+            filenames.append(
+                str(Path(output_folder) / Path(entry.stp_filename)))
             entry.export_stp(Path(output_folder) / Path(entry.stp_filename))
 
-        # creates a graveyard (bounding shell volume) which is needed for nuetronics simulations
+        # creates a graveyard (bounding shell volume) which is needed for
+        # nuetronics simulations
         self.make_graveyard()
-        filenames.append(str(Path(output_folder) / Path(self.graveyard.stp_filename)))
+        filenames.append(
+            str(Path(output_folder) / Path(self.graveyard.stp_filename)))
         self.graveyard.export_stp(
             Path(output_folder) / Path(self.graveyard.stp_filename)
         )
@@ -223,6 +245,184 @@ class Reactor():
         print("exported stp files ", filenames)
 
         return filenames
+
+    def export_stl(self, output_folder="", tolerance=0.001):
+        """Writes stl files (CAD geometry) for each Shape object in the reactor
+
+        :param output_folder: the folder for saving the stp files to
+        :type output_folder: str
+        :param tolerance: the precision of the faceting
+        :type tolerance: float
+
+        :return: a list of stl filenames created
+        :rtype: list
+        """
+        filenames = []
+        for entry in self.shapes_and_components:
+            print("entry.stl_filename", entry.stl_filename)
+            if entry.stl_filename is None:
+                raise ValueError(
+                    "set .stl_filename property for \
+                                 Shapes before using the export_stl method"
+                )
+
+            filenames.append(
+                str(Path(output_folder) / Path(entry.stl_filename)))
+            entry.export_stl(
+                Path(output_folder) /
+                Path(
+                    entry.stl_filename),
+                tolerance)
+
+        # creates a graveyard (bounding shell volume) which is needed for
+        # nuetronics simulations
+        self.make_graveyard()
+        filenames.append(
+            str(Path(output_folder) / Path(self.graveyard.stl_filename)))
+        self.graveyard.export_stl(
+            Path(output_folder) / Path(self.graveyard.stl_filename)
+        )
+
+        print("exported stl files ", filenames)
+
+        return filenames
+
+    def export_h5m(
+            self,
+            filename='dagmc.h5m',
+            skip_graveyard=False,
+            tolerance=0.001):
+        """Converts stl files into DAGMC compatible h5m file using PyMOAB.
+        The DAGMC file produced has not been imprinted and merged unlike the other supported
+        method which uses Trelis to produce an imprinted and merged DAGMC geometry
+        If the provided filename doesn't end with .h5m it will be added
+
+            Args:
+                filename (str, optional): filename of h5m outputfile
+                    Defaults to "dagmc.h5m".
+                skip_graveyard (boolean, optional): filename of h5m outputfile
+                    Defaults to False.
+                tolerance (float, optional): the precision of the faceting
+                    Defaults to 0.001.
+        Returns:
+            filename: output h5m filename
+        """
+
+        try:
+            from pymoab import core, types
+        except ImportError as err:
+            raise err('PyMoab not found, Reactor.export_h5m method not available')
+
+        Pfilename = Path(filename)
+
+        if Pfilename.suffix != ".h5m":
+            Pfilename = Pfilename.with_suffix(".h5m")
+
+        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        self.export_stl(tolerance=tolerance)
+        material_dict = self.neutronics_description()
+
+        # create pymoab instance
+        mb = core.Core()
+
+        tags = dict()
+
+        SENSE_TAG_NAME = "GEOM_SENSE_2"
+        SENSE_TAG_SIZE = 2
+        tags['surf_sense'] = mb.tag_get_handle(
+            SENSE_TAG_NAME,
+            SENSE_TAG_SIZE,
+            types.MB_TYPE_HANDLE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
+
+        tags['category'] = mb.tag_get_handle(
+            types.CATEGORY_TAG_NAME,
+            types.CATEGORY_TAG_SIZE,
+            types.MB_TYPE_OPAQUE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
+        tags['name'] = mb.tag_get_handle(
+            types.NAME_TAG_NAME,
+            types.NAME_TAG_SIZE,
+            types.MB_TYPE_OPAQUE,
+            types.MB_TAG_SPARSE,
+            create_if_missing=True)
+        tags['geom_dimension'] = mb.tag_get_handle(
+            types.GEOM_DIMENSION_TAG_NAME,
+            1,
+            types.MB_TYPE_INTEGER,
+            types.MB_TAG_DENSE,
+            create_if_missing=True)
+
+        # Global ID is a default tag, just need the name to retrieve
+        tags['global_id'] = mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
+
+        surface_id = 1
+        volume_id = 1
+
+        for item in material_dict:
+
+            stl_filename = item['stl_filename']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            surface_set = mb.create_meshset()
+            volume_set = mb.create_meshset()
+
+            # recent versions of MOAB handle this automatically
+            # but best to go ahead and do it manually
+            mb.tag_set_data(tags['global_id'], volume_set, volume_id)
+            volume_id += 1
+            mb.tag_set_data(tags['global_id'], surface_set, surface_id)
+            surface_id += 1
+
+            # set geom IDs
+            mb.tag_set_data(tags['geom_dimension'], volume_set, 3)
+            mb.tag_set_data(tags['geom_dimension'], surface_set, 2)
+
+            # set category tag values
+            mb.tag_set_data(tags['category'], volume_set, "Volume")
+            mb.tag_set_data(tags['category'], surface_set, "Surface")
+
+            # establish parent-child relationship
+            mb.add_parent_child(volume_set, surface_set)
+
+            # set surface sense
+            sense_data = [volume_set, np.uint64(0)]
+            mb.tag_set_data(tags['surf_sense'], surface_set, sense_data)
+
+            # load the stl triangles/vertices into the surface set
+            mb.load_file(stl_filename, surface_set)
+
+            material_name = item['material']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            group_set = mb.create_meshset()
+            mb.tag_set_data(tags['category'], group_set, "Group")
+            print("mat:{}".format(material_name))
+            mb.tag_set_data(
+                tags['name'],
+                group_set,
+                "mat:{}".format(material_name))
+            mb.tag_set_data(tags['geom_dimension'], group_set, 4)
+
+            # add the volume to this group set
+            mb.add_entity(group_set, volume_set)
+
+        all_sets = mb.get_entities_by_handle(0)
+
+        file_set = mb.create_meshset()
+
+        mb.add_entities(file_set, all_sets)
+
+        mb.write_file(filename)
+
+        return filename
 
     def export_physical_groups(self, output_folder=""):
         """Exports several JSON files containing a look up table
@@ -246,8 +446,10 @@ class Reactor():
                     "set .stp_filename property for \
                                  Shapes before using the export_stp method"
                 )
-            filenames.append(str(Path(output_folder) / Path(entry.stp_filename)))
-            entry.export_physical_groups(Path(output_folder) / Path(entry.stp_filename))
+            filenames.append(
+                str(Path(output_folder) / Path(entry.stp_filename)))
+            entry.export_physical_groups(
+                Path(output_folder) / Path(entry.stp_filename))
         return filenames
 
     def export_svg(self, filename):
@@ -283,7 +485,7 @@ class Reactor():
         self.graveyard.export_stp(Path(filename))
         return filename
 
-    def make_graveyard(self, offset = 500.):
+    def make_graveyard(self, offset=500.0):
         """Creates a graveyard volume (bounding box) that encapsulates all
            volumes. This is required by DAGMC when performing neutronics
            simulations.
@@ -326,6 +528,7 @@ class Reactor():
         graveyard_shape.name = "Graveyard"
         graveyard_shape.material_tag = "Graveyard"
         graveyard_shape.stp_filename = "Graveyard.stp"
+        graveyard_shape.stl_filename = "Graveyard.stl"
         graveyard_shape.solid = graveyard_part
 
         self.graveyard = graveyard_shape
@@ -333,8 +536,12 @@ class Reactor():
         return graveyard_shape
 
     def export_2d_image(
-        self, filename="2d_slice.png", xmin=0.0, xmax=900.0, ymin=-600.0, ymax=600.0
-    ):
+            self,
+            filename="2d_slice.png",
+            xmin=0.0,
+            xmax=900.0,
+            ymin=-600.0,
+            ymax=600.0):
         """Creates a 2D slice image (png) of the reactor
         :param filename: output filename of the image created
         :type filename: str

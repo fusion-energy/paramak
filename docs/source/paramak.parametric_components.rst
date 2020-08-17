@@ -37,15 +37,15 @@ BlanketConstantThicknessArcV()
    :members:
    :show-inheritance:
 
-BlanketConstantThicknessFP()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlanketFP()
+^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
    :width: 250
    :height: 200
    :align: center
 
-.. automodule:: paramak.parametric_components.blanket_constant_thickness_fp
+.. automodule:: paramak.parametric_components.blanket_fp
    :members:
    :show-inheritance:
 
@@ -109,6 +109,10 @@ CenterColumnShieldFlatTopCircular()
    :width: 300px
    :height: 220px
 
+.. automodule:: paramak.parametric_components.center_column_flat_top_circular
+   :members:
+   :show-inheritance:
+
 CenterColumnShieldPlasmaHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -121,14 +125,6 @@ CenterColumnShieldPlasmaHyperbola()
    :members:
    :show-inheritance:
 
-DivertorBlock()
-^^^^^^^^^^^^^^^
-
-.. automodule:: paramak.parametric_components.divertor_block
-   :members:
-   :show-inheritance:
-
-
 ITERtypeDivertor()
 ^^^^^^^^^^^^^^^^^^
 
@@ -137,17 +133,9 @@ ITERtypeDivertor()
     :height: 220px
     :align: center
 
-
 .. automodule:: paramak.parametric_components.divertor_ITER
    :members:
    :show-inheritance:
-
-DivertorITERNoDome()
-^^^^^^^^^^^^^^^^^^^^
-.. image:: https://user-images.githubusercontent.com/40028739/88182309-5254b100-cc30-11ea-94ba-296aae346032.png
-    :width: 180px
-    :height: 220px
-    :align: center
 
 
 InnerTfCoilsCircular()
@@ -229,6 +217,18 @@ Plasma()
     :align: center
 
 .. automodule:: paramak.parametric_components.tokamak_plasma
+   :members:
+   :show-inheritance:
+
+PlasmaFromPoints()
+^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
+    :width: 220px
+    :height: 200px
+    :align: center
+
+.. automodule:: paramak.parametric_components.tokamak_plasma_from_points
    :members:
    :show-inheritance:
 

@@ -1,4 +1,3 @@
-
 import unittest
 
 import pytest
@@ -36,7 +35,8 @@ class test_object_properties(unittest.TestCase):
         )
         test_shape_2.azimuth_placement_angle = [0, 90, 180, 270]
 
-        assert test_shape_1.volume * 4 == pytest.approx(test_shape_2.volume, rel=0.01)
+        assert test_shape_1.volume * \
+            4 == pytest.approx(test_shape_2.volume, rel=0.01)
 
     def test_cut_volume(self):
         """creates an extruded shape with one placement angle using spline \
@@ -52,23 +52,18 @@ class test_object_properties(unittest.TestCase):
         )
 
         outer_shape_with_cut = ExtrudeSplineShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3)],
-            cut=inner_shape,
-            distance=30,
+            points=[(3, 3), (3, 12), (12, 12), (12, 3)], cut=inner_shape, distance=30,
         )
 
         assert inner_shape.volume == pytest.approx(1165, abs=2)
         assert outer_shape.volume == pytest.approx(3775, abs=2)
-        assert outer_shape_with_cut.volume == pytest.approx(
-            3775 - 1165, abs=2
-        )
+        assert outer_shape_with_cut.volume == pytest.approx(3775 - 1165, abs=2)
 
     def test_initial_solid_construction(self):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
 
         test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=20
         )
 
         assert test_shape.hash_value is None
@@ -80,8 +75,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
 
         test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            distance=20
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=20
         )
 
         assert test_shape.solid is not None
@@ -96,9 +90,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20
-        )
+            points=[(0, 0), (0, 20), (20, 20)], distance=20)
 
         assert test_shape.solid is not None
         assert test_shape.hash_value is not None
@@ -114,9 +106,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20
-        )
+            points=[(0, 0), (0, 20), (20, 20)], distance=20)
         test_shape.solid
         assert test_shape.hash_value is not None
         initial_hash_value = test_shape.hash_value

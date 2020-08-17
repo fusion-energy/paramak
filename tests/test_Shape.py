@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -33,7 +32,9 @@ class test_object_properties(unittest.TestCase):
 
             test_shape.points = [(0, 200), (200, 100), (0, 0), (0, 200)]
 
-        self.assertRaises(ValueError, incorrect_points_end_point_is_start_point)
+        self.assertRaises(
+            ValueError,
+            incorrect_points_end_point_is_start_point)
 
         def incorrect_points_missing_z_value():
             """checks a ValueError is raised when a point is missing \
@@ -57,7 +58,7 @@ class test_object_properties(unittest.TestCase):
             (20, 20),
             (20, 10),
             (20, 0),
-            (10, 0)
+            (10, 0),
         ]
 
         assert test_shape.create_limits() == (0.0, 20.0, 0.0, 20.0)

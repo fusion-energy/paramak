@@ -11,19 +11,33 @@ class PlasmaFromPoints(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
        by 3 coordinates.
 
-    :param outer_equatorial_x_point: the x value of the outer equatorial of the plasma (cm)
-    :type outer_equatorial_x_point: float
-    :param inner_equatorial_x_point: the x value of the inner equatorial of the plasma (cm)
-    :type inner_equatorial_x_point: float
-    :param high_point: the (x,z) coordinates value of the top of the plasma (cm)
-    :type high_point: tuple of 2 floats
+    Args:
+        outer_equatorial_x_point (float): the x value of the outer equatorial of the
+            plasma (cm).
+        inner_equatorial_x_point (float): the x value of the inner equatorial of the
+            plasma (cm).
+        heigh_point (tuple of 2 floats): the (x,z) coordinate values of the top of the
+            plasma (cm).
 
-    :return: a shape object that has generic functionality with 4 positional attributes
-       (outer_equatorial_point, inner_equatorial_point, high_point, low_point)
-        as tuples of 2 floats and 4 attributes of the plasma (major_radius, minor_radius,
-        elongation, triangularity) as floats
+    Keyword Args:
+        name (str): the legend name used when exporting a html graph of the shape.
+        color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
+            exportin as html graphs or png images.
+        material_tag (str): The material name to use when exporting the neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
+            rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
+        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
+            this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        tet_mesh (str): Insert description.
+        physical_groups (type): Insert description.
 
-    :rtype: paramak shape object
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -33,8 +47,8 @@ class PlasmaFromPoints(Plasma):
         high_point,
         x_point_shift=0.1,
         configuration="non-null",
-        name='plasma',
-        material_tag='DT_plasma',
+        name="plasma",
+        material_tag="DT_plasma",
         num_points=50,
         stp_filename="plasma.stp",
         color=None,
@@ -42,19 +56,23 @@ class PlasmaFromPoints(Plasma):
         azimuth_placement_angle=0,
         **kwargs
     ):
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'hash_value':None,
-                        'intersect':None,
-                        'cut':None
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
         }
 
         for arg in kwargs:
             if arg in default_dict:
                 default_dict[arg] = kwargs[arg]
 
-        minor_radius = (outer_equatorial_x_point - inner_equatorial_x_point) / 2.
+        minor_radius = (outer_equatorial_x_point -
+                        inner_equatorial_x_point) / 2.0
         major_radius = inner_equatorial_x_point + minor_radius
         elongation = high_point[1] / minor_radius
         triangularity = (major_radius - high_point[0]) / minor_radius
@@ -74,16 +92,14 @@ class PlasmaFromPoints(Plasma):
             color=None,
             rotation_angle=rotation_angle,
             azimuth_placement_angle=azimuth_placement_angle,
+            hash_value=None,
             **default_dict
         )
 
         self.outer_equatorial_x_point = outer_equatorial_x_point
         self.inner_equatorial_x_point = inner_equatorial_x_point
         self.high_point = high_point
-        self.lower_x_point, self.upper_x_point = self.compute_x_points(
-            (minor_radius, major_radius), elongation, triangularity,
-            x_point_shift
-        )
+        self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
     @property
     def points(self):
