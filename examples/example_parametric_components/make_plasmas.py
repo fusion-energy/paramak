@@ -21,14 +21,18 @@ def plot_plasma(plasma, name=""):
         outer_equatorial_point = plasma.outer_equatorial_point
         x_points = [row[0] for row in plasma.points]
         y_points = [row[1] for row in plasma.points]
-        
+
     else:
-        major_radius = plasma.major_radius*-1
-        low_point = (plasma.low_point[0]*-1, plasma.low_point[1])
-        high_point = (plasma.high_point[0]*-1, plasma.high_point[1])
-        inner_equatorial_point = (plasma.inner_equatorial_point[0]*-1, plasma.inner_equatorial_point[1])
-        outer_equatorial_point = (plasma.outer_equatorial_point[0]*-1, plasma.outer_equatorial_point[1])
-        x_points = [row[0]*-1 for row in plasma.points]
+        major_radius = plasma.major_radius * -1
+        low_point = (plasma.low_point[0] * -1, plasma.low_point[1])
+        high_point = (plasma.high_point[0] * -1, plasma.high_point[1])
+        inner_equatorial_point = (
+            plasma.inner_equatorial_point[0] * -1,
+            plasma.inner_equatorial_point[1])
+        outer_equatorial_point = (
+            plasma.outer_equatorial_point[0] * -1,
+            plasma.outer_equatorial_point[1])
+        x_points = [row[0] * -1 for row in plasma.points]
         y_points = [row[1] for row in plasma.points]
 
     traces = []
@@ -224,7 +228,10 @@ def main():
 
     fig = go.Figure()
     fig.add_traces(plot_plasma(plasma=ITER_plasma, name="ITER_plasma"))
-    fig.add_traces(plot_plasma(plasma=ITER_plasma_plasmaboundaries, name="ITER_plasma_plasmaboundaries"))
+    fig.add_traces(
+        plot_plasma(
+            plasma=ITER_plasma_plasmaboundaries,
+            name="ITER_plasma_plasmaboundaries"))
     fig.add_traces(plot_plasma(plasma=EU_DEMO_plasma, name="EU_DEMO_plasma"))
     fig.add_traces(plot_plasma(plasma=ST_plasma, name="ST_plasma"))
     fig.add_traces(plot_plasma(plasma=AST_plasma, name="AST_plasma"))
