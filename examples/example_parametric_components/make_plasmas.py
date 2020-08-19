@@ -235,8 +235,14 @@ def main():
     fig.add_traces(plot_plasma(plasma=EU_DEMO_plasma, name="EU_DEMO_plasma"))
     fig.add_traces(plot_plasma(plasma=ST_plasma, name="ST_plasma"))
     fig.add_traces(plot_plasma(plasma=AST_plasma, name="AST_plasma"))
-    fig.add_traces(plot_plasma(plasma=NSTX_double_null_plasma_plasmaboundaries, name="NSTX_double_null_plasma_plasmaboundaries"))
-    fig.add_traces(plot_plasma(plasma=NSTX_single_null_plasma_plasmaboundaries, name="NSTX_single_null_plasma_plasmaboundaries"))
+    fig.add_traces(
+        plot_plasma(
+            plasma=NSTX_double_null_plasma_plasmaboundaries,
+            name="NSTX_double_null_plasma_plasmaboundaries"))
+    fig.add_traces(
+        plot_plasma(
+            plasma=NSTX_single_null_plasma_plasmaboundaries,
+            name="NSTX_single_null_plasma_plasmaboundaries"))
     fig.show()
     fig.write_html("all_plasma_and_points.html")
 
