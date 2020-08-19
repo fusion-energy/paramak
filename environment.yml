@@ -20,3 +20,4 @@ dependencies:
     - pyrender
     - neutronics-material-maker
     - sympy
+    - plasmaboundaries

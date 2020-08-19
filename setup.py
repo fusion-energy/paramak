@@ -19,7 +19,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     setup_requires=["pytest-runner"],
-    tests_require=["pytest-cov",],
+    tests_require=[
+        "pytest-cov",
+    ],
     install_requires=[
         "pytest-cov",
         "pyglet",
@@ -31,6 +33,7 @@ setuptools.setup(
         "matplotlib",
         "trimesh",
         "pyrender",
+        "plasmaboundaries",
         "uncertainties",
         "importlib_resources",
     ],

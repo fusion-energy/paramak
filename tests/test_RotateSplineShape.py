@@ -1,4 +1,3 @@
-
 import unittest
 
 import pytest
@@ -12,8 +11,7 @@ class test_object_properties(unittest.TestCase):
                 the volume is correct"""
 
         test_shape = RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)])
 
         test_shape.rotation_angle = 360
         test_shape.create_solid()
@@ -42,15 +40,13 @@ class test_object_properties(unittest.TestCase):
         assert inner_shape.volume == pytest.approx(900.88, abs=0.1)
         assert outer_shape.volume == pytest.approx(2881.76, abs=0.1)
         assert outer_shape_with_cut.volume == pytest.approx(
-            2881.76 - 900.88, abs=0.2
-        )
+            2881.76 - 900.88, abs=0.2)
 
     def test_initial_solid_construction(self):
         """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
 
         test_shape = RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
         )
 
         assert test_shape.hash_value is None
@@ -62,8 +58,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
 
         test_shape = RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
         )
 
         assert test_shape.solid is not None
@@ -78,8 +73,7 @@ class test_object_properties(unittest.TestCase):
         """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
 
         test_shape = RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
         )
 
         assert test_shape.solid is not None
@@ -96,8 +90,7 @@ class test_object_properties(unittest.TestCase):
         """tests that the hash_value of the shape is not updated until a new solid has been created"""
 
         test_shape = RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
         )
         test_shape.solid
         assert test_shape.hash_value is not None

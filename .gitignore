@@ -30,6 +30,7 @@ coverage.xml
 
 # neutronics geometry files
 *.h5m
+*.xml
 
 # images of the model
 *.svg

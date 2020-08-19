@@ -5,6 +5,7 @@ from points to create an example reactor
 
 import paramak
 
+
 def main():
 
     plasma = paramak.Plasma()
@@ -13,7 +14,6 @@ def main():
     plasma.triangularity = 0.5
     plasma.elongation = 2.5
     plasma.rotation_angle = 180
-
 
     centre_column = paramak.RotateMixedShape(
         points=[
@@ -31,7 +31,6 @@ def main():
     centre_column.stp_filename = "centre_column.stp"
     centre_column.rotation_angle = 180
 
-
     blanket = paramak.RotateMixedShape(
         points=[
             (325.4886, 300.5, "straight"),
@@ -45,7 +44,6 @@ def main():
     )
     blanket.stp_filename = "blanket.stp"
     blanket.rotation_angle = 180
-
 
     firstwall = paramak.RotateMixedShape(
         points=[
@@ -63,7 +61,6 @@ def main():
     )
     firstwall.stp_filename = "firstwall.stp"
     firstwall.rotation_angle = 180
-
 
     divertor_bottom = paramak.RotateMixedShape(
         points=[
@@ -83,7 +80,6 @@ def main():
     divertor_bottom.stp_filename = "divertor_bottom.stp"
     divertor_bottom.rotation_angle = 180
 
-
     divertor_top = paramak.RotateMixedShape(
         points=[
             (192.4782, 447.204, "spline"),
@@ -102,15 +98,19 @@ def main():
     divertor_top.stp_filename = "divertor_top.stp"
     divertor_top.rotation_angle = 180
 
-
     core = paramak.RotateStraightShape(
         points=[(0, 687.0), (74.6, 687.0), (74.6, -687.0), (0, -687.0)]
     )
     core.stp_filename = "core.stp"
     core.rotation_angle = 180
 
-    myreactor = paramak.Reactor([plasma, blanket, core, divertor_top,
-                                 divertor_bottom, firstwall, centre_column])
+    myreactor = paramak.Reactor([plasma,
+                                 blanket,
+                                 core,
+                                 divertor_top,
+                                 divertor_bottom,
+                                 firstwall,
+                                 centre_column])
 
     myreactor.export_stp(output_folder="can_reactor_from_points")
     myreactor.export_html("can_reactor_from_points/reactor.html")

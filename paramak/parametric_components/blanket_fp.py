@@ -7,55 +7,62 @@ import sympy as sp
 from paramak import RotateMixedShape
 
 
-class BlanketConstantThicknessFP(RotateMixedShape):
+class BlanketFP(RotateMixedShape):
     """A blanket volume created from plasma parameters.
 
-    :param thickness: the thickness of the blanket (cm)
-    :type thickness: float
-    :param stop_angle: the angle in degrees to stop the blanket, measured anti
-     clockwise from 3 o'clock
-    :type stop_angle: float
-    :param start_angle: the angle in degrees to start the blanket, measured
-     anti clockwise from 3 o'clock
-    :type start_angle: float
-    :param minor_radius: the minor radius of the plasma (cm)
-    :type minor_radius: float
-    :param major_radius: the major radius of the plasma (cm)
-    :type major_radius: float
-    :param triangularity: the triangularity of the plasma
-    :type triangularity: float
-    :param elongation: the elongation of the plasma
-    :type elongation: float
-    :param vertical_displacement: the vertical_displacement of the plasma (cm)
-    :type vertical_displacement: float
-    :param offset_from_plasma: the distance bettwen the plasma and the blanket
-        (cm)
-    :type offset_from_plasma: float
-    :param num_points: number of points that will describe the shape
-    :type num_points: int
-    :param name: The legend name used when exporting a html graph of the shape
-    :type name: str
-    :param color: the color to use when exporting as html graphs or png images
-    :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences
-     of, 3 or 4 floats respectively each in the range 0-1
-    :param material_tag: The material name to use when exporting the
-     neutronics description
-    :type material_tag: str
-    :param stp_filename: the filename used when saving stp files as part of a
-     reactor
-    :type stp_filename: str
-    :param azimuth_placement_angle: the angle or angles to use when rotating
-     the shape on the azimuthal axis
-    :type azimuth_placement_angle: float or iterable of floats
-    :param rotation_angle: The rotation_angle to use when revoling the solid
-     (degrees)
-    :type rotation_angle: float
-    :param cut: An optional cadquery object to perform a boolean cut with this
-     object
-    :type cut: cadquery object
+    Args:
+        thickness (float, (float, float), callable): the thickness of the
+            blanket (cm). If float, constant thickness. If tuple of floats,
+            thickness will vary linearly between the two values. If callable,
+            thickness will be a function of poloidal angle (in degrees).
+        start_angle (float): the angle in degrees to start the blanket,
+            measured anti clockwise from 3 o'clock
+        stop_angle (float): the angle in degrees to stop the blanket, measured
+            anti clockwise from 3 o'clock
+        plasma (paramak.Plasma, optional): If not None, the parameters of the
+            plasma Object will be used. Defaults to None.
+        minor_radius (float, optional): the minor radius of the plasma (cm).
+            Defaults to 150.
+        major_radius (float, optional): the major radius of the plasma (cm).
+            Defaults to 450.
+        triangularity (float, optional): the triangularity of the plasma.
+            Defaults to 0.55.
+        elongation (float, optional): the elongation of the plasma.
+            Defaults to 2.0.
+        vertical_displacement (float, optional): the vertical_displacement of
+            the plasma (cm). Defaults to 0.
+        offset_from_plasma (float, optional): the distance bettwen the plasma
+            and the blanket (cm). Defaults to 0.
+        num_points (int, optional): number of points that will describe the
+            shape. Defaults to 50.
+        Others: see paramak.RotateMixedShape() arguments.
 
-    :return: a shape object that has generic functionality
-    :rtype: paramak shape object
+    Keyword Args:
+        thickness (float, (float, float), callable): the thickness of the
+            blanket (cm). If float, constant thickness. If tuple of floats,
+            thickness will vary linearly between the two values. If callable,
+            thickness will be a function of poloidal angle (in degrees).
+        start_angle (float): the angle in degrees to start the blanket,
+            measured anti clockwise from 3 o'clock
+        stop_angle (float): the angle in degrees to stop the blanket, measured
+            anti clockwise from 3 o'clock
+        plasma (paramak.Plasma): If not None, the parameters of the
+            plasma Object will be used.
+        minor_radius (float): the minor radius of the plasma (cm).
+        major_radius (float): the major radius of the plasma (cm).
+        triangularity (float): the triangularity of the plasma.
+        elongation (float): the elongation of the plasma.
+            Defaults to 2.0.
+        vertical_displacement (float): the vertical_displacement of
+            the plasma (cm).
+        offset_from_plasma (float): the distance bettwen the plasma
+            and the blanket (cm).
+        num_points (int): number of points that will describe the
+            shape.
+        Others: see paramak.RotateMixedShape() attributes.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -64,14 +71,15 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         start_angle,
         stop_angle,
         plasma=None,
-        minor_radius=150,
-        major_radius=450,
+        minor_radius=150.0,
+        major_radius=450.0,
         triangularity=0.55,
         elongation=2.0,
         vertical_displacement=0,
         offset_from_plasma=0,
         num_points=50,
-        stp_filename="BlanketConstantThicknessFP.stp",
+        stp_filename="BlanketFP.stp",
+        stl_filename="BlanketFP.stl",
         rotation_angle=360,
         azimuth_placement_angle=0,
         color=None,
@@ -80,12 +88,15 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         **kwargs
     ):
 
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'hash_value':None,
-                        'intersect':None,
-                        'cut':None
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
         }
 
         for arg in kwargs:
@@ -97,8 +108,10 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
+            hash_value=None,
             **default_dict
         )
 
@@ -158,21 +171,26 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         self._thickness = thickness
 
     def find_points(self):
-        conversion_factor = 2*np.pi/360
+        conversion_factor = 2 * np.pi / 360
 
         def R(theta, pkg=np):
-            return self.major_radius + self.minor_radius*pkg.cos(
-                theta + self.triangularity*pkg.sin(theta))
+            return self.major_radius + self.minor_radius * pkg.cos(
+                theta + self.triangularity * pkg.sin(theta)
+            )
 
         def Z(theta, pkg=np):
-            return self.elongation*self.minor_radius*pkg.sin(theta) + \
-                self.vertical_displacement
+            return (
+                self.elongation * self.minor_radius * pkg.sin(theta)
+                + self.vertical_displacement
+            )
+
         # create array of angles theta
         thetas = np.linspace(
-                    self.start_angle*conversion_factor,
-                    self.stop_angle*conversion_factor,
-                    num=self.num_points,
-                    endpoint=True)
+            self.start_angle * conversion_factor,
+            self.stop_angle * conversion_factor,
+            num=self.num_points,
+            endpoint=True,
+        )
 
         # create inner points
         if self.plasma is None:
@@ -181,22 +199,42 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             inner_points_Z = Z(thetas)
 
             inner_points = [
-                [inner_points_R[i], inner_points_Z[i], 'spline']
+                [inner_points_R[i], inner_points_Z[i], "spline"]
                 for i in range(len(thetas))
-                ]
+            ]
         else:
             # if a plasma is given
             inner_points = self.create_offset_points(
-                thetas, R, Z,
-                self.offset_from_plasma)
-        inner_points[-1][2] = 'straight'
+                thetas, R, Z, self.offset_from_plasma
+            )
+        inner_points[-1][2] = "straight"
 
         # compute outer points
+        def new_offset(theta):
+            if callable(self.thickness):
+                # use the function of angle
+                return (
+                    self.thickness(
+                        theta /
+                        conversion_factor) +
+                    self.offset_from_plasma)
+            elif isinstance(self.thickness, tuple):
+                # increase thickness linearly
+                start_thickness, stop_thickness = self.thickness
+                a = (stop_thickness - start_thickness) / (
+                    self.stop_angle * conversion_factor
+                    - self.start_angle * conversion_factor
+                )
+                b = start_thickness - self.start_angle * a
+                return a * theta + b + self.offset_from_plasma
+            else:
+                # use the constant value
+                return self.thickness + self.offset_from_plasma
+
         outer_points = self.create_offset_points(
-            np.flip(thetas), R, Z,
-            self.thickness + self.offset_from_plasma)
+            np.flip(thetas), R, Z, new_offset)
         points = inner_points + outer_points
-        points[-1][2] = 'straight'
+        points[-1][2] = "straight"
         points.append(inner_points[0])
         self.points = points
 
@@ -212,7 +250,7 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         :type Z_fun: callable
         :param offset: offset value (cm). offset=0 will follow the parametric
          equations.
-
+        :type offset: float, callable
         :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
             ...]
         :rtype: list
@@ -227,25 +265,31 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         Z_derivative = sp.diff(Z_sp, theta_sp)
         points = []
 
+        def new_offset(theta):
+            if callable(offset):
+                return offset(theta)
+            else:
+                return offset
+
         for theta in thetas:
             # get local value of derivatives
-            val_R_derivative = float(R_derivative.subs('theta', theta))
-            val_Z_derivative = float(Z_derivative.subs('theta', theta))
+            val_R_derivative = float(R_derivative.subs("theta", theta))
+            val_Z_derivative = float(Z_derivative.subs("theta", theta))
 
             # get normal vector components
             nx = val_Z_derivative
             ny = -val_R_derivative
 
             # normalise normal vector
-            normal_vector_norm = (nx**2 + ny**2)**0.5
+            normal_vector_norm = (nx ** 2 + ny ** 2) ** 0.5
             nx /= normal_vector_norm
             ny /= normal_vector_norm
 
             # calculate outer points
-            val_R_outer = R_fun(theta) + offset*nx
-            val_Z_outer = Z_fun(theta) + offset*ny
+            val_R_outer = R_fun(theta) + new_offset(theta) * nx
+            val_Z_outer = Z_fun(theta) + new_offset(theta) * ny
 
-            points.append([float(val_R_outer), float(val_Z_outer), 'spline'])
+            points.append([float(val_R_outer), float(val_Z_outer), "spline"])
         return points
 
     def create_physical_groups(self):
@@ -260,6 +304,7 @@ class BlanketConstantThicknessFP(RotateMixedShape):
             if c > 180:
                 c -= 360
             return c
+
         groups = []
         nb_volumes = 1  # only one volume
         nb_surfaces = 2  # inner and outer
@@ -287,8 +332,10 @@ class BlanketConstantThicknessFP(RotateMixedShape):
         # TODO: fix issue #86 (full coverage)
         if full_rot:
             if stop_equals_start:
-                print("Warning: If start_angle = stop_angle surfaces will not\
-                     be handled correctly")
+                print(
+                    "Warning: If start_angle = stop_angle surfaces will not\
+                     be handled correctly"
+                )
                 new_order = [0, 1, 2, 3]
             else:
                 # from ["inner", "outer", "inner_section", "outer_section"]
@@ -297,8 +344,10 @@ class BlanketConstantThicknessFP(RotateMixedShape):
                 new_order = [0, 2, 1, 3]
         else:
             if stop_equals_start:
-                print("Warning: If start_angle = stop_angle surfaces will not\
-                     be handled correctly")
+                print(
+                    "Warning: If start_angle = stop_angle surfaces will not\
+                     be handled correctly"
+                )
                 new_order = [0, 1, 2, 3]
             else:
                 # from ['inner', 'outer', 'left_section', 'right_section',
@@ -306,21 +355,13 @@ class BlanketConstantThicknessFP(RotateMixedShape):
 
                 # to ["inner", "inner_section", "outer", "outer_section",
                 #         "left_section", "right_section"]
-                new_order = [0, 4,  1, 5, 2, 3]
+                new_order = [0, 4, 1, 5, 2, 3]
         surface_names = [surface_names[i] for i in new_order]
 
-        for i in range(1, nb_volumes+1):
-            group = {
-                "dim": 3,
-                "id": i,
-                "name": volumes_names[i-1]
-            }
+        for i in range(1, nb_volumes + 1):
+            group = {"dim": 3, "id": i, "name": volumes_names[i - 1]}
             groups.append(group)
-        for i in range(1, nb_surfaces+1):
-            group = {
-                "dim": 2,
-                "id": i,
-                "name": surface_names[i-1]
-            }
+        for i in range(1, nb_surfaces + 1):
+            group = {"dim": 2, "id": i, "name": surface_names[i - 1]}
             groups.append(group)
         self.physical_groups = groups

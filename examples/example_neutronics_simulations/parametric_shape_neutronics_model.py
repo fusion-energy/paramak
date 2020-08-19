@@ -17,22 +17,16 @@ def make_cad_model_with_paramak():
     and stp files for the reactor
     """
 
-    width=500
+    width = 500
 
     # creates a parametric shape
     pf_coil = paramak.RotateStraightShape(
-        points=[
-            (width, width),
-            (550, width),
-            (550, 550),
-            (500, 550)
-        ],
-        stp_filename = 'pf_coil.stp',
-        material_tag = 'pf_coil_material'
+        points=[(width, width), (550, width), (550, 550), (500, 550)],
+        stp_filename="pf_coil.stp",
+        material_tag="pf_coil_material",
     )
 
-    pf_coil.export_html('test.html')
-
+    pf_coil.export_html("test.html")
 
     # creates another parametric shape
     blanket = paramak.RotateMixedShape(
@@ -41,12 +35,12 @@ def make_cad_model_with_paramak():
             (538, -305, "straight"),
             (322, -305, "spline"),
             (470, 0, "spline"),
-            (322, 305, "straight")
+            (322, 305, "straight"),
         ],
         rotation_angle=40,
         azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315],
-        stp_filename = 'blanket.stp',
-        material_tag = 'blanket_material'
+        stp_filename="blanket.stp",
+        material_tag="blanket_material",
     )
     blanket.solid
 
@@ -66,9 +60,10 @@ def convert_stp_files_to_neutronics_geometry():
     file which can be used as neutronics geometry.
     """
 
-    os.system('trelis -batch -nographics make_faceteted_neutronics_model.py')
+    os.system("trelis -batch -nographics make_faceteted_neutronics_model.py")
 
-    os.system('make_watertight dagmc_notwatertight.h5m -o dagmc.h5m')
+    os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m")
+
 
 def make_other_aspects_of_neutronics_model():
     """
@@ -81,21 +76,22 @@ def make_other_aspects_of_neutronics_model():
     universe = openmc.Universe()
     geom = openmc.Geometry(universe)
 
-    mat1 = Material(material_name='Li4SiO4',
-                    material_tag='blanket_material').openmc_material
+    mat1 = Material(
+        material_name="Li4SiO4", material_tag="blanket_material"
+    ).openmc_material
 
-    mat2 = Material(material_name='copper',
-                    material_tag='pf_coil_material').openmc_material
+    mat2 = Material(
+        material_name="copper", material_tag="pf_coil_material"
+    ).openmc_material
 
     mats = openmc.Materials([mat1, mat2])
-
 
     settings = openmc.Settings()
     settings.batches = 10
     settings.inactive = 0
     settings.particles = 100
-    settings.run_mode = 'fixed source'
-    settings.dagmc = True 
+    settings.run_mode = "fixed source"
+    settings.dagmc = True
 
     source = openmc.Source()
     source.space = openmc.stats.Point((0, 0, 0))
@@ -104,8 +100,8 @@ def make_other_aspects_of_neutronics_model():
     settings.source = source
 
     tallies = openmc.Tallies()
-    tbr_tally = openmc.Tally(name='TBR')
-    tbr_tally.scores = ['(n,Xt)'] # where X is a wild card
+    tbr_tally = openmc.Tally(name="TBR")
+    tbr_tally.scores = ["(n,Xt)"]  # where X is a wild card
     tallies.append(tbr_tally)
 
     model = openmc.model.Model(geom, mats, settings, tallies)
@@ -113,6 +109,7 @@ def make_other_aspects_of_neutronics_model():
     output_filename = model.run()
 
     return output_filename
+
 
 def read_simulation_results(output_filename):
     """
@@ -124,12 +121,12 @@ def read_simulation_results(output_filename):
     sp = openmc.StatePoint(output_filename)
 
     # access the tally
-    tbr_tally = sp.get_tally(name='TBR')
+    tbr_tally = sp.get_tally(name="TBR")
     df = tbr_tally.get_pandas_dataframe()
-    tbr_tally_result = df['mean'].sum()
+    tbr_tally_result = df["mean"].sum()
 
     # print result
-    print('The tritium breeding ratio was found, TBR = ', tbr_tally_result)
+    print("The tritium breeding ratio was found, TBR = ", tbr_tally_result)
     return tbr_tally_result
 
 
