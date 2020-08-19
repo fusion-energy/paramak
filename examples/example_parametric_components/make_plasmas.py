@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 def plot_plasma(plasma, name=""):
     """Extract points that make up the plasma and creates a plotly trace"""
 
-    if name == "ITER_plasma_plasmaboundaries":
+    if name.endswith("plasmaboundaries"):
         major_radius = plasma.major_radius
         low_point = plasma.low_point
         high_point = plasma.high_point
@@ -202,12 +202,34 @@ def main():
         color="black",
     )
 
+    NSTX_double_null_plasma_plasmaboundaries = make_plasma_plasmaboundaries(
+        name="NSTX_double_null_plasma_plasmaboundaries",
+        A=0,
+        major_radius=850,
+        minor_radius=680,
+        triangularity=0.35,
+        elongation=2,
+        color="yellow"
+    )
+
+    NSTX_single_null_plasma_plasmaboundaries = make_plasma_plasmaboundaries(
+        name="NSTX_single_null_plasma_plasmaboundaries",
+        A=-0.05,
+        major_radius=850,
+        minor_radius=680,
+        triangularity=0.35,
+        elongation=2,
+        color="purple"
+    )
+
     fig = go.Figure()
     fig.add_traces(plot_plasma(plasma=ITER_plasma, name="ITER_plasma"))
     fig.add_traces(plot_plasma(plasma=ITER_plasma_plasmaboundaries, name="ITER_plasma_plasmaboundaries"))
     fig.add_traces(plot_plasma(plasma=EU_DEMO_plasma, name="EU_DEMO_plasma"))
     fig.add_traces(plot_plasma(plasma=ST_plasma, name="ST_plasma"))
     fig.add_traces(plot_plasma(plasma=AST_plasma, name="AST_plasma"))
+    fig.add_traces(plot_plasma(plasma=NSTX_double_null_plasma_plasmaboundaries, name="NSTX_double_null_plasma_plasmaboundaries"))
+    fig.add_traces(plot_plasma(plasma=NSTX_single_null_plasma_plasmaboundaries, name="NSTX_single_null_plasma_plasmaboundaries"))
     fig.show()
     fig.write_html("all_plasma_and_points.html")
 
