@@ -393,6 +393,10 @@ class BallReactor(paramak.Reactor):
                     tf_coil_start_radius +
                     self.outboard_tf_coil_radial_thickness)
 
+            else:
+                tf_coil_start_radius = None
+                tf_coil_end_radius = None
+
         else:
             pf_coil_start_radius = None
             pf_coil_end_radius = None
