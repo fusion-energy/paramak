@@ -36,7 +36,7 @@ class BallReactor(paramak.Reactor):
         number_of_tf_coils (int): the number of tf coils
         pf_coil_to_rear_blanket_radial_gap (float): the radial distance between
             the rear blanket and the closest poloidal field coil (optional)
-        pf_coil_radial_thicknesses (list of floats): the radial thickness of each 
+        pf_coil_radial_thicknesses (list of floats): the radial thickness of each
             poloidal field coil (optional)
         pf_coil_vertical_thicknesses (list of floats): the vertical thickness of
             each poloidal field coil (optional)
@@ -98,7 +98,8 @@ class BallReactor(paramak.Reactor):
         self.tf_coil_poloidal_thickness = tf_coil_poloidal_thickness
 
         # sets major radius and minor radius from equatorial_points to allow a radial build
-        # this helps avoid the plasma overlapping the center column and such things
+        # this helps avoid the plasma overlapping the center column and such
+        # things
 
         inner_equatorial_point = (
             inner_bore_radial_thickness
@@ -108,8 +109,7 @@ class BallReactor(paramak.Reactor):
         )
         outer_equatorial_point = inner_equatorial_point + plasma_radial_thickness
         self.major_radius = (
-            inner_equatorial_point + plasma_radial_thickness + inner_equatorial_point
-        ) / 2
+            inner_equatorial_point + plasma_radial_thickness + inner_equatorial_point) / 2
         self.minor_radius = (
             (outer_equatorial_point + inner_equatorial_point) / 2
         ) - inner_equatorial_point
@@ -269,8 +269,8 @@ class BallReactor(paramak.Reactor):
 
         inboard_tf_coils_start_radius = inner_bore_end_radius
         inboard_tf_coils_end_radius = (
-            inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
-        )
+            inboard_tf_coils_start_radius +
+            self.inboard_tf_leg_radial_thickness)
 
         center_column_shield_start_radius = inboard_tf_coils_end_radius
         center_column_shield_end_radius = (
@@ -296,8 +296,8 @@ class BallReactor(paramak.Reactor):
 
         blanket_rear_wall_start_radius = blanket_end_radius
         blanket_read_wall_end_radius = (
-            blanket_rear_wall_start_radius + self.blanket_rear_wall_radial_thickness
-        )
+            blanket_rear_wall_start_radius +
+            self.blanket_rear_wall_radial_thickness)
 
         return (
             inner_bore_start_radius,
@@ -317,9 +317,9 @@ class BallReactor(paramak.Reactor):
         )
 
     def make_vertical_build(
-        self, 
-        shapes_or_components, 
-        plasma, 
+        self,
+        shapes_or_components,
+        plasma,
         blanket_read_wall_end_radius
     ):
 
@@ -336,8 +336,8 @@ class BallReactor(paramak.Reactor):
 
         blanket_rear_wall_start_height = blanket_end_height
         blanket_rear_wall_end_height = (
-            blanket_rear_wall_start_height + self.blanket_rear_wall_radial_thickness
-        )
+            blanket_rear_wall_start_height +
+            self.blanket_rear_wall_radial_thickness)
 
         tf_coil_height = blanket_rear_wall_end_height
         center_column_shield_height = blanket_rear_wall_end_height * 2
@@ -376,8 +376,8 @@ class BallReactor(paramak.Reactor):
                 pf_coils_x_values.append(x_value)
 
             pf_coil_start_radius = (
-                blanket_read_wall_end_radius + self.pf_coil_to_rear_blanket_radial_gap
-            )
+                blanket_read_wall_end_radius +
+                self.pf_coil_to_rear_blanket_radial_gap)
             pf_coil_end_radius = pf_coil_start_radius + max(
                 self.pf_coil_radial_thicknesses
             )
@@ -387,11 +387,11 @@ class BallReactor(paramak.Reactor):
                 and self.outboard_tf_coil_radial_thickness is not None
             ):
                 tf_coil_start_radius = (
-                    pf_coil_end_radius + self.pf_coil_to_rear_blanket_radial_gap
-                )
+                    pf_coil_end_radius +
+                    self.pf_coil_to_rear_blanket_radial_gap)
                 tf_coil_end_radius = (
-                    tf_coil_start_radius + self.outboard_tf_coil_radial_thickness
-                )
+                    tf_coil_start_radius +
+                    self.outboard_tf_coil_radial_thickness)
 
         else:
             pf_coil_start_radius = None
@@ -428,7 +428,8 @@ class BallReactor(paramak.Reactor):
         inboard_tf_coils_end_radius,
     ):
 
-        # makes a large cylinder that is used to cut the TF coils when the rotation angle is less than 360
+        # makes a large cylinder that is used to cut the TF coils when the
+        # rotation angle is less than 360
         if self.rotation_angle < 360:
             max_high = 3 * center_column_shield_height
             max_width = 3 * blanket_read_wall_end_radius
@@ -677,7 +678,8 @@ class BallReactor(paramak.Reactor):
     ):
         firstwall.solid = firstwall.solid.cut(divertor.solid)
         blanket.solid = blanket.solid.cut(divertor.solid)
-        blanket_rear_casing.solid = blanket_rear_casing.solid.cut(divertor.solid)
+        blanket_rear_casing.solid = blanket_rear_casing.solid.cut(
+            divertor.solid)
         shapes_or_components.append(firstwall)
         shapes_or_components.append(blanket)
         shapes_or_components.append(blanket_rear_casing)

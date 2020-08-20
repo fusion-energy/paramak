@@ -1,7 +1,7 @@
 import math
 import operator
 
-import cadquery as cq 
+import cadquery as cq
 
 import paramak
 
@@ -53,8 +53,7 @@ class SingleNullReactor(paramak.BallReactor):
             pf_coil_to_tf_coil_radial_gap=pf_coil_vertical_thicknesses,
             outboard_tf_coil_radial_thickness=outer_plasma_gap_radial_thickness,
             tf_coil_poloidal_thickness=tf_coil_poloidal_thickness,
-            rotation_angle=rotation_angle
-        )
+            rotation_angle=rotation_angle)
 
         self.divertor_position = divertor_position
         self.create_components_single_null()
@@ -70,7 +69,6 @@ class SingleNullReactor(paramak.BallReactor):
             self._divertor_position = value
         else:
             raise ValueError("divertor position must be 'upper' or 'lower'")
-
 
     def create_components_single_null(self):
 
@@ -192,22 +190,22 @@ class SingleNullReactor(paramak.BallReactor):
         self.shapes_and_components = shapes_or_components
 
     def make_divertor_single_null(
-        self, 
-        shapes_or_components, 
-        firstwall_start_radius, 
-        firstwall_start_height, 
-        extra_blanket_upper, 
-        extra_firstwall_upper, 
-        extra_blanket_rear_wall_upper, 
-        extra_blanket_lower, 
-        extra_firstwall_lower, 
-        extra_blanket_rear_wall_lower, 
-        plasma, 
-        blanket_rear_wall_end_height, 
-        divertor_start_radius, 
+        self,
+        shapes_or_components,
+        firstwall_start_radius,
+        firstwall_start_height,
+        extra_blanket_upper,
+        extra_firstwall_upper,
+        extra_blanket_rear_wall_upper,
+        extra_blanket_lower,
+        extra_firstwall_lower,
+        extra_blanket_rear_wall_lower,
+        plasma,
+        blanket_rear_wall_end_height,
+        divertor_start_radius,
         divertor_end_radius
     ):
-    
+
         # used as an intersect when making the divertor
         blanket_fw_rear_wall_envelope = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(firstwall_start_radius, 0),
@@ -250,4 +248,3 @@ class SingleNullReactor(paramak.BallReactor):
         shapes_or_components.append(divertor)
 
         return blanket_fw_rear_wall_envelope, divertor
-    
