@@ -12,63 +12,44 @@ class BallReactor(paramak.Reactor):
     There is no inboard breeder blanket on this ball reactor like
     most spherical reactors.
 
-    :param inner_bore_radial_thickness: the radial thickness of
-     the inner bore (cm)
-    :type inner_bore_radial_thickness: float
-    :inboard_tf_leg_radial_thickness: the radial thickness of the
-     inner leg of the toroidal field coils (cm)
-    :type inboard_tf_leg_radial_thickness: float
-    :center_column_shield_radial_thickness: the radial thickness
-     of the center column shield (cm)
-    :type center_column_shield_radial_thickness: float
-    :divertor_radial_thickness: the radial thickness of the divertor
-     (cm), this fills the gap between the center column shield and blanket
-    :type divertor_radial_thickness: float
-    :inner_plasma_gap_radial_thickness: the radial thickness of the
-     inboard gap between the plasma and the center column shield (cm)
-    :type inner_plasma_gap_radial_thickness: float
-    :plasma_radial_thickness: the radial thickness of the plasma (cm),
-     this is double the minor radius
-    :type plasma_radial_thickness: float
-    :outer_plasma_gap_radial_thickness: the radial thickness of the
-     outboard gap between the plasma and the firstwall (cm)
-    :type outer_plasma_gap_radial_thickness: float
-    :firstwall_radial_thickness: the radial thickness of the first wall (cm)
-    :type firstwall_radial_thickness: float
-    :blanket_radial_thickness: the radial thickness of the blanket (cm)
-    :type blanket_radial_thickness: float
-    :blanket_rear_wall_radial_thickness: the radial thickness of the rear wall
-     of the blanket (cm)
-    :type blanket_rear_wall_radial_thickness: float
-    :elongation: the elongation of the plasma
-    :type elongation: float
-    :triangularity: the triangularity of the plasma
-    :type triangularity: float
-    :number_of_tf_coils: the number of tf coils
-    :type number_of_tf_coils: int
-    :pf_coil_to_rear_blanket_radial_gap: the radial distance between the rear
-     blanket and the closest poloidal field coil (optional)
-    :type pf_coil_to_rear_blanket_radial_gap: float
-    :pf_coil_radial_thicknesses: the radial thickness of each poloidal field
-     coil (optional)
-    :type pf_coil_radial_thicknesses: list of floats
-    :pf_coil_vertical_thicknesses: the vertical thickness of each poloidal
-     field coil (optional)
-    :type pf_coil_vertical_thicknesses: list of floats
-    :pf_coil_to_tf_coil_radial_gap: the radial distance between the rear of
-     the poloidal field coil and the toroidal field coil (optional)
-    :type pf_coil_to_tf_coil_radial_gap: float
-    :outboard_tf_coil_radial_thickness: the radial thickness of the toroidal field
-     coil (optional)
-    :type outboard_tf_coil_radial_thickness: float
-    :tf_coil_poloidal_thickness: the poloidal thickness of the toroidal field
-     coil (optional)
-    :type tf_coil_poloidal_thickness: float
-    :rotation_angle: the angle of the sector that is desired
-    :type rotation_angle: int
+    Arguments:
+        inner_bore_radial_thickness (float): the radial thickness of the
+            inner bore (cm)
+        inboard_tf_leg_radial_thickness (float): the radial thickness of the
+            inner leg of the toroidal field coils (cm)
+        center_column_shield_radial_thickness (float): the radial thickness of
+            the center column shield (cm)
+        divertor_radial_thickness (float): the radial thickness of the divertor
+            (cm), this fills the gap between the center column shield and blanket
+        inner_plasma_gap_radial_thickness (float): the radial thickness of the
+            inboard gap between the plasma and the center column shield (cm)
+        plasma_radial_thickness (float): the radial thickness of the plasma
+        outer_plasma_gap_radial_thickness (float): the radial thickness of the
+            outboard gap between the plasma and firstwall (cm)
+        firstwall_radial_thickness (float): the radial thickness of the first
+            wall (cm)
+        blanket_radial_thickness (float): the radial thickness of the blanket (cm)
+        blanket_rear_wall_radial_thickness (float): the radial thickness of the
+            rear wall of the blanket (cm)
+        elongation (float): the elongation of the plasma
+        triangularity (float): the triangularity of the plasma
+        number_of_tf_coils (int): the number of tf coils
+        pf_coil_to_rear_blanket_radial_gap (float): the radial distance between
+            the rear blanket and the closest poloidal field coil (optional)
+        pf_coil_radial_thicknesses (list of floats): the radial thickness of each 
+            poloidal field coil (optional)
+        pf_coil_vertical_thicknesses (list of floats): the vertical thickness of
+            each poloidal field coil (optional)
+        pf_coil_to_tf_coil_radial_gap (float): the radial distance between the
+            rear of the poloidal field coil and the toroidal field coil (optional)
+        outboard_tf_coil_radial_thickness (float): the radial thickness of the
+            toroidal field coil (optional)
+        tf_coil_poloidal_thickness (float): the poloidal thickness of the toroidal
+            field coil (optional)
+        rotation_angle (float): the angle of the sector that is desired
 
-    :return: a Reactor object that has generic functionality
-    :rtype: paramak shape object
+    Returns:
+        a paramak shape object: a Reactor object that has generic functionality
     """
 
     def __init__(
@@ -116,9 +97,9 @@ class BallReactor(paramak.Reactor):
         self.outboard_tf_coil_radial_thickness = outboard_tf_coil_radial_thickness
         self.tf_coil_poloidal_thickness = tf_coil_poloidal_thickness
 
-        # sets major raduis and minor radius from equatorial_points to allow a radial build
-        # this helps avoid the plasma overlapping the center column and such
-        # things
+        # sets major radius and minor radius from equatorial_points to allow a radial build
+        # this helps avoid the plasma overlapping the center column and such things
+
         inner_equatorial_point = (
             inner_bore_radial_thickness
             + inboard_tf_leg_radial_thickness
@@ -127,7 +108,8 @@ class BallReactor(paramak.Reactor):
         )
         outer_equatorial_point = inner_equatorial_point + plasma_radial_thickness
         self.major_radius = (
-            inner_equatorial_point + plasma_radial_thickness + inner_equatorial_point) / 2
+            inner_equatorial_point + plasma_radial_thickness + inner_equatorial_point
+        ) / 2
         self.minor_radius = (
             (outer_equatorial_point + inner_equatorial_point) / 2
         ) - inner_equatorial_point
@@ -142,23 +124,125 @@ class BallReactor(paramak.Reactor):
 
     def create_components(self):
 
+        # this calls each method for constructing the reactor components by passing the
+        # relevant parameters/objects to each method which return more objects
+
         shapes_or_components = []
 
-        # lots of shapes have to be returned and passed to different methods, this is a bit of a mess
         plasma = self.make_plasma(shapes_or_components)
-        inner_bore_start_radius, inner_bore_end_radius, inboard_tf_coils_start_radius, inboard_tf_coils_end_radius, center_column_shield_start_radius, center_column_shield_end_radius, divertor_start_radius, divertor_end_radius, firstwall_start_radius, firstwall_end_radius, blanket_start_radius, blanket_end_radius, blanket_read_wall_start_radius, blanket_read_wall_end_radius = self.perform_radial_build(shapes_or_components)
-        firstwall_start_height, firstwall_end_height, blanket_start_height, blanket_end_height, blanket_rear_wall_start_height, blanket_rear_wall_end_height, tf_coil_height, center_column_shield_height, pf_coil_start_radius, pf_coil_end_radius, pf_coils_y_values, pf_coils_x_values, tf_coil_start_radius, tf_coil_end_radius = self.perform_vertical_build(shapes_or_components, plasma, blanket_read_wall_end_radius)
-        inboard_tf_coils, cutting_slice = self.make_inboard_tf_coils(shapes_or_components, center_column_shield_height, blanket_read_wall_end_radius, tf_coil_height, inboard_tf_coils_start_radius, inboard_tf_coils_end_radius)
-        center_column_shield = self.make_center_column_shield(shapes_or_components, center_column_shield_height, center_column_shield_start_radius, center_column_shield_end_radius)
-        extra_blanket_upper, extra_firstwall_upper, extra_blanket_rear_wall_upper, extra_blanket_lower, extra_firstwall_lower, extra_blanket_rear_wall_lower = self.make_extra_component_parts(shapes_or_components, center_column_shield_end_radius, blanket_start_height, blanket_end_height, firstwall_start_height, firstwall_end_height, blanket_rear_wall_start_height, blanket_rear_wall_end_height, plasma)
-        firstwall = self.make_firstwall_without_cuts(shapes_or_components, firstwall_start_radius, firstwall_start_height, plasma, extra_firstwall_upper, extra_firstwall_lower)
-        blanket, blanket_rear_casing = self.make_blanket_without_cuts(shapes_or_components, blanket_start_radius, blanket_start_height, extra_blanket_upper, extra_blanket_lower, plasma, blanket_read_wall_start_radius, blanket_rear_wall_start_height, extra_blanket_rear_wall_upper, extra_blanket_rear_wall_lower)
-        blanket_fw_rear_wall_envelope, divertor = self.make_divertor(shapes_or_components, firstwall_start_radius, firstwall_start_height, extra_blanket_upper, extra_firstwall_upper, extra_blanket_rear_wall_upper, extra_blanket_lower, extra_firstwall_lower, extra_blanket_rear_wall_lower, plasma, blanket_rear_wall_end_height, divertor_start_radius, divertor_end_radius)
-        self.make_remaining_components_with_cuts(shapes_or_components, firstwall, blanket, blanket_rear_casing, divertor, pf_coils_y_values, pf_coils_x_values, inboard_tf_coils_start_radius, inboard_tf_coils_end_radius, tf_coil_height, tf_coil_start_radius, cutting_slice)
+
+        (
+            inner_bore_start_radius,
+            inner_bore_end_radius,
+            inboard_tf_coils_start_radius,
+            inboard_tf_coils_end_radius,
+            center_column_shield_start_radius,
+            center_column_shield_end_radius,
+            divertor_start_radius,
+            divertor_end_radius,
+            firstwall_start_radius,
+            firstwall_end_radius,
+            blanket_start_radius,
+            blanket_end_radius,
+            blanket_rear_wall_start_radius,
+            blanket_read_wall_end_radius,
+        ) = self.make_radial_build(shapes_or_components)
+
+        (
+            firstwall_start_height,
+            firstwall_end_height,
+            blanket_start_height,
+            blanket_end_height,
+            blanket_rear_wall_start_height,
+            blanket_rear_wall_end_height,
+            tf_coil_height,
+            center_column_shield_height,
+            pf_coil_start_radius,
+            pf_coil_end_radius,
+            pf_coils_y_values,
+            pf_coils_x_values,
+            tf_coil_start_radius,
+            tf_coil_end_radius,
+        ) = self.make_vertical_build(
+            shapes_or_components, plasma, blanket_read_wall_end_radius
+        )
+
+        inboard_tf_coils, cutting_slice = self.make_inboard_tf_coils(
+            shapes_or_components,
+            center_column_shield_height,
+            blanket_read_wall_end_radius,
+            tf_coil_height,
+            inboard_tf_coils_start_radius,
+            inboard_tf_coils_end_radius
+        )
+
+        center_column_shield = self.make_center_column_shield(
+            shapes_or_components,
+            center_column_shield_height,
+            center_column_shield_start_radius,
+            center_column_shield_end_radius,
+        )
+
+        (
+            firstwall,
+            blanket,
+            blanket_rear_casing,
+            extra_blanket_upper,
+            extra_firstwall_upper,
+            extra_blanket_rear_wall_upper,
+            extra_blanket_lower,
+            extra_firstwall_lower,
+            extra_blanket_rear_wall_lower,
+        ) = self.make_blanket_and_firstwall(
+            shapes_or_components,
+            center_column_shield_end_radius,
+            blanket_start_height,
+            blanket_end_height,
+            firstwall_start_height,
+            firstwall_end_height,
+            blanket_rear_wall_start_height,
+            blanket_rear_wall_end_height,
+            plasma,
+            firstwall_start_radius,
+            blanket_start_radius,
+            blanket_rear_wall_start_radius,
+        )
+
+        blanket_fw_rear_wall_envelope, divertor = self.make_divertor(
+            shapes_or_components,
+            firstwall_start_radius,
+            firstwall_start_height,
+            extra_blanket_upper,
+            extra_firstwall_upper,
+            extra_blanket_rear_wall_upper,
+            extra_blanket_lower,
+            extra_firstwall_lower,
+            extra_blanket_rear_wall_lower,
+            plasma,
+            blanket_rear_wall_end_height,
+            divertor_start_radius,
+            divertor_end_radius,
+        )
+
+        self.make_component_cuts(
+            shapes_or_components,
+            firstwall,
+            blanket,
+            blanket_rear_casing,
+            divertor,
+            pf_coils_y_values,
+            pf_coils_x_values,
+            inboard_tf_coils_start_radius,
+            inboard_tf_coils_end_radius,
+            tf_coil_height,
+            tf_coil_start_radius,
+            cutting_slice,
+        )
 
         self.shapes_and_components = shapes_or_components
 
     def make_plasma(self, shapes_or_components):
+
         plasma = paramak.Plasma(
             major_radius=self.major_radius,
             minor_radius=self.minor_radius,
@@ -173,9 +257,11 @@ class BallReactor(paramak.Reactor):
 
         return plasma
 
-    def perform_radial_build(self, shapes_or_components):
-        # this is the radial build sequence, where one componet stops and
+    def make_radial_build(self, shapes_or_components):
+
+        # this is the radial build sequence, where one component stops and
         # another starts
+
         inner_bore_start_radius = 0
         inner_bore_end_radius = (
             inner_bore_start_radius + self.inner_bore_radial_thickness
@@ -183,8 +269,8 @@ class BallReactor(paramak.Reactor):
 
         inboard_tf_coils_start_radius = inner_bore_end_radius
         inboard_tf_coils_end_radius = (
-            inboard_tf_coils_start_radius +
-            self.inboard_tf_leg_radial_thickness)
+            inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
+        )
 
         center_column_shield_start_radius = inboard_tf_coils_end_radius
         center_column_shield_end_radius = (
@@ -208,16 +294,36 @@ class BallReactor(paramak.Reactor):
         blanket_start_radius = firstwall_end_radius
         blanket_end_radius = blanket_start_radius + self.blanket_radial_thickness
 
-        blanket_read_wall_start_radius = blanket_end_radius
+        blanket_rear_wall_start_radius = blanket_end_radius
         blanket_read_wall_end_radius = (
-            blanket_read_wall_start_radius +
-            self.blanket_rear_wall_radial_thickness)
+            blanket_rear_wall_start_radius + self.blanket_rear_wall_radial_thickness
+        )
 
-        return inner_bore_start_radius, inner_bore_end_radius, inboard_tf_coils_start_radius, inboard_tf_coils_end_radius, center_column_shield_start_radius, center_column_shield_end_radius, divertor_start_radius, divertor_end_radius, firstwall_start_radius, firstwall_end_radius, blanket_start_radius, blanket_end_radius, blanket_read_wall_start_radius, blanket_read_wall_end_radius
-        
-    def perform_vertical_build(self, shapes_or_components, plasma, blanket_read_wall_end_radius):
+        return (
+            inner_bore_start_radius,
+            inner_bore_end_radius,
+            inboard_tf_coils_start_radius,
+            inboard_tf_coils_end_radius,
+            center_column_shield_start_radius,
+            center_column_shield_end_radius,
+            divertor_start_radius,
+            divertor_end_radius,
+            firstwall_start_radius,
+            firstwall_end_radius,
+            blanket_start_radius,
+            blanket_end_radius,
+            blanket_rear_wall_start_radius,
+            blanket_read_wall_end_radius,
+        )
 
-        # this is the vertical build sequence, componets build on each other in
+    def make_vertical_build(
+        self, 
+        shapes_or_components, 
+        plasma, 
+        blanket_read_wall_end_radius
+    ):
+
+        # this is the vertical build sequence, components build on each other in
         # a similar manner to the radial build
 
         firstwall_start_height = (
@@ -230,8 +336,8 @@ class BallReactor(paramak.Reactor):
 
         blanket_rear_wall_start_height = blanket_end_height
         blanket_rear_wall_end_height = (
-            blanket_rear_wall_start_height +
-            self.blanket_rear_wall_radial_thickness)
+            blanket_rear_wall_start_height + self.blanket_rear_wall_radial_thickness
+        )
 
         tf_coil_height = blanket_rear_wall_end_height
         center_column_shield_height = blanket_rear_wall_end_height * 2
@@ -270,8 +376,8 @@ class BallReactor(paramak.Reactor):
                 pf_coils_x_values.append(x_value)
 
             pf_coil_start_radius = (
-                blanket_read_wall_end_radius +
-                self.pf_coil_to_rear_blanket_radial_gap)
+                blanket_read_wall_end_radius + self.pf_coil_to_rear_blanket_radial_gap
+            )
             pf_coil_end_radius = pf_coil_start_radius + max(
                 self.pf_coil_radial_thicknesses
             )
@@ -281,11 +387,11 @@ class BallReactor(paramak.Reactor):
                 and self.outboard_tf_coil_radial_thickness is not None
             ):
                 tf_coil_start_radius = (
-                    pf_coil_end_radius +
-                    self.pf_coil_to_rear_blanket_radial_gap)
+                    pf_coil_end_radius + self.pf_coil_to_rear_blanket_radial_gap
+                )
                 tf_coil_end_radius = (
-                    tf_coil_start_radius +
-                    self.outboard_tf_coil_radial_thickness)
+                    tf_coil_start_radius + self.outboard_tf_coil_radial_thickness
+                )
 
         else:
             pf_coil_start_radius = None
@@ -295,11 +401,34 @@ class BallReactor(paramak.Reactor):
             tf_coil_start_radius = None
             tf_coil_end_radius = None
 
-        return firstwall_start_height, firstwall_end_height, blanket_start_height, blanket_end_height, blanket_rear_wall_start_height, blanket_rear_wall_end_height, tf_coil_height, center_column_shield_height, pf_coil_start_radius, pf_coil_end_radius, pf_coils_y_values, pf_coils_x_values, tf_coil_start_radius, tf_coil_end_radius
+        return (
+            firstwall_start_height,
+            firstwall_end_height,
+            blanket_start_height,
+            blanket_end_height,
+            blanket_rear_wall_start_height,
+            blanket_rear_wall_end_height,
+            tf_coil_height,
+            center_column_shield_height,
+            pf_coil_start_radius,
+            pf_coil_end_radius,
+            pf_coils_y_values,
+            pf_coils_x_values,
+            tf_coil_start_radius,
+            tf_coil_end_radius,
+        )
 
+    def make_inboard_tf_coils(
+        self,
+        shapes_or_components,
+        center_column_shield_height,
+        blanket_read_wall_end_radius,
+        tf_coil_height,
+        inboard_tf_coils_start_radius,
+        inboard_tf_coils_end_radius,
+    ):
 
-    def make_inboard_tf_coils(self, shapes_or_components, center_column_shield_height, blanket_read_wall_end_radius, tf_coil_height, inboard_tf_coils_start_radius, inboard_tf_coils_end_radius):        # makes a large cylinder that is used to cut the TF coils when the
-        # rotation angle is less than 360
+        # makes a large cylinder that is used to cut the TF coils when the rotation angle is less than 360
         if self.rotation_angle < 360:
             max_high = 3 * center_column_shield_height
             max_width = 3 * blanket_read_wall_end_radius
@@ -331,7 +460,14 @@ class BallReactor(paramak.Reactor):
 
         return inboard_tf_coils, cutting_slice
 
-    def make_center_column_shield(self, shapes_or_components, center_column_shield_height, center_column_shield_start_radius, center_column_shield_end_radius):
+    def make_center_column_shield(
+        self,
+        shapes_or_components,
+        center_column_shield_height,
+        center_column_shield_start_radius,
+        center_column_shield_end_radius,
+    ):
+
         center_column_shield = paramak.CenterColumnShieldCylinder(
             height=center_column_shield_height,
             inner_radius=center_column_shield_start_radius,
@@ -347,7 +483,22 @@ class BallReactor(paramak.Reactor):
 
         return center_column_shield
 
-    def make_extra_component_parts(self, shapes_or_components, center_column_shield_end_radius, blanket_start_height, blanket_end_height, firstwall_start_height, firstwall_end_height, blanket_rear_wall_start_height, blanket_rear_wall_end_height, plasma):
+    def make_blanket_and_firstwall(
+        self,
+        shapes_or_components,
+        center_column_shield_end_radius,
+        blanket_start_height,
+        blanket_end_height,
+        firstwall_start_height,
+        firstwall_end_height,
+        blanket_rear_wall_start_height,
+        blanket_rear_wall_end_height,
+        plasma,
+        firstwall_start_radius,
+        blanket_start_radius,
+        blanket_rear_wall_start_radius,
+    ):
+
         extra_blanket_upper = paramak.RotateStraightShape(
             points=[
                 (center_column_shield_end_radius, blanket_start_height),
@@ -408,9 +559,6 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        return extra_blanket_upper, extra_firstwall_upper, extra_blanket_rear_wall_upper, extra_blanket_lower, extra_firstwall_lower, extra_blanket_rear_wall_lower
-
-    def make_firstwall_without_cuts(self, shapes_or_components, firstwall_start_radius, firstwall_start_height, plasma, extra_firstwall_upper, extra_firstwall_lower):
         firstwall = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(firstwall_start_radius, 0),
             inner_upper_point=(plasma.high_point[0], firstwall_start_height),
@@ -424,9 +572,6 @@ class BallReactor(paramak.Reactor):
             union=[extra_firstwall_upper, extra_firstwall_lower],
         )
 
-        return firstwall
-
-    def make_blanket_without_cuts(self, shapes_or_components, blanket_start_radius, blanket_start_height, extra_blanket_upper, extra_blanket_lower, plasma, blanket_read_wall_start_radius, blanket_rear_wall_start_height, extra_blanket_rear_wall_upper, extra_blanket_rear_wall_lower):
         blanket = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(blanket_start_radius, 0),
             inner_upper_point=(plasma.high_point[0], blanket_start_height),
@@ -441,7 +586,7 @@ class BallReactor(paramak.Reactor):
         )
 
         blanket_rear_casing = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(blanket_read_wall_start_radius, 0),
+            inner_mid_point=(blanket_rear_wall_start_radius, 0),
             inner_upper_point=(plasma.high_point[0], blanket_rear_wall_start_height),
             inner_lower_point=(plasma.low_point[0], -blanket_rear_wall_start_height),
             thickness=self.blanket_rear_wall_radial_thickness,
@@ -453,9 +598,34 @@ class BallReactor(paramak.Reactor):
             union=[extra_blanket_rear_wall_upper, extra_blanket_rear_wall_lower],
         )
 
-        return blanket, blanket_rear_casing
+        return (
+            firstwall,
+            blanket,
+            blanket_rear_casing,
+            extra_blanket_upper,
+            extra_firstwall_upper,
+            extra_blanket_rear_wall_upper,
+            extra_blanket_lower,
+            extra_firstwall_lower,
+            extra_blanket_rear_wall_lower,
+        )
 
-    def make_divertor(self, shapes_or_components, firstwall_start_radius, firstwall_start_height, extra_blanket_upper, extra_firstwall_upper, extra_blanket_rear_wall_upper, extra_blanket_lower, extra_firstwall_lower, extra_blanket_rear_wall_lower, plasma, blanket_rear_wall_end_height, divertor_start_radius, divertor_end_radius):
+    def make_divertor(
+        self,
+        shapes_or_components,
+        firstwall_start_radius,
+        firstwall_start_height,
+        extra_blanket_upper,
+        extra_firstwall_upper,
+        extra_blanket_rear_wall_upper,
+        extra_blanket_lower,
+        extra_firstwall_lower,
+        extra_blanket_rear_wall_lower,
+        plasma,
+        blanket_rear_wall_end_height,
+        divertor_start_radius,
+        divertor_end_radius,
+    ):
         # used as an intersect when making the divertor
         blanket_fw_rear_wall_envelope = paramak.BlanketConstantThicknessArcV(
             inner_mid_point=(firstwall_start_radius, 0),
@@ -484,16 +654,30 @@ class BallReactor(paramak.Reactor):
             stp_filename="divertor.stp",
             name="divertor",
             material_tag="divertor_mat",
+            rotation_angle=self.rotation_angle
         )
         shapes_or_components.append(divertor)
 
         return blanket_fw_rear_wall_envelope, divertor
 
-    def make_remaining_components_with_cuts(self, shapes_or_components, firstwall, blanket, blanket_rear_casing, divertor, pf_coils_y_values, pf_coils_x_values, inboard_tf_coils_start_radius, inboard_tf_coils_end_radius, tf_coil_height, tf_coil_start_radius, cutting_slice):
+    def make_component_cuts(
+        self,
+        shapes_or_components,
+        firstwall,
+        blanket,
+        blanket_rear_casing,
+        divertor,
+        pf_coils_y_values,
+        pf_coils_x_values,
+        inboard_tf_coils_start_radius,
+        inboard_tf_coils_end_radius,
+        tf_coil_height,
+        tf_coil_start_radius,
+        cutting_slice,
+    ):
         firstwall.solid = firstwall.solid.cut(divertor.solid)
         blanket.solid = blanket.solid.cut(divertor.solid)
-        blanket_rear_casing.solid = blanket_rear_casing.solid.cut(
-            divertor.solid)
+        blanket_rear_casing.solid = blanket_rear_casing.solid.cut(divertor.solid)
         shapes_or_components.append(firstwall)
         shapes_or_components.append(blanket)
         shapes_or_components.append(blanket_rear_casing)
