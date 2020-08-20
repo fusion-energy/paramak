@@ -6,7 +6,7 @@ import cadquery as cq
 import paramak
 
 
-class SingleNullReactor(paramak.BallReactor):
+class SingleNullBallReactor(paramak.BallReactor):
 
     def __init__(
         self,
