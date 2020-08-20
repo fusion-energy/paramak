@@ -12,61 +12,52 @@ class SubmersionTokamak(paramak.Reactor):
     coils. There is an inboard breeder blanket on this ball reactor.
     :param inner_bore_radial_thickness: the radial thickness of
      the inner bore (cm)
-    :type inner_bore_radial_thickness: float
-    :inboard_tf_leg_radial_thickness: the radial thickness of the
-     inner leg of the toroidal field coils (cm)
-    :type inboard_tf_leg_radial_thickness: float
-    :center_column_shield_radial_thickness: the radial thickness
-     of the center column shield (cm)
-    :type center_column_shield_radial_thickness: float
-    :inboard_blanket_radial_thickness: the radial thickness of the first wall (cm)
-    :type inboard_blanket_radial_thickness: float
-    :firstwall_radial_thickness: the radial thickness of the first wall (cm)
-    :type firstwall_radial_thickness: float
-    :inner_plasma_gap_radial_thickness: the radial thickness of the
-     inboard gap between the plasma and the center column shield (cm)
-    :type inner_plasma_gap_radial_thickness: float
-    :plasma_radial_thickness: the radial thickness of the plasma (cm),
-     this is double the minor radius
-    :type plasma_radial_thickness: float
-    :divertor_radial_thickness: the radial thickness of the divertors (cm)
-    :type divertor_radial_thickness: float
-    :support_radial_thickness: the radial thickness of the upper and lower supports (cm)
-    :type support_radial_thickness: float
-    :outer_plasma_gap_radial_thickness: the radial thickness of the
-     outboard gap between the plasma and the firstwall (cm)
-    :type outer_plasma_gap_radial_thickness: float
-    :outboard_blanket_radial_thickness: the radial thickness of the blanket (cm)
-    :type outboard_blanket_radial_thickness: float
-    :blanket_rear_wall_radial_thickness: the radial thickness of the rear wall
-     of the blanket (cm)
-    :type blanket_rear_wall_radial_thickness: float
-    :param high_point: the (x,z) coordinates value of the top of the plasma (cm)
-    :type high_point: tuple of 2 floats
-    :number_of_tf_coils: the number of tf coils
-    :type number_of_tf_coils: int
-    :rotation_angle: the angle of the sector that is desired
-    :type rotation_angle: int
-    :outboard_tf_coil_radial_thickness: the radial thickness of the toroidal field
-     coil (optional)
-    :type outboard_tf_coil_radial_thickness: float
-    :tf_coil_to_rear_blanket_radial_gap: the radial distance between the rear of
-     the blanket and the toroidal field coil (optional)
-    :type tf_coil_to_rear_blanket_radial_gap: float
-    :tf_coil_poloidal_thickness: the poloidal thickness of the toroidal field
-     coil (optional)
-    :type tf_coil_poloidal_thickness: float
-    :pf_coil_vertical_thicknesses: the vertical thickness of each poloidal
-     field coil (optional)
-    :type pf_coil_vertical_thicknesses: list of floats
-    :pf_coil_radial_thicknesses: the radial thickness of each poloidal field
-     coil (optional)
-    :type pf_coil_radial_thicknesses: list of floats
-    :pf_coil_to_tf_coil_radial_gap: the radial distance between the rear of
-     the poloidal field coil and the toroidal field coil (optional)
-    :type pf_coil_to_tf_coil_radial_gap: float
-    :return: a Reactor object that has generic functionality
-    :rtype: paramak shape object
+
+    Arguments:
+        inner_bore_radial_thickness (float): the radial thickness of the
+            inner bore (cm)
+        inboard_tf_leg_radial_thickness (float): the radial thickness of
+            the inner leg of the toroidal field coils (cm)
+        center_column_shield_radial_thickness (float): the radial thickness
+            of the center column shield (cm)
+        inboard_blanket_radial_thickness (float): the radial thickness of
+            the inboard blanket (cm)
+        firstwall_radial_thickness (float): the radial thickness of the
+            first wall (cm)
+        inner_plasma_gap_radial_thickness (float): the radial thickness of
+            the inboard gap between the plasma and the center column shield (cm)
+        plasma_radial_thickness (float): the radial thickness of the plasma (cm)
+        divertor_radial_thickness (float): the radial thickness of the
+            divertors (cm)
+        support_radial_thickness (float): the radial thickness of the upper
+            and lower supports (cm)
+        outer_plasma_gap_radial_thickness (float): the radial thickness of
+            the outboard gap between the plasma and the first wall (cm)
+        outboard_blanket_radial_thickness (float): the radial thickness of
+            the blanket (cm)
+        blanket_rear_wall_radial_thickness (float): the radial thickness of
+            the rear wall of the blanket (cm)
+        high_point (tuple of 2 floats): the (x,z) coordinate value of the
+            top of the plasma (cm)
+        number_of_tf_coils (int): the number of tf coils
+        rotation_angle (float): the angle of the sector that is desired
+        outboard_tf_coil_radial_thickness (float): the radial thickness of
+            the toroidal field coil (optional)
+        tf_coil_to_rear_blanket_radial_gap (float): the radial distance
+            between the rear of the blanket and the toroidal field coil
+            (optional)
+        tf_coil_poloidal_thickness (float): the vertical thickness of each
+            poloidal field coil (optional)
+        pf_coil_vertical_thicknesses (list of floats): the vertical thickness
+            of each poloidal field coil (optional)
+        pf_coil_radial_thicknesses (list of floats): the radial thickness of
+            each poloidal field coil (optional)
+        pf_coil_to_tf_coil_radial_gap (float): the radial distance between
+            the rear of the poloidal field coil and the toroidal field coil
+            (optional)
+        
+    Returns:
+        a paramak shape object: a Reactor object that has generic functionality
     """
 
     def __init__(
@@ -130,8 +121,126 @@ class SubmersionTokamak(paramak.Reactor):
 
     def create_components(self):
 
-        # this is the radial build sequence, where one componet stops and
+        # this calls each method for constructing the reactor components by passing the
+        # relevant parameters/objects to each method which return more objects
+
+        shapes_or_components = []
+
+        (
+            inner_bore_start_radius,
+            inner_bore_end_radius,
+            inboard_tf_coils_start_radius,
+            inboard_tf_coils_end_radius,
+            center_column_shield_start_radius,
+            center_column_shield_end_radius,
+            inboard_blanket_start_radius,
+            inboard_blanket_end_radius,
+            inboard_firstwall_start_radius,
+            inboard_firstwall_end_radius,
+            inner_plasma_gap_start_radius,
+            inner_plasma_gap_end_radius,
+            plasma_start_radius,
+            plasma_end_radius,
+            outer_plasma_gap_start_radius,
+            outer_plasma_gap_end_radius,
+            outboard_firstwall_start_radius,
+            outboard_firstwall_end_radius,
+            outboard_blanket_start_radius,
+            outboard_blanket_end_radius,
+            blanket_rear_wall_start_radius,
+            blanket_rear_wall_end_radius,
+            tf_info_provided,
+            pf_info_provided,
+            divertor_start_radius,
+            divertor_end_radius,
+            support_start_radius,
+            support_end_radius,
+            outboard_tf_coil_end_radius,
+            outboard_tf_coil_start_radius
+        ) = self.make_radial_build()
+
+        (
+            plasma_start_height,
+            plasma_end_height,
+            plasma_to_divertor_gap_start_height,
+            plasma_to_divertor_gap_end_height,
+            firstwall_start_height,
+            firstwall_end_height,
+            blanket_start_height,
+            blanket_end_height,
+            blanket_rear_wall_start_height,
+            blanket_rear_wall_end_height,
+            number_of_pf_coils,
+            pf_coils_y_values,
+            pf_coils_x_values,
+            pf_coil_start_radius,
+            pf_coil_end_radius,
+            cutting_slice
+        ) = self.make_vertical_build(tf_info_provided, pf_info_provided, plasma_start_radius, plasma_end_radius, blanket_rear_wall_end_radius, outboard_tf_coil_end_radius, outboard_tf_coil_start_radius)
+
+        inboard_tf_coils = self.make_inboard_tf_coils(
+            blanket_rear_wall_end_height,
+            inboard_tf_coils_start_radius,
+            inboard_tf_coils_end_radius,
+        )
+
+        center_column_shield = self.make_center_column_shield(
+            shapes_or_components,
+            blanket_rear_wall_end_height,
+            center_column_shield_start_radius,
+            center_column_shield_end_radius,
+        )
+
+        plasma = self.make_plasma(
+            shapes_or_components,
+            plasma_end_radius,
+            plasma_start_radius,
+        )
+
+        inboard_firstwall, inboard_blanket, firstwall = self.make_blanket_and_firstwall(
+            shapes_or_components,
+            inboard_blanket_start_radius,
+            plasma,
+            blanket_end_height,
+        )
+
+        divertor = self.make_divertor(
+            shapes_or_components,
+            blanket_rear_wall_end_height,
+            divertor_start_radius,
+            divertor_end_radius,
+            firstwall
+        )
+
+        self.make_component_cuts(
+            shapes_or_components,
+            firstwall,
+            support_start_radius,
+            support_end_radius,
+            center_column_shield_end_radius,
+            blanket_rear_wall_start_height,
+            blanket_rear_wall_end_height,
+            inboard_tf_coils_start_radius,
+            tf_info_provided,
+            pf_info_provided,
+            pf_coils_y_values,
+            pf_coils_x_values,
+            divertor,
+            plasma,
+            inboard_blanket,
+            inboard_firstwall,
+            outboard_tf_coil_end_radius,
+            outboard_tf_coil_start_radius,
+            cutting_slice
+        )
+
+        self.shapes_and_components = shapes_or_components
+
+    def make_radial_build(self):
+
+        # this is the radial build sequence, where one component stops and
         # another starts
+
         inner_bore_start_radius = 0
         inner_bore_end_radius = (
             inner_bore_start_radius + self.inner_bore_radial_thickness
@@ -222,8 +331,53 @@ class SubmersionTokamak(paramak.Reactor):
             self.plasma_high_point[0] + 0.5 * self.support_radial_thickness
         )
 
+        return (
+            inner_bore_start_radius,
+            inner_bore_end_radius,
+            inboard_tf_coils_start_radius,
+            inboard_tf_coils_end_radius,
+            center_column_shield_start_radius,
+            center_column_shield_end_radius,
+            inboard_blanket_start_radius,
+            inboard_blanket_end_radius,
+            inboard_firstwall_start_radius,
+            inboard_firstwall_end_radius,
+            inner_plasma_gap_start_radius,
+            inner_plasma_gap_end_radius,
+            plasma_start_radius,
+            plasma_end_radius,
+            outer_plasma_gap_start_radius,
+            outer_plasma_gap_end_radius,
+            outboard_firstwall_start_radius,
+            outboard_firstwall_end_radius,
+            outboard_blanket_start_radius,
+            outboard_blanket_end_radius,
+            blanket_rear_wall_start_radius,
+            blanket_rear_wall_end_radius,
+            tf_info_provided,
+            pf_info_provided,
+            divertor_start_radius,
+            divertor_end_radius,
+            support_start_radius,
+            support_end_radius,
+            outboard_tf_coil_end_radius,
+            outboard_tf_coil_start_radius
+        )
+
+    def make_vertical_build(
+        self, 
+        tf_info_provided, 
+        pf_info_provided, 
+        plasma_start_radius, 
+        plasma_end_radius, 
+        blanket_rear_wall_end_radius,
+        outboard_tf_coil_end_radius,
+        outboard_tf_coil_start_radius
+    ):
+        
         # this is the vertical build sequence, componets build on each other in
         # a similar manner to the radial build
+        
         plasma_start_height = 0
         plasma_end_height = plasma_start_height + self.plasma_high_point[1]
 
@@ -277,6 +431,13 @@ class SubmersionTokamak(paramak.Reactor):
             pf_coil_end_radius = pf_coil_start_radius + max(
                 self.pf_coil_radial_thicknesses
             )
+        
+        else:
+            number_of_pf_coils = None
+            pf_coils_y_values = None
+            pf_coils_x_values = None
+            pf_coil_start_radius = None
+            pf_coil_end_radius = None
 
         # raises an error if the plasma high point is not above part of the
         # plasma
@@ -307,6 +468,32 @@ class SubmersionTokamak(paramak.Reactor):
         else:
             cutting_slice = None
 
+        return (
+            plasma_start_height,
+            plasma_end_height,
+            plasma_to_divertor_gap_start_height,
+            plasma_to_divertor_gap_end_height,
+            firstwall_start_height,
+            firstwall_end_height,
+            blanket_start_height,
+            blanket_end_height,
+            blanket_rear_wall_start_height,
+            blanket_rear_wall_end_height,
+            number_of_pf_coils,
+            pf_coils_y_values,
+            pf_coils_x_values,
+            pf_coil_start_radius,
+            pf_coil_end_radius,
+            cutting_slice
+        )
+
+    def make_inboard_tf_coils(
+        self, 
+        blanket_rear_wall_end_height, 
+        inboard_tf_coils_start_radius, 
+        inboard_tf_coils_end_radius
+    ):    
+
         shapes_or_components = []
 
         # shapes_or_components.append(inboard_tf_coils)
@@ -322,6 +509,16 @@ class SubmersionTokamak(paramak.Reactor):
         )
         shapes_or_components.append(inboard_tf_coils)
 
+        return inboard_tf_coils
+
+    def make_center_column_shield(
+        self, 
+        shapes_or_components, 
+        blanket_rear_wall_end_height, 
+        center_column_shield_start_radius, 
+        center_column_shield_end_radius
+    ):
+
         center_column_shield = paramak.CenterColumnShieldCylinder(
             height=blanket_rear_wall_end_height * 2,
             inner_radius=center_column_shield_start_radius,
@@ -333,6 +530,15 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="center_column_shield_mat",
         )
         shapes_or_components.append(center_column_shield)
+
+        return center_column_shield
+
+    def make_plasma(
+        self, 
+        shapes_or_components, 
+        plasma_end_radius, 
+        plasma_start_radius
+    ):
 
         plasma = paramak.PlasmaFromPoints(
             outer_equatorial_x_point=plasma_end_radius,
@@ -347,6 +553,16 @@ class SubmersionTokamak(paramak.Reactor):
         self.triangularity = plasma.triangularity
 
         shapes_or_components.append(plasma)
+
+        return plasma
+
+    def make_blanket_and_firstwall(
+        self, 
+        shapes_or_components, 
+        inboard_blanket_start_radius, 
+        plasma, 
+        blanket_end_height
+    ):
 
         # this is used to cut the inboard blanket and then fused / unioned with
         # the firstwall
@@ -387,6 +603,21 @@ class SubmersionTokamak(paramak.Reactor):
             union=inboard_firstwall,
         )
 
+        return (
+            inboard_firstwall,
+            inboard_blanket,
+            firstwall
+        )
+
+    def make_divertor(
+        self, 
+        shapes_or_components, 
+        blanket_rear_wall_end_height, 
+        divertor_start_radius, 
+        divertor_end_radius, 
+        firstwall
+    ):
+
         divertor = paramak.CenterColumnShieldCylinder(
             height=blanket_rear_wall_end_height * 2,
             inner_radius=divertor_start_radius,
@@ -399,6 +630,31 @@ class SubmersionTokamak(paramak.Reactor):
             intersect=firstwall,
         )
         shapes_or_components.append(divertor)
+
+        return(divertor)
+
+    def make_component_cuts(
+        self, 
+        shapes_or_components,
+        firstwall,
+        support_start_radius,
+        support_end_radius,
+        center_column_shield_end_radius,
+        blanket_rear_wall_start_height,
+        blanket_rear_wall_end_height,
+        inboard_tf_coils_start_radius,
+        tf_info_provided,
+        pf_info_provided,
+        pf_coils_y_values,
+        pf_coils_x_values,
+        divertor,
+        plasma,
+        inboard_blanket,
+        inboard_firstwall,
+        outboard_tf_coil_end_radius,
+        outboard_tf_coil_start_radius,
+        cutting_slice
+    ):
 
         # the divertor is cut away then the firstwall can be added to the
         # reactor using CQ operations
@@ -536,4 +792,3 @@ class SubmersionTokamak(paramak.Reactor):
                     )
                     shapes_or_components.append(pf_coil)
 
-        self.shapes_and_components = shapes_or_components
