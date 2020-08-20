@@ -213,7 +213,8 @@ def main():
         minor_radius=680,
         triangularity=0.35,
         elongation=2,
-        color="yellow"
+        color="yellow",
+        config="double-null"
     )
 
     NSTX_single_null_plasma_plasmaboundaries = make_plasma_plasmaboundaries(
@@ -223,7 +224,8 @@ def main():
         minor_radius=680,
         triangularity=0.35,
         elongation=2,
-        color="purple"
+        color="purple",
+        config="single-null"
     )
 
     fig = go.Figure()
