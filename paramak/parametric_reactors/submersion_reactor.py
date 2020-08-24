@@ -320,6 +320,10 @@ class SubmersionTokamak(paramak.Reactor):
             outboard_tf_coil_end_radius = (
                 outboard_tf_coil_start_radius +
                 self.outboard_tf_coil_radial_thickness)
+        
+        else:
+            outboard_tf_coil_end_radius = None
+            outboard_tf_coil_start_radius = None
 
         pf_info_provided = False
         if (
