@@ -9,11 +9,11 @@ import paramak
 def main():
 
     plasma = paramak.Plasma(
-        major_radius = 250,
-        minor_radius = 100,
-        triangularity = 0.5,
-        elongation = 2.5,
-        rotation_angle = 180,
+        major_radius=250,
+        minor_radius=100,
+        triangularity=0.5,
+        elongation=2.5,
+        rotation_angle=180,
     )
 
     centre_column = paramak.RotateMixedShape(
