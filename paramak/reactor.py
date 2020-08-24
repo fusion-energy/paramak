@@ -11,7 +11,6 @@ from PIL import Image
 
 import paramak
 import plotly.graph_objects as go
-import pyrender
 from paramak.shape import Shape
 
 
@@ -82,30 +81,6 @@ class Reactor:
         shapes_and_components = []
         if not isinstance(value, Iterable):
             raise ValueError("shapes_and_components must be a list")
-
-        stp_filenames = []
-        stl_filenames = []
-
-        for shape in value:
-            if shape.stp_filename is not None:
-                if shape.stp_filename in stp_filenames:
-                    raise ValueError(
-                        "Set Reactor already contains a shape or component \
-                         with this stp_filename",
-                        shape.stp_filename,
-                    )
-                else:
-                    stp_filenames.append(shape.stp_filename)
-            if shape.stl_filename is not None:
-                if shape.stl_filename in stl_filenames:
-                    raise ValueError(
-                        "Set Reactor already contains a shape or component \
-                         with this stl_filename",
-                        shape.stl_filename,
-                    )
-                else:
-                    stl_filenames.append(shape.stl_filename)
-
         self._shapes_and_components = value
 
     @property
@@ -222,6 +197,18 @@ class Reactor:
         :rtype: list
         """
 
+        stp_filenames = []
+        stl_filenames = []
+
+        for shape in self.shapes_and_components:
+            if shape.stp_filename is not None:
+                if shape.stp_filename in stp_filenames:
+                    raise ValueError(
+                        "Set Reactor already contains a shape or component \
+                         with this stp_filename",
+                        shape.stp_filename,
+                    )
+
         filenames = []
         for entry in self.shapes_and_components:
             if entry.stp_filename is None:
@@ -257,6 +244,18 @@ class Reactor:
         :return: a list of stl filenames created
         :rtype: list
         """
+
+        stl_filenames = []
+
+        for shape in self.shapes_and_components:
+            if shape.stl_filename is not None:
+                if shape.stl_filename in stl_filenames:
+                    raise ValueError(
+                        "Set Reactor already contains a shape or component \
+                         with this stl_filename",
+                        shape.stl_filename,
+                    )
+
         filenames = []
         for entry in self.shapes_and_components:
             print("entry.stl_filename", entry.stl_filename)
