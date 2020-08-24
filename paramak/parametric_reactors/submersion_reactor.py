@@ -197,7 +197,7 @@ class SubmersionTokamak(paramak.Reactor):
             plasma_start_radius,
         )
 
-        inboard_firstwall, inboard_blanket, firstwall = self.make_blanket_and_firstwall(
+        inboard_firstwall, inboard_blanket, firstwall = self.make_inboard_blanket_and_firstwall(
             shapes_or_components,
             inboard_blanket_start_radius,
             plasma,
@@ -212,11 +212,23 @@ class SubmersionTokamak(paramak.Reactor):
             firstwall
         )
 
+        blanket = self.make_outboard_blanket(
+            shapes_or_components,
+            plasma,
+            inboard_blanket
+        )
+
+        supports = self.make_supports(
+            shapes_or_components,
+            blanket_rear_wall_end_height,
+            support_start_radius,
+            support_end_radius,
+            blanket
+        )
+
         self.make_component_cuts(
             shapes_or_components,
             firstwall,
-            support_start_radius,
-            support_end_radius,
             center_column_shield_end_radius,
             blanket_rear_wall_start_height,
             blanket_rear_wall_end_height,
@@ -227,11 +239,11 @@ class SubmersionTokamak(paramak.Reactor):
             pf_coils_x_values,
             divertor,
             plasma,
-            inboard_blanket,
             inboard_firstwall,
-            outboard_tf_coil_end_radius,
             outboard_tf_coil_start_radius,
-            cutting_slice
+            cutting_slice,
+            supports,
+            blanket
         )
 
         self.shapes_and_components = shapes_or_components
@@ -556,7 +568,7 @@ class SubmersionTokamak(paramak.Reactor):
 
         return plasma
 
-    def make_blanket_and_firstwall(
+    def make_inboard_blanket_and_firstwall(
         self, 
         shapes_or_components, 
         inboard_blanket_start_radius, 
@@ -633,35 +645,15 @@ class SubmersionTokamak(paramak.Reactor):
 
         return(divertor)
 
-    def make_component_cuts(
-        self, 
+    def make_outboard_blanket(
+        self,
         shapes_or_components,
-        firstwall,
-        support_start_radius,
-        support_end_radius,
-        center_column_shield_end_radius,
-        blanket_rear_wall_start_height,
-        blanket_rear_wall_end_height,
-        inboard_tf_coils_start_radius,
-        tf_info_provided,
-        pf_info_provided,
-        pf_coils_y_values,
-        pf_coils_x_values,
-        divertor,
         plasma,
-        inboard_blanket,
-        inboard_firstwall,
-        outboard_tf_coil_end_radius,
-        outboard_tf_coil_start_radius,
-        cutting_slice
+        inboard_blanket
     ):
 
-        # the divertor is cut away then the firstwall can be added to the
-        # reactor using CQ operations
-        firstwall.solid = firstwall.solid.cut(divertor.solid)
-        shapes_or_components.append(firstwall)
+        # this is the outboard fused /unioned with the inboard blanket
 
-        # this is the outboard fused / unioned with the inboard blanket
         blanket = paramak.BlanketFP(
             plasma=plasma,
             start_angle=90,
@@ -677,6 +669,17 @@ class SubmersionTokamak(paramak.Reactor):
             union=inboard_blanket,
         )
 
+        return blanket
+
+    def make_supports(
+        self,
+        shapes_or_components,
+        blanket_rear_wall_end_height,
+        support_start_radius,
+        support_end_radius,
+        blanket
+    ):
+
         supports = paramak.CenterColumnShieldCylinder(
             height=blanket_rear_wall_end_height * 2,
             inner_radius=support_start_radius,
@@ -689,6 +692,34 @@ class SubmersionTokamak(paramak.Reactor):
             intersect=blanket,
         )
         shapes_or_components.append(supports)
+
+        return supports
+
+    def make_component_cuts(
+        self, 
+        shapes_or_components,
+        firstwall,
+        center_column_shield_end_radius,
+        blanket_rear_wall_start_height,
+        blanket_rear_wall_end_height,
+        inboard_tf_coils_start_radius,
+        tf_info_provided,
+        pf_info_provided,
+        pf_coils_y_values,
+        pf_coils_x_values,
+        divertor,
+        plasma,
+        inboard_firstwall,
+        outboard_tf_coil_start_radius,
+        cutting_slice,
+        supports,
+        blanket,
+    ):
+
+        # the divertor is cut away then the firstwall can be added to the
+        # reactor using CQ operations
+        firstwall.solid = firstwall.solid.cut(divertor.solid)
+        shapes_or_components.append(firstwall)
 
         # cutting the supports away from the blanket
         blanket.solid = blanket.solid.cut(supports.solid)
