@@ -331,5 +331,6 @@ class test_object_properties(unittest.TestCase):
         assert Path("tests/test.stl").exists() is True
         os.system("rm tests/test.stl")
 
+
 if __name__ == "__main__":
     unittest.main()
