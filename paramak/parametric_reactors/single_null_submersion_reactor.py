@@ -31,7 +31,8 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         pf_coil_vertical_thicknesses=None,
         pf_coil_radial_thicknesses=None,
         pf_coil_to_tf_coil_radial_gap=None,
-        divertor_position="upper"
+        divertor_position="upper",
+        support_position="upper"
     ):
 
         super().__init__(
@@ -64,6 +65,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         self.triangularity = None
 
         self.divertor_position = divertor_position
+        self.support_position = support_position
         self.create_components_single_null()
         
 
@@ -78,6 +80,18 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             self._divertor_position = value
         else:
             raise ValueError("divertor position must be 'upper' or 'lower'")
+
+    @property
+    def support_position(self):
+        return self._support_position
+
+    @support_position.setter
+    def support_position(self, value):
+        acceptable_values = ["upper", "lower"]
+        if value in acceptable_values:
+            self._support_position = value
+        else:
+            raise ValueError("support position must be 'upper' or 'lower'")
 
     def create_components_single_null(self):
 
@@ -141,27 +155,27 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         inboard_tf_coils = self.make_inboard_tf_coils(
             blanket_rear_wall_end_height,
             inboard_tf_coils_start_radius,
-            inboard_tf_coils_end_radius,
+            inboard_tf_coils_end_radius
         )
 
         center_column_shield = self.make_center_column_shield(
             shapes_or_components,
             blanket_rear_wall_end_height,
             center_column_shield_start_radius,
-            center_column_shield_end_radius,
+            center_column_shield_end_radius
         )
 
         plasma = self.make_plasma(
             shapes_or_components,
             plasma_end_radius,
-            plasma_start_radius,
+            plasma_start_radius
         )
 
-        inboard_firstwall, inboard_blanket, firstwall = self.make_blanket_and_firstwall(
+        inboard_firstwall, inboard_blanket, firstwall = self.make_inboard_blanket_and_firstwall(
             shapes_or_components,
             inboard_blanket_start_radius,
             plasma,
-            blanket_end_height,
+            blanket_end_height
         )
 
         divertor = self.make_divertor_single_null(
@@ -172,11 +186,23 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             firstwall
         )
 
+        blanket = self.make_outboard_blanket(
+            shapes_or_components,
+            plasma,
+            inboard_blanket
+        )
+
+        supports = self.make_supports_single_null(
+            shapes_or_components,
+            blanket_rear_wall_end_height,
+            support_start_radius,
+            support_end_radius,
+            blanket
+        )
+
         self.make_component_cuts(
             shapes_or_components,
             firstwall,
-            support_start_radius,
-            support_end_radius,
             center_column_shield_end_radius,
             blanket_rear_wall_start_height,
             blanket_rear_wall_end_height,
@@ -187,11 +213,11 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             pf_coils_x_values,
             divertor,
             plasma,
-            inboard_blanket,
             inboard_firstwall,
-            outboard_tf_coil_end_radius,
             outboard_tf_coil_start_radius,
-            cutting_slice
+            cutting_slice,
+            supports,
+            blanket
         )
 
         self.shapes_and_components = shapes_or_components
@@ -227,3 +253,35 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         shapes_or_components.append(divertor)
 
         return(divertor)
+
+    def make_supports_single_null(
+        self,
+        shapes_or_components,
+        blanket_rear_wall_end_height,
+        support_start_radius,
+        support_end_radius,
+        blanket 
+    ):
+
+        if self.support_position == "upper":
+            support_height = blanket_rear_wall_end_height
+        elif self.support_position == "lower":
+            support_height = -blanket_rear_wall_end_height
+
+        supports = paramak.RotateStraightShape(
+            points = [
+                (support_start_radius, 0),
+                (support_end_radius, 0),
+                (support_end_radius, support_height),
+                (support_start_radius, support_height)
+            ],
+            intersect=blanket,
+            rotation_angle=self.rotation_angle,
+            stp_filename="supports.stp",
+            stl_filename="supports.stl",
+            name="supports",
+            material_tag="supports_mat",
+        )
+        shapes_or_components.append(supports)
+
+        return supports
