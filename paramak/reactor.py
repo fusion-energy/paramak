@@ -46,6 +46,17 @@ class Reactor:
         self._stp_filenames = value
 
     @property
+    def stl_filenames(self):
+        values = []
+        for shape_or_componet in self.shapes_and_components:
+            values.append(shape_or_componet.stl_filename)
+        return values
+
+    @stl_filenames.setter
+    def stl_filenames(self, value):
+        self._stl_filenames = value
+
+    @property
     def material_tags(self):
         values = []
         for shape_or_componet in self.shapes_and_components:
@@ -197,18 +208,12 @@ class Reactor:
         :rtype: list
         """
 
-        stp_filenames = []
-
-        for entry in self.shapes_and_components:
-            if entry.stp_filename is not None:
-                if entry.stp_filename in stp_filenames:
-                    raise ValueError(
+        if len(self.stp_filenames) != len(set(self.stp_filenames)):
+            raise ValueError(
                         "Set Reactor already contains a shape or component \
                          with this stp_filename",
-                        entry.stp_filename,
+                        self.stp_filenames,
                     )
-                else:
-                    stp_filenames.append(entry.stp_filename)
 
         filenames = []
         for entry in self.shapes_and_components:
@@ -246,18 +251,12 @@ class Reactor:
         :rtype: list
         """
 
-        stl_filenames = []
-
-        for shape in self.shapes_and_components:
-            if shape.stl_filename is not None:
-                if shape.stl_filename in stl_filenames:
-                    raise ValueError(
+        if len(self.stl_filenames) != len(set(self.stl_filenames)):
+            raise ValueError(
                         "Set Reactor already contains a shape or component \
                          with this stl_filename",
-                        shape.stl_filename,
+                        self.stl_filenames,
                     )
-                else:
-                    stl_filenames.append(shape.stp_filename)
 
         filenames = []
         for entry in self.shapes_and_components:
