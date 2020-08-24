@@ -198,16 +198,17 @@ class Reactor:
         """
 
         stp_filenames = []
-        stl_filenames = []
 
-        for shape in self.shapes_and_components:
-            if shape.stp_filename is not None:
-                if shape.stp_filename in stp_filenames:
+        for entry in self.shapes_and_components:
+            if entry.stp_filename is not None:
+                if entry.stp_filename in stp_filenames:
                     raise ValueError(
                         "Set Reactor already contains a shape or component \
                          with this stp_filename",
-                        shape.stp_filename,
+                        entry.stp_filename,
                     )
+                else:
+                    stp_filenames.append(entry.stp_filename)
 
         filenames = []
         for entry in self.shapes_and_components:
@@ -255,6 +256,8 @@ class Reactor:
                          with this stl_filename",
                         shape.stl_filename,
                     )
+                else:
+                    stl_filenames.append(shape.stp_filename)
 
         filenames = []
         for entry in self.shapes_and_components:
