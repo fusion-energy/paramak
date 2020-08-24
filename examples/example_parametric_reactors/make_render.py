@@ -15,7 +15,6 @@ def make_render(rgb_colours, shapes, filename='render.png'):
 
     scene = pyrender.Scene(ambient_light=np.array([0.1, 0.1, 0.1, 1.0]))
 
-
     for rgb_colour, entry in zip(rgb_colours, shapes):
         entry.export_stl("temp.stl", tolerance=0.001)
 
@@ -53,9 +52,8 @@ def make_render(rgb_colours, shapes, filename='render.png'):
     image.save(filename, "PNG")
 
 
-
 if __name__ == "__main__":
-    #make a reactor 
+    # make a reactor
     my_reactor = paramak.BallReactor(
         inner_bore_radial_thickness=1,
         inboard_tf_leg_radial_thickness=30,
@@ -73,6 +71,6 @@ if __name__ == "__main__":
         rotation_angle=180,
     )
     # render the reactor shape objects
-    make_render([(255,0,255),(0,255,0),(255,0,0),(0,0,255),
-                (255,255,0),(0,255,255),(192,192,192)],
+    make_render([(255, 0, 255), (0, 255, 0), (255, 0, 0), (0, 0, 255),
+                 (255, 255, 0), (0, 255, 255), (192, 192, 192)],
                 my_reactor.shapes_and_components)
