@@ -210,10 +210,10 @@ class Reactor:
 
         if len(self.stp_filenames) != len(set(self.stp_filenames)):
             raise ValueError(
-                        "Set Reactor already contains a shape or component \
+                "Set Reactor already contains a shape or component \
                          with this stp_filename",
-                        self.stp_filenames,
-                    )
+                self.stp_filenames,
+            )
 
         filenames = []
         for entry in self.shapes_and_components:
@@ -253,10 +253,10 @@ class Reactor:
 
         if len(self.stl_filenames) != len(set(self.stl_filenames)):
             raise ValueError(
-                        "Set Reactor already contains a shape or component \
+                "Set Reactor already contains a shape or component \
                          with this stl_filename",
-                        self.stl_filenames,
-                    )
+                self.stl_filenames,
+            )
 
         filenames = []
         for entry in self.shapes_and_components:
