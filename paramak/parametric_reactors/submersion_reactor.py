@@ -55,7 +55,7 @@ class SubmersionTokamak(paramak.Reactor):
         pf_coil_to_tf_coil_radial_gap (float): the radial distance between
             the rear of the poloidal field coil and the toroidal field coil
             (optional)
-        
+
     Returns:
         a paramak shape object: a Reactor object that has generic functionality
     """
@@ -166,8 +166,8 @@ class SubmersionTokamak(paramak.Reactor):
 
         self._inboard_firstwall_start_radius = self._inboard_blanket_end_radius
         self._inboard_firstwall_end_radius = (
-            self._inboard_firstwall_start_radius + self.firstwall_radial_thickness
-        )
+            self._inboard_firstwall_start_radius +
+            self.firstwall_radial_thickness)
 
         self._inner_plasma_gap_start_radius = self._inboard_firstwall_end_radius
         self._inner_plasma_gap_end_radius = (
@@ -184,8 +184,8 @@ class SubmersionTokamak(paramak.Reactor):
 
         self._outboard_firstwall_start_radius = self._outer_plasma_gap_end_radius
         self._outboard_firstwall_end_radius = (
-            self._outboard_firstwall_start_radius + self.firstwall_radial_thickness
-        )
+            self._outboard_firstwall_start_radius +
+            self.firstwall_radial_thickness)
 
         self._outboard_blanket_start_radius = self._outboard_firstwall_end_radius
         self._outboard_blanket_end_radius = (
@@ -210,7 +210,7 @@ class SubmersionTokamak(paramak.Reactor):
             self._outboard_tf_coil_end_radius = (
                 self._outboard_tf_coil_start_radius +
                 self.outboard_tf_coil_radial_thickness)
-        
+
         else:
             self._outboard_tf_coil_end_radius = None
             self._outboard_tf_coil_start_radius = None
@@ -237,14 +237,14 @@ class SubmersionTokamak(paramak.Reactor):
             self.plasma_high_point[0] + 0.5 * self.support_radial_thickness
         )
 
-
     def make_vertical_build(self):
-        
+
         # this is the vertical build sequence, componets build on each other in
         # a similar manner to the radial build
-        
+
         self._plasma_start_height = 0
-        self._plasma_end_height = self._plasma_start_height + self.plasma_high_point[1]
+        self._plasma_end_height = self._plasma_start_height + \
+            self.plasma_high_point[1]
 
         self._plasma_to_divertor_gap_start_height = self._plasma_end_height
         self._plasma_to_divertor_gap_end_height = (
@@ -253,7 +253,8 @@ class SubmersionTokamak(paramak.Reactor):
 
         # the firstwall is cut by the divertor but uses the same control points
         self._firstwall_start_height = self._plasma_to_divertor_gap_end_height
-        self._firstwall_end_height = self._firstwall_start_height + self.firstwall_radial_thickness
+        self._firstwall_end_height = self._firstwall_start_height + \
+            self.firstwall_radial_thickness
 
         self._blanket_start_height = self._firstwall_end_height
         self._blanket_end_height = (
@@ -296,7 +297,7 @@ class SubmersionTokamak(paramak.Reactor):
             self._pf_coil_end_radius = self._pf_coil_start_radius + max(
                 self.pf_coil_radial_thicknesses
             )
-        
+
         else:
             self._number_of_pf_coils = None
             self._pf_coils_y_values = None
@@ -575,4 +576,3 @@ class SubmersionTokamak(paramak.Reactor):
                         material_tag="pf_coil_mat",
                     )
                     shapes_or_components.append(self._pf_coil)
-

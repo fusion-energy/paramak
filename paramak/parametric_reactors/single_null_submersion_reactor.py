@@ -1,7 +1,7 @@
 import math
 import operator
 
-import cadquery as cq 
+import cadquery as cq
 
 import paramak
 
@@ -36,28 +36,27 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
     ):
 
         super().__init__(
-            inner_bore_radial_thickness = inner_bore_radial_thickness,
-            inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness,
-            center_column_shield_radial_thickness = center_column_shield_radial_thickness,
-            inboard_blanket_radial_thickness = inboard_blanket_radial_thickness,
-            firstwall_radial_thickness = firstwall_radial_thickness,
-            inner_plasma_gap_radial_thickness = inner_plasma_gap_radial_thickness,
-            plasma_radial_thickness = plasma_radial_thickness,
-            outer_plasma_gap_radial_thickness = outer_plasma_gap_radial_thickness,
-            outboard_blanket_radial_thickness = outboard_blanket_radial_thickness,
-            blanket_rear_wall_radial_thickness = blanket_rear_wall_radial_thickness,
-            pf_coil_radial_thicknesses = pf_coil_radial_thicknesses,
-            pf_coil_to_tf_coil_radial_gap = pf_coil_to_tf_coil_radial_gap,
-            outboard_tf_coil_radial_thickness = outboard_tf_coil_radial_thickness,
-            tf_coil_poloidal_thickness = tf_coil_poloidal_thickness,
-            divertor_radial_thickness = divertor_radial_thickness,
-            support_radial_thickness = support_radial_thickness,
-            plasma_high_point = plasma_high_point,
-            tf_coil_to_rear_blanket_radial_gap = tf_coil_to_rear_blanket_radial_gap,
-            pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses,
-            number_of_tf_coils = number_of_tf_coils,
-            rotation_angle = rotation_angle
-        )
+            inner_bore_radial_thickness=inner_bore_radial_thickness,
+            inboard_tf_leg_radial_thickness=inboard_tf_leg_radial_thickness,
+            center_column_shield_radial_thickness=center_column_shield_radial_thickness,
+            inboard_blanket_radial_thickness=inboard_blanket_radial_thickness,
+            firstwall_radial_thickness=firstwall_radial_thickness,
+            inner_plasma_gap_radial_thickness=inner_plasma_gap_radial_thickness,
+            plasma_radial_thickness=plasma_radial_thickness,
+            outer_plasma_gap_radial_thickness=outer_plasma_gap_radial_thickness,
+            outboard_blanket_radial_thickness=outboard_blanket_radial_thickness,
+            blanket_rear_wall_radial_thickness=blanket_rear_wall_radial_thickness,
+            pf_coil_radial_thicknesses=pf_coil_radial_thicknesses,
+            pf_coil_to_tf_coil_radial_gap=pf_coil_to_tf_coil_radial_gap,
+            outboard_tf_coil_radial_thickness=outboard_tf_coil_radial_thickness,
+            tf_coil_poloidal_thickness=tf_coil_poloidal_thickness,
+            divertor_radial_thickness=divertor_radial_thickness,
+            support_radial_thickness=support_radial_thickness,
+            plasma_high_point=plasma_high_point,
+            tf_coil_to_rear_blanket_radial_gap=tf_coil_to_rear_blanket_radial_gap,
+            pf_coil_vertical_thicknesses=pf_coil_vertical_thicknesses,
+            number_of_tf_coils=number_of_tf_coils,
+            rotation_angle=rotation_angle)
 
         self.major_radius = None
         self.minor_radius = None
@@ -67,7 +66,6 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         self.divertor_position = divertor_position
         self.support_position = support_position
         self.create_components_single_null()
-        
 
     @property
     def divertor_position(self):
@@ -98,7 +96,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         # this calls each method for constructing the reactor components
 
         shapes_or_components = []
-        
+
         self.make_radial_build()
         self.make_vertical_build()
         self.make_inboard_tf_coils(shapes_or_components)
@@ -143,7 +141,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             support_height = -self._blanket_rear_wall_end_height
 
         self._supports = paramak.RotateStraightShape(
-            points = [
+            points=[
                 (self._support_start_radius, 0),
                 (self._support_end_radius, 0),
                 (self._support_end_radius, support_height),
