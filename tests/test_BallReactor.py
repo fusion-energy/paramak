@@ -253,5 +253,3 @@ class test_BallReactor(unittest.TestCase):
         test_reactor.export_stp()
 
         assert len(test_reactor.shapes_and_components) == 12
-
-    

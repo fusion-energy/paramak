@@ -178,8 +178,8 @@ class BallReactor(paramak.Reactor):
 
         self._divertor_start_radius = self._center_column_shield_end_radius
         self._divertor_end_radius = (
-            self._center_column_shield_end_radius + self.divertor_radial_thickness
-        )
+            self._center_column_shield_end_radius +
+            self.divertor_radial_thickness)
 
         self._firstwall_start_radius = (
             self._center_column_shield_end_radius
@@ -187,7 +187,8 @@ class BallReactor(paramak.Reactor):
             + self.plasma_radial_thickness
             + self.outer_plasma_gap_radial_thickness
         )
-        self._firstwall_end_radius = self._firstwall_start_radius + self.firstwall_radial_thickness
+        self._firstwall_end_radius = self._firstwall_start_radius + \
+            self.firstwall_radial_thickness
 
         self._blanket_start_radius = self._firstwall_end_radius
         self._blanket_end_radius = self._blanket_start_radius + self.blanket_radial_thickness
@@ -197,7 +198,6 @@ class BallReactor(paramak.Reactor):
             self._blanket_rear_wall_start_radius +
             self.blanket_rear_wall_radial_thickness)
 
-
     def make_vertical_build(self, shapes_or_components):
 
         # this is the vertical build sequence, components build on each other in
@@ -206,7 +206,8 @@ class BallReactor(paramak.Reactor):
         self._firstwall_start_height = (
             self._plasma.high_point[1] + self.outer_plasma_gap_radial_thickness
         )
-        self._firstwall_end_height = self._firstwall_start_height + self.firstwall_radial_thickness
+        self._firstwall_end_height = self._firstwall_start_height + \
+            self.firstwall_radial_thickness
 
         self._blanket_start_height = self._firstwall_end_height
         self._blanket_end_height = self._blanket_start_height + self.blanket_radial_thickness
@@ -465,7 +466,7 @@ class BallReactor(paramak.Reactor):
         shapes_or_components.append(self._divertor)
 
     def make_component_cuts(self, shapes_or_components):
-        
+
         self._firstwall.solid = self._firstwall.solid.cut(self._divertor.solid)
         self._blanket.solid = self._blanket.solid.cut(self._divertor.solid)
         self._blanket_rear_casing.solid = self._blanket_rear_casing.solid.cut(
