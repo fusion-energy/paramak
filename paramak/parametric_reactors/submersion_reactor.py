@@ -10,8 +10,6 @@ class SubmersionTokamak(paramak.Reactor):
     """Creates geometry for a simple submersion reactor including a
     plasma, cylindical center column shielding, square toroidal field
     coils. There is an inboard breeder blanket on this ball reactor.
-    :param inner_bore_radial_thickness: the radial thickness of
-     the inner bore (cm)
 
     Arguments:
         inner_bore_radial_thickness (float): the radial thickness of the
@@ -205,10 +203,6 @@ class SubmersionTokamak(paramak.Reactor):
                 self._outboard_tf_coil_start_radius +
                 self.outboard_tf_coil_radial_thickness)
 
-        else:
-            self._outboard_tf_coil_end_radius = None
-            self._outboard_tf_coil_start_radius = None
-
         self._pf_info_provided = False
         if (
             self.pf_coil_vertical_thicknesses is not None
@@ -292,13 +286,6 @@ class SubmersionTokamak(paramak.Reactor):
                 self.pf_coil_radial_thicknesses
             )
 
-        else:
-            self._number_of_pf_coils = None
-            self._pf_coils_y_values = None
-            self._pf_coils_x_values = None
-            self._pf_coil_start_radius = None
-            self._pf_coil_end_radius = None
-
         # raises an error if the plasma high point is not above part of the
         # plasma
         if self.plasma_high_point[0] < self._plasma_start_radius:
@@ -325,8 +312,6 @@ class SubmersionTokamak(paramak.Reactor):
                 rotation_angle=360 - self.rotation_angle,
                 azimuth_placement_angle=360 - self.rotation_angle,
             )
-        else:
-            self._cutting_slice = None
 
     def make_inboard_tf_coils(self, shapes_or_components):
 
@@ -473,8 +458,6 @@ class SubmersionTokamak(paramak.Reactor):
         # cutting the supports away from the blanket
         self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
         shapes_or_components.append(self._blanket)
-
-        # shapes_or_components.append(outboard_rear_blanket_wall)
 
         self._outboard_rear_blanket_wall_upper = paramak.RotateStraightShape(
             points=[
