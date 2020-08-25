@@ -56,23 +56,6 @@ class SingleNullBallReactor(paramak.BallReactor):
             rotation_angle=rotation_angle)
 
         self.divertor_position = divertor_position
-        self.create_components_single_null()
-
-    @property
-    def divertor_position(self):
-        return self._divertor_position
-
-    @divertor_position.setter
-    def divertor_position(self, value):
-        acceptable_values = ["upper", "lower"]
-        if value in acceptable_values:
-            self._divertor_position = value
-        else:
-            raise ValueError("divertor position must be 'upper' or 'lower'")
-
-    def create_components_single_null(self):
-
-        # this calls each method for constructing the reactor components
 
         shapes_or_components = []
 
@@ -86,6 +69,18 @@ class SingleNullBallReactor(paramak.BallReactor):
         self.make_component_cuts(shapes_or_components)
 
         self.shapes_and_components = shapes_or_components
+
+    @property
+    def divertor_position(self):
+        return self._divertor_position
+
+    @divertor_position.setter
+    def divertor_position(self, value):
+        acceptable_values = ["upper", "lower"]
+        if value in acceptable_values:
+            self._divertor_position = value
+        else:
+            raise ValueError("divertor position must be 'upper' or 'lower'")        
 
     def make_divertor_single_null(self, shapes_or_components):
 

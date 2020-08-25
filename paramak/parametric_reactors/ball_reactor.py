@@ -120,12 +120,6 @@ class BallReactor(paramak.Reactor):
         self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
 
-        self.create_components()
-
-    def create_components(self):
-
-        # this calls each method for constructing the reactor components
-
         shapes_or_components = []
 
         self.make_plasma(shapes_or_components)
