@@ -30,7 +30,7 @@ def main():
         outboard_tf_coil_radial_thickness=100,
         tf_coil_poloidal_thickness=50,
         tf_coil_to_rear_blanket_radial_gap=20,
-        divertor_position="lower",
+        divertor_position="upper",
         support_position="upper"
     )
 
