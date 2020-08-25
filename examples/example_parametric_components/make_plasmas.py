@@ -13,11 +13,33 @@ import plotly.graph_objects as go
 def plot_plasma(plasma, name=""):
     """Extract points that make up the plasma and creates a plotly trace"""
 
+    if name.endswith("plasmaboundaries"):
+        major_radius = plasma.major_radius
+        low_point = plasma.low_point
+        high_point = plasma.high_point
+        inner_equatorial_point = plasma.inner_equatorial_point
+        outer_equatorial_point = plasma.outer_equatorial_point
+        x_points = [row[0] for row in plasma.points]
+        y_points = [row[1] for row in plasma.points]
+
+    else:
+        major_radius = plasma.major_radius * -1
+        low_point = (plasma.low_point[0] * -1, plasma.low_point[1])
+        high_point = (plasma.high_point[0] * -1, plasma.high_point[1])
+        inner_equatorial_point = (
+            plasma.inner_equatorial_point[0] * -1,
+            plasma.inner_equatorial_point[1])
+        outer_equatorial_point = (
+            plasma.outer_equatorial_point[0] * -1,
+            plasma.outer_equatorial_point[1])
+        x_points = [row[0] * -1 for row in plasma.points]
+        y_points = [row[1] for row in plasma.points]
+
     traces = []
 
     traces.append(
         go.Scatter(
-            x=[plasma.major_radius],
+            x=[major_radius],
             y=[0],
             mode="markers",
             name="major_radius",
@@ -27,8 +49,8 @@ def plot_plasma(plasma, name=""):
 
     traces.append(
         go.Scatter(
-            x=[row[0] for row in plasma.points],
-            y=[row[1] for row in plasma.points],
+            x=x_points,
+            y=y_points,
             mode="markers",
             name="points",
             marker={"color": plasma.color},
@@ -37,8 +59,8 @@ def plot_plasma(plasma, name=""):
 
     traces.append(
         go.Scatter(
-            x=[plasma.low_point[0]],
-            y=[plasma.low_point[1]],
+            x=[low_point[0]],
+            y=[low_point[1]],
             mode="markers",
             name="low_point",
             marker={"color": plasma.color},
@@ -47,8 +69,8 @@ def plot_plasma(plasma, name=""):
 
     traces.append(
         go.Scatter(
-            x=[plasma.high_point[0]],
-            y=[plasma.high_point[1]],
+            x=[high_point[0]],
+            y=[high_point[1]],
             mode="markers",
             name="high_point",
             marker={"color": plasma.color},
@@ -57,8 +79,8 @@ def plot_plasma(plasma, name=""):
 
     traces.append(
         go.Scatter(
-            x=[plasma.inner_equatorial_point[0]],
-            y=[plasma.inner_equatorial_point[1]],
+            x=[inner_equatorial_point[0]],
+            y=[inner_equatorial_point[1]],
             mode="markers",
             name="inner_equatorial_point",
             marker={"color": plasma.color},
@@ -67,8 +89,8 @@ def plot_plasma(plasma, name=""):
 
     traces.append(
         go.Scatter(
-            x=[plasma.outer_equatorial_point[0]],
-            y=[plasma.outer_equatorial_point[1]],
+            x=[outer_equatorial_point[0]],
+            y=[outer_equatorial_point[1]],
             mode="markers",
             name="outer_equatorial_point",
             marker={"color": plasma.color},
@@ -184,12 +206,45 @@ def main():
         color="black",
     )
 
+    NSTX_double_null_plasma_plasmaboundaries = make_plasma_plasmaboundaries(
+        name="NSTX_double_null_plasma_plasmaboundaries",
+        A=0,
+        major_radius=850,
+        minor_radius=680,
+        triangularity=0.35,
+        elongation=2,
+        color="yellow",
+        config="double-null"
+    )
+
+    NSTX_single_null_plasma_plasmaboundaries = make_plasma_plasmaboundaries(
+        name="NSTX_single_null_plasma_plasmaboundaries",
+        A=-0.05,
+        major_radius=850,
+        minor_radius=680,
+        triangularity=0.35,
+        elongation=2,
+        color="purple",
+        config="single-null"
+    )
+
     fig = go.Figure()
-    fig.add_traces(plot_plasma(plasma=ITER_plasma))
-    fig.add_traces(plot_plasma(plasma=ITER_plasma_plasmaboundaries))
-    fig.add_traces(plot_plasma(plasma=EU_DEMO_plasma))
-    fig.add_traces(plot_plasma(plasma=ST_plasma))
-    fig.add_traces(plot_plasma(plasma=AST_plasma))
+    fig.add_traces(plot_plasma(plasma=ITER_plasma, name="ITER_plasma"))
+    fig.add_traces(
+        plot_plasma(
+            plasma=ITER_plasma_plasmaboundaries,
+            name="ITER_plasma_plasmaboundaries"))
+    fig.add_traces(plot_plasma(plasma=EU_DEMO_plasma, name="EU_DEMO_plasma"))
+    fig.add_traces(plot_plasma(plasma=ST_plasma, name="ST_plasma"))
+    fig.add_traces(plot_plasma(plasma=AST_plasma, name="AST_plasma"))
+    fig.add_traces(
+        plot_plasma(
+            plasma=NSTX_double_null_plasma_plasmaboundaries,
+            name="NSTX_double_null_plasma_plasmaboundaries"))
+    fig.add_traces(
+        plot_plasma(
+            plasma=NSTX_single_null_plasma_plasmaboundaries,
+            name="NSTX_single_null_plasma_plasmaboundaries"))
     fig.show()
     fig.write_html("all_plasma_and_points.html")
 
