@@ -219,7 +219,7 @@ class BallReactor(paramak.Reactor):
             and self.pf_coil_radial_thicknesses is not None
             and self.pf_coil_to_rear_blanket_radial_gap is not None
         ):
-            number_of_pf_coils = len(self.pf_coil_vertical_thicknesses)
+            self._number_of_pf_coils = len(self.pf_coil_vertical_thicknesses)
 
             y_position_step = (
                 2
@@ -227,13 +227,13 @@ class BallReactor(paramak.Reactor):
                     self._blanket_rear_wall_end_height
                     + self.pf_coil_to_rear_blanket_radial_gap
                 )
-            ) / (number_of_pf_coils + 1)
+            ) / (self._number_of_pf_coils + 1)
 
             self._pf_coils_y_values = []
             self._pf_coils_x_values = []
             # adds in coils with equal spacing strategy, should be updated to
             # allow user positions
-            for i in range(number_of_pf_coils):
+            for i in range(self._number_of_pf_coils):
                 y_value = (
                     self._blanket_rear_wall_end_height
                     + self.pf_coil_to_rear_blanket_radial_gap
@@ -265,18 +265,6 @@ class BallReactor(paramak.Reactor):
                     self._tf_coil_start_radius +
                     self.outboard_tf_coil_radial_thickness)
 
-            else:
-                self._tf_coil_start_radius = None
-                self._tf_coil_end_radius = None
-
-        else:
-            self._pf_coil_start_radius = None
-            self._pf_coil_end_radius = None
-            self._pf_coils_y_values = None
-            self._pf_coils_x_values = None
-            self._tf_coil_start_radius = None
-            self._tf_coil_end_radius = None
-
     def make_inboard_tf_coils(self, shapes_or_components):
 
         # makes a large cylinder that is used to cut the TF coils when the
@@ -294,8 +282,6 @@ class BallReactor(paramak.Reactor):
                 rotation_angle=360 - self.rotation_angle,
                 azimuth_placement_angle=360 - self.rotation_angle,
             )
-        else:
-            self._cutting_slice = None
 
         self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=self._tf_coil_height * 2,
