@@ -80,7 +80,7 @@ class SingleNullBallReactor(paramak.BallReactor):
         if value in acceptable_values:
             self._divertor_position = value
         else:
-            raise ValueError("divertor position must be 'upper' or 'lower'")        
+            raise ValueError("divertor position must be 'upper' or 'lower'")
 
     def make_divertor_single_null(self, shapes_or_components):
 
