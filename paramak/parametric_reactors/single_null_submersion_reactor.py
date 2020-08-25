@@ -65,7 +65,21 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
 
         self.divertor_position = divertor_position
         self.support_position = support_position
-        self.create_components_single_null()
+        
+        shapes_or_components = []
+
+        self.make_radial_build()
+        self.make_vertical_build()
+        self.make_inboard_tf_coils(shapes_or_components)
+        self.make_center_column_shield(shapes_or_components)
+        self.make_plasma(shapes_or_components)
+        self.make_inboard_blanket_and_firstwall(shapes_or_components)
+        self.make_divertor_single_null(shapes_or_components)
+        self.make_outboard_blanket(shapes_or_components)
+        self.make_supports_single_null(shapes_or_components)
+        self.make_component_cuts(shapes_or_components)
+
+        self.shapes_and_components = shapes_or_components
 
     @property
     def divertor_position(self):
@@ -90,25 +104,6 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             self._support_position = value
         else:
             raise ValueError("support position must be 'upper' or 'lower'")
-
-    def create_components_single_null(self):
-
-        # this calls each method for constructing the reactor components
-
-        shapes_or_components = []
-
-        self.make_radial_build()
-        self.make_vertical_build()
-        self.make_inboard_tf_coils(shapes_or_components)
-        self.make_center_column_shield(shapes_or_components)
-        self.make_plasma(shapes_or_components)
-        self.make_inboard_blanket_and_firstwall(shapes_or_components)
-        self.make_divertor_single_null(shapes_or_components)
-        self.make_outboard_blanket(shapes_or_components)
-        self.make_supports_single_null(shapes_or_components)
-        self.make_component_cuts(shapes_or_components)
-
-        self.shapes_and_components = shapes_or_components
 
     def make_divertor_single_null(self, shapes_or_components):
 

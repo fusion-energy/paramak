@@ -117,12 +117,6 @@ class SubmersionTokamak(paramak.Reactor):
         self.elongation = None
         self.triangularity = None
 
-        self.create_components()
-
-    def create_components(self):
-
-        # this calls each method for constructing the reactor components
-
         shapes_or_components = []
 
         self.make_radial_build()
