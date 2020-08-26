@@ -11,7 +11,7 @@ BallReactor()
    :height: 450
    :align: center
 
-The above image is colored by components, instead of by the type of Shape volumes are made from. The TF coils are blue, the PF coils are red, the center coumn shielding is light blue, the blanket is green, the divertor is orange, the firstwall is grey and the rear wall of the blanket is teal.
+The above image is colored by components, instead of by Shape volume type. The TF coils are blue, the PF coils are red, the center column shielding is light blue, the blanket is green, the divertor is orange, the firstwall is grey and the rear wall of the blanket is teal.
 
 .. image:: https://user-images.githubusercontent.com/56687624/88921452-79ca0000-d266-11ea-9f8f-5247e88b03cf.png
    :width: 450
@@ -26,6 +26,27 @@ The above image is colored by Shape type with RotateStraightShape in red, Extrud
    :align: center
 
 .. automodule:: paramak.parametric_reactors.ball_reactor
+   :members:
+   :show-inheritance:
+
+SingleNullBallReactor()
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/91280446-ab0ef080-e77e-11ea-8792-71b44a38b070.png
+   :width: 450
+   :height: 450
+   :align: center
+
+The above image is colored by components, instead of by Shape volume type. The TF coils are blue, the PF coils are red, the center column shielding is light blue, the blanket is green, the divertor is organe, the firstwall is grey and the rear wall of the blanket is teal.
+
+.. image:: https://user-images.githubusercontent.com/56687624/91280475-b104d180-e77e-11ea-96ff-0bfcf8b8d5a9.png
+   :width: 450
+   :height: 450
+   :align: center
+
+The above image is colored by Shape type with RotateStraightShape in red, ExtrudeStraightShape in orange, RotateSplineShape in purple, ExtrudeSplineShape in pink, RotateMixedShape in blue, ExtrudeMixedShape in green, RotateCircleShape in yellow and ExtrudeCircleShape in brown.
+
+.. automodule:: paramak.parametric_reactors.single_null_ball_reactor
    :members:
    :show-inheritance:
 
@@ -48,4 +69,16 @@ The above image is colored by components with RotateStraightShape in red, Extrud
    :members:
    :show-inheritance:
 
-   
+SingleNullSubmersionTokamak()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/91299260-3e551f80-e799-11ea-82dc-1b300d3fbe45.png
+   :width: 470
+   :height: 450
+   :align: center
+
+The above image is colored by component instead of by Shape type. The TF coils are blue, the PF coils are red, the center column shielding is light blue, the blanket is green, the divertor is oragne, the firstwall is grey, the rear wall of the blanket is teal and the supports are black.
+
+.. automodule:: paramak.parametric_reactors.single_null_submersion_reactor
+   :members:
+   :show-inheritance:

@@ -110,7 +110,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stp()
 
         self.assertRaises(ValueError, test_stp_filename_duplication)
 
@@ -127,7 +128,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stl()
 
         self.assertRaises(
             ValueError,
@@ -143,7 +145,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stl()
 
         self.assertRaises(
             ValueError,
@@ -161,7 +164,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stl()
 
         self.assertRaises(
             ValueError,
@@ -183,7 +187,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stl()
 
         self.assertRaises(
             ValueError,
@@ -203,7 +208,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stl()
 
         self.assertRaises(
             ValueError,
@@ -223,7 +229,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stl()
 
         self.assertRaises(
             ValueError,
@@ -243,7 +250,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stl()
 
         self.assertRaises(
             ValueError,
@@ -259,7 +267,8 @@ class test_object_properties(unittest.TestCase):
             )
             test_shape.rotation_angle = 360
             test_shape.create_solid()
-            paramak.Reactor([test_shape, test_shape2])
+            my_reactor = paramak.Reactor([test_shape, test_shape2])
+            my_reactor.export_stl()
 
         self.assertRaises(
             ValueError,
