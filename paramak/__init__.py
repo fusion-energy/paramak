@@ -54,6 +54,7 @@ from .parametric_components.inner_tf_coils_flat import InnerTfCoilsFlat
 
 from .parametric_reactors.ball_reactor import BallReactor
 from .parametric_reactors.submersion_reactor import SubmersionTokamak
+from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
 
 from .parametric_components.toroidal_field_coil_coat_hanger import (
     ToroidalFieldCoilCoatHanger,
