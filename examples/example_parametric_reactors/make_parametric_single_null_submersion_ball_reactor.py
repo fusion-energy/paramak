@@ -32,7 +32,7 @@ def main():
         tf_coil_to_rear_blanket_radial_gap=20,
         divertor_position="upper",
         support_position="upper"
-)
+    )
 
     my_reactor.export_stp()
 
