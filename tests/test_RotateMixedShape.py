@@ -287,27 +287,6 @@ class test_object_properties(unittest.TestCase):
         )
         assert test_shape.volume > 10 * 10
 
-    def test_export_3d_image(self):
-        """Tests the method export_3d_image
-        """
-        test_shape = RotateMixedShape(
-            points=[
-                (10, 20, "straight"),
-                (10, 10, "straight"),
-                (20, 10, "circle"),
-                (40, 15, "circle"),
-                (20, 20, "straight"),
-            ],
-            rotation_angle=10,
-        )
-        os.system("rm tests/export_3D.png")
-        test_shape.export_3d_image("tests/export_3D.png")
-        assert Path("tests/export_3D.png").exists() is True
-        os.system("rm tests/export_3D.png")
-        test_shape.export_3d_image("tests/export_3D")
-        assert Path("tests/export_3D.png").exists() is True
-        os.system("rm tests/export_3D.png")
-
     def test_export_stp(self):
         """Tests the method export_stp
         """
@@ -351,21 +330,6 @@ class test_object_properties(unittest.TestCase):
         test_shape.export_stl("tests/test")
         assert Path("tests/test.stl").exists() is True
         os.system("rm tests/test.stl")
-
-    def test_create_render_mesh(self):
-        """Tests the method create_render_mesh
-        """
-        test_shape = RotateMixedShape(
-            points=[
-                (10, 20, "straight"),
-                (10, 10, "straight"),
-                (20, 10, "circle"),
-                (40, 15, "circle"),
-                (20, 20, "straight"),
-            ],
-            rotation_angle=10,
-        )
-        test_shape._create_render_mesh()
 
 
 if __name__ == "__main__":

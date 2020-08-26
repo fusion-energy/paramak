@@ -1,19 +1,16 @@
+import json
 import math
 import numbers
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-from cadquery import exporters
+import plotly.graph_objects as go
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from PIL import Image
 
-import plotly.graph_objects as go
-import pyrender
-import trimesh
-
-import json
+from cadquery import exporters
 
 
 class Shape:
@@ -315,30 +312,6 @@ class Shape:
 
         return self.x_min, self.x_max, self.z_min, self.z_max
 
-    def _create_render_mesh(self, tolerance=0.001):
-        """Converts the Shape.mesh into a mesh suitable for use with pyrender.
-        This method required for internal use by Shape.export_3d_image
-
-        :param tolerance: the mesh tolerance
-        :type tolerance: float
-
-        :return: a pyrender mesh object
-        :rtype: pyrender.Mesh
-        """
-
-        # export a tempory STL file
-        self.export_stl("temp.stl", tolerance)
-
-        tm = trimesh.load("temp.stl")
-
-        if self.color is not None:
-            tm.visual.vertex_colors = self.color
-
-        render_mesh = pyrender.Mesh.from_trimesh(tm)
-        self.render_mesh = render_mesh
-
-        return render_mesh
-
     def export_stl(self, filename, tolerance=0.001):
         """Exports an stl file for the Shape.solid.
         If the provided filename doesn't end with .stl it will be added
@@ -583,60 +556,6 @@ class Shape:
         print("\n saved 2d image to ", filename)
 
         return plt
-
-    def export_3d_image(self, filename, tolerance=0.001):
-        """Exports a 3d rendered image (png) of the reactor.
-        Components colored by their Shape.Color property.
-
-        Note: to make the reactor internals more visable consider
-        setting the Shape.rotation_angle to 180
-
-        :param filename: the filename of the saved png image
-        :type filename: str
-        :param tolerance: the tolerance of the mesh
-        :type tolerance: float
-
-        :return: a image object
-        :rtype: PIL image object
-        """
-
-        scene = pyrender.Scene(ambient_light=np.array([0.1, 0.1, 0.1, 1.0]))
-
-        if self.render_mesh is None:
-            scene.add(self._create_render_mesh(tolerance))
-
-        # sets the camera field of view (fov) and aspect ratio of the image
-        camera = pyrender.camera.PerspectiveCamera(
-            yfov=math.radians(90.0), aspectRatio=2.0
-        )
-        # sets the camera position using a matrix
-        c = 2 ** -0.5
-        camera_pose = np.array(
-            [[1, 0, 0, 0], [0, c, -c, -800], [0, c, c, 800], [0, 0, 0, 1]]
-        )
-        scene.add(camera, pose=camera_pose)
-
-        light = pyrender.DirectionalLight(color=[np.ones(3)], intensity=1.0)
-        scene.add(light, pose=camera_pose)
-
-        # Render the scene
-        renderer = pyrender.OffscreenRenderer(1000, 500)
-        colours, depth = renderer.render(scene)
-
-        image = Image.fromarray(colours, "RGB")
-
-        Pfilename = Path(filename)
-
-        if Pfilename.suffix != ".png":
-            Pfilename = Pfilename.with_suffix(".png")
-
-        Path(filename).parent.mkdir(parents=True, exist_ok=True)
-
-        image.save(Pfilename, "PNG")
-
-        print("\n saved 3d image to ", Pfilename)
-
-        return image
 
     def _create_patch(self):
         """Creates a matplotlib polygon patch from the Shape points.

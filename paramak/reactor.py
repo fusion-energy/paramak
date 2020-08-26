@@ -11,7 +11,6 @@ from PIL import Image
 
 import paramak
 import plotly.graph_objects as go
-import pyrender
 from paramak.shape import Shape
 
 
@@ -45,6 +44,17 @@ class Reactor:
     @stp_filenames.setter
     def stp_filenames(self, value):
         self._stp_filenames = value
+
+    @property
+    def stl_filenames(self):
+        values = []
+        for shape_or_componet in self.shapes_and_components:
+            values.append(shape_or_componet.stl_filename)
+        return values
+
+    @stl_filenames.setter
+    def stl_filenames(self, value):
+        self._stl_filenames = value
 
     @property
     def material_tags(self):
@@ -82,30 +92,6 @@ class Reactor:
         shapes_and_components = []
         if not isinstance(value, Iterable):
             raise ValueError("shapes_and_components must be a list")
-
-        stp_filenames = []
-        stl_filenames = []
-
-        for shape in value:
-            if shape.stp_filename is not None:
-                if shape.stp_filename in stp_filenames:
-                    raise ValueError(
-                        "Set Reactor already contains a shape or component \
-                         with this stp_filename",
-                        shape.stp_filename,
-                    )
-                else:
-                    stp_filenames.append(shape.stp_filename)
-            if shape.stl_filename is not None:
-                if shape.stl_filename in stl_filenames:
-                    raise ValueError(
-                        "Set Reactor already contains a shape or component \
-                         with this stl_filename",
-                        shape.stl_filename,
-                    )
-                else:
-                    stl_filenames.append(shape.stl_filename)
-
         self._shapes_and_components = value
 
     @property
@@ -222,6 +208,13 @@ class Reactor:
         :rtype: list
         """
 
+        if len(self.stp_filenames) != len(set(self.stp_filenames)):
+            raise ValueError(
+                "Set Reactor already contains a shape or component \
+                         with this stp_filename",
+                self.stp_filenames,
+            )
+
         filenames = []
         for entry in self.shapes_and_components:
             if entry.stp_filename is None:
@@ -257,6 +250,14 @@ class Reactor:
         :return: a list of stl filenames created
         :rtype: list
         """
+
+        if len(self.stl_filenames) != len(set(self.stl_filenames)):
+            raise ValueError(
+                "Set Reactor already contains a shape or component \
+                         with this stl_filename",
+                self.stl_filenames,
+            )
+
         filenames = []
         for entry in self.shapes_and_components:
             print("entry.stl_filename", entry.stl_filename)
@@ -575,51 +576,6 @@ class Reactor:
         print("\n saved 2d image to ", str(Pfilename))
 
         return str(Pfilename)
-
-    def export_3d_image(self, filename="3d_render.png", tolerance=0.005):
-        """Creates a 3D rendered image (png) of the reactor
-
-        :param filename: output filename of the image created
-        :type filename: [ParamType](, optional)
-        :param tolerance: the mesh tolerance
-        :type tolerance: float
-
-        :return: filename of the created image
-        :rtype: str
-        """
-
-        scene = pyrender.Scene(ambient_light=np.array([0.1, 0.1, 0.1, 1.0]))
-        for entry in self.shapes_and_components:
-            if entry.render_mesh is None:
-                scene.add(entry._create_render_mesh(tolerance))
-
-        # sets the field of view (fov) and the aspect ratio of the image
-        camera = pyrender.camera.PerspectiveCamera(
-            yfov=math.radians(90.0), aspectRatio=2.0
-        )
-
-        # sets the position of the camera using a matrix
-        c = 2 ** -0.5
-        camera_pose = np.array(
-            [[1, 0, 0, 0], [0, c, -c, -500], [0, c, c, 500], [0, 0, 0, 1]]
-        )
-        scene.add(camera, pose=camera_pose)
-
-        # adds some basic lighting to the scene
-        light = pyrender.DirectionalLight(color=np.ones(3), intensity=1.0)
-        scene.add(light, pose=camera_pose)
-
-        # Render the scene
-        renderer = pyrender.OffscreenRenderer(1000, 500)
-        colours, depth = renderer.render(scene)
-
-        image = Image.fromarray(colours, "RGB")
-
-        Path(filename).parent.mkdir(parents=True, exist_ok=True)
-        image.save(filename, "PNG")
-        print("\n saved 3d image to ", filename)
-
-        return filename
 
     def export_html(self, filename="reactor.html"):
         """Creates a html graph representation of the points

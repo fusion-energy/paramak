@@ -329,21 +329,6 @@ class test_Plasma(unittest.TestCase):
         os.system("rm plasma.stp")
 
 
-# class test_DivertorBlock(unittest.TestCase):
-# def test_DivertorBlock_creation(self):
-#         test_shape = DivertorBlock(major_radius = 300,
-#                                    minor_radius = 50,
-#                                    triangularity = 0.5,
-#                                    elongation = 2,
-#                                    thickness = 50,
-#                                    stop_angle = 120,
-#                                    offset_from_plasma = 20,
-#                                    start_x_value = 10)
-
-#         assert test_shape.solid is not None
-#         assert test_shape.volume > 1000
-
-
 class test_DivertorITER(unittest.TestCase):
     def test_DivertorITER_creaction(self):
         test_shape = paramak.ITERtypeDivertor()
