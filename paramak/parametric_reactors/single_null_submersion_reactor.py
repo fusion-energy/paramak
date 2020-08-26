@@ -117,7 +117,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
 
         self.divertor_position = divertor_position
         self.support_position = support_position
-        
+
         shapes_or_components = []
 
         self.make_radial_build()
