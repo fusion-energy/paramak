@@ -73,8 +73,17 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     def azimuth_placement_angle(self, azimuth_placement_angle):
         self._azimuth_placement_angle = azimuth_placement_angle
 
-    def compute_distribution(self, R1, R2):
+    def compute_inner_points(self, R1, R2):
+        """Computes the inner curve points
 
+        Args:
+            R1 (float): smallest radius (cm)
+            R2 (float): largest radius (cm)
+
+        Returns:
+            (list, list, list): R, Z and derivative lists for outer curve
+                points
+        """
         def error(Z0, R0, R2):
             segment = get_segment(R0, R2, Z0)
             return abs(segment[1][-1])
@@ -100,12 +109,24 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         segment1 = get_segment(R0, R1, Z0)
         segment2 = get_segment(R0, R2, Z0)
 
-        R = np.concatenate([np.flip(segment1[0]), segment2[0][3:], np.flip(segment2[0]), segment1[0][3:]])
-        Z = np.concatenate([np.flip(segment1[1]), segment2[1][3:], -np.flip(segment2[1]), -segment1[1][3:]])
+        R = np.concatenate([np.flip(segment1[0]), segment2[0][1:], np.flip(segment2[0])[1:], segment1[0][1:]])
+        Z = np.concatenate([np.flip(segment1[1]), segment2[1][1:], -np.flip(segment2[1])[1:], -segment1[1][1:]])
         dz_dr = np.concatenate([np.flip(segment1[2]), segment2[2]])
         return R, Z, dz_dr
 
-    def get_outer_points(self, R, Z, thickness, derivative):
+    def compute_outer_points(self, R, Z, thickness, derivative):
+        """Computes outer curve points based on thickness
+
+        Args:
+            R (list): list of floats containing R values
+            Z (list): list of floats containing Z values
+            thickness (float): thickness of the magnet
+            derivative (list): list of floats containing the first order
+                derivatives
+
+        Returns:
+            (list, list): R and Z lists for outer curve points
+        """
         new_R, new_Z = [], []
         for i in range(len(derivative)):
             nx = -derivative[i]
@@ -126,17 +147,22 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     def find_points(self):
         """Finds the XZ points joined by connections that describe the 2D
         profile of the toroidal field coil shape."""
-        R, Z, dz_dr = self.compute_distribution(self.R1, self.R2)
-        R_, Z_ = self.get_outer_points(R, Z, self.thickness, dz_dr)
+        # compute inner and outer points
+        R, Z, dz_dr = self.compute_inner_points(self.R1, self.R2)
+        R_, Z_ = self.compute_outer_points(R, Z, self.thickness, dz_dr)
 
-        points = []
+        # add connections
+        inner_points = []
         for r, z in zip(R, Z):
-            print(r, z)
-            points.append((r, z, 'straight'))
+            inner_points.append([r, z, 'spline'])
+        inner_points[-1][2] = 'straight'
+        outer_points = []
+        for r, z in zip(np.flip(R_), np.flip(Z_)):
+            outer_points.append([r, z, 'spline'])
+        outer_points[-1][2] = "straight"
 
-        # for r, z in zip(np.flip(R_), np.flip(Z_)):
-        #     points.append([r, z, 'straight'])
-        points.append(points[0])
+        points = inner_points + outer_points
+        points.append(inner_points[0])
 
         self.points = points
 
