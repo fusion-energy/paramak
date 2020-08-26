@@ -6,6 +6,33 @@ from paramak import ExtrudeMixedShape
 
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
+    """Toroidal field coil based on Princeton-D curve
+
+    Args:
+        R1 (float): smallest radius (cm)
+        R2 (float): largest radius (cm)
+        thickness (float): magnet thickness (cm)
+        distance (float): extrusion distance (cm)
+        number_of_coils (int): the number of tf coils. This changes by the
+            azimuth_placement_angle dividing up 360 degrees by the number of
+            coils.
+
+    Keyword Args:
+        stp_filename (str, optional): The filename used when saving stp files
+            as part of a reactor.
+            Defaults to "ToroidalFieldCoilPrincetonD.stp".
+        stl_filename (str, optional): The filename used when saving stl files
+            as part of a reactor.
+            Defaults to "ToroidalFieldCoilPrincetonD.stl".
+        color ((float, float, float), optional): the color to use when
+            exportin as html graphs or png images. Defaults to None.
+        azimuth_placement_angle (float, optional): The angle or angles to use
+            when rotating the shape on the azimuthal axis. Defaults to 0.
+        name (str, optional): the legend name used when exporting a html
+            graph of the shape. Defaults to None.
+        material_tag (str, optional): The material name to use when exporting
+            the neutronics description.. Defaults to "outer_tf_coil_mat".
+    """
     def __init__(
         self,
         R1,
