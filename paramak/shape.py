@@ -1,19 +1,16 @@
+import json
 import math
 import numbers
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-from cadquery import exporters
+import plotly.graph_objects as go
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from PIL import Image
 
-import plotly.graph_objects as go
-import pyrender
-import trimesh
-
-import json
+from cadquery import exporters
 
 
 class Shape:
@@ -314,30 +311,6 @@ class Shape:
         self.z_max = float(max([row[1] for row in self.points]))
 
         return self.x_min, self.x_max, self.z_min, self.z_max
-
-    def _create_render_mesh(self, tolerance=0.001):
-        """Converts the Shape.mesh into a mesh suitable for use with pyrender.
-        This method required for internal use by Shape.export_3d_image
-
-        :param tolerance: the mesh tolerance
-        :type tolerance: float
-
-        :return: a pyrender mesh object
-        :rtype: pyrender.Mesh
-        """
-
-        # export a tempory STL file
-        self.export_stl("temp.stl", tolerance)
-
-        tm = trimesh.load("temp.stl")
-
-        if self.color is not None:
-            tm.visual.vertex_colors = self.color
-
-        render_mesh = pyrender.Mesh.from_trimesh(tm)
-        self.render_mesh = render_mesh
-
-        return render_mesh
 
     def export_stl(self, filename, tolerance=0.001):
         """Exports an stl file for the Shape.solid.

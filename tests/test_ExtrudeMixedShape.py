@@ -232,21 +232,6 @@ class test_object_properties(unittest.TestCase):
         assert Path("tests/test.stl").exists() is True
         os.system("rm tests/test.stl")
 
-    def test_create_render_mesh(self):
-        """Tests the method create_render_mesh
-        """
-        test_shape = ExtrudeMixedShape(
-            points=[
-                (10, 20, "straight"),
-                (10, 10, "straight"),
-                (20, 10, "circle"),
-                (22, 15, "circle"),
-                (20, 20, "straight"),
-            ],
-            distance=10,
-        )
-        test_shape._create_render_mesh()
-
 
 if __name__ == "__main__":
     unittest.main()
