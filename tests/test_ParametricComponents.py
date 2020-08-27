@@ -43,7 +43,7 @@ class test_BlanketConstantThicknessArcH(unittest.TestCase):
 
 class test_BlanketFP(unittest.TestCase):
     def test_BlanketFP_creation_plasma(self):
-        """checks that a cadquery solid can be created by passing a plasma to the 
+        """checks that a cadquery solid can be created by passing a plasma to the
         BlanketFP parametric component"""
 
         plasma = paramak.Plasma(
@@ -161,7 +161,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
 
 class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
-        """creates a pf coil case using the PoloidalFieldCoilCase parametric component and 
+        """creates a pf coil case using the PoloidalFieldCoilCase parametric component and
         checks that a cadquery solid is created"""
 
         test_shape = paramak.PoloidalFieldCoilCase(
@@ -351,7 +351,7 @@ class test_DivertorITER(unittest.TestCase):
         assert test_shape.solid is not None
 
     def test_DivertorITER_STP_export(self):
-        """creates an ITER-type divertor using the ITERtypeDivertor parametric component and 
+        """creates an ITER-type divertor using the ITERtypeDivertor parametric component and
         checks that an stp file of the shape can be exported using the export_stp method"""
 
         test_shape = paramak.ITERtypeDivertor()
@@ -367,7 +367,7 @@ class test_DivertorITERNoDome(unittest.TestCase):
         assert test_shape.solid is not None
 
     def test_DivertorITER_STP_export(self):
-        """creates an ITER-type divertor using the ITERtypeDivertorNoDome parametric component and 
+        """creates an ITER-type divertor using the ITERtypeDivertorNoDome parametric component and
         checks that an stp file of the shape can be exported using the export_stp method"""
 
         test_shape = paramak.ITERtypeDivertorNoDome()

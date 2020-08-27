@@ -59,7 +59,7 @@ class test_object_properties(unittest.TestCase):
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
         """checks that multiple shape objects can be added to a Reactor object
         with the correct material tag properties"""
-        
+
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], material_tag="mat1"
         )
@@ -76,7 +76,7 @@ class test_object_properties(unittest.TestCase):
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """chekcs that a shape object can be added to a Reactor object with the
         correct stp filename property"""
-        
+
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename.stp"
         )
@@ -105,7 +105,7 @@ class test_object_properties(unittest.TestCase):
 
     def test_adding_shape_with_duplicate_stp_filename_to_reactor(self):
         """adds shapes to a Reactor object to check errors are raised correctly"""
-        
+
         def test_stp_filename_duplication():
             """checks ValueError is raised when RotateStraightShapes with duplicate
             stp filenames are added"""
@@ -167,7 +167,7 @@ class test_object_properties(unittest.TestCase):
         def test_stl_filename_duplication_rotate_mixed():
             """checks ValueError is raised when RotateMixedShapes with duplicate
             stl filenames are added"""
-            
+
             test_shape = paramak.RotateMixedShape(
                 points=[(0, 0, "straight"), (0, 20, "straight"), (20, 20, "straight")],
                 stl_filename="filename.stl",
@@ -463,7 +463,7 @@ class test_object_properties(unittest.TestCase):
         assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
 
     def test_export_neutronics_description(self):
-        """creates a Reactor object and checks that the neutronics description is 
+        """creates a Reactor object and checks that the neutronics description is
         exported to a json file with the correct material_name and stp_filename"""
 
         os.system("rm manifest_test.json")
@@ -539,7 +539,7 @@ class test_object_properties(unittest.TestCase):
         os.system("rm manifest.json")
 
     def test_export_neutronics_description_without_plasma(self):
-        """creates a Reactor object and checks that the neutronics description is 
+        """creates a Reactor object and checks that the neutronics description is
         exported to a json file with the correct entires, exluding the optional
         plasma"""
 

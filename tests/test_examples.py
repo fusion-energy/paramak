@@ -58,19 +58,19 @@ class test_object_properties(unittest.TestCase):
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_reactors"))
         output_filenames = [
-            'inboard_tf_coils.stp', 
-            'center_column_shield.stp', 
-            'plasma.stp', 
-            'divertor.stp', 
-            'supports.stp', 
-            'outboard_firstwall.stp', 
-            'blanket.stp', 
-            'outboard_rear_blanket_wall.stp', 
-            'outboard_tf_coil.stp', 
-            'pf_coil_0.stp', 
-            'pf_coil_1.stp', 
-            'pf_coil_2.stp', 
-            'pf_coil_3.stp', 
+            'inboard_tf_coils.stp',
+            'center_column_shield.stp',
+            'plasma.stp',
+            'divertor.stp',
+            'supports.stp',
+            'outboard_firstwall.stp',
+            'blanket.stp',
+            'outboard_rear_blanket_wall.stp',
+            'outboard_tf_coil.stp',
+            'pf_coil_0.stp',
+            'pf_coil_1.stp',
+            'pf_coil_2.stp',
+            'pf_coil_3.stp',
             'Graveyard.stp'
         ]
         for output_filename in output_filenames:

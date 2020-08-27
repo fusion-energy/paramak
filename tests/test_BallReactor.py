@@ -33,7 +33,7 @@ class test_BallReactor(unittest.TestCase):
         assert len(test_reactor.shapes_and_components) == 7
 
     def test_BallReactor_creation_with_wide_divertor(self):
-        """checks whether a ball reactor with a wide divertor can be created using 
+        """checks whether a ball reactor with a wide divertor can be created using
         the BallReactor parametric_reactor, and that the correct number of components
         are created"""
 

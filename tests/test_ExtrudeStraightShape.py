@@ -92,7 +92,7 @@ class test_object_properties(unittest.TestCase):
 
     def test_extruded_shape_with_overlap_volume(self):
         """creates two overlapping extruded shapes at different placement angles using
-        straight connections and checks that their volume is correct""" 
+        straight connections and checks that their volume is correct"""
 
         test_shape = ExtrudeStraightShape(
             points=[(0, 0), (0, 20), (10, 20), (10, 0)], distance=10
@@ -173,7 +173,7 @@ class test_object_properties(unittest.TestCase):
         assert initial_hash_value != test_shape.hash_value
 
     def test_hash_value_update(self):
-        """checks that the has value of an ExtrudeCircleShape is not updated until a new 
+        """checks that the has value of an ExtrudeCircleShape is not updated until a new
         solid has been created"""
 
         test_shape = ExtrudeStraightShape(

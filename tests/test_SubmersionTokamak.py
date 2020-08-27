@@ -36,7 +36,7 @@ class test_SubmersionTokamak(unittest.TestCase):
         os.system("rm test_SubmersionTokamak_image.svg")
 
     def test_minimal_SubmersionTokamak_creation(self):
-        """creates a submersion reactor using the SubmersionTokamak parametric reactor and 
+        """creates a submersion reactor using the SubmersionTokamak parametric reactor and
         checks that the correct number of components are created"""
 
         test_reactor = paramak.SubmersionTokamak(
@@ -247,7 +247,7 @@ class test_SubmersionTokamak(unittest.TestCase):
         os.system("rm -r tf_pf_SubmersionTokamak")
 
     def test_SingleNullSubmersionTokamak_with_pf_and_tf_coils(self):
-        """creates a single null submersion reactor with pf and tf coils using the 
+        """creates a single null submersion reactor with pf and tf coils using the
         SingleNullSubmersionTokamak parametric reactor and checks that the correct number
         of components are created"""
 
@@ -308,7 +308,7 @@ class test_SubmersionTokamak(unittest.TestCase):
         """creates a single null submersion reactor with upper supports and divertor using the
         SingleNullSubmersionTokamak parametric reactor and checks that the correct number of
         components are created"""
-        
+
         test_reactor = paramak.SingleNullSubmersionTokamak(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
