@@ -7,7 +7,7 @@ cwd = os.getcwd()
 
 class test_object_properties(unittest.TestCase):
     def test_make_parametric_ball_rector(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_reactors"))
         output_filenames = [
@@ -27,8 +27,61 @@ class test_object_properties(unittest.TestCase):
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
+    def test_make_parametric_single_null_ball_reactor(self):
+        """Runs the example and checks the output files are produced"""
+        os.chdir(Path(cwd))
+        os.chdir(Path("examples/example_parametric_reactors"))
+        output_filenames = [
+            "blanket_rear_wall.stp",
+            "blanket.stp",
+            "center_column_shield.stp",
+            "divertor.stp",
+            "firstwall.stp",
+            "Graveyard.stp",
+            "inboard_tf_coils.stp",
+            "pf_coil_0.stp",
+            "pf_coil_1.stp",
+            "pf_coil_2.stp",
+            "pf_coil_3.stp",
+            "plasma.stp",
+            "tf_coil.stp"
+        ]
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        os.system("python make_parametric_single_null_ball_reactor.py")
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
+    def test_make_parametric_single_null_submersion_reactor(self):
+        """Runs the example and checks the output files are produced"""
+        os.chdir(Path(cwd))
+        os.chdir(Path("examples/example_parametric_reactors"))
+        output_filenames = [
+            'inboard_tf_coils.stp', 
+            'center_column_shield.stp', 
+            'plasma.stp', 
+            'divertor.stp', 
+            'supports.stp', 
+            'outboard_firstwall.stp', 
+            'blanket.stp', 
+            'outboard_rear_blanket_wall.stp', 
+            'outboard_tf_coil.stp', 
+            'pf_coil_0.stp', 
+            'pf_coil_1.stp', 
+            'pf_coil_2.stp', 
+            'pf_coil_3.stp', 
+            'Graveyard.stp'
+        ]
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        os.system("python make_parametric_single_null_submersion_ball_reactor.py")
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
     def test_make_blanket_from_points(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_shapes"))
         output_filename = "blanket_from_points.stp"
@@ -38,7 +91,7 @@ class test_object_properties(unittest.TestCase):
         os.system("rm " + output_filename)
 
     def test_make_blanket_parametrically(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_shapes"))
         output_filename = "blanket_from_parameters.stp"
@@ -48,7 +101,7 @@ class test_object_properties(unittest.TestCase):
         os.system("rm " + output_filename)
 
     def test_make_CAD_from_points(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
@@ -67,7 +120,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + output_filename)
 
     def test_make_all_parametric_components(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_components"))
         output_filenames = [
@@ -96,7 +149,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + output_filename)
 
     def test_make_can_reactor_from_parameters(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
@@ -117,7 +170,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + output_filename)
 
     def test_make_can_reactor_from_points(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
@@ -138,7 +191,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + output_filename)
 
     def test_make_plasma(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_components"))
         output_filenames = [

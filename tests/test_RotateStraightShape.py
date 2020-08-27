@@ -9,9 +9,8 @@ from paramak import RotateStraightShape
 
 class test_object_properties(unittest.TestCase):
     def test_union_volume_addition(self):
-        """ makes two volumes and then remakes the same two volumes as a
-        fused solid. Checks the volumes of these two options are the same.
-        """
+        """fuses two RotateStraightShapes and checks that their fused volume is correct"""
+
         inner_box = RotateStraightShape(
             points=[(100, 100), (100, 200), (200, 200), (200, 100)], rotation_angle=20
         )
@@ -31,15 +30,14 @@ class test_object_properties(unittest.TestCase):
         )
 
     def test_shape_rotation_angle_default(self):
-        """"checks that the default rotation angle for a RotateStraightShape \
-                is 360 degrees"""
+        """checks that the default rotation angle of a RotateStraightShape is 360 degrees"""
 
         test_shape = RotateStraightShape(points=None)
         assert test_shape.rotation_angle == 360
 
     def test_shape_rotation_angle_setting_getting(self):
-        """checks that the rotation angle for a RotateStraightShape \
-                can be set"""
+        """checks that the rotation angle of a RotateStraightShape can be set"""
+
         test_shape = RotateStraightShape(points=None)
         test_shape.rotation_angle = 180
         assert test_shape.rotation_angle == 180
@@ -47,15 +45,14 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.rotation_angle == 90
 
     def test_shape_azimuth_placement_angle_default(self):
-        """checks that the default azimuth placement angle for a RotateStraightShape \
-                is 0"""
+        """checks that the default azimuth placement angle of a RotateStraightShape is 0"""
 
         test_shape = RotateStraightShape(points=None)
         assert test_shape.azimuth_placement_angle == 0
 
     def test_shape_azimuth_placement_angle_setting_getting(self):
-        """checks that the default azimuth placement angle for a RotateStraightShape \
-                can be set to single values or to a list of values"""
+        """checks that the azimuth placement angle of a RotateStraightShape can be set to
+        single values or a list of values"""
 
         test_shape = RotateStraightShape(points=None)
         test_shape.azimuth_placement_angle = 180
@@ -66,8 +63,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.azimuth_placement_angle == [0, 90, 180, 360]
 
     def test_absolute_shape_volume(self):
-        """creates a rotated shape using straight connections and checks that the \
-                volume is correct"""
+        """creates a rotated straight shape using straight connections and checks that the
+        volume is correct"""
 
         test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)])
@@ -79,8 +76,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.volume == pytest.approx(3.141592654 * 20 * 20 * 20)
 
     def test_relative_shape_volume(self):
-        """creates a rotated shape using straight connections and checks the volume \
-                is half the volume of a shape which is double its size"""
+        """creates two rotated shapes using straight connections and checks that their
+        relative volumes are correct"""
 
         test_shape_1 = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)])
@@ -95,7 +92,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape_1.volume == pytest.approx(test_shape_2.volume * 0.5)
 
     def test_export_stp(self):
-        """checks that export_stp() exports stp files with the correct suffix"""
+        """creates a RotateStraightShape and checks that an stp file of the shape can
+        be exported with the correct suffix using the export_stp method"""
 
         test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)])
@@ -111,7 +109,8 @@ class test_object_properties(unittest.TestCase):
         os.system("rm filename.stp")
 
     def test_export_stl(self):
-        """checks that export_stl() exports stl files with the correct suffix"""
+        """creates a RotateStraightShape and checks that an stl file of the shape
+        can be exported with the correct suffix using the export_stl method"""
 
         test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)])
@@ -125,7 +124,8 @@ class test_object_properties(unittest.TestCase):
         os.system("rm filename.stl")
 
     def test_export_svg(self):
-        """checks that export_svg() exports svg files with the correct suffix"""
+        """creates a RotateStraightShape and checks that an svg file of the shape
+        can be exported with the correct suffix using the export_svg method"""
 
         test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)])
@@ -139,8 +139,8 @@ class test_object_properties(unittest.TestCase):
         os.system("rm filename.svg")
 
     def test_cut_volume(self):
-        """creates a rotated shape from straight connections with another shape \
-                cut out and checks the volume is correct"""
+        """creates a rotated shape using straight connections with another shape cut out
+        and checks that the volume is correct"""
 
         inner_shape = RotateStraightShape(
             points=[(5, 5), (5, 10), (10, 10), (10, 5)], rotation_angle=180
@@ -162,7 +162,8 @@ class test_object_properties(unittest.TestCase):
             1908.517537 - 589.048622)
 
     def test_initial_solid_construction(self):
-        """tests that a cadquery solid with a unique hash is constructed when .solid is called"""
+        """creates a rotated shape using staright connections and checks that a cadquery solid with
+        a unique hash value is created when .solid is called"""
 
         test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
@@ -174,7 +175,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value is not None
 
     def test_solid_return(self):
-        """tests that the same cadquery solid with the same unique hash is returned when shape.solid is called again when no changes have been made to the shape"""
+        """checks that the same cadquery solid with the same unique hash value is returned when
+        shape.solid is called again after no changes have been made to the RotateStraightShape"""
 
         test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
@@ -189,7 +191,8 @@ class test_object_properties(unittest.TestCase):
         assert initial_hash_value == test_shape.hash_value
 
     def test_conditional_solid_reconstruction(self):
-        """tests that a new cadquery solid with a new unique hash is constructed when .solid is called again after changes have been made to the shape"""
+        """checks that a new cadquery solid with a new unique hash value is constructed when
+        shape.solid is called after changes to the RotateStraightShape have been made"""
 
         test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
@@ -206,7 +209,8 @@ class test_object_properties(unittest.TestCase):
         assert initial_hash_value != test_shape.hash_value
 
     def test_hash_value_update(self):
-        """tests that the hash_value of the shape is not updated until a new solid has been created"""
+        """checks that the hash value of a RotateStraightShape is not updated until a new cadquery
+        solid has been created"""
 
         test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
@@ -221,7 +225,9 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value != initial_hash_value
 
     def test_conditional_solid_reconstruction_parameters(self):
-        """tests that a new cadquery solid with a new unique hash is created when the shape properties of points, workplane, name, color, material_tag, stp_filename, azimuth_placement_angle, rotation_angle or cut are changed"""
+        """checks that a new cadquery solid with a new unique hash value is created when the
+        RotateStraightShape parameters of 'points', 'workplane', 'name', 'color', 'material_tag',
+        'stp_filename', 'azimuth_placement_angle', 'rotation_angle' or 'cut' are changed"""
 
         # points
         test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)],)
