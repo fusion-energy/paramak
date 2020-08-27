@@ -9,7 +9,8 @@ import paramak
 
 class test_BallReactor(unittest.TestCase):
     def test_BallReactor_creation_with_narrow_divertor(self):
-        """creates blanket from parametric shape and checks a solid is created"""
+        """creates a ball reactor using the BallReactor parametric_reactor and checks
+        the correct number of components are created"""
 
         test_reactor = paramak.BallReactor(
             inner_bore_radial_thickness=50,
@@ -32,7 +33,9 @@ class test_BallReactor(unittest.TestCase):
         assert len(test_reactor.shapes_and_components) == 7
 
     def test_BallReactor_creation_with_wide_divertor(self):
-        """creates blanket from parametric shape and checks a solid is created"""
+        """checks whether a ball reactor with a wide divertor can be created using
+        the BallReactor parametric_reactor, and that the correct number of components
+        are created"""
 
         test_reactor = paramak.BallReactor(
             inner_bore_radial_thickness=50,
@@ -55,6 +58,9 @@ class test_BallReactor(unittest.TestCase):
         assert len(test_reactor.shapes_and_components) == 7
 
     def test_BallReactor_svg_creation(self):
+        """creates a ball reactor using the BallReactor parametric_reactor and checks
+        an svg image of the reactor can be exported"""
+
         os.system("rm test_ballreactor_image.svg")
 
         test_reactor = paramak.BallReactor(
@@ -78,6 +84,10 @@ class test_BallReactor(unittest.TestCase):
         os.system("rm test_ballreactor_image.svg")
 
     def test_BallReactor_with_pf_coils(self):
+        """checks whether a ball reactor with optional pf coils can be
+        created using the BallReactor parametric_reactor, and that the correct
+        number of components are created"""
+
         test_reactor = paramak.BallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
@@ -102,6 +112,10 @@ class test_BallReactor(unittest.TestCase):
         assert len(test_reactor.shapes_and_components) == 11
 
     def test_BallReactor_with_pf_and_tf_coils(self):
+        """checks whether a ball reactor with optional pf and tf coils can
+        be created using the BallReactor parametric_reactor, and that the correct
+        number of components are created"""
+
         test_reactor = paramak.BallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
@@ -128,6 +142,9 @@ class test_BallReactor(unittest.TestCase):
         assert len(test_reactor.shapes_and_components) == 12
 
     def test_BallReactor_with_pf_and_tf_coils_export_physical_groups(self):
+        """creates a ball reactor using the BallReactor parametric_reactor and
+        checks that the export_physical_groups() method works"""
+
         test_reactor = paramak.BallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
@@ -152,7 +169,13 @@ class test_BallReactor(unittest.TestCase):
         )
         test_reactor.export_physical_groups()
 
+        # insert assertion
+
     def test_SingleNullBallReactor_with_pf_and_tf_coils(self):
+        """checks that a single null ball reactor with optional pf and tf
+        coils can be created using the SingleNullBallReactor parametric_reactor,
+        and that the correct number of components are produced"""
+
         test_reactor = paramak.SingleNullBallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
@@ -179,6 +202,9 @@ class test_BallReactor(unittest.TestCase):
         assert len(test_reactor.shapes_and_components) == 12
 
     def test_single_null_ball_reactor_divertor_lower(self):
+        """checks that a single null reactor with a lower divertor can be
+        created using the SingleNullBallReactor parametric_reactor"""
+
         test_reactor = paramak.SingleNullBallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
@@ -199,6 +225,9 @@ class test_BallReactor(unittest.TestCase):
         assert len(test_reactor.shapes_and_components) == 7
 
     def test_single_null_ball_reactor_divertor_upper(self):
+        """checks that a single null reactor with an upper divertor can be
+        created using the SingleNullBallReactor parametric_reactor"""
+
         test_reactor = paramak.SingleNullBallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
