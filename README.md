@@ -1,9 +1,11 @@
 
+
 [![CircleCI](https://circleci.com/gh/ukaea/paramak/tree/develop.svg?style=svg)](https://circleci.com/gh/ukaea/paramak/tree/develop)
 [![codecov](https://codecov.io/gh/ukaea/paramak/branch/develop/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
 [![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=latest)](https://paramak.readthedocs.io/en/latest/?badge=latest)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openmcworkshop/paramak_dependencies)](https://hub.docker.com/r/openmcworkshop/paramak_dependencies)
+
+:point_right: [Documentation](https://paramak.readthedocs.io/en/latest/)
 
 
 # Paramak
