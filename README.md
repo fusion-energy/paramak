@@ -1,11 +1,9 @@
 
-
+[![N|Python](https://www.python.org/static/community_logos/python-powered-w-100x40.png)](https://www.python.org)
 [![CircleCI](https://circleci.com/gh/ukaea/paramak/tree/develop.svg?style=svg)](https://circleci.com/gh/ukaea/paramak/tree/develop)
 [![codecov](https://codecov.io/gh/ukaea/paramak/branch/develop/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
 [![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=latest)](https://paramak.readthedocs.io/en/latest/?badge=latest)
-
-
 
 # Paramak
 
@@ -18,7 +16,7 @@ The Paramak python package allows rapid production of 3D CAD models of fusion re
 
 To install the Paramak you need to have [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), [Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and [Pip](https://anaconda.org/anaconda/pip). If you have these three dependancies already then you can install the Paramak using Pip:
 
-```python
+```
 pip install paramak
 ```
 
