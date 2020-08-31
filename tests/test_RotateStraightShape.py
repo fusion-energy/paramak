@@ -161,170 +161,78 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape_with_cut.volume == pytest.approx(
             1908.517537 - 589.048622)
 
-    def test_initial_solid_construction(self):
-        """creates a rotated shape using staright connections and checks that a cadquery solid with
-        a unique hash value is created when .solid is called"""
-
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
-        )
-
-        assert test_shape.hash_value is None
-        assert test_shape.solid is not None
-        assert type(test_shape.solid).__name__ == "Workplane"
-        assert test_shape.hash_value is not None
-
-    def test_solid_return(self):
-        """checks that the same cadquery solid with the same unique hash value is returned when
-        shape.solid is called again after no changes have been made to the RotateStraightShape"""
-
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        assert initial_hash_value == test_shape.hash_value
-
-    def test_conditional_solid_reconstruction(self):
-        """checks that a new cadquery solid with a new unique hash value is constructed when
-        shape.solid is called after changes to the RotateStraightShape have been made"""
-
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        test_shape.rotation_angle = 180
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        assert initial_hash_value != test_shape.hash_value
-
-    def test_hash_value_update(self):
-        """checks that the hash value of a RotateStraightShape is not updated until a new cadquery
-        solid has been created"""
-
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
-        )
-        test_shape.solid
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        test_shape.rotation_angle = 180
-        assert test_shape.hash_value == initial_hash_value
-        test_shape.solid
-        assert test_shape.hash_value != initial_hash_value
-
     def test_conditional_solid_reconstruction_parameters(self):
         """checks that a new cadquery solid with a new unique hash value is created when the
         RotateStraightShape parameters of 'points', 'workplane', 'name', 'color', 'material_tag',
         'stp_filename', 'azimuth_placement_angle', 'rotation_angle' or 'cut' are changed"""
 
-        # points
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)],)
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)], 
+            name="test_name",
+            color=[0.5, 0.5, 0.5],
+            material_tag="test_tag",
+            stp_filename="test_filename.stp",
+            azimuth_placement_angle=0,
+            rotation_angle=360,
+            cut=None
+        )
         test_shape.solid
-        initial_hash_value = test_shape.hash_value
+        reference_hash_value = test_shape.hash_value
+
+        # points
         test_shape.points = [(0, 0), (10, 30), (15, 50), (25, 5), (15, 0)]
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # workplane
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], workplane="XZ",
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.workplane = "YZ"
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # name
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], name="test_name",
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.name = "new_name"
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # color
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], color=[0.5, 0.5, 0.5],
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.color = [0.1, 0.2, 0.8]
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # material_tag
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], material_tag="test_material",
-        )
+        test_shape.material_tag = "new_tag"
         test_shape.solid
-        initial_hash_value = test_shape.hash_value
-        test_shape.material_tag = "new_material"
-        test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # stp_filename
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], stp_filename="test_filename.stp",
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.stp_filename = "new_filename.stp"
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # azimuth_placement_angle
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], azimuth_placement_angle=0,
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.azimuth_placement_angle = 180
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # rotation_angle
-        test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360,
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.rotation_angle = 180
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # cut
-        cut_shape = RotateStraightShape(points=[(5, 5), (5, 15), (15, 15)],)
-
-        test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)],)
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
+        cut_shape = RotateStraightShape(points=[(5, 5), (5, 15), (15, 15)])
+        
         test_shape.cut = cut_shape
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
 
 
 if __name__ == "__main__":

@@ -125,181 +125,91 @@ class test_object_properties(unittest.TestCase):
             (9 * 9 * 30) - (5 * 5 * 30), abs=0.1
         )
 
-    def test_initial_solid_construction(self):
-        """creates and extruded shape using straight connections and checks that a cadquery
-        solid with a unique hash value is created when .solid is called"""
-
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=20
-        )
-
-        assert test_shape.hash_value is None
-        assert test_shape.solid is not None
-        assert type(test_shape.solid).__name__ == "Workplane"
-        assert test_shape.hash_value is not None
-
-    def test_solid_return(self):
-        """checks that the same cadquery solid with the same unique hash value is returned when
-        shape.solid is called again after no changes have been made to the shape"""
-
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=20
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        assert initial_hash_value == test_shape.hash_value
-
-    def test_conditional_solid_reconstruction(self):
-        """checks that a new cadquery solid with a new unique has value is construced when
-        shape.solid is called after changes to the ExtrudeStraightShape have been made"""
-
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        test_shape.distance = 30
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        assert initial_hash_value != test_shape.hash_value
-
-    def test_hash_value_update(self):
-        """checks that the has value of an ExtrudeCircleShape is not updated until a new
-        solid has been created"""
-
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20
-        )
-        test_shape.solid
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        test_shape.distance = 30
-
-        assert test_shape.hash_value == initial_hash_value
-        test_shape.solid
-        assert test_shape.hash_value != initial_hash_value
-
     def test_conditional_solid_reconstruction_parameters(self):
         """checks that a new cadquery solid with a new unique hash value is created when the shape
         properties of 'points', 'distance', 'workplane', 'name', 'color', 'material_tag', 'stp_filename',
         'azimuth_placement_angle', or 'cut' are changed"""
 
-        # points
         test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20
+            points = [
+                (0, 0),
+                (0, 20),
+                (20, 20)
+            ],
+            distance=20,
+            workplane="XY",
+            name="test_name",
+            color=[0.5, 0.5, 0.5],
+            material_tag="test_tag",
+            stp_filename="test_filename.stp",
+            azimuth_placement_angle=0,
+            rotation_angle=360,
+            cut=None
         )
         test_shape.solid
-        initial_hash_value = test_shape.hash_value
+        reference_hash_value = test_shape.hash_value
+
+        # points
         test_shape.points = [(0, 0), (10, 30), (15, 50), (25, 5), (15, 0)]
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # distance
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.distance = 30
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # workplane
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20, workplane="XZ",
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.workplane = "YZ"
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # name
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20, name="test_name",
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.name = "new_name"
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # color
-        test_shape = ExtrudeStraightShape(
-            points=[
-                (0, 0), (0, 20), (20, 20)], distance=20, color=[
-                0.5, 0.5, 0.5], )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.color = [0.1, 0.2, 0.8]
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
-
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
+        
         # material_tag
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20,
-            material_tag="test_material",
-        )
+        test_shape.material_tag = "new_tag"
         test_shape.solid
-        initial_hash_value = test_shape.hash_value
-        test_shape.material_tag = "new_material"
-        test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # stp_filename
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            distance=20,
-            stp_filename="test_filename.stp",
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.stp_filename = "new_filename.stp"
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # azimuth_placement_angle
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20, azimuth_placement_angle=0,
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.azimuth_placement_angle = 180
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
+
+        # rotation_angle
+        test_shape.rotation_angle = 180
+        test_shape.solid
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # cut
         cut_shape = ExtrudeStraightShape(
             points=[(5, 5), (5, 15), (15, 15)], distance=5)
 
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20,
-        )
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.cut = cut_shape
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
 
 
 if __name__ == "__main__":

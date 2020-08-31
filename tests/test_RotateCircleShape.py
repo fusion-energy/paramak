@@ -97,98 +97,34 @@ class test_object_properties(unittest.TestCase):
             - ((math.pi * 5 ** 2) * ((2 * math.pi * 30) / 2))
         )
 
-    def test_initial_solid_construction(self):
-        """creates a rotated shape using circles and checks that a cadquery solid with a
-        unique hash value is created when .solid is called"""
-
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360)
-
-        assert test_shape.hash_value is None
-        assert test_shape.solid is not None
-        assert type(test_shape.solid).__name__ == "Workplane"
-        assert test_shape.hash_value is not None
-
-    def test_solid_return(self):
-        """checks that the same cadquery solid with the same unique hash value is returned when
-        shape.solid is called again after no changes have been made to the shape"""
-
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360)
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        assert initial_hash_value == test_shape.hash_value
-
-    def test_conditional_solid_reconstruction(self):
-        """checks that a new cadquery solid with a new unique has value is constructed when .solid
-        is called after changes to the RotateCircleShape have been made"""
-
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360)
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        test_shape.rotation_angle = 180
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        assert initial_hash_value != test_shape.hash_value
-
-    def test_hash_value_update(self):
-        """checks that the hash value of a RotateStraightShape is not updated until a new solid
-        has been created"""
-
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360)
-        test_shape.solid
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        test_shape.rotation_angle = 180
-        assert test_shape.hash_value == initial_hash_value
-        test_shape.solid
-        assert test_shape.hash_value != initial_hash_value
-
     def test_conditional_solid_reconstruction_parameters(self):
         """checks that a new cadquery solid with a new unique has value is created when the
         properties of 'points', 'radius', or 'rotation_angle' are changed"""
 
-        # points
         test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360)
+            points=[(30, 0)],
+            radius=5,
+            rotation_angle=360
+        )
         test_shape.solid
-        initial_hash_value = test_shape.hash_value
+        reference_hash_value = test_shape.hash_value
+
+        # points
         test_shape.points = [(40, 0)]
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # radius
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360)
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.radius = 10
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
+        reference_hash_value = test_shape.hash_value
 
         # rotation_angle
-        test_shape = RotateCircleShape(
-            points=[(30, 0)], radius=5, rotation_angle=360)
-        test_shape.solid
-        initial_hash_value = test_shape.hash_value
         test_shape.rotation_angle = 180
         test_shape.solid
-        assert test_shape.solid is not None
-        assert test_shape.hash_value != initial_hash_value
+        assert test_shape.hash_value != reference_hash_value
 
 
 if __name__ == "__main__":
