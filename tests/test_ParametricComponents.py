@@ -73,10 +73,28 @@ class test_BlanketFP(unittest.TestCase):
             thickness=200,
             stop_angle=360,
             start_angle=0,
+            rotation_angle=180
         )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+
+    def test_BlanketFP_full_cov_full_rotation(self):
+        """checks BlanketFP cannot have full coverage and 360 rotation at the same time"""
+        def create_shape():
+            test_shape = paramak.BlanketFP(
+                major_radius=300,
+                minor_radius=50,
+                triangularity=0.5,
+                elongation=2,
+                thickness=200,
+                stop_angle=360,
+                start_angle=0,
+                rotation_angle=360
+            )
+            test_shape.solid
+        self.assertRaises(
+            ValueError, create_shape)
 
     def test_BlanketFP_creation_variable_thickness_from_tuple(self):
         """checks that a cadquery solid can be created using the BlanketFP parametric
