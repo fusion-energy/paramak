@@ -141,17 +141,6 @@ class Plasma(RotateSplineShape):
         self._vertical_displacement = value
 
     @property
-    def openmc_install_directory(self):
-        return self._openmc_install_directory
-
-    @openmc_install_directory.setter
-    def openmc_install_directory(self, openmc_install_directory):
-        if Path(openmc_install_directory).exists() is False:
-            raise ValueError("openmc_install_directory is out of range")
-        else:
-            self._openmc_install_directory = openmc_install_directory
-
-    @property
     def minor_radius(self):
         return self._minor_radius
 
