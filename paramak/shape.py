@@ -9,36 +9,33 @@ import plotly.graph_objects as go
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from PIL import Image
+from hashlib import blake2b
 
 from cadquery import exporters
 
 
 class Shape:
     """A shape object that represents a 3d volume and can have materials and
-       neutronics tallies assigned. Shape objects are not intended to be used
-       directly by the user but provide basic functionality for user facing
-       classes that inherit from Shape.
+    neutronics tallies assigned. Shape objects are not intended to be used
+    directly bly the user but provide basic functionality for user-facing
+    classes that inherit from Shape.
 
-       :param points: The x, y, z coordinates of points that make up the shape
-       :type points: a list of (x, y, z) tuples where x, y, z are floats
-       :param name: the name of the shape, used in the graph legend by export_html
-       :type name: str
-       :param color: the color to use when exporting as html graphs or png images
-       :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-        3 or 4 floats respectively each in the range 0-1
-       :param material_tag: the name of the shape, used in the neutronics description
-       :type material_tag: str
-       :param stp_filename: the filename to save the step file
-       :type stp_filename: str
-       :param azimuth_placement_angle: the azimuth angle(s) to when positioning the
-        shape. If a list of angles is provided the shape is duplicated at all angles
-       :type azimuth_placement_angle: float or list of floats
-       :param workplane: The orientation of the CadQuery workplane. Options are XY, YZ, XZ
-       :type workplane: str
+    Args:
+        points (list of (x,y,z) tuples where x, y, z are floats): the x, y, z
+            coordinates of points that make up the shape
+        name (str): the name of the shape, used in the graph legend by export_html
+        color (RGB or RGBA, sequences of 3 or 4 floats, respectively, each in the
+            range 0-1): the color to use when exporting as html graphs or png images
+        material_tag (str): the material name to use when exporting the neutronics
+            description
+        stp_filename (str): the filename used when saving stp files
+        azimuth_placement_angle: the azimuth angle(s) used when positioning the shape.
+            If a list of angles is provided, the shape is duplicated at all angles
+        workplane (str): the orientation of the Cadquery workplane. (XY, YZ or XZ)
 
-       :return: a shape object that has generic functionality
-       :rtype: paramak shape object
-       """
+    Returns:
+        a paramak shape object: a Shape object that has generic functionality
+    """
 
     def __init__(
         self,
@@ -52,6 +49,7 @@ class Shape:
         workplane="XZ",
         tet_mesh=None,
         physical_groups=None,
+        hash_value=None,
     ):
 
         self.points = points
@@ -73,6 +71,7 @@ class Shape:
         self.solid = None
         self.render_mesh = None
         # self.volume = None
+        self.hash_value = None
 
     @property
     def workplane(self):
@@ -93,6 +92,14 @@ class Shape:
     @property
     def volume(self):
         return self.solid.val().Volume()
+
+    @property
+    def hash_value(self):
+        return self._hash_value
+
+    @hash_value.setter
+    def hash_value(self, value):
+        self._hash_value = value
 
     @property
     def color(self):
@@ -618,3 +625,15 @@ class Shape:
             neutronics_description["stl_filename"] = self.stl_filename
 
         return neutronics_description
+
+    def get_hash(self):
+        hash_object = blake2b()
+        shape_dict = dict(self.__dict__)
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
+
+        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
+        value = hash_object.hexdigest()
+        return value
