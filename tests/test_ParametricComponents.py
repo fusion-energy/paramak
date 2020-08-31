@@ -327,6 +327,7 @@ class test_Plasma(unittest.TestCase):
                     [expected_lower_x_point, expected_upper_x_point],
                 ):
                     assert point == expected_point
+                assert test_plasma.solid is not None
 
     def test_export_plasma_source(self):
         """creates a plasma using the Plasma parametric component and checks an stp file
