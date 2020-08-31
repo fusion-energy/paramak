@@ -9,7 +9,7 @@
 
 The Paramak python package allows rapid production of 3D CAD models of fusion reactors. The purpose of the Paramak is to provide geometry for parametric studies. It is possible to use the created geometry in engineering and neutronics studies as the STP files produced can be automatically converted to DAGMC compatable neutronics models or meshed and used in finite element analysis codes.
 
-:point_right: [Documentation](https://paramak.readthedocs.io/en/latest/)
+:point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
 
 
 ## Installation
@@ -20,7 +20,7 @@ To install the Paramak you need to have [Conda](https://docs.conda.io/projects/c
 pip install paramak
 ```
 
-Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/#prerequisites) can be found in the User's Guide.
+Detailed [installation instructions](https://paramak.readthedocs.io/en/main/#prerequisites) can be found in the User's Guide.
 
  
 
@@ -59,9 +59,9 @@ There are a collection of Python scripts in the example folder that demonstrate 
 After importing the class the user then sets the points. By default, points should be a list of (x,z) points. In this case the points are connected with straight lines.
 
 ```python
-from paramak import RotateStraightShape
+import paramak
 
-my_shape = RotateStraightShape(points = [(20,0), (20,100), (100,0)])
+my_shape = paramak.RotateStraightShape(points = [(20,0), (20,100), (100,0)])
 ```
 
 Once these properties have been set users can write 3D volumes in CAD STP or STL formats.
@@ -80,9 +80,9 @@ my_shape.export_stl('example.stl')
 Parametric components are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerous parametric components for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma. Users could also construct a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric component called Plasma can construct a plasma from more convenient parameters. Parametric components also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
 
 ```python
-from paramak import Plasma
+import paramak
 
-my_plasma = Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
+my_plasma = paramak.Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
 
 my_plasma.export_stp('plasma.stp')
 ```
@@ -97,10 +97,9 @@ a submersion ball reactor. These allow full reactor models to be constructed by 
 optional outer pf and tf coils.
 
 ```python
+import paramak
 
-from paramak import BallReactor
-
-my_reactor = BallReactor(
+my_reactor = paramak.BallReactor(
     inner_bore_radial_thickness = 50,
     inboard_tf_leg_radial_thickness = 50,
     center_column_shield_radial_thickness= 50,
@@ -129,21 +128,15 @@ my_reactor.export_stp()
 
 A reactor object provides a container object for all Shape objects created, and allows operations to be performed on the whole collection of Shapes.
 
-Import the Reactor object.
-
 ```python
-from paramak import Reactor
+import paramak
 ```
 
 Initiate a Reactor object and pass a list of all Shape objects to the shapes_and_components parameter.
 
 ```python
-my_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])
+my_reactor = paramak.Reactor(shapes_and_components = [my_shape, my_plasma])
 ```
-
-<!-- A 3D rendering of the combined Shapes can be created. -->
-
-<!-- `my_reactor.export_3d_image('reactor.png')` -->
 
 A html graph of the combined Shapes can be created.
 
@@ -175,7 +168,7 @@ Note - Tetrahedral meshes can also be assigned to Shape objects
 Now add the Shape objects to a freshly created reactor object.
 
 ```python
-new_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])
+new_reactor = paramak.Reactor(shapes_and_components = [my_shape, my_plasma])
 ```
 
 The entire reactor can now be exported as step files. This also generates a DAGMC graveyard automatically.
