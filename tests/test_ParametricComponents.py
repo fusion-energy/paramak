@@ -9,7 +9,8 @@ import paramak
 
 class test_BlanketConstantThicknessArcV(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
-        """creates blanket from parametric shape and checks a solid is created"""
+        """creates a blanket using the BlanketConstantThicknessArcV parametric component
+        and checks that a cadquery solid is created"""
 
         test_shape = paramak.BlanketConstantThicknessArcV(
             inner_lower_point=(300, -200),
@@ -23,27 +24,10 @@ class test_BlanketConstantThicknessArcV(unittest.TestCase):
         assert test_shape.volume > 1000
 
 
-class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
-    def test_ToroidalFieldCoilCoatHanger_creation(self):
-        """creates blanket from parametric shape and checks a solid is created"""
-
-        test_shape = paramak.ToroidalFieldCoilCoatHanger(
-            horizontal_start_point=(200, 500),
-            horizontal_length=400,
-            vertical_start_point=(700, 50),
-            vertical_length=500,
-            thickness=50,
-            distance=50,
-            number_of_coils=5,
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.volume > 1000
-
-
 class test_BlanketConstantThicknessArcH(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
-        """creates blanket from parametric shape and checks a solid is created"""
+        """creates a blanket using the BlanketConstantThicknessArcH parametric component
+        and checks that a cadquery solid is created"""
 
         test_shape = paramak.BlanketConstantThicknessArcH(
             inner_lower_point=(300, -200),
@@ -59,7 +43,9 @@ class test_BlanketConstantThicknessArcH(unittest.TestCase):
 
 class test_BlanketFP(unittest.TestCase):
     def test_BlanketFP_creation_plasma(self):
-        """creates blanket from parametric shape and checks a solid is created"""
+        """checks that a cadquery solid can be created by passing a plasma to the
+        BlanketFP parametric component"""
+
         plasma = paramak.Plasma(
             major_radius=300, minor_radius=50, triangularity=0.5, elongation=2,
         )
@@ -76,7 +62,8 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketFP_creation_noplasma(self):
-        """creates blanket from parametric shape and checks a solid is created"""
+        """checks that a cadquery solid can be created using the BlanketFP parametric
+        component when no plasma is passed"""
 
         test_shape = paramak.BlanketFP(
             major_radius=300,
@@ -92,7 +79,8 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketFP_creation_variable_thickness_from_tuple(self):
-        """creates blanket from parametric shape and checks a solid is created"""
+        """checks that a cadquery solid can be created using the BlanketFP parametric
+        component when a tuple of thicknesses is passed"""
 
         test_shape = paramak.BlanketFP(
             major_radius=300,
@@ -108,7 +96,8 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketFP_creation_variable_thickness_function(self):
-        """creates blanket from parametric shape and checks a solid is created"""
+        """checks that a cadquery solid can be created using the BlanketFP parametric
+        component when a thickness function is passed"""
 
         def thickness(theta):
             return 100 + 3 * theta
@@ -127,14 +116,15 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketFP_physical_groups(self):
-        """Creates default blanket and checks the exports of physical groups
-        """
+        """creates a blanket using the BlanketFP parametric component and checks that
+        physical groups can be exported using the export_physical_groups method"""
+
         test_shape = paramak.BlanketFP(100, stop_angle=90, start_angle=270,)
         test_shape.export_physical_groups("tests/blanket.json")
 
     def test_BlanketFP_full_cov_stp_export(self):
-        """creates blanket from parametric shape and checks the STP export
-        with full coverage"""
+        """creates a blanket using the BlanketFP parametric component and checks that
+        an stp file with full coverage can be exported using the export_stp method"""
 
         test_shape = paramak.BlanketFP(
             major_radius=300,
@@ -150,9 +140,30 @@ class test_BlanketFP(unittest.TestCase):
         test_shape.export_stp("tests/test_blanket_full_cov")
 
 
+class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
+    def test_ToroidalFieldCoilCoatHanger_creation(self):
+        """creates a tf coil using the ToroidalFieldCoilCoatHanger parametric component
+        and checks that a cadquery solid is created"""
+
+        test_shape = paramak.ToroidalFieldCoilCoatHanger(
+            horizontal_start_point=(200, 500),
+            horizontal_length=400,
+            vertical_start_point=(700, 50),
+            vertical_length=500,
+            thickness=50,
+            distance=50,
+            number_of_coils=5,
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+
 class test_PoloidalFieldCoilCase(unittest.TestCase):
     def test_PoloidalFieldCoilCase_creation(self):
-        """creates a poloidal field coil from parametric shape and checks a solid is created"""
+        """creates a pf coil case using the PoloidalFieldCoilCase parametric component and
+        checks that a cadquery solid is created"""
+
         test_shape = paramak.PoloidalFieldCoilCase(
             casing_thickness=5,
             coil_height=50,
@@ -167,7 +178,8 @@ class test_PoloidalFieldCoilCase(unittest.TestCase):
 
 class test_Plasma(unittest.TestCase):
     def test_plasma_attributes(self):
-        """creates a plasma object and checks its attributes"""
+        """creates a plasma object using the Plasma parametric component and checks that
+        its attributes can be set correctly"""
 
         test_plasma = paramak.Plasma()
 
@@ -188,8 +200,8 @@ class test_Plasma(unittest.TestCase):
         self.assertRaises(ValueError, test_plasma_elongation_max_setting)
 
     def test_plasma_x_points(self):
-        """Checks the location of the x point for various plasma configurations
-        """
+        """creates several plasmas with different configurations using the Plasma parametric
+        component and checks the location of the x point for each"""
 
         for (
             triangularity,
@@ -249,9 +261,8 @@ class test_Plasma(unittest.TestCase):
                     assert point == expected_point
 
     def test_plasma_x_points_plasmaboundaries(self):
-        """Checks the location of the x point for various plasma configurations
-        for plasma from plasmaboundaries
-        """
+        """creates several plasmas with different configurations using the PlasmaBoundaries
+        parametric component and checks the location of the x point for each"""
 
         for A, triangularity, elongation, minor_radius, major_radius in zip(
             [0, 0.05, 0.05],  # A
@@ -300,7 +311,8 @@ class test_Plasma(unittest.TestCase):
                     assert point == expected_point
 
     def test_export_plasma_source(self):
-        """checks that export_stp() exports plasma stp file"""
+        """creates a plasma using the Plasma parametric component and checks an stp file
+        of the shape can be exported using the export_stp method"""
 
         test_plasma = paramak.Plasma()
 
@@ -312,7 +324,8 @@ class test_Plasma(unittest.TestCase):
         os.system("rm plasma.stp")
 
     def test_export_plasma_from_points_export(self):
-        """checks that export_stp() exports plasma stp file"""
+        """creates a plasma using the PlasmaFromPoints parametric component and checks an
+        stp file of the shape can be exported using the export_stp method"""
 
         test_plasma = paramak.PlasmaFromPoints(
             outer_equatorial_x_point=500,
@@ -330,28 +343,41 @@ class test_Plasma(unittest.TestCase):
 
 
 class test_DivertorITER(unittest.TestCase):
-    def test_DivertorITER_creaction(self):
+    def test_DivertorITER_creation(self):
+        """creates an ITER-type divertor using the ITERtypeDivertor parametric component and
+        checks that a cadquery solid is created"""
+
         test_shape = paramak.ITERtypeDivertor()
         assert test_shape.solid is not None
 
     def test_DivertorITER_STP_export(self):
+        """creates an ITER-type divertor using the ITERtypeDivertor parametric component and
+        checks that an stp file of the shape can be exported using the export_stp method"""
+
         test_shape = paramak.ITERtypeDivertor()
         test_shape.export_stp("tests/ITER_div")
 
 
 class test_DivertorITERNoDome(unittest.TestCase):
-    def test_DivertorITER_creaction(self):
+    def test_DivertorITER_creation(self):
+        """creates an ITER-type divertor using the ITERtypeDivertorNoDome parametric component and
+        checks that a cadquery solid is created"""
+
         test_shape = paramak.ITERtypeDivertorNoDome()
         assert test_shape.solid is not None
 
     def test_DivertorITER_STP_export(self):
+        """creates an ITER-type divertor using the ITERtypeDivertorNoDome parametric component and
+        checks that an stp file of the shape can be exported using the export_stp method"""
+
         test_shape = paramak.ITERtypeDivertorNoDome()
         test_shape.export_stp("tests/ITER_div_no_dome")
 
 
 class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
     def test_CenterColumnShieldFlatTopHyperbola_creation(self):
-        """creates a CenterColumnShieldFlatTopHyperbola object and checks a solid is created"""
+        """creates a center column shield using the CenterColumnShieldFlatTopHyperbola parametric
+        component and checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldFlatTopHyperbola(
             height=500,
@@ -367,7 +393,8 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
 
 class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
     def test_CenterColumnShieldPlasmaHyperbola_creation(self):
-        """creates a CenterColumnShieldPlasmaHyperbola object and checks a solid is created"""
+        """creates a center column shield using the CenterColumnShieldPlasmaHyperbola parametric
+        component and checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldPlasmaHyperbola(
             inner_radius=50, height=800, mid_offset=40, edge_offset=30
@@ -379,7 +406,8 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
 
 class test_CenterColumnShieldHyperbola(unittest.TestCase):
     def test_CenterColumnShieldHyperbola_creation(self):
-        """creates a CenterColumnShieldHyperbola object and checks a solid is created"""
+        """creates a center column shield using the CenterColumnShieldHyperbola parametric component
+        and checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldHyperbola(
             height=100, inner_radius=50, mid_radius=80, outer_radius=100
@@ -391,7 +419,8 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
 
 class test_PoloidalFieldCoil(unittest.TestCase):
     def test_PoloidalFieldCoil_creation(self):
-        """creates a PoloidalFieldCoil object and checks a solid is created"""
+        """creates a pf coil using the PoloidalFieldCoil parametric component and checks that a cadquery
+        solid is created"""
 
         test_shape = paramak.PoloidalFieldCoil(
             height=50, width=60, center_point=(1000, 500)
@@ -403,7 +432,8 @@ class test_PoloidalFieldCoil(unittest.TestCase):
 
 class test_ToroidalFieldCoilRectangle(unittest.TestCase):
     def test_ToroidalFieldCoilRectangle_creation(self):
-        """creates a ToroidalFieldCoilRectangle object and checks a solid is created"""
+        """creates a tf coil using the ToroidalFieldCoilRectangle parametric component and checks that a
+        cadquery solid is created"""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             inner_upper_point=(100, 700),
@@ -417,9 +447,25 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_shape.volume > 1000
 
 
+class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
+    def test_ToroidalFieldCoilPrincetonD_creation(self):
+        """creates a ToroidalFieldCoilPrincetonD object and checks a solid is created"""
+
+        test_shape = paramak.ToroidalFieldCoilPrincetonD(
+            R1=100,
+            R2=300,
+            thickness=50,
+            distance=50,
+            number_of_coils=8,
+        )
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+
 class test_CenterColumnShieldCircular(unittest.TestCase):
     def test_CenterColumnShieldCircular_creation(self):
-        """creates a CenterColumnShieldCircular object and checks a solid is created"""
+        """creates a center column shield using the CenterColumnShieldCircular parametric component and
+        checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldCircular(
             height=600, inner_radius=100, mid_radius=150, outer_radius=200
@@ -431,7 +477,8 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
 
 class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
     def test_CenterColumnShieldFlatTopCircular_creation(self):
-        """creates a CenterColumnShieldFlatTopCircular object and checks a solid is created"""
+        """creates a center column shield using the CenterColumnShieldFlatTopCircular parametric component
+        and checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldFlatTopCircular(
             height=600,
@@ -447,7 +494,8 @@ class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
 
 class test_CenterColumnShieldCylinder(unittest.TestCase):
     def test_CenterColumnShieldCylinder_creation(self):
-        """creates a CenterColumnShieldCylinder object and checks a solid is created"""
+        """creates a center column shield using the CenterColumnShieldCylinder parametric component and
+        checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             height=600, inner_radius=100, outer_radius=200
@@ -457,7 +505,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_volume_CenterColumnShieldCylinder(self):
-        """creates a CenterColumnShieldCylinder object and checks that the volume is correct"""
+        """creates a CenterColumnShieldCylinder shape and checks that the volume is correct"""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             rotation_angle=360,
@@ -480,7 +528,8 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         assert test_shape.volume == pytest.approx(3534.29 / 2.0)
 
     def test_export_stp_CenterColumnShieldCylinder(self):
-        """checks that export_stp() can export an stp file of a CenterColumnShieldCylinder object"""
+        """creates a CenterColumnShieldCylinder shape and checks that an stp file of the shape
+        can be exported using the export_stp method"""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             rotation_angle=360,
@@ -501,7 +550,8 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
 
 class test_PoloidalFieldCoilCaseFC(unittest.TestCase):
     def test_PoloidalFieldCoilCaseFC_creation(self):
-        """creates a PoloidalFieldCoilCaseFC object and checks a solid is created"""
+        """creates a pf coil case using the PoloidalFieldCoilCaseFC parametric component and
+        checks that a cadquery solid is created"""
 
         pf_coil = paramak.PoloidalFieldCoil(
             height=50, width=60, center_point=(1000, 500)
@@ -517,7 +567,8 @@ class test_PoloidalFieldCoilCaseFC(unittest.TestCase):
 
 class test_InnerTfCoilsFlat(unittest.TestCase):
     def test_InnerTfCoilsFlat_creation(self):
-        """creates a InnerTfCoilsFlat object and checks a solid is created"""
+        """creates an inner tf coil using the InnerTFCoilsFlat parametric component and checks
+        that a cadquery solid is created"""
 
         test_shape = paramak.InnerTfCoilsFlat(
             height=500,
@@ -533,7 +584,8 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
 
 class test_InnerTfCoilsCircular(unittest.TestCase):
     def test_InnerTfCoilsCircular_creation(self):
-        """creates a InnerTfCoilsCircular object and checks a solid is created"""
+        """creates an inner tf coil using the InnerTfCoilsCircular parametric component and checks
+        that a cadquery solid is created"""
 
         test_shape = paramak.InnerTfCoilsCircular(
             height=500,
