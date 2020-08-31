@@ -32,7 +32,7 @@ class test_object_properties(unittest.TestCase):
             """checks ValueError is raised when the start and end points are
             the same"""
 
-            test_shape.points = [(0, 200), (200, 100), (0, 0), (200, 0)]
+            test_shape.points = [(0, 200), (200, 100), (0, 0), (0, 200)]
 
         self.assertRaises(
             ValueError,
