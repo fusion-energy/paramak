@@ -61,6 +61,22 @@ def intersect_solid(solid, intersecter):
     return solid
 
 
+def diff_between_angles(a, b):
+    """Calculates the difference between two angles a and b
+
+    Args:
+        a (float): angle in degree
+        b (float): angle in degree
+
+    Returns:
+        float: difference between the two angles in degree
+    """
+    c = (b - a) % 360
+    if c > 180:
+        c -= 360
+    return c
+
+
 def rotate(origin, point, angle):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
