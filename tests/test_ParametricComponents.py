@@ -447,6 +447,21 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_shape.volume > 1000
 
 
+
+class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
+    def test_ToroidalFieldCoilTripleArc_creation(self):
+        """creates a ToroidalFieldCoilTripleArc object and checks a solid is created"""
+
+        test_shape = paramak.ToroidalFieldCoilTripleArc(
+            R1=1,
+            h=1,
+            radii=(100, 200),
+            coverages=(10, 60),
+            thickness=150,
+            distance=50,
+            number_of_coils=8,
+            vertical_displacement=1)
+
 class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
     def test_ToroidalFieldCoilPrincetonD_creation(self):
         """creates a ToroidalFieldCoilPrincetonD object and checks a solid is created"""
@@ -458,6 +473,7 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
             distance=50,
             number_of_coils=8,
         )
+
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
