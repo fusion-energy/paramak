@@ -63,4 +63,8 @@ from .parametric_components.toroidal_field_coil_coat_hanger import (
 from .parametric_components.toroidal_field_coil_rectangle import (
     ToroidalFieldCoilRectangle,
 )
+
 from .parametric_components.toroidal_field_coil_triple_arc import ToroidalFieldCoilTripleArc
+
+from .parametric_components.toroidal_field_coil_princeton_d import ToroidalFieldCoilPrincetonD
+
