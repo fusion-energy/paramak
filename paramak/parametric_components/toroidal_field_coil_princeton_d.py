@@ -33,6 +33,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         material_tag (str, optional): The material name to use when exporting
             the neutronics description.. Defaults to "outer_tf_coil_mat".
     """
+
     def __init__(
         self,
         R1,
@@ -121,10 +122,10 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             return a_R, asol[:, 0], asol[:, 1]
 
         def solvr(Y, R):
-            return [Y[1], -1/(k*R)*(1 + Y[1]**2)**(3/2)]
+            return [Y[1], -1 / (k * R) * (1 + Y[1]**2)**(3 / 2)]
 
-        R0 = (R1*R2)**0.5
-        k = 0.5*np.log(R2/R1)
+        R0 = (R1 * R2)**0.5
+        k = 0.5 * np.log(R2 / R1)
 
         # computing of Z0
         # Z0 is computed by ensuring outer segment end is zero
@@ -136,8 +137,10 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         segment1 = get_segment(R0, R1, Z0)
         segment2 = get_segment(R0, R2, Z0)
 
-        R = np.concatenate([np.flip(segment1[0]), segment2[0][1:], np.flip(segment2[0])[1:], segment1[0][1:]])
-        Z = np.concatenate([np.flip(segment1[1]), segment2[1][1:], -np.flip(segment2[1])[1:], -segment1[1][1:]])
+        R = np.concatenate([np.flip(segment1[0]), segment2[0]
+                            [1:], np.flip(segment2[0])[1:], segment1[0][1:]])
+        Z = np.concatenate([np.flip(segment1[1]), segment2[1]
+                            [1:], -np.flip(segment2[1])[1:], -segment1[1][1:]])
         dz_dr = np.concatenate([np.flip(segment1[2]), segment2[2]])
         return R, Z, dz_dr
 

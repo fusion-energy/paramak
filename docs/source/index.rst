@@ -71,6 +71,18 @@ Alternatively you can install the paramak with following command.
 
    python setup.py install
 
+Docker
+------
+
+The paramak is availabie as a Docker image and can be downloaded using Docker commands
+
+.. code-block:: bash
+
+   docker build -t openmcworkshop/paramak . 
+
+   docker run -it openmcworkshop/paramak
+
+
 Features
 --------
 

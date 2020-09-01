@@ -482,6 +482,7 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         assert test_shape.solid is not None
 
 
+
 class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
     def test_ToroidalFieldCoilPrincetonD_creation(self):
         """creates a ToroidalFieldCoilPrincetonD object and checks a solid is created"""
