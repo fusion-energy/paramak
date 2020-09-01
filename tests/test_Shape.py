@@ -101,11 +101,8 @@ class test_object_properties(unittest.TestCase):
         )
 
         assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
         initial_hash_value = test_shape.hash_value
-
         assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
         assert initial_hash_value == test_shape.hash_value
 
     def test_conditional_solid_reconstruction(self):
