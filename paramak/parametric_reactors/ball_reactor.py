@@ -282,6 +282,8 @@ class BallReactor(paramak.Reactor):
                 rotation_angle=360 - self.rotation_angle,
                 azimuth_placement_angle=360 - self.rotation_angle,
             )
+        else:
+            self._cutting_slice = None
 
         self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=self._tf_coil_height * 2,
