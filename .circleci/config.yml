@@ -8,8 +8,8 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: openmcworkshop/paramak_dependencies
-      
+      - image: openmcworkshop/paramak:dependencies
+
     working_directory: ~/repo
 
     steps:
