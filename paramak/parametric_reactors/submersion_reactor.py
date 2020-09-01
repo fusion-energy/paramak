@@ -312,6 +312,8 @@ class SubmersionTokamak(paramak.Reactor):
                 rotation_angle=360 - self.rotation_angle,
                 azimuth_placement_angle=360 - self.rotation_angle,
             )
+        else:
+            self._cutting_slice = None
 
     def make_inboard_tf_coils(self, shapes_or_components):
 
