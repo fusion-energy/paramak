@@ -97,35 +97,6 @@ class test_object_properties(unittest.TestCase):
             - ((math.pi * 5 ** 2) * ((2 * math.pi * 30) / 2))
         )
 
-    def test_conditional_solid_reconstruction_parameters(self):
-        """checks that a new cadquery solid with a new unique has value is created when the
-        properties of 'points', 'radius', or 'rotation_angle' are changed"""
-
-        test_shape = RotateCircleShape(
-            points=[(30, 0)],
-            radius=5,
-            rotation_angle=360
-        )
-        test_shape.solid
-        reference_hash_value = test_shape.hash_value
-
-        # points
-        test_shape.points = [(40, 0)]
-        test_shape.solid
-        assert test_shape.hash_value != reference_hash_value
-        reference_hash_value = test_shape.hash_value
-
-        # radius
-        test_shape.radius = 10
-        test_shape.solid
-        assert test_shape.hash_value != reference_hash_value
-        reference_hash_value = test_shape.hash_value
-
-        # rotation_angle
-        test_shape.rotation_angle = 180
-        test_shape.solid
-        assert test_shape.hash_value != reference_hash_value
-
 
 if __name__ == "__main__":
     unittest.main()

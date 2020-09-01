@@ -66,33 +66,6 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape_with_cut.volume == pytest.approx(
             (math.pi * 10 ** 2 * 20) - (math.pi * 5 ** 2 * 20)
         )
-
-    def test_conditional_solid_reconstruction_parameters(self):
-        """checks that a new cadquery solid with a new unique hash value is created when the shape
-        properties of 'points', 'radius' or 'distance' are changed"""
-
-        test_shape = paramak.ExtrudeCircleShape(
-            points=[(30, 0)], radius=5, distance=20
-        )
-        test_shape.solid
-        reference_hash_value = test_shape.hash_value
-
-        # points
-        test_shape.points = [(40, 0)]
-        test_shape.solid
-        assert test_shape.hash_value != reference_hash_value
-        reference_hash_value = test_shape.hash_value
-
-        # radius
-        test_shape.radius = 10
-        test_shape.solid
-        assert test_shape.hash_value != reference_hash_value
-        reference_hash_value = test_shape.hash_value
-
-        # distance
-        test_shape.distance = 30
-        test_shape.solid
-        assert test_shape.hash_value != reference_hash_value
         
 
 if __name__ == "__main__":

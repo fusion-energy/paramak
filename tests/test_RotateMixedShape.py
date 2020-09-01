@@ -264,31 +264,6 @@ class test_object_properties(unittest.TestCase):
         assert Path("tests/test.stl").exists() is True
         os.system("rm tests/test.stl")
 
-    def test_conditional_solid_reconstruction_parameters(self):
-        """checks that a new cadquery solid with a new unique hash value is created when the
-        RotateMixedShape parameter of 'points' is changed"""
-
-        test_shape = RotateMixedShape(
-            points=[
-                (0, 0, "straight"),
-                (0, 20, "spline"),
-                (20, 15, "spline"),
-                (10, 0, "straight")
-            ]
-        )
-        test_shape.solid
-        reference_hash_value = test_shape.hash_value 
-
-        # points
-        test_shape.points = [
-            (0, 0, "spline"),
-            (0, 20, "spline"),
-            (20, 5, "straight")
-            (10, 0, "straight")
-        ]
-        test_shape.solid
-        assert test_shape.hash_value != reference_hash_value
-
 
 if __name__ == "__main__":
     unittest.main()
