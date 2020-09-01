@@ -38,6 +38,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         material_tag (str, optional): The material name to use when exporting
             the neutronics description.. Defaults to "outer_tf_coil_mat".
     """
+
     def __init__(
         self,
         R1,
@@ -168,7 +169,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
 
         # create outer coordinates
         R_outer, Z_outer = self.compute_curve(
-            self.R1-thickness, self.h,
+            self.R1 - thickness, self.h,
             radii=(small_radius + thickness, mid_radius + thickness),
             coverages=(small_coverage, mid_coverage))
         R_outer, Z_outer = np.flip(R_outer), np.flip(Z_outer)
