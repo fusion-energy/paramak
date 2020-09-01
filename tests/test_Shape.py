@@ -10,9 +10,6 @@ import paramak
 # pytest tests -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 # from head paramak directory
 
-# R: the test functions/methods should all have docstrings to explain what
-#   is being tested and the expected result
-
 
 class test_object_properties(unittest.TestCase):
     def test_shape_default_properties(self):

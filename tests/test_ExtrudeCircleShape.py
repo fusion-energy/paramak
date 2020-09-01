@@ -3,14 +3,14 @@ import unittest
 
 import pytest
 
-import paramak
+from paramak import ExtrudeCircleShape
 
 
 class test_object_properties(unittest.TestCase):
     def test_absolute_shape_volume(self):
         """creates extruded shapes using circles and checks the volumes are correct"""
 
-        test_shape = paramak.ExtrudeCircleShape(
+        test_shape = ExtrudeCircleShape(
             points=[(30, 0)], radius=10, distance=20
         )
 
@@ -19,7 +19,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume == pytest.approx(math.pi * 10 ** 2 * 20)
 
-        test_shape2 = paramak.ExtrudeCircleShape(
+        test_shape2 = ExtrudeCircleShape(
             points=[(30, 0)], radius=10, distance=10
         )
 
@@ -32,11 +32,11 @@ class test_object_properties(unittest.TestCase):
         """creates two extruded shapes at different placement angles using
         circles and checks their relative volumes are correct"""
 
-        test_shape1 = paramak.ExtrudeCircleShape(
+        test_shape1 = ExtrudeCircleShape(
             points=[(30, 0)], radius=10, distance=20, azimuth_placement_angle=0
         )
 
-        test_shape2 = paramak.ExtrudeCircleShape(
+        test_shape2 = ExtrudeCircleShape(
             points=[(30, 0)],
             radius=10,
             distance=20,
@@ -49,15 +49,15 @@ class test_object_properties(unittest.TestCase):
         """creates an extruded shape using circles with another shape cut out and
         checks that the volume is correct"""
 
-        inner_shape = paramak.ExtrudeCircleShape(
+        inner_shape = ExtrudeCircleShape(
             points=[(30, 0)], radius=5, distance=20
         )
 
-        outer_shape = paramak.ExtrudeCircleShape(
+        outer_shape = ExtrudeCircleShape(
             points=[(30, 0)], radius=10, distance=20
         )
 
-        outer_shape_with_cut = paramak.ExtrudeCircleShape(
+        outer_shape_with_cut = ExtrudeCircleShape(
             points=[(30, 0)], radius=10, distance=20, cut=inner_shape
         )
 
