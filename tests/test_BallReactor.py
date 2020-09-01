@@ -1,3 +1,4 @@
+
 import os
 import unittest
 from pathlib import Path
@@ -26,6 +27,7 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
+            rotation_angle=359,
         )
 
         test_reactor.export_stp()
@@ -51,6 +53,7 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
+            rotation_angle=359,
         )
 
         test_reactor.export_stp()
@@ -77,6 +80,7 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
+            rotation_angle=359,
         )
         test_reactor.export_svg("test_ballreactor_image.svg")
 
@@ -102,11 +106,11 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            rotation_angle=180,
             pf_coil_radial_thicknesses=[50, 50, 50, 50],
             pf_coil_vertical_thicknesses=[50, 50, 50, 50],
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
+            rotation_angle=359,
         )
         test_reactor.export_stp()
         assert len(test_reactor.shapes_and_components) == 11
@@ -130,13 +134,13 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            rotation_angle=180,
             pf_coil_radial_thicknesses=[50, 50, 50, 50],
             pf_coil_vertical_thicknesses=[50, 50, 50, 50],
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_poloidal_thickness=50,
+            rotation_angle=359,
         )
         test_reactor.export_stp()
         assert len(test_reactor.shapes_and_components) == 12
@@ -159,13 +163,13 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            rotation_angle=180,
             pf_coil_radial_thicknesses=[50, 50, 50, 50],
             pf_coil_vertical_thicknesses=[50, 50, 50, 50],
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_poloidal_thickness=50,
+            rotation_angle=359,
         )
         test_reactor.export_physical_groups()
 
@@ -190,14 +194,14 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            rotation_angle=270,
             pf_coil_radial_thicknesses=[50, 50, 50, 50],
             pf_coil_vertical_thicknesses=[50, 50, 50, 50],
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=100,
             tf_coil_poloidal_thickness=50,
-            divertor_position="lower"
+            divertor_position="lower",
+            rotation_angle=359,
         )
         assert len(test_reactor.shapes_and_components) == 12
 
@@ -219,7 +223,8 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            divertor_position="lower"
+            divertor_position="lower",
+            rotation_angle=359,
         )
 
         assert len(test_reactor.shapes_and_components) == 7
@@ -242,7 +247,8 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            divertor_position="upper"
+            divertor_position="upper",
+            rotation_angle=359,
         )
 
         assert len(test_reactor.shapes_and_components) == 7
