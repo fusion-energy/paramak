@@ -4,7 +4,7 @@ import numpy as np
 import scipy
 import sympy as sp
 
-from paramak import RotateMixedShape
+from paramak import RotateMixedShape, diff_between_angles
 
 
 class BlanketFP(RotateMixedShape):
@@ -114,7 +114,10 @@ class BlanketFP(RotateMixedShape):
             hash_value=None,
             **default_dict
         )
-
+        # raise error if full coverage and full rotation angle are set
+        if diff_between_angles(start_angle, stop_angle) == 0 and rotation_angle == 360:
+            raise ValueError("Full coverage and 360 rotation will result in a \
+                standard construction error.")
         self.thickness = thickness
         self.start_angle = start_angle
         self.stop_angle = stop_angle
@@ -298,12 +301,6 @@ class BlanketFP(RotateMixedShape):
         Returns:
             list: list of dicts containing the physical groups
         """
-
-        def diff_between_angles(a, b):
-            c = (b - a) % 360
-            if c > 180:
-                c -= 360
-            return c
 
         groups = []
         nb_volumes = 1  # only one volume

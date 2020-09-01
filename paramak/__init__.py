@@ -1,6 +1,6 @@
 from .shape import Shape
 from .reactor import Reactor
-from .utils import rotate, extend, distance_between_two_points
+from .utils import rotate, extend, distance_between_two_points, diff_between_angles
 
 from .parametric_shapes.extruded_spline_shape import ExtrudeSplineShape
 from .parametric_shapes.extruded_straight_shape import ExtrudeStraightShape

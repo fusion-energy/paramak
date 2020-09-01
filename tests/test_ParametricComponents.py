@@ -73,10 +73,28 @@ class test_BlanketFP(unittest.TestCase):
             thickness=200,
             stop_angle=360,
             start_angle=0,
+            rotation_angle=180
         )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+
+    def test_BlanketFP_full_cov_full_rotation(self):
+        """checks BlanketFP cannot have full coverage and 360 rotation at the same time"""
+        def create_shape():
+            test_shape = paramak.BlanketFP(
+                major_radius=300,
+                minor_radius=50,
+                triangularity=0.5,
+                elongation=2,
+                thickness=200,
+                stop_angle=360,
+                start_angle=0,
+                rotation_angle=360
+            )
+            test_shape.solid
+        self.assertRaises(
+            ValueError, create_shape)
 
     def test_BlanketFP_creation_variable_thickness_from_tuple(self):
         """checks that a cadquery solid can be created using the BlanketFP parametric
@@ -309,6 +327,7 @@ class test_Plasma(unittest.TestCase):
                     [expected_lower_x_point, expected_upper_x_point],
                 ):
                     assert point == expected_point
+                assert test_plasma.solid is not None
 
     def test_export_plasma_source(self):
         """creates a plasma using the Plasma parametric component and checks an stp file
@@ -447,7 +466,6 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_shape.volume > 1000
 
 
-
 class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
     def test_ToroidalFieldCoilTripleArc_creation(self):
         """creates a ToroidalFieldCoilTripleArc object and checks a solid is created"""
@@ -455,12 +473,14 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         test_shape = paramak.ToroidalFieldCoilTripleArc(
             R1=1,
             h=1,
-            radii=(100, 200),
+            radii=(1, 2),
             coverages=(10, 60),
-            thickness=150,
-            distance=50,
-            number_of_coils=8,
-            vertical_displacement=1)
+            thickness=0.1,
+            distance=0.5,
+            number_of_coils=6,
+            vertical_displacement=0.1)
+        assert test_shape.solid is not None
+
 
 class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
     def test_ToroidalFieldCoilPrincetonD_creation(self):
