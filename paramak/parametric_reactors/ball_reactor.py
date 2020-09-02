@@ -135,7 +135,7 @@ class BallReactor(paramak.Reactor):
         self.shapes_and_components = shapes_or_components
 
     def rotation_angle_check(self):
-        
+
         if self.rotation_angle == 360:
             print(
                 'Warning - 360 degree rotation may result in a Standard_ConstructionError or AttributeError'
