@@ -125,18 +125,32 @@ CenterColumnShieldPlasmaHyperbola()
    :members:
    :show-inheritance:
 
+
 ITERtypeDivertor()
 ^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/40028739/88180936-626b9100-cc2e-11ea-92df-1bac68b11e3b.png
-    :width: 180px
+    :width: 250px
     :height: 220px
     :align: center
 
 .. automodule:: paramak.parametric_components.divertor_ITER
+.. autoclass:: ITERtypeDivertor
    :members:
    :show-inheritance:
 
+ITERtypeDivertorNoDome()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/91977407-871d5300-ed1a-11ea-91e5-922e5c9b31a0.png
+    :width: 250px
+    :height: 220px
+    :align: center
+
+.. automodule:: paramak.parametric_components.divertor_ITER
+.. autoclass:: ITERtypeDivertorNoDome
+   :members:
+   :show-inheritance:
 
 InnerTfCoilsCircular()
 ^^^^^^^^^^^^^^^^^^^^^^
