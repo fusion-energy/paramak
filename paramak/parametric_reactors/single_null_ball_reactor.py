@@ -44,7 +44,7 @@ class SingleNullBallReactor(paramak.BallReactor):
             rear of the poloidal field coil and the toroidal field coil (optional)
         outboard_tf_coil_radial_thickness (float): the radial thickness of the
             toroidal field coil (optional)
-        tf_coil_poloidal_thickness (float): the poloidal thickness of the toroidal
+        outboard_tf_coil_poloidal_thickness (float): the poloidal thickness of the toroidal
             field coil (optional)
         divertor_position (str): the position of the divertor, "upper" or "lower
         rotation_angle (float): the angle of the sector that is desired
@@ -73,7 +73,7 @@ class SingleNullBallReactor(paramak.BallReactor):
         pf_coil_vertical_thicknesses=None,
         pf_coil_to_tf_coil_radial_gap=None,
         outboard_tf_coil_radial_thickness=None,
-        tf_coil_poloidal_thickness=None,
+        outboard_tf_coil_poloidal_thickness=None,
         divertor_position="upper",
         rotation_angle=360,
     ):
@@ -97,7 +97,7 @@ class SingleNullBallReactor(paramak.BallReactor):
             pf_coil_vertical_thicknesses=pf_coil_vertical_thicknesses,
             pf_coil_to_tf_coil_radial_gap=pf_coil_vertical_thicknesses,
             outboard_tf_coil_radial_thickness=outer_plasma_gap_radial_thickness,
-            tf_coil_poloidal_thickness=tf_coil_poloidal_thickness,
+            outboard_tf_coil_poloidal_thickness=outboard_tf_coil_poloidal_thickness,
             rotation_angle=rotation_angle)
 
         self.divertor_position = divertor_position
