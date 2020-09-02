@@ -44,7 +44,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         tf_coil_to_rear_blanket_radial_gap (float): the radial distance
             between the rear of the blanket and the toroidal field coil
             (optional)
-        tf_coil_poloidal_thickness (float): the vertical thickness of each
+        outboard_tf_coil_poloidal_thickness (float): the vertical thickness of each
             poloidal field coil (optional)
         pf_coil_vertical_thicknesses (list of floats): the vertical thickness
             of each poloidal field coil (optional)
@@ -79,7 +79,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         rotation_angle=360,
         outboard_tf_coil_radial_thickness=None,
         tf_coil_to_rear_blanket_radial_gap=None,
-        tf_coil_poloidal_thickness=None,
+        outboard_tf_coil_poloidal_thickness=None,
         pf_coil_vertical_thicknesses=None,
         pf_coil_radial_thicknesses=None,
         pf_coil_to_tf_coil_radial_gap=None,
@@ -101,7 +101,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             pf_coil_radial_thicknesses=pf_coil_radial_thicknesses,
             pf_coil_to_tf_coil_radial_gap=pf_coil_to_tf_coil_radial_gap,
             outboard_tf_coil_radial_thickness=outboard_tf_coil_radial_thickness,
-            tf_coil_poloidal_thickness=tf_coil_poloidal_thickness,
+            outboard_tf_coil_poloidal_thickness=outboard_tf_coil_poloidal_thickness,
             divertor_radial_thickness=divertor_radial_thickness,
             support_radial_thickness=support_radial_thickness,
             plasma_high_point=plasma_high_point,

@@ -28,7 +28,7 @@ def main():
         pf_coil_vertical_thicknesses=[30, 30, 30, 30],
         pf_coil_to_tf_coil_radial_gap=50,
         outboard_tf_coil_radial_thickness=30,
-        tf_coil_poloidal_thickness=30,
+        outboard_tf_coil_poloidal_thickness=30,
         tf_coil_to_rear_blanket_radial_gap=20,
     )
 

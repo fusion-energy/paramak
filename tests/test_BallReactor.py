@@ -139,7 +139,7 @@ class test_BallReactor(unittest.TestCase):
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=50,
-            tf_coil_poloidal_thickness=50,
+            outboard_tf_coil_poloidal_thickness=50,
             rotation_angle=359,
         )
         test_reactor.export_stp()
@@ -168,7 +168,7 @@ class test_BallReactor(unittest.TestCase):
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=50,
-            tf_coil_poloidal_thickness=50,
+            outboard_tf_coil_poloidal_thickness=50,
             rotation_angle=359,
         )
         test_reactor.export_physical_groups()
@@ -199,7 +199,7 @@ class test_BallReactor(unittest.TestCase):
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=100,
-            tf_coil_poloidal_thickness=50,
+            outboard_tf_coil_poloidal_thickness=50,
             divertor_position="lower",
             rotation_angle=359,
         )

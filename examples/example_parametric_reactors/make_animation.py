@@ -36,8 +36,8 @@ for i in tqdm(range(args.number_of_models)):
         pf_coil_vertical_thicknesses=[50, 50, 50, 50],
         pf_coil_to_rear_blanket_radial_gap=50,
         pf_coil_to_tf_coil_radial_gap=50,
-        tf_coil_radial_thickness=100,
-        tf_coil_poloidal_thickness=50,
+        outboard_tf_coil_radial_thickness=100,
+        outboard_tf_coil_poloidal_thickness=50,
     )
 
     my_reactor.export_2d_image(

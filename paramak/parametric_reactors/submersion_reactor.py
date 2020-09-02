@@ -44,7 +44,7 @@ class SubmersionTokamak(paramak.Reactor):
         tf_coil_to_rear_blanket_radial_gap (float): the radial distance
             between the rear of the blanket and the toroidal field coil
             (optional)
-        tf_coil_poloidal_thickness (float): the vertical thickness of each
+        outboard_tf_coil_poloidal_thickness (float): the vertical thickness of each
             poloidal field coil (optional)
         pf_coil_vertical_thicknesses (list of floats): the vertical thickness
             of each poloidal field coil (optional)
@@ -77,7 +77,7 @@ class SubmersionTokamak(paramak.Reactor):
         rotation_angle=360,
         outboard_tf_coil_radial_thickness=None,
         tf_coil_to_rear_blanket_radial_gap=None,
-        tf_coil_poloidal_thickness=None,
+        outboard_tf_coil_poloidal_thickness=None,
         pf_coil_vertical_thicknesses=None,
         pf_coil_radial_thicknesses=None,
         pf_coil_to_tf_coil_radial_gap=None,
@@ -100,7 +100,7 @@ class SubmersionTokamak(paramak.Reactor):
         self.pf_coil_radial_thicknesses = pf_coil_radial_thicknesses
         self.pf_coil_to_tf_coil_radial_gap = pf_coil_to_tf_coil_radial_gap
         self.outboard_tf_coil_radial_thickness = outboard_tf_coil_radial_thickness
-        self.tf_coil_poloidal_thickness = tf_coil_poloidal_thickness
+        self.outboard_tf_coil_poloidal_thickness = outboard_tf_coil_poloidal_thickness
         self.divertor_radial_thickness = divertor_radial_thickness
         self.support_radial_thickness = support_radial_thickness
         self.plasma_high_point = plasma_high_point
@@ -201,7 +201,7 @@ class SubmersionTokamak(paramak.Reactor):
         if (
             self.outboard_tf_coil_radial_thickness is not None
             and self.tf_coil_to_rear_blanket_radial_gap is not None
-            and self.tf_coil_poloidal_thickness is not None
+            and self.outboard_tf_coil_poloidal_thickness is not None
         ):
             self._tf_info_provided = True
             self._outboard_tf_coil_start_radius = (
@@ -534,7 +534,7 @@ class SubmersionTokamak(paramak.Reactor):
                 inner_mid_point=(self._outboard_tf_coil_start_radius, 0),
                 thickness=self.outboard_tf_coil_radial_thickness,
                 number_of_coils=self.number_of_tf_coils,
-                distance=self.tf_coil_poloidal_thickness,
+                distance=self.outboard_tf_coil_poloidal_thickness,
                 stp_filename="outboard_tf_coil.stp",
                 stl_filename="outboard_tf_coil.stl",
                 cut=self._cutting_slice,
