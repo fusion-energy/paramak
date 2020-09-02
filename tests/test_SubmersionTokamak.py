@@ -28,7 +28,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             blanket_rear_wall_radial_thickness=50,
             support_radial_thickness=150,
             plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-            rotation_angle=180,
+            rotation_angle=359,
         )
         test_reactor.export_svg("test_SubmersionTokamak_image.svg")
 
@@ -53,7 +53,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             blanket_rear_wall_radial_thickness=50,
             support_radial_thickness=150,
             plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-            rotation_angle=180,
+            rotation_angle=359,
         )
 
         assert len(test_reactor.shapes_and_components) == 8
@@ -75,12 +75,12 @@ class test_SubmersionTokamak(unittest.TestCase):
             blanket_rear_wall_radial_thickness=50,
             divertor_radial_thickness=50,
             plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
-            rotation_angle=180,
             support_radial_thickness=150,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=50,
             tf_coil_poloidal_thickness=70,
             number_of_tf_coils=4,
+            rotation_angle=359,
         )
         assert len(test_reactor.shapes_and_components) == 9
 
@@ -101,7 +101,6 @@ class test_SubmersionTokamak(unittest.TestCase):
             blanket_rear_wall_radial_thickness=50,
             divertor_radial_thickness=50,
             plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
-            rotation_angle=180,
             support_radial_thickness=150,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=50,
@@ -110,6 +109,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             pf_coil_radial_thicknesses=[40, 40, 40, 40, 40],
             pf_coil_to_tf_coil_radial_gap=50,
             number_of_tf_coils=4,
+            rotation_angle=359,
         )
         assert len(test_reactor.shapes_and_components) == 14
 
@@ -133,7 +133,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             blanket_rear_wall_radial_thickness=50,
             support_radial_thickness=150,
             plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-            rotation_angle=180,
+            rotation_angle=359,
         )
         test_reactor.export_stp("minimal_SubmersionTokamak")
 
@@ -173,12 +173,12 @@ class test_SubmersionTokamak(unittest.TestCase):
             blanket_rear_wall_radial_thickness=50,
             divertor_radial_thickness=50,
             plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
-            rotation_angle=180,
             support_radial_thickness=150,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=50,
             tf_coil_poloidal_thickness=70,
             number_of_tf_coils=4,
+            rotation_angle=360
         )
         test_reactor.export_stp("pf_SubmersionTokamak")
 
@@ -218,7 +218,6 @@ class test_SubmersionTokamak(unittest.TestCase):
             blanket_rear_wall_radial_thickness=50,
             divertor_radial_thickness=50,
             plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
-            rotation_angle=180,
             support_radial_thickness=150,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=50,
@@ -227,6 +226,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             pf_coil_radial_thicknesses=[40, 40, 40, 40, 40],
             pf_coil_to_tf_coil_radial_gap=50,
             number_of_tf_coils=4,
+            rotation_angle=359,
         )
         test_reactor.export_stp("tf_pf_SubmersionTokamak")
 
@@ -262,7 +262,6 @@ class test_SubmersionTokamak(unittest.TestCase):
             firstwall_radial_thickness=30,
             blanket_rear_wall_radial_thickness=30,
             number_of_tf_coils=16,
-            rotation_angle=180,
             support_radial_thickness=20,
             inboard_blanket_radial_thickness=20,
             outboard_blanket_radial_thickness=20,
@@ -274,7 +273,8 @@ class test_SubmersionTokamak(unittest.TestCase):
             tf_coil_poloidal_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=20,
             divertor_position="upper",
-            support_position="upper"
+            support_position="upper",
+            rotation_angle=359,
         )
         assert len(test_reactor.shapes_and_components) == 13
 
@@ -294,13 +294,13 @@ class test_SubmersionTokamak(unittest.TestCase):
             firstwall_radial_thickness=30,
             blanket_rear_wall_radial_thickness=30,
             number_of_tf_coils=16,
-            rotation_angle=180,
             support_radial_thickness=20,
             inboard_blanket_radial_thickness=20,
             outboard_blanket_radial_thickness=20,
             plasma_high_point=(200, 200),
             divertor_position="lower",
-            support_position="lower"
+            support_position="lower",
+            rotation_angle=359,
         )
         assert len(test_reactor.shapes_and_components) == 8
 
@@ -320,12 +320,12 @@ class test_SubmersionTokamak(unittest.TestCase):
             firstwall_radial_thickness=30,
             blanket_rear_wall_radial_thickness=30,
             number_of_tf_coils=16,
-            rotation_angle=180,
             support_radial_thickness=20,
             inboard_blanket_radial_thickness=20,
             outboard_blanket_radial_thickness=20,
             plasma_high_point=(200, 200),
             divertor_position="upper",
-            support_position="upper"
+            support_position="upper",
+            rotation_angle=359,
         )
         assert len(test_reactor.shapes_and_components) == 8

@@ -104,6 +104,10 @@ class SingleNullBallReactor(paramak.BallReactor):
 
         shapes_or_components = []
 
+        if self.rotation_angle == 360:
+            print(
+                'Warning - 360 degree rotation may result in a Standard_ConstructionError or AttributeError')
+
         self.make_plasma(shapes_or_components)
         self.make_radial_build(shapes_or_components)
         self.make_vertical_build(shapes_or_components)

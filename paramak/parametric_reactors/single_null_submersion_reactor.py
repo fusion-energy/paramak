@@ -120,6 +120,10 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
 
         shapes_or_components = []
 
+        if self.rotation_angle == 360:
+            print(
+                'Warning - 360 degree rotation may result in a Standard_ConstructionError or AttributeError')
+
         self.make_radial_build()
         self.make_vertical_build()
         self.make_inboard_tf_coils(shapes_or_components)
