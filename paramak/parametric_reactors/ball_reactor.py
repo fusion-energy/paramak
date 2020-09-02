@@ -72,7 +72,7 @@ class BallReactor(paramak.Reactor):
         pf_coil_vertical_thicknesses=None,
         pf_coil_to_tf_coil_radial_gap=None,
         outboard_tf_coil_radial_thickness=None,
-        outboard_outboard_tf_coil_poloidal_thickness=None,
+        outboard_tf_coil_poloidal_thickness=None,
         rotation_angle=360,
     ):
 
