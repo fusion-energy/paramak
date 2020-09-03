@@ -204,4 +204,4 @@ Further information on DAGMC neutronics can be found [here](https://svalinn.gith
 
 # Example scripts
 
-There are several example scripts in the [examples folder](https://github.com/ukaea/paramak/blob/develop/examples/). A good one to start with is [make_CAD_from_points.py](https://github.com/ukaea/paramak/blob/develop/examples/make_CAD_from_points.py) which makes simple examples of the different types of shapes (extrude, rotate) with different connection methods (splines, straight lines and circles).
+There are several example scripts in the [examples folder](https://github.com/ukaea/paramak/blob/main/examples/). A good one to start with is [make_CAD_from_points.py](https://github.com/ukaea/paramak/blob/main/examples/example_parametric_shapes/make_CAD_from_points.py) which makes simple examples of the different types of shapes (extrude, rotate) with different connection methods (splines, straight lines and circles).
