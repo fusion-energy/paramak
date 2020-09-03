@@ -114,8 +114,9 @@ class Shape:
         elif isinstance(value, str):
             if len(value) > 27:
                 warnings.warn(
-                    "Shape.material_tag > 28 characters. Use with DAGMC will be affected."+ str(value), UserWarning
-                )
+                    "Shape.material_tag > 28 characters. Use with DAGMC will be affected." +
+                    str(value),
+                    UserWarning)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
