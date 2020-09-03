@@ -355,7 +355,7 @@ class test_SubmersionTokamak(unittest.TestCase):
                         350),
                     rotation_angle=360,
                 )
-            except:
+            except BaseException:
                 pass
 
         with warnings.catch_warnings(record=True) as w:
