@@ -284,5 +284,5 @@ class test_BallReactor(unittest.TestCase):
             warning_trigger()
             assert len(w) == 1
             assert issubclass(w[-1].category, UserWarning)
-            assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(w[-1].message)
-
+            assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
+                w[-1].message)

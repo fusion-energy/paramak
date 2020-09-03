@@ -350,7 +350,9 @@ class test_SubmersionTokamak(unittest.TestCase):
                     outboard_blanket_radial_thickness=200,
                     blanket_rear_wall_radial_thickness=50,
                     support_radial_thickness=150,
-                    plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
+                    plasma_high_point=(
+                        50 + 50 + 50 + 100 + 50 + 50 + 100,
+                        350),
                     rotation_angle=360,
                 )
             except (RuntimeError, AttributeError):
@@ -361,4 +363,5 @@ class test_SubmersionTokamak(unittest.TestCase):
             warning_trigger()
             assert len(w) == 1
             assert issubclass(w[-1].category, UserWarning)
-            assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(w[-1].message)
+            assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
+                w[-1].message)
