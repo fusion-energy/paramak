@@ -1,5 +1,6 @@
 import math
 import operator
+import warnings
 
 import cadquery as cq
 
@@ -134,9 +135,9 @@ class SubmersionTokamak(paramak.Reactor):
     def rotation_angle_check(self):
 
         if self.rotation_angle == 360:
-            print(
-                'Warning - 360 degree rotation may result in a Standard_ConstructionError or AttributeError'
-            )
+            warnings.warn(
+                "360 degree rotation may result in a Standard_ConstructionError or AttributeError",
+                UserWarning)
 
     def make_radial_build(self):
 

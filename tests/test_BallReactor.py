@@ -2,6 +2,7 @@
 import os
 import unittest
 from pathlib import Path
+import warnings
 
 import pytest
 
@@ -252,3 +253,36 @@ class test_BallReactor(unittest.TestCase):
         )
 
         assert len(test_reactor.shapes_and_components) == 7
+
+    def test_rotation_angle_warning(self):
+        """checks that the correct warning message is printed when
+        rotation_angle = 360"""
+
+        def warning_trigger():
+            try:
+                paramak.BallReactor(
+                    inner_bore_radial_thickness=50,
+                    inboard_tf_leg_radial_thickness=50,
+                    center_column_shield_radial_thickness=50,
+                    divertor_radial_thickness=100,
+                    inner_plasma_gap_radial_thickness=50,
+                    plasma_radial_thickness=200,
+                    outer_plasma_gap_radial_thickness=50,
+                    firstwall_radial_thickness=50,
+                    blanket_radial_thickness=100,
+                    blanket_rear_wall_radial_thickness=50,
+                    elongation=2,
+                    triangularity=0.55,
+                    number_of_tf_coils=16,
+                    rotation_angle=360,
+                )
+            except (RuntimeError, AttributeError):
+                pass
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            warning_trigger()
+            assert len(w) == 1
+            assert issubclass(w[-1].category, UserWarning)
+            assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
+                w[-1].message)
