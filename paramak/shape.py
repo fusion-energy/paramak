@@ -2,6 +2,7 @@ import json
 import math
 import numbers
 from pathlib import Path
+import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -112,9 +113,8 @@ class Shape:
             self._material_tag = value
         elif isinstance(value, str):
             if len(value) > 27:
-                print(
-                    "Warning: Shape.material_tag > 28 characters. Use with DAGMC will be affected.",
-                    value,
+                warnings.warn(
+                    "Shape.material_tag > 28 characters. Use with DAGMC will be affected."+ str(value), UserWarning
                 )
             self._material_tag = value
         else:
