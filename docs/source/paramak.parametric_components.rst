@@ -269,3 +269,27 @@ ToroidalFieldCoilCoatHanger()
 .. automodule:: paramak.parametric_components.toroidal_field_coil_coat_hanger
    :members:
    :show-inheritance:
+
+ToroidalFieldCoilPrincetonD()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_princeton_d
+   :members:
+   :show-inheritance:
+
+ToroidalFieldCoilTripleArc()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/92124454-b654c280-edf5-11ea-96d2-c0957f37a733.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_triple_arc
+   :members:
+   :show-inheritance:

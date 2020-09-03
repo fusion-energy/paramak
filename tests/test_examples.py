@@ -140,6 +140,8 @@ class test_object_properties(unittest.TestCase):
             "blanket_arc_h.stp",
             "tf_coil_rectangle.stp",
             "toroidal_field_coil_coat_hanger.stp",
+            "toroidal_field_coil_triple_arc.stp",
+            "toroidal_field_coil_princeton_d.stp"
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)

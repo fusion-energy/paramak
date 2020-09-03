@@ -51,18 +51,6 @@ def main():
     )
     all_components.append(component)
 
-    component = paramak.ToroidalFieldCoilCoatHanger(
-        horizontal_start_point=(200, 500),
-        horizontal_length=400,
-        vertical_start_point=(700, 50),
-        vertical_length=500,
-        thickness=50,
-        distance=50,
-        stp_filename="toroidal_field_coil_coat_hanger.stp",
-        number_of_coils=5,
-    )
-    all_components.append(component)
-
     component = paramak.CenterColumnShieldCylinder(
         inner_radius=80,
         outer_radius=100,
@@ -211,6 +199,40 @@ def main():
         distance=60,
         stp_filename="tf_coil_rectangle.stp",
         number_of_coils=6,
+    )
+    all_components.append(component)
+
+    component = paramak.ToroidalFieldCoilCoatHanger(
+        horizontal_start_point=(200, 500),
+        horizontal_length=400,
+        vertical_start_point=(700, 50),
+        vertical_length=500,
+        thickness=50,
+        distance=50,
+        stp_filename="toroidal_field_coil_coat_hanger.stp",
+        number_of_coils=6,
+    )
+    all_components.append(component)
+
+    component = paramak.ToroidalFieldCoilTripleArc(
+        R1=80,
+        h=200,
+        radii=(70, 100),
+        coverages=(60, 60),
+        thickness=30,
+        distance=30,
+        number_of_coils=6,
+        stp_filename="toroidal_field_coil_triple_arc.stp"
+    )
+    all_components.append(component)
+
+    component = paramak.ToroidalFieldCoilPrincetonD(
+        R1=80,
+        R2=300,
+        thickness=30,
+        distance=30,
+        number_of_coils=6,
+        stp_filename="toroidal_field_coil_princeton_d.stp"
     )
     all_components.append(component)
 
