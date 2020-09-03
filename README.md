@@ -1,9 +1,9 @@
 
 [![N|Python](https://www.python.org/static/community_logos/python-powered-w-100x40.png)](https://www.python.org)
 [![CircleCI](https://circleci.com/gh/ukaea/paramak/tree/main.svg?style=svg)](https://circleci.com/gh/ukaea/paramak/tree/main)
-[![codecov](https://codecov.io/gh/ukaea/paramak/branch/develop/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
+[![codecov](https://codecov.io/gh/ukaea/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
 [![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
-[![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=latest)](https://paramak.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openmcworkshop/paramak)](https://hub.docker.com/r/openmcworkshop/paramak)
 
 
