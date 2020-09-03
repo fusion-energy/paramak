@@ -220,8 +220,9 @@ def main():
         radii=(70, 100),
         coverages=(60, 60),
         thickness=30,
-        distance 30,
-        number_of_coils=6
+        distance=30,
+        number_of_coils=6,
+        stp_filename="toroidal_field_coil_triple_arc.stp"
     )
     all_components.append(component)
 
@@ -230,7 +231,8 @@ def main():
         R2=300,
         thickness=30,
         distance=30,
-        number_of_coils=6
+        number_of_coils=6,
+        stp_filename="toroidal_field_coil_princeton_d.stp"
     )
     all_components.append(component)
 
