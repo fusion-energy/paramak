@@ -1,10 +1,10 @@
 from collections import Iterable
+from hashlib import blake2b
 
 import cadquery as cq
 
 from paramak import Shape
-
-from hashlib import blake2b
+from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class ExtrudeMixedShape(Shape):
@@ -15,7 +15,7 @@ class ExtrudeMixedShape(Shape):
             types are either 'straight', 'spline' or 'circle'. For example [(2.,1.,'straight'),
             (2.,2.,'straight'), (1.,2.,'spline'), (1.,1.,'spline'), (2.,1.,'spline')].
        :type points: a list of tuples each containing X (float), Z (float), connection
-            type (string) values 
+            type (string) values
        :param stp_filename: the filename used when saving stp files as part of a reactor
        :type stp_filename: str
        :param color: the color to use when exporting as html graphs or png images
@@ -23,7 +23,7 @@ class ExtrudeMixedShape(Shape):
             3 or 4 floats respectively each in the range 0-1
        :param distance: The extrude distance to use (cm units if used for neutronics)
        :type distance: float
-       :param azimuth_placement_angle: the angle or angles to use when rotating the 
+       :param azimuth_placement_angle: the angle or angles to use when rotating the
             shape on the azimuthal axis
        :type azimuth_placement_angle: float or iterable of floats
        :param cut: An optional cadquery object to perform a boolean cut with this object
@@ -40,28 +40,42 @@ class ExtrudeMixedShape(Shape):
         distance,
         workplane="XZ",
         stp_filename="ExtrudeMixedShape.stp",
+        stl_filename="ExtrudeMixedShape.stl",
         solid=None,
         color=None,
         azimuth_placement_angle=0,
         cut=None,
+        intersect=None,
+        union=None,
         material_tag=None,
         name=None,
-        hash_value=None,
+        **kwargs
     ):
 
+        default_dict = {"tet_mesh": None,
+                        "physical_groups": None}
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
         super().__init__(
-            points,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            workplane,
+            points=points,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            workplane=workplane,
+            **default_dict
         )
 
         self.cut = cut
+        self.intersect = intersect
+        self.union = union
         self.distance = distance
-        self.hash_value = hash_value
+        self.hash_value = None
         self.solid = solid
 
     @property
@@ -71,6 +85,22 @@ class ExtrudeMixedShape(Shape):
     @cut.setter
     def cut(self, value):
         self._cut = value
+
+    @property
+    def intersect(self):
+        return self._intersect
+
+    @intersect.setter
+    def intersect(self, value):
+        self._intersect = value
+
+    @property
+    def union(self):
+        return self._union
+
+    @union.setter
+    def union(self, value):
+        self._union = value
 
     @property
     def solid(self):
@@ -100,17 +130,13 @@ class ExtrudeMixedShape(Shape):
 
     def get_hash(self):
         hash_object = blake2b()
-        hash_object.update(
-            str(self.points).encode("utf-8")
-            + str(self.workplane).encode("utf-8")
-            + str(self.name).encode("utf-8")
-            + str(self.color).encode("utf-8")
-            + str(self.material_tag).encode("utf-8")
-            + str(self.stp_filename).encode("utf-8")
-            + str(self.azimuth_placement_angle).encode("utf-8")
-            + str(self.distance).encode("utf-8")
-            + str(self.cut).encode("utf-8")
-        )
+        shape_dict = dict(self.__dict__)
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
+
+        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()
         return value
 
@@ -123,9 +149,6 @@ class ExtrudeMixedShape(Shape):
         """
 
         # print('create_solid() has been called')
-
-        # Creates hash value for current solid
-        self.hash_value = self.get_hash()
 
         # obtains the first two values of the points list
         XZ_points = [(p[0], p[1]) for p in self.points]
@@ -173,7 +196,9 @@ class ExtrudeMixedShape(Shape):
             rotated_solids = []
             # Perform seperate rotations for each angle
             for angle in self.azimuth_placement_angle:
-                rotated_solids.append(solid.rotate((0, 0, -1), (0, 0, 1), angle))
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
             solid = cq.Workplane(self.workplane)
 
             # Joins the seperate solids together
@@ -181,17 +206,24 @@ class ExtrudeMixedShape(Shape):
                 solid = solid.union(i)
         else:
             # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate((0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
-            # Allows for multiple cuts to be applied
-            if isinstance(self.cut, Iterable):
-                for cutting_solid in self.cut:
-                    solid = solid.cut(cutting_solid.solid)
-            else:
-                solid = solid.cut(self.cut.solid)
+            solid = cut_solid(solid, self.cut)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.intersect is not None:
+            solid = intersect_solid(solid, self.intersect)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.union is not None:
+            solid = union_solid(solid, self.union)
 
         self.solid = solid
+
+        # Calculate hash value for current solid
+        self.hash_value = self.get_hash()
 
         return solid

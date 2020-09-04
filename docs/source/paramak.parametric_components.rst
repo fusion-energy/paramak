@@ -37,15 +37,15 @@ BlanketConstantThicknessArcV()
    :members:
    :show-inheritance:
 
-BlanketConstantThicknessFP()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlanketFP()
+^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
    :width: 250
    :height: 200
    :align: center
 
-.. automodule:: paramak.parametric_components.blanket_constant_thickness_fp
+.. automodule:: paramak.parametric_components.blanket_fp
    :members:
    :show-inheritance:
 
@@ -109,6 +109,10 @@ CenterColumnShieldFlatTopCircular()
    :width: 300px
    :height: 220px
 
+.. automodule:: paramak.parametric_components.center_column_flat_top_circular
+   :members:
+   :show-inheritance:
+
 CenterColumnShieldPlasmaHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -121,34 +125,32 @@ CenterColumnShieldPlasmaHyperbola()
    :members:
    :show-inheritance:
 
-DivertorBlock()
-^^^^^^^^^^^^^^^
-
-.. automodule:: paramak.parametric_components.divertor_block
-   :members:
-   :show-inheritance:
-
 
 ITERtypeDivertor()
 ^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/40028739/88180936-626b9100-cc2e-11ea-92df-1bac68b11e3b.png
-    :width: 180px
+    :width: 250px
     :height: 220px
     :align: center
 
-
 .. automodule:: paramak.parametric_components.divertor_ITER
+.. autoclass:: ITERtypeDivertor
    :members:
    :show-inheritance:
 
-DivertorITERNoDome()
-^^^^^^^^^^^^^^^^^^^^
-.. image:: https://user-images.githubusercontent.com/40028739/88182309-5254b100-cc30-11ea-94ba-296aae346032.png
-    :width: 180px
+ITERtypeDivertorNoDome()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/91977407-871d5300-ed1a-11ea-91e5-922e5c9b31a0.png
+    :width: 250px
     :height: 220px
     :align: center
 
+.. automodule:: paramak.parametric_components.divertor_ITER
+.. autoclass:: ITERtypeDivertorNoDome
+   :members:
+   :show-inheritance:
 
 InnerTfCoilsCircular()
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -232,6 +234,18 @@ Plasma()
    :members:
    :show-inheritance:
 
+PlasmaFromPoints()
+^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
+    :width: 220px
+    :height: 200px
+    :align: center
+
+.. automodule:: paramak.parametric_components.tokamak_plasma_from_points
+   :members:
+   :show-inheritance:
+
 ToroidalFieldCoilRectangle()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -253,5 +267,29 @@ ToroidalFieldCoilCoatHanger()
    :align: center
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_coat_hanger
+   :members:
+   :show-inheritance:
+
+ToroidalFieldCoilPrincetonD()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_princeton_d
+   :members:
+   :show-inheritance:
+
+ToroidalFieldCoilTripleArc()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/92124454-b654c280-edf5-11ea-96d2-c0957f37a733.png
+   :width: 250
+   :height: 200
+   :align: center
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_triple_arc
    :members:
    :show-inheritance:

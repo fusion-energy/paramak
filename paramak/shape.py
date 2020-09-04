@@ -1,19 +1,17 @@
+import json
 import math
 import numbers
 from pathlib import Path
+import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
-from cadquery import exporters
+import plotly.graph_objects as go
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from PIL import Image
 
-import plotly.graph_objects as go
-import pyrender
-import trimesh
-
-import json
+from cadquery import exporters
 
 
 class Shape:
@@ -50,12 +48,16 @@ class Shape:
         color=None,
         material_tag=None,
         stp_filename=None,
+        stl_filename=None,
         azimuth_placement_angle=0,
         workplane="XZ",
+        tet_mesh=None,
+        physical_groups=None,
     ):
 
         self.points = points
         self.stp_filename = stp_filename
+        self.stl_filename = stl_filename
         self.color = color
         self.name = name
 
@@ -64,14 +66,14 @@ class Shape:
 
         # neutronics specific properties
         self.material_tag = material_tag
-        self.tet_mesh = None
+        self.tet_mesh = tet_mesh
+
+        self.physical_groups = physical_groups
 
         # properties calculated internally by the class
         self.solid = None
         self.render_mesh = None
         # self.volume = None
-
-        self.physical_groups = None
 
     @property
     def workplane(self):
@@ -84,8 +86,10 @@ class Shape:
             self._workplane = value
         else:
             raise ValueError(
-                "Shape.workplane must be one of ", acceptable_values, " not ", value
-            )
+                "Shape.workplane must be one of ",
+                acceptable_values,
+                " not ",
+                value)
 
     @property
     def volume(self):
@@ -107,9 +111,12 @@ class Shape:
     def material_tag(self, value):
         if value is None:
             self._material_tag = value
-        elif type(value) == str:
+        elif isinstance(value, str):
             if len(value) > 27:
-                print("Warning: Shape.material_tag > 28 characters. Use with DAGMC will be affected.", value)
+                warnings.warn(
+                    "Shape.material_tag > 28 characters. Use with DAGMC will be affected." +
+                    str(value),
+                    UserWarning)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
@@ -122,7 +129,7 @@ class Shape:
     def tet_mesh(self, value):
         if value is None:
             self._tet_mesh = value
-        elif type(value) == str:
+        elif isinstance(value, str):
             self._tet_mesh = value
         else:
             raise ValueError("Shape.tet_mesh must be a string", value)
@@ -135,7 +142,7 @@ class Shape:
     def name(self, value):
         if value is None:
             self._name = value
-        elif type(value) == str:
+        elif isinstance(value, str):
             self._name = value
         else:
             raise ValueError("Shape.name must be a string", value)
@@ -156,7 +163,7 @@ class Shape:
         if values is None:
             self._points = values
         else:
-            if type(values) != list:
+            if not isinstance(values, list):
                 raise ValueError("points must be a list")
 
             for value in values:
@@ -194,14 +201,16 @@ class Shape:
                         value,
                     )
 
-                # Checks that only straight and spline are in the connections part of points
+                # Checks that only straight and spline are in the connections
+                # part of points
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
                         raise ValueError(
                             'individual connections must be either "straight" or "spline"'
                         )
 
-            # checks that the entries in the points are either all 2 long or all 3 long, not a mixture
+            # checks that the entries in the points are either all 2 long or
+            # all 3 long, not a mixture
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
                     raise ValueError(
@@ -236,21 +245,54 @@ class Shape:
         if value is None:
             # print("stp_filename will need setting to use this shape in a Reactor")
             self._stp_filename = value
-        elif type(value) == str:
+        elif isinstance(value, str):
             if Path(value).suffix == ".stp" or Path(value).suffix == ".step":
                 self._stp_filename = value
             else:
                 raise ValueError(
                     "Incorrect filename ending, filename must end with .stp or .step"
                 )
-
         else:
-            raise ValueError("stp_filename must be a string", type(value))
+            raise ValueError(
+                "stp_filename must be a string",
+                value,
+                type(value))
+
+    @property
+    def stl_filename(self):
+        return self._stl_filename
+
+    @stl_filename.setter
+    def stl_filename(self, value):
+        """Sets the Shape.stl_filename attributes which is used as the
+           filename when exporting the geometry to stp format. Note,
+           .stp will be added to filenames not ending with .step or .stp
+
+        :param value: the value to use as the stl_filename
+        :type value: str
+
+        :raises incorrect type: only str values are accepted
+        """
+        if value is None:
+            # print("stl_filename will need setting to use this shape in a Reactor")
+            self._stl_filename = value
+        elif isinstance(value, str):
+            if Path(value).suffix == ".stl":
+                self._stl_filename = value
+            else:
+                raise ValueError(
+                    "Incorrect filename ending, filename must end with .stl"
+                )
+        else:
+            raise ValueError(
+                "stl_filename must be a string",
+                value,
+                type(value))
 
     def create_limits(self):
         """"Finds the x,y,z limits (min and max) of the points that make up the face of the shape.
         Note the Shape may extend beyond this boundary if splines are used to connect points.
-        Shape.solid.BoundBox can be used to find the limits of the 
+        Shape.solid.BoundBox can be used to find the limits of the
 
         :raises ValueError: if no points are defined
 
@@ -271,36 +313,14 @@ class Shape:
 
         return self.x_min, self.x_max, self.z_min, self.z_max
 
-    def _create_render_mesh(self, tolerance=0.001):
-        """Converts the Shape.mesh into a mesh suitable for use with pyrender.
-        This method required for internal use by Shape.export_3d_image
-
-        :param tolerance: the mesh tolerance
-        :type tolerance: float
-
-        :return: a pyrender mesh object
-        :rtype: pyrender.Mesh
-        """
-
-        # export a tempory STL file
-        self.export_stl("temp.stl", tolerance)
-
-        tm = trimesh.load("temp.stl")
-
-        if self.color is not None:
-            tm.visual.vertex_colors = self.color
-
-        render_mesh = pyrender.Mesh.from_trimesh(tm)
-        self.render_mesh = render_mesh
-
-        return render_mesh
-
     def export_stl(self, filename, tolerance=0.001):
         """Exports an stl file for the Shape.solid.
         If the provided filename doesn't end with .stl it will be added
 
         :param filename: the filename of the stl
         :type filename: str
+        :param tolerance: the precision of the faceting
+        :type tolerance: float
         """
 
         Pfilename = Path(filename)
@@ -370,8 +390,12 @@ class Shape:
 
             print("Saved physical_groups description to ", Pfilename)
         else:
-            print("Warning: physical_groups attribute is None \
-                for {}".format(self.name))
+            print(
+                "Warning: physical_groups attribute is None \
+                for {}".format(
+                    self.name
+                )
+            )
 
         return filename
 
@@ -534,60 +558,6 @@ class Shape:
 
         return plt
 
-    def export_3d_image(self, filename, tolerance=0.001):
-        """Exports a 3d rendered image (png) of the reactor.
-        Components colored by their Shape.Color property.
-
-        Note: to make the reactor internals more visable consider
-        setting the Shape.rotation_angle to 180
-
-        :param filename: the filename of the saved png image
-        :type filename: str
-        :param tolerance: the tolerance of the mesh
-        :type tolerance: float
-
-        :return: a image object
-        :rtype: PIL image object
-        """
-
-        scene = pyrender.Scene(ambient_light=np.array([0.1, 0.1, 0.1, 1.0]))
-
-        if self.render_mesh is None:
-            scene.add(self._create_render_mesh(tolerance))
-
-        # sets the camera field of view (fov) and aspect ratio of the image
-        camera = pyrender.camera.PerspectiveCamera(
-            yfov=math.radians(90.0), aspectRatio=2.0
-        )
-        # sets the camera position using a matrix
-        c = 2 ** -0.5
-        camera_pose = np.array(
-            [[1, 0, 0, 0], [0, c, -c, -800], [0, c, c, 800], [0, 0, 0, 1]]
-        )
-        scene.add(camera, pose=camera_pose)
-
-        light = pyrender.DirectionalLight(color=[np.ones(3)], intensity=1.0)
-        scene.add(light, pose=camera_pose)
-
-        # Render the scene
-        renderer = pyrender.OffscreenRenderer(1000, 500)
-        colours, depth = renderer.render(scene)
-
-        image = Image.fromarray(colours, "RGB")
-
-        Pfilename = Path(filename)
-
-        if Pfilename.suffix != ".png":
-            Pfilename = Pfilename.with_suffix(".png")
-
-        Path(filename).parent.mkdir(parents=True, exist_ok=True)
-
-        image.save(Pfilename, "PNG")
-
-        print("\n saved 3d image to ", Pfilename)
-
-        return image
-
     def _create_patch(self):
         """Creates a matplotlib polygon patch from the Shape points.
         This is used when making 2d images of the Shape object.
@@ -637,8 +607,15 @@ class Shape:
         :rtype: dictionary
         """
 
-        neutronics_description = {"material": self.material_tag,
-                                  "filename": self.stp_filename}
-        if self.tet_mesh != None:
-            neutronics_description['tet_mesh'] = self.tet_mesh
+        neutronics_description = {"material": self.material_tag}
+
+        if self.stp_filename is not None:
+            neutronics_description["stp_filename"] = self.stp_filename
+
+        if self.tet_mesh is not None:
+            neutronics_description["tet_mesh"] = self.tet_mesh
+
+        if self.stl_filename is not None:
+            neutronics_description["stl_filename"] = self.stl_filename
+
         return neutronics_description

@@ -7,23 +7,35 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
     plasma and offsets specified at the plasma center and edges. Shield thickness is
     controlled by the relative values of the shield offsets and inner radius.
 
-    :param major_radius: the major radius of the plasma
-    :type major_radius: float
-    :param minor_radius: the minor radius of the plasma
-    :type minor_radius: float
-    :param triangularity: the triangularity of the plasma
-    :type triangularity: float
-    :param elongation: the elongation of the plasma
-    :type elongation: float
-    :param inner_radius: the inner radius of the center column shield
-    :type inner_radius: float
-    :param mid_offset: the offset of the shield from the plasma at the plasma center
-    :type mid_offset: float
-    :param edge_offset: the offset of the shield from the plasma at the plasma edge
-    :type edge_offset: float
+    Args:
+        major_radius (float): the major radius of the plasma.
+        minor_radius (float): the minor radius of the plasma.
+        triangulation (float): the triangularity of the plasma.
+        elongation (float): the elongation of the plasma.
+        inner_radius (float): the inner radius of the center column shield.
+        mid_offset (float): the offset of the shield from the plasma at the plasma center.
+        edge_offset (float): the offset of the shield from the plasma at the plasma edge.
 
-    :return: a shape object that has generic functionality
-    :rtype: a paramak shape
+    Keyword Args:
+        name (str): the legend name used when exporting a html graph of the shape.
+        color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
+            exportin as html graphs or png images.
+        material_tag (str): The material name to use when exporting the neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
+            rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
+        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
+            this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        tet_mesh (str): Insert description.
+        physical_groups (type): Insert description.
+
+    Returns:
+        a paramak shape object: A shape object that has generic functionality with points determined by
+            the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -36,20 +48,26 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         color=None,
         material_tag="center_column_shield_mat",
         stp_filename="CenterColumnShieldPlasmaHyperbola.stp",
+        stl_filename="CenterColumnShieldPlasmaHyperbola.stl",
         azimuth_placement_angle=0,
         rotation_angle=360,
-        cut=None,
         major_radius=450,
         minor_radius=150,
         triangularity=0.55,
         elongation=2,
         **kwargs
     ):
-    
-        default_dict = {'points':None,
-                        'workplane':"XZ",
-                        'solid':None,
-                        'hash_value':None}
+
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
+        }
 
         for arg in kwargs:
             if arg in default_dict:
@@ -60,9 +78,10 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
+            stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
-            cut=cut,
+            hash_value=None,
             **default_dict
         )
 
@@ -169,7 +188,8 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
                 )
             )
 
-        if self.inner_radius >= plasma.inner_equatorial_point[0] - self.mid_offset:
+        if self.inner_radius >= plasma.inner_equatorial_point[0] - \
+                self.mid_offset:
             raise ValueError("Inner radius is too large")
 
         points = [
@@ -177,7 +197,11 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             (self.inner_radius, self.height / 2, "straight"),
             (plasma.high_point[0] - self.edge_offset, self.height / 2, "straight"),
             (plasma.high_point[0] - self.edge_offset, plasma.high_point[1], "spline"),
-            (plasma.inner_equatorial_point[0] - self.mid_offset, plasma.inner_equatorial_point[1], "spline"),
+            (
+                plasma.inner_equatorial_point[0] - self.mid_offset,
+                plasma.inner_equatorial_point[1],
+                "spline",
+            ),
             (plasma.low_point[0] - self.edge_offset, plasma.low_point[1], "straight"),
             (plasma.low_point[0] - self.edge_offset, -1 * self.height / 2, "straight"),
             (self.inner_radius, -1 * self.height / 2, "straight"),

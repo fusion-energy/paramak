@@ -1,29 +1,28 @@
 
+[![N|Python](https://www.python.org/static/community_logos/python-powered-w-100x40.png)](https://www.python.org)
 [![CircleCI](https://circleci.com/gh/ukaea/paramak/tree/main.svg?style=svg)](https://circleci.com/gh/ukaea/paramak/tree/main)
-[![codecov](https://codecov.io/gh/ukaea/paramak/branch/develop/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
+[![codecov](https://codecov.io/gh/ukaea/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
 [![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
-[![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=latest)](https://paramak.readthedocs.io/en/latest/?badge=latest)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openmcworkshop/paramak_dependencies)](https://hub.docker.com/r/openmcworkshop/paramak_dependencies)
+[![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openmcworkshop/paramak)](https://hub.docker.com/r/openmcworkshop/paramak)
 
 
 # Paramak
 
-  
-<!---R nit: Minor formatting now, but lines should be hard-wrapped at 79
-characters for ease of viewing in traditional text editors. -->
-
 The Paramak python package allows rapid production of 3D CAD models of fusion reactors. The purpose of the Paramak is to provide geometry for parametric studies. It is possible to use the created geometry in engineering and neutronics studies as the STP files produced can be automatically converted to DAGMC compatable neutronics models or meshed and used in finite element analysis codes.
 
-Documentation can be found on [ReadTheDocs](https://paramak.readthedocs.io/en/latest/)
+:point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
 
 
 ## Installation
 
 To install the Paramak you need to have [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), [Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and [Pip](https://anaconda.org/anaconda/pip). If you have these three dependancies already then you can install the Paramak using Pip:
 
-```pip install paramak```
+```
+pip install paramak
+```
 
-Detailed [installation instructions](https://paramak.readthedocs.io/en/latest/#prerequisites) can be found in the User's Guide.
+Detailed [installation instructions](https://paramak.readthedocs.io/en/main/#prerequisites) can be found in the User's Guide.
 
  
 
@@ -36,11 +35,14 @@ Once points and connections between the points are provided the user has options
 The different families of shapes that can be made with the Paramak are shown in the table below. The CadQuery objects created can be combined and modified (e.g. fillet corners) using CadQueries powerful filtering capabilties to create more complex models (e.g. a Tokamak). The Tokamak images below are coloured based on the shape family that the component is made from. There are also parametric components which provide convenient fusion relevent shapes for common reactor components.
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/88866536-e57a8180-d202-11ea-8e3f-2662973c6f69.gif" width="310" height="200">
 <img src="https://user-images.githubusercontent.com/8583900/86237379-90136c00-bb93-11ea-80fb-54e2dab74819.gif" width="150" height="200">
 <img src="https://user-images.githubusercontent.com/8583900/86237165-2c893e80-bb93-11ea-8fcd-838eb3180c95.png" width="150" height="200">
 <img src="https://user-images.githubusercontent.com/8583900/86237161-2b581180-bb93-11ea-99ff-01cc1cec62ef.png" width="150" height="200">
 <img src="https://user-images.githubusercontent.com/8583900/86237158-2abf7b00-bb93-11ea-9a78-a987f20359a3.png" width="150" height="200">
+</p>
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/8583900/88866536-e57a8180-d202-11ea-8e3f-2662973c6f69.gif" width="800" height="300">
 </p>
 
 
@@ -58,16 +60,19 @@ There are a collection of Python scripts in the example folder that demonstrate 
 
 After importing the class the user then sets the points. By default, points should be a list of (x,z) points. In this case the points are connected with straight lines.
 
-`from paramak import RotateStraightShape`
+```python
+import paramak
 
-`my_shape = RotateStraightShape(points = [(20,0), (20,100), (100,0)])` 
-
+my_shape = paramak.RotateStraightShape(points = [(20,0), (20,100), (100,0)])
+```
 
 Once these properties have been set users can write 3D volumes in CAD STP or STL formats.
 
-`my_shape.export_stp('example.stp')`
+```python
+my_shape.export_stp('example.stp')
 
-`my_shape.export_stl('example.stl')`
+my_shape.export_stl('example.stl')
+```
 
 <p align="center"><img src="https://user-images.githubusercontent.com/56687624/88935761-ff0ae000-d279-11ea-8848-de9b486840d9.png" height="300"></p>
 
@@ -76,72 +81,121 @@ Once these properties have been set users can write 3D volumes in CAD STP or STL
 
 Parametric components are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerous parametric components for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma. Users could also construct a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric component called Plasma can construct a plasma from more convenient parameters. Parametric components also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
 
+```python
+import paramak
 
-`from paramak import Plasma`
+my_plasma = paramak.Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
 
-`my_plasma = Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)`
-
-`my_plasma.export_stp('plasma.stp')`
+my_plasma.export_stp('plasma.stp')
+```
 
 <p align="center"><img src="https://user-images.githubusercontent.com/56687624/88935871-1ea20880-d27a-11ea-82e1-1afa55ff9ba8.png" height="300"></p>
+
+
+## Usage - Parametric Reactors
+
+Parametric Reactors are wrapped versions of a combination of parametric shapes and components that comprise a particular reactor design. Some parametric reactors include a ball reactor and
+a submersion ball reactor. These allow full reactor models to be constructed by specifying a series of simple parameters. This example shows the construction of a simple ball reactor without the
+optional outer pf and tf coils.
+
+```python
+import paramak
+
+my_reactor = paramak.BallReactor(
+    inner_bore_radial_thickness = 50,
+    inboard_tf_leg_radial_thickness = 50,
+    center_column_shield_radial_thickness= 50,
+    divertor_radial_thickness = 100,
+    inner_plasma_gap_radial_thickness = 50,
+    plasma_radial_thickness = 200,
+    outer_plasma_gap_radial_thickness = 50,
+    firstwall_radial_thickness = 50,
+    blanket_radial_thickness = 100,
+    blanket_rear_wall_radial_thickness = 50,
+    elongation = 2,
+    triangularity = 0.55,
+    number_of_tf_coils = 16,
+    rotation_angle = 180
+
+my_reactor.name = 'BallReactor'
+
+my_reactor.export_stp()
+```
+
+<p align="center"><img src="https://user-images.githubusercontent.com/56687624/89203299-465fdc00-d5ac-11ea-8663-a5b7eecfb584.png" height="300"></p>
+
 
 
 ## Usage - Reactor object
 
 A reactor object provides a container object for all Shape objects created, and allows operations to be performed on the whole collection of Shapes.
 
-Import the Reactor object.
-
-`from paramak import Reactor`
+```python
+import paramak
+```
 
 Initiate a Reactor object and pass a list of all Shape objects to the shapes_and_components parameter.
 
-`my_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])`
-
-<!-- A 3D rendering of the combined Shapes can be created. -->
-
-<!-- `my_reactor.export_3d_image('reactor.png')` -->
+```python
+my_reactor = paramak.Reactor(shapes_and_components = [my_shape, my_plasma])
+```
 
 A html graph of the combined Shapes can be created.
 
-`my_reactor.export_html('reactor.html')`
+```python
+my_reactor.export_html('reactor.html')
+```
 
 
 ## Usage - Neutronics model creation
 
 First assign stp_filenames to each of the Shape objects that were created earlier on.
 
-`my_shape.stp_filename = 'my_shape.stp'`
+```python
+my_shape.stp_filename = 'my_shape.stp'
 
-`my_plasma.stp_filename = 'my_plasma.stp'`
+my_plasma.stp_filename = 'my_plasma.stp'
+```
 
 Then assign material_tags to each of the Shape objects.
 
-`my_shape.material_tag = 'steel'`
+```python
+my_shape.material_tag = 'steel'
 
-`my_plasma.material_tag = 'DT_plasma'`
+my_plasma.material_tag = 'DT_plasma'
+```
 
 Note - Tetrahedral meshes can also be assigned to Shape objects
 
 Now add the Shape objects to a freshly created reactor object.
 
-`new_reactor = Reactor(shapes_and_components = [my_shape, my_plasma])`
+```python
+new_reactor = paramak.Reactor(shapes_and_components = [my_shape, my_plasma])
+```
 
 The entire reactor can now be exported as step files. This also generates a DAGMC graveyard automatically.
 
-`my_reactor.export_stp()`
+```python
+my_reactor.export_stp()
+```
 
 A manifest.json file that contains all the step filenames and materials can now be created.
 
-`my_reactor.export_neutronics_description()`
+```python
+my_reactor.export_neutronics_description()
+```
 
 Once you step files and the neutronics description has been exported then [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in task 12 of the UKAEA openmc workshop which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py) and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal. You will need to have previously installed the [DAGMC plugin](https://github.com/svalinn/Trelis-plugin) for Trelis.
 
-`trelis make_faceteted_neutronics_model.py`
+```python
+trelis make_faceteted_neutronics_model.py
+```
 
 Alternatively, run this without the GUI in batch mode using:
 
-`trelis -batch -nographics make_faceteted_neutronics_model.py`
+```python
+trelis -batch -nographics make_faceteted_neutronics_model.py
+```
 
 This should export a h5m file for use in DAGMC.
 
@@ -150,4 +204,4 @@ Further information on DAGMC neutronics can be found [here](https://svalinn.gith
 
 # Example scripts
 
-There are several example scripts in the [examples folder](https://github.com/ukaea/paramak/blob/develop/examples/). A good one to start with is [make_CAD_from_points.py](https://github.com/ukaea/paramak/blob/develop/examples/make_CAD_from_points.py) which makes simple examples of the different types of shapes (extrude, rotate) with different connection methods (splines, straight lines and circles).
+There are several example scripts in the [examples folder](https://github.com/ukaea/paramak/blob/main/examples/). A good one to start with is [make_CAD_from_points.py](https://github.com/ukaea/paramak/blob/main/examples/example_parametric_shapes/make_CAD_from_points.py) which makes simple examples of the different types of shapes (extrude, rotate) with different connection methods (splines, straight lines and circles).

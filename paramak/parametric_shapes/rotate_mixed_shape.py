@@ -1,10 +1,10 @@
 from collections import Iterable
+from hashlib import blake2b
 
 import cadquery as cq
 
 from paramak import Shape
-
-from hashlib import blake2b
+from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class RotateMixedShape(Shape):
@@ -12,16 +12,16 @@ class RotateMixedShape(Shape):
        a mixture of straight lines and splines.
 
        Args:
-          points (list of tuples each containing X (float), Z (float), connection): 
-             A list of XZ coordinates and connection types. The connection types are 
-             either 'straight', 'spline' or 'circle'. For example [(2.,1.,'straight'), (2.,2.,'straight'), 
+          points (list of tuples each containing X (float), Z (float), connection):
+             A list of XZ coordinates and connection types. The connection types are
+             either 'straight', 'spline' or 'circle'. For example [(2.,1.,'straight'), (2.,2.,'straight'),
              (1.,2.,'spline'), (1.,1.,'spline')].
           name (str): The legend name used when exporting a html graph of the shape.
           color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
               The color to use when exporting as html graphs or png images.
           material_tag (str): The material name to use when exporting the neutronics description.
           stp_filename (str): The filename used when saving stp files as part of a reactor
-          azimuth_placement_angle (float or iterable of floats): the angle or angles to use when 
+          azimuth_placement_angle (float or iterable of floats): the angle or angles to use when
               rotating the shape on the azimuthal axis.
           rotation_angle (float): The rotation_angle to use when revoling the solid (degrees).
           cut (CadQuery object): An optional cadquery object to perform a boolean cut with this object.
@@ -35,26 +35,40 @@ class RotateMixedShape(Shape):
         color=None,
         material_tag=None,
         stp_filename="RotateMixedShape.stp",
+        stl_filename="RotateMixedShape.stl",
         azimuth_placement_angle=0,
         solid=None,
         rotation_angle=360,
         cut=None,
-        hash_value=None,
+        intersect=None,
+        union=None,
+        **kwargs
     ):
 
+        default_dict = {"tet_mesh": None,
+                        "physical_groups": None}
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
         super().__init__(
-            points,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            workplane,
+            points=points,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            workplane=workplane,
+            **default_dict
         )
 
         self.cut = cut
+        self.intersect = intersect
+        self.union = union
         self.rotation_angle = rotation_angle
-        self.hash_value = hash_value
+        self.hash_value = None
         self.solid = solid
 
     @property
@@ -64,6 +78,22 @@ class RotateMixedShape(Shape):
     @cut.setter
     def cut(self, value):
         self._cut = value
+
+    @property
+    def intersect(self):
+        return self._intersect
+
+    @intersect.setter
+    def intersect(self, value):
+        self._intersect = value
+
+    @property
+    def union(self):
+        return self._union
+
+    @union.setter
+    def union(self, value):
+        self._union = value
 
     @property
     def solid(self):
@@ -93,17 +123,13 @@ class RotateMixedShape(Shape):
 
     def get_hash(self):
         hash_object = blake2b()
-        hash_object.update(
-            str(self.points).encode("utf-8")
-            + str(self.workplane).encode("utf-8")
-            + str(self.name).encode("utf-8")
-            + str(self.color).encode("utf-8")
-            + str(self.material_tag).encode("utf-8")
-            + str(self.stp_filename).encode("utf-8")
-            + str(self.azimuth_placement_angle).encode("utf-8")
-            + str(self.rotation_angle).encode("utf-8")
-            + str(self.cut).encode("utf-8")
-        )
+        shape_dict = dict(self.__dict__)
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
+
+        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()
         return value
 
@@ -116,9 +142,6 @@ class RotateMixedShape(Shape):
         """
 
         # print('create_solid() has been called')
-
-        # Creates hash value for current solid
-        self.hash_value = self.get_hash()
 
         # obtains the first two values of the points list
         XZ_points = [(p[0], p[1]) for p in self.points]
@@ -164,7 +187,9 @@ class RotateMixedShape(Shape):
             rotated_solids = []
             # Perform seperate rotations for each angle
             for angle in self.azimuth_placement_angle:
-                rotated_solids.append(solid.rotate((0, 0, -1), (0, 0, 1), angle))
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
             solid = cq.Workplane(self.workplane)
 
             # Joins the seperate solids together
@@ -172,17 +197,24 @@ class RotateMixedShape(Shape):
                 solid = solid.union(i)
         else:
             # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate((0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
-            # Allows for multiple cuts to be applied
-            if isinstance(self.cut, Iterable):
-                for cutting_solid in self.cut:
-                    solid = solid.cut(cutting_solid.solid)
-            else:
-                solid = solid.cut(self.cut.solid)
+            solid = cut_solid(solid, self.cut)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.intersect is not None:
+            solid = intersect_solid(solid, self.intersect)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.union is not None:
+            solid = union_solid(solid, self.union)
 
         self.solid = solid
+
+        # Calculate hash value for current solid
+        self.hash_value = self.get_hash()
 
         return solid

@@ -1,10 +1,10 @@
 from collections import Iterable
+from hashlib import blake2b
 
 import cadquery as cq
 
 from paramak import Shape
-
-from hashlib import blake2b
+from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class RotateCircleShape(Shape):
@@ -32,30 +32,44 @@ class RotateCircleShape(Shape):
         radius,
         workplane="XZ",
         stp_filename="RotateCircleShape.stp",
+        stl_filename="RotateCircleShape.stl",
         solid=None,
         color=None,
         azimuth_placement_angle=0,
         rotation_angle=360,
         cut=None,
+        intersect=None,
+        union=None,
         material_tag=None,
         name=None,
-        hash_value=None,
+        **kwargs
     ):
 
+        default_dict = {"tet_mesh": None,
+                        "physical_groups": None}
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
         super().__init__(
-            points,
-            name,
-            color,
-            material_tag,
-            stp_filename,
-            azimuth_placement_angle,
-            workplane,
+            points=points,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            workplane=workplane,
+            **default_dict
         )
 
         self.cut = cut
+        self.intersect = intersect
+        self.union = union
         self.radius = radius
         self.rotation_angle = rotation_angle
-        self.hash_value = hash_value
+        self.hash_value = None
         self.solid = solid
 
     @property
@@ -65,6 +79,22 @@ class RotateCircleShape(Shape):
     @cut.setter
     def cut(self, value):
         self._cut = value
+
+    @property
+    def intersect(self):
+        return self._intersect
+
+    @intersect.setter
+    def intersect(self, value):
+        self._intersect = value
+
+    @property
+    def union(self):
+        return self._union
+
+    @union.setter
+    def union(self, value):
+        self._union = value
 
     @property
     def solid(self):
@@ -102,18 +132,13 @@ class RotateCircleShape(Shape):
 
     def get_hash(self):
         hash_object = blake2b()
-        hash_object.update(
-            str(self.points).encode("utf-8")
-            + str(self.radius).encode("utf-8")
-            + str(self.workplane).encode("utf-8")
-            + str(self.name).encode("utf-8")
-            + str(self.color).encode("utf-8")
-            + str(self.material_tag).encode("utf-8")
-            + str(self.stp_filename).encode("utf-8")
-            + str(self.azimuth_placement_angle).encode("utf-8")
-            + str(self.rotation_angle).encode("utf-8")
-            + str(self.cut).encode("utf-8")
-        )
+        shape_dict = dict(self.__dict__)
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
+
+        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()
         return value
 
@@ -127,9 +152,6 @@ class RotateCircleShape(Shape):
 
         # print('create_solid() has been called')
 
-        # Creates hash value for current solid
-        self.hash_value = self.get_hash()
-
         solid = (
             cq.Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])
@@ -142,7 +164,9 @@ class RotateCircleShape(Shape):
             rotated_solids = []
             # Perform seperate rotations for each angle
             for angle in self.azimuth_placement_angle:
-                rotated_solids.append(solid.rotate((0, 0, -1), (0, 0, 1), angle))
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
             solid = cq.Workplane(self.workplane)
 
             # Joins the seperate solids together
@@ -150,17 +174,24 @@ class RotateCircleShape(Shape):
                 solid = solid.union(i)
         else:
             # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate((0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
-            # Allows for multiple cuts to be applied
-            if isinstance(self.cut, Iterable):
-                for cutting_solid in self.cut:
-                    solid = solid.cut(cutting_solid.solid)
-            else:
-                solid = solid.cut(self.cut.solid)
+            solid = cut_solid(solid, self.cut)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.intersect is not None:
+            solid = intersect_solid(solid, self.intersect)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.union is not None:
+            solid = union_solid(solid, self.union)
 
         self.solid = solid
+
+        # Calculate hash value for current solid
+        self.hash_value = self.get_hash()
 
         return solid

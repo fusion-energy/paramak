@@ -1,4 +1,3 @@
-
 __doc__ = " This file creates a collarge of paramak images on a grid"
 
 import argparse
@@ -17,7 +16,7 @@ args = parser.parse_args()
 def divide_chunks(l, n):
     # looping till length l
     for i in range(0, len(l), n):
-        yield l[i : i + n]
+        yield l[i: i + n]
 
 
 def write_file(n):
@@ -63,9 +62,8 @@ for i in range(args.number_of_models):
     my_reactor.export_3d_image("output_collarge/" + str(i) + str(".png"))
 
 
-files_found = [
-    pos_json for pos_json in os.listdir("output_collarge") if pos_json.endswith(".png")
-]
+files_found = [pos_json for pos_json in os.listdir(
+    "output_collarge") if pos_json.endswith(".png")]
 
 for i in range(1, math.floor(math.sqrt(len(files_found)))):
     print("making grid of ", i * i, "images")
