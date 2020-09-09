@@ -37,7 +37,6 @@ class RotateMixedShape(Shape):
         name=None,
         color=None,
         material_tag=None,
-        hash_value=None,
         stp_filename="RotateMixedShape.stp",
         stl_filename="RotateMixedShape.stl",
         azimuth_placement_angle=0,
@@ -50,7 +49,8 @@ class RotateMixedShape(Shape):
     ):
 
         default_dict = {"tet_mesh": None,
-                        "physical_groups": None}
+                        "physical_groups": None,
+                        "hash_value": None}
 
         for arg in kwargs:
             if arg in default_dict:
@@ -65,7 +65,6 @@ class RotateMixedShape(Shape):
             stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
-            hash_value=hash_value,
             **default_dict
         )
 

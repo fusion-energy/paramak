@@ -44,13 +44,13 @@ class RotateCircleShape(Shape):
         intersect=None,
         union=None,
         material_tag=None,
-        hash_value=None,
         name=None,
         **kwargs
     ):
 
         default_dict = {"tet_mesh": None,
-                        "physical_groups": None}
+                        "physical_groups": None,
+                        "hash_value": None}
 
         for arg in kwargs:
             if arg in default_dict:
@@ -65,7 +65,6 @@ class RotateCircleShape(Shape):
             stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
-            hash_value=hash_value,
             **default_dict
         )
 
