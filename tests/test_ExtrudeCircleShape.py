@@ -66,7 +66,7 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape_with_cut.volume == pytest.approx(
             (math.pi * 10 ** 2 * 20) - (math.pi * 5 ** 2 * 20)
         )
-        
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -81,14 +81,14 @@ class test_object_properties(unittest.TestCase):
         is created when .solid is called"""
 
         test_shape = paramak.RotateStraightShape(
-            points = [(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
         )
 
         assert test_shape.hash_value is None
         assert test_shape.solid is not None
         assert type(test_shape.solid).__name__ == "Workplane"
         assert test_shape.hash_value is not None
-    
+
     def test_solid_return(self):
         """checks that the same cadquery solid with the same unique has value is returned when
         shape.solid is called again after no changs have been made to the Shape"""
@@ -119,7 +119,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.hash_value is not None
         assert initial_hash_value != test_shape.hash_value
-    
+
     def test_hash_value_update(self):
         """checks that the hash value of a Shape is not updated until a new cadquery solid has
         been created"""

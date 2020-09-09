@@ -170,4 +170,3 @@ class RotateStraightShape(Shape):
         self.hash_value = self.get_hash()
 
         return solid
-    
