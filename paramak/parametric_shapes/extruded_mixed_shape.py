@@ -8,31 +8,29 @@ from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class ExtrudeMixedShape(Shape):
-    """Extrude a 3d CadQuery solid from points connected with
-       a mixture of straight lines and splines
+    """Extrudes a 3d CadQuery solid from points connected with a mixture of straight
+    and spline connections
 
-       :param points: A list of XZ coordinates and connection types. The connections
-            types are either 'straight', 'spline' or 'circle'. For example [(2.,1.,'straight'),
+    Args:
+        points (list of tuples each containing X (float), Z (float), connection (str)):
+            a list of XZ coordinates and connection types. The connection types are
+            either 'straight', 'spline' or 'circle'. For example [(2.,1.,'straight'),
             (2.,2.,'straight'), (1.,2.,'spline'), (1.,1.,'spline'), (2.,1.,'spline')].
-       :type points: a list of tuples each containing X (float), Z (float), connection
-            type (string) values
-       :param stp_filename: the filename used when saving stp files as part of a reactor
-       :type stp_filename: str
-       :param color: the color to use when exporting as html graphs or png images
-       :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-            3 or 4 floats respectively each in the range 0-1
-       :param distance: The extrude distance to use (cm units if used for neutronics)
-       :type distance: float
-       :param azimuth_placement_angle: the angle or angles to use when rotating the
-            shape on the azimuthal axis
-       :type azimuth_placement_angle: float or iterable of floats
-       :param cut: An optional cadquery object to perform a boolean cut with this object
-       :type cut: cadquery object
-       :param material_tag: The material name to use when exporting the neutronics description
-       :type material_tag: str
-       :param name: The legend name used when exporting a html graph of the shape
-       :type name: str
-       """
+        stp_filename (str): the filename used when saving stp files as part of a reactor
+        color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
+            the color to use when exporting as html graphs or png images
+        distance (float): the extrusion distance to use (cm units if used for neutronics)
+        azimuth_placement_angle (float or iterable of floats): the angle or angles to use when
+            rotating the shape on the azimuthal axis
+        cut (CadQuery object): an optional CadQuery object to perform a boolean cut with
+            this object
+        material_tag (str): the material name to use when exporting the neutronics descrption
+        name (str): the legend name used when exporting a html graph of the shape
+        workplane (str): the orientation of the CadQuery workplane. Options are XY, YZ, XZ.
+
+    Returns:
+        a paramak shape object: a Shape object that has generic functionality
+    """
 
     def __init__(
         self,
@@ -48,6 +46,7 @@ class ExtrudeMixedShape(Shape):
         intersect=None,
         union=None,
         material_tag=None,
+        hash_value=None,
         name=None,
         **kwargs
     ):
@@ -68,6 +67,7 @@ class ExtrudeMixedShape(Shape):
             stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
+            hash_value=hash_value,
             **default_dict
         )
 
@@ -75,7 +75,6 @@ class ExtrudeMixedShape(Shape):
         self.intersect = intersect
         self.union = union
         self.distance = distance
-        self.hash_value = None
         self.solid = solid
 
     @property
@@ -119,26 +118,6 @@ class ExtrudeMixedShape(Shape):
     @distance.setter
     def distance(self, value):
         self._distance = value
-
-    @property
-    def hash_value(self):
-        return self._hash_value
-
-    @hash_value.setter
-    def hash_value(self, value):
-        self._hash_value = value
-
-    def get_hash(self):
-        hash_object = blake2b()
-        shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary
-        # reconstruction
-        shape_dict["_solid"] = None
-        shape_dict["_hash_value"] = None
-
-        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
-        value = hash_object.hexdigest()
-        return value
 
     def create_solid(self):
         """Creates a 3d solid using points with straight and spline
