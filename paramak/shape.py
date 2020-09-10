@@ -305,7 +305,7 @@ class Shape:
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the face of the shape.
         Note the Shape may extend beyond this boundary if splines are used to connect points.
-        
+
         Raises:
             ValueError: if no points are defined
 
@@ -378,7 +378,7 @@ class Shape:
 
     def export_physical_groups(self, filename):
         """Exports a JSON file containing a look up table which is useful for
-        identifying faces and volumes. If filename provided doesn't end with 
+        identifying faces and volumes. If filename provided doesn't end with
         .json then .json will be added.
 
         Args:
@@ -429,7 +429,7 @@ class Shape:
 
     def export_html(self, filename):
         """Creates a html graph representation of the points and connections for
-        the Shape object. Shapes are colored by their .color property. Shapes are 
+        the Shape object. Shapes are colored by their .color property. Shapes are
         also labelled by their .name. If filename provided doesn't end with .html
         then .html will be added.
 
@@ -541,7 +541,7 @@ class Shape:
             xmax (float): the maximum x value of the x axis
             ymin (float): the minimum y value of the y axis
             ymax (float); the maximum y value of the y axis
-        
+
         Returns:
             matplotlib plot: a plt object
         """
@@ -563,7 +563,7 @@ class Shape:
         return plt
 
     def _create_patch(self):
-        """Creates a matplotlib polygon patch from the Shape points. This is 
+        """Creates a matplotlib polygon patch from the Shape points. This is
         used when making 2d images of the Shape object.
 
         Raises:

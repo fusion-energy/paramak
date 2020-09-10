@@ -15,7 +15,7 @@ from paramak.shape import Shape
 
 
 class Reactor:
-    """The Reactor object allows shapes and components to be added and then collective 
+    """The Reactor object allows shapes and components to be added and then collective
     operations to be performed on them. Combining all the shapes is required for creating
     images of the whole reactor and creating a Graveyard (bounding box) that is needed
     for neutronics simulations.
@@ -81,7 +81,7 @@ class Reactor:
     def shapes_and_components(self):
         """Adds a list of parametric shape(s) and or parametric component(s)
         to the Reactor object. This allows collective operations to be performed
-        on all the shapes in the reactor. When adding a shape or component the 
+        on all the shapes in the reactor. When adding a shape or component the
         stp_filename of the shape or component should be unique."""
 
         return self._shapes_and_components
@@ -198,7 +198,7 @@ class Reactor:
 
         Args:
             output_folder (str): the folder for saving the stp files to
-        
+
         Returns:
             list: a list of stp filenames created
         """
@@ -488,7 +488,7 @@ class Reactor:
         Args:
             offset (float): the offset between the largest edge of the geometry and
             bounding shell created
-        
+
         Returns:
             CadQuery solid: a shell volume that bounds the geometry, referred to as
             a graveyard in DAGMC
@@ -579,7 +579,7 @@ class Reactor:
 
         Args:
             filename (str): the filename to save the html graph
-        
+
         Returns:
             plotly figure: figure object
         """
