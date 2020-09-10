@@ -161,6 +161,30 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape_with_cut.volume == pytest.approx(
             1908.517537 - 589.048622)
 
+    def test_parametric_shape_hash_value(self):
+        """creates a parametric shape and checks that a cadquery solid with a unique hash
+        value is created when .solid is called. checks that the same cadquery solid with
+        same unique hash value is returned when shape.solid is called again after no changes
+        have been made to the parametric shape. checks that a new cadquery solid with a new 
+        unique hash value is constructed when shape.solid is called after changes to the 
+        parametric shape have been made. checks that the hash_value of a parametric shape is
+        not updated until a new cadquery solid has been created"""
+
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
+        )
+
+        assert test_shape.hash_value is None
+        assert test_shape.solid is not None
+        assert test_shape.hash_value is not None
+        initial_hash_value = test_shape.hash_value
+        assert test_shape.solid is not None
+        assert initial_hash_value == test_shape.hash_value
+        test_shape.rotation_angle = 180
+        assert initial_hash_value == test_shape.hash_value
+        assert test_shape.solid is not None
+        assert initial_hash_value != test_shape.hash_value
+
 
 if __name__ == "__main__":
     unittest.main()
