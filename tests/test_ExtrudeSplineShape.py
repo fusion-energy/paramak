@@ -58,68 +58,6 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape.volume == pytest.approx(3775, abs=2)
         assert outer_shape_with_cut.volume == pytest.approx(3775 - 1165, abs=2)
 
-    def test_initial_solid_construction(self):
-        """creates an extruded shape using splines and checks that a cadquery solid with a
-        unique has value is constructted when .solid is called"""
-
-        test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=20
-        )
-
-        assert test_shape.hash_value is None
-        assert test_shape.solid is not None
-        assert type(test_shape.solid).__name__ == "Workplane"
-        assert test_shape.hash_value is not None
-
-    def test_solid_return(self):
-        """checks that the same cadquery solid with the same unique hash value is returned when
-        shape.solid is called again after no changes have been made to the shape"""
-
-        test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=20
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        assert initial_hash_value == test_shape.hash_value
-
-    def test_conditional_solid_reconstruction(self):
-        """checks that a new cadquery solid with a new unique has value is constructed when .solid
-        is called after changes to the ExtrudeSplineShape have been made"""
-
-        test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20)
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        test_shape.distance = 30
-
-        assert test_shape.solid is not None
-        assert test_shape.hash_value is not None
-        assert initial_hash_value != test_shape.hash_value
-
-    def test_hash_value_update(self):
-        """checks that the hash value of an ExtrudeSplineShape is not updated until a new solid
-        has been created"""
-
-        test_shape = ExtrudeSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)], distance=20)
-        test_shape.solid
-        assert test_shape.hash_value is not None
-        initial_hash_value = test_shape.hash_value
-
-        test_shape.distance = 30
-
-        assert test_shape.hash_value == initial_hash_value
-        test_shape.solid
-        assert test_shape.hash_value != initial_hash_value
-
 
 if __name__ == "__main__":
     unittest.main()

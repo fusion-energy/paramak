@@ -8,23 +8,26 @@ from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class RotateMixedShape(Shape):
-    """Rotates a 3d CadQuery solid from points connected with
-       a mixture of straight lines and splines.
+    """Rotates a 3d CadQuery solid from points connected with a mixture of straight
+    lines and splines
 
-       Args:
-          points (list of tuples each containing X (float), Z (float), connection):
-             A list of XZ coordinates and connection types. The connection types are
-             either 'straight', 'spline' or 'circle'. For example [(2.,1.,'straight'), (2.,2.,'straight'),
-             (1.,2.,'spline'), (1.,1.,'spline')].
-          name (str): The legend name used when exporting a html graph of the shape.
-          color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
-              The color to use when exporting as html graphs or png images.
-          material_tag (str): The material name to use when exporting the neutronics description.
-          stp_filename (str): The filename used when saving stp files as part of a reactor
-          azimuth_placement_angle (float or iterable of floats): the angle or angles to use when
-              rotating the shape on the azimuthal axis.
-          rotation_angle (float): The rotation_angle to use when revoling the solid (degrees).
-          cut (CadQuery object): An optional cadquery object to perform a boolean cut with this object.
+    Args:
+        points (list of tuples each containing X (float), Z (float), connection):
+            A list of XZ coordinates and connection types. The connection types are
+            either 'straight', 'spline' or 'circle'. For example [(2.,1.,'straight'), (2.,2.,'straight'),
+            (1.,2.,'spline'), (1.,1.,'spline')].
+        name (str): The legend name used when exporting a html graph of the shape.
+        color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
+            The color to use when exporting as html graphs or png images.
+        material_tag (str): The material name to use when exporting the neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a reactor
+        azimuth_placement_angle (float or iterable of floats): the angle or angles to use when
+            rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation_angle to use when revoling the solid (degrees).
+        cut (CadQuery object): An optional cadquery object to perform a boolean cut with this object.
+
+    Returns:
+        a paramak shape object: a Shape object that has generic functionality
     """
 
     def __init__(
@@ -46,7 +49,8 @@ class RotateMixedShape(Shape):
     ):
 
         default_dict = {"tet_mesh": None,
-                        "physical_groups": None}
+                        "physical_groups": None,
+                        "hash_value": None}
 
         for arg in kwargs:
             if arg in default_dict:
@@ -68,7 +72,6 @@ class RotateMixedShape(Shape):
         self.intersect = intersect
         self.union = union
         self.rotation_angle = rotation_angle
-        self.hash_value = None
         self.solid = solid
 
     @property
@@ -112,26 +115,6 @@ class RotateMixedShape(Shape):
     @rotation_angle.setter
     def rotation_angle(self, value):
         self._rotation_angle = value
-
-    @property
-    def hash_value(self):
-        return self._hash_value
-
-    @hash_value.setter
-    def hash_value(self, value):
-        self._hash_value = value
-
-    def get_hash(self):
-        hash_object = blake2b()
-        shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary
-        # reconstruction
-        shape_dict["_solid"] = None
-        shape_dict["_hash_value"] = None
-
-        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
-        value = hash_object.hexdigest()
-        return value
 
     def create_solid(self):
         """Creates a 3d solid using points with straight and spline

@@ -9,7 +9,7 @@
 
 # Paramak
 
-The Paramak python package allows rapid production of 3D CAD models of fusion reactors. The purpose of the Paramak is to provide geometry for parametric studies. It is possible to use the created geometry in engineering and neutronics studies as the STP files produced can be automatically converted to DAGMC compatable neutronics models or meshed and used in finite element analysis codes.
+The Paramak python package allows rapid production of 3D CAD models of fusion reactors. The purpose of the Paramak is to provide geometry for parametric studies. It is possible to use the created geometry in engineering and neutronics studies as the STP or STL files produced can be automatically converted to DAGMC compatable neutronics models or meshed and used in finite element analysis codes.
 
 :point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
 

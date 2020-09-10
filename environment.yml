@@ -9,15 +9,11 @@ dependencies:
   - plotly
   - scipy
   - numpy
-  - tqdm
   - matplotlib
-  - trimesh
-  - uncertainties
-  - importlib_resources
+  - Pillow
   - cadquery=2
   - openmc
   - pip:
-    - pyrender
     - neutronics-material-maker
     - sympy
     - plasmaboundaries

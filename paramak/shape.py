@@ -10,36 +10,33 @@ import plotly.graph_objects as go
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from PIL import Image
+from hashlib import blake2b
 
 from cadquery import exporters
 
 
 class Shape:
     """A shape object that represents a 3d volume and can have materials and
-       neutronics tallies assigned. Shape objects are not intended to be used
-       directly by the user but provide basic functionality for user facing
-       classes that inherit from Shape.
+    neutronics tallies assigned. Shape objects are not intended to be used
+    directly bly the user but provide basic functionality for user-facing
+    classes that inherit from Shape.
 
-       :param points: The x, y, z coordinates of points that make up the shape
-       :type points: a list of (x, y, z) tuples where x, y, z are floats
-       :param name: the name of the shape, used in the graph legend by export_html
-       :type name: str
-       :param color: the color to use when exporting as html graphs or png images
-       :type color: Red, Green, Blue, [Alpha] values. RGB and RGBA are sequences of,
-        3 or 4 floats respectively each in the range 0-1
-       :param material_tag: the name of the shape, used in the neutronics description
-       :type material_tag: str
-       :param stp_filename: the filename to save the step file
-       :type stp_filename: str
-       :param azimuth_placement_angle: the azimuth angle(s) to when positioning the
-        shape. If a list of angles is provided the shape is duplicated at all angles
-       :type azimuth_placement_angle: float or list of floats
-       :param workplane: The orientation of the CadQuery workplane. Options are XY, YZ, XZ
-       :type workplane: str
+    Args:
+        points (list of (x,y,z) tuples where x, y, z are floats): the x, y, z
+            coordinates of points that make up the shape
+        name (str): the name of the shape, used in the graph legend by export_html
+        color (RGB or RGBA, sequences of 3 or 4 floats, respectively, each in the
+            range 0-1): the color to use when exporting as html graphs or png images
+        material_tag (str): the material name to use when exporting the neutronics
+            description
+        stp_filename (str): the filename used when saving stp files
+        azimuth_placement_angle: the azimuth angle(s) used when positioning the shape.
+            If a list of angles is provided, the shape is duplicated at all angles
+        workplane (str): the orientation of the Cadquery workplane. (XY, YZ or XZ)
 
-       :return: a shape object that has generic functionality
-       :rtype: paramak shape object
-       """
+    Returns:
+        a paramak shape object: a Shape object that has generic functionality
+    """
 
     def __init__(
         self,
@@ -53,6 +50,7 @@ class Shape:
         workplane="XZ",
         tet_mesh=None,
         physical_groups=None,
+        hash_value=None,
     ):
 
         self.points = points
@@ -74,6 +72,7 @@ class Shape:
         self.solid = None
         self.render_mesh = None
         # self.volume = None
+        self.hash_value = None
 
     @property
     def workplane(self):
@@ -94,6 +93,14 @@ class Shape:
     @property
     def volume(self):
         return self.solid.val().Volume()
+
+    @property
+    def hash_value(self):
+        return self._hash_value
+
+    @hash_value.setter
+    def hash_value(self, value):
+        self._hash_value = value
 
     @property
     def color(self):
@@ -149,16 +156,19 @@ class Shape:
 
     @property
     def points(self):
+        """Sets the Shape.point attributes.
+
+        Args:
+            points (a list of lists or tuples): list of points that create the shape
+
+        Raises:
+            incorrect type: only list of lists or tuples are accepted
+        """
+
         return self._points
 
     @points.setter
     def points(self, values):
-        """Sets the Shape.point attributes
-        :param points: list of points that create the shape
-        :type points: a list of lists or tuples
-
-        :raises incorrect type: only lists of lists or tuples are accepted
-        """
 
         if values is None:
             self._points = values
@@ -229,19 +239,21 @@ class Shape:
 
     @property
     def stp_filename(self):
+        """Sets the Shape.stp_filename attribute which is used as the filename when
+        exporting the geometry to stp format. Note, .stp will be added to filenames
+        not ending with .step or .stp.
+
+        Args:
+            value (str): the value to use as the stp_filename
+
+        Raises:
+            incorrect type: only str values are accepted
+        """
+
         return self._stp_filename
 
     @stp_filename.setter
     def stp_filename(self, value):
-        """Sets the Shape.stp_filename attributes which is used as the
-           filename when exporting the geometry to stp format. Note,
-           .stp will be added to filenames not ending with .step or .stp
-
-        :param value: the value to use as the stp_filename
-        :type value: str
-
-        :raises incorrect type: only str values are accepted
-        """
         if value is None:
             # print("stp_filename will need setting to use this shape in a Reactor")
             self._stp_filename = value
@@ -260,19 +272,20 @@ class Shape:
 
     @property
     def stl_filename(self):
+        """Sets the Shape.stl_filename attribute which is used as the filename
+        when exporting the geometry to stl format. Note .stl will be added to
+        filenames not ending with .stl
+
+        Args:
+            value (str): the value to use as the stl_filename
+
+        Raises:
+            incorrect type: only str values are accepted
+        """
         return self._stl_filename
 
     @stl_filename.setter
     def stl_filename(self, value):
-        """Sets the Shape.stl_filename attributes which is used as the
-           filename when exporting the geometry to stp format. Note,
-           .stp will be added to filenames not ending with .step or .stp
-
-        :param value: the value to use as the stl_filename
-        :type value: str
-
-        :raises incorrect type: only str values are accepted
-        """
         if value is None:
             # print("stl_filename will need setting to use this shape in a Reactor")
             self._stl_filename = value
@@ -290,14 +303,15 @@ class Shape:
                 type(value))
 
     def create_limits(self):
-        """"Finds the x,y,z limits (min and max) of the points that make up the face of the shape.
+        """Finds the x,y,z limits (min and max) of the points that make up the face of the shape.
         Note the Shape may extend beyond this boundary if splines are used to connect points.
-        Shape.solid.BoundBox can be used to find the limits of the
 
-        :raises ValueError: if no points are defined
+        Raises:
+            ValueError: if no points are defined
 
-        :return: x_minimum, x_maximum, y_minimum, y_maximum, z_minimum, z_maximum
-        :rtype: float, float, float, float, float, float
+        Returns:
+            float, float, float, float, float, float: x_minimum, x_maximum, y_minimum, y_maximum,
+            z_minimum, z_maximum
         """
 
         if hasattr(self, "find_points"):
@@ -314,13 +328,12 @@ class Shape:
         return self.x_min, self.x_max, self.z_min, self.z_max
 
     def export_stl(self, filename, tolerance=0.001):
-        """Exports an stl file for the Shape.solid.
-        If the provided filename doesn't end with .stl it will be added
+        """Exports an stl file for the Shape.solid. If the provided filename doesn't end with .stl
+        it will be added
 
-        :param filename: the filename of the stl
-        :type filename: str
-        :param tolerance: the precision of the faceting
-        :type tolerance: float
+        Args:
+            filename (str): the filename of the stl file to be exported
+            tolerance (float): the precision of the faceting
         """
 
         Pfilename = Path(filename)
@@ -337,15 +350,12 @@ class Shape:
         return str(Pfilename)
 
     def export_stp(self, filename=None):
-        """Exports an stp file for the Shape.solid.
-        If the provided filename doesn't end with
-        .stp or .step then .stp will be added. If a
-        filename is not provided and the shapes
-        stp_filename property is not None the stp_filename
-        will be used as the export filename
+        """Exports an stp file for the Shape.solid. If the filename provided doesn't end with
+        .stp or .step then .stp will be added. If a filename is not provided and the shape's
+        stp_filename property is not None the stp_filename will be used as the export filename.
 
-        :param filename: the filename of the stp
-        :type filename: str
+        Args:
+            filename (str): the filename of the stp
         """
 
         if filename is not None:
@@ -367,15 +377,12 @@ class Shape:
         return str(Pfilename)
 
     def export_physical_groups(self, filename):
-        """Exports a JSON file containing a look up table
-        which is useful for identifying faces and volumes. If provided
-        filename doesn't end with .json then .json will be added.
+        """Exports a JSON file containing a look up table which is useful for
+        identifying faces and volumes. If filename provided doesn't end with
+        .json then .json will be added.
 
-        :param filename: the filename to save the json look up table
-        :type filename: str
-
-        :param filename: the filename of the json file
-        :type filename: str
+        Args:
+            filename (str): the filename used to save the json file
         """
 
         Pfilename = Path(filename)
@@ -400,11 +407,11 @@ class Shape:
         return filename
 
     def export_svg(self, filename):
-        """Exports an svg file for the Shape.solid.
-        If the provided filename doesn't end with .svg it will be added
+        """Exports an svg file for the Shape.solid. If the provided filename
+        doesn't end with .svg it will be added.
 
-        :param filename: the filename of the svg
-        :type filename: str
+        Args:
+            filename (str): the filename of the svg file to be exported
         """
 
         Pfilename = Path(filename)
@@ -421,17 +428,18 @@ class Shape:
         return str(Pfilename)
 
     def export_html(self, filename):
-        """Creates a html graph representation of the points and connections
-        for the Shape object. Shapes are colored by their .color property.
-        Shapes are also labeled by their .name.
-        If provided filename doesn't end with .html then .html will be added.
+        """Creates a html graph representation of the points and connections for
+        the Shape object. Shapes are colored by their .color property. Shapes are
+        also labelled by their .name. If filename provided doesn't end with .html
+        then .html will be added.
 
-        :param filename: the filename to save the html graph
-        :type filename: str
+        Args:
+            filename (str): the filename used to save the html graph
 
-        :return: figure object
-        :rtype: plotly figure
+        Returns:
+            plotly figure: figure object
         """
+
         if self.points is None:
             ValueError("No points defined for", self)
 
@@ -456,11 +464,11 @@ class Shape:
         return fig
 
     def _trace(self):
-        """Creates a plotly trace representation of the points for the Shape object.
+        """Creates a plotly trace representation of the points of the Shape object.
         This method is intended for internal use by Shape.export_html.
 
-        :return: trace object
-        :rtype: plotly trace
+        Returns:
+            plotly trace: trace object
         """
 
         # provides a default color if color is not set
@@ -523,23 +531,19 @@ class Shape:
         return trace
 
     def export_2d_image(self, filename, xmin=0, xmax=900, ymin=-600, ymax=600):
-        """Exports a 2d image (png) of the reactor.
-        Components colored by their Shape.color property.
-        If provided filename doesn't end with .png then .png will be added.
+        """Exports a 2d image (png) of the reactor. Components are colored by their
+        Shape.color property. If filename provided doesn't end with .png then .png
+        will be added.
 
-        :param filename: the filename of the saved png image
-        :type filename: str
-        :param xmin: the minimum x value of the x axis
-        :type xmin: float
-        :param xmax: the maximum x value of the x axis
-        :type xmax: float
-        :param ymin: the minimum y value of the y axis
-        :type ymin: float
-        :param ymax: the maximum y value of the y axis
-        :type ymax: float
+        Args:
+            filename (str): the filename of the saved png image
+            xmin (float): the minimum x value of the x axis
+            xmax (float): the maximum x value of the x axis
+            ymin (float): the minimum y value of the y axis
+            ymax (float); the maximum y value of the y axis
 
-        :return: a plt object
-        :rtype: matplotlib plot
+        Returns:
+            matplotlib plot: a plt object
         """
 
         fig, ax = plt.subplots()
@@ -559,13 +563,14 @@ class Shape:
         return plt
 
     def _create_patch(self):
-        """Creates a matplotlib polygon patch from the Shape points.
-        This is used when making 2d images of the Shape object.
+        """Creates a matplotlib polygon patch from the Shape points. This is
+        used when making 2d images of the Shape object.
 
-        :raises ValueError: No points defined for the Shape
+        Raises:
+            ValueError: No points defined for the Shape
 
-        :return: a plotable polygon shape
-        :rtype: Matplotlib object patch
+        Returns:
+            Matplotlib object patch: a plotable polygon shape
         """
 
         if self.points is None:
@@ -596,15 +601,14 @@ class Shape:
         return p
 
     def neutronics_description(self):
-        """Returns a neutronics description of the Shape object.
-        This is needed for the use with automated neutronics model
-        methods which require linkage between the stp files and
-        materials. If tet meshing of the volume is required then
-        Trelis meshing commands can optinally be specificed as
-        the tet_mesh argument.
+        """Returns a neutronics description of the Shape object. This is needed
+        for the use with automated neutronics model methods which require linkage
+        between the stp files and materials. If tet meshing of the volume is required
+        then Trelis meshing commands can be optionally specified as the tet_mesh
+        argument.
 
-        :return: a dictionary of the step filename and material name.
-        :rtype: dictionary
+        Returns:
+            dictionary: a dictionary of the step filename and material name
         """
 
         neutronics_description = {"material": self.material_tag}
@@ -619,3 +623,15 @@ class Shape:
             neutronics_description["stl_filename"] = self.stl_filename
 
         return neutronics_description
+
+    def get_hash(self):
+        hash_object = blake2b()
+        shape_dict = dict(self.__dict__)
+        # set _solid and _hash_value to None to prevent unnecessary
+        # reconstruction
+        shape_dict["_solid"] = None
+        shape_dict["_hash_value"] = None
+
+        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
+        value = hash_object.hexdigest()
+        return value
