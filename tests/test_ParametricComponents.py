@@ -647,7 +647,7 @@ class test_ParametricComponents(unittest.TestCase):
         test_shape = paramak.CenterColumnShieldCylinder(
             height = 100,
             inner_radius = 20,
-            outer_radisu = 40
+            outer_radius = 40
         )
 
         assert test_shape.hash_value is None
