@@ -15,9 +15,8 @@ from paramak.shape import Shape
 
 
 class Reactor:
-
     """The Reactor object allows shapes and components to be added and then collective
-    opperations to be performed on them. Combining all the shapes is required for creating
+    operations to be performed on them. Combining all the shapes is required for creating
     images of the whole reactor and creating a Graveyard (bounding box) that is needed
     for neutronics simulations.
     """
@@ -80,15 +79,15 @@ class Reactor:
 
     @property
     def shapes_and_components(self):
+        """Adds a list of parametric shape(s) and or parametric component(s)
+        to the Reactor object. This allows collective operations to be performed
+        on all the shapes in the reactor. When adding a shape or component the
+        stp_filename of the shape or component should be unique."""
+
         return self._shapes_and_components
 
     @shapes_and_components.setter
     def shapes_and_components(self, value):
-        """Adds a list of parametric shape(s) and or parametric component(s)
-        to the Reactor object. This allows collective operations can be performed
-        on all the shapes in the reactor. When adding a shape or componet the
-        stp_filename of the shape or component should be unique.
-        """
         shapes_and_components = []
         if not isinstance(value, Iterable):
             raise ValueError("shapes_and_components must be a list")
@@ -113,18 +112,16 @@ class Reactor:
         self._solid = value
 
     def neutronics_description(self, include_plasma=False):
-        """A description of the reactor containing materials tags,
-        stp filenames, tet mesh instructions. This is can be used
-        for neutronics simulations which require linkage between
-        volumes, materials and identification of which volumes to
-        tet mesh. The plasma geometry is not included by default
-        as it is typically not included in neutronics simulations.
-        The reason for this is that the low number density results
-        in minimal interaction with neutrons. However it can be added
-        if the include_plasma argument is set to True
+        """A description of the reactor containing material tags, stp filenames,
+        and tet mesh instructions. This is used for neutronics simulations which
+        require linkage between volumes, materials and identification of which
+        volumes to tet mesh. The plasma geometry is not included by default as
+        it is typically not included in neutronics simulations. The reason for this
+        is that the low number density results in minimal interaction with neutrons.
+        However, it can be added if the include_plasma argument is set to True.
 
-        :return: a dictionary of materials and filenames for the reactor
-        :rtype: dictionary
+        Returns:
+            dictionary: a dictionary of materials and filenames for the reactor
         """
 
         neutronics_description = []
@@ -161,23 +158,21 @@ class Reactor:
     def export_neutronics_description(
         self, filename="manifest.json", include_plasma=False
     ):
-        """Saves Reactor.neutronics_description to a json file.
-        The resulting json file contains a list of dictionaries.
-        Each dictionary entry comprising of a material and a
-        filename and optionally a tet_mesh instruction. The json
-        file can then be used with the neutronics workflows to
-        create a neutronics model. Creation of the netronics
-        model requires linkage between volumes, materials and
-        identifcation of which volumes to tet_mesh. If the
-        filename does not end with .json then .json will be added.
-        The plasma geometry is not included by default as it is
-        typically not included in neutronics simulations. The
-        reason for this is that the low number density results
-        in minimal interaction with neutrons. However the plasma
-        can be added if the include_plasma argument is set to True
+        """
+        Saves Reactor.neutronics_description to a json file. The resulting json
+        file contains a list of dictionaries. Each dictionary entry comprises of
+        a material and a filename and optionally a tet_mesh instruction. The json
+        file can then be used with the neutronics workflows to create a neutronics
+        model. Creating of the neutronics model requires linkage between volumes,
+        materials and identification of which volumes to tet_mesh. If the filename
+        does not end with .json then .json will be added. The plasma geometry is
+        not included by default as it is typically not included in neutronics
+        simulations. The reason for this is that the low number density results in
+        minimal interactions with neutrons. However, the plasma can be added if
+        the include_plasma argument is set to True.
 
-        :param filename: the filename used to save the neutronics description
-        :type filename: str
+        Args:
+            filename (str): the filename used to save the neutronics description
         """
 
         Pfilename = Path(filename)
@@ -201,11 +196,11 @@ class Reactor:
     def export_stp(self, output_folder=""):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
 
-        :param output_folder: the folder for saving the stp files to
-        :type output_folder: str
+        Args:
+            output_folder (str): the folder for saving the stp files to
 
-        :return: a list of stp filenames created
-        :rtype: list
+        Returns:
+            list: a list of stp filenames created
         """
 
         if len(self.stp_filenames) != len(set(self.stp_filenames)):
@@ -454,11 +449,11 @@ class Reactor:
         return filenames
 
     def export_svg(self, filename):
-        """Exports an svg file for the Reactor.solid.
-        If the provided filename doesn't end with .svg it will be added
+        """Exports an svg file for the Reactor.solid. If the filename provided
+        doesn't end with .svg it will be added.
 
-        :param filename: the filename of the svg
-        :type filename: str
+        Args:
+            filename (str): the filename of the svg file to be exported
         """
 
         Pfilename = Path(filename)
@@ -473,14 +468,14 @@ class Reactor:
         print("Saved file as ", Pfilename)
 
     def export_graveyard(self, filename="Graveyard.stp"):
-        """Writes a stp file (CAD geometry) for the reactor graveyard.
-           Thich is needed for DAGMC simulations
+        """Writes an stp file (CAD geometry) for the reactor graveyard. This
+        is needed for DAGMC simulations.
 
-        :param filename: the filename for saving the stp file to
-        :type filename: str
+        Args:
+            filename (str): the filename for saving the stp file
 
-        :return: the stp filename created
-        :rtype: str
+        Returns:
+            str: the stp filename created
         """
         self.make_graveyard()
         self.graveyard.export_stp(Path(filename))
@@ -488,16 +483,15 @@ class Reactor:
 
     def make_graveyard(self, offset=500.0):
         """Creates a graveyard volume (bounding box) that encapsulates all
-           volumes. This is required by DAGMC when performing neutronics
-           simulations.
+        volumes. This is required by DAGMC when performing neutronics simulations.
 
-        :param offset: the offset between the largest edge of the geometry
-        and the bounding shell created
-        :type offset: float
+        Args:
+            offset (float): the offset between the largest edge of the geometry and
+            bounding shell created
 
-        :return: A shell volume that bounds the geometry referred to as a
-         graveyard in DAGMC
-        :rtype: CadQuery solid
+        Returns:
+            CadQuery solid: a shell volume that bounds the geometry, referred to as
+            a graveyard in DAGMC
         """
 
         for component in self.shapes_and_components:
@@ -543,12 +537,13 @@ class Reactor:
             xmax=900.0,
             ymin=-600.0,
             ymax=600.0):
-        """Creates a 2D slice image (png) of the reactor
-        :param filename: output filename of the image created
-        :type filename: str
+        """Creates a 2D slice image (png) of the reactor.
 
-        :return: Png filename created
-        :rtype: str
+        Args:
+            filename (str): output filename of the image created
+
+        Returns:
+            str: png filename created
         """
 
         Pfilename = Path(filename)
@@ -578,17 +573,15 @@ class Reactor:
         return str(Pfilename)
 
     def export_html(self, filename="reactor.html"):
-        """Creates a html graph representation of the points
-           for the Shape objects that make up the reactor.
+        """Creates a html graph representation of the points for the Shape objects
+        that make up the reactor. Note, If filename provided doesn't end with .html
+        then it will be appended.
 
-         Note:
-             If provided filename doesn't end with .html with will be appended
+        Args:
+            filename (str): the filename to save the html graph
 
-        :param filename: the filename to save the html graph
-        :type filename: str
-
-        :return: figure object
-        :rtype: plotly figure
+        Returns:
+            plotly figure: figure object
         """
 
         Pfilename = Path(filename)
