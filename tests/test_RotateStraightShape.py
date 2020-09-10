@@ -165,8 +165,8 @@ class test_object_properties(unittest.TestCase):
         """creates a parametric shape and checks that a cadquery solid with a unique hash
         value is created when .solid is called. checks that the same cadquery solid with
         same unique hash value is returned when shape.solid is called again after no changes
-        have been made to the parametric shape. checks that a new cadquery solid with a new 
-        unique hash value is constructed when shape.solid is called after changes to the 
+        have been made to the parametric shape. checks that a new cadquery solid with a new
+        unique hash value is constructed when shape.solid is called after changes to the
         parametric shape have been made. checks that the hash_value of a parametric shape is
         not updated until a new cadquery solid has been created"""
 
