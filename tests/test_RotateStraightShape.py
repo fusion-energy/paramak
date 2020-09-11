@@ -186,7 +186,8 @@ class test_object_properties(unittest.TestCase):
         assert main_shape.volume == pytest.approx(25132741.23)
         assert shape_to_cut_1.volume == pytest.approx(753982.2367)
         assert shape_to_cut_2.volume == pytest.approx(3267256.358)
-        assert main_shape_with_cuts.volume == pytest.approx(25132741.23 - 753982.2367 - 3267256.358)
+        assert main_shape_with_cuts.volume == pytest.approx(
+            25132741.23 - 753982.2367 - 3267256.358)
 
     def test_parametric_shape_hash_value(self):
         """creates a parametric shape and checks that a cadquery solid with a unique hash
