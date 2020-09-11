@@ -161,6 +161,34 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape_with_cut.volume == pytest.approx(
             1908.517537 - 589.048622)
 
+    def test_multiple_cut_volume(self):
+        """creates a rotated shape using straight connections with multiple shapes cut out
+        and checks that the volume is correct"""
+
+        main_shape = RotateStraightShape(
+            points=[(0, 0), (0, 200), (200, 200), (200, 0)], rotation_angle=360
+        )
+
+        shape_to_cut_1 = RotateStraightShape(
+            points=[(20, 0), (20, 200), (40, 200), (40, 0)], rotation_angle=360
+        )
+
+        shape_to_cut_2 = RotateStraightShape(
+            points=[(120, 0), (120, 200), (140, 200), (140, 0)], rotation_angle=360
+        )
+
+        main_shape_with_cuts = RotateStraightShape(
+            points=[(0, 0), (0, 200), (200, 200), (200, 0)],
+            rotation_angle=360,
+            cut=[shape_to_cut_1, shape_to_cut_2]
+        )
+
+        assert main_shape.volume == pytest.approx(25132741.23)
+        assert shape_to_cut_1.volume == pytest.approx(753982.2367)
+        assert shape_to_cut_2.volume == pytest.approx(3267256.358)
+        assert main_shape_with_cuts.volume == pytest.approx(
+            25132741.23 - 753982.2367 - 3267256.358)
+
     def test_parametric_shape_hash_value(self):
         """creates a parametric shape and checks that a cadquery solid with a unique hash
         value is created when .solid is called. checks that the same cadquery solid with
