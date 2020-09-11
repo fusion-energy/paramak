@@ -18,9 +18,9 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    setup_requires=["pytest-runner"],
     tests_require=[
         "pytest-cov",
+        "pytest-runner",
     ],
     install_requires=[
         "pytest-cov",
