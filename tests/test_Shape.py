@@ -20,6 +20,19 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.points is None
 
+    def test_incorrect_workplane(self):
+        """creates Shape object with incorrect workplane and checks ValueError
+        is raised"""
+
+        test_shape = paramak.Shape()
+
+        def incorrect_workplane():
+            """creates Shape object with unacceptable workplane"""
+
+            test_shape.workplane = "ZY"
+
+        self.assertRaises(ValueError, incorrect_workplane)
+
     def test_incorrect_points(self):
         """creates Shape objects and checks errors are raised correctly when
         specifying points"""
@@ -42,6 +55,35 @@ class test_object_properties(unittest.TestCase):
             test_shape.points = [(0, 200), (200), (0, 0), (0, 50)]
 
         self.assertRaises(ValueError, incorrect_points_missing_z_value)
+
+        def incorrect_points_not_a_list():
+            """checks ValueError is raised when the points are not a list"""
+
+            test_shape.points = (0, 0), (0, 20), (20, 20), (20, 0)
+
+        self.assertRaises(ValueError, incorrect_points_not_a_list)
+
+        def incorrect_points_wrong_number_of_entries():
+            """checks ValueError is raised when individual points dont have 2 or
+            3 entries"""
+
+            test_shape.points = [(0, 0), (0, 20), (20, 20, 20, 20)]
+
+        self.assertRaises(ValueError, incorrect_points_wrong_number_of_entries)
+
+        def incorrect_x_point_value_type():
+            """checks ValueError is raised when X point is not a number"""
+
+            test_shape.points = [("string", 0), (0, 20), (20, 20)]
+
+        self.assertRaises(ValueError, incorrect_x_point_value_type)
+
+        def incorrect_y_point_value_type():
+            """checks ValueError is raised when Y point is not a number"""
+
+            test_shape.points = [(0, "string"), (0, 20), (20, 20)]
+
+        self.assertRaises(ValueError, incorrect_y_point_value_type)
 
     def test_create_limits(self):
         """creates a Shape object and checks that the create_limits function
@@ -135,6 +177,83 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.hash_value == initial_hash_value
         test_shape.solid
         assert test_shape.hash_value != initial_hash_value
+
+    def test_material_tag_warning(self):
+        """checks that a warning is raised when a Shape has a material tag > 28 characters"""
+
+        test_shape = paramak.Shape()
+
+        def warning_material_tag():
+
+            test_shape.material_tag = "abcdefghijklmnopqrstuvwxyz12345"
+
+        self.assertWarns(UserWarning, warning_material_tag)
+
+    def test_invalid_material_tag(self):
+        """checks a ValueError is raised when a Shape has an invalid material tag"""
+
+        test_shape = paramak.Shape()
+
+        def invalid_material_tag():
+
+            test_shape.material_tag = 123
+
+        self.assertRaises(ValueError, invalid_material_tag)
+
+    def test_export_html(self):
+        """checks a plotly figure of the Shape is exported by the export_html method with
+        the correct filename"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
+        )
+
+        os.system("rm filename.html")
+        test_shape.export_html('filename')
+        assert Path("filename.html").exists() is True
+        os.system("rm filename.html")
+
+    def test_invalid_stp_filename(self):
+        """checks ValueError is raised when invalid stp filenames are used"""
+
+        def invalid_filename_suffix():
+
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stp_filename="filename.invalid_suffix"
+            )
+
+        self.assertRaises(ValueError, invalid_filename_suffix)
+
+        def invalid_filename_type():
+
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stp_filename=123456
+            )
+
+        self.assertRaises(ValueError, invalid_filename_type)
+
+    def test_invalid_stl_filename(self):
+        """checks ValueError is raised when invalid stl filenames are used"""
+
+        def invalid_filename_suffix():
+
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stl_filename="filename.invalid_suffix"
+            )
+
+        self.assertRaises(ValueError, invalid_filename_suffix)
+
+        def invalid_filename_type():
+
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                stl_filename=123456
+            )
+
+        self.assertRaises(ValueError, invalid_filename_type)
 
 
 if __name__ == "__main__":

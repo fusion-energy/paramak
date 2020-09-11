@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="paramak",
-    version="0.0.13",
+    version="0.0.15",
     author="Jonathan Shimwell",
     author_email="jonathan.shimwell@ukaea.uk",
     description="Create 3D fusion reactor CAD models based on input parameters",
@@ -18,9 +18,9 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    setup_requires=["pytest-runner"],
     tests_require=[
         "pytest-cov",
+        "pytest-runner",
     ],
     install_requires=[
         "pytest-cov",
