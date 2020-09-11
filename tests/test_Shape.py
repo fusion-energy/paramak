@@ -30,7 +30,7 @@ class test_object_properties(unittest.TestCase):
             """creates Shape object with unacceptable workplane"""
 
             test_shape.workplane = "ZY"
-        
+
         self.assertRaises(ValueError, incorrect_workplane)
 
     def test_incorrect_points(self):
@@ -184,7 +184,7 @@ class test_object_properties(unittest.TestCase):
         test_shape = paramak.Shape()
 
         def warning_material_tag():
-            
+
             test_shape.material_tag = "abcdefghijklmnopqrstuvwxyz12345"
 
         self.assertWarns(UserWarning, warning_material_tag)
@@ -254,9 +254,6 @@ class test_object_properties(unittest.TestCase):
             )
 
         self.assertRaises(ValueError, invalid_filename_type)
-
-
-
 
 
 if __name__ == "__main__":
