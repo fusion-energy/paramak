@@ -108,7 +108,16 @@ class Shape:
 
     @color.setter
     def color(self, value):
-        self._color = value
+        if value is None:
+            self._color = value
+        elif isinstance(value, (list, tuple)):
+            if len(value) in [3, 4]:
+                self._color = value
+            else:
+                raise ValueError("Shape.color must be a list or tuple of 3 or 4 floats")
+        else:
+            raise ValueError("Shape.color must be a list or tuple of 3 or 4 floats")
+
 
     @property
     def material_tag(self):
@@ -473,10 +482,15 @@ class Shape:
 
         # provides a default color if color is not set
         if self.color is None:
-            color = "grey"
-        else:
-            color = self.color
+            self.color = (0.5, 0.5, 0.5)
 
+        color_list = [i*255 for i in self.color]
+
+        if len(color_list) == 3:
+            color = "rgb(" + str(color_list).strip("[]") + ")"
+        elif len(color_list) == 4:
+            color = "rgba(" + str(color_list).strip("[]") + ")"
+        
         if self.name is None:
             name = "Shape not named"
         else:
@@ -523,7 +537,7 @@ class Shape:
                 "hoverinfo": "text",
                 "text": text_values,
                 "mode": "markers+lines",
-                "marker": {"size": 4, "color": color},
+                "marker": {"size": 5, "color": color},
                 "name": name,
             }
         )
