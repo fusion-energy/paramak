@@ -275,7 +275,7 @@ class test_object_properties(unittest.TestCase):
             )
 
         self.assertRaises(ValueError, invalid_color_length)
-    
+
 
 if __name__ == "__main__":
     unittest.main()

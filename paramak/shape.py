@@ -114,10 +114,11 @@ class Shape:
             if len(value) in [3, 4]:
                 self._color = value
             else:
-                raise ValueError("Shape.color must be a list or tuple of 3 or 4 floats")
+                raise ValueError(
+                    "Shape.color must be a list or tuple of 3 or 4 floats")
         else:
-            raise ValueError("Shape.color must be a list or tuple of 3 or 4 floats")
-
+            raise ValueError(
+                "Shape.color must be a list or tuple of 3 or 4 floats")
 
     @property
     def material_tag(self):
@@ -484,13 +485,13 @@ class Shape:
         if self.color is None:
             self.color = (0.5, 0.5, 0.5)
 
-        color_list = [i*255 for i in self.color]
+        color_list = [i * 255 for i in self.color]
 
         if len(color_list) == 3:
             color = "rgb(" + str(color_list).strip("[]") + ")"
         elif len(color_list) == 4:
             color = "rgba(" + str(color_list).strip("[]") + ")"
-        
+
         if self.name is None:
             name = "Shape not named"
         else:
