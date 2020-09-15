@@ -108,7 +108,9 @@ class Shape:
 
     @color.setter
     def color(self, value):
-        if isinstance(value, (list, tuple)):
+        if value is None:
+            self._color = value
+        elif isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 self._color = value
             else:
