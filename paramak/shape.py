@@ -42,7 +42,7 @@ class Shape:
         self,
         points=None,
         name=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         material_tag=None,
         stp_filename=None,
         stl_filename=None,
@@ -108,9 +108,7 @@ class Shape:
 
     @color.setter
     def color(self, value):
-        if value is None:
-            self._color = value
-        elif isinstance(value, (list, tuple)):
+        if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 self._color = value
             else:
@@ -480,10 +478,6 @@ class Shape:
         Returns:
             plotly trace: trace object
         """
-
-        # provides a default color if color is not set
-        if self.color is None:
-            self.color = (0.5, 0.5, 0.5)
 
         color_list = [i * 255 for i in self.color]
 

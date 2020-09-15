@@ -33,7 +33,7 @@ class RotateSplineShape(Shape):
         points,
         workplane="XZ",
         name=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         material_tag=None,
         stp_filename="RotateSplineShape.stp",
         stl_filename="RotateSplineShape.stl",

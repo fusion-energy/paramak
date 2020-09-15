@@ -41,7 +41,7 @@ class ExtrudeCircleShape(Shape):
         stp_filename="ExtrudeCircleShape.stp",
         stl_filename="ExtrudeCircleShape.stl",
         solid=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         cut=None,
         intersect=None,
