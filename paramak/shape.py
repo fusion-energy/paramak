@@ -494,11 +494,10 @@ class Shape:
             name = self.name
 
         text_values = []
-        # for mixed shapes there are also connections added to the plot
-        if hasattr(self, "connections"):
-            if len(self.points[0]) == 3:
-                for i, (p, c) in enumerate(zip(self.points[:-1])):
-                    text_values.append(
+
+        for i, p in enumerate(self.points[:-1]):
+            if len(p) == 3:
+                text_values.append(
                         "point number="
                         + str(i)
                         + "<br>"
@@ -512,9 +511,7 @@ class Shape:
                         + str(p[1])
                         + "<br>"
                     )
-        # connections are not avaialbe for some shapes
-        else:
-            for i, p in enumerate(self.points):
+            else:
                 text_values.append(
                     "point number="
                     + str(i)
