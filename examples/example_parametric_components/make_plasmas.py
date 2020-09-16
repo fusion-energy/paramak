@@ -37,13 +37,18 @@ def plot_plasma(plasma, name=""):
 
     traces = []
 
+    print(plasma.color)
+
+    color_list = [i * 255 for i in plasma.color]
+    color = "rgb(" + str(color_list).strip("[]") + ")"
+
     traces.append(
         go.Scatter(
             x=[major_radius],
             y=[0],
             mode="markers",
             name="major_radius",
-            marker={"color": plasma.color},
+            marker={"color": color},
         )
     )
 
@@ -53,7 +58,7 @@ def plot_plasma(plasma, name=""):
             y=y_points,
             mode="markers",
             name="points",
-            marker={"color": plasma.color},
+            marker={"color": color},
         )
     )
 
@@ -63,7 +68,7 @@ def plot_plasma(plasma, name=""):
             y=[low_point[1]],
             mode="markers",
             name="low_point",
-            marker={"color": plasma.color},
+            marker={"color": color},
         )
     )
 
@@ -73,7 +78,7 @@ def plot_plasma(plasma, name=""):
             y=[high_point[1]],
             mode="markers",
             name="high_point",
-            marker={"color": plasma.color},
+            marker={"color": color},
         )
     )
 
@@ -83,7 +88,7 @@ def plot_plasma(plasma, name=""):
             y=[inner_equatorial_point[1]],
             mode="markers",
             name="inner_equatorial_point",
-            marker={"color": plasma.color},
+            marker={"color": color},
         )
     )
 
@@ -93,7 +98,7 @@ def plot_plasma(plasma, name=""):
             y=[outer_equatorial_point[1]],
             mode="markers",
             name="outer_equatorial_point",
-            marker={"color": plasma.color},
+            marker={"color": color},
         )
     )
 
@@ -148,6 +153,7 @@ def make_plasma_plasmaboundaries(
         triangularity=triangularity,
         elongation=elongation,
         configuration=config,
+        color=color
     )
     plasma.name = "plasma"
     plasma.export_2d_image(name + ".png")
@@ -166,7 +172,7 @@ def main():
         minor_radius=210,
         triangularity=0.33,
         elongation=1.85,
-        color="blue",
+        color=(0.1, 0.5, 0.7)
     )
 
     ITER_plasma_plasmaboundaries = make_plasma_plasmaboundaries(
@@ -176,7 +182,7 @@ def main():
         minor_radius=210,
         triangularity=0.33,
         elongation=1.85,
-        color="orange",
+        color=(1, 0.5, 0)
     )
 
     EU_DEMO_plasma = make_plasma(
@@ -185,7 +191,7 @@ def main():
         minor_radius=290,
         triangularity=0.33,
         elongation=1.59,
-        color="red",
+        color=(0.9, 0.1, 0.1)
     )
 
     ST_plasma = make_plasma(
@@ -194,7 +200,7 @@ def main():
         minor_radius=129,
         triangularity=0.55,
         elongation=2.3,
-        color="green",
+        color=(0.2, 0.6, 0.2)
     )
 
     AST_plasma = make_plasma(
@@ -203,7 +209,7 @@ def main():
         minor_radius=129,
         triangularity=-0.55,
         elongation=2.3,
-        color="black",
+        color=(0, 0, 0)
     )
 
     NSTX_double_null_plasma_plasmaboundaries = make_plasma_plasmaboundaries(
@@ -213,7 +219,7 @@ def main():
         minor_radius=680,
         triangularity=0.35,
         elongation=2,
-        color="yellow",
+        color=(1, 1, 0),
         config="double-null"
     )
 
@@ -224,7 +230,7 @@ def main():
         minor_radius=680,
         triangularity=0.35,
         elongation=2,
-        color="purple",
+        color=(0.6, 0.3, 0.6),
         config="single-null"
     )
 
