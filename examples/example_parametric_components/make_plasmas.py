@@ -37,8 +37,6 @@ def plot_plasma(plasma, name=""):
 
     traces = []
 
-    print(plasma.color)
-
     color_list = [i * 255 for i in plasma.color]
     color = "rgb(" + str(color_list).strip("[]") + ")"
 
