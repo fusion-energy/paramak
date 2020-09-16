@@ -498,19 +498,19 @@ class Shape:
         for i, p in enumerate(self.points[:-1]):
             if len(p) == 3:
                 text_values.append(
-                        "point number="
-                        + str(i)
-                        + "<br>"
-                        + "connection to next point="
-                        + str(p[2])
-                        + "<br>"
-                        + "x="
-                        + str(p[0])
-                        + "<br>"
-                        + "z="
-                        + str(p[1])
-                        + "<br>"
-                    )
+                    "point number="
+                    + str(i)
+                    + "<br>"
+                    + "connection to next point="
+                    + str(p[2])
+                    + "<br>"
+                    + "x="
+                    + str(p[0])
+                    + "<br>"
+                    + "z="
+                    + str(p[1])
+                    + "<br>"
+                )
             else:
                 text_values.append(
                     "point number="
