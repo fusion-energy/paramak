@@ -95,14 +95,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         self.distance = distance
         self.number_of_coils = number_of_coils
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     @property
     def azimuth_placement_angle(self):
@@ -174,7 +167,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             (
                 self.horizontal_start_point[0],
                 self.horizontal_start_point[1] + self.thickness,
-            ),  # upper right inner
+            )  # upper right inner
         ]
 
         self.points = points

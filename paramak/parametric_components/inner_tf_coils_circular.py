@@ -86,14 +86,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         self.gap_size = gap_size
         self.distance = height
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     @property
     def height(self):
@@ -223,9 +216,8 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             (point_3[0], point_3[1], "straight"),
             (point_6[0], point_6[1], "circle"),
             (point_5[0], point_5[1], "circle"),
-            (point_4[0], point_4[1], "straight"),
-            (point_1[0], point_1[1], "straight"),
-        ]  # we have overwritten the setter which automatically adds the endpoint=first point, so we need to specify it explicitely
+            (point_4[0], point_4[1], "straight")
+        ]
 
         self.points = points
 

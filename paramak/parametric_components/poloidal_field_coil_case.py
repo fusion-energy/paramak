@@ -6,8 +6,8 @@ class PoloidalFieldCoilCase(RotateStraightShape):
     describe the existing coil and the thickness of the casing required.
 
     Args:
-        height (float): the vertical (z axis) height of the coil (cm).
-        width (float): the horizontal(x axis) width of the coil (cm).
+        coil_height (float): the vertical (z axis) height of the coil (cm).
+        coil_width (float): the horizontal(x axis) width of the coil (cm).
         center_point (tuple of floats): the center of the coil (x,z) values (cm).
         casing_thickness (tuple of floats): the thickness of the coil casing (cm).
 
@@ -79,15 +79,8 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         self.height = coil_height
         self.width = coil_width
         self.casing_thickness = casing_thickness
-
-    @property
-    def points(self):
+        
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, value):
-        self._points = value
 
     @property
     def center_point(self):
@@ -167,11 +160,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
                 (self.casing_thickness + self.width / 2.0),
                 self.center_point[1] + \
                 (self.casing_thickness + self.height / 2.0),
-            ),
-            (
-                self.center_point[0] + self.width / 2.0,
-                self.center_point[1] + self.height / 2.0,
-            ),  # upper right
+            )
         ]
 
         self.points = points

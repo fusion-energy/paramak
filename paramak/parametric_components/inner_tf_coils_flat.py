@@ -86,14 +86,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         self.gap_size = gap_size
         self.distance = height
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     @property
     def height(self):
@@ -201,9 +194,8 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             (point_1[0], point_1[1]),
             (point_3[0], point_3[1]),
             (point_6[0], point_6[1]),
-            (point_4[0], point_4[1]),
-            (point_1[0], point_1[1]),
-        ]  # we have overwritten the setter which automatically adds the endpoint=first point, so we need to specify it explicitely
+            (point_4[0], point_4[1])
+        ]
 
         self.points = points
 
