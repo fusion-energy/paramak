@@ -142,6 +142,4 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
             (self.inner_radius, -self.height / 2, "straight")
         ]
 
-        print(points)
-
         self.points = points
