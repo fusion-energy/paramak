@@ -51,7 +51,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         vertical_displacement=0.0,
         stp_filename="ToroidalFieldCoilPrincetonD.stp",
         stl_filename="ToroidalFieldCoilPrincetonD.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         name=None,
         material_tag="outer_tf_coil_mat",

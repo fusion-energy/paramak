@@ -39,7 +39,7 @@ class ExtrudeStraightShape(Shape):
         stp_filename="ExtrudeStraightShape.stp",
         stl_filename="ExtrudeStraightShape.stl",
         solid=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         cut=None,
         intersect=None,

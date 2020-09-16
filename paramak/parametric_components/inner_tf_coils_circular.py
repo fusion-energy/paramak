@@ -45,7 +45,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         distance=None,
         stp_filename="InnerTfCoilsCircular.stp",
         stl_filename="InnerTfCoilsCircular.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         material_tag="inner_tf_coil_mat",
         name=None,

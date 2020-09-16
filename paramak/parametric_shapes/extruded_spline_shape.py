@@ -38,7 +38,7 @@ class ExtrudeSplineShape(Shape):
         stp_filename="ExtrudeSplineShape.stp",
         stl_filename="ExtrudeSplineShape.stl",
         solid=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         cut=None,
         intersect=None,

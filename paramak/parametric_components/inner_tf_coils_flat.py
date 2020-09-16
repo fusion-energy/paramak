@@ -45,7 +45,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         distance=None,
         stp_filename="InnerTfCoilsFlat.stp",
         stl_filename="InnerTfCoilsFlat.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         material_tag="inner_tf_coil_mat",
         name=None,

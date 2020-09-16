@@ -28,7 +28,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         inner_radius,
         outer_radius,
         name=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         stp_filename="CenterColumnShieldCylinder.stp",
         stl_filename="CenterColumnShieldCylinder.stl",
         rotation_angle=360,

@@ -49,7 +49,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         rotation_angle=360,
         stp_filename="ToroidalFieldCoilRectangle.stp",
         stl_filename="ToroidalFieldCoilRectangle.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         name=None,
         material_tag="outer_tf_coil_mat",
