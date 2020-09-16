@@ -82,7 +82,7 @@ class ITERtypeDivertor(RotateMixedShape):
         stp_filename="ITERtypeDivertor.stp",
         stl_filename="ITERtypeDivertor.stl",
         azimuth_placement_angle=0,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         name=None,
         material_tag=None,
         **kwargs

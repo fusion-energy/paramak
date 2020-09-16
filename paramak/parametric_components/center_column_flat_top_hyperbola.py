@@ -44,7 +44,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         rotation_angle=360,
         stp_filename="CenterColumnFlatTopHyperbola.stp",
         stl_filename="CenterColumnFlatTopHyperbola.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         name="center_column",
         material_tag="center_column_shield_mat",
         azimuth_placement_angle=0,

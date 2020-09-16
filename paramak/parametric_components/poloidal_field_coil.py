@@ -38,7 +38,7 @@ class PoloidalFieldCoil(RotateStraightShape):
         rotation_angle=360,
         stp_filename="PoloidalFieldCoil.stp",
         stl_filename="PoloidalFieldCoil.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         name="pf_coil",
         material_tag="pf_coil_mat",

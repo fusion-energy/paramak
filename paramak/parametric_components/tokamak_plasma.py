@@ -74,7 +74,7 @@ class Plasma(RotateSplineShape):
         material_tag="DT_plasma",
         stp_filename="plasma.stp",
         stl_filename="plasma.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         rotation_angle=360,
         azimuth_placement_angle=0,
         **kwargs

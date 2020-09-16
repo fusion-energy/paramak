@@ -51,7 +51,7 @@ class PlasmaFromPoints(Plasma):
         material_tag="DT_plasma",
         num_points=50,
         stp_filename="plasma.stp",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         rotation_angle=360,
         azimuth_placement_angle=0,
         **kwargs

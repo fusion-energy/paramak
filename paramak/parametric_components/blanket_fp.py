@@ -82,7 +82,7 @@ class BlanketFP(RotateMixedShape):
         stl_filename="BlanketFP.stl",
         rotation_angle=360,
         azimuth_placement_angle=0,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         name=None,
         material_tag="blanket_mat",
         **kwargs

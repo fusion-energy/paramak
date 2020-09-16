@@ -53,7 +53,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         rotation_angle=360,
         stp_filename="ToroidalFieldCoilCoatHangar.stp",
         stl_filename="ToroidalFieldCoilCoatHangar.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         name=None,
         material_tag="outer_tf_coil_mat",

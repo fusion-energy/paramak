@@ -45,7 +45,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         mid_offset,
         edge_offset,
         name=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         material_tag="center_column_shield_mat",
         stp_filename="CenterColumnShieldPlasmaHyperbola.stp",
         stl_filename="CenterColumnShieldPlasmaHyperbola.stl",
