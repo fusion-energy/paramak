@@ -216,6 +216,11 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of tf coils"""
 
-        angles = list(np.linspace(0, 360, self.number_of_coils, endpoint=False))
+        angles = list(
+            np.linspace(
+                0,
+                360,
+                self.number_of_coils,
+                endpoint=False))
 
         self.azimuth_placement_angle = angles
