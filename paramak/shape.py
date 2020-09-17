@@ -108,10 +108,13 @@ class Shape:
 
     @color.setter
     def color(self, value):
-        if value is None:
-            self._color = value
-        elif isinstance(value, (list, tuple)):
+        if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
+                for i in value:
+                    if isinstance(i, (int, float)) is False:
+                        raise ValueError(
+                            "Shape.color must be a list or tuple of 3 or 4 floats"
+                        )
                 self._color = value
             else:
                 raise ValueError(
@@ -311,6 +314,27 @@ class Shape:
                 "stl_filename must be a string",
                 value,
                 type(value))
+
+    @property
+    def azimuth_placement_angle(self):
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        if isinstance(value, (int, float, list)):
+            if isinstance(value, list):
+                for i in value:
+                    if isinstance(i, (int, float)) is False:
+                        raise ValueError(
+                            "azimuth_placement_angle must be a float or list of floats"
+                        )
+                self._azimuth_placement_angle = value
+            else:
+                self._azimuth_placement_angle = value
+        else:
+            raise ValueError(
+                "azimuth_placement_angle must be a float or list of floats"
+            )
 
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the face of the shape.

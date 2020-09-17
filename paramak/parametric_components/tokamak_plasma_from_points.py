@@ -89,7 +89,7 @@ class PlasmaFromPoints(Plasma):
             configuration=configuration,
             x_point_shift=x_point_shift,
             stp_filename="plasma.stp",
-            color=None,
+            color=color,
             rotation_angle=rotation_angle,
             azimuth_placement_angle=azimuth_placement_angle,
             hash_value=None,

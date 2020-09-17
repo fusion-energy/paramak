@@ -87,6 +87,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         self.distance = height
 
         self.find_points()
+        self.find_azimuth_placement_angle()
 
     @property
     def height(self):
@@ -103,15 +104,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     @distance.setter
     def distance(self, distance):
         self._distance = distance
-
-    @property
-    def azimuth_placement_angle(self):
-        self.find_azimuth_placement_angle()
-        return self._azimuth_placement_angle
-
-    @azimuth_placement_angle.setter
-    def azimuth_placement_angle(self, azimuth_placement_angle):
-        self._azimuth_placement_angle = azimuth_placement_angle
 
     @property
     def inner_radius(self):
@@ -202,6 +194,11 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of tf coils"""
 
-        angles = np.linspace(0, 360, self.number_of_coils, endpoint=False)
+        angles = list(
+            np.linspace(
+                0,
+                360,
+                self.number_of_coils,
+                endpoint=False))
 
         self.azimuth_placement_angle = angles
