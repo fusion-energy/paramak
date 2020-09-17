@@ -345,7 +345,7 @@ class ITERtypeDivertorNoDome(ITERtypeDivertor):
         stp_filename=None,
         azimuth_placement_angle=0,
         solid=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         name=None,
         material_tag=None,
         cut=None,
