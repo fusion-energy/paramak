@@ -126,14 +126,7 @@ class ITERtypeDivertor(RotateMixedShape):
         self.dome_pos = dome_pos
         self.dome_thickness = dome_thickness
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     def create_vertical_target_points(
             self, anchor, coverage, tilt, radius, length):
@@ -311,7 +304,6 @@ class ITERtypeDivertor(RotateMixedShape):
 
         # append all points
         points = IVT_points + dome_points + OVT_points + casing_points
-        points.append(points[0])  # close surface
         self.points = points
 
 
