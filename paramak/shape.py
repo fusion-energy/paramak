@@ -61,7 +61,7 @@ class Shape:
         self.stl_filename = stl_filename
         self.color = color
         self.name = name
-        
+
         self.cut = cut
         self.intersect = intersect
         self.union = union
@@ -80,7 +80,6 @@ class Shape:
         self.render_mesh = None
         # self.volume = None
         self.hash_value = None
-
 
     @property
     def cut(self):
