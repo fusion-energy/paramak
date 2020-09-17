@@ -84,15 +84,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         self.number_of_coils = number_of_coils
 
         self.find_points()
-
-    @property
-    def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
-        return self._azimuth_placement_angle
-
-    @azimuth_placement_angle.setter
-    def azimuth_placement_angle(self, azimuth_placement_angle):
-        self._azimuth_placement_angle = azimuth_placement_angle
 
     def compute_inner_points(self, R1, R2):
         """Computes the inner curve points
@@ -191,6 +183,6 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of tf coils"""
 
-        angles = np.linspace(0, 360, self.number_of_coils, endpoint=False)
+        angles = list(np.linspace(0, 360, self.number_of_coils, endpoint=False))
 
         self.azimuth_placement_angle = angles
