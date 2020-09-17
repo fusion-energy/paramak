@@ -42,7 +42,7 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         rotation_angle=360,
         stp_filename="center_column.stp",
         stl_filename="center_column.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         name="center_column",
         material_tag="center_column_material",
         azimuth_placement_angle=0,
