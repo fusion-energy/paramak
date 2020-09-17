@@ -65,39 +65,14 @@ class RotateCircleShape(Shape):
             stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
+            cut=cut,
+            intersect=intersect,
+            union=union,
             **default_dict
         )
-
-        self.cut = cut
-        self.intersect = intersect
-        self.union = union
         self.radius = radius
         self.rotation_angle = rotation_angle
         self.solid = solid
-
-    @property
-    def cut(self):
-        return self._cut
-
-    @cut.setter
-    def cut(self, value):
-        self._cut = value
-
-    @property
-    def intersect(self):
-        return self._intersect
-
-    @intersect.setter
-    def intersect(self, value):
-        self._intersect = value
-
-    @property
-    def union(self):
-        return self._union
-
-    @union.setter
-    def union(self, value):
-        self._union = value
 
     @property
     def solid(self):

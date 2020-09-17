@@ -51,6 +51,9 @@ class Shape:
         tet_mesh=None,
         physical_groups=None,
         hash_value=None,
+        cut=None,
+        intersect=None,
+        union=None
     ):
 
         self.points = points
@@ -58,6 +61,10 @@ class Shape:
         self.stl_filename = stl_filename
         self.color = color
         self.name = name
+        
+        self.cut = cut
+        self.intersect = intersect
+        self.union = union
 
         self.azimuth_placement_angle = azimuth_placement_angle
         self.workplane = workplane
@@ -73,6 +80,31 @@ class Shape:
         self.render_mesh = None
         # self.volume = None
         self.hash_value = None
+
+
+    @property
+    def cut(self):
+        return self._cut
+
+    @cut.setter
+    def cut(self, value):
+        self._cut = value
+
+    @property
+    def intersect(self):
+        return self._intersect
+
+    @intersect.setter
+    def intersect(self, value):
+        self._intersect = value
+
+    @property
+    def union(self):
+        return self._union
+
+    @union.setter
+    def union(self, value):
+        self._union = value
 
     @property
     def workplane(self):

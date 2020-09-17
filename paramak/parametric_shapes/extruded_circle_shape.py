@@ -68,39 +68,15 @@ class ExtrudeCircleShape(Shape):
             stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
+            cut=cut,
+            intersect=intersect,
+            union=union,
             **default_dict
         )
 
-        self.cut = cut
-        self.intersect = intersect
-        self.union = union
         self.radius = radius
         self.distance = distance
         self.solid = solid
-
-    @property
-    def cut(self):
-        return self._cut
-
-    @cut.setter
-    def cut(self, cut):
-        self._cut = cut
-
-    @property
-    def intersect(self):
-        return self._intersect
-
-    @intersect.setter
-    def intersect(self, value):
-        self._intersect = value
-
-    @property
-    def union(self):
-        return self._union
-
-    @union.setter
-    def union(self, value):
-        self._union = value
 
     @property
     def solid(self):
