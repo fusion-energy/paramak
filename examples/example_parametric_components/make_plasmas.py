@@ -148,6 +148,7 @@ def make_plasma_plasmaboundaries(
         triangularity=triangularity,
         elongation=elongation,
         configuration=config,
+        rotation_angle=180
     )
     plasma.name = "plasma"
     plasma.export_2d_image(name + ".png")
