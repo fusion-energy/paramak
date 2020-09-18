@@ -55,7 +55,7 @@ class PlasmaBoundaries(Plasma):
         name="plasma",
         material_tag="DT_plasma",
         stp_filename="plasma.stp",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         rotation_angle=360,
         azimuth_placement_angle=0,
         **kwargs
@@ -103,14 +103,7 @@ class PlasmaBoundaries(Plasma):
         self.low_point = None
         self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, value):
-        self._points = value
 
     @property
     def vertical_displacement(self):
