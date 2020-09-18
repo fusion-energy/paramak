@@ -4,7 +4,6 @@ from hashlib import blake2b
 import cadquery as cq
 
 from paramak import Shape
-from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class RotateMixedShape(Shape):
@@ -158,21 +157,6 @@ class RotateMixedShape(Shape):
             solid = solid.rotate(
                 (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
-        # If a cut solid is provided then perform a boolean cut
-        if self.cut is not None:
-            solid = cut_solid(solid, self.cut)
-
-        # If an intersect is provided then perform a boolean intersect
-        if self.intersect is not None:
-            solid = intersect_solid(solid, self.intersect)
-
-        # If an intersect is provided then perform a boolean intersect
-        if self.union is not None:
-            solid = union_solid(solid, self.union)
-
-        self.solid = solid
-
-        # Calculate hash value for current solid
-        self.hash_value = self.get_hash()
+        self.perform_boolean_operations(solid)
 
         return solid
