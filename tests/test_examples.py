@@ -228,5 +228,6 @@ class test_object_properties(unittest.TestCase):
         assert Path(output_filename).exists() is True
         os.system("rm " + output_filename)
 
+
 if __name__ == "__main__":
     unittest.main()
