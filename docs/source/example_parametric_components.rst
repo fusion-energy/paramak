@@ -4,15 +4,20 @@ Examples - Parametric Components
 make_all_parametric_components.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. image:: https://user-images.githubusercontent.com/8583900/93629472-47c05900-f9e0-11ea-8219-bc9d2c3e7f7c.png
+   :width: 1051
+   :height: 285
+   :align: center
+
 .. automodule:: examples.example_parametric_components.make_all_parametric_components
    :members:
    :show-inheritance:
 
 `Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_all_parametric_components.py>`_
 
-
 make_plasmas.py
 ^^^^^^^^^^^^^^^
+
 .. image:: https://user-images.githubusercontent.com/8583900/93624384-2e1b1380-f9d8-11ea-99d1-9bf9e4e5b838.png
    :width: 1500
    :height: 1000
