@@ -70,7 +70,7 @@ class ExtrudeSplineShape(Shape):
             union=union,
             **default_dict
         )
-        
+
         self.distance = distance
         self.solid = solid
 
