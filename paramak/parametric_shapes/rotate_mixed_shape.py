@@ -65,9 +65,9 @@ class RotateMixedShape(Shape):
             stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
-            cut=None,
-            intersect=None,
-            union=None,
+            cut=cut,
+            intersect=intersect,
+            union=union,
             **default_dict
         )
         self.rotation_angle = rotation_angle
