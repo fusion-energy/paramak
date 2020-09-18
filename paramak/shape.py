@@ -13,6 +13,7 @@ from PIL import Image
 from hashlib import blake2b
 
 from cadquery import exporters
+from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class Shape:
@@ -698,3 +699,24 @@ class Shape:
         hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
         value = hash_object.hexdigest()
         return value
+
+    def perform_boolean_operations(self, solid):
+        """Performs boolean cut, intersect and union operations if shapes are provided"""
+
+        # If a cut solid is provided then perform a boolean cut
+        if self.cut is not None:
+            solid = cut_solid(solid, self.cut)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.intersect is not None:
+            solid = intersect_solid(solid, self.intersect)
+
+        # If an intersect is provided then perform a boolean intersect
+        if self.union is not None:
+            solid = union_solid(solid, self.union)
+
+        self.solid = solid
+
+        self.hash_value = self.get_hash()
+
+        return solid
