@@ -202,13 +202,17 @@ class test_object_properties(unittest.TestCase):
 
     def test_export_html(self):
         """checks a plotly figure of the Shape is exported by the export_html method with
-        the correct filename"""
+        the correct filename with RGB and RGBA colors"""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
         )
 
         os.system("rm filename.html")
+        test_shape.export_html('filename')
+        assert Path("filename.html").exists() is True
+        os.system("rm filename.html")
+        test_shape.color = (1, 0, 0, 0.5)
         test_shape.export_html('filename')
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
@@ -254,6 +258,27 @@ class test_object_properties(unittest.TestCase):
             )
 
         self.assertRaises(ValueError, invalid_filename_type)
+
+    def test_invalid_color(self):
+        """checks ValueError is raised when invalid colors are used"""
+
+        def invalid_color_type():
+
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                color=255
+            )
+
+        self.assertRaises(ValueError, invalid_color_type)
+
+        def invalid_color_length():
+
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                color=(255, 255, 255, 1, 1)
+            )
+
+        self.assertRaises(ValueError, invalid_color_length)
 
 
 if __name__ == "__main__":

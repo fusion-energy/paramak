@@ -45,7 +45,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         mid_offset,
         edge_offset,
         name=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         material_tag="center_column_shield_mat",
         stp_filename="CenterColumnShieldPlasmaHyperbola.stp",
         stl_filename="CenterColumnShieldPlasmaHyperbola.stl",
@@ -95,14 +95,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         self.mid_offset = mid_offset
         self.edge_offset = edge_offset
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     @property
     def major_radius(self):
@@ -204,8 +197,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             ),
             (plasma.low_point[0] - self.edge_offset, plasma.low_point[1], "straight"),
             (plasma.low_point[0] - self.edge_offset, -1 * self.height / 2, "straight"),
-            (self.inner_radius, -1 * self.height / 2, "straight"),
-            (self.inner_radius, 0, "straight"),
+            (self.inner_radius, -1 * self.height / 2, "straight")
         ]
 
         self.points = points

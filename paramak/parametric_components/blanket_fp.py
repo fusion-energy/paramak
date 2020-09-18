@@ -82,7 +82,7 @@ class BlanketFP(RotateMixedShape):
         stl_filename="BlanketFP.stl",
         rotation_angle=360,
         azimuth_placement_angle=0,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         name=None,
         material_tag="blanket_mat",
         **kwargs
@@ -140,6 +140,8 @@ class BlanketFP(RotateMixedShape):
         # self.points = points
         self.physical_groups = None
 
+        self.find_points()
+
     @property
     def physical_groups(self):
         self.create_physical_groups()
@@ -148,15 +150,6 @@ class BlanketFP(RotateMixedShape):
     @physical_groups.setter
     def physical_groups(self, physical_groups):
         self._physical_groups = physical_groups
-
-    @property
-    def points(self):
-        self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     @property
     def minor_radius(self):
@@ -239,7 +232,6 @@ class BlanketFP(RotateMixedShape):
             np.flip(thetas), R, Z, new_offset)
         points = inner_points + outer_points
         points[-1][2] = "straight"
-        points.append(inner_points[0])
         self.points = points
 
     def create_offset_points(self, thetas, R_fun, Z_fun, offset):

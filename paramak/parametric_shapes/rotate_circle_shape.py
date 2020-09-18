@@ -37,7 +37,7 @@ class RotateCircleShape(Shape):
         stp_filename="RotateCircleShape.stp",
         stl_filename="RotateCircleShape.stl",
         solid=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         rotation_angle=360,
         cut=None,

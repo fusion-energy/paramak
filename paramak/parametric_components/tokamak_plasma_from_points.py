@@ -51,7 +51,7 @@ class PlasmaFromPoints(Plasma):
         material_tag="DT_plasma",
         num_points=50,
         stp_filename="plasma.stp",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         rotation_angle=360,
         azimuth_placement_angle=0,
         **kwargs
@@ -89,7 +89,7 @@ class PlasmaFromPoints(Plasma):
             configuration=configuration,
             x_point_shift=x_point_shift,
             stp_filename="plasma.stp",
-            color=None,
+            color=color,
             rotation_angle=rotation_angle,
             azimuth_placement_angle=azimuth_placement_angle,
             hash_value=None,
@@ -101,14 +101,7 @@ class PlasmaFromPoints(Plasma):
         self.high_point = high_point
         self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, value):
-        self._points = value
 
     @property
     def outer_equatorial_x_point(self):

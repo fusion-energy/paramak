@@ -38,7 +38,7 @@ class PoloidalFieldCoil(RotateStraightShape):
         rotation_angle=360,
         stp_filename="PoloidalFieldCoil.stp",
         stl_filename="PoloidalFieldCoil.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         name="pf_coil",
         material_tag="pf_coil_mat",
@@ -76,14 +76,7 @@ class PoloidalFieldCoil(RotateStraightShape):
         self.height = height
         self.width = width
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     @property
     def center_point(self):
@@ -130,10 +123,6 @@ class PoloidalFieldCoil(RotateStraightShape):
                 self.center_point[0] - self.width / 2.0,
                 self.center_point[1] + self.height / 2.0,
             ),  # upper left
-            (
-                self.center_point[0] + self.width / 2.0,
-                self.center_point[1] + self.height / 2.0,
-            ),
         ]
 
         self.points = points
