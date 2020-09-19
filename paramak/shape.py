@@ -1,8 +1,10 @@
 import json
 import math
 import numbers
-from pathlib import Path
 import warnings
+from collections import Iterable
+from hashlib import blake2b
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +12,6 @@ import plotly.graph_objects as go
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from PIL import Image
-from hashlib import blake2b
 
 from cadquery import exporters
 
@@ -321,8 +322,8 @@ class Shape:
 
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
-        if isinstance(value, (int, float, list)):
-            if isinstance(value, list):
+        if isinstance(value, (int, float, list, Iterable)):
+            if isinstance(value, (list, Iterable)):
                 for i in value:
                     if isinstance(i, (int, float)) is False:
                         raise ValueError(

@@ -5,8 +5,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="paramak",
-    version="0.0.15",
-    author="Jonathan Shimwell",
+    version="0.0.17",
+    author="The Paramak Development Team",
     author_email="jonathan.shimwell@ukaea.uk",
     description="Create 3D fusion reactor CAD models based on input parameters",
     long_description=long_description,
@@ -31,7 +31,5 @@ setuptools.setup(
         "tqdm",
         "matplotlib",
         "plasmaboundaries",
-        "uncertainties",
-        "importlib_resources",
     ],
 )
