@@ -42,7 +42,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
         rotation_angle=360,
         stp_filename="CenterColumnShieldCircular.stp",
         stl_filename="CenterColumnShieldCircular.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         name="center_column",
         material_tag="center_column_shield_mat",
         azimuth_placement_angle=0,
@@ -81,14 +81,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
         self.mid_radius = mid_radius
         self.outer_radius = outer_radius
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     @property
     def height(self):
@@ -132,8 +125,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
             (self.outer_radius, self.height / 2, "circle"),
             (self.mid_radius, 0, "circle"),
             (self.outer_radius, -self.height / 2, "straight"),
-            (self.inner_radius, -self.height / 2, "straight"),
-            (self.inner_radius, 0, "straight"),
+            (self.inner_radius, -self.height / 2, "straight")
         ]
 
         self.points = points

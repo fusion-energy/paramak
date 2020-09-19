@@ -179,7 +179,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             tf_coil_to_rear_blanket_radial_gap=50,
             outboard_tf_coil_poloidal_thickness=70,
             number_of_tf_coils=4,
-            rotation_angle=360
+            rotation_angle=359
         )
         test_reactor.export_stp("pf_SubmersionTokamak")
 

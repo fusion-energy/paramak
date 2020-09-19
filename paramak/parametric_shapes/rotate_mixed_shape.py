@@ -35,7 +35,7 @@ class RotateMixedShape(Shape):
         points,
         workplane="XZ",
         name=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         material_tag=None,
         stp_filename="RotateMixedShape.stp",
         stl_filename="RotateMixedShape.stl",

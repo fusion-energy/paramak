@@ -112,8 +112,6 @@ def main():
     )
     all_components.append(component)
 
-    #
-
     # component = paramak.DivertorBlock(
     #     major_radius = 800,
     #     minor_radius = 400,

@@ -51,7 +51,7 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         stl_filename="BlanketConstantThicknessArcV.stl",
         rotation_angle=360,
         azimuth_placement_angle=0,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         name=None,
         material_tag="blanket_material",
         **kwargs
@@ -89,14 +89,7 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         self.inner_mid_point = inner_mid_point
         self.thickness = thickness
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
 
     def find_points(self):
 
@@ -118,6 +111,5 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
                 self.inner_upper_point[0],
                 self.inner_upper_point[1] + abs(self.thickness),
                 "straight",
-            ),
-            (self.inner_upper_point[0], self.inner_upper_point[1]),
+            )
         ]

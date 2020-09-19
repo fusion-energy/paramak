@@ -45,7 +45,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         distance=None,
         stp_filename="InnerTfCoilsCircular.stp",
         stl_filename="InnerTfCoilsCircular.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         material_tag="inner_tf_coil_mat",
         name=None,
@@ -86,14 +86,8 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         self.gap_size = gap_size
         self.distance = height
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
+        self.find_azimuth_placement_angle()
 
     @property
     def height(self):
@@ -110,15 +104,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
     @distance.setter
     def distance(self, distance):
         self._distance = distance
-
-    @property
-    def azimuth_placement_angle(self):
-        self.find_azimuth_placement_angle()
-        return self._azimuth_placement_angle
-
-    @azimuth_placement_angle.setter
-    def azimuth_placement_angle(self, azimuth_placement_angle):
-        self._azimuth_placement_angle = azimuth_placement_angle
 
     @property
     def inner_radius(self):
@@ -223,15 +208,19 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             (point_3[0], point_3[1], "straight"),
             (point_6[0], point_6[1], "circle"),
             (point_5[0], point_5[1], "circle"),
-            (point_4[0], point_4[1], "straight"),
-            (point_1[0], point_1[1], "straight"),
-        ]  # we have overwritten the setter which automatically adds the endpoint=first point, so we need to specify it explicitely
+            (point_4[0], point_4[1], "straight")
+        ]
 
         self.points = points
 
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of tf coils"""
 
-        angles = np.linspace(0, 360, self.number_of_coils, endpoint=False)
+        angles = list(
+            np.linspace(
+                0,
+                360,
+                self.number_of_coils,
+                endpoint=False))
 
         self.azimuth_placement_angle = angles

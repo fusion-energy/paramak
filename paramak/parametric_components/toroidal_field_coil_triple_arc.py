@@ -51,7 +51,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         vertical_displacement=0.0,
         stp_filename="ToroidalFieldCoilPrincetonD.stp",
         stl_filename="ToroidalFieldCoilPrincetonD.stl",
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         name=None,
         material_tag="outer_tf_coil_mat",
@@ -94,23 +94,8 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         self.number_of_coils = number_of_coils
         self.vertical_displacement = vertical_displacement
 
-    @property
-    def points(self):
         self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
-
-    @property
-    def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
-        return self._azimuth_placement_angle
-
-    @azimuth_placement_angle.setter
-    def azimuth_placement_angle(self, azimuth_placement_angle):
-        self._azimuth_placement_angle = azimuth_placement_angle
 
     def compute_curve(self, R1, h, radii, coverages):
         npoints = 500
@@ -186,12 +171,16 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         for i in range(len(R_outer)):
             points.append([R_outer[i], Z_outer[i], 'spline'])
         points[-1][2] = 'straight'
-        points.append(points[0])
         self.points = points
 
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of tf coils"""
 
-        angles = np.linspace(0, 360, self.number_of_coils, endpoint=False)
+        angles = list(
+            np.linspace(
+                0,
+                360,
+                self.number_of_coils,
+                endpoint=False))
 
         self.azimuth_placement_angle = angles

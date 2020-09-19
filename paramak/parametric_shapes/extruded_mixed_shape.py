@@ -40,7 +40,7 @@ class ExtrudeMixedShape(Shape):
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
         solid=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         azimuth_placement_angle=0,
         cut=None,
         intersect=None,

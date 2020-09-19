@@ -1,8 +1,10 @@
 import json
 import math
 import numbers
-from pathlib import Path
 import warnings
+from collections import Iterable
+from hashlib import blake2b
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +12,6 @@ import plotly.graph_objects as go
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from PIL import Image
-from hashlib import blake2b
 
 from cadquery import exporters
 
@@ -42,7 +43,7 @@ class Shape:
         self,
         points=None,
         name=None,
-        color=None,
+        color=(0.5, 0.5, 0.5),
         material_tag=None,
         stp_filename=None,
         stl_filename=None,
@@ -108,7 +109,20 @@ class Shape:
 
     @color.setter
     def color(self, value):
-        self._color = value
+        if isinstance(value, (list, tuple)):
+            if len(value) in [3, 4]:
+                for i in value:
+                    if isinstance(i, (int, float)) is False:
+                        raise ValueError(
+                            "Shape.color must be a list or tuple of 3 or 4 floats"
+                        )
+                self._color = value
+            else:
+                raise ValueError(
+                    "Shape.color must be a list or tuple of 3 or 4 floats")
+        else:
+            raise ValueError(
+                "Shape.color must be a list or tuple of 3 or 4 floats")
 
     @property
     def material_tag(self):
@@ -302,6 +316,27 @@ class Shape:
                 value,
                 type(value))
 
+    @property
+    def azimuth_placement_angle(self):
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        if isinstance(value, (int, float, list, Iterable)):
+            if isinstance(value, (list, Iterable)):
+                for i in value:
+                    if isinstance(i, (int, float)) is False:
+                        raise ValueError(
+                            "azimuth_placement_angle must be a float or list of floats"
+                        )
+                self._azimuth_placement_angle = value
+            else:
+                self._azimuth_placement_angle = value
+        else:
+            raise ValueError(
+                "azimuth_placement_angle must be a float or list of floats"
+            )
+
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the face of the shape.
         Note the Shape may extend beyond this boundary if splines are used to connect points.
@@ -471,11 +506,12 @@ class Shape:
             plotly trace: trace object
         """
 
-        # provides a default color if color is not set
-        if self.color is None:
-            color = "grey"
-        else:
-            color = self.color
+        color_list = [i * 255 for i in self.color]
+
+        if len(color_list) == 3:
+            color = "rgb(" + str(color_list).strip("[]") + ")"
+        elif len(color_list) == 4:
+            color = "rgba(" + str(color_list).strip("[]") + ")"
 
         if self.name is None:
             name = "Shape not named"
@@ -483,27 +519,24 @@ class Shape:
             name = self.name
 
         text_values = []
-        # for mixed shapes there are also connections added to the plot
-        if hasattr(self, "connections"):
-            if len(self.points[0]) == 3:
-                for i, (p, c) in enumerate(zip(self.points[:-1])):
-                    text_values.append(
-                        "point number="
-                        + str(i)
-                        + "<br>"
-                        + "connection to next point="
-                        + str(p[2])
-                        + "<br>"
-                        + "x="
-                        + str(p[0])
-                        + "<br>"
-                        + "z="
-                        + str(p[1])
-                        + "<br>"
-                    )
-        # connections are not avaialbe for some shapes
-        else:
-            for i, p in enumerate(self.points):
+
+        for i, p in enumerate(self.points[:-1]):
+            if len(p) == 3:
+                text_values.append(
+                    "point number="
+                    + str(i)
+                    + "<br>"
+                    + "connection to next point="
+                    + str(p[2])
+                    + "<br>"
+                    + "x="
+                    + str(p[0])
+                    + "<br>"
+                    + "z="
+                    + str(p[1])
+                    + "<br>"
+                )
+            else:
                 text_values.append(
                     "point number="
                     + str(i)
@@ -523,7 +556,7 @@ class Shape:
                 "hoverinfo": "text",
                 "text": text_values,
                 "mode": "markers+lines",
-                "marker": {"size": 4, "color": color},
+                "marker": {"size": 5, "color": color},
                 "name": name,
             }
         )
