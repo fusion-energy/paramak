@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.abspath("../../examples"))
 
 project = "Paramak"
 copyright = "2020, UKAEA"
-author = "John Billingsley"
+author = "The Paramak Development Team"
 
 # The short X.Y version
 version = ""
