@@ -42,6 +42,14 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape_with_cut.volume == pytest.approx(
             2881.76 - 900.88, abs=0.2)
 
+    def test_shape_azimuth_placement_angles_iterabel(self):
+        """checks that azimuth_placement_angle can take an Iterable
+        """
+        test_shape = RotateSplineShape(
+            points=[(200, 100), (200, 200), (500, 200), (500, 100)],
+            azimuth_placement_angle=[0, 180])
+        assert test_shape.solid is not None
+
 
 if __name__ == "__main__":
     unittest.main()
