@@ -95,7 +95,7 @@ class Reactor:
 
     @property
     def solid(self):
-        """This combines all the parametric shapes and compents in th reactor object
+        """This combines all the parametric shapes and compents in the reactor object
         and rotates the viewing angle so that .solid operations in jupyter notebook
         and svg exports are better orientation.
         """
