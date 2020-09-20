@@ -83,7 +83,7 @@ class PoloidalSegments(RotateStraightShape):
         self.max_distance_from_center = max_distance_from_center
 
         self.find_points()
-    
+
     @property
     def segments(self):
         return self._segments
@@ -93,7 +93,8 @@ class PoloidalSegments(RotateStraightShape):
         if isinstance(value, int) is False:
             raise ValueError("PoloidalSegmenter.segments must be an int.")
         if value < 1:
-            raise ValueError("PoloidalSegmenter.segments must be a minimum of 1.")
+            raise ValueError(
+                "PoloidalSegmenter.segments must be a minimum of 1.")
         self._segments = value
 
     @property
@@ -114,8 +115,8 @@ class PoloidalSegments(RotateStraightShape):
 
     @property
     def solid(self):
-        #TODO
-        #if self.get_hash() != self.hash_value:
+        # TODO
+        # if self.get_hash() != self.hash_value:
         self.create_solid()
         return self._solid
 
@@ -132,12 +133,20 @@ class PoloidalSegments(RotateStraightShape):
         points = []
 
         current_angle = 0
-        outer_point = (self.center_point[0]+self.max_distance_from_center, self.center_point[1])
+        outer_point = (
+            self.center_point[0] +
+            self.max_distance_from_center,
+            self.center_point[1])
         for i in range(self.segments):
             points.append(self.center_point)
 
-            outer_point_1 = rotate(self.center_point, outer_point, math.radians(current_angle))
-            outer_point_2 = rotate(self.center_point, outer_point, math.radians(current_angle + angle_per_segment))
+            outer_point_1 = rotate(
+                self.center_point,
+                outer_point,
+                math.radians(current_angle))
+            outer_point_2 = rotate(
+                self.center_point, outer_point, math.radians(
+                    current_angle + angle_per_segment))
 
             if outer_point_1[0] < 0:
                 points.append((0, outer_point_1[1]))
@@ -166,7 +175,7 @@ class PoloidalSegments(RotateStraightShape):
         # Creates a cadquery solid from points and revolves
 
         it = iter(self.points)
-        local_solids=[]
+        local_solids = []
         for p1, p2, p3 in zip(it, it, it):
 
             solid = (
@@ -183,7 +192,7 @@ class PoloidalSegments(RotateStraightShape):
 
         self.solid = compound
 
-        #TODO
+        # TODO
         # # Calculate hash value for current solid
         # self.hash_value = self.get_hash()
 
