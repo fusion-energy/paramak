@@ -7,6 +7,24 @@ import pytest
 import paramak
 
 
+class test_PoloidalSegments(unittest.TestCase):
+    def test_PoloidalSegments_makes_correct_number_of_solids(self):
+        """creates a rotated ring and segments it into poloidal sections"""
+
+        test_shape_to_segment = paramak.PoloidalFieldCoil(height=100,
+                                                          width=100,
+                                                          center_point=(500, 500))
+
+        test_shape = paramak.BlanketFP(
+            shape_to_segment=test_shape_to_segment,
+            center_point=(500, 500),
+            number_of_segments=22,
+        )
+
+        assert test_shape.solid is not None
+        assert len(test_shape.Solids()) == 22
+
+
 class test_BlanketConstantThicknessArcV(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
         """creates a blanket using the BlanketConstantThicknessArcV parametric component
