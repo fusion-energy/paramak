@@ -7,7 +7,9 @@ from paramak.utils import rotate, intersect_solid, coefficients_of_line_from_poi
 
 
 class PoloidalSegments(RotateStraightShape):
-    """Creates a series of wedges from a central ring, useful for segmenting geometry poloidally.
+    """Creates a ring of wedges from a central point. When provided with a shape_to_segment the shape
+    will be segmented by the wedges. This is useful for segmenting geometry into equal poloidal angles.
+    Intended to segment the firstwall geometry for using in neutron wall loading simulations.
 
     Args:
         shape_to_segment (paramak.Shape): the Shape to segment, if None then the segmenting solids will be returned
