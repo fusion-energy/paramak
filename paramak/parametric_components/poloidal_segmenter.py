@@ -5,6 +5,7 @@ import cadquery as cq
 from paramak import RotateStraightShape
 from paramak.utils import rotate, intersect_solid, coefficients_of_line_from_points
 
+
 class PoloidalSegments(RotateStraightShape):
     """Creates a series of wedges from a central ring, useful for segmenting geometry poloidally.
 
@@ -92,9 +93,11 @@ class PoloidalSegments(RotateStraightShape):
     @number_of_segments.setter
     def number_of_segments(self, value):
         if isinstance(value, int) is False:
-            raise ValueError("PoloidalSegmenter.number_of_segments must be an int.")
+            raise ValueError(
+                "PoloidalSegmenter.number_of_segments must be an int.")
         if value < 1:
-            raise ValueError("PoloidalSegmenter.number_of_segments must be a minimum of 1.")
+            raise ValueError(
+                "PoloidalSegmenter.number_of_segments must be a minimum of 1.")
         self._number_of_segments = value
 
     @property
@@ -142,7 +145,10 @@ class PoloidalSegments(RotateStraightShape):
 
         current_angle = 0
 
-        outer_point = (self.center_point[0]+self.max_distance_from_center, self.center_point[1])
+        outer_point = (
+            self.center_point[0] +
+            self.max_distance_from_center,
+            self.center_point[1])
         for i in range(self.number_of_segments):
 
             points.append(self.center_point)
@@ -156,13 +162,15 @@ class PoloidalSegments(RotateStraightShape):
                     current_angle + angle_per_segment))
 
             if outer_point_1[0] < 0:
-                m, c = coefficients_of_line_from_points(outer_point_1, self.center_point)
+                m, c = coefficients_of_line_from_points(
+                    outer_point_1, self.center_point)
                 points.append((0, c))
             else:
                 points.append(outer_point_1)
 
             if outer_point_2[0] < 0:
-                m, c = coefficients_of_line_from_points(outer_point_2, self.center_point)
+                m, c = coefficients_of_line_from_points(
+                    outer_point_2, self.center_point)
                 points.append((0, c))
             else:
                 points.append(outer_point_2)
@@ -184,7 +192,6 @@ class PoloidalSegments(RotateStraightShape):
         iter_points = iter(self.points)
         triangle_wedges = []
         for p1, p2, p3 in zip(iter_points, iter_points, iter_points):
-
 
             solid = (
                 cq.Workplane(self.workplane)
