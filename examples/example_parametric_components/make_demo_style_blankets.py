@@ -113,7 +113,7 @@ def make_demo_blanket(
     )
 
     # saves the blanket as an stp file
-    inboard_blanket.export_stp('segmented_blanket.stp')
+    inboard_blanket.export_stp('blanket.stp')
 
 
 if __name__ == "__main__":

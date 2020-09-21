@@ -218,11 +218,11 @@ class test_object_properties(unittest.TestCase):
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
-    def test_make_demo_style_segmented_blanket(self):
+    def test_make_demo_style_blanket(self):
         """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/example_parametric_components"))
-        output_filename = "segmented_blanket.stp"
+        output_filename = "blanket.stp"
         os.system("rm " + output_filename)
         os.system("python make_demo_style_blankets.py")
         assert Path(output_filename).exists() is True
