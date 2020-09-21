@@ -23,15 +23,15 @@ def main():
 
     outer_tf = paramak.ToroidalFieldCoilPrincetonD(
         R1=410,
-        R2=1500, # height
+        R2=1500,  # height
         thickness=50,
         distance=130,
         number_of_coils=number_of_toroidal_field_coils,
         azimuth_placement_angle=np.linspace(
-            0+ angle_offset, 360+ angle_offset,
+            0 + angle_offset, 360 + angle_offset,
             number_of_toroidal_field_coils,
             endpoint=False
-            )
+        )
     )
 
     pf_coil1 = paramak.PoloidalFieldCoil(
@@ -84,6 +84,7 @@ def main():
     pf_coil6.export_stp('pf_coil6.stp')
     outer_tf.export_stp('outer_tf.stp')
     inner_tf.export_stp('inner_tf.stp')
+
 
 if __name__ == "__main__":
     main()
