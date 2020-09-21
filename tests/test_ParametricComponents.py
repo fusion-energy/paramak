@@ -15,7 +15,7 @@ class test_PoloidalSegments(unittest.TestCase):
                                                           width=100,
                                                           center_point=(500, 500))
 
-        test_shape = paramak.BlanketFP(
+        test_shape = paramak.PoloidalSegments(
             shape_to_segment=test_shape_to_segment,
             center_point=(500, 500),
             number_of_segments=22,

@@ -228,6 +228,16 @@ class test_object_properties(unittest.TestCase):
         assert Path(output_filename).exists() is True
         os.system("rm " + output_filename)
 
+    def test_make_segmented_firstwall(self):
+        """Runs the example and checks the output files are produced"""
+        os.chdir(Path(cwd))
+        os.chdir(Path("examples/example_parametric_components"))
+        output_filename = "segmented_firstwall.stp"
+        os.system("rm " + output_filename)
+        os.system("python make_firstwall_for_neutron_wall_loading.py")
+        assert Path(output_filename).exists() is True
+        os.system("rm " + output_filename)
+
 
 if __name__ == "__main__":
     unittest.main()
