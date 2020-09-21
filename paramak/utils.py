@@ -176,7 +176,7 @@ def coefficients_of_line_from_points(point1, point2):
         point2 (float, float): point 2 coordinates
 
     Returns:
-        (float, float): m coefficent and c coefficient 
+        (float, float): m coefficent and c coefficient
     """
     points = [point1, point2]
     x_coords, y_coords = zip(*points)
