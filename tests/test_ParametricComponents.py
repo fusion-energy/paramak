@@ -7,6 +7,19 @@ import pytest
 import paramak
 
 
+class test_PoloidalFieldCoilSet(unittest.TestCase):
+    def test_PoloidalFieldCoilSet_creation(self):
+        """creates a blanket using the PoloidalFieldCoilSet parametric component
+        and checks that a cadquery solid is created"""
+        test_shape = paramak.PoloidalFieldCoilSet(heights=[10,10,10],
+                                    widths=[20,20,20],
+                                    center_points=[(100,100),
+                                                    (200,200),
+                                                    (300,300)])
+        assert test_shape.solid is not None
+        assert len(test_shape.solid.Solids()) == 3
+
+
 class test_BlanketConstantThicknessArcV(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
         """creates a blanket using the BlanketConstantThicknessArcV parametric component

@@ -45,6 +45,7 @@ from .parametric_components.center_column_flat_top_circular import (
 )
 
 from .parametric_components.poloidal_field_coil import PoloidalFieldCoil
+from .parametric_components.poloidal_field_coil_set import PoloidalFieldCoilSet
 from .parametric_components.poloidal_field_coil_case import PoloidalFieldCoilCase
 from .parametric_components.poloidal_field_coil_case_fc import PoloidalFieldCoilCaseFC
 
