@@ -123,8 +123,8 @@ class PoloidalSegments(RotateStraightShape):
 
     @property
     def solid(self):
-        #TODO
-        #if self.get_hash() != self.hash_value:
+        # TODO
+        # if self.get_hash() != self.hash_value:
         self.create_solid()
         return self._solid
 
@@ -141,12 +141,19 @@ class PoloidalSegments(RotateStraightShape):
         points = []
 
         current_angle = 0
+
         outer_point = (self.center_point[0]+self.max_distance_from_center, self.center_point[1])
         for i in range(self.number_of_segments):
+
             points.append(self.center_point)
 
-            outer_point_1 = rotate(self.center_point, outer_point, math.radians(current_angle))
-            outer_point_2 = rotate(self.center_point, outer_point, math.radians(current_angle + angle_per_segment))
+            outer_point_1 = rotate(
+                self.center_point,
+                outer_point,
+                math.radians(current_angle))
+            outer_point_2 = rotate(
+                self.center_point, outer_point, math.radians(
+                    current_angle + angle_per_segment))
 
             if outer_point_1[0] < 0:
                 m, c = coefficients_of_line_from_points(outer_point_1, self.center_point)
@@ -178,6 +185,7 @@ class PoloidalSegments(RotateStraightShape):
         triangle_wedges = []
         for p1, p2, p3 in zip(iter_points, iter_points, iter_points):
 
+
             solid = (
                 cq.Workplane(self.workplane)
                 .polyline([p1, p2, p3])
@@ -205,7 +213,7 @@ class PoloidalSegments(RotateStraightShape):
 
         self.solid = compound
 
-        #TODO
+        # TODO
         # # Calculate hash value for current solid
         # self.hash_value = self.get_hash()
 
