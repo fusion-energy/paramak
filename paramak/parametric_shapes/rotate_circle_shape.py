@@ -4,7 +4,6 @@ from hashlib import blake2b
 import cadquery as cq
 
 from paramak import Shape
-from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class RotateCircleShape(Shape):
@@ -65,39 +64,14 @@ class RotateCircleShape(Shape):
             stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
+            cut=cut,
+            intersect=intersect,
+            union=union,
             **default_dict
         )
-
-        self.cut = cut
-        self.intersect = intersect
-        self.union = union
         self.radius = radius
         self.rotation_angle = rotation_angle
         self.solid = solid
-
-    @property
-    def cut(self):
-        return self._cut
-
-    @cut.setter
-    def cut(self, value):
-        self._cut = value
-
-    @property
-    def intersect(self):
-        return self._intersect
-
-    @intersect.setter
-    def intersect(self, value):
-        self._intersect = value
-
-    @property
-    def union(self):
-        return self._union
-
-    @union.setter
-    def union(self, value):
-        self._union = value
 
     @property
     def solid(self):
@@ -160,21 +134,6 @@ class RotateCircleShape(Shape):
             solid = solid.rotate(
                 (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
-        # If a cut solid is provided then perform a boolean cut
-        if self.cut is not None:
-            solid = cut_solid(solid, self.cut)
-
-        # If an intersect is provided then perform a boolean intersect
-        if self.intersect is not None:
-            solid = intersect_solid(solid, self.intersect)
-
-        # If an intersect is provided then perform a boolean intersect
-        if self.union is not None:
-            solid = union_solid(solid, self.union)
-
-        self.solid = solid
-
-        # Calculate hash value for current solid
-        self.hash_value = self.get_hash()
+        self.perform_boolean_operations(solid)
 
         return solid
