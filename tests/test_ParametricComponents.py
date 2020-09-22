@@ -135,6 +135,17 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
             ValueError,
             test_PoloidalFieldCoilSet_incorrect_lengths)
 
+        def test_PoloidalFieldCoilSet_incorrect_pf_coil():
+            """Checks PoloidalFieldCoilSet with the pf_coils as an incorrect entry"""
+            test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+                pf_coils=20,
+                casing_thicknesses=[5, 5, 10, 10],
+                rotation_angle=180)
+
+        self.assertRaises(
+            ValueError,
+            test_PoloidalFieldCoilSet_incorrect_pf_coil)
+
     def test_PoloidalFieldCoilCaseSetFC_from_list(self):
         """Creates a set of PF coil cases from a list of PF coils"""
         pf_coils_1 = paramak.PoloidalFieldCoil(height=10,
