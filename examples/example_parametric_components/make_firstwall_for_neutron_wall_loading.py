@@ -1,6 +1,6 @@
 
 """
-For some neutronics tallies such as neutron wall loading it is necessary to 
+For some neutronics tallies such as neutron wall loading it is necessary to
 segment the geometry so that individual neutronics tallies can be recorded
 for each face. This can be done using the PoloidalSegments(). This geometry
 is then easier to find neutron wall loading as a function of poloidal angle.
@@ -13,7 +13,7 @@ import paramak
 
 def make_segmented_firstwall():
 
-    # makes the firstwall 
+    # makes the firstwall
     firstwall = paramak.BlanketFP(minor_radius=150,
                                   major_radius=450,
                                   triangularity=0.55,
@@ -25,13 +25,14 @@ def make_segmented_firstwall():
 
     # segments the firstwall poloidally into 40 equal angle segments
     segmented_firstwall = paramak.PoloidalSegments(
-            shape_to_segment=firstwall,
-            center_point=(450, 0),  # this is the middle of the plasma
-            number_of_segments=40,
-        )
+        shape_to_segment=firstwall,
+        center_point=(450, 0),  # this is the middle of the plasma
+        number_of_segments=40,
+    )
 
     # saves the segmented firstwall as an stp file
     segmented_firstwall.export_stp('segmented_firstwall.stp')
+
 
 if __name__ == "__main__":
     make_segmented_firstwall()
