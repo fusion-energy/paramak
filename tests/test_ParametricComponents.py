@@ -605,7 +605,9 @@ class test_Plasma(unittest.TestCase):
         os.system("rm plasma.stp")
 
         test_plasma.export_stp("plasma.stp")
-
+        assert test_plasma.high_point[0] > test_plasma.inner_equatorial_x_point
+        assert test_plasma.high_point[0] < test_plasma.outer_equatorial_x_point
+        assert test_plasma.outer_equatorial_x_point > test_plasma.inner_equatorial_x_point
         assert Path("plasma.stp").exists()
         os.system("rm plasma.stp")
 
