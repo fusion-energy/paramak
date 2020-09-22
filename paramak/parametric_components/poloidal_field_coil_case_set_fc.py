@@ -133,8 +133,11 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
                     self.casing_thicknesses):
                 raise ValueError(
                     "The number of pf_coils should be the same as the number of casing_thickness")
+        else:
+            raise ValueError(
+                    "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list paramak.PoloidalFieldCoil \
+                        or a paramak.PoloidalFieldCoilSet object")
 
-        print('center_points', center_points)
         for height, width, center_point, casing_thickness in zip(
                 heights, widths, center_points, self.casing_thicknesses):
 
