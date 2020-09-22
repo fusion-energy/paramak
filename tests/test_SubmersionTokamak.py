@@ -112,7 +112,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             number_of_tf_coils=4,
             rotation_angle=359,
         )
-        assert len(test_reactor.shapes_and_components) == 14
+        assert len(test_reactor.shapes_and_components) == 10
 
     def test_minimal_SubmersionTokamak_stp_creation(self):
         """creates a submersion reactor using the SubmersionTokamak parameteric reactor and
@@ -277,7 +277,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             support_position="upper",
             rotation_angle=359,
         )
-        assert len(test_reactor.shapes_and_components) == 13
+        assert len(test_reactor.shapes_and_components) == 10
 
     def test_SingleNullSubmersionTokamak_divertor_lower_support_lower(self):
         """creates a single null submersion reactor with lower supports and divertor using the
