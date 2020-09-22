@@ -128,9 +128,8 @@ class PoloidalSegments(RotateStraightShape):
 
     @property
     def solid(self):
-        # TODO
-        # if self.get_hash() != self.hash_value:
-        self.create_solid()
+        if self.get_hash() != self.hash_value:
+            self.create_solid()
         return self._solid
 
     @solid.setter
@@ -222,8 +221,6 @@ class PoloidalSegments(RotateStraightShape):
 
         self.solid = compound
 
-        # TODO
-        # # Calculate hash value for current solid
-        # self.hash_value = self.get_hash()
+        self.hash_value = self.get_hash()
 
         return compound
