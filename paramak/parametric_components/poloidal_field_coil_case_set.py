@@ -185,7 +185,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
                 iter_points, iter_points, iter_points, iter_points,
                 iter_points, iter_points, iter_points, iter_points,
                 iter_points, iter_points,
-                ):
+        ):
 
             solid = (
                 cq.Workplane(self.workplane)

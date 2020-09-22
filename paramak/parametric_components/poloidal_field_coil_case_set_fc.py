@@ -117,22 +117,26 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
 
         all_points = []
 
-
         if isinstance(self.pf_coils, list):
             heights = [entry.height for entry in self.pf_coils]
             widths = [entry.width for entry in self.pf_coils]
             center_points = [entry.center_point for entry in self.pf_coils]
             if len(self.pf_coils) != len(self.casing_thicknesses):
-                raise ValueError("The number of pf_coils should be the same as the number of casing_thickness")
+                raise ValueError(
+                    "The number of pf_coils should be the same as the number of casing_thickness")
         elif isinstance(self.pf_coils, PoloidalFieldCoilSet):
             heights = self.pf_coils.heights
             widths = self.pf_coils.widths
             center_points = self.pf_coils.center_points
-            if len(self.pf_coils.solid.Solids()) != len(self.casing_thicknesses):
-                raise ValueError("The number of pf_coils should be the same as the number of casing_thickness")
-        
+            if len(
+                    self.pf_coils.solid.Solids()) != len(
+                    self.casing_thicknesses):
+                raise ValueError(
+                    "The number of pf_coils should be the same as the number of casing_thickness")
+
         print('center_points', center_points)
-        for height, width, center_point, casing_thickness in zip(heights, widths, center_points, self.casing_thicknesses):
+        for height, width, center_point, casing_thickness in zip(
+                heights, widths, center_points, self.casing_thicknesses):
 
             all_points = all_points + [
                 (
@@ -193,7 +197,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
                 iter_points, iter_points, iter_points, iter_points,
                 iter_points, iter_points, iter_points, iter_points,
                 iter_points, iter_points,
-                ):
+        ):
 
             solid = (
                 cq.Workplane(self.workplane)
