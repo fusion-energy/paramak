@@ -19,14 +19,16 @@ def main():
         outer_radius=430,
         number_of_coils=number_of_toroidal_field_coils,
         gap_size=5,
+        rotation_angle=180
     )
 
     outer_tf = paramak.ToroidalFieldCoilPrincetonD(
-        R1=410,
+        R1=400,
         R2=1500,  # height
         thickness=50,
         distance=130,
         number_of_coils=number_of_toroidal_field_coils,
+        rotation_angle=180,
         azimuth_placement_angle=np.linspace(
             0 + angle_offset, 360 + angle_offset,
             number_of_toroidal_field_coils,
@@ -34,54 +36,22 @@ def main():
         )
     )
 
-    pf_coil1 = paramak.PoloidalFieldCoil(
-        height=120,
-        width=120,
-        center_point=(530, 930),
+    pf_coils = paramak.PoloidalFieldCoilSet(
+        heights=[100, 120, 80, 80, 120, 180],
+        widths=[100, 120, 80, 80, 120, 180],
+        center_points=[(530, 930), (1370, 790), (1740, 250), (1750, -250), (1360, -780), (680, -1000)],
         rotation_angle=180
     )
 
-    pf_coil2 = paramak.PoloidalFieldCoil(
-        height=140,
-        width=140,
-        center_point=(1370, 790),
+    pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
+        pf_coils=pf_coils,
+        casing_thicknesses=[10]*6,
         rotation_angle=180
     )
 
-    pf_coil3 = paramak.PoloidalFieldCoil(
-        height=100,
-        width=100,
-        center_point=(1740, 250),
-        rotation_angle=180
-    )
 
-    pf_coil4 = paramak.PoloidalFieldCoil(
-        height=100,
-        width=100,
-        center_point=(1750, -250),
-        rotation_angle=180
-    )
-
-    pf_coil5 = paramak.PoloidalFieldCoil(
-        height=140,
-        width=140,
-        center_point=(1360, -780),
-        rotation_angle=180
-    )
-
-    pf_coil6 = paramak.PoloidalFieldCoil(
-        height=200,
-        width=200,
-        center_point=(680, -1000),
-        rotation_angle=180
-    )
-
-    pf_coil1.export_stp('pf_coil1.stp')
-    pf_coil2.export_stp('pf_coil2.stp')
-    pf_coil3.export_stp('pf_coil3.stp')
-    pf_coil4.export_stp('pf_coil4.stp')
-    pf_coil5.export_stp('pf_coil5.stp')
-    pf_coil6.export_stp('pf_coil6.stp')
+    pf_coils.export_stp('pf_coils.stp')
+    pf_coils_casing.export_stp('pf_coils_casing.stp')
     outer_tf.export_stp('outer_tf.stp')
     inner_tf.export_stp('inner_tf.stp')
 
