@@ -27,6 +27,24 @@ class test_PoloidalSegments(unittest.TestCase):
         self.assertRaises(
             ValueError, create_shape)
 
+    def test_PoloidalSegments_solid_count_with_incorect_inputs2(self):
+        """checks the segmenter does not take a negative int as an input"""
+        def create_shape():
+            test_shape_to_segment = paramak.PoloidalFieldCoil(
+                height=100,
+                width=100,
+                center_point=(500, 500)
+            )
+
+            paramak.PoloidalSegments(
+                shape_to_segment=test_shape_to_segment,
+                center_point=(500, 500),
+                number_of_segments=-5,
+            )
+
+        self.assertRaises(
+            ValueError, create_shape)
+
     def test_PoloidalSegments_solid_count(self):
         """creates a rotated hollow ring and segments it into poloidal sections"""
 
