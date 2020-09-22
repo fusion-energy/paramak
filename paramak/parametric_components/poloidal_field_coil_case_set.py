@@ -3,12 +3,13 @@ import cadquery as cq
 from paramak import RotateStraightShape
 
 
-class PoloidalFieldCoilSet(RotateStraightShape):
+class PoloidalFieldCoilCaseSet(RotateStraightShape):
     """Creates a series of rectangular poloidal field coils.
 
     Args:
         heights (float): the vertical (z axis) heights of the coil (cm).
         widths (float): the horizontal (x axis) widths of the coil (cm).
+        casing_thicknesses (list of floats): the thickness of the casing (cm).
         center_points (tuple of floats): the center of the coil (x,z) values (cm).
 
     Keyword Args:
@@ -36,6 +37,7 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         self,
         heights,
         widths,
+        casing_thicknesses,
         center_points,
         rotation_angle=360,
         stp_filename="PoloidalFieldCoil.stp",
@@ -77,12 +79,12 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         self.center_points = center_points
         self.heights = heights
         self.widths = widths
+        self.casing_thicknesses = casing_thicknesses
 
         self.find_points()
 
     @property
     def solid(self):
-        """Returns a CadQuery compound object consisting of 1 or more 3d volumes"""
         if self.get_hash() != self.hash_value:
             self.create_solid()
         return self._solid
@@ -121,8 +123,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
         all_points = []
 
-        for height, width, center_point in zip(
-                self.heights, self.widths, self.center_points):
+        for height, width, center_point, casing_thickness in zip(
+                self.heights, self.widths, self.center_points, self.casing_thicknesses):
 
             all_points = all_points + [
                 (
@@ -141,6 +143,30 @@ class PoloidalFieldCoilSet(RotateStraightShape):
                     center_point[0] - width / 2.0,
                     center_point[1] + height / 2.0,
                 ),  # upper left
+                (
+                    center_point[0] + width / 2.0,
+                    center_point[1] + height / 2.0,
+                ),  # upper right
+                (
+                    center_point[0] + (casing_thickness + width / 2.0),
+                    center_point[1] + (casing_thickness + height / 2.0),
+                ),
+                (
+                    center_point[0] + (casing_thickness + width / 2.0),
+                    center_point[1] - (casing_thickness + height / 2.0),
+                ),
+                (
+                    center_point[0] - (casing_thickness + width / 2.0),
+                    center_point[1] - (casing_thickness + height / 2.0),
+                ),
+                (
+                    center_point[0] - (casing_thickness + width / 2.0),
+                    center_point[1] + (casing_thickness + height / 2.0),
+                ),
+                (
+                    center_point[0] + (casing_thickness + width / 2.0),
+                    center_point[1] + (casing_thickness + height / 2.0),
+                )
             ]
 
         self.points = all_points
@@ -155,12 +181,15 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
         iter_points = iter(self.points)
         pf_coils_set = []
-        for p1, p2, p3, p4 in zip(
-                iter_points, iter_points, iter_points, iter_points):
+        for p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 in zip(
+                iter_points, iter_points, iter_points, iter_points,
+                iter_points, iter_points, iter_points, iter_points,
+                iter_points, iter_points,
+                ):
 
             solid = (
                 cq.Workplane(self.workplane)
-                .polyline([p1, p2, p3, p4])
+                .polyline([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10])
                 .close()
                 .revolve(self.rotation_angle)
             )
