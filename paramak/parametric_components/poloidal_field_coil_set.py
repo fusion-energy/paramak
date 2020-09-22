@@ -120,7 +120,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
         all_points = []
 
-        for height, width, center_point in zip(self.heights, self.widths, self.center_points):
+        for height, width, center_point in zip(
+                self.heights, self.widths, self.center_points):
 
             all_points = all_points + [
                 (
@@ -153,7 +154,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
         iter_points = iter(self.points)
         pf_coils_set = []
-        for p1, p2, p3, p4 in zip(iter_points, iter_points, iter_points, iter_points):
+        for p1, p2, p3, p4 in zip(
+                iter_points, iter_points, iter_points, iter_points):
 
             solid = (
                 cq.Workplane(self.workplane)
