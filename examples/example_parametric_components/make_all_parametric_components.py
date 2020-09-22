@@ -142,14 +142,53 @@ def main():
     )
     all_components.append(component)
 
+    # this makes 4 pf coil cases
+    pf_coil_set = paramak.PoloidalFieldCoilCaseSet(
+        heights=[10, 10, 20, 20],
+        widths=[10, 10, 20, 40],
+        casing_thicknesses=[5, 5, 10, 10],
+        center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+        rotation_angle=180,
+        stp_filename="pf_coil_case_set.stp"
+    )
+    all_components.append(pf_coil_set)
+
+    # this makes 4 pf coils
+    pf_coil_set = paramak.PoloidalFieldCoilSet(
+        heights=[10, 10, 20, 20],
+        widths=[10, 10, 20, 40],
+        center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+        rotation_angle=180,
+        stp_filename="pf_coil_set.stp"
+    )
+    all_components.append(pf_coil_set)
+
+    # this makes 4 pf coil cases for the 4 pf coils made above
+    component = paramak.PoloidalFieldCoilCaseSetFC(
+        pf_coils=pf_coil_set,
+        casing_thicknesses=[5, 5, 10, 10],
+        rotation_angle=180,
+        stp_filename="pf_coil_cases_set.stp"
+    )
+    all_components.append(component)
+
+    # this makes 1 pf coils
     pf_coil = paramak.PoloidalFieldCoil(
         center_point=(100, 100),
         height=20,
         width=20,
         rotation_angle=rot_angle,
-        stp_filename="poloidal_field_coil.stp",
+        stp_filename="poloidal_field_coil.stp"
     )
     all_components.append(pf_coil)
+
+    # this makes one PF coil case for the provided pf coil
+    component = paramak.PoloidalFieldCoilCaseSetFC(
+        pf_coils=[pf_coil],
+        casing_thicknesses=[10],
+        rotation_angle=180,
+        stp_filename="pf_coil_cases_set_fc.stp")
+    all_components.append(component)
 
     component = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil,

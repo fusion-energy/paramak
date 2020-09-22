@@ -7,6 +7,175 @@ import pytest
 import paramak
 
 
+class test_PoloidalFieldCoilSet(unittest.TestCase):
+
+    def test_PoloidalFieldCoilSet_creation(self):
+        """creates a solid using the PoloidalFieldCoilSet parametric component
+        and checks that a cadquery solid is created"""
+        test_shape = paramak.PoloidalFieldCoilSet(heights=[10, 10, 10],
+                                                  widths=[20, 20, 20],
+                                                  center_points=[(100, 100),
+                                                                 (200, 200),
+                                                                 (300, 300)])
+        assert test_shape.solid is not None
+        assert len(test_shape.solid.Solids()) == 3
+
+    def test_PoloidalFieldCoilSet_incorrect_args(self):
+        """creates a solid using the PoloidalFieldCoilSet parametric component
+        and checks that a cadquery solid is created"""
+        def test_PoloidalFieldCoilSet_incorrect_height():
+            """Checks  PoloidalFieldCoilSet with height as the wrong type"""
+            test_shape = paramak.PoloidalFieldCoilSet(
+                heights=10, widths=[
+                    20, 20, 20], center_points=[
+                    (100, 100), (200, 200), (300, 300)])
+
+        self.assertRaises(
+            ValueError,
+            test_PoloidalFieldCoilSet_incorrect_height)
+
+        def test_PoloidalFieldCoilSet_incorrect_width():
+            """Checks  PoloidalFieldCoilSet with width as the wrong type"""
+            test_shape = paramak.PoloidalFieldCoilSet(
+                heights=[
+                    10, 10, 10], widths=20, center_points=[
+                    (100, 100), (200, 200), (300, 300)])
+
+        self.assertRaises(
+            ValueError,
+            test_PoloidalFieldCoilSet_incorrect_width)
+
+        def test_PoloidalFieldCoilSet_incorrect_center_points():
+            """Checks  PoloidalFieldCoilSet with center_points as the wrong type"""
+            test_shape = paramak.PoloidalFieldCoilSet(heights=[10, 10, 10],
+                                                      widths=[20, 20, 20],
+                                                      center_points=100)
+
+        self.assertRaises(
+            ValueError,
+            test_PoloidalFieldCoilSet_incorrect_center_points)
+
+        def test_PoloidalFieldCoilSet_incorrect_width_length():
+            """Checks  PoloidalFieldCoilSet with not enough entries in width"""
+            test_shape = paramak.PoloidalFieldCoilSet(
+                heights=[
+                    10, 10, 10], widths=[
+                    20, 20], center_points=[
+                    (100, 100), (200, 200), (300, 300)])
+
+        self.assertRaises(
+            ValueError,
+            test_PoloidalFieldCoilSet_incorrect_width_length)
+
+
+class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
+    def test_PoloidalFieldCoilCaseSet_creation(self):
+        """Creates a set of PF coils by providing all required args"""
+        test_shape = paramak.PoloidalFieldCoilCaseSet(
+            heights=[
+                10, 10, 20, 20], widths=[
+                10, 10, 20, 40], casing_thicknesses=[
+                5, 5, 10, 10], center_points=[
+                    (100, 100), (100, 150), (50, 200), (50, 50)], rotation_angle=180)
+
+        assert test_shape.solid is not None
+        assert len(test_shape.solid.Solids()) == 4
+
+
+class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
+    def test_PoloidalFieldCoilCaseSetFC_from_pf_coil_set(self):
+        """Creates a set of PF coil cases from a PF coils object"""
+        pf_coils_set = paramak.PoloidalFieldCoilSet(
+            heights=[
+                10, 10, 20, 20], widths=[
+                10, 10, 20, 40], center_points=[
+                (100, 100), (100, 150), (50, 200), (50, 50)], rotation_angle=180)
+
+        test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+            pf_coils=pf_coils_set, casing_thicknesses=[
+                5, 5, 10, 10], rotation_angle=180)
+
+        assert test_shape.solid is not None
+        assert len(test_shape.solid.Solids()) == 4
+        assert len(pf_coils_set.solid.Solids()) == 4
+
+    def test_PoloidalFieldCoilCaseSetFC_incorrect_args(self):
+        """creates a solid using the PoloidalFieldCoilCaseSetFC with the wrong number of casing_thicknesses"""
+        def test_PoloidalFieldCoilSet_incorrect_lengths_FC():
+            """Checks PoloidalFieldCoilSet with the wrong number of casing thicknesses using a coil set object"""
+            pf_coils_set = paramak.PoloidalFieldCoilSet(
+                heights=[
+                    10, 10, 20, 20], widths=[
+                    10, 10, 20, 40], center_points=[
+                    (100, 100), (100, 150), (50, 200), (50, 50)], rotation_angle=180)
+
+            test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+                pf_coils=pf_coils_set, casing_thicknesses=[
+                    5, 5, 10], rotation_angle=180)
+
+        self.assertRaises(
+            ValueError,
+            test_PoloidalFieldCoilSet_incorrect_lengths_FC)
+
+        def test_PoloidalFieldCoilSet_incorrect_lengths():
+            """Checks PoloidalFieldCoilSet with the wrong number of casing thicknesses using a list"""
+            pf_coils_1 = paramak.PoloidalFieldCoil(
+                height=10,
+                width=10,
+                center_point=(100, 100),
+                rotation_angle=180)
+
+            test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+                pf_coils=[pf_coils_1],
+                casing_thicknesses=[5, 5, 10, 10],
+                rotation_angle=180)
+
+        self.assertRaises(
+            ValueError,
+            test_PoloidalFieldCoilSet_incorrect_lengths)
+
+        def test_PoloidalFieldCoilSet_incorrect_pf_coil():
+            """Checks PoloidalFieldCoilSet with the pf_coils as an incorrect entry"""
+            test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+                pf_coils=20,
+                casing_thicknesses=[5, 5, 10, 10],
+                rotation_angle=180)
+
+        self.assertRaises(
+            ValueError,
+            test_PoloidalFieldCoilSet_incorrect_pf_coil)
+
+    def test_PoloidalFieldCoilCaseSetFC_from_list(self):
+        """Creates a set of PF coil cases from a list of PF coils"""
+        pf_coils_1 = paramak.PoloidalFieldCoil(height=10,
+                                               width=10,
+                                               center_point=(100, 100),
+                                               rotation_angle=180)
+
+        pf_coils_2 = paramak.PoloidalFieldCoil(height=10,
+                                               width=10,
+                                               center_point=(100, 150),
+                                               rotation_angle=180)
+
+        pf_coils_3 = paramak.PoloidalFieldCoil(height=20,
+                                               width=20,
+                                               center_point=(50, 200),
+                                               rotation_angle=180)
+
+        pf_coils_4 = paramak.PoloidalFieldCoil(height=20,
+                                               width=40,
+                                               center_point=(50, 50),
+                                               rotation_angle=180)
+
+        test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+            pf_coils=[
+                pf_coils_1, pf_coils_2, pf_coils_3, pf_coils_4], casing_thicknesses=[
+                5, 5, 10, 10], rotation_angle=180)
+
+        assert test_shape.solid is not None
+        assert len(test_shape.solid.Solids()) == 4
+
+
 class test_PoloidalSegments(unittest.TestCase):
 
     def test_PoloidalSegments_solid_count_with_incorect_input(self):
