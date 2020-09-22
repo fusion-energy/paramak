@@ -135,7 +135,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
                     "The number of pf_coils should be the same as the number of casing_thickness")
         else:
             raise ValueError(
-                    "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list paramak.PoloidalFieldCoil \
+                "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list paramak.PoloidalFieldCoil \
                         or a paramak.PoloidalFieldCoilSet object")
 
         for height, width, center_point, casing_thickness in zip(

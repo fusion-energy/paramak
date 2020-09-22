@@ -78,10 +78,13 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         self.heights = heights
         self.widths = widths
 
-        if len(self.widths) != len(self.heights) or len(self.heights) != len(self.center_points):
+        if len(
+            self.widths) != len(
+            self.heights) or len(
+            self.heights) != len(
+                self.center_points):
             raise ValueError("The length of widthts, height and center_points \
                 must be the same when making a PoloidalFieldCoilSet")
-
 
         self.find_points()
 
@@ -103,7 +106,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
     @center_points.setter
     def center_points(self, value):
         if not isinstance(value, list):
-            raise ValueError("PoloidalFieldCoilSet center_points must be a list")
+            raise ValueError(
+                "PoloidalFieldCoilSet center_points must be a list")
         self._center_points = value
 
     @property
