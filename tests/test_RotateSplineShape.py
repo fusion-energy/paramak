@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+import numpy as np
 
 from paramak import RotateSplineShape
 
@@ -49,6 +50,21 @@ class test_object_properties(unittest.TestCase):
             points=[(200, 100), (200, 200), (500, 200), (500, 100)],
             azimuth_placement_angle=[0, 180])
         assert test_shape.solid is not None
+
+    def test_incorrect_color_values(self):
+        """Checks incorrect argument values for RotateSplineShape"""
+        def test_string_color_value():
+            """Tries to make a RotateSplineShape is string values for color"""
+            test_shape = RotateSplineShape(
+                points=[(200, 100), (200, 200), (500, 200), (500, 100)],
+                azimuth_placement_angle=np.linspace(0, 90, 2),
+                color=('1', '0', '1')
+            )
+
+        self.assertRaises(
+            ValueError,
+            test_string_color_value
+        )
 
 
 if __name__ == "__main__":
