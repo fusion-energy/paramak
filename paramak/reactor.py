@@ -501,8 +501,22 @@ class Reactor:
         # finds the largest dimenton in all the Shapes that are in the reactor
         largest_dimension = 0
         for component in self.shapes_and_components:
-            if component.solid.largestDimension() > largest_dimension:
-                largest_dimension = component.solid.largestDimension()
+
+            if isinstance(component.solid, cq.Compound):
+                for solid in component.solid.Solids():
+                    largestDimension = max(
+                        abs(solid.BoundingBox().xmax),
+                        abs(solid.BoundingBox().xmin),
+                        abs(solid.BoundingBox().ymax),
+                        abs(solid.BoundingBox().ymin),
+                        abs(solid.BoundingBox().zmax),
+                        abs(solid.BoundingBox().zmin)
+                    )
+                    if largestDimension > largest_dimension:
+                        largest_dimension = largestDimension
+            else:
+                if component.solid.largestDimension() > largest_dimension:
+                    largest_dimension = component.solid.largestDimension()
 
         # creates a small box that surrounds the geometry
         inner_box = cq.Workplane("front").box(
