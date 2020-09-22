@@ -542,14 +542,14 @@ class SubmersionTokamak(paramak.Reactor):
 
             if self._pf_info_provided:
 
-                    self._pf_coil = paramak.PoloidalFieldCoilSet(
-                        heights=self.pf_coil_vertical_thicknesses,
-                        widths=self.pf_coil_radial_thicknesses,
-                        center_points=self._pf_coils_xy_values,
-                        rotation_angle=self.rotation_angle,
-                        stp_filename='pf_coils.stp',
-                        name="pf_coil",
-                        material_tag="pf_coil_mat",
-                    )
+                self._pf_coil = paramak.PoloidalFieldCoilSet(
+                    heights=self.pf_coil_vertical_thicknesses,
+                    widths=self.pf_coil_radial_thicknesses,
+                    center_points=self._pf_coils_xy_values,
+                    rotation_angle=self.rotation_angle,
+                    stp_filename='pf_coils.stp',
+                    name="pf_coil",
+                    material_tag="pf_coil_mat",
+                )
 
-                    shapes_or_components.append(self._pf_coil)
+                shapes_or_components.append(self._pf_coil)

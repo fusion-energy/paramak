@@ -45,10 +45,9 @@ def main():
 
     pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
         pf_coils=pf_coils,
-        casing_thicknesses=[10]*6,
+        casing_thicknesses=[10] * 6,
         rotation_angle=180
     )
-
 
     pf_coils.export_stp('pf_coils.stp')
     pf_coils_casing.export_stp('pf_coils_casing.stp')
