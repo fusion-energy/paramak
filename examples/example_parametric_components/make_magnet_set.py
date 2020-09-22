@@ -11,7 +11,7 @@ import paramak
 
 def main():
 
-    number_of_toroidal_field_coils = 5
+    number_of_toroidal_field_coils = 6
     angle_offset = (360 / number_of_toroidal_field_coils) / 2.
     inner_tf = paramak.InnerTfCoilsFlat(
         height=1800,
