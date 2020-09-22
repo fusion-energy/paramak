@@ -99,7 +99,6 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
         assert len(test_shape.solid.Solids()) == 4
         assert len(pf_coils_set.solid.Solids()) == 4
 
-
     def test_PoloidalFieldCoilCaseSetFC_incorrect_args(self):
         """creates a solid using the PoloidalFieldCoilCaseSetFC with the wrong number of casing_thicknesses"""
         def test_PoloidalFieldCoilSet_incorrect_lengths_FC():
