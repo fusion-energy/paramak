@@ -222,6 +222,20 @@ PoloidalFieldCoilCase()
    :members:
    :show-inheritance:
 
+
+PoloidalFieldCoilSet()
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93832861-eb269d80-fc6e-11ea-861c-45de724478a8.png
+    :width: 365px
+    :height: 395px
+    :align: center
+
+.. automodule:: paramak.parametric_components.poloidal_field_coil_set
+   :members:
+   :show-inheritance:
+
+
 Plasma()
 ^^^^^^^^
 
