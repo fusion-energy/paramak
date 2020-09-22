@@ -17,6 +17,8 @@ def export_images():
         with open(reactor.name + ".svg", "w") as f:
             exporters.exportShape(reactor.solid, "SVG", f)
 
+        reactor.export_stp(output_folder=reactor.name)
+
 
 if __name__ == "__main__":
     export_images()

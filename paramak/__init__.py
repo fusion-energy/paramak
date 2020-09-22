@@ -51,6 +51,9 @@ from .parametric_components.poloidal_field_coil_set import PoloidalFieldCoilSet
 from .parametric_components.poloidal_field_coil_case_set import PoloidalFieldCoilCaseSet
 from .parametric_components.poloidal_field_coil_case_set_fc import PoloidalFieldCoilCaseSetFC
 
+from .parametric_components.poloidal_segmenter import PoloidalSegments
+
+
 from .parametric_components.inner_tf_coils_circular import InnerTfCoilsCircular
 from .parametric_components.inner_tf_coils_flat import InnerTfCoilsFlat
 

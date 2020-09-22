@@ -82,6 +82,13 @@ The paramak is availabie as a Docker image and can be downloaded using Docker co
 
    docker run -it openmcworkshop/paramak
 
+Presentations
+-------------
+
+Currently we just have one presentation that covers the Paramak
+
+`Link to presentation <https://github.com/ukaea/paramak/files/5260982/UKAEA_Paramak_shimwell.pdf>`_
+
 
 Features
 --------
