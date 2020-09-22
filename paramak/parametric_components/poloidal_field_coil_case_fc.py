@@ -8,7 +8,7 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
     Args:
         pf_coil (PoloidalFieldCoil object): a pf coil object with a set width,
             height and center point.
-        casing_thickness (tuple of floats): the thickness of the coil casing (cm).
+        casing_thickness (float): the thickness of the coil casing (cm).
 
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the shape.

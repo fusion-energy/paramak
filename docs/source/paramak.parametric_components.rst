@@ -196,6 +196,29 @@ PoloidalFieldCoil()
    :members:
    :show-inheritance:
 
+PoloidalFieldCoilSet()
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93832861-eb269d80-fc6e-11ea-861c-45de724478a8.png
+    :width: 395px
+    :height: 365px
+    :align: center
+
+.. automodule:: paramak.parametric_components.poloidal_field_coil_set
+   :members:
+   :show-inheritance:
+
+PoloidalFieldCoilCase()
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
+    :width: 220px
+    :height: 180px
+    :align: center
+
+.. automodule:: paramak.parametric_components.poloidal_field_coil_case
+   :members:
+   :show-inheritance:
 
 PoloidalFieldCoilCaseFC()
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -209,16 +232,27 @@ PoloidalFieldCoilCaseFC()
    :members:
    :show-inheritance:
 
+PoloidalFieldCoilCaseSet()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-PoloidalFieldCoilCase()
-^^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
-    :width: 220px
-    :height: 180px
+.. image:: https://user-images.githubusercontent.com/8583900/93908750-e86f8b00-fcf6-11ea-938e-349dd09e5915.png
+    :width: 586px
+    :height: 670px
     :align: center
 
-.. automodule:: paramak.parametric_components.poloidal_field_coil_case
+.. automodule:: paramak.parametric_components.poloidal_field_coil_case_set
+   :members:
+   :show-inheritance:
+
+PoloidalFieldCoilCaseSetFC()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93908750-e86f8b00-fcf6-11ea-938e-349dd09e5915.png
+    :width: 586px
+    :height: 670px
+    :align: center
+
+.. automodule:: paramak.parametric_components.poloidal_field_coil_case_set
    :members:
    :show-inheritance:
 
