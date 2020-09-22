@@ -9,7 +9,10 @@ import numpy as np
 import paramak
 
 
-def main():
+def make_demo_blanket(
+        number_of_sections=8,
+        gap_size=15,
+        central_block_width=200):
 
     number_of_segments = 8
     gap_size = 15.
@@ -110,8 +113,8 @@ def main():
     )
 
     # saves the blanket as an stp file
-    inboard_blanket.export_stp('segmented_blanket.stp')
+    inboard_blanket.export_stp('blanket.stp')
 
 
 if __name__ == "__main__":
-    main()
+    make_demo_blanket()

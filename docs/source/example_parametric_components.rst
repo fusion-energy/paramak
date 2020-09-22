@@ -42,3 +42,17 @@ make_demo_style_blankets.py
    :show-inheritance:
 
 `Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_demo_style_blankets.py>`_
+
+make_firstwall_for_neutron_wall_loading.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93807581-bc92cd80-fc42-11ea-8522-7fe14287b3c4.png
+   :width: 437
+   :height: 807
+   :align: center
+
+.. automodule:: examples.example_parametric_components.make_firstwall_for_neutron_wall_loading
+   :members:
+   :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.py>`_

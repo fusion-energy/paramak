@@ -222,6 +222,20 @@ PoloidalFieldCoilCase()
    :members:
    :show-inheritance:
 
+
+PoloidalSegmenter()
+^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93811079-84da5480-fc47-11ea-9c6c-7fd132f6d72d.png
+    :width: 605px
+    :height: 563px
+    :align: center
+
+.. automodule:: paramak.parametric_components.poloidal_segmenter
+   :members:
+   :show-inheritance:
+
+
 Plasma()
 ^^^^^^^^
 

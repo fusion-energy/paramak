@@ -165,3 +165,21 @@ def distance_between_two_points(A, B):
     xb, yb = B
     u_vec = [xb - xa, yb - ya]
     return np.linalg.norm(u_vec)
+
+
+def coefficients_of_line_from_points(point1, point2):
+    """Computes the m and c coefficients of the equation (y=mx+c) for
+    a straight line from two points
+
+    Args:
+        point1 (float, float): point 1 coordinates
+        point2 (float, float): point 2 coordinates
+
+    Returns:
+        (float, float): m coefficent and c coefficient
+    """
+    points = [point1, point2]
+    x_coords, y_coords = zip(*points)
+    A = np.vstack([x_coords, np.ones(len(x_coords))]).T
+    m, c = np.linalg.lstsq(A, y_coords, rcond=None)[0]
+    return m, c
