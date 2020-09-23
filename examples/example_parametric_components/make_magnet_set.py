@@ -11,7 +11,7 @@ import paramak
 
 def main():
 
-    number_of_toroidal_field_coils = 6
+    number_of_toroidal_field_coils = 8
     angle_offset = (360 / number_of_toroidal_field_coils) / 2.
     inner_tf = paramak.InnerTfCoilsFlat(
         height=1800,
@@ -36,6 +36,16 @@ def main():
         )
     )
 
+    inner_leg = paramak.ExtrudeStraightShape(
+        points=outer_tf.inner_leg_connection_points,
+        distance=130,
+        azimuth_placement_angle=np.linspace(
+            0, 360,
+            number_of_toroidal_field_coils,
+            endpoint=False
+        )
+    )
+
     pf_coils = paramak.PoloidalFieldCoilSet(
         heights=[100, 120, 80, 80, 120, 180],
         widths=[100, 120, 80, 80, 120, 180],
@@ -53,6 +63,7 @@ def main():
     pf_coils_casing.export_stp('pf_coils_casing.stp')
     outer_tf.export_stp('outer_tf.stp')
     inner_tf.export_stp('inner_tf.stp')
+    inner_leg.export_stp('leg.stp')
 
 
 if __name__ == "__main__":
