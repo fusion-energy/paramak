@@ -201,7 +201,7 @@ class BlanketFP(RotateMixedShape):
             if callable(self.offset_from_plasma):
                 print(self.offset_from_plasma(theta))
                 return self.offset_from_plasma(theta)
-            elif isinstance(self.offset_from_plasma, tuple):
+            elif isinstance(self.offset_from_plasma, (tuple, list)):
                 # increase offset linearly
                 start_offset, stop_offset = self.offset_from_plasma
                 a = -(start_offset - stop_offset) / (
@@ -227,7 +227,7 @@ class BlanketFP(RotateMixedShape):
                         theta /
                         conversion_factor) +
                     offset(theta))
-            elif isinstance(self.thickness, tuple):
+            elif isinstance(self.thickness, (tuple, list)):
                 # increase thickness linearly
                 start_thickness, stop_thickness = self.thickness
                 a = (stop_thickness - start_thickness) / (
