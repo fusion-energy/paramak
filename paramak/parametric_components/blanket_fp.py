@@ -129,15 +129,13 @@ class BlanketFP(RotateMixedShape):
             self.major_radius = major_radius
             self.triangularity = triangularity
             self.elongation = elongation
-            self.offset_from_plasma = 0
         else:  # if plasma object is given, use its parameters
             self.minor_radius = plasma.minor_radius
             self.major_radius = plasma.major_radius
             self.triangularity = plasma.triangularity
             self.elongation = plasma.elongation
-            self.offset_from_plasma = offset_from_plasma
+        self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
-        # self.points = points
         self.physical_groups = None
 
         self.find_points()
@@ -190,19 +188,8 @@ class BlanketFP(RotateMixedShape):
         )
 
         # create inner points
-        if self.plasma is None:
-            # if no plasma object is given simply use the equation
-            inner_points_R = R(thetas)
-            inner_points_Z = Z(thetas)
-
-            inner_points = [
-                [inner_points_R[i], inner_points_Z[i], "spline"]
-                for i in range(len(thetas))
-            ]
-        else:
-            # if a plasma is given
-            inner_points = self.create_offset_points(
-                thetas, R, Z, self.offset_from_plasma
+        inner_points = self.create_offset_points(
+            thetas, R, Z, self.offset_from_plasma
             )
         inner_points[-1][2] = "straight"
 
