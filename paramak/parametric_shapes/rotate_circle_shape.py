@@ -107,8 +107,6 @@ class RotateCircleShape(Shape):
               A CadQuery solid: A 3D solid volume
         """
 
-        # print('create_solid() has been called')
-
         solid = (
             cq.Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])

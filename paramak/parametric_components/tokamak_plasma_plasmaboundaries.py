@@ -147,8 +147,7 @@ class PlasmaBoundaries(Plasma):
             self._elongation = value
 
     def find_points(self):
-        """Finds the XZ points that describe the 2D profile of the plasma.
-        """
+        """Finds the XZ points that describe the 2D profile of the plasma."""
         aspect_ratio = self.minor_radius / self.major_radius
         params = {
             "A": self.A,

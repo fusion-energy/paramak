@@ -57,7 +57,9 @@ class Plasma(RotateSplineShape):
         Others: see paramak.RotateSplineShape() attributes.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        a paramak shape object: A shape object that has generic functionality
+        with points determined by the find_points() method. A CadQuery solid of
+        the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -182,7 +184,6 @@ class Plasma(RotateSplineShape):
              coordinates. None if no x points
         """
         lower_x_point, upper_x_point = None, None  # non-null config
-        minor_radius, major_radius = self.minor_radius, self.major_radius
         shift = self.x_point_shift
         elongation = self.elongation
         triangularity = self.triangularity
@@ -192,25 +193,24 @@ class Plasma(RotateSplineShape):
                              (1 +
                               shift) *
                              triangularity *
-                             minor_radius, -
+                             self.minor_radius, -
                              (1 +
                               shift) *
                              elongation *
-                             minor_radius +
+                             self.minor_radius +
                              self.vertical_displacement, )
 
             if self.configuration == "double-null":
                 # upper_x_point is up-down symmetrical
                 upper_x_point = (
                     lower_x_point[0],
-                    (1 + shift) * elongation * minor_radius
+                    (1 + shift) * elongation * self.minor_radius
                     + self.vertical_displacement,
                 )
         return lower_x_point, upper_x_point
 
     def find_points(self):
-        """Finds the XZ points that describe the 2D profile of the plasma.
-        """
+        """Finds the XZ points that describe the 2D profile of the plasma."""
 
         # create array of angles theta
         theta = np.linspace(0, 2 * np.pi, num=self.num_points)
