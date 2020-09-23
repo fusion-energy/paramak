@@ -382,6 +382,45 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
+    def test_BlanketFP_creation_variable_offset_from_tuple(self):
+        """checks that a cadquery solid can be created using the BlanketFP
+        parametric component when a tuple of offsets is passed"""
+
+        test_shape = paramak.BlanketFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=100,
+            offset_from_plasma=(0, 10),
+            stop_angle=90,
+            start_angle=270,
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
+    def test_BlanketFP_creation_variable_offset_function(self):
+        """checks that a cadquery solid can be created using the BlanketFP
+        parametric component when a offset function is passed"""
+
+        def offset(theta):
+            return 100 + 3 * theta
+
+        test_shape = paramak.BlanketFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=100,
+            stop_angle=90,
+            start_angle=270,
+            offset_from_plasma=offset
+        )
+
+        assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+
     def test_BlanketFP_physical_groups(self):
         """creates a blanket using the BlanketFP parametric component and checks that
         physical groups can be exported using the export_physical_groups method"""
