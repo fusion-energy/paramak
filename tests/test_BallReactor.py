@@ -114,7 +114,7 @@ class test_BallReactor(unittest.TestCase):
             rotation_angle=359,
         )
         test_reactor.export_stp()
-        assert len(test_reactor.shapes_and_components) == 11
+        assert len(test_reactor.shapes_and_components) == 8
 
     def test_BallReactor_with_pf_and_tf_coils(self):
         """checks whether a ball reactor with optional pf and tf coils can
@@ -144,7 +144,7 @@ class test_BallReactor(unittest.TestCase):
             rotation_angle=359,
         )
         test_reactor.export_stp()
-        assert len(test_reactor.shapes_and_components) == 12
+        assert len(test_reactor.shapes_and_components) == 9
 
     def test_BallReactor_with_pf_and_tf_coils_export_physical_groups(self):
         """creates a ball reactor using the BallReactor parametric_reactor and
@@ -204,7 +204,7 @@ class test_BallReactor(unittest.TestCase):
             divertor_position="lower",
             rotation_angle=359,
         )
-        assert len(test_reactor.shapes_and_components) == 12
+        assert len(test_reactor.shapes_and_components) == 9
 
     def test_single_null_ball_reactor_divertor_lower(self):
         """checks that a single null reactor with a lower divertor can be

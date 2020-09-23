@@ -39,10 +39,7 @@ class test_object_properties(unittest.TestCase):
             "firstwall.stp",
             "Graveyard.stp",
             "inboard_tf_coils.stp",
-            "pf_coil_0.stp",
-            "pf_coil_1.stp",
-            "pf_coil_2.stp",
-            "pf_coil_3.stp",
+            "pf_coils.stp",
             "plasma.stp",
             "tf_coil.stp"
         ]
@@ -67,10 +64,7 @@ class test_object_properties(unittest.TestCase):
             'blanket.stp',
             'outboard_rear_blanket_wall.stp',
             'outboard_tf_coil.stp',
-            'pf_coil_0.stp',
-            'pf_coil_1.stp',
-            'pf_coil_2.stp',
-            'pf_coil_3.stp',
+            'pf_coils.stp',
             'Graveyard.stp'
         ]
         for output_filename in output_filenames:

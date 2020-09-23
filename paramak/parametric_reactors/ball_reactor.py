@@ -238,8 +238,7 @@ class BallReactor(paramak.Reactor):
                 )
             ) / (self._number_of_pf_coils + 1)
 
-            self._pf_coils_y_values = []
-            self._pf_coils_x_values = []
+            self._pf_coils_xy_values = []
             # adds in coils with equal spacing strategy, should be updated to
             # allow user positions
             for i in range(self._number_of_pf_coils):
@@ -253,8 +252,7 @@ class BallReactor(paramak.Reactor):
                     + self.pf_coil_to_rear_blanket_radial_gap
                     + 0.5 * self.pf_coil_radial_thicknesses[i]
                 )
-                self._pf_coils_y_values.append(y_value)
-                self._pf_coils_x_values.append(x_value)
+                self._pf_coils_xy_values.append((x_value, y_value))
 
             self._pf_coil_start_radius = (
                 self._blanket_read_wall_end_radius +
@@ -472,26 +470,18 @@ class BallReactor(paramak.Reactor):
             and self.pf_coil_to_rear_blanket_radial_gap is not None
         ):
 
-            for i, (rt, vt, y_value, x_value) in enumerate(
-                zip(
-                    self.pf_coil_radial_thicknesses,
-                    self.pf_coil_vertical_thicknesses,
-                    self._pf_coils_y_values,
-                    self._pf_coils_x_values,
-                )
-            ):
+            self._pf_coil = paramak.PoloidalFieldCoilSet(
+                heights=self.pf_coil_vertical_thicknesses,
+                widths=self.pf_coil_radial_thicknesses,
+                center_points=self._pf_coils_xy_values,
+                rotation_angle=self.rotation_angle,
+                stp_filename='pf_coils.stp',
+                stl_filename='pf_coils.stl',
+                name="pf_coil",
+                material_tag="pf_coil_mat",
+            )
 
-                self._pf_coil = paramak.PoloidalFieldCoil(
-                    width=rt,
-                    height=vt,
-                    center_point=(x_value, y_value),
-                    rotation_angle=self.rotation_angle,
-                    stp_filename="pf_coil_" + str(i) + ".stp",
-                    stl_filename="pf_coil_" + str(i) + ".stl",
-                    name="pf_coil",
-                    material_tag="pf_coil_mat",
-                )
-                shapes_or_components.append(self._pf_coil)
+            shapes_or_components.append(self._pf_coil)
 
             if (
                 self.pf_coil_to_tf_coil_radial_gap is not None
