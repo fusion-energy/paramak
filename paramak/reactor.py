@@ -88,7 +88,6 @@ class Reactor:
 
     @shapes_and_components.setter
     def shapes_and_components(self, value):
-        shapes_and_components = []
         if not isinstance(value, Iterable):
             raise ValueError("shapes_and_components must be a list")
         self._shapes_and_components = value
@@ -128,8 +127,8 @@ class Reactor:
 
         for entry in self.shapes_and_components:
 
-            if include_plasma == False and isinstance(
-                    entry, paramak.Plasma) == True:
+            if include_plasma is False and isinstance(
+                    entry, paramak.Plasma) is True:
                 continue
 
             if entry.stp_filename is None:

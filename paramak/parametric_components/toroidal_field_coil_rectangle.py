@@ -100,7 +100,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         points = [
             (self.inner_upper_point),
             (self.inner_mid_point[0], self.inner_upper_point[1]),
-            # (self.inner_mid_point),
             (self.inner_mid_point[0], self.inner_lower_point[1]),
             (self.inner_lower_point),
             (self.inner_lower_point[0],

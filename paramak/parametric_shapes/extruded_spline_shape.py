@@ -99,8 +99,6 @@ class ExtrudeSplineShape(Shape):
         :rtype: a cadquery solid
         """
 
-        # print('create_solid() has been called')
-
         # Creates a cadquery solid from points and extrudes
         solid = (
             cq.Workplane(self.workplane)

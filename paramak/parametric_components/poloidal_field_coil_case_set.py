@@ -30,7 +30,9 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        a paramak shape object: A shape object that has generic functionality
+        with points determined by the find_points() method. A CadQuery solid of
+        the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -118,8 +120,8 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         self._widths = widths
 
     def find_points(self):
-        """Finds the XZ points joined by straight connections that describe the 2D
-        profile of the poloidal field coil shape."""
+        """Finds the XZ points joined by straight connections that describe
+        the 2D profile of the poloidal field coil shape."""
 
         all_points = []
 
@@ -172,9 +174,10 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         self.points = all_points
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections
-           edges, azimuth_placement_angle and rotation angle.
-           individual solids in the compound can be accessed using .Solids()[i] where i is an int
+        """Creates a 3d solid using points with straight connections edges,
+           azimuth_placement_angle and rotation angle. Individual solids in
+           the compound can be accessed using .Solids()[i] where i is an int
+
            Returns:
               A CadQuery solid: A 3D solid volume
         """
