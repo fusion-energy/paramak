@@ -31,8 +31,11 @@ class BlanketFP(RotateMixedShape):
             Defaults to 2.0.
         vertical_displacement (float, optional): the vertical_displacement of
             the plasma (cm). Defaults to 0.
-        offset_from_plasma (float, optional): the distance bettwen the plasma
-            and the blanket (cm). Defaults to 0.
+        offset_from_plasma (float, (float, float), callable): the distance
+            bettwen the plasma and the blanket (cm). If float, constant offset.
+            If tuple of floats, offset will vary linearly between the two
+            values. If callable, offset will be a function of poloidal angle
+            (in degrees) Defaults to 0.
         num_points (int, optional): number of points that will describe the
             shape. Defaults to 50.
         Others: see paramak.RotateMixedShape() arguments.
@@ -55,8 +58,11 @@ class BlanketFP(RotateMixedShape):
             Defaults to 2.0.
         vertical_displacement (float): the vertical_displacement of
             the plasma (cm).
-        offset_from_plasma (float): the distance bettwen the plasma
-            and the blanket (cm).
+        offset_from_plasma (float, (float, float), callable): the distance
+            bettwen the plasma and the blanket (cm). If float, constant offset.
+            If tuple of floats, offset will vary linearly between the two
+            values. If callable, offset will be a function of poloidal angle
+            (in degrees) Defaults to 0.
         num_points (int): number of points that will describe the
             shape.
         Others: see paramak.RotateMixedShape() attributes.
