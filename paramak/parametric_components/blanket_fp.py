@@ -31,8 +31,11 @@ class BlanketFP(RotateMixedShape):
             Defaults to 2.0.
         vertical_displacement (float, optional): the vertical_displacement of
             the plasma (cm). Defaults to 0.
-        offset_from_plasma (float, optional): the distance bettwen the plasma
-            and the blanket (cm). Defaults to 0.
+        offset_from_plasma (float, (float, float), callable): the distance
+            bettwen the plasma and the blanket (cm). If float, constant offset.
+            If tuple of floats, offset will vary linearly between the two
+            values. If callable, offset will be a function of poloidal angle
+            (in degrees) Defaults to 0.
         num_points (int, optional): number of points that will describe the
             shape. Defaults to 50.
         Others: see paramak.RotateMixedShape() arguments.
@@ -55,14 +58,19 @@ class BlanketFP(RotateMixedShape):
             Defaults to 2.0.
         vertical_displacement (float): the vertical_displacement of
             the plasma (cm).
-        offset_from_plasma (float): the distance bettwen the plasma
-            and the blanket (cm).
+        offset_from_plasma (float, (float, float), callable): the distance
+            bettwen the plasma and the blanket (cm). If float, constant offset.
+            If tuple of floats, offset will vary linearly between the two
+            values. If callable, offset will be a function of poloidal angle
+            (in degrees) Defaults to 0.
         num_points (int): number of points that will describe the
             shape.
         Others: see paramak.RotateMixedShape() attributes.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        a paramak shape object: A shape object that has generic functionality
+            with points determined by the find_points() method. A CadQuery
+            solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -129,15 +137,13 @@ class BlanketFP(RotateMixedShape):
             self.major_radius = major_radius
             self.triangularity = triangularity
             self.elongation = elongation
-            self.offset_from_plasma = 0
         else:  # if plasma object is given, use its parameters
             self.minor_radius = plasma.minor_radius
             self.major_radius = plasma.major_radius
             self.triangularity = plasma.triangularity
             self.elongation = plasma.elongation
-            self.offset_from_plasma = offset_from_plasma
+        self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
-        # self.points = points
         self.physical_groups = None
 
         self.find_points()
@@ -190,19 +196,25 @@ class BlanketFP(RotateMixedShape):
         )
 
         # create inner points
-        if self.plasma is None:
-            # if no plasma object is given simply use the equation
-            inner_points_R = R(thetas)
-            inner_points_Z = Z(thetas)
 
-            inner_points = [
-                [inner_points_R[i], inner_points_Z[i], "spline"]
-                for i in range(len(thetas))
-            ]
-        else:
-            # if a plasma is given
-            inner_points = self.create_offset_points(
-                thetas, R, Z, self.offset_from_plasma
+        def offset(theta):
+            if callable(self.offset_from_plasma):
+                print(self.offset_from_plasma(theta))
+                return self.offset_from_plasma(theta)
+            elif isinstance(self.offset_from_plasma, tuple):
+                # increase offset linearly
+                start_offset, stop_offset = self.offset_from_plasma
+                a = -(start_offset - stop_offset) / (
+                    self.stop_angle * conversion_factor
+                    - self.start_angle * conversion_factor
+                )
+                b = start_offset - self.start_angle * conversion_factor * a
+                return a * theta + b
+            else:
+                return self.offset_from_plasma
+
+        inner_points = self.create_offset_points(
+            thetas, R, Z, offset
             )
         inner_points[-1][2] = "straight"
 
@@ -214,7 +226,7 @@ class BlanketFP(RotateMixedShape):
                     self.thickness(
                         theta /
                         conversion_factor) +
-                    self.offset_from_plasma)
+                    offset(theta))
             elif isinstance(self.thickness, tuple):
                 # increase thickness linearly
                 start_thickness, stop_thickness = self.thickness
@@ -222,11 +234,11 @@ class BlanketFP(RotateMixedShape):
                     self.stop_angle * conversion_factor
                     - self.start_angle * conversion_factor
                 )
-                b = start_thickness - self.start_angle * a
-                return a * theta + b + self.offset_from_plasma
+                b = start_thickness - self.start_angle * conversion_factor * a
+                return a * theta + b + offset(theta)
             else:
                 # use the constant value
-                return self.thickness + self.offset_from_plasma
+                return self.thickness + offset(theta)
 
         outer_points = self.create_offset_points(
             np.flip(thetas), R, Z, new_offset)
@@ -246,7 +258,7 @@ class BlanketFP(RotateMixedShape):
         :type Z_fun: callable
         :param offset: offset value (cm). offset=0 will follow the parametric
          equations.
-        :type offset: float, callable
+        :type offset: callable
         :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
             ...]
         :rtype: list
@@ -260,12 +272,6 @@ class BlanketFP(RotateMixedShape):
         R_derivative = sp.diff(R_sp, theta_sp)
         Z_derivative = sp.diff(Z_sp, theta_sp)
         points = []
-
-        def new_offset(theta):
-            if callable(offset):
-                return offset(theta)
-            else:
-                return offset
 
         for theta in thetas:
             # get local value of derivatives
@@ -282,8 +288,8 @@ class BlanketFP(RotateMixedShape):
             ny /= normal_vector_norm
 
             # calculate outer points
-            val_R_outer = R_fun(theta) + new_offset(theta) * nx
-            val_Z_outer = Z_fun(theta) + new_offset(theta) * ny
+            val_R_outer = R_fun(theta) + offset(theta) * nx
+            val_Z_outer = Z_fun(theta) + offset(theta) * ny
 
             points.append([float(val_R_outer), float(val_Z_outer), "spline"])
         return points
