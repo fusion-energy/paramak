@@ -62,7 +62,9 @@ class BlanketFP(RotateMixedShape):
         Others: see paramak.RotateMixedShape() attributes.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        a paramak shape object: A shape object that has generic functionality
+            with points determined by the find_points() method. A CadQuery
+            solid of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -200,7 +202,7 @@ class BlanketFP(RotateMixedShape):
                     self.stop_angle * conversion_factor
                     - self.start_angle * conversion_factor
                 )
-                b = start_offset - self.start_angle* conversion_factor * a
+                b = start_offset - self.start_angle * conversion_factor * a
                 return a * theta + b
             else:
                 return self.offset_from_plasma
@@ -226,7 +228,7 @@ class BlanketFP(RotateMixedShape):
                     self.stop_angle * conversion_factor
                     - self.start_angle * conversion_factor
                 )
-                b = start_thickness - self.start_angle* conversion_factor * a
+                b = start_thickness - self.start_angle * conversion_factor * a
                 return a * theta + b + offset(theta)
             else:
                 # use the constant value
