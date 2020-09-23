@@ -188,8 +188,25 @@ class BlanketFP(RotateMixedShape):
         )
 
         # create inner points
+
+        def offset(theta):
+            if callable(self.offset_from_plasma):
+                print(self.offset_from_plasma(theta))
+                return self.offset_from_plasma(theta)
+            elif isinstance(self.offset_from_plasma, tuple):
+                # increase offset linearly
+                start_offset, stop_offset = self.offset_from_plasma
+                a = -(start_offset - stop_offset) / (
+                    self.stop_angle * conversion_factor
+                    - self.start_angle * conversion_factor
+                )
+                b = start_offset - self.start_angle* conversion_factor * a
+                return a * theta + b
+            else:
+                return self.offset_from_plasma
+
         inner_points = self.create_offset_points(
-            thetas, R, Z, self.offset_from_plasma
+            thetas, R, Z, offset
             )
         inner_points[-1][2] = "straight"
 
@@ -201,7 +218,7 @@ class BlanketFP(RotateMixedShape):
                     self.thickness(
                         theta /
                         conversion_factor) +
-                    self.offset_from_plasma)
+                    offset(theta))
             elif isinstance(self.thickness, tuple):
                 # increase thickness linearly
                 start_thickness, stop_thickness = self.thickness
@@ -210,10 +227,10 @@ class BlanketFP(RotateMixedShape):
                     - self.start_angle * conversion_factor
                 )
                 b = start_thickness - self.start_angle* conversion_factor * a
-                return a * theta + b + self.offset_from_plasma
+                return a * theta + b + offset(theta)
             else:
                 # use the constant value
-                return self.thickness + self.offset_from_plasma
+                return self.thickness + offset(theta)
 
         outer_points = self.create_offset_points(
             np.flip(thetas), R, Z, new_offset)
