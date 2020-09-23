@@ -183,10 +183,14 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         # extract helping points for inner leg
         inner_leg_connection_points = []
 
-        inner_leg_connection_points.append((inner_points[0][0], inner_points[0][1]))
-        inner_leg_connection_points.append((inner_points[-1][0], inner_points[-1][1]))
-        inner_leg_connection_points.append((outer_points[0][0], outer_points[0][1]))
-        inner_leg_connection_points.append((outer_points[-1][0], outer_points[-1][1]))
+        inner_leg_connection_points.append(
+            (inner_points[0][0], inner_points[0][1]))
+        inner_leg_connection_points.append(
+            (inner_points[-1][0], inner_points[-1][1]))
+        inner_leg_connection_points.append(
+            (outer_points[0][0], outer_points[0][1]))
+        inner_leg_connection_points.append(
+            (outer_points[-1][0], outer_points[-1][1]))
         self.inner_leg_connection_points = inner_leg_connection_points
 
     def find_azimuth_placement_angle(self):

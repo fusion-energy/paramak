@@ -215,7 +215,7 @@ class BlanketFP(RotateMixedShape):
 
         inner_points = self.create_offset_points(
             thetas, R, Z, offset
-            )
+        )
         inner_points[-1][2] = "straight"
 
         # compute outer points

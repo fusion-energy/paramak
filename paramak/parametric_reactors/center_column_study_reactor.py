@@ -12,7 +12,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
     out parametric studies on the center column shield. Several aspects
     such as outboard magnets are intentionally missing from this reactor
     so that the model runs quickly and only includes componets that have a
-    significant impact on the center column shielding. This allows the 
+    significant impact on the center column shielding. This allows the
     neutronics simulations to run quickly the column design space to be
     explored efficiently.
 
@@ -102,27 +102,32 @@ class CenterColumnStudyReactor(paramak.Reactor):
         # another starts
 
         self._inner_bore_start_radius = 0
-        self._inner_bore_end_radius = self._inner_bore_start_radius + self.inner_bore_radial_thickness
+        self._inner_bore_end_radius = self._inner_bore_start_radius + \
+            self.inner_bore_radial_thickness
 
         self._inboard_tf_coils_start_radius = self._inner_bore_end_radius
-        self._inboard_tf_coils_end_radius = self._inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
+        self._inboard_tf_coils_end_radius = self._inboard_tf_coils_start_radius + \
+            self.inboard_tf_leg_radial_thickness
 
         self._center_column_shield_start_radius = self._inboard_tf_coils_end_radius
-        self._center_column_shield_end_radius_upper = self._center_column_shield_start_radius + self.center_column_shield_radial_thickness_upper
-        self._center_column_shield_end_radius_mid = self._center_column_shield_start_radius + self.center_column_shield_radial_thickness_mid
+        self._center_column_shield_end_radius_upper = self._center_column_shield_start_radius + \
+            self.center_column_shield_radial_thickness_upper
+        self._center_column_shield_end_radius_mid = self._center_column_shield_start_radius + \
+            self.center_column_shield_radial_thickness_mid
 
         self._inner_plasma_gap_start_radius = self._center_column_shield_end_radius_mid
-        self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + self.inner_plasma_gap_radial_thickness
+        self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + \
+            self.inner_plasma_gap_radial_thickness
 
         self._plasma_start_radius = self._inner_plasma_gap_end_radius
         self._plasma_end_radius = self._plasma_start_radius + self.plasma_radial_thickness
 
         self._outer_plasma_gap_start_radius = self._plasma_end_radius
-        self._outer_plasma_gap_end_radius = self._outer_plasma_gap_start_radius + self.outer_plasma_gap_radial_thickness
+        self._outer_plasma_gap_end_radius = self._outer_plasma_gap_start_radius + \
+            self.outer_plasma_gap_radial_thickness
 
         self._outboard_blanket_start_radius = self._outer_plasma_gap_end_radius
         self._outboard_blanket_end_radius = self._outboard_blanket_start_radius + 100.
-
 
     def make_vertical_build(self):
 
@@ -130,10 +135,12 @@ class CenterColumnStudyReactor(paramak.Reactor):
         # a similar manner to the radial build
 
         self._plasma_start_height = 0
-        self._plasma_end_height = self._plasma_start_height + self.plasma_high_point[1]
+        self._plasma_end_height = self._plasma_start_height + \
+            self.plasma_high_point[1]
 
         self._plasma_to_blanket_gap_start_height = self._plasma_end_height
-        self._plasma_to_blanket_gap_end_height = self._plasma_to_blanket_gap_start_height + self.plasma_gap_vertical_thickness
+        self._plasma_to_blanket_gap_end_height = self._plasma_to_blanket_gap_start_height + \
+            self.plasma_gap_vertical_thickness
 
         self._blanket_start_height = self._plasma_to_blanket_gap_end_height
         self._blanket_end_height = self._blanket_start_height + 100.
@@ -176,8 +183,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             inner_radius=self._center_column_shield_start_radius,
             mid_radius=self._center_column_shield_end_radius_mid,
             outer_radius=self._center_column_shield_end_radius_upper,
-            rotation_angle=self.rotation_angle
-        )
+            rotation_angle=self.rotation_angle)
         shapes_or_components.append(self._center_column_shield)
 
     def make_plasma(self, shapes_or_components):
