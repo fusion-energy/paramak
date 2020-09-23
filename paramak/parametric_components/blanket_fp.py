@@ -258,7 +258,7 @@ class BlanketFP(RotateMixedShape):
         :type Z_fun: callable
         :param offset: offset value (cm). offset=0 will follow the parametric
          equations.
-        :type offset: float, callable
+        :type offset: callable
         :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
             ...]
         :rtype: list
@@ -272,12 +272,6 @@ class BlanketFP(RotateMixedShape):
         R_derivative = sp.diff(R_sp, theta_sp)
         Z_derivative = sp.diff(Z_sp, theta_sp)
         points = []
-
-        def new_offset(theta):
-            if callable(offset):
-                return offset(theta)
-            else:
-                return offset
 
         for theta in thetas:
             # get local value of derivatives
@@ -294,8 +288,8 @@ class BlanketFP(RotateMixedShape):
             ny /= normal_vector_norm
 
             # calculate outer points
-            val_R_outer = R_fun(theta) + new_offset(theta) * nx
-            val_Z_outer = Z_fun(theta) + new_offset(theta) * ny
+            val_R_outer = R_fun(theta) + offset(theta) * nx
+            val_Z_outer = Z_fun(theta) + offset(theta) * ny
 
             points.append([float(val_R_outer), float(val_Z_outer), "spline"])
         return points
