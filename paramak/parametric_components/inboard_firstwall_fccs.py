@@ -1,5 +1,3 @@
-import numpy as np
-import math
 from paramak import RotateMixedShape, CenterColumnShieldCylinder, CenterColumnShieldHyperbola, CenterColumnShieldFlatTopHyperbola, CenterColumnShieldPlasmaHyperbola, CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular
 
 
