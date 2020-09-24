@@ -17,15 +17,15 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
         test_reactor = paramak.CenterColumnStudyReactor(
             inner_bore_radial_thickness=20,
             inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness_mid = 50,
-            center_column_shield_radial_thickness_upper = 100,
-            inboard_firstwall_radial_thickness= 20,
-            inner_plasma_gap_radial_thickness = 40,
-            plasma_radial_thickness = 200,
-            outer_plasma_gap_radial_thickness = 30,
-            plasma_high_point = (20 + 50 + 100 + 20, 240),
+            center_column_shield_radial_thickness_mid=50,
+            center_column_shield_radial_thickness_upper=100,
+            inboard_firstwall_radial_thickness=20,
+            inner_plasma_gap_radial_thickness=40,
+            plasma_radial_thickness=200,
+            outer_plasma_gap_radial_thickness=30,
+            plasma_high_point=(20 + 50 + 100 + 20, 240),
             plasma_gap_vertical_thickness=20,
-            center_column_arc_vertical_thickness = 520,
+            center_column_arc_vertical_thickness=520,
             rotation_angle=180)
 
         test_reactor.export_stp()
@@ -41,15 +41,15 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
         test_reactor = paramak.CenterColumnStudyReactor(
             inner_bore_radial_thickness=20,
             inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness_mid = 50,
-            center_column_shield_radial_thickness_upper = 100,
-            inboard_firstwall_radial_thickness= 20,
-            inner_plasma_gap_radial_thickness = 40,
-            plasma_radial_thickness = 200,
-            outer_plasma_gap_radial_thickness = 30,
-            plasma_high_point = (20 + 50 + 100 + 20, 240),
+            center_column_shield_radial_thickness_mid=50,
+            center_column_shield_radial_thickness_upper=100,
+            inboard_firstwall_radial_thickness=20,
+            inner_plasma_gap_radial_thickness=40,
+            plasma_radial_thickness=200,
+            outer_plasma_gap_radial_thickness=30,
+            plasma_high_point=(20 + 50 + 100 + 20, 240),
             plasma_gap_vertical_thickness=20,
-            center_column_arc_vertical_thickness = 520,
+            center_column_arc_vertical_thickness=520,
             rotation_angle=180)
 
         test_reactor.export_svg("test_CenterColumnStudyReactor_image.svg")
@@ -66,15 +66,15 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
                 paramak.CenterColumnStudyReactor(
                     inner_bore_radial_thickness=20,
                     inboard_tf_leg_radial_thickness=50,
-                    center_column_shield_radial_thickness_mid = 50,
-                    center_column_shield_radial_thickness_upper = 100,
-                    inboard_firstwall_radial_thickness= 20,
-                    inner_plasma_gap_radial_thickness = 40,
-                    plasma_radial_thickness = 200,
-                    outer_plasma_gap_radial_thickness = 30,
-                    plasma_high_point = (20 + 50 + 100 + 20, 240),
+                    center_column_shield_radial_thickness_mid=50,
+                    center_column_shield_radial_thickness_upper=100,
+                    inboard_firstwall_radial_thickness=20,
+                    inner_plasma_gap_radial_thickness=40,
+                    plasma_radial_thickness=200,
+                    outer_plasma_gap_radial_thickness=30,
+                    plasma_high_point=(20 + 50 + 100 + 20, 240),
                     plasma_gap_vertical_thickness=20,
-                    center_column_arc_vertical_thickness = 520,
+                    center_column_arc_vertical_thickness=520,
                     rotation_angle=360)
 
             except BaseException:
