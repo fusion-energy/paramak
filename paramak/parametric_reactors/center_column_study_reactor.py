@@ -26,7 +26,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         center_column_shield_radial_thickness_upper (float): the radial thickness
             of the center column shield at the upper point (cm)
         inboard_firstwall_radial_thickness (float): the radial thickness
-            of the inboard firstwall (cm)            
+            of the inboard firstwall (cm)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
             the inboard gap between the plasma and the center column shield (cm)
         plasma_radial_thickness (float): the radial thickness of the plasma (cm)
@@ -114,11 +114,14 @@ class CenterColumnStudyReactor(paramak.Reactor):
             self.inboard_tf_leg_radial_thickness
 
         self._center_column_shield_start_radius = self._inboard_tf_coils_end_radius
-        self._center_column_shield_end_radius_upper = self._center_column_shield_start_radius + self.center_column_shield_radial_thickness_upper
-        self._center_column_shield_end_radius_mid = self._center_column_shield_start_radius + self.center_column_shield_radial_thickness_mid
-        
+        self._center_column_shield_end_radius_upper = self._center_column_shield_start_radius + \
+            self.center_column_shield_radial_thickness_upper
+        self._center_column_shield_end_radius_mid = self._center_column_shield_start_radius + \
+            self.center_column_shield_radial_thickness_mid
+
         self._inboard_firstwall_start_radius = self._center_column_shield_end_radius_upper
-        self._inboard_firstwall_end_radius_upper = self._inboard_firstwall_start_radius + self.inboard_firstwall_radial_thickness
+        self._inboard_firstwall_end_radius_upper = self._inboard_firstwall_start_radius + \
+            self.inboard_firstwall_radial_thickness
 
         self._inner_plasma_gap_start_radius = self._center_column_shield_end_radius_mid
         self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + \
@@ -192,9 +195,10 @@ class CenterColumnStudyReactor(paramak.Reactor):
         shapes_or_components.append(self._center_column_shield)
 
     def make_inboard_firstwall(self, shapes_or_components):
-        #ToDO
+        # ToDO
         pass
-        # make use of self._inboard_firstwall_start_radius and self._inboard_firstwall_end_radius
+        # make use of self._inboard_firstwall_start_radius and
+        # self._inboard_firstwall_end_radius
 
     def make_plasma(self, shapes_or_components):
 
