@@ -4,9 +4,9 @@ Examples - Parametric Components
 make_all_parametric_components.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/93629472-47c05900-f9e0-11ea-8219-bc9d2c3e7f7c.png
-   :width: 735
-   :height: 200
+.. image:: https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
+   :width: 713
+   :height: 245
    :align: center
 
 .. automodule:: examples.example_parametric_components.make_all_parametric_components
