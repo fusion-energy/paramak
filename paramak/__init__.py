@@ -38,11 +38,11 @@ from .parametric_components.center_column_flat_top_hyperbola import (
 from .parametric_components.center_column_plasma_dependant import (
     CenterColumnShieldPlasmaHyperbola,
 )
-
 from .parametric_components.center_column_circular import CenterColumnShieldCircular
 from .parametric_components.center_column_flat_top_circular import (
     CenterColumnShieldFlatTopCircular,
 )
+from .parametric_components.inboard_firstwall_fccs import InboardFirstwallFCCS
 
 from .parametric_components.poloidal_field_coil import PoloidalFieldCoil
 from .parametric_components.poloidal_field_coil_case import PoloidalFieldCoilCase
