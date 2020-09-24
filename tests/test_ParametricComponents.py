@@ -22,11 +22,11 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert a.solid is not None
         assert b.solid is not None
         assert a.volume > b.volume
-        
+
     def test_construction_with_CenterColumnShieldHyperbola(self):
         """Makes a firstwall with from a CenterColumnShieldHyperbola and checks
         the volume is smaller than the shield"""
-        a=paramak.CenterColumnShieldHyperbola(
+        a = paramak.CenterColumnShieldHyperbola(
             height=200,
             inner_radius=20,
             mid_radius=80,
@@ -38,16 +38,16 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert a.solid is not None
         assert b.solid is not None
         assert a.volume > b.volume
-        
+
     def test_construction_with_CenterColumnShieldFlatTopHyperbola(self):
         """Makes a firstwall with from a CenterColumnShieldFlatTopHyperbola and
         checks the volume is smaller than the shield"""
         a = paramak.CenterColumnShieldFlatTopHyperbola(
-                        height=200,
-                        arc_height=100,
-                        inner_radius=50,
-                        mid_radius=80,
-                        outer_radius=100)
+            height=200,
+            arc_height=100,
+            inner_radius=50,
+            mid_radius=80,
+            outer_radius=100)
         b = paramak.InboardFirstwallFCCS(
             central_column_shield=a,
             thickness=20,
@@ -76,10 +76,10 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         """Makes a firstwall with from a CenterColumnShieldCircular and checks
         the volume is smaller than the shield"""
         a = paramak.CenterColumnShieldCircular(
-                height=300,
-                inner_radius=20,
-                mid_radius=50,
-                outer_radius=100)
+            height=300,
+            inner_radius=20,
+            mid_radius=50,
+            outer_radius=100)
         b = paramak.InboardFirstwallFCCS(
             central_column_shield=a,
             thickness=20,
@@ -118,6 +118,7 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         self.assertRaises(
             ValueError,
             test_construction_with_string)
+
 
 class test_PoloidalFieldCoilSet(unittest.TestCase):
 
@@ -160,8 +161,8 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
         def test_PoloidalFieldCoilSet_incorrect_center_points():
             """Checks  PoloidalFieldCoilSet with center_points as the wrong type"""
             paramak.PoloidalFieldCoilSet(heights=[10, 10, 10],
-                                                      widths=[20, 20, 20],
-                                                      center_points=100)
+                                         widths=[20, 20, 20],
+                                         center_points=100)
 
         self.assertRaises(
             ValueError,
@@ -837,7 +838,7 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
 
 class test_CenterColumnShieldHyperbola(unittest.TestCase):
     def test_CenterColumnShieldHyperbola_creation(self):
-        """creates a center column shield using the 
+        """creates a center column shield using the
         CenterColumnShieldHyperbola parametric component
         and checks that a cadquery solid is created"""
 
@@ -939,7 +940,7 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
 
 class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
     def test_CenterColumnShieldFlatTopCircular_creation(self):
-        """creates a center column shield using the 
+        """creates a center column shield using the
         CenterColumnShieldFlatTopCircular parametric
         component and checks that a cadquery solid is created"""
 

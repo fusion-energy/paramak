@@ -4,14 +4,14 @@ from paramak import RotateMixedShape, CenterColumnShieldCylinder, CenterColumnSh
 class InboardFirstwallFCCS(RotateMixedShape):
     """An inboard firstwall component that builds a constant thickness layer
     from the central column shield. The center column shields can be of type
-    CenterColumnShieldCylinder, CenterColumnShieldHyperbola, 
-    CenterColumnShieldFlatTopHyperbola, CenterColumnShieldCircular, 
+    CenterColumnShieldCylinder, CenterColumnShieldHyperbola,
+    CenterColumnShieldFlatTopHyperbola, CenterColumnShieldCircular,
     CenterColumnShieldPlasmaHyperbola or CenterColumnShieldFlatTopCircular
 
     Args:
         central_column_shield (paramak.Shape): The central column shield object to build from
         thickness (float): the radial thickness of the firstwall (cm)
-        
+
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the shape.
         color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
@@ -106,7 +106,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
         self._solid = value
 
     def create_solid(self):
-        """Creates a CadQuery 3d solid 
+        """Creates a CadQuery 3d solid
 
            Returns:
               A CadQuery solid: A 3D solid volume
@@ -116,16 +116,16 @@ class InboardFirstwallFCCS(RotateMixedShape):
             firstwall = CenterColumnShieldCylinder(
                 height=self.central_column_shield.height,
                 inner_radius=self.central_column_shield.inner_radius,
-                outer_radius=self.central_column_shield.outer_radius+self.thickness,
-                cut = self.central_column_shield,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
+                cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
         elif isinstance(self.central_column_shield, CenterColumnShieldHyperbola):
             firstwall = CenterColumnShieldHyperbola(
                 height=self.central_column_shield.height,
                 inner_radius=self.central_column_shield.inner_radius,
-                mid_radius=self.central_column_shield.mid_radius+self.thickness,
-                outer_radius=self.central_column_shield.outer_radius+self.thickness,
+                mid_radius=self.central_column_shield.mid_radius + self.thickness,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
                 cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
@@ -134,8 +134,8 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 height=self.central_column_shield.height,
                 arc_height=self.central_column_shield.arc_height,
                 inner_radius=self.central_column_shield.inner_radius,
-                mid_radius=self.central_column_shield.mid_radius+self.thickness,
-                outer_radius=self.central_column_shield.outer_radius+self.thickness,
+                mid_radius=self.central_column_shield.mid_radius + self.thickness,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
                 cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
@@ -143,17 +143,17 @@ class InboardFirstwallFCCS(RotateMixedShape):
             firstwall = CenterColumnShieldPlasmaHyperbola(
                 height=self.central_column_shield.height,
                 inner_radius=self.central_column_shield.inner_radius,
-                mid_offset=self.central_column_shield.mid_offset-self.thickness,
-                edge_offset=self.central_column_shield.edge_offset-self.thickness,
+                mid_offset=self.central_column_shield.mid_offset - self.thickness,
+                edge_offset=self.central_column_shield.edge_offset - self.thickness,
                 cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
-                
+
         elif isinstance(self.central_column_shield, CenterColumnShieldCircular):
             firstwall = CenterColumnShieldCircular(
                 height=self.central_column_shield.height,
                 inner_radius=self.central_column_shield.inner_radius,
-                mid_radius=self.central_column_shield.mid_radius+self.thickness,
-                outer_radius=self.central_column_shield.outer_radius+self.thickness,
+                mid_radius=self.central_column_shield.mid_radius + self.thickness,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
                 cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
@@ -162,14 +162,15 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 height=self.central_column_shield.height,
                 arc_height=self.central_column_shield.arc_height,
                 inner_radius=self.central_column_shield.inner_radius,
-                mid_radius=self.central_column_shield.mid_radius+self.thickness,
-                outer_radius=self.central_column_shield.outer_radius+self.thickness,
+                mid_radius=self.central_column_shield.mid_radius + self.thickness,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
                 cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
-        
+
         else:
 
-            raise ValueError("InboardFirstwallFCCS.central_column_shield must be an \
+            raise ValueError(
+                "InboardFirstwallFCCS.central_column_shield must be an \
                 instance of CenterColumnShieldCylinder, CenterColumnShieldHyperbola, \
                 CenterColumnShieldFlatTopHyperbola, CenterColumnShieldPlasmaHyperbola, \
                 CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular")
