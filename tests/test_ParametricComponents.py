@@ -7,6 +7,119 @@ import pytest
 import paramak
 
 
+class test_InboardFirstwallFCCS(unittest.TestCase):
+    def test_construction_with_CenterColumnShieldCylinder(self):
+        """Makes a firstwall with from a CenterColumnShieldCylinder and checks
+        the volume is smaller than the shield"""
+        a = paramak.CenterColumnShieldCylinder(
+            height=100,
+            inner_radius=20,
+            outer_radius=80)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180)
+        assert a.solid is not None
+        assert b.solid is not None
+        assert a.volume > b.volume
+
+    def test_construction_with_CenterColumnShieldHyperbola(self):
+        """Makes a firstwall with from a CenterColumnShieldHyperbola and checks
+        the volume is smaller than the shield"""
+        a = paramak.CenterColumnShieldHyperbola(
+            height=200,
+            inner_radius=20,
+            mid_radius=80,
+            outer_radius=120)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180)
+        assert a.solid is not None
+        assert b.solid is not None
+        assert a.volume > b.volume
+
+    def test_construction_with_CenterColumnShieldFlatTopHyperbola(self):
+        """Makes a firstwall with from a CenterColumnShieldFlatTopHyperbola and
+        checks the volume is smaller than the shield"""
+        a = paramak.CenterColumnShieldFlatTopHyperbola(
+            height=200,
+            arc_height=100,
+            inner_radius=50,
+            mid_radius=80,
+            outer_radius=100)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180)
+        assert a.solid is not None
+        assert b.solid is not None
+        assert a.volume > b.volume
+
+    def test_construction_with_CenterColumnShieldPlasmaHyperbola(self):
+        """Makes a firstwall with from a CenterColumnShieldPlasmaHyperbola and
+        checks the volume is smaller than the shield"""
+        a = paramak.CenterColumnShieldPlasmaHyperbola(
+            height=601,
+            inner_radius=20,
+            mid_offset=50,
+            edge_offset=0)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180)
+        assert a.solid is not None
+        assert b.solid is not None
+        assert a.volume > b.volume
+
+    def test_construction_with_CenterColumnShieldCircular(self):
+        """Makes a firstwall with from a CenterColumnShieldCircular and checks
+        the volume is smaller than the shield"""
+        a = paramak.CenterColumnShieldCircular(
+            height=300,
+            inner_radius=20,
+            mid_radius=50,
+            outer_radius=100)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180)
+        assert a.solid is not None
+        assert b.solid is not None
+        assert a.volume > b.volume
+
+    def test_construction_with_CenterColumnShieldFlatTopCircular(self):
+        """Makes a firstwall with from a CenterColumnShieldFlatTopCircular and
+        checks the volume is smaller than the shield"""
+        a = paramak.CenterColumnShieldFlatTopCircular(
+            height=500,
+            arc_height=300,
+            inner_radius=30,
+            mid_radius=70,
+            outer_radius=120)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180)
+        assert a.solid is not None
+        assert b.solid is not None
+        assert a.volume > b.volume
+
+    def test_construction_with_wrong_column_shield_type(self):
+        def test_construction_with_string():
+            """Only CenterColumnShields are acceptable inputs for inputs, this
+            should fail as it trys to use a string"""
+            b = paramak.InboardFirstwallFCCS(
+                central_column_shield="incorrect type",
+                thickness=20,
+                rotation_angle=180)
+            b.solid
+
+        self.assertRaises(
+            ValueError,
+            test_construction_with_string)
+
+
 class test_PoloidalFieldCoilSet(unittest.TestCase):
 
     def test_PoloidalFieldCoilSet_creation(self):
@@ -25,7 +138,7 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
         and checks that a cadquery solid is created"""
         def test_PoloidalFieldCoilSet_incorrect_height():
             """Checks  PoloidalFieldCoilSet with height as the wrong type"""
-            test_shape = paramak.PoloidalFieldCoilSet(
+            paramak.PoloidalFieldCoilSet(
                 heights=10, widths=[
                     20, 20, 20], center_points=[
                     (100, 100), (200, 200), (300, 300)])
@@ -36,7 +149,7 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
 
         def test_PoloidalFieldCoilSet_incorrect_width():
             """Checks  PoloidalFieldCoilSet with width as the wrong type"""
-            test_shape = paramak.PoloidalFieldCoilSet(
+            paramak.PoloidalFieldCoilSet(
                 heights=[
                     10, 10, 10], widths=20, center_points=[
                     (100, 100), (200, 200), (300, 300)])
@@ -47,9 +160,9 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
 
         def test_PoloidalFieldCoilSet_incorrect_center_points():
             """Checks  PoloidalFieldCoilSet with center_points as the wrong type"""
-            test_shape = paramak.PoloidalFieldCoilSet(heights=[10, 10, 10],
-                                                      widths=[20, 20, 20],
-                                                      center_points=100)
+            paramak.PoloidalFieldCoilSet(heights=[10, 10, 10],
+                                         widths=[20, 20, 20],
+                                         center_points=100)
 
         self.assertRaises(
             ValueError,
@@ -57,7 +170,7 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
 
         def test_PoloidalFieldCoilSet_incorrect_width_length():
             """Checks  PoloidalFieldCoilSet with not enough entries in width"""
-            test_shape = paramak.PoloidalFieldCoilSet(
+            paramak.PoloidalFieldCoilSet(
                 heights=[
                     10, 10, 10], widths=[
                     20, 20], center_points=[
@@ -72,11 +185,14 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
     def test_PoloidalFieldCoilCaseSet_creation(self):
         """Creates a set of PF coils by providing all required args"""
         test_shape = paramak.PoloidalFieldCoilCaseSet(
-            heights=[
-                10, 10, 20, 20], widths=[
-                10, 10, 20, 40], casing_thicknesses=[
-                5, 5, 10, 10], center_points=[
-                    (100, 100), (100, 150), (50, 200), (50, 50)], rotation_angle=180)
+            heights=[10, 10, 20, 20],
+            widths=[10, 10, 20, 40],
+            casing_thicknesses=[5, 5, 10, 10],
+            center_points=[(100, 100),
+                           (100, 150),
+                           (50, 200),
+                           (50, 50)],
+            rotation_angle=180)
 
         assert test_shape.solid is not None
         assert len(test_shape.solid.Solids()) == 4
@@ -86,10 +202,13 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
     def test_PoloidalFieldCoilCaseSetFC_from_pf_coil_set(self):
         """Creates a set of PF coil cases from a PF coils object"""
         pf_coils_set = paramak.PoloidalFieldCoilSet(
-            heights=[
-                10, 10, 20, 20], widths=[
-                10, 10, 20, 40], center_points=[
-                (100, 100), (100, 150), (50, 200), (50, 50)], rotation_angle=180)
+            heights=[10, 10, 20, 20],
+            widths=[10, 10, 20, 40],
+            center_points=[(100, 100),
+                           (100, 150),
+                           (50, 200),
+                           (50, 50)],
+            rotation_angle=180)
 
         test_shape = paramak.PoloidalFieldCoilCaseSetFC(
             pf_coils=pf_coils_set, casing_thicknesses=[
@@ -104,12 +223,15 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
         def test_PoloidalFieldCoilSet_incorrect_lengths_FC():
             """Checks PoloidalFieldCoilSet with the wrong number of casing thicknesses using a coil set object"""
             pf_coils_set = paramak.PoloidalFieldCoilSet(
-                heights=[
-                    10, 10, 20, 20], widths=[
-                    10, 10, 20, 40], center_points=[
-                    (100, 100), (100, 150), (50, 200), (50, 50)], rotation_angle=180)
+                heights=[10, 10, 20, 20],
+                widths=[10, 10, 20, 40],
+                center_points=[(100, 100),
+                               (100, 150),
+                               (50, 200),
+                               (50, 50)],
+                rotation_angle=180)
 
-            test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+            paramak.PoloidalFieldCoilCaseSetFC(
                 pf_coils=pf_coils_set, casing_thicknesses=[
                     5, 5, 10], rotation_angle=180)
 
@@ -125,7 +247,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
                 center_point=(100, 100),
                 rotation_angle=180)
 
-            test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+            paramak.PoloidalFieldCoilCaseSetFC(
                 pf_coils=[pf_coils_1],
                 casing_thicknesses=[5, 5, 10, 10],
                 rotation_angle=180)
@@ -136,7 +258,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
 
         def test_PoloidalFieldCoilSet_incorrect_pf_coil():
             """Checks PoloidalFieldCoilSet with the pf_coils as an incorrect entry"""
-            test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+            paramak.PoloidalFieldCoilCaseSetFC(
                 pf_coils=20,
                 casing_thicknesses=[5, 5, 10, 10],
                 rotation_angle=180)
@@ -258,8 +380,8 @@ class test_PoloidalSegments(unittest.TestCase):
 
 class test_BlanketConstantThicknessArcV(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
-        """creates a blanket using the BlanketConstantThicknessArcV parametric component
-        and checks that a cadquery solid is created"""
+        """creates a blanket using the BlanketConstantThicknessArcV parametric
+        component and checks that a cadquery solid is created"""
 
         test_shape = paramak.BlanketConstantThicknessArcV(
             inner_lower_point=(300, -200),
@@ -275,8 +397,8 @@ class test_BlanketConstantThicknessArcV(unittest.TestCase):
 
 class test_BlanketConstantThicknessArcH(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
-        """creates a blanket using the BlanketConstantThicknessArcH parametric component
-        and checks that a cadquery solid is created"""
+        """creates a blanket using the BlanketConstantThicknessArcH parametric
+        component and checks that a cadquery solid is created"""
 
         test_shape = paramak.BlanketConstantThicknessArcH(
             inner_lower_point=(300, -200),
@@ -702,7 +824,8 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
 
 class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
     def test_CenterColumnShieldPlasmaHyperbola_creation(self):
-        """creates a center column shield using the CenterColumnShieldPlasmaHyperbola parametric
+        """creates a center column shield using the
+        CenterColumnShieldPlasmaHyperbola parametric
         component and checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldPlasmaHyperbola(
@@ -715,7 +838,8 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
 
 class test_CenterColumnShieldHyperbola(unittest.TestCase):
     def test_CenterColumnShieldHyperbola_creation(self):
-        """creates a center column shield using the CenterColumnShieldHyperbola parametric component
+        """creates a center column shield using the
+        CenterColumnShieldHyperbola parametric component
         and checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldHyperbola(
@@ -728,8 +852,8 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
 
 class test_PoloidalFieldCoil(unittest.TestCase):
     def test_PoloidalFieldCoil_creation(self):
-        """creates a pf coil using the PoloidalFieldCoil parametric component and checks that a cadquery
-        solid is created"""
+        """creates a pf coil using the PoloidalFieldCoil parametric component
+        and checks that a cadquery solid is created"""
 
         test_shape = paramak.PoloidalFieldCoil(
             height=50, width=60, center_point=(1000, 500)
@@ -741,8 +865,8 @@ class test_PoloidalFieldCoil(unittest.TestCase):
 
 class test_ToroidalFieldCoilRectangle(unittest.TestCase):
     def test_ToroidalFieldCoilRectangle_creation(self):
-        """creates a tf coil using the ToroidalFieldCoilRectangle parametric component and checks that a
-        cadquery solid is created"""
+        """creates a tf coil using the ToroidalFieldCoilRectangle parametric
+        component and checks that a cadquery solid is created"""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             inner_upper_point=(100, 700),
@@ -803,8 +927,8 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
 
 class test_CenterColumnShieldCircular(unittest.TestCase):
     def test_CenterColumnShieldCircular_creation(self):
-        """creates a center column shield using the CenterColumnShieldCircular parametric component and
-        checks that a cadquery solid is created"""
+        """creates a center column shield using the CenterColumnShieldCircular
+        parametric component and checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldCircular(
             height=600, inner_radius=100, mid_radius=150, outer_radius=200
@@ -816,8 +940,9 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
 
 class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
     def test_CenterColumnShieldFlatTopCircular_creation(self):
-        """creates a center column shield using the CenterColumnShieldFlatTopCircular parametric component
-        and checks that a cadquery solid is created"""
+        """creates a center column shield using the
+        CenterColumnShieldFlatTopCircular parametric
+        component and checks that a cadquery solid is created"""
 
         test_shape = paramak.CenterColumnShieldFlatTopCircular(
             height=600,
@@ -940,13 +1065,15 @@ class test_InnerTfCoilsCircular(unittest.TestCase):
 
 class test_ParametricComponents(unittest.TestCase):
     def test_parametric_component_hash_value(self):
-        """creates a parametric component and checks that a cadquery solid with a unique hash value
-        is created when .solid is called. checks that the same cadquery solid with the same unique
-        hash value is returned when shape.solid is called again after no changes have been made to
-        the parametric component. checks that a new cadquery solid with a new unique hash value is
-        constructed when shape.solid is called after changes to the parametric component have been
-        made. checks that the hash_value of a parametric component is not updated until a new cadquery
-        solid has been created"""
+        """creates a parametric component and checks that a cadquery solid with
+        a unique hash value is created when .solid is called. checks that the
+        same cadquery solid with the same unique hash value is returned when
+        shape.solid is called again after no changes have been made to the
+        parametric component. checks that a new cadquery solid with a new
+        unique hash value is constructed when shape.solid is called after
+        changes to the parametric component have been made. checks that the
+        hash_value of a parametric component is not updated until a new
+        cadquery solid has been created"""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             height=100,

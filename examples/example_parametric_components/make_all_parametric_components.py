@@ -51,16 +51,24 @@ def main():
     )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldCylinder(
+    CenterColumnShieldCylinder = paramak.CenterColumnShieldCylinder(
         inner_radius=80,
         outer_radius=100,
         height=300,
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_cylinder.stp",
     )
+    all_components.append(CenterColumnShieldCylinder)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldCylinder,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_cylinder.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldHyperbola(
+    CenterColumnShieldHyperbola = paramak.CenterColumnShieldHyperbola(
         inner_radius=50,
         mid_radius=75,
         outer_radius=100,
@@ -68,9 +76,17 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_hyperbola.stp",
     )
+    all_components.append(CenterColumnShieldHyperbola)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldHyperbola,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_hyperbola.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldCircular(
+    CenterColumnShieldCircular = paramak.CenterColumnShieldCircular(
         inner_radius=50,
         mid_radius=75,
         outer_radius=100,
@@ -78,9 +94,17 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_circular.stp",
     )
+    all_components.append(CenterColumnShieldCircular)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldCircular,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_circular.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldFlatTopHyperbola(
+    CenterColumnShieldFlatTopHyperbola = paramak.CenterColumnShieldFlatTopHyperbola(
         inner_radius=50,
         mid_radius=75,
         outer_radius=100,
@@ -89,9 +113,17 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_flat_top_hyperbola.stp",
     )
+    all_components.append(CenterColumnShieldFlatTopHyperbola)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldFlatTopHyperbola,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_flat_top_hyperbola.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldFlatTopCircular(
+    CenterColumnShieldFlatTopCircular = paramak.CenterColumnShieldFlatTopCircular(
         inner_radius=50,
         mid_radius=75,
         outer_radius=100,
@@ -100,15 +132,31 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_flat_top_Circular.stp",
     )
+    all_components.append(CenterColumnShieldFlatTopCircular)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldFlatTopCircular,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_flat_top_Circular.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldPlasmaHyperbola(
+    CenterColumnShieldPlasmaHyperbola = paramak.CenterColumnShieldPlasmaHyperbola(
         inner_radius=150,
         mid_offset=50,
         edge_offset=40,
         height=800,
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_plasma_hyperbola.stp",
+    )
+    all_components.append(CenterColumnShieldPlasmaHyperbola)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldPlasmaHyperbola,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_plasma_hyperbola.stp",
     )
     all_components.append(component)
 
@@ -285,5 +333,8 @@ def main():
 
 if __name__ == "__main__":
     all_components = main()
+    filenames = []
     for components in all_components:
         components.export_stp()
+        filenames.append(components.stp_filename)
+    print(filenames)
