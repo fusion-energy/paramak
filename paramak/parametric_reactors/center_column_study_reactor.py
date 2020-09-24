@@ -151,6 +151,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self._blanket_end_height = self._blanket_start_height + 100.
 
         self._center_column_shield_end_height = self._blanket_end_height
+        self._inboard_firstwall_end_height = self._blanket_end_height
 
         # raises an error if the plasma high point is not above part of the
         # plasma
@@ -215,9 +216,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
     def make_outboard_blanket(self, shapes_or_components):
 
         center_column_cutter = paramak.CenterColumnShieldCylinder(
-            height=self._center_column_shield_end_height * 2,
+            height=self._inboard_firstwall_end_height * 2,
             inner_radius=0,
-            outer_radius=self._center_column_shield_end_radius_upper,
+            outer_radius=self._inboard_firstwall_end_radius,
             rotation_angle=self.rotation_angle
         )
 
