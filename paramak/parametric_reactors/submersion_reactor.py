@@ -36,7 +36,7 @@ class SubmersionTokamak(paramak.Reactor):
             the blanket (cm)
         blanket_rear_wall_radial_thickness (float): the radial thickness of
             the rear wall of the blanket (cm)
-        high_point (tuple of 2 floats): the (x,z) coordinate value of the
+        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of the
             top of the plasma (cm)
         number_of_tf_coils (int): the number of tf coils
         rotation_angle (float): the angle of the sector that is desired
