@@ -120,7 +120,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             self.center_column_shield_radial_thickness_mid
 
         self._inboard_firstwall_start_radius = self._center_column_shield_end_radius_upper
-        self._inboard_firstwall_end_radius_upper = self._inboard_firstwall_start_radius + \
+        self._inboard_firstwall_end_radius = self._inboard_firstwall_start_radius + \
             self.inboard_firstwall_radial_thickness
 
         self._inner_plasma_gap_start_radius = self._center_column_shield_end_radius_mid
