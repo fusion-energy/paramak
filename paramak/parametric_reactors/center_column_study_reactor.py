@@ -242,9 +242,14 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self._blanket = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=100.,
-            offset_from_plasma=self.outer_plasma_gap_radial_thickness,
-            start_angle=-160,
-            stop_angle=160,
+            offset_from_plasma=[
+                self.inner_plasma_gap_radial_thickness,
+                self.plasma_gap_vertical_thickness,
+                self.outer_plasma_gap_radial_thickness,
+                self.plasma_gap_vertical_thickness,
+                self.inner_plasma_gap_radial_thickness],
+            start_angle=-179,
+            stop_angle=179,
             rotation_angle=self.rotation_angle,
             cut=center_column_cutter
         )

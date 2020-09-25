@@ -21,12 +21,11 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             center_column_shield_radial_thickness_upper=100,
             inboard_firstwall_radial_thickness=20,
             divertor_radial_thickness=100,
-            inner_plasma_gap_radial_thickness=40,
+            inner_plasma_gap_radial_thickness=80,
             plasma_radial_thickness=200,
-            outer_plasma_gap_radial_thickness=30,
-            # first number must be between plasma inner/outer radius
-            plasma_high_point=(20 + 50 + 100 + 10 + 20 + 30, 240),
-            plasma_gap_vertical_thickness=20,
+            outer_plasma_gap_radial_thickness=90,
+            plasma_high_point=(245, 240), # first number must be between plasma inner/outer radius
+            plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
 
@@ -41,17 +40,17 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
         os.system("rm test_CenterColumnStudyReactor_image.svg")
 
         test_reactor = paramak.CenterColumnStudyReactor(
-            inner_bore_radial_thickness=20,
+            inner_bore_radial_thickness=30,
             inboard_tf_leg_radial_thickness=50,
             center_column_shield_radial_thickness_mid=50,
             center_column_shield_radial_thickness_upper=100,
-            inboard_firstwall_radial_thickness=20,
-            divertor_radial_thickness=100,
-            inner_plasma_gap_radial_thickness=40,
+            inboard_firstwall_radial_thickness=30,
+            divertor_radial_thickness=10,
+            inner_plasma_gap_radial_thickness=80,
             plasma_radial_thickness=200,
-            outer_plasma_gap_radial_thickness=30,
-            plasma_high_point=(20 + 50 + 100 + 20, 240),
-            plasma_gap_vertical_thickness=20,
+            outer_plasma_gap_radial_thickness=90,
+            plasma_high_point=(245, 240), # first number must be between plasma inner/outer radius
+            plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
 
@@ -66,18 +65,18 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
 
         def warning_trigger():
             try:
-                paramak.CenterColumnStudyReactor(
+                test_reactor = paramak.CenterColumnStudyReactor(
                     inner_bore_radial_thickness=20,
                     inboard_tf_leg_radial_thickness=50,
                     center_column_shield_radial_thickness_mid=50,
                     center_column_shield_radial_thickness_upper=100,
                     inboard_firstwall_radial_thickness=20,
                     divertor_radial_thickness=100,
-                    inner_plasma_gap_radial_thickness=40,
+                    inner_plasma_gap_radial_thickness=80,
                     plasma_radial_thickness=200,
-                    outer_plasma_gap_radial_thickness=30,
-                    plasma_high_point=(20 + 50 + 100 + 20, 240),
-                    plasma_gap_vertical_thickness=20,
+                    outer_plasma_gap_radial_thickness=90,
+                    plasma_high_point=(245, 240), # first number must be between plasma inner/outer radius
+                    plasma_gap_vertical_thickness=40,
                     center_column_arc_vertical_thickness=520,
                     rotation_angle=360)
 
