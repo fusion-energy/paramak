@@ -202,8 +202,9 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             (point_1[0], point_1[1]),
             (point_3[0], point_3[1]),
             (point_6[0], point_6[1]),
-            (point_4[0], point_4[1])
-        ]
+            (point_4[0], point_4[1]),
+            (point_1[0], point_1[1])
+        ]   # we have overwritten the setter which automatically adds the endpoint
 
         self.points = points
 

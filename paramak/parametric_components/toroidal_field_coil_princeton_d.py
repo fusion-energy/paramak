@@ -192,6 +192,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         outer_points[-1][2] = "straight"
 
         points = inner_points + outer_points
+        points.append(inner_points[0])
 
         self.points = points
 

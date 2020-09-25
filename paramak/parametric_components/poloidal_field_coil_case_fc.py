@@ -166,6 +166,10 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
                 (self.casing_thickness + self.width / 2.0),
                 self.center_point[1] + \
                 (self.casing_thickness + self.height / 2.0),
+            ),
+            (
+                self.center_point[0] + self.width / 2.0,
+                self.center_point[1] + self.height / 2.0
             )
         ]
 

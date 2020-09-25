@@ -186,6 +186,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         for i in range(len(R_outer)):
             points.append([R_outer[i], Z_outer[i], 'spline'])
         points[-1][2] = 'straight'
+        points.append(points[0])
         self.points = points
 
     def find_azimuth_placement_angle(self):

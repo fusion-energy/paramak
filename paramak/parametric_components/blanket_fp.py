@@ -251,6 +251,7 @@ class BlanketFP(RotateMixedShape):
             np.flip(thetas), R, Z, new_offset)
         points = inner_points + outer_points
         points[-1][2] = "straight"
+        points.append(inner_points[0])
         self.points = points
 
     def create_offset_points(self, thetas, R_fun, Z_fun, offset):

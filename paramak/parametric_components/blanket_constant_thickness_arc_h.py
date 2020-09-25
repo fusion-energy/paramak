@@ -118,5 +118,6 @@ class BlanketConstantThicknessArcH(RotateMixedShape):
                 self.inner_upper_point[0] + abs(self.thickness),
                 self.inner_upper_point[1],
                 "straight",
-            )
+            ),
+            (self.inner_upper_point[0], self.inner_upper_point[1])
         ]

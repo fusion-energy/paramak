@@ -204,7 +204,8 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             ),
             (plasma.low_point[0] - self.edge_offset, plasma.low_point[1], "straight"),
             (plasma.low_point[0] - self.edge_offset, -1 * self.height / 2, "straight"),
-            (self.inner_radius, -1 * self.height / 2, "straight")
+            (self.inner_radius, -1 * self.height / 2, "straight"),
+            (self.inner_radius, 0, "straight")
         ]
 
         self.points = points
