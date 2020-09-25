@@ -8,7 +8,7 @@ import os
 
 import openmc
 from neutronics_material_maker import Material
-
+import json
 import paramak
 import uuid
 from skopt import dummy_minimize  # available via pip install scikit-optimize
@@ -50,8 +50,28 @@ def make_cad_model_with_paramak(params):
         center_column_arc_vertical_thickness=center_column_arc_vertical_thickness,
         plasma_high_point=plasma_high_point,
         rotation_angle=180)
-    test_reactor.export_svg(str(uuid.uuid4()) +'.png')
-    test_reactor.export_stp(output_folder= str(uuid.uuid4()))
+    simulation_id =str(uuid.uuid4())
+    test_reactor.export_svg(simulation_id +'.png')
+    test_reactor.export_stp(output_folder= simulation_id)
+
+    input_and_output_data = {
+        "inner_bore_radial_thickness":inner_bore_radial_thickness,
+        "inboard_tf_leg_radial_thickness":inboard_tf_leg_radial_thickness,
+        "center_column_shield_radial_thickness_mid":center_column_shield_radial_thickness_mid,
+        "center_column_shield_radial_thickness_upper":center_column_shield_radial_thickness_upper,
+        "inboard_firstwall_radial_thickness":inboard_firstwall_radial_thickness,
+        "inner_plasma_gap_radial_thickness":inner_plasma_gap_radial_thickness,
+        "divertor_radial_thickness":divertor_radial_thickness,
+        "plasma_radial_thickness":plasma_radial_thickness,
+        "outer_plasma_gap_radial_thickness":outer_plasma_gap_radial_thickness,
+        "plasma_gap_vertical_thickness":plasma_gap_vertical_thickness,
+        "center_column_arc_vertical_thickness":center_column_arc_vertical_thickness,
+        "plasma_high_point_x":plasma_high_point[0],
+        "plasma_high_point_y":plasma_high_point[1],
+        }
+
+    with open(simulation_id + ".json", 'w') as outfile:
+        json.dump(input_and_output_data, outfile, indent=4)
 
     return 1.
 
