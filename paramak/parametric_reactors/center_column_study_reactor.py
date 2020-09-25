@@ -51,6 +51,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         center_column_shield_radial_thickness_mid,
         center_column_shield_radial_thickness_upper,
         inboard_firstwall_radial_thickness,
+        divertor_radial_thickness,
         inner_plasma_gap_radial_thickness,
         plasma_radial_thickness,
         outer_plasma_gap_radial_thickness,
@@ -67,6 +68,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.center_column_shield_radial_thickness_mid = center_column_shield_radial_thickness_mid
         self.center_column_shield_radial_thickness_upper = center_column_shield_radial_thickness_upper
         self.inboard_firstwall_radial_thickness = inboard_firstwall_radial_thickness
+        self.divertor_radial_thickness = divertor_radial_thickness
         self.inner_plasma_gap_radial_thickness = inner_plasma_gap_radial_thickness
         self.plasma_radial_thickness = plasma_radial_thickness
         self.outer_plasma_gap_radial_thickness = outer_plasma_gap_radial_thickness
@@ -91,6 +93,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.make_inboard_firstwall(shapes_or_components)
         self.make_plasma(shapes_or_components)
         self.make_outboard_blanket(shapes_or_components)
+        self.make_divertor(shapes_or_components)
+        self.make_component_cuts(shapes_or_components)
 
         self.shapes_and_components = shapes_or_components
 
@@ -123,6 +127,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self._inboard_firstwall_start_radius = self._center_column_shield_end_radius_upper
         self._inboard_firstwall_end_radius = self._inboard_firstwall_start_radius + \
             self.inboard_firstwall_radial_thickness
+
+        self._divertor_start_radius = self._inboard_firstwall_end_radius
+        self._divertor_end_radius = self._divertor_start_radius + self.divertor_radial_thickness
 
         self._inner_plasma_gap_start_radius = self._center_column_shield_end_radius_mid + self.inboard_firstwall_radial_thickness 
         self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + \
@@ -223,7 +230,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
     def make_outboard_blanket(self, shapes_or_components):
 
         center_column_cutter = paramak.CenterColumnShieldCylinder(
-            height=self._inboard_firstwall_end_height * 2,
+            height=self._inboard_firstwall_end_height * 2.5,  # extra 0.5 to ensure overlap,
             inner_radius=0,
             outer_radius=self._inboard_firstwall_end_radius,
             rotation_angle=self.rotation_angle
@@ -239,4 +246,23 @@ class CenterColumnStudyReactor(paramak.Reactor):
             cut=center_column_cutter
         )
 
+    def make_divertor(self, shapes_or_components):
+
+        self._divertor = paramak.CenterColumnShieldCylinder(
+            height=self._center_column_shield_end_height * 2.5,  # extra 0.5 to ensure overlap
+            inner_radius=self._divertor_start_radius,
+            outer_radius=self._divertor_end_radius,
+            rotation_angle=self.rotation_angle,
+            stp_filename="divertor.stp",
+            stl_filename="divertor.stl",
+            name="divertor",
+            material_tag="divertor_mat",
+            intersect=self._blanket,
+        )
+        shapes_or_components.append(self._divertor)
+
+    def make_component_cuts(self, shapes_or_components):
+
+        # the divertor is cut away then the blanket can be added to the
+        self._blanket.solid = self._blanket.solid.cut(self._divertor.solid)
         shapes_or_components.append(self._blanket)
