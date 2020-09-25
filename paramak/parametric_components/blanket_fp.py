@@ -210,7 +210,6 @@ class BlanketFP(RotateMixedShape):
                     # offset is a list of 2 lists
                     list_of_angles = np.array(self.offset_from_plasma[0])*conversion_factor
                     offset_values = self.offset_from_plasma[1]
-                    return interp1d(list_of_angles, offset_values)(theta)
                 else:
                     # no list of angles is given
                     offset_values = self.offset_from_plasma
@@ -219,8 +218,8 @@ class BlanketFP(RotateMixedShape):
                         self.stop_angle*conversion_factor,
                         len(offset_values),
                         endpoint=True)
-                    # TODO: refactor this
-                    return interp1d(list_of_angles, offset_values)(theta)
+                # TODO: refactor this
+                return interp1d(list_of_angles, offset_values)(theta)
             else:
                 return self.offset_from_plasma
 
@@ -246,7 +245,6 @@ class BlanketFP(RotateMixedShape):
                     # thickness is a list of 2 lists
                     list_of_angles = np.array(self.thickness[0])*conversion_factor
                     thickness_values = self.thickness[1]
-                    return interp1d(list_of_angles, thickness_values)(theta) + offset(theta)
                 else:
                     # no list of angles is given
                     thickness_values = self.thickness
@@ -255,8 +253,8 @@ class BlanketFP(RotateMixedShape):
                         self.stop_angle*conversion_factor,
                         len(thickness_values),
                         endpoint=True)
-                    # TODO: refactor this
-                    return interp1d(list_of_angles, thickness_values)(theta) + offset(theta)
+                # TODO: refactor this
+                return interp1d(list_of_angles, thickness_values)(theta) + offset(theta)
             else:
                 # use the constant value
                 return self.thickness + offset(theta)
