@@ -23,7 +23,7 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=40,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=30,
-            plasma_high_point=(20 + 50 + 100 + 20, 240),
+            plasma_high_point=(20 + 50 + 100 + 10 + 20 + 30, 240), # first number must be between plasma inner/outer radius
             plasma_gap_vertical_thickness=20,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
