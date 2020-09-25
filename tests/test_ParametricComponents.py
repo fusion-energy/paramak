@@ -494,7 +494,7 @@ class test_BlanketFP(unittest.TestCase):
             minor_radius=50,
             triangularity=0.5,
             elongation=2,
-            thickness=[(90, 270), [10, 30]],
+            thickness=[(270, 90), [10, 30]],
             stop_angle=90,
             start_angle=270,
         )
@@ -550,7 +550,7 @@ class test_BlanketFP(unittest.TestCase):
             triangularity=0.5,
             elongation=2,
             thickness=100,
-            offset_from_plasma=[[0, 5, 10], [90, 100, 270]],
+            offset_from_plasma=[[270, 100, 90], [0, 5, 10]],
             stop_angle=90,
             start_angle=270,
         )
