@@ -2,6 +2,7 @@ import math
 
 import numpy as np
 import scipy
+from scipy.interpolate import interp1d
 import sympy as sp
 
 from paramak import RotateMixedShape, diff_between_angles
@@ -199,17 +200,27 @@ class BlanketFP(RotateMixedShape):
 
         def offset(theta):
             if callable(self.offset_from_plasma):
-                print(self.offset_from_plasma(theta))
+                # offset is a callable
                 return self.offset_from_plasma(theta)
             elif isinstance(self.offset_from_plasma, (tuple, list)):
-                # increase offset linearly
-                start_offset, stop_offset = self.offset_from_plasma
-                a = -(start_offset - stop_offset) / (
-                    self.stop_angle * conversion_factor
-                    - self.start_angle * conversion_factor
-                )
-                b = start_offset - self.start_angle * conversion_factor * a
-                return a * theta + b
+                # offset is a list
+                if isinstance(self.offset_from_plasma[0], (tuple, list)) and \
+                    isinstance(self.offset_from_plasma[1], (tuple, list)) and \
+                        len(self.offset_from_plasma) == 2:
+                    # offset is a 2 lists
+                    list_of_angles = self.offset_from_plasma[0]
+                    offset_values = self.offset_from_plasma[1]
+                    return interp1d(list_of_angles, offset_values)(theta)
+                else:
+                    # no list of angles is given
+                    offset_values = self.offset_from_plasma
+                    list_of_angles = np.linspace(
+                        self.start_angle*conversion_factor,
+                        self.stop_angle*conversion_factor,
+                        len(offset_values),
+                        endpoint=True)
+                    # TODO: refactor this
+                    return interp1d(list_of_angles, offset_values)(theta)
             else:
                 return self.offset_from_plasma
 
