@@ -103,6 +103,9 @@ The above image is colored by component instead of by Shape type. The TF coils a
 
 The above image is colored by Shape type with RotateStraightShape in red, ExtrudeStraightShape in orange, RotateSplineShape in purple, ExtrudeSplineShape in pink, RotateMixedShape in blue, ExtrudeMixedShape in green, RotateCircleShape in yellow and ExtrudeCircleShape in brown.
 
+.. image:: https://user-images.githubusercontent.com/8583900/94273259-1265bf00-ff3c-11ea-95ed-89123be3bd16.png
+   :width: 600
+   :align: center
 
 .. automodule:: paramak.parametric_reactors.center_column_study_reactor
    :members:
