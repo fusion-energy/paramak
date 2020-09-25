@@ -44,7 +44,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         outer_radius,
         number_of_coils,
         gap_size,
-        distance=None,
         stp_filename="InnerTfCoilsFlat.stp",
         stl_filename="InnerTfCoilsFlat.stl",
         color=(0.5, 0.5, 0.5),
@@ -70,7 +69,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
                 default_dict[arg] = kwargs[arg]
 
         super().__init__(
-            distance=distance,
+            distance=height,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             color=color,
@@ -116,11 +115,11 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
 
     @property
     def distance(self):
-        return self._distance
+        return self.height
 
     @distance.setter
-    def distance(self, distance):
-        self._distance = distance
+    def distance(self, value):
+        self._distance = value
 
     @property
     def inner_radius(self):
