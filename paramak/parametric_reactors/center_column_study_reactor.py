@@ -132,6 +132,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self._divertor_end_radius = self._divertor_start_radius + self.divertor_radial_thickness
 
         self._inner_plasma_gap_start_radius = self._center_column_shield_end_radius_mid + self.inboard_firstwall_radial_thickness 
+
         self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + \
             self.inner_plasma_gap_radial_thickness
 
@@ -210,7 +211,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             thickness=self.inboard_firstwall_radial_thickness,
             rotation_angle=self.rotation_angle)
         shapes_or_components.append(self._inboard_firstwall)
-        
+
     def make_plasma(self, shapes_or_components):
 
         self._plasma = paramak.PlasmaFromPoints(
