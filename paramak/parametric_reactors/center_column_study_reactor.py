@@ -129,9 +129,11 @@ class CenterColumnStudyReactor(paramak.Reactor):
             self.inboard_firstwall_radial_thickness
 
         self._divertor_start_radius = self._inboard_firstwall_end_radius
-        self._divertor_end_radius = self._divertor_start_radius + self.divertor_radial_thickness
+        self._divertor_end_radius = self._divertor_start_radius + \
+            self.divertor_radial_thickness
 
-        self._inner_plasma_gap_start_radius = self._center_column_shield_end_radius_mid + self.inboard_firstwall_radial_thickness 
+        self._inner_plasma_gap_start_radius = self._center_column_shield_end_radius_mid + \
+            self.inboard_firstwall_radial_thickness
 
         self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + \
             self.inner_plasma_gap_radial_thickness
@@ -250,7 +252,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
     def make_divertor(self, shapes_or_components):
 
         self._divertor = paramak.CenterColumnShieldCylinder(
-            height=self._center_column_shield_end_height * 2.5,  # extra 0.5 to ensure overlap
+            height=self._center_column_shield_end_height *
+            2.5,  # extra 0.5 to ensure overlap
             inner_radius=self._divertor_start_radius,
             outer_radius=self._divertor_end_radius,
             rotation_angle=self.rotation_angle,
