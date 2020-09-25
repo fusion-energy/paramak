@@ -174,6 +174,38 @@ class BlanketFP(RotateMixedShape):
     def thickness(self, thickness):
         self._thickness = thickness
 
+    def make_callable(self, attribute):
+        """This function transforms an attribute (thickness or offset) into a
+        callable function of theta
+        """
+        # if the attribute is a list, create a interpolated object of the
+        # values
+        if isinstance(attribute, (tuple, list)):
+            if isinstance(attribute[0], (tuple, list)) and \
+                isinstance(attribute[1], (tuple, list)) and \
+                    len(attribute) == 2:
+                # attribute is a list of 2 lists
+                list_of_angles = np.array(attribute[0])
+                offset_values = attribute[1]
+            else:
+                # no list of angles is given
+                offset_values = attribute
+                list_of_angles = np.linspace(
+                    self.start_angle,
+                    self.stop_angle,
+                    len(offset_values),
+                    endpoint=True)
+            interpolated_values = interp1d(list_of_angles, offset_values)
+
+        def fun(theta):
+            if callable(attribute):
+                return attribute(theta)
+            elif isinstance(attribute, (tuple, list)):
+                return interpolated_values(theta)
+            else:
+                return attribute
+        return fun
+
     def find_points(self):
         conversion_factor = 2 * np.pi / 360
 
@@ -203,69 +235,22 @@ class BlanketFP(RotateMixedShape):
         )
 
         # create inner points
-
-        def inner_offset(theta):
-            if callable(self.offset_from_plasma):
-                # offset is a callable
-                return self.offset_from_plasma(theta)
-            elif isinstance(self.offset_from_plasma, (tuple, list)):
-                # offset is a list
-                if isinstance(self.offset_from_plasma[0], (tuple, list)) and \
-                    isinstance(self.offset_from_plasma[1], (tuple, list)) and \
-                        len(self.offset_from_plasma) == 2:
-                    # offset is a list of 2 lists
-                    list_of_angles = np.array(self.offset_from_plasma[0])
-                    offset_values = self.offset_from_plasma[1]
-                else:
-                    # no list of angles is given
-                    offset_values = self.offset_from_plasma
-                    list_of_angles = np.linspace(
-                        self.start_angle,
-                        self.stop_angle,
-                        len(offset_values),
-                        endpoint=True)
-                # TODO: refactor this
-                return interp1d(list_of_angles, offset_values)(theta)
-            else:
-                return self.offset_from_plasma
-
+        inner_offset = self.make_callable(self.offset_from_plasma)
         inner_points = self.create_offset_points(
             thetas, R, Z, inner_offset
         )
         inner_points[-1][2] = "straight"
 
-        # compute outer points
-        def thickness(theta):
-            if callable(self.thickness):
-                # use the function of angle
-                return self.thickness(theta)
-            elif isinstance(self.thickness, (tuple, list)):
-                # thickness is a list
-                if isinstance(self.thickness[0], (tuple, list)) and \
-                    isinstance(self.thickness[1], (tuple, list)) and \
-                        len(self.thickness) == 2:
-                    # thickness is a list of 2 lists
-                    list_of_angles = np.array(self.thickness[0])
-                    thickness_values = self.thickness[1]
-                else:
-                    # no list of angles is given
-                    thickness_values = self.thickness
-                    list_of_angles = np.linspace(
-                        self.start_angle,
-                        self.stop_angle,
-                        len(thickness_values),
-                        endpoint=True)
-                # TODO: refactor this
-                return interp1d(list_of_angles, thickness_values)(theta)
-            else:
-                # use the constant value
-                return self.thickness
+        # create outer points
+        thickness = self.make_callable(self.thickness)
 
         def outer_offset(theta):
             return inner_offset(theta) + thickness(theta)
 
         outer_points = self.create_offset_points(
             np.flip(thetas), R, Z, outer_offset)
+
+        # assemble
         points = inner_points + outer_points
         points[-1][2] = "straight"
         self.points = points
