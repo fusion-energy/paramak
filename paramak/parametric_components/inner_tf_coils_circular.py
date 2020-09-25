@@ -86,15 +86,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         self.distance = height
 
     @property
-    def points(self):
-        self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
-
-    @property
     def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
         return self._azimuth_placement_angle
@@ -223,8 +214,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             (point_6[0], point_6[1], "circle"),
             (point_5[0], point_5[1], "circle"),
             (point_4[0], point_4[1], "straight"),
-            (point_1[0], point_1[1], "straight")
-        ]   # we have overwritten the setter which automatically adds the endpoint
+        ]
 
         self.points = points
 

@@ -95,15 +95,6 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         self.vertical_displacement = vertical_displacement
 
     @property
-    def points(self):
-        self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
-
-    @property
     def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
         return self._azimuth_placement_angle
@@ -186,7 +177,6 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         for i in range(len(R_outer)):
             points.append([R_outer[i], Z_outer[i], 'spline'])
         points[-1][2] = 'straight'
-        points.append(points[0])
         self.points = points
 
     def find_azimuth_placement_angle(self):

@@ -91,15 +91,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         self.number_of_coils = number_of_coils
 
     @property
-    def points(self):
-        self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
-
-    @property
     def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
         return self._azimuth_placement_angle

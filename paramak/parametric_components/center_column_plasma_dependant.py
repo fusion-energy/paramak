@@ -96,15 +96,6 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         self.edge_offset = edge_offset
 
     @property
-    def points(self):
-        self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
-
-    @property
     def major_radius(self):
         return self._major_radius
 
@@ -204,8 +195,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             ),
             (plasma.low_point[0] - self.edge_offset, plasma.low_point[1], "straight"),
             (plasma.low_point[0] - self.edge_offset, -1 * self.height / 2, "straight"),
-            (self.inner_radius, -1 * self.height / 2, "straight"),
-            (self.inner_radius, 0, "straight")
+            (self.inner_radius, -1 * self.height / 2, "straight")
         ]
 
         self.points = points
