@@ -24,7 +24,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=80,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=90,
-            plasma_high_point=(245, 240), # first number must be between plasma inner/outer radius
+            # first number must be between plasma inner/outer radius
+            plasma_high_point=(245, 240),
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
@@ -49,7 +50,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=80,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=90,
-            plasma_high_point=(245, 240), # first number must be between plasma inner/outer radius
+            # first number must be between plasma inner/outer radius
+            plasma_high_point=(245, 240),
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
@@ -75,7 +77,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
                     inner_plasma_gap_radial_thickness=80,
                     plasma_radial_thickness=200,
                     outer_plasma_gap_radial_thickness=90,
-                    plasma_high_point=(245, 240), # first number must be between plasma inner/outer radius
+                    # first number must be between plasma inner/outer radius
+                    plasma_high_point=(245, 240),
                     plasma_gap_vertical_thickness=40,
                     center_column_arc_vertical_thickness=520,
                     rotation_angle=360)
