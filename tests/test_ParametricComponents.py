@@ -484,6 +484,23 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
+    def test_BlanketFP_creation_variable_thickness_from_2_lists(self):
+        """checks that a cadquery solid can be created using the BlanketFP
+        parametric component when a list of angles and a list of thicknesses
+        are passed"""
+
+        test_shape = paramak.BlanketFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=[(270, 90), [10, 30]],
+            stop_angle=90,
+            start_angle=270,
+        )
+
+        assert test_shape.solid is not None
+
     def test_BlanketFP_creation_variable_thickness_function(self):
         """checks that a cadquery solid can be created using the BlanketFP parametric
         component when a thickness function is passed"""
@@ -521,6 +538,42 @@ class test_BlanketFP(unittest.TestCase):
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+
+    def test_BlanketFP_creation_variable_offset_from_2_lists(self):
+        """checks that a cadquery solid can be created using the BlanketFP
+        parametric component when a list of offsets and a list of angles are
+        passed"""
+
+        test_shape = paramak.BlanketFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=100,
+            offset_from_plasma=[[270, 100, 90], [0, 5, 10]],
+            stop_angle=90,
+            start_angle=270,
+        )
+
+        assert test_shape.solid is not None
+
+    def test_BlanketFP_creation_variable_offset_error(self):
+        """checks that an error is raised when two lists with different
+        lengths are passed in offset_from_plasma"""
+        def test_different_lengths():
+            test_shape = paramak.BlanketFP(
+                major_radius=300,
+                minor_radius=50,
+                triangularity=0.5,
+                elongation=2,
+                thickness=100,
+                offset_from_plasma=[[270, 100, 90], [0, 5, 10, 15]],
+                stop_angle=90,
+                start_angle=270,
+            )
+            test_shape.solid
+
+        self.assertRaises(ValueError, test_different_lengths)
 
     def test_BlanketFP_creation_variable_offset_function(self):
         """checks that a cadquery solid can be created using the BlanketFP

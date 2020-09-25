@@ -2,6 +2,7 @@ import math
 
 import numpy as np
 import scipy
+from scipy.interpolate import interp1d
 import sympy as sp
 
 from paramak import RotateMixedShape, diff_between_angles
@@ -173,15 +174,56 @@ class BlanketFP(RotateMixedShape):
     def thickness(self, thickness):
         self._thickness = thickness
 
+    def make_callable(self, attribute):
+        """This function transforms an attribute (thickness or offset) into a
+        callable function of theta
+        """
+        # if the attribute is a list, create a interpolated object of the
+        # values
+        if isinstance(attribute, (tuple, list)):
+            if isinstance(attribute[0], (tuple, list)) and \
+                isinstance(attribute[1], (tuple, list)) and \
+                    len(attribute) == 2:
+                # attribute is a list of 2 lists
+                if len(attribute[0]) != len(attribute[1]):
+                    raise ValueError('The length of angles list must equal \
+                     the length of values list')
+                list_of_angles = np.array(attribute[0])
+                offset_values = attribute[1]
+            else:
+                # no list of angles is given
+                offset_values = attribute
+                list_of_angles = np.linspace(
+                    self.start_angle,
+                    self.stop_angle,
+                    len(offset_values),
+                    endpoint=True)
+            interpolated_values = interp1d(list_of_angles, offset_values)
+
+        def fun(theta):
+            if callable(attribute):
+                return attribute(theta)
+            elif isinstance(attribute, (tuple, list)):
+                return interpolated_values(theta)
+            else:
+                return attribute
+        return fun
+
     def find_points(self):
         conversion_factor = 2 * np.pi / 360
 
         def R(theta, pkg=np):
+            """R(theta) plasma profile, theta being the angle in degree
+            """
+            theta *= conversion_factor
             return self.major_radius + self.minor_radius * pkg.cos(
                 theta + self.triangularity * pkg.sin(theta)
             )
 
         def Z(theta, pkg=np):
+            """R(theta) plasma profile, theta being the angle in degree
+            """
+            theta *= conversion_factor
             return (
                 self.elongation * self.minor_radius * pkg.sin(theta)
                 + self.vertical_displacement
@@ -189,59 +231,29 @@ class BlanketFP(RotateMixedShape):
 
         # create array of angles theta
         thetas = np.linspace(
-            self.start_angle * conversion_factor,
-            self.stop_angle * conversion_factor,
+            self.start_angle,
+            self.stop_angle,
             num=self.num_points,
             endpoint=True,
         )
 
         # create inner points
-
-        def offset(theta):
-            if callable(self.offset_from_plasma):
-                print(self.offset_from_plasma(theta))
-                return self.offset_from_plasma(theta)
-            elif isinstance(self.offset_from_plasma, (tuple, list)):
-                # increase offset linearly
-                start_offset, stop_offset = self.offset_from_plasma
-                a = -(start_offset - stop_offset) / (
-                    self.stop_angle * conversion_factor
-                    - self.start_angle * conversion_factor
-                )
-                b = start_offset - self.start_angle * conversion_factor * a
-                return a * theta + b
-            else:
-                return self.offset_from_plasma
-
+        inner_offset = self.make_callable(self.offset_from_plasma)
         inner_points = self.create_offset_points(
-            thetas, R, Z, offset
+            thetas, R, Z, inner_offset
         )
         inner_points[-1][2] = "straight"
 
-        # compute outer points
-        def new_offset(theta):
-            if callable(self.thickness):
-                # use the function of angle
-                return (
-                    self.thickness(
-                        theta /
-                        conversion_factor) +
-                    offset(theta))
-            elif isinstance(self.thickness, (tuple, list)):
-                # increase thickness linearly
-                start_thickness, stop_thickness = self.thickness
-                a = (stop_thickness - start_thickness) / (
-                    self.stop_angle * conversion_factor
-                    - self.start_angle * conversion_factor
-                )
-                b = start_thickness - self.start_angle * conversion_factor * a
-                return a * theta + b + offset(theta)
-            else:
-                # use the constant value
-                return self.thickness + offset(theta)
+        # create outer points
+        thickness = self.make_callable(self.thickness)
+
+        def outer_offset(theta):
+            return inner_offset(theta) + thickness(theta)
 
         outer_points = self.create_offset_points(
-            np.flip(thetas), R, Z, new_offset)
+            np.flip(thetas), R, Z, outer_offset)
+
+        # assemble
         points = inner_points + outer_points
         points[-1][2] = "straight"
         self.points = points
