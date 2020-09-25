@@ -225,7 +225,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             (point_4[0], point_4[1], "straight"),
             (point_1[0], point_1[1], "straight")
         ]   # we have overwritten the setter which automatically adds the endpoint
-        
 
         self.points = points
 
