@@ -103,7 +103,14 @@ class PlasmaBoundaries(Plasma):
         self.low_point = None
         self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
+    @property
+    def points(self):
         self.find_points()
+        return self._points
+
+    @points.setter
+    def points(self, points):
+        self._points = points
 
     @property
     def vertical_displacement(self):

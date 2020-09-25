@@ -86,7 +86,14 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         self.outer_radius = outer_radius
         self.inner_radius = inner_radius
 
+    @property
+    def points(self):
         self.find_points()
+        return self._points
+
+    @points.setter
+    def points(self, points):
+        self._points = points
 
     @property
     def height(self):

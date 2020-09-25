@@ -88,8 +88,23 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         self.gap_size = gap_size
         self.distance = height
 
+    @property
+    def points(self):
         self.find_points()
+        return self._points
+
+    @points.setter
+    def points(self, points):
+        self._points = points
+
+    @property
+    def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        self._azimuth_placement_angle = value
 
     @property
     def height(self):

@@ -80,7 +80,14 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         self.width = coil_width
         self.casing_thickness = casing_thickness
 
+    @property
+    def points(self):
         self.find_points()
+        return self._points
+
+    @points.setter
+    def points(self, points):
+        self._points = points
 
     @property
     def center_point(self):

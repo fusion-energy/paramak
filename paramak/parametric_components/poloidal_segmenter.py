@@ -86,7 +86,14 @@ class PoloidalSegments(RotateStraightShape):
         self.number_of_segments = number_of_segments
         self.max_distance_from_center = max_distance_from_center
 
+    @property
+    def points(self):
         self.find_points()
+        return self._points
+
+    @points.setter
+    def points(self, points):
+        self._points = points
 
     @property
     def number_of_segments(self):

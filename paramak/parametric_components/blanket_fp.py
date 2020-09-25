@@ -146,7 +146,14 @@ class BlanketFP(RotateMixedShape):
         self.num_points = num_points
         self.physical_groups = None
 
+    @property
+    def points(self):
         self.find_points()
+        return self._points
+
+    @points.setter
+    def points(self, points):
+        self._points = points
 
     @property
     def physical_groups(self):
