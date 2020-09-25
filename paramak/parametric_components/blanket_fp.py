@@ -12,10 +12,12 @@ class BlanketFP(RotateMixedShape):
     """A blanket volume created from plasma parameters.
 
     Args:
-        thickness (float, (float, float), callable): the thickness of the
-            blanket (cm). If float, constant thickness. If tuple of floats,
-            thickness will vary linearly between the two values. If callable,
-            thickness will be a function of poloidal angle (in degrees).
+        thickness (float or [float] or callable or [(float), (float)]): 
+            the thickness of the blanket (cm). If float, constant thickness.
+            If tuple of floats, thickness will vary linearly between the two
+            values. If callable, thickness will be a function of poloidal
+            angle (in degrees). If a list of of two lists (thicknesses and angles)
+            then these will be used together with linear interpolation.
         start_angle (float): the angle in degrees to start the blanket,
             measured anti clockwise from 3 o'clock
         stop_angle (float): the angle in degrees to stop the blanket, measured
@@ -32,11 +34,12 @@ class BlanketFP(RotateMixedShape):
             Defaults to 2.0.
         vertical_displacement (float, optional): the vertical_displacement of
             the plasma (cm). Defaults to 0.
-        offset_from_plasma (float, (float, float), callable): the distance
-            bettwen the plasma and the blanket (cm). If float, constant offset.
-            If tuple of floats, offset will vary linearly between the two
+        offset_from_plasma (float or [float] or callable or [(float), (float)]): 
+            the distance bettwen the plasma and the blanket (cm). If float,
+            constant offset. If list of floats, offset will vary linearly between the
             values. If callable, offset will be a function of poloidal angle
-            (in degrees) Defaults to 0.
+            (in degrees) Defaults to 0. If a list of of two lists (offsets and angles)
+            then these will be used together with linear interpolation.
         num_points (int, optional): number of points that will describe the
             shape. Defaults to 50.
         Others: see paramak.RotateMixedShape() arguments.
