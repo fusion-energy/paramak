@@ -207,8 +207,8 @@ class BlanketFP(RotateMixedShape):
                 if isinstance(self.offset_from_plasma[0], (tuple, list)) and \
                     isinstance(self.offset_from_plasma[1], (tuple, list)) and \
                         len(self.offset_from_plasma) == 2:
-                    # offset is a 2 lists
-                    list_of_angles = self.offset_from_plasma[0]
+                    # offset is a list of 2 lists
+                    list_of_angles = np.array(self.offset_from_plasma[0])*conversion_factor
                     offset_values = self.offset_from_plasma[1]
                     return interp1d(list_of_angles, offset_values)(theta)
                 else:
@@ -239,14 +239,24 @@ class BlanketFP(RotateMixedShape):
                         conversion_factor) +
                     offset(theta))
             elif isinstance(self.thickness, (tuple, list)):
-                # increase thickness linearly
-                start_thickness, stop_thickness = self.thickness
-                a = (stop_thickness - start_thickness) / (
-                    self.stop_angle * conversion_factor
-                    - self.start_angle * conversion_factor
-                )
-                b = start_thickness - self.start_angle * conversion_factor * a
-                return a * theta + b + offset(theta)
+                # thickness is a list
+                if isinstance(self.thickness[0], (tuple, list)) and \
+                    isinstance(self.thickness[1], (tuple, list)) and \
+                        len(self.thickness) == 2:
+                    # thickness is a list of 2 lists
+                    list_of_angles = np.array(self.thickness[0])*conversion_factor
+                    thickness_values = self.thickness[1]
+                    return interp1d(list_of_angles, thickness_values)(theta) + offset(theta)
+                else:
+                    # no list of angles is given
+                    thickness_values = self.thickness
+                    list_of_angles = np.linspace(
+                        self.start_angle*conversion_factor,
+                        self.stop_angle*conversion_factor,
+                        len(thickness_values),
+                        endpoint=True)
+                    # TODO: refactor this
+                    return interp1d(list_of_angles, thickness_values)(theta) + offset(theta)
             else:
                 # use the constant value
                 return self.thickness + offset(theta)
