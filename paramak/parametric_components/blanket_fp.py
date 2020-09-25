@@ -147,15 +147,6 @@ class BlanketFP(RotateMixedShape):
         self.physical_groups = None
 
     @property
-    def points(self):
-        self.find_points()
-        return self._points
-
-    @points.setter
-    def points(self, points):
-        self._points = points
-
-    @property
     def physical_groups(self):
         self.create_physical_groups()
         return self._physical_groups
@@ -251,7 +242,6 @@ class BlanketFP(RotateMixedShape):
             np.flip(thetas), R, Z, new_offset)
         points = inner_points + outer_points
         points[-1][2] = "straight"
-        points.append(inner_points[0])
         self.points = points
 
     def create_offset_points(self, thetas, R_fun, Z_fun, offset):

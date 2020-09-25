@@ -86,8 +86,6 @@ class PoloidalFieldCoilSet(RotateStraightShape):
             raise ValueError("The length of widthts, height and center_points \
                 must be the same when making a PoloidalFieldCoilSet")
 
-        self.find_points()
-
     @property
     def solid(self):
         """Returns a CadQuery compound object consisting of 1 or more 3d volumes"""
