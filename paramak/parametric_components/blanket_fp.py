@@ -185,6 +185,9 @@ class BlanketFP(RotateMixedShape):
                 isinstance(attribute[1], (tuple, list)) and \
                     len(attribute) == 2:
                 # attribute is a list of 2 lists
+                if len(attribute[0]) != len(attribute[1]):
+                    raise ValueError('The length of angles list must equal \
+                     the length of values list')
                 list_of_angles = np.array(attribute[0])
                 offset_values = attribute[1]
             else:
