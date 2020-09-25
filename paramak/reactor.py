@@ -292,13 +292,13 @@ class Reactor:
         method which uses Trelis to produce an imprinted and merged DAGMC geometry
         If the provided filename doesn't end with .h5m it will be added
 
-            Args:
-                filename (str, optional): filename of h5m outputfile
-                    Defaults to "dagmc.h5m".
-                skip_graveyard (boolean, optional): filename of h5m outputfile
-                    Defaults to False.
-                tolerance (float, optional): the precision of the faceting
-                    Defaults to 0.001.
+        Args:
+            filename (str, optional): filename of h5m outputfile
+                Defaults to "dagmc.h5m".
+            skip_graveyard (boolean, optional): filename of h5m outputfile
+                Defaults to False.
+            tolerance (float, optional): the precision of the faceting
+                Defaults to 0.001.
         Returns:
             filename: output h5m filename
         """

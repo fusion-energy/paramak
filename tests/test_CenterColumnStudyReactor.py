@@ -20,17 +20,19 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             center_column_shield_radial_thickness_mid=50,
             center_column_shield_radial_thickness_upper=100,
             inboard_firstwall_radial_thickness=20,
+            divertor_radial_thickness=100,
             inner_plasma_gap_radial_thickness=40,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=30,
-            plasma_high_point=(20 + 50 + 100 + 20, 240),
+            # first number must be between plasma inner/outer radius
+            plasma_high_point=(20 + 50 + 100 + 10 + 20 + 30, 240),
             plasma_gap_vertical_thickness=20,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
 
         test_reactor.export_stp()
 
-        assert len(test_reactor.shapes_and_components) == 4
+        assert len(test_reactor.shapes_and_components) == 6
 
     def test_CenterColumnStudyReactor_svg_creation(self):
         """creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
@@ -44,6 +46,7 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             center_column_shield_radial_thickness_mid=50,
             center_column_shield_radial_thickness_upper=100,
             inboard_firstwall_radial_thickness=20,
+            divertor_radial_thickness=100,
             inner_plasma_gap_radial_thickness=40,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=30,
@@ -69,6 +72,7 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
                     center_column_shield_radial_thickness_mid=50,
                     center_column_shield_radial_thickness_upper=100,
                     inboard_firstwall_radial_thickness=20,
+                    divertor_radial_thickness=100,
                     inner_plasma_gap_radial_thickness=40,
                     plasma_radial_thickness=200,
                     outer_plasma_gap_radial_thickness=30,
