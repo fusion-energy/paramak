@@ -235,14 +235,10 @@ class BlanketFP(RotateMixedShape):
         inner_points[-1][2] = "straight"
 
         # compute outer points
-        def outer_offset(theta):
+        def thickness(theta):
             if callable(self.thickness):
                 # use the function of angle
-                return (
-                    self.thickness(
-                        theta /
-                        conversion_factor) +
-                    inner_offset(theta))
+                return self.thickness(theta)
             elif isinstance(self.thickness, (tuple, list)):
                 # thickness is a list
                 if isinstance(self.thickness[0], (tuple, list)) and \
@@ -260,11 +256,13 @@ class BlanketFP(RotateMixedShape):
                         len(thickness_values),
                         endpoint=True)
                 # TODO: refactor this
-                return interp1d(list_of_angles, thickness_values)(theta) + \
-                    inner_offset(theta)
+                return interp1d(list_of_angles, thickness_values)(theta)
             else:
                 # use the constant value
-                return self.thickness + inner_offset(theta)
+                return self.thickness
+
+        def outer_offset(theta):
+            return inner_offset(theta) + thickness(theta)
 
         outer_points = self.create_offset_points(
             np.flip(thetas), R, Z, outer_offset)
