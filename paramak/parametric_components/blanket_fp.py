@@ -178,11 +178,17 @@ class BlanketFP(RotateMixedShape):
         conversion_factor = 2 * np.pi / 360
 
         def R(theta, pkg=np):
+            """R(theta) plasma profile, theta being the angle in degree
+            """
+            theta *= conversion_factor
             return self.major_radius + self.minor_radius * pkg.cos(
                 theta + self.triangularity * pkg.sin(theta)
             )
 
         def Z(theta, pkg=np):
+            """R(theta) plasma profile, theta being the angle in degree
+            """
+            theta *= conversion_factor
             return (
                 self.elongation * self.minor_radius * pkg.sin(theta)
                 + self.vertical_displacement
@@ -190,8 +196,8 @@ class BlanketFP(RotateMixedShape):
 
         # create array of angles theta
         thetas = np.linspace(
-            self.start_angle * conversion_factor,
-            self.stop_angle * conversion_factor,
+            self.start_angle,
+            self.stop_angle,
             num=self.num_points,
             endpoint=True,
         )
@@ -208,14 +214,14 @@ class BlanketFP(RotateMixedShape):
                     isinstance(self.offset_from_plasma[1], (tuple, list)) and \
                         len(self.offset_from_plasma) == 2:
                     # offset is a list of 2 lists
-                    list_of_angles = np.array(self.offset_from_plasma[0])*conversion_factor
+                    list_of_angles = np.array(self.offset_from_plasma[0])
                     offset_values = self.offset_from_plasma[1]
                 else:
                     # no list of angles is given
                     offset_values = self.offset_from_plasma
                     list_of_angles = np.linspace(
-                        self.start_angle*conversion_factor,
-                        self.stop_angle*conversion_factor,
+                        self.start_angle,
+                        self.stop_angle,
                         len(offset_values),
                         endpoint=True)
                 # TODO: refactor this
@@ -243,14 +249,14 @@ class BlanketFP(RotateMixedShape):
                     isinstance(self.thickness[1], (tuple, list)) and \
                         len(self.thickness) == 2:
                     # thickness is a list of 2 lists
-                    list_of_angles = np.array(self.thickness[0])*conversion_factor
+                    list_of_angles = np.array(self.thickness[0])
                     thickness_values = self.thickness[1]
                 else:
                     # no list of angles is given
                     thickness_values = self.thickness
                     list_of_angles = np.linspace(
-                        self.start_angle*conversion_factor,
-                        self.stop_angle*conversion_factor,
+                        self.start_angle,
+                        self.stop_angle,
                         len(thickness_values),
                         endpoint=True)
                 # TODO: refactor this
