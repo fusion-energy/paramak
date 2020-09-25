@@ -32,7 +32,7 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
 
         test_reactor.export_stp()
 
-        assert len(test_reactor.shapes_and_components) == 4
+        assert len(test_reactor.shapes_and_components) == 6
 
     def test_CenterColumnStudyReactor_svg_creation(self):
         """creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
