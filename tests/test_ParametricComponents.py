@@ -1110,9 +1110,11 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
             gap_size=5
         )
 
-        assert test_shape.azimuth_placement_angle == [0, 60, 120, 180, 240, 300]
+        assert test_shape.azimuth_placement_angle == [
+            0, 60, 120, 180, 240, 300]
         test_shape.azimuth_start_angle = 20
-        assert test_shape.azimuth_placement_angle == [20, 80, 140, 200, 260, 320]
+        assert test_shape.azimuth_placement_angle == [
+            20, 80, 140, 200, 260, 320]
 
 
 class test_InnerTfCoilsCircular(unittest.TestCase):
@@ -1143,9 +1145,11 @@ class test_InnerTfCoilsCircular(unittest.TestCase):
             gap_size=5
         )
 
-        assert test_shape.azimuth_placement_angle == [0, 60, 120, 180, 240, 300]
+        assert test_shape.azimuth_placement_angle == [
+            0, 60, 120, 180, 240, 300]
         test_shape.azimuth_start_angle = 20
-        assert test_shape.azimuth_placement_angle == [20, 80, 140, 200, 260, 320]
+        assert test_shape.azimuth_placement_angle == [
+            20, 80, 140, 200, 260, 320]
 
 
 class test_ParametricComponents(unittest.TestCase):
