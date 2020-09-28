@@ -11,13 +11,12 @@ import paramak
 
 def main():
 
-    number_of_toroidal_field_coils = 1
+    number_of_toroidal_field_coils = 8
     angle_offset = (360 / number_of_toroidal_field_coils) / 2.
-    tf_coil_case_thickness = 10
     tf_coil_thickness = 50
     tf_coil_distance = 130
 
-    inner_tf = paramak.InnerTfCoilsFlat(
+    inner_tf_case = paramak.InnerTfCoilsFlat(
         height=1800,
         inner_radius=330,
         outer_radius=430,
@@ -27,23 +26,13 @@ def main():
         azimuth_start_angle=angle_offset
     )
 
-    outer_tf = paramak.ToroidalFieldCoilPrincetonD(
+    tf_coils = paramak.ToroidalFieldCoilPrincetonD(
         R1=400,
         R2=1500,  # height
         thickness=tf_coil_thickness,
         distance=tf_coil_distance,
         number_of_coils=number_of_toroidal_field_coils,
         rotation_angle=180,
-    )
-
-    outer_tf_case = paramak.ToroidalFieldCoilPrincetonD(
-        R1=400,
-        R2=1500,  # height
-        thickness=tf_coil_thickness + tf_coil_case_thickness,
-        distance=tf_coil_distance + tf_coil_case_thickness,
-        number_of_coils=number_of_toroidal_field_coils,
-        rotation_angle=180,
-        cut =outer_tf
     )
 
     pf_coils = paramak.PoloidalFieldCoilSet(
@@ -60,10 +49,10 @@ def main():
     )
 
     pf_coils.export_stp('pf_coils.stp')
-    pf_coils_casing.export_stp('pf_coils_casing.stp')
-    outer_tf.export_stp('outer_tf.stp')
-    inner_tf.export_stp('inner_tf.stp')
-    outer_tf_case.export_stp('tf_case.stp')
+    pf_coils_casing.export_stp('pf_coils_case.stp')
+
+    tf_coils.export_stp('tf_coil.stp')
+    inner_tf_case.export_stp('inner_tf_case.stp')
 
 
 if __name__ == "__main__":

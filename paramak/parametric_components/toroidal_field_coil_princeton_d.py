@@ -6,7 +6,7 @@ from scipy import integrate
 from scipy.optimize import minimize
 
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
-from paramak.utils import union_solid
+
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     """Toroidal field coil based on Princeton-D curve
