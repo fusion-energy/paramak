@@ -42,7 +42,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         outer_radius,
         number_of_coils,
         gap_size,
-        distance=None,
         stp_filename="InnerTfCoilsCircular.stp",
         stl_filename="InnerTfCoilsCircular.stl",
         color=(0.5, 0.5, 0.5),
@@ -68,7 +67,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
                 default_dict[arg] = kwargs[arg]
 
         super().__init__(
-            distance=distance,
+            distance=height,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             color=color,
@@ -86,8 +85,14 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         self.gap_size = gap_size
         self.distance = height
 
-        self.find_points()
+    @property
+    def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        self._azimuth_placement_angle = value
 
     @property
     def height(self):
@@ -99,11 +104,11 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
 
     @property
     def distance(self):
-        return self._distance
+        return self.height
 
     @distance.setter
-    def distance(self, distance):
-        self._distance = distance
+    def distance(self, value):
+        self._distance = value
 
     @property
     def inner_radius(self):
@@ -208,7 +213,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             (point_3[0], point_3[1], "straight"),
             (point_6[0], point_6[1], "circle"),
             (point_5[0], point_5[1], "circle"),
-            (point_4[0], point_4[1], "straight")
+            (point_4[0], point_4[1], "straight"),
         ]
 
         self.points = points

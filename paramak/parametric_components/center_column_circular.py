@@ -83,8 +83,6 @@ class CenterColumnShieldCircular(RotateMixedShape):
         self.mid_radius = mid_radius
         self.outer_radius = outer_radius
 
-        self.find_points()
-
     @property
     def height(self):
         return self._height

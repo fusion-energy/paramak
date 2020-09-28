@@ -101,8 +101,6 @@ class PlasmaFromPoints(Plasma):
         self.high_point = high_point
         self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
-        self.find_points()
-
     @property
     def outer_equatorial_x_point(self):
         return self._outer_equatorial_x_point

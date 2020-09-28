@@ -210,6 +210,8 @@ class Shape:
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
+        if hasattr(self, 'find_points'):
+            self.find_points()
 
         return self._points
 

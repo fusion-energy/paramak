@@ -70,8 +70,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
 
-        self.find_points()
-
     @property
     def height(self):
         return self._height
@@ -115,7 +113,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             (self.inner_radius, self.height / 2),
             (self.outer_radius, self.height / 2),
             (self.outer_radius, -self.height / 2),
-            (self.inner_radius, -self.height / 2)
+            (self.inner_radius, -self.height / 2),
         ]
 
         self.points = points

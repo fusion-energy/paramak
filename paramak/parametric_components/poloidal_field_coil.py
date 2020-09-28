@@ -76,8 +76,6 @@ class PoloidalFieldCoil(RotateStraightShape):
         self.height = height
         self.width = width
 
-        self.find_points()
-
     @property
     def center_point(self):
         return self._center_point
@@ -122,7 +120,7 @@ class PoloidalFieldCoil(RotateStraightShape):
             (
                 self.center_point[0] - self.width / 2.0,
                 self.center_point[1] + self.height / 2.0,
-            ),  # upper left
+            )
         ]
 
         self.points = points

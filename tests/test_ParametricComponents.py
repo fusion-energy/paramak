@@ -233,7 +233,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
 
             paramak.PoloidalFieldCoilCaseSetFC(
                 pf_coils=pf_coils_set, casing_thicknesses=[
-                    5, 5, 10], rotation_angle=180)
+                    5, 5, 10], rotation_angle=180).solid
 
         self.assertRaises(
             ValueError,
@@ -250,7 +250,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
             paramak.PoloidalFieldCoilCaseSetFC(
                 pf_coils=[pf_coils_1],
                 casing_thicknesses=[5, 5, 10, 10],
-                rotation_angle=180)
+                rotation_angle=180).solid
 
         self.assertRaises(
             ValueError,
@@ -261,7 +261,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
             paramak.PoloidalFieldCoilCaseSetFC(
                 pf_coils=20,
                 casing_thicknesses=[5, 5, 10, 10],
-                rotation_angle=180)
+                rotation_angle=180).solid
 
         self.assertRaises(
             ValueError,

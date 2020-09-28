@@ -44,7 +44,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         outer_radius,
         number_of_coils,
         gap_size,
-        distance=None,
         stp_filename="InnerTfCoilsFlat.stp",
         stl_filename="InnerTfCoilsFlat.stl",
         color=(0.5, 0.5, 0.5),
@@ -70,7 +69,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
                 default_dict[arg] = kwargs[arg]
 
         super().__init__(
-            distance=distance,
+            distance=height,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             color=color,
@@ -88,8 +87,14 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         self.gap_size = gap_size
         self.distance = height
 
-        self.find_points()
+    @property
+    def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        self._azimuth_placement_angle = value
 
     @property
     def height(self):
@@ -101,11 +106,11 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
 
     @property
     def distance(self):
-        return self._distance
+        return self.height
 
     @distance.setter
-    def distance(self, distance):
-        self._distance = distance
+    def distance(self, value):
+        self._distance = value
 
     @property
     def inner_radius(self):
@@ -188,7 +193,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             (point_1[0], point_1[1]),
             (point_3[0], point_3[1]),
             (point_6[0], point_6[1]),
-            (point_4[0], point_4[1])
+            (point_4[0], point_4[1]),
         ]
 
         self.points = points

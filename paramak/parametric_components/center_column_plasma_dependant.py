@@ -95,8 +95,6 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         self.mid_offset = mid_offset
         self.edge_offset = edge_offset
 
-        self.find_points()
-
     @property
     def major_radius(self):
         return self._major_radius

@@ -89,8 +89,6 @@ class BlanketConstantThicknessArcH(RotateMixedShape):
         self.inner_mid_point = inner_mid_point
         self.thickness = thickness
 
-        self.find_points()
-
     def find_points(self):
 
         self.points = [

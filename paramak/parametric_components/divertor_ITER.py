@@ -126,8 +126,6 @@ class ITERtypeDivertor(RotateMixedShape):
         self.dome_pos = dome_pos
         self.dome_thickness = dome_thickness
 
-        self.find_points()
-
     def create_vertical_target_points(
             self, anchor, coverage, tilt, radius, length):
         """Creates a list of points for a vertical target
