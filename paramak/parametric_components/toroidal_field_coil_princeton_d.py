@@ -8,6 +8,7 @@ from scipy.optimize import minimize
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 
 
+
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     """Toroidal field coil based on Princeton-D curve
 
@@ -264,8 +265,10 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         if self.with_inner_leg is True:
             inner_leg_solid = cq.Workplane(self.workplane)
             inner_leg_solid.moveTo(XZ_points[0][0], XZ_points[0][1])
-            inner_leg_solid = inner_leg_solid.polyline(self.inner_leg_connection_points)
-            inner_leg_solid = inner_leg_solid.close().extrude(distance=-self.distance / 2.0, both=True)
+            inner_leg_solid = inner_leg_solid.polyline(
+                self.inner_leg_connection_points)
+            inner_leg_solid = inner_leg_solid.close().extrude(
+                distance=-self.distance / 2.0, both=True)
 
             solid = cq.Compound.makeCompound(
                 [a.val() for a in [inner_leg_solid, solid]]
@@ -290,6 +293,5 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
                 (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
         self.perform_boolean_operations(solid)
-
 
         return solid
