@@ -2,6 +2,7 @@
 """
 This script makes a blanket and then segments it in a similar
 manner to the EU DEMO segmentation for remote maintainance.
+This takes sometime to compute so 
 """
 
 import math
@@ -11,39 +12,39 @@ import paramak
 
 def main():
 
-    number_of_toroidal_field_coils = 8
+    number_of_toroidal_field_coils = 1
     angle_offset = (360 / number_of_toroidal_field_coils) / 2.
+    tf_coil_case_thickness = 10
+    tf_coil_thickness = 50
+    tf_coil_distance = 130
+
     inner_tf = paramak.InnerTfCoilsFlat(
         height=1800,
         inner_radius=330,
         outer_radius=430,
         number_of_coils=number_of_toroidal_field_coils,
         gap_size=5,
-        rotation_angle=180
+        rotation_angle=180,
+        azimuth_start_angle=angle_offset
     )
 
     outer_tf = paramak.ToroidalFieldCoilPrincetonD(
         R1=400,
         R2=1500,  # height
-        thickness=50,
-        distance=130,
+        thickness=tf_coil_thickness,
+        distance=tf_coil_distance,
         number_of_coils=number_of_toroidal_field_coils,
         rotation_angle=180,
-        azimuth_placement_angle=np.linspace(
-            0 + angle_offset, 360 + angle_offset,
-            number_of_toroidal_field_coils,
-            endpoint=False
-        )
     )
 
-    inner_leg = paramak.ExtrudeStraightShape(
-        points=outer_tf.inner_leg_connection_points,
-        distance=130,
-        azimuth_placement_angle=np.linspace(
-            0, 360,
-            number_of_toroidal_field_coils,
-            endpoint=False
-        )
+    outer_tf_case = paramak.ToroidalFieldCoilPrincetonD(
+        R1=400,
+        R2=1500,  # height
+        thickness=tf_coil_thickness + tf_coil_case_thickness,
+        distance=tf_coil_distance + tf_coil_case_thickness,
+        number_of_coils=number_of_toroidal_field_coils,
+        rotation_angle=180,
+        cut =outer_tf
     )
 
     pf_coils = paramak.PoloidalFieldCoilSet(
@@ -63,7 +64,7 @@ def main():
     pf_coils_casing.export_stp('pf_coils_casing.stp')
     outer_tf.export_stp('outer_tf.stp')
     inner_tf.export_stp('inner_tf.stp')
-    inner_leg.export_stp('leg.stp')
+    outer_tf_case.export_stp('tf_case.stp')
 
 
 if __name__ == "__main__":
