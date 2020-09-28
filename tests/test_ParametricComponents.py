@@ -6,6 +6,50 @@ import pytest
 
 import paramak
 
+class test_attribute_propagation_to_solid(unittest.TestCase):
+    def test_InnerTfCoilsCircular_attributes(self):
+        """checks that changing the attributes of InnerTfCoilsCircular affects the
+        cadquery solid produced"""
+
+        test_shape = paramak.InnerTfCoilsCircular(
+            height=500,
+            inner_radius=50,
+            outer_radius=150,
+            number_of_coils=6,
+            gap_size=5
+        )
+        test_shape_volume = test_shape.volume
+
+        test_shape.height=1000
+        assert test_shape_volume == test_shape.volume * 0.5
+        test_shape.height=500
+        test_shape.inner_radius=30
+        assert test_shape_volume < test_shape.volume
+        test_shape.inner_radius=50
+        test_shape.outer_radius=170
+        assert test_shape_volume < test_shape.volume
+
+    def test_InnerTfCoilsFlat_attributes(self):
+        """checks that changing the attributes of InnerTfCoilsFlat affects the
+        cadquery solid produced"""
+
+        test_shape = paramak.InnerTfCoilsFlat(
+            height=500,
+            inner_radius=50,
+            outer_radius=150,
+            number_of_coils=6,
+            gap_size=5
+        )
+        test_shape_volume = test_shape.volume
+
+        test_shape.height=1000
+        assert test_shape_volume == test_shape.volume * 0.5
+        test_shape.height=500
+        test_shape.inner_radius=30
+        assert test_shape_volume < test_shape.volume
+        test_shape.inner_radius=50
+        test_shape.outer_radius=170
+        assert test_shape_volume < test_shape.volume
 
 class test_InboardFirstwallFCCS(unittest.TestCase):
     def test_construction_with_CenterColumnShieldCylinder(self):
@@ -1115,6 +1159,7 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
         test_shape.azimuth_start_angle = 20
         assert test_shape.azimuth_placement_angle == [
             20, 80, 140, 200, 260, 320]
+
 
 
 class test_InnerTfCoilsCircular(unittest.TestCase):
