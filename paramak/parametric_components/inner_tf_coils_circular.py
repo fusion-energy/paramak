@@ -42,10 +42,11 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         outer_radius,
         number_of_coils,
         gap_size,
+        azimuth_start_angle=0,
         stp_filename="InnerTfCoilsCircular.stp",
         stl_filename="InnerTfCoilsCircular.stl",
         color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
+        azimuth_placement_angle=0,   # cannot be controlled by user
         material_tag="inner_tf_coil_mat",
         name=None,
         **kwargs
@@ -78,12 +79,21 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             **default_dict
         )
 
+        self.azimuth_start_angle = azimuth_start_angle
         self.height = height
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
         self.number_of_coils = number_of_coils
         self.gap_size = gap_size
         self.distance = height
+
+    @property
+    def azimuth_start_angle(self):
+        return self._azimuth_start_angle
+
+    @azimuth_start_angle.setter
+    def azimuth_start_angle(self, value):
+        self._azimuth_start_angle = value
 
     @property
     def azimuth_placement_angle(self):
@@ -223,8 +233,8 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
 
         angles = list(
             np.linspace(
-                0,
-                360,
+                0 + self.azimuth_start_angle,
+                360 + self.azimuth_start_angle,
                 self.number_of_coils,
                 endpoint=False))
 
