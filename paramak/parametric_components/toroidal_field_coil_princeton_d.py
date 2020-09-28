@@ -84,6 +84,15 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         self.number_of_coils = number_of_coils
 
     @property
+    def inner_leg_connection_points(self):
+        self.find_points()
+        return self._inner_leg_connection_points
+
+    @inner_leg_connection_points.setter
+    def inner_leg_connection_points(self, value):
+        self._inner_leg_connection_points = value
+
+    @property
     def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
         return self._azimuth_placement_angle
