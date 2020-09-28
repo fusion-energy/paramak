@@ -43,7 +43,7 @@ def main():
         distance=tf_coil_distance + tf_coil_case_thickness,
         number_of_coils=number_of_toroidal_field_coils,
         rotation_angle=180,
-        cut =outer_tf
+        cut=outer_tf
     )
 
     pf_coils = paramak.PoloidalFieldCoilSet(
