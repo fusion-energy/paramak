@@ -306,10 +306,14 @@ PlasmaFromPoints()
 ToroidalFieldCoilRectangle()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86822598-bcdbed80-c083-11ea-820e-f6c13d639170.png
+|ToroidalFieldCoilRectangleallstp| |ToroidalFieldCoilRectanglesvg| |ToroidalFieldCoilRectangleastp|
+
+.. |ToroidalFieldCoilRectangleallstp| image:: https://user-images.githubusercontent.com/8583900/86822598-bcdbed80-c083-11ea-820e-f6c13d639170.png
     :width: 220px
-    :height: 200px
-    :align: center
+.. |ToroidalFieldCoilRectanglesvg| image:: https://user-images.githubusercontent.com/8583900/94585086-6abbfa00-0277-11eb-91de-0b2548601587.png
+    :width: 220px
+.. |ToroidalFieldCoilRectangleastp| image:: https://user-images.githubusercontent.com/8583900/94585089-6c85bd80-0277-11eb-9be9-22befe19e86e.png
+    :width: 220px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_rectangle
    :members:
@@ -335,9 +339,9 @@ ToroidalFieldCoilPrincetonD()
 .. |ToroidalFieldCoilPrincetonDallstp| image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
    :width: 250
 .. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/8583900/94529559-cd8aa280-0231-11eb-9919-48d3c642a5d7.png
-   :width: 250
+   :width: 150
 .. |ToroidalFieldCoilPrincetonDastp| image:: https://user-images.githubusercontent.com/8583900/94479853-4c012900-01cd-11eb-9b59-0fcd5f4dc531.png
-   :width: 250
+   :width: 350
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_princeton_d
    :members:
