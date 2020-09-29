@@ -17,18 +17,18 @@ make_parametric_single_null_ball_reactor.py
    :members:
    :show-inheritance:
 
-make_parametric_submersion_ball_reactor.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+make_parametric_submersion_reactor.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: examples.example_parametric_reactors.make_parametric_submersion_ball_reactor
+.. automodule:: examples.example_parametric_reactors.make_parametric_submersion_reactor
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_reactors/make_parametric_submersion_ball_reactor.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_reactors/make_parametric_submersion_reactor.py>`_
 
-make_parametric_single_null_submersion_ball_reactor.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+make_parametric_single_null_submersion_reactor.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: examples.example_parametric_reactors.make_parametric_single_null_submersion_ball_reactor
+.. automodule:: examples.example_parametric_reactors.make_parametric_single_null_submersion_reactor
    :members:
    :show-inheritance:
