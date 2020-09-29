@@ -160,16 +160,6 @@ def main():
     )
     all_components.append(component)
 
-    # component = paramak.DivertorBlock(
-    #     major_radius = 800,
-    #     minor_radius = 400,
-    #     triangularity = 1.2,
-    #     elongation = 0.9,
-    #     thickness = 50,
-    #     offset_from_plasma = 20,
-    #     start
-    # )
-
     component = paramak.InnerTfCoilsCircular(
         inner_radius=25,
         outer_radius=100,
@@ -283,7 +273,7 @@ def main():
         thickness=150,
         distance=60,
         stp_filename="tf_coil_rectangle.stp",
-        number_of_coils=6,
+        number_of_coils=1,
     )
     all_components.append(component)
 
@@ -295,7 +285,7 @@ def main():
         thickness=50,
         distance=50,
         stp_filename="toroidal_field_coil_coat_hanger.stp",
-        number_of_coils=6,
+        number_of_coils=1,
     )
     all_components.append(component)
 
@@ -306,7 +296,7 @@ def main():
         coverages=(60, 60),
         thickness=30,
         distance=30,
-        number_of_coils=6,
+        number_of_coils=1,
         stp_filename="toroidal_field_coil_triple_arc.stp"
     )
     all_components.append(component)
@@ -316,7 +306,7 @@ def main():
         R2=300,
         thickness=30,
         distance=30,
-        number_of_coils=6,
+        number_of_coils=1,
         stp_filename="toroidal_field_coil_princeton_d.stp"
     )
     all_components.append(component)
