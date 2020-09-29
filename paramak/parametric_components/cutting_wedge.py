@@ -73,4 +73,3 @@ class CuttingWedge(RotateStraightShape):
         ]
 
         self.points = points
-        

@@ -56,7 +56,8 @@ class CuttingWedgeFS(RotateStraightShape):
     def find_points(self):
 
         if self.shape.rotation_angle == 360:
-            raise ValueError('rotation angle = 360, cutting slice cannot be defined')
+            raise ValueError(
+                'rotation angle = 360, cutting slice cannot be defined')
 
         else:
             max_dimension = self.shape.solid.largestDimension()
@@ -74,4 +75,3 @@ class CuttingWedgeFS(RotateStraightShape):
         self.points = points
         self.rotation_angle = rotation_angle
         self.azimuth_placement_angle = azimuth_placement_angle
-    
