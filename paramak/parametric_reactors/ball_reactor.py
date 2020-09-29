@@ -487,14 +487,14 @@ class BallReactor(paramak.Reactor):
                 self.pf_coil_to_tf_coil_radial_gap is not None
                 and self.outboard_tf_coil_radial_thickness is not None
             ):
+
                 self._tf_coil = paramak.ToroidalFieldCoilRectangle(
                     with_inner_leg=False,
-                    vertical_mid_point=(
+                    horizontal_start_point=(
                         self._inboard_tf_coils_start_radius,
                         self._tf_coil_height),
-                    horizontal_start_point=(
-                        self._tf_coil_start_radius,
-                        0),
+                    vertical_mid_point=(
+                        self._tf_coil_start_radius, 0),
                     thickness=self.outboard_tf_coil_radial_thickness,
                     number_of_coils=self.number_of_tf_coils,
                     distance=self.outboard_tf_coil_poloidal_thickness,
