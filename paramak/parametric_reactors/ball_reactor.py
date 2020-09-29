@@ -99,7 +99,8 @@ class BallReactor(paramak.Reactor):
         self.outboard_tf_coil_poloidal_thickness = outboard_tf_coil_poloidal_thickness
 
         # sets major radius and minor radius from equatorial_points to allow a radial build
-        # this helps avoid the plasma overlapping the center column and other components
+        # this helps avoid the plasma overlapping the center column and other
+        # components
 
         inner_equatorial_point = (
             inner_bore_radial_thickness
@@ -488,8 +489,12 @@ class BallReactor(paramak.Reactor):
             ):
                 self._tf_coil = paramak.ToroidalFieldCoilRectangle(
                     with_inner_leg=False,
-                    vertical_mid_point=(self._inboard_tf_coils_start_radius, self._tf_coil_height),
-                    horizontal_start_point=(self._tf_coil_start_radius, 0),
+                    vertical_mid_point=(
+                        self._inboard_tf_coils_start_radius,
+                        self._tf_coil_height),
+                    horizontal_start_point=(
+                        self._tf_coil_start_radius,
+                        0),
                     thickness=self.outboard_tf_coil_radial_thickness,
                     number_of_coils=self.number_of_tf_coils,
                     distance=self.outboard_tf_coil_poloidal_thickness,
