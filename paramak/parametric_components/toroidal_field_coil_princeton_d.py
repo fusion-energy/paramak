@@ -8,7 +8,6 @@ from scipy.optimize import minimize
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 
 
-
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     """Toroidal field coil based on Princeton-D curve
 
