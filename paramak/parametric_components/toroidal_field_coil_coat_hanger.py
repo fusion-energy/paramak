@@ -1,6 +1,8 @@
-from paramak import ExtrudeStraightShape
+from collections import Iterable
 
+import cadquery as cq
 import numpy as np
+from paramak import ExtrudeStraightShape
 
 
 class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
@@ -95,14 +97,8 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         self.distance = distance
         self.number_of_coils = number_of_coils
 
-    @property
-    def azimuth_placement_angle(self):
+        self.find_points()
         self.find_azimuth_placement_angle()
-        return self._azimuth_placement_angle
-
-    @azimuth_placement_angle.setter
-    def azimuth_placement_angle(self, value):
-        self._azimuth_placement_angle = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the 2D
@@ -165,8 +161,10 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             (
                 self.horizontal_start_point[0],
                 self.horizontal_start_point[1] + self.thickness,
-            )
+            )  # upper right inner
         ]
+
+        self.inner_leg_connection_points = [points[0], points[1], points[-1],points[-2]]
 
         self.points = points
 
@@ -181,3 +179,54 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                 endpoint=False))
 
         self.azimuth_placement_angle = angles
+
+    def create_solid(self):
+        """Creates a 3d solid using points with straight connections
+        edges, azimuth_placement_angle and rotation_angle.
+
+        Returns:
+           A CadQuery solid: A 3D solid volume
+        """
+
+        # print('create_solid() has been called')
+
+        # Creates a cadquery solid from points and revolves
+        solid = (
+            cq.Workplane(self.workplane)
+            .polyline(self.points)
+            .close()
+            .extrude(distance=-self.distance / 2.0, both=True)
+        )
+
+        if self.with_inner_leg is True:
+            inner_leg_solid = cq.Workplane(self.workplane)
+            inner_leg_solid = inner_leg_solid.polyline(
+                self.inner_leg_connection_points)
+            inner_leg_solid = inner_leg_solid.close().extrude(
+                distance=-self.distance / 2.0, both=True)
+
+        solid = cq.Compound.makeCompound(
+            [a.val() for a in [inner_leg_solid, solid]]
+        )
+
+        # Checks if the azimuth_placement_angle is a list of angles
+        if isinstance(self.azimuth_placement_angle, Iterable):
+            rotated_solids = []
+            # Perform seperate rotations for each angle
+            for angle in self.azimuth_placement_angle:
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
+            solid = cq.Workplane(self.workplane)
+
+            # Joins the seperate solids together
+            for i in rotated_solids:
+                solid = solid.union(i)
+        else:
+            # Peform rotations for a single azimuth_placement_angle angle
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+
+        self.perform_boolean_operations(solid)
+
+        return solid
