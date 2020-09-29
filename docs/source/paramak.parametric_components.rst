@@ -322,10 +322,14 @@ ToroidalFieldCoilRectangle()
 ToroidalFieldCoilCoatHanger()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/87075236-f04f8100-c217-11ea-9ffa-4791b722b9e7.png
+|ToroidalFieldCoilCoatHangerallstp| |ToroidalFieldCoilCoatHangersvg| |ToroidalFieldCoilCoatHangerastp|
+
+.. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/8583900/94572025-79e77b80-0268-11eb-88da-828274539e9e.png
    :width: 250
-   :height: 200
-   :align: center
+.. |ToroidalFieldCoilCoatHangerastp| image:: https://user-images.githubusercontent.com/8583900/94570773-1ad53700-0267-11eb-9003-3b5768745470.png
+   :width: 250
+.. |ToroidalFieldCoilCoatHangerallstp| image:: https://user-images.githubusercontent.com/8583900/87075236-f04f8100-c217-11ea-9ffa-4791b722b9e7.png
+   :width: 250
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_coat_hanger
    :members:
@@ -341,7 +345,7 @@ ToroidalFieldCoilPrincetonD()
 .. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/8583900/94529559-cd8aa280-0231-11eb-9919-48d3c642a5d7.png
    :width: 150
 .. |ToroidalFieldCoilPrincetonDastp| image:: https://user-images.githubusercontent.com/8583900/94479853-4c012900-01cd-11eb-9b59-0fcd5f4dc531.png
-   :width: 350
+   :width: 150
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_princeton_d
    :members:

@@ -155,6 +155,9 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
     def find_points(self):
         """Finds the points that describe the 2D profile of the tf coil shape"""
 
+        if self.gap_size * self.number_of_coils > 2 * math.pi * self.inner_radius:
+            raise ValueError('gap_size is too large')
+
         theta_inner = (
             (2 * math.pi * self.inner_radius) - (self.gap_size * self.number_of_coils)
         ) / (self.inner_radius * self.number_of_coils)
