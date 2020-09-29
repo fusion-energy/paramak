@@ -81,7 +81,7 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            rotation_angle=360,
+            rotation_angle=180,
         )
         test_reactor.export_svg("test_ballreactor_image.svg")
 
