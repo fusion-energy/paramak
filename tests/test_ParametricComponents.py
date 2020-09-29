@@ -1038,7 +1038,7 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
             R2=300,
             thickness=50,
             distance=50,
-            number_of_coils=8,
+            number_of_coils=2,
         )
 
         assert test_shape.solid is not None
