@@ -4,6 +4,7 @@ from collections import Iterable
 
 import cadquery as cq
 
+
 class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     """Creates a rectangular shaped toroidal field coil.
 
@@ -109,18 +110,32 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
 
         points = [
             self.horizontal_start_point,  # connection point
-            (self.horizontal_start_point[0] + self.thickness, self.horizontal_start_point[1]),  # connection point
+            # connection point
+            (self.horizontal_start_point[0] +
+             self.thickness, self.horizontal_start_point[1]),
             (self.vertical_mid_point[0], self.horizontal_start_point[1]),
             (self.vertical_mid_point[0], -self.horizontal_start_point[1]),
-            (self.horizontal_start_point[0] + self.thickness, -self.horizontal_start_point[1]),  #connection point
-            (self.horizontal_start_point[0], -self.horizontal_start_point[1]),  # connection point
-            (self.horizontal_start_point[0], -(self.horizontal_start_point[1] + self.thickness)),
-            (self.vertical_mid_point[0] + self.thickness, -(self.horizontal_start_point[1] + self.thickness)),
-            (self.vertical_mid_point[0] + self.thickness, self.horizontal_start_point[1] + self.thickness),
-            (self.horizontal_start_point[0], self.horizontal_start_point[1]+ self.thickness),
+            # connection point
+            (self.horizontal_start_point[0] +
+             self.thickness, -
+             self.horizontal_start_point[1]),
+            # connection point
+            (self.horizontal_start_point[0], -self.horizontal_start_point[1]),
+            (self.horizontal_start_point[0], -
+             (self.horizontal_start_point[1] +
+                self.thickness)),
+            (self.vertical_mid_point[0] +
+             self.thickness, -
+             (self.horizontal_start_point[1] +
+                self.thickness)),
+            (self.vertical_mid_point[0] + self.thickness,
+             self.horizontal_start_point[1] + self.thickness),
+            (self.horizontal_start_point[0],
+             self.horizontal_start_point[1] + self.thickness),
         ]
 
-        self.inner_leg_connection_points = [points[0], points[1], points[4], points[5]]
+        self.inner_leg_connection_points = [
+            points[0], points[1], points[4], points[5]]
 
         self.points = points
 
