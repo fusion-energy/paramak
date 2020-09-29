@@ -522,15 +522,11 @@ class SubmersionTokamak(paramak.Reactor):
 
         if self._tf_info_provided:
             self._tf_coil = paramak.ToroidalFieldCoilRectangle(
-                inner_upper_point=(
+                horizontal_start_point=(
                     self._inboard_tf_coils_start_radius,
                     self._blanket_rear_wall_end_height,
                 ),
-                inner_lower_point=(
-                    self._inboard_tf_coils_start_radius,
-                    -self._blanket_rear_wall_end_height,
-                ),
-                inner_mid_point=(self._outboard_tf_coil_start_radius, 0),
+                vertical_mid_point=(self._outboard_tf_coil_start_radius, 0),
                 thickness=self.outboard_tf_coil_radial_thickness,
                 number_of_coils=self.number_of_tf_coils,
                 distance=self.outboard_tf_coil_poloidal_thickness,
