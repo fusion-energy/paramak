@@ -267,8 +267,8 @@ def main():
     all_components.append(component)
 
     component = paramak.ToroidalFieldCoilRectangle(
-        vertical_mid_point=(100, 700),
-        inner_upper_point=(800, 0),
+        horizontal_start_point=(100, 700),
+        vertical_mid_point=(800, 0),
         thickness=150,
         distance=60,
         stp_filename="tf_coil_rectangle.stp",
