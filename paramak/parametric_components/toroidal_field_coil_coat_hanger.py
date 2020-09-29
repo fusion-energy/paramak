@@ -184,7 +184,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             (points[5][0] + self.thickness, points[5][1]),
             # (points[4][0], points[4][1] - 2 * self.thickness),
             points[5],
-            ]
+        ]
 
         self.points = points
 
