@@ -130,7 +130,6 @@ class SingleNullBallReactor(paramak.BallReactor):
 
     def make_divertor_single_null(self, shapes_or_components):
 
-
         if self.divertor_position == "upper":
             divertor_height = self._blanket_rear_wall_end_height
         elif self.divertor_position == "lower":
@@ -139,7 +138,8 @@ class SingleNullBallReactor(paramak.BallReactor):
         # # used as an intersect when making the divertor
         self._blanket_fw_rear_wall_envelope = paramak.BlanketFP(
             plasma=self._plasma,
-            thickness=self.firstwall_radial_thickness + self.blanket_radial_thickness + self.blanket_rear_wall_radial_thickness,
+            thickness=self.firstwall_radial_thickness +
+            self.blanket_radial_thickness + self.blanket_rear_wall_radial_thickness,
             offset_from_plasma=[
                 self.major_radius - self.minor_radius,
                 self.plasma_gap_vertical_thickness,
@@ -150,8 +150,7 @@ class SingleNullBallReactor(paramak.BallReactor):
             start_angle=-179,
             stop_angle=179,
             rotation_angle=self.rotation_angle,
-        ) 
-
+        )
 
         self._divertor = paramak.RotateStraightShape(
             points=[
@@ -186,7 +185,8 @@ class SingleNullBallReactor(paramak.BallReactor):
 
         self._firstwall.solid = self._firstwall.solid.cut(blanket_cutter.solid)
         self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
-        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(blanket_cutter.solid)
+        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
+            blanket_cutter.solid)
         shapes_or_components.append(self._firstwall)
         shapes_or_components.append(self._blanket)
         shapes_or_components.append(self._blanket_rear_wall)
