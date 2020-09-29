@@ -80,9 +80,9 @@ class Reactor:
     @property
     def shapes_and_components(self):
         """Adds a list of parametric shape(s) and or parametric component(s)
-        to the Reactor object. This allows collective operations to be performed
-        on all the shapes in the reactor. When adding a shape or component the
-        stp_filename of the shape or component should be unique."""
+        to the Reactor object. This allows collective operations to be
+        performed on all the shapes in the reactor. When adding a shape or
+        component the stp_filename of the shape or component should be unique."""
 
         return self._shapes_and_components
 
@@ -98,9 +98,18 @@ class Reactor:
         and rotates the viewing angle so that .solid operations in jupyter notebook
         and svg exports are better orientation.
         """
-        compound = cq.Compound.makeCompound(
-            [a.solid.val() for a in self.shapes_and_components]
-        )
+
+        list_of_cq_vals = []
+
+        for shope_or_compound in self.shapes_and_components:
+            if isinstance(shope_or_compound.solid,  cq.occ_impl.shapes.Compound):
+                for solid in shope_or_compound.solid.Solids():
+                    list_of_cq_vals.append(solid)
+            else:
+                list_of_cq_vals.append(shope_or_compound.solid.val())
+
+        compound = cq.Compound.makeCompound(list_of_cq_vals)
+
         compound = compound.rotate(
             startVector=(0, 1, 0), endVector=(0, 0, 1), angleDegrees=180
         )
