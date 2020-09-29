@@ -1,21 +1,24 @@
 from paramak import ExtrudeStraightShape
 import numpy as np
+from collections import Iterable
+
+import cadquery as cq
 
 
 class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     """Creates a rectangular shaped toroidal field coil.
 
     Args:
-        inner_upper_point (tuple of 2 floats): the (x,z) coordinates of the inner
-            upper point (cm).
-        inner_mid_point (tuple of 2 floats): the (x,z) coordinates of the inner
-            mid point (cm).
-        inner_lower_point (tuple of 2 floats): the (x,z) coordinates of the inner
-            lower point (cm).
+        horizontal_start_point (tuple of 2 floats): the (x,z) coordinates of the
+            inner upper point (cm).
+        vertical_mid_point (tuple of 2 points): the (x,z) coordinates of the mid point
+            of the vertical section (cm).
         thickness (float): the thickness of the toroidal field coil.
         distance (float): the extrusion distance.
-        number_of_coils (int): the number of tf coils. This changes by the azimuth_placement_angle
-            dividing up 360 degrees by the number of coils.
+        number_of_coils (int): the number of tf coils. This changes by the
+            azimuth_placement_angle dividing up 360 degrees by the number of
+            coils.
+        with_inner_leg (Boolean): Include the inner tf leg (default True)
 
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the shape.
@@ -35,14 +38,15 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        a paramak shape object: A shape object that has generic functionality
+        with points determined by the find_points() method. A CadQuery solid
+        of the shape can be called via shape.solid.
     """
 
     def __init__(
         self,
-        inner_upper_point,
-        inner_mid_point,
-        inner_lower_point,
+        horizontal_start_point,
+        vertical_mid_point,
         thickness,
         distance,
         number_of_coils,
@@ -53,6 +57,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         azimuth_placement_angle=0,
         name=None,
         material_tag="outer_tf_coil_mat",
+        with_inner_leg=True,
         **kwargs
     ):
 
@@ -83,12 +88,12 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             **default_dict
         )
 
-        self.inner_upper_point = inner_upper_point
-        self.inner_mid_point = inner_mid_point
-        self.inner_lower_point = inner_lower_point
+        self.horizontal_start_point = horizontal_start_point
+        self.vertical_mid_point = vertical_mid_point
         self.thickness = thickness
         self.distance = distance
         self.number_of_coils = number_of_coils
+        self.with_inner_leg = with_inner_leg
 
     @property
     def azimuth_placement_angle(self):
@@ -103,26 +108,41 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         """Finds the XZ points joined by straight connections that describe the 2D
         profile of the poloidal field coil shape."""
 
+        if self.horizontal_start_point[0] >= self.vertical_mid_point[0]:
+            raise ValueError(
+                'horizontal_start_point x should be smaller than the vertical_mid_point x value')
+        if self.vertical_mid_point[1] >= self.horizontal_start_point[1]:
+            raise ValueError(
+                'vertical_mid_point y value should be smaller than the horizontal_start_point y value')
+
         points = [
-            (self.inner_upper_point),
-            (self.inner_mid_point[0], self.inner_upper_point[1]),
-            (self.inner_mid_point[0], self.inner_lower_point[1]),
-            (self.inner_lower_point),
-            (self.inner_lower_point[0],
-             self.inner_lower_point[1] - self.thickness),
-            (
-                self.inner_mid_point[0] + self.thickness,
-                self.inner_lower_point[1] - self.thickness,
-            ),
-            (self.inner_mid_point[0] +
-             self.thickness, self.inner_mid_point[1]),
-            (
-                self.inner_mid_point[0] + self.thickness,
-                self.inner_upper_point[1] + self.thickness,
-            ),
-            (self.inner_upper_point[0],
-             self.inner_upper_point[1] + self.thickness),
+            self.horizontal_start_point,  # connection point
+            # connection point
+            (self.horizontal_start_point[0] +
+             self.thickness, self.horizontal_start_point[1]),
+            (self.vertical_mid_point[0], self.horizontal_start_point[1]),
+            (self.vertical_mid_point[0], -self.horizontal_start_point[1]),
+            # connection point
+            (self.horizontal_start_point[0] +
+             self.thickness, -
+             self.horizontal_start_point[1]),
+            # connection point
+            (self.horizontal_start_point[0], -self.horizontal_start_point[1]),
+            (self.horizontal_start_point[0], -
+             (self.horizontal_start_point[1] +
+                self.thickness)),
+            (self.vertical_mid_point[0] +
+             self.thickness, -
+             (self.horizontal_start_point[1] +
+                self.thickness)),
+            (self.vertical_mid_point[0] + self.thickness,
+             self.horizontal_start_point[1] + self.thickness),
+            (self.horizontal_start_point[0],
+             self.horizontal_start_point[1] + self.thickness),
         ]
+
+        self.inner_leg_connection_points = [
+            points[0], points[1], points[4], points[5]]
 
         self.points = points
 
@@ -137,3 +157,52 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
                 endpoint=False))
 
         self.azimuth_placement_angle = angles
+
+    def create_solid(self):
+        """Creates a 3d solid using points with straight connections
+        edges, azimuth_placement_angle and rotation_angle.
+
+        Returns:
+           A CadQuery solid: A 3D solid volume
+        """
+
+        # Creates a cadquery solid from points and revolves
+        solid = (
+            cq.Workplane(self.workplane)
+            .polyline(self.points)
+            .close()
+            .extrude(distance=-self.distance / 2.0, both=True)
+        )
+
+        if self.with_inner_leg is True:
+            inner_leg_solid = cq.Workplane(self.workplane)
+            inner_leg_solid = inner_leg_solid.polyline(
+                self.inner_leg_connection_points)
+            inner_leg_solid = inner_leg_solid.close().extrude(
+                distance=-self.distance / 2.0, both=True)
+
+            solid = cq.Compound.makeCompound(
+                [a.val() for a in [inner_leg_solid, solid]]
+            )
+
+        # Checks if the azimuth_placement_angle is a list of angles
+        if isinstance(self.azimuth_placement_angle, Iterable):
+            rotated_solids = []
+            # Perform seperate rotations for each angle
+            for angle in self.azimuth_placement_angle:
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
+            solid = cq.Workplane(self.workplane)
+
+            # Joins the seperate solids together
+            for i in rotated_solids:
+                solid = solid.union(i)
+        else:
+            # Peform rotations for a single azimuth_placement_angle angle
+            solid = solid.rotate(
+                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+
+        self.perform_boolean_operations(solid)
+
+        return solid
