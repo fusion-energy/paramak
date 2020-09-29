@@ -69,7 +69,7 @@ class test_object_properties(unittest.TestCase):
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        os.system("python make_parametric_single_null_submersion_ball_reactor.py")
+        os.system("python make_parametric_single_null_submersion_reactor.py")
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
