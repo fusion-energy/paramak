@@ -109,9 +109,11 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         profile of the poloidal field coil shape."""
 
         if self.horizontal_start_point[0] >= self.vertical_mid_point[0]:
-            raise ValueError('horizontal_start_point x should be smaller than the vertical_mid_point x value')
+            raise ValueError(
+                'horizontal_start_point x should be smaller than the vertical_mid_point x value')
         if self.vertical_mid_point[1] >= self.horizontal_start_point[1]:
-            raise ValueError('vertical_mid_point y value should be smaller than the horizontal_start_point y value')
+            raise ValueError(
+                'vertical_mid_point y value should be smaller than the horizontal_start_point y value')
 
         points = [
             self.horizontal_start_point,  # connection point
