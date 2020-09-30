@@ -7,7 +7,7 @@ class PoloidalFieldCoil(RotateStraightShape):
     Args:
         height (float): the vertical (z axis) height of the coil (cm).
         width (float): the horizontal (x axis) width of the coil (cm).
-        center_point (tuple of floats): the center of the coil (x,z) values 
+        center_point (tuple of floats): the center of the coil (x,z) values
             (cm).
 
     Keyword Args:
@@ -19,7 +19,7 @@ class PoloidalFieldCoil(RotateStraightShape):
             neutronics description.
         stp_filename (str): The filename used when saving stp files as part of a
             reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or 
+        azimuth_placement_angle (float or iterable of floats): The angle or
             angles to use when rotating the shape on the azimuthal axis.
         rotation_angle (float): The rotation angle to use when revolving the
             solid (degrees).
