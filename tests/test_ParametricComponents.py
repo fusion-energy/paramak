@@ -94,9 +94,9 @@ class test_CuttingWedgeFS(unittest.TestCase):
         encompasses"""
 
         hoop_shape = paramak.PoloidalFieldCoil(height=20,
-                                        width=20,
-                                        center_point=(50, 200),
-                                        rotation_angle=180)
+                                               width=20,
+                                               center_point=(50, 200),
+                                               rotation_angle=180)
 
         cutter = paramak.CuttingWedgeFS(
             shape=hoop_shape,
@@ -104,6 +104,7 @@ class test_CuttingWedgeFS(unittest.TestCase):
         )
 
         assert cutter.volume > hoop_shape.volume
+
 
 class test_CuttingWedge(unittest.TestCase):
     def test_volume_of_CuttingWedge_for_5_random_dimentions(self):
@@ -122,6 +123,7 @@ class test_CuttingWedge(unittest.TestCase):
             angle_fraction = 360 / rotation_angle
             correct_volume = (math.pi * radius ** 2 * height) / angle_fraction
             assert test_shape.volume == pytest.approx(correct_volume)
+
 
 class test_InboardFirstwallFCCS(unittest.TestCase):
     def test_construction_with_CenterColumnShieldCylinder(self):
