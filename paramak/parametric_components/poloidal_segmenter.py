@@ -1,5 +1,4 @@
 import math
-import numpy as np
 import cadquery as cq
 
 from paramak import RotateStraightShape

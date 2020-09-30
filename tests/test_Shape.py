@@ -2,14 +2,7 @@ import os
 import unittest
 from pathlib import Path
 
-import pytest
-
 import paramak
-
-# test command
-# pytest tests -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-# from head paramak directory
-
 
 class test_object_properties(unittest.TestCase):
     def test_shape_default_properties(self):
@@ -222,7 +215,7 @@ class test_object_properties(unittest.TestCase):
 
         def invalid_filename_suffix():
 
-            test_shape = paramak.RotateStraightShape(
+            paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 stp_filename="filename.invalid_suffix"
             )
@@ -231,7 +224,7 @@ class test_object_properties(unittest.TestCase):
 
         def invalid_filename_type():
 
-            test_shape = paramak.RotateStraightShape(
+            paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 stp_filename=123456
             )
@@ -243,7 +236,7 @@ class test_object_properties(unittest.TestCase):
 
         def invalid_filename_suffix():
 
-            test_shape = paramak.RotateStraightShape(
+            paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 stl_filename="filename.invalid_suffix"
             )
@@ -252,7 +245,7 @@ class test_object_properties(unittest.TestCase):
 
         def invalid_filename_type():
 
-            test_shape = paramak.RotateStraightShape(
+            paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 stl_filename=123456
             )
@@ -264,7 +257,7 @@ class test_object_properties(unittest.TestCase):
 
         def invalid_color_type():
 
-            test_shape = paramak.RotateStraightShape(
+            paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 color=255
             )
@@ -273,7 +266,7 @@ class test_object_properties(unittest.TestCase):
 
         def invalid_color_length():
 
-            test_shape = paramak.RotateStraightShape(
+            paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
                 color=(255, 255, 255, 1, 1)
             )

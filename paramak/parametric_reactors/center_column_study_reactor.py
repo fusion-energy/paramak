@@ -1,5 +1,4 @@
-import math
-import operator
+
 import warnings
 
 import cadquery as cq

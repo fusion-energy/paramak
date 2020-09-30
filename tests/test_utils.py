@@ -1,8 +1,5 @@
-import os
-import unittest
-from pathlib import Path
 
-import pytest
+import unittest
 
 from paramak.utils import find_center_point_of_circle
 

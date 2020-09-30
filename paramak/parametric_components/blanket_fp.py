@@ -1,7 +1,4 @@
-import math
-
 import numpy as np
-import scipy
 from scipy.interpolate import interp1d
 import sympy as sp
 
