@@ -15,19 +15,26 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         gap_size (float): gap between adjacent tf coils.
 
     Keyword Args:
-        name (str): the legend name used when exporting a html graph of the shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
-            exportin as html graphs or png images.
-        material_tag (str): The material name to use when exporting the neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
-            rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
-            this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        name (str): the legend name used when exporting a html graph of the
+            shape.
+        color (sequences of 3 or 4 floats each in the range 0-1): the color to
+            use when exporting as html graphs or png images.
+        material_tag (str): The material name to use when exporting the
+            neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a
+            reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or
+            angles to use when rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the
+            solid (degrees).
+        workplane (str): The orientation of the CadQuery workplane. Options are
+            XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a
+            boolean intersect with this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean
+            cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a
+            boolean union with this object.
         tet_mesh (str): Insert description.
         physical_groups (type): Insert description.
 
@@ -212,7 +219,8 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         self.points = points
 
     def find_azimuth_placement_angle(self):
-        """Calculates the azimuth placement angles based on the number of tf coils"""
+        """Calculates the azimuth placement angles based on the number of tf
+        coils"""
 
         angles = list(
             np.linspace(
