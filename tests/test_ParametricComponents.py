@@ -102,8 +102,9 @@ class test_CuttingWedge(unittest.TestCase):
                 azimuth_placement_angle=azimuth_placement_angle
             )
             angle_fraction = 360 / rotation_angle
-            correct_volume = (math.pi * radius **2 * height) / angle_fraction
+            correct_volume = (math.pi * radius ** 2 * height) / angle_fraction
             assert test_shape.volume == pytest.approx(correct_volume)
+
 
 class test_InboardFirstwallFCCS(unittest.TestCase):
     def test_construction_with_CenterColumnShieldCylinder(self):
