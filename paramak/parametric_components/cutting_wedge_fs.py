@@ -19,7 +19,7 @@ class CuttingWedgeFS(RotateStraightShape):
             reactor.
         azimuth_placement_angle (float or iterable of floats): The angle or
             angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the 
+        rotation_angle (float): The rotation angle to use when revolving the
             solid (degrees).
         workplane (str): The orientation of the CadQuery workplane. Options are
             XY, YZ or XZ.

@@ -12,8 +12,8 @@ class RotateMixedShape(Shape):
     Args:
         points (list of tuples each containing X (float), Z (float), connection):
             A list of XZ coordinates and connection types. The connection types
-            are either 'straight', 'spline' or 'circle'. For example [(2., 1., 
-            'straight'), (2., 2., 'straight'), (1., 2., 'spline'), (1., 1., 
+            are either 'straight', 'spline' or 'circle'. For example [(2., 1.,
+            'straight'), (2., 2., 'straight'), (1., 2., 'spline'), (1., 1.,
             'spline')].
         name (str): The legend name used when exporting a html graph of the
             shape.
