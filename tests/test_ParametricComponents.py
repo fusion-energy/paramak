@@ -107,27 +107,21 @@ class test_CuttingWedgeFS(unittest.TestCase):
 
 class test_CuttingWedge(unittest.TestCase):
     def test_volume_of_CuttingWedge_for_5_random_dimentions(self):
-        """makes 5 random cutting cylinders and checks their volumes"""
+        for test_number in range(5):
+            height = random.uniform(1., 2000.)
+            radius = random.uniform(1., 1000)
+            rotation_angle = random.uniform(1., 360.)
+            azimuth_placement_angle = random.uniform(1., 360.)
 
-        height = random.uniform(1., 2000.)
-        radius = random.uniform(1., 1000)
-        rotation_angle = random.uniform(1., 360.)
-        azimuth_placement_angle = random.uniform(1., 360.)
-
-        a = paramak.CenterColumnShieldCylinder(
-            height=100,
-            inner_radius=20,
-            outer_radius=80)
-
-        test_shape = paramak.CuttingWedge(
-            height=height,
-            radius=radius,
-            rotation_angle=rotation_angle,
-            azimuth_placement_angle=azimuth_placement_angle
-        )
-        angle_fraction = 360 / rotation_angle
-        correct_volume = (math.pi * radius **2 * height) / angle_fraction
-        assert test_shape.volume == pytest.approx(correct_volume)
+            test_shape = paramak.CuttingWedge(
+                height=height,
+                radius=radius,
+                rotation_angle=rotation_angle,
+                azimuth_placement_angle=azimuth_placement_angle
+            )
+            angle_fraction = 360 / rotation_angle
+            correct_volume = (math.pi * radius ** 2 * height) / angle_fraction
+            assert test_shape.volume == pytest.approx(correct_volume)
 
 class test_InboardFirstwallFCCS(unittest.TestCase):
     def test_construction_with_CenterColumnShieldCylinder(self):
