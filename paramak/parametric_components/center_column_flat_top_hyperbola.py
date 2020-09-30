@@ -11,7 +11,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         arc_height (float): height of the outer hyperbolic profile of the center
             column shield.
         inner_radius (float): the inner radius of the center column shield.
-        mid_radius (float): the inner radius of the outer hyperbolic profile of 
+        mid_radius (float): the inner radius of the outer hyperbolic profile of
             the center column shield.
         outer_radius (float): the outer_radius of the center column shield.
 
