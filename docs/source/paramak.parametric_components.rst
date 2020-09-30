@@ -125,6 +125,30 @@ CenterColumnShieldPlasmaHyperbola()
    :members:
    :show-inheritance:
 
+CuttingWedge()
+^^^^^^^^^^^^^^
+
+|CuttingWedgestp| |CuttingWedgesvg|
+
+.. |CuttingWedgestp| image:: https://user-images.githubusercontent.com/8583900/94726081-a678c180-0354-11eb-93f2-98d4b4a6839e.png
+    :width: 300px
+.. |CuttingWedgesvg| image:: https://user-images.githubusercontent.com/8583900/94726514-433b5f00-0355-11eb-94d2-06b2bba1ed4a.png
+    :width: 300px
+
+.. automodule:: paramak.parametric_components.cutting_wedge
+   :members:
+   :show-inheritance:
+
+CuttingWedgeFS()
+^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/94726081-a678c180-0354-11eb-93f2-98d4b4a6839e.png
+    :width: 300px
+
+.. automodule:: paramak.parametric_components.cutting_wedge_fs
+   :members:
+   :show-inheritance:
+
 InboardFirstwallFCCS()
 ^^^^^^^^^^^^^^^^^^^^^^
 
