@@ -10,7 +10,7 @@ class CuttingWedgeFS(RotateStraightShape):
         color=(0.5, 0.5, 0.5),
         stp_filename="CuttingSlice.stp",
         stl_filename="CuttingSlice.stl",
-        rotation_angle=360,
+        rotation_angle=180,
         material_tag="cutting_slice_mat",
         azimuth_placement_angle=0,
         **kwargs
