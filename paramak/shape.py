@@ -34,7 +34,7 @@ class Shape:
         azimuth_placement_angle: the azimuth angle(s) used when positioning the
             shape. If a list of angles is provided, the shape is duplicated at
             all angles
-        workplane (str): the orientation of the Cadquery workplane. (XY, YZ or 
+        workplane (str): the orientation of the Cadquery workplane. (XY, YZ or
             XZ)
 
     Returns:
@@ -274,8 +274,7 @@ class Shape:
                 if not all(len(entry) == 3 for entry in values):
                     raise ValueError(
                         "The points list should contain entries of length 2 or \
-                            3 but not a mixture of 2 and 3"
-                    )
+                            3 but not a mixture of 2 and 3")
 
             if len(values) > 1:
                 if values[-1][0] == values[0][0] and values[-1][1] == values[0][1]:
@@ -313,8 +312,7 @@ class Shape:
             else:
                 raise ValueError(
                     "Incorrect filename ending, filename must end with .stp or \
-                        .step"
-                )
+                        .step")
         else:
             raise ValueError(
                 "stp_filename must be a string",
@@ -424,7 +422,7 @@ class Shape:
 
     def export_stp(self, filename=None):
         """Exports an stp file for the Shape.solid. If the filename provided
-            doesn't end with .stp or .step then .stp will be added. If a 
+            doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
             not None the stp_filename will be used as the export filename.
 
