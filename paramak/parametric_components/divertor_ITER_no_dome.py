@@ -1,4 +1,4 @@
-from paramak import RotateMixedShape, extend, rotate, distance_between_two_points, ITERtypeDivertor
+from paramak import ITERtypeDivertor
 import math
 import numpy as np
 

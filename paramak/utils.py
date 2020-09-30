@@ -6,7 +6,7 @@ import numpy as np
 
 def union_solid(solid, joiner):
     """
-    Performs a boolean union of a solid with another solid or iterable of solids.
+    Performs a boolean union of a solid with another solid or iterable of solids
 
     Args:
         solid Shape: the Shape that you want to union from
@@ -44,7 +44,8 @@ def cut_solid(solid, cutter):
 
 def intersect_solid(solid, intersecter):
     """
-    Performs a boolean intersection of a solid with another solid or iterable of solids.
+    Performs a boolean intersection of a solid with another solid or iterable of
+    solids.
 
     Args:
         solid Shape: the Shape that you want to intersect
