@@ -39,6 +39,8 @@ from .parametric_components.poloidal_field_coil_case_set import PoloidalFieldCoi
 from .parametric_components.poloidal_field_coil_case_set_fc import PoloidalFieldCoilCaseSetFC
 
 from .parametric_components.poloidal_segmenter import PoloidalSegments
+from .parametric_components.cutting_wedge import CuttingWedge
+from .parametric_components.cutting_wedge_fs import CuttingWedgeFS
 
 from .parametric_components.inner_tf_coils_circular import InnerTfCoilsCircular
 from .parametric_components.inner_tf_coils_flat import InnerTfCoilsFlat
