@@ -3,8 +3,6 @@ This python script demonstrates the creation of all parametric shapes available
 in the paramak tool
 """
 
-import os
-import paramak
 from make_all_parametric_reactors import main
 from cadquery import exporters
 

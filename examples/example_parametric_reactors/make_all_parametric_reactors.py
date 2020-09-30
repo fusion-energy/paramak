@@ -8,7 +8,6 @@ import paramak
 
 def main():
 
-    rot_angle = 180
     all_reactors = []
 
     my_reactor = paramak.BallReactor(

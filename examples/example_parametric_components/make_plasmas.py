@@ -2,10 +2,6 @@
 This python script demonstrates the creation of plasmas
 """
 
-import math
-
-import numpy as np
-
 import paramak
 import plotly.graph_objects as go
 

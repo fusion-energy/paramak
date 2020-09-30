@@ -420,7 +420,7 @@ class test_object_properties(unittest.TestCase):
             test_shape.rotation_angle = 360
             test_shape.stp_filename = "test.stp"
             test_reactor = paramak.Reactor([test_shape])
-            neutronics_description = test_reactor.neutronics_description()
+            test_reactor.neutronics_description()
 
         self.assertRaises(
             ValueError,
@@ -436,7 +436,7 @@ class test_object_properties(unittest.TestCase):
             test_shape.material_tag = "test_material"
             test_shape.stp_filename = None
             test_reactor = paramak.Reactor([test_shape])
-            neutronics_description = test_reactor.neutronics_description()
+            test_reactor.neutronics_description()
 
         self.assertRaises(
             ValueError,

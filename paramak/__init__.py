@@ -20,7 +20,8 @@ from .parametric_components.blanket_constant_thickness_arc_h import BlanketConst
 from .parametric_components.blanket_constant_thickness_arc_v import BlanketConstantThicknessArcV
 from .parametric_components.blanket_fp import BlanketFP
 
-from .parametric_components.divertor_ITER import ITERtypeDivertor, ITERtypeDivertorNoDome
+from .parametric_components.divertor_ITER import ITERtypeDivertor
+from .parametric_components.divertor_ITER_no_dome import ITERtypeDivertorNoDome
 
 from .parametric_components.center_column_cylinder import CenterColumnShieldCylinder
 from .parametric_components.center_column_hyperbola import CenterColumnShieldHyperbola

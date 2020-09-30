@@ -1,8 +1,6 @@
 
 import warnings
 
-import cadquery as cq
-
 import paramak
 
 
