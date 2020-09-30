@@ -131,7 +131,7 @@ def find_center_point_of_circle(point1, point2, point3):
 
 
 def extend(A, B, L):
-    """Creates a point C in (AB) direction so that \|AC\| = L
+    """Creates a point C in (AB) direction so that \\|AC\\| = L
 
     Args:
         A (float, float): point A coordinates

@@ -1,5 +1,4 @@
 import json
-import math
 from collections import Iterable
 from pathlib import Path
 
@@ -7,7 +6,6 @@ import cadquery as cq
 import matplotlib.pyplot as plt
 import numpy as np
 from cadquery import exporters
-from PIL import Image
 
 import paramak
 import plotly.graph_objects as go

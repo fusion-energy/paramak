@@ -1,7 +1,3 @@
-import scipy
-import math
-
-import numpy as np
 
 from paramak import RotateMixedShape
 

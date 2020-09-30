@@ -1,5 +1,4 @@
 from collections import Iterable
-from hashlib import blake2b
 
 import cadquery as cq
 
@@ -10,19 +9,24 @@ class RotateCircleShape(Shape):
     """Rotates a circular 3d CadQuery solid from a central point and a radius
 
     Args:
-        points (a list of tuples each containing X (float), Z (float)): A list of a single
-            XZ coordinate which is the central point of the circle. For example, [(10, 10)].
+        points (a list of tuples each containing X (float), Z (float)): A list
+            of a single XZ coordinate which is the central point of the circle.
+            For example, [(10, 10)].
         radius (float): The radius of the circle.
-        name (str): The legend name used when exporting a html graph of the shape.
+        name (str): The legend name used when exporting a html graph of the
+            shape.
         color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
             The color to use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the neutronics description.
-        stp_filname (str): The filename used when saving stp files as part of a reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
-            rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
-        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this
-            object.
+        material_tag (str): The material name to use when exporting the
+            neutronics description.
+        stp_filname (str): The filename used when saving stp files as part of a
+            reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or
+            angles to use when rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the
+            solid (degrees).
+        cut (CadQuery object): An optional CadQuery object to perform a boolean
+            cut with this object.
 
     Returns:
         a paramak shape object: a Shape object that has generic functionality

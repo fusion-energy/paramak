@@ -1,6 +1,5 @@
+
 import numpy as np
-from scipy import integrate
-from scipy.optimize import minimize
 
 from paramak import ExtrudeMixedShape
 
@@ -151,7 +150,6 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         small_coverage, mid_coverage = self.small_coverage, self.mid_coverage
         small_coverage *= np.pi / 180  # convert to radians
         mid_coverage *= np.pi / 180
-        asum = small_coverage + mid_coverage
 
         # create inner coordinates
         R_inner, Z_inner = self.compute_curve(

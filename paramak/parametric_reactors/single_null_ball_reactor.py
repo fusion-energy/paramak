@@ -1,7 +1,3 @@
-import math
-import operator
-
-import cadquery as cq
 
 import paramak
 

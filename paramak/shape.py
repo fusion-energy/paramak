@@ -1,5 +1,4 @@
 import json
-import math
 import numbers
 import warnings
 from collections import Iterable
@@ -7,12 +6,10 @@ from hashlib import blake2b
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import numpy as np
 import plotly.graph_objects as go
 from cadquery import exporters
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
-from PIL import Image
 
 from paramak.utils import cut_solid, intersect_solid, union_solid
 
