@@ -162,7 +162,7 @@ class ExtrudeMixedShape(Shape):
         else:
             # Peform rotations for a single azimuth_placement_angle angle
             solid = solid.rotate(
-                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
 
         self.perform_boolean_operations(solid)
 
