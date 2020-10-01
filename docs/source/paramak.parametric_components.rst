@@ -386,12 +386,14 @@ ToroidalFieldCoilPrincetonD()
 ToroidalFieldCoilTripleArc()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-|ToroidalFieldCoilTripleArcallstp| |ToroidalFieldCoilTripleArcstp| 
+|ToroidalFieldCoilTripleArcallstp| |ToroidalFieldCoilTripleArcstp| |ToroidalFieldCoilTripleArcsvg|
 
 .. |ToroidalFieldCoilTripleArcallstp| image:: https://user-images.githubusercontent.com/56687624/92124454-b654c280-edf5-11ea-96d2-c0957f37a733.png
    :width: 250
 .. |ToroidalFieldCoilTripleArcstp| image:: https://user-images.githubusercontent.com/8583900/94835218-51e34e00-0409-11eb-9372-0272c43a4844.png
    :width: 250
+.. |ToroidalFieldCoilTripleArcsvg| image:: https://user-images.githubusercontent.com/8583900/94855159-fe332d80-0425-11eb-92a4-d1d43a066644.png
+   :width: 350
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_triple_arc
    :members:
