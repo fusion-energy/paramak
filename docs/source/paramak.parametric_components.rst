@@ -222,10 +222,12 @@ InnerTfCoilsFlat()
 PoloidalFieldCoil()
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241487-dfa96600-bb9a-11ea-96ba-54f22ecef1ef.png
-    :width: 220px
-    :height: 180px
-    :align: center
+|PoloidalFieldCoilstp| |PoloidalFieldCoilsvg|
+
+.. |PoloidalFieldCoilstp| image:: https://user-images.githubusercontent.com/56687624/86241487-dfa96600-bb9a-11ea-96ba-54f22ecef1ef.png
+    :width: 330px
+.. |PoloidalFieldCoilsvg| image:: https://user-images.githubusercontent.com/8583900/94807412-86461280-03e7-11eb-9854-ecf66489c262.png
+    :width: 330px
 
 .. automodule:: paramak.parametric_components.poloidal_field_coil
    :members:
@@ -246,10 +248,12 @@ PoloidalFieldCoilSet()
 PoloidalFieldCoilCase()
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
-    :width: 220px
-    :height: 180px
-    :align: center
+|PoloidalFieldCoilCasestp| |PoloidalFieldCoilCasesvg|
+
+.. |PoloidalFieldCoilCasestp| image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
+    :width: 330px
+.. |PoloidalFieldCoilCasesvg| image:: https://user-images.githubusercontent.com/8583900/94807553-bab9ce80-03e7-11eb-9a2a-1b78a780b049.png
+    :width: 330px
 
 .. automodule:: paramak.parametric_components.poloidal_field_coil_case
    :members:
