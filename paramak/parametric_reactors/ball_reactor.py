@@ -325,7 +325,7 @@ class BallReactor(paramak.Reactor):
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
             inner_radius=0,
             outer_radius=self._center_column_shield_end_radius,
-            rotation_angle=self.rotation_angle
+            rotation_angle=360
         )
 
         self._firstwall = paramak.BlanketFP(
@@ -426,7 +426,7 @@ class BallReactor(paramak.Reactor):
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
             inner_radius=0,
             outer_radius=self._divertor_end_radius,
-            rotation_angle=self.rotation_angle
+            rotation_angle=360
         )
 
         self._firstwall.solid = self._firstwall.solid.cut(blanket_cutter.solid)
