@@ -105,7 +105,7 @@ class CuttingWedgeFS(RotateStraightShape):
             ]
 
             rotation_angle = 360 - self.shape.rotation_angle
-            
+
             azimuth_placement_angle = self.shape.azimuth_placement_angle + self.shape.rotation_angle
             # azimuth_placement_angle setter allows > 360
 
