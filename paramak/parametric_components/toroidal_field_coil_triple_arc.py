@@ -20,6 +20,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             coils.
         vertical_displacement (float, optional): vertical displacement (cm).
             Defaults to 0.
+        with_inner_leg (Boolean): Include the inner tf leg (default True)
 
     Keyword Args:
         stp_filename (str, optional): The filename used when saving stp files
@@ -54,6 +55,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         azimuth_placement_angle=0,
         name=None,
         material_tag="outer_tf_coil_mat",
+        with_inner_leg=True,
         **kwargs
     ):
 
@@ -92,6 +94,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         self.distance = distance
         self.number_of_coils = number_of_coils
         self.vertical_displacement = vertical_displacement
+        self.with_inner_leg = with_inner_leg
 
     @property
     def azimuth_placement_angle(self):
