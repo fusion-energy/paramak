@@ -306,10 +306,12 @@ PoloidalSegmenter()
 Plasma()
 ^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
-    :width: 220px
-    :height: 200px
-    :align: center
+|Plasmastp| |Plasmasvg|
+
+.. |Plasmastp| image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
+    :width: 300px
+.. |Plasmasvg| image:: https://user-images.githubusercontent.com/8583900/94805331-226e1a80-03e4-11eb-8623-3e6db0aa1489.png
+    :width: 300px
 
 .. automodule:: paramak.parametric_components.tokamak_plasma
    :members:
@@ -318,10 +320,12 @@ Plasma()
 PlasmaFromPoints()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
-    :width: 220px
-    :height: 200px
-    :align: center
+|Plasmastp| |Plasmasvg|
+
+.. |Plasmastp| image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
+    :width: 300px
+.. |Plasmasvg| image:: https://user-images.githubusercontent.com/8583900/94805330-213ced80-03e4-11eb-80b4-b162f2f7a565.png
+    :width: 300px
 
 .. automodule:: paramak.parametric_components.tokamak_plasma_from_points
    :members:
