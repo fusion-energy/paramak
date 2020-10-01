@@ -27,7 +27,7 @@ BlanketConstantThicknessArcV()
 .. |BlanketConstantThicknessArcVstp| image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
    :width: 250
 .. |BlanketConstantThicknessArcVsvg| image:: https://user-images.githubusercontent.com/56687624/88293666-39f99a80-ccf3-11ea-8c8d-84275fd0e0ce.png
-   :width: 300
+   :width: 350
 
 .. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_v
    :members:
@@ -36,9 +36,12 @@ BlanketConstantThicknessArcV()
 BlanketFP()
 ^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
-   :width: 250
-   :align: center
+|BlanketFPstp| |BlanketFPsvg|
+
+.. |BlanketFPstp| image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
+   :width: 200
+.. |BlanketFPsvg| image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
+   :width: 350
 
 .. automodule:: paramak.parametric_components.blanket_fp
    :members:
@@ -50,9 +53,9 @@ CenterColumnShieldCylinder()
 |CenterColumnShieldCylinderstp| |CenterColumnShieldCylindersvg| 
 
 .. |CenterColumnShieldCylinderstp| image:: https://user-images.githubusercontent.com/56687624/86241438-caccd280-bb9a-11ea-9548-b199759a6dbc.png
-   :width: 180px
+   :width: 160px
 .. |CenterColumnShieldCylindersvg| image:: https://user-images.githubusercontent.com/56687624/88293674-3c5bf480-ccf3-11ea-8197-8db75358ff36.png
-   :width: 250px
+   :width: 370px
 
 .. automodule:: paramak.parametric_components.center_column_cylinder
    :members:
@@ -64,9 +67,9 @@ CenterColumnShieldHyperbola()
 |CenterColumnShieldHyperbolastp| |CenterColumnShieldHyperbolasvg|
 
 .. |CenterColumnShieldHyperbolastp| image:: https://user-images.githubusercontent.com/56687624/86241456-d0c2b380-bb9a-11ea-9728-88fe4081345f.png
-   :width: 180px
+   :width: 170px
 .. |CenterColumnShieldHyperbolasvg| image:: https://user-images.githubusercontent.com/56687624/88293672-3b2ac780-ccf3-11ea-9907-b1c8fd1ba0f0.png
-   :width: 350px
+   :width: 410px
 
 .. automodule:: paramak.parametric_components.center_column_hyperbola
    :members:
@@ -78,9 +81,9 @@ CenterColumnShieldFlatTopHyperbola()
 |CenterColumnShieldFlatTopHyperbolastp| |CenterColumnShieldFlatTopHyperbolasvg|
 
 .. |CenterColumnShieldFlatTopHyperbolastp| image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
-   :width: 180px
+   :width: 170px
 .. |CenterColumnShieldFlatTopHyperbolasvg| image:: https://user-images.githubusercontent.com/56687624/88293680-3ebe4e80-ccf3-11ea-8603-b7a290e6bfb4.png
-   :width: 300px
+   :width: 370px
 
 .. automodule:: paramak.parametric_components.center_column_flat_top_hyperbola
    :members:
@@ -92,9 +95,9 @@ CenterColumnShieldFlatTopCircular()
 |CenterColumnShieldFlatTopCircularstp| |CenterColumnShieldFlatTopCircularsvg|
 
 .. |CenterColumnShieldFlatTopCircularstp| image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
-   :width: 180px
+   :width: 170px
 .. |CenterColumnShieldFlatTopCircularsvg| image:: https://user-images.githubusercontent.com/56687624/88293678-3d8d2180-ccf3-11ea-97f7-da9a46beddbf.png
-   :width: 300px
+   :width: 370px
 
 .. automodule:: paramak.parametric_components.center_column_flat_top_circular
    :members:
@@ -176,9 +179,9 @@ InnerTfCoilsCircular()
 |InnerTfCoilsCircularstp| |InnerTfCoilsCircularsvg|
 
 .. |InnerTfCoilsCircularstp| image:: https://user-images.githubusercontent.com/56687624/86241469-d9b38500-bb9a-11ea-935f-8644fa01ab8c.png
-   :width: 200px
+   :width: 210px
 .. |InnerTFCoilsCircularsvg| image:: https://user-images.githubusercontent.com/56687624/88293695-41b93f00-ccf3-11ea-9ea8-338a64bb5566.png
-   :width: 350px
+   :width: 390px
 
 .. automodule:: paramak.parametric_components.inner_tf_coils_circular
    :members:
@@ -190,9 +193,9 @@ InnerTfCoilsFlat()
 |InnerTfCoilsFlatstp| |InnerTfCoilsFlatsvg|
 
 .. |InnerTfCoilsFlatstp| image:: https://user-images.githubusercontent.com/56687624/86241472-db7d4880-bb9a-11ea-8fb9-325b3342fe11.png
-   :width: 200px
+   :width: 210px
 .. |InnerTfCoilsFlatsvg| image:: https://user-images.githubusercontent.com/56687624/88293697-42ea6c00-ccf3-11ea-9e92-dc698813f1ee.png
-   :width: 350px
+   :width: 390px
 
 .. automodule:: paramak.parametric_components.inner_tf_coils_flat
    :members:
@@ -206,7 +209,7 @@ PoloidalFieldCoil()
 .. |PoloidalFieldCoilstp| image:: https://user-images.githubusercontent.com/56687624/86241487-dfa96600-bb9a-11ea-96ba-54f22ecef1ef.png
     :width: 330px
 .. |PoloidalFieldCoilsvg| image:: https://user-images.githubusercontent.com/8583900/94807412-86461280-03e7-11eb-9854-ecf66489c262.png
-    :width: 330px
+    :width: 360px
 
 .. automodule:: paramak.parametric_components.poloidal_field_coil
    :members:
@@ -231,7 +234,7 @@ PoloidalFieldCoilCase()
 .. |PoloidalFieldCoilCasestp| image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
     :width: 300px
 .. |PoloidalFieldCoilCasesvg| image:: https://user-images.githubusercontent.com/8583900/94807553-bab9ce80-03e7-11eb-9a2a-1b78a780b049.png
-    :width: 360px
+    :width: 370px
 
 .. automodule:: paramak.parametric_components.poloidal_field_coil_case
    :members:
@@ -289,7 +292,7 @@ Plasma()
 .. |Plasmastp| image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
     :width: 300px
 .. |Plasmasvg| image:: https://user-images.githubusercontent.com/8583900/94805331-226e1a80-03e4-11eb-8623-3e6db0aa1489.png
-    :width: 300px
+    :width: 380px
 
 .. automodule:: paramak.parametric_components.tokamak_plasma
    :members:
@@ -303,7 +306,7 @@ PlasmaFromPoints()
 .. |Plasmastp| image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
     :width: 300px
 .. |Plasmasvg| image:: https://user-images.githubusercontent.com/8583900/94805330-213ced80-03e4-11eb-80b4-b162f2f7a565.png
-    :width: 300px
+    :width: 380px
 
 .. automodule:: paramak.parametric_components.tokamak_plasma_from_points
    :members:
@@ -317,9 +320,9 @@ ToroidalFieldCoilRectangle()
 .. |ToroidalFieldCoilRectangleallstp| image:: https://user-images.githubusercontent.com/8583900/86822598-bcdbed80-c083-11ea-820e-f6c13d639170.png
     :width: 200px
 .. |ToroidalFieldCoilRectangleastp| image:: https://user-images.githubusercontent.com/8583900/94585086-6abbfa00-0277-11eb-91de-0b2548601587.png
-    :width: 150px
+    :width: 130px
 .. |ToroidalFieldCoilRectanglesvg| image:: https://user-images.githubusercontent.com/8583900/94585089-6c85bd80-0277-11eb-9be9-22befe19e86e.png
-    :width: 300px
+    :width: 310px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_rectangle
    :members:
@@ -331,11 +334,11 @@ ToroidalFieldCoilCoatHanger()
 |ToroidalFieldCoilCoatHangerallstp| |ToroidalFieldCoilCoatHangersvg| |ToroidalFieldCoilCoatHangerastp|
 
 .. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/8583900/94572025-79e77b80-0268-11eb-88da-828274539e9e.png
-   :width: 250
+   :width: 300
 .. |ToroidalFieldCoilCoatHangerastp| image:: https://user-images.githubusercontent.com/8583900/94570773-1ad53700-0267-11eb-9003-3b5768745470.png
-   :width: 250
+   :width: 130
 .. |ToroidalFieldCoilCoatHangerallstp| image:: https://user-images.githubusercontent.com/8583900/87075236-f04f8100-c217-11ea-9ffa-4791b722b9e7.png
-   :width: 250
+   :width: 210
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_coat_hanger
    :members:
@@ -349,9 +352,9 @@ ToroidalFieldCoilPrincetonD()
 .. |ToroidalFieldCoilPrincetonDallstp| image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
    :width: 250
 .. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/8583900/94529559-cd8aa280-0231-11eb-9919-48d3c642a5d7.png
-   :width: 150
+   :width: 220
 .. |ToroidalFieldCoilPrincetonDastp| image:: https://user-images.githubusercontent.com/8583900/94479853-4c012900-01cd-11eb-9b59-0fcd5f4dc531.png
-   :width: 150
+   :width: 170
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_princeton_d
    :members:
@@ -363,11 +366,11 @@ ToroidalFieldCoilTripleArc()
 |ToroidalFieldCoilTripleArcallstp| |ToroidalFieldCoilTripleArcstp| |ToroidalFieldCoilTripleArcsvg|
 
 .. |ToroidalFieldCoilTripleArcallstp| image:: https://user-images.githubusercontent.com/56687624/92124454-b654c280-edf5-11ea-96d2-c0957f37a733.png
-   :width: 250
+   :width: 240
 .. |ToroidalFieldCoilTripleArcstp| image:: https://user-images.githubusercontent.com/8583900/94835218-51e34e00-0409-11eb-9372-0272c43a4844.png
-   :width: 200
+   :width: 190
 .. |ToroidalFieldCoilTripleArcsvg| image:: https://user-images.githubusercontent.com/8583900/94855159-fe332d80-0425-11eb-92a4-d1d43a066644.png
-   :width: 350
+   :width: 340
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_triple_arc
    :members:
