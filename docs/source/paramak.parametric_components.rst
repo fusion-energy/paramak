@@ -39,7 +39,7 @@ BlanketFP()
 |BlanketFPstp| |BlanketFPsvg|
 
 .. |BlanketFPstp| image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
-   :width: 200
+   :width: 220
 .. |BlanketFPsvg| image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
    :width: 350
 
