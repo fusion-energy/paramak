@@ -1,8 +1,4 @@
-import math
-from pathlib import Path
 
-import numpy as np
-import scipy
 from plasmaboundaries import get_separatrix_coordinates
 
 from paramak import Plasma

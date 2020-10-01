@@ -6,7 +6,7 @@ import numpy as np
 
 def union_solid(solid, joiner):
     """
-    Performs a boolean union of a solid with another solid or iterable of solids.
+    Performs a boolean union of a solid with another solid or iterable of solids
 
     Args:
         solid Shape: the Shape that you want to union from
@@ -44,7 +44,8 @@ def cut_solid(solid, cutter):
 
 def intersect_solid(solid, intersecter):
     """
-    Performs a boolean intersection of a solid with another solid or iterable of solids.
+    Performs a boolean intersection of a solid with another solid or iterable of
+    solids.
 
     Args:
         solid Shape: the Shape that you want to intersect
@@ -131,7 +132,7 @@ def find_center_point_of_circle(point1, point2, point3):
 
 
 def extend(A, B, L):
-    """Creates a point C in (AB) direction so that \|AC\| = L
+    """Creates a point C in (AB) direction so that \\|AC\\| = L
 
     Args:
         A (float, float): point A coordinates

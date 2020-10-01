@@ -134,13 +134,14 @@ class test_object_properties(unittest.TestCase):
         assert test_shape3.volume == pytest.approx(test_shape.volume)
 
     def test_incorrect_connections(self):
-        """creates rotated straight shapes to check errors are correctly raised when
-        specifying connections"""
+        """creates rotated straight shapes to check errors are correctly raised
+        when specifying connections"""
 
         def incorrect_string_for_connection_type():
-            """checks ValueError is raised when an invalid connection type is specified"""
+            """checks ValueError is raised when an invalid connection type is
+            specified"""
 
-            test_shape = RotateMixedShape(
+            RotateMixedShape(
                 points=[
                     (0, 0, "straight"),
                     (0, 20, "spline"),
@@ -152,8 +153,8 @@ class test_object_properties(unittest.TestCase):
         self.assertRaises(ValueError, incorrect_string_for_connection_type)
 
         def incorrect_number_of_connections_function():
-            """checks ValueError is raised when an incorrect number of connections is
-            specified"""
+            """checks ValueError is raised when an incorrect number of
+            connections is specified"""
 
             test_shape = RotateMixedShape(
                 points=[(0, 200, "straight"), (200, 100), (0, 0, "spline"), ]
@@ -164,8 +165,8 @@ class test_object_properties(unittest.TestCase):
         self.assertRaises(ValueError, incorrect_number_of_connections_function)
 
     def test_cut_volume(self):
-        """creates a rotated shape using mixed connections with another shape cut out
-        and checks that the volume is correct"""
+        """creates a rotated shape using mixed connections with another shape
+        cut out and checks that the volume is correct"""
 
         inner_shape = RotateMixedShape(
             points=[
@@ -203,8 +204,8 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape_cut.volume == pytest.approx(2854.5969 - 862.5354)
 
     def test_mixed_shape_with_straight_and_circle(self):
-        """creates a rotated shape with straight and circular connections and checks
-        the volume is correct"""
+        """creates a rotated shape with straight and circular connections and
+        checks the volume is correct"""
 
         test_shape = RotateMixedShape(
             points=[
@@ -219,8 +220,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.volume > 10 * 10
 
     def test_export_stp(self):
-        """creates a RotateMixedShape and checks that an stp file of the shape can be
-        exported using the export_stp method"""
+        """creates a RotateMixedShape and checks that an stp file of the shape
+        can be exported using the export_stp method"""
 
         test_shape = RotateMixedShape(
             points=[
@@ -243,8 +244,8 @@ class test_object_properties(unittest.TestCase):
         os.system("rm tests/test.stp")
 
     def test_export_stl(self):
-        """creates a RotateMixedShape and checks that an stl file of the shape can be
-        exported using the export_stl method"""
+        """creates a RotateMixedShape and checks that an stl file of the shape
+        can be exported using the export_stl method"""
 
         test_shape = RotateMixedShape(
             points=[

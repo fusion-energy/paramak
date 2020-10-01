@@ -4,8 +4,6 @@ import unittest
 from pathlib import Path
 import warnings
 
-import pytest
-
 import paramak
 
 

@@ -4,8 +4,6 @@ import unittest
 from pathlib import Path
 import warnings
 
-import pytest
-
 import paramak
 
 
@@ -67,7 +65,7 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
 
         def warning_trigger():
             try:
-                test_reactor = paramak.CenterColumnStudyReactor(
+                paramak.CenterColumnStudyReactor(
                     inner_bore_radial_thickness=20,
                     inboard_tf_leg_radial_thickness=50,
                     center_column_shield_radial_thickness_mid=50,

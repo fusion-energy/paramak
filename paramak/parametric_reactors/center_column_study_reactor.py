@@ -1,8 +1,5 @@
-import math
-import operator
-import warnings
 
-import cadquery as cq
+import warnings
 
 import paramak
 

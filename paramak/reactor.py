@@ -1,5 +1,4 @@
 import json
-import math
 from collections import Iterable
 from pathlib import Path
 
@@ -7,7 +6,6 @@ import cadquery as cq
 import matplotlib.pyplot as plt
 import numpy as np
 from cadquery import exporters
-from PIL import Image
 
 import paramak
 import plotly.graph_objects as go
@@ -15,10 +13,10 @@ from paramak.shape import Shape
 
 
 class Reactor:
-    """The Reactor object allows shapes and components to be added and then collective
-    operations to be performed on them. Combining all the shapes is required for creating
-    images of the whole reactor and creating a Graveyard (bounding box) that is needed
-    for neutronics simulations.
+    """The Reactor object allows shapes and components to be added and then
+    collective operations to be performed on them. Combining all the shapes is
+    required for creating images of the whole reactor and creating a Graveyard
+    (bounding box) that is needed for neutronics simulations.
     """
 
     def __init__(self, shapes_and_components):
@@ -82,7 +80,7 @@ class Reactor:
         """Adds a list of parametric shape(s) and or parametric component(s)
         to the Reactor object. This allows collective operations to be
         performed on all the shapes in the reactor. When adding a shape or
-        component the stp_filename of the shape or component should be unique."""
+        component the stp_filename of the shape or component should be unique"""
 
         return self._shapes_and_components
 
@@ -94,9 +92,9 @@ class Reactor:
 
     @property
     def solid(self):
-        """This combines all the parametric shapes and compents in the reactor object
-        and rotates the viewing angle so that .solid operations in jupyter notebook
-        and svg exports are better orientation.
+        """This combines all the parametric shapes and compents in the reactor
+        object and rotates the viewing angle so that .solid operations in
+        jupyter notebook.
         """
 
         list_of_cq_vals = []
@@ -126,9 +124,10 @@ class Reactor:
         and tet mesh instructions. This is used for neutronics simulations which
         require linkage between volumes, materials and identification of which
         volumes to tet mesh. The plasma geometry is not included by default as
-        it is typically not included in neutronics simulations. The reason for this
-        is that the low number density results in minimal interaction with neutrons.
-        However, it can be added if the include_plasma argument is set to True.
+        it is typically not included in neutronics simulations. The reason for
+        this is that the low number density results in minimal interaction with
+        neutrons. However, it can be added if the include_plasma argument is set
+        to True.
 
         Returns:
             dictionary: a dictionary of materials and filenames for the reactor
@@ -171,15 +170,16 @@ class Reactor:
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
         file contains a list of dictionaries. Each dictionary entry comprises of
-        a material and a filename and optionally a tet_mesh instruction. The json
-        file can then be used with the neutronics workflows to create a neutronics
-        model. Creating of the neutronics model requires linkage between volumes,
-        materials and identification of which volumes to tet_mesh. If the filename
-        does not end with .json then .json will be added. The plasma geometry is
-        not included by default as it is typically not included in neutronics
-        simulations. The reason for this is that the low number density results in
-        minimal interactions with neutrons. However, the plasma can be added if
-        the include_plasma argument is set to True.
+        a material and a filename and optionally a tet_mesh instruction. The
+        json file can then be used with the neutronics workflows to create a
+        neutronics model. Creating of the neutronics model requires linkage
+        between volumes, materials and identification of which volumes to
+        tet_mesh. If the filename does not end with .json then .json will be
+        added. The plasma geometry is not included by default as it is typically
+        not included in neutronics simulations. The reason for this is that the
+        low number density results in minimal interactions with neutrons.
+        However, the plasma can be added if the include_plasma argument is set
+        to True.
 
         Args:
             filename (str): the filename used to save the neutronics description
@@ -298,10 +298,11 @@ class Reactor:
             filename='dagmc.h5m',
             skip_graveyard=False,
             tolerance=0.001):
-        """Converts stl files into DAGMC compatible h5m file using PyMOAB.
-        The DAGMC file produced has not been imprinted and merged unlike the other supported
-        method which uses Trelis to produce an imprinted and merged DAGMC geometry
-        If the provided filename doesn't end with .h5m it will be added
+        """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
+        DAGMC file produced has not been imprinted and merged unlike the other
+        supported method which uses Trelis to produce an imprinted and merged
+        DAGMC geometry. If the provided filename doesn't end with .h5m it will
+        be added
 
         Args:
             filename (str, optional): filename of h5m outputfile
@@ -431,9 +432,9 @@ class Reactor:
         return filename
 
     def export_physical_groups(self, output_folder=""):
-        """Exports several JSON files containing a look up table
-        which is useful for identifying faces and volumes. The
-        output file names are generated from .stp_filename properties.
+        """Exports several JSON files containing a look up table which is useful
+        for identifying faces and volumes. The output file names are generated
+        from .stp_filename properties.
 
         Args:
             output_folder (str, optional): directory of outputfiles.
@@ -493,15 +494,16 @@ class Reactor:
 
     def make_graveyard(self, offset=500.0):
         """Creates a graveyard volume (bounding box) that encapsulates all
-        volumes. This is required by DAGMC when performing neutronics simulations.
+        volumes. This is required by DAGMC when performing neutronics
+        simulations.
 
         Args:
-            offset (float): the offset between the largest edge of the geometry and
-            bounding shell created
+            offset (float): the offset between the largest edge of the geometry
+            and bounding shell created
 
         Returns:
-            CadQuery solid: a shell volume that bounds the geometry, referred to as
-            a graveyard in DAGMC
+            CadQuery solid: a shell volume that bounds the geometry, referred to
+            as a graveyard in DAGMC
         """
 
         for component in self.shapes_and_components:
@@ -597,9 +599,9 @@ class Reactor:
         return str(Pfilename)
 
     def export_html(self, filename="reactor.html"):
-        """Creates a html graph representation of the points for the Shape objects
-        that make up the reactor. Note, If filename provided doesn't end with .html
-        then it will be appended.
+        """Creates a html graph representation of the points for the Shape
+        objects that make up the reactor. Note, If filename provided doesn't end
+        with .html then it will be appended.
 
         Args:
             filename (str): the filename to save the html graph

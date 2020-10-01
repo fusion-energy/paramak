@@ -6,8 +6,6 @@ for each face. This can be done using the PoloidalSegments(). This geometry
 is then easier to find neutron wall loading as a function of poloidal angle.
 """
 
-import math
-import numpy as np
 import paramak
 
 

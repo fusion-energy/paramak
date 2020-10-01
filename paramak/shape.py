@@ -1,5 +1,4 @@
 import json
-import math
 import numbers
 import warnings
 from collections import Iterable
@@ -7,12 +6,10 @@ from hashlib import blake2b
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import numpy as np
 import plotly.graph_objects as go
 from cadquery import exporters
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
-from PIL import Image
 
 from paramak.utils import cut_solid, intersect_solid, union_solid
 
@@ -26,15 +23,19 @@ class Shape:
     Args:
         points (list of (x,y,z) tuples where x, y, z are floats): the x, y, z
             coordinates of points that make up the shape
-        name (str): the name of the shape, used in the graph legend by export_html
-        color (RGB or RGBA, sequences of 3 or 4 floats, respectively, each in the
-            range 0-1): the color to use when exporting as html graphs or png images
-        material_tag (str): the material name to use when exporting the neutronics
-            description
+        name (str): the name of the shape, used in the graph legend by
+            export_html
+        color (RGB or RGBA, sequences of 3 or 4 floats, respectively, each in
+            the range 0-1): the color to use when exporting as html graphs or
+            png images
+        material_tag (str): the material name to use when exporting the
+            neutronics description
         stp_filename (str): the filename used when saving stp files
-        azimuth_placement_angle: the azimuth angle(s) used when positioning the shape.
-            If a list of angles is provided, the shape is duplicated at all angles
-        workplane (str): the orientation of the Cadquery workplane. (XY, YZ or XZ)
+        azimuth_placement_angle: the azimuth angle(s) used when positioning the
+            shape. If a list of angles is provided, the shape is duplicated at
+            all angles
+        workplane (str): the orientation of the Cadquery workplane. (XY, YZ or
+            XZ)
 
     Returns:
         a paramak shape object: a Shape object that has generic functionality
@@ -247,8 +248,8 @@ class Shape:
                 if not isinstance(value[0], numbers.Number):
                     raise ValueError(
                         "The first value in the tuples that make \
-                                        up the points represents the X value and \
-                                        must be a number",
+                                        up the points represents the X value \
+                                        and must be a number",
                         value,
                     )
                 if not isinstance(value[1], numbers.Number):
@@ -272,8 +273,8 @@ class Shape:
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
                     raise ValueError(
-                        "The points list should contain entries of length 2 or 3 but not a mixture of 2 and 3"
-                    )
+                        "The points list should contain entries of length 2 or \
+                            3 but not a mixture of 2 and 3")
 
             if len(values) > 1:
                 if values[-1][0] == values[0][0] and values[-1][1] == values[0][1]:
@@ -287,9 +288,9 @@ class Shape:
 
     @property
     def stp_filename(self):
-        """Sets the Shape.stp_filename attribute which is used as the filename when
-        exporting the geometry to stp format. Note, .stp will be added to filenames
-        not ending with .step or .stp.
+        """Sets the Shape.stp_filename attribute which is used as the filename
+        when exporting the geometry to stp format. Note, .stp will be added to
+        filenames not ending with .step or .stp.
 
         Args:
             value (str): the value to use as the stp_filename
@@ -310,8 +311,8 @@ class Shape:
                 self._stp_filename = value
             else:
                 raise ValueError(
-                    "Incorrect filename ending, filename must end with .stp or .step"
-                )
+                    "Incorrect filename ending, filename must end with .stp or \
+                        .step")
         else:
             raise ValueError(
                 "stp_filename must be a string",
@@ -372,15 +373,16 @@ class Shape:
             )
 
     def create_limits(self):
-        """Finds the x,y,z limits (min and max) of the points that make up the face of the shape.
-        Note the Shape may extend beyond this boundary if splines are used to connect points.
+        """Finds the x,y,z limits (min and max) of the points that make up the
+        face of the shape. Note the Shape may extend beyond this boundary if
+        splines are used to connect points.
 
         Raises:
             ValueError: if no points are defined
 
         Returns:
-            float, float, float, float, float, float: x_minimum, x_maximum, y_minimum, y_maximum,
-            z_minimum, z_maximum
+            float, float, float, float, float, float: x_minimum, x_maximum,
+            y_minimum, y_maximum, z_minimum, z_maximum
         """
 
         if hasattr(self, "find_points"):
@@ -397,8 +399,8 @@ class Shape:
         return self.x_min, self.x_max, self.z_min, self.z_max
 
     def export_stl(self, filename, tolerance=0.001):
-        """Exports an stl file for the Shape.solid. If the provided filename doesn't end with .stl
-        it will be added
+        """Exports an stl file for the Shape.solid. If the provided filename
+            doesn't end with .stl it will be added
 
         Args:
             filename (str): the filename of the stl file to be exported
@@ -419,9 +421,10 @@ class Shape:
         return str(Pfilename)
 
     def export_stp(self, filename=None):
-        """Exports an stp file for the Shape.solid. If the filename provided doesn't end with
-        .stp or .step then .stp will be added. If a filename is not provided and the shape's
-        stp_filename property is not None the stp_filename will be used as the export filename.
+        """Exports an stp file for the Shape.solid. If the filename provided
+            doesn't end with .stp or .step then .stp will be added. If a
+            filename is not provided and the shape's stp_filename property is
+            not None the stp_filename will be used as the export filename.
 
         Args:
             filename (str): the filename of the stp
@@ -498,9 +501,9 @@ class Shape:
 
     def export_html(self, filename):
         """Creates a html graph representation of the points and connections for
-        the Shape object. Shapes are colored by their .color property. Shapes are
-        also labelled by their .name. If filename provided doesn't end with .html
-        then .html will be added.
+        the Shape object. Shapes are colored by their .color property. Shapes
+        are also labelled by their .name. If filename provided doesn't end with
+        .html then .html will be added.
 
         Args:
             filename (str): the filename used to save the html graph
@@ -533,8 +536,8 @@ class Shape:
         return fig
 
     def _trace(self):
-        """Creates a plotly trace representation of the points of the Shape object.
-        This method is intended for internal use by Shape.export_html.
+        """Creates a plotly trace representation of the points of the Shape
+        object. This method is intended for internal use by Shape.export_html.
 
         Returns:
             plotly trace: trace object
@@ -598,9 +601,9 @@ class Shape:
         return trace
 
     def export_2d_image(self, filename, xmin=0, xmax=900, ymin=-600, ymax=600):
-        """Exports a 2d image (png) of the reactor. Components are colored by their
-        Shape.color property. If filename provided doesn't end with .png then .png
-        will be added.
+        """Exports a 2d image (png) of the reactor. Components are colored by
+        their Shape.color property. If filename provided doesn't end with .png
+        then .png will be added.
 
         Args:
             filename (str): the filename of the saved png image
@@ -669,10 +672,10 @@ class Shape:
 
     def neutronics_description(self):
         """Returns a neutronics description of the Shape object. This is needed
-        for the use with automated neutronics model methods which require linkage
-        between the stp files and materials. If tet meshing of the volume is required
-        then Trelis meshing commands can be optionally specified as the tet_mesh
-        argument.
+        for the use with automated neutronics model methods which require
+        linkage between the stp files and materials. If tet meshing of the
+        volume is required then Trelis meshing commands can be optionally
+        specified as the tet_mesh argument.
 
         Returns:
             dictionary: a dictionary of the step filename and material name
@@ -704,7 +707,8 @@ class Shape:
         return value
 
     def perform_boolean_operations(self, solid):
-        """Performs boolean cut, intersect and union operations if shapes are provided"""
+        """Performs boolean cut, intersect and union operations if shapes are
+        provided"""
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:

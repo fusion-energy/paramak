@@ -182,7 +182,7 @@ ITERtypeDivertorNoDome()
     :height: 220px
     :align: center
 
-.. automodule:: paramak.parametric_components.divertor_ITER
+.. automodule:: paramak.parametric_components.divertor_ITER_no_dome
 .. autoclass:: ITERtypeDivertorNoDome
    :members:
    :show-inheritance:

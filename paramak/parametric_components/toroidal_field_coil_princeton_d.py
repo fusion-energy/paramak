@@ -5,7 +5,7 @@ import numpy as np
 from scipy import integrate
 from scipy.optimize import minimize
 
-from paramak import ExtrudeMixedShape, ExtrudeStraightShape
+from paramak import ExtrudeMixedShape
 
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):

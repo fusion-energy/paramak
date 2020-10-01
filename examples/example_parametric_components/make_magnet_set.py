@@ -1,11 +1,8 @@
 
 """
-This script makes a blanket and then segments it in a similar
-manner to the EU DEMO segmentation for remote maintainance.
+This script makes a set of toroidal and poloidal field coils
 """
 
-import math
-import numpy as np
 import paramak
 
 
