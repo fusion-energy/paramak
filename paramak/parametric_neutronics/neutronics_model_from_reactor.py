@@ -70,17 +70,30 @@ class NeutronicsModelFromReactor():
         self.ion_temperature_beta = ion_temperature_beta
         self.output_folder = output_folder
 
+    @property
+    def materials(self):
+        return self._materials
+
+    @materials.setter
+    def materials(self, value):
+        if not isinstance(value, dict):
+            raise ValueError("NeutronicsModelFromReactor.materials should be a\
+                dictionary")
+
+        self._materials = value
 
     def create_materials(self):
-
+        if len(self.reactor.material_tags) is not len(self.materials.keys()):
+            raise ValueError("materials must contain an entry for every \
+                material in the reactor", self.reactor.material_tags)
         openmc_materials = {}
         for material_tag, material_entry in self.materials.items(): 
             if isinstance(material_entry, str):
                 material = nmm.Material(material_entry, material_tag=material_tag)
-                openmc_materials[material_tag] = material.openmc_material)
+                openmc_materials[material_tag] = material.openmc_material
             if isinstance(material_entry, openmc.Material):
                 openmc_materials[material_tag] = material_entry
-            if isinstance(material_entry, (nmm.Material, nmm.MultiMaterial))
+            if isinstance(material_entry, (nmm.Material, nmm.MultiMaterial)):
                 openmc_materials[material_tag] = material_entry.openmc_material
 
         self.openmc_materials = openmc_materials
@@ -154,7 +167,7 @@ class NeutronicsModelFromReactor():
         # if 'center_column_heat'
     
         # make the model from gemonetry, materials, settings and tallies
-        self.model =  = openmc.model.Model(geom, mats, settings, tallies)
+        self.model = openmc.model.Model(geom, mats, settings, tallies)
 
 
     def simulate(self):
