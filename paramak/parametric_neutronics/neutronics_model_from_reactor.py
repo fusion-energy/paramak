@@ -50,6 +50,7 @@ class NeutronicsModelFromReactor():
         shafranov_shift,
         triangularity,
         ion_temperature_beta,
+        output_folder,
     ):
 
         self.reactor = reactor
@@ -67,6 +68,7 @@ class NeutronicsModelFromReactor():
         self.shafranov_shift = shafranov_shift
         self.triangularity = triangularity
         self.ion_temperature_beta = ion_temperature_beta
+        self.output_folder = output_folder
 
 
     def create_materials(self):
@@ -100,12 +102,11 @@ class NeutronicsModelFromReactor():
         self.plasma_source = source
 
     def create_neutronics_geometry(self):
-    """
-    Uses Trelis together with a python script to
-    reading the stp files assign material tags to
-    the volumes and create a watertight h5m DAGMC
-    file which can be used as neutronics geometry.
-    """
+        """Uses Trelis together with a python script to
+        reading the stp files assign material tags to
+        the volumes and create a watertight h5m DAGMC
+        file which can be used as neutronics geometry.
+        """
 
         my_reactor.export_stp()
 
@@ -140,12 +141,17 @@ class NeutronicsModelFromReactor():
         # tally)
         tallies = openmc.Tallies()
 
-        if 'TBR' in self.tallies
-        material_filter = openmc.MaterialFilter(blanket_mat)
-        tbr_tally = openmc.Tally(name="TBR")
-        tbr_tally.filters = [material_filter]
-        tbr_tally.scores = ["(n,Xt)"]  # where X is a wild card
-        tallies.append(tbr_tally)
+        if 'TBR' in self.tallies:
+
+            material_filter = openmc.MaterialFilter(blanket_mat)
+            tbr_tally = openmc.Tally(name="TBR")
+            tbr_tally.filters = [material_filter]
+            tbr_tally.scores = ["(n,Xt)"]  # where X is a wild card
+            tallies.append(tbr_tally)
+        
+        # if 'blanket_heat'
+        
+        # if 'center_column_heat'
     
         # make the model from gemonetry, materials, settings and tallies
         self.model =  = openmc.model.Model(geom, mats, settings, tallies)
@@ -164,13 +170,16 @@ class NeutronicsModelFromReactor():
         # open the results file
         sp = openmc.StatePoint(self.output_filename)
 
-        # access the tally
-        tbr_tally = sp.get_tally(name="TBR")
-        df = tbr_tally.get_pandas_dataframe()
-        tbr_tally_result = df["mean"].sum()
+        # access the tallies
 
-        # print result
-        print("The tritium breeding ratio was found, TBR = ", tbr_tally_result)
-        # return tbr_tally_result
+        if 'TBR' in self.tallies:
+            tbr_tally = sp.get_tally(name="TBR")
+            df = tbr_tally.get_pandas_dataframe()
+            tbr_tally_result = df["mean"].sum()
+
+            # print result
+            print("The tritium breeding ratio was found, TBR = ",
+                    tbr_tally_result)
+            # return tbr_tally_result
     
     
