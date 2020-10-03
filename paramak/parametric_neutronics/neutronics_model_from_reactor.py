@@ -87,8 +87,31 @@ class NeutronicsModelFromReactor():
         if not isinstance(value, dict):
             raise ValueError("NeutronicsModelFromReactor.materials should be a\
                 dictionary")
-
         self._materials = value
+
+    @property
+    def simulation_batches(self):
+        return self._simulation_batches
+
+    @simulation_batches.setter
+    def simulation_batches(self, value):
+        if isinstance(value, float):
+            value = int(value)
+        if not isinstance(value, int):
+            raise ValueError("NeutronicsModelFromReactor.simulation_batches should be an int")
+        self._simulation_batches = value
+
+    @property
+    def simulation_particles_per_batches(self):
+        return self._simulation_particles_per_batches
+
+    @simulation_particles_per_batches.setter
+    def simulation_particles_per_batches(self, value):
+        if isinstance(value, float):
+            value = int(value)
+        if not isinstance(value, int):
+            raise ValueError("NeutronicsModelFromReactor.simulation_particles_per_batches should be an int")
+        self._simulation_particles_per_batches = value
 
     def create_materials(self):
         if len(self.reactor.material_tags) is not len(self.materials.keys()):
