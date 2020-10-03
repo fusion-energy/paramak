@@ -58,7 +58,7 @@ class Reactor:
         values = []
         for shape_or_componet in self.shapes_and_components:
             values.append(shape_or_componet.material_tag)
-        return values
+        return list(set(values))
 
     @material_tags.setter
     def material_tags(self, value):

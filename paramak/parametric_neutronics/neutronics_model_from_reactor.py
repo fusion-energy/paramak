@@ -1,20 +1,24 @@
 import paramak
 import neutronics_material_maker as nmm
+import openmc
 
 class NeutronicsModelFromReactor():
     """Creates a neuronics model of the provided reactor geometry with assigned
     materials, plasma source and neutronics tallies.
 
     Arguments:
+        reactor: (paramak.Reactor): The reactor object to convert to a
+            neutronics model. e.g. reactor=paramak.BallReactor() or 
+            reactor=paramak.SubmersionReactor() .
         materials: (dict): Where the dictionary keys are the material tag
             and the dictionary values are either a string, openmc.Material or
             neutronics-material-maker. All components within the
             Reactor() object must be accounted for. Material tags required
             for the reactor can be obtained with Reactor().materials.
-        simulation_batches: (int): the number of batch to simulate
-        simulation_particles_per_batches: (int): particles per batch
         tallies: (list of strings): the tallies to calculate, options include
             TBR, blanket_heat, center_column_heat
+        simulation_batches: (int): the number of batch to simulate
+        simulation_particles_per_batches: (int): particles per batch
         ion_density_origin: (float): 1.09e20,
         ion_density_peaking_factor: (float): 1,
         ion_density_pedestal: (float): 1.09e20,
@@ -51,6 +55,8 @@ class NeutronicsModelFromReactor():
         triangularity,
         ion_temperature_beta,
         output_folder,
+        simulation_batches=100,
+        simulation_particles_per_batches=10000
     ):
 
         self.reactor = reactor
@@ -69,6 +75,8 @@ class NeutronicsModelFromReactor():
         self.triangularity = triangularity
         self.ion_temperature_beta = ion_temperature_beta
         self.output_folder = output_folder
+        self.simulation_batches=simulation_batches
+        self.simulation_particles_per_batches=simulation_particles_per_batches
 
     @property
     def materials(self):
@@ -98,12 +106,14 @@ class NeutronicsModelFromReactor():
 
         self.openmc_materials = openmc_materials
 
-        mats = openmc.Materials(list(self.openmc_materials.values()))
+        self.mats = openmc.Materials(list(self.openmc_materials.values()))
+
+        return self.mats
         
     def create_plasma_source(self):
-        # "elongation": 1.557,
-        # "major_radius": 9.06,
-        # "minor_radius": 2.92258,
+        # "self.reactor.elongation": 1.557,
+        # "self.reactor.major_radius": 9.06,
+        # "self.reactor.minor_radius": 2.92258,
         # "plasma_id": 1,
 
         # details of the birth locations and energy of the neutronis
@@ -114,6 +124,8 @@ class NeutronicsModelFromReactor():
  
         self.plasma_source = source
 
+        return source
+
     def create_neutronics_geometry(self):
         """Uses Trelis together with a python script to
         reading the stp files assign material tags to
@@ -121,9 +133,9 @@ class NeutronicsModelFromReactor():
         file which can be used as neutronics geometry.
         """
 
-        my_reactor.export_stp()
+        self.reactor.export_stp()
 
-        my_reactor.export_neutronics_description()
+        self.reactor.export_neutronics_description()
 
         os.system("trelis -batch -nographics make_faceteted_neutronics_model.py")
 
@@ -134,6 +146,9 @@ class NeutronicsModelFromReactor():
         """Uses OpenMC python API to make a neutronics model, including tallies
         (outputs), simulation settings (batches, particles per batch)"""
 
+        self.create_materials()
+        self.create_plasma_source()
+        # self.create_neutronics_geometry()
 
         # this is the underlying geometry container that is filled with the
         # faceteted CAD model
@@ -155,7 +170,7 @@ class NeutronicsModelFromReactor():
         tallies = openmc.Tallies()
 
         if 'TBR' in self.tallies:
-
+            blanket_mat = self.openmc_materials['blanket_mat']
             material_filter = openmc.MaterialFilter(blanket_mat)
             tbr_tally = openmc.Tally(name="TBR")
             tbr_tally.filters = [material_filter]
@@ -167,12 +182,13 @@ class NeutronicsModelFromReactor():
         # if 'center_column_heat'
     
         # make the model from gemonetry, materials, settings and tallies
-        self.model = openmc.model.Model(geom, mats, settings, tallies)
+        self.model = openmc.model.Model(geom, self.mats, settings, tallies)
 
 
     def simulate(self):
         # run the simulation
         self.output_filename = self.model.run()
+        self.get_results()
     
     def get_results(self):
         """
@@ -189,10 +205,11 @@ class NeutronicsModelFromReactor():
             tbr_tally = sp.get_tally(name="TBR")
             df = tbr_tally.get_pandas_dataframe()
             tbr_tally_result = df["mean"].sum()
+            tbr_tally_std_dev = df['std. dev.'].sum()
 
             # print result
             print("The tritium breeding ratio was found, TBR = ",
                     tbr_tally_result)
             # return tbr_tally_result
-    
+
     
