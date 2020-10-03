@@ -29,6 +29,8 @@ neutronics_model = paramak.NeutronicsModelFromReactor(
         'blanket_mat': 'eurofer',
         'blanket_mat': 'Li4SiO4'},
     tallies=['TBR'],
+    simulation_batches=10,
+    simulation_particles_per_batches=1e4,
     ion_density_origin=200,
     ion_density_peaking_factor=200,
     ion_density_pedestal=200,
@@ -44,4 +46,4 @@ neutronics_model = paramak.NeutronicsModelFromReactor(
     output_folder=200,
 )
 
-neutronics_model.create_materials()
+neutronics_model.create_neutronics_model()
