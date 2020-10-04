@@ -43,19 +43,18 @@ class NeutronicsModelFromReactor():
         reactor,
         materials,
         tallies,
-        ion_density_origin,
-        ion_density_peaking_factor,
-        ion_density_pedestal,
-        ion_density_separatrix,
-        ion_temperature_origin,
-        ion_temperature_peaking_factor,
-        ion_temperature_pedestal,
-        ion_temperature_separatrix,
-        pedestal_radius,
-        shafranov_shift,
-        triangularity,
-        ion_temperature_beta,
-        output_folder,
+        # ion_density_origin,
+        # ion_density_peaking_factor,
+        # ion_density_pedestal,
+        # ion_density_separatrix,
+        # ion_temperature_origin,
+        # ion_temperature_peaking_factor,
+        # ion_temperature_pedestal,
+        # ion_temperature_separatrix,
+        # pedestal_radius,
+        # shafranov_shift,
+        # triangularity,
+        # ion_temperature_beta,
         simulation_batches=100,
         simulation_particles_per_batches=10000
     ):
@@ -63,19 +62,18 @@ class NeutronicsModelFromReactor():
         self.reactor = reactor
         self.materials = materials
         self.tallies = tallies
-        self.ion_density_origin = ion_density_origin
-        self.ion_density_peaking_factor = ion_density_peaking_factor
-        self.ion_density_pedestal = ion_density_pedestal
-        self.ion_density_separatrix = ion_density_separatrix
-        self.ion_temperature_origin = ion_temperature_origin
-        self.ion_temperature_peaking_factor = ion_temperature_peaking_factor
-        self.ion_temperature_pedestal = ion_temperature_pedestal
-        self.ion_temperature_separatrix = ion_temperature_separatrix
-        self.pedestal_radius = pedestal_radius
-        self.shafranov_shift = shafranov_shift
-        self.triangularity = triangularity
-        self.ion_temperature_beta = ion_temperature_beta
-        self.output_folder = output_folder
+        # self.ion_density_origin = ion_density_origin
+        # self.ion_density_peaking_factor = ion_density_peaking_factor
+        # self.ion_density_pedestal = ion_density_pedestal
+        # self.ion_density_separatrix = ion_density_separatrix
+        # self.ion_temperature_origin = ion_temperature_origin
+        # self.ion_temperature_peaking_factor = ion_temperature_peaking_factor
+        # self.ion_temperature_pedestal = ion_temperature_pedestal
+        # self.ion_temperature_separatrix = ion_temperature_separatrix
+        # self.pedestal_radius = pedestal_radius
+        # self.shafranov_shift = shafranov_shift
+        # self.triangularity = triangularity
+        # self.ion_temperature_beta = ion_temperature_beta
         self.simulation_batches=simulation_batches
         self.simulation_particles_per_batches=simulation_particles_per_batches
 
@@ -231,7 +229,7 @@ class NeutronicsModelFromReactor():
         # run the simulation
         self.create_neutronics_model()
         self.output_filename = self.model.run(output=verbose)
-        results = self.get_results()
+        self.results = self.get_results()
     
     def get_results(self):
         """
@@ -247,7 +245,7 @@ class NeutronicsModelFromReactor():
         # access the tallies
 
         for identifier in self.tallies:
-            tally = sp.get_tally(name="identifier")
+            tally = sp.get_tally(name=identifier)
             df = tally.get_pandas_dataframe()
             tally_result = df["mean"].sum()
             tally_std_dev = df['std. dev.'].sum()
@@ -257,7 +255,11 @@ class NeutronicsModelFromReactor():
 
             if identifier == 'TBR':
                 print("TBR (Tritium Breeding Ratio) = ", tally_result,
-                        '+/-', tbr_tally_std_dev)
+                        '+/-', tally_std_dev)
+
+            if identifier == 'center_column_shield_heat':
+                print("Center column shield heating = ", tally_result,
+                        'eV per source particle +/-', tally_std_dev)
 
         self.results = results
 
