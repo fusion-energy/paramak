@@ -67,7 +67,7 @@ class BallReactor(paramak.Reactor):
         blanket_rear_wall_radial_thickness,
         elongation,
         triangularity,
-        number_of_tf_coils,
+        number_of_tf_coils=None,
         pf_coil_to_rear_blanket_radial_gap=None,
         pf_coil_radial_thicknesses=None,
         pf_coil_vertical_thicknesses=None,

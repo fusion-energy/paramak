@@ -240,8 +240,6 @@ class Reactor:
             Path(output_folder) / Path(self.graveyard.stp_filename)
         )
 
-        print("exported stp files ", filenames)
-
         return filenames
 
     def export_stl(self, output_folder="", tolerance=0.001):

@@ -1,4 +1,4 @@
-
+"""this example obtains the TBR for a parametric reactor"""
 import paramak
 
 my_reactor = paramak.BallReactor(
@@ -15,9 +15,8 @@ my_reactor = paramak.BallReactor(
     elongation=2,
     triangularity=0.55,
     number_of_tf_coils=16,
-    rotation_angle=360,
+    rotation_angle=180,
 )
-
 
 neutronics_model = paramak.NeutronicsModelFromReactor(
     reactor=my_reactor,
@@ -47,3 +46,4 @@ neutronics_model = paramak.NeutronicsModelFromReactor(
 )
 
 neutronics_model.create_neutronics_model()
+neutronics_model.simulate()

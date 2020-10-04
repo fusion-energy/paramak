@@ -1,6 +1,7 @@
 import paramak
 import neutronics_material_maker as nmm
 import openmc
+import os
 
 class NeutronicsModelFromReactor():
     """Creates a neuronics model of the provided reactor geometry with assigned
@@ -16,7 +17,7 @@ class NeutronicsModelFromReactor():
             Reactor() object must be accounted for. Material tags required
             for the reactor can be obtained with Reactor().materials.
         tallies: (list of strings): the tallies to calculate, options include
-            TBR, blanket_heat, center_column_heat
+            TBR, blanket_heat, center_column_shield_heat
         simulation_batches: (int): the number of batch to simulate
         simulation_particles_per_batches: (int): particles per batch
         ion_density_origin: (float): 1.09e20,
@@ -164,6 +165,8 @@ class NeutronicsModelFromReactor():
 
         os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m")
 
+        print('neutronics model saved as dagmc.h5m')
+
 
     def create_neutronics_model(self):
         """Uses OpenMC python API to make a neutronics model, including tallies
@@ -171,7 +174,7 @@ class NeutronicsModelFromReactor():
 
         self.create_materials()
         self.create_plasma_source()
-        # self.create_neutronics_geometry()
+        self.create_neutronics_geometry()
 
         # this is the underlying geometry container that is filled with the
         # faceteted CAD model
@@ -185,6 +188,7 @@ class NeutronicsModelFromReactor():
         settings.particles = self.simulation_particles_per_batches
         settings.run_mode = "fixed source"
         settings.dagmc = True
+        settings.photon_transport = True
 
         settings.source = self.plasma_source
 
@@ -195,23 +199,39 @@ class NeutronicsModelFromReactor():
         if 'TBR' in self.tallies:
             blanket_mat = self.openmc_materials['blanket_mat']
             material_filter = openmc.MaterialFilter(blanket_mat)
-            tbr_tally = openmc.Tally(name="TBR")
-            tbr_tally.filters = [material_filter]
-            tbr_tally.scores = ["(n,Xt)"]  # where X is a wild card
-            tallies.append(tbr_tally)
+            tally = openmc.Tally(name="TBR")
+            tally.filters = [material_filter]
+            tally.scores = ["(n,Xt)"]  # where X is a wild card
+            tallies.append(tally)
         
         # if 'blanket_heat'
         
-        # if 'center_column_heat'
-    
+        if 'center_column_shield_heat':
+            blanket_mat = self.openmc_materials['center_column_shield_mat']
+            material_filter = openmc.MaterialFilter(blanket_mat)
+            tally = openmc.Tally(name="center_column_shield_heat")
+            tally.filters = [material_filter]
+            tally.scores = ["heating"]
+            tallies.append(tally)
+
         # make the model from gemonetry, materials, settings and tallies
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
 
 
-    def simulate(self):
+    def simulate(self, verbose=True):
+        """Run the OpenMC simulation with the specified simulation_batches and
+        simulation_particles_per_batches and tallies. Terminal output can
+        disabled by setting verbose=False. 
+
+        Arguments:
+            verbose: (Boolean): Preint the output from OpenMC (true) to the
+                terminal and don't print the OpenMC output (false). Defaults
+                to True.  
+        """
         # run the simulation
-        self.output_filename = self.model.run()
-        self.get_results()
+        self.create_neutronics_model()
+        self.output_filename = self.model.run(output=verbose)
+        results = self.get_results()
     
     def get_results(self):
         """
@@ -222,17 +242,23 @@ class NeutronicsModelFromReactor():
         # open the results file
         sp = openmc.StatePoint(self.output_filename)
 
+        results = {}
+
         # access the tallies
 
-        if 'TBR' in self.tallies:
-            tbr_tally = sp.get_tally(name="TBR")
-            df = tbr_tally.get_pandas_dataframe()
-            tbr_tally_result = df["mean"].sum()
-            tbr_tally_std_dev = df['std. dev.'].sum()
+        for identifier in self.tallies:
+            tally = sp.get_tally(name="identifier")
+            df = tally.get_pandas_dataframe()
+            tally_result = df["mean"].sum()
+            tally_std_dev = df['std. dev.'].sum()
 
-            # print result
-            print("The tritium breeding ratio was found, TBR = ",
-                    tbr_tally_result)
-            # return tbr_tally_result
+            results[identifier] = tally_result
+            results[identifier + ' std. dev.'] = tally_std_dev
 
-    
+            if identifier == 'TBR':
+                print("TBR (Tritium Breeding Ratio) = ", tally_result,
+                        '+/-', tbr_tally_std_dev)
+
+        self.results = results
+
+        return results
