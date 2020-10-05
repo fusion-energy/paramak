@@ -2,7 +2,7 @@ name: dockerhub-publish
 
 on:
   push:
-    branches: main
+    branches: develop
 
 jobs:
   main:
@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ukaea/paramak:latest
+          tags: ukaea/paramak:dev
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
