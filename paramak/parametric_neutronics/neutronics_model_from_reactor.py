@@ -26,7 +26,7 @@ class NeutronicsModelFromReactor():
 
     Arguments:
         reactor: (paramak.Reactor): The reactor object to convert to a
-            neutronics model. e.g. reactor=paramak.BallReactor() or 
+            neutronics model. e.g. reactor=paramak.BallReactor() or
             reactor=paramak.SubmersionReactor() .
         materials: (dict): Where the dictionary keys are the material tag
             and the dictionary values are either a string, openmc.Material or
@@ -92,7 +92,6 @@ class NeutronicsModelFromReactor():
         self.simulation_batches=simulation_batches
         self.simulation_particles_per_batches=simulation_particles_per_batches
 
-
     @property
     def materials(self):
         return self._materials
@@ -113,8 +112,8 @@ class NeutronicsModelFromReactor():
         if isinstance(value, float):
             value = int(value)
         if not isinstance(value, int):
-            raise ValueError("NeutronicsModelFromReactor.simulation_batches \
-                should be an int")
+            raise ValueError(
+                "NeutronicsModelFromReactor.simulation_batches should be an int")
         self._simulation_batches = value
 
     @property
@@ -126,7 +125,8 @@ class NeutronicsModelFromReactor():
         if isinstance(value, float):
             value = int(value)
         if not isinstance(value, int):
-            raise ValueError("NeutronicsModelFromReactor.simulation_particles_per_batches should be an int")
+            raise ValueError(
+                "NeutronicsModelFromReactor.simulation_particles_per_batches should be an int")
         self._simulation_particles_per_batches = value
 
     def create_materials(self):
@@ -134,9 +134,10 @@ class NeutronicsModelFromReactor():
             raise ValueError("materials must contain an entry for every \
                 material in the reactor", self.reactor.material_tags)
         openmc_materials = {}
-        for material_tag, material_entry in self.materials.items(): 
+        for material_tag, material_entry in self.materials.items():
             if isinstance(material_entry, str):
-                material = nmm.Material(material_entry, material_tag=material_tag)
+                material = nmm.Material(
+                    material_entry, material_tag=material_tag)
                 openmc_materials[material_tag] = material.openmc_material
             if isinstance(material_entry, openmc.Material):
                 openmc_materials[material_tag] = material_entry
@@ -148,8 +149,10 @@ class NeutronicsModelFromReactor():
         self.mats = openmc.Materials(list(self.openmc_materials.values()))
 
         return self.mats
-        
+
     def create_plasma_source(self):
+        """Uses the parametric-plasma-source to create a ditributed neutron
+        source for use in the simulation"""
 
         self.pedestal_radius = self.pedestal_radius_factor * (self.reactor.minor_radius  / 100)
 
@@ -197,7 +200,6 @@ class NeutronicsModelFromReactor():
 
         print('neutronics model saved as dagmc.h5m')
 
-
     def create_neutronics_model(self):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (outputs), simulation settings (batches, particles per batch)"""
@@ -239,26 +241,24 @@ class NeutronicsModelFromReactor():
                 tally.filters = [material_filter]
                 tally.scores = ["heating"]
                 tallies.append(tally)
-                
 
         # make the model from gemonetry, materials, settings and tallies
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
 
-
     def simulate(self, verbose=True):
         """Run the OpenMC simulation with the specified simulation_batches and
         simulation_particles_per_batches and tallies. Terminal output can
-        disabled by setting verbose=False. 
+        disabled by setting verbose=False.
 
         Arguments:
             verbose: (Boolean): Preint the output from OpenMC (true) to the
                 terminal and don't print the OpenMC output (false). Defaults
-                to True.  
+                to True.
         """
         
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
-    
+
     def get_results(self):
         """
         Reads the output file from the neutronics simulation
@@ -283,7 +283,7 @@ class NeutronicsModelFromReactor():
 
             if tally.name == 'TBR':
                 print("TBR (Tritium Breeding Ratio) = ", tally_result,
-                        '+/-', tally_std_dev)
+                      '+/-', tally_std_dev)
 
             if tally.name.endswith('heat'):
                 print(tally.name+ " heating = ", tally_result,

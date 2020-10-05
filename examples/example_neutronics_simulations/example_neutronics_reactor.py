@@ -21,7 +21,7 @@ my_reactor = paramak.BallReactor(
 neutronics_model = paramak.NeutronicsModelFromReactor(
     reactor=my_reactor,
     materials={
-        'DT_plasma': 'DT_plasma', 
+        'DT_plasma': 'DT_plasma',
         'inboard_tf_coils_mat': 'eurofer',
         'center_column_shield_mat': 'eurofer',
         'divertor_mat': 'eurofer',
