@@ -27,23 +27,11 @@ neutronics_model = paramak.NeutronicsModelFromReactor(
         'divertor_mat': 'eurofer',
         'blanket_mat': 'eurofer',
         'blanket_mat': 'Li4SiO4'},
-    tallies=['TBR'],
+    tallies=['TBR', 'heat'],
     simulation_batches=10,
     simulation_particles_per_batches=1e4,
-    ion_density_origin=200,
-    ion_density_peaking_factor=200,
-    ion_density_pedestal=200,
-    ion_density_separatrix=200,
-    ion_temperature_origin=200,
-    ion_temperature_peaking_factor=200,
-    ion_temperature_pedestal=200,
-    ion_temperature_separatrix=200,
-    pedestal_radius=200,
-    shafranov_shift=200,
-    triangularity=200,
-    ion_temperature_beta=200,
-    output_folder=200,
 )
 
 neutronics_model.create_neutronics_model()
 neutronics_model.simulate()
+print(neutronics_model.results)

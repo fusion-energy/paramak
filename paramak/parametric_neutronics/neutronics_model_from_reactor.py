@@ -1,7 +1,24 @@
-import paramak
-import neutronics_material_maker as nmm
-import openmc
 import os
+
+try:
+    from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
+except ImportError as err:
+    raise err('parametric_plasma_source not found distributed plasma sources \
+        are not avaialbe in Neutronics simulations')
+
+try:
+    import openmc
+except ImportError as err:
+    raise err('OpenMC not found, NeutronicsModelFromReactor.simulate method \
+        not available')
+
+try:
+    import neutronics_material_maker as nmm
+except ImportError as err:
+    raise err("neutronics_material_maker not found, \
+        NeutronicsModelFromReactor.materials can't accept strings or \
+        neutronics_material_maker objects")
+
 
 class NeutronicsModelFromReactor():
     """Creates a neuronics model of the provided reactor geometry with assigned
@@ -43,39 +60,38 @@ class NeutronicsModelFromReactor():
         reactor,
         materials,
         tallies,
-        # ion_density_origin,
-        # ion_density_peaking_factor,
-        # ion_density_pedestal,
-        # ion_density_separatrix,
-        # ion_temperature_origin,
-        # ion_temperature_peaking_factor,
-        # ion_temperature_pedestal,
-        # ion_temperature_separatrix,
-        # pedestal_radius,
-        # shafranov_shift,
-        # triangularity,
-        # ion_temperature_beta,
         simulation_batches=100,
-        simulation_particles_per_batches=10000
+        simulation_particles_per_batches=10000,
+        ion_density_peaking_factor=1,
+        ion_density_origin=1.09e20,
+        ion_density_pedestal=1.09e20,
+        ion_density_separatrix=3e19,
+        ion_temperature_origin=45.9,
+        ion_temperature_peaking_factor=8.06,
+        ion_temperature_pedestal=6.09,
+        ion_temperature_separatrix=0.1,
+        pedestal_radius_factor=0.8,
+        shafranov_shift=0.44789,
+        ion_temperature_beta=6
     ):
-
+        # input by user
         self.reactor = reactor
         self.materials = materials
         self.tallies = tallies
-        # self.ion_density_origin = ion_density_origin
-        # self.ion_density_peaking_factor = ion_density_peaking_factor
-        # self.ion_density_pedestal = ion_density_pedestal
-        # self.ion_density_separatrix = ion_density_separatrix
-        # self.ion_temperature_origin = ion_temperature_origin
-        # self.ion_temperature_peaking_factor = ion_temperature_peaking_factor
-        # self.ion_temperature_pedestal = ion_temperature_pedestal
-        # self.ion_temperature_separatrix = ion_temperature_separatrix
-        # self.pedestal_radius = pedestal_radius
-        # self.shafranov_shift = shafranov_shift
-        # self.triangularity = triangularity
-        # self.ion_temperature_beta = ion_temperature_beta
+        self.ion_density_origin = ion_density_origin
+        self.ion_density_peaking_factor = ion_density_peaking_factor
+        self.ion_density_pedestal = ion_density_pedestal
+        self.ion_density_separatrix = ion_density_separatrix
+        self.ion_temperature_origin = ion_temperature_origin
+        self.ion_temperature_peaking_factor = ion_temperature_peaking_factor
+        self.ion_temperature_pedestal = ion_temperature_pedestal
+        self.ion_temperature_separatrix = ion_temperature_separatrix
+        self.pedestal_radius_factor = pedestal_radius_factor
+        self.shafranov_shift = shafranov_shift
+        self.ion_temperature_beta = ion_temperature_beta
         self.simulation_batches=simulation_batches
         self.simulation_particles_per_batches=simulation_particles_per_batches
+
 
     @property
     def materials(self):
@@ -97,7 +113,8 @@ class NeutronicsModelFromReactor():
         if isinstance(value, float):
             value = int(value)
         if not isinstance(value, int):
-            raise ValueError("NeutronicsModelFromReactor.simulation_batches should be an int")
+            raise ValueError("NeutronicsModelFromReactor.simulation_batches \
+                should be an int")
         self._simulation_batches = value
 
     @property
@@ -133,18 +150,33 @@ class NeutronicsModelFromReactor():
         return self.mats
         
     def create_plasma_source(self):
-        # "self.reactor.elongation": 1.557,
-        # "self.reactor.major_radius": 9.06,
-        # "self.reactor.minor_radius": 2.92258,
-        # "plasma_id": 1,
 
-        # details of the birth locations and energy of the neutronis
-        source = openmc.Source()
-        source.space = openmc.stats.Point((self.reactor.major_radius, 0, 0))
-        source.angle = openmc.stats.Isotropic()
-        source.energy = openmc.stats.Discrete([14e6], [1])
+        self.pedestal_radius = self.pedestal_radius_factor * (self.reactor.minor_radius  / 100)
+
+        my_plasma = PlasmaSource(
+            elongation=self.reactor.elongation,
+            ion_density_origin=self.ion_density_origin,
+            ion_density_peaking_factor=self.ion_density_peaking_factor,
+            ion_density_pedestal=self.ion_density_pedestal,
+            ion_density_separatrix=self.ion_density_separatrix,
+            ion_temperature_origin=self.ion_temperature_origin,
+            ion_temperature_peaking_factor=self.ion_temperature_peaking_factor,
+            ion_temperature_pedestal=self.ion_temperature_pedestal,
+            ion_temperature_separatrix=self.ion_temperature_separatrix,
+            major_radius=self.reactor.major_radius / 100,
+            minor_radius=self.reactor.minor_radius / 100,
+            pedestal_radius=self.pedestal_radius,
+            plasma_id=1,
+            shafranov_shift=self.shafranov_shift,
+            triangularity=self.reactor.triangularity,
+            ion_temperature_beta=self.ion_temperature_beta,
+        )
  
-        self.plasma_source = source
+        source = openmc.Source()
+        source.library = SOURCE_SAMPLING_PATH
+        source.parameters = str(my_plasma)
+
+        self.source = source
 
         return source
 
@@ -175,7 +207,7 @@ class NeutronicsModelFromReactor():
         self.create_neutronics_geometry()
 
         # this is the underlying geometry container that is filled with the
-        # faceteted CAD model
+        # faceteted DGAMC CAD model
         universe = openmc.Universe()
         geom = openmc.Geometry(universe)
 
@@ -187,11 +219,9 @@ class NeutronicsModelFromReactor():
         settings.run_mode = "fixed source"
         settings.dagmc = True
         settings.photon_transport = True
+        settings.source = self.source
 
-        settings.source = self.plasma_source
-
-        # details about what neutrons interactions to keep track of (called a
-        # tally)
+        # details about what neutrons interactions to keep track of (tally)
         tallies = openmc.Tallies()
 
         if 'TBR' in self.tallies:
@@ -202,15 +232,14 @@ class NeutronicsModelFromReactor():
             tally.scores = ["(n,Xt)"]  # where X is a wild card
             tallies.append(tally)
         
-        # if 'blanket_heat'
-        
-        if 'center_column_shield_heat':
-            blanket_mat = self.openmc_materials['center_column_shield_mat']
-            material_filter = openmc.MaterialFilter(blanket_mat)
-            tally = openmc.Tally(name="center_column_shield_heat")
-            tally.filters = [material_filter]
-            tally.scores = ["heating"]
-            tallies.append(tally)
+        if 'heat' in self.tallies:
+            for key, value in self.openmc_materials.items():
+                material_filter = openmc.MaterialFilter(value)
+                tally = openmc.Tally(name=key + "_heat")
+                tally.filters = [material_filter]
+                tally.scores = ["heating"]
+                tallies.append(tally)
+                
 
         # make the model from gemonetry, materials, settings and tallies
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
@@ -226,8 +255,7 @@ class NeutronicsModelFromReactor():
                 terminal and don't print the OpenMC output (false). Defaults
                 to True.  
         """
-        # run the simulation
-        self.create_neutronics_model()
+        
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
     
@@ -244,21 +272,21 @@ class NeutronicsModelFromReactor():
 
         # access the tallies
 
-        for identifier in self.tallies:
-            tally = sp.get_tally(name=identifier)
+        for key, tally in sp.tallies.items():
+
             df = tally.get_pandas_dataframe()
             tally_result = df["mean"].sum()
             tally_std_dev = df['std. dev.'].sum()
 
-            results[identifier] = tally_result
-            results[identifier + ' std. dev.'] = tally_std_dev
+            results[tally.name] = tally_result
+            results[tally.name + ' std. dev.'] = tally_std_dev
 
-            if identifier == 'TBR':
+            if tally.name == 'TBR':
                 print("TBR (Tritium Breeding Ratio) = ", tally_result,
                         '+/-', tally_std_dev)
 
-            if identifier == 'center_column_shield_heat':
-                print("Center column shield heating = ", tally_result,
+            if tally.name.endswith('heat'):
+                print(tally.name+ " heating = ", tally_result,
                         'eV per source particle +/-', tally_std_dev)
 
         self.results = results
