@@ -33,8 +33,9 @@ RUN apt-get install -y freeglut3-dev
 
 # Copy over the source code
 COPY paramak paramak/
+COPY setup.py setup.py
 
-RUN cd paramak && pip install
+RUN pip install .
 
 # Copy over the test folder
 COPY tests tests/
