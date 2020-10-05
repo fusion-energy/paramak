@@ -19,6 +19,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         number_of_coils (int): the number of tf coils. This changes by the
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
+        vertical_displacement (float, optional): vertical displacement (cm).
+            Defaults to 0.0.
         with_inner_leg (Boolean): Include the inner tf leg (default True)
 
     Keyword Args:
@@ -45,6 +47,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         thickness,
         distance,
         number_of_coils,
+        vertical_displacement=0.0,
         stp_filename="ToroidalFieldCoilPrincetonD.stp",
         stl_filename="ToroidalFieldCoilPrincetonD.stl",
         color=(0.5, 0.5, 0.5),
@@ -87,6 +90,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         self.thickness = thickness
         self.distance = distance
         self.number_of_coils = number_of_coils
+        self.vertical_displacement = vertical_displacement
         self.with_inner_leg = with_inner_leg
 
     @property
@@ -175,41 +179,43 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         """Finds the XZ points joined by connections that describe the 2D
         profile of the toroidal field coil shape."""
         # compute inner and outer points
-        R, Z, dz_dr = self.compute_inner_points(self.R1, self.R2)
-        R_, Z_ = self.compute_outer_points(R, Z, self.thickness, dz_dr)
-        R_, Z_ = np.flip(R_), np.flip(Z_)
+        R_inner, Z_inner, dz_dr = self.compute_inner_points(self.R1, self.R2)
+        R_outer, Z_outer = self.compute_outer_points(
+            R_inner, Z_inner, self.thickness, dz_dr)
+        R_outer, Z_outer = np.flip(R_outer), np.flip(Z_outer)
+
+        # add vertical displacement
+        Z_outer += self.vertical_displacement
+        Z_inner += self.vertical_displacement
+
         # extract helping points for inner leg
         inner_leg_connection_points = []
 
         inner_leg_connection_points.append(
-            (R[0], Z[0]))
+            (R_inner[0], Z_inner[0]))
         inner_leg_connection_points.append(
-            (R[-1], Z[-1]))
+            (R_inner[-1], Z_inner[-1]))
         inner_leg_connection_points.append(
-            (R_[0], Z_[0]))
+            (R_outer[0], Z_outer[0]))
         inner_leg_connection_points.append(
-            (R_[-1], Z_[-1]))
+            (R_outer[-1], Z_outer[-1]))
         self.inner_leg_connection_points = inner_leg_connection_points
 
         # add the leg to the points
         if self.with_inner_leg:
-            R = np.append(R, R[0])
-            Z = np.append(Z, Z[0])
+            R_inner = np.append(R_inner, R_inner[0])
+            Z_inner = np.append(Z_inner, Z_inner[0])
 
-            R_ = np.append(R_, R_[0])
-            Z_ = np.append(Z_, Z_[0])
+            R_outer = np.append(R_outer, R_outer[0])
+            Z_outer = np.append(Z_outer, Z_outer[0])
         # add connections
-        inner_points = []
-        for r, z in zip(R, Z):
-            inner_points.append([r, z, 'spline'])
-        if self.with_inner_leg:
-            inner_points[-2][2] = 'straight'
-        inner_points[-1][2] = 'straight'
-        outer_points = []
-        for r, z in zip(R_, Z_):
-            outer_points.append([r, z, 'spline'])
+        inner_points = [[r, z, 'spline'] for r, z in zip(R_inner, Z_inner)]
+        outer_points = [[r, z, 'spline'] for r, z in zip(R_outer, Z_outer)]
         if self.with_inner_leg:
             outer_points[-2][2] = 'straight'
+            inner_points[-2][2] = 'straight'
+
+        inner_points[-1][2] = 'straight'
         outer_points[-1][2] = "straight"
 
         points = inner_points + outer_points
@@ -217,7 +223,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         self.points = points
 
     def find_azimuth_placement_angle(self):
-        """Calculates the azimuth placement angles based on the number of tf coils"""
+        """Calculates the azimuth placement angles based on the number of tf
+        coils"""
 
         angles = list(
             np.linspace(

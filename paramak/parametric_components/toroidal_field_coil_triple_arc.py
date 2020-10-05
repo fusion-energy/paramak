@@ -20,7 +20,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
         vertical_displacement (float, optional): vertical displacement (cm).
-            Defaults to 0.
+            Defaults to 0.0.
         with_inner_leg (Boolean): Include the inner tf leg (default True)
 
     Keyword Args:
@@ -184,6 +184,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             (R_outer[-1], Z_outer[-1]))
 
         self.inner_leg_connection_points = inner_leg_connection_points
+
         # add the leg to the points
         if self.with_inner_leg:
             R_inner = np.append(R_inner, R_inner[0])
@@ -191,18 +192,17 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
 
             R_outer = np.append(R_outer, R_outer[0])
             Z_outer = np.append(Z_outer, Z_outer[0])
-        # create points with connections
-        points = []
-        for i in range(len(R_inner)):
-            points.append([R_inner[i], Z_inner[i], 'spline'])
+        # add connections
+        inner_points = [[r, z, 'spline'] for r, z in zip(R_inner, Z_inner)]
+        outer_points = [[r, z, 'spline'] for r, z in zip(R_outer, Z_outer)]
         if self.with_inner_leg:
-            points[-2][2] = 'straight'
-        points[-1][2] = 'straight'
-        for i in range(len(R_outer)):
-            points.append([R_outer[i], Z_outer[i], 'spline'])
-        if self.with_inner_leg:
-            points[-2][2] = 'straight'
-        points[-1][2] = 'straight'
+            outer_points[-2][2] = 'straight'
+            inner_points[-2][2] = 'straight'
+
+        inner_points[-1][2] = 'straight'
+        outer_points[-1][2] = "straight"
+
+        points = inner_points + outer_points
 
         self.points = points
 
