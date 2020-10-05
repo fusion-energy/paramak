@@ -158,7 +158,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         Returns:
             (list, list): R and Z lists for outer curve points
         """
-        new_R, new_Z = [], []
+        R_outer, Z_outer = [], []
         for i in range(len(derivative)):
             nx = -derivative[i]
             ny = 1
@@ -169,11 +169,11 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             # calculate outer points
             val_R_outer = R[i] + thickness * nx
             val_Z_outer = Z[i] + thickness * ny
-            new_R.append(val_R_outer)
-            new_Z.append(val_Z_outer)
-        new_R = np.concatenate([new_R, np.flip(np.array(new_R))])
-        new_Z = np.concatenate([new_Z, np.flip(-np.array(new_Z))])
-        return new_R, new_Z
+            R_outer.append(val_R_outer)
+            Z_outer.append(val_Z_outer)
+        R_outer = np.concatenate([R_outer, np.flip(np.array(R_outer))])
+        Z_outer = np.concatenate([Z_outer, np.flip(-np.array(Z_outer))])
+        return R_outer, Z_outer
 
     def find_points(self):
         """Finds the XZ points joined by connections that describe the 2D
@@ -189,16 +189,12 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         Z_inner += self.vertical_displacement
 
         # extract helping points for inner leg
-        inner_leg_connection_points = []
-
-        inner_leg_connection_points.append(
-            (R_inner[0], Z_inner[0]))
-        inner_leg_connection_points.append(
-            (R_inner[-1], Z_inner[-1]))
-        inner_leg_connection_points.append(
-            (R_outer[0], Z_outer[0]))
-        inner_leg_connection_points.append(
-            (R_outer[-1], Z_outer[-1]))
+        inner_leg_connection_points = [
+            (R_inner[0], Z_inner[0]),
+            (R_inner[-1], Z_inner[-1]),
+            (R_outer[0], Z_outer[0]),
+            (R_outer[-1], Z_outer[-1])
+        ]
         self.inner_leg_connection_points = inner_leg_connection_points
 
         # add the leg to the points
@@ -216,7 +212,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             inner_points[-2][2] = 'straight'
 
         inner_points[-1][2] = 'straight'
-        outer_points[-1][2] = "straight"
+        outer_points[-1][2] = 'straight'
 
         points = inner_points + outer_points
 

@@ -118,8 +118,6 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             0, small_coverage, round(0.5 * npoints * small_coverage / np.pi))
         small_arc_R = R1 + small_radius * (1 - np.cos(theta))
         small_arc_Z = h + small_radius * np.sin(theta)
-        R = small_arc_R
-        Z = small_arc_Z
 
         # mid arc
         theta = np.linspace(
@@ -128,8 +126,6 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             (np.cos(small_coverage) - np.cos(theta))
         mid_arc_Z = Z[-1] + mid_radius * \
             (np.sin(theta) - np.sin(small_coverage))
-        R = np.append(R, mid_arc_R[1:])
-        Z = np.append(Z, mid_arc_Z[1:])
 
         # large arc
         large_radius = (Z[-1]) / np.sin(np.pi - asum)
@@ -138,10 +134,10 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             (np.cos(np.pi - theta) - np.cos(np.pi - asum))
         large_arc_Z = Z[-1] - large_radius * \
             (np.sin(asum) - np.sin(np.pi - theta))
-        R = np.append(R, large_arc_R[1:])
-        Z = np.append(Z, large_arc_Z[1:])
 
+        R = np.concatenate((small_arc_R, mid_arc_R[1:], large_arc_R[1:]))
         R = np.append(R, np.flip(R)[1:])
+        Z = np.concatenate((small_arc_Z, mid_arc_Z[1:], large_arc_Z[1:]))
         Z = np.append(Z, -np.flip(Z)[1:])
         return R, Z
 
@@ -172,17 +168,12 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         Z_inner += self.vertical_displacement
 
         # extract helping points for inner leg
-        inner_leg_connection_points = []
-
-        inner_leg_connection_points.append(
-            (R_inner[0], Z_inner[0]))
-        inner_leg_connection_points.append(
-            (R_inner[-1], Z_inner[-1]))
-        inner_leg_connection_points.append(
-            (R_outer[0], Z_outer[0]))
-        inner_leg_connection_points.append(
-            (R_outer[-1], Z_outer[-1]))
-
+        inner_leg_connection_points = [
+            (R_inner[0], Z_inner[0]),
+            (R_inner[-1], Z_inner[-1]),
+            (R_outer[0], Z_outer[0]),
+            (R_outer[-1], Z_outer[-1])
+        ]
         self.inner_leg_connection_points = inner_leg_connection_points
 
         # add the leg to the points
@@ -200,7 +191,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             inner_points[-2][2] = 'straight'
 
         inner_points[-1][2] = 'straight'
-        outer_points[-1][2] = "straight"
+        outer_points[-1][2] = 'straight'
 
         points = inner_points + outer_points
 
