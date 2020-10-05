@@ -122,17 +122,17 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         # mid arc
         theta = np.linspace(
             theta[-1], asum, round(0.5 * npoints * mid_coverage / np.pi))
-        mid_arc_R = R[-1] + mid_radius * \
+        mid_arc_R = small_arc_R[-1] + mid_radius * \
             (np.cos(small_coverage) - np.cos(theta))
-        mid_arc_Z = Z[-1] + mid_radius * \
+        mid_arc_Z = small_arc_Z[-1] + mid_radius * \
             (np.sin(theta) - np.sin(small_coverage))
 
         # large arc
-        large_radius = (Z[-1]) / np.sin(np.pi - asum)
+        large_radius = (mid_arc_Z[-1]) / np.sin(np.pi - asum)
         theta = np.linspace(theta[-1], np.pi, 60)
-        large_arc_R = R[-1] + large_radius * \
+        large_arc_R = mid_arc_R[-1] + large_radius * \
             (np.cos(np.pi - theta) - np.cos(np.pi - asum))
-        large_arc_Z = Z[-1] - large_radius * \
+        large_arc_Z = mid_arc_Z[-1] - large_radius * \
             (np.sin(asum) - np.sin(np.pi - theta))
 
         R = np.concatenate((small_arc_R, mid_arc_R[1:], large_arc_R[1:]))
