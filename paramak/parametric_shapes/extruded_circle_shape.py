@@ -82,16 +82,6 @@ class ExtrudeCircleShape(Shape):
         self.solid = solid
 
     @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, solid):
-        self._solid = solid
-
-    @property
     def radius(self):
         return self._radius
 
