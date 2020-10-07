@@ -98,19 +98,22 @@ class VacuumVessel(RotateStraightShape):
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the
             2D profile of the vessel shape."""
+        thickness = self.thickness
+        inner_radius = self.inner_radius
+        height = self.height
 
         inner_points = [
-            (0, self.height / 2),
-            (self.inner_radius, self.height / 2),
-            (self.inner_radius, -self.height / 2),
-            (0, -self.height / 2),
+            (0, height / 2),
+            (inner_radius, height / 2),
+            (inner_radius, -height / 2),
+            (0, -height / 2),
         ]
 
         outer_points = [
-            (0, self.height / 2 + self.thickness),
-            (self.inner_radius + self.thickness, self.height / 2 + self.thickness),
-            (self.inner_radius + self.thickness, -(self.height / 2 + self.thickness)),
-            (0, -(self.height / 2 + self.thickness)),
+            (0, height / 2 + thickness),
+            (inner_radius + thickness, height / 2 + thickness),
+            (inner_radius + thickness, -(height / 2 + thickness)),
+            (0, -(height / 2 + thickness)),
         ]
         self.points = inner_points + outer_points[::-1]
 
