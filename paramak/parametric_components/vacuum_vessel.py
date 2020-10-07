@@ -1,4 +1,5 @@
-from paramak import RotateStraightShape
+from paramak import \
+    RotateStraightShape, ExtrudeCircleShape, ExtrudeStraightShape
 
 
 class VacuumVessel(RotateStraightShape):
@@ -32,6 +33,7 @@ class VacuumVessel(RotateStraightShape):
         height,
         inner_radius,
         thickness,
+        circular_ports,
         name=None,
         color=(0.5, 0.5, 0.5),
         stp_filename="CenterColumnShieldCylinder.stp",
@@ -72,6 +74,8 @@ class VacuumVessel(RotateStraightShape):
         self.height = height
         self.inner_radius = inner_radius
         self.thickness = thickness
+        self.circular_ports = circular_ports
+        self.add_ports()
 
     @property
     def height(self):
@@ -107,3 +111,20 @@ class VacuumVessel(RotateStraightShape):
             (0, -(self.height / 2 + self.thickness)),
         ]
         self.points = inner_points + outer_points[::-1]
+
+    def add_ports(self):
+        cutter_shapes = []
+        safety_factor = 1.001
+        # circular ports
+        for port in self.circular_ports:
+            port_height, placement_angle, radius = port
+            shape = ExtrudeCircleShape(
+                points=[(0, port_height)],
+                distance=2*(self.inner_radius+self.thickness*safety_factor),
+                radius=radius,
+                azimuth_placement_angle=placement_angle - 90,
+                extrude_both=False)
+            cutter_shapes.append(shape)
+
+        # rectangular ports
+        self.cut = cutter_shapes
