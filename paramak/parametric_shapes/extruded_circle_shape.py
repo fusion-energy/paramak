@@ -40,6 +40,7 @@ class ExtrudeCircleShape(Shape):
         points,
         distance,
         radius,
+        extrude_both=True,
         workplane="XZ",
         stp_filename="ExtrudeCircleShape.stp",
         stl_filename="ExtrudeCircleShape.stl",
@@ -80,6 +81,7 @@ class ExtrudeCircleShape(Shape):
         self.radius = radius
         self.distance = distance
         self.solid = solid
+        self.extrude_both = extrude_both
 
     @property
     def solid(self):
@@ -120,7 +122,7 @@ class ExtrudeCircleShape(Shape):
             cq.Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
-            .extrude(distance=-self.distance / 2.0, both=True)
+            .extrude(distance=-self.distance / 2.0, both=self.extrude_both)
         )
 
         # Checks if the azimuth_placement_angle is a list of angles
