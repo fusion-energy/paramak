@@ -1,5 +1,6 @@
 from paramak import \
-    RotateStraightShape, ExtrudeCircleShape, ExtrudeStraightShape
+    RotateStraightShape, ExtrudeCircleShape, \
+    ExtrudeStraightShape, PortCutterRotated
 
 
 class VacuumVessel(RotateStraightShape):
@@ -43,6 +44,7 @@ class VacuumVessel(RotateStraightShape):
         thickness,
         circular_ports=[],
         rectangular_ports=[],
+        rotated_ports=[],
         name=None,
         color=(0.5, 0.5, 0.5),
         stp_filename="CenterColumnShieldCylinder.stp",
@@ -85,6 +87,7 @@ class VacuumVessel(RotateStraightShape):
         self.thickness = thickness
         self.circular_ports = circular_ports
         self.rectangular_ports = rectangular_ports
+        self.rotated_ports = rotated_ports
         self.add_ports()
 
     @property
@@ -159,7 +162,24 @@ class VacuumVessel(RotateStraightShape):
             # add fillet
             if len(port) == 5:
                 shape.solid = shape.solid.edges('#Z').fillet(port[4])
-            shape.export_stp("cutter.stp")
+            cutter_shapes.append(shape)
+
+        # rotated ports
+        for port in self.rotated_ports:
+            center_point, polar_coverage_angle, polar_placement_angle, \
+                rotation_angle = port[:4]
+            shape = PortCutterRotated(
+                center_point=center_point,
+                polar_coverage_angle=polar_coverage_angle,
+                polar_placement_angle=polar_placement_angle,
+                max_distance_from_center=2*(
+                    self.inner_radius+self.thickness*safety_factor),
+                rotation_angle=rotation_angle
+                )
+
+            # add fillet
+            if len(port) == 5:
+                shape.solid = shape.solid.edges().fillet(port[4])
             cutter_shapes.append(shape)
 
         self.cut = cutter_shapes
