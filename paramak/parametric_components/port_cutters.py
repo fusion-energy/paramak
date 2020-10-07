@@ -136,17 +136,17 @@ class PortCutterRotated(RotateStraightShape):
         outer_point_rotated = rotate(
             self.center_point,
             outer_point,
-            math.radians(self.poloidal_placement_angle))
+            math.radians(self.polar_placement_angle))
 
         outer_point_1 = rotate(
             self.center_point,
             outer_point_rotated,
-            math.radians(0.5 * self.poloidal_coverage_angle))
+            math.radians(0.5 * self.polar_coverage_angle))
 
         outer_point_2 = rotate(
             self.center_point,
             outer_point_rotated,
-            math.radians(-0.5 * self.poloidal_coverage_angle))
+            math.radians(-0.5 * self.polar_coverage_angle))
 
         if outer_point_1[0] < 0:
             m, c = coefficients_of_line_from_points(
