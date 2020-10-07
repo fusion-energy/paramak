@@ -6,16 +6,16 @@ from paramak.utils import rotate, coefficients_of_line_from_points
 
 
 class PortCutterRotated(RotateStraightShape):
-    """Creates wedges from a central point with angular extent in poloidal
+    """Creates wedges from a central point with angular extent in polar
     direction. To control the width the rotation_angle argument can be used.
     This is useful as a cutting volume for the creation of ports in blankets.
 
     Args:
-        poloidal_coverage_angle (float): the angluar extent of port in the
-            poloidal direction (degrees).
+        polar_coverage_angle (float): the angluar extent of port in the
+            polar direction (degrees).
         center_point (tuple of floats): the center point where the
             ports are aimed towards, typically the center of the plasma.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-        poloidal_placement_angle (float): The angle used when rotating the shape
+        polar_placement_angle (float): The angle used when rotating the shape
             on the polar axis. 0 degrees is the outboard equatorial point.
         max_distance_from_center (float): the maximum distance from the center
             point outwards (cm). Default 3000
@@ -53,8 +53,8 @@ class PortCutterRotated(RotateStraightShape):
     def __init__(
         self,
         center_point,
-        poloidal_coverage_angle=10,
-        poloidal_placement_angle=0,
+        polar_coverage_angle=10,
+        polar_placement_angle=0,
         max_distance_from_center=3000,
         rotation_angle=0,
         stp_filename="PortCutter.stp",
@@ -94,8 +94,8 @@ class PortCutterRotated(RotateStraightShape):
         )
 
         self.center_point = center_point
-        self.poloidal_coverage_angle = poloidal_coverage_angle
-        self.poloidal_placement_angle = poloidal_placement_angle
+        self.polar_coverage_angle = polar_coverage_angle
+        self.polar_placement_angle = polar_placement_angle
         self.max_distance_from_center = max_distance_from_center
 
     @property
@@ -136,17 +136,17 @@ class PortCutterRotated(RotateStraightShape):
         outer_point_rotated = rotate(
             self.center_point,
             outer_point,
-            math.radians(self.poloidal_placement_angle))
+            math.radians(self.polar_placement_angle))
         
         outer_point_1 = rotate(
             self.center_point,
             outer_point_rotated,
-            math.radians(0.5*self.poloidal_coverage_angle))
+            math.radians(0.5*self.polar_coverage_angle))
 
         outer_point_2 = rotate(
             self.center_point,
             outer_point_rotated,
-            math.radians(-0.5*self.poloidal_coverage_angle))
+            math.radians(-0.5*self.polar_coverage_angle))
 
         if outer_point_1[0] < 0:
             m, c = coefficients_of_line_from_points(
