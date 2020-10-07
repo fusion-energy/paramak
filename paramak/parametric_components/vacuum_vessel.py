@@ -34,6 +34,7 @@ class VacuumVessel(RotateStraightShape):
         inner_radius,
         thickness,
         circular_ports,
+        rectangular_ports,
         name=None,
         color=(0.5, 0.5, 0.5),
         stp_filename="CenterColumnShieldCylinder.stp",
@@ -75,6 +76,7 @@ class VacuumVessel(RotateStraightShape):
         self.inner_radius = inner_radius
         self.thickness = thickness
         self.circular_ports = circular_ports
+        self.rectangular_ports = rectangular_ports
         self.add_ports()
 
     @property
@@ -117,9 +119,9 @@ class VacuumVessel(RotateStraightShape):
         safety_factor = 1.001
         # circular ports
         for port in self.circular_ports:
-            port_height, placement_angle, radius = port
+            port_z_pos, placement_angle, radius = port
             shape = ExtrudeCircleShape(
-                points=[(0, port_height)],
+                points=[(0, port_z_pos)],
                 distance=2*(self.inner_radius+self.thickness*safety_factor),
                 radius=radius,
                 azimuth_placement_angle=placement_angle - 90,
@@ -127,4 +129,20 @@ class VacuumVessel(RotateStraightShape):
             cutter_shapes.append(shape)
 
         # rectangular ports
+        for port in self.rectangular_ports:
+            port_z_pos, placement_angle, port_width, port_height = port
+            points = [
+                (-port_width/2, -port_height/2),
+                (port_width/2, -port_height/2),
+                (port_width/2, port_height/2),
+                (-port_width/2, port_height/2),
+            ]
+            shape = ExtrudeStraightShape(
+                points=points,
+                distance=2*(self.inner_radius+self.thickness*safety_factor),
+                azimuth_placement_angle=placement_angle - 90,
+                extrude_both=False
+                )
+            cutter_shapes.append(shape)
+
         self.cut = cutter_shapes
