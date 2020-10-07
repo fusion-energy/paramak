@@ -23,7 +23,7 @@ class VacuumVessel(RotateStraightShape):
         rotated_ports (list): list of iterables containing floats
             describing the ports for, in order:
             (center_point, polar_coverage_angle, polar_placement_angle,
-            rotation_angle, fillet_radius)
+            rotation_angle, azimuth_placement_angle, fillet_radius)
             If no fillet_radius is specified, the port won't be filleted.
             Defaults to [].
 
@@ -175,19 +175,20 @@ class VacuumVessel(RotateStraightShape):
         # rotated ports
         for port in self.rotated_ports:
             center_point, polar_coverage_angle, polar_placement_angle, \
-                rotation_angle = port[:4]
+                rotation_angle, azimuth_placement_angle = port[:5]
             shape = PortCutterRotated(
                 center_point=center_point,
                 polar_coverage_angle=polar_coverage_angle,
                 polar_placement_angle=polar_placement_angle,
                 max_distance_from_center=2*(
                     self.inner_radius+self.thickness*safety_factor),
-                rotation_angle=rotation_angle
+                rotation_angle=rotation_angle,
+                azimuth_placement_angle=azimuth_placement_angle,
                 )
 
             # add fillet
-            if len(port) == 5:
-                shape.solid = shape.solid.edges().fillet(port[4])
+            if len(port) == 6:
+                shape.solid = shape.solid.edges().fillet(port[5])
             cutter_shapes.append(shape)
 
         self.cut = cutter_shapes

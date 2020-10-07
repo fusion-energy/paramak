@@ -1332,7 +1332,7 @@ class test_VacuumVessel(unittest.TestCase):
             ]
         rotated_ports = [
             # center_point, polar_coverage_angle, polar_placement_angle, rotation_angle, fillet_radius
-            ((0, 0), 10, 10, 10, 0.02)
+            ((0, 0), 10, 10, 10, 40, 0.02)
         ]
         test_shape = paramak.VacuumVessel(
             height=2, inner_radius=1, thickness=0.2,
