@@ -95,8 +95,8 @@ class NeutronicsModelFromReactor():
         self.pedestal_radius_factor = pedestal_radius_factor
         self.shafranov_shift = shafranov_shift
         self.ion_temperature_beta = ion_temperature_beta
-        self.simulation_batches=simulation_batches
-        self.simulation_particles_per_batches=simulation_particles_per_batches
+        self.simulation_batches = simulation_batches
+        self.simulation_particles_per_batches = simulation_particles_per_batches
 
         self.model = None
         self.fusion_power = fusion_power
@@ -180,7 +180,8 @@ class NeutronicsModelFromReactor():
         """Uses the parametric-plasma-source to create a ditributed neutron
         source for use in the simulation"""
 
-        self.pedestal_radius = self.pedestal_radius_factor * (self.reactor.minor_radius  / 100)
+        self.pedestal_radius = self.pedestal_radius_factor * \
+            (self.reactor.minor_radius / 100)
 
         my_plasma = PlasmaSource(
             elongation=self.reactor.elongation,
@@ -200,7 +201,7 @@ class NeutronicsModelFromReactor():
             triangularity=self.reactor.triangularity,
             ion_temperature_beta=self.ion_temperature_beta,
         )
- 
+
         source = openmc.Source()
         source.library = SOURCE_SAMPLING_PATH
         source.parameters = str(my_plasma)
@@ -259,8 +260,9 @@ class NeutronicsModelFromReactor():
             tally.filters = [material_filter]
             tally.scores = ["(n,Xt)"]  # where X is a wild card
             tallies.append(tally)
-        
+
         if 'heat' in self.outputs:
+
             for key, value in self.openmc_materials.items():
                 if key != 'DT_plasma':
                     material_filter = openmc.MaterialFilter(value)
@@ -291,6 +293,7 @@ class NeutronicsModelFromReactor():
                 terminal and don't print the OpenMC output (false). Defaults
                 to True.
         """
+
         if self.model is None:
             self.create_neutronics_model()
         self.output_filename = self.model.run(output=verbose)
