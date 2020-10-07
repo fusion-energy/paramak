@@ -235,8 +235,8 @@ class NeutronicsModelFromReactor():
                 avaialbe from the CoreForm website https://www.coreform.com/
         """
 
-        if method.lower not in ['ppp', 'trelis']
-        raise ValueError("the method using in create_neutronics_geometry \
+        if method.lower not in ['ppp', 'trelis']:
+            raise ValueError("the method using in create_neutronics_geometry \
                 should be either ppp or trelis not", method)
 
         self.reactor.export_stp()
