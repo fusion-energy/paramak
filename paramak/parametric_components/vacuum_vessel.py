@@ -18,6 +18,11 @@ class VacuumVessel(RotateStraightShape):
             (port z position, azimuth placement angle, widht, height,
             fillet_radius)
             If no fillet_radius is specified, the port won't be filleted.
+        rotated_ports (list): list of iterables containing floats
+            describing the ports for, in order:
+            (center_point, polar_coverage_angle, polar_placement_angle,
+            rotation_angle, fillet_radius)
+            If no fillet_radius is specified, the port won't be filleted.
 
     Keyword Args:
         workplane (str): The orientation of the CadQuery workplane. Options are
