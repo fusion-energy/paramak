@@ -212,18 +212,42 @@ class NeutronicsModelFromReactor():
 
         return source
 
-    def create_neutronics_geometry(self):
-        """Uses Trelis together with a python script to
-        reading the stp files assign material tags to
-        the volumes and create a watertight h5m DAGMC
-        file which can be used as neutronics geometry.
+    def create_neutronics_geometry(self, method='trelis'):
+        """Produces a h5m neutronics geometry compatable with DAGMC simulations.
+        This is done by first exporting the stp files for the whole reactor,
+        then exporting the neutronics description of the reactor, then there
+        are two methods available for producing the imprinted and merged h5m
+        geometry. The next step is to make the geometry watertight which uses
+        make_watertight from DAGMC. If using the Trelis option you must have
+        the make_faceteted_neutronics_model.py in the same directory as your
+        Python script.
+
+        Arguments:
+            method: (str): The method to use when making the imprinted and
+                merged geometry. Options are 'trelis' or 'ppp'. Further details
+                on imprinting and merging are available on the DAGMC homepage
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                The Parallel-PreProcessor is an open-source tool available 
+                https://github.com/ukaea/parallel-preprocessor and can be used
+                in conjunction with the OCC_faceter 
+                (https://github.com/makeclean/occ_faceter) to create imprinted
+                and merged geometry while Trelis (also known as Cubit) is
+                avaialbe from the CoreForm website https://www.coreform.com/
         """
 
-        self.reactor.export_stp()
+        if method.lower not in ['ppp', 'trelis']
+            raise ValueError("the method using in create_neutronics_geometry \
+                should be either ppp or trelis not", method)
 
+        self.reactor.export_stp()
         self.reactor.export_neutronics_description()
 
-        os.system("trelis -batch -nographics make_faceteted_neutronics_model.py")
+        if method.lower == 'ppp':
+            os.system('/usr/bin/python /usr/bin/geomPipeline.py config.json')
+            os.system('./occ_faceter brep')
+
+        if method.lower == 'trelis':
+            os.system("trelis -batch -nographics make_faceteted_neutronics_model.py")
 
         os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m")
 

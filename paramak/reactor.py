@@ -57,7 +57,8 @@ class Reactor:
     def material_tags(self):
         values = []
         for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.material_tag)
+            if isinstance(shape_or_componet, (paramak.Plasma, paramak.PlasmaFromPoints, paramak.PlasmaBoundaries)) is False:
+                values.append(shape_or_componet.material_tag)
         return list(set(values))
 
     @material_tags.setter
@@ -138,7 +139,7 @@ class Reactor:
         for entry in self.shapes_and_components:
 
             if include_plasma is False and isinstance(
-                    entry, paramak.Plasma) is True:
+                    entry, (paramak.Plasma, paramak.PlasmaFromPoints, paramak.PlasmaBoundaries)) is True:
                 continue
 
             if entry.stp_filename is None:
@@ -165,12 +166,12 @@ class Reactor:
         return neutronics_description
 
     def export_neutronics_description(
-        self, filename="manifest.json", include_plasma=False
+        self, filename="config.json", include_plasma=False
     ):
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
-        file contains a list of dictionaries. Each dictionary entry comprises of
-        a material and a filename and optionally a tet_mesh instruction. The
+        file contains a list of dictionaries. Each dictionary entry comprises
+        of a material and a filename and optionally a tet_mesh instruction. The
         json file can then be used with the neutronics workflows to create a
         neutronics model. Creating of the neutronics model requires linkage
         between volumes, materials and identification of which volumes to
