@@ -37,6 +37,7 @@ class ExtrudeStraightShape(Shape):
         self,
         points,
         distance,
+        extrude_both=True,
         workplane="XZ",
         stp_filename="ExtrudeStraightShape.stp",
         stl_filename="ExtrudeStraightShape.stl",
@@ -76,6 +77,7 @@ class ExtrudeStraightShape(Shape):
 
         self.distance = distance
         self.solid = solid
+        self.extrude_both = extrude_both
 
     @property
     def solid(self):
@@ -108,7 +110,7 @@ class ExtrudeStraightShape(Shape):
             cq.Workplane(self.workplane)
             .polyline(self.points)
             .close()
-            .extrude(distance=-self.distance / 2.0, both=True)
+            .extrude(distance=-self.distance / 2.0, both=self.extrude_both)
         )
 
         # Checks if the azimuth_placement_angle is a list of angles
