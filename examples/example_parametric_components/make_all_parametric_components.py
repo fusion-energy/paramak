@@ -317,6 +317,15 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.PortCutterRotated(
+        center_point=(450, 0),
+        poloidal_coverage_angle=20,
+        rotation_angle=10,
+        poloidal_placement_angle=45,
+        azimuth_placement_angle=0
+    )
+    all_components.append(component)
+
     return all_components
 
 

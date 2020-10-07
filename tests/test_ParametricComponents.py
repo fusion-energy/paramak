@@ -1,8 +1,9 @@
+import math
 import os
 import random
 import unittest
 from pathlib import Path
-import math
+import numpy as np
 import paramak
 import pytest
 

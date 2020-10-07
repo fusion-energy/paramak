@@ -284,6 +284,20 @@ PoloidalSegmenter()
    :members:
    :show-inheritance:
 
+PortCutterRotated()
+^^^^^^^^^^^^^^^^^^^
+
+|PortCutterRotatedstp| |PortCutterRotatedsvg|
+
+.. |PortCutterRotatedstp| image:: https://user-images.githubusercontent.com/8583900/95115392-511a2700-073d-11eb-9cb9-d6d2bec80e2c.png
+    :width: 300px
+.. |PortCutterRotatedsvg| image:: https://user-images.githubusercontent.com/8583900/95115923-267c9e00-073e-11eb-898b-bafbb2626b02.png
+    :width: 380px
+
+.. automodule:: paramak.parametric_components.port_cutter
+   :members:
+   :show-inheritance:
+
 Plasma()
 ^^^^^^^^
 
