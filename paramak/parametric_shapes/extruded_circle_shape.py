@@ -14,6 +14,8 @@ class ExtrudeCircleShape(Shape):
             of a single XZ coordinate which is the central point of the circle.
             For example [(10, 10)]
         radius (float): the radius of the circle
+        extrude_both (bool): if set to True, the extrusion will occur in both
+            directions. Defaults to True.
         stp_filename (str): the filename used when saving stp files as part of a
             reactor
         color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
