@@ -1314,5 +1314,29 @@ class test_ParametricComponents(unittest.TestCase):
         assert initial_hash_value != test_shape.hash_value
 
 
+class test_VacuumVessel(unittest.TestCase):
+    def test_VacuumVessel_creation(self):
+        """creates an inner tf coil using the VacuumVessel parametric
+        component and checks that a cadquery solid is created"""
+
+        rectangular_ports = [
+            # port z position, azimuth placement angle, widht, height, fillet_radius
+            (0, 90, 0.2, 0.1),
+            (0.5, 120, 0.1, 0.3, 0.02),
+        ]
+        circular_ports = [
+            # port z position, azimuth placement angle, radius
+            (0.5, 25, 0.2),
+            (-0.5, 75, 0.1),
+            ]
+        test_shape = paramak.VacuumVessel(
+            height=2, inner_radius=1, thickness=0.2,
+            circular_ports=circular_ports,
+            rectangular_ports=rectangular_ports
+            )
+
+        assert test_shape.solid is not None
+
+
 if __name__ == "__main__":
     unittest.main()
