@@ -113,8 +113,10 @@ class NeutronicsModelFromReactor():
         output_options = ['TBR', 'heat', 'flux', 'fast flux', 'dose']
         for entry in value:
             if entry not in output_options:
-                raise ValueError("NeutronicsModelFromReactor.outputs argument", 
-                    entry, "not allowed, the following options are supported",
+                raise ValueError(
+                    "NeutronicsModelFromReactor.outputs argument",
+                    entry,
+                    "not allowed, the following options are supported",
                     output_options)
         self._outputs = value
 
@@ -334,8 +336,8 @@ class NeutronicsModelFromReactor():
                     'std. dev.': tally_std_dev / 1e6,
                 }
                 results[tally.name]['Watts'] = {
-                    'result': tally_result*1.602176487e-19 * (self.fusion_power / ((17.58 *1e6) / 6.2415090744e18)),
-                    'std. dev.': tally_std_dev*1.602176487e-19 * (self.fusion_power / ((17.58 *1e6) / 6.2415090744e18)),
+                    'result': tally_result * 1.602176487e-19 * (self.fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
+                    'std. dev.': tally_std_dev * 1.602176487e-19 * (self.fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
                 }
 
         self.results = json.dumps(results, indent=4, sort_keys=True)

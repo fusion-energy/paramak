@@ -4,7 +4,7 @@ import paramak
 total_heats_in_MW = []
 plasma_to_center_column_gaps = []
 
-# this will take a few mins to perform 3 simulations at 
+# this will take a few mins to perform 3 simulations at
 for plasma_to_center_column_gap in [50, 100, 150]:
 
     my_reactor = paramak.CenterColumnStudyReactor(
@@ -18,7 +18,7 @@ for plasma_to_center_column_gap in [50, 100, 150]:
         plasma_radial_thickness=200,
         outer_plasma_gap_radial_thickness=90,
         # first number must be between plasma inner/outer radius
-        plasma_high_point=(180+plasma_to_center_column_gap, 240),
+        plasma_high_point=(180 + plasma_to_center_column_gap, 240),
         plasma_gap_vertical_thickness=40,
         center_column_arc_vertical_thickness=520,
         rotation_angle=360
@@ -40,7 +40,7 @@ for plasma_to_center_column_gap in [50, 100, 150]:
 
     neutronics_model.simulate()
 
-    total_heat_in_MW = (neutronics_model.results['center_column_shield_mat_heat']['Watts']['result'] + \
+    total_heat_in_MW = (neutronics_model.results['center_column_shield_mat_heat']['Watts']['result'] +
                         neutronics_model.results['firstwall_mat_heat']['Watts']['result']) / 1e6
 
     total_heats_in_MW.append(total_heat_in_MW)
