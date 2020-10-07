@@ -294,7 +294,7 @@ PortCutterRotated()
 .. |PortCutterRotatedsvg| image:: https://user-images.githubusercontent.com/8583900/95115923-267c9e00-073e-11eb-898b-bafbb2626b02.png
     :width: 380px
 
-.. automodule:: paramak.parametric_components.port_cutter
+.. automodule:: paramak.parametric_components.port_cutters
    :members:
    :show-inheritance:
 
