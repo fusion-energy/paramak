@@ -1330,10 +1330,15 @@ class test_VacuumVessel(unittest.TestCase):
             (0.5, 25, 0.2),
             (-0.5, 75, 0.1),
             ]
+        rotated_ports = [
+            # center_point, polar_coverage_angle, polar_placement_angle, rotation_angle, fillet_radius
+            ((0, 0), 10, 10, 10, 0.02)
+        ]
         test_shape = paramak.VacuumVessel(
             height=2, inner_radius=1, thickness=0.2,
             circular_ports=circular_ports,
-            rectangular_ports=rectangular_ports
+            rectangular_ports=rectangular_ports,
+            rotated_ports=rotated_ports
             )
 
         assert test_shape.solid is not None
