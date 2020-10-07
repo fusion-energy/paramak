@@ -1,4 +1,6 @@
 import os
+import json
+from collections import defaultdict
 
 try:
     from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
@@ -35,6 +37,9 @@ class NeutronicsModelFromReactor():
             for the reactor can be obtained with Reactor().materials.
         tallies: (list of strings): the tallies to calculate, options include
             TBR, blanket_heat, center_column_shield_heat
+        fusion_power: (float): the power in watts emitted by the fusion reaction
+            recalling that each DT fusion reaction emitts 17.6 MeV or
+            2.819831e-12 Joules
         simulation_batches: (int): the number of batch to simulate
         simulation_particles_per_batches: (int): particles per batch
         ion_density_origin: (float): 1.09e20,
@@ -59,7 +64,8 @@ class NeutronicsModelFromReactor():
         self,
         reactor,
         materials,
-        tallies,
+        outputs,
+        fusion_power=1e9,
         simulation_batches=100,
         simulation_particles_per_batches=10000,
         ion_density_peaking_factor=1,
@@ -77,7 +83,7 @@ class NeutronicsModelFromReactor():
         # input by user
         self.reactor = reactor
         self.materials = materials
-        self.tallies = tallies
+        self.outputs = outputs
         self.ion_density_origin = ion_density_origin
         self.ion_density_peaking_factor = ion_density_peaking_factor
         self.ion_density_pedestal = ion_density_pedestal
@@ -91,6 +97,26 @@ class NeutronicsModelFromReactor():
         self.ion_temperature_beta = ion_temperature_beta
         self.simulation_batches=simulation_batches
         self.simulation_particles_per_batches=simulation_particles_per_batches
+
+        self.model = None
+        self.fusion_power = fusion_power
+
+    @property
+    def outputs(self):
+        return self._outputs
+
+    @outputs.setter
+    def outputs(self, value):
+        if not isinstance(value, list):
+            raise ValueError("NeutronicsModelFromReactor.outputs should be a\
+                list")
+        output_options = ['TBR', 'heat', 'flux', 'fast flux', 'dose']
+        for entry in value:
+            if entry not in output_options:
+                raise ValueError("NeutronicsModelFromReactor.outputs argument", 
+                    entry, "not allowed, the following options are supported",
+                    output_options)
+        self._outputs = value
 
     @property
     def materials(self):
@@ -226,7 +252,7 @@ class NeutronicsModelFromReactor():
         # details about what neutrons interactions to keep track of (tally)
         tallies = openmc.Tallies()
 
-        if 'TBR' in self.tallies:
+        if 'TBR' in self.outputs:
             blanket_mat = self.openmc_materials['blanket_mat']
             material_filter = openmc.MaterialFilter(blanket_mat)
             tally = openmc.Tally(name="TBR")
@@ -234,13 +260,23 @@ class NeutronicsModelFromReactor():
             tally.scores = ["(n,Xt)"]  # where X is a wild card
             tallies.append(tally)
         
-        if 'heat' in self.tallies:
+        if 'heat' in self.outputs:
             for key, value in self.openmc_materials.items():
-                material_filter = openmc.MaterialFilter(value)
-                tally = openmc.Tally(name=key + "_heat")
-                tally.filters = [material_filter]
-                tally.scores = ["heating"]
-                tallies.append(tally)
+                if key != 'DT_plasma':
+                    material_filter = openmc.MaterialFilter(value)
+                    tally = openmc.Tally(name=key + "_heat")
+                    tally.filters = [material_filter]
+                    tally.scores = ["heating"]
+                    tallies.append(tally)
+
+        if 'flux' in self.outputs:
+            for key, value in self.openmc_materials.items():
+                if key != 'DT_plasma':
+                    material_filter = openmc.MaterialFilter(value)
+                    tally = openmc.Tally(name=key + "_flux")
+                    tally.filters = [material_filter]
+                    tally.scores = ["flux"]
+                    tallies.append(tally)
 
         # make the model from gemonetry, materials, settings and tallies
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
@@ -255,7 +291,8 @@ class NeutronicsModelFromReactor():
                 terminal and don't print the OpenMC output (false). Defaults
                 to True.
         """
-        
+        if self.model is None:
+            self.create_neutronics_model()
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
 
@@ -263,32 +300,41 @@ class NeutronicsModelFromReactor():
         """
         Reads the output file from the neutronics simulation
         and prints the TBR tally result to screen
+
+        Returns:
+            dict: a dictionary of the simulation results
         """
 
         # open the results file
         sp = openmc.StatePoint(self.output_filename)
 
-        results = {}
+        results = defaultdict(dict)
 
         # access the tallies
-
         for key, tally in sp.tallies.items():
 
             df = tally.get_pandas_dataframe()
             tally_result = df["mean"].sum()
             tally_std_dev = df['std. dev.'].sum()
 
-            results[tally.name] = tally_result
-            results[tally.name + ' std. dev.'] = tally_std_dev
-
             if tally.name == 'TBR':
-                print("TBR (Tritium Breeding Ratio) = ", tally_result,
-                      '+/-', tally_std_dev)
+
+                results[tally.name] = {
+                    'result': tally_result,
+                    'std. dev.': tally_std_dev,
+                }
 
             if tally.name.endswith('heat'):
-                print(tally.name+ " heating = ", tally_result,
-                        'eV per source particle +/-', tally_std_dev)
 
-        self.results = results
+                results[tally.name]['MeV per source particle'] = {
+                    'result': tally_result / 1e6,
+                    'std. dev.': tally_std_dev / 1e6,
+                }
+                results[tally.name]['Watts'] = {
+                    'result': tally_result*1.602176487e-19 * (self.fusion_power / ((17.58 *1e6) / 6.2415090744e18)),
+                    'std. dev.': tally_std_dev*1.602176487e-19 * (self.fusion_power / ((17.58 *1e6) / 6.2415090744e18)),
+                }
+
+        self.results = json.dumps(results, indent=4, sort_keys=True)
 
         return results

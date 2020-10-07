@@ -20,8 +20,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
             the inner leg of the toroidal field coils (cm)
         center_column_shield_radial_thickness_mid (float): the radial thickness
             of the center column shield at the mid point (cm)
-        center_column_shield_radial_thickness_upper (float): the radial thickness
-            of the center column shield at the upper point (cm)
+        center_column_shield_radial_thickness_upper (float): the radial
+            thickness of the center column shield at the upper point (cm)
         inboard_firstwall_radial_thickness (float): the radial thickness
             of the inboard firstwall (cm)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
@@ -29,10 +29,10 @@ class CenterColumnStudyReactor(paramak.Reactor):
         plasma_radial_thickness (float): the radial thickness of the plasma (cm)
         outer_plasma_gap_radial_thickness (float): the radial thickness of
             the outboard gap between the plasma and the first wall (cm)
-        center_column_arc_vertical_thickness (float): height of the outer hyperbolic
-            profile of the center column shield.
-        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of the
-            top of the plasma (cm)
+        center_column_arc_vertical_thickness (float): height of the outer
+            hyperbolic profile of the center column shield.
+        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of
+            the top of the plasma (cm)
         plasma_gap_vertical_thickness (float): the vertical thickness of
             the upper gap between the plasma and the blanket (cm)
         rotation_angle (float): the angle of the sector that is desired
