@@ -9,6 +9,14 @@ class VacuumVessel(RotateStraightShape):
         height (float): height of the vessel.
         inner_radius (float): the inner radius of the vessel.
         thickness (float): thickness of the vessel
+        circular_ports (list): list of iterables containing floats describing
+            the ports for, in order:
+            (z position, azimuth placement angle, radius)
+        rectangular_ports (list): list of iterables containing floats
+            describing the ports for, in order:
+            (port z position, azimuth placement angle, widht, height,
+            fillet_radius)
+            If no fillet_radius is specified, the port won't be filleted.
 
     Keyword Args:
         workplane (str): The orientation of the CadQuery workplane. Options are
