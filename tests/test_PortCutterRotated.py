@@ -2,6 +2,7 @@ import numpy as np
 import paramak
 import unittest
 
+
 class test_PortCutterRotated(unittest.TestCase):
     def test_PortCutterRotated_shape_construction_and_volume(self):
         """Cuts a vessel cylinder with several different size port cutters"""
@@ -95,7 +96,6 @@ class test_PortCutterRotated(unittest.TestCase):
         )
 
         assert large_ports.volume > small_ports.volume
-
 
     def test_PortCutterRotated_azimuth_placement_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
