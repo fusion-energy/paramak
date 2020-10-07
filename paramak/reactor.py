@@ -57,7 +57,11 @@ class Reactor:
     def material_tags(self):
         values = []
         for shape_or_componet in self.shapes_and_components:
-            if isinstance(shape_or_componet, (paramak.Plasma, paramak.PlasmaFromPoints, paramak.PlasmaBoundaries)) is False:
+            if isinstance(
+                shape_or_componet,
+                (paramak.Plasma,
+                 paramak.PlasmaFromPoints,
+                 paramak.PlasmaBoundaries)) is False:
                 values.append(shape_or_componet.material_tag)
         return list(set(values))
 
@@ -139,7 +143,10 @@ class Reactor:
         for entry in self.shapes_and_components:
 
             if include_plasma is False and isinstance(
-                    entry, (paramak.Plasma, paramak.PlasmaFromPoints, paramak.PlasmaBoundaries)) is True:
+                entry,
+                (paramak.Plasma,
+                 paramak.PlasmaFromPoints,
+                 paramak.PlasmaBoundaries)) is True:
                 continue
 
             if entry.stp_filename is None:

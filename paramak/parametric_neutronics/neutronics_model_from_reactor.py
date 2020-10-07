@@ -227,16 +227,16 @@ class NeutronicsModelFromReactor():
                 merged geometry. Options are 'trelis' or 'ppp'. Further details
                 on imprinting and merging are available on the DAGMC homepage
                 https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-                The Parallel-PreProcessor is an open-source tool available 
+                The Parallel-PreProcessor is an open-source tool available
                 https://github.com/ukaea/parallel-preprocessor and can be used
-                in conjunction with the OCC_faceter 
+                in conjunction with the OCC_faceter
                 (https://github.com/makeclean/occ_faceter) to create imprinted
                 and merged geometry while Trelis (also known as Cubit) is
                 avaialbe from the CoreForm website https://www.coreform.com/
         """
 
         if method.lower not in ['ppp', 'trelis']
-            raise ValueError("the method using in create_neutronics_geometry \
+        raise ValueError("the method using in create_neutronics_geometry \
                 should be either ppp or trelis not", method)
 
         self.reactor.export_stp()
@@ -247,7 +247,8 @@ class NeutronicsModelFromReactor():
             os.system('./occ_faceter brep')
 
         if method.lower == 'trelis':
-            os.system("trelis -batch -nographics make_faceteted_neutronics_model.py")
+            os.system(
+                "trelis -batch -nographics make_faceteted_neutronics_model.py")
 
         os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m")
 
