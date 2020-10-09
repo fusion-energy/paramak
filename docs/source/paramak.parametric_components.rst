@@ -215,6 +215,20 @@ PoloidalFieldCoil()
    :members:
    :show-inheritance:
 
+PoloidalFieldCoilFP()
+^^^^^^^^^^^^^^^^^^^^^
+
+|PoloidalFieldCoilFPstp| |PoloidalFieldCoilFPsvg|
+
+.. |PoloidalFieldCoilFPstp| image:: https://user-images.githubusercontent.com/56687624/86241487-dfa96600-bb9a-11ea-96ba-54f22ecef1ef.png
+    :width: 330px
+.. |PoloidalFieldCoilFPsvg| image:: https://user-images.githubusercontent.com/8583900/95579521-ba47b600-0a2d-11eb-9bdf-7f0415396978.png
+    :width: 360px
+
+.. automodule:: paramak.parametric_components.poloidal_field_coil_fp
+   :members:
+   :show-inheritance:
+
 PoloidalFieldCoilSet()
 ^^^^^^^^^^^^^^^^^^^^^^
 
