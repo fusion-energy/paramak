@@ -15,24 +15,33 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         gap_size (float): gap between adjacent tf coils.
 
     Keyword Args:
-        name (str): the legend name used when exporting a html graph of the shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to use when
-            exportin as html graphs or png images.
-        material_tag (str): The material name to use when exporting the neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
-            rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
-            this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        name (str): the legend name used when exporting a html graph of the
+            shape.
+        color (sequences of 3 or 4 floats each in the range 0-1): the color to
+            use when exporting as html graphs or png images.
+        material_tag (str): The material name to use when exporting the
+            neutronics description.
+        stp_filename (str): The filename used when saving stp files as part of a
+            reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or
+            angles to use when rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the
+            solid (degrees).
+        workplane (str): The orientation of the CadQuery workplane. Options are
+            XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a
+            boolean intersect with this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean
+            cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a
+            boolean union with this object.
         tet_mesh (str): Insert description.
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        a paramak shape object: A shape object that has generic functionality
+        with points determined by the find_points() method. A CadQuery solid of
+        the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -42,11 +51,11 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         outer_radius,
         number_of_coils,
         gap_size,
-        distance=None,
+        azimuth_start_angle=0,
         stp_filename="InnerTfCoilsCircular.stp",
         stl_filename="InnerTfCoilsCircular.stl",
         color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
+        azimuth_placement_angle=0,   # cannot be controlled by user
         material_tag="inner_tf_coil_mat",
         name=None,
         **kwargs
@@ -68,7 +77,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
                 default_dict[arg] = kwargs[arg]
 
         super().__init__(
-            distance=distance,
+            distance=height,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             color=color,
@@ -79,6 +88,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             **default_dict
         )
 
+        self.azimuth_start_angle = azimuth_start_angle
         self.height = height
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
@@ -86,8 +96,22 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         self.gap_size = gap_size
         self.distance = height
 
-        self.find_points()
+    @property
+    def azimuth_start_angle(self):
+        return self._azimuth_start_angle
+
+    @azimuth_start_angle.setter
+    def azimuth_start_angle(self, value):
+        self._azimuth_start_angle = value
+
+    @property
+    def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        self._azimuth_placement_angle = value
 
     @property
     def height(self):
@@ -99,11 +123,11 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
 
     @property
     def distance(self):
-        return self._distance
+        return self.height
 
     @distance.setter
-    def distance(self, distance):
-        self._distance = distance
+    def distance(self, value):
+        self._distance = value
 
     @property
     def inner_radius(self):
@@ -139,6 +163,9 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
 
     def find_points(self):
         """Finds the points that describe the 2D profile of the tf coil shape"""
+
+        if self.gap_size * self.number_of_coils > 2 * math.pi * self.inner_radius:
+            raise ValueError('gap_size is too large')
 
         theta_inner = (
             (2 * math.pi * self.inner_radius) - (self.gap_size * self.number_of_coils)
@@ -208,7 +235,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             (point_3[0], point_3[1], "straight"),
             (point_6[0], point_6[1], "circle"),
             (point_5[0], point_5[1], "circle"),
-            (point_4[0], point_4[1], "straight")
+            (point_4[0], point_4[1], "straight"),
         ]
 
         self.points = points
@@ -218,8 +245,8 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
 
         angles = list(
             np.linspace(
-                0,
-                360,
+                0 + self.azimuth_start_angle,
+                360 + self.azimuth_start_angle,
                 self.number_of_coils,
                 endpoint=False))
 

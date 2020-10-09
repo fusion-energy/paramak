@@ -1,29 +1,32 @@
 from collections import Iterable
-from hashlib import blake2b
 
 import cadquery as cq
 
 from paramak import Shape
-from paramak.utils import cut_solid, intersect_solid, union_solid
 
 
 class RotateCircleShape(Shape):
     """Rotates a circular 3d CadQuery solid from a central point and a radius
 
     Args:
-        points (a list of tuples each containing X (float), Z (float)): A list of a single
-            XZ coordinate which is the central point of the circle. For example, [(10, 10)].
+        points (a list of tuples each containing X (float), Z (float)): A list
+            of a single XZ coordinate which is the central point of the circle.
+            For example, [(10, 10)].
         radius (float): The radius of the circle.
-        name (str): The legend name used when exporting a html graph of the shape.
+        name (str): The legend name used when exporting a html graph of the
+            shape.
         color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
             The color to use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the neutronics description.
-        stp_filname (str): The filename used when saving stp files as part of a reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or angles to use when
-            rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the solid (degrees).
-        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this
-            object.
+        material_tag (str): The material name to use when exporting the
+            neutronics description.
+        stp_filname (str): The filename used when saving stp files as part of a
+            reactor.
+        azimuth_placement_angle (float or iterable of floats): The angle or
+            angles to use when rotating the shape on the azimuthal axis.
+        rotation_angle (float): The rotation angle to use when revolving the
+            solid (degrees).
+        cut (CadQuery object): An optional CadQuery object to perform a boolean
+            cut with this object.
 
     Returns:
         a paramak shape object: a Shape object that has generic functionality
@@ -65,49 +68,14 @@ class RotateCircleShape(Shape):
             stl_filename=stl_filename,
             azimuth_placement_angle=azimuth_placement_angle,
             workplane=workplane,
+            cut=cut,
+            intersect=intersect,
+            union=union,
             **default_dict
         )
-
-        self.cut = cut
-        self.intersect = intersect
-        self.union = union
         self.radius = radius
         self.rotation_angle = rotation_angle
         self.solid = solid
-
-    @property
-    def cut(self):
-        return self._cut
-
-    @cut.setter
-    def cut(self, value):
-        self._cut = value
-
-    @property
-    def intersect(self):
-        return self._intersect
-
-    @intersect.setter
-    def intersect(self, value):
-        self._intersect = value
-
-    @property
-    def union(self):
-        return self._union
-
-    @union.setter
-    def union(self, value):
-        self._union = value
-
-    @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
 
     @property
     def rotation_angle(self):
@@ -133,8 +101,6 @@ class RotateCircleShape(Shape):
               A CadQuery solid: A 3D solid volume
         """
 
-        # print('create_solid() has been called')
-
         solid = (
             cq.Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])
@@ -158,23 +124,8 @@ class RotateCircleShape(Shape):
         else:
             # Peform rotations for a single azimuth_placement_angle angle
             solid = solid.rotate(
-                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
 
-        # If a cut solid is provided then perform a boolean cut
-        if self.cut is not None:
-            solid = cut_solid(solid, self.cut)
-
-        # If an intersect is provided then perform a boolean intersect
-        if self.intersect is not None:
-            solid = intersect_solid(solid, self.intersect)
-
-        # If an intersect is provided then perform a boolean intersect
-        if self.union is not None:
-            solid = union_solid(solid, self.union)
-
-        self.solid = solid
-
-        # Calculate hash value for current solid
-        self.hash_value = self.get_hash()
+        self.perform_boolean_operations(solid)
 
         return solid

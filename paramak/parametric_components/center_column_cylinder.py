@@ -10,16 +10,21 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         outer_radius (float): the outer radius of the center column shield.
 
     Keyword Args:
-        workplane (str): The orientation of the CadQuery workplane. Options are XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a boolean intersect with
-            this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a boolean union with this object.
+        workplane (str): The orientation of the CadQuery workplane. Options are
+            XY, YZ or XZ.
+        intersect (CadQuery object): An optional CadQuery object to perform a
+            boolean intersect with this object.
+        cut (CadQuery object): An optional CadQuery object to perform a boolean
+            cut with this object.
+        union (CadQuery object): An optional CadQuery object to perform a
+            boolean union with this object.
         tet_mesh (str): Insert description.
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        a paramak shape object: A shape object that has generic functionality
+        with points determined by the find_points() method. A CadQuery solid
+        of the shape can be called via shape.solid.
     """
 
     def __init__(
@@ -68,8 +73,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
 
-        self.find_points()
-
     @property
     def height(self):
         return self._height
@@ -95,8 +98,8 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         self._outer_radius = outer_radius
 
     def find_points(self):
-        """Finds the XZ points joined by straight connections that describe the 2D
-        profile of the center column shield shape."""
+        """Finds the XZ points joined by straight connections that describe the
+            2D profile of the center column shield shape."""
 
         if self.inner_radius >= self.outer_radius:
             raise ValueError(
@@ -113,7 +116,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             (self.inner_radius, self.height / 2),
             (self.outer_radius, self.height / 2),
             (self.outer_radius, -self.height / 2),
-            (self.inner_radius, -self.height / 2)
+            (self.inner_radius, -self.height / 2),
         ]
 
         self.points = points

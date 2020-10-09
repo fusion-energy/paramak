@@ -1,7 +1,3 @@
-import math
-import operator
-
-import cadquery as cq
 
 import paramak
 
@@ -44,9 +40,10 @@ class SingleNullBallReactor(paramak.BallReactor):
             rear of the poloidal field coil and the toroidal field coil (optional)
         outboard_tf_coil_radial_thickness (float): the radial thickness of the
             toroidal field coil (optional)
-        outboard_tf_coil_poloidal_thickness (float): the poloidal thickness of the toroidal
-            field coil (optional)
-        divertor_position (str): the position of the divertor, "upper" or "lower
+        outboard_tf_coil_poloidal_thickness (float): the poloidal thickness of
+            the toroidal field coil (optional)
+        divertor_position (str): the position of the divertor, "upper" or
+            "lower" default is "upper"
         rotation_angle (float): the angle of the sector that is desired
 
     Returns:
@@ -109,7 +106,7 @@ class SingleNullBallReactor(paramak.BallReactor):
         self.make_vertical_build(shapes_or_components)
         self.make_inboard_tf_coils(shapes_or_components)
         self.make_center_column_shield(shapes_or_components)
-        self.make_blanket_and_firstwall(shapes_or_components)
+        self.make_blankets_layers(shapes_or_components)
         self.make_divertor_single_null(shapes_or_components)
         self.make_component_cuts(shapes_or_components)
 
@@ -129,30 +126,27 @@ class SingleNullBallReactor(paramak.BallReactor):
 
     def make_divertor_single_null(self, shapes_or_components):
 
-        # used as an intersect when making the divertor
-        self._blanket_fw_rear_wall_envelope = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(self._firstwall_start_radius, 0),
-            inner_upper_point=(self._plasma.high_point[0], self._firstwall_start_height),
-            inner_lower_point=(self._plasma.low_point[0], -self._firstwall_start_height),
-            thickness=self.firstwall_radial_thickness
-            + self.blanket_radial_thickness
-            + self.blanket_rear_wall_radial_thickness,
-            rotation_angle=self.rotation_angle,
-            union=[
-                self._extra_blanket_upper,
-                self._extra_firstwall_upper,
-                self._extra_blanket_rear_wall_upper,
-                self._extra_blanket_lower,
-                self._extra_firstwall_lower,
-                self._extra_blanket_rear_wall_lower,
-            ],
-            stp_filename="test.stp",
-        )
-
         if self.divertor_position == "upper":
             divertor_height = self._blanket_rear_wall_end_height
         elif self.divertor_position == "lower":
             divertor_height = -self._blanket_rear_wall_end_height
+
+        # # used as an intersect when making the divertor
+        self._blanket_fw_rear_wall_envelope = paramak.BlanketFP(
+            plasma=self._plasma,
+            thickness=self.firstwall_radial_thickness +
+            self.blanket_radial_thickness + self.blanket_rear_wall_radial_thickness,
+            offset_from_plasma=[
+                self.major_radius - self.minor_radius,
+                self.plasma_gap_vertical_thickness,
+                self.outer_plasma_gap_radial_thickness,
+                self.plasma_gap_vertical_thickness,
+                # self.inner_plasma_gap_radial_thickness],
+                self.major_radius - self.minor_radius],
+            start_angle=-179,
+            stop_angle=179,
+            rotation_angle=self.rotation_angle,
+        )
 
         self._divertor = paramak.RotateStraightShape(
             points=[
@@ -168,4 +162,27 @@ class SingleNullBallReactor(paramak.BallReactor):
             material_tag="divertor_mat",
             rotation_angle=self.rotation_angle
         )
+
         shapes_or_components.append(self._divertor)
+
+        blanket_cutter = paramak.RotateStraightShape(
+            points=[
+                (self._divertor_start_radius, 0),
+                (self._divertor_end_radius, 0),
+                (self._divertor_end_radius, divertor_height),
+                (self._divertor_start_radius, divertor_height)
+            ],
+            stp_filename="divertor.stp",
+            stl_filename="divertor.stl",
+            name="divertor",
+            material_tag="divertor_mat",
+            rotation_angle=self.rotation_angle
+        )
+
+        self._firstwall.solid = self._firstwall.solid.cut(blanket_cutter.solid)
+        self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
+        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
+            blanket_cutter.solid)
+        shapes_or_components.append(self._firstwall)
+        shapes_or_components.append(self._blanket)
+        shapes_or_components.append(self._blanket_rear_wall)

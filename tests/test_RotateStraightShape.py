@@ -62,6 +62,14 @@ class test_object_properties(unittest.TestCase):
         test_shape.azimuth_placement_angle = [0, 90, 180, 360]
         assert test_shape.azimuth_placement_angle == [0, 90, 180, 360]
 
+    def test_shape_azimuth_placement_angles_iterabel(self):
+        """checks that azimuth_placement_angle can take an Iterable
+        """
+        test_shape = RotateStraightShape(
+            points=[(200, 100), (200, 200), (500, 200), (500, 100)],
+            azimuth_placement_angle=[0, 180])
+        assert test_shape.solid is not None
+
     def test_absolute_shape_volume(self):
         """creates a rotated straight shape using straight connections and checks that the
         volume is correct"""

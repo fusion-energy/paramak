@@ -1,8 +1,5 @@
-import math
-import operator
-import warnings
 
-import cadquery as cq
+import warnings
 
 import paramak
 
@@ -99,8 +96,8 @@ class BallReactor(paramak.Reactor):
         self.outboard_tf_coil_poloidal_thickness = outboard_tf_coil_poloidal_thickness
 
         # sets major radius and minor radius from equatorial_points to allow a radial build
-        # this helps avoid the plasma overlapping the center column and such
-        # things
+        # this helps avoid the plasma overlapping the center column and other
+        # components
 
         inner_equatorial_point = (
             inner_bore_radial_thickness
@@ -129,7 +126,7 @@ class BallReactor(paramak.Reactor):
         self.make_vertical_build(shapes_or_components)
         self.make_inboard_tf_coils(shapes_or_components)
         self.make_center_column_shield(shapes_or_components)
-        self.make_blanket_and_firstwall(shapes_or_components)
+        self.make_blankets_layers(shapes_or_components)
         self.make_divertor(shapes_or_components)
         self.make_component_cuts(shapes_or_components)
 
@@ -206,8 +203,10 @@ class BallReactor(paramak.Reactor):
         # this is the vertical build sequence, components build on each other in
         # a similar manner to the radial build
 
+        self.plasma_gap_vertical_thickness = self.outer_plasma_gap_radial_thickness
+
         self._firstwall_start_height = (
-            self._plasma.high_point[1] + self.outer_plasma_gap_radial_thickness
+            self._plasma.high_point[1] + self.plasma_gap_vertical_thickness
         )
         self._firstwall_end_height = self._firstwall_start_height + \
             self.firstwall_radial_thickness
@@ -238,8 +237,7 @@ class BallReactor(paramak.Reactor):
                 )
             ) / (self._number_of_pf_coils + 1)
 
-            self._pf_coils_y_values = []
-            self._pf_coils_x_values = []
+            self._pf_coils_xy_values = []
             # adds in coils with equal spacing strategy, should be updated to
             # allow user positions
             for i in range(self._number_of_pf_coils):
@@ -253,8 +251,7 @@ class BallReactor(paramak.Reactor):
                     + self.pf_coil_to_rear_blanket_radial_gap
                     + 0.5 * self.pf_coil_radial_thicknesses[i]
                 )
-                self._pf_coils_y_values.append(y_value)
-                self._pf_coils_x_values.append(x_value)
+                self._pf_coils_xy_values.append((x_value, y_value))
 
             self._pf_coil_start_radius = (
                 self._blanket_read_wall_end_radius +
@@ -322,126 +319,95 @@ class BallReactor(paramak.Reactor):
         )
         shapes_or_components.append(self._center_column_shield)
 
-    def make_blanket_and_firstwall(self, shapes_or_components):
+    def make_blankets_layers(self, shapes_or_components):
 
-        self._extra_blanket_upper = paramak.RotateStraightShape(
-            points=[
-                (self._center_column_shield_end_radius, self._blanket_start_height),
-                (self._center_column_shield_end_radius, self._blanket_end_height),
-                (self._plasma.high_point[0], self._blanket_end_height),
-                (self._plasma.high_point[0], self._blanket_start_height),
-            ],
-            rotation_angle=self.rotation_angle,
+        center_column_cutter = paramak.CenterColumnShieldCylinder(
+            height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
+            inner_radius=0,
+            outer_radius=self._center_column_shield_end_radius,
+            rotation_angle=360
         )
 
-        self._extra_firstwall_upper = paramak.RotateStraightShape(
-            points=[
-                (self._center_column_shield_end_radius, self._firstwall_start_height),
-                (self._center_column_shield_end_radius, self._firstwall_end_height),
-                (self._plasma.high_point[0], self._firstwall_end_height),
-                (self._plasma.high_point[0], self._firstwall_start_height),
-            ],
-            rotation_angle=self.rotation_angle,
-        )
-
-        self._extra_blanket_rear_wall_upper = paramak.RotateStraightShape(
-            points=[
-                (self._center_column_shield_end_radius, self._blanket_rear_wall_start_height),
-                (self._center_column_shield_end_radius, self._blanket_rear_wall_end_height),
-                (self._plasma.high_point[0], self._blanket_rear_wall_end_height),
-                (self._plasma.high_point[0], self._blanket_rear_wall_start_height),
-            ],
-            rotation_angle=self.rotation_angle,
-        )
-
-        self._extra_blanket_lower = paramak.RotateStraightShape(
-            points=[
-                (self._center_column_shield_end_radius, -self._blanket_start_height),
-                (self._center_column_shield_end_radius, -self._blanket_end_height),
-                (self._plasma.high_point[0], -self._blanket_end_height),
-                (self._plasma.high_point[0], -self._blanket_start_height),
-            ],
-            rotation_angle=self.rotation_angle,
-        )
-
-        self._extra_firstwall_lower = paramak.RotateStraightShape(
-            points=[
-                (self._center_column_shield_end_radius, -self._firstwall_start_height),
-                (self._center_column_shield_end_radius, -self._firstwall_end_height),
-                (self._plasma.high_point[0], -self._firstwall_end_height),
-                (self._plasma.high_point[0], -self._firstwall_start_height),
-            ],
-            rotation_angle=self.rotation_angle,
-        )
-
-        self._extra_blanket_rear_wall_lower = paramak.RotateStraightShape(
-            points=[
-                (self._center_column_shield_end_radius, -self._blanket_rear_wall_start_height),
-                (self._center_column_shield_end_radius, -self._blanket_rear_wall_end_height),
-                (self._plasma.high_point[0], -self._blanket_rear_wall_end_height),
-                (self._plasma.high_point[0], -self._blanket_rear_wall_start_height),
-            ],
-            rotation_angle=self.rotation_angle,
-        )
-
-        self._firstwall = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(self._firstwall_start_radius, 0),
-            inner_upper_point=(self._plasma.high_point[0], self._firstwall_start_height),
-            inner_lower_point=(self._plasma.low_point[0], -self._firstwall_start_height),
+        self._firstwall = paramak.BlanketFP(
+            plasma=self._plasma,
             thickness=self.firstwall_radial_thickness,
+            offset_from_plasma=[
+                self.inner_plasma_gap_radial_thickness,
+                self.plasma_gap_vertical_thickness,
+                self.outer_plasma_gap_radial_thickness,
+                self.plasma_gap_vertical_thickness,
+                self.inner_plasma_gap_radial_thickness],
+            start_angle=-179,
+            stop_angle=179,
             rotation_angle=self.rotation_angle,
             stp_filename="firstwall.stp",
-            stl_filename="firstwall.stl",
-            name="firstwall",
-            material_tag="firstwall_mat",
-            union=[self._extra_firstwall_upper, self._extra_firstwall_lower],
+            cut=center_column_cutter
         )
 
-        self._blanket = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(self._blanket_start_radius, 0),
-            inner_upper_point=(self._plasma.high_point[0], self._blanket_start_height),
-            inner_lower_point=(self._plasma.low_point[0], -self._blanket_start_height),
+        self._blanket = paramak.BlanketFP(
+            plasma=self._plasma,
             thickness=self.blanket_radial_thickness,
+            offset_from_plasma=[
+                self.inner_plasma_gap_radial_thickness +
+                self.firstwall_radial_thickness,
+                self.plasma_gap_vertical_thickness +
+                self.firstwall_radial_thickness,
+                self.outer_plasma_gap_radial_thickness +
+                self.firstwall_radial_thickness,
+                self.plasma_gap_vertical_thickness +
+                self.firstwall_radial_thickness,
+                self.inner_plasma_gap_radial_thickness +
+                self.firstwall_radial_thickness],
+            start_angle=-
+            179,
+            stop_angle=179,
             rotation_angle=self.rotation_angle,
             stp_filename="blanket.stp",
-            stl_filename="blanket.stl",
-            name="blanket",
-            material_tag="blanket_mat",
-            union=[self._extra_blanket_upper, self._extra_blanket_lower],
-        )
+            cut=center_column_cutter)
 
-        self._blanket_rear_casing = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(self._blanket_rear_wall_start_radius, 0),
-            inner_upper_point=(self._plasma.high_point[0], self._blanket_rear_wall_start_height),
-            inner_lower_point=(self._plasma.low_point[0], -self._blanket_rear_wall_start_height),
+        self._blanket_rear_wall = paramak.BlanketFP(
+            plasma=self._plasma,
             thickness=self.blanket_rear_wall_radial_thickness,
+            offset_from_plasma=[
+                self.inner_plasma_gap_radial_thickness +
+                self.firstwall_radial_thickness +
+                self.blanket_radial_thickness,
+                self.plasma_gap_vertical_thickness +
+                self.firstwall_radial_thickness +
+                self.blanket_radial_thickness,
+                self.outer_plasma_gap_radial_thickness +
+                self.firstwall_radial_thickness +
+                self.blanket_radial_thickness,
+                self.plasma_gap_vertical_thickness +
+                self.firstwall_radial_thickness +
+                self.blanket_radial_thickness,
+                self.inner_plasma_gap_radial_thickness +
+                self.firstwall_radial_thickness +
+                self.blanket_radial_thickness],
+            start_angle=-
+            179,
+            stop_angle=179,
             rotation_angle=self.rotation_angle,
             stp_filename="blanket_rear_wall.stp",
-            stl_filename="blanket_rear_wall.stl",
-            name="blanket_rear_wall",
-            material_tag="blanket_rear_wall_mat",
-            union=[self._extra_blanket_rear_wall_upper, self._extra_blanket_rear_wall_lower],
-        )
+            cut=center_column_cutter)
 
     def make_divertor(self, shapes_or_components):
-        # used as an intersect when making the divertor
-        self._blanket_fw_rear_wall_envelope = paramak.BlanketConstantThicknessArcV(
-            inner_mid_point=(self._firstwall_start_radius, 0),
-            inner_upper_point=(self._plasma.high_point[0], self._firstwall_start_height),
-            inner_lower_point=(self._plasma.low_point[0], -self._firstwall_start_height),
-            thickness=self.firstwall_radial_thickness
-            + self.blanket_radial_thickness
-            + self.blanket_rear_wall_radial_thickness,
+
+        # # used as an intersect when making the divertor
+        self._blanket_fw_rear_wall_envelope = paramak.BlanketFP(
+            plasma=self._plasma,
+            thickness=self.firstwall_radial_thickness +
+            self.blanket_radial_thickness + self.blanket_rear_wall_radial_thickness,
+            offset_from_plasma=[
+                self.major_radius - self.minor_radius,
+                self.plasma_gap_vertical_thickness,
+                self.outer_plasma_gap_radial_thickness,
+                self.plasma_gap_vertical_thickness,
+                # self.inner_plasma_gap_radial_thickness],
+                self.major_radius - self.minor_radius],
+            start_angle=-179,
+            stop_angle=179,
             rotation_angle=self.rotation_angle,
-            union=[
-                self._extra_blanket_upper,
-                self._extra_firstwall_upper,
-                self._extra_blanket_rear_wall_upper,
-                self._extra_blanket_lower,
-                self._extra_firstwall_lower,
-                self._extra_blanket_rear_wall_lower,
-            ],
-            stp_filename="test.stp",
         )
 
         self._divertor = paramak.CenterColumnShieldCylinder(
@@ -456,15 +422,22 @@ class BallReactor(paramak.Reactor):
         )
         shapes_or_components.append(self._divertor)
 
-    def make_component_cuts(self, shapes_or_components):
+        blanket_cutter = paramak.CenterColumnShieldCylinder(
+            height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
+            inner_radius=0,
+            outer_radius=self._divertor_end_radius,
+            rotation_angle=360
+        )
 
-        self._firstwall.solid = self._firstwall.solid.cut(self._divertor.solid)
-        self._blanket.solid = self._blanket.solid.cut(self._divertor.solid)
-        self._blanket_rear_casing.solid = self._blanket_rear_casing.solid.cut(
-            self._divertor.solid)
+        self._firstwall.solid = self._firstwall.solid.cut(blanket_cutter.solid)
+        self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
+        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
+            blanket_cutter.solid)
         shapes_or_components.append(self._firstwall)
         shapes_or_components.append(self._blanket)
-        shapes_or_components.append(self._blanket_rear_casing)
+        shapes_or_components.append(self._blanket_rear_wall)
+
+    def make_component_cuts(self, shapes_or_components):
 
         if (
             self.pf_coil_vertical_thicknesses is not None
@@ -472,35 +445,31 @@ class BallReactor(paramak.Reactor):
             and self.pf_coil_to_rear_blanket_radial_gap is not None
         ):
 
-            for i, (rt, vt, y_value, x_value) in enumerate(
-                zip(
-                    self.pf_coil_radial_thicknesses,
-                    self.pf_coil_vertical_thicknesses,
-                    self._pf_coils_y_values,
-                    self._pf_coils_x_values,
-                )
-            ):
+            self._pf_coil = paramak.PoloidalFieldCoilSet(
+                heights=self.pf_coil_vertical_thicknesses,
+                widths=self.pf_coil_radial_thicknesses,
+                center_points=self._pf_coils_xy_values,
+                rotation_angle=self.rotation_angle,
+                stp_filename='pf_coils.stp',
+                stl_filename='pf_coils.stl',
+                name="pf_coil",
+                material_tag="pf_coil_mat",
+            )
 
-                self._pf_coil = paramak.PoloidalFieldCoil(
-                    width=rt,
-                    height=vt,
-                    center_point=(x_value, y_value),
-                    rotation_angle=self.rotation_angle,
-                    stp_filename="pf_coil_" + str(i) + ".stp",
-                    stl_filename="pf_coil_" + str(i) + ".stl",
-                    name="pf_coil",
-                    material_tag="pf_coil_mat",
-                )
-                shapes_or_components.append(self._pf_coil)
+            shapes_or_components.append(self._pf_coil)
 
             if (
                 self.pf_coil_to_tf_coil_radial_gap is not None
                 and self.outboard_tf_coil_radial_thickness is not None
             ):
+
                 self._tf_coil = paramak.ToroidalFieldCoilRectangle(
-                    inner_upper_point=(self._inboard_tf_coils_start_radius, self._tf_coil_height),
-                    inner_lower_point=(self._inboard_tf_coils_start_radius, -self._tf_coil_height),
-                    inner_mid_point=(self._tf_coil_start_radius, 0),
+                    with_inner_leg=False,
+                    horizontal_start_point=(
+                        self._inboard_tf_coils_start_radius,
+                        self._tf_coil_height),
+                    vertical_mid_point=(
+                        self._tf_coil_start_radius, 0),
                     thickness=self.outboard_tf_coil_radial_thickness,
                     number_of_coils=self.number_of_tf_coils,
                     distance=self.outboard_tf_coil_poloidal_thickness,

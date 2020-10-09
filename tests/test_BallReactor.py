@@ -4,8 +4,6 @@ import unittest
 from pathlib import Path
 import warnings
 
-import pytest
-
 import paramak
 
 
@@ -28,7 +26,7 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            rotation_angle=359,
+            rotation_angle=360,
         )
 
         test_reactor.export_stp()
@@ -54,7 +52,7 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            rotation_angle=359,
+            rotation_angle=360,
         )
 
         test_reactor.export_stp()
@@ -81,7 +79,7 @@ class test_BallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
-            rotation_angle=359,
+            rotation_angle=180,
         )
         test_reactor.export_svg("test_ballreactor_image.svg")
 
@@ -111,10 +109,10 @@ class test_BallReactor(unittest.TestCase):
             pf_coil_vertical_thicknesses=[50, 50, 50, 50],
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
-            rotation_angle=359,
+            rotation_angle=360,
         )
         test_reactor.export_stp()
-        assert len(test_reactor.shapes_and_components) == 11
+        assert len(test_reactor.shapes_and_components) == 8
 
     def test_BallReactor_with_pf_and_tf_coils(self):
         """checks whether a ball reactor with optional pf and tf coils can
@@ -141,10 +139,10 @@ class test_BallReactor(unittest.TestCase):
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=50,
             outboard_tf_coil_poloidal_thickness=50,
-            rotation_angle=359,
+            rotation_angle=360,
         )
         test_reactor.export_stp()
-        assert len(test_reactor.shapes_and_components) == 12
+        assert len(test_reactor.shapes_and_components) == 9
 
     def test_BallReactor_with_pf_and_tf_coils_export_physical_groups(self):
         """creates a ball reactor using the BallReactor parametric_reactor and
@@ -170,7 +168,7 @@ class test_BallReactor(unittest.TestCase):
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=50,
             outboard_tf_coil_poloidal_thickness=50,
-            rotation_angle=359,
+            rotation_angle=360,
         )
         test_reactor.export_physical_groups()
 
@@ -202,9 +200,9 @@ class test_BallReactor(unittest.TestCase):
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
             divertor_position="lower",
-            rotation_angle=359,
+            rotation_angle=360,
         )
-        assert len(test_reactor.shapes_and_components) == 12
+        assert len(test_reactor.shapes_and_components) == 9
 
     def test_single_null_ball_reactor_divertor_lower(self):
         """checks that a single null reactor with a lower divertor can be
@@ -225,7 +223,7 @@ class test_BallReactor(unittest.TestCase):
             triangularity=0.55,
             number_of_tf_coils=16,
             divertor_position="lower",
-            rotation_angle=359,
+            rotation_angle=360,
         )
 
         assert len(test_reactor.shapes_and_components) == 7
@@ -249,7 +247,7 @@ class test_BallReactor(unittest.TestCase):
             triangularity=0.55,
             number_of_tf_coils=16,
             divertor_position="upper",
-            rotation_angle=359,
+            rotation_angle=360,
         )
 
         assert len(test_reactor.shapes_and_components) == 7

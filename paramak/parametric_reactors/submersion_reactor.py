@@ -1,5 +1,4 @@
-import math
-import operator
+
 import warnings
 
 import cadquery as cq
@@ -36,7 +35,7 @@ class SubmersionTokamak(paramak.Reactor):
             the blanket (cm)
         blanket_rear_wall_radial_thickness (float): the radial thickness of
             the rear wall of the blanket (cm)
-        high_point (tuple of 2 floats): the (x,z) coordinate value of the
+        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of the
             top of the plasma (cm)
         number_of_tf_coils (int): the number of tf coils
         rotation_angle (float): the angle of the sector that is desired
@@ -270,8 +269,7 @@ class SubmersionTokamak(paramak.Reactor):
                 self._number_of_pf_coils + 1
             )
 
-            self._pf_coils_y_values = []
-            self._pf_coils_x_values = []
+            self._pf_coils_xy_values = []
             # adds in coils with equal spacing strategy, should be updated to
             # allow user positions
             for i in range(self._number_of_pf_coils):
@@ -285,8 +283,7 @@ class SubmersionTokamak(paramak.Reactor):
                     + self.pf_coil_to_tf_coil_radial_gap
                     + 0.5 * self.pf_coil_radial_thicknesses[i]
                 )
-                self._pf_coils_y_values.append(y_value)
-                self._pf_coils_x_values.append(x_value)
+                self._pf_coils_xy_values.append((x_value, y_value))
 
             self._pf_coil_start_radius = (
                 self._outboard_tf_coil_end_radius +
@@ -524,15 +521,12 @@ class SubmersionTokamak(paramak.Reactor):
 
         if self._tf_info_provided:
             self._tf_coil = paramak.ToroidalFieldCoilRectangle(
-                inner_upper_point=(
+                with_inner_leg=False,
+                horizontal_start_point=(
                     self._inboard_tf_coils_start_radius,
                     self._blanket_rear_wall_end_height,
                 ),
-                inner_lower_point=(
-                    self._inboard_tf_coils_start_radius,
-                    -self._blanket_rear_wall_end_height,
-                ),
-                inner_mid_point=(self._outboard_tf_coil_start_radius, 0),
+                vertical_mid_point=(self._outboard_tf_coil_start_radius, 0),
                 thickness=self.outboard_tf_coil_radial_thickness,
                 number_of_coils=self.number_of_tf_coils,
                 distance=self.outboard_tf_coil_poloidal_thickness,
@@ -544,23 +538,14 @@ class SubmersionTokamak(paramak.Reactor):
 
             if self._pf_info_provided:
 
-                for i, (rt, vt, y_value, x_value) in enumerate(
-                    zip(
-                        self.pf_coil_radial_thicknesses,
-                        self.pf_coil_vertical_thicknesses,
-                        self._pf_coils_y_values,
-                        self._pf_coils_x_values,
-                    )
-                ):
+                self._pf_coil = paramak.PoloidalFieldCoilSet(
+                    heights=self.pf_coil_vertical_thicknesses,
+                    widths=self.pf_coil_radial_thicknesses,
+                    center_points=self._pf_coils_xy_values,
+                    rotation_angle=self.rotation_angle,
+                    stp_filename='pf_coils.stp',
+                    name="pf_coil",
+                    material_tag="pf_coil_mat",
+                )
 
-                    self._pf_coil = paramak.PoloidalFieldCoil(
-                        width=rt,
-                        height=vt,
-                        center_point=(x_value, y_value),
-                        rotation_angle=self.rotation_angle,
-                        stp_filename="pf_coil_" + str(i) + ".stp",
-                        stl_filename="pf_coil_" + str(i) + ".stl",
-                        name="pf_coil",
-                        material_tag="pf_coil_mat",
-                    )
-                    shapes_or_components.append(self._pf_coil)
+                shapes_or_components.append(self._pf_coil)

@@ -6,7 +6,7 @@ import numpy as np
 
 def union_solid(solid, joiner):
     """
-    Performs a boolean union of a solid with another solid or iterable of solids.
+    Performs a boolean union of a solid with another solid or iterable of solids
 
     Args:
         solid Shape: the Shape that you want to union from
@@ -44,7 +44,8 @@ def cut_solid(solid, cutter):
 
 def intersect_solid(solid, intersecter):
     """
-    Performs a boolean intersection of a solid with another solid or iterable of solids.
+    Performs a boolean intersection of a solid with another solid or iterable of
+    solids.
 
     Args:
         solid Shape: the Shape that you want to intersect
@@ -131,7 +132,7 @@ def find_center_point_of_circle(point1, point2, point3):
 
 
 def extend(A, B, L):
-    """Creates a point C in (AB) direction so that \|AC\| = L
+    """Creates a point C in (AB) direction so that \\|AC\\| = L
 
     Args:
         A (float, float): point A coordinates
@@ -165,3 +166,21 @@ def distance_between_two_points(A, B):
     xb, yb = B
     u_vec = [xb - xa, yb - ya]
     return np.linalg.norm(u_vec)
+
+
+def coefficients_of_line_from_points(point1, point2):
+    """Computes the m and c coefficients of the equation (y=mx+c) for
+    a straight line from two points
+
+    Args:
+        point1 (float, float): point 1 coordinates
+        point2 (float, float): point 2 coordinates
+
+    Returns:
+        (float, float): m coefficent and c coefficient
+    """
+    points = [point1, point2]
+    x_coords, y_coords = zip(*points)
+    A = np.vstack([x_coords, np.ones(len(x_coords))]).T
+    m, c = np.linalg.lstsq(A, y_coords, rcond=None)[0]
+    return m, c

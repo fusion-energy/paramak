@@ -1,8 +1,4 @@
-import math
-from pathlib import Path
 
-import numpy as np
-import scipy
 from plasmaboundaries import get_separatrix_coordinates
 
 from paramak import Plasma
@@ -103,8 +99,6 @@ class PlasmaBoundaries(Plasma):
         self.low_point = None
         self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
-        self.find_points()
-
     @property
     def vertical_displacement(self):
         return self._vertical_displacement
@@ -147,8 +141,7 @@ class PlasmaBoundaries(Plasma):
             self._elongation = value
 
     def find_points(self):
-        """Finds the XZ points that describe the 2D profile of the plasma.
-        """
+        """Finds the XZ points that describe the 2D profile of the plasma."""
         aspect_ratio = self.minor_radius / self.major_radius
         params = {
             "A": self.A,

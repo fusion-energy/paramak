@@ -3,8 +3,6 @@ import unittest
 from pathlib import Path
 import warnings
 
-import pytest
-
 import paramak
 
 
@@ -112,7 +110,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             number_of_tf_coils=4,
             rotation_angle=359,
         )
-        assert len(test_reactor.shapes_and_components) == 14
+        assert len(test_reactor.shapes_and_components) == 10
 
     def test_minimal_SubmersionTokamak_stp_creation(self):
         """creates a submersion reactor using the SubmersionTokamak parameteric reactor and
@@ -277,7 +275,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             support_position="upper",
             rotation_angle=359,
         )
-        assert len(test_reactor.shapes_and_components) == 13
+        assert len(test_reactor.shapes_and_components) == 10
 
     def test_SingleNullSubmersionTokamak_divertor_lower_support_lower(self):
         """creates a single null submersion reactor with lower supports and divertor using the
@@ -337,7 +335,7 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         def warning_trigger():
             try:
-                test_reactor = paramak.SubmersionTokamak(
+                paramak.SubmersionTokamak(
                     inner_bore_radial_thickness=25,
                     inboard_tf_leg_radial_thickness=50,
                     center_column_shield_radial_thickness=50,

@@ -51,16 +51,24 @@ def main():
     )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldCylinder(
+    CenterColumnShieldCylinder = paramak.CenterColumnShieldCylinder(
         inner_radius=80,
         outer_radius=100,
         height=300,
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_cylinder.stp",
     )
+    all_components.append(CenterColumnShieldCylinder)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldCylinder,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_cylinder.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldHyperbola(
+    CenterColumnShieldHyperbola = paramak.CenterColumnShieldHyperbola(
         inner_radius=50,
         mid_radius=75,
         outer_radius=100,
@@ -68,9 +76,17 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_hyperbola.stp",
     )
+    all_components.append(CenterColumnShieldHyperbola)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldHyperbola,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_hyperbola.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldCircular(
+    CenterColumnShieldCircular = paramak.CenterColumnShieldCircular(
         inner_radius=50,
         mid_radius=75,
         outer_radius=100,
@@ -78,9 +94,17 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_circular.stp",
     )
+    all_components.append(CenterColumnShieldCircular)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldCircular,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_circular.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldFlatTopHyperbola(
+    CenterColumnShieldFlatTopHyperbola = paramak.CenterColumnShieldFlatTopHyperbola(
         inner_radius=50,
         mid_radius=75,
         outer_radius=100,
@@ -89,9 +113,17 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_flat_top_hyperbola.stp",
     )
+    all_components.append(CenterColumnShieldFlatTopHyperbola)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldFlatTopHyperbola,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_flat_top_hyperbola.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldFlatTopCircular(
+    CenterColumnShieldFlatTopCircular = paramak.CenterColumnShieldFlatTopCircular(
         inner_radius=50,
         mid_radius=75,
         outer_radius=100,
@@ -100,9 +132,17 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_flat_top_Circular.stp",
     )
+    all_components.append(CenterColumnShieldFlatTopCircular)
+
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldFlatTopCircular,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_flat_top_Circular.stp",
+    )
     all_components.append(component)
 
-    component = paramak.CenterColumnShieldPlasmaHyperbola(
+    CenterColumnShieldPlasmaHyperbola = paramak.CenterColumnShieldPlasmaHyperbola(
         inner_radius=150,
         mid_offset=50,
         edge_offset=40,
@@ -110,17 +150,15 @@ def main():
         rotation_angle=rot_angle,
         stp_filename="center_column_shield_plasma_hyperbola.stp",
     )
-    all_components.append(component)
+    all_components.append(CenterColumnShieldPlasmaHyperbola)
 
-    # component = paramak.DivertorBlock(
-    #     major_radius = 800,
-    #     minor_radius = 400,
-    #     triangularity = 1.2,
-    #     elongation = 0.9,
-    #     thickness = 50,
-    #     offset_from_plasma = 20,
-    #     start
-    # )
+    component = paramak.InboardFirstwallFCCS(
+        central_column_shield=CenterColumnShieldPlasmaHyperbola,
+        thickness=50,
+        rotation_angle=180,
+        stp_filename="firstwall_from_center_column_shield_plasma_hyperbola.stp",
+    )
+    all_components.append(component)
 
     component = paramak.InnerTfCoilsCircular(
         inner_radius=25,
@@ -142,14 +180,53 @@ def main():
     )
     all_components.append(component)
 
+    # this makes 4 pf coil cases
+    pf_coil_set = paramak.PoloidalFieldCoilCaseSet(
+        heights=[10, 10, 20, 20],
+        widths=[10, 10, 20, 40],
+        casing_thicknesses=[5, 5, 10, 10],
+        center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+        rotation_angle=180,
+        stp_filename="pf_coil_case_set.stp"
+    )
+    all_components.append(pf_coil_set)
+
+    # this makes 4 pf coils
+    pf_coil_set = paramak.PoloidalFieldCoilSet(
+        heights=[10, 10, 20, 20],
+        widths=[10, 10, 20, 40],
+        center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+        rotation_angle=180,
+        stp_filename="pf_coil_set.stp"
+    )
+    all_components.append(pf_coil_set)
+
+    # this makes 4 pf coil cases for the 4 pf coils made above
+    component = paramak.PoloidalFieldCoilCaseSetFC(
+        pf_coils=pf_coil_set,
+        casing_thicknesses=[5, 5, 10, 10],
+        rotation_angle=180,
+        stp_filename="pf_coil_cases_set.stp"
+    )
+    all_components.append(component)
+
+    # this makes 1 pf coils
     pf_coil = paramak.PoloidalFieldCoil(
         center_point=(100, 100),
         height=20,
         width=20,
         rotation_angle=rot_angle,
-        stp_filename="poloidal_field_coil.stp",
+        stp_filename="poloidal_field_coil.stp"
     )
     all_components.append(pf_coil)
+
+    # this makes one PF coil case for the provided pf coil
+    component = paramak.PoloidalFieldCoilCaseSetFC(
+        pf_coils=[pf_coil],
+        casing_thicknesses=[10],
+        rotation_angle=180,
+        stp_filename="pf_coil_cases_set_fc.stp")
+    all_components.append(component)
 
     component = paramak.PoloidalFieldCoilCaseFC(
         pf_coil=pf_coil,
@@ -190,13 +267,12 @@ def main():
     all_components.append(component)
 
     component = paramak.ToroidalFieldCoilRectangle(
-        inner_upper_point=(100, 700),
-        inner_mid_point=(800, 0),
-        inner_lower_point=(100, -700),
+        horizontal_start_point=(100, 700),
+        vertical_mid_point=(800, 0),
         thickness=150,
         distance=60,
         stp_filename="tf_coil_rectangle.stp",
-        number_of_coils=6,
+        number_of_coils=1,
     )
     all_components.append(component)
 
@@ -208,7 +284,7 @@ def main():
         thickness=50,
         distance=50,
         stp_filename="toroidal_field_coil_coat_hanger.stp",
-        number_of_coils=6,
+        number_of_coils=1,
     )
     all_components.append(component)
 
@@ -219,7 +295,7 @@ def main():
         coverages=(60, 60),
         thickness=30,
         distance=30,
-        number_of_coils=6,
+        number_of_coils=1,
         stp_filename="toroidal_field_coil_triple_arc.stp"
     )
     all_components.append(component)
@@ -229,7 +305,7 @@ def main():
         R2=300,
         thickness=30,
         distance=30,
-        number_of_coils=6,
+        number_of_coils=1,
         stp_filename="toroidal_field_coil_princeton_d.stp"
     )
     all_components.append(component)
@@ -241,10 +317,22 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.PortCutterRotated(
+        center_point=(450, 0),
+        poloidal_coverage_angle=20,
+        rotation_angle=10,
+        poloidal_placement_angle=45,
+        azimuth_placement_angle=0
+    )
+    all_components.append(component)
+
     return all_components
 
 
 if __name__ == "__main__":
     all_components = main()
+    filenames = []
     for components in all_components:
         components.export_stp()
+        filenames.append(components.stp_filename)
+    print(filenames)

@@ -1,8 +1,8 @@
-import numpy as np
-from scipy import integrate
-from scipy.optimize import minimize
 
+import cadquery as cq
+import numpy as np
 from paramak import ExtrudeMixedShape
+from collections import Iterable
 
 
 class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
@@ -20,7 +20,8 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
         vertical_displacement (float, optional): vertical displacement (cm).
-            Defaults to 0.
+            Defaults to 0.0.
+        with_inner_leg (Boolean): Include the inner tf leg (default True)
 
     Keyword Args:
         stp_filename (str, optional): The filename used when saving stp files
@@ -55,6 +56,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         azimuth_placement_angle=0,
         name=None,
         material_tag="outer_tf_coil_mat",
+        with_inner_leg=True,
         **kwargs
     ):
 
@@ -93,9 +95,16 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         self.distance = distance
         self.number_of_coils = number_of_coils
         self.vertical_displacement = vertical_displacement
+        self.with_inner_leg = with_inner_leg
 
-        self.find_points()
+    @property
+    def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        self._azimuth_placement_angle = value
 
     def compute_curve(self, R1, h, radii, coverages):
         npoints = 500
@@ -109,30 +118,26 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             0, small_coverage, round(0.5 * npoints * small_coverage / np.pi))
         small_arc_R = R1 + small_radius * (1 - np.cos(theta))
         small_arc_Z = h + small_radius * np.sin(theta)
-        R = small_arc_R
-        Z = small_arc_Z
 
         # mid arc
         theta = np.linspace(
             theta[-1], asum, round(0.5 * npoints * mid_coverage / np.pi))
-        mid_arc_R = R[-1] + mid_radius * \
+        mid_arc_R = small_arc_R[-1] + mid_radius * \
             (np.cos(small_coverage) - np.cos(theta))
-        mid_arc_Z = Z[-1] + mid_radius * \
+        mid_arc_Z = small_arc_Z[-1] + mid_radius * \
             (np.sin(theta) - np.sin(small_coverage))
-        R = np.append(R, mid_arc_R[1:])
-        Z = np.append(Z, mid_arc_Z[1:])
 
         # large arc
-        large_radius = (Z[-1]) / np.sin(np.pi - asum)
+        large_radius = (mid_arc_Z[-1]) / np.sin(np.pi - asum)
         theta = np.linspace(theta[-1], np.pi, 60)
-        large_arc_R = R[-1] + large_radius * \
+        large_arc_R = mid_arc_R[-1] + large_radius * \
             (np.cos(np.pi - theta) - np.cos(np.pi - asum))
-        large_arc_Z = Z[-1] - large_radius * \
+        large_arc_Z = mid_arc_Z[-1] - large_radius * \
             (np.sin(asum) - np.sin(np.pi - theta))
-        R = np.append(R, large_arc_R[1:])
-        Z = np.append(Z, large_arc_Z[1:])
 
+        R = np.concatenate((small_arc_R, mid_arc_R[1:], large_arc_R[1:]))
         R = np.append(R, np.flip(R)[1:])
+        Z = np.concatenate((small_arc_Z, mid_arc_Z[1:], large_arc_Z[1:]))
         Z = np.append(Z, -np.flip(Z)[1:])
         return R, Z
 
@@ -145,16 +150,15 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         small_coverage, mid_coverage = self.small_coverage, self.mid_coverage
         small_coverage *= np.pi / 180  # convert to radians
         mid_coverage *= np.pi / 180
-        asum = small_coverage + mid_coverage
 
         # create inner coordinates
         R_inner, Z_inner = self.compute_curve(
-            self.R1, self.h, radii=(small_radius, mid_radius),
+            self.R1, self.h * 0.5, radii=(small_radius, mid_radius),
             coverages=(small_coverage, mid_coverage))
 
         # create outer coordinates
         R_outer, Z_outer = self.compute_curve(
-            self.R1 - thickness, self.h,
+            self.R1 - thickness, self.h * 0.5,
             radii=(small_radius + thickness, mid_radius + thickness),
             coverages=(small_coverage, mid_coverage))
         R_outer, Z_outer = np.flip(R_outer), np.flip(Z_outer)
@@ -163,18 +167,39 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         Z_outer += self.vertical_displacement
         Z_inner += self.vertical_displacement
 
-        # create points with connections
-        points = []
-        for i in range(len(R_inner)):
-            points.append([R_inner[i], Z_inner[i], 'spline'])
-        points[-1][2] = 'straight'
-        for i in range(len(R_outer)):
-            points.append([R_outer[i], Z_outer[i], 'spline'])
-        points[-1][2] = 'straight'
+        # extract helping points for inner leg
+        inner_leg_connection_points = [
+            (R_inner[0], Z_inner[0]),
+            (R_inner[-1], Z_inner[-1]),
+            (R_outer[0], Z_outer[0]),
+            (R_outer[-1], Z_outer[-1])
+        ]
+        self.inner_leg_connection_points = inner_leg_connection_points
+
+        # add the leg to the points
+        if self.with_inner_leg:
+            R_inner = np.append(R_inner, R_inner[0])
+            Z_inner = np.append(Z_inner, Z_inner[0])
+
+            R_outer = np.append(R_outer, R_outer[0])
+            Z_outer = np.append(Z_outer, Z_outer[0])
+        # add connections
+        inner_points = [[r, z, 'spline'] for r, z in zip(R_inner, Z_inner)]
+        outer_points = [[r, z, 'spline'] for r, z in zip(R_outer, Z_outer)]
+        if self.with_inner_leg:
+            outer_points[-2][2] = 'straight'
+            inner_points[-2][2] = 'straight'
+
+        inner_points[-1][2] = 'straight'
+        outer_points[-1][2] = 'straight'
+
+        points = inner_points + outer_points
+
         self.points = points
 
     def find_azimuth_placement_angle(self):
-        """Calculates the azimuth placement angles based on the number of tf coils"""
+        """Calculates the azimuth placement angles based on the number of tf
+        coils"""
 
         angles = list(
             np.linspace(

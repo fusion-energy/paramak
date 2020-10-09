@@ -4,9 +4,9 @@ Examples - Parametric Components
 make_all_parametric_components.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/93629472-47c05900-f9e0-11ea-8219-bc9d2c3e7f7c.png
-   :width: 735
-   :height: 200
+.. image:: https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
+   :width: 713
+   :height: 245
    :align: center
 
 .. automodule:: examples.example_parametric_components.make_all_parametric_components
@@ -42,3 +42,17 @@ make_demo_style_blankets.py
    :show-inheritance:
 
 `Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_demo_style_blankets.py>`_
+
+make_firstwall_for_neutron_wall_loading.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93807581-bc92cd80-fc42-11ea-8522-7fe14287b3c4.png
+   :width: 437
+   :height: 807
+   :align: center
+
+.. automodule:: examples.example_parametric_components.make_firstwall_for_neutron_wall_loading
+   :members:
+   :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.py>`_
