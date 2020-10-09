@@ -45,7 +45,7 @@ class test_PortCutterRotated(unittest.TestCase):
             cut=large_ports
         )
 
-        assert large_ports.volume > small_ports.volume
+        assert large_ports.volume < small_ports.volume
         assert vessel_with_out_ports.volume > vessel_with_small_ports.volume
         assert vessel_with_small_ports.volume > vessel_with_large_ports.volume
 
