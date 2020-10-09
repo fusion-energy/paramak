@@ -14,6 +14,8 @@ class ExtrudeCircleShape(Shape):
             of a single XZ coordinate which is the central point of the circle.
             For example [(10, 10)]
         radius (float): the radius of the circle
+        extrude_both (bool): if set to True, the extrusion will occur in both
+            directions. Defaults to True.
         stp_filename (str): the filename used when saving stp files as part of a
             reactor
         color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
@@ -40,6 +42,7 @@ class ExtrudeCircleShape(Shape):
         points,
         distance,
         radius,
+        extrude_both=True,
         workplane="XZ",
         stp_filename="ExtrudeCircleShape.stp",
         stl_filename="ExtrudeCircleShape.stl",
@@ -80,6 +83,7 @@ class ExtrudeCircleShape(Shape):
         self.radius = radius
         self.distance = distance
         self.solid = solid
+        self.extrude_both = extrude_both
 
     @property
     def radius(self):
@@ -110,7 +114,7 @@ class ExtrudeCircleShape(Shape):
             cq.Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
-            .extrude(distance=-self.distance / 2.0, both=True)
+            .extrude(distance=-self.distance / 2.0, both=self.extrude_both)
         )
 
         # Checks if the azimuth_placement_angle is a list of angles

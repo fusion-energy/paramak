@@ -18,6 +18,8 @@ class ExtrudeStraightShape(Shape):
         color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
             the color to use when exporting as html graphs or png images
         distance (float): the extrusion distance to use (cm units if used for neutronics)
+        extrude_both (bool): if set to True, the extrusion will occur in both
+            directions. Defaults to True.
         azimuth_placement_angle (float or iterable of floats): the angle or
             angles to use when rotating the shape on the azimuthal axis
         cut (CadQuery object): an optional CadQuery object to perform a boolean
@@ -37,6 +39,7 @@ class ExtrudeStraightShape(Shape):
         self,
         points,
         distance,
+        extrude_both=True,
         workplane="XZ",
         stp_filename="ExtrudeStraightShape.stp",
         stl_filename="ExtrudeStraightShape.stl",
@@ -76,6 +79,7 @@ class ExtrudeStraightShape(Shape):
 
         self.distance = distance
         self.solid = solid
+        self.extrude_both = extrude_both
 
     @property
     def distance(self):
@@ -98,7 +102,7 @@ class ExtrudeStraightShape(Shape):
             cq.Workplane(self.workplane)
             .polyline(self.points)
             .close()
-            .extrude(distance=-self.distance / 2.0, both=True)
+            .extrude(distance=-self.distance / 2.0, both=self.extrude_both)
         )
 
         # Checks if the azimuth_placement_angle is a list of angles
