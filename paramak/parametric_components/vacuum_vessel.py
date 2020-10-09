@@ -10,22 +10,6 @@ class VacuumVessel(RotateStraightShape):
         height (float): height of the vessel.
         inner_radius (float): the inner radius of the vessel.
         thickness (float): thickness of the vessel
-        circular_ports (list): list of iterables containing floats describing
-            the ports for, in order:
-            (z position, azimuth placement angle, radius)
-            Defaults to [].
-        rectangular_ports (list): list of iterables containing floats
-            describing the ports for, in order:
-            (port z position, azimuth placement angle, widht, height,
-            fillet_radius)
-            If no fillet_radius is specified, the port won't be filleted.
-            Defaults to [].
-        rotated_ports (list): list of iterables containing floats
-            describing the ports for, in order:
-            (center_point, polar_coverage_angle, polar_placement_angle,
-            rotation_angle, azimuth_placement_angle, fillet_radius)
-            If no fillet_radius is specified, the port won't be filleted.
-            Defaults to [].
 
     Keyword Args:
         workplane (str): The orientation of the CadQuery workplane. Options are
@@ -50,9 +34,6 @@ class VacuumVessel(RotateStraightShape):
         height,
         inner_radius,
         thickness,
-        circular_ports=[],
-        rectangular_ports=[],
-        rotated_ports=[],
         name=None,
         color=(0.5, 0.5, 0.5),
         stp_filename="CenterColumnShieldCylinder.stp",
@@ -93,10 +74,6 @@ class VacuumVessel(RotateStraightShape):
         self.height = height
         self.inner_radius = inner_radius
         self.thickness = thickness
-        self.circular_ports = circular_ports
-        self.rectangular_ports = rectangular_ports
-        self.rotated_ports = rotated_ports
-        self.add_ports()
 
     @property
     def height(self):
@@ -135,60 +112,3 @@ class VacuumVessel(RotateStraightShape):
             (0, -(height / 2 + thickness)),
         ]
         self.points = inner_points + outer_points[::-1]
-
-    def add_ports(self):
-        cutter_shapes = []
-        safety_factor = 2
-        # circular ports
-        for port in self.circular_ports:
-            port_z_pos, placement_angle, radius = port
-            shape = ExtrudeCircleShape(
-                points=[(0, port_z_pos)],
-                distance=2*(self.inner_radius+self.thickness*safety_factor),
-                radius=radius,
-                azimuth_placement_angle=placement_angle - 90,
-                extrude_both=False)
-            cutter_shapes.append(shape)
-
-        # rectangular ports
-        for port in self.rectangular_ports:
-            port_z_pos, placement_angle, port_width, port_height = port[:4]
-            points = [
-                (-port_width/2, -port_height/2),
-                (port_width/2, -port_height/2),
-                (port_width/2, port_height/2),
-                (-port_width/2, port_height/2),
-            ]
-            points = [(e[0], e[1] + port_z_pos) for e in points]
-            shape = ExtrudeStraightShape(
-                points=points,
-                distance=2*(self.inner_radius+self.thickness*safety_factor),
-                azimuth_placement_angle=placement_angle - 90,
-                extrude_both=False
-                )
-
-            # add fillet
-            if len(port) == 5:
-                shape.solid = shape.solid.edges('#Z').fillet(port[4])
-            cutter_shapes.append(shape)
-
-        # rotated ports
-        for port in self.rotated_ports:
-            center_point, polar_coverage_angle, polar_placement_angle, \
-                rotation_angle, azimuth_placement_angle = port[:5]
-            shape = PortCutterRotated(
-                center_point=center_point,
-                polar_coverage_angle=polar_coverage_angle,
-                polar_placement_angle=polar_placement_angle,
-                max_distance_from_center=2*(
-                    self.inner_radius+self.thickness*safety_factor),
-                rotation_angle=rotation_angle,
-                azimuth_placement_angle=azimuth_placement_angle,
-                )
-
-            # add fillet
-            if len(port) == 6:
-                shape.solid = shape.solid.edges().fillet(port[5])
-            cutter_shapes.append(shape)
-
-        self.cut = cutter_shapes
