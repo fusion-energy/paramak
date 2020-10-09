@@ -74,18 +74,18 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/8583900/89423931-070dc880-d72f-11ea-8cb3-1ce3ce840b7e.png" width="150">
-<img src="https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png" width="150">
+<img src="https://user-images.githubusercontent.com/8583900/89407027-fb61d800-d715-11ea-892a-59283742687f.png" width="150">
 </p>
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/88866536-e57a8180-d202-11ea-8e3f-2662973c6f69.gif" width="800" height="300">
+<img src="https://user-images.githubusercontent.com/8583900/88866536-e57a8180-d202-11ea-8e3f-2662973c6f69.gif" width="700">
 <img src="https://user-images.githubusercontent.com/8583900/86237379-90136c00-bb93-11ea-80fb-54e2dab74819.gif" width="150">
 </p>
 
 ## Selction of parametric components
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/89407027-fb61d800-d715-11ea-892a-59283742687f.png" width="150">
+<img src="https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png" width="300">
 </p>
 
 ## Selction of parametric shapes
