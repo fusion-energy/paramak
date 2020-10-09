@@ -18,4 +18,3 @@ class test_BlanketConstantThicknessArcH(unittest.TestCase):
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
-
