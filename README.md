@@ -13,6 +13,19 @@ The Paramak python package allows rapid production of 3D CAD models of fusion re
 
 :point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
 
+# History
+
+The package was originally conceived by Jonathan Shimwell and based on the
+[FreeCAD Python API](https://wiki.freecadweb.org/FreeCAD_API). When 
+[CadQuery 2](https://github.com/CadQuery/cadquery) was released the project
+started to migrated the code base. Shortly after this migration the project
+became open-source and has flourished ever since. The project has grown due to
+two contributors in particular (John Billingsley and Remi Delaporte-Mathurin)
+and others have also helped, you can see all those who have helped the
+development in the 
+[Authors.md](https://github.com/ukaea/paramak/blob/main/AUTHORS.md) and in the 
+[github contributions](https://github.com/ukaea/paramak/graphs/contributors). 
+
 
 ## Installation
 
