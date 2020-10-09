@@ -78,16 +78,6 @@ class ExtrudeSplineShape(Shape):
         self.solid = solid
 
     @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
-
-    @property
     def distance(self):
         return self._distance
 
