@@ -66,11 +66,11 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
             if arg in default_dict:
                 default_dict[arg] = kwargs[arg]
 
-        height = abs(corner_points[0][1]-corner_points[1][1])
-        width = abs(corner_points[0][0]-corner_points[1][0])
+        height = abs(corner_points[0][1] - corner_points[1][1])
+        width = abs(corner_points[0][0] - corner_points[1][0])
 
-        center_width = (corner_points[0][1]+corner_points[1][1])/2.
-        center_height = (corner_points[0][1]+corner_points[1][1])/2.
+        center_width = (corner_points[0][1] + corner_points[1][1]) / 2.
+        center_height = (corner_points[0][1] + corner_points[1][1]) / 2.
         center_point = (center_width, center_height)
 
         super().__init__(
@@ -89,7 +89,6 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
         )
 
         self.corner_points = corner_points
-
 
     @property
     def corner_points(self):
