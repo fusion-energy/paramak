@@ -1322,7 +1322,7 @@ class test_VacuumVessel(unittest.TestCase):
 
         test_shape = paramak.VacuumVessel(
             height=2, inner_radius=1, thickness=0.2,
-            )
+        )
         assert test_shape.solid is not None
 
 
