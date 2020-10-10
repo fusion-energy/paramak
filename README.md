@@ -13,18 +13,19 @@ The Paramak python package allows rapid production of 3D CAD models of fusion
 reactors. The purpose of the Paramak is to provide geometry for parametric
 studies. It is possible to use the created geometry in engineering and
 neutronics studies as the STP or STL files produced can be automatically
-converted to DAGMC compatable neutronics models or meshed and used in
+converted to DAGMC compatible neutronics models or meshed and used in
 finite element analysis codes.
 
 :point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
+
 
 # History
 
 The package was originally conceived by Jonathan Shimwell and based on the
 [FreeCAD Python API](https://wiki.freecadweb.org/FreeCAD_API). When 
 [CadQuery 2](https://github.com/CadQuery/cadquery) was released the project
-started to migrated the code base. Shortly after this migration the project
-became open-source and has flourished ever since. The project has grown largly
+started to migrate the code base. Shortly after this migration the project
+became open-source and has flourished ever since. The project has grown largely
 due to two contributors in particular (John Billingsley and
 Remi Delaporte-Mathurin) and others have also helped, you can see all those who
 have helped the development in the 
@@ -37,7 +38,7 @@ have helped the development in the
 To install the Paramak you need to have 
 [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), 
 [Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and 
-[Pip](https://anaconda.org/anaconda/pip). If you have these three dependancies 
+[Pip](https://anaconda.org/anaconda/pip). If you have these three dependencies 
 already then you can install the Paramak using Pip:
 
 ```
@@ -48,29 +49,29 @@ Detailed installation
 [instructions](https://paramak.readthedocs.io/en/main/#prerequisites)
 can be found in the User's Guide.
 
- 
 
 ## Features
 
 In general the Paramak takes points and connection information in 2D space (XY)
 and performs operations on them to create 3D volumes. The points and
-connections can be provided by the user or when using parametric_components
+connections can be provided by the user or when using parametric components
 the points and connections are calculated by the software.
 
 Once points and connections between the points are provided the user has
 options to perform CAD operations (rotate or extrude on different orientations)
-to create a 3D volume and boolean operations like cut, union and intesection.
+to create a 3D volume and boolean operations like cut, union and intersection.
 
 The different families of shapes that can be made with the Paramak are shown in
 the table below. The CadQuery objects created can be combined and modified
 (e.g. fillet corners) using CadQueries powerful filtering capabilties to create
 more complex models (e.g. a Tokamak). The Tokamak images below are coloured
 based on the shape family that the component is made from. There are also
-parametric components which provide convenient fusion relevent shapes for
+parametric components which provide convenient fusion relevant shapes for
 common reactor components.
 https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
 
-## Selection of parametric reactors
+
+## Selection Of Parametric Reactors
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/8583900/89423931-070dc880-d72f-11ea-8cb3-1ce3ce840b7e.png" width="150">
@@ -85,13 +86,14 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 <img src="https://user-images.githubusercontent.com/8583900/86237379-90136c00-bb93-11ea-80fb-54e2dab74819.gif" width="150">
 </p>
 
-## Selction of parametric components
+## Selection Of Parametric Components
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png" width="500">
 </p>
 
-## Selction of parametric shapes
+
+## Selection Of Parametric Shapes
 
 |                                                         | Rotate                                                                                                                                 | Extrude                                                                                                                                   |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
@@ -103,9 +105,13 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 
 ## Usage - Parametric Shapes
   
-There are a collection of Python scripts in the example folder that demonstrate simple shape construction and visualisation. However here is a quick example of a RotateStraightShape.
+There are a collection of Python scripts in the example folder that demonstrate
+simple shape construction and visualisation. However here is a quick example of
+a RotateStraightShape.
 
-After importing the class the user then sets the points. By default, points should be a list of (x,z) points. In this case the points are connected with straight lines.
+After importing the class the user then sets the points, by default, points
+should be a list of (x,z) coordinates. In this case the points are connected
+with straight lines.
 
 ```python
 import paramak
@@ -113,7 +119,8 @@ import paramak
 my_shape = paramak.RotateStraightShape(points = [(20,0), (20,100), (100,0)])
 ```
 
-Once these properties have been set users can write 3D volumes in CAD STP or STL formats.
+Once these properties have been set users can write 3D volumes in CAD STP or
+STL formats.
 
 ```python
 my_shape.export_stp('example.stp')
@@ -126,7 +133,15 @@ my_shape.export_stl('example.stl')
 
 ## Usage - Parametric Components
 
-Parametric components are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerous parametric components for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma. Users could also construct a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric component called Plasma can construct a plasma from more convenient parameters. Parametric components also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
+Parametric components are wrapped versions of the eight basic shapes where
+parameters drive the construction of the shape. There are numerous parametric
+components for a variety of different reactor components such as center columns,
+blankets, poloidal field coils. This example shows the construction of a
+plasma. Users could also construct a plasma by using a RotateSplineShape()
+combined with coordinates for the points. However a parametric component called
+Plasma can construct a plasma from more convenient parameters. Parametric
+components also inherit from the Shape object so they have access to the same
+methods like export_stp() and export_stl().
 
 ```python
 import paramak
@@ -175,8 +190,7 @@ my_reactor.export_stp()
 <p align="center"><img src="https://user-images.githubusercontent.com/56687624/89203299-465fdc00-d5ac-11ea-8663-a5b7eecfb584.png" height="300"></p>
 
 
-
-## Usage - Reactor object
+## Usage - Reactor Object
 
 A reactor object provides a container object for all Shape objects created, and
 allows operations to be performed on the whole collection of Shapes.
@@ -198,8 +212,7 @@ A html graph of the combined Shapes can be created.
 my_reactor.export_html('reactor.html')
 ```
 
-
-## Usage - Neutronics model creation
+## Usage - Neutronics Model Creation
 
 First assign stp_filenames to each of the Shape objects that were created
 earlier on.
@@ -218,7 +231,7 @@ my_shape.material_tag = 'steel'
 my_plasma.material_tag = 'DT_plasma'
 ```
 
-Note - Tetrahedral meshes can also be assigned to Shape objects
+Note - Tetrahedral meshes can also be assigned to Shape objects.
 
 Now add the Shape objects to a freshly created reactor object.
 
@@ -226,26 +239,27 @@ Now add the Shape objects to a freshly created reactor object.
 new_reactor = paramak.Reactor(shapes_and_components = [my_shape, my_plasma])
 ```
 
-The entire reactor can now be exported as step files. This also generates a
+The entire reactor can now be exported as STP files. This also generates a
 DAGMC graveyard automatically.
 
 ```python
 my_reactor.export_stp()
 ```
 
-A manifest.json file that contains all the step filenames and materials can now be created.
+A manifest.json file that contains all the STP filenames and materials can now
+be created.
 
 ```python
 my_reactor.export_neutronics_description()
 ```
 
-Once you step files and the neutronics description has been exported then
+Once your STP files and the neutronics description has been exported then
 [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC
 geometry in the usual manner. There is also a convenient script included in
 task 12 of the UKAEA openmc workshop which can be used in conjunction with the
 neutronics description json file to automatically create a DAGMC geometry.
 Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py)
-and place it in the same directory as the manifest.json and step files.
+and place it in the same directory as the manifest.json and STP files.
 Then run the following command from the terminal. You will need to have
 previously installed the 
 [DAGMC plugin](https://github.com/svalinn/Trelis-plugin) for Trelis.
@@ -271,7 +285,7 @@ also has two tasks that might be of interest
 and [task 12](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12).
 
 
-# Example scripts
+# Example Scripts
 
 There are several example scripts in the 
 [examples folder](https://github.com/ukaea/paramak/blob/main/examples/).
