@@ -109,9 +109,9 @@ There are a collection of Python scripts in the example folder that demonstrate
 simple shape construction and visualisation. However here is a quick example of
 a RotateStraightShape.
 
-After importing the class the user then sets the points. By default, points
-should be a list of (x,z) points. In this case the points are connected with
-straight lines.
+After importing the class the user then sets the points, by default, points
+should be a list of (x,z) coordinates. In this case the points are connected
+with straight lines.
 
 ```python
 import paramak
@@ -135,7 +135,7 @@ my_shape.export_stl('example.stl')
 
 Parametric components are wrapped versions of the eight basic shapes where
 parameters drive the construction of the shape. There are numerous parametric
-components for a varity of different reactor components such as center columns,
+components for a variety of different reactor components such as center columns,
 blankets, poloidal field coils. This example shows the construction of a
 plasma. Users could also construct a plasma by using a RotateSplineShape()
 combined with coordinates for the points. However a parametric component called
@@ -246,7 +246,8 @@ DAGMC graveyard automatically.
 my_reactor.export_stp()
 ```
 
-A manifest.json file that contains all the step filenames and materials can now be created.
+A manifest.json file that contains all the step filenames and materials can now
+be created.
 
 ```python
 my_reactor.export_neutronics_description()
