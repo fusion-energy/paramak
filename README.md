@@ -23,7 +23,7 @@ finite element analysis codes.
 The package was originally conceived by Jonathan Shimwell and based on the
 [FreeCAD Python API](https://wiki.freecadweb.org/FreeCAD_API). When 
 [CadQuery 2](https://github.com/CadQuery/cadquery) was released the project
-started to migrated the code base. Shortly after this migration the project
+started to migrate the code base. Shortly after this migration the project
 became open-source and has flourished ever since. The project has grown largly
 due to two contributors in particular (John Billingsley and
 Remi Delaporte-Mathurin) and others have also helped, you can see all those who
