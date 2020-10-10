@@ -239,14 +239,14 @@ Now add the Shape objects to a freshly created reactor object.
 new_reactor = paramak.Reactor(shapes_and_components = [my_shape, my_plasma])
 ```
 
-The entire reactor can now be exported as step files. This also generates a
+The entire reactor can now be exported as STP files. This also generates a
 DAGMC graveyard automatically.
 
 ```python
 my_reactor.export_stp()
 ```
 
-A manifest.json file that contains all the step filenames and materials can now
+A manifest.json file that contains all the STP filenames and materials can now
 be created.
 
 ```python
@@ -259,7 +259,7 @@ geometry in the usual manner. There is also a convenient script included in
 task 12 of the UKAEA openmc workshop which can be used in conjunction with the
 neutronics description json file to automatically create a DAGMC geometry.
 Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py)
-and place it in the same directory as the manifest.json and step files.
+and place it in the same directory as the manifest.json and STP files.
 Then run the following command from the terminal. You will need to have
 previously installed the 
 [DAGMC plugin](https://github.com/svalinn/Trelis-plugin) for Trelis.
