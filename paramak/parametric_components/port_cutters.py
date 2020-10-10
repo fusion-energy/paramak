@@ -1,7 +1,8 @@
 import math
 import cadquery as cq
 
-from paramak import RotateStraightShape, ExtrudeStraightShape, ExtrudeCircleShape
+from paramak import RotateStraightShape, ExtrudeStraightShape, \
+    ExtrudeCircleShape
 from paramak.utils import rotate, coefficients_of_line_from_points
 
 
