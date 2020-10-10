@@ -19,6 +19,8 @@ class PortCutterRotated(RotateStraightShape):
             on the polar axis. 0 degrees is the outboard equatorial point.
         max_distance_from_center (float): the maximum distance from the center
             point outwards (cm). Default 3000
+        fillet_radius (float): If not None, radius (cm) of fillets added to
+            all edges. Defaults to None.
 
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the
@@ -57,6 +59,7 @@ class PortCutterRotated(RotateStraightShape):
         polar_placement_angle=0,
         max_distance_from_center=3000,
         rotation_angle=0,
+        fillet_radius=None,
         stp_filename="PortCutter.stp",
         stl_filename="PortCutter.stl",
         color=(0.5, 0.5, 0.5),
@@ -97,6 +100,9 @@ class PortCutterRotated(RotateStraightShape):
         self.polar_coverage_angle = polar_coverage_angle
         self.polar_placement_angle = polar_placement_angle
         self.max_distance_from_center = max_distance_from_center
+        self.fillet_radius = fillet_radius
+
+        self.add_fillet()
 
     @property
     def center_point(self):
@@ -163,6 +169,11 @@ class PortCutterRotated(RotateStraightShape):
             points.append(outer_point_2)
 
         self.points = points
+
+    def add_fillet(self):
+        """adds fillets to all edges"""
+        if self.fillet_radius is not None and self.fillet_radius != 0:
+            self.solid = self.solid.edges().fillet(self.fillet_radius)
 
 
 class RectangularPortCutter(ExtrudeStraightShape):

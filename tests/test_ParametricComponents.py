@@ -134,7 +134,7 @@ class test_VacuumVessel(unittest.TestCase):
 
         cutter4 = paramak.CircularPortCutter(distance=3, z_pos=0.25, radius=0.1, azimuth_placement_angle=45)
 
-        cutter5 = paramak.PortCutterRotated((0, 0), azimuth_placement_angle=-90)
+        cutter5 = paramak.PortCutterRotated((0, 0), azimuth_placement_angle=-90, rotation_angle=10, fillet_radius=0.01)
         self.test_shape.cut = [cutter1, cutter2, cutter3, cutter4, cutter5]
         assert self.test_shape.solid is not None
 
