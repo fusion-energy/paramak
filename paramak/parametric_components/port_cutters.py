@@ -1,7 +1,7 @@
 import math
 import cadquery as cq
 
-from paramak import RotateStraightShape, ExtrudeStraightShape
+from paramak import RotateStraightShape, ExtrudeStraightShape, ExtrudeCircleShape
 from paramak.utils import rotate, coefficients_of_line_from_points
 
 
@@ -198,12 +198,13 @@ class RectangularPortCutter(ExtrudeStraightShape):
                 default_dict[arg] = kwargs[arg]
 
         super().__init__(
+            extrude_both=False,
             name=name,
             color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
+            azimuth_placement_angle=azimuth_placement_angle-90,
             distance=distance,
             hash_value=None,
             **default_dict
@@ -228,3 +229,54 @@ class RectangularPortCutter(ExtrudeStraightShape):
     def add_fillet(self):
         if self.fillet_radius is not None and self.fillet_radius != 0:
             self.solid = self.solid.edges('#Z').fillet(self.fillet_radius)
+
+
+class CircularPortCutter(ExtrudeCircleShape):
+    def __init__(
+        self,
+        z_pos,
+        radius,
+        distance,
+        stp_filename="CircularPortCutter.stp",
+        stl_filename="CircularPortCutter.stl",
+        color=(0.5, 0.5, 0.5),
+        azimuth_placement_angle=0,
+        name="circular_port_cutter",
+        material_tag="circular_port_cutter_mat",
+        **kwargs
+    ):
+
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
+        }
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
+        super().__init__(
+            radius=radius,
+            extrude_both=False,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            azimuth_placement_angle=azimuth_placement_angle - 90,
+            distance=distance,
+            hash_value=None,
+            **default_dict
+        )
+
+        self.z_pos = z_pos
+        self.radius = radius
+
+    def find_points(self):
+        self.points = [(0, self.z_pos)]
