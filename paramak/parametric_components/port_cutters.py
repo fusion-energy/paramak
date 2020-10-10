@@ -1,7 +1,7 @@
 import math
 import cadquery as cq
 
-from paramak import RotateStraightShape
+from paramak import RotateStraightShape, ExtrudeStraightShape
 from paramak.utils import rotate, coefficients_of_line_from_points
 
 
@@ -163,3 +163,68 @@ class PortCutterRotated(RotateStraightShape):
             points.append(outer_point_2)
 
         self.points = points
+
+
+class RectangularPortCutter(ExtrudeStraightShape):
+    def __init__(
+        self,
+        z_pos,
+        height,
+        width,
+        distance,
+        fillet_radius=None,
+        stp_filename="RectangularPortCutter.stp",
+        stl_filename="RectangularPortCutter.stl",
+        color=(0.5, 0.5, 0.5),
+        azimuth_placement_angle=0,
+        name="rectangular_port_cutter",
+        material_tag="rectangular_port_cutter_mat",
+        **kwargs
+    ):
+
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
+        }
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
+        super().__init__(
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            azimuth_placement_angle=azimuth_placement_angle,
+            distance=distance,
+            hash_value=None,
+            **default_dict
+        )
+
+        self.z_pos = z_pos
+        self.height = height
+        self.width = width
+        self.fillet_radius = fillet_radius
+        self.add_fillet()
+
+    def find_points(self):
+        points = [
+            (-self.width/2, -self.height/2),
+            (self.width/2, -self.height/2),
+            (self.width/2, self.height/2),
+            (-self.width/2, self.height/2),
+        ]
+        points = [(e[0], e[1] + self.z_pos) for e in points]
+        self.points = points
+
+    def add_fillet(self):
+        if self.fillet_radius is not None and self.fillet_radius != 0:
+            self.solid = self.solid.edges('#Z').fillet(self.fillet_radius)
