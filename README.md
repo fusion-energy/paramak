@@ -38,7 +38,7 @@ have helped the development in the
 To install the Paramak you need to have 
 [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), 
 [Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and 
-[Pip](https://anaconda.org/anaconda/pip). If you have these three dependancies 
+[Pip](https://anaconda.org/anaconda/pip). If you have these three dependencies 
 already then you can install the Paramak using Pip:
 
 ```
@@ -54,21 +54,22 @@ can be found in the User's Guide.
 
 In general the Paramak takes points and connection information in 2D space (XY)
 and performs operations on them to create 3D volumes. The points and
-connections can be provided by the user or when using parametric_components
+connections can be provided by the user or when using parametric components
 the points and connections are calculated by the software.
 
 Once points and connections between the points are provided the user has
 options to perform CAD operations (rotate or extrude on different orientations)
-to create a 3D volume and boolean operations like cut, union and intesection.
+to create a 3D volume and boolean operations like cut, union and intersection.
 
 The different families of shapes that can be made with the Paramak are shown in
 the table below. The CadQuery objects created can be combined and modified
 (e.g. fillet corners) using CadQueries powerful filtering capabilties to create
 more complex models (e.g. a Tokamak). The Tokamak images below are coloured
 based on the shape family that the component is made from. There are also
-parametric components which provide convenient fusion relevent shapes for
+parametric components which provide convenient fusion relevant shapes for
 common reactor components.
 https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
+
 
 ## Selection of parametric reactors
 
@@ -90,6 +91,7 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 <p align="center">
 <img src="https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png" width="500">
 </p>
+
 
 ## Selection of parametric shapes
 
@@ -175,7 +177,6 @@ my_reactor.export_stp()
 <p align="center"><img src="https://user-images.githubusercontent.com/56687624/89203299-465fdc00-d5ac-11ea-8663-a5b7eecfb584.png" height="300"></p>
 
 
-
 ## Usage - Reactor object
 
 A reactor object provides a container object for all Shape objects created, and
@@ -197,7 +198,6 @@ A html graph of the combined Shapes can be created.
 ```python
 my_reactor.export_html('reactor.html')
 ```
-
 
 ## Usage - Neutronics model creation
 
