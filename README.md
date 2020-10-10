@@ -71,7 +71,7 @@ common reactor components.
 https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
 
 
-## Selection of parametric reactors
+## Selection Of Parametric Reactors
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/8583900/89423931-070dc880-d72f-11ea-8cb3-1ce3ce840b7e.png" width="150">
@@ -86,14 +86,14 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 <img src="https://user-images.githubusercontent.com/8583900/86237379-90136c00-bb93-11ea-80fb-54e2dab74819.gif" width="150">
 </p>
 
-## Selection of parametric components
+## Selection Of Parametric Components
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png" width="500">
 </p>
 
 
-## Selection of parametric shapes
+## Selection Of Parametric Shapes
 
 |                                                         | Rotate                                                                                                                                 | Extrude                                                                                                                                   |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
@@ -105,9 +105,13 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 
 ## Usage - Parametric Shapes
   
-There are a collection of Python scripts in the example folder that demonstrate simple shape construction and visualisation. However here is a quick example of a RotateStraightShape.
+There are a collection of Python scripts in the example folder that demonstrate
+simple shape construction and visualisation. However here is a quick example of
+a RotateStraightShape.
 
-After importing the class the user then sets the points. By default, points should be a list of (x,z) points. In this case the points are connected with straight lines.
+After importing the class the user then sets the points. By default, points
+should be a list of (x,z) points. In this case the points are connected with
+straight lines.
 
 ```python
 import paramak
@@ -115,7 +119,8 @@ import paramak
 my_shape = paramak.RotateStraightShape(points = [(20,0), (20,100), (100,0)])
 ```
 
-Once these properties have been set users can write 3D volumes in CAD STP or STL formats.
+Once these properties have been set users can write 3D volumes in CAD STP or
+STL formats.
 
 ```python
 my_shape.export_stp('example.stp')
@@ -128,7 +133,15 @@ my_shape.export_stl('example.stl')
 
 ## Usage - Parametric Components
 
-Parametric components are wrapped versions of the eight basic shapes where parameters drive the construction of the shape. There are numerous parametric components for a varity of different reactor components such as center columns, blankets, poloidal field coils. This example shows the construction of a plasma. Users could also construct a plasma by using a RotateSplineShape() combined with coordinates for the points. However a parametric component called Plasma can construct a plasma from more convenient parameters. Parametric components also inherit from the Shape object so they have access to the same methods like export_stp() and export_stl().
+Parametric components are wrapped versions of the eight basic shapes where
+parameters drive the construction of the shape. There are numerous parametric
+components for a varity of different reactor components such as center columns,
+blankets, poloidal field coils. This example shows the construction of a
+plasma. Users could also construct a plasma by using a RotateSplineShape()
+combined with coordinates for the points. However a parametric component called
+Plasma can construct a plasma from more convenient parameters. Parametric
+components also inherit from the Shape object so they have access to the same
+methods like export_stp() and export_stl().
 
 ```python
 import paramak
@@ -177,7 +190,7 @@ my_reactor.export_stp()
 <p align="center"><img src="https://user-images.githubusercontent.com/56687624/89203299-465fdc00-d5ac-11ea-8663-a5b7eecfb584.png" height="300"></p>
 
 
-## Usage - Reactor object
+## Usage - Reactor Object
 
 A reactor object provides a container object for all Shape objects created, and
 allows operations to be performed on the whole collection of Shapes.
@@ -199,7 +212,7 @@ A html graph of the combined Shapes can be created.
 my_reactor.export_html('reactor.html')
 ```
 
-## Usage - Neutronics model creation
+## Usage - Neutronics Model Creation
 
 First assign stp_filenames to each of the Shape objects that were created
 earlier on.
@@ -271,7 +284,7 @@ also has two tasks that might be of interest
 and [task 12](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12).
 
 
-# Example scripts
+# Example Scripts
 
 There are several example scripts in the 
 [examples folder](https://github.com/ukaea/paramak/blob/main/examples/).
