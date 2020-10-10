@@ -18,13 +18,14 @@ finite element analysis codes.
 
 :point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
 
+
 # History
 
 The package was originally conceived by Jonathan Shimwell and based on the
 [FreeCAD Python API](https://wiki.freecadweb.org/FreeCAD_API). When 
 [CadQuery 2](https://github.com/CadQuery/cadquery) was released the project
 started to migrate the code base. Shortly after this migration the project
-became open-source and has flourished ever since. The project has grown largly
+became open-source and has flourished ever since. The project has grown largely
 due to two contributors in particular (John Billingsley and
 Remi Delaporte-Mathurin) and others have also helped, you can see all those who
 have helped the development in the 
@@ -48,7 +49,6 @@ Detailed installation
 [instructions](https://paramak.readthedocs.io/en/main/#prerequisites)
 can be found in the User's Guide.
 
- 
 
 ## Features
 
