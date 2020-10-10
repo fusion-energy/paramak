@@ -253,7 +253,7 @@ be created.
 my_reactor.export_neutronics_description()
 ```
 
-Once you step files and the neutronics description has been exported then
+Once your STP files and the neutronics description has been exported then
 [Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC
 geometry in the usual manner. There is also a convenient script included in
 task 12 of the UKAEA openmc workshop which can be used in conjunction with the
