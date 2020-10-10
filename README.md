@@ -231,7 +231,7 @@ my_shape.material_tag = 'steel'
 my_plasma.material_tag = 'DT_plasma'
 ```
 
-Note - Tetrahedral meshes can also be assigned to Shape objects
+Note - Tetrahedral meshes can also be assigned to Shape objects.
 
 Now add the Shape objects to a freshly created reactor object.
 
