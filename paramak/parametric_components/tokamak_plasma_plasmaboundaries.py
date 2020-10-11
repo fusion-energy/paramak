@@ -48,6 +48,13 @@ class PlasmaBoundaries(Plasma):
     ):
 
         super().__init__(
+            elongation=elongation,
+            major_radius=major_radius,
+            minor_radius=minor_radius,
+            triangularity=triangularity,
+            vertical_displacement=vertical_displacement,
+            configuration=configuration,
+            x_point_shift=x_point_shift,
             **kwargs
         )
 
