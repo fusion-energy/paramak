@@ -18,7 +18,7 @@ The above image is colored by components. The TF coils are blue, the PF coils ar
 
 The above image is colored by Shape type, with RotateStraightShape in red, ExtrudeStraightShape in orange, RotateSplineShape in purple, ExtrudeSplineShape in pink, RotateMixedShape in blue, ExtrudeMixedShape in green, RotateCircleShape in yellow and ExtrudeCircleShape in brown.
 
-.. image:: https://user-images.githubusercontent.com/8583900/89176602-bc028280-d581-11ea-8a16-dfc20833b8d9.png
+.. image:: https://user-images.githubusercontent.com/8583900/95379434-4b5b4780-08dd-11eb-8ac0-e3fce40efa90.png
    :width: 450
    :align: center
 

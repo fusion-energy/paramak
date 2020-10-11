@@ -158,7 +158,7 @@ class NeutronicsModelFromReactor():
         self._simulation_particles_per_batches = value
 
     def create_materials(self):
-        #TODO check every materials is accounted for
+        # TODO check every materials is accounted for
         if len(self.reactor.material_tags) is not len(self.materials.keys()):
             raise ValueError("materials must contain an entry for every \
                 material in the reactor", self.reactor.material_tags)

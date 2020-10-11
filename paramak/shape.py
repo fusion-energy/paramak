@@ -85,6 +85,16 @@ class Shape:
         self.hash_value = None
 
     @property
+    def solid(self):
+        if self.get_hash() != self.hash_value:
+            self.create_solid()
+        return self._solid
+
+    @solid.setter
+    def solid(self, value):
+        self._solid = value
+
+    @property
     def cut(self):
         return self._cut
 
@@ -371,6 +381,11 @@ class Shape:
             raise ValueError(
                 "azimuth_placement_angle must be a float or list of floats"
             )
+
+    def create_solid(self):
+        """Dummy create_solid method
+        """
+        return
 
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the

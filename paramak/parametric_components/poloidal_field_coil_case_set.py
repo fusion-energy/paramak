@@ -7,8 +7,8 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
     """Creates a series of rectangular poloidal field coils.
 
     Args:
-        heights (float): the vertical (z axis) heights of the coil (cm).
-        widths (float): the horizontal (x axis) widths of the coil (cm).
+        heights (list of floats): the vertical (z axis) heights of the coil (cm).
+        widths (list of floats): the horizontal (x axis) widths of the coil (cm).
         casing_thicknesses (list of floats): the thickness of the casing (cm).
         center_points (tuple of floats): the center of the coil (x,z) values (cm).
 

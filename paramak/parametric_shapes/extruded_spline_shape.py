@@ -78,16 +78,6 @@ class ExtrudeSplineShape(Shape):
         self.solid = solid
 
     @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
-
-    @property
     def distance(self):
         return self._distance
 
@@ -127,7 +117,7 @@ class ExtrudeSplineShape(Shape):
         else:
             # Peform rotations for a single azimuth_placement_angle angle
             solid = solid.rotate(
-                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
+                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
 
         self.perform_boolean_operations(solid)
 
