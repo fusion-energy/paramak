@@ -215,6 +215,20 @@ PoloidalFieldCoil()
    :members:
    :show-inheritance:
 
+PoloidalFieldCoilFP()
+^^^^^^^^^^^^^^^^^^^^^
+
+|PoloidalFieldCoilFPstp| |PoloidalFieldCoilFPsvg|
+
+.. |PoloidalFieldCoilFPstp| image:: https://user-images.githubusercontent.com/56687624/86241487-dfa96600-bb9a-11ea-96ba-54f22ecef1ef.png
+    :width: 330px
+.. |PoloidalFieldCoilFPsvg| image:: https://user-images.githubusercontent.com/8583900/95579521-ba47b600-0a2d-11eb-9bdf-7f0415396978.png
+    :width: 360px
+
+.. automodule:: paramak.parametric_components.poloidal_field_coil_fp
+   :members:
+   :show-inheritance:
+
 PoloidalFieldCoilSet()
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -281,6 +295,20 @@ PoloidalSegmenter()
     :align: center
 
 .. automodule:: paramak.parametric_components.poloidal_segmenter
+   :members:
+   :show-inheritance:
+
+PortCutterRotated()
+^^^^^^^^^^^^^^^^^^^
+
+|PortCutterRotatedstp| |PortCutterRotatedsvg|
+
+.. |PortCutterRotatedstp| image:: https://user-images.githubusercontent.com/8583900/95115392-511a2700-073d-11eb-9cb9-d6d2bec80e2c.png
+    :width: 300px
+.. |PortCutterRotatedsvg| image:: https://user-images.githubusercontent.com/8583900/95115923-267c9e00-073e-11eb-898b-bafbb2626b02.png
+    :width: 380px
+
+.. automodule:: paramak.parametric_components.port_cutters
    :members:
    :show-inheritance:
 

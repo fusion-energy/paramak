@@ -33,6 +33,7 @@ from .parametric_components.center_column_flat_top_circular import CenterColumnS
 from .parametric_components.inboard_firstwall_fccs import InboardFirstwallFCCS
 
 from .parametric_components.poloidal_field_coil import PoloidalFieldCoil
+from .parametric_components.poloidal_field_coil_fp import PoloidalFieldCoilFP
 from .parametric_components.poloidal_field_coil_case import PoloidalFieldCoilCase
 from .parametric_components.poloidal_field_coil_case_fc import PoloidalFieldCoilCaseFC
 from .parametric_components.poloidal_field_coil_set import PoloidalFieldCoilSet
@@ -40,6 +41,7 @@ from .parametric_components.poloidal_field_coil_case_set import PoloidalFieldCoi
 from .parametric_components.poloidal_field_coil_case_set_fc import PoloidalFieldCoilCaseSetFC
 
 from .parametric_components.poloidal_segmenter import PoloidalSegments
+from .parametric_components.port_cutters import PortCutterRotated
 from .parametric_components.cutting_wedge import CuttingWedge
 from .parametric_components.cutting_wedge_fs import CuttingWedgeFS
 
@@ -50,6 +52,8 @@ from .parametric_components.toroidal_field_coil_coat_hanger import ToroidalField
 from .parametric_components.toroidal_field_coil_rectangle import ToroidalFieldCoilRectangle
 from .parametric_components.toroidal_field_coil_triple_arc import ToroidalFieldCoilTripleArc
 from .parametric_components.toroidal_field_coil_princeton_d import ToroidalFieldCoilPrincetonD
+
+from .parametric_components.vacuum_vessel import VacuumVessel
 
 from .parametric_reactors.ball_reactor import BallReactor
 from .parametric_reactors.submersion_reactor import SubmersionTokamak

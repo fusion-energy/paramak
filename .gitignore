@@ -32,6 +32,10 @@ coverage.xml
 *.h5m
 *.xml
 
+# neutronics simulation files
+*.h5
+*.out
+
 # images of the model
 *.svg
 *.png

@@ -6,15 +6,20 @@ from paramak.utils import rotate, intersect_solid, coefficients_of_line_from_poi
 
 
 class PoloidalSegments(RotateStraightShape):
-    """Creates a ring of wedges from a central point. When provided with a shape_to_segment the shape
-    will be segmented by the wedges. This is useful for segmenting geometry into equal poloidal angles.
-    Intended to segment the firstwall geometry for using in neutron wall loading simulations.
+    """Creates a ring of wedges from a central point. When provided with a shape
+    to_segment the shape will be segmented by the wedges. This is useful for
+    segmenting geometry into equal poloidal angles. Intended to segment the
+    firstwall geometry for using in neutron wall loading simulations.
 
     Args:
-        shape_to_segment (paramak.Shape): the Shape to segment, if None then the segmenting solids will be returned
-        max_distance_from_center (float): the maximum distance from the center_point outwards (cm).
-        center_point (tuple of floats): the center of the segmentation wedges (x,z) values (cm).
-        number_of_segments (int): the number of equal angles segments in 360 degrees.
+        shape_to_segment (paramak.Shape): the Shape to segment, if None then
+            the segmenting solids will be returned
+        max_distance_from_center (float): the maximum distance from the center
+            point outwards (cm).
+        center_point (tuple of floats): the center of the segmentation wedges
+            (x,z) values (cm).
+        number_of_segments (int): the number of equal angles segments in 360
+            degrees.
 
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the
@@ -41,7 +46,9 @@ class PoloidalSegments(RotateStraightShape):
         physical_groups (type): Insert description.
 
     Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        a paramak shape object: A shape object that has generic functionality
+        with points determined by the find_points() method. A CadQuery solid of
+        the shape can be called via shape.solid.
     """
 
     def __init__(
