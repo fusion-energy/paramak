@@ -158,6 +158,7 @@ class NeutronicsModelFromReactor():
         self._simulation_particles_per_batches = value
 
     def create_materials(self):
+        #TODO check every materials is accounted for
         if len(self.reactor.material_tags) is not len(self.materials.keys()):
             raise ValueError("materials must contain an entry for every \
                 material in the reactor", self.reactor.material_tags)
@@ -235,18 +236,18 @@ class NeutronicsModelFromReactor():
                 avaialbe from the CoreForm website https://www.coreform.com/
         """
 
-        if method.lower not in ['ppp', 'trelis']:
+        if method not in ['ppp', 'trelis']:
             raise ValueError("the method using in create_neutronics_geometry \
                 should be either ppp or trelis not", method)
 
         self.reactor.export_stp()
         self.reactor.export_neutronics_description()
 
-        if method.lower == 'ppp':
+        if method == 'ppp':
             os.system('/usr/bin/python /usr/bin/geomPipeline.py config.json')
             os.system('./occ_faceter brep')
 
-        if method.lower == 'trelis':
+        if method == 'trelis':
             os.system(
                 "trelis -batch -nographics make_faceteted_neutronics_model.py")
 
@@ -254,13 +255,13 @@ class NeutronicsModelFromReactor():
 
         print('neutronics model saved as dagmc.h5m')
 
-    def create_neutronics_model(self):
+    def create_neutronics_model(self, method='trelis'):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (outputs), simulation settings (batches, particles per batch)"""
 
         self.create_materials()
         self.create_plasma_source()
-        self.create_neutronics_geometry()
+        self.create_neutronics_geometry(method=method)
 
         # this is the underlying geometry container that is filled with the
         # faceteted DGAMC CAD model
