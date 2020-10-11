@@ -1,7 +1,8 @@
 import math
 import cadquery as cq
 
-from paramak import RotateStraightShape, ExtrudeStraightShape, ExtrudeCircleShape
+from paramak import RotateStraightShape, ExtrudeStraightShape, \
+    ExtrudeCircleShape
 from paramak.utils import rotate, coefficients_of_line_from_points
 
 
@@ -19,8 +20,8 @@ class PortCutterRotated(RotateStraightShape):
             on the polar axis. 0 degrees is the outboard equatorial point.
         max_distance_from_center (float): the maximum distance from the center
             point outwards (cm). Default 3000
-        fillet_radius (float): If not None, radius (cm) of fillets added to
-            all edges. Defaults to None.
+        fillet_radius (float, optional): If not None, radius (cm) of fillets
+            added to all edges. Defaults to None.
 
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the
@@ -177,6 +178,34 @@ class PortCutterRotated(RotateStraightShape):
 
 
 class RectangularPortCutter(ExtrudeStraightShape):
+    """Creates a extruded shape with a rectangular section that is used to cut
+    other components (eg. blanket, vessel,..) in order to create ports.
+
+    Args:
+        z_pos (float): Z position (cm) of the port
+        height (float): height (cm) of the port
+        width (float): width (cm) of the port
+        distance (float): extruded distance (cm) of the cutter
+        fillet_radius (float, optional): If not None, radius (cm) of fillets
+            added to edges orthogonal to the Z direction. Defaults to None.
+        azimuth_placement_angle (float or iterable of floats): The angle or
+            angles to use when rotating the shape on the azimuthal axis.
+            Defaults to 0.0.
+        stp_filename (str, optional): The filename used when saving stp files
+            as part of a reactor. Defaults to "RectangularPortCutter.stp".
+        stl_filename (str, optional): The filename used when saving stl files
+            as part of a reactor. Defaults to "RectangularPortCutter.stl".
+        color (tuple, optional): (sequences of 3 or 4 floats each in the range
+            0-1): the color to  use when exporting as html graphs or png
+            images. Defaults to (0.5, 0.5, 0.5).
+        azimuth_placement_angle (int, optional): [description]. Defaults to 0.
+        name (str, optional): the legend name used when exporting a html graph
+            of the shape. Defaults to "rectangular_port_cutter".
+        material_tag (str, optional): The material name to use when exporting
+            the neutronics description. Defaults to
+            "rectangular_port_cutter_mat".
+
+    """
     def __init__(
         self,
         z_pos,
@@ -187,7 +216,7 @@ class RectangularPortCutter(ExtrudeStraightShape):
         stp_filename="RectangularPortCutter.stp",
         stl_filename="RectangularPortCutter.stl",
         color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
+        azimuth_placement_angle=0.0,
         name="rectangular_port_cutter",
         material_tag="rectangular_port_cutter_mat",
         **kwargs
@@ -243,6 +272,29 @@ class RectangularPortCutter(ExtrudeStraightShape):
 
 
 class CircularPortCutter(ExtrudeCircleShape):
+    """Creates a extruded shape with a circular section that is used to cut
+    other components (eg. blanket, vessel,..) in order to create ports.
+
+    Args:
+        z_pos (float): Z position (cm) of the port
+        height (float): height (cm) of the port
+        width (float): width (cm) of the port
+        distance (float): extruded distance (cm) of the cutter
+        stp_filename (str, optional): The filename used when saving stp files
+            as part of a reactor. Defaults to "CircularPortCutter.stp".
+        stl_filename (str, optional): The filename used when saving stl files
+            as part of a reactor. Defaults to "CircularPortCutter.stl".
+        color (tuple, optional): (sequences of 3 or 4 floats each in the range
+            0-1): the color to  use when exporting as html graphs or png
+            images. Defaults to (0.5, 0.5, 0.5).
+        azimuth_placement_angle (float or iterable of floats, optional): The
+            angle or angles to use when rotating the shape on the azimuthal
+            axis. Defaults to 0.0.
+        name (str, optional): the legend name used when exporting a html graph
+            of the shape. Defaults to "circular_port_cutter".
+        material_tag (str, optional): The material name to use when exporting
+            the neutronics description. Defaults to "circular_port_cutter_mat".
+    """
     def __init__(
         self,
         z_pos,
@@ -251,7 +303,7 @@ class CircularPortCutter(ExtrudeCircleShape):
         stp_filename="CircularPortCutter.stp",
         stl_filename="CircularPortCutter.stl",
         color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
+        azimuth_placement_angle=0.0,
         name="circular_port_cutter",
         material_tag="circular_port_cutter_mat",
         **kwargs
