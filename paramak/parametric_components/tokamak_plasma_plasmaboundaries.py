@@ -14,10 +14,10 @@ class PlasmaBoundaries(Plasma):
                 Defaults to 0.05.
             elongation (float, optional): the elongation of the plasma.
                 Defaults to 2.0.
-            major_radius (float, optional): the major radius of the plasma (cm).
-                Defaults to 450.
-            minor_radius (float, optional): the minor radius of the plasma (cm).
-                Defaults to 150.
+            major_radius (float, optional): the major radius of the plasma
+                (cm). Defaults to 450.
+            minor_radius (float, optional): the minor radius of the plasma
+                (cm). Defaults to 150.
             triangularity (float, optional): the triangularity of the plasma.
                 Defaults to 0.55.
             vertical_displacement (float, optional): the vertical_displacement
@@ -123,9 +123,10 @@ class PlasmaBoundaries(Plasma):
         lower_point_y = (
             -self.elongation * self.minor_radius + self.vertical_displacement
         )
-        upper_point_y = self.elongation * self.minor_radius + self.vertical_displacement
+        upper_point_y = self.elongation * self.minor_radius + \
+            self.vertical_displacement
         # else use x points
-        if self.configuration == "single-null" or self.configuration == "double-null":
+        if self.configuration in ["single-null", "double-null"]:
             lower_point_y = lower_x_point[1]
             if self.configuration == "double-null":
                 upper_point_y = upper_x_point[1]
