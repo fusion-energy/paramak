@@ -51,41 +51,18 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         outer_radius,
         number_of_coils,
         gap_size,
-        azimuth_start_angle=0,
         stp_filename="InnerTfCoilsFlat.stp",
         stl_filename="InnerTfCoilsFlat.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,   # cannot be controlled by user
         material_tag="inner_tf_coil_mat",
-        name=None,
         **kwargs
     ):
-
-        default_dict = {
-            "points": None,
-            "workplane": "XY",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
 
         super().__init__(
             distance=height,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            color=color,
-            azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,
-            name=name,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.azimuth_start_angle = azimuth_start_angle

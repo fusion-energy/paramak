@@ -62,12 +62,6 @@ class PlasmaBoundaries(Plasma):
         self.A = A
         self.vertical_displacement = vertical_displacement
 
-        self.outer_equatorial_point = None
-        self.inner_equatorial_point = None
-        self.high_point = None
-        self.low_point = None
-        self.lower_x_point, self.upper_x_point = self.compute_x_points()
-
     @property
     def vertical_displacement(self):
         return self._vertical_displacement

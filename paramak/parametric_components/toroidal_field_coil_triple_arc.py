@@ -52,39 +52,17 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         vertical_displacement=0.0,
         stp_filename="ToroidalFieldCoilPrincetonD.stp",
         stl_filename="ToroidalFieldCoilPrincetonD.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
-        name=None,
         material_tag="outer_tf_coil_mat",
         with_inner_leg=True,
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
             distance=distance,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            color=color,
-            azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,
-            name=name,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
         self.R1 = R1
         self.h = h

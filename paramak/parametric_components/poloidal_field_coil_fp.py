@@ -41,30 +41,8 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
     def __init__(
         self,
         corner_points,
-        rotation_angle=360,
-        stp_filename="PoloidalFieldCoil.stp",
-        stl_filename="PoloidalFieldCoil.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
-        name="pf_coil",
-        material_tag="pf_coil_mat",
         **kwargs
     ):
-
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
 
         height = abs(corner_points[0][1] - corner_points[1][1])
         width = abs(corner_points[0][0] - corner_points[1][0])
@@ -77,15 +55,7 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
             height=height,
             width=width,
             center_point=center_point,
-            name=name,
-            color=color,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.corner_points = corner_points

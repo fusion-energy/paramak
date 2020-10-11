@@ -57,42 +57,19 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         thickness,
         distance,
         number_of_coils,
-        rotation_angle=360,
         stp_filename="ToroidalFieldCoilRectangle.stp",
         stl_filename="ToroidalFieldCoilRectangle.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
-        name=None,
         material_tag="outer_tf_coil_mat",
         with_inner_leg=True,
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
             distance=distance,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            color=color,
-            azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,
-            name=name,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.horizontal_start_point = horizontal_start_point

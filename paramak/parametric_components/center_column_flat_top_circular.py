@@ -52,41 +52,19 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         inner_radius,
         mid_radius,
         outer_radius,
-        rotation_angle=360,
         stp_filename="CenterColumnShieldFlatTopCircular.stp",
         stl_filename="CenterColumnShieldFlatTopCircular.stl",
-        color=(0.5, 0.5, 0.5),
         name="center_column",
         material_tag="center_column_shield_mat",
-        azimuth_placement_angle=0,
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
             name=name,
-            color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.height = height

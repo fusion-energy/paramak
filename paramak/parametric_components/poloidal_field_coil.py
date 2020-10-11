@@ -45,41 +45,19 @@ class PoloidalFieldCoil(RotateStraightShape):
         height,
         width,
         center_point,
-        rotation_angle=360,
         stp_filename="PoloidalFieldCoil.stp",
         stl_filename="PoloidalFieldCoil.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
         name="pf_coil",
         material_tag="pf_coil_mat",
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
             name=name,
-            color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.center_point = center_point

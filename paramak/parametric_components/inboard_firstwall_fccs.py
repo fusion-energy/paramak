@@ -49,39 +49,15 @@ class InboardFirstwallFCCS(RotateMixedShape):
         thickness,
         stp_filename="InboardFirstwallFCCS.stp",
         stl_filename="InboardFirstwallFCCS.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
         material_tag="firstwall_mat",
-        name=None,
-        rotation_angle=360,
         **kwargs
     ):
-
-        default_dict = {
-            "points": None,
-            "workplane": "XY",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
 
         super().__init__(
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            color=color,
-            azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,
-            rotation_angle=rotation_angle,
-            name=name,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.central_column_shield = central_column_shield
