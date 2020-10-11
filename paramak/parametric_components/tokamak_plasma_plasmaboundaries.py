@@ -8,7 +8,7 @@ class PlasmaBoundaries(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
        by 5 shaping parameters using the plasmaboundaries package to calculate
        points. For more details see:
-       http://github.com/RemiTheWarrior/plasma-boundaries
+       http://github.com/RemDelaporteMathurin/plasma-boundaries
         Args:
             A (float, optional): plasma parameter see plasmaboundaries doc.
                 Defaults to 0.05.
@@ -22,19 +22,16 @@ class PlasmaBoundaries(Plasma):
                 Defaults to 0.55.
             vertical_displacement (float, optional): the vertical_displacement
                 of the plasma (cm). Defaults to 0.
-            num_points (int, optional): number of points to described the
-                shape. Defaults to 50.
             configuration (str, optional): plasma configuration
                 ("non-null", "single-null", "double-null").
                 Defaults to "non-null".
             x_point_shift (float, optional): Shift parameters for locating the
                 X points in [0, 1]. Defaults to 0.1.
-            Others: see paramak.RotateSplineShape() arguments.
+            Others: see paramak.Plasma() arguments.
 
         Attributes:
             A: plasma parameter see plasmaboundaries doc.
-            Others: see paramak.RotateSplineShape() and paramak.Plasma()
-                attributes.
+            Others: see paramak.Plasma() attributes.
     """
 
     def __init__(
@@ -45,53 +42,18 @@ class PlasmaBoundaries(Plasma):
         minor_radius=150,
         triangularity=0.55,
         vertical_displacement=0,
-        num_points=50,
         configuration="non-null",
         x_point_shift=0.1,
-        name="plasma",
-        material_tag="DT_plasma",
-        stp_filename="plasma.stp",
-        color=(0.5, 0.5, 0.5),
-        rotation_angle=360,
-        azimuth_placement_angle=0,
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            name=name,
-            color=color,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         # properties needed for plasma shapes
         self.A = A
-        self.elongation = elongation
-        self.major_radius = major_radius
-        self.minor_radius = minor_radius
-        self.triangularity = triangularity
         self.vertical_displacement = vertical_displacement
-        self.num_points = num_points
-        self.configuration = configuration
-        self.x_point_shift = x_point_shift
 
         self.outer_equatorial_point = None
         self.inner_equatorial_point = None
