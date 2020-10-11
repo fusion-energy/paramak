@@ -9,25 +9,10 @@ class ExtrudeSplineShape(Shape):
     """Extrudes a 3d CadQuery solid from points connected with spline connections
 
     Args:
-        points (list of tuples each containing X (float), Z (float)): a list of
-            XZ coordinates connected by spline connections. For example
-            [(2.,1.), (2.,2.), (1.,2.), (1.,1.), (2.,1.)]
-        stp_filename (str): the filename used when saving stp files as part of a
-            reactor
-        color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
-            the color to use when exporting as html graphs or png images
-        distance (float): the extrusion distance to use (cm units if used for
-            neutronics)
-        azimuth_placement_angle (float or iterable of floats): the angle or
-            angles to use when rotating the shape on the azimuthal axis
-        cut (CadQuery object): an optional CadQuery object to perform a boolean
-            cut with this object
-        material_tag (str): the material name to use when exporting the
-            neutronics descrption
-        name (str): the legend name used when exporting a html graph of the
-            shape
-        workplane (str): the orientation of the CadQuery workplane. Options are
-            XY, YZ, XZ.
+        distance (float): the extrusion distance to use (cm units if used for neutronics)
+        extrude_both (bool): if set to True, the extrusion will occur in both
+            directions. Defaults to True.
+        Others: see paramak.Shape() arguments.
 
     Returns:
         a paramak shape object: a Shape object that has generic functionality
