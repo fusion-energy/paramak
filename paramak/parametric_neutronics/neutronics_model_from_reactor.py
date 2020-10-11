@@ -169,8 +169,12 @@ class NeutronicsModelFromReactor():
                     material_entry, material_tag=material_tag)
                 openmc_materials[material_tag] = material.openmc_material
             if isinstance(material_entry, openmc.Material):
+                # sets the material name in the event that it had not been set
+                material_entry.name = material_tag
                 openmc_materials[material_tag] = material_entry
             if isinstance(material_entry, (nmm.Material, nmm.MultiMaterial)):
+                # sets the material tag in the event that it had not been set
+                material_entry.material_tag = material_tag
                 openmc_materials[material_tag] = material_entry.openmc_material
 
         self.openmc_materials = openmc_materials
