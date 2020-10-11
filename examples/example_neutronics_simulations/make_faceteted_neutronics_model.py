@@ -96,7 +96,7 @@ def save_output_files():
         json.dump(geometry_details, outfile, indent=4)
 
 
-with open("manifest.json") as f:
+with open("config.json") as f:
     geometry_details = byteify(json.load(f))
 
 
