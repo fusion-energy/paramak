@@ -34,43 +34,18 @@ class RotateSplineShape(Shape):
 
     def __init__(
         self,
-        points,
         workplane="XZ",
-        name=None,
-        color=(0.5, 0.5, 0.5),
-        material_tag=None,
         stp_filename="RotateSplineShape.stp",
         stl_filename="RotateSplineShape.stl",
-        azimuth_placement_angle=0,
         solid=None,
         rotation_angle=360,
-        cut=None,
-        intersect=None,
-        union=None,
         **kwargs
     ):
 
-        default_dict = {"tet_mesh": None,
-                        "physical_groups": None,
-                        "hash_value": None}
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            points=points,
-            name=name,
-            color=color,
-            material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            workplane=workplane,
-            cut=cut,
-            intersect=intersect,
-            union=union,
-            **default_dict
+            **kwargs
         )
 
         self.rotation_angle = rotation_angle

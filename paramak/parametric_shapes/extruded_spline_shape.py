@@ -35,43 +35,17 @@ class ExtrudeSplineShape(Shape):
 
     def __init__(
         self,
-        points,
         distance,
-        workplane="XZ",
         stp_filename="ExtrudeSplineShape.stp",
         stl_filename="ExtrudeSplineShape.stl",
         solid=None,
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
-        cut=None,
-        intersect=None,
-        union=None,
-        material_tag=None,
-        name=None,
         **kwargs
     ):
 
-        default_dict = {"tet_mesh": None,
-                        "physical_groups": None,
-                        "hash_value": None}
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            points=points,
-            name=name,
-            color=color,
-            material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            workplane=workplane,
-            cut=cut,
-            intersect=intersect,
-            union=union,
-            **default_dict
+            **kwargs
         )
 
         self.distance = distance
