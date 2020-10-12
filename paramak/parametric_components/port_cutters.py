@@ -1,7 +1,8 @@
 import math
 import cadquery as cq
 
-from paramak import RotateStraightShape
+from paramak import RotateStraightShape, ExtrudeStraightShape, \
+    ExtrudeCircleShape
 from paramak.utils import rotate, coefficients_of_line_from_points
 
 
@@ -19,6 +20,8 @@ class PortCutterRotated(RotateStraightShape):
             on the polar axis. 0 degrees is the outboard equatorial point.
         max_distance_from_center (float): the maximum distance from the center
             point outwards (cm). Default 3000
+        fillet_radius (float, optional): If not None, radius (cm) of fillets
+            added to all edges. Defaults to None.
 
     Keyword Args:
         name (str): the legend name used when exporting a html graph of the
@@ -57,6 +60,7 @@ class PortCutterRotated(RotateStraightShape):
         polar_placement_angle=0,
         max_distance_from_center=3000,
         rotation_angle=0,
+        fillet_radius=None,
         stp_filename="PortCutter.stp",
         stl_filename="PortCutter.stl",
         color=(0.5, 0.5, 0.5),
@@ -97,6 +101,9 @@ class PortCutterRotated(RotateStraightShape):
         self.polar_coverage_angle = polar_coverage_angle
         self.polar_placement_angle = polar_placement_angle
         self.max_distance_from_center = max_distance_from_center
+        self.fillet_radius = fillet_radius
+
+        self.add_fillet()
 
     @property
     def center_point(self):
@@ -163,3 +170,176 @@ class PortCutterRotated(RotateStraightShape):
             points.append(outer_point_2)
 
         self.points = points
+
+    def add_fillet(self):
+        """adds fillets to all edges"""
+        if self.fillet_radius is not None and self.fillet_radius != 0:
+            self.solid = self.solid.edges().fillet(self.fillet_radius)
+
+
+class RectangularPortCutter(ExtrudeStraightShape):
+    """Creates a extruded shape with a rectangular section that is used to cut
+    other components (eg. blanket, vessel,..) in order to create ports.
+
+    Args:
+        z_pos (float): Z position (cm) of the port
+        height (float): height (cm) of the port
+        width (float): width (cm) of the port
+        distance (float): extruded distance (cm) of the cutter
+        fillet_radius (float, optional): If not None, radius (cm) of fillets
+            added to edges orthogonal to the Z direction. Defaults to None.
+        azimuth_placement_angle (float or iterable of floats): The angle or
+            angles to use when rotating the shape on the azimuthal axis.
+            Defaults to 0.0.
+        stp_filename (str, optional): The filename used when saving stp files
+            as part of a reactor. Defaults to "RectangularPortCutter.stp".
+        stl_filename (str, optional): The filename used when saving stl files
+            as part of a reactor. Defaults to "RectangularPortCutter.stl".
+        color (tuple, optional): (sequences of 3 or 4 floats each in the range
+            0-1): the color to  use when exporting as html graphs or png
+            images. Defaults to (0.5, 0.5, 0.5).
+        azimuth_placement_angle (int, optional): [description]. Defaults to 0.
+        name (str, optional): the legend name used when exporting a html graph
+            of the shape. Defaults to "rectangular_port_cutter".
+        material_tag (str, optional): The material name to use when exporting
+            the neutronics description. Defaults to
+            "rectangular_port_cutter_mat".
+
+    """
+    def __init__(
+        self,
+        z_pos,
+        height,
+        width,
+        distance,
+        fillet_radius=None,
+        stp_filename="RectangularPortCutter.stp",
+        stl_filename="RectangularPortCutter.stl",
+        color=(0.5, 0.5, 0.5),
+        azimuth_placement_angle=0.0,
+        name="rectangular_port_cutter",
+        material_tag="rectangular_port_cutter_mat",
+        **kwargs
+    ):
+
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
+        }
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
+        super().__init__(
+            extrude_both=False,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            azimuth_placement_angle=azimuth_placement_angle-90,
+            distance=distance,
+            hash_value=None,
+            **default_dict
+        )
+
+        self.z_pos = z_pos
+        self.height = height
+        self.width = width
+        self.fillet_radius = fillet_radius
+        self.add_fillet()
+
+    def find_points(self):
+        points = [
+            (-self.width/2, -self.height/2),
+            (self.width/2, -self.height/2),
+            (self.width/2, self.height/2),
+            (-self.width/2, self.height/2),
+        ]
+        points = [(e[0], e[1] + self.z_pos) for e in points]
+        self.points = points
+
+    def add_fillet(self):
+        if self.fillet_radius is not None and self.fillet_radius != 0:
+            self.solid = self.solid.edges('#Z').fillet(self.fillet_radius)
+
+
+class CircularPortCutter(ExtrudeCircleShape):
+    """Creates a extruded shape with a circular section that is used to cut
+    other components (eg. blanket, vessel,..) in order to create ports.
+
+    Args:
+        z_pos (float): Z position (cm) of the port
+        height (float): height (cm) of the port
+        width (float): width (cm) of the port
+        distance (float): extruded distance (cm) of the cutter
+        stp_filename (str, optional): The filename used when saving stp files
+            as part of a reactor. Defaults to "CircularPortCutter.stp".
+        stl_filename (str, optional): The filename used when saving stl files
+            as part of a reactor. Defaults to "CircularPortCutter.stl".
+        color (tuple, optional): (sequences of 3 or 4 floats each in the range
+            0-1): the color to  use when exporting as html graphs or png
+            images. Defaults to (0.5, 0.5, 0.5).
+        azimuth_placement_angle (float or iterable of floats, optional): The
+            angle or angles to use when rotating the shape on the azimuthal
+            axis. Defaults to 0.0.
+        name (str, optional): the legend name used when exporting a html graph
+            of the shape. Defaults to "circular_port_cutter".
+        material_tag (str, optional): The material name to use when exporting
+            the neutronics description. Defaults to "circular_port_cutter_mat".
+    """
+    def __init__(
+        self,
+        z_pos,
+        radius,
+        distance,
+        stp_filename="CircularPortCutter.stp",
+        stl_filename="CircularPortCutter.stl",
+        color=(0.5, 0.5, 0.5),
+        azimuth_placement_angle=0.0,
+        name="circular_port_cutter",
+        material_tag="circular_port_cutter_mat",
+        **kwargs
+    ):
+
+        default_dict = {
+            "points": None,
+            "workplane": "XZ",
+            "solid": None,
+            "intersect": None,
+            "cut": None,
+            "union": None,
+            "tet_mesh": None,
+            "physical_groups": None,
+        }
+
+        for arg in kwargs:
+            if arg in default_dict:
+                default_dict[arg] = kwargs[arg]
+
+        super().__init__(
+            radius=radius,
+            extrude_both=False,
+            name=name,
+            color=color,
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            azimuth_placement_angle=azimuth_placement_angle - 90,
+            distance=distance,
+            hash_value=None,
+            **default_dict
+        )
+
+        self.z_pos = z_pos
+        self.radius = radius
+
+    def find_points(self):
+        self.points = [(0, self.z_pos)]

@@ -114,14 +114,29 @@ class test_ParametricComponents(unittest.TestCase):
 
 
 class test_VacuumVessel(unittest.TestCase):
+    test_shape = paramak.VacuumVessel(
+        height=2, inner_radius=1, thickness=0.2,
+    )
+
     def test_VacuumVessel_creation(self):
-        """creates an inner tf coil using the VacuumVessel parametric
+        """creates a shape using the VacuumVessel parametric
         component and checks that a cadquery solid is created"""
 
-        test_shape = paramak.VacuumVessel(
-            height=2, inner_radius=1, thickness=0.2,
-        )
-        assert test_shape.solid is not None
+        assert self.test_shape.solid is not None
+
+    def test_VacuumVessel_ports(self):
+        """Creates a vacuum vessel cuts ports in it and cheks that a caquery
+        solid is created"""
+
+        cutter1 = paramak.RectangularPortCutter(distance=3, z_pos=0, height=0.2, width=0.4, fillet_radius=0.01)
+        cutter2 = paramak.RectangularPortCutter(distance=3, z_pos=0.1, height=0.2, width=0.4, fillet_radius=0.00)
+        cutter3 = paramak.RectangularPortCutter(distance=3, z_pos=-0.1, height=0.2, width=0.4, physical_groups=None)
+
+        cutter4 = paramak.CircularPortCutter(distance=3, z_pos=0.25, radius=0.1, azimuth_placement_angle=45, physical_groups=None)
+
+        cutter5 = paramak.PortCutterRotated((0, 0), azimuth_placement_angle=-90, rotation_angle=10, fillet_radius=0.01, physical_groups=None)
+        self.test_shape.cut = [cutter1, cutter2, cutter3, cutter4, cutter5]
+        assert self.test_shape.solid is not None
 
 
 if __name__ == "__main__":
