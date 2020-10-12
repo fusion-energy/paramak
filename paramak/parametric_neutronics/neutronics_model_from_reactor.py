@@ -78,7 +78,8 @@ class NeutronicsModelFromReactor():
         ion_temperature_separatrix=0.1,
         pedestal_radius_factor=0.8,
         shafranov_shift=0.44789,
-        ion_temperature_beta=6
+        ion_temperature_beta=6,
+        max_lost_particles=10
     ):
         # input by user
         self.reactor = reactor
@@ -95,6 +96,7 @@ class NeutronicsModelFromReactor():
         self.pedestal_radius_factor = pedestal_radius_factor
         self.shafranov_shift = shafranov_shift
         self.ion_temperature_beta = ion_temperature_beta
+        self.max_lost_particles = max_lost_particles
         self.simulation_batches = simulation_batches
         self.simulation_particles_per_batches = simulation_particles_per_batches
 
@@ -292,6 +294,7 @@ class NeutronicsModelFromReactor():
         settings.dagmc = True
         settings.photon_transport = True
         settings.source = self.source
+        settings.max_lost_particles = self.max_lost_particles
 
         # details about what neutrons interactions to keep track of (tally)
         tallies = openmc.Tallies()
