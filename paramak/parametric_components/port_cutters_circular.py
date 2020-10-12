@@ -26,6 +26,7 @@ class PortCutterCircular(ExtrudeCircleShape):
         material_tag (str, optional): The material name to use when exporting
             the neutronics description. Defaults to "circular_port_cutter_mat".
     """
+
     def __init__(
         self,
         z_pos,
