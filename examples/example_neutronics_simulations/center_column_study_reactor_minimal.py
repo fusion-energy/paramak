@@ -3,6 +3,7 @@ parametric reactor"""
 
 import paramak
 
+# makes the 3d geometry
 my_reactor = paramak.CenterColumnStudyReactor(
     inner_bore_radial_thickness=20,
     inboard_tf_leg_radial_thickness=50,
@@ -19,20 +20,22 @@ my_reactor = paramak.CenterColumnStudyReactor(
     rotation_angle=360
 )
 
+# creates a neutronics model from the geometry and assigned materials
 neutronics_model = paramak.NeutronicsModelFromReactor(
     reactor=my_reactor,
     materials={
-        'DT_plasma': 'DT_plasma',
         'inboard_tf_coils_mat': 'eurofer',
         'center_column_shield_mat': 'eurofer',
         'divertor_mat': 'eurofer',
         'firstwall_mat': 'eurofer',
         'blanket_mat': 'Li4SiO4'},
-    tallies=['heat'],
-    simulation_batches=10,
+    tallies=['heat', 'TBR'],
+    simulation_batches=5,
     simulation_particles_per_batches=1e4,
 )
 
+# starts the neutronics simulation
 neutronics_model.simulate()
 
+# prints the results
 print(neutronics_model.results)

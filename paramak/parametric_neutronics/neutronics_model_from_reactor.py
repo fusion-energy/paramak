@@ -67,7 +67,7 @@ class NeutronicsModelFromReactor():
         outputs,
         fusion_power=1e9,
         simulation_batches=100,
-        simulation_particles_per_batches=10000,
+        simulation_particles_per_batch=10000,
         ion_density_peaking_factor=1,
         ion_density_origin=1.09e20,
         ion_density_pedestal=1.09e20,
@@ -98,7 +98,7 @@ class NeutronicsModelFromReactor():
         self.ion_temperature_beta = ion_temperature_beta
         self.max_lost_particles = max_lost_particles
         self.simulation_batches = simulation_batches
-        self.simulation_particles_per_batches = simulation_particles_per_batches
+        self.simulation_particles_per_batch = simulation_particles_per_batch
 
         self.model = None
         self.fusion_power = fusion_power
@@ -156,7 +156,8 @@ class NeutronicsModelFromReactor():
             value = int(value)
         if not isinstance(value, int):
             raise ValueError(
-                "NeutronicsModelFromReactor.simulation_particles_per_batches should be an int")
+                "NeutronicsModelFromReactor.simulation_particles_per_batches\
+                    should be an int")
         self._simulation_particles_per_batches = value
 
     def create_materials(self):
@@ -276,7 +277,20 @@ class NeutronicsModelFromReactor():
 
     def create_neutronics_model(self, method='trelis'):
         """Uses OpenMC python API to make a neutronics model, including tallies
-        (outputs), simulation settings (batches, particles per batch)"""
+        (outputs), simulation settings (batches, particles per batch)
+
+        Arguments:
+            method: (str): The method to use when making the imprinted and
+                merged geometry. Options are 'trelis' or 'ppp'. Further details
+                on imprinting and merging are available on the DAGMC homepage
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                The Parallel-PreProcessor is an open-source tool available
+                https://github.com/ukaea/parallel-preprocessor and can be used
+                in conjunction with the OCC_faceter
+                (https://github.com/makeclean/occ_faceter) to create imprinted
+                and merged geometry while Trelis (also known as Cubit) is
+                avaialbe from the CoreForm website https://www.coreform.com/
+        """
 
         self.create_materials()
         self.create_plasma_source()
@@ -348,8 +362,7 @@ class NeutronicsModelFromReactor():
         self.results = self.get_results()
 
     def get_results(self):
-        """
-        Reads the output file from the neutronics simulation
+        """Reads the output file from the neutronics simulation
         and prints the TBR tally result to screen
 
         Returns:
