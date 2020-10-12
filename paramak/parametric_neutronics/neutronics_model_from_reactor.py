@@ -163,8 +163,8 @@ class NeutronicsModelFromReactor():
         for reactor_material in self.reactor.material_tags:
             if reactor_material not in self.materials.keys():
                 raise ValueError(
-                    "material needed by the reactor model has not \
-                    been added")
+                    "material included by the reactor model has not \
+                    been added", reactor_material)
 
         if len(self.reactor.material_tags) is not len(self.materials.keys()):
             raise ValueError("materials must contain an entry for every \
