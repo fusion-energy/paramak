@@ -158,7 +158,11 @@ class NeutronicsModelFromReactor():
         self._simulation_particles_per_batches = value
 
     def create_materials(self):
-        # TODO check every materials is accounted for
+        for reactor_material in self.reactor.material_tags:
+            if reactor_material not in self.materials.keys():
+                raise ValueError("material needed by the reactor model has not \
+                    been added")
+
         if len(self.reactor.material_tags) is not len(self.materials.keys()):
             raise ValueError("materials must contain an entry for every \
                 material in the reactor", self.reactor.material_tags)
@@ -168,14 +172,18 @@ class NeutronicsModelFromReactor():
                 material = nmm.Material(
                     material_entry, material_tag=material_tag)
                 openmc_materials[material_tag] = material.openmc_material
-            if isinstance(material_entry, openmc.Material):
+            elif isinstance(material_entry, openmc.Material):
                 # sets the material name in the event that it had not been set
                 material_entry.name = material_tag
                 openmc_materials[material_tag] = material_entry
-            if isinstance(material_entry, (nmm.Material, nmm.MultiMaterial)):
+            elif isinstance(material_entry, (nmm.Material, nmm.MultiMaterial)):
                 # sets the material tag in the event that it had not been set
                 material_entry.material_tag = material_tag
                 openmc_materials[material_tag] = material_entry.openmc_material
+            else:
+                raise ValueError("materials must be either a str, \
+                    openmc.Material, nmm.MultiMaterial or nmm.Material object \
+                    not a ", type(material_entry), material_entry)
 
         self.openmc_materials = openmc_materials
 
@@ -255,7 +263,10 @@ class NeutronicsModelFromReactor():
             os.system(
                 "trelis -batch -nographics make_faceteted_neutronics_model.py")
 
-        os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m")
+        if os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m") != 0:
+            raise ValueError(
+                "make_watertight failed, check DAGMC is install and the \
+                    DAGMC/bin folder is in the path directory")
 
         print('neutronics model saved as dagmc.h5m')
 
