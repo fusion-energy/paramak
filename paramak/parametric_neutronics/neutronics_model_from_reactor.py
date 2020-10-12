@@ -4,20 +4,20 @@ from collections import defaultdict
 
 try:
     from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
-except ImportError as err:
-    raise err('parametric_plasma_source not found distributed plasma sources \
+except:
+    raise Warning('parametric_plasma_source not found distributed plasma sources \
         are not avaialbe in Neutronics simulations')
 
 try:
     import openmc
-except ImportError as err:
-    raise err('OpenMC not found, NeutronicsModelFromReactor.simulate method \
+except:
+    raise Warning('OpenMC not found, NeutronicsModelFromReactor.simulate method \
         not available')
 
 try:
     import neutronics_material_maker as nmm
-except ImportError as err:
-    raise err("neutronics_material_maker not found, \
+except:
+    raise Warning("neutronics_material_maker not found, \
         NeutronicsModelFromReactor.materials can't accept strings or \
         neutronics_material_maker objects")
 
