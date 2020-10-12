@@ -35,6 +35,6 @@ neutronics_model = paramak.NeutronicsModelFromReactor(
     simulation_particles_per_batches=1e4,
 )
 
-neutronics_model.create_neutronics_model()
+# simulate the neutroonics model
 neutronics_model.simulate()
 print(neutronics_model.results)
