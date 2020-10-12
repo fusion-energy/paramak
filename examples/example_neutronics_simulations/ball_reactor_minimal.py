@@ -2,6 +2,7 @@
 
 import paramak
 
+# makes the 3d geometry from input parameters
 my_reactor = paramak.BallReactor(
     inner_bore_radial_thickness=50,
     inboard_tf_leg_radial_thickness=200,
@@ -19,17 +20,18 @@ my_reactor = paramak.BallReactor(
     rotation_angle=180,
 )
 
+# makes the neutronics model from the geometry and material allocations
 neutronics_model = paramak.NeutronicsModelFromReactor(
     reactor=my_reactor,
     materials={
-        'DT_plasma': 'DT_plasma',
         'inboard_tf_coils_mat': 'eurofer',
         'center_column_shield_mat': 'eurofer',
         'divertor_mat': 'eurofer',
-        'blanket_mat': 'eurofer',
+        'firstwall_mat': 'eurofer',
+        'blanket_rear_wall_mat': 'eurofer',
         'blanket_mat': 'Li4SiO4'},
-    tallies=['TBR', 'heat'],
-    simulation_batches=10,
+    outputs=['TBR', 'heat'],
+    simulation_batches=5,
     simulation_particles_per_batches=1e4,
 )
 
