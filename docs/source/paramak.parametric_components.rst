@@ -308,7 +308,27 @@ PortCutterRotated()
 .. |PortCutterRotatedsvg| image:: https://user-images.githubusercontent.com/8583900/95115923-267c9e00-073e-11eb-898b-bafbb2626b02.png
     :width: 380px
 
-.. automodule:: paramak.parametric_components.port_cutters
+.. automodule:: paramak.parametric_components.port_cutters_rotated
+   :members:
+   :show-inheritance:
+
+PortCutterRectangular()
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/95790579-8f808a80-0cd7-11eb-83e1-872a98fe0bc8.png
+    :width: 300px
+
+.. automodule:: paramak.parametric_components.port_cutters_rectangular
+   :members:
+   :show-inheritance:
+
+PortCutterCircular()
+^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/95790580-90b1b780-0cd7-11eb-944f-14fe290f8442.png
+    :width: 300px
+
+.. automodule:: paramak.parametric_components.port_cutters_circular
    :members:
    :show-inheritance:
 
@@ -401,5 +421,21 @@ ToroidalFieldCoilTripleArc()
    :width: 340
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_triple_arc
+   :members:
+   :show-inheritance:
+
+VacuumVessel()
+^^^^^^^^^^^^^^
+
+|VacuumVesselstp| |VacuumVesselsvgWP| |VacuumVesselsvg|
+
+.. |VacuumVesselstp| image:: https://user-images.githubusercontent.com/8583900/95792842-2d765400-0cdc-11eb-8a8a-e3a88e923bc0.png
+   :width: 150
+.. |VacuumVesselsvgWP| image:: https://user-images.githubusercontent.com/8583900/95792839-2c452700-0cdc-11eb-9313-edfd2bfad5dc.png
+   :width: 350
+.. |VacuumVesselsvg| image:: https://user-images.githubusercontent.com/8583900/95792893-4ed74000-0cdc-11eb-9d19-c66cdb3a5ca3.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.vacuum_vessel
    :members:
    :show-inheritance:
