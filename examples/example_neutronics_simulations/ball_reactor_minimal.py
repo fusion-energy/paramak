@@ -1,4 +1,5 @@
-"""this example obtains the TBR for a parametric reactor"""
+"""this is a minimal example that obtains the tbr for a parametric reactor"""
+
 import paramak
 
 my_reactor = paramak.BallReactor(

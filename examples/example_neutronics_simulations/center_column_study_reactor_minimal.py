@@ -1,4 +1,6 @@
-"""this example obtains the center column heating for a parametric reactor"""
+"""this is a minimal example that obtains the center column heating for a 
+parametric reactor"""
+
 import paramak
 
 my_reactor = paramak.CenterColumnStudyReactor(
@@ -11,7 +13,6 @@ my_reactor = paramak.CenterColumnStudyReactor(
     inner_plasma_gap_radial_thickness=80,
     plasma_radial_thickness=200,
     outer_plasma_gap_radial_thickness=90,
-    # first number must be between plasma inner/outer radius
     plasma_high_point=(245, 240),
     plasma_gap_vertical_thickness=40,
     center_column_arc_vertical_thickness=520,
@@ -32,6 +33,6 @@ neutronics_model = paramak.NeutronicsModelFromReactor(
     simulation_particles_per_batches=1e4,
 )
 
-neutronics_model.create_neutronics_model()
 neutronics_model.simulate()
+
 print(neutronics_model.results)
