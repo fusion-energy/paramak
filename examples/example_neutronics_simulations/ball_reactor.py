@@ -35,9 +35,9 @@ my_reactor = paramak.BallReactor(
 results_list = []
 
 for strucutral_material in ['SiC', 'eurofer']:
-    for enrichment in np.linspace(0, 100, 2):
-        for structural_fraction in np.linspace(0, 1, 2):
-        
+    for enrichment in np.linspace(0, 100, 3):
+        for structural_fraction in np.linspace(0, 1, 3):
+
             blanket_material = nmm.MultiMaterial(
                 materials=[
                     nmm.Material('Pb842Li158',
@@ -45,38 +45,39 @@ for strucutral_material in ['SiC', 'eurofer']:
                                  temperature_in_K=500),
                     nmm.Material(strucutral_material)
                 ],
-                fracs=[1-structural_fraction, structural_fraction])
+                fracs=[1 - structural_fraction, structural_fraction]
 
-            neutronics_model = paramak.NeutronicsModelFromReactor(
-                reactor=my_reactor,
-                materials={
-                    'inboard_tf_coils_mat': 'eurofer',
-                    'center_column_shield_mat': 'eurofer',
-                    'divertor_mat': 'eurofer',
-                    'firstwall_mat': 'eurofer',
-                    'blanket_mat': blanket_material,
-                    'blanket_rear_wall_mat': 'eurofer'},
-                outputs=['TBR'],
-                simulation_batches=5,
-                simulation_particles_per_batches=1e4,
-            )
-            neutronics_model.create_materials()
-            neutronics_model.mats
 
-            neutronics_model.simulate()
-            
-            results_list.append({
-                'tbr': neutronics_model.results['TBR']['result'],
-                'enrichment': enrichment,
-                'strucutral_material': strucutral_material,
-                'structural_fraction':structural_fraction}
+                neutronics_model=paramak.NeutronicsModelFromReactor(
+                    reactor=my_reactor,
+                    materials={
+                        'inboard_tf_coils_mat': 'eurofer',
+                        'center_column_shield_mat': 'eurofer',
+                        'divertor_mat': 'eurofer',
+                        'firstwall_mat': 'eurofer',
+                        'blanket_mat': blanket_material,
+                        'blanket_rear_wall_mat': 'eurofer'},
+                    outputs=['TBR'],
+                    simulation_batches=5,
+                    simulation_particles_per_batches=1e4,
                 )
+                neutronics_model.create_materials()
+                neutronics_model.mats
+
+                neutronics_model.simulate()
+
+                df.append({
+                    'tbr': neutronics_model.results['TBR']['result'],
+                    'enrichemt': enrichment},
+                    'strucutral_material': strucutral_material,
+                    'structural_fraction': structural_fraction},
+            )
 
 df = pd.DataFrame.from_dict(results_list)
 fig = make_subplots(rows=2, cols=2,
                     subplot_titles=('TBR for blankets with different structural materials'))
 
-material_df =  df['strucutral_material']=='SiC'
+material_df = df['strucutral_material'] == 'SiC'
 
 x = list(material_df['enrichment'])
 y = list(material_df['structural_fraction'])
