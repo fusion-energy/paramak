@@ -326,6 +326,29 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.PortCutterRectangular(
+        distance=3,
+        z_pos=0,
+        height=0.2,
+        width=0.4,
+        fillet_radius=0.02,
+        azimuth_placement_angle=[0, 45, 90, 180]
+    )
+    all_components.append(component)
+
+    component = paramak.PortCutterCircular(
+        distance=3,
+        z_pos=0.25,
+        radius=0.1,
+        azimuth_placement_angle=[0, 45, 90, 180]
+    )
+    all_components.append(component)
+
+    component = paramak.VacuumVessel(
+        height=2, inner_radius=1, thickness=0.2, rotation_angle=270
+    )
+    all_components.append(component)
+
     return all_components
 
 
