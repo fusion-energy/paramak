@@ -162,7 +162,8 @@ class NeutronicsModelFromReactor():
     def create_materials(self):
         for reactor_material in self.reactor.material_tags:
             if reactor_material not in self.materials.keys():
-                raise ValueError("material needed by the reactor model has not \
+                raise ValueError(
+                    "material needed by the reactor model has not \
                     been added")
 
         if len(self.reactor.material_tags) is not len(self.materials.keys()):
@@ -265,7 +266,8 @@ class NeutronicsModelFromReactor():
             os.system(
                 "trelis -batch -nographics make_faceteted_neutronics_model.py")
 
-        if os.system("make_watertight dagmc_notwatertight.h5m -o dagmc.h5m") != 0:
+        if os.system(
+                "make_watertight dagmc_notwatertight.h5m -o dagmc.h5m") != 0:
             raise ValueError(
                 "make_watertight failed, check DAGMC is install and the \
                     DAGMC/bin folder is in the path directory")
