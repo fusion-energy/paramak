@@ -31,6 +31,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
             "rectangular_port_cutter_mat".
 
     """
+
     def __init__(
         self,
         z_pos,
@@ -69,7 +70,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle-90,
+            azimuth_placement_angle=azimuth_placement_angle - 90,
             distance=distance,
             hash_value=None,
             **default_dict
@@ -83,10 +84,10 @@ class PortCutterRectangular(ExtrudeStraightShape):
 
     def find_points(self):
         points = [
-            (-self.width/2, -self.height/2),
-            (self.width/2, -self.height/2),
-            (self.width/2, self.height/2),
-            (-self.width/2, self.height/2),
+            (-self.width / 2, -self.height / 2),
+            (self.width / 2, -self.height / 2),
+            (self.width / 2, self.height / 2),
+            (-self.width / 2, self.height / 2),
         ]
         points = [(e[0], e[1] + self.z_pos) for e in points]
         self.points = points
