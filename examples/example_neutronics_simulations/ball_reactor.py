@@ -32,19 +32,20 @@ my_reactor = paramak.BallReactor(
     rotation_angle=360,
 )
 
-df = pd.DataFrame()
+results_list = []
 
 for strucutral_material in ['SiC', 'eurofer']:
-    for enrichment in np.linspace(0, 100, 3):
-        for structural_fraction in np.linspace(0, 1, 3):
+    for enrichment in np.linspace(0, 100, 2):
+        for structural_fraction in np.linspace(0, 1, 2):
         
             blanket_material = nmm.MultiMaterial(
                 materials=[
-                    nmm.Material('Pb842Li158', temperature_in_K=500),
+                    nmm.Material('Pb842Li158',
+                                 enrichment=enrichment,
+                                 temperature_in_K=500),
                     nmm.Material(strucutral_material)
                 ],
-                fracs=[1-structural_fraction, structural_fraction]
-
+                fracs=[1-structural_fraction, structural_fraction])
 
             neutronics_model = paramak.NeutronicsModelFromReactor(
                 reactor=my_reactor,
@@ -64,14 +65,16 @@ for strucutral_material in ['SiC', 'eurofer']:
 
             neutronics_model.simulate()
             
-            df.append({
+            results_list.append({
                 'tbr': neutronics_model.results['TBR']['result'],
-                'enrichemt': enrichment},
+                'enrichment': enrichment,
                 'strucutral_material': strucutral_material,
-                'structural_fraction':structural_fraction},
+                'structural_fraction':structural_fraction}
                 )
 
-fig = make_subplots(rows=2, cols=2, subplot_titles=(sampling_methods))
+df = pd.DataFrame.from_dict(results_list)
+fig = make_subplots(rows=2, cols=2,
+                    subplot_titles=('TBR for blankets with different structural materials'))
 
 material_df =  df['strucutral_material']=='SiC'
 
