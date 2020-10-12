@@ -18,9 +18,9 @@ class test_VacuumVessel(unittest.TestCase):
         """Creates a vacuum vessel cuts ports in it and checks that a caquery
         solid is created"""
 
-        cutter1 = paramak.RectangularPortCutter(distance=3, z_pos=0, height=0.2, width=0.4, fillet_radius=0.01)
-        cutter2 = paramak.RectangularPortCutter(distance=3, z_pos=0.5, height=0.2, width=0.4, fillet_radius=0.00)
-        cutter3 = paramak.RectangularPortCutter(distance=3, z_pos=-0.5, height=0.2, width=0.4, physical_groups=None)
+        cutter1 = paramak.PortCutterRectangular(distance=3, z_pos=0, height=0.2, width=0.4, fillet_radius=0.01)
+        cutter2 = paramak.PortCutterRectangular(distance=3, z_pos=0.5, height=0.2, width=0.4, fillet_radius=0.00)
+        cutter3 = paramak.PortCutterRectangular(distance=3, z_pos=-0.5, height=0.2, width=0.4, physical_groups=None)
 
         cutter4 = paramak.CircularPortCutter(distance=3, z_pos=0.25, radius=0.1, azimuth_placement_angle=45, physical_groups=None)
 
