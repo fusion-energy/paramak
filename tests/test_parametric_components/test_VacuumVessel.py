@@ -26,8 +26,8 @@ class test_VacuumVessel(unittest.TestCase):
 
         cutter5 = paramak.PortCutterRotated((0, 0), azimuth_placement_angle=-90, rotation_angle=10, fillet_radius=0.01, physical_groups=None)
 
-        pre_cut_volume = test_shape.volume
+        pre_cut_volume = self.test_shape.volume
 
         self.test_shape.cut = [cutter1, cutter2, cutter3, cutter4, cutter5]
         assert self.test_shape.solid is not None
-        assert test_shape.volume < pre_cut_volume
+        assert self.test_shape.volume < pre_cut_volume
