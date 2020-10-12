@@ -1,4 +1,4 @@
-"""this is a minimal example that obtains the center column heating for a 
+"""this is a minimal example that obtains the center column heating for a
 parametric reactor"""
 
 import paramak

@@ -23,7 +23,7 @@ my_reactor = paramak.BallReactor(
     rotation_angle=360,
 )
 
-#makes a homogenised material for the blanket from lithium lead and eurofer
+# makes a homogenised material for the blanket from lithium lead and eurofer
 blanket_material = nmm.MultiMaterial(
     fracs=[0.8, 0.2],
     materials=[
@@ -41,7 +41,7 @@ neutronics_model = paramak.NeutronicsModelFromReactor(
         'center_column_shield_mat': 'WC',
         'divertor_mat': 'eurofer',
         'firstwall_mat': 'eurofer',
-        'blanket_mat': blanket_material, # use of homogenised material
+        'blanket_mat': blanket_material,  # use of homogenised material
         'blanket_rear_wall_mat': 'eurofer'},
     outputs=['TBR'],
     simulation_batches=5,
