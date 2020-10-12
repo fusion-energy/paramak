@@ -22,7 +22,7 @@ class test_VacuumVessel(unittest.TestCase):
         cutter2 = paramak.PortCutterRectangular(distance=3, z_pos=0.5, height=0.2, width=0.4, fillet_radius=0.00)
         cutter3 = paramak.PortCutterRectangular(distance=3, z_pos=-0.5, height=0.2, width=0.4, physical_groups=None)
 
-        cutter4 = paramak.CircularPortCutter(distance=3, z_pos=0.25, radius=0.1, azimuth_placement_angle=45, physical_groups=None)
+        cutter4 = paramak.PortCutterCircular(distance=3, z_pos=0.25, radius=0.1, azimuth_placement_angle=45, physical_groups=None)
 
         cutter5 = paramak.PortCutterRotated((0, 0), azimuth_placement_angle=-90, rotation_angle=10, fillet_radius=0.01, physical_groups=None)
 
