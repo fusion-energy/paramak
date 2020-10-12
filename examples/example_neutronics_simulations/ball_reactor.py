@@ -74,8 +74,8 @@ for strucutral_material in ['SiC', 'eurofer']:
             )
 
 df = pd.DataFrame.from_dict(results_list)
-fig = make_subplots(rows=2, cols=2,
-                    subplot_titles=('TBR for blankets with different structural materials'))
+fig = make_subplots(rows=2, cols=2, subplot_titles=(
+    'TBR for blankets with different structural materials'))
 
 material_df = df['strucutral_material'] == 'SiC'
 
