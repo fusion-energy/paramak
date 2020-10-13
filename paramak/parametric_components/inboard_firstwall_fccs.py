@@ -1,4 +1,7 @@
-from paramak import RotateMixedShape, CenterColumnShieldCylinder, CenterColumnShieldHyperbola, CenterColumnShieldFlatTopHyperbola, CenterColumnShieldPlasmaHyperbola, CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular
+from paramak import RotateMixedShape, CenterColumnShieldCylinder, \
+    CenterColumnShieldHyperbola, CenterColumnShieldFlatTopHyperbola, \
+    CenterColumnShieldPlasmaHyperbola, CenterColumnShieldCircular, \
+    CenterColumnShieldFlatTopCircular
 
 
 class InboardFirstwallFCCS(RotateMixedShape):
@@ -12,30 +15,9 @@ class InboardFirstwallFCCS(RotateMixedShape):
         central_column_shield (paramak.Shape): The central column shield object
             to build from
         thickness (float): the radial thickness of the firstwall (cm)
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exportin as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
+        stp_filename (str, optional): Defaults to "InboardFirstwallFCCS.stp".
+        stl_filename (str, optional): Defaults to "InboardFirstwallFCCS.stl".
+        material_tag (str, optional): Defaults to "firstwall_mat".
 
     Returns:
         a paramak shape object: A shape object that has generic functionality

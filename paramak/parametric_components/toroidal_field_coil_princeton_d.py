@@ -21,23 +21,13 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             coils.
         vertical_displacement (float, optional): vertical displacement (cm).
             Defaults to 0.0.
-        with_inner_leg (Boolean): Include the inner tf leg (default True)
-
-    Keyword Args:
-        stp_filename (str, optional): The filename used when saving stp files
-            as part of a reactor.
-            Defaults to "ToroidalFieldCoilPrincetonD.stp".
-        stl_filename (str, optional): The filename used when saving stl files
-            as part of a reactor.
-            Defaults to "ToroidalFieldCoilPrincetonD.stl".
-        color ((float, float, float), optional): the color to use when
-            exportin as html graphs or png images. Defaults to None.
-        azimuth_placement_angle (float, optional): The angle or angles to use
-            when rotating the shape on the azimuthal axis. Defaults to 0.
-        name (str, optional): the legend name used when exporting a html
-            graph of the shape. Defaults to None.
-        material_tag (str, optional): The material name to use when exporting
-            the neutronics description.. Defaults to "outer_tf_coil_mat".
+        with_inner_leg (bool, optional): Include the inner tf leg. Defaults to
+            True.
+        stp_filename (str, optional): Defaults to
+            "ToroidalFieldCoilPrincetonD.stp".
+        stl_filename (str, optional): Defaults to
+            "ToroidalFieldCoilPrincetonD.stl".
+        material_tag (str, optional): Defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
@@ -48,10 +38,10 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         distance,
         number_of_coils,
         vertical_displacement=0.0,
+        with_inner_leg=True,
         stp_filename="ToroidalFieldCoilPrincetonD.stp",
         stl_filename="ToroidalFieldCoilPrincetonD.stl",
         material_tag="outer_tf_coil_mat",
-        with_inner_leg=True,
         **kwargs
     ):
 

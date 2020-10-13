@@ -8,18 +8,11 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         height (float): height of the center column shield.
         inner_radius (float): the inner radius of the center column shield.
         outer_radius (float): the outer radius of the center column shield.
-
-    Keyword Args:
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
+        stp_filename (str, optional): Defaults to
+            "CenterColumnShieldCylinder.stp".
+        stl_filename (str, optional): Defaults to
+            "CenterColumnShieldCylinder.stl".
+        material_tag (str, optional): Defaults to "center_column_shield_mat".
 
     Returns:
         a paramak shape object: A shape object that has generic functionality

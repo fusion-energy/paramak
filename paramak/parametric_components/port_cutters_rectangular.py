@@ -13,23 +13,11 @@ class PortCutterRectangular(ExtrudeStraightShape):
         distance (float): extruded distance (cm) of the cutter
         fillet_radius (float, optional): If not None, radius (cm) of fillets
             added to edges orthogonal to the Z direction. Defaults to None.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-            Defaults to 0.0.
-        stp_filename (str, optional): The filename used when saving stp files
-            as part of a reactor. Defaults to "PortCutterRectangular.stp".
-        stl_filename (str, optional): The filename used when saving stl files
-            as part of a reactor. Defaults to "PortCutterRectangular.stl".
-        color (tuple, optional): (sequences of 3 or 4 floats each in the range
-            0-1): the color to  use when exporting as html graphs or png
-            images. Defaults to (0.5, 0.5, 0.5).
-        azimuth_placement_angle (int, optional): [description]. Defaults to 0.
-        name (str, optional): the legend name used when exporting a html graph
-            of the shape. Defaults to "rectangular_port_cutter".
-        material_tag (str, optional): The material name to use when exporting
-            the neutronics description. Defaults to
+        stp_filename (str, optional): Defaults to "PortCutterRectangular.stp".
+        stl_filename (str, optional): Defaults to "PortCutterRectangular.stl".
+        name (str, optional): Defaults to "rectangular_port_cutter".
+        material_tag (str, optional): Defaults to
             "rectangular_port_cutter_mat".
-
     """
 
     def __init__(

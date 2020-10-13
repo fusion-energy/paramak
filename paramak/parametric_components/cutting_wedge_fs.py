@@ -2,35 +2,16 @@ from paramak import RotateStraightShape
 
 
 class CuttingWedgeFS(RotateStraightShape):
-    """Creates a wedge from a Shape than can be useful for cutting sector models.
+    """Creates a wedge from a Shape than can be useful for cutting sector
+    models.
 
     Args:
-        shape (float): a paramak.Shape object that is used to find the
+        shape (paramak.Shape): a paramak.Shape object that is used to find the
             height and radius of the wedge
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a boolean
-            union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
+        stp_filename (str, optional): Defaults to "CuttingWedgeFS.stp".
+        stl_filename (str, optional): Defaults to "CuttingWedgeFS.stl".
+        rotation_angle (float, optional): Defaults to 180.0.
+        material_tag (str, optional): Defaults to "cutting_slice_mat".
 
     Returns:
         a paramak shape object: A shape object that has generic functionality
@@ -43,7 +24,7 @@ class CuttingWedgeFS(RotateStraightShape):
         shape,
         stp_filename="CuttingWedgeFS.stp",
         stl_filename="CuttingWedgeFS.stl",
-        rotation_angle=180,
+        rotation_angle=180.0,
         material_tag="cutting_slice_mat",
         **kwargs
     ):

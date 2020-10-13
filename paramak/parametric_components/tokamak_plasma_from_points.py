@@ -7,21 +7,12 @@ class PlasmaFromPoints(Plasma):
        by 3 coordinates.
 
     Args:
-        outer_equatorial_x_point (float): the x value of the outer equatorial of the
-            plasma (cm).
-        inner_equatorial_x_point (float): the x value of the inner equatorial of the
-            plasma (cm).
-        high_point (tuple of 2 floats): the (x,z) coordinate values of the top of the
-            plasma (cm).
-        Others: see paramak.Plasma() arguments.
-
-    Keyword Args:
-        Others: see paramak.Plasma() attributes.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality
-            with points determined by the find_points() method. A CadQuery
-            solid of the shape can be called via shape.solid.
+        outer_equatorial_x_point (float): the x value of the outer equatorial
+            of the plasma (cm).
+        inner_equatorial_x_point (float): the x value of the inner equatorial
+            of the plasma (cm).
+        high_point (tuple of 2 floats): the (x,z) coordinate values of the top
+            of the plasma (cm).
     """
 
     def __init__(

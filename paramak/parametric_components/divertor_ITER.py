@@ -1,5 +1,6 @@
 
-from paramak import RotateMixedShape, extend, rotate, distance_between_two_points
+from paramak import RotateMixedShape, extend, rotate, \
+    distance_between_two_points
 import math
 import numpy as np
 
@@ -31,37 +32,8 @@ class ITERtypeDivertor(RotateMixedShape):
             in between the targets. Defaults to 0.5.
         tilts ((float, float), optional): Tilt angles (anticlockwise) in
             degrees for the vertical targets. Defaults to (-27, 0).
-        Others: see paramak.RotateMixedShape() arguments.
-
-    Keyword Args:
-        IVT_anchor (float, float): xy coordinates of points at
-            the top of inner vertical target.
-        OVT_anchor (float, float): xy coordinates of points at
-            the top of outer vertical target.
-        IVT_coverage (float): coverage (anticlockwise) in degrees of the
-            circular parts of inner vertical target.
-        OVT_coverage (float): coverage (anticlockwise) in degrees of the
-            circular parts of outer vertical target.
-        IVT_radius (float): radius (cm) of circular part of the inner vertical
-            target.
-        OVT_radius (float): radius (cm) of circular part of the outer vertical
-            target.
-        IVT_length (float): leg length (cm) of the inner vertical target.
-        OVT_length (float): leg length (cm) of the outer vertical target.
-        IVT_tilt (float): Tilt angles (anticlockwise) in
-            degrees for the inner vertical target.
-        OVT_tilt (float): Tilt angles (anticlockwise) in
-            degrees for the outer vertical target.
-        dome (bool): If set to False, the dome will not be created.
-        dome_height (float): distance (cm) between the dome base and lower
-            points.
-        dome_length (float): length of the dome.
-        dome_thickness (float): thickness of the dome.
-        dome_pos (float): relative location of the dome between
-            vertical targets (0 inner, 1 outer). Ex: 0.5 will place the dome
-            in between the targets.
-
-        Others: see paramak.RotateMixedShape() attributes.
+        stp_filename (str, optional): Defaults to "ITERtypeDivertor.stp".
+        stl_filename (str, optional): Defaults to "ITERtypeDivertor.stl".
 
     Returns:
         a paramak shape object: A shape object that has generic functionality

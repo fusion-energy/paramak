@@ -9,34 +9,12 @@ class PoloidalFieldCoilSet(RotateStraightShape):
     Args:
         heights (float): the vertical (z axis) heights of the coil (cm).
         widths (float): the horizontal (x axis) widths of the coil (cm).
-        center_points (tuple of floats): the center of the coil (x,z) values (cm).
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        center_points (tuple of floats): the center of the coil (x,z) values
+            (cm).
+        stp_filename (str, optional): Defaults to "PoloidalFieldCoil.stp".
+        stl_filename (str, optional): Defaults to "PoloidalFieldCoil.stl".
+        name (str, optional): Defaults to "pf_coil".
+        material_tag (str, optional): Defaults to "pf_coil_mat".
     """
 
     def __init__(
@@ -73,7 +51,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
     @property
     def solid(self):
-        """Returns a CadQuery compound object consisting of 1 or more 3d volumes"""
+        """Returns a CadQuery compound object consisting of 1 or more 3d
+        volumes"""
         if self.get_hash() != self.hash_value:
             self.create_solid()
         return self._solid
@@ -114,8 +93,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         self._widths = value
 
     def find_points(self):
-        """Finds the XZ points joined by straight connections that describe the 2D
-        profile of the poloidal field coil shape."""
+        """Finds the XZ points joined by straight connections that describe
+        the 2D profile of the poloidal field coil shape."""
 
         all_points = []
 
@@ -145,8 +124,10 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
     def create_solid(self):
         """Creates a 3d solid using points with straight connections
-           edges, azimuth_placement_angle and rotation angle.
-           individual solids in the compound can be accessed using .Solids()[i] where i is an int
+        edges, azimuth_placement_angle and rotation angle.
+        individual solids in the compound can be accessed using .Solids()[i]
+        where i is an int
+
            Returns:
               A CadQuery solid: A 3D solid volume
         """

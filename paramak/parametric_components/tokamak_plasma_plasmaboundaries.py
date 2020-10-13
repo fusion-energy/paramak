@@ -15,33 +15,28 @@ class PlasmaBoundaries(Plasma):
             elongation (float, optional): the elongation of the plasma.
                 Defaults to 2.0.
             major_radius (float, optional): the major radius of the plasma
-                (cm). Defaults to 450.
+                (cm). Defaults to 450.0.
             minor_radius (float, optional): the minor radius of the plasma
-                (cm). Defaults to 150.
+                (cm). Defaults to 150.0.
             triangularity (float, optional): the triangularity of the plasma.
                 Defaults to 0.55.
             vertical_displacement (float, optional): the vertical_displacement
-                of the plasma (cm). Defaults to 0.
+                of the plasma (cm). Defaults to 0.0.
             configuration (str, optional): plasma configuration
                 ("non-null", "single-null", "double-null").
                 Defaults to "non-null".
             x_point_shift (float, optional): Shift parameters for locating the
                 X points in [0, 1]. Defaults to 0.1.
-            Others: see paramak.Plasma() arguments.
-
-        Attributes:
-            A: plasma parameter see plasmaboundaries doc.
-            Others: see paramak.Plasma() attributes.
     """
 
     def __init__(
         self,
         A=0.05,
         elongation=2.0,
-        major_radius=450,
-        minor_radius=150,
+        major_radius=450.0,
+        minor_radius=150.0,
         triangularity=0.55,
-        vertical_displacement=0,
+        vertical_displacement=0.0,
         configuration="non-null",
         x_point_shift=0.1,
         **kwargs

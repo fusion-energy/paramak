@@ -3,45 +3,31 @@ from paramak import Plasma
 
 
 class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
-    """A center column shield volume with a curvature controlled by the shape of
-    the plasma and offsets specified at the plasma center and edges. Shield
+    """A center column shield volume with a curvature controlled by the shape
+    of the plasma and offsets specified at the plasma center and edges. Shield
     thickness is controlled by the relative values of the shield offsets and
     inner radius.
 
     Args:
-        major_radius (float): the major radius of the plasma.
-        minor_radius (float): the minor radius of the plasma.
-        triangulation (float): the triangularity of the plasma.
-        elongation (float): the elongation of the plasma.
+        height (float): height of the center column shield.
         inner_radius (float): the inner radius of the center column shield.
         mid_offset (float): the offset of the shield from the plasma at the
             plasma center.
         edge_offset (float): the offset of the shield from the plasma at the
             plasma edge.
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
+        major_radius (int, optional): the major radius of the plasma. Defaults
+            to 450.0.
+        minor_radius (int, optional): the minor radius of the plasma. Defaults
+            to 150.0.
+        triangularity (float, optional): the triangularity of the plasma.
+            Defaults to 0.55.
+        elongation (float, optional): the elongation of the plasma. Defaults
+            to 2.0.
+        material_tag (str, optional): Defaults to "center_column_shield_mat".
+        stp_filename (str, optional): Defaults to
+            "CenterColumnShieldPlasmaHyperbola.stp".
+        stl_filename (str, optional): Defaults to
+            "CenterColumnShieldPlasmaHyperbola.stl".
 
     Returns:
         a paramak shape object: A shape object that has generic functionality
@@ -55,13 +41,13 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         inner_radius,
         mid_offset,
         edge_offset,
+        major_radius=450.0,
+        minor_radius=150.0,
+        triangularity=0.55,
+        elongation=2.0,
         material_tag="center_column_shield_mat",
         stp_filename="CenterColumnShieldPlasmaHyperbola.stp",
         stl_filename="CenterColumnShieldPlasmaHyperbola.stl",
-        major_radius=450,
-        minor_radius=150,
-        triangularity=0.55,
-        elongation=2,
         **kwargs
     ):
 
