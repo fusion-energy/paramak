@@ -41,7 +41,9 @@ from .parametric_components.poloidal_field_coil_case_set import PoloidalFieldCoi
 from .parametric_components.poloidal_field_coil_case_set_fc import PoloidalFieldCoilCaseSetFC
 
 from .parametric_components.poloidal_segmenter import PoloidalSegments
-from .parametric_components.port_cutters import PortCutterRotated, RectangularPortCutter, CircularPortCutter
+from .parametric_components.port_cutters_rotated import PortCutterRotated
+from .parametric_components.port_cutters_rectangular import PortCutterRectangular
+from .parametric_components.port_cutters_circular import PortCutterCircular
 from .parametric_components.cutting_wedge import CuttingWedge
 from .parametric_components.cutting_wedge_fs import CuttingWedgeFS
 
