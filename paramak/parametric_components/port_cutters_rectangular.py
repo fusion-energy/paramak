@@ -70,7 +70,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle - 90,
+            azimuth_placement_angle=azimuth_placement_angle,
             distance=distance,
             hash_value=None,
             **default_dict
