@@ -60,7 +60,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
-            **default_dict
+            **kwargs
         )
 
         self.R1 = R1
