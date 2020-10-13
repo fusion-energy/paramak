@@ -43,7 +43,7 @@ class NeutronicsModelFromReactor():
             recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
         simulation_batches: (int): the number of batch to simulate
-        simulation_particles_per_batches: (int): particles per batch
+        simulation_particles_per_batch: (int): particles per batch
         ion_density_origin: (float): 1.09e20,
         ion_density_peaking_factor: (float): 1,
         ion_density_pedestal: (float): 1.09e20,
@@ -149,16 +149,16 @@ class NeutronicsModelFromReactor():
         self._simulation_batches = value
 
     @property
-    def simulation_particles_per_batches(self):
+    def simulation_particles_per_batch(self):
         return self._simulation_particles_per_batch
 
-    @simulation_particles_per_batches.setter
-    def simulation_particles_per_batches(self, value):
+    @simulation_particles_per_batch.setter
+    def simulation_particles_per_batch(self, value):
         if isinstance(value, float):
             value = int(value)
         if not isinstance(value, int):
             raise ValueError(
-                "NeutronicsModelFromReactor.simulation_particles_per_batches\
+                "NeutronicsModelFromReactor.simulation_particles_per_batch\
                     should be an int")
         self._simulation_particles_per_batch = value
 
@@ -307,7 +307,7 @@ class NeutronicsModelFromReactor():
         settings = openmc.Settings()
         settings.batches = self.simulation_batches
         settings.inactive = 0
-        settings.particles = self.simulation_particles_per_batches
+        settings.particles = self.simulation_particles_per_batch
         settings.run_mode = "fixed source"
         settings.dagmc = True
         settings.photon_transport = True
@@ -349,7 +349,7 @@ class NeutronicsModelFromReactor():
 
     def simulate(self, verbose=True):
         """Run the OpenMC simulation with the specified simulation_batches and
-        simulation_particles_per_batches and tallies. Terminal output can
+        simulation_particles_per_batch and tallies. Terminal output can
         disabled by setting verbose=False.
 
         Arguments:
