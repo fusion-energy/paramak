@@ -6,16 +6,16 @@ from paramak import Shape
 
 
 class ExtrudeSplineShape(Shape):
-    """Extrudes a 3d CadQuery solid from points connected with spline connections
+    """Extrudes a 3d CadQuery solid from points connected with spline
+    connections
 
     Args:
-        distance (float): the extrusion distance to use (cm units if used for neutronics)
-        extrude_both (bool): if set to True, the extrusion will occur in both
-            directions. Defaults to True.
-        Others: see paramak.Shape() arguments.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        distance (float): the extrusion distance to use (cm units if used for
+            neutronics)
+        solid (cadquery.Workplane, optional): [INSERT DESCRIPTION]. Defaults
+            to None.
+        stp_filename (str, optional): Defaults to "ExtrudeSplineShape.stp".
+        stl_filename (str, optional): Defaults to "ExtrudeSplineShape.stl".
     """
 
     def __init__(
@@ -23,7 +23,6 @@ class ExtrudeSplineShape(Shape):
         distance,
         stp_filename="ExtrudeSplineShape.stp",
         stl_filename="ExtrudeSplineShape.stl",
-        solid=None,
         **kwargs
     ):
 

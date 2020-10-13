@@ -10,22 +10,22 @@ class ExtrudeStraightShape(Shape):
     """Extrudes a 3d CadQuery solid from points connected with straight lines
 
     Args:
-        distance (float): the extrusion distance to use (cm units if used for neutronics)
-        extrude_both (bool): if set to True, the extrusion will occur in both
-            directions. Defaults to True.
-        Others: see paramak.Shape() arguments.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        distance (float): the extrusion distance to use (cm units if used for
+            neutronics)
+        extrude_both (bool, optional): if set to True, the extrusion will
+            occur in both directions. Defaults to True.
+        solid (cadquery.Workplane, optional): [description]. Defaults to None.
+        stp_filename (str, optional): Defaults to "ExtrudeStraightShape.stp".
+        stl_filename (str, optional): Defaults to "ExtrudeStraightShape.stl".
     """
 
     def __init__(
         self,
         distance,
+        solid=None,
         extrude_both=True,
         stp_filename="ExtrudeStraightShape.stp",
         stl_filename="ExtrudeStraightShape.stl",
-        solid=None,
         **kwargs
     ):
 

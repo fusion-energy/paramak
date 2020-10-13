@@ -6,24 +6,23 @@ from paramak import Shape
 
 
 class RotateMixedShape(Shape):
-    """Rotates a 3d CadQuery solid from points connected with a mixture of straight
-    lines and splines
+    """Rotates a 3d CadQuery solid from points connected with a mixture of
+    straight lines and splines
 
     Args:
-        rotation_angle (float): The rotation_angle to use when revolving the
-            solid (degrees).
-        Others: see paramak.Shape() arguments.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        rotation_angle (float, optional): The rotation_angle to use when
+            revolving the solid (degrees). Defaults to 360.0.
+        solid (cadquery.Workplane, optional): [description]. Defaults to None.
+        stp_filename (str, optional):  Defaults to "RotateMixedShape.stp".
+        stl_filename (str, optional):  Defaults to "RotateMixedShape.stl".
     """
 
     def __init__(
         self,
+        rotation_angle=360.0,
+        solid=None,
         stp_filename="RotateMixedShape.stp",
         stl_filename="RotateMixedShape.stl",
-        rotation_angle=360,
-        solid=None,
         **kwargs
     ):
 

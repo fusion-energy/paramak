@@ -9,21 +9,21 @@ class RotateCircleShape(Shape):
     """Rotates a circular 3d CadQuery solid from a central point and a radius
 
     Args:
-        rotation_angle (float): The rotation_angle to use when revolving the
-            solid (degrees).
-        Others: see paramak.Shape() arguments.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        radius (float): radius of the shape
+        rotation_angle (float, optional): The rotation_angle to use when
+            revolving the solid (degrees). Defaults to 360.0.
+        solid (cadquery.Workplane, optional): [description]. Defaults to None.
+        stp_filename (str, optional):  Defaults to "RotateCircleShape.stp".
+        stl_filename (str, optional):  Defaults to "RotateCircleShape.stl".
     """
 
     def __init__(
         self,
         radius,
-        rotation_angle=360,
+        rotation_angle=360.0,
+        solid=None,
         stp_filename="RotateCircleShape.stp",
         stl_filename="RotateCircleShape.stl",
-        solid=None,
         **kwargs
     ):
 

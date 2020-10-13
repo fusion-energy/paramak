@@ -12,18 +12,17 @@ class RotateStraightShape(Shape):
     Args:
         rotation_angle (float): The rotation angle to use when revolving the
             solid (degrees).
-        Others: see paramak.Shape() arguments.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        solid (cadquery.Workplane, optional): [description]. Defaults to None.
+        stp_filename (str, optional): Defaults to "RotateStraightShape.stp".
+        stl_filename (str, optional): Defaults to "RotateStraightShape.stl".
     """
 
     def __init__(
         self,
+        rotation_angle=360.0,
+        solid=None,
         stp_filename="RotateStraightShape.stp",
         stl_filename="RotateStraightShape.stl",
-        solid=None,
-        rotation_angle=360,
         **kwargs
     ):
 

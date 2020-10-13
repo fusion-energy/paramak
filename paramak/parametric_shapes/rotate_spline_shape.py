@@ -10,21 +10,19 @@ class RotateSplineShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with splines
 
     Args:
-        rotation_angle (float): The rotation_angle to use when revolving the
-            solid (degrees).
-        Others: see paramak.Shape() arguments.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        rotation_angle (float, optional): The rotation_angle to use when
+            revolving the solid (degrees). Defaults to 360.0.
+        solid (cadquery.Workplane, optional): [description]. Defaults to None.
+        stp_filename (str, optional): Defaults to "RotateSplineShape.stp".
+        stl_filename (str, optional): Defaults to "RotateSplineShape.stl".
     """
 
     def __init__(
         self,
-        workplane="XZ",
+        rotation_angle=360,
+        solid=None,
         stp_filename="RotateSplineShape.stp",
         stl_filename="RotateSplineShape.stl",
-        solid=None,
-        rotation_angle=360,
         **kwargs
     ):
 

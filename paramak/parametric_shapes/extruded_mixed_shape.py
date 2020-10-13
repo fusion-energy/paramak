@@ -6,25 +6,25 @@ from paramak import Shape
 
 
 class ExtrudeMixedShape(Shape):
-    """Extrudes a 3d CadQuery solid from points connected with a mixture of straight
-    and spline connections
+    """Extrudes a 3d CadQuery solid from points connected with a mixture of
+    straight and spline connections
 
     Args:
-        distance (float): the extrusion distance to use (cm units if used for neutronics)
-        extrude_both (bool): if set to True, the extrusion will occur in both
-            directions. Defaults to True.
-        Others: see paramak.Shape() arguments.
+        distance (float): the extrusion distance to use (cm units if used for
+            neutronics)
+        solid (cadquery.Workplane, optional): [INSERT DESCRIPTION]. Defaults
+            to None.
+        stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".
+        stl_filename (str, optional): Defaults to "ExtrudeMixedShape.stl".
 
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
     """
 
     def __init__(
         self,
         distance,
+        solid=None,
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
-        solid=None,
         **kwargs
     ):
 

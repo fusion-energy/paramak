@@ -10,23 +10,24 @@ class ExtrudeCircleShape(Shape):
     """Extrudes a circular 3d CadQuery solid from a central point and a radius
 
     Args:
-        distance (float): the extrusion distance to use (cm units if used for neutronics)
-        extrude_both (bool): if set to True, the extrusion will occur in both
-            directions. Defaults to True.
-        Others: see paramak.Shape() arguments.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        distance (float): the extrusion distance to use (cm units if used for
+            neutronics)
+        radius (float): radius of the shape.
+        solid (cadquery.Workplane, optional): [description]. Defaults to None.
+        extrude_both (bool, optional): if set to True, the extrusion will
+            occur in both directions. Defaults to True.
+        stp_filename (str, optional): Defaults to "ExtrudeCircleShape.stp".
+        stl_filename (str, optional): Defaults to "ExtrudeCircleShape.stl".
     """
 
     def __init__(
         self,
         distance,
         radius,
+        solid=None,
         extrude_both=True,
         stp_filename="ExtrudeCircleShape.stp",
         stl_filename="ExtrudeCircleShape.stl",
-        solid=None,
         **kwargs
     ):
 
