@@ -28,11 +28,6 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
             "CenterColumnShieldPlasmaHyperbola.stp".
         stl_filename (str, optional): Defaults to
             "CenterColumnShieldPlasmaHyperbola.stl".
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality
-        with points determined by the find_points() method. A CadQuery solid of
-        the shape can be called via shape.solid.
     """
 
     def __init__(
