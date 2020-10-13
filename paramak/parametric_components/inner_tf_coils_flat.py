@@ -51,6 +51,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         outer_radius,
         number_of_coils,
         gap_size,
+        azimuth_start_angle=0,
         stp_filename="InnerTfCoilsFlat.stp",
         stl_filename="InnerTfCoilsFlat.stl",
         material_tag="inner_tf_coil_mat",

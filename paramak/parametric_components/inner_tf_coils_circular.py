@@ -51,6 +51,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         outer_radius,
         number_of_coils,
         gap_size,
+        azimuth_start_angle=0,
         stp_filename="InnerTfCoilsCircular.stp",
         stl_filename="InnerTfCoilsCircular.stl",
         material_tag="inner_tf_coil_mat",
