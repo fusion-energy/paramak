@@ -18,7 +18,8 @@ class BallReactor(paramak.Reactor):
         center_column_shield_radial_thickness (float): the radial thickness of
             the center column shield (cm)
         divertor_radial_thickness (float): the radial thickness of the divertor
-            (cm), this fills the gap between the center column shield and blanket
+            (cm), this fills the gap between the center column shield and
+            blanket
         inner_plasma_gap_radial_thickness (float): the radial thickness of the
             inboard gap between the plasma and the center column shield (cm)
         plasma_radial_thickness (float): the radial thickness of the plasma
@@ -32,22 +33,22 @@ class BallReactor(paramak.Reactor):
         elongation (float): the elongation of the plasma
         triangularity (float): the triangularity of the plasma
         number_of_tf_coils (int): the number of tf coils
-        pf_coil_to_rear_blanket_radial_gap (float): the radial distance between
-            the rear blanket and the closest poloidal field coil (optional)
-        pf_coil_radial_thicknesses (list of floats): the radial thickness of each
-            poloidal field coil (optional)
-        pf_coil_vertical_thicknesses (list of floats): the vertical thickness of
-            each poloidal field coil (optional)
-        pf_coil_to_tf_coil_radial_gap (float): the radial distance between the
-            rear of the poloidal field coil and the toroidal field coil (optional)
-        outboard_tf_coil_radial_thickness (float): the radial thickness of the
-            toroidal field coil (optional)
-        outboard_tf_coil_poloidal_thickness (float): the poloidal thickness of the toroidal
-            field coil (optional)
-        rotation_angle (float): the angle of the sector that is desired
-
-    Returns:
-        a paramak shape object: a Reactor object that has generic functionality
+        pf_coil_to_rear_blanket_radial_gap (float, optional): the radial
+            distance between the rear blanket and the closest poloidal field
+            coil. Defaults to None.
+        pf_coil_radial_thicknesses (list of floats, optional): the radial
+            thickness of each poloidal field coil. Defaults to None.
+        pf_coil_vertical_thicknesses (list of floats, optional): the vertical
+            thickness of each poloidal field coil. Defaults to None.
+        pf_coil_to_tf_coil_radial_gap (float, optional): the radial distance
+            between the rear of the poloidal field coil and the toroidal field
+            coil. Defaults to None.
+        outboard_tf_coil_radial_thickness (float, optional): the radial
+            thickness of the toroidal field coil. Defaults to None.
+        outboard_tf_coil_poloidal_thickness (float, optional): the poloidal
+            thickness of the toroidal field coil. Defaults to None.
+        rotation_angle (float): the angle of the sector that is desired.
+            Defaults to 360.0.
     """
 
     def __init__(
@@ -71,7 +72,7 @@ class BallReactor(paramak.Reactor):
         pf_coil_to_tf_coil_radial_gap=None,
         outboard_tf_coil_radial_thickness=None,
         outboard_tf_coil_poloidal_thickness=None,
-        rotation_angle=360,
+        rotation_angle=360.0,
     ):
 
         super().__init__([])
