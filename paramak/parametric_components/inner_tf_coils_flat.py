@@ -55,6 +55,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         stp_filename="InnerTfCoilsFlat.stp",
         stl_filename="InnerTfCoilsFlat.stl",
         material_tag="inner_tf_coil_mat",
+        workplane="XY",
         **kwargs
     ):
 
@@ -63,6 +64,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            workplane=workplane,
             **kwargs
         )
 
