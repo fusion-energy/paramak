@@ -59,7 +59,6 @@ class CenterColumnShieldCircular(RotateMixedShape):
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            rotation_angle=rotation_angle,
             **kwargs
         )
 
