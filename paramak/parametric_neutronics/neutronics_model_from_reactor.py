@@ -150,7 +150,7 @@ class NeutronicsModelFromReactor():
 
     @property
     def simulation_particles_per_batches(self):
-        return self._simulation_particles_per_batches
+        return self._simulation_particles_per_batch
 
     @simulation_particles_per_batches.setter
     def simulation_particles_per_batches(self, value):
@@ -160,7 +160,7 @@ class NeutronicsModelFromReactor():
             raise ValueError(
                 "NeutronicsModelFromReactor.simulation_particles_per_batches\
                     should be an int")
-        self._simulation_particles_per_batches = value
+        self._simulation_particles_per_batch = value
 
     def create_materials(self):
         for reactor_material in self.reactor.material_tags:
