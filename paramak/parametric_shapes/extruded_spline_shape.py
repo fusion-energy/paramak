@@ -21,6 +21,7 @@ class ExtrudeSplineShape(Shape):
     def __init__(
         self,
         distance,
+        solid=None,
         stp_filename="ExtrudeSplineShape.stp",
         stl_filename="ExtrudeSplineShape.stl",
         **kwargs
