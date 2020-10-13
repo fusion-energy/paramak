@@ -19,7 +19,7 @@ class BlanketFP(RotateMixedShape):
             measured anti clockwise from 3 o'clock
         stop_angle (float): the angle in degrees to stop the blanket, measured
             anti clockwise from 3 o'clock
-        plasma ([type], optional): If not None, the parameters of the
+        plasma (paramak.Plasma, optional): If not None, the parameters of the
             plasma Object will be used. Defaults to None.
         minor_radius (float, optional): the minor radius of the plasma (cm).
             Defaults to 150.0.
