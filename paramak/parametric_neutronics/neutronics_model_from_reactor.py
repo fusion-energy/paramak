@@ -1,27 +1,26 @@
 import os
 import json
 from collections import defaultdict
+import warnings
 
 try:
     from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
 except BaseException:
-    raise Warning(
-        'parametric_plasma_source not found distributed plasma sources \
-        are not avaialbe in Neutronics simulations')
+        warnings.warn('parametric_plasma_source not found distributed plasma \
+            sources are not avaialbe in Neutronics simulations', UserWarning)
 
 try:
     import openmc
 except BaseException:
-    raise Warning(
-        'OpenMC not found, NeutronicsModelFromReactor.simulate method \
-        not available')
+        warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
+            method not available', UserWarning)
 
 try:
     import neutronics_material_maker as nmm
 except BaseException:
-    raise Warning("neutronics_material_maker not found, \
-        NeutronicsModelFromReactor.materials can't accept strings or \
-        neutronics_material_maker objects")
+        warnings.warn("neutronics_material_maker not found, \
+            NeutronicsModelFromReactor.materials can't accept strings or \
+            neutronics_material_maker objects", UserWarning)
 
 
 class NeutronicsModelFromReactor():
