@@ -5,31 +5,21 @@
 # sudo docker run -it paramak
 
 # We will use Ubuntu for our image
-FROM ubuntu:18.04
+FROM continuumio/miniconda3
 
-# Updating Ubuntu packages
-RUN apt-get update && yes|apt-get upgrade
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-# Adding wget and bzip2
-RUN apt-get install -y wget bzip2 git
+RUN useradd -ms /bin/bash cq
 
-# Anaconda installing
-RUN wget https://repo.continuum.io/archive/Anaconda3-2020.02-Linux-x86_64.sh
+WORKDIR /home/cq/
 
-RUN bash Anaconda3-2020.02-Linux-x86_64.sh -b
+USER root
 
-RUN rm Anaconda3-2020.02-Linux-x86_64.sh
+RUN apt-get install -y libgl1-mesa-glx
 
-# Set path to conda
-ENV PATH /root/anaconda3/bin:$PATH
+RUN conda install -c cadquery -c conda-forge cadquery=master
 
-# CAD query is the main dependancy for the paramak
-RUN conda install -c conda-forge -c cadquery cadquery=2
-
-RUN apt-get update
-RUN apt-get install -y libgl1-mesa-dev 
-RUN apt-get install -y libglu1-mesa-dev
-RUN apt-get install -y freeglut3-dev
+USER cq
 
 # Copy over the source code
 COPY paramak paramak/
