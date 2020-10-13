@@ -24,6 +24,7 @@ USER cq
 # Copy over the source code
 COPY paramak paramak/
 COPY setup.py setup.py
+COPY README.md README.md
 
 RUN pip install .
 
