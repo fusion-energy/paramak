@@ -43,7 +43,6 @@ class Shape:
             the neutronics description output. Defaults to None.
         physical_groups (dict, optional): contains information on physical
             groups (volumes and surfaces). Defaults to None.
-        hash_value ([type], optional): [description]. Defaults to None.
         cut (paramak.shape or list, optional): If set, the current solid will
             be cut with the provided solid or iterable in cut. Defaults to
             None.
@@ -67,7 +66,6 @@ class Shape:
         workplane="XZ",
         tet_mesh=None,
         physical_groups=None,
-        hash_value=None,
         cut=None,
         intersect=None,
         union=None
