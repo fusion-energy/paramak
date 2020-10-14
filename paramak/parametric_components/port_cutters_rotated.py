@@ -1,5 +1,4 @@
 import math
-import cadquery as cq
 
 from paramak import RotateStraightShape
 from paramak.utils import rotate, coefficients_of_line_from_points
@@ -11,92 +10,55 @@ class PortCutterRotated(RotateStraightShape):
     This is useful as a cutting volume for the creation of ports in blankets.
 
     Args:
-        polar_coverage_angle (float): the angluar extent of port in the
-            polar direction (degrees).
         center_point (tuple of floats): the center point where the
             ports are aimed towards, typically the center of the plasma.
+        polar_coverage_angle (float): the angluar extent of port in the
+            polar direction (degrees). Defaults to 10.0.
         polar_placement_angle (float): The angle used when rotating the shape
             on the polar axis. 0 degrees is the outboard equatorial point.
+            Defaults to 0.0.
         max_distance_from_center (float): the maximum distance from the center
-            point outwards (cm). Default 3000
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of
-            a reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality
-        with points determined by the find_points() method. A CadQuery solid of
-        the shape can be called via shape.solid.
+            point outwards (cm). Default 3000.0.
+        fillet_radius (float, optional): If not None, radius (cm) of fillets
+            added to all edges. Defaults to None.
+        rotation_angle (float, optional): Defaults to 0.0.
+        stp_filename (str, optional): Defaults to "PortCutter.stp".
+        stl_filename (str, optional): Defaults to "PortCutter.stl".
+        name (str, optional): Defaults to "port_cutter".
+        material_tag (str, optional): Defaults to "port_cutter_mat".
     """
 
     def __init__(
         self,
         center_point,
-        polar_coverage_angle=10,
-        polar_placement_angle=0,
-        max_distance_from_center=3000,
-        rotation_angle=0,
+        polar_coverage_angle=10.0,
+        polar_placement_angle=0.0,
+        max_distance_from_center=3000.0,
+        fillet_radius=None,
+        rotation_angle=0.0,
         stp_filename="PortCutter.stp",
         stl_filename="PortCutter.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
         name="port_cutter",
         material_tag="port_cutter_mat",
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
             name=name,
-            color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
             rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.center_point = center_point
         self.polar_coverage_angle = polar_coverage_angle
         self.polar_placement_angle = polar_placement_angle
         self.max_distance_from_center = max_distance_from_center
+        self.fillet_radius = fillet_radius
+
+        self.add_fillet()
 
     @property
     def center_point(self):
@@ -163,3 +125,8 @@ class PortCutterRotated(RotateStraightShape):
             points.append(outer_point_2)
 
         self.points = points
+
+    def add_fillet(self):
+        """adds fillets to all edges"""
+        if self.fillet_radius is not None and self.fillet_radius != 0:
+            self.solid = self.solid.edges().fillet(self.fillet_radius)

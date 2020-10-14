@@ -25,8 +25,10 @@ class CenterColumnStudyReactor(paramak.Reactor):
         inboard_firstwall_radial_thickness (float): the radial thickness
             of the inboard firstwall (cm)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
-            the inboard gap between the plasma and the center column shield (cm)
-        plasma_radial_thickness (float): the radial thickness of the plasma (cm)
+            the inboard gap between the plasma and the center column shield
+            (cm)
+        plasma_radial_thickness (float): the radial thickness of the plasma
+            (cm)
         outer_plasma_gap_radial_thickness (float): the radial thickness of
             the outboard gap between the plasma and the first wall (cm)
         center_column_arc_vertical_thickness (float): height of the outer
@@ -35,7 +37,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
             the top of the plasma (cm)
         plasma_gap_vertical_thickness (float): the vertical thickness of
             the upper gap between the plasma and the blanket (cm)
-        rotation_angle (float): the angle of the sector that is desired
+        rotation_angle (float): the angle of the sector that is desired.
+            Defaults to 360.0.
 
     Returns:
         a paramak shape object: a Reactor object that has generic functionality
@@ -55,7 +58,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         center_column_arc_vertical_thickness,
         plasma_high_point,
         plasma_gap_vertical_thickness,
-        rotation_angle=360,
+        rotation_angle=360.0,
     ):
 
         super().__init__([])

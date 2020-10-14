@@ -113,16 +113,5 @@ class test_ParametricComponents(unittest.TestCase):
         assert initial_hash_value != test_shape.hash_value
 
 
-class test_VacuumVessel(unittest.TestCase):
-    def test_VacuumVessel_creation(self):
-        """creates an inner tf coil using the VacuumVessel parametric
-        component and checks that a cadquery solid is created"""
-
-        test_shape = paramak.VacuumVessel(
-            height=2, inner_radius=1, thickness=0.2,
-        )
-        assert test_shape.solid is not None
-
-
 if __name__ == "__main__":
     unittest.main()

@@ -9,73 +9,29 @@ class RotateCircleShape(Shape):
     """Rotates a circular 3d CadQuery solid from a central point and a radius
 
     Args:
-        points (a list of tuples each containing X (float), Z (float)): A list
-            of a single XZ coordinate which is the central point of the circle.
-            For example, [(10, 10)].
-        radius (float): The radius of the circle.
-        name (str): The legend name used when exporting a html graph of the
-            shape.
-        color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
-            The color to use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filname (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        radius (float): radius of the shape
+        rotation_angle (float, optional): The rotation_angle to use when
+            revolving the solid (degrees). Defaults to 360.0.
+        stp_filename (str, optional):  Defaults to "RotateCircleShape.stp".
+        stl_filename (str, optional):  Defaults to "RotateCircleShape.stl".
     """
 
     def __init__(
         self,
-        points,
         radius,
-        workplane="XZ",
+        rotation_angle=360.0,
         stp_filename="RotateCircleShape.stp",
         stl_filename="RotateCircleShape.stl",
-        solid=None,
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
-        rotation_angle=360,
-        cut=None,
-        intersect=None,
-        union=None,
-        material_tag=None,
-        name=None,
         **kwargs
     ):
 
-        default_dict = {"tet_mesh": None,
-                        "physical_groups": None,
-                        "hash_value": None}
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            points=points,
-            name=name,
-            color=color,
-            material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            workplane=workplane,
-            cut=cut,
-            intersect=intersect,
-            union=union,
-            **default_dict
+            **kwargs
         )
         self.radius = radius
         self.rotation_angle = rotation_angle
-        self.solid = solid
 
     @property
     def rotation_angle(self):
