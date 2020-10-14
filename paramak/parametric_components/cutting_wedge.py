@@ -31,7 +31,6 @@ class CuttingWedge(RotateStraightShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             rotation_angle=rotation_angle,
-            hash_value=None,
             **kwargs
         )
 
