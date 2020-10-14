@@ -34,18 +34,25 @@ class Shape:
             Defaults to None.
         stl_filename (str, optional): the filename used when saving stl files.
             Defaults to None.
-
         azimuth_placement_angle (float, optional): the azimuth angle(s) used
             when positioning the shape. If a list of angles is provided, the
             shape is duplicated at all angles. Defaults to 0.0.
         workplane (str, optional): the orientation of the Cadquery workplane.
             (XY, YZ or XZ). Defaults to "XZ".
-        tet_mesh ([type], optional): [description]. Defaults to None.
-        physical_groups ([type], optional): [description]. Defaults to None.
+        tet_mesh (bool, optional): If True, a tet mesh flag will be added to
+            the neutronics description output. Defaults to False.
+        physical_groups (dict, optional): contains information on physical
+            groups (volumes and surfaces). Defaults to None.
         hash_value ([type], optional): [description]. Defaults to None.
-        cut ([type], optional): [description]. Defaults to None.
-        intersect ([type], optional): [description]. Defaults to None.
-        union ([type], optional): [description]. Defaults to None.
+        cut (paramak.shape or list, optional): If set, the current solid will
+            be cut with the provided solid or iterable in cut. Defaults to
+            None.
+        intersect (paramak.shape or list, optional): If set, the current solid
+            will be interested with the provided solid or iterable of solids.
+            Defaults to None.
+        union (paramak.shape or list, optional): If set, the current solid
+            will be united with the provided solid or iterable of solids.
+            Defaults to None.
     """
 
     def __init__(
@@ -58,7 +65,7 @@ class Shape:
         stl_filename=None,
         azimuth_placement_angle=0.0,
         workplane="XZ",
-        tet_mesh=None,
+        tet_mesh=False,
         physical_groups=None,
         hash_value=None,
         cut=None,
