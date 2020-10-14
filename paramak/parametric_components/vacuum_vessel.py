@@ -10,23 +10,11 @@ class VacuumVessel(RotateStraightShape):
         height (float): height of the vessel.
         inner_radius (float): the inner radius of the vessel.
         thickness (float): thickness of the vessel
-
-    Keyword Args:
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality
-        with points determined by the find_points() method. A CadQuery solid
-        of the shape can be called via shape.solid.
+        stp_filename (str, optional): Defaults to
+            "CenterColumnShieldCylinder.stp".
+        stl_filename (str, optional): Defaults to
+            "CenterColumnShieldCylinder.stl".
+        material_tag (str, optional): Defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -34,41 +22,17 @@ class VacuumVessel(RotateStraightShape):
         height,
         inner_radius,
         thickness,
-        name=None,
-        color=(0.5, 0.5, 0.5),
         stp_filename="CenterColumnShieldCylinder.stp",
         stl_filename="CenterColumnShieldCylinder.stl",
-        rotation_angle=360,
         material_tag="center_column_shield_mat",
-        azimuth_placement_angle=0,
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            name=name,
-            color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.height = height

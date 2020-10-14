@@ -1,4 +1,7 @@
-from paramak import RotateMixedShape, CenterColumnShieldCylinder, CenterColumnShieldHyperbola, CenterColumnShieldFlatTopHyperbola, CenterColumnShieldPlasmaHyperbola, CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular
+from paramak import RotateMixedShape, CenterColumnShieldCylinder, \
+    CenterColumnShieldHyperbola, CenterColumnShieldFlatTopHyperbola, \
+    CenterColumnShieldPlasmaHyperbola, CenterColumnShieldCircular, \
+    CenterColumnShieldFlatTopCircular
 
 
 class InboardFirstwallFCCS(RotateMixedShape):
@@ -12,35 +15,9 @@ class InboardFirstwallFCCS(RotateMixedShape):
         central_column_shield (paramak.Shape): The central column shield object
             to build from
         thickness (float): the radial thickness of the firstwall (cm)
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exportin as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality
-        with points determined by the find_points() method. A CadQuery solid
-        of the shape can be called via shape.solid.
+        stp_filename (str, optional): Defaults to "InboardFirstwallFCCS.stp".
+        stl_filename (str, optional): Defaults to "InboardFirstwallFCCS.stl".
+        material_tag (str, optional): Defaults to "firstwall_mat".
     """
 
     def __init__(
@@ -49,39 +26,15 @@ class InboardFirstwallFCCS(RotateMixedShape):
         thickness,
         stp_filename="InboardFirstwallFCCS.stp",
         stl_filename="InboardFirstwallFCCS.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
         material_tag="firstwall_mat",
-        name=None,
-        rotation_angle=360,
         **kwargs
     ):
-
-        default_dict = {
-            "points": None,
-            "workplane": "XY",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
 
         super().__init__(
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            color=color,
-            azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,
-            rotation_angle=rotation_angle,
-            name=name,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.central_column_shield = central_column_shield

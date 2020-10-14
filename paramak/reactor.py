@@ -17,6 +17,9 @@ class Reactor:
     collective operations to be performed on them. Combining all the shapes is
     required for creating images of the whole reactor and creating a Graveyard
     (bounding box) that is needed for neutronics simulations.
+
+    Args:
+        shapes_and_components (list): list of paramak.Shape
     """
 
     def __init__(self, shapes_and_components):

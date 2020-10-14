@@ -7,76 +7,33 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
     """Creates a series of rectangular poloidal field coils.
 
     Args:
-        pf_coils (PoloidalFieldCoil object): a list of pf coil objects or a CadQuery compound object
-        casing_thicknesses (list of floats): the thicknesses of the coil casing (cm).
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality with points determined by the find_points() method. A CadQuery solid of the shape can be called via shape.solid.
+        pf_coils (paramak.PoloidalFieldCoil): a list of pf coil objects or a
+        CadQuery compound object
+        casing_thicknesses (list of floats): the thicknesses of the coil
+            casing (cm).
+        stp_filename (str, optional): Defaults to "PoloidalFieldCoil.stp".
+        stl_filename (str, optional): Defaults to "PoloidalFieldCoil.stl".
+        name (str, optional): Defaults to "pf_coil".
+        material_tag (str, optional): Defaults to "pf_coil_mat".
     """
 
     def __init__(
         self,
         pf_coils,
         casing_thicknesses,
-        rotation_angle=360,
         stp_filename="PoloidalFieldCoil.stp",
         stl_filename="PoloidalFieldCoil.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
         name="pf_coil",
         material_tag="pf_coil_mat",
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
             name=name,
-            color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.pf_coils = pf_coils
@@ -117,8 +74,8 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         self._widths = widths
 
     def find_points(self):
-        """Finds the XZ points joined by straight connections that describe the 2D
-        profile of the poloidal field coil shape."""
+        """Finds the XZ points joined by straight connections that describe
+        the 2D profile of the poloidal field coil shape."""
 
         all_points = []
 
@@ -129,7 +86,8 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
                 entry.center_point for entry in self.pf_coils]
             if len(self.pf_coils) != len(self.casing_thicknesses):
                 raise ValueError(
-                    "The number of pf_coils should be the same as the number of casing_thickness")
+                    "The number of pf_coils should be the same as the number \
+                    of casing_thickness")
         elif isinstance(self.pf_coils, PoloidalFieldCoilSet):
             self.heights = self.pf_coils.heights
             self.widths = self.pf_coils.widths
@@ -138,14 +96,17 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
                     self.pf_coils.solid.Solids()) != len(
                     self.casing_thicknesses):
                 raise ValueError(
-                    "The number of pf_coils should be the same as the number of casing_thickness")
+                    "The number of pf_coils should be the same as the number \
+                    of casing_thickness")
         else:
             raise ValueError(
-                "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list paramak.PoloidalFieldCoil \
-                        or a paramak.PoloidalFieldCoilSet object")
+                "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list \
+                paramak.PoloidalFieldCoil or a \
+                paramak.PoloidalFieldCoilSet object")
 
         for height, width, center_point, casing_thickness in zip(
-                self.heights, self.widths, self.center_points, self.casing_thicknesses):
+                self.heights, self.widths,
+                self.center_points, self.casing_thicknesses):
 
             all_points = all_points + [
                 (
@@ -194,8 +155,10 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
 
     def create_solid(self):
         """Creates a 3d solid using points with straight connections
-           edges, azimuth_placement_angle and rotation angle.
-           individual solids in the compound can be accessed using .Solids()[i] where i is an int
+        edges, azimuth_placement_angle and rotation angle.
+        individual solids in the compound can be accessed using .Solids()[i]
+        where i is an int
+
            Returns:
               A CadQuery solid: A 3D solid volume
         """

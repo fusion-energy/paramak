@@ -10,79 +10,33 @@ class ExtrudeCircleShape(Shape):
     """Extrudes a circular 3d CadQuery solid from a central point and a radius
 
     Args:
-        points (tuple containing X (float), Z (float) value for the central point): a list
-            of a single XZ coordinate which is the central point of the circle.
-            For example [(10, 10)]
-        radius (float): the radius of the circle
-        extrude_both (bool): if set to True, the extrusion will occur in both
-            directions. Defaults to True.
-        stp_filename (str): the filename used when saving stp files as part of a
-            reactor
-        color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
-            the color to use when exporting as html graphs or png images
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
-        azimuth_placement_angle (float or iterable of floats): the angle or
-            angles to use when rotating the shape on the azimuthal axis
-        cut (CadQuery object): an optional CadQuery object to perform a boolean
-            cut with this object
-        material_tag (str): the material name to use when exporting the
-            neutronics descrption
-        name (str): the legend name used when exporting a html graph of the
-            shape
-        workplane (str): the orientation of the CadQuery workplane. Options are
-            XY, YZ, XZ.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+        radius (float): radius of the shape.
+        extrude_both (bool, optional): if set to True, the extrusion will
+            occur in both directions. Defaults to True.
+        stp_filename (str, optional): Defaults to "ExtrudeCircleShape.stp".
+        stl_filename (str, optional): Defaults to "ExtrudeCircleShape.stl".
     """
 
     def __init__(
         self,
-        points,
         distance,
         radius,
         extrude_both=True,
-        workplane="XZ",
         stp_filename="ExtrudeCircleShape.stp",
         stl_filename="ExtrudeCircleShape.stl",
-        solid=None,
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
-        cut=None,
-        intersect=None,
-        union=None,
-        material_tag=None,
-        name=None,
         **kwargs
     ):
 
-        default_dict = {"tet_mesh": None,
-                        "physical_groups": None,
-                        "hash_value": None}
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            points=points,
-            name=name,
-            color=color,
-            material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            workplane=workplane,
-            cut=cut,
-            intersect=intersect,
-            union=union,
-            **default_dict
+            **kwargs
         )
 
         self.radius = radius
         self.distance = distance
-        self.solid = solid
         self.extrude_both = extrude_both
 
     @property

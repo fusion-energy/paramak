@@ -13,35 +13,11 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         outer_radius (float): outer radius of tf coils.
         number_of_coils (int): number of tf coils.
         gap_size (float): gap between adjacent tf coils.
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality
-        with points determined by the find_points() method. A CadQuery solid
-        of the shape can be called via shape.solid.
+        azimuth_start_angle (float, optional): Defaults to 0.0.
+        stp_filename (str, optional): Defaults to "InnerTfCoilsFlat.stp".
+        stl_filename (str, optional): Defaults to "InnerTfCoilsFlat.stl".
+        material_tag (str, optional): Defaults to "inner_tf_coil_mat".
+        workplane (str, optional):Defaults to "XY".
     """
 
     def __init__(
@@ -51,41 +27,21 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         outer_radius,
         number_of_coils,
         gap_size,
-        azimuth_start_angle=0,
+        azimuth_start_angle=0.0,
         stp_filename="InnerTfCoilsFlat.stp",
         stl_filename="InnerTfCoilsFlat.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,   # cannot be controlled by user
         material_tag="inner_tf_coil_mat",
-        name=None,
+        workplane="XY",
         **kwargs
     ):
-
-        default_dict = {
-            "points": None,
-            "workplane": "XY",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
 
         super().__init__(
             distance=height,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            color=color,
-            azimuth_placement_angle=azimuth_placement_angle,
             material_tag=material_tag,
-            name=name,
-            hash_value=None,
-            **default_dict
+            workplane=workplane,
+            **kwargs
         )
 
         self.azimuth_start_angle = azimuth_start_angle
