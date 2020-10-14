@@ -173,7 +173,7 @@ class Reactor:
         return neutronics_description
 
     def export_neutronics_description(
-        self, filename="config.json", include_plasma=False
+        self, filename="manifest.json", include_plasma=False
     ):
         """
         Saves Reactor.neutronics_description to a json file. The resulting json

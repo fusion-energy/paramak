@@ -230,7 +230,7 @@ class NeutronicsModelFromReactor():
 
         return source
 
-    def create_neutronics_geometry(self, method='trelis'):
+    def create_neutronics_geometry(self, method='ppp'):
         """Produces a h5m neutronics geometry compatable with DAGMC simulations.
         This is done by first exporting the stp files for the whole reactor,
         then exporting the neutronics description of the reactor, then there
@@ -261,7 +261,10 @@ class NeutronicsModelFromReactor():
         self.reactor.export_neutronics_description()
 
         if method == 'ppp':
-            os.system('/usr/bin/python /usr/bin/geomPipeline.py config.json')
+            # as the installer connects to the system python not the conda python
+            # this full path is needed for now
+            os.system('/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json')
+
             os.system('./occ_faceter brep')
 
         if method == 'trelis':
