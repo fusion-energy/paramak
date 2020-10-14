@@ -39,8 +39,8 @@ class Shape:
             shape is duplicated at all angles. Defaults to 0.0.
         workplane (str, optional): the orientation of the Cadquery workplane.
             (XY, YZ or XZ). Defaults to "XZ".
-        tet_mesh (bool, optional): If True, a tet mesh flag will be added to
-            the neutronics description output. Defaults to False.
+        tet_mesh (str, optional): If not None, a tet mesh flag will be added to
+            the neutronics description output. Defaults to None.
         physical_groups (dict, optional): contains information on physical
             groups (volumes and surfaces). Defaults to None.
         hash_value ([type], optional): [description]. Defaults to None.
@@ -65,7 +65,7 @@ class Shape:
         stl_filename=None,
         azimuth_placement_angle=0.0,
         workplane="XZ",
-        tet_mesh=False,
+        tet_mesh=None,
         physical_groups=None,
         hash_value=None,
         cut=None,
