@@ -12,8 +12,6 @@ class ExtrudeSplineShape(Shape):
     Args:
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
-        solid (cadquery.Workplane, optional): [INSERT DESCRIPTION]. Defaults
-            to None.
         stp_filename (str, optional): Defaults to "ExtrudeSplineShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeSplineShape.stl".
     """
@@ -21,7 +19,6 @@ class ExtrudeSplineShape(Shape):
     def __init__(
         self,
         distance,
-        solid=None,
         stp_filename="ExtrudeSplineShape.stp",
         stl_filename="ExtrudeSplineShape.stl",
         **kwargs
@@ -34,7 +31,6 @@ class ExtrudeSplineShape(Shape):
         )
 
         self.distance = distance
-        self.solid = solid
 
     @property
     def distance(self):

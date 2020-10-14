@@ -12,7 +12,6 @@ class RotateSplineShape(Shape):
     Args:
         rotation_angle (float, optional): The rotation_angle to use when
             revolving the solid (degrees). Defaults to 360.0.
-        solid (cadquery.Workplane, optional): [description]. Defaults to None.
         stp_filename (str, optional): Defaults to "RotateSplineShape.stp".
         stl_filename (str, optional): Defaults to "RotateSplineShape.stl".
     """
@@ -20,7 +19,6 @@ class RotateSplineShape(Shape):
     def __init__(
         self,
         rotation_angle=360,
-        solid=None,
         stp_filename="RotateSplineShape.stp",
         stl_filename="RotateSplineShape.stl",
         **kwargs
@@ -33,7 +31,6 @@ class RotateSplineShape(Shape):
         )
 
         self.rotation_angle = rotation_angle
-        self.solid = solid
 
     @property
     def rotation_angle(self):

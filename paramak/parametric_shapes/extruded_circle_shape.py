@@ -13,7 +13,6 @@ class ExtrudeCircleShape(Shape):
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
         radius (float): radius of the shape.
-        solid (cadquery.Workplane, optional): [description]. Defaults to None.
         extrude_both (bool, optional): if set to True, the extrusion will
             occur in both directions. Defaults to True.
         stp_filename (str, optional): Defaults to "ExtrudeCircleShape.stp".
@@ -24,7 +23,6 @@ class ExtrudeCircleShape(Shape):
         self,
         distance,
         radius,
-        solid=None,
         extrude_both=True,
         stp_filename="ExtrudeCircleShape.stp",
         stl_filename="ExtrudeCircleShape.stl",
@@ -39,7 +37,6 @@ class ExtrudeCircleShape(Shape):
 
         self.radius = radius
         self.distance = distance
-        self.solid = solid
         self.extrude_both = extrude_both
 
     @property

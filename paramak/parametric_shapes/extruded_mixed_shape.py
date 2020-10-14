@@ -12,8 +12,6 @@ class ExtrudeMixedShape(Shape):
     Args:
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
-        solid (cadquery.Workplane, optional): [INSERT DESCRIPTION]. Defaults
-            to None.
         stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeMixedShape.stl".
 
@@ -22,7 +20,6 @@ class ExtrudeMixedShape(Shape):
     def __init__(
         self,
         distance,
-        solid=None,
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
         **kwargs
@@ -35,7 +32,6 @@ class ExtrudeMixedShape(Shape):
         )
 
         self.distance = distance
-        self.solid = solid
 
     @property
     def distance(self):

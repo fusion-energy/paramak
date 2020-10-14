@@ -12,7 +12,6 @@ class RotateStraightShape(Shape):
     Args:
         rotation_angle (float): The rotation angle to use when revolving the
             solid (degrees).
-        solid (cadquery.Workplane, optional): [description]. Defaults to None.
         stp_filename (str, optional): Defaults to "RotateStraightShape.stp".
         stl_filename (str, optional): Defaults to "RotateStraightShape.stl".
     """
@@ -20,7 +19,6 @@ class RotateStraightShape(Shape):
     def __init__(
         self,
         rotation_angle=360.0,
-        solid=None,
         stp_filename="RotateStraightShape.stp",
         stl_filename="RotateStraightShape.stl",
         **kwargs
@@ -33,7 +31,6 @@ class RotateStraightShape(Shape):
         )
 
         self.rotation_angle = rotation_angle
-        self.solid = solid
 
     @property
     def rotation_angle(self):

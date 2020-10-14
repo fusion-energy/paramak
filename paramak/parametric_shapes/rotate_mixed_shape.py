@@ -12,7 +12,6 @@ class RotateMixedShape(Shape):
     Args:
         rotation_angle (float, optional): The rotation_angle to use when
             revolving the solid (degrees). Defaults to 360.0.
-        solid (cadquery.Workplane, optional): [description]. Defaults to None.
         stp_filename (str, optional):  Defaults to "RotateMixedShape.stp".
         stl_filename (str, optional):  Defaults to "RotateMixedShape.stl".
     """
@@ -20,7 +19,6 @@ class RotateMixedShape(Shape):
     def __init__(
         self,
         rotation_angle=360.0,
-        solid=None,
         stp_filename="RotateMixedShape.stp",
         stl_filename="RotateMixedShape.stl",
         **kwargs
@@ -32,7 +30,6 @@ class RotateMixedShape(Shape):
             **kwargs
         )
         self.rotation_angle = rotation_angle
-        self.solid = solid
 
     @property
     def rotation_angle(self):

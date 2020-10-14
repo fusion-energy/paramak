@@ -12,7 +12,6 @@ class RotateCircleShape(Shape):
         radius (float): radius of the shape
         rotation_angle (float, optional): The rotation_angle to use when
             revolving the solid (degrees). Defaults to 360.0.
-        solid (cadquery.Workplane, optional): [description]. Defaults to None.
         stp_filename (str, optional):  Defaults to "RotateCircleShape.stp".
         stl_filename (str, optional):  Defaults to "RotateCircleShape.stl".
     """
@@ -21,7 +20,6 @@ class RotateCircleShape(Shape):
         self,
         radius,
         rotation_angle=360.0,
-        solid=None,
         stp_filename="RotateCircleShape.stp",
         stl_filename="RotateCircleShape.stl",
         **kwargs
@@ -34,7 +32,6 @@ class RotateCircleShape(Shape):
         )
         self.radius = radius
         self.rotation_angle = rotation_angle
-        self.solid = solid
 
     @property
     def rotation_angle(self):

@@ -14,7 +14,6 @@ class ExtrudeStraightShape(Shape):
             neutronics)
         extrude_both (bool, optional): if set to True, the extrusion will
             occur in both directions. Defaults to True.
-        solid (cadquery.Workplane, optional): [description]. Defaults to None.
         stp_filename (str, optional): Defaults to "ExtrudeStraightShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeStraightShape.stl".
     """
@@ -22,7 +21,6 @@ class ExtrudeStraightShape(Shape):
     def __init__(
         self,
         distance,
-        solid=None,
         extrude_both=True,
         stp_filename="ExtrudeStraightShape.stp",
         stl_filename="ExtrudeStraightShape.stl",
@@ -36,7 +34,6 @@ class ExtrudeStraightShape(Shape):
         )
 
         self.distance = distance
-        self.solid = solid
         self.extrude_both = extrude_both
 
     @property
