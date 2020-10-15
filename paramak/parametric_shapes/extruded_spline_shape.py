@@ -51,7 +51,7 @@ class ExtrudeSplineShape(Shape):
         # Creates a cadquery solid from points and extrudes
         solid = (
             cq.Workplane(self.workplane)
-            .spline(self.points)
+            .spline(self.scaled_points)
             .close()
             .extrude(distance=-1 * self.distance / 2.0, both=True)
         )
