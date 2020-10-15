@@ -55,7 +55,7 @@ class ExtrudeStraightShape(Shape):
         # Creates a cadquery solid from points and revolves
         solid = (
             cq.Workplane(self.workplane)
-            .polyline(self.points)
+            .polyline(self.scaled_points)
             .close()
             .extrude(distance=-self.distance / 2.0, both=self.extrude_both)
         )
