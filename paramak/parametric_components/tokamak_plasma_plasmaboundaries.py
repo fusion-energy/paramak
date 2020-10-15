@@ -8,96 +8,54 @@ class PlasmaBoundaries(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
        by 5 shaping parameters using the plasmaboundaries package to calculate
        points. For more details see:
-       http://github.com/RemiTheWarrior/plasma-boundaries
+       http://github.com/RemDelaporteMathurin/plasma-boundaries
         Args:
             A (float, optional): plasma parameter see plasmaboundaries doc.
                 Defaults to 0.05.
             elongation (float, optional): the elongation of the plasma.
                 Defaults to 2.0.
-            major_radius (float, optional): the major radius of the plasma (cm).
-                Defaults to 450.
-            minor_radius (float, optional): the minor radius of the plasma (cm).
-                Defaults to 150.
+            major_radius (float, optional): the major radius of the plasma
+                (cm). Defaults to 450.0.
+            minor_radius (float, optional): the minor radius of the plasma
+                (cm). Defaults to 150.0.
             triangularity (float, optional): the triangularity of the plasma.
                 Defaults to 0.55.
             vertical_displacement (float, optional): the vertical_displacement
-                of the plasma (cm). Defaults to 0.
-            num_points (int, optional): number of points to described the
-                shape. Defaults to 50.
+                of the plasma (cm). Defaults to 0.0.
             configuration (str, optional): plasma configuration
                 ("non-null", "single-null", "double-null").
                 Defaults to "non-null".
             x_point_shift (float, optional): Shift parameters for locating the
                 X points in [0, 1]. Defaults to 0.1.
-            Others: see paramak.RotateSplineShape() arguments.
-
-        Attributes:
-            A: plasma parameter see plasmaboundaries doc.
-            Others: see paramak.RotateSplineShape() and paramak.Plasma()
-                attributes.
     """
 
     def __init__(
         self,
         A=0.05,
         elongation=2.0,
-        major_radius=450,
-        minor_radius=150,
+        major_radius=450.0,
+        minor_radius=150.0,
         triangularity=0.55,
-        vertical_displacement=0,
-        num_points=50,
+        vertical_displacement=0.0,
         configuration="non-null",
         x_point_shift=0.1,
-        name="plasma",
-        material_tag="DT_plasma",
-        stp_filename="plasma.stp",
-        color=(0.5, 0.5, 0.5),
-        rotation_angle=360,
-        azimuth_placement_angle=0,
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            name=name,
-            color=color,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            elongation=elongation,
+            major_radius=major_radius,
+            minor_radius=minor_radius,
+            triangularity=triangularity,
+            vertical_displacement=vertical_displacement,
+            configuration=configuration,
+            x_point_shift=x_point_shift,
+            **kwargs
         )
 
         # properties needed for plasma shapes
         self.A = A
-        self.elongation = elongation
-        self.major_radius = major_radius
-        self.minor_radius = minor_radius
-        self.triangularity = triangularity
         self.vertical_displacement = vertical_displacement
-        self.num_points = num_points
-        self.configuration = configuration
-        self.x_point_shift = x_point_shift
-
-        self.outer_equatorial_point = None
-        self.inner_equatorial_point = None
-        self.high_point = None
-        self.low_point = None
-        self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
     @property
     def vertical_displacement(self):
@@ -161,9 +119,10 @@ class PlasmaBoundaries(Plasma):
         lower_point_y = (
             -self.elongation * self.minor_radius + self.vertical_displacement
         )
-        upper_point_y = self.elongation * self.minor_radius + self.vertical_displacement
+        upper_point_y = self.elongation * self.minor_radius + \
+            self.vertical_displacement
         # else use x points
-        if self.configuration == "single-null" or self.configuration == "double-null":
+        if self.configuration in ["single-null", "double-null"]:
             lower_point_y = lower_x_point[1]
             if self.configuration == "double-null":
                 upper_point_y = upper_x_point[1]

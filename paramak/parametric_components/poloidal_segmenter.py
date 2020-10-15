@@ -2,53 +2,29 @@ import math
 import cadquery as cq
 
 from paramak import RotateStraightShape
-from paramak.utils import rotate, intersect_solid, coefficients_of_line_from_points
+from paramak.utils import rotate, intersect_solid, \
+    coefficients_of_line_from_points
 
 
 class PoloidalSegments(RotateStraightShape):
-    """Creates a ring of wedges from a central point. When provided with a shape
-    to_segment the shape will be segmented by the wedges. This is useful for
-    segmenting geometry into equal poloidal angles. Intended to segment the
+    """Creates a ring of wedges from a central point. When provided with a
+    shape to_segment the shape will be segmented by the wedges. This is useful
+    for segmenting geometry into equal poloidal angles. Intended to segment the
     firstwall geometry for using in neutron wall loading simulations.
 
     Args:
-        shape_to_segment (paramak.Shape): the Shape to segment, if None then
-            the segmenting solids will be returned
-        max_distance_from_center (float): the maximum distance from the center
-            point outwards (cm).
         center_point (tuple of floats): the center of the segmentation wedges
             (x,z) values (cm).
-        number_of_segments (int): the number of equal angles segments in 360
-            degrees.
-
-    Keyword Args:
-        name (str): the legend name used when exporting a html graph of the
-            shape.
-        color (sequences of 3 or 4 floats each in the range 0-1): the color to
-            use when exporting as html graphs or png images.
-        material_tag (str): The material name to use when exporting the
-            neutronics description.
-        stp_filename (str): The filename used when saving stp files as part of a
-            reactor.
-        azimuth_placement_angle (float or iterable of floats): The angle or
-            angles to use when rotating the shape on the azimuthal axis.
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        workplane (str): The orientation of the CadQuery workplane. Options are
-            XY, YZ or XZ.
-        intersect (CadQuery object): An optional CadQuery object to perform a
-            boolean intersect with this object.
-        cut (CadQuery object): An optional CadQuery object to perform a boolean
-            cut with this object.
-        union (CadQuery object): An optional CadQuery object to perform a
-            boolean union with this object.
-        tet_mesh (str): Insert description.
-        physical_groups (type): Insert description.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality
-        with points determined by the find_points() method. A CadQuery solid of
-        the shape can be called via shape.solid.
+        shape_to_segment (paramak.Shape, optional): the Shape to segment, if
+            None then the segmenting solids will be returned. Defaults to None.
+        number_of_segments (int, optional): the number of equal angles
+            segments in 360 degrees. Defaults to 10.
+        max_distance_from_center (float): the maximum distance from the center
+            point outwards (cm). Defaults to 1000.0.
+        stp_filename (str, optional): Defaults to "PoloidalSegmenter.stp".
+        stl_filename (str, optional): Defaults to "PoloidalSegmenter.stl".
+        name (str, optional): Defaults to "poloidal_segmenter".
+        material_tag (str, optional): Defaults to "poloidal_segmenter_mat".
     """
 
     def __init__(
@@ -56,42 +32,20 @@ class PoloidalSegments(RotateStraightShape):
         center_point,
         shape_to_segment=None,
         number_of_segments=10,
-        max_distance_from_center=1000,
-        rotation_angle=360,
+        max_distance_from_center=1000.0,
         stp_filename="PoloidalSegmenter.stp",
         stl_filename="PoloidalSegmenter.stl",
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
         name="poloidal_segmenter",
         material_tag="poloidal_segmenter_mat",
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
             name=name,
-            color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
 
         self.center_point = center_point
@@ -148,8 +102,8 @@ class PoloidalSegments(RotateStraightShape):
         self._solid = value
 
     def find_points(self):
-        """Finds the XZ points joined by straight connections that describe the 2D
-        profile of the poloidal segmentation shape."""
+        """Finds the XZ points joined by straight connections that describe
+        the 2D profile of the poloidal segmentation shape."""
 
         angle_per_segment = 360. / self.number_of_segments
 
@@ -193,9 +147,9 @@ class PoloidalSegments(RotateStraightShape):
 
     def create_solid(self):
         """Creates a 3d solid using points with straight connections
-           edges, azimuth_placement_angle and rotation angle.
-
-           individual solids in the compound can be accessed using .Solids()[i] where i is an int
+        edges, azimuth_placement_angle and rotation angle.
+        individual solids in the compound can be accessed using .Solids()[i]
+        where i is an int
 
            Returns:
               A CadQuery solid: A 3D solid volume

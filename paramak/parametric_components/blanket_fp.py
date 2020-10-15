@@ -22,61 +22,26 @@ class BlanketFP(RotateMixedShape):
         plasma (paramak.Plasma, optional): If not None, the parameters of the
             plasma Object will be used. Defaults to None.
         minor_radius (float, optional): the minor radius of the plasma (cm).
-            Defaults to 150.
+            Defaults to 150.0.
         major_radius (float, optional): the major radius of the plasma (cm).
-            Defaults to 450.
+            Defaults to 450.0.
         triangularity (float, optional): the triangularity of the plasma.
             Defaults to 0.55.
-        elongation (float, optional): the elongation of the plasma.
-            Defaults to 2.0.
+        elongation (float, optional): the elongation of the plasma. Defaults
+            to 2.0.
         vertical_displacement (float, optional): the vertical_displacement of
             the plasma (cm). Defaults to 0.
-        offset_from_plasma (float or [float] or callable or [(float), (float)]):
-            the distance bettwen the plasma and the blanket (cm). If float,
-            constant offset. If list of floats, offset will vary linearly
-            between the values. If callable, offset will be a function of
-            poloidal angle (in degrees) Defaults to 0. If a list of of two lists
-            (offsets and angles) then these will be used together with linear
-            interpolation.
+        offset_from_plasma (float, optional): the distance bettwen the plasma
+            and the blanket (cm). If float, constant offset. If list of floats,
+            offset will vary linearly between the values. If callable, offset
+            will be a function of poloidal angle (in degrees). If a list of of
+            two lists (offsets and angles) then these will be used together
+            with linear interpolation. Defaults to 0.0.
         num_points (int, optional): number of points that will describe the
             shape. Defaults to 50.
-        Others: see paramak.RotateMixedShape() arguments.
-
-    Keyword Args:
-        thickness (float or [float] or callable or [(float), (float)]):
-            the thickness of the blanket (cm). If float, constant thickness.
-            If tuple of floats, thickness will vary linearly between the two
-            values. If callable, thickness will be a function of poloidal
-            angle (in degrees). If a list of of two lists (thicknesses and
-            angles) then these will be used together with linear interpolation.
-        start_angle (float): the angle in degrees to start the blanket,
-            measured anti clockwise from 3 o'clock
-        stop_angle (float): the angle in degrees to stop the blanket, measured
-            anti clockwise from 3 o'clock
-        plasma (paramak.Plasma): If not None, the parameters of the
-            plasma Object will be used.
-        minor_radius (float): the minor radius of the plasma (cm).
-        major_radius (float): the major radius of the plasma (cm).
-        triangularity (float): the triangularity of the plasma.
-        elongation (float): the elongation of the plasma.
-            Defaults to 2.0.
-        vertical_displacement (float): the vertical_displacement of
-            the plasma (cm).
-        offset_from_plasma (float or [float] or callable or [(float), (float)]):
-            the distance bettwen the plasma and the blanket (cm). If float,
-            constant offset. If list of floats, offset will vary linearly
-            between the values. If callable, offset will be a function of
-            poloidal angle (in degrees) Defaults to 0. If a list of of two lists
-            (offsets and angles) then these will be used together with linear
-            interpolation.
-        num_points (int): number of points that will describe the
-            shape.
-        Others: see paramak.RotateMixedShape() attributes.
-
-    Returns:
-        a paramak shape object: A shape object that has generic functionality
-            with points determined by the find_points() method. A CadQuery
-            solid of the shape can be called via shape.solid.
+        stp_filename (str, optional): Defaults to "BlanketFP.stp".
+        stl_filename (str, optional): Defaults to "BlanketFP.stl".
+        material_tag (str, optional): Defaults to "blanket_mat".
     """
 
     def __init__(
@@ -89,48 +54,24 @@ class BlanketFP(RotateMixedShape):
         major_radius=450.0,
         triangularity=0.55,
         elongation=2.0,
-        vertical_displacement=0,
-        offset_from_plasma=0,
+        vertical_displacement=0.0,
+        offset_from_plasma=0.0,
         num_points=50,
         stp_filename="BlanketFP.stp",
         stl_filename="BlanketFP.stl",
-        rotation_angle=360,
-        azimuth_placement_angle=0,
-        color=(0.5, 0.5, 0.5),
-        name=None,
         material_tag="blanket_mat",
         **kwargs
     ):
 
-        default_dict = {
-            "points": None,
-            "workplane": "XZ",
-            "solid": None,
-            "intersect": None,
-            "cut": None,
-            "union": None,
-            "tet_mesh": None,
-            "physical_groups": None,
-        }
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            name=name,
-            color=color,
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            rotation_angle=rotation_angle,
-            hash_value=None,
-            **default_dict
+            **kwargs
         )
         # raise error if full coverage and full rotation angle are set
         if diff_between_angles(start_angle,
-                               stop_angle) == 0 and rotation_angle == 360:
+                               stop_angle) == 0 and self.rotation_angle == 360:
             raise ValueError("Full coverage and 360 rotation will result in a \
                 standard construction error.")
         self.thickness = thickness

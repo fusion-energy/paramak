@@ -21,24 +21,37 @@ class Shape:
     classes that inherit from Shape.
 
     Args:
-        points (list of (x,y,z) tuples where x, y, z are floats): the x, y, z
-            coordinates of points that make up the shape
-        name (str): the name of the shape, used in the graph legend by
-            export_html
+        points (list of (float, float, float), optional): the x, y, z
+            coordinates of points that make up the shape. Defaults to None.
+        name (str, optional): the name of the shape, used in the graph legend
+            by export_html. Defaults to None.
         color (RGB or RGBA, sequences of 3 or 4 floats, respectively, each in
-            the range 0-1): the color to use when exporting as html graphs or
-            png images
-        material_tag (str): the material name to use when exporting the
-            neutronics description
-        stp_filename (str): the filename used when saving stp files
-        azimuth_placement_angle: the azimuth angle(s) used when positioning the
-            shape. If a list of angles is provided, the shape is duplicated at
-            all angles
-        workplane (str): the orientation of the Cadquery workplane. (XY, YZ or
-            XZ)
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
+            the range 0-1, optional): the color to use when exporting as html
+            graphs or png images. Defaults to (0.5, 0.5, 0.5).
+        material_tag (str, optional): the material name to use when exporting
+            the neutronics description. Defaults to None.
+        stp_filename (str, optional): the filename used when saving stp files.
+            Defaults to None.
+        stl_filename (str, optional): the filename used when saving stl files.
+            Defaults to None.
+        azimuth_placement_angle (float, optional): the azimuth angle(s) used
+            when positioning the shape. If a list of angles is provided, the
+            shape is duplicated at all angles. Defaults to 0.0.
+        workplane (str, optional): the orientation of the Cadquery workplane.
+            (XY, YZ or XZ). Defaults to "XZ".
+        tet_mesh (str, optional): If not None, a tet mesh flag will be added to
+            the neutronics description output. Defaults to None.
+        physical_groups (dict, optional): contains information on physical
+            groups (volumes and surfaces). Defaults to None.
+        cut (paramak.shape or list, optional): If set, the current solid will
+            be cut with the provided solid or iterable in cut. Defaults to
+            None.
+        intersect (paramak.shape or list, optional): If set, the current solid
+            will be interested with the provided solid or iterable of solids.
+            Defaults to None.
+        union (paramak.shape or list, optional): If set, the current solid
+            will be united with the provided solid or iterable of solids.
+            Defaults to None.
     """
 
     def __init__(
@@ -49,11 +62,10 @@ class Shape:
         material_tag=None,
         stp_filename=None,
         stl_filename=None,
-        azimuth_placement_angle=0,
+        azimuth_placement_angle=0.0,
         workplane="XZ",
         tet_mesh=None,
         physical_groups=None,
-        hash_value=None,
         cut=None,
         intersect=None,
         union=None

@@ -3,9 +3,10 @@ import paramak
 
 
 class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
-    """Creates geometry for a submersion reactor with a single divertor including
-    a plasma, cylindrical center column shielding, square toroidal field coils.
-    There is an inboard breeder blanket on this submersion reactor.
+    """Creates geometry for a submersion reactor with a single divertor
+    including a plasma, cylindrical center column shielding, square toroidal
+    field coils. There is an inboard breeder blanket on this submersion
+    reactor.
 
     Arguments:
         inner_bore_radial_thickness (float): the radial thickness of the
@@ -19,8 +20,10 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         firstwall_radial_thickness (float): the radial thickness of the
             first wall (cm)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
-            the inboard gap between the plasma and the center column shield (cm)
-        plasma_radial_thickness (float): the radial thickness of the plasma (cm)
+            the inboard gap between the plasma and the center column shield
+                (cm)
+        plasma_radial_thickness (float): the radial thickness of the plasma
+            (cm)
         divertor_radial_thickness (float): the radial thickness of the
             divertors (cm)
         support_radial_thickness (float): the radial thickness of the upper
@@ -31,8 +34,8 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             the blanket (cm)
         blanket_rear_wall_radial_thickness (float): the radial thickness of
             the rear wall of the blanket (cm)
-        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of the
-            top of the plasma (cm)
+        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of
+            the top of the plasma (cm)
         number_of_tf_coils (int): the number of tf coils
         rotation_angle (float): the angle of the sector that is desired
         outboard_tf_coil_radial_thickness (float): the radial thickness of
@@ -40,8 +43,8 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         tf_coil_to_rear_blanket_radial_gap (float): the radial distance
             between the rear of the blanket and the toroidal field coil
             (optional)
-        outboard_tf_coil_poloidal_thickness (float): the vertical thickness of each
-            poloidal field coil (optional)
+        outboard_tf_coil_poloidal_thickness (float): the vertical thickness of
+            each poloidal field coil (optional)
         pf_coil_vertical_thicknesses (list of floats): the vertical thickness
             of each poloidal field coil (optional)
         pf_coil_radial_thicknesses (list of floats): the radial thickness of
@@ -49,8 +52,10 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         pf_coil_to_tf_coil_radial_gap (float): the radial distance between
             the rear of the poloidal field coil and the toroidal field coil
             (optional)
-        divertor_position (str): the position of the divertor, "upper" or "lower"
-        support_position (str): the position of the supports, "upper" or "lower"
+        divertor_position (str): the position of the divertor, "upper" or
+            "lower"
+        support_position (str): the position of the supports, "upper" or
+            "lower"
 
     Returns:
         a paramak shape object: a Reactor object that has generic functionality
@@ -71,16 +76,9 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         outboard_blanket_radial_thickness,
         blanket_rear_wall_radial_thickness,
         plasma_high_point,
-        number_of_tf_coils=16,
-        rotation_angle=360,
-        outboard_tf_coil_radial_thickness=None,
-        tf_coil_to_rear_blanket_radial_gap=None,
-        outboard_tf_coil_poloidal_thickness=None,
-        pf_coil_vertical_thicknesses=None,
-        pf_coil_radial_thicknesses=None,
-        pf_coil_to_tf_coil_radial_gap=None,
         divertor_position="upper",
-        support_position="upper"
+        support_position="upper",
+        **kwargs
     ):
 
         super().__init__(
@@ -94,18 +92,10 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             outer_plasma_gap_radial_thickness=outer_plasma_gap_radial_thickness,
             outboard_blanket_radial_thickness=outboard_blanket_radial_thickness,
             blanket_rear_wall_radial_thickness=blanket_rear_wall_radial_thickness,
-            pf_coil_radial_thicknesses=pf_coil_radial_thicknesses,
-            pf_coil_to_tf_coil_radial_gap=pf_coil_to_tf_coil_radial_gap,
-            outboard_tf_coil_radial_thickness=outboard_tf_coil_radial_thickness,
-            outboard_tf_coil_poloidal_thickness=outboard_tf_coil_poloidal_thickness,
             divertor_radial_thickness=divertor_radial_thickness,
             support_radial_thickness=support_radial_thickness,
             plasma_high_point=plasma_high_point,
-            tf_coil_to_rear_blanket_radial_gap=tf_coil_to_rear_blanket_radial_gap,
-            pf_coil_vertical_thicknesses=pf_coil_vertical_thicknesses,
-            number_of_tf_coils=number_of_tf_coils,
-            rotation_angle=rotation_angle)
-
+            **kwargs)
         self.major_radius = None
         self.minor_radius = None
         self.elongation = None

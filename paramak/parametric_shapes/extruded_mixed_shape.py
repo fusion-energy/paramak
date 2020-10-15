@@ -6,78 +6,32 @@ from paramak import Shape
 
 
 class ExtrudeMixedShape(Shape):
-    """Extrudes a 3d CadQuery solid from points connected with a mixture of straight
-    and spline connections
+    """Extrudes a 3d CadQuery solid from points connected with a mixture of
+    straight and spline connections
 
     Args:
-        points (list of tuples each containing X (float), Z (float), connection (str)):
-            a list of XZ coordinates and connection types. The connection types
-            are either 'straight', 'spline' or 'circle'. For example [(2., 1.,
-            'straight'), (2.,2.,'straight'), (1.,2.,'spline'), (1.,1.,'spline'),
-            (2.,1.,'spline')].
-        stp_filename (str): the filename used when saving stp files as part of a
-            reactor
-        color (RGB or RGBA - sequences of 3 or 4 floats, respectively, each in the range 0-1):
-            the color to use when exporting as html graphs or png images
-        distance (float): the extrusion distance to use (cm units if used for neutronics)
-        azimuth_placement_angle (float or iterable of floats): the angle or
-            angles to use when rotating the shape on the azimuthal axis
-        cut (CadQuery object): an optional CadQuery object to perform a boolean
-            cut with this object
-        material_tag (str): the material name to use when exporting the
-            neutronics descrption
-        name (str): the legend name used when exporting a html graph of the
-            shape
-        workplane (str): the orientation of the CadQuery workplane. Options are
-            XY, YZ, XZ.
+        distance (float): the extrusion distance to use (cm units if used for
+            neutronics)
+        stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".
+        stl_filename (str, optional): Defaults to "ExtrudeMixedShape.stl".
 
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
     """
 
     def __init__(
         self,
-        points,
         distance,
-        workplane="XZ",
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
-        solid=None,
-        color=(0.5, 0.5, 0.5),
-        azimuth_placement_angle=0,
-        cut=None,
-        intersect=None,
-        union=None,
-        material_tag=None,
-        name=None,
         **kwargs
     ):
 
-        default_dict = {"tet_mesh": None,
-                        "physical_groups": None,
-                        "hash_value": None}
-
-        for arg in kwargs:
-            if arg in default_dict:
-                default_dict[arg] = kwargs[arg]
-
         super().__init__(
-            points=points,
-            name=name,
-            color=color,
-            material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=azimuth_placement_angle,
-            workplane=workplane,
-            cut=cut,
-            intersect=intersect,
-            union=union,
-            **default_dict
+            **kwargs
         )
 
         self.distance = distance
-        self.solid = solid
 
     @property
     def distance(self):

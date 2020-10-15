@@ -6,19 +6,19 @@ import warnings
 try:
     from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
 except BaseException:
-        warnings.warn('parametric_plasma_source not found distributed plasma \
+    warnings.warn('parametric_plasma_source not found distributed plasma \
             sources are not avaialbe in Neutronics simulations', UserWarning)
 
 try:
     import openmc
 except BaseException:
-        warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
+    warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
             method not available', UserWarning)
 
 try:
     import neutronics_material_maker as nmm
 except BaseException:
-        warnings.warn("neutronics_material_maker not found, \
+    warnings.warn("neutronics_material_maker not found, \
             NeutronicsModelFromReactor.materials can't accept strings or \
             neutronics_material_maker objects", UserWarning)
 
