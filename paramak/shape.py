@@ -52,7 +52,7 @@ class Shape:
         union (paramak.shape or list, optional): If set, the current solid
             will be united with the provided solid or iterable of solids.
             Defaults to None.
-        units (str, optional): The units that the points are input as. 
+        units (str, optional): The units that the points are input as.
             Internally the points are converted to mm. Defaults to 'm'.
     """
 
@@ -101,8 +101,8 @@ class Shape:
         self.hash_value = None
 
     @property
-    def scaling_coefficient(self):        
-        return {'mm':1,'cm':10,'m':1000}[self.units] 
+    def scaling_coefficient(self):
+        return {'mm': 1, 'cm': 10, 'm': 1000}[self.units]
 
     @scaling_coefficient.setter
     def scaling_coefficient(self, value):

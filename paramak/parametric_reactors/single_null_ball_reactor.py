@@ -67,8 +67,7 @@ class SingleNullBallReactor(paramak.BallReactor):
             elongation=elongation,
             triangularity=triangularity,
             number_of_tf_coils=number_of_tf_coils,
-            **kwargs
-        )
+            **kwargs)
 
         self.divertor_position = divertor_position
 
