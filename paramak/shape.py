@@ -70,7 +70,8 @@ class Shape:
         physical_groups=None,
         cut=None,
         intersect=None,
-        union=None
+        union=None,
+        units='m'
     ):
 
         self.points = points
@@ -85,6 +86,7 @@ class Shape:
 
         self.azimuth_placement_angle = azimuth_placement_angle
         self.workplane = workplane
+        self.units = units
 
         # neutronics specific properties
         self.material_tag = material_tag
@@ -97,6 +99,15 @@ class Shape:
         self.render_mesh = None
         # self.volume = None
         self.hash_value = None
+
+    @property
+    def scaling_coefficent(self):        
+        return {'mm':1,'cm':10,'m':1000}[self.units] 
+
+
+    @scaling_coefficent.setter
+    def scaling_coefficent(self, value):
+        self._scaling_coefficent = value
 
     @property
     def solid(self):
