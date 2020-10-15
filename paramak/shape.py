@@ -700,6 +700,8 @@ class Shape:
 
         if self.stp_filename is not None:
             neutronics_description["stp_filename"] = self.stp_filename
+            # this is needed as ppp looks for the filename key
+            neutronics_description["filename"] = self.stp_filename
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
