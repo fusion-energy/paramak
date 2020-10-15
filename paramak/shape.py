@@ -21,7 +21,7 @@ class Shape:
     classes that inherit from Shape.
 
     Args:
-        points (list of (float, float, float), optional): the x, y, z
+        points (list of (float, float), optional): the x, z
             coordinates of points that make up the shape. Defaults to None.
         name (str, optional): the name of the shape, used in the graph legend
             by export_html. Defaults to None.
@@ -101,13 +101,25 @@ class Shape:
         self.hash_value = None
 
     @property
-    def scaling_coefficent(self):        
+    def scaling_coefficient(self):        
         return {'mm':1,'cm':10,'m':1000}[self.units] 
 
+    @scaling_coefficient.setter
+    def scaling_coefficient(self, value):
+        self._scaling_coefficient = value
 
-    @scaling_coefficent.setter
-    def scaling_coefficent(self, value):
-        self._scaling_coefficent = value
+    @property
+    def scaled_points(self):
+        scaled_points = []
+        for p in self.points:
+            scaled_coordinate = (p[0] * self.scaling_coefficient,
+                                 p[1] * self.scaling_coefficient)
+            scaled_points.append(scaled_coordinate)
+        return scaled_points
+
+    @scaled_points.setter
+    def scaled_points(self, value):
+        self._scaled_points = value
 
     @property
     def solid(self):
