@@ -66,7 +66,7 @@ class ExtrudeCircleShape(Shape):
         # Creates a cadquery solid from points and revolves
         solid = (
             cq.Workplane(self.workplane)
-            .moveTo(self.points[0][0], self.points[0][1])
+            .moveTo(self.scaled_points[0][0], self.scaled_points[0][1])
             .circle(self.radius)
             .extrude(distance=-self.distance / 2.0, both=self.extrude_both)
         )
