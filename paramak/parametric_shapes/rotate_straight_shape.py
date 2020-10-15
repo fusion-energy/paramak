@@ -51,7 +51,7 @@ class RotateStraightShape(Shape):
         # Creates a cadquery solid from points and revolves
         solid = (
             cq.Workplane(self.workplane)
-            .polyline(self.points)
+            .polyline(self.scaled_points)
             .close()
             .revolve(self.rotation_angle)
         )
