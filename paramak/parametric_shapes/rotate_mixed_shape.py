@@ -48,7 +48,7 @@ class RotateMixedShape(Shape):
         """
 
         # obtains the first two values of the points list
-        XZ_points = [(p[0], p[1]) for p in self.points]
+        XZ_points = [(p[0], p[1]) for p in self.scaled_points]
 
         # obtains the last values of the points list
         connections = [p[2] for p in self.points[:-1]]
