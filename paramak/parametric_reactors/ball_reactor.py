@@ -12,24 +12,24 @@ class BallReactor(paramak.Reactor):
 
     Arguments:
         inner_bore_radial_thickness (float): the radial thickness of the
-            inner bore (cm)
+            inner bore (m)
         inboard_tf_leg_radial_thickness (float): the radial thickness of the
-            inner leg of the toroidal field coils (cm)
+            inner leg of the toroidal field coils (m)
         center_column_shield_radial_thickness (float): the radial thickness of
-            the center column shield (cm)
+            the center column shield (m)
         divertor_radial_thickness (float): the radial thickness of the divertor
-            (cm), this fills the gap between the center column shield and
+            (m), this fills the gap between the center column shield and
             blanket
         inner_plasma_gap_radial_thickness (float): the radial thickness of the
-            inboard gap between the plasma and the center column shield (cm)
+            inboard gap between the plasma and the center column shield (m)
         plasma_radial_thickness (float): the radial thickness of the plasma
         outer_plasma_gap_radial_thickness (float): the radial thickness of the
-            outboard gap between the plasma and firstwall (cm)
+            outboard gap between the plasma and firstwall (m)
         firstwall_radial_thickness (float): the radial thickness of the first
-            wall (cm)
-        blanket_radial_thickness (float): the radial thickness of the blanket (cm)
+            wall (m)
+        blanket_radial_thickness (float): the radial thickness of the blanket (m)
         blanket_rear_wall_radial_thickness (float): the radial thickness of the
-            rear wall of the blanket (cm)
+            rear wall of the blanket (m)
         elongation (float): the elongation of the plasma
         triangularity (float): the triangularity of the plasma
         number_of_tf_coils (int): the number of tf coils

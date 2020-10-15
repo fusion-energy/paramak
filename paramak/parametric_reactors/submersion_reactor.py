@@ -13,32 +13,30 @@ class SubmersionTokamak(paramak.Reactor):
 
     Arguments:
         inner_bore_radial_thickness (float): the radial thickness of the
-            inner bore (cm)
+            inner bore (m)
         inboard_tf_leg_radial_thickness (float): the radial thickness of
-            the inner leg of the toroidal field coils (cm)
+            the inner leg of the toroidal field coils (m)
         center_column_shield_radial_thickness (float): the radial thickness
-            of the center column shield (cm)
+            of the center column shield (m)
         inboard_blanket_radial_thickness (float): the radial thickness of
-            the inboard blanket (cm)
+            the inboard blanket (m)
         firstwall_radial_thickness (float): the radial thickness of the
-            first wall (cm)
+            first wall (m)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
-            the inboard gap between the plasma and the center column shield
-            (cm)
-        plasma_radial_thickness (float): the radial thickness of the plasma
-            (cm)
+            the inboard gap between the plasma and the center column shield (m)
+        plasma_radial_thickness (float): the radial thickness of the plasma (m)
         divertor_radial_thickness (float): the radial thickness of the
-            divertors (cm)
+            divertors (m)
         support_radial_thickness (float): the radial thickness of the upper
-            and lower supports (cm)
+            and lower supports (m)
         outer_plasma_gap_radial_thickness (float): the radial thickness of
-            the outboard gap between the plasma and the first wall (cm)
+            the outboard gap between the plasma and the first wall (m)
         outboard_blanket_radial_thickness (float): the radial thickness of
-            the blanket (cm)
+            the blanket (m)
         blanket_rear_wall_radial_thickness (float): the radial thickness of
-            the rear wall of the blanket (cm)
+            the rear wall of the blanket (m)
         plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of
-            the top of the plasma (cm)
+            the top of the plasma (m)
         number_of_tf_coils (int, optional): the number of tf coils. Defaults
             to 16.
         rotation_angle (float, optional): the angle of the sector that is

@@ -15,28 +15,26 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
     Arguments:
         inner_bore_radial_thickness (float): the radial thickness of the
-            inner bore (cm)
+            inner bore (m)
         inboard_tf_leg_radial_thickness (float): the radial thickness of
-            the inner leg of the toroidal field coils (cm)
+            the inner leg of the toroidal field coils (m)
         center_column_shield_radial_thickness_mid (float): the radial thickness
-            of the center column shield at the mid point (cm)
+            of the center column shield at the mid point (m)
         center_column_shield_radial_thickness_upper (float): the radial
-            thickness of the center column shield at the upper point (cm)
+            thickness of the center column shield at the upper point (m)
         inboard_firstwall_radial_thickness (float): the radial thickness
-            of the inboard firstwall (cm)
+            of the inboard firstwall (m)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
-            the inboard gap between the plasma and the center column shield
-            (cm)
-        plasma_radial_thickness (float): the radial thickness of the plasma
-            (cm)
+            the inboard gap between the plasma and the center column shield (m)
+        plasma_radial_thickness (float): the radial thickness of the plasma (m)
         outer_plasma_gap_radial_thickness (float): the radial thickness of
-            the outboard gap between the plasma and the first wall (cm)
+            the outboard gap between the plasma and the first wall (m)
         center_column_arc_vertical_thickness (float): height of the outer
             hyperbolic profile of the center column shield.
         plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of
-            the top of the plasma (cm)
+            the top of the plasma (m)
         plasma_gap_vertical_thickness (float): the vertical thickness of
-            the upper gap between the plasma and the blanket (cm)
+            the upper gap between the plasma and the blanket (m)
         rotation_angle (float): the angle of the sector that is desired.
             Defaults to 360.0.
 

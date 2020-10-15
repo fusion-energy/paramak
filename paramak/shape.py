@@ -52,6 +52,8 @@ class Shape:
         union (paramak.shape or list, optional): If set, the current solid
             will be united with the provided solid or iterable of solids.
             Defaults to None.
+        units (str, optional): The units that the points are input as. 
+            Internally the points are converted to mm. Defaults to 'm'.
     """
 
     def __init__(
