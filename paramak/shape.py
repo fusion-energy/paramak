@@ -3,7 +3,10 @@ import numbers
 import warnings
 from collections import Iterable
 from hashlib import blake2b
+from os import fdopen, remove
 from pathlib import Path
+from shutil import copymode, move
+from tempfile import mkstemp
 
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
@@ -471,6 +474,7 @@ class Shape:
 
         with open(Pfilename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)
+
         print("Saved file as ", Pfilename)
 
         return str(Pfilename)
