@@ -274,7 +274,6 @@ class NeutronicsModelFromReactor():
             raise ValueError("the method using in create_neutronics_geometry \
                 should be either ppp or trelis not", method)
 
-
         if os.system(
                 "make_watertight dagmc_not_watertight.h5m -o dagmc.h5m") != 0:
             raise ValueError(
