@@ -51,7 +51,7 @@ class RotateSplineShape(Shape):
         # Creates a cadquery solid from points and revolves
         solid = (
             cq.Workplane(self.workplane)
-            .spline(self.points)
+            .spline(self.scaled_points)
             .close()
             .revolve(self.rotation_angle)
         )
