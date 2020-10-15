@@ -83,6 +83,7 @@ class NeutronicsModelFromReactor():
         max_lost_particles=10
     ):
         # input by user
+        reactor.rotation_angle = 360
         self.reactor = reactor
         self.materials = materials
         self.outputs = outputs
@@ -253,9 +254,8 @@ class NeutronicsModelFromReactor():
                 avaialbe from the CoreForm website https://www.coreform.com/
         """
 
-        if method not in ['ppp', 'trelis']:
-            raise ValueError("the method using in create_neutronics_geometry \
-                should be either ppp or trelis not", method)
+        os.system('rm dagmc_not_watertight.h5m')
+        os.system('rm dagmc.h5m')
 
         self.reactor.export_stp()
         self.reactor.export_neutronics_description()
@@ -265,21 +265,25 @@ class NeutronicsModelFromReactor():
             # this full path is needed for now
             os.system('/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json')
 
-            os.system('./occ_faceter brep')
+            os.system('occ_faceter manifest_processed/manifest_processed.brep')
 
-        if method == 'trelis':
+        elif method == 'trelis':
             os.system(
                 "trelis -batch -nographics make_faceteted_neutronics_model.py")
+        else:
+            raise ValueError("the method using in create_neutronics_geometry \
+                should be either ppp or trelis not", method)
+
 
         if os.system(
-                "make_watertight dagmc_notwatertight.h5m -o dagmc.h5m") != 0:
+                "make_watertight dagmc_not_watertight.h5m -o dagmc.h5m") != 0:
             raise ValueError(
                 "make_watertight failed, check DAGMC is install and the \
                     DAGMC/bin folder is in the path directory")
 
         print('neutronics model saved as dagmc.h5m')
 
-    def create_neutronics_model(self, method='trelis'):
+    def create_neutronics_model(self, method='ppp'):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (outputs), simulation settings (batches, particles per batch)
 
@@ -349,7 +353,7 @@ class NeutronicsModelFromReactor():
         # make the model from gemonetry, materials, settings and tallies
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
 
-    def simulate(self, verbose=True):
+    def simulate(self, verbose=True, method='ppp'):
         """Run the OpenMC simulation with the specified simulation_batches and
         simulation_particles_per_batch and tallies. Terminal output can
         disabled by setting verbose=False.
@@ -361,7 +365,7 @@ class NeutronicsModelFromReactor():
         """
 
         if self.model is None:
-            self.create_neutronics_model()
+            self.create_neutronics_model(method=method)
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
 
