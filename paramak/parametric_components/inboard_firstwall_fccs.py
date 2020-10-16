@@ -67,7 +67,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
         self._solid = value
 
     def create_solid(self):
-        """Creates a CadQuery 3d solid
+        """Creates a CadQuery 3D solid
 
            Returns:
               A CadQuery solid: A 3D solid volume
