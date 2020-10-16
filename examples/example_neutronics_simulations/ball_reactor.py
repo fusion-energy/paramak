@@ -27,7 +27,8 @@ def make_model_and_simulate():
         rotation_angle=360,
     )
 
-    # makes a homogenised material for the blanket from lithium lead and eurofer
+    # makes a homogenised material for the blanket from lithium lead and
+    # eurofer
     blanket_material = nmm.MultiMaterial(
         fracs=[0.8, 0.2],
         materials=[

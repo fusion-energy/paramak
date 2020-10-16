@@ -264,17 +264,20 @@ class NeutronicsModelFromReactor():
         if method == 'ppp':
             # as the installer connects to the system python not the conda python
             # this full path is needed for now
-            if os.system('/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json') !=0:
-                raise ValueError("geomPipeline.py failed, check PPP is installed")
+            if os.system(
+                    '/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json') != 0:
+                raise ValueError(
+                    "geomPipeline.py failed, check PPP is installed")
 
             # TODO allow tolerance to be user controlled
-            if os.system('occ_faceter manifest_processed/manifest_processed.brep') !=0:
+            if os.system(
+                    'occ_faceter manifest_processed/manifest_processed.brep') != 0:
                 raise ValueError(
-                "occ_faceter failed, check occ_faceter is install and the \
+                    "occ_faceter failed, check occ_faceter is install and the \
                     occ_faceter/bin folder is in the path directory")
 
         elif method == 'trelis':
-            
+
             if not Path("make_faceteted_neutronics_model.py").is_file():
                 raise ValueError("The make_faceteted_neutronics_model.py was \
                     not found in the directory")
@@ -285,7 +288,7 @@ class NeutronicsModelFromReactor():
                 raise ValueError("The dagmc_not_watertight.h5m was not found \
                     in the directory, the Trelis stage has failed")
 
-            #TODO use os system to check file is there
+            # TODO use os system to check file is there
         else:
             raise ValueError("the method using in create_neutronics_geometry \
                 should be either ppp or trelis not", method)
@@ -302,7 +305,7 @@ class NeutronicsModelFromReactor():
         import matplotlib.pyplot as plt
         plt.show(self.universe.plot(width=(1200, 1200), basis='xz'))
         # plt.show(self.universe.plot(width=(1200, 1200), basis='xy', colors={cell_1: 'blue'}))
-        plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))    
+        plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
 
     def create_neutronics_model(self, method='ppp'):
         """Uses OpenMC python API to make a neutronics model, including tallies
@@ -385,7 +388,7 @@ class NeutronicsModelFromReactor():
                 to True.
         """
 
-        #if self.model is None:
+        # if self.model is None:
         self.create_neutronics_model(method=method)
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
