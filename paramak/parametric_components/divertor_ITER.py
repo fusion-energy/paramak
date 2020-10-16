@@ -20,7 +20,7 @@ class ITERtypeDivertor(RotateMixedShape):
             vertical targets. Defaults to (50, 25).
         lengths ((float, float), optional): leg length (cm) of the vertical
             targets. Defaults to (78, 87).
-        dome (bool, optional): If set to False, the dome will not be created.
+        dome (bool, optional): if set to False, the dome will not be created.
             Defaults to True.
         dome_height (float, optional): distance (cm) between the dome base and
             lower points. Defaults to 43.
