@@ -8,7 +8,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
 
     Args:
         height (float): height of the center column shield.
-        arc_height (float): height of the outer circlar profile of the center
+        arc_height (float): height of the outer circular profile of the center
             column shield.
         inner_radius (float): the inner radius of the center column shield.
         mid_radius (float): the inner radius of the outer circular profile of
