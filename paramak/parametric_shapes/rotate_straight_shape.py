@@ -7,7 +7,7 @@ from paramak import Shape
 
 class RotateStraightShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with straight
-    connections
+    connections.
 
     Args:
         rotation_angle (float): The rotation angle to use when revolving the
@@ -41,8 +41,7 @@ class RotateStraightShape(Shape):
         self._rotation_angle = value
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections
-           edges, azimuth_placement_angle and rotation angle.
+        """Creates a rotated 3d solid using points with straight edges.
 
            Returns:
               A CadQuery solid: A 3D solid volume
