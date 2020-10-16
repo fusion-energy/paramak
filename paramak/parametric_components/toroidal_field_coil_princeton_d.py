@@ -23,11 +23,11 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             Defaults to 0.0.
         with_inner_leg (bool, optional): Include the inner tf leg. Defaults to
             True.
-        stp_filename (str, optional): Defaults to
+        stp_filename (str, optional): defaults to
             "ToroidalFieldCoilPrincetonD.stp".
-        stl_filename (str, optional): Defaults to
+        stl_filename (str, optional): defaults to
             "ToroidalFieldCoilPrincetonD.stl".
-        material_tag (str, optional): Defaults to "outer_tf_coil_mat".
+        material_tag (str, optional): defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
@@ -70,7 +70,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     def azimuth_placement_angle(self, value):
         self._azimuth_placement_angle = value
 
-    def compute_inner_points(self, R1, R2):
+    def _compute_inner_points(self, R1, R2):
         """Computes the inner curve points
 
         Args:
@@ -78,8 +78,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             R2 (float): largest radius (cm)
 
         Returns:
-            (list, list, list): R, Z and derivative lists for outer curve
-                points
+            (list, list, list): R, Z and derivative lists for outer curve 
+            points
         """
         def error(Z0, R0, R2):
             segment = get_segment(R0, R2, Z0)
@@ -113,7 +113,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         dz_dr = np.concatenate([np.flip(segment1[2]), segment2[2]])
         return R, Z, dz_dr
 
-    def compute_outer_points(self, R, Z, thickness, derivative):
+    def _compute_outer_points(self, R, Z, thickness, derivative):
         """Computes outer curve points based on thickness
 
         Args:
@@ -147,8 +147,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         """Finds the XZ points joined by connections that describe the 2D
         profile of the toroidal field coil shape."""
         # compute inner and outer points
-        R_inner, Z_inner, dz_dr = self.compute_inner_points(self.R1, self.R2)
-        R_outer, Z_outer = self.compute_outer_points(
+        R_inner, Z_inner, dz_dr = self._compute_inner_points(self.R1, self.R2)
+        R_outer, Z_outer = self._compute_outer_points(
             R_inner, Z_inner, self.thickness, dz_dr)
         R_outer, Z_outer = np.flip(R_outer), np.flip(Z_outer)
 
