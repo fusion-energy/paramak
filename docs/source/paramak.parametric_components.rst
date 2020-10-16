@@ -349,14 +349,24 @@ Plasma()
 PlasmaFromPoints()
 ^^^^^^^^^^^^^^^^^^
 
-|Plasmastp| |Plasmasvg|
+|PlasmaFPstp| |PlasmaFPsvg|
 
-.. |Plasmastp| image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
+.. |PlasmaFPstp| image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
     :width: 300px
-.. |Plasmasvg| image:: https://user-images.githubusercontent.com/8583900/94805330-213ced80-03e4-11eb-80b4-b162f2f7a565.png
+.. |PlasmaFPsvg| image:: https://user-images.githubusercontent.com/8583900/94805330-213ced80-03e4-11eb-80b4-b162f2f7a565.png
     :width: 380px
 
 .. automodule:: paramak.parametric_components.tokamak_plasma_from_points
+   :members:
+   :show-inheritance:
+
+PlasmaBoundaries()
+^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
+    :width: 300px
+
+.. automodule:: paramak.parametric_components.tokamak_plasma_plasmaboundaries
    :members:
    :show-inheritance:
 
