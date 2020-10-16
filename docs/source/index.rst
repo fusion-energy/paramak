@@ -247,7 +247,12 @@ methods like export_stp() and export_stl().
 Usage - Parametric Reactors
 ---------------------------
 
-Parametric Reactors are wrapped versions of a combination of parametric shapes and components that comprise a particular reactor design. Some parametric reactors include a ball reactor and a submersion ball reactor. These allow full reactor models to be constructed by specifying a series of simple parameters. This example shows the construction of a simple ball reactor without the optional outer pf and tf coils.
+Parametric Reactors() are wrapped versions of a combination of parametric
+shapes and components that comprise a particular reactor design. Some
+parametric reactors include a ball reactor and a submersion ball reactor. These
+allow full reactor models to be constructed by specifying a series of simple
+parameters. This example shows the construction of a simple ball reactor
+without the optional outer pf and tf coils.
 
 .. code-block:: python
 
@@ -279,16 +284,18 @@ Parametric Reactors are wrapped versions of a combination of parametric shapes a
    :height: 300
    :align: center
 
-Usage - Reactor object
+Usage - Reactor Object
 ----------------------
 
-A reactor object provides a container object for all Shape objects created, and allows operations to be performed on the whole collection of Shapes.
+A reactor object provides a container object for all Shape objects created, and
+allows operations to be performed on the whole collection of Shapes.
 
 .. code-block:: python
 
    import paramak
 
-Initiate a Reactor object and pass a list of all Shape objects to the shapes_and_components parameter.
+Initiate a Reactor object and pass a list of all Shape objects to the
+shapes_and_components parameter.
 
 .. code-block:: python
 
@@ -304,7 +311,8 @@ A html graph of the combined Shapes can be created.
 Usage - Neutronics model creation
 ---------------------------------
 
-First assign stp_filenames to each of the Shape objects that were created earlier on.
+First assign stp_filenames to each of the Shape objects that were created
+earlier on.
 
 .. code-block:: python
 
@@ -328,13 +336,15 @@ Now add the Shape objects to a freshly created reactor object.
 
    new_reactor = Reactor([my_shape, my_plasma])
 
-The entire reactor can now be exported as step files. This also generates a DAGMC graveyard automatically.
+The entire reactor can now be exported as step files. This also generates a
+DAGMC graveyard automatically.
 
 .. code-block:: python
 
    my_reactor.export_stp()
 
-A manifest.json file that contains all the step filenames and materials can now be created.
+A manifest.json file that contains all the step filenames and materials can now
+be created.
 
 .. code-block:: python
 
