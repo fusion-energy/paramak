@@ -7,7 +7,7 @@ from paramak import Shape
 
 class ExtrudeMixedShape(Shape):
     """Extrudes a 3d CadQuery solid from points connected with a mixture of
-    straight and spline connections
+    straight and spline connections.
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
@@ -42,8 +42,8 @@ class ExtrudeMixedShape(Shape):
         self._distance = value
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight and spline
-        connections edges, azimuth_placement_angle and distance.
+        """Creates an extruded 3d solid using points connected with straight
+        and spline edges.
 
         :return: a 3d solid volume
         :rtype: a cadquery solid

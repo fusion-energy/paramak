@@ -56,8 +56,8 @@ class ExtrudeCircleShape(Shape):
         self._distance = value
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections
-        edges, azimuth_placement_angle and rotation angle.
+        """Creates an extruded 3d solid using points connected with circular
+        edges.
 
         :return: a 3d solid volume
         :rtype: a cadquery solid
