@@ -10,11 +10,11 @@ class VacuumVessel(RotateStraightShape):
         height (float): height of the vessel.
         inner_radius (float): the inner radius of the vessel.
         thickness (float): thickness of the vessel
-        stp_filename (str, optional): Defaults to
+        stp_filename (str, optional): defaults to
             "CenterColumnShieldCylinder.stp".
-        stl_filename (str, optional): Defaults to
+        stl_filename (str, optional): defaults to
             "CenterColumnShieldCylinder.stl".
-        material_tag (str, optional): Defaults to "center_column_shield_mat".
+        material_tag (str, optional): defaults to "center_column_shield_mat".
     """
 
     def __init__(

@@ -3,8 +3,8 @@ from paramak import Plasma
 
 
 class PlasmaFromPoints(Plasma):
-    """Creates a double null tokamak plasma shape that is controlled
-       by 3 coordinates.
+    """Creates a double null tokamak plasma shape that is controlled by 3
+    coordinates.
 
     Args:
         outer_equatorial_x_point (float): the x value of the outer equatorial

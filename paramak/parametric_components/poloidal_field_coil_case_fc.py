@@ -2,18 +2,18 @@ from paramak import RotateStraightShape
 
 
 class PoloidalFieldCoilCaseFC(RotateStraightShape):
-    """Creates a casing for a reactangular poloidal field coil by building
+    """Creates a casing for a rectangular poloidal field coil by building
     around an existing coil (which is passed as an argument on construction).
 
     Args:
         pf_coil (paramak.PoloidalFieldCoil): a pf coil object with a set width,
             height and center point.
         casing_thickness (float): the thickness of the coil casing (cm).
-        stp_filename (str, optional): Defaults to
+        stp_filename (str, optional): defaults to
             "PoloidalFieldCoilCaseFC.stp".
-        stl_filename (str, optional): Defaults to
+        stl_filename (str, optional): defaults to
             "PoloidalFieldCoilCaseFC.stl".
-        material_tag (str, optional): Defaults to "pf_coil_case_mat".
+        material_tag (str, optional): defaults to "pf_coil_case_mat".
     """
 
     def __init__(

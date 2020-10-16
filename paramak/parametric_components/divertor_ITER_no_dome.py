@@ -4,7 +4,7 @@ import numpy as np
 
 
 class ITERtypeDivertorNoDome(ITERtypeDivertor):
-    """Creates a ITER-like divertor with inner and outer vertical targets
+    """Creates an ITER-like divertor with inner and outer vertical targets
     """
 
     def __init__(

@@ -3,7 +3,7 @@ from paramak import ExtrudeStraightShape
 
 
 class PortCutterRectangular(ExtrudeStraightShape):
-    """Creates a extruded shape with a rectangular section that is used to cut
+    """Creates an extruded shape with a rectangular section that is used to cut
     other components (eg. blanket, vessel,..) in order to create ports.
 
     Args:
@@ -13,10 +13,10 @@ class PortCutterRectangular(ExtrudeStraightShape):
         distance (float): extruded distance (cm) of the cutter
         fillet_radius (float, optional): If not None, radius (cm) of fillets
             added to edges orthogonal to the Z direction. Defaults to None.
-        stp_filename (str, optional): Defaults to "PortCutterRectangular.stp".
-        stl_filename (str, optional): Defaults to "PortCutterRectangular.stl".
-        name (str, optional): Defaults to "rectangular_port_cutter".
-        material_tag (str, optional): Defaults to
+        stp_filename (str, optional): defaults to "PortCutterRectangular.stp".
+        stl_filename (str, optional): defaults to "PortCutterRectangular.stl".
+        name (str, optional): defaults to "rectangular_port_cutter".
+        material_tag (str, optional): defaults to
             "rectangular_port_cutter_mat".
     """
 

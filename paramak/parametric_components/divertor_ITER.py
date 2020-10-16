@@ -6,11 +6,11 @@ import numpy as np
 
 
 class ITERtypeDivertor(RotateMixedShape):
-    """Creates a ITER-like divertor with inner and outer vertical targets and
+    """Creates an ITER-like divertor with inner and outer vertical targets and
     dome
 
     Args:
-        anchors ((float, float), (float, float), optional): xy coordinates of
+        anchors ((float, float), (float, float), optional): xz coordinates of
             points at the top of vertical targets.
             Defaults to ((450, -300), (561, -367)).
         coverages ((float, float), optional): coverages (anticlockwise) in
@@ -20,7 +20,7 @@ class ITERtypeDivertor(RotateMixedShape):
             vertical targets. Defaults to (50, 25).
         lengths ((float, float), optional): leg length (cm) of the vertical
             targets. Defaults to (78, 87).
-        dome (bool, optional): If set to False, the dome will not be created.
+        dome (bool, optional): if set to False, the dome will not be created.
             Defaults to True.
         dome_height (float, optional): distance (cm) between the dome base and
             lower points. Defaults to 43.
@@ -30,10 +30,10 @@ class ITERtypeDivertor(RotateMixedShape):
         dome_pos (float, optional): relative location of the dome between
             vertical targets (0 inner, 1 outer). Ex: 0.5 will place the dome
             in between the targets. Defaults to 0.5.
-        tilts ((float, float), optional): Tilt angles (anticlockwise) in
+        tilts ((float, float), optional): tilt angles (anticlockwise) in
             degrees for the vertical targets. Defaults to (-27, 0).
-        stp_filename (str, optional): Defaults to "ITERtypeDivertor.stp".
-        stl_filename (str, optional): Defaults to "ITERtypeDivertor.stl".
+        stp_filename (str, optional): defaults to "ITERtypeDivertor.stp".
+        stl_filename (str, optional): defaults to "ITERtypeDivertor.stl".
     """
 
     def __init__(
@@ -70,16 +70,16 @@ class ITERtypeDivertor(RotateMixedShape):
         self.dome_pos = dome_pos
         self.dome_thickness = dome_thickness
 
-    def create_vertical_target_points(
+    def _create_vertical_target_points(
             self, anchor, coverage, tilt, radius, length):
         """Creates a list of points for a vertical target
 
         Args:
-            anchor (float, float): xy coordinates of point at
+            anchor (float, float): xz coordinates of point at
                 the top of the vertical target.
             coverage (float): coverages (anticlockwise) in degrees of the
                 circular part of the vertical target.
-            tilt (float): Tilt angle (anticlockwise) in
+            tilt (float): tilt angle (anticlockwise) in
                 degrees for the vertical target.
             radius (float): radius (cm) of circular part of the vertical
                 target.
@@ -107,7 +107,7 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([C[0], C[1]])
         return points
 
-    def create_dome_points(
+    def _create_dome_points(
         self, C, F, dome_length, dome_height, dome_thickness, dome_pos
     ):
         """Creates a list of points for the dome alongside with their
@@ -123,7 +123,7 @@ class ITERtypeDivertor(RotateMixedShape):
 
         Returns:
             list: list of points with connectivity
-                ([[x, y, 'connection_type'], [...]])
+                ([[x, z, 'connection_type'], [...]])
         """
         points = []
 
@@ -158,12 +158,12 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([E[0], E[1], "straight"])
         return points
 
-    def create_casing_points(self, anchors, C, F, targets_lengths):
+    def _create_casing_points(self, anchors, C, F, targets_lengths):
         """Creates a list of points for the casing alongside with their
         connectivity
 
         Args:
-            anchors ((float, float), (float, float)): xy coordinates of points
+            anchors ((float, float), (float, float)): xz coordinates of points
                 at the top of vertical targets.
             C (float, float): coordinate of inner end of the dome
             F (float, float): coordinate of outer end of the dome
@@ -171,7 +171,7 @@ class ITERtypeDivertor(RotateMixedShape):
 
         Returns:
             list: list of points with connectivity
-                ([[x, y, 'connection_type'], [...]])
+                ([[x, z, 'connection_type'], [...]])
         """
         B, G = anchors
         h1, h2 = targets_lengths
@@ -196,7 +196,7 @@ class ITERtypeDivertor(RotateMixedShape):
         """
 
         # IVT points
-        IVT_points = self.create_vertical_target_points(
+        IVT_points = self._create_vertical_target_points(
             self.IVT_anchor,
             math.radians(self.IVT_coverage),
             math.radians(self.IVT_tilt),
@@ -209,7 +209,7 @@ class ITERtypeDivertor(RotateMixedShape):
             IVT_points[i].append(connection)
 
         # OVT points
-        OVT_points = self.create_vertical_target_points(
+        OVT_points = self._create_vertical_target_points(
             self.OVT_anchor,
             -math.radians(self.OVT_coverage),
             math.radians(self.OVT_tilt),
@@ -227,7 +227,7 @@ class ITERtypeDivertor(RotateMixedShape):
         # Dome points
         dome_points = []
         if self.dome:
-            dome_points = self.create_dome_points(
+            dome_points = self._create_dome_points(
                 IVT_points[-1][:2],
                 OVT_points[0][:2],
                 self.dome_length,
@@ -237,7 +237,7 @@ class ITERtypeDivertor(RotateMixedShape):
             )
 
         # casing points
-        casing_points = self.create_casing_points(
+        casing_points = self._create_casing_points(
             anchors=(self.IVT_anchor, self.OVT_anchor),
             C=IVT_points[-1][:2],
             F=OVT_points[0][:2],

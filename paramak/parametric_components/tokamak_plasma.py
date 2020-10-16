@@ -19,17 +19,17 @@ class Plasma(RotateSplineShape):
             Defaults to 0.55.
         vertical_displacement (float, optional): the vertical_displacement
             of the plasma (cm). Defaults to 0.0.
-        num_points (int, optional): number of points to described the
+        num_points (int, optional): number of points to describe the
             shape. Defaults to 50.
         configuration (str, optional): plasma configuration
             ("non-null", "single-null", "double-null").
             Defaults to "non-null".
-        x_point_shift (float, optional): Shift parameters for locating the
+        x_point_shift (float, optional): shift parameters for locating the
             X points in [0, 1]. Defaults to 0.1.
         name (str, optional): Defaults to "plasma".
-        material_tag (str, optional): Defaults to "DT_plasma".
-        stp_filename (str, optional): Defaults to "plasma.stp".
-        stl_filename (str, optional): Defaults to "plasma.stl".
+        material_tag (str, optional): defaults to "DT_plasma".
+        stp_filename (str, optional): defaults to "plasma.stp".
+        stl_filename (str, optional): defaults to "plasma.stl".
     """
 
     def __init__(
@@ -126,11 +126,11 @@ class Plasma(RotateSplineShape):
 
     def compute_x_points(self):
         """Computes the location of X points based on plasma parameters and
-         configuration
+        configuration
 
         Returns:
             ((float, float), (float, float)): lower and upper x points
-             coordinates. None if no x points
+            coordinates. None if no x points
         """
         lower_x_point, upper_x_point = None, None  # non-null config
         shift = self.x_point_shift

@@ -19,16 +19,16 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             vertical section of the TF coil (cm).
         thickness (float): the thickness of the toroidal field coil.
         distance (float): the extrusion distance.
-        number_of_coils (int): the number of tf coils. This changes with
+        number_of_coils (int): the number of TF coils. This changes with
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
-        with_inner_leg (bool, optional): Include the inner tf leg. Defaults to
+        with_inner_leg (bool, optional): Include the inner TF leg. Defaults to
             True.
-        stp_filename (str, optional): Defaults to
+        stp_filename (str, optional): defaults to
             "ToroidalFieldCoilCoatHangar.stp".
-        stl_filename (str, optional): Defaults to
+        stl_filename (str, optional): defaults to
             "ToroidalFieldCoilCoatHangar.stl".
-        material_tag (str, optional): Defaults to "outer_tf_coil_mat".
+        material_tag (str, optional): defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
@@ -155,8 +155,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         self.azimuth_placement_angle = angles
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections
-        edges, azimuth_placement_angle and rotation_angle.
+        """Creates a 3d solid using points with straight edges.
 
         Returns:
            A CadQuery solid: A 3D solid volume

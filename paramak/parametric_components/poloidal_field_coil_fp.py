@@ -5,7 +5,7 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
     """Creates a rectangular poloidal field coil.
 
     Args:
-        corner_points (list of float tuples): the coordinates of the oppersite
+        corner_points (list of float tuples): the coordinates of the opposite
             corners of the rectangular shaped coil e.g [(x1, y1), (x2, y2)]
     """
 
