@@ -120,7 +120,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         mid_coverage *= np.pi / 180
 
         # create inner coordinates
-        R_inner, Z_inner = self._(
+        R_inner, Z_inner = self._compute_curve(
             self.R1, self.h * 0.5, radii=(small_radius, mid_radius),
             coverages=(small_coverage, mid_coverage))
 
