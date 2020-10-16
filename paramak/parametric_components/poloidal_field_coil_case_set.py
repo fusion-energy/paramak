@@ -136,9 +136,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         self.points = all_points
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections edges,
-           azimuth_placement_angle and rotation angle. Individual solids in
-           the compound can be accessed using .Solids()[i] where i is an int
+        """Creates a 3d solid using points with straight edges.
 
            Returns:
               A CadQuery solid: A 3D solid volume
