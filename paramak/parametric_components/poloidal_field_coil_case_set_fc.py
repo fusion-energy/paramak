@@ -11,10 +11,10 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         CadQuery compound object
         casing_thicknesses (list of floats): the thicknesses of the coil
             casing (cm).
-        stp_filename (str, optional): Defaults to "PoloidalFieldCoil.stp".
-        stl_filename (str, optional): Defaults to "PoloidalFieldCoil.stl".
-        name (str, optional): Defaults to "pf_coil".
-        material_tag (str, optional): Defaults to "pf_coil_mat".
+        stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
+        stl_filename (str, optional): defaults to "PoloidalFieldCoil.stl".
+        name (str, optional): defaults to "pf_coil".
+        material_tag (str, optional): defaults to "pf_coil_mat".
     """
 
     def __init__(
