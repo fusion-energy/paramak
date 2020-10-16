@@ -12,7 +12,7 @@ class PortCutterRotated(RotateStraightShape):
     Args:
         center_point (tuple of floats): the center point where the
             ports are aimed towards, typically the center of the plasma.
-        polar_coverage_angle (float): the angluar extent of port in the
+        polar_coverage_angle (float): the angular extent of port in the
             polar direction (degrees). Defaults to 10.0.
         polar_placement_angle (float): The angle used when rotating the shape
             on the polar axis. 0 degrees is the outboard equatorial point.
@@ -21,11 +21,11 @@ class PortCutterRotated(RotateStraightShape):
             point outwards (cm). Default 3000.0.
         fillet_radius (float, optional): If not None, radius (cm) of fillets
             added to all edges. Defaults to None.
-        rotation_angle (float, optional): Defaults to 0.0.
-        stp_filename (str, optional): Defaults to "PortCutter.stp".
-        stl_filename (str, optional): Defaults to "PortCutter.stl".
-        name (str, optional): Defaults to "port_cutter".
-        material_tag (str, optional): Defaults to "port_cutter_mat".
+        rotation_angle (float, optional): defaults to 0.0.
+        stp_filename (str, optional): defaults to "PortCutter.stp".
+        stl_filename (str, optional): defaults to "PortCutter.stl".
+        name (str, optional): defaults to "port_cutter".
+        material_tag (str, optional): defaults to "port_cutter_mat".
     """
 
     def __init__(
