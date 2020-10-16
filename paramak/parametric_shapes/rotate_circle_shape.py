@@ -50,8 +50,7 @@ class RotateCircleShape(Shape):
         self._radius = value
 
     def create_solid(self):
-        """Creates a 3d solid using points, radius, azimuth_placement_angle and
-           rotation_angle.
+        """Creates a rotated 3d solid using points with circular edges.
 
            Returns:
               A CadQuery solid: A 3D solid volume
