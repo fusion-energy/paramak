@@ -2,6 +2,7 @@ import os
 import json
 from collections import defaultdict
 import warnings
+from pathlib import Path
 
 try:
     from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
@@ -202,7 +203,7 @@ class NeutronicsModelFromReactor():
         source for use in the simulation"""
 
         self.pedestal_radius = self.pedestal_radius_factor * \
-            (self.reactor.minor_radius / 100)
+            (self.reactor.minor_radius / 1000)
 
         my_plasma = PlasmaSource(
             elongation=self.reactor.elongation,
@@ -214,8 +215,8 @@ class NeutronicsModelFromReactor():
             ion_temperature_peaking_factor=self.ion_temperature_peaking_factor,
             ion_temperature_pedestal=self.ion_temperature_pedestal,
             ion_temperature_separatrix=self.ion_temperature_separatrix,
-            major_radius=self.reactor.major_radius / 100,
-            minor_radius=self.reactor.minor_radius / 100,
+            major_radius=self.reactor.major_radius / 1000,
+            minor_radius=self.reactor.minor_radius / 1000,
             pedestal_radius=self.pedestal_radius,
             plasma_id=1,
             shafranov_shift=self.shafranov_shift,
@@ -263,13 +264,28 @@ class NeutronicsModelFromReactor():
         if method == 'ppp':
             # as the installer connects to the system python not the conda python
             # this full path is needed for now
-            os.system('/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json')
+            if os.system('/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json') !=0:
+                raise ValueError("geomPipeline.py failed, check PPP is installed")
 
-            os.system('occ_faceter manifest_processed/manifest_processed.brep')
+            # TODO allow tolerance to be user controlled
+            if os.system('occ_faceter manifest_processed/manifest_processed.brep') !=0:
+                raise ValueError(
+                "occ_faceter failed, check occ_faceter is install and the \
+                    occ_faceter/bin folder is in the path directory")
 
         elif method == 'trelis':
+            
+            if not Path("make_faceteted_neutronics_model.py").is_file():
+                raise ValueError("The make_faceteted_neutronics_model.py was \
+                    not found in the directory")
             os.system(
                 "trelis -batch -nographics make_faceteted_neutronics_model.py")
+
+            if not Path("dagmc_not_watertight.h5m").is_file():
+                raise ValueError("The dagmc_not_watertight.h5m was not found \
+                    in the directory, the Trelis stage has failed")
+
+            #TODO use os system to check file is there
         else:
             raise ValueError("the method using in create_neutronics_geometry \
                 should be either ppp or trelis not", method)
@@ -281,6 +297,12 @@ class NeutronicsModelFromReactor():
                     DAGMC/bin folder is in the path directory")
 
         print('neutronics model saved as dagmc.h5m')
+
+    def plot_neutronics_geometry(self):
+        import matplotlib.pyplot as plt
+        plt.show(self.universe.plot(width=(1200, 1200), basis='xz'))
+        # plt.show(self.universe.plot(width=(1200, 1200), basis='xy', colors={cell_1: 'blue'}))
+        plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))    
 
     def create_neutronics_model(self, method='ppp'):
         """Uses OpenMC python API to make a neutronics model, including tallies
@@ -305,8 +327,8 @@ class NeutronicsModelFromReactor():
 
         # this is the underlying geometry container that is filled with the
         # faceteted DGAMC CAD model
-        universe = openmc.Universe()
-        geom = openmc.Geometry(universe)
+        self.universe = openmc.Universe()
+        geom = openmc.Geometry(self.universe)
 
         # settings for the number of neutrons to simulate
         settings = openmc.Settings()
@@ -363,8 +385,8 @@ class NeutronicsModelFromReactor():
                 to True.
         """
 
-        if self.model is None:
-            self.create_neutronics_model(method=method)
+        #if self.model is None:
+        self.create_neutronics_model(method=method)
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
 
