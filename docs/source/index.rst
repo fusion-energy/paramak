@@ -167,7 +167,7 @@ using CadQuery's powerful filtering capabilties to create more complex models
 |                                                           |                                                           |                                                            |
 |                                                           |     RotateSplineShape()                                   |     ExtrudeSplineShape()                                   |
 +-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with a circle                           | |rotatecircle|                                            | |extrudecircle|                                            |
+| Points connected with a circle                            | |rotatecircle|                                            | |extrudecircle|                                            |
 |                                                           |                                                           |                                                            |
 |                                                           |                                                           |                                                            |
 |                                                           |                                                           |                                                            |
