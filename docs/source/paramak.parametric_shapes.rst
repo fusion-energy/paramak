@@ -1,4 +1,4 @@
-Paramak Shapes
+Parametric Shapes
 ==============
 
 
