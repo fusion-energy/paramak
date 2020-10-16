@@ -3,7 +3,7 @@ from paramak import ExtrudeCircleShape
 
 
 class PortCutterCircular(ExtrudeCircleShape):
-    """Creates a extruded shape with a circular section that is used to cut
+    """Creates an extruded shape with a circular section that is used to cut
     other components (eg. blanket, vessel,..) in order to create ports.
 
     Args:
@@ -11,10 +11,10 @@ class PortCutterCircular(ExtrudeCircleShape):
         height (float): height (cm) of the port
         width (float): width (cm) of the port
         distance (float): extruded distance (cm) of the cutter
-        stp_filename (str, optional): Defaults to "PortCutterCircular.stp".
-        stl_filename (str, optional): Defaults to "PortCutterCircular.stl".
-        name (str, optional): Defaults to "circular_port_cutter".
-        material_tag (str, optional): Defaults to "circular_port_cutter_mat".
+        stp_filename (str, optional): defaults to "PortCutterCircular.stp".
+        stl_filename (str, optional): defaults to "PortCutterCircular.stl".
+        name (str, optional): defaults to "circular_port_cutter".
+        material_tag (str, optional): defaults to "circular_port_cutter_mat".
     """
 
     def __init__(
