@@ -6,7 +6,7 @@ import numpy as np
 
 
 class ITERtypeDivertor(RotateMixedShape):
-    """Creates a ITER-like divertor with inner and outer vertical targets and
+    """Creates an ITER-like divertor with inner and outer vertical targets and
     dome
 
     Args:
