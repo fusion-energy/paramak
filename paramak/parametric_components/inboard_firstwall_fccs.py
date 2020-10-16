@@ -6,7 +6,7 @@ from paramak import RotateMixedShape, CenterColumnShieldCylinder, \
 
 class InboardFirstwallFCCS(RotateMixedShape):
     """An inboard firstwall component that builds a constant thickness layer
-    from the central column shield. The center column shields can be of type
+    from the central column shield. The center column shields can be of type:
     CenterColumnShieldCylinder, CenterColumnShieldHyperbola,
     CenterColumnShieldFlatTopHyperbola, CenterColumnShieldCircular,
     CenterColumnShieldPlasmaHyperbola or CenterColumnShieldFlatTopCircular
