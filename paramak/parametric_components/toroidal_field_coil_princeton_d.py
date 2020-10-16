@@ -78,7 +78,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             R2 (float): largest radius (cm)
 
         Returns:
-            (list, list, list): R, Z and derivative lists for outer curve 
+            (list, list, list): R, Z and derivative lists for outer curve
             points
         """
         def error(Z0, R0, R2):
