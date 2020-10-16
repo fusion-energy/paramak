@@ -7,7 +7,7 @@ from paramak import Shape
 
 
 class ExtrudeStraightShape(Shape):
-    """Extrudes a 3d CadQuery solid from points connected with straight lines
+    """Extrudes a 3d CadQuery solid from points connected with straight lines.
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
@@ -45,8 +45,8 @@ class ExtrudeStraightShape(Shape):
         self._distance = value
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections
-        edges, azimuth_placement_angle and rotation_angle.
+        """Creates an extruded 3d solid using points connected with straight
+        edges.
 
         Returns:
            A CadQuery solid: A 3D solid volume
