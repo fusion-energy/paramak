@@ -474,6 +474,8 @@ class Shape:
 
         with open(Pfilename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)
+        
+        self._replace(Pfilename, 'SI_UNIT(.MILLI.,.METRE.)', 'SI_UNIT(.CENTI.,.METRE.)')
 
         print("Saved file as ", Pfilename)
 
@@ -760,3 +762,30 @@ class Shape:
         self.hash_value = self.get_hash()
 
         return solid
+
+    def _replace(self, filename, pattern, subst):
+        """Opens a file and replaces occurances of a particular string
+            (pattern)with a new string (subst) and overwrites the file.
+            Used internally within the paramak to ensure .STP files are
+            in units of cm not the default mm.
+        Args:
+            filename (str): the filename of the file to edit
+            pattern (str): the string that should be removed
+            subst (str): the string that should be used in the place of the 
+                pattern string
+        """
+        # Create temp file
+        fh, abs_path = mkstemp()
+        with fdopen(fh,'w') as new_file:
+            with open(filename) as old_file:
+                for line in old_file:
+                    new_file.write(line.replace(pattern, subst))
+        
+        # Copy the file permissions from the old file to the new file
+        copymode(filename, abs_path)
+        
+        # Remove original file
+        remove(filename)
+        
+        # Move new file
+        move(abs_path, filename)
