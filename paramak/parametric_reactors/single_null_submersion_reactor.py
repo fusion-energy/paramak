@@ -95,8 +95,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             divertor_radial_thickness=divertor_radial_thickness,
             support_radial_thickness=support_radial_thickness,
             plasma_high_point=plasma_high_point,
-            **kwargs
-        )
+            **kwargs)
         self.major_radius = None
         self.minor_radius = None
         self.elongation = None
