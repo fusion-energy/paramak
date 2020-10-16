@@ -7,7 +7,7 @@ from paramak import Shape
 
 class ExtrudeSplineShape(Shape):
     """Extrudes a 3d CadQuery solid from points connected with spline
-    connections
+    connections.
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
@@ -41,8 +41,8 @@ class ExtrudeSplineShape(Shape):
         self._distance = value
 
     def create_solid(self):
-        """Creates a 3d solid using points with spline
-           edges, azimuth_placement_angle and distance.
+        """Creates an extruded 3d solid using points connected with spline
+        edges.
 
         :return: a 3d solid volume
         :rtype: a cadquery solid

@@ -7,7 +7,7 @@ from paramak import Shape
 
 class RotateMixedShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with a mixture of
-    straight lines and splines
+    straight lines and splines.
 
     Args:
         rotation_angle (float, optional): The rotation_angle to use when
@@ -40,8 +40,7 @@ class RotateMixedShape(Shape):
         self._rotation_angle = value
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight and spline
-           connections edges, azimuth_placement_angle and distance.
+        """Creates a rotated 3d solid using points with straight and spline edges.
 
            Returns:
               A CadQuery solid: A 3D solid volume
