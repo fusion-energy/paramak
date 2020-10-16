@@ -32,4 +32,7 @@ setuptools.setup(
         "matplotlib",
         "plasmaboundaries",
     ],
+    extras_require={
+        'neutronics':  ["neutronics_material_maker"]
+    }
 )
