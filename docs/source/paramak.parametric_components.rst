@@ -2,8 +2,8 @@ Parametric Components
 =====================
 
 These are components that represent a selection of the components found in fusion
-reactors and are created from parameters. These componets all inherit from the 
-parametric shape classes.
+reactors and are created from parameters. These components all inherit from the 
+parametric Shape classes.
 
 BlanketConstantThicknessArcH()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
