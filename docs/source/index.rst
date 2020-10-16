@@ -308,7 +308,7 @@ A html graph of the combined Shapes can be created.
    my_reactor.export_html('reactor.html')
 
 
-Usage - Neutronics model creation
+Usage - Neutronics Model Creation
 ---------------------------------
 
 First assign stp_filenames to each of the Shape objects that were created
