@@ -16,18 +16,18 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             (deg)
         thickness (float): magnet thickness (cm)
         distance (float): extrusion distance (cm)
-        number_of_coils (int): the number of tf coils. This changes by the
+        number_of_coils (int): the number of TF coils. This changes by the
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
         vertical_displacement (float, optional): vertical displacement (cm).
             Defaults to 0.0.
         with_inner_leg (bool, optional): Include the inner tf leg. Defaults to
             True.
-        stp_filename (str, optional): Defaults to
+        stp_filename (str, optional): defaults to
             "ToroidalFieldCoilPrincetonD.stp".
-        stl_filename (str, optional): Defaults to
+        stl_filename (str, optional): defaults to
             "ToroidalFieldCoilPrincetonD.stl".
-        material_tag (str, optional): Defaults to "outer_tf_coil_mat".
+        material_tag (str, optional): defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
@@ -74,7 +74,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
     def azimuth_placement_angle(self, value):
         self._azimuth_placement_angle = value
 
-    def compute_curve(self, R1, h, radii, coverages):
+    def _compute_curve(self, R1, h, radii, coverages):
         npoints = 500
 
         small_radius, mid_radius = radii
@@ -120,12 +120,12 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         mid_coverage *= np.pi / 180
 
         # create inner coordinates
-        R_inner, Z_inner = self.compute_curve(
+        R_inner, Z_inner = self._(
             self.R1, self.h * 0.5, radii=(small_radius, mid_radius),
             coverages=(small_coverage, mid_coverage))
 
         # create outer coordinates
-        R_outer, Z_outer = self.compute_curve(
+        R_outer, Z_outer = self._compute_curve(
             self.R1 - thickness, self.h * 0.5,
             radii=(small_radius + thickness, mid_radius + thickness),
             coverages=(small_coverage, mid_coverage))
