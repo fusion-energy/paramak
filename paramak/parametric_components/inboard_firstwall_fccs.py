@@ -39,7 +39,10 @@ class InboardFirstwallFCCS(RotateMixedShape):
 
         self.central_column_shield = central_column_shield
         self.thickness = thickness
-        self.cut = self.central_column_shield
+        if self.cut is None:
+            self.cut = self.central_column_shield
+        else:
+            self.cut = [*[self.cut], self.central_column_shield]
 
     @property
     def thickness(self):
