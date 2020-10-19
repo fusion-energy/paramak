@@ -59,6 +59,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
 
     def find_points(self):
 
+        # check that is an acceptable class
         acceptable_classes = (
             CenterColumnShieldCylinder,
             CenterColumnShieldHyperbola,
@@ -76,7 +77,8 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 CenterColumnShieldPlasmaHyperbola, \
                 CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular")
 
-        connection_type = "mixed"
+        # initialise connection type
+        connection_type = None
 
         inner_radius = self.central_column_shield.inner_radius
         height = self.central_column_shield.height
@@ -88,6 +90,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 outer_radius=self.central_column_shield.outer_radius +
                 self.thickness
             )
+            # since no connection type in firstwall.points
             connection_type = "straight"
 
         elif isinstance(self.central_column_shield,
@@ -149,9 +152,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
 
         firstwall.rotation_angle = self.rotation_angle
         points = firstwall.points[:-1]
-        if connection_type != "mixed":
-            points_with_connection = []
-            for p in points:
-                points_with_connection.append([*p, connection_type])
-            points = points_with_connection
+        # if no connection type is given, add the connection types to points
+        if connection_type is not None:
+            points = [[*p, connection_type] for p in points]
         self.points = points
