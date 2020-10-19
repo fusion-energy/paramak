@@ -140,8 +140,9 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert np.isclose(c.volume, 2*b.volume)
 
     def test_azimuth_placement_angle(self):
-        """Makes two halfs of a 360 firstwall and perform a union and checks
-        that the volume corresponds to 2 times the volume of 1 half"""
+        """Makes two 180deg firstwalls (one is rotated 90deg), performs a cut
+        and checks that the volume corresponds to 0.5 times the volume of 1
+        half"""
         a = paramak.CenterColumnShieldFlatTopCircular(
             height=500,
             arc_height=300,
