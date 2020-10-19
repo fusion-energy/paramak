@@ -1,6 +1,7 @@
 
 import paramak
 import unittest
+import numpy as np
 
 
 class test_InboardFirstwallFCCS(unittest.TestCase):
@@ -114,3 +115,67 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         self.assertRaises(
             ValueError,
             test_construction_with_string)
+
+    def test_boolean_union(self):
+        """Makes two halfs of a 360 firstwall and perform a union and checks
+        that the volume corresponds to 2 times the volume of 1 half"""
+        a = paramak.CenterColumnShieldFlatTopCircular(
+            height=500,
+            arc_height=300,
+            inner_radius=30,
+            mid_radius=70,
+            outer_radius=120)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180,
+            azimuth_placement_angle=0)
+
+        c = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180,
+            azimuth_placement_angle=180,
+            union=b)
+        assert np.isclose(c.volume, 2*b.volume)
+
+    def test_azimuth_placement_angle(self):
+        """Makes two 180deg firstwalls (one is rotated 90deg), performs a cut
+        and checks that the volume corresponds to 0.5 times the volume of 1
+        half"""
+        a = paramak.CenterColumnShieldFlatTopCircular(
+            height=500,
+            arc_height=300,
+            inner_radius=30,
+            mid_radius=70,
+            outer_radius=120)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180,
+            azimuth_placement_angle=0)
+
+        c = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180,
+            azimuth_placement_angle=90,
+            cut=b)
+        assert np.isclose(c.volume, 0.5*b.volume)
+
+    def test_cut_attribute(self):
+        """Creates a firstwall then reset its cut attribute and check that
+        the shape isn't affected"""
+        a = paramak.CenterColumnShieldCylinder(
+            height=100,
+            inner_radius=20,
+            outer_radius=80)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180)
+
+        volume_1 = b.volume
+        b.cut = None
+        volume_2 = b.volume
+        assert np.isclose(volume_1, volume_2)
