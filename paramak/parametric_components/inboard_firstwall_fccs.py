@@ -2,6 +2,7 @@ from paramak import RotateMixedShape, CenterColumnShieldCylinder, \
     CenterColumnShieldHyperbola, CenterColumnShieldFlatTopHyperbola, \
     CenterColumnShieldPlasmaHyperbola, CenterColumnShieldCircular, \
     CenterColumnShieldFlatTopCircular
+from collections import Iterable
 
 
 class InboardFirstwallFCCS(RotateMixedShape):
@@ -39,10 +40,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
 
         self.central_column_shield = central_column_shield
         self.thickness = thickness
-        if self.cut is None:
-            self.cut = self.central_column_shield
-        else:
-            self.cut = [*[self.cut], self.central_column_shield]
 
     @property
     def thickness(self):
@@ -58,6 +55,11 @@ class InboardFirstwallFCCS(RotateMixedShape):
 
     @central_column_shield.setter
     def central_column_shield(self, value):
+        if self.cut is None:
+            self.cut = self.central_column_shield
+        elif isinstance(self.cut, Iterable):
+            if self.central_column_shield not in self.cut:
+                self.cut.append(self.central_column_shield)
         self._central_column_shield = value
 
     def find_points(self):
