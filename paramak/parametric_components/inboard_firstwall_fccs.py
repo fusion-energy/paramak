@@ -151,7 +151,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
             )
 
         firstwall.rotation_angle = self.rotation_angle
-        points = firstwall.points[:-1]
+        points = firstwall.points[:-1]  # remove last point
         # if no connection type is given, add the connection types to points
         if connection_type is not None:
             points = [[*p, connection_type] for p in points]
