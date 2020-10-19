@@ -58,65 +58,96 @@ class InboardFirstwallFCCS(RotateMixedShape):
         self._central_column_shield = value
 
     def find_points(self):
-        connection_type = "mixed"
-        if isinstance(self.central_column_shield, CenterColumnShieldCylinder):
-            firstwall = CenterColumnShieldCylinder(
-                height=self.central_column_shield.height,
-                inner_radius=self.central_column_shield.inner_radius,
-                outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                rotation_angle=self.rotation_angle)
-            connection_type = "straight"
 
-        elif isinstance(self.central_column_shield, CenterColumnShieldHyperbola):
-            firstwall = CenterColumnShieldHyperbola(
-                height=self.central_column_shield.height,
-                inner_radius=self.central_column_shield.inner_radius,
-                mid_radius=self.central_column_shield.mid_radius + self.thickness,
-                outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                rotation_angle=self.rotation_angle)
-
-        elif isinstance(self.central_column_shield, CenterColumnShieldFlatTopHyperbola):
-            firstwall = CenterColumnShieldFlatTopHyperbola(
-                height=self.central_column_shield.height,
-                arc_height=self.central_column_shield.arc_height,
-                inner_radius=self.central_column_shield.inner_radius,
-                mid_radius=self.central_column_shield.mid_radius + self.thickness,
-                outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                rotation_angle=self.rotation_angle)
-
-        elif isinstance(self.central_column_shield, CenterColumnShieldPlasmaHyperbola):
-            firstwall = CenterColumnShieldPlasmaHyperbola(
-                height=self.central_column_shield.height,
-                inner_radius=self.central_column_shield.inner_radius,
-                mid_offset=self.central_column_shield.mid_offset - self.thickness,
-                edge_offset=self.central_column_shield.edge_offset - self.thickness,
-                rotation_angle=self.rotation_angle)
-
-        elif isinstance(self.central_column_shield, CenterColumnShieldCircular):
-            firstwall = CenterColumnShieldCircular(
-                height=self.central_column_shield.height,
-                inner_radius=self.central_column_shield.inner_radius,
-                mid_radius=self.central_column_shield.mid_radius + self.thickness,
-                outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                rotation_angle=self.rotation_angle)
-
-        elif isinstance(self.central_column_shield, CenterColumnShieldFlatTopCircular):
-            firstwall = CenterColumnShieldFlatTopCircular(
-                height=self.central_column_shield.height,
-                arc_height=self.central_column_shield.arc_height,
-                inner_radius=self.central_column_shield.inner_radius,
-                mid_radius=self.central_column_shield.mid_radius + self.thickness,
-                outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                rotation_angle=self.rotation_angle)
-
-        else:
-
+        acceptable_classes = (
+            CenterColumnShieldCylinder,
+            CenterColumnShieldHyperbola,
+            CenterColumnShieldFlatTopHyperbola,
+            CenterColumnShieldPlasmaHyperbola,
+            CenterColumnShieldCircular,
+            CenterColumnShieldFlatTopCircular
+        )
+        if not isinstance(self.central_column_shield, acceptable_classes):
             raise ValueError(
                 "InboardFirstwallFCCS.central_column_shield must be an \
-                instance of CenterColumnShieldCylinder, CenterColumnShieldHyperbola, \
-                CenterColumnShieldFlatTopHyperbola, CenterColumnShieldPlasmaHyperbola, \
+                instance of CenterColumnShieldCylinder, \
+                CenterColumnShieldHyperbola, \
+                CenterColumnShieldFlatTopHyperbola, \
+                CenterColumnShieldPlasmaHyperbola, \
                 CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular")
 
+        connection_type = "mixed"
+
+        inner_radius = self.central_column_shield.inner_radius
+        height = self.central_column_shield.height
+
+        if isinstance(self.central_column_shield, CenterColumnShieldCylinder):
+            firstwall = CenterColumnShieldCylinder(
+                height=height,
+                inner_radius=inner_radius,
+                outer_radius=self.central_column_shield.outer_radius +
+                self.thickness
+            )
+            connection_type = "straight"
+
+        elif isinstance(self.central_column_shield,
+                        CenterColumnShieldHyperbola):
+            firstwall = CenterColumnShieldHyperbola(
+                height=height,
+                inner_radius=inner_radius,
+                mid_radius=self.central_column_shield.mid_radius +
+                self.thickness,
+                outer_radius=self.central_column_shield.outer_radius +
+                self.thickness,
+            )
+
+        elif isinstance(self.central_column_shield,
+                        CenterColumnShieldFlatTopHyperbola):
+            firstwall = CenterColumnShieldFlatTopHyperbola(
+                height=height,
+                arc_height=self.central_column_shield.arc_height,
+                inner_radius=inner_radius,
+                mid_radius=self.central_column_shield.mid_radius +
+                self.thickness,
+                outer_radius=self.central_column_shield.outer_radius +
+                self.thickness,
+            )
+
+        elif isinstance(self.central_column_shield,
+                        CenterColumnShieldPlasmaHyperbola):
+            firstwall = CenterColumnShieldPlasmaHyperbola(
+                height=height,
+                inner_radius=inner_radius,
+                mid_offset=self.central_column_shield.mid_offset -
+                self.thickness,
+                edge_offset=self.central_column_shield.edge_offset -
+                self.thickness,
+            )
+
+        elif isinstance(self.central_column_shield,
+                        CenterColumnShieldCircular):
+            firstwall = CenterColumnShieldCircular(
+                height=height,
+                inner_radius=inner_radius,
+                mid_radius=self.central_column_shield.mid_radius +
+                self.thickness,
+                outer_radius=self.central_column_shield.outer_radius +
+                self.thickness,
+            )
+
+        elif isinstance(self.central_column_shield,
+                        CenterColumnShieldFlatTopCircular):
+            firstwall = CenterColumnShieldFlatTopCircular(
+                height=height,
+                arc_height=self.central_column_shield.arc_height,
+                inner_radius=inner_radius,
+                mid_radius=self.central_column_shield.mid_radius +
+                self.thickness,
+                outer_radius=self.central_column_shield.outer_radius +
+                self.thickness,
+            )
+
+        firstwall.rotation_angle = self.rotation_angle
         points = firstwall.points[:-1]
         if connection_type != "mixed":
             points_with_connection = []
