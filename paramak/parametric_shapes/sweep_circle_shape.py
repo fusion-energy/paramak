@@ -1,6 +1,6 @@
-from collections import Iterable 
+from collections import Iterable
 
-import cadquery as cq 
+import cadquery as cq
 
 from paramak import Shape
 

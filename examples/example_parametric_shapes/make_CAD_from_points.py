@@ -112,10 +112,10 @@ def main():
     extruded_circle.export_stp("extruded_circle.stp")
     extruded_circle.export_html("extruded_circle.html")
 
-
     # sweep examples
 
-    # this makes a banana shape with straight edges and sweeps it along a spline to make a solid
+    # this makes a banana shape with straight edges and sweeps it along a
+    # spline to make a solid
     sweep_straight = paramak.SweepStraightShape(
         points=[
             (-150, 300),
@@ -125,21 +125,21 @@ def main():
             (-150, -300),
             (-50, 0)
         ],
-        path_points = [
+        path_points=[
             (50, 0),
             (150, 400),
             (400, 500),
             (650, 600),
             (750, 1000)
         ],
-        workplane = "XY",
-        path_workplane = "XZ"
+        workplane="XY",
+        path_workplane="XZ"
     )
     sweep_straight.export_stp("sweep_straight.stp")
     sweep_straight.export_html("sweep_straight.html")
 
-
-    # this makes a banana shape with spline edges and sweeps it along a spline to make a solid
+    # this makes a banana shape with spline edges and sweeps it along a spline
+    # to make a solid
     sweep_spline = paramak.SweepSplineShape(
         points=[
             (50, 0),
@@ -151,21 +151,21 @@ def main():
             (-50, 300),
             (50, 20)
         ],
-        path_points = [
+        path_points=[
             (50, 0),
             (150, 400),
             (400, 500),
             (650, 600),
             (750, 1000)
         ],
-        workplane = "XY",
-        path_workplane = "XZ"
+        workplane="XY",
+        path_workplane="XZ"
     )
     sweep_spline.export_stp("sweep_spline.stp")
     sweep_spline.export_html("sweep_spline.html")
 
-
-    # this makes a shape with straight, spline and circular edges and sweeps it along a spline to make a solid
+    # this makes a shape with straight, spline and circular edges and sweeps
+    # it along a spline to make a solid
     sweep_mixed = paramak.SweepMixedShape(
         points=[
             (-80, -50, "straight"),
@@ -176,36 +176,34 @@ def main():
             (-40, 25, "spline"),
             (-70, -5, "spline")
         ],
-        path_points = [
+        path_points=[
             (50, 0),
             (150, 400),
             (400, 500),
             (650, 600),
             (750, 1000)
         ],
-        workplane = "XY",
-        path_workplane = "XZ"
+        workplane="XY",
+        path_workplane="XZ"
     )
     sweep_mixed.export_stp("sweep_mixed.stp")
     sweep_mixed.export_html("sweep_mixed.html")
 
-
     # this makes a circular shape and sweeps it to make a solid
     sweep_circle = paramak.SweepCircleShape(
-        radius = 40,
-        path_points = [
+        radius=40,
+        path_points=[
             (50, 0),
             (150, 400),
             (400, 500),
             (650, 600),
             (750, 1000)
         ],
-        workplane = "XY",
-        path_workplane = "XZ"
+        workplane="XY",
+        path_workplane="XZ"
     )
     sweep_circle.export_stp("sweep_circle.stp")
     # sweep_circle.export_html("sweep_circle.html")
-
 
 
 if __name__ == "__main__":

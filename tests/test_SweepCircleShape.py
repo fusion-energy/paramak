@@ -68,4 +68,3 @@ class test_object_properties(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-    
