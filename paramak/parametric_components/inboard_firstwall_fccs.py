@@ -40,12 +40,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
 
         self.central_column_shield = central_column_shield
         self.thickness = thickness
-        if self.cut is None:
-            self.cut = self.central_column_shield
-        elif isinstance(self.cut, Iterable):
-            self.cut = [*self.cut, self.central_column_shield]
-        else:
-            self.cut = [*[self.cut], self.central_column_shield]
 
     @property
     def thickness(self):
@@ -162,3 +156,11 @@ class InboardFirstwallFCCS(RotateMixedShape):
         if connection_type is not None:
             points = [[*p, connection_type] for p in points]
         self.points = points
+
+        # add to cut attribute
+        if self.cut is None:
+            self.cut = self.central_column_shield
+        elif isinstance(self.cut, Iterable):
+            self.cut = [*self.cut, self.central_column_shield]
+        else:
+            self.cut = [*[self.cut], self.central_column_shield]

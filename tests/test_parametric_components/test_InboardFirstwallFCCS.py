@@ -162,3 +162,20 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
             azimuth_placement_angle=90,
             cut=b)
         assert np.isclose(c.volume, 0.5*b.volume)
+
+    def test_cut_attribute(self):
+        """Creates a firstwall then reset its cut attribute and check that
+        the shape isn't affected"""
+        a = paramak.CenterColumnShieldCylinder(
+            height=100,
+            inner_radius=20,
+            outer_radius=80)
+        b = paramak.InboardFirstwallFCCS(
+            central_column_shield=a,
+            thickness=20,
+            rotation_angle=180)
+
+        volume_1 = b.volume
+        b.cut = None
+        volume_2 = b.volume
+        assert np.isclose(volume_1, volume_2)
