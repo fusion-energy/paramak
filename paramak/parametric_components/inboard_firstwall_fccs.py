@@ -39,6 +39,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
 
         self.central_column_shield = central_column_shield
         self.thickness = thickness
+        self.cut = self.central_column_shield
 
     @property
     def thickness(self):
@@ -56,30 +57,15 @@ class InboardFirstwallFCCS(RotateMixedShape):
     def central_column_shield(self, value):
         self._central_column_shield = value
 
-    @property
-    def solid(self):
-        if self.get_hash() != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
-
-    def create_solid(self):
-        """Creates a CadQuery 3D solid
-
-           Returns:
-              A CadQuery solid: A 3D solid volume
-        """
-
+    def find_points(self):
+        connection_type = "mixed"
         if isinstance(self.central_column_shield, CenterColumnShieldCylinder):
             firstwall = CenterColumnShieldCylinder(
                 height=self.central_column_shield.height,
                 inner_radius=self.central_column_shield.inner_radius,
                 outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
+            connection_type = "straight"
 
         elif isinstance(self.central_column_shield, CenterColumnShieldHyperbola):
             firstwall = CenterColumnShieldHyperbola(
@@ -87,7 +73,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 inner_radius=self.central_column_shield.inner_radius,
                 mid_radius=self.central_column_shield.mid_radius + self.thickness,
                 outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
         elif isinstance(self.central_column_shield, CenterColumnShieldFlatTopHyperbola):
@@ -97,7 +82,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 inner_radius=self.central_column_shield.inner_radius,
                 mid_radius=self.central_column_shield.mid_radius + self.thickness,
                 outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
         elif isinstance(self.central_column_shield, CenterColumnShieldPlasmaHyperbola):
@@ -106,7 +90,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 inner_radius=self.central_column_shield.inner_radius,
                 mid_offset=self.central_column_shield.mid_offset - self.thickness,
                 edge_offset=self.central_column_shield.edge_offset - self.thickness,
-                cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
         elif isinstance(self.central_column_shield, CenterColumnShieldCircular):
@@ -115,7 +98,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 inner_radius=self.central_column_shield.inner_radius,
                 mid_radius=self.central_column_shield.mid_radius + self.thickness,
                 outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
         elif isinstance(self.central_column_shield, CenterColumnShieldFlatTopCircular):
@@ -125,7 +107,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 inner_radius=self.central_column_shield.inner_radius,
                 mid_radius=self.central_column_shield.mid_radius + self.thickness,
                 outer_radius=self.central_column_shield.outer_radius + self.thickness,
-                cut=self.central_column_shield,
                 rotation_angle=self.rotation_angle)
 
         else:
@@ -136,8 +117,10 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 CenterColumnShieldFlatTopHyperbola, CenterColumnShieldPlasmaHyperbola, \
                 CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular")
 
-        self.solid = firstwall.solid
-
-        self.hash_value = self.get_hash()
-
-        return firstwall.solid
+        points = firstwall.points[:-1]
+        if connection_type != "mixed":
+            points_with_connection = []
+            for p in points:
+                points_with_connection.append([*p, connection_type])
+            points = points_with_connection
+        self.points = points
