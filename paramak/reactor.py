@@ -502,9 +502,9 @@ class Reactor:
             str: the stp filename created
         """
 
-        if offset == None:
+        if offset is None:
             offset = self.graveyard_offset
-        
+
         self.make_graveyard(offset=offset)
         self.graveyard.export_stp(Path(filename))
         return filename
@@ -523,7 +523,7 @@ class Reactor:
             as a graveyard in DAGMC
         """
 
-        if offset == None:
+        if offset is None:
             offset = self.graveyard_offset
 
         for component in self.shapes_and_components:
