@@ -497,7 +497,7 @@ class Reactor:
 
     def export_graveyard(self, offset=None, filename="Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
-        is needed for DAGMC simulations. This method also calculates the graveyard.
+        is needed for DAGMC simulations. This method also calls Reactor.make_graveyard with the offset.
 
         Args:
             filename (str): the filename for saving the stp file
@@ -506,9 +506,9 @@ class Reactor:
             str: the stp filename created
         """
 
-        if offset == None:
+        if offset is None:
             offset = self.graveyard_offset
-        
+
         self.make_graveyard(offset=offset)
         self.graveyard.export_stp(Path(filename))
         return filename
@@ -527,7 +527,7 @@ class Reactor:
             as a graveyard in DAGMC
         """
 
-        if offset == None:
+        if offset is None:
             offset = self.graveyard_offset
 
         for component in self.shapes_and_components:
