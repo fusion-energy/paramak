@@ -52,7 +52,7 @@ class NeutronicsModelFromReactor():
             in conjunction with the OCC_faceter
             (https://github.com/makeclean/occ_faceter) to create imprinted
             and merged geometry while Trelis (also known as Cubit) is
-            avaialbe from the CoreForm website https://www.coreform.com/
+            available from the CoreForm website https://www.coreform.com/
         simulation_batches: (int): the number of batch to simulate
         simulation_particles_per_batch: (int): particles per batch
         ion_density_origin: (float): 1.09e20,
@@ -79,6 +79,7 @@ class NeutronicsModelFromReactor():
         materials,
         outputs,
         fusion_power=1e9,
+        method='ppp',
         simulation_batches=100,
         simulation_particles_per_batch=10000,
         ion_density_peaking_factor=1,
@@ -110,9 +111,10 @@ class NeutronicsModelFromReactor():
         self.pedestal_radius_factor = pedestal_radius_factor
         self.shafranov_shift = shafranov_shift
         self.ion_temperature_beta = ion_temperature_beta
-        self.max_lost_particles = max_lost_particles
+        self.method = 'ppp'
         self.simulation_batches = simulation_batches
         self.simulation_particles_per_batch = simulation_particles_per_batch
+        self.max_lost_particles = max_lost_particles
 
         self.model = None
         self.fusion_power = fusion_power
@@ -243,7 +245,7 @@ class NeutronicsModelFromReactor():
 
         return source
 
-    def create_neutronics_geometry(self, method='ppp'):
+    def create_neutronics_geometry(self, method=None):
         """Produces a h5m neutronics geometry compatable with DAGMC simulations.
         This is done by first exporting the stp files for the whole reactor,
         then exporting the neutronics description of the reactor, then there
@@ -255,15 +257,9 @@ class NeutronicsModelFromReactor():
 
         Arguments:
             method: (str): The method to use when making the imprinted and
-                merged geometry. Options are 'trelis' or 'ppp'. Further details
-                on imprinting and merging are available on the DAGMC homepage
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-                The Parallel-PreProcessor is an open-source tool available
-                https://github.com/ukaea/parallel-preprocessor and can be used
-                in conjunction with the OCC_faceter
-                (https://github.com/makeclean/occ_faceter) to create imprinted
-                and merged geometry while Trelis (also known as Cubit) is
-                avaialbe from the CoreForm website https://www.coreform.com/
+                merged geometry. Options are PPP or Trelis. Defaults to  
+                NeutronicsModelFromReactor.method. where options ae further
+                described.
         """
 
         os.system('rm dagmc_not_watertight.h5m')
@@ -271,6 +267,12 @@ class NeutronicsModelFromReactor():
 
         self.reactor.export_stp()
         self.reactor.export_neutronics_description()
+
+        if method is None:
+            method = self.method
+            if method not in ['ppp', 'trelis']:
+                raise ValueError("the method using in create_neutronics_geometry \
+                    should be either ppp or trelis not", method)
 
         if method == 'ppp':
             # as the installer connects to the system python not the conda python
@@ -308,10 +310,6 @@ class NeutronicsModelFromReactor():
                 "make_watertight failed, check DAGMC is install and the \
                     DAGMC/bin folder is in the path directory")
 
-        else:
-            raise ValueError("the method using in create_neutronics_geometry \
-                should be either ppp or trelis not", method)
-
         print('neutronics model saved as dagmc.h5m')
 
     def plot_neutronics_geometry(self):
@@ -323,9 +321,16 @@ class NeutronicsModelFromReactor():
         #TODO use colors already assigned to reactor components, like this ...
         # plt.show(self.universe.plot(width=(1200, 1200), basis='xy', colors={cell_1: 'blue'}))
 
-    def create_neutronics_model(self, method='ppp'):
+    def create_neutronics_model(self, method=None):
         """Uses OpenMC python API to make a neutronics model, including tallies
-        (outputs), simulation settings (batches, particles per batch)"""
+        (outputs), simulation settings (batches, particles per batch)
+
+        Arguments:
+            method: (str): The method to use when making the imprinted and
+                merged geometry. Options are PPP or Trelis. Defaults to  
+                NeutronicsModelFromReactor.method. where options ae further
+                described.
+        """
 
         self.create_materials()
         self.create_plasma_source()
@@ -380,7 +385,7 @@ class NeutronicsModelFromReactor():
         # make the model from gemonetry, materials, settings and tallies
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
 
-    def simulate(self, verbose=True):
+    def simulate(self, verbose=True, method=None):
         """Run the OpenMC simulation. Terminal output can
         disabled by setting verbose=False.
 
@@ -388,13 +393,17 @@ class NeutronicsModelFromReactor():
             verbose: (Boolean): Print the output from OpenMC (true) to the
                 terminal and don't print the OpenMC output (false). Defaults
                 to True.
+            method: (str): The method to use when making the imprinted and
+                merged geometry. Options are PPP or Trelis. Defaults to  
+                NeutronicsModelFromReactor.method. where options ae further
+                described.
+
         Returns:
             dict: a dictionary of the simulation results
         """
 
         if self.model is None:
-            model
-        self.create_neutronics_model(method=method)
+            self.create_neutronics_model(method=method)
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
 
