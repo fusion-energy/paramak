@@ -491,7 +491,7 @@ class Reactor:
             exporters.exportShape(self.solid, "SVG", f)
         print("Saved file as ", Pfilename)
 
-    def export_graveyard(self, filename="Graveyard.stp"):
+    def export_graveyard(self, offset=None, filename="Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calculates the graveyard.
 
@@ -501,11 +501,15 @@ class Reactor:
         Returns:
             str: the stp filename created
         """
-        self.make_graveyard()
+
+        if offset == None:
+            offset = self.graveyard_offset
+        
+        self.make_graveyard(offset=offset)
         self.graveyard.export_stp(Path(filename))
         return filename
 
-    def make_graveyard(self):
+    def make_graveyard(self, offset=None):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -518,6 +522,9 @@ class Reactor:
             CadQuery solid: a shell volume that bounds the geometry, referred to
             as a graveyard in DAGMC
         """
+
+        if offset == None:
+            offset = self.graveyard_offset
 
         for component in self.shapes_and_components:
             if component.solid is None:
@@ -545,17 +552,17 @@ class Reactor:
 
         # creates a small box that surrounds the geometry
         inner_box = cq.Workplane("front").box(
-            largest_dimension + self.graveyard_offset,
-            largest_dimension + self.graveyard_offset,
-            largest_dimension + self.graveyard_offset
+            largest_dimension + offset,
+            largest_dimension + offset,
+            largest_dimension + offset
         )
 
         graveyard_thickness = 10
         # creates a large box that surrounds the smaller box
         outer_box = cq.Workplane("front").box(
-            largest_dimension + self.graveyard_offset + graveyard_thickness,
-            largest_dimension + self.graveyard_offset + graveyard_thickness,
-            largest_dimension + self.graveyard_offset + graveyard_thickness
+            largest_dimension + offset + graveyard_thickness,
+            largest_dimension + offset + graveyard_thickness,
+            largest_dimension + offset + graveyard_thickness
         )
 
         # subtracts the two boxes to leave a hollow box
