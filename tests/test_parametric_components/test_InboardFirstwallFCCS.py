@@ -137,7 +137,7 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180,
             azimuth_placement_angle=180,
             union=b)
-        assert np.isclose(c.volume, 2*b.volume)
+        assert np.isclose(c.volume, 2 * b.volume)
 
     def test_azimuth_placement_angle(self):
         """Makes two 180deg firstwalls (one is rotated 90deg), performs a cut
@@ -161,7 +161,7 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180,
             azimuth_placement_angle=90,
             cut=b)
-        assert np.isclose(c.volume, 0.5*b.volume)
+        assert np.isclose(c.volume, 0.5 * b.volume)
 
     def test_cut_attribute(self):
         """Creates a firstwall then reset its cut attribute and check that
