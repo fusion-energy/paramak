@@ -299,11 +299,7 @@ class Shape:
                             3 but not a mixture of 2 and 3")
 
             if len(values) > 1:
-                if values[-1][0] == values[0][0] and values[-1][1] == values[0][1]:
-                    raise ValueError(
-                        "The coordinates of the last and first points are the same."
-                    )
-                else:
+                if values[-1][:2] != values[0][:2]:
                     values.append(values[0])
 
             self._points = values
