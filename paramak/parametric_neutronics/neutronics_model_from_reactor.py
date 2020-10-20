@@ -300,7 +300,10 @@ class NeutronicsModelFromReactor():
                     in the directory, the Trelis stage has failed")
 
         if not Path("dagmc_not_watertight.h5m").is_file():
-            raise ValueError("The" + method + "failed to create a dagmc_not_watertight.h5m file")
+            raise ValueError(
+                "The" +
+                method +
+                "failed to create a dagmc_not_watertight.h5m file")
 
         if os.system(
                 "make_watertight dagmc_not_watertight.h5m -o dagmc.h5m") != 0:
@@ -315,12 +318,12 @@ class NeutronicsModelFromReactor():
         print('neutronics model saved as dagmc.h5m')
 
     def plot_neutronics_geometry(self):
-        
+
         plt.show(self.universe.plot(width=(1200, 1200), basis='xz'))
         plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
         plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
 
-        #TODO use colors already assigned to reactor components, like this ...
+        # TODO use colors already assigned to reactor components, like this ...
         # plt.show(self.universe.plot(width=(1200, 1200), basis='xy', colors={cell_1: 'blue'}))
 
     def create_neutronics_model(self, method='ppp'):
@@ -398,7 +401,7 @@ class NeutronicsModelFromReactor():
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
 
-        return self.output_filename 
+        return self.output_filename
 
     def get_results(self):
         """Reads the output file from the neutronics simulation
