@@ -3,6 +3,7 @@ import json
 from collections import defaultdict
 import warnings
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 try:
     from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
@@ -42,6 +43,16 @@ class NeutronicsModelFromReactor():
         fusion_power: (float): the power in watts emitted by the fusion reaction
             recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
+        method: (str): The method to use when making the imprinted and
+            merged geometry. Options are 'trelis' or 'ppp'. Further details
+            on imprinting and merging are available on the DAGMC homepage
+            https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+            The Parallel-PreProcessor is an open-source tool available
+            https://github.com/ukaea/parallel-preprocessor and can be used
+            in conjunction with the OCC_faceter
+            (https://github.com/makeclean/occ_faceter) to create imprinted
+            and merged geometry while Trelis (also known as Cubit) is
+            avaialbe from the CoreForm website https://www.coreform.com/
         simulation_batches: (int): the number of batch to simulate
         simulation_particles_per_batch: (int): particles per batch
         ion_density_origin: (float): 1.09e20,
@@ -288,10 +299,8 @@ class NeutronicsModelFromReactor():
                 raise ValueError("The dagmc_not_watertight.h5m was not found \
                     in the directory, the Trelis stage has failed")
 
-            # TODO use os system to check file is there
-        else:
-            raise ValueError("the method using in create_neutronics_geometry \
-                should be either ppp or trelis not", method)
+        if not Path("dagmc_not_watertight.h5m").is_file():
+            raise ValueError("The" + method + "failed to create a dagmc_not_watertight.h5m file")
 
         if os.system(
                 "make_watertight dagmc_not_watertight.h5m -o dagmc.h5m") != 0:
@@ -299,30 +308,24 @@ class NeutronicsModelFromReactor():
                 "make_watertight failed, check DAGMC is install and the \
                     DAGMC/bin folder is in the path directory")
 
+        else:
+            raise ValueError("the method using in create_neutronics_geometry \
+                should be either ppp or trelis not", method)
+
         print('neutronics model saved as dagmc.h5m')
 
     def plot_neutronics_geometry(self):
-        import matplotlib.pyplot as plt
+        
         plt.show(self.universe.plot(width=(1200, 1200), basis='xz'))
-        # plt.show(self.universe.plot(width=(1200, 1200), basis='xy', colors={cell_1: 'blue'}))
         plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
+        plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
+
+        #TODO use colors already assigned to reactor components, like this ...
+        # plt.show(self.universe.plot(width=(1200, 1200), basis='xy', colors={cell_1: 'blue'}))
 
     def create_neutronics_model(self, method='ppp'):
         """Uses OpenMC python API to make a neutronics model, including tallies
-        (outputs), simulation settings (batches, particles per batch)
-
-        Arguments:
-            method: (str): The method to use when making the imprinted and
-                merged geometry. Options are 'trelis' or 'ppp'. Further details
-                on imprinting and merging are available on the DAGMC homepage
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-                The Parallel-PreProcessor is an open-source tool available
-                https://github.com/ukaea/parallel-preprocessor and can be used
-                in conjunction with the OCC_faceter
-                (https://github.com/makeclean/occ_faceter) to create imprinted
-                and merged geometry while Trelis (also known as Cubit) is
-                avaialbe from the CoreForm website https://www.coreform.com/
-        """
+        (outputs), simulation settings (batches, particles per batch)"""
 
         self.create_materials()
         self.create_plasma_source()
@@ -377,21 +380,25 @@ class NeutronicsModelFromReactor():
         # make the model from gemonetry, materials, settings and tallies
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
 
-    def simulate(self, verbose=True, method='ppp'):
-        """Run the OpenMC simulation with the specified simulation_batches and
-        simulation_particles_per_batch and tallies. Terminal output can
+    def simulate(self, verbose=True):
+        """Run the OpenMC simulation. Terminal output can
         disabled by setting verbose=False.
 
         Arguments:
-            verbose: (Boolean): Preint the output from OpenMC (true) to the
+            verbose: (Boolean): Print the output from OpenMC (true) to the
                 terminal and don't print the OpenMC output (false). Defaults
                 to True.
+        Returns:
+            dict: a dictionary of the simulation results
         """
 
-        # if self.model is None:
+        if self.model is None:
+            model
         self.create_neutronics_model(method=method)
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
+
+        return self.output_filename 
 
     def get_results(self):
         """Reads the output file from the neutronics simulation
