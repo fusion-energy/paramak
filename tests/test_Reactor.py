@@ -359,7 +359,7 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         os.system("rm Graveyard.stp")
         test_reactor = paramak.Reactor([test_shape])
-        
+
         test_reactor.export_graveyard(offset=100)
         graveyard_volume = test_reactor.graveyard.volume
         test_reactor.export_graveyard(offset=200)
