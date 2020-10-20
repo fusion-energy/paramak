@@ -31,6 +31,6 @@ setuptools.setup(
         "tqdm",
         "matplotlib",
         "plasmaboundaries",
+        "neutronics_material_maker",
     ],
-    extras_require={
-        'neutronics': ["neutronics_material_maker"]})
+)
