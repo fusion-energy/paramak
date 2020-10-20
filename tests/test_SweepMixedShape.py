@@ -87,7 +87,7 @@ class test_object_properties(unittest.TestCase):
         test_shape.create_solid()
 
         test_volume = test_shape.volume
-        
+
         test_shape.azimuth_placement_angle = [0, 90, 180, 270]
 
         assert test_shape.volume == pytest.approx(test_volume * 4, rel=0.01)
@@ -101,7 +101,7 @@ class test_object_properties(unittest.TestCase):
                 points=[
                     (-20, 20, "straight"),
                     (20, 20, "spline"),
-                    (20, -20, "spline"), 
+                    (20, -20, "spline"),
                     (-20, -20, "straight")
                 ],
                 path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
@@ -114,7 +114,7 @@ class test_object_properties(unittest.TestCase):
                 points=[
                     (-20, 20, "straight"),
                     (20, 20, "spline"),
-                    (20, -20, "spline"), 
+                    (20, -20, "spline"),
                     (-20, -20, "straight")
                 ],
                 path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
@@ -123,7 +123,9 @@ class test_object_properties(unittest.TestCase):
             )
 
         self.assertRaises(ValueError, workplane_and_path_workplane_equal)
-        self.assertRaises(ValueError, invalid_relative_workplane_and_path_workplane)
+        self.assertRaises(
+            ValueError,
+            invalid_relative_workplane_and_path_workplane)
 
 
 if __name__ == "__main__":

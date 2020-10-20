@@ -106,7 +106,7 @@ class test_object_properties(unittest.TestCase):
         test_shape.create_solid()
 
         test_volume = test_shape.volume
-        
+
         test_shape.azimuth_placement_angle = [0, 90, 180, 270]
 
         assert test_shape.volume == pytest.approx(test_volume * 4)
@@ -132,7 +132,10 @@ class test_object_properties(unittest.TestCase):
             )
 
         self.assertRaises(ValueError, workplane_and_path_workplane_equal)
-        self.assertRaises(ValueError, invalid_relative_workplane_and_path_workplane)
+        self.assertRaises(
+            ValueError,
+            invalid_relative_workplane_and_path_workplane)
+
 
 if __name__ == "__main__":
     unittest.main()
