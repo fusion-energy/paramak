@@ -505,6 +505,8 @@ class Reactor:
 
         Args:
             filename (str): the filename for saving the stp file
+            offset (float): the offset between the largest edge of the geometry
+                and inner bounding shell created. Defaults to Reactor.graveyard_offset
 
         Returns:
             str: the stp filename created
@@ -524,7 +526,7 @@ class Reactor:
 
         Args:
             offset (float): the offset between the largest edge of the geometry
-            and inner bounding shell created
+            and inner bounding shell created. Defaults to Reactor.graveyard_offset
 
         Returns:
             CadQuery solid: a shell volume that bounds the geometry, referred to
