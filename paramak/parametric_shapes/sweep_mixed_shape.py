@@ -1,6 +1,6 @@
-from collections import Iterable 
+from collections import Iterable
 
-import cadquery as cq 
+import cadquery as cq
 
 from paramak import Shape
 
@@ -10,9 +10,9 @@ class SweepMixedShape(Shape):
     connections along a defined spline path to create a 3D CadQuery solid.
 
     Args:
-        points (list of tuples each containing X (float), Z (float), connection): A list 
-            of XY, YZ or XZ coordinates connected by straight connections which define 
-            the 2D shape to be swept. The coordinates are defined with respect to origins 
+        points (list of tuples each containing X (float), Z (float), connection): A list
+            of XY, YZ or XZ coordinates connected by straight connections which define
+            the 2D shape to be swept. The coordinates are defined with respect to origins
             at the first and last points of the spline path.
         path_points (list of tuples each containing X (float), Z (float)): A list of XY,
             YZ or XZ coordinates connected by spline connections which define the path

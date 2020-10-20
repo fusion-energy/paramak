@@ -1,6 +1,6 @@
 from collections import Iterable
 
-import cadquery as cq 
+import cadquery as cq
 
 from paramak import Shape
 
@@ -43,7 +43,6 @@ class SweepSplineShape(Shape):
         self.path_points = path_points
         self.path_workplane = path_workplane
 
-    
     @property
     def path_points(self):
         return self._path_points

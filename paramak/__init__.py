@@ -13,8 +13,8 @@ from .parametric_shapes.rotate_mixed_shape import RotateMixedShape
 from .parametric_shapes.rotate_circle_shape import RotateCircleShape
 
 from .parametric_shapes.sweep_spline_shape import SweepSplineShape
-from .parametric_shapes.sweep_straight_shape import SweepStraightShape 
-from .parametric_shapes.sweep_mixed_shape import SweepMixedShape 
+from .parametric_shapes.sweep_straight_shape import SweepStraightShape
+from .parametric_shapes.sweep_mixed_shape import SweepMixedShape
 from .parametric_shapes.sweep_circle_shape import SweepCircleShape
 
 from .parametric_components.tokamak_plasma import Plasma
