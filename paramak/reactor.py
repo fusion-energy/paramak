@@ -505,6 +505,8 @@ class Reactor:
 
         Args:
             filename (str): the filename for saving the stp file
+            offset (float): the offset between the largest edge of the geometry
+                and inner bounding shell created. Defaults to Reactor.graveyard_offset
 
         Returns:
             str: the stp filename created
