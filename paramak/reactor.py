@@ -100,6 +100,10 @@ class Reactor:
 
     @graveyard_offset.setter
     def graveyard_offset(self, value):
+        if not isinstance(value, (float, int)):
+            raise ValueError("graveyard_offset must be a number")
+        if value < 0:
+            raise ValueError("graveyard_offset must be positive")
         self._graveyard_offset = value
 
     @property
