@@ -208,6 +208,7 @@ class Reactor:
 
     def export_stp(self, output_folder=""):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
+        and the graveyard.
 
         Args:
             output_folder (str): the folder for saving the stp files to
@@ -483,7 +484,7 @@ class Reactor:
 
     def export_graveyard(self, filename="Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
-        is needed for DAGMC simulations.
+        is needed for DAGMC simulations. This method also calculates the graveyard.
 
         Args:
             filename (str): the filename for saving the stp file
