@@ -330,7 +330,7 @@ class test_object_properties(unittest.TestCase):
 
         assert isinstance(test_reactor.graveyard, paramak.Shape)
 
-    def test_exported_graveyard_creates_stp_file(self):
+    def test_export_graveyard(self):
         """creates a Reactor object with one shape and checks that a graveyard
         can be exported to a specified location using the make_graveyard method"""
 
@@ -348,6 +348,22 @@ class test_object_properties(unittest.TestCase):
         for filepath in ["Graveyard.stp", "my_graveyard.stp"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
+
+        assert test_reactor.graveyard is not None
+        assert test_reactor.graveyard.__class__.__name__ == "Shape"
+
+    def test_export_graveyard_offset(self):
+        """checks that the graveyard offset can be changed"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        os.system("rm Graveyard.stp")
+        test_reactor = paramak.Reactor([test_shape])
+        
+        test_reactor.export_graveyard(offset=100)
+        graveyard_volume = test_reactor.graveyard.volume
+        test_reactor.export_graveyard(offset=200)
+        assert test_reactor.graveyard.volume > graveyard_volume
 
     def test_exported_stp_files_exist(self):
         """creates a Reactor object with one shape and checks that an stp file
