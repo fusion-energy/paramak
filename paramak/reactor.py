@@ -20,9 +20,9 @@ class Reactor:
 
     Args:
         shapes_and_components (list): list of paramak.Shape
-        graveyard_offset (float): the offset between the largest edge of the 
-            geometry and inner bounding shell created. can be overwritten by 
-            specifying offset as part of the export_graveyard and make_graveyard 
+        graveyard_offset (float): the offset between the largest edge of the
+            geometry and inner bounding shell created. can be overwritten by
+            specifying offset as part of the export_graveyard and make_graveyard
             methods.
     """
 
