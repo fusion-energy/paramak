@@ -257,7 +257,7 @@ class NeutronicsModelFromReactor():
 
         Arguments:
             method: (str): The method to use when making the imprinted and
-                merged geometry. Options are PPP or Trelis. Defaults to  
+                merged geometry. Options are PPP or Trelis. Defaults to
                 NeutronicsModelFromReactor.method. where options ae further
                 described.
         """
@@ -271,7 +271,8 @@ class NeutronicsModelFromReactor():
         if method is None:
             method = self.method
             if method not in ['ppp', 'trelis']:
-                raise ValueError("the method using in create_neutronics_geometry \
+                raise ValueError(
+                    "the method using in create_neutronics_geometry \
                     should be either ppp or trelis not", method)
 
         if method == 'ppp':
@@ -330,7 +331,7 @@ class NeutronicsModelFromReactor():
 
         Arguments:
             method: (str): The method to use when making the imprinted and
-                merged geometry. Options are PPP or Trelis. Defaults to  
+                merged geometry. Options are PPP or Trelis. Defaults to
                 NeutronicsModelFromReactor.method. where options ae further
                 described.
         """
@@ -397,7 +398,7 @@ class NeutronicsModelFromReactor():
                 terminal and don't print the OpenMC output (false). Defaults
                 to True.
             method: (str): The method to use when making the imprinted and
-                merged geometry. Options are PPP or Trelis. Defaults to  
+                merged geometry. Options are PPP or Trelis. Defaults to
                 NeutronicsModelFromReactor.method. where options ae further
                 described.
 
