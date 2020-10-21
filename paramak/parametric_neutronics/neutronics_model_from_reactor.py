@@ -95,8 +95,7 @@ class NeutronicsModelFromReactor():
         ion_temperature_beta=6,
         max_lost_particles=10
     ):
-        # input by user
-        reactor.rotation_angle = 360
+
         self.reactor = reactor
         self.materials = materials
         self.outputs = outputs
@@ -118,6 +117,14 @@ class NeutronicsModelFromReactor():
 
         self.model = None
         self.fusion_power = fusion_power
+
+        # Only 360 degree models are supported for now as reflecting surfaces
+        # are needed for sector models and they are not currently supported
+        if reactor.rotation_angle != 360:
+            reactor.rotation_angle = 360
+            print('remaking reactor as it was not set to 360 degrees')
+            reactor.solid
+            #TODO make use of reactor.create_solids() here
 
     @property
     def outputs(self):
