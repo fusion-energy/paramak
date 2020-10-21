@@ -195,7 +195,7 @@ def calculate_wedge_cut(self):
         return None
     
     else:
-        cutting_wedge = paramak.CuttingWedgeFSAlternative(self)
+        cutting_wedge = paramak.CuttingWedgeFS(self)
         if self.cut is None:
             self.cut = cutting_wedge
         else:
