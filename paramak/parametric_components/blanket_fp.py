@@ -10,15 +10,17 @@ class BlanketFP(RotateMixedShape):
 
     Args:
         thickness (float or [float] or callable or [(float), (float)]):
-            the thickness of the blanket (cm). If float, constant thickness.
-            If tuple of floats, thickness will vary linearly between the two
-            values. If callable, thickness will be a function of poloidal
-            angle (in degrees). If a list of of two lists (thicknesses and
-            angles) then these will be used together with linear interpolation.
+            the thickness of the blanket (cm). If the thickness is a float then
+            this produces a blanket of constant thickness. If the thickness is
+            a tuple of floats, blanket thickness will vary linearly between the
+            two values. If thickness is callable, then the blanket thickness
+            will be a function of poloidal angle (in degrees). If thickness is
+            a list of two lists (thicknesses and angles) then these will be
+            used together with linear interpolation.
         start_angle (float): the angle in degrees to start the blanket,
-            measured anti clockwise from 3 o'clock
+            measured anti clockwise from 3 o'clock.
         stop_angle (float): the angle in degrees to stop the blanket, measured
-            anti clockwise from 3 o'clock
+            anti clockwise from 3 o'clock.
         plasma (paramak.Plasma, optional): If not None, the parameters of the
             plasma Object will be used. Defaults to None.
         minor_radius (float, optional): the minor radius of the plasma (cm).
@@ -31,10 +33,10 @@ class BlanketFP(RotateMixedShape):
             to 2.0.
         vertical_displacement (float, optional): the vertical_displacement of
             the plasma (cm). Defaults to 0.
-        offset_from_plasma (float, optional): the distance bettwen the plasma
+        offset_from_plasma (float, optional): the distance between the plasma
             and the blanket (cm). If float, constant offset. If list of floats,
             offset will vary linearly between the values. If callable, offset
-            will be a function of poloidal angle (in degrees). If a list of of
+            will be a function of poloidal angle (in degrees). If a list of
             two lists (offsets and angles) then these will be used together
             with linear interpolation. Defaults to 0.0.
         num_points (int, optional): number of points that will describe the

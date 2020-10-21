@@ -6,27 +6,28 @@ from paramak import Plasma
 
 class PlasmaBoundaries(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
-       by 5 shaping parameters using the plasmaboundaries package to calculate
-       points. For more details see:
-       http://github.com/RemDelaporteMathurin/plasma-boundaries
-        Args:
-            A (float, optional): plasma parameter see plasmaboundaries doc.
-                Defaults to 0.05.
-            elongation (float, optional): the elongation of the plasma.
-                Defaults to 2.0.
-            major_radius (float, optional): the major radius of the plasma
-                (cm). Defaults to 450.0.
-            minor_radius (float, optional): the minor radius of the plasma
-                (cm). Defaults to 150.0.
-            triangularity (float, optional): the triangularity of the plasma.
-                Defaults to 0.55.
-            vertical_displacement (float, optional): the vertical_displacement
-                of the plasma (cm). Defaults to 0.0.
-            configuration (str, optional): plasma configuration
-                ("non-null", "single-null", "double-null").
-                Defaults to "non-null".
-            x_point_shift (float, optional): Shift parameters for locating the
-                X points in [0, 1]. Defaults to 0.1.
+    by 5 shaping parameters using the plasmaboundaries package to calculate
+    points. For more details see:
+    http://github.com/RemDelaporteMathurin/plasma-boundaries
+
+    Args:
+        A (float, optional): plasma parameter see plasmaboundaries doc.
+            Defaults to 0.05.
+        elongation (float, optional): the elongation of the plasma.
+            Defaults to 2.0.
+        major_radius (float, optional): the major radius of the plasma
+            (cm). Defaults to 450.0.
+        minor_radius (float, optional): the minor radius of the plasma
+            (cm). Defaults to 150.0.
+        triangularity (float, optional): the triangularity of the plasma.
+            Defaults to 0.55.
+        vertical_displacement (float, optional): the vertical_displacement
+            of the plasma (cm). Defaults to 0.0.
+        configuration (str, optional): plasma configuration
+            ("non-null", "single-null", "double-null").
+            Defaults to "non-null".
+        x_point_shift (float, optional): Shift parameters for locating the
+            X points in [0, 1]. Defaults to 0.1.
     """
 
     def __init__(

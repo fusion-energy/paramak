@@ -61,3 +61,31 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         assert Path("center_column_shield.stp").exists()
 
         os.system("rm center_column_shield.stp")
+
+    def test_parametric_component_hash_value(self):
+        """creates a parametric component and checks that a cadquery solid with
+        a unique hash value is created when .solid is called. checks that the
+        same cadquery solid with the same unique hash value is returned when
+        shape.solid is called again after no changes have been made to the
+        parametric component. checks that a new cadquery solid with a new
+        unique hash value is constructed when shape.solid is called after
+        changes to the parametric component have been made. checks that the
+        hash_value of a parametric component is not updated until a new
+        cadquery solid has been created"""
+
+        test_shape = paramak.CenterColumnShieldCylinder(
+            height=100,
+            inner_radius=20,
+            outer_radius=40
+        )
+
+        assert test_shape.hash_value is None
+        assert test_shape.solid is not None
+        assert test_shape.hash_value is not None
+        initial_hash_value = test_shape.hash_value
+        assert test_shape.solid is not None
+        assert initial_hash_value == test_shape.hash_value
+        test_shape.height = 120
+        assert initial_hash_value == test_shape.hash_value
+        assert test_shape.solid is not None
+        assert initial_hash_value != test_shape.hash_value

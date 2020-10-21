@@ -2,7 +2,7 @@ from paramak import RotateStraightShape
 
 
 class CuttingWedge(RotateStraightShape):
-    """Creates a wedge from height, radius and rotation angle agruements than
+    """Creates a wedge from height, radius and rotation angle arguments than
     can be useful for cutting sector models.
 
     Args:

@@ -1,5 +1,5 @@
 
-Core modules
+Core Modules
 ============
 
 These modules form the basis of parametric_shapes,

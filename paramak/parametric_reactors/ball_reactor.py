@@ -33,7 +33,7 @@ class BallReactor(paramak.Reactor):
             rear wall of the blanket (cm)
         elongation (float): the elongation of the plasma
         triangularity (float): the triangularity of the plasma
-        number_of_tf_coils (int): the number of tf coils
+        number_of_tf_coils (int, optional): the number of tf coils
         pf_coil_to_rear_blanket_radial_gap (float, optional): the radial
             distance between the rear blanket and the closest poloidal field
             coil. Defaults to None.
@@ -66,7 +66,7 @@ class BallReactor(paramak.Reactor):
         blanket_rear_wall_radial_thickness,
         elongation,
         triangularity,
-        number_of_tf_coils=None,
+        number_of_tf_coils=12,
         pf_coil_to_rear_blanket_radial_gap=None,
         pf_coil_radial_thicknesses=None,
         pf_coil_vertical_thicknesses=None,

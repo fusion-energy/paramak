@@ -7,14 +7,16 @@ class PoloidalFieldCoilSet(RotateStraightShape):
     """Creates a series of rectangular poloidal field coils.
 
     Args:
-        heights (float): the vertical (z axis) heights of the coil (cm).
-        widths (float): the horizontal (x axis) widths of the coil (cm).
-        center_points (tuple of floats): the center of the coil (x,z) values
+        heights (list of floats): the vertical (z axis) heights of the coils
             (cm).
-        stp_filename (str, optional): Defaults to "PoloidalFieldCoil.stp".
-        stl_filename (str, optional): Defaults to "PoloidalFieldCoil.stl".
-        name (str, optional): Defaults to "pf_coil".
-        material_tag (str, optional): Defaults to "pf_coil_mat".
+        widths (list of floats): the horizontal (x axis) widths of the coils
+            (cm).
+        center_points (list of tuple of floats): the center of the coil (x,z)
+            values e.g. [(100,100), (100,200)] (cm).
+        stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
+        stl_filename (str, optional): defaults to "PoloidalFieldCoil.stl".
+        name (str, optional): defaults to "pf_coil".
+        material_tag (str, optional): defaults to "pf_coil_mat".
     """
 
     def __init__(

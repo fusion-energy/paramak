@@ -7,7 +7,7 @@ from paramak import Shape
 
 
 class RotateSplineShape(Shape):
-    """Rotates a 3d CadQuery solid from points connected with splines
+    """Rotates a 3d CadQuery solid from points connected with splines.
 
     Args:
         rotation_angle (float, optional): The rotation_angle to use when
@@ -41,8 +41,7 @@ class RotateSplineShape(Shape):
         self._rotation_angle = value
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections
-           edges, azimuth_placement_angle and rotation angle.
+        """Creates a rotated 3d solid using points with spline edges.
 
            Returns:
               A CadQuery solid: A 3D solid volume

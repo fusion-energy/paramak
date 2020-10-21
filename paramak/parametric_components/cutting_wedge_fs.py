@@ -2,7 +2,7 @@ from paramak import RotateStraightShape
 
 
 class CuttingWedgeFS(RotateStraightShape):
-    """Creates a wedge from a Shape than can be useful for cutting sector
+    """Creates a wedge from a Shape that can be useful for cutting sector
     models.
 
     Args:

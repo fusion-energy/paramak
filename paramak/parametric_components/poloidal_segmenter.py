@@ -8,7 +8,7 @@ from paramak.utils import rotate, intersect_solid, \
 
 class PoloidalSegments(RotateStraightShape):
     """Creates a ring of wedges from a central point. When provided with a
-    shape to_segment the shape will be segmented by the wedges. This is useful
+    shape_to_segment the shape will be segmented by the wedges. This is useful
     for segmenting geometry into equal poloidal angles. Intended to segment the
     firstwall geometry for using in neutron wall loading simulations.
 
@@ -21,10 +21,10 @@ class PoloidalSegments(RotateStraightShape):
             segments in 360 degrees. Defaults to 10.
         max_distance_from_center (float): the maximum distance from the center
             point outwards (cm). Defaults to 1000.0.
-        stp_filename (str, optional): Defaults to "PoloidalSegmenter.stp".
-        stl_filename (str, optional): Defaults to "PoloidalSegmenter.stl".
-        name (str, optional): Defaults to "poloidal_segmenter".
-        material_tag (str, optional): Defaults to "poloidal_segmenter_mat".
+        stp_filename (str, optional): defaults to "PoloidalSegmenter.stp".
+        stl_filename (str, optional): defaults to "PoloidalSegmenter.stl".
+        name (str, optional): defaults to "poloidal_segmenter".
+        material_tag (str, optional): defaults to "poloidal_segmenter_mat".
     """
 
     def __init__(
@@ -146,10 +146,9 @@ class PoloidalSegments(RotateStraightShape):
         self.points = points
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections
-        edges, azimuth_placement_angle and rotation angle.
-        individual solids in the compound can be accessed using .Solids()[i]
-        where i is an int
+        """Creates a 3d solid using points with straight edges. Individual
+        solids in the compound can be accessed using .Solids()[i] where i is an
+        int.
 
            Returns:
               A CadQuery solid: A 3D solid volume

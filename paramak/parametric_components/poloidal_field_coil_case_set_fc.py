@@ -8,13 +8,13 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
 
     Args:
         pf_coils (paramak.PoloidalFieldCoil): a list of pf coil objects or a
-        CadQuery compound object
+            CadQuery compound object
         casing_thicknesses (list of floats): the thicknesses of the coil
             casing (cm).
-        stp_filename (str, optional): Defaults to "PoloidalFieldCoil.stp".
-        stl_filename (str, optional): Defaults to "PoloidalFieldCoil.stl".
-        name (str, optional): Defaults to "pf_coil".
-        material_tag (str, optional): Defaults to "pf_coil_mat".
+        stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
+        stl_filename (str, optional): defaults to "PoloidalFieldCoil.stl".
+        name (str, optional): defaults to "pf_coil".
+        material_tag (str, optional): defaults to "pf_coil_mat".
     """
 
     def __init__(
@@ -154,10 +154,9 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         self.points = all_points
 
     def create_solid(self):
-        """Creates a 3d solid using points with straight connections
-        edges, azimuth_placement_angle and rotation angle.
-        individual solids in the compound can be accessed using .Solids()[i]
-        where i is an int
+        """Creates a 3d solid using points with straight edges. Individual
+        solids in the compound can be accessed using .Solids()[i] where i is an
+        int
 
            Returns:
               A CadQuery solid: A 3D solid volume
