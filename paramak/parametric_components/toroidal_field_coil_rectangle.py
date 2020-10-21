@@ -1,4 +1,4 @@
-from paramak import ExtrudeStraightShape
+from paramak import ExtrudeStraightShape, CuttingWedgeFSAlternative
 import numpy as np
 from collections import Iterable
 
@@ -34,6 +34,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         thickness,
         distance,
         number_of_coils,
+        rotation_angle=360,
         with_inner_leg=True,
         stp_filename="ToroidalFieldCoilRectangle.stp",
         stl_filename="ToroidalFieldCoilRectangle.stl",
@@ -55,6 +56,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         self.distance = distance
         self.number_of_coils = number_of_coils
         self.with_inner_leg = with_inner_leg
+        self.rotation_angle = rotation_angle
 
     @property
     def azimuth_placement_angle(self):
@@ -64,6 +66,34 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
         self._azimuth_placement_angle = value
+
+    @property
+    def rotation_angle(self):
+        return self._rotation_angle
+
+    @rotation_angle.setter
+    def rotation_angle(self, value):
+        self._rotation_angle = value
+
+    def calculate_wedge_cut(self):
+        """Calculates a wedge cut depending on the rotation_angle given"""
+
+        cutting_wedge = CuttingWedgeFSAlternative(self)
+
+        if self.rotation_angle == 360:
+            return None
+        
+        else:
+            if self.cut is None:
+                self.cut = cutting_wedge
+            else:
+                if isinstance(self.cut, Iterable):
+                    cuts = [i for i in self.cut]
+                    cuts.append(cutting_wedge)
+                else:
+                    self.cut = [self.cut, cutting_wedge]
+            
+            return None
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
@@ -166,6 +196,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             solid = solid.rotate(
                 (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
+        self.calculate_wedge_cut()
         self.perform_boolean_operations(solid)
 
         return solid
