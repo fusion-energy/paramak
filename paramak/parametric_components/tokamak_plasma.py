@@ -97,7 +97,7 @@ class Plasma(RotateSplineShape):
 
     @minor_radius.setter
     def minor_radius(self, value):
-        if value > 2000 or value < 1:
+        if value < 1:
             raise ValueError("minor_radius is out of range")
         else:
             self._minor_radius = value
@@ -108,7 +108,7 @@ class Plasma(RotateSplineShape):
 
     @major_radius.setter
     def major_radius(self, value):
-        if value > 2000 or value < 1:
+        if value < 1:
             raise ValueError("major_radius is out of range")
         else:
             self._major_radius = value
