@@ -3,6 +3,7 @@ from collections import Iterable
 import cadquery as cq
 import numpy as np
 from paramak import ExtrudeStraightShape
+from paramak.utils import calculate_wedge_cut
 
 
 class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
@@ -40,6 +41,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         thickness,
         distance,
         number_of_coils,
+        rotation_angle=360,
         with_inner_leg=True,
         stp_filename="ToroidalFieldCoilCoatHangar.stp",
         stl_filename="ToroidalFieldCoilCoatHangar.stl",
@@ -52,6 +54,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            rotation_angle=rotation_angle,
             **kwargs
         )
 
@@ -198,6 +201,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             solid = solid.rotate(
                 (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
+        calculate_wedge_cut(self)
         self.perform_boolean_operations(solid)
 
         return solid

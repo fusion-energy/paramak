@@ -49,6 +49,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            rotation_angle=rotation_angle,
             **kwargs
         )
 
@@ -58,7 +59,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         self.distance = distance
         self.number_of_coils = number_of_coils
         self.with_inner_leg = with_inner_leg
-        self.rotation_angle = rotation_angle
 
     @property
     def azimuth_placement_angle(self):
@@ -68,14 +68,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
         self._azimuth_placement_angle = value
-
-    @property
-    def rotation_angle(self):
-        return self._rotation_angle
-
-    @rotation_angle.setter
-    def rotation_angle(self, value):
-        self._rotation_angle = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
