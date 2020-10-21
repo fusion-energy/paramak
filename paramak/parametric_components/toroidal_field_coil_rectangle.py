@@ -1,6 +1,8 @@
-from paramak import ExtrudeStraightShape, CuttingWedgeFSAlternative
+from paramak import ExtrudeStraightShape
 import numpy as np
 from collections import Iterable
+
+from paramak.utils import calculate_wedge_cut
 
 import cadquery as cq
 
@@ -74,26 +76,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     @rotation_angle.setter
     def rotation_angle(self, value):
         self._rotation_angle = value
-
-    def calculate_wedge_cut(self):
-        """Calculates a wedge cut depending on the rotation_angle given"""
-
-        cutting_wedge = CuttingWedgeFSAlternative(self)
-
-        if self.rotation_angle == 360:
-            return None
-
-        else:
-            if self.cut is None:
-                self.cut = cutting_wedge
-            else:
-                if isinstance(self.cut, Iterable):
-                    cuts = [i for i in self.cut]
-                    cuts.append(cutting_wedge)
-                else:
-                    self.cut = [self.cut, cutting_wedge]
-
-            return None
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
@@ -196,7 +178,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             solid = solid.rotate(
                 (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
-        self.calculate_wedge_cut()
+        calculate_wedge_cut(self)
         self.perform_boolean_operations(solid)
 
         return solid
