@@ -191,7 +191,6 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
     def _make_inboard_tf_coils(self):
 
-        self.# shapes_and_components.append(inboard_tf_coils)
         self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=self._blanket_end_height * 2,
             inner_radius=self._inboard_tf_coils_start_radius,
