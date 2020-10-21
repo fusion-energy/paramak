@@ -65,8 +65,13 @@ class Reactor:
     def material_tags(self):
         values = []
         for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.material_tag)
-        return values
+            if isinstance(
+                shape_or_componet,
+                (paramak.Plasma,
+                 paramak.PlasmaFromPoints,
+                 paramak.PlasmaBoundaries)) is False:
+                values.append(shape_or_componet.material_tag)
+        return list(set(values))
 
     @material_tags.setter
     def material_tags(self, value):
@@ -158,7 +163,10 @@ class Reactor:
         for entry in self.shapes_and_components:
 
             if include_plasma is False and isinstance(
-                    entry, paramak.Plasma) is True:
+                entry,
+                (paramak.Plasma,
+                 paramak.PlasmaFromPoints,
+                 paramak.PlasmaBoundaries)) is True:
                 continue
 
             if entry.stp_filename is None:
@@ -189,8 +197,8 @@ class Reactor:
     ):
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
-        file contains a list of dictionaries. Each dictionary entry comprises of
-        a material and a filename and optionally a tet_mesh instruction. The
+        file contains a list of dictionaries. Each dictionary entry comprises
+        of a material and a filename and optionally a tet_mesh instruction. The
         json file can then be used with the neutronics workflows to create a
         neutronics model. Creating of the neutronics model requires linkage
         between volumes, materials and identification of which volumes to
@@ -260,8 +268,6 @@ class Reactor:
         self.graveyard.export_stp(
             Path(output_folder) / Path(self.graveyard.stp_filename)
         )
-
-        print("exported stp files ", filenames)
 
         return filenames
 

@@ -62,3 +62,5 @@ from .parametric_reactors.submersion_reactor import SubmersionTokamak
 from .parametric_reactors.single_null_submersion_reactor import SingleNullSubmersionTokamak
 from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
 from .parametric_reactors.center_column_study_reactor import CenterColumnStudyReactor
+
+from .parametric_neutronics.neutronics_model_from_reactor import NeutronicsModelFromReactor
