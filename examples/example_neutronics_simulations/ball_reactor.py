@@ -7,7 +7,7 @@ import paramak
 
 
 def make_model_and_simulate():
-    """Makes a BallReactor neutronics model and simulates the TBR"""
+    """Makes a neutronics Reactor model and simulates the TBR"""
 
     # makes the 3d geometry
     my_reactor = paramak.BallReactor(
