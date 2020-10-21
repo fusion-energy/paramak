@@ -9,7 +9,7 @@ import pytest
 class test_object_properties(unittest.TestCase):
     """Makes a BallReactor neutronics model and simulates the TBR"""
 
-    #TODO the x 10e3 is needed for now as the units are wrong
+    # TODO the x 10e3 is needed for now as the units are wrong
 
     # makes the 3d geometry
     my_reactor = paramak.BallReactor(
@@ -28,7 +28,8 @@ class test_object_properties(unittest.TestCase):
         rotation_angle=360,
     )
 
-    # makes a homogenised material for the blanket from lithium lead and eurofer
+    # makes a homogenised material for the blanket from lithium lead and
+    # eurofer
     blanket_material = nmm.MultiMaterial(
         fracs=[0.8, 0.2],
         materials=[
