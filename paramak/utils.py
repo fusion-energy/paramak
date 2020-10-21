@@ -3,6 +3,8 @@ from collections import Iterable
 
 import numpy as np
 
+import paramak
+
 
 def union_solid(solid, joiner):
     """
@@ -184,3 +186,23 @@ def coefficients_of_line_from_points(point1, point2):
     A = np.vstack([x_coords, np.ones(len(x_coords))]).T
     m, c = np.linalg.lstsq(A, y_coords, rcond=None)[0]
     return m, c
+
+
+def calculate_wedge_cut(self):
+    """Calculates a wedge cut with the given rotation_angle"""
+
+    if self.rotation_angle == 360:
+        return None
+    
+    else:
+        cutting_wedge = paramak.CuttingWedgeFSAlternative(self)
+        if self.cut is None:
+            self.cut = cutting_wedge
+        else:
+            if isinstance(self.cut, Iterable):
+                cuts = [i for i in self.cut]
+                cuts.append(cutting_wedge)
+            else:
+                self.cut = [self.cut, cutting_wedge]
+
+        return None
