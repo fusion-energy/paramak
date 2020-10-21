@@ -193,7 +193,7 @@ def calculate_wedge_cut(self):
 
     if self.rotation_angle == 360:
         return None
-    
+
     else:
         cutting_wedge = paramak.CuttingWedgeFS(self)
         if self.cut is None:
