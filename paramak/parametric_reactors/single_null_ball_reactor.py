@@ -53,6 +53,8 @@ class SingleNullBallReactor(paramak.BallReactor):
         **kwargs
     ):
 
+        self.divertor_position = divertor_position
+
         super().__init__(
             inner_bore_radial_thickness=inner_bore_radial_thickness,
             inboard_tf_leg_radial_thickness=inboard_tf_leg_radial_thickness,
@@ -69,20 +71,9 @@ class SingleNullBallReactor(paramak.BallReactor):
             number_of_tf_coils=number_of_tf_coils,
             **kwargs)
 
-        self.divertor_position = divertor_position
+        self.shapes_and_components = []
 
-        shapes_or_components = []
-
-        self.make_plasma(shapes_or_components)
-        self.make_radial_build(shapes_or_components)
-        self.make_vertical_build(shapes_or_components)
-        self.make_inboard_tf_coils(shapes_or_components)
-        self.make_center_column_shield(shapes_or_components)
-        self.make_blankets_layers(shapes_or_components)
-        self.make_divertor_single_null(shapes_or_components)
-        self.make_component_cuts(shapes_or_components)
-
-        self.shapes_and_components = shapes_or_components
+        self.create_solids()
 
     @property
     def divertor_position(self):
@@ -96,7 +87,7 @@ class SingleNullBallReactor(paramak.BallReactor):
         else:
             raise ValueError("divertor position must be 'upper' or 'lower'")
 
-    def make_divertor_single_null(self, shapes_or_components):
+    def _make_divertor(self):
 
         if self.divertor_position == "upper":
             divertor_height = self._blanket_rear_wall_end_height
@@ -135,7 +126,7 @@ class SingleNullBallReactor(paramak.BallReactor):
             rotation_angle=self.rotation_angle
         )
 
-        shapes_or_components.append(self._divertor)
+        self.shapes_and_components.append(self._divertor)
 
         blanket_cutter = paramak.RotateStraightShape(
             points=[
@@ -155,6 +146,6 @@ class SingleNullBallReactor(paramak.BallReactor):
         self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
         self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
             blanket_cutter.solid)
-        shapes_or_components.append(self._firstwall)
-        shapes_or_components.append(self._blanket)
-        shapes_or_components.append(self._blanket_rear_wall)
+        self.shapes_and_components.append(self._firstwall)
+        self.shapes_and_components.append(self._blanket)
+        self.shapes_and_components.append(self._blanket_rear_wall)
