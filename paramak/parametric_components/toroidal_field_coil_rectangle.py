@@ -82,7 +82,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
 
         if self.rotation_angle == 360:
             return None
-        
+
         else:
             if self.cut is None:
                 self.cut = cutting_wedge
@@ -92,7 +92,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
                     cuts.append(cutting_wedge)
                 else:
                     self.cut = [self.cut, cutting_wedge]
-            
+
             return None
 
     def find_points(self):
