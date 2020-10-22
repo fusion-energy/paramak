@@ -45,7 +45,7 @@ class CuttingWedgeFS(RotateStraightShape):
     def find_points(self):
 
         if self.shape.rotation_angle == 360:
-            raise ValueError('rotation_angle is 360')
+            raise ValueError('cutting_wedge cannot be created, rotation_angle must be < 360')
 
         else:
 
@@ -56,12 +56,15 @@ class CuttingWedgeFS(RotateStraightShape):
                 max_x = self.shape.points[0][0] + self.shape.radius
                 max_y = self.shape.points[0][1] + self.shape.radius
 
-            else:
+            elif len(self.shape.points) > 1:
                 for point in self.shape.points:
                     if point[0] > max_x:
                         max_x = point[0]
                     if point[1] > max_y:
                         max_y = point[1]
+
+            else:
+                raise ValueError('cutting_wedge cannot be created')
 
             points = [
                 (0, max_y * 2),
