@@ -57,6 +57,7 @@ class Shape:
     def __init__(
         self,
         points=None,
+        connection_type="mixed",
         name=None,
         color=(0.5, 0.5, 0.5),
         material_tag=None,
@@ -71,6 +72,7 @@ class Shape:
         union=None
     ):
 
+        self.connection_type = connection_type
         self.points = points
         self.stp_filename = stp_filename
         self.stl_filename = stl_filename
@@ -305,8 +307,8 @@ class Shape:
                     )
                 else:
                     values.append(values[0])
-            if hasattr(self, 'add_connections'):
-                values = self.add_connections(values)
+            if self.connection_type != "mixed":
+                values = [(*p, self.connection_type) for p in values]
 
             self._points = values
 

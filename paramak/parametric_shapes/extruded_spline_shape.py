@@ -28,9 +28,6 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
             distance=distance,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            connection_type="spline",
             **kwargs
         )
-
-    def add_connections(self, points):
-        if points is not None:
-            return [(*p, "spline") for p in points]

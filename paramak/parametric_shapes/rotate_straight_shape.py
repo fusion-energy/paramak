@@ -26,9 +26,6 @@ class RotateStraightShape(RotateMixedShape):
             rotation_angle=rotation_angle,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            connection_type="straight",
             **kwargs
         )
-
-    def add_connections(self, points):
-        if points is not None:
-            return [(*p, "straight") for p in points]
