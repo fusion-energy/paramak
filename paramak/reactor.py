@@ -22,8 +22,8 @@ class Reactor:
         shapes_and_components (list): list of paramak.Shape
         graveyard_offset (float): the offset between the largest edge of the
             geometry and inner bounding shell created. can be overwritten by
-            specifying offset as part of the export_graveyard and make_graveyard
-            methods.
+            specifying offset as part of the export_graveyard and
+            make_graveyard methods.
     """
 
     def __init__(self, shapes_and_components, graveyard_offset=500):
@@ -144,7 +144,9 @@ class Reactor:
     def solid(self, value):
         self._solid = value
 
-    def neutronics_description(self, include_plasma=False):
+    def neutronics_description(self, include_plasma=False,
+        include_graveyard=True
+    ):
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations which
         require linkage between volumes, materials and identification of which
@@ -183,17 +185,18 @@ class Reactor:
 
             neutronics_description.append(entry.neutronics_description())
 
-        # This add the neutronics description for the graveyard which is unique as
-        # it is automatically calculated instead of being added by the user.
+        # This add the neutronics description for the graveyard which is unique
+        # as it is automatically calculated instead of being added by the user.
         # Also the graveyard must have 'Graveyard' as the material name
-        if self.graveyard is None:
-            self.make_graveyard()
-        neutronics_description.append(self.graveyard.neutronics_description())
+        if include_graveyard is True:
+            if self.graveyard is None:
+                self.make_graveyard()
+            neutronics_description.append(self.graveyard.neutronics_description())
 
         return neutronics_description
 
-    def export_neutronics_description(
-        self, filename="manifest.json", include_plasma=False
+    def export_neutronics_description(self, filename="manifest.json",
+        include_plasma=False, include_graveyard=True
     ):
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
@@ -203,14 +206,21 @@ class Reactor:
         neutronics model. Creating of the neutronics model requires linkage
         between volumes, materials and identification of which volumes to
         tet_mesh. If the filename does not end with .json then .json will be
-        added. The plasma geometry is not included by default as it is typically
-        not included in neutronics simulations. The reason for this is that the
-        low number density results in minimal interactions with neutrons.
-        However, the plasma can be added if the include_plasma argument is set
-        to True.
+        added. The plasma geometry is not included by default as it is
+        typically not included in neutronics simulations. The reason for this
+        is that the low number density results in minimal interactions with
+        neutrons. However, the plasma can be added if the include_plasma
+        argument is set to True.
 
         Args:
-            filename (str): the filename used to save the neutronics description
+            filename (str, optional): the filename used to save the neutronics
+                description
+            include_plasma (Boolean, optional): should the plasma be included.
+                Defaults to False as the plasma volume and material has very
+                little impact on the neutronics results due to the low density.
+                Including the plasma does however slow down the simulation.
+            include_graveyard (Boolean, optional): should the graveyard be
+                included. Defaults to True as this is needed for DAGMC models.
         """
 
         Pfilename = Path(filename)
@@ -222,7 +232,10 @@ class Reactor:
 
         with open(filename, "w") as outfile:
             json.dump(
-                self.neutronics_description(include_plasma=include_plasma),
+                self.neutronics_description(
+                    include_plasma=include_plasma,
+                    include_graveyard=include_graveyard,
+                ),
                 outfile,
                 indent=4,
             )
