@@ -10,6 +10,8 @@ class RotateMixedShape(Shape):
     straight lines and splines.
 
     Args:
+        points (list): list of (float, float, str) containing each point
+            coordinate and connection type.
         rotation_angle (float, optional): The rotation_angle to use when
             revolving the solid (degrees). Defaults to 360.0.
         stp_filename (str, optional):  Defaults to "RotateMixedShape.stp".
@@ -18,6 +20,7 @@ class RotateMixedShape(Shape):
 
     def __init__(
         self,
+        points,
         rotation_angle=360.0,
         stp_filename="RotateMixedShape.stp",
         stl_filename="RotateMixedShape.stl",
@@ -29,6 +32,7 @@ class RotateMixedShape(Shape):
             stl_filename=stl_filename,
             **kwargs
         )
+        self.points = points
         self.rotation_angle = rotation_angle
 
     @property
