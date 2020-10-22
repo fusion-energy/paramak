@@ -12,6 +12,8 @@ class ExtrudeMixedShape(Shape):
     Args:
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
+        extrude_both (bool, optional): If set to True, the extrusion will
+            occur in both directions. Defaults to True.
         stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeMixedShape.stl".
 
