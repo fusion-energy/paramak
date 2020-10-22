@@ -23,6 +23,7 @@ class ExtrudeMixedShape(Shape):
         self,
         points,
         distance,
+        extrude_both=True,
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
         **kwargs
@@ -35,6 +36,7 @@ class ExtrudeMixedShape(Shape):
         )
         self.points = points
         self.distance = distance
+        self.extrude_both = extrude_both
 
     @property
     def distance(self):
@@ -91,7 +93,9 @@ class ExtrudeMixedShape(Shape):
                 solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
         # performs extrude in both directions, hence distance / 2
-        solid = solid.close().extrude(distance=-self.distance / 2.0, both=True)
+        solid = solid.close().extrude(
+            distance=-self.distance / 2.0,
+            both=self.extrude_both)
 
         # Checks if the azimuth_placement_angle is a list of angles
         if isinstance(self.azimuth_placement_angle, Iterable):
