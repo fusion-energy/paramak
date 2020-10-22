@@ -68,7 +68,8 @@ class test_object_properties(unittest.TestCase):
         )
         test_shape_2.create_solid()
 
-        assert test_shape_1.volume == pytest.approx(test_shape_2.volume * 0.25, rel=0.01)
+        assert test_shape_1.volume == pytest.approx(
+            test_shape_2.volume * 0.25, rel=0.01)
 
     def test_iterable_azimuthal_placement(self):
         """checks that swept solids can be placed at multiple azimuth placement angles"""
