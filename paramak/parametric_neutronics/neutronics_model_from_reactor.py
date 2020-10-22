@@ -124,7 +124,7 @@ class NeutronicsModelFromReactor():
             reactor.rotation_angle = 360
             print('remaking reactor as it was not set to 360 degrees')
             reactor.solid
-            #TODO make use of reactor.create_solids() here
+            # TODO make use of reactor.create_solids() here
 
     @property
     def outputs(self):

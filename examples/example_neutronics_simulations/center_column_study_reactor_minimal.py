@@ -3,6 +3,7 @@ parametric reactor"""
 
 import paramak
 
+
 def make_model_and_simulate():
     """Makes a neutronics Reactor model and simulates the TBR"""
 
@@ -42,6 +43,7 @@ def make_model_and_simulate():
 
     # prints the results
     print(neutronics_model.results)
+
 
 if __name__ == "__main__":
     make_model_and_simulate()

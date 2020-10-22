@@ -5,6 +5,7 @@ center column while simulating the heat on the center column"""
 import matplotlib.pyplot as plt
 import paramak
 
+
 def make_model_and_simulate():
     """Makes a neutronics Reactor model and simulates the TBR"""
 
@@ -31,7 +32,8 @@ def make_model_and_simulate():
             rotation_angle=360
         )
 
-        # makes the neutronics model and assigns basic materials to each component
+        # makes the neutronics model and assigns basic materials to each
+        # component
         neutronics_model = paramak.NeutronicsModelFromReactor(
             reactor=my_reactor,
             materials={
@@ -61,6 +63,7 @@ def make_model_and_simulate():
     plt.xlabel('plasma_to_center_column_gap (cm)')
     plt.ylabel('Heat on the inboard (MW)')
     plt.show()
+
 
 if __name__ == "__main__":
     make_model_and_simulate()

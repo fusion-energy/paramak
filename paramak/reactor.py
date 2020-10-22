@@ -145,8 +145,8 @@ class Reactor:
         self._solid = value
 
     def neutronics_description(self, include_plasma=False,
-        include_graveyard=True
-    ):
+                               include_graveyard=True
+                               ):
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations which
         require linkage between volumes, materials and identification of which
@@ -191,13 +191,16 @@ class Reactor:
         if include_graveyard is True:
             if self.graveyard is None:
                 self.make_graveyard()
-            neutronics_description.append(self.graveyard.neutronics_description())
+            neutronics_description.append(
+                self.graveyard.neutronics_description())
 
         return neutronics_description
 
-    def export_neutronics_description(self, filename="manifest.json",
-        include_plasma=False, include_graveyard=True
-    ):
+    def export_neutronics_description(
+            self,
+            filename="manifest.json",
+            include_plasma=False,
+            include_graveyard=True):
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
         file contains a list of dictionaries. Each dictionary entry comprises

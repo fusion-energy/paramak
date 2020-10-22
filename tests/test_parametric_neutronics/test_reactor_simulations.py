@@ -30,7 +30,8 @@ class test_neutronics_BallReactor(unittest.TestCase):
             rotation_angle=360,
         )
 
-        # makes a homogenised material for the blanket from lithium lead and eurofer
+        # makes a homogenised material for the blanket from lithium lead and
+        # eurofer
         blanket_material = nmm.MultiMaterial(
             fracs=[0.8, 0.2],
             materials=[
