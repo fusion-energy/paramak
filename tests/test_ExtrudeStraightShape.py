@@ -125,21 +125,6 @@ class test_object_properties(unittest.TestCase):
             (9 * 9 * 30) - (5 * 5 * 30), abs=0.1
         )
 
-    def test_rotation_angle_cutting(self):
-        """creates an extruded shape with multiple azimuth placement angles and checks that
-        the solid can be cut using the rotation_angle parameter"""
-
-        shape = ExtrudeStraightShape(
-            points=[(50, 0), (50, 50), (70, 50), (70, 0)],
-            distance=20,
-            azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315, 360]
-        )
-        initial_volume = shape.volume
-
-        shape.rotation_angle = 180
-
-        assert shape.volume == pytest.approx(initial_volume * 0.5)
-
 
 if __name__ == "__main__":
     unittest.main()
