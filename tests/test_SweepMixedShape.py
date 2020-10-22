@@ -13,11 +13,12 @@ class test_object_properties(unittest.TestCase):
 
         test_shape = SweepMixedShape(
             points=[
-                (0, 0, "straight"),
+                (-10, -10, "straight"),
+                (-10, 10, "spline"),
                 (0, 20, "spline"),
-                (10, 30, "spline"),
-                (20, 20, "straight"),
-                (20, 0, "straight"),
+                (10, 10, "circle"),
+                (0, 0, "circle"),
+                (10, -10, "straight")
             ],
             path_points=[
                 (50, 0),
@@ -35,11 +36,12 @@ class test_object_properties(unittest.TestCase):
 
         test_shape_1 = SweepMixedShape(
             points=[
-                (-10, 10, "straight"),
-                (10, 10, "spline"),
-                (15, 0, "spline"),
-                (10, -10, "straight"),
-                (-10, -10, "straight")
+                (-10, -10, "straight"),
+                (-10, 10, "spline"),
+                (0, 20, "spline"),
+                (10, 10, "circle"),
+                (0, 0, "circle"),
+                (10, -10, "straight")
             ],
             path_points=[
                 (50, 0),
@@ -51,11 +53,12 @@ class test_object_properties(unittest.TestCase):
 
         test_shape_2 = SweepMixedShape(
             points=[
-                (-20, 20, "straight"),
-                (20, 20, "spline"),
-                (30, 0, "spline"),
-                (20, -20, "straight"),
-                (-20, -20, "straight")
+                (-20, -20, "straight"),
+                (-20, 20, "spline"),
+                (0, 40, "spline"),
+                (20, 20, "circle"),
+                (0, 0, "circle"),
+                (20, -20, "straight")
             ],
             path_points=[
                 (50, 0),
@@ -65,17 +68,19 @@ class test_object_properties(unittest.TestCase):
         )
         test_shape_2.create_solid()
 
-        assert test_shape_1.volume == pytest.approx(test_shape_2.volume * 0.25)
+        assert test_shape_1.volume == pytest.approx(test_shape_2.volume * 0.25, rel=0.01)
 
     def test_iterable_azimuthal_placement(self):
         """checks that swept solids can be placed at multiple azimuth placement angles"""
 
         test_shape = SweepMixedShape(
             points=[
-                (-10, 10, "straight"),
-                (10, 10, "spline"),
-                (10, -10, "spline"),
-                (-10, -10, "straight")
+                (-10, -10, "straight"),
+                (-10, 10, "spline"),
+                (0, 20, "spline"),
+                (10, 10, "circle"),
+                (0, 0, "circle"),
+                (10, -10, "straight")
             ],
             path_points=[
                 (50, 0),
@@ -99,10 +104,12 @@ class test_object_properties(unittest.TestCase):
         def workplane_and_path_workplane_equal():
             test_shape = SweepMixedShape(
                 points=[
-                    (-20, 20, "straight"),
-                    (20, 20, "spline"),
-                    (20, -20, "spline"),
-                    (-20, -20, "straight")
+                    (-10, -10, "straight"),
+                    (-10, 10, "spline"),
+                    (0, 20, "spline"),
+                    (10, 10, "circle"),
+                    (0, 0, "circle"),
+                    (10, -10, "straight")
                 ],
                 path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
                 workplane="XZ",
@@ -112,10 +119,12 @@ class test_object_properties(unittest.TestCase):
         def invalid_relative_workplane_and_path_workplane():
             test_shape = SweepMixedShape(
                 points=[
-                    (-20, 20, "straight"),
-                    (20, 20, "spline"),
-                    (20, -20, "spline"),
-                    (-20, -20, "straight")
+                    (-10, -10, "straight"),
+                    (-10, 10, "spline"),
+                    (0, 20, "spline"),
+                    (10, 10, "circle"),
+                    (0, 0, "circle"),
+                    (10, -10, "straight")
                 ],
                 path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
                 workplane="XZ",
