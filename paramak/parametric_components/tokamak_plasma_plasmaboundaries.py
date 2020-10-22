@@ -133,7 +133,7 @@ class PlasmaBoundaries(Plasma):
                 points2.append(p)
         points = points2
 
-        self.points = points
+        self.points = [(p[0], p[1]) for p in points[:-1]]
 
         # set the points of interest
         self.high_point = (

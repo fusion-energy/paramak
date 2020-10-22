@@ -73,15 +73,15 @@ class Plasma(RotateSplineShape):
         self.low_point = None
         self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
-    # overwrite points setter in Shape (error returned if not overwritten)
-    @property
-    def points(self):
-        self.find_points()
-        return self._points
+    # # overwrite points setter in Shape (error returned if not overwritten)
+    # @property
+    # def points(self):
+    #     self.find_points()
+    #     return self._points
 
-    @points.setter
-    def points(self, value):
-        self._points = value
+    # @points.setter
+    # def points(self, value):
+    #     self._points = value
 
     @property
     def vertical_displacement(self):
@@ -183,8 +183,7 @@ class Plasma(RotateSplineShape):
         points = np.stack((R_points, Z_points), axis=1)
 
         # set self.points
-        self.points = list(points)
-
+        self.points = [(p[0], p[1]) for p in points[:-1]]
         # set the points of interest
         self.high_point = (
             self.major_radius - self.triangularity * self.minor_radius,
