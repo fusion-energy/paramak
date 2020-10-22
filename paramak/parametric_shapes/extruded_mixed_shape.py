@@ -10,8 +10,6 @@ class ExtrudeMixedShape(Shape):
     straight and spline connections.
 
     Args:
-        points (list): list of (float, float, str) containing each point
-            coordinate and connection type.
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
         stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".

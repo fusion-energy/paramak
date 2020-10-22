@@ -10,8 +10,6 @@ class ExtrudeStraightShape(ExtrudeMixedShape):
     """Extrudes a 3d CadQuery solid from points connected with straight lines.
 
     Args:
-        points (list): list of (float, float) containing each point
-            coordinates.
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
         stp_filename (str, optional): Defaults to "ExtrudeStraightShape.stp".

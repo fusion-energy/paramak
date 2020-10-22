@@ -10,8 +10,6 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
     connections.
 
     Args:
-        points (list): list of (float, float) containing each point
-            coordinates.
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
         stp_filename (str, optional): Defaults to "ExtrudeSplineShape.stp".

@@ -8,8 +8,6 @@ class RotateStraightShape(RotateMixedShape):
     connections.
 
     Args:
-        points (list): list of (float, float) containing each point
-            coordinates.
         rotation_angle (float): The rotation angle to use when revolving the
             solid (degrees).
         stp_filename (str, optional): Defaults to "RotateStraightShape.stp".

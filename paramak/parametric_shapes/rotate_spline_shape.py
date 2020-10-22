@@ -7,8 +7,6 @@ class RotateSplineShape(RotateMixedShape):
     """Rotates a 3d CadQuery solid from points connected with splines.
 
     Args:
-        points (list): list of (float, float) containing each point
-            coordinates.
         rotation_angle (float, optional): The rotation_angle to use when
             revolving the solid (degrees). Defaults to 360.0.
         stp_filename (str, optional): Defaults to "RotateSplineShape.stp".
