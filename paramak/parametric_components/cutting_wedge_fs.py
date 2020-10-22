@@ -48,13 +48,20 @@ class CuttingWedgeFS(RotateStraightShape):
             raise ValueError('rotation_angle is 360')
 
         else:
+
             max_x = 0
             max_y = 0
-            for point in self.shape.points:
-                if point[0] > max_x:
-                    max_x = point[0]
-                if point[1] > max_y:
-                    max_y = point[1]
+
+            if hasattr(self.shape, 'radius') and len(self.shape.points) == 1:
+                max_x = self.shape.points[0][0] + self.shape.radius
+                max_y = self.shape.points[0][1] + self.shape.radius
+
+            else:
+                for point in self.shape.points:
+                    if point[0] > max_x:
+                        max_x = point[0]
+                    if point[1] > max_y:
+                        max_y = point[1]
 
             points = [
                 (0, max_y * 2),

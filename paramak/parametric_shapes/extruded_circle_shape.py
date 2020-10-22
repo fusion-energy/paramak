@@ -4,6 +4,7 @@ from collections import Iterable
 import cadquery as cq
 
 from paramak import Shape
+from paramak.utils import calculate_wedge_cut
 
 
 class ExtrudeCircleShape(Shape):
@@ -23,6 +24,7 @@ class ExtrudeCircleShape(Shape):
         self,
         distance,
         radius,
+        rotation_angle=360,
         extrude_both=True,
         stp_filename="ExtrudeCircleShape.stp",
         stl_filename="ExtrudeCircleShape.stl",
@@ -37,6 +39,7 @@ class ExtrudeCircleShape(Shape):
 
         self.radius = radius
         self.distance = distance
+        self.rotation_angle = rotation_angle
         self.extrude_both = extrude_both
 
     @property
@@ -54,6 +57,14 @@ class ExtrudeCircleShape(Shape):
     @distance.setter
     def distance(self, value):
         self._distance = value
+
+    @property
+    def rotation_angle(self):
+        return self._rotation_angle
+
+    @rotation_angle.setter
+    def rotation_angle(self, value):
+        self._rotation_angle = value
 
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with circular
@@ -89,6 +100,7 @@ class ExtrudeCircleShape(Shape):
             solid = solid.rotate(
                 (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
 
+        calculate_wedge_cut(self)
         self.perform_boolean_operations(solid)
 
         return solid
