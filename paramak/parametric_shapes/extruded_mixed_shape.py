@@ -93,24 +93,7 @@ class ExtrudeMixedShape(Shape):
             distance=-self.distance / 2.0,
             both=self.extrude_both)
 
-        # Checks if the azimuth_placement_angle is a list of angles
-        if isinstance(self.azimuth_placement_angle, Iterable):
-            rotated_solids = []
-            # Perform seperate rotations for each angle
-            for angle in self.azimuth_placement_angle:
-                rotated_solids.append(
-                    solid.rotate(
-                        (0, 0, -1), (0, 0, 1), angle))
-            solid = cq.Workplane(self.workplane)
-
-            # Joins the seperate solids together
-            for i in rotated_solids:
-                solid = solid.union(i)
-        else:
-            # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate(
-                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
-
+        solid = self.rotate_solid(solid)
         self.perform_boolean_operations(solid)
 
         return solid

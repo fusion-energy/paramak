@@ -7,6 +7,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import cadquery as cq
 from cadquery import exporters
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
@@ -402,6 +403,26 @@ class Shape:
         """Dummy create_solid method
         """
         return
+
+    def rotate_solid(self, solid):
+        # Checks if the azimuth_placement_angle is a list of angles
+        if isinstance(self.azimuth_placement_angle, Iterable):
+            rotated_solids = []
+            # Perform seperate rotations for each angle
+            for angle in self.azimuth_placement_angle:
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
+            solid = cq.Workplane(self.workplane)
+
+            # Joins the seperate solids together
+            for i in rotated_solids:
+                solid = solid.union(i)
+        else:
+            # Peform rotations for a single azimuth_placement_angle angle
+            solid = solid.rotate(
+                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
+        return solid
 
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the
