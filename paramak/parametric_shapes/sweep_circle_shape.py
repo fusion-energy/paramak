@@ -14,10 +14,8 @@ class SweepCircleShape(Shape):
         path_points (list of tuples each containing X (float), Z (float)): A list of XY,
             YZ or XZ coordinates connected by spline connections which define the path
             along which the 2D shape is swept.
+        workplane (str): Workplane in which the circle to be swept is defined.
         path_workplane (str): Workplane in which the spline path is defined.
-
-    Returns:
-        a paramak shape object: a Shape object that has generic functionality
     """
 
     def __init__(
@@ -85,7 +83,7 @@ class SweepCircleShape(Shape):
         path = cq.Workplane(self.path_workplane).spline(self.path_points)
         distance = float(self.path_points[-1][1] - self.path_points[0][1])
 
-        if self.workplane == "XZ" or self.workplane == "YX" or self.workplane == "ZY":
+        if self.workplane in ["XZ", "YX", "ZY"]:
             distance = -distance
 
         solid = (
