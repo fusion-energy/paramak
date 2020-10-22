@@ -73,3 +73,4 @@ class CuttingWedgeFS(RotateStraightShape):
         self.points = points
         self.rotation_angle = rotation_angle
         self.azimuth_placement_angle = azimuth_placement_angle
+        self.workplane = self.shape.workplane
