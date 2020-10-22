@@ -2,14 +2,14 @@ from .shape import Shape
 from .reactor import Reactor
 from .utils import rotate, extend, distance_between_two_points, diff_between_angles
 
+from .parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from .parametric_shapes.extruded_spline_shape import ExtrudeSplineShape
 from .parametric_shapes.extruded_straight_shape import ExtrudeStraightShape
-from .parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from .parametric_shapes.extruded_circle_shape import ExtrudeCircleShape
 
+from .parametric_shapes.rotate_mixed_shape import RotateMixedShape
 from .parametric_shapes.rotate_spline_shape import RotateSplineShape
 from .parametric_shapes.rotate_straight_shape import RotateStraightShape
-from .parametric_shapes.rotate_mixed_shape import RotateMixedShape
 from .parametric_shapes.rotate_circle_shape import RotateCircleShape
 
 from .parametric_components.tokamak_plasma import Plasma

@@ -10,6 +10,8 @@ class ExtrudeMixedShape(Shape):
     straight and spline connections.
 
     Args:
+        points (list): list of (float, float, str) containing each point
+            coordinate and connection type.
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
         stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".
@@ -19,6 +21,7 @@ class ExtrudeMixedShape(Shape):
 
     def __init__(
         self,
+        points,
         distance,
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
@@ -30,7 +33,7 @@ class ExtrudeMixedShape(Shape):
             stl_filename=stl_filename,
             **kwargs
         )
-
+        self.points = points
         self.distance = distance
 
     @property
