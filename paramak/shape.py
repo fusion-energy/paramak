@@ -305,6 +305,8 @@ class Shape:
                     )
                 else:
                     values.append(values[0])
+            if hasattr(self, 'add_connections'):
+                values = self.add_connections(values)
 
             self._points = values
 

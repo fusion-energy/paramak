@@ -20,7 +20,6 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
 
     def __init__(
         self,
-        points,
         distance,
         stp_filename="ExtrudeSplineShape.stp",
         stl_filename="ExtrudeSplineShape.stl",
@@ -28,9 +27,12 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
     ):
 
         super().__init__(
-            points=[(*p, "spline") for p in points],
             distance=distance,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             **kwargs
         )
+
+    def add_connections(self, points):
+        if points is not None:
+            return [(*p, "spline") for p in points]

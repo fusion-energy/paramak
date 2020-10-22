@@ -21,7 +21,6 @@ class ExtrudeMixedShape(Shape):
 
     def __init__(
         self,
-        points,
         distance,
         extrude_both=True,
         stp_filename="ExtrudeMixedShape.stp",
@@ -34,7 +33,6 @@ class ExtrudeMixedShape(Shape):
             stl_filename=stl_filename,
             **kwargs
         )
-        self.points = points
         self.distance = distance
         self.extrude_both = extrude_both
 
