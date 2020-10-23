@@ -12,7 +12,9 @@ class ExtrudeSplineShape(Shape):
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
-            neutronics)
+            neutronics).
+        rotation_angle (float): rotation angle of solid created. a cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.
         stp_filename (str, optional): Defaults to "ExtrudeSplineShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeSplineShape.stl".
     """

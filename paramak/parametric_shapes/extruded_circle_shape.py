@@ -14,6 +14,8 @@ class ExtrudeCircleShape(Shape):
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
         radius (float): radius of the shape.
+        rotation_angle (float): rotation_angle of solid created. a cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.
         extrude_both (bool, optional): if set to True, the extrusion will
             occur in both directions. Defaults to True.
         stp_filename (str, optional): Defaults to "ExtrudeCircleShape.stp".
