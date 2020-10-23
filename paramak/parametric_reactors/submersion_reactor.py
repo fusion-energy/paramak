@@ -527,6 +527,7 @@ class SubmersionTokamak(paramak.Reactor):
                 distance=self.outboard_tf_coil_poloidal_thickness,
                 stp_filename="outboard_tf_coil.stp",
                 stl_filename="outboard_tf_coil.stl",
+                rotation_angle=self.rotation_angle
             )
             self.shapes_and_components.append(self._tf_coil)
 
