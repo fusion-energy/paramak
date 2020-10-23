@@ -2,8 +2,9 @@
 """
 For some neutronics tallies such as neutron wall loading it is necessary to
 segment the geometry so that individual neutronics tallies can be recorded
-for each face. This can be done using the PoloidalSegments(). This geometry
-is then easier to find neutron wall loading as a function of poloidal angle.
+for each face. This can be done using the PoloidalSegments(). With this
+segmented geometry it is then easier to find neutron wall loading as a function
+of poloidal angle.
 """
 
 import paramak

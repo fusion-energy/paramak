@@ -21,7 +21,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             first wall (cm)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
             the inboard gap between the plasma and the center column shield
-                (cm)
+            (cm)
         plasma_radial_thickness (float): the radial thickness of the plasma
             (cm)
         divertor_radial_thickness (float): the radial thickness of the

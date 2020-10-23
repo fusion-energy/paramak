@@ -55,7 +55,7 @@ def make_cad_model_with_paramak():
 def convert_stp_files_to_neutronics_geometry():
     """
     Uses Trelis together with a python script to
-    reading the stp files assign material tags to
+    read the STP files, assign material tags to
     the volumes and create a watertight h5m DAGMC
     file which can be used as neutronics geometry.
     """
