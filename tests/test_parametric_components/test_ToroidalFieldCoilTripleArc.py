@@ -37,4 +37,3 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         test_shape.rotation_angle = 180
 
         assert test_shape.volume == pytest.approx(test_volume * 0.5)
-        
