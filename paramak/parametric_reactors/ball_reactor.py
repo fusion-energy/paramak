@@ -124,6 +124,33 @@ class BallReactor(paramak.Reactor):
 
         self.create_solids()
 
+
+    @property
+    def pf_coil_radial_thickness(self):
+        return self._pf_coil_radial_thickness
+
+    @pf_coil_radial_thickness.setter
+    def pf_coil_radial_thickness(self, values):
+        if values is None:
+            self._pf_coil_radial_thickness = values
+        elif not isinstance(values, list):
+            raise ValueError("pf_coil_radial_thickness must be a list")
+        else:
+            self._pf_coil_radial_thickness = values
+
+    @property
+    def pf_coil_vertical_thickness(self):
+        return self._pf_coil_vertical_thickness
+
+    @pf_coil_vertical_thickness.setter
+    def pf_coil_vertical_thickness(self, values):
+        if values is None:
+            self._pf_coil_vertical_thickness = values
+        elif not isinstance(values, list):
+            raise ValueError("pf_coil_vertical_thickness must be a list")
+        else:
+            self._pf_coil_vertical_thickness = values
+
     def create_solids(self):
         """Creates a 3d solids for each component.
 
@@ -142,7 +169,7 @@ class BallReactor(paramak.Reactor):
         self._make_component_cuts()
 
         return self.shapes_and_components
-
+    
     def _rotation_angle_check(self):
 
         if self.rotation_angle == 360:
