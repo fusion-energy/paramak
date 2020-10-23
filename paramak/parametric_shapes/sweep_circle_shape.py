@@ -14,10 +14,10 @@ class SweepCircleShape(Shape):
         path_points (list of tuples each containing X (float), Z (float)): A list of XY,
             YZ or XZ coordinates connected by spline connections which define the path
             along which the 2D shape is swept.
-        workplane (str): Workplane in which the circle to be swept is defined. Defaults
-            to "XY".
-        path_workplane (str): Workplane in which the spline path is defined. Defaults to
-            "XZ".
+        workplane (str, optional): Workplane in which the circle to be swept is defined. 
+            Defaults to "XY".
+        path_workplane (str, optional): Workplane in which the spline path is defined. 
+            Defaults to "XZ".
         stp_filename (str, optional): Defaults to "SweepCircleShape.stp".
         stl_filename (str, optional): Defaults to "SweepCircleShape.stl".
     """
