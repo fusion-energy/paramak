@@ -32,13 +32,15 @@ class test_object_properties(unittest.TestCase):
     def test_shape_rotation_angle_default(self):
         """checks that the default rotation angle of a RotateStraightShape is 360 degrees"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (1, 0), (1, 1), (0, 1)])
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (1, 0), (1, 1), (0, 1)])
         assert test_shape.rotation_angle == 360
 
     def test_shape_rotation_angle_setting_getting(self):
         """checks that the rotation angle of a RotateStraightShape can be set"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (1, 0), (1, 1), (0, 1)])
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (1, 0), (1, 1), (0, 1)])
         test_shape.rotation_angle = 180
         assert test_shape.rotation_angle == 180
         test_shape.rotation_angle = 90
@@ -47,14 +49,16 @@ class test_object_properties(unittest.TestCase):
     def test_shape_azimuth_placement_angle_default(self):
         """checks that the default azimuth placement angle of a RotateStraightShape is 0"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (1, 0), (1, 1), (0, 1)])
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (1, 0), (1, 1), (0, 1)])
         assert test_shape.azimuth_placement_angle == 0
 
     def test_shape_azimuth_placement_angle_setting_getting(self):
         """checks that the azimuth placement angle of a RotateStraightShape can be set to
         single values or a list of values"""
 
-        test_shape = RotateStraightShape(points=[(0, 0), (1, 0), (1, 1), (0, 1)])
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (1, 0), (1, 1), (0, 1)])
         test_shape.azimuth_placement_angle = 180
         assert test_shape.azimuth_placement_angle == 180
         test_shape.azimuth_placement_angle = 90

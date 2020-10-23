@@ -37,8 +37,6 @@ class VacuumVessel(RotateStraightShape):
             **kwargs
         )
 
-
-
     @property
     def height(self):
         return self._height
