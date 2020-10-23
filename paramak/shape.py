@@ -8,6 +8,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from cadquery import exporters
+import cadquery as cq
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
@@ -148,7 +149,10 @@ class Shape:
 
     @property
     def volume(self):
-        return self.solid.val().Volume()
+        if isinstance(self.solid, cq.Compound):
+            return self.solid.Volume()
+        else:
+            return self.solid.val().Volume()
 
     @property
     def hash_value(self):
