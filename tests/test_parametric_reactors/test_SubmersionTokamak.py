@@ -379,8 +379,9 @@ class test_SubmersionTokamak(unittest.TestCase):
             support_position="upper",
             rotation_angle=180,
         )
-        
-        for r90, r180 in zip(test_reactor_90.shapes_and_components, test_reactor_180.shapes_and_components):
+
+        for r90, r180 in zip(test_reactor_90.shapes_and_components,
+                             test_reactor_180.shapes_and_components):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
     def test_rotation_angle_warning(self):
