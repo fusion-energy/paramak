@@ -6,7 +6,7 @@ import paramak
 
 class BallReactor(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,
-    cylindical center column shielding, square toroidal field coils.
+    cylindrical center column shielding, square toroidal field coils.
     There is no inboard breeder blanket on this ball reactor like
     most spherical reactors.
 
@@ -27,7 +27,8 @@ class BallReactor(paramak.Reactor):
             outboard gap between the plasma and firstwall (cm)
         firstwall_radial_thickness (float): the radial thickness of the first
             wall (cm)
-        blanket_radial_thickness (float): the radial thickness of the blanket (cm)
+        blanket_radial_thickness (float): the radial thickness of the blanket
+            (cm)
         blanket_rear_wall_radial_thickness (float): the radial thickness of the
             rear wall of the blanket (cm)
         elongation (float): the elongation of the plasma
