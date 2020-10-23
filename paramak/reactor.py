@@ -119,14 +119,14 @@ class Reactor:
 
         list_of_cq_vals = []
 
-        for shope_or_compound in self.shapes_and_components:
+        for shape_or_compound in self.shapes_and_components:
             if isinstance(
-                    shope_or_compound.solid,
+                    shape_or_compound.solid,
                     cq.occ_impl.shapes.Compound):
-                for solid in shope_or_compound.solid.Solids():
+                for solid in shape_or_compound.solid.Solids():
                     list_of_cq_vals.append(solid)
             else:
-                list_of_cq_vals.append(shope_or_compound.solid.val())
+                list_of_cq_vals.append(shape_or_compound.solid.val())
 
         compound = cq.Compound.makeCompound(list_of_cq_vals)
 

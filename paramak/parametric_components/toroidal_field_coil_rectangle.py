@@ -2,6 +2,8 @@ from paramak import ExtrudeStraightShape
 import numpy as np
 from collections import Iterable
 
+from paramak.utils import calculate_wedge_cut
+
 import cadquery as cq
 
 
@@ -167,6 +169,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             solid = solid.rotate(
                 (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
+        calculate_wedge_cut(self)
         self.perform_boolean_operations(solid)
 
         return solid

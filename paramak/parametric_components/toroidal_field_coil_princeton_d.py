@@ -6,6 +6,7 @@ from scipy import integrate
 from scipy.optimize import minimize
 
 from paramak import ExtrudeMixedShape
+from paramak.utils import calculate_wedge_cut
 
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):

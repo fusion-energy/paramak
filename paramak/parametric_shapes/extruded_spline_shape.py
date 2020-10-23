@@ -20,6 +20,7 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
     def __init__(
         self,
         distance,
+        rotation_angle=360,
         stp_filename="ExtrudeSplineShape.stp",
         stl_filename="ExtrudeSplineShape.stl",
         **kwargs

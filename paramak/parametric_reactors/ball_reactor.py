@@ -120,28 +120,37 @@ class BallReactor(paramak.Reactor):
         self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
 
-        shapes_or_components = []
+        self.shapes_and_components = []
 
-        self.rotation_angle_check()
-        self.make_plasma(shapes_or_components)
-        self.make_radial_build(shapes_or_components)
-        self.make_vertical_build(shapes_or_components)
-        self.make_inboard_tf_coils(shapes_or_components)
-        self.make_center_column_shield(shapes_or_components)
-        self.make_blankets_layers(shapes_or_components)
-        self.make_divertor(shapes_or_components)
-        self.make_component_cuts(shapes_or_components)
+        self.create_solids()
 
-        self.shapes_and_components = shapes_or_components
+    def create_solids(self):
+        """Creates a 3d solids for each component.
 
-    def rotation_angle_check(self):
+           Returns:
+              A list of CadQuery solids: A list of 3D solid volumes
+
+        """
+        self._rotation_angle_check()
+        self._make_plasma()
+        self._make_radial_build()
+        self._make_vertical_build()
+        self._make_inboard_tf_coils()
+        self._make_center_column_shield()
+        self._make_blankets_layers()
+        self._make_divertor()
+        self._make_component_cuts()
+
+        return self.shapes_and_components
+
+    def _rotation_angle_check(self):
 
         if self.rotation_angle == 360:
             warnings.warn(
                 "360 degree rotation may result in a Standard_ConstructionError or AttributeError",
                 UserWarning)
 
-    def make_plasma(self, shapes_or_components):
+    def _make_plasma(self):
 
         plasma = paramak.Plasma(
             major_radius=self.major_radius,
@@ -153,11 +162,11 @@ class BallReactor(paramak.Reactor):
         )
         plasma.create_solid()
 
-        shapes_or_components.append(plasma)
+        self.shapes_and_components.append(plasma)
 
         self._plasma = plasma
 
-    def make_radial_build(self, shapes_or_components):
+    def _make_radial_build(self):
 
         # this is the radial build sequence, where one component stops and
         # another starts
@@ -200,7 +209,7 @@ class BallReactor(paramak.Reactor):
             self._blanket_rear_wall_start_radius +
             self.blanket_rear_wall_radial_thickness)
 
-    def make_vertical_build(self, shapes_or_components):
+    def _make_vertical_build(self):
 
         # this is the vertical build sequence, components build on each other in
         # a similar manner to the radial build
@@ -273,25 +282,7 @@ class BallReactor(paramak.Reactor):
                     self._tf_coil_start_radius +
                     self.outboard_tf_coil_radial_thickness)
 
-    def make_inboard_tf_coils(self, shapes_or_components):
-
-        # makes a large cylinder that is used to cut the TF coils when the
-        # rotation angle is less than 360
-        if self.rotation_angle < 360:
-            max_high = 3 * self._center_column_shield_height
-            max_width = 3 * self._blanket_read_wall_end_radius
-            self._cutting_slice = paramak.RotateStraightShape(
-                points=[
-                    (0, max_high),
-                    (max_width, max_high),
-                    (max_width, -max_high),
-                    (0, -max_high),
-                ],
-                rotation_angle=360 - self.rotation_angle,
-                azimuth_placement_angle=360 - self.rotation_angle,
-            )
-        else:
-            self._cutting_slice = None
+    def _make_inboard_tf_coils(self):
 
         self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=self._tf_coil_height * 2,
@@ -304,9 +295,9 @@ class BallReactor(paramak.Reactor):
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
         )
-        shapes_or_components.append(self._inboard_tf_coils)
+        self.shapes_and_components.append(self._inboard_tf_coils)
 
-    def make_center_column_shield(self, shapes_or_components):
+    def _make_center_column_shield(self):
 
         self._center_column_shield = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height,
@@ -319,9 +310,9 @@ class BallReactor(paramak.Reactor):
             name="center_column_shield",
             material_tag="center_column_shield_mat",
         )
-        shapes_or_components.append(self._center_column_shield)
+        self.shapes_and_components.append(self._center_column_shield)
 
-    def make_blankets_layers(self, shapes_or_components):
+    def _make_blankets_layers(self):
 
         center_column_cutter = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
@@ -393,7 +384,7 @@ class BallReactor(paramak.Reactor):
             stp_filename="blanket_rear_wall.stp",
             cut=center_column_cutter)
 
-    def make_divertor(self, shapes_or_components):
+    def _make_divertor(self):
 
         # # used as an intersect when making the divertor
         self._blanket_fw_rear_wall_envelope = paramak.BlanketFP(
@@ -422,7 +413,7 @@ class BallReactor(paramak.Reactor):
             material_tag="divertor_mat",
             rotation_angle=self.rotation_angle
         )
-        shapes_or_components.append(self._divertor)
+        self.shapes_and_components.append(self._divertor)
 
         blanket_cutter = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
@@ -435,11 +426,11 @@ class BallReactor(paramak.Reactor):
         self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
         self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
             blanket_cutter.solid)
-        shapes_or_components.append(self._firstwall)
-        shapes_or_components.append(self._blanket)
-        shapes_or_components.append(self._blanket_rear_wall)
+        self.shapes_and_components.append(self._firstwall)
+        self.shapes_and_components.append(self._blanket)
+        self.shapes_and_components.append(self._blanket_rear_wall)
 
-    def make_component_cuts(self, shapes_or_components):
+    def _make_component_cuts(self):
 
         if (
             self.pf_coil_vertical_thicknesses is not None
@@ -458,7 +449,7 @@ class BallReactor(paramak.Reactor):
                 material_tag="pf_coil_mat",
             )
 
-            shapes_or_components.append(self._pf_coil)
+            self.shapes_and_components.append(self._pf_coil)
 
             if (
                 self.pf_coil_to_tf_coil_radial_gap is not None
@@ -479,7 +470,6 @@ class BallReactor(paramak.Reactor):
                     name="tf_coil",
                     material_tag="tf_coil_mat",
                     stl_filename="tf_coil.stl",
-                    cut=self._cutting_slice,
                 )
 
-                shapes_or_components.append(self._tf_coil)
+                self.shapes_and_components.append(self._tf_coil)

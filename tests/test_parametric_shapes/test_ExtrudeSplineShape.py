@@ -58,6 +58,21 @@ class test_object_properties(unittest.TestCase):
         assert outer_shape.volume == pytest.approx(3775, abs=2)
         assert outer_shape_with_cut.volume == pytest.approx(3775 - 1165, abs=2)
 
+    def test_rotation_angle(self):
+        """creates an extruded shape with a rotation_angle < 360 and checks that the
+        correct cut is performed and the volume is correct"""
+
+        test_shape = ExtrudeSplineShape(
+            points=[(50, 0), (50, 20), (70, 20), (70, 0)],
+            distance=50,
+            azimuth_placement_angle=[45, 135, 225, 315]
+        )
+        test_volume = test_shape.volume
+
+        test_shape.rotation_angle = 180
+
+        assert test_shape.volume == pytest.approx(test_volume * 0.5)
+
 
 if __name__ == "__main__":
     unittest.main()
