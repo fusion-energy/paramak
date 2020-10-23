@@ -73,11 +73,6 @@ class Plasma(RotateSplineShape):
         self.low_point = None
         self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
-    # # overwrite points setter in Shape (error returned if not overwritten)
-    # @property
-    # def points(self):
-    #     self.find_points()
-    #     return self._points
 
     # @points.setter
     # def points(self, value):
