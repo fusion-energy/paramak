@@ -74,9 +74,6 @@ class Plasma(RotateSplineShape):
         self.lower_x_point, self.upper_x_point = self.compute_x_points()
 
 
-    # @points.setter
-    # def points(self, value):
-    #     self._points = value
 
     @property
     def vertical_displacement(self):
