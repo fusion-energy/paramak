@@ -81,6 +81,9 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         **kwargs
     ):
 
+        self.divertor_position = divertor_position
+        self.support_position = support_position
+
         super().__init__(
             inner_bore_radial_thickness=inner_bore_radial_thickness,
             inboard_tf_leg_radial_thickness=inboard_tf_leg_radial_thickness,
@@ -101,23 +104,9 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         self.elongation = None
         self.triangularity = None
 
-        self.divertor_position = divertor_position
-        self.support_position = support_position
+        self.shapes_and_components = []
 
-        shapes_or_components = []
-
-        self.make_radial_build()
-        self.make_vertical_build()
-        self.make_inboard_tf_coils(shapes_or_components)
-        self.make_center_column_shield(shapes_or_components)
-        self.make_plasma(shapes_or_components)
-        self.make_inboard_blanket_and_firstwall(shapes_or_components)
-        self.make_divertor_single_null(shapes_or_components)
-        self.make_outboard_blanket(shapes_or_components)
-        self.make_supports_single_null(shapes_or_components)
-        self.make_component_cuts(shapes_or_components)
-
-        self.shapes_and_components = shapes_or_components
+        self.create_solids()
 
     @property
     def divertor_position(self):
@@ -143,7 +132,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         else:
             raise ValueError("support position must be 'upper' or 'lower'")
 
-    def make_divertor_single_null(self, shapes_or_components):
+    def _make_divertor(self):
 
         if self.divertor_position == "upper":
             divertor_height = self._blanket_rear_wall_end_height
@@ -164,9 +153,9 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             name="divertor",
             material_tag="divertor_mat"
         )
-        shapes_or_components.append(self._divertor)
+        self.shapes_and_components.append(self._divertor)
 
-    def make_supports_single_null(self, shapes_or_components):
+    def _make_supports(self):
 
         if self.support_position == "upper":
             support_height = self._blanket_rear_wall_end_height
@@ -187,4 +176,4 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             name="supports",
             material_tag="supports_mat",
         )
-        shapes_or_components.append(self._supports)
+        self.shapes_and_components.append(self._supports)

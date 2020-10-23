@@ -116,30 +116,40 @@ class SubmersionTokamak(paramak.Reactor):
         self.elongation = None
         self.triangularity = None
 
-        shapes_or_components = []
+        self.shapes_and_components = []
 
-        self.rotation_angle_check()
-        self.make_radial_build()
-        self.make_vertical_build()
-        self.make_inboard_tf_coils(shapes_or_components)
-        self.make_center_column_shield(shapes_or_components)
-        self.make_plasma(shapes_or_components)
-        self.make_inboard_blanket_and_firstwall(shapes_or_components)
-        self.make_divertor(shapes_or_components)
-        self.make_outboard_blanket(shapes_or_components)
-        self.make_supports(shapes_or_components)
-        self.make_component_cuts(shapes_or_components)
+        self.create_solids()
 
-        self.shapes_and_components = shapes_or_components
+    def create_solids(self):
+        """Creates a 3d solids for each component.
 
-    def rotation_angle_check(self):
+           Returns:
+              A list of CadQuery solids: A list of 3D solid volumes
+
+        """
+
+        self._rotation_angle_check()
+        self._make_radial_build()
+        self._make_vertical_build()
+        self._make_inboard_tf_coils()
+        self._make_center_column_shield()
+        self._make_plasma()
+        self._make_inboard_blanket_and_firstwall()
+        self._make_divertor()
+        self._make_outboard_blanket()
+        self._make_supports()
+        self._make_component_cuts()
+
+        return self.shapes_and_components
+
+    def _rotation_angle_check(self):
 
         if self.rotation_angle == 360:
             warnings.warn(
                 "360 degree rotation may result in a Standard_ConstructionError or AttributeError",
                 UserWarning)
 
-    def make_radial_build(self):
+    def _make_radial_build(self):
 
         # this is the radial build sequence, where one component stops and
         # another starts
@@ -234,7 +244,7 @@ class SubmersionTokamak(paramak.Reactor):
             self.plasma_high_point[0] + 0.5 * self.support_radial_thickness
         )
 
-    def make_vertical_build(self):
+    def _make_vertical_build(self):
 
         # this is the vertical build sequence, componets build on each other in
         # a similar manner to the radial build
@@ -306,25 +316,9 @@ class SubmersionTokamak(paramak.Reactor):
                 self._plasma_end_radius,
             )
 
-        if self.rotation_angle < 360:
-            max_high = 3 * self._blanket_rear_wall_end_height
-            max_width = 3 * self._blanket_rear_wall_end_radius
-            self._cutting_slice = paramak.RotateStraightShape(
-                points=[
-                    (0, max_high),
-                    (max_width, max_high),
-                    (max_width, -max_high),
-                    (0, -max_high),
-                ],
-                rotation_angle=360 - self.rotation_angle,
-                azimuth_placement_angle=360 - self.rotation_angle,
-            )
-        else:
-            self._cutting_slice = None
+    def _make_inboard_tf_coils(self):
 
-    def make_inboard_tf_coils(self, shapes_or_components):
-
-        # shapes_or_components.append(inboard_tf_coils)
+        # self.shapes_and_components.append(inboard_tf_coils)
         self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=self._blanket_rear_wall_end_height * 2,
             inner_radius=self._inboard_tf_coils_start_radius,
@@ -335,9 +329,9 @@ class SubmersionTokamak(paramak.Reactor):
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
         )
-        shapes_or_components.append(self._inboard_tf_coils)
+        self.shapes_and_components.append(self._inboard_tf_coils)
 
-    def make_center_column_shield(self, shapes_or_components):
+    def _make_center_column_shield(self):
 
         self._center_column_shield = paramak.CenterColumnShieldCylinder(
             height=self._blanket_rear_wall_end_height * 2,
@@ -349,9 +343,9 @@ class SubmersionTokamak(paramak.Reactor):
             name="center_column_shield",
             material_tag="center_column_shield_mat",
         )
-        shapes_or_components.append(self._center_column_shield)
+        self.shapes_and_components.append(self._center_column_shield)
 
-    def make_plasma(self, shapes_or_components):
+    def _make_plasma(self):
 
         self._plasma = paramak.PlasmaFromPoints(
             outer_equatorial_x_point=self._plasma_end_radius,
@@ -365,9 +359,9 @@ class SubmersionTokamak(paramak.Reactor):
         self.elongation = self._plasma.elongation
         self.triangularity = self._plasma.triangularity
 
-        shapes_or_components.append(self._plasma)
+        self.shapes_and_components.append(self._plasma)
 
-    def make_inboard_blanket_and_firstwall(self, shapes_or_components):
+    def _make_inboard_blanket_and_firstwall(self):
 
         # this is used to cut the inboard blanket and then fused / unioned with
         # the firstwall
@@ -408,7 +402,7 @@ class SubmersionTokamak(paramak.Reactor):
             union=self._inboard_firstwall,
         )
 
-    def make_divertor(self, shapes_or_components):
+    def _make_divertor(self):
 
         self._divertor = paramak.CenterColumnShieldCylinder(
             height=self._blanket_rear_wall_end_height * 2,
@@ -421,9 +415,9 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="divertor_mat",
             intersect=self._firstwall,
         )
-        shapes_or_components.append(self._divertor)
+        self.shapes_and_components.append(self._divertor)
 
-    def make_outboard_blanket(self, shapes_or_components):
+    def _make_outboard_blanket(self):
 
         # this is the outboard fused /unioned with the inboard blanket
 
@@ -442,7 +436,7 @@ class SubmersionTokamak(paramak.Reactor):
             union=self._inboard_blanket,
         )
 
-    def make_supports(self, shapes_or_components):
+    def _make_supports(self):
 
         self._supports = paramak.CenterColumnShieldCylinder(
             height=self._blanket_rear_wall_end_height * 2,
@@ -455,18 +449,18 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="supports_mat",
             intersect=self._blanket,
         )
-        shapes_or_components.append(self._supports)
+        self.shapes_and_components.append(self._supports)
 
-    def make_component_cuts(self, shapes_or_components):
+    def _make_component_cuts(self):
 
         # the divertor is cut away then the firstwall can be added to the
         # reactor using CQ operations
         self._firstwall.solid = self._firstwall.solid.cut(self._divertor.solid)
-        shapes_or_components.append(self._firstwall)
+        self.shapes_and_components.append(self._firstwall)
 
         # cutting the supports away from the blanket
         self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
-        shapes_or_components.append(self._blanket)
+        self.shapes_and_components.append(self._blanket)
 
         self._outboard_rear_blanket_wall_upper = paramak.RotateStraightShape(
             points=[
@@ -518,7 +512,7 @@ class SubmersionTokamak(paramak.Reactor):
                 self._outboard_rear_blanket_wall_lower],
         )
 
-        shapes_or_components.append(self._outboard_rear_blanket_wall)
+        self.shapes_and_components.append(self._outboard_rear_blanket_wall)
 
         if self._tf_info_provided:
             self._tf_coil = paramak.ToroidalFieldCoilRectangle(
@@ -533,9 +527,8 @@ class SubmersionTokamak(paramak.Reactor):
                 distance=self.outboard_tf_coil_poloidal_thickness,
                 stp_filename="outboard_tf_coil.stp",
                 stl_filename="outboard_tf_coil.stl",
-                cut=self._cutting_slice,
             )
-            shapes_or_components.append(self._tf_coil)
+            self.shapes_and_components.append(self._tf_coil)
 
             if self._pf_info_provided:
 
@@ -549,4 +542,4 @@ class SubmersionTokamak(paramak.Reactor):
                     material_tag="pf_coil_mat",
                 )
 
-                shapes_or_components.append(self._pf_coil)
+                self.shapes_and_components.append(self._pf_coil)
