@@ -1,7 +1,7 @@
 
 """
 This script makes a blanket and then segments it in a similar
-manner to the EU DEMO segmentation for remote maintainance.
+manner to the EU DEMO segmentation for remote maintenance.
 """
 
 import math

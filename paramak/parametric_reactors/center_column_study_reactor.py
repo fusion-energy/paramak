@@ -8,9 +8,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
     """Creates geometry for a simple reactor that is optimised for carrying
     out parametric studies on the center column shield. Several aspects
     such as outboard magnets are intentionally missing from this reactor
-    so that the model runs quickly and only includes componets that have a
+    so that the model runs quickly and only includes components that have a
     significant impact on the center column shielding. This allows the
-    neutronics simulations to run quickly the column design space to be
+    neutronics simulations to run quickly and the column design space to be
     explored efficiently.
 
     Arguments:

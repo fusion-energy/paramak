@@ -8,7 +8,7 @@ import paramak
 
 class SubmersionTokamak(paramak.Reactor):
     """Creates geometry for a simple submersion reactor including a
-    plasma, cylindical center column shielding, square toroidal field
+    plasma, cylindrical center column shielding, square toroidal field
     coils. There is an inboard breeder blanket on this ball reactor.
 
     Arguments:
