@@ -36,7 +36,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         thickness,
         distance,
         number_of_coils,
-        rotation_angle=360,
         with_inner_leg=True,
         stp_filename="ToroidalFieldCoilRectangle.stp",
         stl_filename="ToroidalFieldCoilRectangle.stl",
@@ -49,7 +48,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
-            rotation_angle=rotation_angle,
             **kwargs
         )
 

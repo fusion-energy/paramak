@@ -39,7 +39,6 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         thickness,
         distance,
         number_of_coils,
-        rotation_angle=360,
         vertical_displacement=0.0,
         with_inner_leg=True,
         stp_filename="ToroidalFieldCoilPrincetonD.stp",
@@ -65,7 +64,6 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         self.number_of_coils = number_of_coils
         self.vertical_displacement = vertical_displacement
         self.with_inner_leg = with_inner_leg
-        self.rotation_angle = rotation_angle
 
     @property
     def azimuth_placement_angle(self):
@@ -75,14 +73,6 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
         self._azimuth_placement_angle = value
-
-    @property
-    def rotation_angle(self):
-        return self._rotation_angle
-
-    @rotation_angle.setter
-    def rotation_angle(self, value):
-        self._rotation_angle = value
 
     def _compute_curve(self, R1, h, radii, coverages):
         npoints = 500
