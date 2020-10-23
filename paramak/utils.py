@@ -72,6 +72,7 @@ def distance_between_two_points(A, B):
     u_vec = [xb - xa, yb - ya]
     return np.linalg.norm(u_vec)
 
+
 def extend(A, B, L):
     """Creates a point C in (AB) direction so that \\|AC\\| = L
 
