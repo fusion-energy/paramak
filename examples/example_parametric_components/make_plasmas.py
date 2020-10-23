@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 
 def plot_plasma(plasma, name=""):
-    """Extract points that make up the plasma and creates a plotly trace"""
+    """Extracts points that make up the plasma and creates a Plotly trace"""
 
     if name.endswith("plasmaboundaries"):
         major_radius = plasma.major_radius
