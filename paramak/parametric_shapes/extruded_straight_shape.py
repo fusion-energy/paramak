@@ -4,6 +4,7 @@ from collections import Iterable
 import cadquery as cq
 
 from paramak import Shape
+from paramak.utils import calculate_wedge_cut
 
 
 class ExtrudeStraightShape(Shape):
@@ -11,7 +12,9 @@ class ExtrudeStraightShape(Shape):
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
-            neutronics)
+            neutronics).
+        rotation_angle (float): rotation angle of solid created. a cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.
         extrude_both (bool, optional): if set to True, the extrusion will
             occur in both directions. Defaults to True.
         stp_filename (str, optional): Defaults to "ExtrudeStraightShape.stp".
@@ -21,6 +24,7 @@ class ExtrudeStraightShape(Shape):
     def __init__(
         self,
         distance,
+        rotation_angle=360,
         extrude_both=True,
         stp_filename="ExtrudeStraightShape.stp",
         stl_filename="ExtrudeStraightShape.stl",
@@ -34,6 +38,7 @@ class ExtrudeStraightShape(Shape):
         )
 
         self.distance = distance
+        self.rotation_angle = rotation_angle
         self.extrude_both = extrude_both
 
     @property
@@ -43,6 +48,14 @@ class ExtrudeStraightShape(Shape):
     @distance.setter
     def distance(self, value):
         self._distance = value
+
+    @property
+    def rotation_angle(self):
+        return self._rotation_angle
+
+    @rotation_angle.setter
+    def rotation_angle(self, value):
+        self._rotation_angle = value
 
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with straight
@@ -78,6 +91,7 @@ class ExtrudeStraightShape(Shape):
             solid = solid.rotate(
                 (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
 
+        calculate_wedge_cut(self)
         self.perform_boolean_operations(solid)
 
         return solid

@@ -3,15 +3,15 @@ from collections import Iterable
 
 import numpy as np
 
+import paramak
+
 
 def coefficients_of_line_from_points(point1, point2):
     """Computes the m and c coefficients of the equation (y=mx+c) for
     a straight line from two points.
-
     Args:
         point1 (float, float): point 1 coordinates
         point2 (float, float): point 2 coordinates
-
     Returns:
         (float, float): m coefficient and c coefficient
     """
@@ -25,7 +25,6 @@ def coefficients_of_line_from_points(point1, point2):
 def cut_solid(solid, cutter):
     """
     Performs a boolean cut of a solid with another solid or iterable of solids.
-
     Args:
         solid Shape: the Shape that you want to cut from
         cutter Shape: the Shape(s) that you want to be the cutting object
@@ -43,11 +42,9 @@ def cut_solid(solid, cutter):
 
 def diff_between_angles(a, b):
     """Calculates the difference between two angles a and b
-
     Args:
         a (float): angle in degree
         b (float): angle in degree
-
     Returns:
         float: difference between the two angles in degree.
     """
@@ -59,11 +56,9 @@ def diff_between_angles(a, b):
 
 def distance_between_two_points(A, B):
     """Computes the distance between two points
-
     Args:
         A (float, float): point A coordinates
         B (float, float): point B coordinates
-
     Returns:
         float: distance between A and B
     """
@@ -75,12 +70,10 @@ def distance_between_two_points(A, B):
 
 def extend(A, B, L):
     """Creates a point C in (AB) direction so that \\|AC\\| = L
-
     Args:
         A (float, float): point A coordinates
         B (float, float): point B coordinates
         L (float): distance AC
-
     Returns:
         float, float: point C coordinates
     """
@@ -98,7 +91,6 @@ def find_center_point_of_circle(point1, point2, point3):
     """
     Calculates the center and the radius of a circle
     passing through 3 points.
-
     Args:
         point1 (float, float): point 1 coordinates
         point2 (float, float): point 2 coordinates
@@ -130,7 +122,6 @@ def intersect_solid(solid, intersecter):
     """
     Performs a boolean intersection of a solid with another solid or iterable of
     solids.
-
     Args:
         solid Shape: the Shape that you want to intersect
         intersecter Shape: the Shape(s) that you want to be the intersecting object
@@ -150,7 +141,6 @@ def rotate(origin, point, angle):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
     The angle should be given in radians.
-
     Args:
         origin (float, float): coordinates of origin point
         point (float, float): coordinates of point to be rotated
@@ -169,7 +159,6 @@ def rotate(origin, point, angle):
 def union_solid(solid, joiner):
     """
     Performs a boolean union of a solid with another solid or iterable of solids
-
     Args:
         solid Shape: the Shape that you want to union from
         joiner Shape: the Shape(s) that you want to form the union with the
@@ -184,3 +173,23 @@ def union_solid(solid, joiner):
     else:
         solid = solid.union(joiner.solid)
     return solid
+
+
+def calculate_wedge_cut(self):
+    """Calculates a wedge cut with the given rotation_angle"""
+
+    if self.rotation_angle == 360:
+        return None
+
+    else:
+        cutting_wedge = paramak.CuttingWedgeFS(self)
+        if self.cut is None:
+            self.cut = cutting_wedge
+        else:
+            if isinstance(self.cut, Iterable):
+                cuts = [i for i in self.cut]
+                cuts.append(cutting_wedge)
+            else:
+                self.cut = [self.cut, cutting_wedge]
+
+        return None

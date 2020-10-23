@@ -3,6 +3,7 @@ from collections import Iterable
 import cadquery as cq
 
 from paramak import Shape
+from paramak.utils import calculate_wedge_cut
 
 
 class ExtrudeSplineShape(Shape):
@@ -11,7 +12,9 @@ class ExtrudeSplineShape(Shape):
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
-            neutronics)
+            neutronics).
+        rotation_angle (float): rotation angle of solid created. a cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.
         stp_filename (str, optional): Defaults to "ExtrudeSplineShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeSplineShape.stl".
     """
@@ -19,6 +22,7 @@ class ExtrudeSplineShape(Shape):
     def __init__(
         self,
         distance,
+        rotation_angle=360,
         stp_filename="ExtrudeSplineShape.stp",
         stl_filename="ExtrudeSplineShape.stl",
         **kwargs
@@ -31,6 +35,7 @@ class ExtrudeSplineShape(Shape):
         )
 
         self.distance = distance
+        self.rotation_angle = rotation_angle
 
     @property
     def distance(self):
@@ -39,6 +44,14 @@ class ExtrudeSplineShape(Shape):
     @distance.setter
     def distance(self, value):
         self._distance = value
+
+    @property
+    def rotation_angle(self):
+        return self._rotation_angle
+
+    @rotation_angle.setter
+    def rotation_angle(self, value):
+        self._rotation_angle = value
 
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with spline
@@ -74,6 +87,7 @@ class ExtrudeSplineShape(Shape):
             solid = solid.rotate(
                 (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
 
+        calculate_wedge_cut(self)
         self.perform_boolean_operations(solid)
 
         return solid
