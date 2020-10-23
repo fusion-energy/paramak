@@ -4,6 +4,7 @@ from collections import Iterable
 import cadquery as cq
 
 from paramak import ExtrudeMixedShape
+from paramak.utils import calculate_wedge_cut
 
 
 class ExtrudeStraightShape(ExtrudeMixedShape):

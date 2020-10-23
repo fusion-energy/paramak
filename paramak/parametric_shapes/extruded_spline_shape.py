@@ -3,6 +3,7 @@ from collections import Iterable
 import cadquery as cq
 
 from paramak import ExtrudeMixedShape
+from paramak.utils import calculate_wedge_cut
 
 
 class ExtrudeSplineShape(ExtrudeMixedShape):
@@ -11,7 +12,7 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
-            neutronics)
+            neutronics).
         stp_filename (str, optional): Defaults to "ExtrudeSplineShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeSplineShape.stl".
     """

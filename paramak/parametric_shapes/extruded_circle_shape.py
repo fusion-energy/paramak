@@ -4,6 +4,7 @@ from collections import Iterable
 import cadquery as cq
 
 from paramak import Shape
+from paramak.utils import calculate_wedge_cut
 
 
 class ExtrudeCircleShape(Shape):
@@ -13,6 +14,8 @@ class ExtrudeCircleShape(Shape):
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
         radius (float): radius of the shape.
+        rotation_angle (float): rotation_angle of solid created. a cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.
         extrude_both (bool, optional): if set to True, the extrusion will
             occur in both directions. Defaults to True.
         stp_filename (str, optional): Defaults to "ExtrudeCircleShape.stp".
@@ -23,6 +26,7 @@ class ExtrudeCircleShape(Shape):
         self,
         distance,
         radius,
+        rotation_angle=360,
         extrude_both=True,
         stp_filename="ExtrudeCircleShape.stp",
         stl_filename="ExtrudeCircleShape.stl",
@@ -37,6 +41,7 @@ class ExtrudeCircleShape(Shape):
 
         self.radius = radius
         self.distance = distance
+        self.rotation_angle = rotation_angle
         self.extrude_both = extrude_both
 
     @property
@@ -55,6 +60,14 @@ class ExtrudeCircleShape(Shape):
     def distance(self, value):
         self._distance = value
 
+    @property
+    def rotation_angle(self):
+        return self._rotation_angle
+
+    @rotation_angle.setter
+    def rotation_angle(self, value):
+        self._rotation_angle = value
+
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with circular
         edges.
@@ -72,6 +85,7 @@ class ExtrudeCircleShape(Shape):
         )
 
         solid = self.rotate_solid(solid)
+        calculate_wedge_cut(self)
         self.perform_boolean_operations(solid)
 
         return solid
