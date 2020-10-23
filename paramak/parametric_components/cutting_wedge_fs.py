@@ -45,7 +45,8 @@ class CuttingWedgeFS(RotateStraightShape):
     def find_points(self):
 
         if self.shape.rotation_angle == 360:
-            raise ValueError('cutting_wedge cannot be created, rotation_angle must be < 360')
+            raise ValueError(
+                'cutting_wedge cannot be created, rotation_angle must be < 360')
 
         else:
 
