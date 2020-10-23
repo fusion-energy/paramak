@@ -41,7 +41,9 @@ from .parametric_components.poloidal_field_coil_case_set import PoloidalFieldCoi
 from .parametric_components.poloidal_field_coil_case_set_fc import PoloidalFieldCoilCaseSetFC
 
 from .parametric_components.poloidal_segmenter import PoloidalSegments
-from .parametric_components.port_cutters import PortCutterRotated
+from .parametric_components.port_cutters_rotated import PortCutterRotated
+from .parametric_components.port_cutters_rectangular import PortCutterRectangular
+from .parametric_components.port_cutters_circular import PortCutterCircular
 from .parametric_components.cutting_wedge import CuttingWedge
 from .parametric_components.cutting_wedge_fs import CuttingWedgeFS
 
@@ -53,10 +55,10 @@ from .parametric_components.toroidal_field_coil_rectangle import ToroidalFieldCo
 from .parametric_components.toroidal_field_coil_triple_arc import ToroidalFieldCoilTripleArc
 from .parametric_components.toroidal_field_coil_princeton_d import ToroidalFieldCoilPrincetonD
 
+from .parametric_components.vacuum_vessel import VacuumVessel
+
 from .parametric_reactors.ball_reactor import BallReactor
 from .parametric_reactors.submersion_reactor import SubmersionTokamak
 from .parametric_reactors.single_null_submersion_reactor import SingleNullSubmersionTokamak
 from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
 from .parametric_reactors.center_column_study_reactor import CenterColumnStudyReactor
-
-from .parametric_components.vacuum_vessel import VacuumVessel

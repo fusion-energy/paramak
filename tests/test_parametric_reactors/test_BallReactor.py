@@ -1,10 +1,11 @@
 
 import os
 import unittest
-from pathlib import Path
 import warnings
+from pathlib import Path
 
 import paramak
+import pytest
 
 
 class test_BallReactor(unittest.TestCase):
@@ -251,6 +252,51 @@ class test_BallReactor(unittest.TestCase):
         )
 
         assert len(test_reactor.shapes_and_components) == 7
+
+    def test_SingleNullBallReactor_rotation_angle_impacts_volume(self):
+        """creates a single null ball reactor with a rotation angle of
+        90 and another reactor with a rotation angle of 180. Then checks the
+        volumes of all the components is double in the 180 reactor"""
+
+        test_reactor_90 = paramak.SingleNullBallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            divertor_position="upper",
+            rotation_angle=90,
+        )
+
+        test_reactor_180 = paramak.SingleNullBallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            divertor_position="upper",
+            rotation_angle=180,
+        )
+
+        for r90, r180 in zip(test_reactor_90.shapes_and_components,
+                             test_reactor_180.shapes_and_components):
+            assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
     def test_rotation_angle_warning(self):
         """checks that the correct warning message is printed when

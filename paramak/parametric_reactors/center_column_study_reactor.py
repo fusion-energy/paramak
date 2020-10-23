@@ -8,9 +8,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
     """Creates geometry for a simple reactor that is optimised for carrying
     out parametric studies on the center column shield. Several aspects
     such as outboard magnets are intentionally missing from this reactor
-    so that the model runs quickly and only includes componets that have a
+    so that the model runs quickly and only includes components that have a
     significant impact on the center column shielding. This allows the
-    neutronics simulations to run quickly the column design space to be
+    neutronics simulations to run quickly and the column design space to be
     explored efficiently.
 
     Arguments:
@@ -20,22 +20,25 @@ class CenterColumnStudyReactor(paramak.Reactor):
             the inner leg of the toroidal field coils (cm)
         center_column_shield_radial_thickness_mid (float): the radial thickness
             of the center column shield at the mid point (cm)
-        center_column_shield_radial_thickness_upper (float): the radial thickness
-            of the center column shield at the upper point (cm)
+        center_column_shield_radial_thickness_upper (float): the radial
+            thickness of the center column shield at the upper point (cm)
         inboard_firstwall_radial_thickness (float): the radial thickness
             of the inboard firstwall (cm)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
-            the inboard gap between the plasma and the center column shield (cm)
-        plasma_radial_thickness (float): the radial thickness of the plasma (cm)
+            the inboard gap between the plasma and the center column shield
+            (cm)
+        plasma_radial_thickness (float): the radial thickness of the plasma
+            (cm)
         outer_plasma_gap_radial_thickness (float): the radial thickness of
             the outboard gap between the plasma and the first wall (cm)
-        center_column_arc_vertical_thickness (float): height of the outer hyperbolic
-            profile of the center column shield.
-        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of the
-            top of the plasma (cm)
+        center_column_arc_vertical_thickness (float): height of the outer
+            hyperbolic profile of the center column shield.
+        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of
+            the top of the plasma (cm)
         plasma_gap_vertical_thickness (float): the vertical thickness of
             the upper gap between the plasma and the blanket (cm)
-        rotation_angle (float): the angle of the sector that is desired
+        rotation_angle (float): the angle of the sector that is desired.
+            Defaults to 360.0.
 
     Returns:
         a paramak shape object: a Reactor object that has generic functionality
@@ -55,7 +58,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         center_column_arc_vertical_thickness,
         plasma_high_point,
         plasma_gap_vertical_thickness,
-        rotation_angle=360,
+        rotation_angle=360.0,
     ):
 
         super().__init__([])
@@ -80,29 +83,38 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.elongation = None
         self.triangularity = None
 
-        shapes_or_components = []
+        self.shapes_and_components = []
 
-        self.rotation_angle_check()
-        self.make_radial_build()
-        self.make_vertical_build()
-        self.make_inboard_tf_coils(shapes_or_components)
-        self.make_center_column_shield(shapes_or_components)
-        self.make_inboard_firstwall(shapes_or_components)
-        self.make_plasma(shapes_or_components)
-        self.make_outboard_blanket(shapes_or_components)
-        self.make_divertor(shapes_or_components)
-        self.make_component_cuts(shapes_or_components)
+        self.create_solids()
 
-        self.shapes_and_components = shapes_or_components
+    def create_solids(self):
+        """Creates a 3d solids for each component.
 
-    def rotation_angle_check(self):
+           Returns:
+              A list of CadQuery solids: A list of 3D solid volumes
+
+        """
+        self._rotation_angle_check()
+        self._make_radial_build()
+        self._make_vertical_build()
+        self._make_inboard_tf_coils()
+        self._make_center_column_shield()
+        self._make_inboard_firstwall()
+        self._make_plasma()
+        self._make_outboard_blanket()
+        self._make_divertor()
+        self._make_component_cuts()
+
+        return self.shapes_and_components
+
+    def _rotation_angle_check(self):
 
         if self.rotation_angle == 360:
             warnings.warn(
                 "360 degree rotation may result in a Standard_ConstructionError or AttributeError",
                 UserWarning)
 
-    def make_radial_build(self):
+    def _make_radial_build(self):
 
         # this is the radial build sequence, where one component stops and
         # another starts
@@ -145,7 +157,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self._outboard_blanket_start_radius = self._outer_plasma_gap_end_radius
         self._outboard_blanket_end_radius = self._outboard_blanket_start_radius + 100.
 
-    def make_vertical_build(self):
+    def _make_vertical_build(self):
 
         # this is the vertical build sequence, componets build on each other in
         # a similar manner to the radial build
@@ -177,9 +189,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
                 self._plasma_end_radius,
             )
 
-    def make_inboard_tf_coils(self, shapes_or_components):
+    def _make_inboard_tf_coils(self):
 
-        # shapes_or_components.append(inboard_tf_coils)
         self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=self._blanket_end_height * 2,
             inner_radius=self._inboard_tf_coils_start_radius,
@@ -190,9 +201,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
         )
-        shapes_or_components.append(self._inboard_tf_coils)
+        self.shapes_and_components.append(self._inboard_tf_coils)
 
-    def make_center_column_shield(self, shapes_or_components):
+    def _make_center_column_shield(self):
 
         self._center_column_shield = paramak.CenterColumnShieldFlatTopHyperbola(
             height=self._center_column_shield_end_height * 2.,
@@ -201,17 +212,17 @@ class CenterColumnStudyReactor(paramak.Reactor):
             mid_radius=self._center_column_shield_end_radius_mid,
             outer_radius=self._center_column_shield_end_radius_upper,
             rotation_angle=self.rotation_angle)
-        shapes_or_components.append(self._center_column_shield)
+        self.shapes_and_components.append(self._center_column_shield)
 
-    def make_inboard_firstwall(self, shapes_or_components):
+    def _make_inboard_firstwall(self):
 
         self._inboard_firstwall = paramak.InboardFirstwallFCCS(
             central_column_shield=self._center_column_shield,
             thickness=self.inboard_firstwall_radial_thickness,
             rotation_angle=self.rotation_angle)
-        shapes_or_components.append(self._inboard_firstwall)
+        self.shapes_and_components.append(self._inboard_firstwall)
 
-    def make_plasma(self, shapes_or_components):
+    def _make_plasma(self):
 
         self._plasma = paramak.PlasmaFromPoints(
             outer_equatorial_x_point=self._plasma_end_radius,
@@ -225,9 +236,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.elongation = self._plasma.elongation
         self.triangularity = self._plasma.triangularity
 
-        shapes_or_components.append(self._plasma)
+        self.shapes_and_components.append(self._plasma)
 
-    def make_outboard_blanket(self, shapes_or_components):
+    def _make_outboard_blanket(self):
 
         center_column_cutter = paramak.CenterColumnShieldCylinder(
             height=self._inboard_firstwall_end_height * 2.5,  # extra 0.5 to ensure overlap,
@@ -251,7 +262,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             cut=center_column_cutter
         )
 
-    def make_divertor(self, shapes_or_components):
+    def _make_divertor(self):
 
         self._divertor = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_end_height *
@@ -265,10 +276,10 @@ class CenterColumnStudyReactor(paramak.Reactor):
             material_tag="divertor_mat",
             intersect=self._blanket,
         )
-        shapes_or_components.append(self._divertor)
+        self.shapes_and_components.append(self._divertor)
 
-    def make_component_cuts(self, shapes_or_components):
+    def _make_component_cuts(self):
 
         # the divertor is cut away then the blanket can be added to the
         self._blanket.solid = self._blanket.solid.cut(self._divertor.solid)
-        shapes_or_components.append(self._blanket)
+        self.shapes_and_components.append(self._blanket)

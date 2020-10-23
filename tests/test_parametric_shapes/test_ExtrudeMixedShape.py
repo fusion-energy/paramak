@@ -159,6 +159,27 @@ class test_object_properties(unittest.TestCase):
         assert Path("tests/test.stl").exists() is True
         os.system("rm tests/test.stl")
 
+    def test_rotation_angle(self):
+        """creates an extruded shape with a rotation_angle < 360 and checks that the
+        correct cut is performed and the volume is correct"""
+
+        test_shape = ExtrudeMixedShape(
+            points=[
+                (10, 20, "straight"),
+                (10, 10, "straight"),
+                (20, 10, "circle"),
+                (22, 15, "circle"),
+                (20, 20, "straight"),
+            ],
+            distance=10,
+            azimuth_placement_angle=[45, 135, 225, 315]
+        )
+        test_volume = test_shape.volume
+
+        test_shape.rotation_angle = 180
+
+        assert test_shape.volume == pytest.approx(test_volume * 0.5)
+
 
 if __name__ == "__main__":
     unittest.main()
