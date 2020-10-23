@@ -496,6 +496,7 @@ class BallReactor(paramak.Reactor):
                     name="tf_coil",
                     material_tag="tf_coil_mat",
                     stl_filename="tf_coil.stl",
+                    rotation_angle=self.rotation_angle
                 )
 
                 self.shapes_and_components.append(self._tf_coil)
