@@ -160,7 +160,7 @@ class PoloidalSegments(RotateStraightShape):
 
             solid = (
                 cq.Workplane(self.workplane)
-                .polyline([p1, p2, p3])
+                .polyline([p1[:2], p2[:2], p3[:2]])
                 .close()
                 .revolve(self.rotation_angle)
             )
