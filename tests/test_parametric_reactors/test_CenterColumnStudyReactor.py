@@ -1,8 +1,8 @@
 
 import os
 import unittest
-from pathlib import Path
 import warnings
+from pathlib import Path
 
 import paramak
 import pytest
@@ -62,8 +62,24 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
 
     def test_CenterColumnStudyReactor_rotation_angle_impacts_volume(self):
         """creates a CenterColumnStudyReactor reactor with a rotation angle of
-        180 and another reactor with a rotation angle of 360. Then checks the
-        volumes of all the components is double in the 360 reactor"""
+        90 and another reactor with a rotation angle of 180. Then checks the
+        volumes of all the components is double in the 180 reactor"""
+
+        test_reactor_90 = paramak.CenterColumnStudyReactor(
+            inner_bore_radial_thickness=30,
+            inboard_tf_leg_radial_thickness=50,
+            center_column_shield_radial_thickness_mid=50,
+            center_column_shield_radial_thickness_upper=100,
+            inboard_firstwall_radial_thickness=30,
+            divertor_radial_thickness=10,
+            inner_plasma_gap_radial_thickness=80,
+            plasma_radial_thickness=200,
+            outer_plasma_gap_radial_thickness=90,
+            # first number must be between plasma inner/outer radius
+            plasma_high_point=(245, 240),
+            plasma_gap_vertical_thickness=40,
+            center_column_arc_vertical_thickness=520,
+            rotation_angle=90)
 
         test_reactor_180 = paramak.CenterColumnStudyReactor(
             inner_bore_radial_thickness=30,
@@ -80,25 +96,9 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
-
-        test_reactor_360 = paramak.CenterColumnStudyReactor(
-            inner_bore_radial_thickness=30,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness_mid=50,
-            center_column_shield_radial_thickness_upper=100,
-            inboard_firstwall_radial_thickness=30,
-            divertor_radial_thickness=10,
-            inner_plasma_gap_radial_thickness=80,
-            plasma_radial_thickness=200,
-            outer_plasma_gap_radial_thickness=90,
-            # first number must be between plasma inner/outer radius
-            plasma_high_point=(245, 240),
-            plasma_gap_vertical_thickness=40,
-            center_column_arc_vertical_thickness=520,
-            rotation_angle=360)
         
-        for r180, r360 in zip(test_reactor_180.shapes_and_components, test_reactor_360.shapes_and_components):
-            assert r180.volume == pytest.approx(r360.volume * 0.5)
+        for r90, r180 in zip(test_reactor_90.shapes_and_components, test_reactor_180.shapes_and_components):
+            assert r90.volume == pytest.approx(r180.volume * 0.5)
 
     def test_rotation_angle_warning(self):
         """checks that the correct warning message is printed when
