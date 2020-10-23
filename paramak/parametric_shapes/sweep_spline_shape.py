@@ -17,8 +17,12 @@ class SweepSplineShape(Shape):
         path_points (list of tuples each containing X (float), Z (float)): A list of XY,
             YZ or XZ coordinates connected by spline connections which define the path
             along which the 2D shape is swept.
-        workplane (str): Workplane in which the 2D shape to be swept is defined.
-        path_workplane (str): Workplane in which the spline path is defined.
+        workplane (str): Workplane in which the 2D shape to be swept is defined. Defaults
+            to "XY".
+        path_workplane (str): Workplane in which the spline path is defined. Defaults to
+            "XZ".
+        stp_filename (str, optional): Defaults to "SweepSplineShape.stp".
+        stl_filename (str, optional): Defaults to "SweepSplineShape.stl".
     """
 
     def __init__(
@@ -77,7 +81,7 @@ class SweepSplineShape(Shape):
         distance = float(self.path_points[-1][1] - self.path_points[0][1])
 
         if self.workplane in ["XZ", "YX", "ZY"]:
-            distance = -distance
+            distance *= -1
 
         solid = (
             cq.Workplane(self.workplane)
