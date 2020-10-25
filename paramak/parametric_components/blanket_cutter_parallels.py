@@ -36,7 +36,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         distance,
         gap_size,
         azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216., 252.,
-            288., 324.],
+                                 288., 324.],
         height=2000,
         width=2000,
         stp_filename="BlanketCutterStar.stp",
