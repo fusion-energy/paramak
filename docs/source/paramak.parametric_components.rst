@@ -47,6 +47,21 @@ BlanketFP()
    :members:
    :show-inheritance:
 
+BlanketCutterParallels()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+|BlanketCutterParallelsstp| |BlanketCutterParallelssvg|
+
+.. |BlanketCutterParallelsstp| image:: https://user-images.githubusercontent.com/8583900/97234967-d1322a80-17d9-11eb-9398-87052bf2e6c3.png
+   :width: 300
+.. |BlanketCutterParallelssvg| image:: https://user-images.githubusercontent.com/8583900/97234950-c7102c00-17d9-11eb-8fe6-9c7a501bab87.png
+   :width: 450
+
+.. automodule:: paramak.parametric_components.blanket_cutter_parallels
+   :members:
+   :show-inheritance:
+
+
 BlanketCutterStar()
 ^^^^^^^^^^^^^^^^^^^
 
