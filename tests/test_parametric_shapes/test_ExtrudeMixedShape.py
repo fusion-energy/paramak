@@ -180,6 +180,26 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.volume == pytest.approx(test_volume * 0.5)
 
+    def test_extrude_both(self):
+        """test that the volume with extrude_both=True is twice as when
+        extrude_both=False
+        """
+        test_shape = ExtrudeMixedShape(
+            points=[
+                (10, 20, "straight"),
+                (10, 10, "spline"),
+                (20, 10, "circle"),
+                (22, 15, "circle"),
+                (20, 20, "straight"),
+            ],
+            distance=10,
+        )
+        test_volume_double_extrude = test_shape.volume
+        test_shape.extrude_both = False
+
+        assert test_shape.volume == \
+            pytest.approx(test_volume_double_extrude * 0.5)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -77,9 +77,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 CenterColumnShieldPlasmaHyperbola, \
                 CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular")
 
-        # initialise connection type
-        connection_type = None
-
         inner_radius = self.central_column_shield.inner_radius
         height = self.central_column_shield.height
 
@@ -90,8 +87,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 outer_radius=self.central_column_shield.outer_radius +
                 self.thickness
             )
-            # since no connection type in firstwall.points
-            connection_type = "straight"
 
         elif isinstance(self.central_column_shield,
                         CenterColumnShieldHyperbola):
@@ -152,9 +147,6 @@ class InboardFirstwallFCCS(RotateMixedShape):
 
         firstwall.rotation_angle = self.rotation_angle
         points = firstwall.points[:-1]  # remove last point
-        # if no connection type is given, add the connection types to points
-        if connection_type is not None:
-            points = [[*p, connection_type] for p in points]
         self.points = points
 
         # add to cut attribute

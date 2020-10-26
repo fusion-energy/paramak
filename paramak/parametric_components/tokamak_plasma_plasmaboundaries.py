@@ -72,7 +72,7 @@ class PlasmaBoundaries(Plasma):
 
     @minor_radius.setter
     def minor_radius(self, value):
-        if value > 2000 or value < 1:
+        if value < 1:
             raise ValueError("minor_radius is out of range")
         else:
             self._minor_radius = value
@@ -83,7 +83,7 @@ class PlasmaBoundaries(Plasma):
 
     @major_radius.setter
     def major_radius(self, value):
-        if value > 2000 or value < 1:
+        if value < 1:
             raise ValueError("major_radius is out of range")
         else:
             self._major_radius = value
@@ -133,7 +133,7 @@ class PlasmaBoundaries(Plasma):
                 points2.append(p)
         points = points2
 
-        self.points = points
+        self.points = [(p[0], p[1]) for p in points[:-1]]
 
         # set the points of interest
         self.high_point = (

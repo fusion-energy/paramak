@@ -29,6 +29,12 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.BlanketCutterStar(
+        height=2000,
+        width=2000,
+        distance=100)
+    all_components.append(component)
+
     component = paramak.BlanketFP(
         plasma=plasma,
         thickness=100,

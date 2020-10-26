@@ -132,9 +132,10 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         """
 
         # Creates a cadquery solid from points and revolves
+        points_without_connections = [p[:2] for p in self.points]
         solid = (
             cq.Workplane(self.workplane)
-            .polyline(self.points)
+            .polyline(points_without_connections)
             .close()
             .extrude(distance=-self.distance / 2.0, both=True)
         )
