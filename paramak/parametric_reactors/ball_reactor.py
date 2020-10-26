@@ -359,6 +359,7 @@ class BallReactor(paramak.Reactor):
             start_angle=-179,
             stop_angle=179,
             rotation_angle=self.rotation_angle,
+            material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
             cut=center_column_cutter
         )
@@ -381,6 +382,7 @@ class BallReactor(paramak.Reactor):
             179,
             stop_angle=179,
             rotation_angle=self.rotation_angle,
+            material_tag="blanket_mat",
             stp_filename="blanket.stp",
             cut=center_column_cutter)
 
@@ -407,6 +409,7 @@ class BallReactor(paramak.Reactor):
             179,
             stop_angle=179,
             rotation_angle=self.rotation_angle,
+            material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
             cut=center_column_cutter)
 
