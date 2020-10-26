@@ -197,11 +197,9 @@ class Shape:
             self._material_tag = value
         elif isinstance(value, str):
             if len(value) > 27:
-                warnings.warn(
-                    "Shape.material_tag > 28 characters. Use with DAGMC will \
-                        be affected." +
-                    str(value),
-                    UserWarning)
+                msg = "Shape.material_tag > 28 characters." + \
+                      "Use with DAGMC will be affected." + str(value)
+                warnings.warn(msg, UserWarning)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
@@ -251,62 +249,50 @@ class Shape:
 
             for value in values:
                 if type(value) not in [list, tuple]:
-                    raise ValueError(
-                        "individual points must be a list or a tuple.",
-                        value,
-                        " in of type ",
-                        type(value),
-                    )
+                    msg = "individual points must be a list or a tuple." + \
+                        "{} in of type {}".format(value, type(value))
+                    raise ValueError(msg)
 
             for value in values:
                 # Checks that the length of each tuple in points is 2 or 3
                 if len(value) not in [2, 3]:
-                    raise ValueError(
-                        "individual points contain 2 or 3 entries",
-                        value,
-                        " has a length of ",
-                        len(values[0]),
-                    )
+                    msg = "individual points contain 2 or 3 entries {} has a \
+                        length of {}".format(value, len(values[0]))
+                    raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
-                    raise ValueError(
-                        "The first value in the tuples that make \
+                    msg = "The first value in the tuples that make \
                                         up the points represents the X value \
-                                        and must be a number",
-                        value,
-                    )
+                                        and must be a number {}".format(value)
+                    raise ValueError(msg)
                 if not isinstance(value[1], numbers.Number):
-                    raise ValueError(
-                        "The second value in the tuples that make \
+                    msg = "The second value in the tuples that make \
                                       up the points represents the X value \
-                                      and must be a number",
-                        value,
-                    )
+                                      and must be a number {}".format(value)
+                    raise ValueError(msg)
 
                 # Checks that only straight and spline are in the connections
                 # part of points
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
-                        raise ValueError(
-                            'individual connections must be either "straight" \
-                                "circle" or "spline"'
-                        )
+                        msg = 'individual connections must be either \
+                            "straight", "circle" or "spline"'
+                        raise ValueError(msg)
 
             # checks that the entries in the points are either all 2 long or
             # all 3 long, not a mixture
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
-                    raise ValueError(
-                        "The points list should contain entries of length 2 \
-                            or 3 but not a mixture of 2 and 3")
+                    msg = "The points list should contain entries of length 2 \
+                            or 3 but not a mixture of 2 and 3"
+                    raise ValueError(msg)
 
             if len(values) > 1:
                 if values[0][:2] == values[-1][:2]:
-                    raise ValueError(
-                        "The coordinates of the last and first points are the \
-                            same."
-                    )
+                    msg = "The coordinates of the last and first points are \
+                        the same."
+                    raise ValueError(msg)
                 else:
                     values.append(values[0])
             if self.connection_type != "mixed":
