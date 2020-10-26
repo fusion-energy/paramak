@@ -245,9 +245,7 @@ class Shape:
     @points.setter
     def points(self, values):
 
-        if values is None:
-            self._points = values
-        else:
+        if values is not None:
             if not isinstance(values, list):
                 raise ValueError("points must be a list")
 
@@ -314,7 +312,7 @@ class Shape:
             if self.connection_type != "mixed":
                 values = [(*p, self.connection_type) for p in values]
 
-            self._points = values
+        self._points = values
 
     @property
     def stp_filename(self):
