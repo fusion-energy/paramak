@@ -66,15 +66,9 @@ def make_demo_blanket(
     )
 
     # this makes the regular gaps (non parallel) gaps on the outboard blanket
-    outboard_gaps = paramak.ExtrudeStraightShape(
-        points=[(large_dimention, large_dimention),
-                (large_dimention, -large_dimention),
-                (0, -large_dimention),
-                (0, large_dimention),
-                ],
-        distance=gap_size,
-        azimuth_placement_angle=np.linspace(0 + offset, 360 + offset, number_of_segments, endpoint=False)
-    )
+    outboard_gaps = paramak.BlanketCutterStar(
+        distance=gap_size, azimuth_placement_angle=np.linspace(
+            0 + offset, 360 + offset, number_of_segments, endpoint=False))
 
     # makes the outboard blanket with cuts for all the segmentation
     outboard_blanket = paramak.BlanketFP(
@@ -90,15 +84,9 @@ def make_demo_blanket(
             inboard_to_outboard_gaps])
 
     # this makes the regular gaps on the outboard blanket
-    inboard_gaps = paramak.ExtrudeStraightShape(
-        points=[(large_dimention, large_dimention),
-                (large_dimention, -large_dimention),
-                (0, -large_dimention),
-                (0, large_dimention),
-                ],
-        distance=gap_size,
-        azimuth_placement_angle=np.linspace(0, 360, number_of_segments * 2, endpoint=False)
-    )
+    inboard_gaps = paramak.BlanketCutterStar(
+        distance=gap_size, azimuth_placement_angle=np.linspace(
+            0, 360, number_of_segments * 2, endpoint=False))
 
     # makes the inboard blanket with cuts for all the segmentation
     inboard_blanket = paramak.BlanketFP(

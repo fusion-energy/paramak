@@ -47,6 +47,20 @@ BlanketFP()
    :members:
    :show-inheritance:
 
+BlanketCutterStar()
+^^^^^^^^^^^^^^^^^^^
+
+|BlanketCutterStarstp| |BlanketCutterStarsvg|
+
+.. |BlanketCutterStarstp| image:: https://user-images.githubusercontent.com/8583900/97103699-0178ac80-16a6-11eb-8e5a-ec3575d265fe.png
+   :width: 300
+.. |BlanketCutterStarsvg| image:: https://user-images.githubusercontent.com/8583900/97103794-b0b58380-16a6-11eb-86f0-fb5530d630af.png
+   :width: 450
+
+.. automodule:: paramak.parametric_components.blanket_cutters_star
+   :members:
+   :show-inheritance:
+
 CenterColumnShieldCylinder()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
