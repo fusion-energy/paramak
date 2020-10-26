@@ -171,20 +171,21 @@ class Shape:
 
     @color.setter
     def color(self, value):
+        error = False
         if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 for i in value:
-                    if isinstance(i, (int, float)) is False:
-                        raise ValueError(
-                            "Shape.color must be a list or tuple of 3 or 4 floats"
-                        )
-                self._color = value
+                    if not isinstance(i, (int, float)):
+                        error = True
             else:
-                raise ValueError(
-                    "Shape.color must be a list or tuple of 3 or 4 floats")
+                error = True
         else:
+            error = True
+        # raise error
+        if error:
             raise ValueError(
                 "Shape.color must be a list or tuple of 3 or 4 floats")
+        self._color = value
 
     @property
     def material_tag(self):
@@ -196,10 +197,9 @@ class Shape:
             self._material_tag = value
         elif isinstance(value, str):
             if len(value) > 27:
-                warnings.warn(
-                    "Shape.material_tag > 28 characters. Use with DAGMC will be affected." +
-                    str(value),
-                    UserWarning)
+                msg = "Shape.material_tag > 28 characters." + \
+                      "Use with DAGMC will be affected." + str(value)
+                warnings.warn(msg, UserWarning)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
@@ -210,12 +210,9 @@ class Shape:
 
     @tet_mesh.setter
     def tet_mesh(self, value):
-        if value is None:
-            self._tet_mesh = value
-        elif isinstance(value, str):
-            self._tet_mesh = value
-        else:
+        if value is not None and not isinstance(value, str):
             raise ValueError("Shape.tet_mesh must be a string", value)
+        self._tet_mesh = value
 
     @property
     def name(self):
@@ -223,19 +220,17 @@ class Shape:
 
     @name.setter
     def name(self, value):
-        if value is None:
-            self._name = value
-        elif isinstance(value, str):
-            self._name = value
-        else:
+        if value is not None and not isinstance(value, str):
             raise ValueError("Shape.name must be a string", value)
+        self._name = value
 
     @property
     def points(self):
         """Sets the Shape.point attributes.
 
         Args:
-            points (a list of lists or tuples): list of points that create the shape
+            points (a list of lists or tuples): list of points that create the
+                shape
 
         Raises:
             incorrect type: only list of lists or tuples are accepted
@@ -248,74 +243,62 @@ class Shape:
     @points.setter
     def points(self, values):
 
-        if values is None:
-            self._points = values
-        else:
+        if values is not None:
             if not isinstance(values, list):
                 raise ValueError("points must be a list")
 
             for value in values:
                 if type(value) not in [list, tuple]:
-                    raise ValueError(
-                        "individual points must be a list or a tuple.",
-                        value,
-                        " in of type ",
-                        type(value),
-                    )
+                    msg = "individual points must be a list or a tuple." + \
+                        "{} in of type {}".format(value, type(value))
+                    raise ValueError(msg)
 
             for value in values:
                 # Checks that the length of each tuple in points is 2 or 3
                 if len(value) not in [2, 3]:
-                    raise ValueError(
-                        "individual points contain 2 or 3 entries",
-                        value,
-                        " has a length of ",
-                        len(values[0]),
-                    )
+                    msg = "individual points contain 2 or 3 entries {} has a \
+                        length of {}".format(value, len(values[0]))
+                    raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
-                    raise ValueError(
-                        "The first value in the tuples that make \
+                    msg = "The first value in the tuples that make \
                                         up the points represents the X value \
-                                        and must be a number",
-                        value,
-                    )
+                                        and must be a number {}".format(value)
+                    raise ValueError(msg)
                 if not isinstance(value[1], numbers.Number):
-                    raise ValueError(
-                        "The second value in the tuples that make \
-                                      up the points represents the X value and \
-                                      must be a number",
-                        value,
-                    )
+                    msg = "The second value in the tuples that make \
+                                      up the points represents the X value \
+                                      and must be a number {}".format(value)
+                    raise ValueError(msg)
 
                 # Checks that only straight and spline are in the connections
                 # part of points
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
-                        raise ValueError(
-                            'individual connections must be either "straight" or "spline"'
-                        )
+                        msg = 'individual connections must be either \
+                            "straight", "circle" or "spline"'
+                        raise ValueError(msg)
 
             # checks that the entries in the points are either all 2 long or
             # all 3 long, not a mixture
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
-                    raise ValueError(
-                        "The points list should contain entries of length 2 or \
-                            3 but not a mixture of 2 and 3")
+                    msg = "The points list should contain entries of length 2 \
+                            or 3 but not a mixture of 2 and 3"
+                    raise ValueError(msg)
 
             if len(values) > 1:
-                if values[-1][0] == values[0][0] and values[-1][1] == values[0][1]:
-                    raise ValueError(
-                        "The coordinates of the last and first points are the same."
-                    )
+                if values[0][:2] == values[-1][:2]:
+                    msg = "The coordinates of the last and first points are \
+                        the same."
+                    raise ValueError(msg)
                 else:
                     values.append(values[0])
             if self.connection_type != "mixed":
                 values = [(*p, self.connection_type) for p in values]
 
-            self._points = values
+        self._points = values
 
     @property
     def stp_filename(self):
@@ -334,21 +317,17 @@ class Shape:
 
     @stp_filename.setter
     def stp_filename(self, value):
-        if value is None:
-            # print("stp_filename will need setting to use this shape in a Reactor")
-            self._stp_filename = value
-        elif isinstance(value, str):
-            if Path(value).suffix == ".stp" or Path(value).suffix == ".step":
-                self._stp_filename = value
+        if value is not None:
+            if isinstance(value, str):
+                if Path(value).suffix not in [".stp", ".step"]:
+                    msg = "Incorrect filename ending, filename must end with \
+                            .stp or .step"
+                    raise ValueError(msg)
             else:
-                raise ValueError(
-                    "Incorrect filename ending, filename must end with .stp or \
-                        .step")
-        else:
-            raise ValueError(
-                "stp_filename must be a string",
-                value,
-                type(value))
+                msg = "stp_filename must be a \
+                    string {} {}".format(value, type(value))
+                raise ValueError(msg)
+        self._stp_filename = value
 
     @property
     def stl_filename(self):
@@ -366,21 +345,17 @@ class Shape:
 
     @stl_filename.setter
     def stl_filename(self, value):
-        if value is None:
-            # print("stl_filename will need setting to use this shape in a Reactor")
-            self._stl_filename = value
-        elif isinstance(value, str):
-            if Path(value).suffix == ".stl":
-                self._stl_filename = value
+        if value is not None:
+            if isinstance(value, str):
+                if Path(value).suffix != ".stl":
+                    msg = "Incorrect filename ending, filename must end with \
+                            .stl"
+                    raise ValueError(msg)
             else:
-                raise ValueError(
-                    "Incorrect filename ending, filename must end with .stl"
-                )
-        else:
-            raise ValueError(
-                "stl_filename must be a string",
-                value,
-                type(value))
+                msg = "stl_filename must be a string \
+                    {} {}".format(value, type(value))
+                raise ValueError(msg)
+        self._stl_filename = value
 
     @property
     def azimuth_placement_angle(self):
@@ -388,20 +363,19 @@ class Shape:
 
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
+        error = False
         if isinstance(value, (int, float, Iterable)):
             if isinstance(value, Iterable):
                 for i in value:
-                    if isinstance(i, (int, float)) is False:
-                        raise ValueError(
-                            "azimuth_placement_angle must be a float or list of floats"
-                        )
-                self._azimuth_placement_angle = value
-            else:
-                self._azimuth_placement_angle = value
+                    if not isinstance(i, (int, float)):
+                        error = True
         else:
-            raise ValueError(
-                "azimuth_placement_angle must be a float or list of floats"
-            )
+            error = True
+
+        if error:
+            msg = "azimuth_placement_angle must be a float or list of floats"
+            raise ValueError(msg)
+        self._azimuth_placement_angle = value
 
     def create_solid(self):
         """Dummy create_solid method
@@ -411,21 +385,21 @@ class Shape:
     def rotate_solid(self, solid):
         # Checks if the azimuth_placement_angle is a list of angles
         if isinstance(self.azimuth_placement_angle, Iterable):
-            rotated_solids = []
-            # Perform seperate rotations for each angle
-            for angle in self.azimuth_placement_angle:
-                rotated_solids.append(
-                    solid.rotate(
-                        (0, 0, -1), (0, 0, 1), angle))
-            solid = cq.Workplane(self.workplane)
-
-            # Joins the seperate solids together
-            for i in rotated_solids:
-                solid = solid.union(i)
+            azimuth_placement_angles = self.azimuth_placement_angle
         else:
-            # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate(
-                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
+            azimuth_placement_angles = [self.azimuth_placement_angle]
+
+        rotated_solids = []
+        # Perform seperate rotations for each angle
+        for angle in azimuth_placement_angles:
+            rotated_solids.append(
+                solid.rotate(
+                    (0, 0, -1), (0, 0, 1), angle))
+        solid = cq.Workplane(self.workplane)
+
+        # Joins the seperate solids together
+        for i in rotated_solids:
+            solid = solid.union(i)
         return solid
 
     def create_limits(self):
@@ -556,16 +530,16 @@ class Shape:
         return str(Pfilename)
 
     def export_html(self, filename):
-        """Creates a html graph representation of the points and connections for
-        the Shape object. Shapes are colored by their .color property. Shapes
-        are also labelled by their .name. If filename provided doesn't end with
-        .html then .html will be added.
+        """Creates a html graph representation of the points and connections
+        for the Shape object. Shapes are colored by their .color property.
+        Shapes are also labelled by their .name. If filename provided doesn't
+        end with .html then .html will be added.
 
         Args:
             filename (str): the filename used to save the html graph
 
         Returns:
-            plotly figure: figure object
+            plotly.Figure(): figure object
         """
 
         if self.points is None:
@@ -656,20 +630,25 @@ class Shape:
 
         return trace
 
-    def export_2d_image(self, filename, xmin=0, xmax=900, ymin=-600, ymax=600):
+    def export_2d_image(
+            self, filename, xmin=0., xmax=900., ymin=-600., ymax=600.):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
 
         Args:
-            filename (str): the filename of the saved png image
-            xmin (float): the minimum x value of the x axis
-            xmax (float): the maximum x value of the x axis
-            ymin (float): the minimum y value of the y axis
-            ymax (float); the maximum y value of the y axis
+            filename (str): the filename of the saved png image.
+            xmin (float, optional): the minimum x value of the x axis.
+                Defaults to 0..
+            xmax (float, optional): the maximum x value of the x axis.
+                Defaults to 900..
+            ymin (float, optional): the minimum y value of the y axis.
+                Defaults to -600..
+            ymax (float, optional): the maximum y value of the y axis.
+                Defaults to 600..
 
         Returns:
-            matplotlib plot: a plt object
+            matplotlib.plt(): a plt object
         """
 
         fig, ax = plt.subplots()
@@ -705,10 +684,8 @@ class Shape:
         patches = []
         xylist = []
 
-        for x1, z1 in zip(
-            [row[0] for row in self.points], [row[1] for row in self.points]
-        ):
-            xylist.append([x1, z1])
+        for point in self.points:
+            xylist.append([point[0], point[1]])
 
         polygon = Polygon(xylist, closed=True)
         patches.append(polygon)
