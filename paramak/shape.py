@@ -648,20 +648,25 @@ class Shape:
 
         return trace
 
-    def export_2d_image(self, filename, xmin=0, xmax=900, ymin=-600, ymax=600):
+    def export_2d_image(
+            self, filename, xmin=0., xmax=900., ymin=-600., ymax=600.):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
 
         Args:
-            filename (str): the filename of the saved png image
-            xmin (float): the minimum x value of the x axis
-            xmax (float): the maximum x value of the x axis
-            ymin (float): the minimum y value of the y axis
-            ymax (float); the maximum y value of the y axis
+            filename (str): the filename of the saved png image.
+            xmin (float, optional): the minimum x value of the x axis.
+                Defaults to 0..
+            xmax (float, optional): the maximum x value of the x axis.
+                Defaults to 900..
+            ymin (float, optional): the minimum y value of the y axis.
+                Defaults to -600..
+            ymax (float, optional): the maximum y value of the y axis.
+                Defaults to 600..
 
         Returns:
-            matplotlib plot: a plt object
+            matplotlib.plt(): a plt object
         """
 
         fig, ax = plt.subplots()
