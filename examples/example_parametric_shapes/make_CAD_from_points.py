@@ -203,7 +203,7 @@ def main():
         path_workplane="XZ"
     )
     sweep_circle.export_stp("sweep_circle.stp")
-    # sweep_circle.export_html("sweep_circle.html")
+    sweep_circle.export_html("sweep_circle.html")
 
 
 if __name__ == "__main__":

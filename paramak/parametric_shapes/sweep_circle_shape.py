@@ -58,6 +58,7 @@ class SweepCircleShape(Shape):
 
     @path_points.setter
     def path_points(self, value):
+        self._points = value
         self._path_points = value
 
     @property
