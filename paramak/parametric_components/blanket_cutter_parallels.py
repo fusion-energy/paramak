@@ -18,10 +18,10 @@ class BlanketCutterParallels(ExtrudeStraightShape):
             segment blankets.
         gap_size (float): the distance between the inner edges of the two
             parrallel extrusions
-        azimuth_placement_angle (float, optional): the azimuth angle(s) used
-            when positioning the shape. If an iterable of angles is provided,
-            the shape is duplicated at all angles. Defaults to [0., 36.,
-            72., 108., 144., 180., 216., 252., 288., 324.]
+        azimuth_placement_angle (iterable of floats or float, optional): the
+            azimuth angle(s) used when positioning the shape. If an iterable of
+            angles is provided, the shape is duplicated at all angles. Defaults
+            to [0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
         height (float, optional): height (cm) of the port. Defaults to 2000
         width (float, optional): width (cm) of the port. Defaults to 2000
         stp_filename (str, optional): defaults to "BlanketCutterParallels.stp".
