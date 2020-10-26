@@ -212,12 +212,9 @@ class Shape:
 
     @tet_mesh.setter
     def tet_mesh(self, value):
-        if value is None:
-            self._tet_mesh = value
-        elif isinstance(value, str):
-            self._tet_mesh = value
-        else:
+        if value is not None and not isinstance(value, str):
             raise ValueError("Shape.tet_mesh must be a string", value)
+        self._tet_mesh = value
 
     @property
     def name(self):
