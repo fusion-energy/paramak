@@ -171,20 +171,21 @@ class Shape:
 
     @color.setter
     def color(self, value):
+        error = False
         if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 for i in value:
                     if isinstance(i, (int, float)) is False:
-                        raise ValueError(
-                            "Shape.color must be a list or tuple of 3 or 4 floats"
-                        )
-                self._color = value
+                        error = True
             else:
-                raise ValueError(
-                    "Shape.color must be a list or tuple of 3 or 4 floats")
+                error = True
         else:
+            error = True
+        # raise error
+        if error:
             raise ValueError(
-                "Shape.color must be a list or tuple of 3 or 4 floats")
+                    "Shape.color must be a list or tuple of 3 or 4 floats")
+        self._color = value
 
     @property
     def material_tag(self):
@@ -197,7 +198,8 @@ class Shape:
         elif isinstance(value, str):
             if len(value) > 27:
                 warnings.warn(
-                    "Shape.material_tag > 28 characters. Use with DAGMC will be affected." +
+                    "Shape.material_tag > 28 characters. Use with DAGMC will \
+                        be affected." +
                     str(value),
                     UserWarning)
             self._material_tag = value
@@ -235,7 +237,8 @@ class Shape:
         """Sets the Shape.point attributes.
 
         Args:
-            points (a list of lists or tuples): list of points that create the shape
+            points (a list of lists or tuples): list of points that create the
+                shape
 
         Raises:
             incorrect type: only list of lists or tuples are accepted
@@ -284,8 +287,8 @@ class Shape:
                 if not isinstance(value[1], numbers.Number):
                     raise ValueError(
                         "The second value in the tuples that make \
-                                      up the points represents the X value and \
-                                      must be a number",
+                                      up the points represents the X value \
+                                      and must be a number",
                         value,
                     )
 
@@ -294,7 +297,8 @@ class Shape:
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
                         raise ValueError(
-                            'individual connections must be either "straight" or "spline"'
+                            'individual connections must be either "straight" \
+                                "circle" or "spline"'
                         )
 
             # checks that the entries in the points are either all 2 long or
@@ -302,13 +306,14 @@ class Shape:
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
                     raise ValueError(
-                        "The points list should contain entries of length 2 or \
-                            3 but not a mixture of 2 and 3")
+                        "The points list should contain entries of length 2 \
+                            or 3 but not a mixture of 2 and 3")
 
             if len(values) > 1:
-                if values[-1][0] == values[0][0] and values[-1][1] == values[0][1]:
+                if values[0][:2] == values[-1][:2]:
                     raise ValueError(
-                        "The coordinates of the last and first points are the same."
+                        "The coordinates of the last and first points are the \
+                            same."
                     )
                 else:
                     values.append(values[0])
@@ -335,15 +340,14 @@ class Shape:
     @stp_filename.setter
     def stp_filename(self, value):
         if value is None:
-            # print("stp_filename will need setting to use this shape in a Reactor")
             self._stp_filename = value
         elif isinstance(value, str):
-            if Path(value).suffix == ".stp" or Path(value).suffix == ".step":
+            if Path(value).suffix in [".stp", ".step"]:
                 self._stp_filename = value
             else:
                 raise ValueError(
-                    "Incorrect filename ending, filename must end with .stp or \
-                        .step")
+                    "Incorrect filename ending, filename must end with .stp \
+                        or .step")
         else:
             raise ValueError(
                 "stp_filename must be a string",
@@ -367,7 +371,6 @@ class Shape:
     @stl_filename.setter
     def stl_filename(self, value):
         if value is None:
-            # print("stl_filename will need setting to use this shape in a Reactor")
             self._stl_filename = value
         elif isinstance(value, str):
             if Path(value).suffix == ".stl":
@@ -388,20 +391,20 @@ class Shape:
 
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
+        error = False
         if isinstance(value, (int, float, Iterable)):
             if isinstance(value, Iterable):
                 for i in value:
                     if isinstance(i, (int, float)) is False:
-                        raise ValueError(
-                            "azimuth_placement_angle must be a float or list of floats"
-                        )
-                self._azimuth_placement_angle = value
-            else:
-                self._azimuth_placement_angle = value
+                        error = True
         else:
+            error = True
+
+        if error:
             raise ValueError(
                 "azimuth_placement_angle must be a float or list of floats"
             )
+        self._azimuth_placement_angle = value
 
     def create_solid(self):
         """Dummy create_solid method
@@ -411,21 +414,21 @@ class Shape:
     def rotate_solid(self, solid):
         # Checks if the azimuth_placement_angle is a list of angles
         if isinstance(self.azimuth_placement_angle, Iterable):
-            rotated_solids = []
-            # Perform seperate rotations for each angle
-            for angle in self.azimuth_placement_angle:
-                rotated_solids.append(
-                    solid.rotate(
-                        (0, 0, -1), (0, 0, 1), angle))
-            solid = cq.Workplane(self.workplane)
-
-            # Joins the seperate solids together
-            for i in rotated_solids:
-                solid = solid.union(i)
+            azimuth_placement_angles = self.azimuth_placement_angle
         else:
-            # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate(
-                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
+            azimuth_placement_angles = [self.azimuth_placement_angle]
+
+        rotated_solids = []
+        # Perform seperate rotations for each angle
+        for angle in azimuth_placement_angles:
+            rotated_solids.append(
+                solid.rotate(
+                    (0, 0, -1), (0, 0, 1), angle))
+        solid = cq.Workplane(self.workplane)
+
+        # Joins the seperate solids together
+        for i in rotated_solids:
+            solid = solid.union(i)
         return solid
 
     def create_limits(self):
@@ -556,16 +559,16 @@ class Shape:
         return str(Pfilename)
 
     def export_html(self, filename):
-        """Creates a html graph representation of the points and connections for
-        the Shape object. Shapes are colored by their .color property. Shapes
-        are also labelled by their .name. If filename provided doesn't end with
-        .html then .html will be added.
+        """Creates a html graph representation of the points and connections
+        for the Shape object. Shapes are colored by their .color property.
+        Shapes are also labelled by their .name. If filename provided doesn't
+        end with .html then .html will be added.
 
         Args:
             filename (str): the filename used to save the html graph
 
         Returns:
-            plotly figure: figure object
+            plotly.Figure(): figure object
         """
 
         if self.points is None:
