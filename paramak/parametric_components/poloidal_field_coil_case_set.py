@@ -152,7 +152,9 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
 
             solid = (
                 cq.Workplane(self.workplane)
-                .polyline([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10])
+                .polyline(
+                    [p1[:2], p2[:2], p3[:2], p4[:2], p5[:2], p6[:2],
+                     p7[:2], p8[:2], p9[:2], p10[:2]])
                 .close()
                 .revolve(self.rotation_angle)
             )

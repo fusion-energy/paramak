@@ -7,6 +7,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import cadquery as cq
 from cadquery import exporters
 import cadquery as cq
 from matplotlib.collections import PatchCollection
@@ -58,6 +59,7 @@ class Shape:
     def __init__(
         self,
         points=None,
+        connection_type="mixed",
         name=None,
         color=(0.5, 0.5, 0.5),
         material_tag=None,
@@ -72,6 +74,7 @@ class Shape:
         union=None
     ):
 
+        self.connection_type = connection_type
         self.points = points
         self.stp_filename = stp_filename
         self.stl_filename = stl_filename
@@ -309,6 +312,8 @@ class Shape:
                     )
                 else:
                     values.append(values[0])
+            if self.connection_type != "mixed":
+                values = [(*p, self.connection_type) for p in values]
 
             self._points = values
 
@@ -402,6 +407,26 @@ class Shape:
         """Dummy create_solid method
         """
         return
+
+    def rotate_solid(self, solid):
+        # Checks if the azimuth_placement_angle is a list of angles
+        if isinstance(self.azimuth_placement_angle, Iterable):
+            rotated_solids = []
+            # Perform seperate rotations for each angle
+            for angle in self.azimuth_placement_angle:
+                rotated_solids.append(
+                    solid.rotate(
+                        (0, 0, -1), (0, 0, 1), angle))
+            solid = cq.Workplane(self.workplane)
+
+            # Joins the seperate solids together
+            for i in rotated_solids:
+                solid = solid.union(i)
+        else:
+            # Peform rotations for a single azimuth_placement_angle angle
+            solid = solid.rotate(
+                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
+        return solid
 
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the

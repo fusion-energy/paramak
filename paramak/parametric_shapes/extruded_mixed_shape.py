@@ -12,9 +12,12 @@ class ExtrudeMixedShape(Shape):
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
-            neutronics).
-        rotation_angle (float): rotation angle of solid created. a cut is performed
-            from rotation_angle to 360 degrees. Defaults to 360.
+            neutronics)
+        extrude_both (bool, optional): If set to True, the extrusion will
+            occur in both directions. Defaults to True.
+        rotation_angle (float, optional): rotation angle of solid created. A
+            cut is performed from rotation_angle to 360 degrees. Defaults to
+            360.0.
         stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeMixedShape.stl".
 
@@ -23,7 +26,8 @@ class ExtrudeMixedShape(Shape):
     def __init__(
         self,
         distance,
-        rotation_angle=360,
+        extrude_both=True,
+        rotation_angle=360.0,
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
         **kwargs
@@ -34,8 +38,8 @@ class ExtrudeMixedShape(Shape):
             stl_filename=stl_filename,
             **kwargs
         )
-
         self.distance = distance
+        self.extrude_both = extrude_both
         self.rotation_angle = rotation_angle
 
     @property
@@ -101,26 +105,11 @@ class ExtrudeMixedShape(Shape):
                 solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
         # performs extrude in both directions, hence distance / 2
-        solid = solid.close().extrude(distance=-self.distance / 2.0, both=True)
+        solid = solid.close().extrude(
+            distance=-self.distance / 2.0,
+            both=self.extrude_both)
 
-        # Checks if the azimuth_placement_angle is a list of angles
-        if isinstance(self.azimuth_placement_angle, Iterable):
-            rotated_solids = []
-            # Perform seperate rotations for each angle
-            for angle in self.azimuth_placement_angle:
-                rotated_solids.append(
-                    solid.rotate(
-                        (0, 0, -1), (0, 0, 1), angle))
-            solid = cq.Workplane(self.workplane)
-
-            # Joins the seperate solids together
-            for i in rotated_solids:
-                solid = solid.union(i)
-        else:
-            # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate(
-                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
-
+        solid = self.rotate_solid(solid)
         calculate_wedge_cut(self)
         self.perform_boolean_operations(solid)
 
