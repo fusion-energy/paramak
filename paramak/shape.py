@@ -702,10 +702,8 @@ class Shape:
         patches = []
         xylist = []
 
-        for x1, z1 in zip(
-            [row[0] for row in self.points], [row[1] for row in self.points]
-        ):
-            xylist.append([x1, z1])
+        for point in self.points:
+            xylist.append([point[0], point[1]])
 
         polygon = Polygon(xylist, closed=True)
         patches.append(polygon)
