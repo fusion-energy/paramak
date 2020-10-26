@@ -155,6 +155,35 @@ class Shape:
             return self.solid.val().Volume()
 
     @property
+    def volumes(self):
+        all_volumes = []
+        if isinstance(self.solid, cq.Compound):
+            for solid in self.solid.Solids():
+                all_volumes.append(solid.Volume())
+            return all_volumes
+        else:
+            return [self.solid.val().Volume()]
+
+    @property
+    def area(self):
+        if isinstance(self.solid, cq.Compound):
+            return self.solid.Area()
+        else:
+            return self.solid.val().Area()
+
+    @property
+    def areas(self):
+        all_areas = []
+        if isinstance(self.solid, cq.Compound):
+            for face in self.solid.Faces():
+                all_areas.append(face.Area())
+            return all_areas
+        else:
+            for face in self.solid.val().Faces():
+                all_areas.append(face.Area())
+            return all_areas
+
+    @property
     def hash_value(self):
         return self._hash_value
 
