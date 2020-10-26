@@ -540,7 +540,8 @@ class Shape:
         """
 
         if self.__class__.__name__ == "SweepCircleShape":
-            print('WARNING: export_html will plot path_points for the SweepCircleShape class')
+            print(
+                'WARNING: export_html will plot path_points for the SweepCircleShape class')
 
         if self.points is None:
             ValueError("No points defined for", self)
