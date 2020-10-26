@@ -331,20 +331,18 @@ class Shape:
 
     @stp_filename.setter
     def stp_filename(self, value):
-        if value is None:
-            self._stp_filename = value
-        elif isinstance(value, str):
-            if Path(value).suffix in [".stp", ".step"]:
-                self._stp_filename = value
+        if value is not None:
+            if isinstance(value, str):
+                if Path(value).suffix not in [".stp", ".step"]:
+                    raise ValueError(
+                        "Incorrect filename ending, filename must end with \
+                            .stp or .step")
             else:
                 raise ValueError(
-                    "Incorrect filename ending, filename must end with .stp \
-                        or .step")
-        else:
-            raise ValueError(
-                "stp_filename must be a string",
-                value,
-                type(value))
+                    "stp_filename must be a string",
+                    value,
+                    type(value))
+        self._stp_filename = value
 
     @property
     def stl_filename(self):
