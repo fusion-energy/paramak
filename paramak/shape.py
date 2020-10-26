@@ -360,20 +360,19 @@ class Shape:
 
     @stl_filename.setter
     def stl_filename(self, value):
-        if value is None:
-            self._stl_filename = value
-        elif isinstance(value, str):
-            if Path(value).suffix == ".stl":
-                self._stl_filename = value
+        if value is not None:
+            if isinstance(value, str):
+                if Path(value).suffix != ".stl":
+                    raise ValueError(
+                        "Incorrect filename ending, filename must end with \
+                            .stl"
+                    )
             else:
                 raise ValueError(
-                    "Incorrect filename ending, filename must end with .stl"
-                )
-        else:
-            raise ValueError(
-                "stl_filename must be a string",
-                value,
-                type(value))
+                    "stl_filename must be a string",
+                    value,
+                    type(value))
+        self._stl_filename = value
 
     @property
     def azimuth_placement_angle(self):
