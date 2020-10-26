@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 import paramak
+import pytest
 
 
 class test_object_properties(unittest.TestCase):
@@ -273,6 +274,81 @@ class test_object_properties(unittest.TestCase):
             )
 
         self.assertRaises(ValueError, invalid_color_length)
+
+    def test_volumes_add_up_to_total_volume_Compound(self):
+        """Checks the volume and volumes attributes are correct types
+        and that the volumes sum to equalt the volume for a Compound."""
+
+        test_shape = paramak.PoloidalFieldCoilSet(
+            heights=[10, 10],
+            widths=[20, 20],
+            center_points=[(15, 15), (50, 50)]
+        )
+
+        assert isinstance(test_shape.volume, float)
+        assert isinstance(test_shape.volumes, list)
+        assert isinstance(test_shape.volumes[0], float)
+        assert isinstance(test_shape.volumes[1], float)
+        assert len(test_shape.volumes) == 2
+        assert sum(test_shape.volumes) == pytest.approx(test_shape.volume)
+
+    def test_volumes_add_up_to_total_volume(self):
+        """Checks the volume and volumes attributes are correct types
+        and that the volumes sum to equalt the volume."""
+
+        test_shape = paramak.PoloidalFieldCoil(
+            center_point=(100, 100),
+            height=50,
+            width=50
+        )
+
+        assert isinstance(test_shape.volume, float)
+        assert isinstance(test_shape.volumes, list)
+        assert isinstance(test_shape.volumes[0], float)
+        assert len(test_shape.volumes) == 1
+        assert sum(test_shape.volumes) == pytest.approx(test_shape.volume)
+
+    def test_areas_add_up_to_total_area_Compound(self):
+        """Checks the area and areas attributes are correct types
+        and that the areas sum to equalt the area for a Compound."""
+
+        test_shape = paramak.PoloidalFieldCoilSet(
+            heights=[10, 10],
+            widths=[20, 20],
+            center_points=[(15, 15), (50, 50)]
+        )
+
+        assert isinstance(test_shape.area, float)
+        assert isinstance(test_shape.areas, list)
+        assert isinstance(test_shape.areas[0], float)
+        assert isinstance(test_shape.areas[1], float)
+        assert isinstance(test_shape.areas[2], float)
+        assert isinstance(test_shape.areas[3], float)
+        assert isinstance(test_shape.areas[4], float)
+        assert isinstance(test_shape.areas[5], float)
+        assert isinstance(test_shape.areas[6], float)
+        assert isinstance(test_shape.areas[7], float)
+        assert len(test_shape.areas) == 8
+        assert sum(test_shape.areas) == pytest.approx(test_shape.area)
+
+    def test_areas_add_up_to_total_area(self):
+        """Checks the area and areas attributes are correct types
+        and that the areas sum to equalt the area."""
+
+        test_shape = paramak.PoloidalFieldCoil(
+            center_point=(100, 100),
+            height=50,
+            width=50
+        )
+
+        assert isinstance(test_shape.area, float)
+        assert isinstance(test_shape.areas, list)
+        assert isinstance(test_shape.areas[0], float)
+        assert isinstance(test_shape.areas[1], float)
+        assert isinstance(test_shape.areas[2], float)
+        assert isinstance(test_shape.areas[3], float)
+        assert len(test_shape.areas) == 4
+        assert sum(test_shape.areas) == pytest.approx(test_shape.area)
 
 
 if __name__ == "__main__":
