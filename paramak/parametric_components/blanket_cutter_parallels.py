@@ -24,11 +24,11 @@ class BlanketCutterParallels(ExtrudeStraightShape):
             72., 108., 144., 180., 216., 252., 288., 324.]
         height (float, optional): height (cm) of the port. Defaults to 2000
         width (float, optional): width (cm) of the port. Defaults to 2000
-        stp_filename (str, optional): defaults to "BlanketCutterStar.stp".
-        stl_filename (str, optional): defaults to "BlanketCutterStar.stl".
-        name (str, optional): defaults to "blanket_cutter_star".
+        stp_filename (str, optional): defaults to "BlanketCutterParallels.stp".
+        stl_filename (str, optional): defaults to "BlanketCutterParallels.stl".
+        name (str, optional): defaults to "blanket_cutter_Parallels".
         material_tag (str, optional): defaults to
-            "blanket_cutter_star_mat".
+            "blanket_cutter_parallels_mat".
     """
 
     def __init__(
@@ -39,10 +39,10 @@ class BlanketCutterParallels(ExtrudeStraightShape):
                                  288., 324.],
         height=2000,
         width=2000,
-        stp_filename="BlanketCutterStar.stp",
-        stl_filename="BlanketCutterStar.stl",
-        name="blanket_cutter_star",
-        material_tag="blanket_cutter_star_mat",
+        stp_filename="BlanketCutterParallels.stp",
+        stl_filename="BlanketCutterParallels.stl",
+        name="blanket_cutter_parallels",
+        material_tag="blanket_cutter_parallels_mat",
         **kwargs
     ):
 
@@ -67,7 +67,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
             (0, -self.height / 2),
             (self.width, -self.height / 2),
             (self.width, self.height / 2),
-            (0, self.height / 2),
+            (0, self.height / 2)
         ]
         self.points = points
 
@@ -78,17 +78,16 @@ class BlanketCutterParallels(ExtrudeStraightShape):
            A CadQuery solid: A 3D solid volume
         """
 
-        # Creates a cadquery solid from points and revolves
         small_solid = (
             cq.Workplane(self.workplane)
-            .polyline(self.points)
+            .polyline([(p[0], p[1]) for p in self.points])
             .close()
             .extrude(distance=self.gap_size / 2.0, both=True)
         )
 
         large_solid = (
             cq.Workplane(self.workplane)
-            .polyline(self.points)
+            .polyline([(p[0], p[1]) for p in self.points])
             .close()
             .extrude(distance=self.gap_size / 2.0 + self.distance, both=True)
         )
