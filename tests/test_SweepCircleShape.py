@@ -110,6 +110,17 @@ class test_object_properties(unittest.TestCase):
             ValueError,
             invalid_relative_workplane_and_path_workplane)
 
+    def test_points_equal_path_points(self):
+        """checks that the points attribute is set equal to path_points upon shape
+        construction"""
+
+        test_shape = SweepCircleShape(
+            radius=20,
+            path_points=[(50, 0), (30, 50), (60, 100), (50, 150)]
+        )
+
+        assert test_shape.points == test_shape.path_points
+
 
 if __name__ == "__main__":
     unittest.main()
