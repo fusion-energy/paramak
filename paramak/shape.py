@@ -320,14 +320,13 @@ class Shape:
         if value is not None:
             if isinstance(value, str):
                 if Path(value).suffix not in [".stp", ".step"]:
-                    raise ValueError(
-                        "Incorrect filename ending, filename must end with \
-                            .stp or .step")
+                    msg = "Incorrect filename ending, filename must end with \
+                            .stp or .step"
+                    raise ValueError(msg)
             else:
-                raise ValueError(
-                    "stp_filename must be a string",
-                    value,
-                    type(value))
+                msg = "stp_filename must be a \
+                    string {} {}".format(value, type(value))
+                raise ValueError(msg)
         self._stp_filename = value
 
     @property
@@ -349,15 +348,13 @@ class Shape:
         if value is not None:
             if isinstance(value, str):
                 if Path(value).suffix != ".stl":
-                    raise ValueError(
-                        "Incorrect filename ending, filename must end with \
+                    msg = "Incorrect filename ending, filename must end with \
                             .stl"
-                    )
+                    raise ValueError(msg)
             else:
-                raise ValueError(
-                    "stl_filename must be a string",
-                    value,
-                    type(value))
+                msg = "stl_filename must be a string \
+                    {} {}".format(value, type(value))
+                raise ValueError(msg)
         self._stl_filename = value
 
     @property
@@ -376,9 +373,8 @@ class Shape:
             error = True
 
         if error:
-            raise ValueError(
-                "azimuth_placement_angle must be a float or list of floats"
-            )
+            msg = "azimuth_placement_angle must be a float or list of floats"
+            raise ValueError(msg)
         self._azimuth_placement_angle = value
 
     def create_solid(self):
