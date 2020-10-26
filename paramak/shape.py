@@ -175,7 +175,7 @@ class Shape:
         if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 for i in value:
-                    if isinstance(i, (int, float)) is False:
+                    if not isinstance(i, (int, float)):
                         error = True
             else:
                 error = True
@@ -367,7 +367,7 @@ class Shape:
         if isinstance(value, (int, float, Iterable)):
             if isinstance(value, Iterable):
                 for i in value:
-                    if isinstance(i, (int, float)) is False:
+                    if not isinstance(i, (int, float)):
                         error = True
         else:
             error = True
