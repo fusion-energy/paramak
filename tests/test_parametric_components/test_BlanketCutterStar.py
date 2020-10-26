@@ -3,6 +3,7 @@ import paramak
 import unittest
 import pytest
 
+
 class test_BlanketCutterStar(unittest.TestCase):
     def test_BlanketCutterStar_creation(self):
         """creates a solid using the BlanketCutterStar parametric component
@@ -24,4 +25,5 @@ class test_BlanketCutterStar(unittest.TestCase):
         large_shape = paramak.BlanketCutterStar(distance=100)
 
         # not quite two times as big as there is overlap in the center
-        assert 2 * small_shape.volume == pytest.approx(large_shape.volume, rel=0.1)
+        assert 2 * \
+            small_shape.volume == pytest.approx(large_shape.volume, rel=0.1)
