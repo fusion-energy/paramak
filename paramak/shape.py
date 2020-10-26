@@ -184,7 +184,7 @@ class Shape:
         # raise error
         if error:
             raise ValueError(
-                    "Shape.color must be a list or tuple of 3 or 4 floats")
+                "Shape.color must be a list or tuple of 3 or 4 floats")
         self._color = value
 
     @property
