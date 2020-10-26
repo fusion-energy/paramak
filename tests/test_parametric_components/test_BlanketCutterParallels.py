@@ -27,6 +27,6 @@ class test_BlanketCutterParallels(unittest.TestCase):
         large_shape = paramak.BlanketCutterParallels(
             distance=100,
             gap_size=200,
-            )
+        )
 
         assert small_shape.volume < large_shape.volume
