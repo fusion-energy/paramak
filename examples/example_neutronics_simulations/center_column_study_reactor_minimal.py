@@ -1,11 +1,11 @@
-"""this is a minimal example that obtains the center column heating for a
-parametric reactor"""
+"""This is a minimal example that obtains the center column heating for a
+parametric reactor."""
 
 import paramak
 
 
 def make_model_and_simulate():
-    """Makes a neutronics Reactor model and simulates the TBR"""
+    """Makes a neutronics Reactor model and simulates the heat deposition"""
 
     # makes the 3d geometry
     my_reactor = paramak.CenterColumnStudyReactor(
@@ -33,7 +33,7 @@ def make_model_and_simulate():
             'divertor_mat': 'eurofer',
             'firstwall_mat': 'eurofer',
             'blanket_mat': 'Li4SiO4'},
-        tallies=['heat', 'TBR'],
+        tallies=['heat'],
         simulation_batches=5,
         simulation_particles_per_batch=1e4,
     )

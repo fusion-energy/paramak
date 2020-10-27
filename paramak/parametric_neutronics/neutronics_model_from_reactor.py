@@ -34,14 +34,15 @@ class NeutronicsModelFromReactor():
             neutronics model. e.g. reactor=paramak.BallReactor() or
             reactor=paramak.SubmersionReactor() .
         materials: (dict): Where the dictionary keys are the material tag
-            and the dictionary values are either a string, openmc.Material or
-            neutronics-material-maker. All components within the
+            and the dictionary values are either a string, openmc.Material, 
+            neutronics-material-maker.Material or
+            neutronics-material-maker.MultiMaterial. All components within the
             Reactor() object must be accounted for. Material tags required
-            for the reactor can be obtained with Reactor().materials.
-        tallies: (list of strings): the tallies to calculate, options include
-            TBR, blanket_heat, center_column_shield_heat
-        fusion_power: (float): the power in watts emitted by the fusion reaction
-            recalling that each DT fusion reaction emitts 17.6 MeV or
+            for the reactor can be obtained with Reactor().material_tags.
+        cell_tallies: (list of strings): the cell based tallies to calculate,
+            options include TBR, heat
+        fusion_power: (float): the power in watts emitted by the fusion
+            reaction recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
         method: (str): The method to use when making the imprinted and
             merged geometry. Options are 'trelis' or 'ppp'. Further details
@@ -53,8 +54,8 @@ class NeutronicsModelFromReactor():
             (https://github.com/makeclean/occ_faceter) to create imprinted
             and merged geometry while Trelis (also known as Cubit) is
             available from the CoreForm website https://www.coreform.com/
-        simulation_batches: (int): the number of batch to simulate
-        simulation_particles_per_batch: (int): particles per batch
+        simulation_batches: (int): the number of batch to simulate.
+        simulation_particles_per_batch: (int): particles per batch.
         ion_density_origin: (float): 1.09e20,
         ion_density_peaking_factor: (float): 1,
         ion_density_pedestal: (float): 1.09e20,
@@ -67,10 +68,6 @@ class NeutronicsModelFromReactor():
         shafranov_shift: (float): 0.44789,
         triangularity: (float): 0.270,
         ion_temperature_beta: (float): 6,
-
-    Returns:
-        a paramak neutronics model object: a neutronics model object that has
-        generic functionality such as .simulate and .tbr
     """
 
     def __init__(
@@ -253,14 +250,14 @@ class NeutronicsModelFromReactor():
         return source
 
     def create_neutronics_geometry(self, method=None):
-        """Produces a h5m neutronics geometry compatable with DAGMC simulations.
-        This is done by first exporting the stp files for the whole reactor,
-        then exporting the neutronics description of the reactor, then there
-        are two methods available for producing the imprinted and merged h5m
-        geometry. The next step is to make the geometry watertight which uses
-        make_watertight from DAGMC. If using the Trelis option you must have
-        the make_faceteted_neutronics_model.py in the same directory as your
-        Python script.
+        """Produces a dagmc.h5m neutronics file compatable with DAGMC
+        simulations. This is done by first exporting the stp files for the
+        whole reactor, then exporting the neutronics description of the reactor
+        , then there are two methods available for producing the imprinted and
+        merged h5m geometry. The next step is to make the geometry watertight
+        which uses make_watertight from DAGMC. If using the Trelis option you
+        must have the make_faceteted_neutronics_model.py in the same directory
+        as your Python script.
 
         Arguments:
             method: (str): The method to use when making the imprinted and
@@ -375,7 +372,6 @@ class NeutronicsModelFromReactor():
             tallies.append(tally)
 
         if 'heat' in self.outputs:
-
             for key, value in self.openmc_materials.items():
                 if key != 'DT_plasma':
                     material_filter = openmc.MaterialFilter(value)
@@ -397,20 +393,18 @@ class NeutronicsModelFromReactor():
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
 
     def simulate(self, verbose=True, method=None):
-        """Run the OpenMC simulation. Terminal output can
-        disabled by setting verbose=False.
+        """Run the OpenMC simulation.
 
         Arguments:
-            verbose: (Boolean): Print the output from OpenMC (true) to the
-                terminal and don't print the OpenMC output (false). Defaults
-                to True.
+            verbose: (Boolean, optional): Print the output from OpenMC (true)
+                to the terminal and don't print the OpenMC output (false).
+                Defaults to True.
             method: (str): The method to use when making the imprinted and
                 merged geometry. Options are PPP or Trelis. Defaults to
-                NeutronicsModelFromReactor.method. where options ae further
-                described.
+                NeutronicsModelFromReactor.method.
 
         Returns:
-            dict: a dictionary of the simulation results
+            dict: the simulation output filename
         """
 
         if self.model is None:
@@ -456,6 +450,13 @@ class NeutronicsModelFromReactor():
                 results[tally.name]['Watts'] = {
                     'result': tally_result * 1.602176487e-19 * (self.fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
                     'std. dev.': tally_std_dev * 1.602176487e-19 * (self.fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
+                }
+
+            if tally.name.endswith('flux'):
+
+                results[tally.name]['Flux per source particle'] = {
+                    'result': tally_result,
+                    'std. dev.': tally_std_dev,
                 }
 
         self.results = json.dumps(results, indent=4, sort_keys=True)

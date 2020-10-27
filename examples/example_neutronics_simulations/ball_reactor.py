@@ -1,6 +1,7 @@
-"""This example makes a reactor geometry and a neutronics model, the addition
-of a homogenised material is added to demonstrate the ability of making more
-complex materials"""
+"""This example makes a reactor geometry and a neutronics model. A homogenised
+material made of enriched lithium lead and eurofer is being used as the blanket
+material for this simulation in order to demonstrate the use of more complex
+materials."""
 
 import neutronics_material_maker as nmm
 import paramak

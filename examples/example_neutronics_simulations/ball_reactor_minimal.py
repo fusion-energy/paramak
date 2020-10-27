@@ -1,4 +1,5 @@
-"""this is a minimal example that obtains the tbr for a parametric reactor"""
+"""This is a minimal example that obtains the TBR (Tritium Breeding Ratio)
+for a parametric reactor"""
 
 import paramak
 

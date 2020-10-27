@@ -1,6 +1,8 @@
 """This example makes a reactor geometry and a neutronics model, the addition
-of a for loops allow a parameter sweep of the distance between the plasma and
-center column while simulating the heat on the center column"""
+of a Python for loop allow a parameter sweep of the neutronics results for
+different geometries. The distance between the plasma and center column is
+varried while simulating the impact on the heat depositied in the center
+column."""
 
 import matplotlib.pyplot as plt
 import paramak
