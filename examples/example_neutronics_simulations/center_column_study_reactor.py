@@ -45,7 +45,7 @@ def make_model_and_simulate():
                 'divertor_mat': 'eurofer',
                 'firstwall_mat': 'eurofer',
                 'blanket_mat': 'Li4SiO4'},
-            outputs=['heat'],
+            cell_tallies=['heat'],
             simulation_batches=5,
             simulation_particles_per_batch=1e4,
         )

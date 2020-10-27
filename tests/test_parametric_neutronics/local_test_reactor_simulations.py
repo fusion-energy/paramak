@@ -52,7 +52,7 @@ class test_neutronics_BallReactor(unittest.TestCase):
                 'firstwall_mat': 'eurofer',
                 'blanket_mat': blanket_material,  # use of homogenised material
                 'blanket_rear_wall_mat': 'eurofer'},
-            outputs=['TBR'],
+            cell_tallies=['TBR'],
             simulation_batches=5,
             simulation_particles_per_batch=1e3,
         )

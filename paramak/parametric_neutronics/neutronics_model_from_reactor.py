@@ -34,13 +34,13 @@ class NeutronicsModelFromReactor():
             neutronics model. e.g. reactor=paramak.BallReactor() or
             reactor=paramak.SubmersionReactor() .
         materials: (dict): Where the dictionary keys are the material tag
-            and the dictionary values are either a string, openmc.Material,
+            and the dictionary values are either a string, openmc.Material, 
             neutronics-material-maker.Material or
             neutronics-material-maker.MultiMaterial. All components within the
             Reactor() object must be accounted for. Material tags required
             for the reactor can be obtained with Reactor().material_tags.
         cell_tallies: (list of strings): the cell based tallies to calculate,
-            options include TBR, heat
+            options include TBR, heat and flux
         fusion_power: (float): the power in watts emitted by the fusion
             reaction recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
@@ -74,7 +74,7 @@ class NeutronicsModelFromReactor():
         self,
         reactor,
         materials,
-        outputs,
+        cell_tallies,
         fusion_power=1e9,
         method='ppp',
         simulation_batches=100,
@@ -95,7 +95,7 @@ class NeutronicsModelFromReactor():
 
         self.reactor = reactor
         self.materials = materials
-        self.outputs = outputs
+        self.cell_tallies = cell_tallies
         self.ion_density_origin = ion_density_origin
         self.ion_density_peaking_factor = ion_density_peaking_factor
         self.ion_density_pedestal = ion_density_pedestal
@@ -124,23 +124,23 @@ class NeutronicsModelFromReactor():
             # TODO make use of reactor.create_solids() here
 
     @property
-    def outputs(self):
-        return self._outputs
+    def cell_tallies(self):
+        return self._cell_tallies
 
-    @outputs.setter
-    def outputs(self, value):
+    @cell_tallies.setter
+    def cell_tallies(self, value):
         if not isinstance(value, list):
-            raise ValueError("NeutronicsModelFromReactor.outputs should be a\
+            raise ValueError("NeutronicsModelFromReactor.cell_tallies should be a\
                 list")
         output_options = ['TBR', 'heat', 'flux', 'fast flux', 'dose']
         for entry in value:
             if entry not in output_options:
                 raise ValueError(
-                    "NeutronicsModelFromReactor.outputs argument",
+                    "NeutronicsModelFromReactor.cell_tallies argument",
                     entry,
                     "not allowed, the following options are supported",
                     output_options)
-        self._outputs = value
+        self._cell_tallies = value
 
     @property
     def materials(self):
@@ -331,7 +331,7 @@ class NeutronicsModelFromReactor():
 
     def create_neutronics_model(self, method=None):
         """Uses OpenMC python API to make a neutronics model, including tallies
-        (outputs), simulation settings (batches, particles per batch)
+        (cell_tallies), simulation settings (batches, particles per batch)
 
         Arguments:
             method: (str): The method to use when making the imprinted and
@@ -363,7 +363,7 @@ class NeutronicsModelFromReactor():
         # details about what neutrons interactions to keep track of (tally)
         tallies = openmc.Tallies()
 
-        if 'TBR' in self.outputs:
+        if 'TBR' in self.cell_tallies:
             blanket_mat = self.openmc_materials['blanket_mat']
             material_filter = openmc.MaterialFilter(blanket_mat)
             tally = openmc.Tally(name="TBR")
@@ -371,7 +371,7 @@ class NeutronicsModelFromReactor():
             tally.scores = ["(n,Xt)"]  # where X is a wild card
             tallies.append(tally)
 
-        if 'heat' in self.outputs:
+        if 'heat' in self.cell_tallies:
             for key, value in self.openmc_materials.items():
                 if key != 'DT_plasma':
                     material_filter = openmc.MaterialFilter(value)
@@ -380,7 +380,7 @@ class NeutronicsModelFromReactor():
                     tally.scores = ["heating"]
                     tallies.append(tally)
 
-        if 'flux' in self.outputs:
+        if 'flux' in self.cell_tallies:
             for key, value in self.openmc_materials.items():
                 if key != 'DT_plasma':
                     material_filter = openmc.MaterialFilter(value)
