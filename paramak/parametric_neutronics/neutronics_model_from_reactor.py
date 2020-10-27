@@ -34,7 +34,7 @@ class NeutronicsModelFromReactor():
             neutronics model. e.g. reactor=paramak.BallReactor() or
             reactor=paramak.SubmersionReactor() .
         materials: (dict): Where the dictionary keys are the material tag
-            and the dictionary values are either a string, openmc.Material, 
+            and the dictionary values are either a string, openmc.Material,
             neutronics-material-maker.Material or
             neutronics-material-maker.MultiMaterial. All components within the
             Reactor() object must be accounted for. Material tags required
