@@ -418,3 +418,33 @@ class test_SubmersionTokamak(unittest.TestCase):
             assert issubclass(w[-1].category, UserWarning)
             assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
                 w[-1].message)
+
+    def test_SubmersionTokamak_error(self):
+        test_reactor = paramak.SingleNullSubmersionTokamak(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            number_of_tf_coils=16,
+            support_radial_thickness=20,
+            inboard_blanket_radial_thickness=20,
+            outboard_blanket_radial_thickness=20,
+            plasma_high_point=(200, 200),
+            divertor_position="upper",
+            support_position="upper",
+            rotation_angle=359,
+        )
+
+        def invalid_divertor_position():
+            test_reactor.divertor_position = "coucou"
+
+        def invalid_support_position():
+            test_reactor.support_position = "coucou"
+
+        self.assertRaises(ValueError, invalid_divertor_position)
+        self.assertRaises(ValueError, invalid_support_position)
