@@ -220,7 +220,7 @@ class NeutronicsModelFromReactor():
         source for use in the simulation"""
 
         self.pedestal_radius = self.pedestal_radius_factor * \
-            (self.reactor.minor_radius / 1000)
+            (self.reactor.minor_radius / 100)
 
         my_plasma = PlasmaSource(
             elongation=self.reactor.elongation,
@@ -232,8 +232,8 @@ class NeutronicsModelFromReactor():
             ion_temperature_peaking_factor=self.ion_temperature_peaking_factor,
             ion_temperature_pedestal=self.ion_temperature_pedestal,
             ion_temperature_separatrix=self.ion_temperature_separatrix,
-            major_radius=self.reactor.major_radius / 1000,
-            minor_radius=self.reactor.minor_radius / 1000,
+            major_radius=self.reactor.major_radius / 100,
+            minor_radius=self.reactor.minor_radius / 100,
             pedestal_radius=self.pedestal_radius,
             plasma_id=1,
             shafranov_shift=self.shafranov_shift,
