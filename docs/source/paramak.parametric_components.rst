@@ -52,9 +52,9 @@ BlanketCutterParallels()
 
 |BlanketCutterParallelsstp| |BlanketCutterParallelssvg|
 
-.. |BlanketCutterParallelsstp| image:: https://user-images.githubusercontent.com/8583900/97234967-d1322a80-17d9-11eb-9398-87052bf2e6c3.png
+.. |BlanketCutterParallelsstp| image:: https://user-images.githubusercontent.com/8583900/97328431-eb1d4d00-186d-11eb-9f5d-4bbee9e3b17d.png
    :width: 300
-.. |BlanketCutterParallelssvg| image:: https://user-images.githubusercontent.com/8583900/97234950-c7102c00-17d9-11eb-8fe6-9c7a501bab87.png
+.. |BlanketCutterParallelssvg| image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
    :width: 450
 
 .. automodule:: paramak.parametric_components.blanket_cutter_parallels
