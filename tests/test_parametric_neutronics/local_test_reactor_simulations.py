@@ -7,7 +7,6 @@ import pytest
 
 
 class test_neutronics_BallReactor(unittest.TestCase):
-
     def test_tbr_simulation(self):
         """Makes a BallReactor neutronics model and simulates the TBR"""
 
@@ -60,4 +59,8 @@ class test_neutronics_BallReactor(unittest.TestCase):
         # starts the neutronics simulation using trelis
         neutronics_model.simulate(method='trelis')
 
-        assert neutronics_model.results['TBR'] == pytest.approx(1.0, rel=0.01)
+        assert neutronics_model.results['TBR'] == pytest.approx(1.168, rel=0.1)
+
+
+if __name__ == "__main__":
+    unittest.main()
