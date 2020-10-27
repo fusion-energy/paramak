@@ -235,7 +235,7 @@ class Reactor:
 
         Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(filename, "w") as outfile:
+        with open(Pfilename, "w") as outfile:
             json.dump(
                 self.neutronics_description(
                     include_plasma=include_plasma,
