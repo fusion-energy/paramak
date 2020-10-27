@@ -86,6 +86,6 @@ class RotateMixedShape(Shape):
         solid = solid.close().revolve(self.rotation_angle)
 
         solid = self.rotate_solid(solid)
-        self.perform_boolean_operations(solid)
+        solid = self.perform_boolean_operations(solid)
 
         return solid
