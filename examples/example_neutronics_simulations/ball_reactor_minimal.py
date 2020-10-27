@@ -22,7 +22,7 @@ def make_model_and_simulate():
         elongation=2,
         triangularity=0.55,
         number_of_tf_coils=16,
-        rotation_angle=180,
+        rotation_angle=360,
     )
 
     # makes the neutronics model from the geometry and material allocations
