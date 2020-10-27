@@ -160,8 +160,8 @@ def union_solid(solid, joiner):
     """
     Performs a boolean union of a solid with another solid or iterable of solids
     Args:
-        solid Shape: the Shape that you want to union from
-        joiner Shape: the Shape(s) that you want to form the union with the
+        solid (Shape): the Shape that you want to union from
+        joiner (Shape): the Shape(s) that you want to form the union with the
             solid
     Returns:
         Shape: the original shape union with the joiner shape(s)
