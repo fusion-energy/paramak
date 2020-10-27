@@ -99,6 +99,15 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.create_limits() == (0.0, 20.0, 0.0, 20.0)
 
+    def test_create_limits_error(self):
+        """checks error is raised when no points are given
+        """
+        test_shape = paramak.Shape()
+
+        def limits():
+            test_shape.create_limits()
+        self.assertRaises(ValueError, limits)
+
     def test_export_2d_image(self):
         """creates a Shape object and checks that a png file of the object with
         the correct suffix can be exported using the export_2d_image method"""
@@ -211,6 +220,15 @@ class test_object_properties(unittest.TestCase):
         test_shape.export_html('filename')
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
+
+    def test_export_html_with_points_None(self):
+        """checks that an error is raised when points is None and export_html
+        """
+        test_shape = paramak.Shape()
+
+        def export():
+            test_shape.export_html("out.html")
+        self.assertRaises(ValueError, export)
 
     def test_invalid_stp_filename(self):
         """checks ValueError is raised when invalid stp filenames are used"""
@@ -349,6 +367,16 @@ class test_object_properties(unittest.TestCase):
         assert isinstance(test_shape.areas[3], float)
         assert len(test_shape.areas) == 4
         assert sum(test_shape.areas) == pytest.approx(test_shape.area)
+
+    def test_trace(self):
+        """Test trace method"""
+        test_shape = paramak.PoloidalFieldCoil(
+            center_point=(100, 100),
+            height=50,
+            width=50,
+            name="coucou"
+        )
+        assert test_shape._trace is not None
 
 
 if __name__ == "__main__":
