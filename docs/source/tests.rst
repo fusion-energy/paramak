@@ -47,6 +47,35 @@ test\_ExtrudeMixedShape
    :members:
    :show-inheritance:
 
+test\_SweepStraightShape
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: test_SweepStraightShape
+   :members:
+   :show-inheritance:
+
+test\_SweepSplineShape
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: test_SweepSplineShape
+   :members:
+   :show-inheritance:
+
+test\_SweepMixedShape
+^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: test_SweepMixedShape
+   :members:
+   :show-inheritance:
+
+test\_SweepCircleShape
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: test_SweepCircleShape
+   :members:
+   :show-inheritance:
+
+
 Parametric Shape Tests
 ----------------------
 
