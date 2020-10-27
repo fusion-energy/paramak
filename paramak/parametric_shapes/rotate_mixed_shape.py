@@ -40,7 +40,8 @@ class RotateMixedShape(Shape):
         self._rotation_angle = value
 
     def create_solid(self):
-        """Creates a rotated 3d solid using points with straight and spline edges.
+        """Creates a rotated 3d solid using points with straight and spline
+        edges.
 
            Returns:
               A CadQuery solid: A 3D solid volume
@@ -71,6 +72,7 @@ class RotateMixedShape(Shape):
             instructions[-1][keyname].append(XZ_points[0])
 
         solid = cq.Workplane(self.workplane)
+        solid.moveTo(XZ_points[0][0], XZ_points[0][1])
 
         for entry in instructions:
             if list(entry.keys())[0] == "spline":
@@ -86,6 +88,6 @@ class RotateMixedShape(Shape):
         solid = solid.close().revolve(self.rotation_angle)
 
         solid = self.rotate_solid(solid)
-        self.perform_boolean_operations(solid)
-
+        solid = self.perform_boolean_operations(solid)
+        self.solid = solid
         return solid

@@ -51,6 +51,7 @@ from .parametric_components.port_cutters_rectangular import PortCutterRectangula
 from .parametric_components.port_cutters_circular import PortCutterCircular
 from .parametric_components.cutting_wedge import CuttingWedge
 from .parametric_components.cutting_wedge_fs import CuttingWedgeFS
+from .parametric_components.blanket_cutter_parallels import BlanketCutterParallels
 from .parametric_components.blanket_cutters_star import BlanketCutterStar
 
 from .parametric_components.inner_tf_coils_circular import InnerTfCoilsCircular
