@@ -32,8 +32,9 @@ def make_demo_blanket(
     # this makes a cutter shape that is used to make the blanket bananna
     # segment that has parallel sides
     parallel_outboard_gaps_outer = paramak.BlanketCutterParallels(
-        distance=gap_size, azimuth_placement_angle=np.linspace(
-            0, 360, number_of_segments, endpoint=False), gap_size=central_block_width)
+        thickness=gap_size, azimuth_placement_angle=np.linspace(
+            0, 360, number_of_segments, endpoint=False),
+        gap_size=central_block_width)
 
     # this makes a gap that seperates the inboard and outboard blanket
     inboard_to_outboard_gaps = paramak.ExtrudeStraightShape(

@@ -766,8 +766,6 @@ class Shape:
         if self.union is not None:
             solid = union_solid(solid, self.union)
 
-        self.solid = solid
-
         self.hash_value = self.get_hash()
 
         return solid

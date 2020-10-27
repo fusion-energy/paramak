@@ -9,7 +9,7 @@ class test_BlanketCutterParallels(unittest.TestCase):
         and checks that a cadquery solid is created"""
 
         test_shape = paramak.BlanketCutterParallels(
-            distance=50,
+            thickness=50,
             gap_size=200)
 
         assert test_shape.solid is not None
@@ -21,11 +21,11 @@ class test_BlanketCutterParallels(unittest.TestCase):
         """
 
         small_shape = paramak.BlanketCutterParallels(
-            distance=50,
+            thickness=50,
             gap_size=200)
 
         large_shape = paramak.BlanketCutterParallels(
-            distance=100,
+            thickness=100,
             gap_size=200,
         )
 
