@@ -75,6 +75,7 @@ class ExtrudeMixedShape(Shape):
 
         solid = self.rotate_solid(solid)
         calculate_wedge_cut(self)
-        self.perform_boolean_operations(solid)
+        solid = self.perform_boolean_operations(solid)
+        self.solid = solid
 
         return solid
