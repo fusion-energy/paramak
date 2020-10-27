@@ -89,3 +89,22 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         assert initial_hash_value == test_shape.hash_value
         assert test_shape.solid is not None
         assert initial_hash_value != test_shape.hash_value
+
+    def test_center_column_shield_cylinder_error(self):
+        def incorrect_radii():
+            test_shape = paramak.CenterColumnShieldCylinder(
+                height=100,
+                inner_radius=40,
+                outer_radius=20
+            )
+            test_shape.solid
+
+        def incorrect_height():
+            test_shape = paramak.CenterColumnShieldCylinder(
+                height=None,
+                inner_radius=20,
+                outer_radius=40
+            )
+            test_shape.solid
+        self.assertRaises(ValueError, incorrect_radii)
+        self.assertRaises(ValueError, incorrect_height)
