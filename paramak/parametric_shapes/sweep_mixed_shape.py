@@ -77,18 +77,11 @@ class SweepMixedShape(Shape):
             A CadQuery solid: A 3D solid volume
         """
 
-        path = cq.Workplane(self.path_workplane).spline(self.path_points)
-        distance = float(self.path_points[-1][1] - self.path_points[0][1])
-
-        if self.workplane in ["XZ", "YX", "ZY"]:
-            distance *= -1
-
         solid = super().create_solid()
-
+        path = cq.Workplane(self.path_workplane).spline(self.path_points)
         solid = solid.close().sweep(path, multisection=True)
 
         solid = self.rotate_solid(solid)
-
         self.perform_boolean_operations(solid)
 
         return solid

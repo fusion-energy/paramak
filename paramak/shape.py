@@ -448,6 +448,10 @@ class Shape:
                 instructions[-1][keyname].append(XZ_points[0])
 
             if hasattr(self, "path_points"):
+                distance = float(self.path_points[-1][1] - self.path_points[0][1])
+
+                if self.workplane in ["XZ", "YX", "ZY"]:
+                    distance *= -1
                 # sweep shape
                 solid = cq.Workplane(
                     self.workplane).workplane(
@@ -468,6 +472,22 @@ class Shape:
                     p1 = list(entry.values())[0][1]
                     p2 = list(entry.values())[0][2]
                     solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+
+            if hasattr(self, "path_points"):
+                # sweep shape
+                solid = solid.close().moveTo(-self.path_points[0][0], 0).workplane(
+                    offset=distance).moveTo(self.path_points[-1][0], 0).workplane()
+
+                for entry in instructions:
+                    if list(entry.keys())[0] == "spline":
+                        solid = solid.spline(listOfXYTuple=list(entry.values())[0])
+                    if list(entry.keys())[0] == "straight":
+                        solid = solid.polyline(list(entry.values())[0])
+                    if list(entry.keys())[0] == "circle":
+                        p0 = list(entry.values())[0][0]
+                        p1 = list(entry.values())[0][1]
+                        p2 = list(entry.values())[0][2]
+                        solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
         return solid
 
     def rotate_solid(self, solid):
