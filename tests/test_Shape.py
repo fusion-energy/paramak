@@ -378,6 +378,80 @@ class test_object_properties(unittest.TestCase):
         )
         assert test_shape._trace is not None
 
+    def test_create_patch_error(self):
+        """Checks _create_patch raises a ValueError when points is None
+        """
+        test_shape = paramak.Shape()
+
+        def patch():
+            test_shape._create_patch()
+        self.assertRaises(ValueError, patch)
+
+    def test_create_patch_alpha(self):
+        """Checks _create_patch returns a patch when alpha is given
+        """
+        test_shape = paramak.PoloidalFieldCoil(
+            center_point=(100, 100),
+            height=50,
+            width=50,
+            color=(0.5, 0.5, 0.5, 0.1)
+        )
+        assert test_shape._create_patch is not None
+
+    def test_azimuth_placement_angle_error(self):
+        """Checks an error is raised when invalid value for
+        azimuth_placement_angle is set
+        """
+
+        test_shape = paramak.Shape()
+
+        def angle_str():
+            test_shape.azimuth_placement_angle = "coucou"
+
+        def angle_str_in_Iterable():
+            test_shape.azimuth_placement_angle = [0, "coucou"]
+
+        self.assertRaises(ValueError, angle_str)
+        self.assertRaises(ValueError, angle_str_in_Iterable)
+
+    def test_name_error(self):
+        """Checks an error is raised when invalid value for name is set
+        """
+
+        test_shape = paramak.Shape()
+
+        def name_float():
+            test_shape.name = 2.0
+
+        def name_int():
+            test_shape.name = 1
+
+        def name_list():
+            test_shape.name = ['coucou']
+
+        self.assertRaises(ValueError, name_float)
+        self.assertRaises(ValueError, name_int)
+        self.assertRaises(ValueError, name_list)
+
+    def test_tet_mesh_error(self):
+        """Checks an error is raised when invalid value for tet_mesh is set
+        """
+
+        test_shape = paramak.Shape()
+
+        def tet_mesh_float():
+            test_shape.tet_mesh = 2.0
+
+        def tet_mesh_int():
+            test_shape.tet_mesh = 1
+
+        def tet_mesh_list():
+            test_shape.tet_mesh = ['coucou']
+
+        self.assertRaises(ValueError, tet_mesh_float)
+        self.assertRaises(ValueError, tet_mesh_int)
+        self.assertRaises(ValueError, tet_mesh_list)
+
 
 if __name__ == "__main__":
     unittest.main()
