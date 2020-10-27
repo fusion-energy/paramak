@@ -43,7 +43,7 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
             distance=30,
             number_of_coils=8,
         )
-        
+
         test_shape.rotation_angle = 360
         test_shape.workplane = "XZ"
         test_volume = test_shape.volume

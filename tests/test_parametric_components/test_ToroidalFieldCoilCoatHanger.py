@@ -35,7 +35,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
             distance=50,
             number_of_coils=8,
         )
-        
+
         test_shape.rotation_angle = 360
         test_shape.workplane = "XZ"
         test_volume = test_shape.volume
