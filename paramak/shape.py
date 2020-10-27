@@ -801,7 +801,7 @@ class Shape:
         """
 
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         patches = []
         xylist = []
