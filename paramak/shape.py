@@ -102,6 +102,8 @@ class Shape:
 
     @property
     def solid(self):
+        """The CadQuery solid of the 3d object. Returns a CadQuery workplane
+        or CadQuery Compound"""
         if self.get_hash() != self.hash_value:
             self.create_solid()
         return self._solid
@@ -152,10 +154,45 @@ class Shape:
 
     @property
     def volume(self):
+        """Get the total volume of the Shape. Returns a float"""
         if isinstance(self.solid, cq.Compound):
             return self.solid.Volume()
         else:
             return self.solid.val().Volume()
+
+    @property
+    def volumes(self):
+        """Get the volumes of the Shape. Compound shapes provide a seperate
+        volume value for each entry. Returns a list of floats"""
+        all_volumes = []
+        if isinstance(self.solid, cq.Compound):
+            for solid in self.solid.Solids():
+                all_volumes.append(solid.Volume())
+            return all_volumes
+        else:
+            return [self.solid.val().Volume()]
+
+    @property
+    def area(self):
+        """Get the total surface area of the Shape. Returns a float"""
+        if isinstance(self.solid, cq.Compound):
+            return self.solid.Area()
+        else:
+            return self.solid.val().Area()
+
+    @property
+    def areas(self):
+        """Get the surface areas of the Shape. Compound shapes provide a
+        seperate area value for each entry. Returns a list of floats"""
+        all_areas = []
+        if isinstance(self.solid, cq.Compound):
+            for face in self.solid.Faces():
+                all_areas.append(face.Area())
+            return all_areas
+        else:
+            for face in self.solid.val().Faces():
+                all_areas.append(face.Area())
+            return all_areas
 
     @property
     def hash_value(self):
@@ -189,6 +226,9 @@ class Shape:
 
     @property
     def material_tag(self):
+        """The material_tag assigned to the Shape. Used when taging materials
+        for use in neutronics descriptions"""
+
         return self._material_tag
 
     @material_tag.setter
@@ -216,6 +256,8 @@ class Shape:
 
     @property
     def name(self):
+        """The name of the Shape, used to identify Shapes when exporting_html
+        """
         return self._name
 
     @name.setter
@@ -578,6 +620,10 @@ class Shape:
         Returns:
             plotly.Figure(): figure object
         """
+
+        if self.__class__.__name__ == "SweepCircleShape":
+            print(
+                'WARNING: export_html will plot path_points for the SweepCircleShape class')
 
         if self.points is None:
             ValueError("No points defined for", self)
