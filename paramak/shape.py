@@ -36,9 +36,10 @@ class Shape:
             Defaults to None.
         stl_filename (str, optional): the filename used when saving stl files.
             Defaults to None.
-        azimuth_placement_angle (iterable of floats or float, optional): the azimuth angle(s) used
-            when positioning the shape. If a list of angles is provided, the
-            shape is duplicated at all angles. Defaults to 0.0.
+        azimuth_placement_angle (iterable of floats or float, optional): the
+            azimuth angle(s) used when positioning the shape. If a list of
+            angles is provided, the shape is duplicated at all angles.
+            Defaults to 0.0.
         workplane (str, optional): the orientation of the Cadquery workplane.
             (XY, YZ or XZ). Defaults to "XZ".
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
