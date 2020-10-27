@@ -395,7 +395,8 @@ class Shape:
                     current_points_list.append(XZ_points[i])
                 else:
                     current_points_list.append(XZ_points[i])
-                    instructions.append({current_linetype: current_points_list})
+                    instructions.append(
+                        {current_linetype: current_points_list})
                     current_linetype = c
                     current_points_list = [XZ_points[i]]
             instructions.append({current_linetype: current_points_list})
