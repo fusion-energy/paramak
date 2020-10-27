@@ -495,7 +495,7 @@ class Shape:
 
         return str(Pfilename)
 
-    def export_stp(self, filename=None):
+    def export_stp(self, filename=None, units='mm'):
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -503,6 +503,8 @@ class Shape:
 
         Args:
             filename (str): the filename of the stp
+            units (str): the units of the stp file, options are 'cm' or 'mm'.
+                Default is mm.
         """
 
         if filename is not None:
@@ -520,10 +522,11 @@ class Shape:
         with open(Pfilename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)
 
-        self._replace(
-            Pfilename,
-            'SI_UNIT(.MILLI.,.METRE.)',
-            'SI_UNIT(.CENTI.,.METRE.)')
+        if units == 'cm':
+            self._replace(
+                Pfilename,
+                'SI_UNIT(.MILLI.,.METRE.)',
+                'SI_UNIT(.CENTI.,.METRE.)')
 
         print("Saved file as ", Pfilename)
 
