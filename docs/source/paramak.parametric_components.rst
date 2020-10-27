@@ -392,7 +392,7 @@ PlasmaFromPoints()
 PlasmaBoundaries()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: 
+.. image:: https://user-images.githubusercontent.com/8583900/97366104-a958ca80-189e-11eb-8bc6-9892b04ab053.png
     :width: 300px
 
 .. automodule:: paramak.parametric_components.tokamak_plasma_plasmaboundaries
