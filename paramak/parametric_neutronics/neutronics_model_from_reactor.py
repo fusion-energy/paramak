@@ -34,7 +34,7 @@ class NeutronicsModelFromReactor():
             neutronics model. e.g. reactor=paramak.BallReactor() or
             reactor=paramak.SubmersionReactor() .
         materials: (dict): Where the dictionary keys are the material tag
-            and the dictionary values are either a string, openmc.Material, 
+            and the dictionary values are either a string, openmc.Material,
             neutronics-material-maker.Material or
             neutronics-material-maker.MultiMaterial. All components within the
             Reactor() object must be accounted for. Material tags required
@@ -130,7 +130,8 @@ class NeutronicsModelFromReactor():
     @cell_tallies.setter
     def cell_tallies(self, value):
         if not isinstance(value, list):
-            raise ValueError("NeutronicsModelFromReactor.cell_tallies should be a\
+            raise ValueError(
+                "NeutronicsModelFromReactor.cell_tallies should be a\
                 list")
         output_options = ['TBR', 'heat', 'flux', 'fast flux', 'dose']
         for entry in value:
