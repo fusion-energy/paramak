@@ -535,7 +535,7 @@ class Shape:
         if hasattr(self, "find_points"):
             self.find_points()
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         self.x_min = float(min([row[0] for row in self.points]))
         self.x_max = float(max([row[0] for row in self.points]))
@@ -665,7 +665,7 @@ class Shape:
             print(msg)
 
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
