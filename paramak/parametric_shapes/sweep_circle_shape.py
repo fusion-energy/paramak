@@ -6,18 +6,18 @@ from paramak import Shape
 
 
 class SweepCircleShape(Shape):
-    """Sweeps a 2D circle of a defined radius along a defined spline path to create a
-    3D CadQuery solid.
+    """Sweeps a 2D circle of a defined radius along a defined spline path to
+    create a 3D CadQuery solid.
 
     Args:
         radius (float): Radius of 2D circle to be swept.
-        path_points (list of tuples each containing X (float), Z (float)): A list of XY,
-            YZ or XZ coordinates connected by spline connections which define the path
-            along which the 2D shape is swept.
-        workplane (str, optional): Workplane in which the circle to be swept is defined.
-            Defaults to "XY".
-        path_workplane (str, optional): Workplane in which the spline path is defined.
-            Defaults to "XZ".
+        path_points (list of tuples each containing X (float), Z (float)): A
+            list of XY, YZ or XZ coordinates connected by spline connections
+            which define the path along which the 2D shape is swept.
+        workplane (str, optional): Workplane in which the circle to be swept
+            is defined. Defaults to "XY".
+        path_workplane (str, optional): Workplane in which the spline path is
+            defined. Defaults to "XZ".
         stp_filename (str, optional): Defaults to "SweepCircleShape.stp".
         stl_filename (str, optional): Defaults to "SweepCircleShape.stl".
     """

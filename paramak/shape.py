@@ -476,8 +476,11 @@ class Shape:
 
             if hasattr(self, "path_points"):
                 # sweep shape
-                solid = solid.close().moveTo(-self.path_points[0][0], 0).workplane(
-                    offset=distance).moveTo(self.path_points[-1][0], 0).workplane()
+                solid = solid.close().\
+                    moveTo(-self.path_points[0][0], 0).\
+                    workplane(offset=distance).\
+                    moveTo(self.path_points[-1][0], 0).\
+                    workplane()
 
                 for entry in instructions:
                     if list(entry.keys())[0] == "spline":
@@ -656,8 +659,9 @@ class Shape:
         """
 
         if self.__class__.__name__ == "SweepCircleShape":
-            print(
-                'WARNING: export_html will plot path_points for the SweepCircleShape class')
+            msg = 'WARNING: export_html will plot path_points for ' + \
+                'the SweepCircleShape class'
+            print(msg)
 
         if self.points is None:
             ValueError("No points defined for", self)
