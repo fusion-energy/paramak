@@ -129,22 +129,20 @@ class BallReactor(paramak.Reactor):
         return self._pf_coil_radial_thicknesses
 
     @pf_coil_radial_thicknesses.setter
-    def pf_coil_radial_thicknesses(self, values):
-        if not isinstance(values, list) and values is not None:
+    def pf_coil_radial_thicknesses(self, value):
+        if not isinstance(value, list) and value is not None:
             raise ValueError("pf_coil_radial_thicknesses must be a list")
-        else:
-            self._pf_coil_radial_thicknesses = values
+        self._pf_coil_radial_thicknesses = value
 
     @property
     def pf_coil_vertical_thicknesses(self):
         return self._pf_coil_vertical_thicknesses
 
     @pf_coil_vertical_thicknesses.setter
-    def pf_coil_vertical_thicknesses(self, values):
-        if not isinstance(values, list) and values is not None:
+    def pf_coil_vertical_thicknesses(self, value):
+        if not isinstance(value, list) and value is not None:
             raise ValueError("pf_coil_vertical_thicknesses must be a list")
-        else:
-            self._pf_coil_vertical_thicknesses = values
+        self._pf_coil_vertical_thicknesses = value
 
     def create_solids(self):
         """Creates a 3d solids for each component.
