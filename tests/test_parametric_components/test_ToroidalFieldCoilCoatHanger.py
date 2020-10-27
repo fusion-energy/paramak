@@ -35,8 +35,21 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
             distance=50,
             number_of_coils=8,
         )
+        
+        test_shape.rotation_angle = 360
+        test_shape.workplane = "XZ"
         test_volume = test_shape.volume
-
         test_shape.rotation_angle = 180
-
         assert test_shape.volume == pytest.approx(test_volume * 0.5, rel=0.01)
+
+        test_shape.rotation_angle = 360
+        test_shape.workplane = "YZ"
+        test_volume = test_shape.volume
+        test_shape.rotation_angle = 180
+        assert test_shape.volume == pytest.approx(test_volume * 0.5, rel=0.01)
+
+        # test_shape.rotation_angle = 360
+        # test_shape.workplane = "XY"
+        # test_volume = test_shape.volume
+        # test_shape.rotation_angle = 180
+        # assert test_shape.volume == pytest.approx(test_volume * 0.5)
