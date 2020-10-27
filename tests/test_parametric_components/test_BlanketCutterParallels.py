@@ -30,3 +30,12 @@ class test_BlanketCutterParallels(unittest.TestCase):
         )
 
         assert small_shape.volume < large_shape.volume
+
+    def test_BlanketCutterParallels_modif(self):
+        test_shape = paramak.BlanketCutterParallels(
+            thickness=50,
+            gap_size=200)
+        test_shape.solid
+
+        test_shape.thickness = 53
+        assert test_shape.solid is not None
