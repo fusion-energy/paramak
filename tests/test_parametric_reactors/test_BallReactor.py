@@ -352,6 +352,30 @@ class test_BallReactor(unittest.TestCase):
                              test_reactor_180.shapes_and_components):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
+    def test_single_null_ball_reactor_error(self):
+        test_reactor = paramak.SingleNullBallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            divertor_position="upper",
+            rotation_angle=180,
+        )
+
+        def invalid_position():
+            test_reactor.divertor_position = "coucou"
+
+        self.assertRaises(ValueError, invalid_position)
+
     def test_rotation_angle_warning(self):
         """checks that the correct warning message is printed when
         rotation_angle = 360"""

@@ -171,5 +171,5 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
                 rotation_angle=180)
             test_reactor._make_vertical_build()
 
-        self.assertRaises(ValueError, small_plasma_high_point) 
-        self.assertRaises(ValueError, large_plasma_high_point) 
+        self.assertRaises(ValueError, small_plasma_high_point)
+        self.assertRaises(ValueError, large_plasma_high_point)
