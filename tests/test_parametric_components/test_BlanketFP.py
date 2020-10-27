@@ -193,6 +193,10 @@ class test_BlanketFP(unittest.TestCase):
 
         test_shape = paramak.BlanketFP(100, stop_angle=90, start_angle=270,)
         test_shape.export_physical_groups("tests/blanket.json")
+        test_shape = paramak.BlanketFP(
+            100, stop_angle=0, start_angle=360,
+            rotation_angle=180)
+        test_shape.export_physical_groups("tests/blanket.json")
 
     def test_BlanketFP_full_cov_stp_export(self):
         """creates a blanket using the BlanketFP parametric component and checks that
