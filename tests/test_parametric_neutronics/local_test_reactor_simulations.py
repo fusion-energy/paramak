@@ -15,16 +15,16 @@ class test_neutronics_BallReactor(unittest.TestCase):
 
         # makes the 3d geometry
         my_reactor = paramak.BallReactor(
-            inner_bore_radial_thickness=1e2,
-            inboard_tf_leg_radial_thickness=30e2,
-            center_column_shield_radial_thickness=60e2,
-            divertor_radial_thickness=50e2,
-            inner_plasma_gap_radial_thickness=30e2,
-            plasma_radial_thickness=300e2,
-            outer_plasma_gap_radial_thickness=30e2,
-            firstwall_radial_thickness=3e2,
-            blanket_radial_thickness=100e2,
-            blanket_rear_wall_radial_thickness=3e2,
+            inner_bore_radial_thickness=1,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=3,
+            blanket_radial_thickness=100,
+            blanket_rear_wall_radial_thickness=3,
             elongation=2.75,
             triangularity=0.5,
             rotation_angle=360,
@@ -57,7 +57,7 @@ class test_neutronics_BallReactor(unittest.TestCase):
             simulation_particles_per_batch=1e3,
         )
 
-        # starts the neutronics simulation
-        neutronics_model.simulate()
+        # starts the neutronics simulation using trelis
+        neutronics_model.simulate(method='trelis')
 
         assert neutronics_model.results['TBR'] == pytest.approx(1.0, rel=0.01)
