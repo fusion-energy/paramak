@@ -33,7 +33,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
 
     def __init__(
         self,
-        distance,
+        thickness,
         gap_size,
         azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216., 252.,
                                  288., 324.],
@@ -47,18 +47,22 @@ class BlanketCutterParallels(ExtrudeStraightShape):
     ):
 
         super().__init__(
-            distance=distance,
+            distance=gap_size / 2.0 + thickness,
+            azimuth_placement_angle=azimuth_placement_angle,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
             **kwargs
         )
-
-        self.azimuth_placement_angle = azimuth_placement_angle
+        self.thickness = thickness
         self.height = height
         self.width = width
-        self.distance = distance
         self.gap_size = gap_size
+        self.main_cutting_shape = \
+            ExtrudeStraightShape(
+                distance=self.gap_size / 2.0,
+                azimuth_placement_angle=self.azimuth_placement_angle,
+            )
         self.find_points()
 
     def find_points(self):
@@ -69,49 +73,14 @@ class BlanketCutterParallels(ExtrudeStraightShape):
             (self.width, self.height / 2),
             (0, self.height / 2)
         ]
-        self.points = points
 
-    def create_solid(self):
-        """Creates a 3d solid using points with straight edges.
+        self.main_cutting_shape.points = points
+        if self.cut is None:
+            self.cut = [self.main_cutting_shape]
+        elif not isinstance(self.cut, list) and \
+                self.cut != self.main_cutting_shape:
+            self.cut = [self.cut, self.main_cutting_shape]
+        elif self.main_cutting_shape not in self.cut:
+            self.cut.append(main_cutting_shape)
 
-        Returns:
-           A CadQuery solid: A 3D solid volume
-        """
-
-        small_solid = (
-            cq.Workplane(self.workplane)
-            .polyline([(p[0], p[1]) for p in self.points])
-            .close()
-            .extrude(distance=self.gap_size / 2.0, both=True)
-        )
-
-        large_solid = (
-            cq.Workplane(self.workplane)
-            .polyline([(p[0], p[1]) for p in self.points])
-            .close()
-            .extrude(distance=self.gap_size / 2.0 + self.distance, both=True)
-        )
-
-        solid = large_solid.cut(small_solid)
-
-        # Checks if the azimuth_placement_angle is a list of angles
-        if isinstance(self.azimuth_placement_angle, Iterable):
-            rotated_solids = []
-            # Perform seperate rotations for each angle
-            for angle in self.azimuth_placement_angle:
-                rotated_solids.append(
-                    solid.rotate(
-                        (0, 0, -1), (0, 0, 1), angle))
-            solid = cq.Workplane(self.workplane)
-
-            # Joins the seperate solids together
-            for i in rotated_solids:
-                solid = solid.union(i)
-        else:
-            # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate(
-                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
-
-        self.perform_boolean_operations(solid)
-
-        return solid
+        self.points = points[:-1]
