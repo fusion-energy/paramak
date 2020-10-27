@@ -59,7 +59,8 @@ class test_neutronics_BallReactor(unittest.TestCase):
         # starts the neutronics simulation using trelis
         neutronics_model.simulate(method='trelis')
 
-        assert neutronics_model.results['TBR']['result'] == pytest.approx(1.168, rel=0.2)
+        assert neutronics_model.results['TBR']['result'] == pytest.approx(
+            1.168, rel=0.2)
 
 
 if __name__ == "__main__":
