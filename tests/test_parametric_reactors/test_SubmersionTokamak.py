@@ -301,10 +301,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             support_position="lower",
             rotation_angle=359,
         )
-        test_reactor._make_divertor()
-        test_reactor._make_supports()
-        # assert len(test_reactor.shapes_and_components) == 8
-        assert len(test_reactor.shapes_and_components) == 10
+        assert len(test_reactor.shapes_and_components) == 8
 
     def test_SingleNullSubmersionTokamak_divertor_upper_support_upper(self):
         """creates a single null submersion reactor with upper supports and
