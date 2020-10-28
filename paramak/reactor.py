@@ -73,7 +73,7 @@ class Reactor:
                  paramak.PlasmaFromPoints,
                  paramak.PlasmaBoundaries)) is False:
                 values.append(shape_or_componet.material_tag)
-        return list(set(values))
+        return values
 
     @material_tags.setter
     def material_tags(self, value):

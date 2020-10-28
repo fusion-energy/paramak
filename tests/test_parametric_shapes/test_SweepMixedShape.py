@@ -30,6 +30,30 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.solid is not None
 
+    def test_solid_construction(self):
+        """checks that a SweepMixedShape solid can be created with workplane
+        YZ"""
+
+        test_shape = SweepMixedShape(
+            points=[
+                (-10, -10, "straight"),
+                (-10, 10, "spline"),
+                (0, 20, "spline"),
+                (10, 10, "circle"),
+                (0, 0, "circle"),
+                (10, -10, "straight")
+            ],
+            path_points=[
+                (50, 0),
+                (20, 50),
+                (50, 100)
+            ],
+            workplane='YZ',
+            path_workplane="YX"
+        )
+
+        assert test_shape.solid is not None
+
     def test_relative_shape_volume(self):
         """creates two SweepMixedShapes and checks that their relative volumes
         are correct"""
