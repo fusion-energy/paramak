@@ -449,11 +449,6 @@ class Shape:
                 instructions[-1][keyname].append(XZ_points[0])
 
             if hasattr(self, "path_points"):
-                distance = float(
-                    self.path_points[-1][1] - self.path_points[0][1])
-
-                if self.workplane in ["XZ", "YX", "ZY"]:
-                    distance *= -1
                 # sweep shape
                 solid = cq.Workplane(
                     self.workplane).workplane(
@@ -476,6 +471,10 @@ class Shape:
                     solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
             if hasattr(self, "path_points"):
+                distance = float(
+                    self.path_points[-1][1] - self.path_points[0][1])
+                if self.workplane in ["XZ", "YX", "ZY"]:
+                    distance *= -1
                 # sweep shape
                 solid = solid.close().\
                     moveTo(-self.path_points[0][0], 0).\
