@@ -183,13 +183,4 @@ def calculate_wedge_cut(self):
 
     else:
         cutting_wedge = paramak.CuttingWedgeFS(self)
-        if self.cut is None:
-            self.cut = cutting_wedge
-        else:
-            if isinstance(self.cut, Iterable):
-                cuts = [i for i in self.cut]
-                cuts.append(cutting_wedge)
-            else:
-                self.cut = [self.cut, cutting_wedge]
-
-        return None
+        return cutting_wedge
