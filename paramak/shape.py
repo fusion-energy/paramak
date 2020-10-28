@@ -795,7 +795,7 @@ class Shape:
 
         # If a wedge cut is provided then perform a boolean cut
         if 'wedge_cut' in kwargs:
-            if kwargs['wedge_cut'] != None:
+            if kwargs['wedge_cut'] is not None:
                 solid = cut_solid(solid, kwargs['wedge_cut'])
 
         # If an intersect is provided then perform a boolean intersect
