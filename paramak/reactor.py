@@ -567,16 +567,15 @@ class Reactor:
 
             if isinstance(component.solid, cq.Compound):
                 for solid in component.solid.Solids():
-                    largestDimension = max(
+                    largest_dimension = max(
                         abs(solid.BoundingBox().xmax),
                         abs(solid.BoundingBox().xmin),
                         abs(solid.BoundingBox().ymax),
                         abs(solid.BoundingBox().ymin),
                         abs(solid.BoundingBox().zmax),
-                        abs(solid.BoundingBox().zmin)
+                        abs(solid.BoundingBox().zmin),
+                        largest_dimension
                     )
-                    if largestDimension > largest_dimension:
-                        largest_dimension = largestDimension
             else:
                 if component.solid.largestDimension() > largest_dimension:
                     largest_dimension = component.solid.largestDimension()
