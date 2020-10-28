@@ -794,6 +794,8 @@ class Shape:
             solid = cut_solid(solid, self.cut)
 
         # If a wedge cut is provided then perform a boolean cut
+        # Performed independantly to avoid use of self.cut
+        # Prevents repetition of 'outdated' wedge cuts
         if 'wedge_cut' in kwargs:
             if kwargs['wedge_cut'] is not None:
                 solid = cut_solid(solid, kwargs['wedge_cut'])
