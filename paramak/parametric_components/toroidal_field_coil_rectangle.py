@@ -169,7 +169,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             solid = solid.rotate(
                 (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
 
-        calculate_wedge_cut(self)
-        self.perform_boolean_operations(solid)
+        cutting_wedge = calculate_wedge_cut(self)
+        self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
 
         return solid

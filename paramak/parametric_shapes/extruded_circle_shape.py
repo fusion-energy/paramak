@@ -85,7 +85,7 @@ class ExtrudeCircleShape(Shape):
         )
 
         solid = self.rotate_solid(solid)
-        calculate_wedge_cut(self)
-        self.perform_boolean_operations(solid)
+        cutting_wedge = calculate_wedge_cut(self)
+        self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
 
         return solid
