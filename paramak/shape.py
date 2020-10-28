@@ -3,7 +3,10 @@ import numbers
 import warnings
 from collections import Iterable
 from hashlib import blake2b
+from os import fdopen, remove
 from pathlib import Path
+from shutil import copymode, move
+from tempfile import mkstemp
 
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
@@ -566,7 +569,7 @@ class Shape:
 
         return str(Pfilename)
 
-    def export_stp(self, filename=None):
+    def export_stp(self, filename=None, units='mm'):
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -574,6 +577,8 @@ class Shape:
 
         Args:
             filename (str): the filename of the stp
+            units (str): the units of the stp file, options are 'cm' or 'mm'.
+                Default is mm.
         """
 
         if filename is not None:
@@ -590,6 +595,13 @@ class Shape:
 
         with open(Pfilename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)
+
+        if units == 'cm':
+            self._replace(
+                Pfilename,
+                'SI_UNIT(.MILLI.,.METRE.)',
+                'SI_UNIT(.CENTI.,.METRE.)')
+
         print("Saved file as ", Pfilename)
 
         return str(Pfilename)
@@ -839,6 +851,8 @@ class Shape:
 
         if self.stp_filename is not None:
             neutronics_description["stp_filename"] = self.stp_filename
+            # this is needed as ppp looks for the filename key
+            neutronics_description["filename"] = self.stp_filename
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
@@ -879,3 +893,30 @@ class Shape:
         self.hash_value = self.get_hash()
 
         return solid
+
+    def _replace(self, filename, pattern, subst):
+        """Opens a file and replaces occurances of a particular string
+            (pattern)with a new string (subst) and overwrites the file.
+            Used internally within the paramak to ensure .STP files are
+            in units of cm not the default mm.
+        Args:
+            filename (str): the filename of the file to edit
+            pattern (str): the string that should be removed
+            subst (str): the string that should be used in the place of the
+                pattern string
+        """
+        # Create temp file
+        fh, abs_path = mkstemp()
+        with fdopen(fh, 'w') as new_file:
+            with open(filename) as old_file:
+                for line in old_file:
+                    new_file.write(line.replace(pattern, subst))
+
+        # Copy the file permissions from the old file to the new file
+        copymode(filename, abs_path)
+
+        # Remove original file
+        remove(filename)
+
+        # Move new file
+        move(abs_path, filename)
