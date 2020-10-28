@@ -54,8 +54,9 @@ class test_object_properties(unittest.TestCase):
             material_tag='mat2')
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape, test_shape2])
-        test_reactor.export_h5m(filename='out.h5m', tolerance=0.01)
+        test_reactor.export_h5m(filename='out', tolerance=0.01)
         assert Path("out.h5m").exists() is True
+        os.system('rm out.h5m')
 
     def test_adding_shape_with_material_tag_to_reactor(self):
         """checks that a shape object can be added to a Reactor object with
