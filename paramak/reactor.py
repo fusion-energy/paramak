@@ -472,7 +472,7 @@ class Reactor:
 
         mb.add_entities(file_set, all_sets)
 
-        mb.write_file(filename)
+        mb.write_file(str(Pfilename))
 
         return filename
 
