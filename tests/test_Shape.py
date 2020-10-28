@@ -99,6 +99,11 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.create_limits() == (0.0, 20.0, 0.0, 20.0)
 
+        # test with a component which has a find_points method
+        test_shape2 = paramak.Plasma()
+        test_shape2.create_limits()
+        assert test_shape2.x_min is not None
+
     def test_create_limits_error(self):
         """checks error is raised when no points are given
         """
