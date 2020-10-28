@@ -51,3 +51,27 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         test_shape.rotation_angle = 180
 
         assert test_shape.volume == pytest.approx(test_volume * 0.5)
+
+    def test_ToroidalFieldCoilRectangle_error(self):
+        """Checks errors are raised with invalid arguments
+        """
+        test_shape = paramak.ToroidalFieldCoilRectangle(
+            horizontal_start_point=(100, 700),
+            vertical_mid_point=(800, 0),
+            with_inner_leg=False,
+            thickness=50,
+            distance=50,
+            number_of_coils=8,
+        )
+
+        def incorrect_horizontal_start_point():
+            test_shape.horizontal_start_point = (801, 700)
+            test_shape.solid
+
+        self.assertRaises(ValueError, incorrect_horizontal_start_point)
+
+        def incorrect_vertical_mid_point():
+            test_shape.vertical_mid_point = (800, 701)
+            test_shape.solid
+
+        self.assertRaises(ValueError, incorrect_vertical_mid_point)
