@@ -12,21 +12,21 @@ class test_SubmersionTokamak(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(test_SubmersionTokamak, self).__init__(*args, **kwargs)
         self.Submersion_Tokamak_reactor = paramak.SubmersionTokamak(
-                inner_bore_radial_thickness=25,
-                inboard_tf_leg_radial_thickness=50,
-                center_column_shield_radial_thickness=50,
-                inboard_blanket_radial_thickness=100,
-                firstwall_radial_thickness=50,
-                inner_plasma_gap_radial_thickness=70,
-                plasma_radial_thickness=300,
-                divertor_radial_thickness=100,
-                outer_plasma_gap_radial_thickness=70,
-                outboard_blanket_radial_thickness=200,
-                blanket_rear_wall_radial_thickness=50,
-                support_radial_thickness=150,
-                plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-                rotation_angle=359,
-            )
+            inner_bore_radial_thickness=25,
+            inboard_tf_leg_radial_thickness=50,
+            center_column_shield_radial_thickness=50,
+            inboard_blanket_radial_thickness=100,
+            firstwall_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=70,
+            plasma_radial_thickness=300,
+            divertor_radial_thickness=100,
+            outer_plasma_gap_radial_thickness=70,
+            outboard_blanket_radial_thickness=200,
+            blanket_rear_wall_radial_thickness=50,
+            support_radial_thickness=150,
+            plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
+            rotation_angle=359,
+        )
 
         self.SingleNullSubmersionTokamak = paramak.SingleNullSubmersionTokamak(
             inner_bore_radial_thickness=10,
