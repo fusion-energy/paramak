@@ -37,5 +37,13 @@ class test_BlanketCutterParallels(unittest.TestCase):
             gap_size=200)
         test_shape.solid
 
-        test_shape.thickness = 53
+        cut_shape = paramak.ExtrudeCircleShape(1, 1, points=[(0, 0)])
+        test_shape.cut = cut_shape
+        test_shape.solid
+
+        assert test_shape.solid is not None
+
+        test_shape.cut = [cut_shape]
+        test_shape.solid
+
         assert test_shape.solid is not None
