@@ -107,14 +107,14 @@ Features
 --------
 
 In general the Paramak takes input arguments and creates 3D objects. This can
-be achomplished via the use of parametric Shapes, parametric Components and
+be accomplished via the use of parametric Shapes, parametric Components and
 parametric Reactors with each level building upon the level below.
 
-Parametric Shapes are the simpelist and Shapes take points and connection
-information in 2D space (x,z) and performs operations on them to create 3D
-volumes. The points and connections are provided by the user when using
+Parametric Shapes are the simplest and accept points and connection information
+in 2D space (defaults to x,z) and performs operations on them to create 3D
+volumes. The points and connections are provided by the user when making
 parametric Shapes. Supported CAD opperations include (rotate, extrude, sweep)
-and Boolean opperations such as cut, union, intersect. Additionally the 
+and Boolean opperations such as cut, union and intersect. Additionally the 
 CadQuery objects created can be combined and modified using CadQuery's powerful 
 filtering capabilties to furter customise the shapes by performing operations
 like edge filleting.
