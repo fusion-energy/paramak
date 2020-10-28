@@ -451,9 +451,6 @@ class Reactor:
 
             material_name = item['material']
 
-            if skip_graveyard and "graveyard" in stl_filename.lower():
-                continue
-
             group_set = mb.create_meshset()
             mb.tag_set_data(tags['category'], group_set, "Group")
             print("mat:{}".format(material_name))
