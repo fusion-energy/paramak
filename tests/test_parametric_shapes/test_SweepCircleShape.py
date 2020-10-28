@@ -90,11 +90,11 @@ class test_object_properties(unittest.TestCase):
         path_workplane XY
         """
         test_shape = SweepCircleShape(
-                radius=20,
-                path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
-                workplane="XZ",
-                path_workplane="XY"
-            )
+            radius=20,
+            path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
+            workplane="XZ",
+            path_workplane="XY"
+        )
         assert test_shape.solid is not None
 
     def test_workplane_path_workplane_error_raises(self):
