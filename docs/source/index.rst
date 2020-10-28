@@ -19,6 +19,7 @@ straightforward for developers with Python knowledge.
    paramak.parametric_shapes
    paramak.parametric_components
    paramak.parametric_reactors
+   paramak.parametric_neutronics
    paramak.core_modules
    example_parametric_shapes
    example_parametric_components

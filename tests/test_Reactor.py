@@ -70,8 +70,8 @@ class test_object_properties(unittest.TestCase):
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape, test_shape2])
         assert len(test_reactor.material_tags) == 2
-        assert test_reactor.material_tags[0] == "mat1"
-        assert test_reactor.material_tags[1] == "mat2"
+        assert "mat1" in test_reactor.material_tags
+        assert "mat2" in test_reactor.material_tags
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """chekcs that a shape object can be added to a Reactor object with the
