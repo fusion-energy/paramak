@@ -56,48 +56,6 @@ class PlasmaBoundaries(Plasma):
 
         # properties needed for plasma shapes
         self.A = A
-        self.vertical_displacement = vertical_displacement
-
-    @property
-    def vertical_displacement(self):
-        return self._vertical_displacement
-
-    @vertical_displacement.setter
-    def vertical_displacement(self, value):
-        self._vertical_displacement = value
-
-    @property
-    def minor_radius(self):
-        return self._minor_radius
-
-    @minor_radius.setter
-    def minor_radius(self, value):
-        if value > 2000 or value < 1:
-            raise ValueError("minor_radius is out of range")
-        else:
-            self._minor_radius = value
-
-    @property
-    def major_radius(self):
-        return self._major_radius
-
-    @major_radius.setter
-    def major_radius(self, value):
-        if value > 2000 or value < 1:
-            raise ValueError("major_radius is out of range")
-        else:
-            self._major_radius = value
-
-    @property
-    def elongation(self):
-        return self._elongation
-
-    @elongation.setter
-    def elongation(self, value):
-        if value > 10 or value < 0:
-            raise ValueError("elongation is out of range")
-        else:
-            self._elongation = value
 
     def find_points(self):
         """Finds the XZ points that describe the 2D profile of the plasma."""
