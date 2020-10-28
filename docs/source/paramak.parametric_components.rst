@@ -47,15 +47,30 @@ BlanketFP()
    :members:
    :show-inheritance:
 
+BlanketCutterParallels()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+|BlanketCutterParallelsstp| |BlanketCutterParallelssvg|
+
+.. |BlanketCutterParallelsstp| image:: https://user-images.githubusercontent.com/8583900/97328431-eb1d4d00-186d-11eb-9f5d-4bbee9e3b17d.png
+   :width: 250
+.. |BlanketCutterParallelssvg| image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
+   :width: 400
+
+.. automodule:: paramak.parametric_components.blanket_cutter_parallels
+   :members:
+   :show-inheritance:
+
+
 BlanketCutterStar()
 ^^^^^^^^^^^^^^^^^^^
 
 |BlanketCutterStarstp| |BlanketCutterStarsvg|
 
 .. |BlanketCutterStarstp| image:: https://user-images.githubusercontent.com/8583900/97103699-0178ac80-16a6-11eb-8e5a-ec3575d265fe.png
-   :width: 300
+   :width: 250
 .. |BlanketCutterStarsvg| image:: https://user-images.githubusercontent.com/8583900/97103794-b0b58380-16a6-11eb-86f0-fb5530d630af.png
-   :width: 450
+   :width: 400
 
 .. automodule:: paramak.parametric_components.blanket_cutters_star
    :members:
@@ -377,7 +392,7 @@ PlasmaFromPoints()
 PlasmaBoundaries()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
+.. image:: https://user-images.githubusercontent.com/8583900/97366104-a958ca80-189e-11eb-8bc6-9892b04ab053.png
     :width: 300px
 
 .. automodule:: paramak.parametric_components.tokamak_plasma_plasmaboundaries

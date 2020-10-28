@@ -121,6 +121,13 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.points == test_shape.path_points
 
+    def test_html(self):
+        test_shape = SweepCircleShape(
+            radius=20,
+            path_points=[(50, 0), (30, 50), (60, 100), (50, 150)]
+        )
+        assert test_shape.export_html("out.html") is not None
+
 
 if __name__ == "__main__":
     unittest.main()

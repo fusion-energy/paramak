@@ -22,8 +22,8 @@ class Reactor:
         shapes_and_components (list): list of paramak.Shape
         graveyard_offset (float): the offset between the largest edge of the
             geometry and inner bounding shell created. can be overwritten by
-            specifying offset as part of the export_graveyard and make
-            graveyard methods.
+            specifying offset as part of the export_graveyard and
+            make_graveyard methods.
     """
 
     def __init__(self, shapes_and_components, graveyard_offset=500):
@@ -73,7 +73,7 @@ class Reactor:
                  paramak.PlasmaFromPoints,
                  paramak.PlasmaBoundaries)) is False:
                 values.append(shape_or_componet.material_tag)
-        return list(set(values))
+        return values
 
     @material_tags.setter
     def material_tags(self, value):

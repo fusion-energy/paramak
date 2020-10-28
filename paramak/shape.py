@@ -3,7 +3,10 @@ import numbers
 import warnings
 from collections import Iterable
 from hashlib import blake2b
+from os import fdopen, remove
 from pathlib import Path
+from shutil import copymode, move
+from tempfile import mkstemp
 
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
@@ -36,9 +39,10 @@ class Shape:
             Defaults to None.
         stl_filename (str, optional): the filename used when saving stl files.
             Defaults to None.
-        azimuth_placement_angle (float, optional): the azimuth angle(s) used
-            when positioning the shape. If a list of angles is provided, the
-            shape is duplicated at all angles. Defaults to 0.0.
+        azimuth_placement_angle (iterable of floats or float, optional): the
+            azimuth angle(s) used when positioning the shape. If a list of
+            angles is provided, the shape is duplicated at all angles.
+            Defaults to 0.0.
         workplane (str, optional): the orientation of the Cadquery workplane.
             (XY, YZ or XZ). Defaults to "XZ".
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
@@ -420,9 +424,83 @@ class Shape:
         self._azimuth_placement_angle = value
 
     def create_solid(self):
-        """Dummy create_solid method, this is overwritten by inheriting classes
-        """
-        return
+        solid = None
+        if self.points is not None:
+            # obtains the first two values of the points list
+            XZ_points = [(p[0], p[1]) for p in self.points]
+
+            # obtains the last values of the points list
+            connections = [p[2] for p in self.points[:-1]]
+
+            current_linetype = connections[0]
+            current_points_list = []
+            instructions = []
+            # groups together common connection types
+            for i, c in enumerate(connections):
+                if c == current_linetype:
+                    current_points_list.append(XZ_points[i])
+                else:
+                    current_points_list.append(XZ_points[i])
+                    instructions.append(
+                        {current_linetype: current_points_list})
+                    current_linetype = c
+                    current_points_list = [XZ_points[i]]
+            instructions.append({current_linetype: current_points_list})
+
+            if list(instructions[-1].values())[0][-1] != XZ_points[0]:
+                keyname = list(instructions[-1].keys())[0]
+                instructions[-1][keyname].append(XZ_points[0])
+
+            if hasattr(self, "path_points"):
+                distance = float(
+                    self.path_points[-1][1] - self.path_points[0][1])
+
+                if self.workplane in ["XZ", "YX", "ZY"]:
+                    distance *= -1
+                # sweep shape
+                solid = cq.Workplane(
+                    self.workplane).workplane(
+                    offset=self.path_points[0][1]).moveTo(
+                    self.path_points[0][0],
+                    0).workplane()
+            else:
+                # rotate or extrude shape
+                solid = cq.Workplane(self.workplane)
+
+            for entry in instructions:
+                if list(entry.keys())[0] == "spline":
+                    solid = solid.spline(listOfXYTuple=list(entry.values())[0])
+                if list(entry.keys())[0] == "straight":
+                    solid = solid.polyline(list(entry.values())[0])
+                if list(entry.keys())[0] == "circle":
+                    p0 = list(entry.values())[0][0]
+                    p1 = list(entry.values())[0][1]
+                    p2 = list(entry.values())[0][2]
+                    solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+
+            if hasattr(self, "path_points"):
+                # sweep shape
+                solid = solid.close().\
+                    moveTo(-self.path_points[0][0], 0).\
+                    workplane(offset=distance).\
+                    moveTo(self.path_points[-1][0], 0).\
+                    workplane()
+
+                for entry in instructions:
+                    if list(entry.keys())[0] == "spline":
+                        solid = solid.spline(
+                            listOfXYTuple=list(
+                                entry.values())[0])
+                    if list(entry.keys())[0] == "straight":
+                        solid = solid.polyline(list(entry.values())[0])
+                    if list(entry.keys())[0] == "circle":
+                        p0 = list(entry.values())[0][0]
+                        p1 = list(entry.values())[0][1]
+                        p2 = list(entry.values())[0][2]
+                        solid = solid.moveTo(
+                            p0[0], p0[1]).threePointArc(
+                            p1, p2)
+        return solid
 
     def rotate_solid(self, solid):
         # Checks if the azimuth_placement_angle is a list of angles
@@ -460,7 +538,7 @@ class Shape:
         if hasattr(self, "find_points"):
             self.find_points()
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         self.x_min = float(min([row[0] for row in self.points]))
         self.x_max = float(max([row[0] for row in self.points]))
@@ -492,7 +570,7 @@ class Shape:
 
         return str(Pfilename)
 
-    def export_stp(self, filename=None):
+    def export_stp(self, filename=None, units='mm'):
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -500,6 +578,8 @@ class Shape:
 
         Args:
             filename (str): the filename of the stp
+            units (str): the units of the stp file, options are 'cm' or 'mm'.
+                Default is mm.
         """
 
         if filename is not None:
@@ -516,6 +596,13 @@ class Shape:
 
         with open(Pfilename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)
+
+        if units == 'cm':
+            self._replace(
+                Pfilename,
+                'SI_UNIT(.MILLI.,.METRE.)',
+                'SI_UNIT(.CENTI.,.METRE.)')
+
         print("Saved file as ", Pfilename)
 
         return str(Pfilename)
@@ -585,11 +672,12 @@ class Shape:
         """
 
         if self.__class__.__name__ == "SweepCircleShape":
-            print(
-                'WARNING: export_html will plot path_points for the SweepCircleShape class')
+            msg = 'WARNING: export_html will plot path_points for ' + \
+                'the SweepCircleShape class'
+            print(msg)
 
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
@@ -725,7 +813,7 @@ class Shape:
         """
 
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         patches = []
         xylist = []
@@ -764,6 +852,8 @@ class Shape:
 
         if self.stp_filename is not None:
             neutronics_description["stp_filename"] = self.stp_filename
+            # this is needed as ppp looks for the filename key
+            neutronics_description["filename"] = self.stp_filename
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
@@ -808,8 +898,33 @@ class Shape:
         if self.union is not None:
             solid = union_solid(solid, self.union)
 
-        self.solid = solid
-
         self.hash_value = self.get_hash()
 
         return solid
+
+    def _replace(self, filename, pattern, subst):
+        """Opens a file and replaces occurances of a particular string
+            (pattern)with a new string (subst) and overwrites the file.
+            Used internally within the paramak to ensure .STP files are
+            in units of cm not the default mm.
+        Args:
+            filename (str): the filename of the file to edit
+            pattern (str): the string that should be removed
+            subst (str): the string that should be used in the place of the
+                pattern string
+        """
+        # Create temp file
+        fh, abs_path = mkstemp()
+        with fdopen(fh, 'w') as new_file:
+            with open(filename) as old_file:
+                for line in old_file:
+                    new_file.write(line.replace(pattern, subst))
+
+        # Copy the file permissions from the old file to the new file
+        copymode(filename, abs_path)
+
+        # Remove original file
+        remove(filename)
+
+        # Move new file
+        move(abs_path, filename)

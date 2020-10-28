@@ -1,21 +1,43 @@
 Examples - Neutronics Simulations
 =================================
 
-parametric_shape_neutronics_model.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+There are minimal examples of neutronics simulations that just make a single
+and there are slightly more involved examples that make more complex models or
+a series of models.
 
-.. automodule:: examples.example_neutronics_simulations.parametric_shape_neutronics_model
+ball_reactor_minimal
+^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: examples.example_neutronics_simulations.ball_reactor_minimal
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/parametric_shape_neutronics_model.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor_minimal.py>`_
 
 
-parametric_ball_reactor_neutronics_model.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+center_column_study_reactor_minimal
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: examples.example_neutronics_simulations.parametric_ball_reactor_neutronics_model
+.. automodule:: examples.example_neutronics_simulations.center_column_study_reactor_minimal
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/parametric_ball_reactor_neutronics_model.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/center_column_study_reactor_minimal.py>`_
+
+ball_reactor
+^^^^^^^^^^^^
+
+.. automodule:: examples.example_neutronics_simulations.ball_reactor
+   :members:
+   :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor.py>`_
+
+center_column_study_reactor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: examples.example_neutronics_simulations.center_column_study_reactor
+   :members:
+   :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/center_column_study_reactor.py>`_

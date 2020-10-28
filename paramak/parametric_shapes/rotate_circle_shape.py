@@ -65,7 +65,6 @@ class RotateCircleShape(Shape):
         )
 
         solid = self.rotate_solid(solid)
-
-        self.perform_boolean_operations(solid)
-
+        solid = self.perform_boolean_operations(solid)
+        self.solid = solid
         return solid
