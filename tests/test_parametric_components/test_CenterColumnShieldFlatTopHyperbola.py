@@ -45,7 +45,7 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
                 height=500,
                 arc_height=600,
                 inner_radius=50,
-                mid_radius=200,
+                mid_radius=100,
                 outer_radius=150,
             )
             test_shape.solid
