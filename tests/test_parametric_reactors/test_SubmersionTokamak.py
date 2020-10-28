@@ -285,6 +285,8 @@ class test_SubmersionTokamak(unittest.TestCase):
         test_reactor = self.SingleNullSubmersionTokamak
         test_reactor.divertor_position = "lower"
         test_reactor.support_position = "lower"
+        test_reactor._make_divertor()
+        test_reactor._make_supports()
         assert len(test_reactor.shapes_and_components) == 8
 
     def test_SingleNullSubmersionTokamak_divertor_upper_support_upper(self):
