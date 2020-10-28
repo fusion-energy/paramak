@@ -9,6 +9,45 @@ import pytest
 
 
 class test_SubmersionTokamak(unittest.TestCase):
+    def __init__(self, *args, **kwargs):
+        super(test_SubmersionTokamak, self).__init__(*args, **kwargs)
+        self.Submersion_Tokamak_reactor = paramak.SubmersionTokamak(
+                inner_bore_radial_thickness=25,
+                inboard_tf_leg_radial_thickness=50,
+                center_column_shield_radial_thickness=50,
+                inboard_blanket_radial_thickness=100,
+                firstwall_radial_thickness=50,
+                inner_plasma_gap_radial_thickness=70,
+                plasma_radial_thickness=300,
+                divertor_radial_thickness=100,
+                outer_plasma_gap_radial_thickness=70,
+                outboard_blanket_radial_thickness=200,
+                blanket_rear_wall_radial_thickness=50,
+                support_radial_thickness=150,
+                plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
+                rotation_angle=359,
+            )
+
+        self.SingleNullSubmersionTokamak = paramak.SingleNullSubmersionTokamak(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            number_of_tf_coils=16,
+            support_radial_thickness=20,
+            inboard_blanket_radial_thickness=20,
+            outboard_blanket_radial_thickness=20,
+            plasma_high_point=(200, 200),
+            divertor_position="upper",
+            support_position="upper",
+            rotation_angle=359,
+        )
+
     def test_SubmersionTokamak_svg_creation(self):
         """creates a submersion reactor using the SubmersionTokamak parametric
         reactor and checks that an svg file of the reactor can be exported
@@ -16,22 +55,7 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         os.system("rm test_SubmersionTokamak_image.svg")
 
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=100,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            divertor_radial_thickness=100,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            support_radial_thickness=150,
-            plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-            rotation_angle=359,
-        )
+        test_reactor = self.Submersion_Tokamak_reactor
         test_reactor.export_svg("test_SubmersionTokamak_image.svg")
 
         assert Path("test_SubmersionTokamak_image.svg").exists() is True
@@ -41,22 +65,7 @@ class test_SubmersionTokamak(unittest.TestCase):
         """creates a submersion reactor using the SubmersionTokamak parametric
         reactor and checks that the correct number of components are created"""
 
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=100,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            divertor_radial_thickness=100,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            support_radial_thickness=150,
-            plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-            rotation_angle=359,
-        )
+        test_reactor = self.Submersion_Tokamak_reactor
 
         assert len(test_reactor.shapes_and_components) == 8
 
@@ -124,22 +133,7 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         os.system("rm -r minimal_SubmersionTokamak")
 
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=100,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            divertor_radial_thickness=100,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            support_radial_thickness=150,
-            plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-            rotation_angle=359,
-        )
+        test_reactor = self.Submersion_Tokamak_reactor
         test_reactor.export_stp("minimal_SubmersionTokamak")
 
         output_filenames = [
@@ -288,25 +282,9 @@ class test_SubmersionTokamak(unittest.TestCase):
         divertor using the SingleNullSubmersionTokamak parametric reactor and
         checks that the correct number of components are created"""
 
-        test_reactor = paramak.SingleNullSubmersionTokamak(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            support_radial_thickness=20,
-            inboard_blanket_radial_thickness=20,
-            outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
-            divertor_position="lower",
-            support_position="lower",
-            rotation_angle=359,
-        )
+        test_reactor = self.SingleNullSubmersionTokamak
+        test_reactor.divertor_position = "lower"
+        test_reactor.support_position = "lower"
         assert len(test_reactor.shapes_and_components) == 8
 
     def test_SingleNullSubmersionTokamak_divertor_upper_support_upper(self):
@@ -314,25 +292,7 @@ class test_SubmersionTokamak(unittest.TestCase):
         divertor using the SingleNullSubmersionTokamak parametric reactor and
         checks that the correct number of components are created"""
 
-        test_reactor = paramak.SingleNullSubmersionTokamak(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            support_radial_thickness=20,
-            inboard_blanket_radial_thickness=20,
-            outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
-            divertor_position="upper",
-            support_position="upper",
-            rotation_angle=359,
-        )
+        test_reactor = self.SingleNullSubmersionTokamak
         assert len(test_reactor.shapes_and_components) == 8
 
     def test_SingleNullSubmersionTokamak_rotation_angle_impacts_volume(self):
@@ -415,32 +375,31 @@ class test_SubmersionTokamak(unittest.TestCase):
         with pytest.warns(UserWarning, match=msg):
             warning_trigger()
 
-    def test_SubmersionTokamak_error(self):
-        test_reactor = paramak.SingleNullSubmersionTokamak(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            support_radial_thickness=20,
-            inboard_blanket_radial_thickness=20,
-            outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
-            divertor_position="upper",
-            support_position="upper",
-            rotation_angle=359,
-        )
+    def test_SubmersionTokamak_error_divertor_pos(self):
+        test_reactor = self.SingleNullSubmersionTokamak
 
         def invalid_divertor_position():
             test_reactor.divertor_position = "coucou"
 
+        self.assertRaises(ValueError, invalid_divertor_position)
+
         def invalid_support_position():
             test_reactor.support_position = "coucou"
 
-        self.assertRaises(ValueError, invalid_divertor_position)
         self.assertRaises(ValueError, invalid_support_position)
+
+    def test_plasma_high_point_error(self):
+        """checks that error are raised when invalid plasma_high_point is set
+        """
+        test_reactor = self.Submersion_Tokamak_reactor
+
+        def small_plasma_high_point():
+            test_reactor.plasma_high_point = (1, 240)
+            test_reactor._make_vertical_build()
+
+        def large_plasma_high_point():
+            test_reactor.plasma_high_point = (1000, 240)
+            test_reactor._make_vertical_build()
+
+        self.assertRaises(ValueError, small_plasma_high_point)
+        self.assertRaises(ValueError, large_plasma_high_point)
