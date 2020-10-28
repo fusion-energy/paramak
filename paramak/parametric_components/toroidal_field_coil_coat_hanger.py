@@ -183,8 +183,8 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         )
 
         solid = self.rotate_solid(solid)
+        cutting_wedge = calculate_wedge_cut(self)
+        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+        self.solid = solid   # not necessarily required as set in boolean_operations
 
-        calculate_wedge_cut(self)
-        solid = self.perform_boolean_operations(solid)
-        self.solid = solid
         return solid
