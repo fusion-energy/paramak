@@ -375,6 +375,21 @@ class test_object_properties(unittest.TestCase):
 
         assert isinstance(test_reactor.graveyard, paramak.Shape)
 
+    def test_Graveyard_exists_solid_is_None(self):
+        """creates a Reactor object with one shape and checks that a graveyard
+        can be produced using the make_graveyard method when the solid
+        attribute of the shape is None"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape.rotation_angle = 360
+        test_shape.create_solid()
+        test_reactor = paramak.Reactor([test_shape])
+        test_reactor.shapes_and_components[0].solid = None
+        test_reactor.make_graveyard()
+
+        assert isinstance(test_reactor.graveyard, paramak.Shape)
+
     def test_export_graveyard(self):
         """creates a Reactor object with one shape and checks that a graveyard
         can be exported to a specified location using the make_graveyard method"""
