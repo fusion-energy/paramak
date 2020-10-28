@@ -389,24 +389,27 @@ class test_SubmersionTokamak(unittest.TestCase):
         rotation_angle = 360"""
 
         def warning_trigger():
-            paramak.SubmersionTokamak(
-                inner_bore_radial_thickness=25,
-                inboard_tf_leg_radial_thickness=50,
-                center_column_shield_radial_thickness=50,
-                inboard_blanket_radial_thickness=100,
-                firstwall_radial_thickness=50,
-                inner_plasma_gap_radial_thickness=70,
-                plasma_radial_thickness=300,
-                divertor_radial_thickness=100,
-                outer_plasma_gap_radial_thickness=70,
-                outboard_blanket_radial_thickness=200,
-                blanket_rear_wall_radial_thickness=50,
-                support_radial_thickness=150,
-                plasma_high_point=(
-                    50 + 50 + 50 + 100 + 50 + 50 + 100,
-                    350),
-                rotation_angle=360,
-            )
+            try:
+                paramak.SubmersionTokamak(
+                    inner_bore_radial_thickness=25,
+                    inboard_tf_leg_radial_thickness=50,
+                    center_column_shield_radial_thickness=50,
+                    inboard_blanket_radial_thickness=100,
+                    firstwall_radial_thickness=50,
+                    inner_plasma_gap_radial_thickness=70,
+                    plasma_radial_thickness=300,
+                    divertor_radial_thickness=100,
+                    outer_plasma_gap_radial_thickness=70,
+                    outboard_blanket_radial_thickness=200,
+                    blanket_rear_wall_radial_thickness=50,
+                    support_radial_thickness=150,
+                    plasma_high_point=(
+                        50 + 50 + 50 + 100 + 50 + 50 + 100,
+                        350),
+                    rotation_angle=360,
+                )
+            except BaseException:
+                pass
         msg = "360 degree rotation may result in a " + \
             "Standard_ConstructionError or AttributeError"
         with pytest.warns(UserWarning, match=msg):
