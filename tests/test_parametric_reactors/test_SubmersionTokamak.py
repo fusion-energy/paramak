@@ -282,7 +282,25 @@ class test_SubmersionTokamak(unittest.TestCase):
         divertor using the SingleNullSubmersionTokamak parametric reactor and
         checks that the correct number of components are created"""
 
-        test_reactor = self.SingleNullSubmersionTokamak
+        test_reactor = paramak.SingleNullSubmersionTokamak(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            number_of_tf_coils=16,
+            support_radial_thickness=20,
+            inboard_blanket_radial_thickness=20,
+            outboard_blanket_radial_thickness=20,
+            plasma_high_point=(200, 200),
+            divertor_position="lower",
+            support_position="lower",
+            rotation_angle=359,
+        )
         test_reactor.divertor_position = "lower"
         test_reactor.support_position = "lower"
         test_reactor._make_divertor()
