@@ -65,12 +65,14 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         )
 
         def incorrect_horizontal_start_point():
+            test_shape.vertical_mid_point = (800, 0)
             test_shape.horizontal_start_point = (801, 700)
             test_shape.solid
 
         self.assertRaises(ValueError, incorrect_horizontal_start_point)
 
         def incorrect_vertical_mid_point():
+            test_shape.horizontal_start_point = (100, 700)
             test_shape.vertical_mid_point = (800, 701)
             test_shape.solid
 
