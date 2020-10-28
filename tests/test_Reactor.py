@@ -331,6 +331,17 @@ class test_object_properties(unittest.TestCase):
             ValueError,
             test_stl_filename_duplication_Extrude_Circle)
 
+        def test_stl_filename_None():
+            test_shape = paramak.ExtrudeCircleShape(
+                points=[(20, 20)], radius=10, distance=10, stl_filename=None
+            )
+            my_reactor = paramak.Reactor([test_shape])
+            my_reactor.export_stl()
+
+        self.assertRaises(
+            ValueError,
+            test_stl_filename_None)
+
     def test_reactor_creation_with_default_properties(self):
         """creates a Reactor object and checks that it has no default properties"""
 
