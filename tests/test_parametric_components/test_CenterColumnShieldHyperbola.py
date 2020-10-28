@@ -23,8 +23,11 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
             )
             test_shape.solid
 
-        def incorrect_inner_radius1():
+        def incorrect_inner_radius2():
             test_shape = paramak.CenterColumnShieldHyperbola(
                 height=100, inner_radius=50, mid_radius=80, outer_radius=49
             )
             test_shape.solid
+
+        self.assertRaises(ValueError, incorrect_inner_radius1)
+        self.assertRaises(ValueError, incorrect_inner_radius2)
