@@ -401,7 +401,7 @@ class test_object_properties(unittest.TestCase):
             width=50,
             color=(0.5, 0.5, 0.5, 0.1)
         )
-        assert test_shape._create_patch is not None
+        assert test_shape._create_patch() is not None
 
     def test_azimuth_placement_angle_error(self):
         """Checks an error is raised when invalid value for
