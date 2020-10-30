@@ -21,13 +21,9 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         assert test_shape.solid is not None
 
     def test_ToroidalFieldCoilTripleArc_rotation_angle(self):
-<<<<<<< HEAD
-        """Creates a tf coil with a rotation_angle < 360 degrees and checks
-        that the correct cut is performed and the volume is correct."""
-=======
-        """creates tf coils with rotation_angles < 360 in different workplanes and
-        checks that the correct cuts are performed and their volumes are correct"""
->>>>>>> develop
+        """Creates tf coils with rotation_angles < 360 in different workplanes
+        and checks that the correct cuts are performed and their volumes are
+        correct."""
 
         test_shape = paramak.ToroidalFieldCoilTripleArc(
             R1=150,
