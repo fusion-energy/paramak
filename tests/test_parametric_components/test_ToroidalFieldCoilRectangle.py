@@ -5,32 +5,50 @@ import unittest
 
 
 class test_ToroidalFieldCoilRectangle(unittest.TestCase):
-    def test_ToroidalFieldCoilRectangle_creation(self):
-        """creates a tf coil using the ToroidalFieldCoilRectangle parametric
-        component and checks that a cadquery solid is created"""
+    def test_ToroidalFieldCoilRectangle_creation_with_inner_leg(self):
+        """creates a tf coil with inner leg using the ToroidalFieldCoilRectangle
+        parametric component and checks that a cadquery solid is created"""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
             vertical_mid_point=(800, 0),
             thickness=150,
             distance=50,
-            number_of_coils=8,
+            number_of_coils=1,
+            with_inner_leg=True
         )
         assert test_shape.solid is not None
+        assert test_shape.volume > 1000
+        assert test_shape.inner_leg_connection_points is not None
 
-    def test_ToroidalFieldCoilRectangle_no_inner_leg_creation(self):
-        """creates a tf coil using the ToroidalFieldCoilRectangle without
-        the inner leg and checks that a cadquery solid is created"""
-
-        test_shape = paramak.ToroidalFieldCoilRectangle(
-            horizontal_start_point=(100, 700),
-            vertical_mid_point=(800, 0),
-            with_inner_leg=False,
-            thickness=150,
-            distance=50,
-            number_of_coils=8,
+        test_inner_leg = paramak.ExtrudeStraightShape(
+            points=test_shape.inner_leg_connection_points, distance=50
         )
-        assert test_shape.solid is not None
+        assert test_inner_leg.solid is not None
+
+    def test_ToroidalFieldCoilRectangle_creation_no_inner_leg(self):
+        """creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
+        parametric component and checks that a cadquery solid is created"""
+
+        test_shape_1 = paramak.ToroidalFieldCoilRectangle(
+            horizontal_start_point=(100, 700),vertical_mid_point=(800, 0),
+            thickness=150, distance=50,number_of_coils=1, 
+            with_inner_leg=True
+        )
+        test_volume_1 = test_shape_1.volume
+
+        test_inner_leg = paramak.ExtrudeStraightShape(
+            points=test_shape_1.inner_leg_connection_points, distance=50
+        )
+        inner_leg_volume = test_inner_leg.volume
+
+        test_shape_2 = paramak.ToroidalFieldCoilRectangle(
+            horizontal_start_point=(100, 700),vertical_mid_point=(800, 0),
+            thickness=150, distance=50,number_of_coils=1, 
+            with_inner_leg=False
+        ) 
+        assert test_shape_2.solid is not None
+        assert test_shape_2.volume == pytest.approx(test_volume_1 - inner_leg_volume)
 
     def test_ToroidalFieldCoilRectangle_absolute_volume(self):
         """creates a tf coil using the ToroidalFieldCoilRectangle parametric

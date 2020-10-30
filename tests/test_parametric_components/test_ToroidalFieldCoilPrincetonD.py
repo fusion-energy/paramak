@@ -5,32 +5,49 @@ import unittest
 
 
 class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
-    def test_ToroidalFieldCoilPrincetonD_creation(self):
-        """creates a ToroidalFieldCoilPrincetonD object and checks a solid is created"""
+    def test_ToroidalFieldCoilPrincetonD_creation_with_inner_leg(self):
+        """creates a tf coil with inner leg using the ToroidalFieldCoilPrincetonD
+        parametric component and checks that a cadquery solid is created"""
 
         test_shape = paramak.ToroidalFieldCoilPrincetonD(
             R1=100,
             R2=300,
             thickness=50,
             distance=50,
-            number_of_coils=2,
+            number_of_coils=1,
+            with_inner_leg=True
         )
-
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+        assert test_shape.inner_leg_connection_points is not None
 
-    def test_ToroidalFieldCoilPrincetonD_with_leg(self):
-        """creates a ToroidalFieldCoilPrincetonD object and checks a leg can
-        be created"""
+        test_inner_leg = paramak.ExtrudeStraightShape(
+            points=test_shape.inner_leg_connection_points, distance=50
+        )
+        assert test_inner_leg.solid is not None
 
-        my_magnet = paramak.ToroidalFieldCoilPrincetonD(
-            R1=0.29, R2=0.91, thickness=0.05, distance=0.05, number_of_coils=1)
-        my_magnet.export_stp('princeton.stp')
+    def test_ToroidalFieldCoilPrincetonD_creation_no_inner_leg(self):
+        """creates a tf coil with no inner leg using the ToroidalFieldCoilPrincetonD
+        parametric component and checks that a cadquery solid is created"""
 
-        my_leg = paramak.ExtrudeStraightShape(
-            points=my_magnet.inner_leg_connection_points, distance=0.05)
+        test_shape_1 = paramak.ToroidalFieldCoilPrincetonD(
+            R1=100, R2=300, thickness=50, distance=50, number_of_coils=1,
+            with_inner_leg=True
+        )
+        test_volume_1 = test_shape_1.volume
 
-        assert my_leg.solid is not None
+        test_inner_leg = paramak.ExtrudeStraightShape(
+            points=test_shape_1.inner_leg_connection_points, distance=50,
+        )
+        inner_leg_volume = test_inner_leg.volume
+
+        test_shape_2 = paramak.ToroidalFieldCoilPrincetonD(
+            R1=100, R2=300, thickness=50, distance=50, number_of_coils=1,
+            with_inner_leg=False
+        )
+
+        assert test_shape_2.solid is not None
+        assert test_shape_2.volume == pytest.approx(test_volume_1 - inner_leg_volume)
 
     def test_ToroidalFieldCoilPrincetonD_rotation_angle(self):
         """creates a tf coil with a rotation_angle < 360 and checks that the correct
