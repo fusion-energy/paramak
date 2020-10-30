@@ -5,7 +5,8 @@ import unittest
 
 class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
     def test_PoloidalFieldCoilCaseSet_creation(self):
-        """Creates a set of PF coils by providing all required args"""
+        """Creates a set of PF coils by providing all required args."""
+
         test_shape = paramak.PoloidalFieldCoilCaseSet(
             heights=[10, 10, 20, 20],
             widths=[10, 10, 20, 40],

@@ -5,9 +5,9 @@ import unittest
 
 class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
     def test_CenterColumnShieldFlatTopCircular_creation(self):
-        """creates a center column shield using the
-        CenterColumnShieldFlatTopCircular parametric
-        component and checks that a cadquery solid is created"""
+        """Creates a center column shield using the
+        CenterColumnShieldFlatTopCircular parametric component and checks that
+        a cadquery solid is created."""
 
         test_shape = paramak.CenterColumnShieldFlatTopCircular(
             height=600,

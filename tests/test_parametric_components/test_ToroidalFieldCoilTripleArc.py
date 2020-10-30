@@ -6,7 +6,8 @@ import unittest
 
 class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
     def test_ToroidalFieldCoilTripleArc_creation(self):
-        """creates a ToroidalFieldCoilTripleArc object and checks a solid is created"""
+        """Creates a ToroidalFieldCoilTripleArc object and checks a solid is
+        created."""
 
         test_shape = paramak.ToroidalFieldCoilTripleArc(
             R1=1,
@@ -20,8 +21,9 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         assert test_shape.solid is not None
 
     def test_ToroidalFieldCoilTripleArc_rotation_angle(self):
-        """creates tf coils with rotation_angles < 360 in different workplanes and
-        checks that the correct cuts are performed and their volumes are correct"""
+        """Creates tf coils with rotation_angles < 360 in different workplanes
+        and checks that the correct cuts are performed and their volumes are
+        correct."""
 
         test_shape = paramak.ToroidalFieldCoilTripleArc(
             R1=150,

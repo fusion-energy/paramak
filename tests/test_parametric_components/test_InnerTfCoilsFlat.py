@@ -5,8 +5,8 @@ import unittest
 
 class test_InnerTfCoilsFlat(unittest.TestCase):
     def test_InnerTfCoilsFlat_creation(self):
-        """creates an inner tf coil using the InnerTFCoilsFlat parametric component and checks
-        that a cadquery solid is created"""
+        """Creates an inner tf coil using the InnerTFCoilsFlat parametric
+        component and checks that a cadquery solid is created."""
 
         test_shape = paramak.InnerTfCoilsFlat(
             height=500,
@@ -20,8 +20,9 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_InnerTfCoilsFlat_azimuth_offset(self):
-        """creates an inner tf coil using the InnerTfCoilsFlat parametric component and checks
-        that the azimuthal start angle can be changed correctly"""
+        """Creates an inner tf coil using the InnerTfCoilsFlat parametric
+        component and checks that the azimuthal start angle can be changed
+        correctly."""
 
         test_shape = paramak.InnerTfCoilsFlat(
             height=500,
@@ -38,8 +39,8 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
             20, 80, 140, 200, 260, 320]
 
     def test_InnerTfCoilsFlat_attributes(self):
-        """checks that changing the attributes of InnerTfCoilsFlat affects the
-        cadquery solid produced"""
+        """Checks that changing the attributes of InnerTfCoilsFlat affects the
+        cadquery solid produced."""
 
         test_shape = paramak.InnerTfCoilsFlat(
             height=500,
@@ -60,7 +61,8 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
         assert test_shape_volume < test_shape.volume
 
     def test_InnerTfCoilsFlat_gap_size(self):
-        """checks that a ValueError is raised when a too large gap_size is used"""
+        """Checks that a ValueError is raised when a too large gap_size is
+        used."""
 
         def test_InnerTfCoilsFlat_incorrect_gap_size():
             paramak.InnerTfCoilsFlat(

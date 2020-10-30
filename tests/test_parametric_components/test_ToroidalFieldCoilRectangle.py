@@ -6,8 +6,8 @@ import unittest
 
 class test_ToroidalFieldCoilRectangle(unittest.TestCase):
     def test_ToroidalFieldCoilRectangle_creation(self):
-        """creates a tf coil using the ToroidalFieldCoilRectangle parametric
-        component and checks that a cadquery solid is created"""
+        """Creates a tf coil using the ToroidalFieldCoilRectangle parametric
+        component and checks that a cadquery solid is created."""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
@@ -20,8 +20,8 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_ToroidalFieldCoilRectangle_no_inner_leg_creation(self):
-        """creates a tf coil using the ToroidalFieldCoilRectangle without
-        the inner leg and checks that a cadquery solid is created"""
+        """Creates a tf coil using the ToroidalFieldCoilRectangle without
+        the inner leg and checks that a cadquery solid is created."""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
@@ -35,8 +35,9 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_ToroidalFieldCoilRectangle_rotation_angle(self):
-        """creates tf coils with rotation_angles < 360 in different workplanes and
-        checks that the correct cuts are performed and their volumes are correct"""
+        """Creates tf coils with rotation_angles < 360 degrees in different
+        workplanes and checks that the correct cuts are performed and their
+        volumes are correct."""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
@@ -69,8 +70,8 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         # assert test_shape.volume == pytest.approx(test_volume * 0.5)
 
     def test_ToroidalFieldCoilRectangle_error(self):
-        """Checks errors are raised with invalid arguments
-        """
+        """Checks errors are raised with invalid arguments."""
+
         test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
             vertical_mid_point=(800, 0),

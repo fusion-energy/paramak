@@ -5,8 +5,8 @@ import unittest
 
 class test_BlanketConstantThicknessArcH(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
-        """creates a blanket using the BlanketConstantThicknessArcH parametric
-        component and checks that a cadquery solid is created"""
+        """Creates a blanket using the BlanketConstantThicknessArcH parametric
+        component and checks that a cadquery solid is created."""
 
         test_shape = paramak.BlanketConstantThicknessArcH(
             inner_lower_point=(300, -200),

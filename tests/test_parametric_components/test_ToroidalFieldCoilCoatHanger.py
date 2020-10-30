@@ -6,8 +6,8 @@ import unittest
 
 class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
     def test_ToroidalFieldCoilCoatHanger_creation(self):
-        """creates a tf coil using the ToroidalFieldCoilCoatHanger parametric component
-        and checks that a cadquery solid is created"""
+        """Creates a tf coil using the ToroidalFieldCoilCoatHanger parametric
+        component and checks that a cadquery solid is created."""
 
         test_shape = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500),
@@ -23,8 +23,8 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_ToroidalFieldCoilCoatHanger_rotation_angle(self):
-        """creates a tf coil with a rotation_angle < 360 and checks that the correct
-        cut is performed and the volume is correct"""
+        """Creates a tf coil with a rotation_angle < 360 degrees and checks
+        that the correct cut is performed and the volume is correct."""
 
         test_shape = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500),

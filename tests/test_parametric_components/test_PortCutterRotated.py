@@ -5,7 +5,7 @@ import unittest
 
 class test_PortCutterRotated(unittest.TestCase):
     def test_PortCutterRotated_shape_construction_and_volume(self):
-        """Cuts a vessel cylinder with several different size port cutters"""
+        """Cuts a vessel cylinder with several different size port cutters."""
 
         small_ports = paramak.PortCutterRotated(
             polar_coverage_angle=5,
@@ -51,7 +51,7 @@ class test_PortCutterRotated(unittest.TestCase):
 
     def test_PortCutterRotated_polar_coverage_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
-        polar_coverage_angle and checks angle impacts the volume"""
+        polar_coverage_angle and checks angle impacts the volume."""
 
         small_ports = paramak.PortCutterRotated(
             polar_coverage_angle=5,
@@ -75,7 +75,7 @@ class test_PortCutterRotated(unittest.TestCase):
 
     def test_PortCutterRotated_max_distance_from_center_impacts_volume(self):
         """Checks the volumes of two port cutters with different
-        max_distance_from_center and checks distance impacts the volume"""
+        max_distance_from_center and checks distance impacts the volume."""
 
         small_ports = paramak.PortCutterRotated(
             polar_coverage_angle=5,
@@ -99,7 +99,7 @@ class test_PortCutterRotated(unittest.TestCase):
 
     def test_PortCutterRotated_azimuth_placement_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
-        azimuth_placement_angle and checks distance impacts the volume"""
+        azimuth_placement_angle and checks distance impacts the volume."""
 
         small_ports = paramak.PortCutterRotated(
             polar_coverage_angle=5,
@@ -123,7 +123,7 @@ class test_PortCutterRotated(unittest.TestCase):
 
     def test_PortCutterRotated_rotation_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
-        rotation_angle and checks distance impacts the volume"""
+        rotation_angle and checks distance impacts the volume."""
 
         small_ports = paramak.PortCutterRotated(
             polar_coverage_angle=5,
@@ -146,8 +146,9 @@ class test_PortCutterRotated(unittest.TestCase):
         assert large_ports.volume > small_ports.volume
 
     def test_PortCutterRotated_outerpoint_negative(self):
-        """Tests that when the outerpoints x pos is negative no error is
-        raised"""
+        """Tests that when the outerpoints x position is negative no error is
+        raised."""
+
         shape = paramak.PortCutterRotated(
             center_point=(1, 1),
             polar_coverage_angle=181,

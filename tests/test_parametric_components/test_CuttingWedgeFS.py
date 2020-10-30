@@ -5,9 +5,9 @@ import unittest
 
 class test_CuttingWedgeFS(unittest.TestCase):
     def test_CuttingWedgeFS_shape_construction_and_volume(self):
-        """makes cutting cylinders from shapes and checks the
+        """Makes cutting cylinders from shapes and checks the
         volume of the cutter shape is larger than the shape it
-        encompasses"""
+        encompasses."""
 
         hoop_shape = paramak.PoloidalFieldCoil(height=20,
                                                width=20,

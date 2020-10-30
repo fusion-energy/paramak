@@ -6,7 +6,8 @@ import unittest
 
 class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
     def test_ToroidalFieldCoilPrincetonD_creation(self):
-        """creates a ToroidalFieldCoilPrincetonD object and checks a solid is created"""
+        """Creates a ToroidalFieldCoilPrincetonD object and checks a solid is
+        created."""
 
         test_shape = paramak.ToroidalFieldCoilPrincetonD(
             R1=100,
@@ -20,8 +21,8 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_ToroidalFieldCoilPrincetonD_with_leg(self):
-        """creates a ToroidalFieldCoilPrincetonD object and checks a leg can
-        be created"""
+        """Creates a ToroidalFieldCoilPrincetonD object and checks a inboard
+        leg can also be created."""
 
         my_magnet = paramak.ToroidalFieldCoilPrincetonD(
             R1=0.29, R2=0.91, thickness=0.05, distance=0.05, number_of_coils=1)
@@ -33,8 +34,8 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         assert my_leg.solid is not None
 
     def test_ToroidalFieldCoilPrincetonD_rotation_angle(self):
-        """creates a tf coil with a rotation_angle < 360 and checks that the correct
-        cut is performed and the volume is correct"""
+        """Creates a tf coil with a rotation_angle < 360 degrees and checks
+        that the correct cut is performed and the volume is correct."""
 
         test_shape = paramak.ToroidalFieldCoilPrincetonD(
             R1=50,
