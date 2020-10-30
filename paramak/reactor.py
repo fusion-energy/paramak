@@ -247,7 +247,7 @@ class Reactor:
 
         print("saved geometry description to ", Pfilename)
 
-        return filename
+        return str(Pfilename)
 
     def export_stp(self, output_folder=""):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
