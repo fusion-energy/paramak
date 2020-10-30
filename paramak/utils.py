@@ -1,6 +1,7 @@
 import math
 from collections import Iterable
 
+import cadquery as cq
 import numpy as np
 
 import paramak
@@ -193,3 +194,41 @@ def calculate_wedge_cut(self):
                 self.cut = [self.cut, cutting_wedge]
 
         return None
+
+
+class FaceAreaSelector(cq.Selector):
+
+    def __init__(self, area, tol=0.1):
+        self.area = area
+        self.tol = tol
+
+    def filter(self, objectList):
+        new_obj_list = []
+        for obj in objectList:
+            edge_len = obj.Area()
+
+            # Only return faces that meet the requirements
+            if face_area > self.area - self.tol and face_area < self.area + self.tol: 
+                new_obj_list.append(obj)
+
+        return new_obj_list
+
+
+class EdgeLengthSelector(cq.Selector):
+
+    def __init__(self, length, tol=0.1):
+        self.length = length
+        self.tol = tol
+
+    def filter(self, objectList):
+        new_obj_list = []
+        for obj in objectList:
+
+            edge_len = obj.Length()
+
+            # Only return edges that meet our requirements
+            if edge_len > self.length - self.tol and edge_len < self.length + self.tol: 
+
+                new_obj_list.append(obj)
+        
+        return new_obj_list
