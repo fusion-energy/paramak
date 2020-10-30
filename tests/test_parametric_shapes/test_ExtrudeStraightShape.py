@@ -74,6 +74,31 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume == pytest.approx(20 * 20 * 30)
 
+    def test_absolute_shape_areas(self):
+        """creates extruded straight shapes using straight connections and checks that the
+        areas of each face are correct"""
+
+        test_shape = ExtrudeStraightShape(
+            points=[(0, 0), (0, 50), (20, 50), (20, 0)], distance=30
+        )
+
+        assert test_shape.area == pytest.approx((50 * 20 * 2) + (30 * 20 * 2) + (50 * 30 * 2))
+        assert len(test_shape.areas) == 6
+        assert test_shape.areas.count(pytest.approx(50 * 20)) == 2
+        assert test_shape.areas.count(pytest.approx(30 * 20)) == 2
+        assert test_shape.areas.count(pytest.approx(50 * 30)) == 2
+
+        test_shape = ExtrudeStraightShape(
+            points=[(50, 0), (70, 50), (50, 100), (70, 100), (90, 50), (70, 0)],
+            distance=50
+        )
+
+        assert test_shape.area == pytest.approx((20 * 50 * 2 * 2) + (20 * 50 * 2) + (10 * (29 ** 0.5) * 50 * 4))
+        assert len(test_shape.areas) == 8
+        assert test_shape.areas.count(pytest.approx(20 * 50 * 2)) == 2
+        assert test_shape.areas.count(pytest.approx(50 * 20)) == 2
+        assert test_shape.areas.count(pytest.approx(10 * (29 ** 0.5) * 50)) == 4
+
     def test_extruded_shape_relative_volume(self):
         """creates two extruded shapes at different placement angles using straight
         connections and checks that their relative volumes are correct"""

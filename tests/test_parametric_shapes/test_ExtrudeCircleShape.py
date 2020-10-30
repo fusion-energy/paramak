@@ -45,6 +45,19 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape1.volume * 4 == pytest.approx(test_shape2.volume)
 
+    def test_absolute_shape_areas(self):
+        """creates extruded circle shapes and checks that the areas of each face
+        are correct"""
+
+        test_shape = ExtrudeCircleShape(
+            points=[(50, 0)], radius=10, distance=50
+        )
+
+        assert test_shape.area == pytest.approx((math.pi * (10**2) * 2) + (math.pi * (2*10) * 50))
+        assert len(test_shape.areas) == 3
+        assert test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
+        assert test_shape.areas.count(pytest.approx(math.pi * (2*10) * 50)) == 1
+
     def test_cut_volume(self):
         """creates an extruded shape using circles with another shape cut out and
         checks that the volume is correct"""
