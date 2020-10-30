@@ -29,6 +29,22 @@ class test_Plasma(unittest.TestCase):
 
         self.assertRaises(ValueError, test_plasma_elongation_max_setting)
 
+        def minor_radius_out_of_range():
+            """checks ValueError is raised when an minor_radius < 1 is
+            specified"""
+
+            test_plasma.minor_radius = 0.5
+
+        self.assertRaises(ValueError, minor_radius_out_of_range)
+
+        def major_radius_out_of_range():
+            """checks ValueError is raised when an manor_radius < 1 is
+            specified"""
+
+            test_plasma.major_radius = 0.5
+
+        self.assertRaises(ValueError, major_radius_out_of_range)
+
     def test_plasma_x_points(self):
         """creates several plasmas with different configurations using the Plasma parametric
         component and checks the location of the x point for each"""

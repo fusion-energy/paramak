@@ -1,4 +1,4 @@
-
+import os
 import paramak
 import unittest
 
@@ -190,9 +190,24 @@ class test_BlanketFP(unittest.TestCase):
     def test_BlanketFP_physical_groups(self):
         """creates a blanket using the BlanketFP parametric component and checks that
         physical groups can be exported using the export_physical_groups method"""
+        outfile = "tests/blanket.json"
 
-        test_shape = paramak.BlanketFP(100, stop_angle=90, start_angle=270,)
-        test_shape.export_physical_groups("tests/blanket.json")
+        # 180 coverage, full rotation
+        test_shape = paramak.BlanketFP(100, stop_angle=180, start_angle=0,)
+        test_shape.export_physical_groups(outfile)
+
+        # full coverage, 180 rotation
+        test_shape = paramak.BlanketFP(
+            100, stop_angle=0, start_angle=360,
+            rotation_angle=180)
+        test_shape.export_physical_groups(outfile)
+
+        # 180 coverage, 180 rotation
+        test_shape = paramak.BlanketFP(
+            100, stop_angle=180, start_angle=0,
+            rotation_angle=180)
+        test_shape.export_physical_groups(outfile)
+        os.system("rm " + outfile)
 
     def test_BlanketFP_full_cov_stp_export(self):
         """creates a blanket using the BlanketFP parametric component and checks that
