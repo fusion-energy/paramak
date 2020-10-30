@@ -5,8 +5,9 @@ import unittest
 
 class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
     def test_CenterColumnShieldFlatTopHyperbola_creation(self):
-        """creates a center column shield using the CenterColumnShieldFlatTopHyperbola parametric
-        component and checks that a cadquery solid is created"""
+        """Creates a center column shield using the
+        CenterColumnShieldFlatTopHyperbola parametric component and checks that
+        a cadquery solid is created."""
 
         test_shape = paramak.CenterColumnShieldFlatTopHyperbola(
             height=500,

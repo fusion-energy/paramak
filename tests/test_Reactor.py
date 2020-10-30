@@ -9,8 +9,8 @@ import paramak
 class test_object_properties(unittest.TestCase):
 
     def test_export_h5m(self):
-        """creates a Reactor object consisting of two shapes and checks a h5m file of the
-        reactor can be exported using the export_h5m method"""
+        """Creates a Reactor object consisting of two shapes and checks a h5m
+        file of the reactor can be exported using the export_h5m method."""
 
         os.system('rm small_dagmc.h5m')
         os.system('rm small_dagmc_without_graveyard.h5m')
@@ -44,8 +44,8 @@ class test_object_properties(unittest.TestCase):
         ).st_size < Path("small_dagmc.h5m").stat().st_size
 
     def test_adding_shape_with_material_tag_to_reactor(self):
-        """checks that a shape object can be added to a Reactor object with
-        the correct material tag property"""
+        """Checks that a shape object can be added to a Reactor object with
+        the correct material tag property."""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], material_tag="mat1"
@@ -57,8 +57,8 @@ class test_object_properties(unittest.TestCase):
         assert test_reactor.material_tags[0] == "mat1"
 
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
-        """checks that multiple shape objects can be added to a Reactor object
-        with the correct material tag properties"""
+        """Checks that multiple shape objects can be added to a Reactor object
+        with the correct material tag properties."""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], material_tag="mat1"
@@ -74,8 +74,8 @@ class test_object_properties(unittest.TestCase):
         assert "mat2" in test_reactor.material_tags
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
-        """chekcs that a shape object can be added to a Reactor object with the
-        correct stp filename property"""
+        """Checks that a shape object can be added to a Reactor object with the
+        correct stp filename property."""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename.stp"
@@ -87,8 +87,8 @@ class test_object_properties(unittest.TestCase):
         assert test_reactor.stp_filenames[0] == "filename.stp"
 
     def test_adding_multiple_shape_with_stp_filename_to_reactor(self):
-        """checks that multiple shape objects can be added to a Reactor object
-        with the correct stp filename properties"""
+        """Checks that multiple shape objects can be added to a Reactor object
+        with the correct stp filename properties."""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename.stp"
@@ -104,11 +104,12 @@ class test_object_properties(unittest.TestCase):
         assert test_reactor.stp_filenames[1] == "filename2.stp"
 
     def test_adding_shape_with_duplicate_stp_filename_to_reactor(self):
-        """adds shapes to a Reactor object to check errors are raised correctly"""
+        """Adds shapes to a Reactor object to check errors are raised
+        correctly."""
 
         def test_stp_filename_duplication():
-            """checks ValueError is raised when RotateStraightShapes with duplicate
-            stp filenames are added"""
+            """Checks ValueError is raised when RotateStraightShapes with
+            duplicate stp filenames are added."""
 
             test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)], stp_filename="filename.stp"
@@ -124,11 +125,12 @@ class test_object_properties(unittest.TestCase):
         self.assertRaises(ValueError, test_stp_filename_duplication)
 
     def test_adding_shape_with_duplicate_stl_filename_to_reactor(self):
-        """adds shapes to a Reactor object to check errors are raised correctly"""
+        """Adds shapes to a Reactor object to check errors are raised
+        correctly."""
 
         def test_stl_filename_duplication_rotate_straight():
-            """checks ValueError is raised when RotateStraightShapes with duplicate
-            stl filenames are added"""
+            """checks ValueError is raised when RotateStraightShapes with
+            duplicate stl filenames are added"""
 
             test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)], stl_filename="filename.stl"
@@ -146,8 +148,8 @@ class test_object_properties(unittest.TestCase):
             test_stl_filename_duplication_rotate_straight)
 
         def test_stl_filename_duplication_rotate_spline():
-            """checks ValueError is raised when RotateSplineShapes with duplicate
-            stl filenames are added"""
+            """Checks ValueError is raised when RotateSplineShapes with
+            duplicate stl filenames are added."""
 
             test_shape = paramak.RotateSplineShape(
                 points=[(0, 0), (0, 20), (20, 20)], stl_filename="filename.stl"
@@ -165,8 +167,8 @@ class test_object_properties(unittest.TestCase):
             test_stl_filename_duplication_rotate_spline)
 
         def test_stl_filename_duplication_rotate_mixed():
-            """checks ValueError is raised when RotateMixedShapes with duplicate
-            stl filenames are added"""
+            """Checks ValueError is raised when RotateMixedShapes with
+            duplicate stl filenames are added."""
 
             test_shape = paramak.RotateMixedShape(
                 points=[(0, 0, "straight"), (0, 20, "straight"), (20, 20, "straight")],
@@ -186,8 +188,8 @@ class test_object_properties(unittest.TestCase):
             test_stl_filename_duplication_rotate_mixed)
 
         def test_stl_filename_duplication_Rotate_Circle():
-            """checks ValueError is raised when RotateCircleShapes with duplicate
-            stl filenames are added"""
+            """Checks ValueError is raised when RotateCircleShapes with
+            duplicate stl filenames are added."""
 
             test_shape = paramak.RotateCircleShape(
                 points=[(20, 20)],
@@ -211,8 +213,8 @@ class test_object_properties(unittest.TestCase):
             test_stl_filename_duplication_Rotate_Circle)
 
         def test_stl_filename_duplication_Extrude_straight():
-            """checks ValueError is raised when ExtrudeStraightShapes with duplicate
-            stl filenames are added"""
+            """Checks ValueError is raised when ExtrudeStraightShapes with
+            duplicate stl filenames are added."""
 
             test_shape = paramak.ExtrudeStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
@@ -234,8 +236,8 @@ class test_object_properties(unittest.TestCase):
             test_stl_filename_duplication_Extrude_straight)
 
         def test_stl_filename_duplication_Extrude_spline():
-            """checks ValueError is raised when ExtrudeSplineShapes with duplicate
-            stl filenames are added"""
+            """Checks ValueError is raised when ExtrudeSplineShapes with
+            duplicate stl filenames are added."""
 
             test_shape = paramak.ExtrudeSplineShape(
                 points=[(0, 0), (0, 20), (20, 20)],
@@ -373,7 +375,7 @@ class test_object_properties(unittest.TestCase):
         assert test_reactor.graveyard.volume > graveyard_volume_2
 
     def test_exported_stp_files_exist(self):
-        """creates a Reactor object with one shape and checks that an stp file
+        """creates a Reactor object with one shape and checks that a stp file
         of the reactor can be exported to a specified location using the export_stp
         method"""
 
@@ -394,9 +396,9 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + filepath)
 
     def test_exported_stl_files_exist(self):
-        """creates a Reactor object with one shape and checks that an stl file
-        of the reactor can be exported to a specified location using the export_stl
-        method"""
+        """creates a Reactor object with one shape and checks that a stl file
+        of the reactor can be exported to a specified location using the
+        export_stl method"""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
@@ -415,9 +417,9 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + filepath)
 
     def test_exported_svg_files_exist(self):
-        """creates a Reactor object with one shape and checks that an svg file
-        of the reactor can be exported to a specified location using the export_svg
-        method"""
+        """Creates a Reactor object with one shape and checks that a svg file
+        of the reactor can be exported to a specified location using the
+        export_svg method."""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
@@ -431,12 +433,12 @@ class test_object_properties(unittest.TestCase):
         os.system("rm test_svg_image.svg")
 
     def test_neutronics_description(self):
-        """creates reactor objects to check errors are raised correctly when exporting
-        the neutronics description"""
+        """Creates reactor objects to check errors are raised correctly when
+        exporting the neutronics description."""
 
         def test_neutronics_description_without_material_tag():
-            """checks ValueError is raised when the neutronics description is exported
-            without material_tag"""
+            """Checks ValueError is raised when the neutronics description is
+            exported without material_tag."""
 
             test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)])
@@ -450,8 +452,8 @@ class test_object_properties(unittest.TestCase):
             test_neutronics_description_without_material_tag)
 
         def test_neutronics_description_without_stp_filename():
-            """checks ValueError is raised when the neutronics description is exported
-            without stp_filename"""
+            """Checks ValueError is raised when the neutronics description is
+            exported without stp_filename."""
 
             test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)])
@@ -466,8 +468,8 @@ class test_object_properties(unittest.TestCase):
             test_neutronics_description_without_stp_filename)
 
     def test_neutronics_description_without_plasma(self):
-        """creates a Reactor object and checks that the neutronics description is exported
-        with the correct material_tag and stp_filename"""
+        """Creates a Reactor object and checks that the neutronics description
+        is exported with the correct material_tag and stp_filename."""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
@@ -486,8 +488,9 @@ class test_object_properties(unittest.TestCase):
         assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
 
     def test_export_neutronics_description(self):
-        """creates a Reactor object and checks that the neutronics description is
-        exported to a json file with the correct material_name and stp_filename"""
+        """Creates a Reactor object and checks that the neutronics description
+        is exported to a json file with the correct material_name and
+        stp_filename."""
 
         os.system("rm manifest_test.json")
 
@@ -518,8 +521,9 @@ class test_object_properties(unittest.TestCase):
         os.system("rm manifest_test.json")
 
     def test_export_neutronics_description_with_plasma(self):
-        """creates a Reactor object and checks that the neutronics description is
-        exported to a json file with the correct entries, including the optional plasma"""
+        """Creates a Reactor object and checks that the neutronics description
+        is exported to a json file with the correct entries, including the
+        optional plasma."""
 
         os.system("rm manifest_test.json")
 
@@ -562,9 +566,9 @@ class test_object_properties(unittest.TestCase):
         os.system("rm manifest.json")
 
     def test_export_neutronics_description_without_plasma(self):
-        """creates a Reactor object and checks that the neutronics description is
+        """Creates a Reactor object and checks that the neutronics description is
         exported to a json file with the correct entires, exluding the optional
-        plasma"""
+        plasma."""
 
         os.system("rm manifest_test.json")
 
@@ -594,24 +598,26 @@ class test_object_properties(unittest.TestCase):
         assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
         os.system("rm manifest.json")
 
-    def test_export_2d_image(self):
-        """creates a Reactor object and checks that a png file of the reactor
-        with the correct filename can be exported using the export_2d_image method"""
+    def test_export_2D_image(self):
+        """Creates a Reactor object and checks that a png file of the reactor
+        with the correct filename can be exported using the export_2D_image
+        method."""
 
-        os.system("rm 2d_test_image.png")
+        os.system("rm 2D_test_image.png")
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
         returned_filename = test_reactor.export_2d_image(
-            filename="2d_test_image.png")
+            filename="2D_test_image.png")
 
         assert Path(returned_filename).exists() is True
-        os.system("rm 2d_test_image.png")
+        os.system("rm 2D_test_image.png")
 
     def test_export_html(self):
-        """creates a Reactor object and checks that a html file of the reactor with
-        the correct filename can be exported using the export_html method"""
+        """Creates a Reactor object and checks that a html file of the reactor
+        with the correct filename can be exported using the export_html
+        method."""
 
         os.system("rm test_html.html")
         test_shape = paramak.RotateStraightShape(

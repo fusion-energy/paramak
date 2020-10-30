@@ -6,8 +6,9 @@ import numpy as np
 
 class test_InboardFirstwallFCCS(unittest.TestCase):
     def test_construction_with_CenterColumnShieldCylinder(self):
-        """Makes a firstwall with from a CenterColumnShieldCylinder and checks
-        the volume is smaller than the shield"""
+        """Makes a firstwall from a CenterColumnShieldCylinder and checks
+        the volume is smaller than the shield."""
+
         a = paramak.CenterColumnShieldCylinder(
             height=100,
             inner_radius=20,
@@ -21,8 +22,9 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert a.volume > b.volume
 
     def test_construction_with_CenterColumnShieldHyperbola(self):
-        """Makes a firstwall with from a CenterColumnShieldHyperbola and checks
-        the volume is smaller than the shield"""
+        """Makes a firstwall from a CenterColumnShieldHyperbola and checks
+        the volume is smaller than the shield."""
+
         a = paramak.CenterColumnShieldHyperbola(
             height=200,
             inner_radius=20,
@@ -37,8 +39,9 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert a.volume > b.volume
 
     def test_construction_with_CenterColumnShieldFlatTopHyperbola(self):
-        """Makes a firstwall with from a CenterColumnShieldFlatTopHyperbola and
-        checks the volume is smaller than the shield"""
+        """Makes a firstwall from a CenterColumnShieldFlatTopHyperbola and
+        checks the volume is smaller than the shield."""
+
         a = paramak.CenterColumnShieldFlatTopHyperbola(
             height=200,
             arc_height=100,
@@ -54,8 +57,9 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert a.volume > b.volume
 
     def test_construction_with_CenterColumnShieldPlasmaHyperbola(self):
-        """Makes a firstwall with from a CenterColumnShieldPlasmaHyperbola and
-        checks the volume is smaller than the shield"""
+        """Makes a firstwall from a CenterColumnShieldPlasmaHyperbola and
+        checks the volume is smaller than the shield."""
+
         a = paramak.CenterColumnShieldPlasmaHyperbola(
             height=601,
             inner_radius=20,
@@ -70,8 +74,9 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert a.volume > b.volume
 
     def test_construction_with_CenterColumnShieldCircular(self):
-        """Makes a firstwall with from a CenterColumnShieldCircular and checks
-        the volume is smaller than the shield"""
+        """Makes a firstwall from a CenterColumnShieldCircular and checks
+        the volume is smaller than the shield."""
+
         a = paramak.CenterColumnShieldCircular(
             height=300,
             inner_radius=20,
@@ -86,8 +91,9 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert a.volume > b.volume
 
     def test_construction_with_CenterColumnShieldFlatTopCircular(self):
-        """Makes a firstwall with from a CenterColumnShieldFlatTopCircular and
-        checks the volume is smaller than the shield"""
+        """Makes a firstwall from a CenterColumnShieldFlatTopCircular and
+        checks the volume is smaller than the shield."""
+
         a = paramak.CenterColumnShieldFlatTopCircular(
             height=500,
             arc_height=300,
@@ -105,7 +111,8 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
     def test_construction_with_wrong_column_shield_type(self):
         def test_construction_with_string():
             """Only CenterColumnShields are acceptable inputs for inputs, this
-            should fail as it trys to use a string"""
+            should fail as it trys to use a string."""
+
             b = paramak.InboardFirstwallFCCS(
                 central_column_shield="incorrect type",
                 thickness=20,
@@ -117,8 +124,9 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
             test_construction_with_string)
 
     def test_boolean_union(self):
-        """Makes two halfs of a 360 firstwall and perform a union and checks
-        that the volume corresponds to 2 times the volume of 1 half"""
+        """Makes two halves of a 360 firstwall and performs a union and checks
+        that the volume corresponds to 2 times the volume of 1 half."""
+
         a = paramak.CenterColumnShieldFlatTopCircular(
             height=500,
             arc_height=300,
@@ -140,9 +148,10 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert np.isclose(c.volume, 2 * b.volume)
 
     def test_azimuth_placement_angle(self):
-        """Makes two 180deg firstwalls (one is rotated 90deg), performs a cut
-        and checks that the volume corresponds to 0.5 times the volume of 1
-        half"""
+        """Makes two 180 degree firstwalls (one is rotated 90 degree), performs
+        a cut and checks that the volume corresponds to 0.5 times the volume of
+        1 half."""
+
         a = paramak.CenterColumnShieldFlatTopCircular(
             height=500,
             arc_height=300,
@@ -164,8 +173,9 @@ class test_InboardFirstwallFCCS(unittest.TestCase):
         assert np.isclose(c.volume, 0.5 * b.volume)
 
     def test_cut_attribute(self):
-        """Creates a firstwall then reset its cut attribute and check that
-        the shape isn't affected"""
+        """Creates a firstwall then resets its cut attribute and checks that
+        the shape is not affected."""
+
         a = paramak.CenterColumnShieldCylinder(
             height=100,
             inner_radius=20,
