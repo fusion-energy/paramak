@@ -6,8 +6,8 @@ import unittest
 
 class test_ToroidalFieldCoilRectangle(unittest.TestCase):
     def test_ToroidalFieldCoilRectangle_creation(self):
-        """creates a tf coil using the ToroidalFieldCoilRectangle parametric
-        component and checks that a cadquery solid is created"""
+        """Creates a tf coil using the ToroidalFieldCoilRectangle parametric
+        component and checks that a cadquery solid is created."""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
@@ -20,8 +20,8 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_ToroidalFieldCoilRectangle_no_inner_leg_creation(self):
-        """creates a tf coil using the ToroidalFieldCoilRectangle without
-        the inner leg and checks that a cadquery solid is created"""
+        """Creates a tf coil using the ToroidalFieldCoilRectangle without
+        the inner leg and checks that a cadquery solid is created."""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
@@ -35,8 +35,8 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_ToroidalFieldCoilRectangle_rotation_angle(self):
-        """creates a tf coil with a rotation_angle < 360 and checks that the correct
-        cut is performed and the volume is correct"""
+        """Creates a tf coil with a rotation_angle < 360 degrees and checks
+        that the correct cut is performed and the volume is correct."""
 
         test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
