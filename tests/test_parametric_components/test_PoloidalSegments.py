@@ -84,3 +84,14 @@ class test_PoloidalSegments(unittest.TestCase):
 
         assert test_shape.solid is not None
         assert len(test_shape.solid.Solids()) == 22
+
+    def test_PoloidalSegments_without_shape_to_segment(self):
+        """Checks a solid can be created if no shape is given
+        """
+        test_shape = paramak.PoloidalSegments(
+            shape_to_segment=None,
+            center_point=(500, 500),
+            number_of_segments=22,
+        )
+
+        assert test_shape.solid is not None

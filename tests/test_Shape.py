@@ -100,6 +100,11 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.create_limits() == (0.0, 20.0, 0.0, 20.0)
 
+        # test with a component which has a find_points method
+        test_shape2 = paramak.Plasma()
+        test_shape2.create_limits()
+        assert test_shape2.x_min is not None
+
     def test_create_limits_error(self):
         """Checks error is raised when no points are given."""
 
@@ -382,7 +387,7 @@ class test_object_properties(unittest.TestCase):
             width=50,
             name="coucou"
         )
-        assert test_shape._trace is not None
+        assert test_shape._trace() is not None
 
     def test_create_patch_error(self):
         """Checks _create_patch raises a ValueError when points is None."""
@@ -402,7 +407,7 @@ class test_object_properties(unittest.TestCase):
             width=50,
             color=(0.5, 0.5, 0.5, 0.1)
         )
-        assert test_shape._create_patch is not None
+        assert test_shape._create_patch() is not None
 
     def test_azimuth_placement_angle_error(self):
         """Checks an error is raised when invalid value for

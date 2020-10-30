@@ -85,6 +85,18 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.volume == pytest.approx(test_volume * 4, rel=0.01)
 
+    def test_workplane_opposite_distance(self):
+        """Checks that a solid can be created with workplane XZ and
+        path_workplane XY
+        """
+        test_shape = SweepCircleShape(
+            radius=20,
+            path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
+            workplane="XZ",
+            path_workplane="XY"
+        )
+        assert test_shape.solid is not None
+
     def test_workplane_path_workplane_error_raises(self):
         """checks that errors are raised when disallowed workplane and path_workplane
         combinations are used"""

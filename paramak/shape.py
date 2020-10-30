@@ -410,7 +410,8 @@ class Shape:
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
         error = False
-        if isinstance(value, (int, float, Iterable)):
+        if isinstance(value, (int, float, Iterable)) and \
+                not isinstance(value, str):
             if isinstance(value, Iterable):
                 for i in value:
                     if not isinstance(i, (int, float)):
@@ -452,11 +453,6 @@ class Shape:
                 instructions[-1][keyname].append(XZ_points[0])
 
             if hasattr(self, "path_points"):
-                distance = float(
-                    self.path_points[-1][1] - self.path_points[0][1])
-
-                if self.workplane in ["XZ", "YX", "ZY"]:
-                    distance *= -1
                 # sweep shape
                 solid = cq.Workplane(
                     self.workplane).workplane(
@@ -479,6 +475,10 @@ class Shape:
                     solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
             if hasattr(self, "path_points"):
+                distance = float(
+                    self.path_points[-1][1] - self.path_points[0][1])
+                if self.workplane in ["XZ", "YX", "ZY"]:
+                    distance *= -1
                 # sweep shape
                 solid = solid.close().\
                     moveTo(-self.path_points[0][0], 0).\
@@ -875,13 +875,20 @@ class Shape:
         value = hash_object.hexdigest()
         return value
 
-    def perform_boolean_operations(self, solid):
+    def perform_boolean_operations(self, solid, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
             solid = cut_solid(solid, self.cut)
+
+        # If a wedge cut is provided then perform a boolean cut
+        # Performed independantly to avoid use of self.cut
+        # Prevents repetition of 'outdated' wedge cuts
+        if 'wedge_cut' in kwargs:
+            if kwargs['wedge_cut'] is not None:
+                solid = cut_solid(solid, kwargs['wedge_cut'])
 
         # If an intersect is provided then perform a boolean intersect
         if self.intersect is not None:

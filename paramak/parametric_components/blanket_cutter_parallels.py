@@ -81,6 +81,6 @@ class BlanketCutterParallels(ExtrudeStraightShape):
                 self.cut != self.main_cutting_shape:
             self.cut = [self.cut, self.main_cutting_shape]
         elif self.main_cutting_shape not in self.cut:
-            self.cut.append(main_cutting_shape)
+            self.cut.append(self.main_cutting_shape)
 
         self.points = points[:-1]

@@ -285,13 +285,7 @@ class BlanketFP(RotateMixedShape):
         # rearrange order
         # TODO: fix issue #86 (full coverage)
         if full_rot:
-            if stop_equals_start:
-                print(
-                    "Warning: If start_angle = stop_angle surfaces will not\
-                     be handled correctly"
-                )
-                new_order = [0, 1, 2, 3]
-            else:
+            if not stop_equals_start:
                 # from ["inner", "outer", "inner_section", "outer_section"]
 
                 # to ["inner", "inner_section", "outer", "outer_section"]
