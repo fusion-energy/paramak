@@ -17,7 +17,6 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
             number_of_coils=8,
         )
         assert test_shape.solid is not None
-        assert test_shape.volume > 1000
 
     def test_ToroidalFieldCoilRectangle_no_inner_leg_creation(self):
         """creates a tf coil using the ToroidalFieldCoilRectangle without
@@ -32,7 +31,48 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
             number_of_coils=8,
         )
         assert test_shape.solid is not None
-        assert test_shape.volume > 1000
+
+    def test_ToroidalFieldCoilRectangle_absolute_volume(self):
+        """creates a tf coil using the ToroidalFieldCoilRectangle parametric
+        component and checks that the volume is correct"""
+
+        test_shape = paramak.ToroidalFieldCoilRectangle(
+            horizontal_start_point=(100, 700),
+            vertical_mid_point=(800, 0),
+            thickness=150,
+            distance=50,
+            number_of_coils=8
+        )
+
+        assert test_shape.volume == pytest.approx(((850*150*50*2) + (1400*150*50*2))*8)
+
+        test_shape.with_inner_leg = False
+        assert test_shape.volume == pytest.approx(((850*150*50*2) + (1400*150*50))*8)
+
+    def test_ToroidalFieldCoilRectangle_absolute_areas(self):
+        """creates tf coils using the ToroidalFieldCoilRectangle parametric 
+        component and checks that the areas of the faces are correct"""
+
+        test_shape = paramak.ToroidalFieldCoilRectangle(
+            horizontal_start_point=(100, 700),
+            vertical_mid_point=(800, 0),
+            thickness=150,
+            distance=50,
+            number_of_coils=1
+        )
+
+        assert test_shape.area == pytest.approx((((850*150*2)+(1400*150))*2) + (1400*150*2) + (850*50*2) + (1700*50) + (1400*50*3) + (700*50*2) + (150*50*4))
+        assert len(test_shape.areas) == 16
+        assert test_shape.areas.count(pytest.approx((850 * 150 * 2) + (1400 * 150))) == 2
+        assert test_shape.areas.count(pytest.approx((1400 * 150))) == 2
+        assert test_shape.areas.count(pytest.approx(850 * 50)) == 2
+        assert test_shape.areas.count(pytest.approx(1700 * 50)) == 1
+        assert test_shape.areas.count(pytest.approx(1400 * 50)) == 3
+        assert test_shape.areas.count(pytest.approx(700 * 50)) == 2
+        assert test_shape.areas.count(pytest.approx(150 * 50)) == 4
+
+        test_shape.with_inner_leg = False
+        assert test_shape.area == pytest.approx((((850*150*2)+(1400*150))*2) + (850*50*2) + (1700*50) + (1400*50) + (700*50*2) + (150*50*2))
 
     def test_ToroidalFieldCoilRectangle_rotation_angle(self):
         """creates tf coils with rotation_angles < 360 in different workplanes and
