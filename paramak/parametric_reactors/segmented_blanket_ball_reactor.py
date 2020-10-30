@@ -2,6 +2,7 @@
 import paramak
 import numpy as np
 
+
 class SegmentedBlanketBallReactor(paramak.BallReactor):
     """Creates geometry for a single ball reactor with a single divertor
     including a plasma, cylindrical center column shielding, square toroidal
@@ -90,7 +91,8 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         if isinstance(value, (float, int)) and value > 0:
             self._gap_between_blankets = float(value)
         else:
-            raise ValueError("gap_between_blankets but be a positive value float")
+            raise ValueError(
+                "gap_between_blankets but be a positive value float")
 
     @property
     def number_of_blanket_segments(self):
@@ -101,7 +103,8 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         if isinstance(value, int) and value > 2:
             self._number_of_blanket_segments = value
         else:
-            raise ValueError("number_of_blanket_segments but be an int greater than 2")
+            raise ValueError(
+                "number_of_blanket_segments but be an int greater than 2")
 
     def _make_blankets_layers(self):
 
@@ -113,32 +116,39 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         )
 
         thin_cutter = paramak.BlanketCutterStar(
-            distance=self.gap_between_blankets,
-            azimuth_placement_angle=np.linspace(0, 360, self.number_of_blanket_segments, endpoint=False)
-        )
+            distance=self.gap_between_blankets, azimuth_placement_angle=np.linspace(
+                0, 360, self.number_of_blanket_segments, endpoint=False))
 
         self._blanket_envelope = paramak.BlanketFP(
             plasma=self._plasma,
-            thickness=self.firstwall_radial_thickness+self.blanket_radial_thickness,
+            thickness=self.firstwall_radial_thickness +
+            self.blanket_radial_thickness,
             offset_from_plasma=[
                 self.inner_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
                 self.outer_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
                 self.inner_plasma_gap_radial_thickness],
-            start_angle=-179,
+            start_angle=-
+            179,
             stop_angle=179,
             rotation_angle=self.rotation_angle,
             material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
-            cut=[center_column_cutter, thin_cutter]
-        )
+            cut=[
+                center_column_cutter,
+                thin_cutter])
 
-        #makes a thicker star shaped cutting tool
+        # makes a thicker star shaped cutting tool
         thick_cutter = paramak.BlanketCutterStar(
-            distance=self.gap_between_blankets + 2* self.firstwall_radial_thickness,
-            azimuth_placement_angle=np.linspace(0, 360, self.number_of_blanket_segments, endpoint=False)
-        )
+            distance=self.gap_between_blankets +
+            2 *
+            self.firstwall_radial_thickness,
+            azimuth_placement_angle=np.linspace(
+                0,
+                360,
+                self.number_of_blanket_segments,
+                endpoint=False))
 
         self._blanket = paramak.BlanketFP(
             plasma=self._plasma,
@@ -161,7 +171,8 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             stp_filename="blanket.stp",
             cut=[center_column_cutter, thick_cutter])
 
-        self._blanket_envelope.solid = self._blanket_envelope.solid.cut(self._blanket.solid)
+        self._blanket_envelope.solid = self._blanket_envelope.solid.cut(
+            self._blanket.solid)
         self._firstwall = self._blanket_envelope
 
         self._blanket_rear_wall = paramak.BlanketFP(
