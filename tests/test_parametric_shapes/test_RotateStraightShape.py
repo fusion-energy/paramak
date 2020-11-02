@@ -1,4 +1,5 @@
 import os
+import math
 import unittest
 from pathlib import Path
 
@@ -108,6 +109,59 @@ class test_object_properties(unittest.TestCase):
         test_shape_2.create_solid()
 
         assert test_shape_1.volume == pytest.approx(test_shape_2.volume * 0.5)
+
+    def test_absolute_shape_areas(self):
+        """creates rotated straight shapes using straight connections and checks that the
+        areas of each face are correct"""
+
+        test_shape = RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
+        )
+
+        test_shape.rotation_angle = 180
+        assert test_shape.area == pytest.approx(
+            ((math.pi * (20**2) / 2) * 2) + (20 * 40) + (math.pi * (20 * 2) * 20 / 2))
+        assert len(test_shape.areas) == 4
+        assert test_shape.areas.count(
+            pytest.approx(math.pi * (20**2) / 2)) == 2
+        assert test_shape.areas.count(pytest.approx(20 * 40)) == 1
+        assert test_shape.areas.count(
+            pytest.approx((math.pi * (20 * 2) * 20) / 2)) == 1
+
+        test_shape.rotation_angle = 360
+        assert test_shape.area == pytest.approx(
+            (math.pi * (20**2) * 2) + (math.pi * (20 * 2) * 20))
+        assert len(test_shape.areas) == 3
+        assert test_shape.areas.count(pytest.approx(math.pi * (20**2))) == 2
+        assert test_shape.areas.count(
+            pytest.approx((math.pi * (20 * 2) * 20))) == 1
+
+        test_shape = RotateStraightShape(
+            points=[(50, 0), (50, 50), (70, 50), (70, 0)],
+        )
+
+        test_shape.rotation_angle = 180
+        assert test_shape.area == pytest.approx((20 * 50 * 2) + ((((math.pi * (70**2)) / 2) - (
+            (math.pi * (50**2)) / 2)) * 2) + ((math.pi * (50 * 2) * 50) / 2) + ((math.pi * (70 * 2) * 50) / 2))
+        assert len(test_shape.areas) == 6
+        assert test_shape.areas.count(pytest.approx(20 * 50)) == 2
+        assert test_shape.areas.count(pytest.approx(
+            ((math.pi * (70**2)) / 2) - ((math.pi * (50**2)) / 2))) == 2
+        assert test_shape.areas.count(
+            pytest.approx(math.pi * (50 * 2) * 50 / 2)) == 1
+        assert test_shape.areas.count(
+            pytest.approx(math.pi * (70 * 2) * 50 / 2)) == 1
+
+        test_shape.rotation_angle = 360
+        assert test_shape.area == pytest.approx(
+            (((math.pi * (70**2)) - (math.pi * (50**2))) * 2) + (math.pi * (50 * 2) * 50) + (math.pi * (70 * 2) * 50))
+        assert len(test_shape.areas) == 4
+        assert test_shape.areas.count(pytest.approx(
+            (math.pi * (70**2)) - (math.pi * (50**2)))) == 2
+        assert test_shape.areas.count(
+            pytest.approx(math.pi * (50 * 2) * 50)) == 1
+        assert test_shape.areas.count(
+            pytest.approx(math.pi * (70 * 2) * 50)) == 1
 
     def test_export_stp(self):
         """Creates a RotateStraightShape and checks that a stp file of the

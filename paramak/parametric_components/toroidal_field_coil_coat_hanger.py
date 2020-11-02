@@ -178,9 +178,9 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             inner_leg_solid = inner_leg_solid.close().extrude(
                 distance=-self.distance / 2.0, both=True)
 
-        solid = cq.Compound.makeCompound(
-            [a.val() for a in [inner_leg_solid, solid]]
-        )
+            solid = cq.Compound.makeCompound(
+                [a.val() for a in [inner_leg_solid, solid]]
+            )
 
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)
