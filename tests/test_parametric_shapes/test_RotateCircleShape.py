@@ -14,26 +14,23 @@ class test_object_properties(unittest.TestCase):
         test_shape = RotateCircleShape(
             points=[(30, 0)],
             radius=10,
-            rotation_angle=360
+            rotation_angle=270
         )
-
-        test_shape.create_solid()
 
         assert test_shape.solid is not None
         assert test_shape.volume == pytest.approx(
-            (2 * math.pi * 30) * (math.pi * 10**2), abs=0.1)
+            (2 * math.pi * 30 * 0.75) * (math.pi * 10**2), abs=0.1)
 
-        test_shape2 = RotateCircleShape(
+        test_shape = RotateCircleShape(
             points=[(30, 0)],
             radius=10,
             rotation_angle=180
         )
 
-        test_shape2.create_solid()
-
-        assert test_shape2.solid is not None
-        assert 2 * test_shape2.volume == pytest.approx(test_shape.volume)
-
+        assert test_shape.solid is not None
+        assert test_shape.volume == pytest.approx(
+            (2 * math.pi * 30 * 0.5) * (math.pi * 10**2), abs=0.1)
+        
     def test_absolute_shape_areas(self):
         """creates rotated circle shapes and checks that the areas of each face
         are correct"""
@@ -44,18 +41,18 @@ class test_object_properties(unittest.TestCase):
 
         test_shape.rotation_angle = 180
         assert test_shape.area == pytest.approx(
-            ((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * math.pi * (60 * 2) / 2))
+            ((math.pi * (10**2)) * 2) + (math.pi * (10*2) * math.pi * (60*2) / 2), abs=0.1)
         assert len(test_shape.areas) == 3
         assert test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
         assert test_shape.areas.count(pytest.approx(
-            math.pi * (10 * 2) * math.pi * (60 * 2) / 2)) == 1
+            math.pi * (10*2) * math.pi * (60*2) / 2)) == 1
 
         test_shape.rotation_angle = 360
         assert test_shape.area == pytest.approx(
-            math.pi * (10 * 2) * math.pi * (60 * 2))
+            math.pi * (10*2) * math.pi * (60*2))
         assert len(test_shape.areas) == 1
         assert test_shape.areas.count(pytest.approx(
-            math.pi * (10 * 2) * math.pi * (60 * 2))) == 1
+            math.pi * (10*2) * math.pi * (60*2))) == 1
 
     def test_shape_volume_with_multiple_azimuth_placement_angles(self):
         """creates two rotated shapes at different placement angles using circles and
@@ -71,7 +68,7 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.solid is not None
         assert test_shape.volume == pytest.approx(
-            (math.pi * 10 ** 2) * ((2 * math.pi * 30) / 36) * 4
+            (math.pi * 10**2) * ((2 * math.pi * 30) / 36) * 4
         )
 
         test_shape2 = RotateCircleShape(
@@ -111,14 +108,14 @@ class test_object_properties(unittest.TestCase):
         )
 
         assert inner_shape.volume == pytest.approx(
-            (math.pi * 5 ** 2) * ((2 * math.pi * 30) / 2)
+            (math.pi * 5**2) * ((2 * math.pi * 30) / 2)
         )
         assert outer_shape.volume == pytest.approx(
-            (math.pi * 10 ** 2) * ((2 * math.pi * 30) / 2)
+            (math.pi * 10**2) * ((2 * math.pi * 30) / 2)
         )
         assert outer_shape_cut.volume == pytest.approx(
-            ((math.pi * 10 ** 2) * ((2 * math.pi * 30) / 2))
-            - ((math.pi * 5 ** 2) * ((2 * math.pi * 30) / 2))
+            ((math.pi * 10**2) * ((2 * math.pi * 30) / 2))
+            - ((math.pi * 5**2) * ((2 * math.pi * 30) / 2))
         )
 
 
