@@ -164,6 +164,41 @@ class Shape:
                 value)
 
     @property
+    def rotation_axis(self):
+        return self._rotation_axis
+
+    @rotation_axis.setter
+    def rotation_axis(self, value):
+        if isinstance(value, str):
+            acceptable_values = \
+                ["X", "Y", "Z", "-X", "-Y", "-Z", "+X", "+Y", "+Z"]
+            if value not in acceptable_values:
+                msg = "Shape.rotation_axis must be one of " + \
+                    " ".join(acceptable_values) + \
+                    " not " + value
+                raise ValueError(msg)
+        elif isinstance(value, Iterable):
+            msg = "Shape.rotation_axis must be a list of two (X, Y, Z) floats"
+            if len(value) != 2:
+                raise ValueError(msg)
+            for point in value:
+                if not isinstance(point, tuple):
+                    raise ValueError(msg)
+                if len(point) != 3:
+                    raise ValueError(msg)
+                for val in point:
+                    if not isinstance(val, (int, float)):
+                        raise ValueError(msg)
+
+            if value[0] == value[1]:
+                msg = "The two points must be different"
+                raise ValueError(msg)
+        elif value is not None:
+            msg = "Shape.rotation_axis must be a list or a string or None"
+            raise ValueError(msg)
+        self._rotation_axis = value
+
+    @property
     def volume(self):
         """Get the total volume of the Shape. Returns a float"""
         if isinstance(self.solid, cq.Compound):
@@ -533,7 +568,7 @@ class Shape:
         """Returns the rotation axis for a given shape. If self.rotation_axis
         is None, the rotation axis will be computed from self.workplane (or
         from self.path_workplane if applicable). If self.rotation_axis is an
-        acceptable string (eg. "X", "Y", "-Z"...) then this axis will be used.
+        acceptable string (eg. "X", "+Y", "-Z"...) then this axis will be used.
         If self.rotation_axis is a list of two points, then these two points
         will be used to form an axis.
 
@@ -550,7 +585,7 @@ class Shape:
         }
         if isinstance(self.rotation_axis, str):
             # X, Y or Z axis
-            return rotation_axis[self.rotation_axis]
+            return rotation_axis[self.rotation_axis.replace("+", "")]
         elif isinstance(self.rotation_axis, Iterable):
             # Custom axis
             return self.rotation_axis
