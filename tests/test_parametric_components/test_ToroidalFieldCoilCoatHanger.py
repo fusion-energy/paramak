@@ -74,7 +74,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert test_shape.volume == pytest.approx((400 * 50 * 30 * 2) + ((50 * 50 * 30 / 2) * 2) + (
             50 * 500 * 30) + (((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30)) * 2))
 
-    def test_ToroidalFieldCoilCoatHanger_absolute_volume(self):
+    def test_ToroidalFieldCoilCoatHanger_absolute_area(self):
         """creates a tf coil using the ToroidalFieldCoilCoatHanger parametric
         component and checks that the areas of the faces are correct"""
 
