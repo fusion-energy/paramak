@@ -54,8 +54,9 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         assert test_shape_2.volume == pytest.approx(test_volume_1 - inner_leg_volume)
 
     def test_ToroidalFieldCoilTripleArc_rotation_angle(self):
-        """creates tf coils with rotation_angles < 360 in different workplanes and
-        checks that the correct cuts are performed and their volumes are correct"""
+        """Creates tf coils with rotation_angles < 360 in different workplanes
+        and checks that the correct cuts are performed and their volumes are
+        correct."""
 
         test_shape = paramak.ToroidalFieldCoilTripleArc(
             R1=150,

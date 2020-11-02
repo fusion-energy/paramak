@@ -8,6 +8,8 @@ import pytest
 
 
 class test_CuttingWedge(unittest.TestCase):
+    """Creates a random sized cutting wedge and changes the volume"""
+
     def test_volume_of_CuttingWedge_for_5_random_dimentions(self):
         for test_number in range(5):
             height = random.uniform(1., 2000.)

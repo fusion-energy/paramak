@@ -9,8 +9,8 @@ import pytest
 
 class test_CenterColumnShieldCylinder(unittest.TestCase):
     def test_CenterColumnShieldCylinder_creation(self):
-        """creates a center column shield using the CenterColumnShieldCylinder parametric component and
-        checks that a cadquery solid is created"""
+        """Creates a center column shield using the CenterColumnShieldCylinder
+        parametric component and checks that a cadquery solid is created."""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             height=600, inner_radius=100, outer_radius=200
@@ -20,7 +20,8 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_volume_CenterColumnShieldCylinder(self):
-        """creates a CenterColumnShieldCylinder shape and checks that the volume is correct"""
+        """Creates a CenterColumnShieldCylinder shape and checks that the
+        volume is correct."""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             rotation_angle=360,
@@ -43,8 +44,8 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         assert test_shape.volume == pytest.approx(3534.29 / 2.0)
 
     def test_export_stp_CenterColumnShieldCylinder(self):
-        """creates a CenterColumnShieldCylinder shape and checks that an stp file of the shape
-        can be exported using the export_stp method"""
+        """Creates a CenterColumnShieldCylinder shape and checks that a stp
+        file of the shape can be exported using the export_stp method."""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             rotation_angle=360,
@@ -63,15 +64,15 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         os.system("rm center_column_shield.stp")
 
     def test_parametric_component_hash_value(self):
-        """creates a parametric component and checks that a cadquery solid with
-        a unique hash value is created when .solid is called. checks that the
+        """Creates a parametric component and checks that a cadquery solid with
+        a unique hash value is created when .solid is called. Checks that the
         same cadquery solid with the same unique hash value is returned when
         shape.solid is called again after no changes have been made to the
-        parametric component. checks that a new cadquery solid with a new
+        parametric component. Checks that a new cadquery solid with a new
         unique hash value is constructed when shape.solid is called after
-        changes to the parametric component have been made. checks that the
+        changes to the parametric component have been made. Checks that the
         hash_value of a parametric component is not updated until a new
-        cadquery solid has been created"""
+        cadquery solid has been created."""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             height=100,
@@ -89,3 +90,22 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         assert initial_hash_value == test_shape.hash_value
         assert test_shape.solid is not None
         assert initial_hash_value != test_shape.hash_value
+
+    def test_center_column_shield_cylinder_error(self):
+        def incorrect_radii():
+            test_shape = paramak.CenterColumnShieldCylinder(
+                height=100,
+                inner_radius=40,
+                outer_radius=20
+            )
+            test_shape.solid
+
+        def incorrect_height():
+            test_shape = paramak.CenterColumnShieldCylinder(
+                height=None,
+                inner_radius=20,
+                outer_radius=40
+            )
+            test_shape.solid
+        self.assertRaises(ValueError, incorrect_radii)
+        self.assertRaises(ValueError, incorrect_height)

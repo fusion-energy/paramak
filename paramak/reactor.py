@@ -235,7 +235,7 @@ class Reactor:
 
         Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(filename, "w") as outfile:
+        with open(Pfilename, "w") as outfile:
             json.dump(
                 self.neutronics_description(
                     include_plasma=include_plasma,
@@ -247,7 +247,7 @@ class Reactor:
 
         print("saved geometry description to ", Pfilename)
 
-        return filename
+        return str(Pfilename)
 
     def export_stp(self, output_folder=""):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
@@ -451,9 +451,6 @@ class Reactor:
 
             material_name = item['material']
 
-            if skip_graveyard and "graveyard" in stl_filename.lower():
-                continue
-
             group_set = mb.create_meshset()
             mb.tag_set_data(tags['category'], group_set, "Group")
             print("mat:{}".format(material_name))
@@ -472,7 +469,7 @@ class Reactor:
 
         mb.add_entities(file_set, all_sets)
 
-        mb.write_file(filename)
+        mb.write_file(str(Pfilename))
 
         return filename
 
@@ -570,16 +567,15 @@ class Reactor:
 
             if isinstance(component.solid, cq.Compound):
                 for solid in component.solid.Solids():
-                    largestDimension = max(
+                    largest_dimension = max(
                         abs(solid.BoundingBox().xmax),
                         abs(solid.BoundingBox().xmin),
                         abs(solid.BoundingBox().ymax),
                         abs(solid.BoundingBox().ymin),
                         abs(solid.BoundingBox().zmax),
-                        abs(solid.BoundingBox().zmin)
+                        abs(solid.BoundingBox().zmin),
+                        largest_dimension
                     )
-                    if largestDimension > largest_dimension:
-                        largest_dimension = largestDimension
             else:
                 if component.solid.largestDimension() > largest_dimension:
                     largest_dimension = component.solid.largestDimension()

@@ -5,8 +5,8 @@ import unittest
 
 class test_BlanketCutterParallels(unittest.TestCase):
     def test_BlanketCutterParallels_creation(self):
-        """creates solid using the BlanketCutterParallels parametric component
-        and checks that a cadquery solid is created"""
+        """Creates solid using the BlanketCutterParallels parametric component
+        and checks that a cadquery solid is created."""
 
         test_shape = paramak.BlanketCutterParallels(
             thickness=50,
@@ -16,9 +16,9 @@ class test_BlanketCutterParallels(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketCutterParallels_distance_volume_impact(self):
-        """creates solid using the BlanketCutterParallels parametric component
+        """Creates solid using the BlanketCutterParallels parametric component
         with different distances and checks that the volume changes accordingly
-        """
+        ."""
 
         small_shape = paramak.BlanketCutterParallels(
             thickness=50,
@@ -30,3 +30,20 @@ class test_BlanketCutterParallels(unittest.TestCase):
         )
 
         assert small_shape.volume < large_shape.volume
+
+    def test_BlanketCutterParallels_modif(self):
+        test_shape = paramak.BlanketCutterParallels(
+            thickness=50,
+            gap_size=200)
+        test_shape.solid
+
+        cut_shape = paramak.ExtrudeCircleShape(1, 1, points=[(0, 0)])
+        test_shape.cut = cut_shape
+        test_shape.solid
+
+        assert test_shape.solid is not None
+
+        test_shape.cut = [cut_shape]
+        test_shape.solid
+
+        assert test_shape.solid is not None

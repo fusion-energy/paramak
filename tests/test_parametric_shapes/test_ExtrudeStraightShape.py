@@ -7,8 +7,9 @@ from paramak import ExtrudeStraightShape
 
 class test_object_properties(unittest.TestCase):
     def test_intersect_volume_2_shapes(self):
-        """creates two extruded shapes using straight connections with the second shape
-        intersecting the first and checks that the volume is correct"""
+        """Creates two extruded shapes using straight connections with the
+        second shape intersecting the first and checks that the volume is
+        correct."""
 
         test_shape1 = ExtrudeStraightShape(
             points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
@@ -23,8 +24,9 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25)
 
     def test_intersect_volume_3_shapes(self):
-        """creates three extruded shapes using straight connections with the second and
-        third shapes intersecting the first and checks that the volume is correct"""
+        """Creates three extruded shapes using straight connections with the
+        second and third shapes intersecting the first and checks that the
+        volume is correct."""
 
         test_shape1 = ExtrudeStraightShape(
             points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
@@ -42,9 +44,9 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25 * 0.5)
 
     def test_intersect_volume_3_extruded_shapes(self):
-        """creates three different extruded shapes using straight connections with the
-        second and third shapes intersecting the first and checks that the volume is
-        correct"""
+        """Creates three different extruded shapes using straight connections
+        with the second and third shapes intersecting the first and checks that
+        the volume is correct."""
 
         test_shape1 = ExtrudeStraightShape(
             points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=10
@@ -62,8 +64,8 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25 * 0.1)
 
     def test_absolute_shape_volume(self):
-        """creates an extruded shape at one placement angle using straight connections
-        and checks that the volume is correct"""
+        """Creates an extruded shape at one placement angle using straight
+        connections and checks that the volume is correct."""
 
         test_shape = ExtrudeStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=30
@@ -100,8 +102,9 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.areas.count(pytest.approx(10 * (29 ** 0.5) * 50)) == 4
 
     def test_extruded_shape_relative_volume(self):
-        """creates two extruded shapes at different placement angles using straight
-        connections and checks that their relative volumes are correct"""
+        """Creates two extruded shapes at different placement angles using
+        straight connections and checks that their relative volumes are
+        correct."""
 
         test_shape = ExtrudeStraightShape(
             points=[(5, 0), (5, 20), (15, 20), (15, 0)], distance=10
@@ -116,8 +119,9 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.volume == pytest.approx(10 * 20 * 10 * 4)
 
     def test_extruded_shape_with_overlap_volume(self):
-        """creates two overlapping extruded shapes at different placement angles using
-        straight connections and checks that their volume is correct"""
+        """Creates two overlapping extruded shapes at different placement
+        angles using straight connections and checks that their volume is
+        correct."""
 
         test_shape = ExtrudeStraightShape(
             points=[(0, 0), (0, 20), (10, 20), (10, 0)], distance=10
@@ -129,8 +133,8 @@ class test_object_properties(unittest.TestCase):
             (10 * 20 * 10 * 4) - (5 * 20 * 5 * 4))
 
     def test_cut_volume(self):
-        """creates an extruded shape using straight connections with another shape cut
-        out and checks that the volume is correct"""
+        """Creates an extruded shape using straight connections with another
+        shape cut out and checks that the volume is correct."""
 
         inner_shape = ExtrudeStraightShape(
             points=[(5, 5), (5, 10), (10, 10), (10, 5)], distance=30
@@ -151,8 +155,8 @@ class test_object_properties(unittest.TestCase):
         )
 
     def test_rotation_angle(self):
-        """creates an extruded shape with a rotation_angle < 360 and checks that the
-        correct cut is performed and the volume is correct"""
+        """Creates an extruded shape with a rotation_angle < 360 and checks
+        that the correct cut is performed and the volume is correct."""
 
         test_shape = ExtrudeStraightShape(
             points=[(50, 0), (50, 20), (70, 20), (70, 0)],

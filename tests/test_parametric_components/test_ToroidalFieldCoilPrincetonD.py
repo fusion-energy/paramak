@@ -50,8 +50,8 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         assert test_shape_2.volume == pytest.approx(test_volume_1 - inner_leg_volume)
 
     def test_ToroidalFieldCoilPrincetonD_rotation_angle(self):
-        """creates a tf coil with a rotation_angle < 360 and checks that the correct
-        cut is performed and the volume is correct"""
+        """Creates a tf coil with a rotation_angle < 360 degrees and checks
+        that the correct cut is performed and the volume is correct."""
 
         test_shape = paramak.ToroidalFieldCoilPrincetonD(
             R1=50,

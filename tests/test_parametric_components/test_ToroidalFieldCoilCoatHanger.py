@@ -72,8 +72,8 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert test_shape.volume == pytest.approx((400*50*30*2) + ((50*50*30/2)*2) + (50*500*30) + (((150*250*30) - (((100*250)/2)*30) - (((100*250)/2)*30))*2))
 
     def test_ToroidalFieldCoilCoatHanger_rotation_angle(self):
-        """creates a tf coil with a rotation_angle < 360 and checks that the correct
-        cut is performed and the volume is correct"""
+        """Creates a tf coil with a rotation_angle < 360 degrees and checks
+        that the correct cut is performed and the volume is correct."""
 
         test_shape = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500),
