@@ -18,6 +18,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         stl_filename (str, optional): defaults to "InnerTfCoilsFlat.stl".
         material_tag (str, optional): defaults to "inner_tf_coil_mat".
         workplane (str, optional):defaults to "XY".
+        rotation_axis (str, optional): Defaults to "Z".
     """
 
     def __init__(
@@ -32,6 +33,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         stl_filename="InnerTfCoilsFlat.stl",
         material_tag="inner_tf_coil_mat",
         workplane="XY",
+        rotation_axis="Z",
         **kwargs
     ):
 
@@ -41,6 +43,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             stl_filename=stl_filename,
             material_tag=material_tag,
             workplane=workplane,
+            rotation_axis=rotation_axis,
             **kwargs
         )
 

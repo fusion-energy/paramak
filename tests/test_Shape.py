@@ -462,6 +462,70 @@ class test_object_properties(unittest.TestCase):
         self.assertRaises(ValueError, tet_mesh_int)
         self.assertRaises(ValueError, tet_mesh_list)
 
+    def test_get_rotation_axis(self):
+        """Creates a shape and test the expected rotation_axis is the correct
+        values for several cases
+        """
+        shape = paramak.Shape()
+        expected_dict = {
+            "X": [(-1, 0, 0), (1, 0, 0)],
+            "-X": [(1, 0, 0), (-1, 0, 0)],
+            "Y": [(0, -1, 0), (0, 1, 0)],
+            "-Y": [(0, 1, 0), (0, -1, 0)],
+            "Z": [(0, 0, -1), (0, 0, 1)],
+            "-Z": [(0, 0, 1), (0, 0, -1)],
+        }
+        # test with axis from string
+        for axis in expected_dict:
+            shape.rotation_axis = axis
+            assert shape.get_rotation_axis() == expected_dict[axis]
+
+        # test with axis from list of two points
+        expected_axis = [(-1, -2, -3), (1, 4, 5)]
+        shape.rotation_axis = expected_axis
+        assert shape.get_rotation_axis() == expected_axis
+
+        # test with axis from workplane
+        shape.rotation_axis = None
+
+        workplanes = ["XY", "XZ", "YZ"]
+        expected_axis = ["Y", "Z", "Z"]
+        for wp, axis in zip(workplanes, expected_axis):
+            shape.workplane = wp
+            assert shape.get_rotation_axis() == expected_dict[axis]
+
+        # test with axis from path_workplane
+        for wp, axis in zip(workplanes, expected_axis):
+            shape.path_workplane = wp
+            assert shape.get_rotation_axis() == expected_dict[axis]
+
+    def test_rotation_axis_error(self):
+        """Checks errors are raised when incorrect values of rotation_axis are
+        set
+        """
+        incorrect_values = [
+            "coucou",
+            2,
+            2.2,
+            [(1, 1, 1), 'coucou'],
+            [(1, 1, 1), 1],
+            [(1, 1, 1), 1.0],
+            [(1, 1, 1), (1, 1, 1)],
+            [(1, 1, 1), (1, 0, 1, 2)],
+            [(1, 1, 1, 2), (1, 0, 2)],
+            [(1, 1, 2), [1, 0, 2]],
+            [(1, 1, 1)],
+            [(1, 1, 1), (1, 'coucou', 1)],
+            [(1, 1, 1), (1, 0, 1), (1, 2, 3)],
+        ]
+        shape = paramak.Shape()
+
+        def set_value():
+            shape.rotation_axis = incorrect_values[i]
+
+        for i in range(len(incorrect_values)):
+            self.assertRaises(ValueError, set_value)
+
 
 if __name__ == "__main__":
     unittest.main()

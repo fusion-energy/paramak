@@ -45,6 +45,11 @@ class Shape:
             Defaults to 0.0.
         workplane (str, optional): the orientation of the Cadquery workplane.
             (XY, YZ or XZ). Defaults to "XZ".
+        rotation_axis (str or list, optional): rotation axis around which the
+            solid is rotated. If None, the rotation axis will depend on the
+            workplane or path_workplane if applicable. Can be set to "X", "-Y",
+            "Z", etc. A custom axis can be set by setting a list of two XYZ
+            floats. Defaults to None.
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
             the neutronics description output. Defaults to None.
         physical_groups (dict, optional): contains information on physical
@@ -71,6 +76,7 @@ class Shape:
         stl_filename=None,
         azimuth_placement_angle=0.0,
         workplane="XZ",
+        rotation_axis=None,
         tet_mesh=None,
         physical_groups=None,
         cut=None,
@@ -91,6 +97,7 @@ class Shape:
 
         self.azimuth_placement_angle = azimuth_placement_angle
         self.workplane = workplane
+        self.rotation_axis = rotation_axis
 
         # neutronics specific properties
         self.material_tag = material_tag
@@ -155,6 +162,41 @@ class Shape:
                 acceptable_values,
                 " not ",
                 value)
+
+    @property
+    def rotation_axis(self):
+        return self._rotation_axis
+
+    @rotation_axis.setter
+    def rotation_axis(self, value):
+        if isinstance(value, str):
+            acceptable_values = \
+                ["X", "Y", "Z", "-X", "-Y", "-Z", "+X", "+Y", "+Z"]
+            if value not in acceptable_values:
+                msg = "Shape.rotation_axis must be one of " + \
+                    " ".join(acceptable_values) + \
+                    " not " + value
+                raise ValueError(msg)
+        elif isinstance(value, Iterable):
+            msg = "Shape.rotation_axis must be a list of two (X, Y, Z) floats"
+            if len(value) != 2:
+                raise ValueError(msg)
+            for point in value:
+                if not isinstance(point, tuple):
+                    raise ValueError(msg)
+                if len(point) != 3:
+                    raise ValueError(msg)
+                for val in point:
+                    if not isinstance(val, (int, float)):
+                        raise ValueError(msg)
+
+            if value[0] == value[1]:
+                msg = "The two points must be different"
+                raise ValueError(msg)
+        elif value is not None:
+            msg = "Shape.rotation_axis must be a list or a string or None"
+            raise ValueError(msg)
+        self._rotation_axis = value
 
     @property
     def volume(self):
@@ -514,13 +556,47 @@ class Shape:
         for angle in azimuth_placement_angles:
             rotated_solids.append(
                 solid.rotate(
-                    (0, 0, -1), (0, 0, 1), angle))
+                    *self.get_rotation_axis(), angle))
         solid = cq.Workplane(self.workplane)
 
         # Joins the seperate solids together
         for i in rotated_solids:
             solid = solid.union(i)
         return solid
+
+    def get_rotation_axis(self):
+        """Returns the rotation axis for a given shape. If self.rotation_axis
+        is None, the rotation axis will be computed from self.workplane (or
+        from self.path_workplane if applicable). If self.rotation_axis is an
+        acceptable string (eg. "X", "+Y", "-Z"...) then this axis will be used.
+        If self.rotation_axis is a list of two points, then these two points
+        will be used to form an axis.
+
+        Returns:
+            list: list of two XYZ points
+        """
+        rotation_axis = {
+            "X": [(-1, 0, 0), (1, 0, 0)],
+            "-X": [(1, 0, 0), (-1, 0, 0)],
+            "Y": [(0, -1, 0), (0, 1, 0)],
+            "-Y": [(0, 1, 0), (0, -1, 0)],
+            "Z": [(0, 0, -1), (0, 0, 1)],
+            "-Z": [(0, 0, 1), (0, 0, -1)],
+        }
+        if isinstance(self.rotation_axis, str):
+            # X, Y or Z axis
+            return rotation_axis[self.rotation_axis.replace("+", "")]
+        elif isinstance(self.rotation_axis, Iterable):
+            # Custom axis
+            return self.rotation_axis
+        elif self.rotation_axis is None:
+            # Axis from workplane or path_workplane
+            if hasattr(self, "path_workplane"):
+                # compute from path_workplane instead
+                workplane = self.path_workplane
+            else:
+                workplane = self.workplane
+            return rotation_axis[workplane[1]]
 
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the
