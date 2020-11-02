@@ -84,7 +84,8 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 50), (20, 50), (20, 0)], distance=30
         )
 
-        assert test_shape.area == pytest.approx((50 * 20 * 2) + (30 * 20 * 2) + (50 * 30 * 2))
+        assert test_shape.area == pytest.approx(
+            (50 * 20 * 2) + (30 * 20 * 2) + (50 * 30 * 2))
         assert len(test_shape.areas) == 6
         assert test_shape.areas.count(pytest.approx(50 * 20)) == 2
         assert test_shape.areas.count(pytest.approx(30 * 20)) == 2
@@ -95,11 +96,13 @@ class test_object_properties(unittest.TestCase):
             distance=50
         )
 
-        assert test_shape.area == pytest.approx((20 * 50 * 2 * 2) + (20 * 50 * 2) + (10 * (29 ** 0.5) * 50 * 4))
+        assert test_shape.area == pytest.approx(
+            (20 * 50 * 2 * 2) + (20 * 50 * 2) + (10 * (29 ** 0.5) * 50 * 4))
         assert len(test_shape.areas) == 8
         assert test_shape.areas.count(pytest.approx(20 * 50 * 2)) == 2
         assert test_shape.areas.count(pytest.approx(50 * 20)) == 2
-        assert test_shape.areas.count(pytest.approx(10 * (29 ** 0.5) * 50)) == 4
+        assert test_shape.areas.count(
+            pytest.approx(10 * (29 ** 0.5) * 50)) == 4
 
     def test_extruded_shape_relative_volume(self):
         """Creates two extruded shapes at different placement angles using

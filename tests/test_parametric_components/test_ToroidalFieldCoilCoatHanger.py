@@ -50,8 +50,9 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
             distance=50, number_of_coils=1, with_inner_leg=False,
         )
         assert test_shape_2.solid is not None
-        assert test_shape_2.volume == pytest.approx(test_volume_1 - inner_leg_volume)
-    
+        assert test_shape_2.volume == pytest.approx(
+            test_volume_1 - inner_leg_volume)
+
     def test_ToroidalFieldCoilCoatHanger_absolute_volume(self):
         """creates a tf coil using the ToroidalFieldCoilCoatHanger parametric
         component and checks that the volume is correct"""
@@ -66,10 +67,12 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
             number_of_coils=1,
         )
 
-        assert test_shape.volume == pytest.approx((400*50*30*2) + ((50*50*30/2)*2) + (50*500*30) + (((150*250*30) - (((100*250)/2)*30) - (((100*250)/2)*30))*2) + (50*1000*30))
+        assert test_shape.volume == pytest.approx((400 * 50 * 30 * 2) + ((50 * 50 * 30 / 2) * 2) + (50 * 500 * 30) + (
+            ((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30)) * 2) + (50 * 1000 * 30))
 
         test_shape.with_inner_leg = False
-        assert test_shape.volume == pytest.approx((400*50*30*2) + ((50*50*30/2)*2) + (50*500*30) + (((150*250*30) - (((100*250)/2)*30) - (((100*250)/2)*30))*2))
+        assert test_shape.volume == pytest.approx((400 * 50 * 30 * 2) + ((50 * 50 * 30 / 2) * 2) + (
+            50 * 500 * 30) + (((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30)) * 2))
 
     def test_ToroidalFieldCoilCoatHanger_rotation_angle(self):
         """Creates a tf coil with a rotation_angle < 360 degrees and checks

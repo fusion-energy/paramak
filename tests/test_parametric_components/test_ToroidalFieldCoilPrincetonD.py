@@ -47,7 +47,8 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         )
 
         assert test_shape_2.solid is not None
-        assert test_shape_2.volume == pytest.approx(test_volume_1 - inner_leg_volume)
+        assert test_shape_2.volume == pytest.approx(
+            test_volume_1 - inner_leg_volume)
 
     def test_ToroidalFieldCoilPrincetonD_rotation_angle(self):
         """Creates a tf coil with a rotation_angle < 360 degrees and checks
