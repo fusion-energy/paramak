@@ -45,6 +45,11 @@ class Shape:
             Defaults to 0.0.
         workplane (str, optional): the orientation of the Cadquery workplane.
             (XY, YZ or XZ). Defaults to "XZ".
+        rotation_axis (str or list, optional): rotation axis around which the
+            solid is rotated. If None, the rotation axis will depend on the
+            workplane or path_workplane if applicable. Can be set to "X", "-Y",
+            "Z", etc. A custom axis can be set by setting a list of two XYZ
+            floats. Defaults to None.
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
             the neutronics description output. Defaults to None.
         physical_groups (dict, optional): contains information on physical
