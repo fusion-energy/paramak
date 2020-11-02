@@ -499,6 +499,33 @@ class test_object_properties(unittest.TestCase):
             shape.path_workplane = wp
             assert shape.get_rotation_axis() == expected_dict[axis]
 
+    def test_rotation_axis_error(self):
+        """Checks errors are raised when incorrect values of rotation_axis are
+        set
+        """
+        incorrect_values = [
+            "coucou",
+            2,
+            2.2,
+            [(1, 1, 1), 'coucou'],
+            [(1, 1, 1), 1],
+            [(1, 1, 1), 1.0],
+            [(1, 1, 1), (1, 1, 1)],
+            [(1, 1, 1), (1, 0, 1, 2)],
+            [(1, 1, 1, 2), (1, 0, 2)],
+            [(1, 1, 2), [1, 0, 2]],
+            [(1, 1, 1)],
+            [(1, 1, 1), (1, 'coucou', 1)],
+            [(1, 1, 1), (1, 0, 1), (1, 2, 3)],
+        ]
+        shape = paramak.Shape()
+
+        def set_value():
+            shape.rotation_axis = incorrect_values[i]
+
+        for i in range(len(incorrect_values)):
+            self.assertRaises(ValueError, set_value)
+
 
 if __name__ == "__main__":
     unittest.main()
