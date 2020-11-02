@@ -74,6 +74,35 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert test_shape.volume == pytest.approx((400 * 50 * 30 * 2) + ((50 * 50 * 30 / 2) * 2) + (
             50 * 500 * 30) + (((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30)) * 2))
 
+    def test_ToroidalFieldCoilCoatHanger_absolute_volume(self):
+        """creates a tf coil using the ToroidalFieldCoilCoatHanger parametric
+        component and checks that the areas of the faces are correct"""
+
+        test_shape = paramak.ToroidalFieldCoilCoatHanger(
+            horizontal_start_point=(200, 500),
+            horizontal_length=400,
+            vertical_start_point=(700, 0),
+            vertical_length=500,
+            thickness=50,
+            distance=30,
+            number_of_coils=1,
+        )
+
+        assert test_shape.area == pytest.approx((((400*50*2) + (50*50*0.5*2) + (((150*250) - (100*250*0.5) - (100*250*0.5))*2) + (500*50))*2) + ((50*30)*4) + ((400*30)*4) + ((500*30)*2) + ((((50**2 + 50**2)**0.5) * 30)*2) + ((((100**2 + 250**2)**0.5) * 30)*4) + ((50*1000)*2) + ((1000*30)*2))
+        assert len(test_shape.areas) == 22
+        assert test_shape.areas.count(pytest.approx((400*50*2) + (50*50*0.5*2) + (((150*250) - (100*250*0.5) - (100*250*0.5))*2) + (500*50))) == 2
+        assert test_shape.areas.count(pytest.approx(50*30)) == 4
+        assert test_shape.areas.count(pytest.approx(400*30)) == 4
+        assert test_shape.areas.count(pytest.approx(500*30)) == 2
+        assert test_shape.areas.count(pytest.approx(((50**2 + 50**2)**0.5) * 30)) == 2
+        assert test_shape.areas.count(pytest.approx(((100**2 + 250**2)**0.5) * 30)) == 4
+        assert test_shape.areas.count(pytest.approx(50*1000)) == 2
+        assert test_shape.areas.count(pytest.approx(1000*30)) == 2
+
+        test_shape.with_inner_leg = False
+        assert test_shape.area == pytest.approx((((400*50*2) + (50*50*0.5*2) + (((150*250) - (100*250*0.5) - (100*250*0.5))*2) + (500*50))*2) + ((50*30)*2) + ((400*30)*4) + ((500*30)*2) + ((((50**2 + 50**2)**0.5) * 30)*2) + ((((100**2 + 250**2)**0.5) * 30)*4))
+
+
     def test_ToroidalFieldCoilCoatHanger_rotation_angle(self):
         """Creates a tf coil with a rotation_angle < 360 degrees and checks
         that the correct cut is performed and the volume is correct."""
