@@ -18,6 +18,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         stl_filename (str, optional): defaults to "InnerTfCoilsCircular.stl".
         material_tag (str, optional): defaults to "inner_tf_coil_mat".
         workplane (str, optional): defaults to "XY".
+        rotation_axis (str, optional): Defaults to "Z".
     """
 
     def __init__(
