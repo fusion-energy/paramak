@@ -41,7 +41,7 @@ class test_object_properties(unittest.TestCase):
 
         test_shape.rotation_angle = 180
         assert test_shape.area == pytest.approx(
-            ((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * math.pi * (60 * 2) / 2), abs=0.1)
+            ((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * math.pi * (60 * 2) / 2), rel=0.01)
         assert len(test_shape.areas) == 3
         assert test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
         assert test_shape.areas.count(pytest.approx(
@@ -49,7 +49,7 @@ class test_object_properties(unittest.TestCase):
 
         test_shape.rotation_angle = 360
         assert test_shape.area == pytest.approx(
-            math.pi * (10 * 2) * math.pi * (60 * 2))
+            math.pi * (10 * 2) * math.pi * (60 * 2), rel=0.01)
         assert len(test_shape.areas) == 1
         assert test_shape.areas.count(pytest.approx(
             math.pi * (10 * 2) * math.pi * (60 * 2))) == 1
