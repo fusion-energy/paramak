@@ -54,7 +54,7 @@ jobs:
           name: run example tests
           command: 
 
-            pytest tests/test_examples/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_examples.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run parametric_reactors tests
