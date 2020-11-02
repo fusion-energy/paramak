@@ -62,11 +62,11 @@ jobs:
 
             pytest tests/test_examples.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run neutronics tests
-          command: 
+      # - run:
+      #     name: run neutronics tests
+      #     command: 
 
-            pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      #       pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       - store_test_results:
           path: test-reports
