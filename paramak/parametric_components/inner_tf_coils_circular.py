@@ -32,6 +32,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         stl_filename="InnerTfCoilsCircular.stl",
         material_tag="inner_tf_coil_mat",
         workplane="XY",
+        rotation_axis="Z",
         **kwargs
     ):
 
@@ -41,6 +42,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
             stl_filename=stl_filename,
             material_tag=material_tag,
             workplane=workplane,
+            rotation_axis=rotation_axis,
             **kwargs
         )
 
