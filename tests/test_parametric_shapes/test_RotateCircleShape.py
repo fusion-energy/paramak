@@ -36,7 +36,7 @@ class test_object_properties(unittest.TestCase):
         are correct"""
 
         test_shape = RotateCircleShape(
-            points=[(60, 0)], 
+            points=[(60, 0)],
             radius=10
         )
 
@@ -46,7 +46,7 @@ class test_object_properties(unittest.TestCase):
         assert len(test_shape.areas) == 3
         assert test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
         assert test_shape.areas.count(pytest.approx(
-            math.pi * (10*2) * math.pi * (60*2) * 0.5)) == 1
+            math.pi * (10 * 2) * math.pi * (60 * 2) * 0.5)) == 1
 
         test_shape.rotation_angle = 270
         assert test_shape.area == pytest.approx(
