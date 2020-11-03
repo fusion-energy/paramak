@@ -137,7 +137,7 @@ class NeutronicsModelFromReactor():
 
     @faceting_tolerance.setter
     def faceting_tolerance(self, value):
-        if not isinstance(value, (int,float)):
+        if not isinstance(value, (int, float)):
             raise ValueError(
                 "NeutronicsModelFromReactor.faceting_tolerance should be a\
                 number (floats or ints are accepted)")
@@ -149,7 +149,7 @@ class NeutronicsModelFromReactor():
 
     @merge_tolerance.setter
     def merge_tolerance(self, value):
-        if not isinstance(value, (int,float)):
+        if not isinstance(value, (int, float)):
             raise ValueError(
                 "NeutronicsModelFromReactor.merge_tolerance should be a\
                 number (floats or ints are accepted)")
@@ -227,7 +227,7 @@ class NeutronicsModelFromReactor():
                 raise ValueError(
                     "material has been added that is not needed for this \
                     reactor model", reactor_material)
-    
+
         openmc_materials = {}
         for material_tag, material_entry in self.materials.items():
             if isinstance(material_entry, str):
@@ -336,10 +336,9 @@ class NeutronicsModelFromReactor():
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
                 raise ValueError("The make_faceteted_neutronics_model.py was \
-                    not found in the directory") 
-            os.system(
-                "trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='"+str(self.faceting_tolerance)+"'\" \"merge_tolerance='"+str(self.merge_tolerance)+"'\""
-            )
+                    not found in the directory")
+            os.system("trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
+                      str(self.faceting_tolerance) + "'\" \"merge_tolerance='" + str(self.merge_tolerance) + "'\"")
 
             if not Path("dagmc_not_watertight.h5m").is_file():
                 raise ValueError("The dagmc_not_watertight.h5m was not found \

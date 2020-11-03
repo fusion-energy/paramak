@@ -6,6 +6,7 @@ import paramak
 import neutronics_material_maker as nmm
 import matplotlib.pyplot as plt
 
+
 def make_model_and_simulate(temperature):
     """Makes a neutronics Reactor model and simulates the flux"""
 
@@ -27,7 +28,8 @@ def make_model_and_simulate(temperature):
         plasma_high_point=(200, 150)
     )
 
-    # this can just be set as a string as temperature is needed for this material
+    # this can just be set as a string as temperature is needed for this
+    # material
     flibe = nmm.Material('FLiBe', temperature_in_C=temperature)
 
     # makes the neutronics model from the geometry and material allocations
@@ -52,13 +54,14 @@ def make_model_and_simulate(temperature):
     neutronics_model.simulate(method='trelis')
     return neutronics_model.results['TBR']
 
+
 if __name__ == "__main__":
     tbr_values = []
     temperature_values = [32, 100, 200, 300, 400, 500]
     for temperature in temperature_values:
         tbr = make_model_and_simulate(temperature)
         tbr_values.append(tbr)
-    
+
     # plots the results
     plt.scatter(temperature_values, tbr_values)
     plt.xlabel('FLiBe Temperature (degrees C)')
