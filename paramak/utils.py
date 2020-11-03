@@ -197,6 +197,7 @@ def calculate_wedge_cut(self):
 
 
 class FaceAreaSelector(cq.Selector):
+    """Filters faces based on their area with a tolerance"""
 
     def __init__(self, area, tol=0.1):
         self.area = area
@@ -215,6 +216,7 @@ class FaceAreaSelector(cq.Selector):
 
 
 class EdgeLengthSelector(cq.Selector):
+    """Filters edges based on their length with a tolerance"""
 
     def __init__(self, length, tol=0.1):
         self.length = length
