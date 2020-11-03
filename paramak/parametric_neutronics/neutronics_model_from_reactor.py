@@ -410,6 +410,9 @@ class NeutronicsModelFromReactor():
 
         if self.model is None:
             self.create_neutronics_model(method=method)
+
+        # deletes summary.h5m if it already exists
+        os.system('rm summary.h5m')
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
 
