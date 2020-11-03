@@ -70,7 +70,8 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
             distance=50, number_of_coils=8, vertical_displacement=10,
             with_inner_leg=True
         )
-        assert test_shape_2.volume == pytest.approx(test_volume_1 * 8, rel=0.01)
+        assert test_shape_2.volume == pytest.approx(
+            test_volume_1 * 8, rel=0.01)
 
     def test_ToroidalFieldCoilTripleArc_rotation_angle(self):
         """Creates tf coils with rotation_angles < 360 in different workplanes

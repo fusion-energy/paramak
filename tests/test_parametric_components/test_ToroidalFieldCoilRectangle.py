@@ -73,7 +73,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         test_shape.with_inner_leg = True
         test_shape.number_of_coils = 8
         assert test_shape.volume == pytest.approx(
-            ((850 * 150 * 50 *2) + (1400 *150 * 50 * 2)) * 8
+            ((850 * 150 * 50 * 2) + (1400 * 150 * 50 * 2)) * 8
         )
 
         test_shape.with_inner_leg = False
