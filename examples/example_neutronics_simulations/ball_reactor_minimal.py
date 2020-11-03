@@ -1,5 +1,5 @@
 """This is a minimal example that obtains the TBR (Tritium Breeding Ratio)
-for a parametric reactor"""
+for a parametric ball reactor"""
 
 import paramak
 
@@ -40,8 +40,8 @@ def make_model_and_simulate():
         simulation_particles_per_batch=1e4,
     )
 
-    # simulate the neutroonics model
-    neutronics_model.simulate()
+    # simulate the neutronics model
+    neutronics_model.simulate(method='trelis')
     print(neutronics_model.results)
 
 

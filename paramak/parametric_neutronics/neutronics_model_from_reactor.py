@@ -68,6 +68,10 @@ class NeutronicsModelFromReactor():
         shafranov_shift: (float): 0.44789,
         triangularity: (float): 0.270,
         ion_temperature_beta: (float): 6,
+        merge_tolerance(float): the tolerance to use when merging surfaces.
+            Defaults to 1e-4.
+        faceting_tolerance(float): the tolerance to use when faceting surfaces.
+            Defaults to 1e-1.
     """
 
     def __init__(
@@ -90,7 +94,9 @@ class NeutronicsModelFromReactor():
         pedestal_radius_factor=0.8,
         shafranov_shift=0.44789,
         ion_temperature_beta=6,
-        max_lost_particles=10
+        max_lost_particles=10,
+        faceting_tolerance=1e-1,
+        merge_tolerance=1e-4
     ):
 
         self.reactor = reactor
@@ -111,6 +117,8 @@ class NeutronicsModelFromReactor():
         self.simulation_batches = simulation_batches
         self.simulation_particles_per_batch = simulation_particles_per_batch
         self.max_lost_particles = max_lost_particles
+        self.faceting_tolerance = faceting_tolerance
+        self.merge_tolerance = merge_tolerance
 
         self.model = None
         self.fusion_power = fusion_power
@@ -122,6 +130,30 @@ class NeutronicsModelFromReactor():
             print('remaking reactor as it was not set to 360 degrees')
             reactor.solid
             # TODO make use of reactor.create_solids() here
+
+    @property
+    def faceting_tolerance(self):
+        return self._faceting_tolerance
+
+    @faceting_tolerance.setter
+    def faceting_tolerance(self, value):
+        if not isinstance(value, (int,float)):
+            raise ValueError(
+                "NeutronicsModelFromReactor.faceting_tolerance should be a\
+                number (floats or ints are accepted)")
+        self._faceting_tolerance = value
+
+    @property
+    def merge_tolerance(self):
+        return self._merge_tolerance
+
+    @merge_tolerance.setter
+    def merge_tolerance(self, value):
+        if not isinstance(value, (int,float)):
+            raise ValueError(
+                "NeutronicsModelFromReactor.merge_tolerance should be a\
+                number (floats or ints are accepted)")
+        self._merge_tolerance = value
 
     @property
     def cell_tallies(self):
@@ -182,15 +214,20 @@ class NeutronicsModelFromReactor():
         self._simulation_particles_per_batch = value
 
     def create_materials(self):
+        # checks all the required materials are present
         for reactor_material in self.reactor.material_tags:
             if reactor_material not in self.materials.keys():
                 raise ValueError(
                     "material included by the reactor model has not \
                     been added", reactor_material)
 
-        if len(self.reactor.material_tags) is not len(self.materials.keys()):
-            raise ValueError("materials must contain an entry for every \
-                material in the reactor", self.reactor.material_tags)
+        # checks that no extra materials we added
+        for reactor_material in self.materials.keys():
+            if reactor_material not in self.reactor.material_tags:
+                raise ValueError(
+                    "material has been added that is not needed for this \
+                    reactor model", reactor_material)
+    
         openmc_materials = {}
         for material_tag, material_entry in self.materials.items():
             if isinstance(material_entry, str):
@@ -299,9 +336,10 @@ class NeutronicsModelFromReactor():
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
                 raise ValueError("The make_faceteted_neutronics_model.py was \
-                    not found in the directory")
+                    not found in the directory") 
             os.system(
-                "trelis -batch -nographics make_faceteted_neutronics_model.py")
+                "trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='"+str(self.faceting_tolerance)+"'\" \"merge_tolerance='"+str(self.merge_tolerance)+"'\""
+            )
 
             if not Path("dagmc_not_watertight.h5m").is_file():
                 raise ValueError("The dagmc_not_watertight.h5m was not found \
