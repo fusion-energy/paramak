@@ -19,6 +19,27 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 20 * 20 * 30
 
+    def test_shape_areas(self):
+        """creates an extruded shape using spline connections and checks that the
+        areas of faces are expected"""
+
+        test_shape = ExtrudeSplineShape(
+            points=[
+                (50, 0),
+                (50, 20),
+                (70, 80),
+                (90, 50),
+                (70, 0),
+                (90, -50),
+                (70, -80),
+                (50, -20)
+            ],
+            distance=50
+        )
+
+        assert len(test_shape.areas) == 3
+        assert len(set(test_shape.areas)) == 2
+
     def test_extruded_shape_relative_volume(self):
         """Creates two extruded shapes at different placement angles using
         spline connections and checks that their relative volumes are
