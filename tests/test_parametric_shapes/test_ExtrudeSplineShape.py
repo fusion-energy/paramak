@@ -34,7 +34,8 @@ class test_object_properties(unittest.TestCase):
                 (70, -80),
                 (50, -20)
             ],
-            distance=50
+            distance=50,
+            extrude_both=False
         )
 
         assert len(test_shape.areas) == 3
