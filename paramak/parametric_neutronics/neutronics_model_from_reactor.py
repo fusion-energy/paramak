@@ -394,7 +394,8 @@ class NeutronicsModelFromReactor():
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
 
     def simulate(self, verbose=True, method=None):
-        """Run the OpenMC simulation.
+        """Run the OpenMC simulation. Deletes exisiting simulation output
+        (summary.h5) if files exists.
 
         Arguments:
             verbose: (Boolean, optional): Print the output from OpenMC (true)
@@ -410,6 +411,11 @@ class NeutronicsModelFromReactor():
 
         if self.model is None:
             self.create_neutronics_model(method=method)
+
+        # Deletes summary.h5m if it already exists.
+        # This avoids permission problems when trying to overwrite the file
+        os.system('rm summary.h5')
+
         self.output_filename = self.model.run(output=verbose)
         self.results = self.get_results()
 
