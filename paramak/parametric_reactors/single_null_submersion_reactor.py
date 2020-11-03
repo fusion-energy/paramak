@@ -104,10 +104,6 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         self.elongation = None
         self.triangularity = None
 
-        self.shapes_and_components = []
-
-        self.create_solids()
-
     @property
     def divertor_position(self):
         return self._divertor_position
