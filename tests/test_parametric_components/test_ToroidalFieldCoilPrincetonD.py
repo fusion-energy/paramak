@@ -55,16 +55,16 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         their relative volumes are correct"""
 
         test_shape_1 = paramak.ToroidalFieldCoilPrincetonD(
-            R1=100, R2=300, thickness=50, distance=50, number_of_coils=1,
+            R1=100, R2=300, thickness=50, distance=30, number_of_coils=4,
             with_inner_leg=True
         )
         test_volume_1 = test_shape_1.volume
 
         test_shape_2 = paramak.ToroidalFieldCoilPrincetonD(
-            R1=100, R2=300, thickness=50, distance=50, number_of_coils=8,
+            R1=100, R2=300, thickness=50, distance=30, number_of_coils=8,
             with_inner_leg=True
         )
-        assert test_shape_2.volume == pytest.approx(test_volume_1 * 8)
+        assert test_shape_2.volume == pytest.approx(test_volume_1 * 2)
 
     def test_ToroidalFieldCoilPrincetonD_rotation_angle(self):
         """Creates a tf coil with a rotation_angle < 360 degrees and checks
