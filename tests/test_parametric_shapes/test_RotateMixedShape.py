@@ -95,7 +95,7 @@ class test_object_properties(unittest.TestCase):
                 (70, 0, "straight")
             ]
         )
-        
+
         assert len(test_shape.areas) == 4
         assert len(set(test_shape.areas)) == 4
 
