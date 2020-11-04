@@ -4,6 +4,7 @@ for a parametric submersion reactor"""
 import paramak
 import neutronics_material_maker as nmm
 
+
 def make_model_and_simulate():
     """Makes a neutronics Reactor model and simulates the flux"""
 
@@ -25,7 +26,8 @@ def make_model_and_simulate():
         plasma_high_point=(200, 150)
     )
 
-    # this can just be set as a string as temperature is needed for this material
+    # this can just be set as a string as temperature is needed for this
+    # material
     flibe = nmm.Material('FLiBe', temperature_in_C=500)
 
     # makes the neutronics model from the geometry and material allocations
@@ -47,6 +49,7 @@ def make_model_and_simulate():
     # simulate the neutronics model
     neutronics_model.simulate(method='trelis')
     print(neutronics_model.results)
+
 
 if __name__ == "__main__":
     make_model_and_simulate()
