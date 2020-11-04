@@ -26,7 +26,7 @@ COPY paramak paramak/
 COPY setup.py setup.py
 COPY README.md README.md
 
-RUN pip install .
+RUN pip install .[neutronics]
 
 # Copy over the test folder
 COPY tests tests/
