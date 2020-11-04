@@ -33,9 +33,7 @@ setuptools.setup(
         "plasmaboundaries",
     ],
     extras_require={
-        "neutronics":  [
+        "neutronics": [
             "neutronics_material_maker",
             "parametric_plasma_source",
-        ]
-    }
-)
+        ]})
