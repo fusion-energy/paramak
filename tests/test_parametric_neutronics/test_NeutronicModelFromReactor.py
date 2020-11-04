@@ -57,12 +57,12 @@ class test_neutronics_BallReactor(unittest.TestCase):
         assert neutronics_model.reactor == self.my_reactor
 
         assert neutronics_model.materials == {
-                'inboard_tf_coils_mat': 'copper',
-                'center_column_shield_mat': 'WC',
-                'divertor_mat': 'eurofer',
-                'firstwall_mat': 'eurofer',
-                'blanket_mat': self.blanket_material,
-                'blanket_rear_wall_mat': 'eurofer'}
+            'inboard_tf_coils_mat': 'copper',
+            'center_column_shield_mat': 'WC',
+            'divertor_mat': 'eurofer',
+            'firstwall_mat': 'eurofer',
+            'blanket_mat': self.blanket_material,
+            'blanket_rear_wall_mat': 'eurofer'}
 
         assert neutronics_model.cell_tallies == ['TBR', 'flux', 'heat']
 
