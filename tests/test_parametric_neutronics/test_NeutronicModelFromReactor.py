@@ -1,5 +1,6 @@
 
 import unittest
+import os
 import neutronics_material_maker as nmm
 import paramak
 import pytest
@@ -8,6 +9,8 @@ import pytest
 class test_neutronics_BallReactor(unittest.TestCase):
     def test_tbr_simulation(self):
         """Makes a BallReactor neutronics model and simulates the TBR"""
+
+#     #TODO the x 10e3 is needed for now as the units are wrong
 
         # makes the 3d geometry
         my_reactor = paramak.BallReactor(
