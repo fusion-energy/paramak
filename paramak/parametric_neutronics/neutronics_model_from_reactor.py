@@ -144,7 +144,7 @@ class NeutronicsModelFromReactor():
         if value < 0:
             raise ValueError(
                 "NeutronicsModelFromReactor.faceting_tolerance should be a\
-                positive number")    
+                positive number")
         self._faceting_tolerance = value
 
     @property
@@ -160,7 +160,7 @@ class NeutronicsModelFromReactor():
         if value < 0:
             raise ValueError(
                 "NeutronicsModelFromReactor.merge_tolerance should be a\
-                positive number")    
+                positive number")
         self._merge_tolerance = value
 
     @property
