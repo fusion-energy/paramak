@@ -141,6 +141,10 @@ class NeutronicsModelFromReactor():
             raise ValueError(
                 "NeutronicsModelFromReactor.faceting_tolerance should be a\
                 number (floats or ints are accepted)")
+        if value < 0:
+            raise ValueError(
+                "NeutronicsModelFromReactor.faceting_tolerance should be a\
+                positive number")    
         self._faceting_tolerance = value
 
     @property
@@ -153,6 +157,10 @@ class NeutronicsModelFromReactor():
             raise ValueError(
                 "NeutronicsModelFromReactor.merge_tolerance should be a\
                 number (floats or ints are accepted)")
+        if value < 0:
+            raise ValueError(
+                "NeutronicsModelFromReactor.merge_tolerance should be a\
+                positive number")    
         self._merge_tolerance = value
 
     @property
