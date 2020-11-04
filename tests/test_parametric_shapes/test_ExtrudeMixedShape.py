@@ -58,6 +58,26 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape_1.volume * 4 == pytest.approx(test_shape_2.volume)
 
+    def test_shape_areas(self):
+        """creates an extruded shape using mixed connections and checks that the
+        areas of the faces are expected"""
+
+        test_shape = ExtrudeMixedShape(
+            points=[
+                (50, 0, "straight"),
+                (50, 50, "spline"),
+                (60, 70, "spline"),
+                (70, 50, "circle"),
+                (60, 25, "circle"),
+                (70, 0, "straight")
+            ],
+            extrude_both=False,
+            distance=50
+        )
+
+        assert len(test_shape.areas) == 6
+        assert len(set(test_shape.areas)) == 5
+
     def test_cut_volume(self):
         """creates an extruded shape using straight and spline connections with
         another shape cut out and checks that the volume is correct"""

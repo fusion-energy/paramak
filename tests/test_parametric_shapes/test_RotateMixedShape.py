@@ -81,6 +81,29 @@ class test_object_properties(unittest.TestCase):
         assert test_shape2.solid is not None
         assert 2 * test_shape2.volume == test_shape.volume
 
+    def test_shape_areas(self):
+        """Creates rotated shapes using mixed connections and checks the
+        areas are expected"""
+
+        test_shape = RotateMixedShape(
+            points=[
+                (50, 0, "straight"),
+                (50, 50, "spline"),
+                (60, 70, "spline"),
+                (70, 50, "circle"),
+                (60, 25, "circle"),
+                (70, 0, "straight")
+            ]
+        )
+
+        assert len(test_shape.areas) == 4
+        assert len(set(test_shape.areas)) == 4
+
+        test_shape.rotation_angle = 180
+
+        assert len(test_shape.areas) == 6
+        assert len(set(test_shape.areas)) == 5
+
     def test_shape_volume_with_multiple_azimuth_placement_angles(self):
         """Creates rotated shapes at multiple placement angles using mixed
         connections and checks the volumes are correct."""

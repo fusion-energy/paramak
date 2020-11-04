@@ -60,15 +60,26 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
             vertical_mid_point=(800, 0),
             thickness=150,
             distance=50,
-            number_of_coils=8
+            number_of_coils=1
         )
 
         assert test_shape.volume == pytest.approx(
-            ((850 * 150 * 50 * 2) + (1400 * 150 * 50 * 2)) * 8)
+            (850 * 150 * 50 * 2) + (1400 * 150 * 50 * 2))
 
         test_shape.with_inner_leg = False
         assert test_shape.volume == pytest.approx(
-            ((850 * 150 * 50 * 2) + (1400 * 150 * 50)) * 8)
+            (850 * 150 * 50 * 2) + (1400 * 150 * 50))
+
+        test_shape.with_inner_leg = True
+        test_shape.number_of_coils = 8
+        assert test_shape.volume == pytest.approx(
+            ((850 * 150 * 50 * 2) + (1400 * 150 * 50 * 2)) * 8
+        )
+
+        test_shape.with_inner_leg = False
+        assert test_shape.volume == pytest.approx(
+            ((850 * 150 * 50 * 2) + (1400 * 150 * 50)) * 8
+        )
 
     def test_ToroidalFieldCoilRectangle_absolute_areas(self):
         """creates tf coils using the ToroidalFieldCoilRectangle parametric
