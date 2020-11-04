@@ -506,7 +506,7 @@ class SubmersionTokamak(paramak.Reactor):
             stp_filename="outboard_rear_blanket_wall.stp",
             stl_filename="outboard_rear_blanket_wall.stl",
             name="outboard_rear_blanket_wall",
-            material_tag="rear_blanket_wall_mat",
+            material_tag="blanket_rear_wall_mat",
             union=[
                 self._outboard_rear_blanket_wall_upper,
                 self._outboard_rear_blanket_wall_lower],

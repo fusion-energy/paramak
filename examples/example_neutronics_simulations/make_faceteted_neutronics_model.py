@@ -2,6 +2,37 @@
 import os
 import json
 
+"""This script automatically produces DAGMC compatable geometry. A manifest
+file is required that specfies a the stp filenames and the materials names to
+assign. The name of the manifest file is manifest.json by default but can be
+specified using aprepro arguments. Other optional aprepro arguments are
+faceting_tolerance and merge_tolerance which default to 1e-1 and 1e-4 by
+default
+
+To using this script with Trelis it can be run in batch mode
+trelis -batch -nographics make_faceteted_neutronics_model.py
+
+With the Trelis GUI
+trelis make_faceteted_neutronics_model.py
+
+With additional arguments to overwrite the defaults
+trelis -batch -nographics make_faceteted_neutronics_model.py "faceting_tolerance='1e-4'" "merge_tolerance='1e-4'"
+
+An example manifest file would contain a list of dictionaries with entry having
+stp_filename and material keywords. Here is an example manifest file with just
+two entries.
+
+[
+    {
+        "material": "m1",
+        "stp_filename": "inboard_tf_coils.stp",
+    },
+    {
+        "material": "m2",
+        "stp_filename": "center_column_shield.stp",
+    }
+]
+"""
 
 def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
     body_ids = ""
@@ -80,23 +111,48 @@ def tag_geometry_with_mats(geometry_details):
         )
 
 
-def imprint_and_merge_geometry(tolerance="1e-4"):
+def imprint_and_merge_geometry():
     cubit.cmd("imprint body all")
-    cubit.cmd("merge tolerance " + tolerance)  # optional as there is a default
+    print('using merge_tolerance of ', merge_tolerance)
+    cubit.cmd("merge tolerance " + merge_tolerance)  # optional as there is a default
     cubit.cmd("merge vol all group_results")
     cubit.cmd("graphics tol angle 3")
 
 
 def save_output_files():
+    """This saves the output files"""
     cubit.cmd("set attribute on")
     # use a faceting_tolerance 1.0e-4 or smaller for accurate simulations
-    cubit.cmd('export dagmc "dagmc_not_watertight.h5m" faceting_tolerance 1.0e-1')
+    print('using faceting_tolerance of ', faceting_tolerance)
+    cubit.cmd('export dagmc "dagmc_not_watertight.h5m" faceting_tolerance '+ faceting_tolerance)
     # os.system('mbconvert -1 dagmc_not_watertight.h5m dagmc_not_watertight_edges.h5m')
     with open("geometry_details.json", "w") as outfile:
         json.dump(geometry_details, outfile, indent=4)
 
+aprepro_vars = cubit.get_aprepro_vars()
 
-with open("manifest.json") as f:
+print("Found the following aprepro variables:")
+print(aprepro_vars)
+for var_name in aprepro_vars:
+  val = cubit.get_aprepro_value_as_string(var_name)
+  print("{0} = {1}".format(var_name, val))
+
+if "faceting_tolerance" in aprepro_vars:
+    faceting_tolerance = str(cubit.get_aprepro_value_as_string("faceting_tolerance"))
+else:
+    faceting_tolerance = str(1.0e-1)
+
+if "merge_tolerance" in aprepro_vars:
+    merge_tolerance = str(cubit.get_aprepro_value_as_string("merge_tolerance"))
+else:
+    merge_tolerance = str(1e-4)
+
+if "manifest" in aprepro_vars:
+    manifest_filename = str(cubit.get_aprepro_value_as_string("manifest"))
+else:
+    manifest_filename = "manifest.json"
+
+with open(manifest_filename) as f:
     geometry_details = byteify(json.load(f))
 
 
