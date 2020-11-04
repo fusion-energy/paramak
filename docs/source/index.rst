@@ -60,28 +60,39 @@ Installation
 
 The quickest way to install the Paramak is to use pip. In the terminal type...
 
-.. code-block:: python
+.. code-block:: bash
 
    pip install paramak
 
 Alternatively you can download the repository using the `download link <https://github.com/ukaea/paramak/archive/develop.zip>`_ or clone the repository using:
 
-.. code-block:: python
+.. code-block:: bash
 
    git clone https://github.com/Shimwell/paramak.git
 
 Navigate to the paramak repository and within the terminal install the paramak
 package and the dependencies using pip3.
 
-.. code-block:: python
+.. code-block:: bash
 
    pip install .
 
 Alternatively you can install the paramak with the following command.
 
-.. code-block:: python
+.. code-block:: bash
 
    python setup.py install
+
+You can also install optional dependencies that add some neutronics
+capabilities to the paramak. This will install neutronics_material_maker and
+parametric_plasma_source. In addition to this you would need DAGMC, OpenMC and
+a method of imprinting and merging.
+`More details <https://paramak.readthedocs.io/en/latest/paramak.parametric_neutronics.html>`_
+
+
+.. code-block:: bash
+
+   pip install .[neutronics]
 
 Docker
 ------
