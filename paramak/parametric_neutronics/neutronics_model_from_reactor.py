@@ -632,7 +632,7 @@ class NeutronicsModelFromReactor():
 
                 fig = plt.subplot()
 
-                fig.imshow(my_slice.mean).get_figure().savefig('tritium_production_on_2D_mesh' + tally.name[-3:])
+                fig.imshow(my_slice.mean).get_figure().savefig('tritium_production_on_2D_mesh' + tally.name[-3:], dpi=300)
 
                 del fig
 
@@ -645,7 +645,7 @@ class NeutronicsModelFromReactor():
 
                 fig = plt.subplot()
 
-                fig.imshow(my_slice.mean).get_figure().savefig('heating_on_2D_mesh' + tally.name[-3:])
+                fig.imshow(my_slice.mean).get_figure().savefig('heating_on_2D_mesh' + tally.name[-3:], dpi=300)
 
                 del fig
 
@@ -658,7 +658,7 @@ class NeutronicsModelFromReactor():
 
                 fig = plt.subplot()
 
-                fig.imshow(my_slice.mean).get_figure().savefig('flux_on_2D_mesh' + tally.name[-3:])
+                fig.imshow(my_slice.mean).get_figure().savefig('flux_on_2D_mesh' + tally.name[-3:], dpi=300)
 
                 del fig
 
