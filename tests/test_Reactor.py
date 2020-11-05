@@ -426,11 +426,11 @@ class test_object_properties(unittest.TestCase):
         test_reactor.export_graveyard()
         graveyard_volume_1 = test_reactor.graveyard.volume
 
-        test_reactor.export_graveyard(offset=100)
+        test_reactor.export_graveyard(graveyard_offset=100)
         assert test_reactor.graveyard.volume < graveyard_volume_1
         graveyard_volume_2 = test_reactor.graveyard.volume
 
-        test_reactor.export_graveyard(offset=200)
+        test_reactor.export_graveyard(graveyard_offset=200)
         assert test_reactor.graveyard.volume < graveyard_volume_1
         assert test_reactor.graveyard.volume > graveyard_volume_2
 
