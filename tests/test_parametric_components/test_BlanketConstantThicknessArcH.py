@@ -4,6 +4,7 @@ import unittest
 
 import pytest
 
+
 class test_BlanketConstantThicknessArcH(unittest.TestCase):
     def test_BlanketConstantThickness_creation(self):
         """Creates a blanket using the BlanketConstantThicknessArcH parametric

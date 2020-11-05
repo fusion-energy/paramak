@@ -34,7 +34,7 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
 
     def test_CenterColumnShieldHyperbola_faces(self):
         """Creates a center column shield using the CenterColumnShieldHyperbola
-        parametric component and checks that a solid with the correct number of 
+        parametric component and checks that a solid with the correct number of
         faces is created"""
 
         test_shape = paramak.CenterColumnShieldHyperbola(

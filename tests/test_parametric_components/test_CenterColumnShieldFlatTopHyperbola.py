@@ -72,4 +72,4 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
 
         test_shape.rotation_angle = 180
         assert len(test_shape.areas) == 8
-        assert len(set(test_shape.areas)) == 5 
+        assert len(set(test_shape.areas)) == 5

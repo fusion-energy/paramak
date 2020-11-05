@@ -9,7 +9,10 @@ class test_BlanketFP(unittest.TestCase):
         the BlanketFP parametric component."""
 
         plasma = paramak.Plasma(
-            major_radius=450, minor_radius=150, triangularity=0.55, elongation=2,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
+            elongation=2,
         )
         test_shape = paramak.BlanketFP(
             plasma=plasma,
@@ -27,7 +30,10 @@ class test_BlanketFP(unittest.TestCase):
         that a solid with the correct number of faces is created"""
 
         plasma = paramak.Plasma(
-            major_radius=450, minor_radius=150, triangularity=0.55, elongation=2,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
+            elongation=2,
         )
 
         test_shape = paramak.BlanketFP(
@@ -43,7 +49,7 @@ class test_BlanketFP(unittest.TestCase):
         test_shape.rotation_angle = 180
         assert len(test_shape.areas) == 6
         assert len(set(test_shape.areas)) == 5
-        
+
     def test_BlanketFP_creation_noplasma(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when no plasma is passed."""

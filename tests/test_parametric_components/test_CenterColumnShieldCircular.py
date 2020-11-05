@@ -19,10 +19,13 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
         """Creates a center column shield using the CenterColumnShieldCircular
         parametric component and checks that a solid is created with the correct
         number of faces"""
-        
+
         test_shape = paramak.CenterColumnShieldCircular(
-            height=600, inner_radius=100, mid_radius=150, outer_radius=200, rotation_angle=360
-        )
+            height=600,
+            inner_radius=100,
+            mid_radius=150,
+            outer_radius=200,
+            rotation_angle=360)
         assert len(test_shape.areas) == 4
         # assert len(set(test_shape.areas)) == 3
 

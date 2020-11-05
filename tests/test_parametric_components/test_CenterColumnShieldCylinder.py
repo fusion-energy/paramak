@@ -54,7 +54,8 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
             height=200
         )
 
-        assert test_shape.volume == pytest.approx(((math.pi * (40**2)) - (math.pi * (20**2)))*200)
+        assert test_shape.volume == pytest.approx(
+            ((math.pi * (40**2)) - (math.pi * (20**2))) * 200)
 
     def test_CenterColumnShieldCylinder_absolute_area(self):
         """Creates a CenterColumnShieldCylinder shape and checks that the
@@ -67,9 +68,11 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         )
 
         assert len(test_shape.areas) == 4
-        assert test_shape.area == pytest.approx((((math.pi * (40**2)) - (math.pi * (20**2))) * 2) + (math.pi * (2*40) * 200) + (math.pi * (2*20) * 200))
-        assert test_shape.areas.count(pytest.approx((math.pi * (40**2)) - (math.pi * (20**2)))) == 2
-        assert test_shape.areas.count(pytest.approx(math.pi * (2*40) * 200))
+        assert test_shape.area == pytest.approx((((math.pi * (40**2)) - (math.pi * (
+            20**2))) * 2) + (math.pi * (2 * 40) * 200) + (math.pi * (2 * 20) * 200))
+        assert test_shape.areas.count(pytest.approx(
+            (math.pi * (40**2)) - (math.pi * (20**2)))) == 2
+        assert test_shape.areas.count(pytest.approx(math.pi * (2 * 40) * 200))
 
     def test_export_stp_CenterColumnShieldCylinder(self):
         """Creates a CenterColumnShieldCylinder shape and checks that a stp
