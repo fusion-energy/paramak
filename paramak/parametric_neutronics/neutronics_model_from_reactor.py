@@ -366,15 +366,6 @@ class NeutronicsModelFromReactor():
 
         print('neutronics model saved as dagmc.h5m')
 
-    def plot_neutronics_geometry(self):
-
-        plt.show(self.universe.plot(width=(1200, 1200), basis='xz'))
-        plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
-        plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
-
-        # TODO use colors already assigned to reactor components, like this ...
-        # plt.show(self.universe.plot(width=(1200, 1200), basis='xy', colors={cell_1: 'blue'}))
-
     def create_neutronics_model(self, method=None):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (cell_tallies), simulation settings (batches, particles per batch)
