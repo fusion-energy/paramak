@@ -520,7 +520,10 @@ class Reactor:
             exporters.exportShape(self.solid, "SVG", f)
         print("Saved file as ", Pfilename)
 
-    def export_graveyard(self, graveyard_offset=None, filename="Graveyard.stp"):
+    def export_graveyard(
+            self,
+            graveyard_offset=None,
+            filename="Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -590,7 +593,7 @@ class Reactor:
                     abs(component.solid.val().BoundingBox().zmin),
                     largest_dimension
                 )
-        
+
         largest_dimension = largest_dimension * 2
 
         graveyard_offset = graveyard_offset * 2
