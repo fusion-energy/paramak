@@ -18,3 +18,16 @@ class test_DivertorITER(unittest.TestCase):
 
         test_shape = paramak.ITERtypeDivertor()
         test_shape.export_stp("tests/ITER_div")
+
+    def test_DivertorITER_faces(self):
+        """Creates an ITER-type divertor using the ITERtypeDivertor parametric
+        component and checks that a solid with the correct number of faces is
+        created"""
+
+        test_shape = paramak.ITERtypeDivertor()
+        assert len(test_shape.areas) == 12
+        assert len(set(test_shape.areas)) == 12
+
+        test_shape.rotation_angle = 180
+        assert len(test_shape.areas) == 14
+        assert len(set(test_shape.areas)) == 13

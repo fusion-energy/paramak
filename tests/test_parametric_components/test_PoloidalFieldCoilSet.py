@@ -1,6 +1,8 @@
 
+import math
 import paramak
 import unittest
+import pytest
 
 
 class test_PoloidalFieldCoilSet(unittest.TestCase):
@@ -16,6 +18,40 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
                                                                  (300, 300)])
         assert test_shape.solid is not None
         assert len(test_shape.solid.Solids()) == 3
+
+    def test_PoloidalFieldCoilSet_absolute_volume(self):
+        """Creates a set of pf coils using the PoloidalFieldCoilSet parametric
+        component and checks that the volume is correct"""
+
+        test_shape = paramak.PoloidalFieldCoilSet(
+            heights=[10, 15, 5],
+            widths=[20, 25, 30],
+            center_points=[(100, 100), (200, 200), (300, 300)]
+        )
+
+        assert test_shape.volume == (pytest.approx((10*20*math.pi*(2*100)) + (15*25*math.pi*(2*200)) + (5*30*math.pi*(2*300))))
+
+    def test_PoloidalFieldCoilSet_absolute_areas(self):
+        """Creates a set of pf coils using the PoloidalFieldCoilSet parametric
+        component and checks that the areas of its faces are correct"""
+
+        test_shape = paramak.PoloidalFieldCoilSet(
+            heights=[10, 15, 5],
+            widths=[20, 25, 30],
+            center_points=[(100, 100), (200, 200), (300, 300)]
+        )
+
+        assert len(test_shape.areas) == 12
+        # assert len(set(test_shape.areas)) == 9
+        assert test_shape.areas.count(pytest.approx(20*math.pi*(2*100))) == 2
+        assert test_shape.areas.count(pytest.approx(25*math.pi*(2*200))) == 2
+        assert test_shape.areas.count(pytest.approx(30*math.pi*(2*300))) == 2
+        assert test_shape.areas.count(pytest.approx(10*math.pi*(2*90))) == 1
+        assert test_shape.areas.count(pytest.approx(10*math.pi*(2*110))) == 1
+        assert test_shape.areas.count(pytest.approx(15*math.pi*(2*187.5))) == 1
+        assert test_shape.areas.count(pytest.approx(15*math.pi*(2*212.5))) == 1
+        assert test_shape.areas.count(pytest.approx(5*math.pi*(2*285))) == 1
+        assert test_shape.areas.count(pytest.approx(5*math.pi*(2*315))) == 1
 
     def test_PoloidalFieldCoilSet_incorrect_args(self):
         """Creates a solid using the PoloidalFieldCoilSet parametric component

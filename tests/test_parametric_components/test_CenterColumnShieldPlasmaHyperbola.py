@@ -31,3 +31,19 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_inner_radius)
         self.assertRaises(ValueError, incorrect_inner_height)
+
+    def test_CenterColumnShieldPlasmaHyperbola_faces(self):
+        """Creates a center column shield using the CenterColumnShieldPlasmaHyperbola
+        parametric component and checks that a solid with the correct number of
+        faces is created"""
+
+        test_shape = paramak.CenterColumnShieldPlasmaHyperbola(
+            inner_radius=200, height=800, mid_offset=40, edge_offset=30
+        )
+
+        assert len(test_shape.areas) == 6
+        # assert len(set(test_shape.areas)) == 4
+
+        test_shape.rotation_angle = 180
+        assert len(test_shape.areas) == 8
+        # assert len(set(test_shape.areas)) == 5

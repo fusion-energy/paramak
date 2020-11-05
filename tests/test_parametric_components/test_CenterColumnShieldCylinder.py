@@ -1,5 +1,6 @@
 
 import os
+import math
 import unittest
 from pathlib import Path
 
@@ -19,9 +20,9 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
-    def test_volume_CenterColumnShieldCylinder(self):
-        """Creates a CenterColumnShieldCylinder shape and checks that the
-        volume is correct."""
+    def test_CenterColumnShieldCylinder_relative_volume(self):
+        """Creates CenterColumnShieldCylinder shapes and checks that their
+        relative volumes are correct"""
 
         test_shape = paramak.CenterColumnShieldCylinder(
             rotation_angle=360,
@@ -42,6 +43,33 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         )
 
         assert test_shape.volume == pytest.approx(3534.29 / 2.0)
+
+    def test_CenterColumnShieldCylinder_absolute_volume(self):
+        """Creates a CenterColumnShieldCylinder shape and checks that its
+        relative volume is correct"""
+
+        test_shape = paramak.CenterColumnShieldCylinder(
+            inner_radius=20,
+            outer_radius=40,
+            height=200
+        )
+
+        assert test_shape.volume == pytest.approx(((math.pi * (40**2)) - (math.pi * (20**2)))*200)
+
+    def test_CenterColumnShieldCylinder_absolute_area(self):
+        """Creates a CenterColumnShieldCylinder shape and checks that the
+        areas of the faces of the solid created are correct"""
+
+        test_shape = paramak.CenterColumnShieldCylinder(
+            inner_radius=20,
+            outer_radius=40,
+            height=200
+        )
+
+        assert len(test_shape.areas) == 4
+        assert test_shape.area == pytest.approx((((math.pi * (40**2)) - (math.pi * (20**2))) * 2) + (math.pi * (2*40) * 200) + (math.pi * (2*20) * 200))
+        assert test_shape.areas.count(pytest.approx((math.pi * (40**2)) - (math.pi * (20**2)))) == 2
+        assert test_shape.areas.count(pytest.approx(math.pi * (2*40) * 200))
 
     def test_export_stp_CenterColumnShieldCylinder(self):
         """Creates a CenterColumnShieldCylinder shape and checks that a stp
