@@ -26,7 +26,7 @@ class Reactor:
             make_graveyard methods.
     """
 
-    def __init__(self, shapes_and_components, graveyard_offset=50):
+    def __init__(self, shapes_and_components, graveyard_offset=100):
 
         # calculated internally
         self.material_tags = []
@@ -581,8 +581,19 @@ class Reactor:
                         largest_dimension
                     )
             else:
-                if component.solid.largestDimension() > largest_dimension:
-                    largest_dimension = component.solid.largestDimension()
+                largest_dimension = max(
+                    abs(component.solid.val().BoundingBox().xmax),
+                    abs(component.solid.val().BoundingBox().xmin),
+                    abs(component.solid.val().BoundingBox().ymax),
+                    abs(component.solid.val().BoundingBox().ymin),
+                    abs(component.solid.val().BoundingBox().zmax),
+                    abs(component.solid.val().BoundingBox().zmin),
+                    largest_dimension
+                )
+        
+        largest_dimension = largest_dimension * 2
+
+        graveyard_offset = graveyard_offset * 2
 
         # creates a small box that surrounds the geometry
         inner_box = cq.Workplane("front").box(
