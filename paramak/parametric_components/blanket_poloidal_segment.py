@@ -103,8 +103,8 @@ def compute_lengths_from_angles(angles, distribution):
         points.append(distribution(angle))
 
     lengths = []
-    for i in range(len(points)-1):
-        lengths.append(distance_between_two_points(points[i], points[i+1]))
+    for i in range(len(points) - 1):
+        lengths.append(distance_between_two_points(points[i], points[i + 1]))
     return lengths
 
 
@@ -162,7 +162,7 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
         cost = 0
         for length in lengths:
             if not min_length <= length <= max_length:
-                cost += min(abs(min_length-length), abs(max_length-length))
+                cost += min(abs(min_length - length), abs(max_length - length))
         return cost
 
     # test for several numbers of segments the best config
@@ -171,7 +171,7 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
     for nb_segments in range(min_nb_segments, max_nb_segments + 1):
         # initialise angles to linspace
         list_of_angles = \
-            np.linspace(start_angle, stop_angle, num=nb_segments+1)
+            np.linspace(start_angle, stop_angle, num=nb_segments + 1)
 
         # use scipy minimize to find best set of angles
         res = minimize(
