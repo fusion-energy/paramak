@@ -33,29 +33,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
 
     @segments_angles.setter
     def segments_angles(self, value):
-        if value is None:
-            if self.use_optimiser:
-                def distribution(theta, pkg=np):
-                    """plasma profile, theta being the angle in degree
-                    """
-                    conversion_factor = 2 * np.pi / 360
-                    theta *= conversion_factor
-                    R = self.major_radius + self.minor_radius * pkg.cos(
-                        theta + self.triangularity * pkg.sin(theta)
-                    )
-                    Z = self.elongation * self.minor_radius * pkg.sin(theta) \
-                        + self.vertical_displacement
-                    return R, Z
-
-                value = segments_optimiser(
-                    self.length_limits, self.nb_segments_limits,
-                    distribution, (self.start_angle, self.stop_angle)
-                    )
-            else:
-                value = np.linspace(
-                    self.start_angle, self.stop_angle,
-                    num=self.num_segments)
-        else:
+        if value is not None:
             if self.start_angle is not None or self.stop_angle is not None:
                 msg = "start_angle and stop_angle attributes will be " + \
                     "ignored if segments_angles is not None"
@@ -77,7 +55,30 @@ class BlanketFPPoloidalSegments(BlanketFP):
         self._num_segments = value
 
     def find_points(self):
-        points = super().find_points(angles=self.segments_angles)
+        if self.use_optimiser:
+            def distribution(theta, pkg=np):
+                """plasma profile, theta being the angle in degree
+                """
+                conversion_factor = 2 * np.pi / 360
+                theta *= conversion_factor
+                R = self.major_radius + self.minor_radius * pkg.cos(
+                    theta + self.triangularity * pkg.sin(theta)
+                )
+                Z = self.elongation * self.minor_radius * pkg.sin(theta) \
+                    + self.vertical_displacement
+                return R, Z
+            angles = segments_optimiser(
+                self.length_limits, self.nb_segments_limits,
+                distribution, (self.start_angle, self.stop_angle)
+                )
+        elif self.segments_angles is None:
+            angles = np.linspace(
+                self.start_angle, self.stop_angle,
+                num=self.num_segments + 1)
+        else:
+            angles = self.segments_angles
+
+        points = super().find_points(angles=angles)
 
         # every points straight connections
         for p in points:
@@ -168,7 +169,6 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
     best = [float("inf"), []]
 
     for nb_segments in range(min_nb_segments, max_nb_segments + 1):
-        print(nb_segments)
         # initialise angles to linspace
         list_of_angles = \
             np.linspace(start_angle, stop_angle, num=nb_segments+1)

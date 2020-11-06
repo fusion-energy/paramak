@@ -23,6 +23,39 @@ class test_BlanketFP(unittest.TestCase):
         blanket.nb_segments_limits = (4, 8)
         assert blanket.solid is not None
 
+    def test_modifying_nb_segments_limits(self):
+        """creates a shape and checks that modifying the nb_segments_limits
+        also modifies segmets_angles accordingly
+        """
+        blanket1 = paramak.BlanketFPPoloidalSegments(
+            thickness=20, start_angle=0,
+            stop_angle=180, rotation_angle=180,
+            use_optimiser=True)
+
+        blanket2 = paramak.BlanketFPPoloidalSegments(
+            thickness=20, start_angle=0,
+            stop_angle=180, rotation_angle=180, use_optimiser=True,
+            cut=blanket1)
+
+        blanket1.nb_segments_limits = (4, 8)
+        blanket2.nb_segments_limits = (3, 8)
+
+        assert blanket2.volume != 0
+
+    def test_segments_angles_is_modified_num_segments(self):
+        blanket1 = paramak.BlanketFPPoloidalSegments(
+            thickness=20, start_angle=0,
+            stop_angle=180, rotation_angle=180)
+
+        blanket2 = paramak.BlanketFPPoloidalSegments(
+            thickness=20, start_angle=0,
+            stop_angle=180, rotation_angle=180,
+            cut=blanket1)
+
+        blanket1.num_segments = 8
+        blanket2.num_segments = 5
+        assert blanket2.volume != 0
+
     def test_num_point_is_affected(self):
         blanket = paramak.BlanketFPPoloidalSegments(
             thickness=20, start_angle=0,
