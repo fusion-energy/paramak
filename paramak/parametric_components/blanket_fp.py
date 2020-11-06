@@ -155,7 +155,7 @@ class BlanketFP(RotateMixedShape):
                 return attribute
         return fun
 
-    def find_points(self):
+    def find_points(self, angles=None):
         conversion_factor = 2 * np.pi / 360
 
         def R(theta, pkg=np):
@@ -176,12 +176,15 @@ class BlanketFP(RotateMixedShape):
             )
 
         # create array of angles theta
-        thetas = np.linspace(
-            self.start_angle,
-            self.stop_angle,
-            num=self.num_points,
-            endpoint=True,
-        )
+        if angles is None:
+            thetas = np.linspace(
+                self.start_angle,
+                self.stop_angle,
+                num=self.num_points,
+                endpoint=True,
+            )
+        else:
+            thetas = angles
 
         # create inner points
         inner_offset = self.make_callable(self.offset_from_plasma)

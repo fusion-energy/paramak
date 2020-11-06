@@ -42,7 +42,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
         self._num_segments = value
 
     def find_points(self):
-        points = super().find_points()
+        points = super().find_points(angles=self.segments_angles)
 
         # every points straight connections
         for p in points:
