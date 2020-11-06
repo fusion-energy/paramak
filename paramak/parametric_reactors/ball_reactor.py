@@ -3,6 +3,8 @@ import warnings
 
 import paramak
 
+from paramak.utils import get_hash
+
 
 class BallReactor(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,
@@ -122,7 +124,19 @@ class BallReactor(paramak.Reactor):
 
         self.shapes_and_components = []
 
-        self.create_solids()
+        self.hash_value = None
+
+        # self.create_solids()
+
+    @property
+    def shapes_and_components(self):
+        if get_hash(self) != self.hash_value:
+            self.create_solids()
+        return self._shapes_and_components
+
+    @shapes_and_components.setter
+    def shapes_and_components(self, value):
+        self._shapes_and_components = value
 
     @property
     def pf_coil_radial_thicknesses(self):
@@ -151,6 +165,9 @@ class BallReactor(paramak.Reactor):
               A list of CadQuery solids: A list of 3D solid volumes
 
         """
+
+        self.hash_value = get_hash(self)
+        
         self._rotation_angle_check()
         self._make_plasma()
         self._make_radial_build()

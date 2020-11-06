@@ -26,9 +26,12 @@ class Reactor:
             make_graveyard methods.
     """
 
-    def __init__(self, shapes_and_components, graveyard_offset=500):
+    def __init__(
+        self, 
+        shapes_and_components, 
+        graveyard_offset=500
+    ):
 
-        # calculated internally
         self.material_tags = []
         self.stp_filenames = []
         self.stl_filenames = []

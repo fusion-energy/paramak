@@ -1,4 +1,5 @@
 import math
+from hashlib import blake2b
 from collections import Iterable
 
 import numpy as np
@@ -184,3 +185,33 @@ def calculate_wedge_cut(self):
     else:
         cutting_wedge = paramak.CuttingWedgeFS(self)
         return cutting_wedge
+
+
+def get_hash(shape):
+
+    hash_object = blake2b()
+    shape_dict = dict(shape.__dict__)
+    
+    # could maybe separate into different lists depending on shape or reactor
+    keys_to_ignore = [
+        "_solid", 
+        "_hash_value", 
+        "hash_value", 
+        "_shapes_and_components", 
+        "_plasma", 
+        "_inboard_tf_coils", 
+        "_center_column_shield", 
+        "_firstwall", 
+        "_blanket", 
+        "_blanket_rear_wall", 
+        "_blanket_fw_rear_wall_envelope", 
+        "_divertor"
+    ]
+
+    for key in keys_to_ignore:
+        if key in shape_dict.keys():
+            shape_dict[key] = None
+
+    hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
+    value = hash_object.hexdigest()
+    return value

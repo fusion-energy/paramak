@@ -2,7 +2,6 @@ import json
 import numbers
 import warnings
 from collections import Iterable
-from hashlib import blake2b
 from os import fdopen, remove
 from pathlib import Path
 from shutil import copymode, move
@@ -16,7 +15,7 @@ import cadquery as cq
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
-from paramak.utils import cut_solid, intersect_solid, union_solid
+from paramak.utils import cut_solid, intersect_solid, union_solid, get_hash
 
 
 class Shape:
@@ -115,7 +114,7 @@ class Shape:
     def solid(self):
         """The CadQuery solid of the 3d object. Returns a CadQuery workplane
         or CadQuery Compound"""
-        if self.get_hash() != self.hash_value:
+        if get_hash(self) != self.hash_value:
             self.create_solid()
         return self._solid
 
@@ -939,18 +938,6 @@ class Shape:
 
         return neutronics_description
 
-    def get_hash(self):
-        hash_object = blake2b()
-        shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary
-        # reconstruction
-        shape_dict["_solid"] = None
-        shape_dict["_hash_value"] = None
-
-        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
-        value = hash_object.hexdigest()
-        return value
-
     def perform_boolean_operations(self, solid, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""
@@ -974,7 +961,7 @@ class Shape:
         if self.union is not None:
             solid = union_solid(solid, self.union)
 
-        self.hash_value = self.get_hash()
+        self.hash_value = get_hash(self)
 
         return solid
 
