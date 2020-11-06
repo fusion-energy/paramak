@@ -27,7 +27,7 @@ class test_BlanketFP(unittest.TestCase):
             thickness=20, start_angle=None,
             stop_angle=None, rotation_angle=180,
             cut=blanket1)
-        blanket2.segments_angles = np.array([0, 25, 50, 90, 130, 150, 180])
+        blanket2.segments_angles = [0, 25, 50, 90, 130, 150, 180]
         assert blanket2.volume != 0
 
     def test_warning_segment_angles(self):
@@ -39,13 +39,13 @@ class test_BlanketFP(unittest.TestCase):
             blanket.start_angle = 1
             blanket.stop_angle = 50
             blanket.num_segments = None
-            blanket.segments_angles = np.array([0, 25, 50, 90, 130, 150, 180])
+            blanket.segments_angles = [0, 25, 50, 90, 130, 150, 180]
 
         def warning2():
             blanket.start_angle = None
             blanket.stop_angle = None
             blanket.num_segments = 7
-            blanket.segments_angles = np.array([0, 25, 50, 90, 130, 150, 180])
+            blanket.segments_angles = [0, 25, 50, 90, 130, 150, 180]
 
         self.assertWarns(UserWarning, warning1)
         self.assertWarns(UserWarning, warning2)
