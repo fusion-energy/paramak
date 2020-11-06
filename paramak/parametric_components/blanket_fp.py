@@ -72,10 +72,13 @@ class BlanketFP(RotateMixedShape):
             **kwargs
         )
         # raise error if full coverage and full rotation angle are set
-        if diff_between_angles(start_angle,
-                               stop_angle) == 0 and self.rotation_angle == 360:
-            raise ValueError("Full coverage and 360 rotation will result in a \
-                standard construction error.")
+        if start_angle is not None and stop_angle is not None:
+            if diff_between_angles(start_angle,
+                                   stop_angle) == 0:
+                if self.rotation_angle == 360:
+                    msg = "Full coverage and 360 rotation will" + \
+                        " result in a standard construction error."
+                    raise ValueError(msg)
         self.thickness = thickness
         self.start_angle = start_angle
         self.stop_angle = stop_angle
