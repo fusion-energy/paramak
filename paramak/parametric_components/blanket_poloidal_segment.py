@@ -14,7 +14,6 @@ class BlanketFPPoloidalSegments(BlanketFP):
         **kwargs
     ):
         super().__init__(
-            num_points=num_segments + 1,
             **kwargs
         )
         self.num_segments = num_segments
@@ -39,7 +38,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
 
     @num_segments.setter
     def num_segments(self, value):
-        self.num_points = value
+        self.num_points = value + 1
         self._num_segments = value
 
     def find_points(self):
