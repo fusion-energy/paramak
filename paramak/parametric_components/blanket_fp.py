@@ -203,6 +203,7 @@ class BlanketFP(RotateMixedShape):
         points = inner_points + outer_points
         points[-1][2] = "straight"
         self.points = points
+        return points
 
     def create_offset_points(self, thetas, R_fun, Z_fun, offset):
         """generates a list of points following parametric equations with an
