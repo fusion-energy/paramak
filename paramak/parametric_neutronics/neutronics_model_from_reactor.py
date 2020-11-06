@@ -434,9 +434,8 @@ class NeutronicsModelFromReactor():
         # details about what neutrons interactions to keep track of (tally)
         tallies = openmc.Tallies()
 
-
         if self.mesh_tally_2D is not None:
-            
+
             # Create mesh which will be used for tally
             mesh_width = self.mesh_2D_resolution[1]
             mesh_height = self.mesh_2D_resolution[0]
@@ -458,19 +457,22 @@ class NeutronicsModelFromReactor():
 
             if 'tritium_production' in self.mesh_tally_2D:
                 mesh_filter = openmc.MeshFilter(mesh_xz)
-                mesh_tally = openmc.Tally(name='tritium_production_on_2D_mesh_xz')
+                mesh_tally = openmc.Tally(
+                    name='tritium_production_on_2D_mesh_xz')
                 mesh_tally.filters = [mesh_filter]
                 mesh_tally.scores = ['(n,Xt)']
                 tallies.append(mesh_tally)
 
                 mesh_filter = openmc.MeshFilter(mesh_xy)
-                mesh_tally = openmc.Tally(name='tritium_production_on_2D_mesh_xy')
+                mesh_tally = openmc.Tally(
+                    name='tritium_production_on_2D_mesh_xy')
                 mesh_tally.filters = [mesh_filter]
                 mesh_tally.scores = ['(n,Xt)']
                 tallies.append(mesh_tally)
 
                 mesh_filter = openmc.MeshFilter(mesh_yz)
-                mesh_tally = openmc.Tally(name='tritium_production_on_2D_mesh_yz')
+                mesh_tally = openmc.Tally(
+                    name='tritium_production_on_2D_mesh_yz')
                 mesh_tally.filters = [mesh_filter]
                 mesh_tally.scores = ['(n,Xt)']
                 tallies.append(mesh_tally)
@@ -588,7 +590,6 @@ class NeutronicsModelFromReactor():
         # access the tallies
         for key, tally in sp.tallies.items():
 
-
             if tally.name == 'TBR':
 
                 df = tally.get_pandas_dataframe()
@@ -622,9 +623,9 @@ class NeutronicsModelFromReactor():
                     'result': tally_result,
                     'std. dev.': tally_std_dev,
                 }
-            
+
             if tally.name.startswith('tritium_production_on_2D_mesh'):
-            
+
                 my_tally = sp.get_tally(name=tally.name)
                 my_slice = my_tally.get_slice(scores=['(n,Xt)'])
 
@@ -632,12 +633,13 @@ class NeutronicsModelFromReactor():
 
                 fig = plt.subplot()
 
-                fig.imshow(my_slice.mean).get_figure().savefig('tritium_production_on_2D_mesh' + tally.name[-3:])
+                fig.imshow(my_slice.mean).get_figure().savefig(
+                    'tritium_production_on_2D_mesh' + tally.name[-3:])
 
                 del fig
 
             if tally.name.startswith('heating_on_2D_mesh'):
-            
+
                 my_tally = sp.get_tally(name=tally.name)
                 my_slice = my_tally.get_slice(scores=['heating'])
 
@@ -645,12 +647,13 @@ class NeutronicsModelFromReactor():
 
                 fig = plt.subplot()
 
-                fig.imshow(my_slice.mean).get_figure().savefig('heating_on_2D_mesh' + tally.name[-3:])
+                fig.imshow(my_slice.mean).get_figure().savefig(
+                    'heating_on_2D_mesh' + tally.name[-3:])
 
                 del fig
 
             if tally.name.startswith('flux_on_2D_mesh'):
-            
+
                 my_tally = sp.get_tally(name=tally.name)
                 my_slice = my_tally.get_slice(scores=['flux'])
 
@@ -658,7 +661,8 @@ class NeutronicsModelFromReactor():
 
                 fig = plt.subplot()
 
-                fig.imshow(my_slice.mean).get_figure().savefig('flux_on_2D_mesh' + tally.name[-3:])
+                fig.imshow(my_slice.mean).get_figure().savefig(
+                    'flux_on_2D_mesh' + tally.name[-3:])
 
                 del fig
 
