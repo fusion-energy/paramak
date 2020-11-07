@@ -125,6 +125,24 @@ class BlanketFP(RotateMixedShape):
     def thickness(self, thickness):
         self._thickness = thickness
 
+    @property
+    def inner_points(self):
+        self.find_points()
+        return self._inner_points
+
+    @inner_points.setter
+    def inner_points(self, value):
+        self._inner_points = value
+
+    @property
+    def outer_points(self):
+        self.find_points()
+        return self._outer_points
+
+    @outer_points.setter
+    def outer_points(self, value):
+        self._outer_points = value
+
     def make_callable(self, attribute):
         """This function transforms an attribute (thickness or offset) into a
         callable function of theta
@@ -179,6 +197,7 @@ class BlanketFP(RotateMixedShape):
             thetas, self.R, self.Z, inner_offset
         )
         inner_points[-1][2] = "straight"
+        self.inner_points = inner_points
 
         # create outer points
         thickness = self.make_callable(self.thickness)
@@ -188,10 +207,11 @@ class BlanketFP(RotateMixedShape):
 
         outer_points = self.create_offset_points(
             np.flip(thetas), self.R, self.Z, outer_offset)
+        outer_points[-1][2] = "straight"
+        self.outer_points = outer_points
 
         # assemble
         points = inner_points + outer_points
-        points[-1][2] = "straight"
         self.points = points
         return points
 
