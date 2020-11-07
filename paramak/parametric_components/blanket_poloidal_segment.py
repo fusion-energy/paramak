@@ -13,16 +13,14 @@ class BlanketFPPoloidalSegments(BlanketFP):
         self,
         segments_angles=None,
         num_segments=7,
-        length_limits=(None, None),
-        nb_segments_limits=(2, None),
-        use_optimiser=False,
+        length_limits=None,
+        nb_segments_limits=None,
         stop_on_success=True,
         **kwargs
     ):
         super().__init__(
             **kwargs
         )
-        self.use_optimiser = use_optimiser
         self.num_segments = num_segments
         self.length_limits = length_limits
         self.nb_segments_limits = nb_segments_limits
@@ -57,7 +55,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
         self._num_segments = value
 
     def find_points(self):
-        if self.use_optimiser:
+        if (self.length_limits, self.nb_segments_limits) != (None, None):
             angles = segments_optimiser(
                 self.length_limits, self.nb_segments_limits,
                 self.distribution, (self.start_angle, self.stop_angle),

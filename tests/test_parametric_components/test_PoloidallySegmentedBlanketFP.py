@@ -15,7 +15,7 @@ class test_BlanketFP(unittest.TestCase):
         # Default
         blanket = paramak.BlanketFPPoloidalSegments(
             thickness=20, start_angle=0,
-            stop_angle=180, rotation_angle=180, use_optimiser=True)
+            stop_angle=180, rotation_angle=180)
         assert blanket.solid is not None
 
         # With limits
@@ -38,7 +38,7 @@ class test_BlanketFP(unittest.TestCase):
         blanket = paramak.BlanketFPPoloidalSegments(
             thickness=20, start_angle=0,
             stop_angle=180, rotation_angle=180,
-            use_optimiser=True, stop_on_success=False)
+            stop_on_success=False)
 
         blanket.length_limits = (100, 300)
         blanket.nb_segments_limits = (2, 8)
@@ -57,12 +57,11 @@ class test_BlanketFP(unittest.TestCase):
         """
         blanket1 = paramak.BlanketFPPoloidalSegments(
             thickness=20, start_angle=0,
-            stop_angle=180, rotation_angle=180,
-            use_optimiser=True)
+            stop_angle=180, rotation_angle=180)
 
         blanket2 = paramak.BlanketFPPoloidalSegments(
             thickness=20, start_angle=0,
-            stop_angle=180, rotation_angle=180, use_optimiser=True,
+            stop_angle=180, rotation_angle=180,
             cut=blanket1)
 
         blanket1.nb_segments_limits = (4, 8)
