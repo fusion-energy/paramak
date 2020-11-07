@@ -54,7 +54,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
             self.num_points = value + 1
         self._num_segments = value
 
-    def find_points(self):
+    def get_angles(self):
         if (self.length_limits, self.nb_segments_limits) != (None, None):
             angles = segments_optimiser(
                 self.length_limits, self.nb_segments_limits,
@@ -67,8 +67,10 @@ class BlanketFPPoloidalSegments(BlanketFP):
                 num=self.num_segments + 1)
         else:
             angles = self.segments_angles
+        return angles
 
-        points = super().find_points(angles=angles)
+    def find_points(self):
+        points = super().find_points(angles=self.get_angles())
 
         # every points straight connections
         for p in points:
