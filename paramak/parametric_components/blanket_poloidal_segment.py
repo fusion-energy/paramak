@@ -185,7 +185,6 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
             # cost function value
             best = min(best, [res.fun, optimised_angles], key=lambda x: x[0])
             if stop_on_success:
-                print('The optimised angles are ', optimised_angles)
                 return optimised_angles
 
     # return the results
@@ -194,5 +193,4 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
         msg = "Couldn't find optimum configuration for Blanket segments"
         raise ValueError(msg)
     else:
-        print('The optimised angles are ', optimised_angles)
         return returned_angles
