@@ -107,10 +107,12 @@ class BlanketFPPoloidalSegments(BlanketFP):
         in segments_cutter attribute
         """
         if self.segments_gap > 0:
+            # initialise main cutting shape
             cutting_shape = RotateStraightShape(
                 rotation_angle=self.rotation_angle,
                 azimuth_placement_angle=self.azimuth_placement_angle,
                 union=[])
+            # add points to the shape to avoid void solid
             cutting_shape.points = [
                 (self.major_radius,
                  self.vertical_displacement),
@@ -129,22 +131,26 @@ class BlanketFPPoloidalSegments(BlanketFP):
                  self.minor_radius /
                  10),
             ]
-            i = 0
+
+            # Create cutters for each gap
             for inner_point, outer_point in zip(
                     self.inner_points[1:-1],
                     self.outer_points[-2:0:-1]):
-                i += 1
-                security_factor = 0.5
-                A = (inner_point[0], inner_point[1])
-                B = (outer_point[0], outer_point[1])
-                local_thickness = distance_between_two_points(A, B)
-                A = extend(A, B, -local_thickness * security_factor)
-                B = extend(A, B, local_thickness * (1 + 2 * security_factor))
-
+                # initialise cutter for gap
                 cutter = RotateStraightShape(
                     rotation_angle=self.rotation_angle,
                     azimuth_placement_angle=self.azimuth_placement_angle
                 )
+                # create rectangle of dimension |AB|*2.6 x self.segments_gap
+                A = (inner_point[0], inner_point[1])
+                B = (outer_point[0], outer_point[1])
+
+                # increase rectangle length
+                security_factor = 0.8
+                local_thickness = distance_between_two_points(A, B)
+                A = extend(A, B, -local_thickness * security_factor)
+                B = extend(A, B, local_thickness * (1 + 2 * security_factor))
+                # create points for cutter
                 points_cutter = [
                     A,
                     B,
@@ -163,7 +169,9 @@ class BlanketFPPoloidalSegments(BlanketFP):
                             self.segments_gap),
                         angle=np.pi / 2)]
                 cutter.points = points_cutter
+                # add cutter to global cutting shape
                 cutting_shape.union.append(cutter)
+
             self.segments_cutters = cutting_shape
 
 
