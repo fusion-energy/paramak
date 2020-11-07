@@ -5,11 +5,32 @@ import sympy as sp
 import warnings
 
 from paramak import BlanketFP, RotateStraightShape
-from paramak.utils import cut_solid, rotate, extend, distance_between_two_points
+from paramak.utils import cut_solid, rotate, extend, \
+    distance_between_two_points
 
 
 class BlanketFPPoloidalSegments(BlanketFP):
+    """Poloidally segmented Blanket inheriting from paramak.BlanketFP.
 
+    Args:
+        segments_angles (list, optional): If not None, the segments ends will
+            be located at these angles. If None and if the constraints
+            length_limits and nb_segments_limits are not None, segments angles
+            will be linearly distributed. Else, an optimum configuration
+            meeting the set requirements will be found. Defaults to None.
+        num_segments (int, optional): Number of segments (igored if
+            segments_angles is not None). Defaults to 7.
+        length_limits ((float, float), optional): The minimum and maximum
+            acceptable length of the segments. Ex: (100, 500), (100, None),
+            (None, 300), None, (None, None). Defaults to None.
+        nb_segments_limits ((float, float), optional): The minimum and maximum
+            acceptable number of segments. Ex: (3, 10), (5, None), (None, 7),
+            None, (None, None). Defaults to None.
+        stop_on_success (bool, optional): If True, the optimiser will stop as
+            soon as an acceptable configuration is found. Defaults to True.
+        segments_gap (float, optional): Distance between segments. Defaults to
+            0.0.
+    """
     def __init__(
         self,
         segments_angles=None,
@@ -17,7 +38,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
         length_limits=None,
         nb_segments_limits=None,
         stop_on_success=True,
-        segments_gap=0,
+        segments_gap=0.0,
         **kwargs
     ):
         super().__init__(
@@ -97,8 +118,9 @@ class BlanketFPPoloidalSegments(BlanketFP):
 
     def create_solid(self):
         solid = super().create_solid()
-        if self.segments_cutters is not None:
-            solid = cut_solid(solid, self.segments_cutters)
+        segments_cutters = self.segments_cutters
+        if segments_cutters is not None:
+            solid = cut_solid(solid, segments_cutters)
         self.solid = solid
         return solid
 
