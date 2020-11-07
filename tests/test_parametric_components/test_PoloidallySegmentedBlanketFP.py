@@ -121,3 +121,11 @@ class test_BlanketFP(unittest.TestCase):
 
         self.assertWarns(UserWarning, warning1)
         self.assertWarns(UserWarning, warning2)
+
+    def test_creation_with_gaps(self):
+        blanket = paramak.BlanketFPPoloidalSegments(
+            thickness=20, start_angle=0,
+            stop_angle=180, rotation_angle=180,
+            segments_gap=3
+            )
+        assert blanket.solid is not None
