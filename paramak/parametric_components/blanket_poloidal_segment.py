@@ -112,10 +112,22 @@ class BlanketFPPoloidalSegments(BlanketFP):
                 azimuth_placement_angle=self.azimuth_placement_angle,
                 union=[])
             cutting_shape.points = [
-                (self.major_radius, self.vertical_displacement),
-                (self.major_radius + self.minor_radius/10, self.vertical_displacement),
-                (self.major_radius + self.minor_radius/10, self.vertical_displacement + self.minor_radius/10),
-                (self.major_radius, self.vertical_displacement + self.minor_radius/10),
+                (self.major_radius,
+                 self.vertical_displacement),
+                (self.major_radius +
+                 self.minor_radius /
+                 10,
+                 self.vertical_displacement),
+                (self.major_radius +
+                 self.minor_radius /
+                 10,
+                 self.vertical_displacement +
+                 self.minor_radius /
+                 10),
+                (self.major_radius,
+                 self.vertical_displacement +
+                 self.minor_radius /
+                 10),
             ]
             i = 0
             for inner_point, outer_point in zip(
@@ -126,19 +138,30 @@ class BlanketFPPoloidalSegments(BlanketFP):
                 A = (inner_point[0], inner_point[1])
                 B = (outer_point[0], outer_point[1])
                 local_thickness = distance_between_two_points(A, B)
-                A = extend(A, B, -local_thickness*security_factor)
-                B = extend(A, B, local_thickness*(1 + 2*security_factor))
+                A = extend(A, B, -local_thickness * security_factor)
+                B = extend(A, B, local_thickness * (1 + 2 * security_factor))
 
                 cutter = RotateStraightShape(
                     rotation_angle=self.rotation_angle,
                     azimuth_placement_angle=self.azimuth_placement_angle
-                    )
+                )
                 points_cutter = [
                     A,
                     B,
-                    rotate(B, extend(B, A, self.segments_gap), angle=-np.pi/2),
-                    rotate(A, extend(A, B, self.segments_gap), angle=np.pi/2)
-                ]
+                    rotate(
+                        B,
+                        extend(
+                            B,
+                            A,
+                            self.segments_gap),
+                        angle=-np.pi / 2),
+                    rotate(
+                        A,
+                        extend(
+                            A,
+                            B,
+                            self.segments_gap),
+                        angle=np.pi / 2)]
                 cutter.points = points_cutter
                 cutting_shape.union.append(cutter)
             self.segments_cutters = cutting_shape
