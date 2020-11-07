@@ -59,7 +59,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
             angles = segments_optimiser(
                 self.length_limits, self.nb_segments_limits,
                 self.distribution, (self.start_angle, self.stop_angle)
-                )
+            )
         elif self.segments_angles is None:
             angles = np.linspace(
                 self.start_angle, self.stop_angle,
