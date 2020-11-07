@@ -16,6 +16,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
         length_limits=(None, None),
         nb_segments_limits=(2, None),
         use_optimiser=False,
+        stop_on_success=True,
         **kwargs
     ):
         super().__init__(
@@ -26,6 +27,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
         self.length_limits = length_limits
         self.nb_segments_limits = nb_segments_limits
         self.segments_angles = segments_angles
+        self.stop_on_success = stop_on_success
 
     @property
     def segments_angles(self):
@@ -58,7 +60,8 @@ class BlanketFPPoloidalSegments(BlanketFP):
         if self.use_optimiser:
             angles = segments_optimiser(
                 self.length_limits, self.nb_segments_limits,
-                self.distribution, (self.start_angle, self.stop_angle)
+                self.distribution, (self.start_angle, self.stop_angle),
+                stop_on_success=self.stop_on_success
                 )
         elif self.segments_angles is None:
             angles = np.linspace(
@@ -188,7 +191,8 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
     # return the results
     returned_angles = best[1]
     if returned_angles == []:
-        print("Couldn't find optimum configuration")
-        return
+        msg = "Couldn't find optimum configuration for Blanket segments"
+        raise ValueError(msg)
     else:
+        print('The optimised angles are ', optimised_angles)
         return returned_angles

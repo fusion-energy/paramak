@@ -23,6 +23,34 @@ class test_BlanketFP(unittest.TestCase):
         blanket.nb_segments_limits = (4, 8)
         assert blanket.solid is not None
 
+        # With None length_limits
+        blanket.length_limits = None
+        blanket.nb_segments_limits = (4, 8)
+        assert blanket.solid is not None
+
+        # With None nb_segments_limits
+        blanket.start_angle = 80
+        blanket.length_limits = (100, 300)
+        blanket.nb_segments_limits = None
+        assert blanket.solid is not None
+
+    def test_optimiser(self):
+        blanket = paramak.BlanketFPPoloidalSegments(
+            thickness=20, start_angle=0,
+            stop_angle=180, rotation_angle=180,
+            use_optimiser=True, stop_on_success=False)
+
+        blanket.length_limits = (100, 300)
+        blanket.nb_segments_limits = (2, 8)
+        assert blanket.solid is not None
+
+        def no_possible_config():
+            blanket.length_limits = (10, 20)
+            blanket.nb_segments_limits = (2, 4)
+            blanket.solid
+
+        self.assertRaises(ValueError, no_possible_config)
+
     def test_modifying_nb_segments_limits(self):
         """creates a shape and checks that modifying the nb_segments_limits
         also modifies segmets_angles accordingly
