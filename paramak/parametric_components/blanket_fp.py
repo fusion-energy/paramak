@@ -4,6 +4,8 @@ import sympy as sp
 
 from paramak import RotateMixedShape, diff_between_angles
 
+deg_to_rad = 2 * np.pi / 360
+
 
 class BlanketFP(RotateMixedShape):
     """A blanket volume created from plasma parameters.
@@ -159,24 +161,6 @@ class BlanketFP(RotateMixedShape):
         return fun
 
     def find_points(self, angles=None):
-        conversion_factor = 2 * np.pi / 360
-
-        def R(theta, pkg=np):
-            """R(theta) plasma profile, theta being the angle in degree
-            """
-            theta *= conversion_factor
-            return self.major_radius + self.minor_radius * pkg.cos(
-                theta + self.triangularity * pkg.sin(theta)
-            )
-
-        def Z(theta, pkg=np):
-            """R(theta) plasma profile, theta being the angle in degree
-            """
-            theta *= conversion_factor
-            return (
-                self.elongation * self.minor_radius * pkg.sin(theta)
-                + self.vertical_displacement
-            )
 
         # create array of angles theta
         if angles is None:
@@ -192,7 +176,7 @@ class BlanketFP(RotateMixedShape):
         # create inner points
         inner_offset = self.make_callable(self.offset_from_plasma)
         inner_points = self.create_offset_points(
-            thetas, R, Z, inner_offset
+            thetas, self.R, self.Z, inner_offset
         )
         inner_points[-1][2] = "straight"
 
@@ -203,7 +187,7 @@ class BlanketFP(RotateMixedShape):
             return inner_offset(theta) + thickness(theta)
 
         outer_points = self.create_offset_points(
-            np.flip(thetas), R, Z, outer_offset)
+            np.flip(thetas), self.R, self.Z, outer_offset)
 
         # assemble
         points = inner_points + outer_points
@@ -320,3 +304,23 @@ class BlanketFP(RotateMixedShape):
             group = {"dim": 2, "id": i, "name": surface_names[i - 1]}
             groups.append(group)
         self.physical_groups = groups
+
+    def distribution(self, theta):
+        return self.R(theta), self.Z(theta)
+
+    def R(self, theta, pkg=np):
+        """R(theta) plasma profile, theta being the angle in degree
+        """
+        theta *= deg_to_rad
+        return self.major_radius + self.minor_radius * pkg.cos(
+            theta + self.triangularity * pkg.sin(theta)
+        )
+
+    def Z(self, theta, pkg=np):
+        """R(theta) plasma profile, theta being the angle in degree
+        """
+        theta *= deg_to_rad
+        return (
+            self.elongation * self.minor_radius * pkg.sin(theta)
+            + self.vertical_displacement
+        )

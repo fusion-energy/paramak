@@ -56,20 +56,9 @@ class BlanketFPPoloidalSegments(BlanketFP):
 
     def find_points(self):
         if self.use_optimiser:
-            def distribution(theta, pkg=np):
-                """plasma profile, theta being the angle in degree
-                """
-                conversion_factor = 2 * np.pi / 360
-                theta *= conversion_factor
-                R = self.major_radius + self.minor_radius * pkg.cos(
-                    theta + self.triangularity * pkg.sin(theta)
-                )
-                Z = self.elongation * self.minor_radius * pkg.sin(theta) \
-                    + self.vertical_displacement
-                return R, Z
             angles = segments_optimiser(
                 self.length_limits, self.nb_segments_limits,
-                distribution, (self.start_angle, self.stop_angle)
+                self.distribution, (self.start_angle, self.stop_angle)
                 )
         elif self.segments_angles is None:
             angles = np.linspace(
