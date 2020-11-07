@@ -127,5 +127,5 @@ class test_BlanketFP(unittest.TestCase):
             thickness=20, start_angle=0,
             stop_angle=180, rotation_angle=180,
             segments_gap=3
-            )
+        )
         assert blanket.solid is not None
