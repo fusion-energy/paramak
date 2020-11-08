@@ -37,8 +37,7 @@ class test_BlanketFP(unittest.TestCase):
     def test_optimiser(self):
         blanket = paramak.BlanketFPPoloidalSegments(
             thickness=20, start_angle=0,
-            stop_angle=180, rotation_angle=180,
-            stop_on_success=False)
+            stop_angle=180, rotation_angle=180)
 
         blanket.length_limits = (100, 300)
         blanket.nb_segments_limits = (2, 8)

@@ -26,8 +26,6 @@ class BlanketFPPoloidalSegments(BlanketFP):
         nb_segments_limits ((float, float), optional): The minimum and maximum
             acceptable number of segments. Ex: (3, 10), (5, None), (None, 7),
             None, (None, None). Defaults to None.
-        stop_on_success (bool, optional): If True, the optimiser will stop as
-            soon as an acceptable configuration is found. Defaults to True.
         segments_gap (float, optional): Distance between segments. Defaults to
             0.0.
     """
@@ -38,7 +36,6 @@ class BlanketFPPoloidalSegments(BlanketFP):
         num_segments=7,
         length_limits=None,
         nb_segments_limits=None,
-        stop_on_success=True,
         segments_gap=0.0,
         **kwargs
     ):
@@ -49,7 +46,6 @@ class BlanketFPPoloidalSegments(BlanketFP):
         self.length_limits = length_limits
         self.nb_segments_limits = nb_segments_limits
         self.segments_angles = segments_angles
-        self.stop_on_success = stop_on_success
         self.segments_gap = segments_gap
         self.segments_cutters = None
 
@@ -99,7 +95,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
             angles = segments_optimiser(
                 self.length_limits, self.nb_segments_limits,
                 self.distribution, (self.start_angle, self.stop_angle),
-                stop_on_success=self.stop_on_success
+                stop_on_success=True
             )
         elif self.segments_angles is None:
             angles = np.linspace(
