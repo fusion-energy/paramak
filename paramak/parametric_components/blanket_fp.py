@@ -72,7 +72,6 @@ class BlanketFP(RotateMixedShape):
             stl_filename=stl_filename,
             **kwargs
         )
-        # raise error if full coverage and full rotation angle are set
 
         self.thickness = thickness
         self.start_angle, self.stop_angle = None, None
