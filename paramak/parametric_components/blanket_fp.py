@@ -242,7 +242,7 @@ class BlanketFP(RotateMixedShape):
         offset
 
         Args:
-            thetas (np.array): the angles
+            thetas (np.array): the angles in degrees.
             offset (callable): offset value (cm). offset=0 will follow the
                 parametric equations.
 
@@ -343,6 +343,17 @@ class BlanketFP(RotateMixedShape):
 
     def distribution(self, theta, pkg=np):
         """Plasma distribution theta in degrees
+
+        Args:
+            theta (float or np.array or sp.Symbol): the angle(s) in degrees.
+            pkg (module, optional): Module to use in the funciton. If sp, as
+                sympy object will be returned. If np, a np.array or a float
+                will be returned. Defaults to np.
+
+        Returns:
+            (float, float) or (sympy.Add, sympy.Mul) or
+                (numpy.array, numpy.array): The R and Z coordinates of the
+                point with angle theta
         """
         if pkg == np:
             theta = np.radians(theta)
