@@ -1,7 +1,7 @@
 
 import paramak
 import numpy as np
-
+import cadquery as cq
 
 class SegmentedBlanketBallReactor(paramak.BallReactor):
     """Creates geometry for a single ball reactor with a single divertor
@@ -32,8 +32,8 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             rear wall of the blanket (cm)
         gap_between_blankets (float): the distance between adjacent blanket
             segments,
-        number_of_blanket_segments (int): the number of segments to chop the
-            blanket up into,
+        number_of_blanket_segments (int): the number of segments to divide the
+            blanket up into. This for a full 360 degrees rotation
         elongation (float): the elongation of the plasma
         triangularity (float): the triangularity of the plasma
         number_of_tf_coils (int): the number of tf coils
@@ -56,11 +56,13 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         number_of_tf_coils,
         gap_between_blankets,
         number_of_blanket_segments,
+        #TODO #blanket_fillet_radius,
         **kwargs
     ):
 
         self.gap_between_blankets = gap_between_blankets
         self.number_of_blanket_segments = number_of_blanket_segments
+        #TODO #self.blanket_fillet_radius = blanket_fillet_radius
 
         super().__init__(
             inner_bore_radial_thickness=inner_bore_radial_thickness,
@@ -88,6 +90,9 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
 
     @gap_between_blankets.setter
     def gap_between_blankets(self, value):
+        """Sets the SegmentedBlanketBallReactor.gap_between_blankets
+        attribute which controls the horitzonal distance between blanket
+        segments."""
         if isinstance(value, (float, int)) and value > 0:
             self._gap_between_blankets = float(value)
         else:
@@ -96,6 +101,8 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
 
     @property
     def number_of_blanket_segments(self):
+        """Sets the SegmentedBlanketBallReactor.number_of_blanket_segments
+        attribute which controls the number of blanket segments."""
         return self._number_of_blanket_segments
 
     @number_of_blanket_segments.setter

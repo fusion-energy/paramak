@@ -27,10 +27,10 @@ def cut_solid(solid, cutter):
     """
     Performs a boolean cut of a solid with another solid or iterable of solids.
     Args:
-        solid Shape: the Shape that you want to cut from
-        cutter Shape: the Shape(s) that you want to be the cutting object
+        solid Shape: The Shape that you want to cut from
+        cutter Shape: The Shape(s) that you want to be the cutting object
     Returns:
-        Shape: the original shape cut with the cutter shape(s)
+        Shape: The original shape cut with the cutter shape(s)
     """
     # Allows for multiple cuts to be applied
     if isinstance(cutter, Iterable):
@@ -124,10 +124,10 @@ def intersect_solid(solid, intersecter):
     Performs a boolean intersection of a solid with another solid or iterable of
     solids.
     Args:
-        solid Shape: the Shape that you want to intersect
-        intersecter Shape: the Shape(s) that you want to be the intersecting object
+        solid Shape: The Shape that you want to intersect
+        intersecter Shape: The Shape(s) that you want to be the intersecting object
     Returns:
-        Shape: the original shape cut with the intersecter shape(s)
+        Shape: The original shape cut with the intersecter shape(s)
     """
     # Allows for multiple cuts to be applied
     if isinstance(intersecter, Iterable):
@@ -161,11 +161,11 @@ def union_solid(solid, joiner):
     """
     Performs a boolean union of a solid with another solid or iterable of solids
     Args:
-        solid (Shape): the Shape that you want to union from
-        joiner (Shape): the Shape(s) that you want to form the union with the
+        solid (Shape): The Shape that you want to union from
+        joiner (Shape): The Shape(s) that you want to form the union with the
             solid
     Returns:
-        Shape: the original shape union with the joiner shape(s)
+        Shape: The original shape union with the joiner shape(s)
     """
     # Allows for multiple unions to be applied
     if isinstance(joiner, Iterable):
@@ -194,3 +194,83 @@ def calculate_wedge_cut(self):
                 self.cut = [self.cut, cutting_wedge]
 
         return None
+
+
+class FaceAreaSelector(cq.Selector):
+    """A custom CadQuery selector the selects faces based on their area with a
+    tolerance. The following useage example will fillet the faces of an extrude
+    shape with an area of 0.5. paramak.ExtrudeStraightShape(points=[(1,1),(2,1),
+    (2,2)], distance=5).solid.faces(FaceAreaSelector(0.5)).fillet(0.1)
+
+
+    Args:
+        area (float): The area of the surface to select.
+        tolerance (float, optional): The allowable tolerance of the length
+            (+/-) while still being selected by the custom selector.
+    """
+
+    def __init__(self, area, tol=0.1):
+        self.area = area
+        self.tol = tol
+
+    def filter(self, objectList):
+        """Loops through all the faces in the object checking if the face
+        meets the custom selector requirments or not.
+
+        Args:
+            objectList (cadquery): The object to filter the faces from.
+
+        Returns:
+            objectList (cadquery): The face that match the selector area within
+                the specified tolerance.
+        """
+        new_obj_list = []
+        for obj in objectList:
+            face_area = obj.Area()
+
+            # Only return faces that meet the requirements
+            if face_area > self.area - self.tol and face_area < self.area + self.tol: 
+                new_obj_list.append(obj)
+
+        return new_obj_list
+
+
+class EdgeLengthSelector(cq.Selector):
+    """A custom CadQuery selector the selects edges  based on their length with
+    a tolerance. The following useage example will fillet the inner edge of a
+    rotated triangular shape. paramak.RotateStraightShape(points=[(1,1),(2,1),
+    (2,2)]).solid.edges(paramak.EdgeLengthSelector(6.28)).fillet(0.1)
+
+    Args:
+        length (float): The length of the edge to select.
+        tolerance (float, optional): The allowable tolerance of the length
+            (+/-) while still being selected by the custom selector.
+
+    """
+    def __init__(self, length, tol=0.1):
+        self.length = length
+        self.tol = tol
+
+    def filter(self, objectList):
+        """Loops through all the edges in the object checking if the edge
+        meets the custom selector requirments or not.
+
+        Args:
+            objectList (cadquery): The object to filter the edges from.
+
+        Returns:
+            objectList (cadquery): The edge that match the selector length
+                within the specified tolerance.
+        """
+        new_obj_list = []
+        print('filleting edge#')
+        for obj in objectList:
+
+            edge_len = obj.Length()
+
+            # Only return edges that meet our requirements
+            if edge_len > self.length - self.tol and edge_len < self.length + self.tol: 
+
+                new_obj_list.append(obj)
+        print('length(new_obj_list)', len(new_obj_list))
+        return new_obj_list
