@@ -197,7 +197,14 @@ def calculate_wedge_cut(self):
 
 
 class FaceAreaSelector(cq.Selector):
-    """Filters faces based on their area with a tolerance"""
+    """A custom CadQuery selector the selects faces based on their area with a
+    tolerance.
+
+    Args:
+        area (float): the area of the surface to select.
+        tolerance (float, optional): the allowable tolerance of the length
+            (+/-) while still being selected by the custom selector.
+    """
 
     def __init__(self, area, tol=0.1):
         self.area = area
@@ -206,7 +213,7 @@ class FaceAreaSelector(cq.Selector):
     def filter(self, objectList):
         new_obj_list = []
         for obj in objectList:
-            edge_len = obj.Area()
+            face_area = obj.Area()
 
             # Only return faces that meet the requirements
             if face_area > self.area - self.tol and face_area < self.area + self.tol: 
@@ -216,8 +223,15 @@ class FaceAreaSelector(cq.Selector):
 
 
 class EdgeLengthSelector(cq.Selector):
-    """Filters edges based on their length with a tolerance"""
+    """A custom CadQuery selector the selects edges  based on their length with
+    a tolerance.
 
+    Args:
+        length (float): the length of the edge to select.
+        tolerance (float, optional): the allowable tolerance of the length
+            (+/-) while still being selected by the custom selector.
+
+    """
     def __init__(self, length, tol=0.1):
         self.length = length
         self.tol = tol
