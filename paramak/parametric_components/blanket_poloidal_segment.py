@@ -31,6 +31,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
         segments_gap (float, optional): Distance between segments. Defaults to
             0.0.
     """
+
     def __init__(
         self,
         segments_angles=None,
