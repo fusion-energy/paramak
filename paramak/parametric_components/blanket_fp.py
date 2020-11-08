@@ -216,7 +216,7 @@ class BlanketFP(RotateMixedShape):
         offset
 
         Args:
-            thetas ([type]): [description]
+            thetas (np.array): the angles
             offset (callable): offset value (cm). offset=0 will follow the
                 parametric equations.
 
