@@ -22,7 +22,7 @@ def main():
         elongation=2,
         triangularity=0.55,
         number_of_tf_coils=16,
-        rotation_angle=220,
+        rotation_angle=180,
         pf_coil_radial_thicknesses=[50, 50, 50, 50],
         pf_coil_vertical_thicknesses=[50, 50, 50, 50],
         pf_coil_to_rear_blanket_radial_gap=50,
