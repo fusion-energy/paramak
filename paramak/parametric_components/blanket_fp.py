@@ -1,10 +1,9 @@
 import numpy as np
 from scipy.interpolate import interp1d
 import sympy as sp
+import mpmath
 
 from paramak import RotateMixedShape, diff_between_angles
-
-deg_to_rad = 2 * np.pi / 360
 
 
 class BlanketFP(RotateMixedShape):
@@ -193,9 +192,7 @@ class BlanketFP(RotateMixedShape):
 
         # create inner points
         inner_offset = self.make_callable(self.offset_from_plasma)
-        inner_points = self.create_offset_points(
-            thetas, self.R, self.Z, inner_offset
-        )
+        inner_points = self.create_offset_points(thetas, inner_offset)
         inner_points[-1][2] = "straight"
         self.inner_points = inner_points
 
@@ -205,8 +202,7 @@ class BlanketFP(RotateMixedShape):
         def outer_offset(theta):
             return inner_offset(theta) + thickness(theta)
 
-        outer_points = self.create_offset_points(
-            np.flip(thetas), self.R, self.Z, outer_offset)
+        outer_points = self.create_offset_points(np.flip(thetas), outer_offset)
         outer_points[-1][2] = "straight"
         self.outer_points = outer_points
 
@@ -215,29 +211,23 @@ class BlanketFP(RotateMixedShape):
         self.points = points
         return points
 
-    def create_offset_points(self, thetas, R_fun, Z_fun, offset):
+    def create_offset_points(self, thetas, offset):
         """generates a list of points following parametric equations with an
         offset
 
-        :param thetas: list of angles (radians)
-        :type thetas: list
-        :param R_fun: parametric function for R coordinate (cm)
-        :type R_fun: callable
-        :param Z_fun: parametric function for Z coordinate (cm)
-        :type Z_fun: callable
-        :param offset: offset value (cm). offset=0 will follow the parametric
-         equations.
-        :type offset: callable
-        :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
+        Args:
+            thetas ([type]): [description]
+            offset (callable): offset value (cm). offset=0 will follow the
+                parametric equations.
+
+        Returns:
+            list: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
             ...]
-        :rtype: list
         """
         # create sympy objects and derivatives
         theta_sp = sp.Symbol("theta")
 
-        R_sp = R_fun(theta_sp, pkg=sp)
-        Z_sp = Z_fun(theta_sp, pkg=sp)
-
+        R_sp, Z_sp = self.distribution(theta_sp, pkg=sp)
         R_derivative = sp.diff(R_sp, theta_sp)
         Z_derivative = sp.diff(Z_sp, theta_sp)
         points = []
@@ -257,8 +247,8 @@ class BlanketFP(RotateMixedShape):
             ny /= normal_vector_norm
 
             # calculate outer points
-            val_R_outer = R_fun(theta) + offset(theta) * nx
-            val_Z_outer = Z_fun(theta) + offset(theta) * ny
+            val_R_outer = self.distribution(theta)[0] + offset(theta) * nx
+            val_Z_outer = self.distribution(theta)[1] + offset(theta) * ny
 
             points.append([float(val_R_outer), float(val_Z_outer), "spline"])
         return points
@@ -325,22 +315,18 @@ class BlanketFP(RotateMixedShape):
             groups.append(group)
         self.physical_groups = groups
 
-    def distribution(self, theta):
-        return self.R(theta), self.Z(theta)
-
-    def R(self, theta, pkg=np):
-        """R(theta) plasma profile, theta being the angle in degree
+    def distribution(self, theta, pkg=np):
+        """Plasma distribution theta in degrees
         """
-        theta *= deg_to_rad
-        return self.major_radius + self.minor_radius * pkg.cos(
+        if pkg == np:
+            theta = np.radians(theta)
+        else:
+            theta = mpmath.radians(theta)
+        R = self.major_radius + self.minor_radius * pkg.cos(
             theta + self.triangularity * pkg.sin(theta)
         )
-
-    def Z(self, theta, pkg=np):
-        """R(theta) plasma profile, theta being the angle in degree
-        """
-        theta *= deg_to_rad
-        return (
+        Z = (
             self.elongation * self.minor_radius * pkg.sin(theta)
             + self.vertical_displacement
         )
+        return R, Z
