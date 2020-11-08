@@ -73,14 +73,9 @@ class BlanketFP(RotateMixedShape):
             **kwargs
         )
         # raise error if full coverage and full rotation angle are set
-        if start_angle is not None and stop_angle is not None:
-            if diff_between_angles(start_angle,
-                                   stop_angle) == 0:
-                if self.rotation_angle == 360:
-                    msg = "Full coverage and 360 rotation will" + \
-                        " result in a standard construction error."
-                    raise ValueError(msg)
+
         self.thickness = thickness
+        self.start_angle, self.stop_angle = None, None
         self.start_angle = start_angle
         self.stop_angle = stop_angle
         self.plasma = plasma
@@ -98,6 +93,38 @@ class BlanketFP(RotateMixedShape):
         self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
         self.physical_groups = None
+
+    @property
+    def start_angle(self):
+        return self._start_angle
+
+    @start_angle.setter
+    def start_angle(self, value):
+        if value is not None:
+            if self.stop_angle is not None:
+                if diff_between_angles(value,
+                                       self.stop_angle) == 0:
+                    if self.rotation_angle == 360:
+                        msg = "Full coverage and 360 rotation will" + \
+                            " result in a standard construction error."
+                        raise ValueError(msg)
+        self._start_angle = value
+
+    @property
+    def stop_angle(self):
+        return self._stop_angle
+
+    @stop_angle.setter
+    def stop_angle(self, value):
+        if value is not None:
+            if self.start_angle is not None:
+                if diff_between_angles(self.start_angle,
+                                       value) == 0:
+                    if self.rotation_angle == 360:
+                        msg = "Full coverage and 360 rotation will" + \
+                            " result in a standard construction error."
+                        raise ValueError(msg)
+        self._stop_angle = value
 
     @property
     def physical_groups(self):
