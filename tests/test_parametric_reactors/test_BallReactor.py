@@ -114,6 +114,60 @@ class test_BallReactor(unittest.TestCase):
         )
         test_reactor.export_stp()
         assert len(test_reactor.shapes_and_components) == 8
+        assert test_reactor.pf_coil_radial_thicknesses == [50, 50, 50, 50]
+        assert test_reactor.pf_coil_vertical_thicknesses == [50, 50, 50, 50]
+
+    def test_pf_coil_radial_thicknesses_error(self):
+        test_reactor = paramak.BallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            pf_coil_radial_thicknesses=[50, 50, 50, 50],
+            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
+            pf_coil_to_rear_blanket_radial_gap=50,
+            pf_coil_to_tf_coil_radial_gap=50,
+            rotation_angle=360,
+        )
+
+        def invalid_pf_coil_radial_thicknesses():
+            test_reactor.pf_coil_radial_thicknesses = 2
+        self.assertRaises(ValueError, invalid_pf_coil_radial_thicknesses)
+
+    def test_pf_coil_vertical_thicknesses_error(self):
+        test_reactor = paramak.BallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            pf_coil_radial_thicknesses=[50, 50, 50, 50],
+            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
+            pf_coil_to_rear_blanket_radial_gap=50,
+            pf_coil_to_tf_coil_radial_gap=50,
+            rotation_angle=360,
+        )
+
+        def invalid_pf_coil_vertical_thicknesses():
+            test_reactor.pf_coil_vertical_thicknesses = 2
+        self.assertRaises(ValueError, invalid_pf_coil_vertical_thicknesses)
 
     def test_BallReactor_with_pf_and_tf_coils(self):
         """checks whether a ball reactor with optional pf and tf coils can
@@ -298,7 +352,6 @@ class test_BallReactor(unittest.TestCase):
                              test_reactor_180.shapes_and_components):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
-
     def test_SegmentedBlanketBallReactor_gap_between_blankets_impacts_volume(self):
         """creates a SegmentedBlanketBallReactor with different
         gap_between_blankets and checks the volume of the blankes and the
@@ -398,24 +451,30 @@ class test_BallReactor(unittest.TestCase):
             outer_plasma_gap_radial_thickness=30,
             firstwall_radial_thickness=20,
             blanket_radial_thickness=50,
+
+    def test_single_null_ball_reactor_error(self):
+        test_reactor = paramak.SingleNullBallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=30,
             blanket_rear_wall_radial_thickness=30,
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=16,
+            divertor_position="upper",
             rotation_angle=180,
-            pf_coil_radial_thicknesses=[50, 50, 50, 50],
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
-            pf_coil_to_rear_blanket_radial_gap=50,
-            pf_coil_to_tf_coil_radial_gap=50,
-            outboard_tf_coil_radial_thickness=100,
-            outboard_tf_coil_poloidal_thickness=50,
-            gap_between_blankets=30,
-            number_of_blanket_segments=7,
         )
 
-        assert few_segment_reactor._blanket.volume > many_segment_reactor._blanket.volume
-        assert few_segment_reactor._firstwall.volume < many_segment_reactor._firstwall.volume
+        def invalid_position():
+            test_reactor.divertor_position = "coucou"
 
+        self.assertRaises(ValueError, invalid_position)
 
     def test_rotation_angle_warning(self):
         """checks that the correct warning message is printed when

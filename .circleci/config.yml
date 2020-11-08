@@ -17,14 +17,56 @@ jobs:
       - run:
           name: install
           command:
-            python setup.py install
+            pip install .[neutronics]
 
       # run tests!
+
       - run:
-          name: run tests
+          name: run utils tests
           command: 
 
-            pytest tests -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_utils.py -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      - run:
+          name: run shape tests
+          command: 
+
+            pytest tests/test_Shape.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
+          name: run Reactor tests
+          command: 
+
+            pytest tests/test_Reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
+          name: run parametric_shapes tests
+          command: 
+
+            pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
+          name: run parametric_components tests
+          command: 
+
+            pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
+          name: run example tests
+          command: 
+
+            pytest tests/test_examples.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
+          name: run parametric_reactors tests
+          command: 
+
+            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      # - run:
+      #     name: run neutronics tests
+      #     command: 
+
+      #       pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       - store_test_results:
           path: test-reports

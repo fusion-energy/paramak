@@ -9,21 +9,22 @@ class test_VacuumVessel(unittest.TestCase):
     )
 
     def test_VacuumVessel_creation(self):
-        """creates a shape using the VacuumVessel parametric
-        component and checks that a cadquery solid is created"""
+        """Creates a shape using the VacuumVessel parametric component and
+        checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
 
     def test_VacuumVessel_ports(self):
-        """Creates a vacuum vessel cuts ports in it and checks that a caquery
-        solid is created"""
+        """Creates a vacuum vessel with ports holes in it and checks that a
+        caquery solid is created."""
 
         cutter1 = paramak.PortCutterRectangular(
             distance=3, z_pos=0, height=0.2, width=0.4, fillet_radius=0.01)
         cutter2 = paramak.PortCutterRectangular(
             distance=3, z_pos=0.5, height=0.2, width=0.4, fillet_radius=0.00)
         cutter3 = paramak.PortCutterRectangular(
-            distance=3, z_pos=-0.5, height=0.2, width=0.4, physical_groups=None)
+            distance=3, z_pos=-0.5, height=0.2, width=0.4,
+            physical_groups=None)
 
         cutter4 = paramak.PortCutterCircular(
             distance=3,

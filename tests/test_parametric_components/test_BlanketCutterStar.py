@@ -6,8 +6,8 @@ import pytest
 
 class test_BlanketCutterStar(unittest.TestCase):
     def test_BlanketCutterStar_creation(self):
-        """creates a solid using the BlanketCutterStar parametric component
-        and checks that a cadquery solid is created"""
+        """Creates a solid using the BlanketCutterStar parametric component
+        and checks that a cadquery solid is created."""
 
         test_shape = paramak.BlanketCutterStar(
             distance=100)
@@ -16,9 +16,9 @@ class test_BlanketCutterStar(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketCutterStar_distance_volume_impact(self):
-        """creates solid using the BlanketCutterStar parametric component
+        """Creates solid using the BlanketCutterStar parametric component
         with different distances and checks that the volume changes accordingly
-        """
+        ."""
 
         small_shape = paramak.BlanketCutterStar(distance=50)
 

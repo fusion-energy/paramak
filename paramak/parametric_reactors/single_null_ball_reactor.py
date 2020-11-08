@@ -71,10 +71,6 @@ class SingleNullBallReactor(paramak.BallReactor):
             number_of_tf_coils=number_of_tf_coils,
             **kwargs)
 
-        self.shapes_and_components = []
-
-        self.create_solids()
-
     @property
     def divertor_position(self):
         return self._divertor_position

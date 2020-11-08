@@ -99,14 +99,6 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             support_radial_thickness=support_radial_thickness,
             plasma_high_point=plasma_high_point,
             **kwargs)
-        self.major_radius = None
-        self.minor_radius = None
-        self.elongation = None
-        self.triangularity = None
-
-        self.shapes_and_components = []
-
-        self.create_solids()
 
     @property
     def divertor_position(self):

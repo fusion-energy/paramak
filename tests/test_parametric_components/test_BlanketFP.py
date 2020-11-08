@@ -1,40 +1,67 @@
-
+import os
 import paramak
 import unittest
 
 
 class test_BlanketFP(unittest.TestCase):
     def test_BlanketFP_creation_plasma(self):
-        """checks that a cadquery solid can be created by passing a plasma to the
-        BlanketFP parametric component"""
+        """Checks that a cadquery solid can be created by passing a plasma to
+        the BlanketFP parametric component."""
 
         plasma = paramak.Plasma(
-            major_radius=300, minor_radius=50, triangularity=0.5, elongation=2,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
+            elongation=2,
         )
         test_shape = paramak.BlanketFP(
             plasma=plasma,
-            thickness=200,
-            stop_angle=90,
-            start_angle=270,
+            thickness=150,
+            start_angle=-90,
+            stop_angle=240,
             offset_from_plasma=30,
-            rotation_angle=180,
         )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
-    def test_BlanketFP_creation_noplasma(self):
-        """checks that a cadquery solid can be created using the BlanketFP parametric
-        component when no plasma is passed"""
+    def test_BlanketFP_faces(self):
+        """creates a blanket using the BlanketFP parametric component and checks
+        that a solid with the correct number of faces is created"""
+
+        plasma = paramak.Plasma(
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
+            elongation=2,
+        )
 
         test_shape = paramak.BlanketFP(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
+            plasma=plasma,
+            thickness=150,
+            start_angle=-90,
+            stop_angle=240,
+            offset_from_plasma=30,
+        )
+        assert len(test_shape.areas) == 4
+        assert len(set(test_shape.areas)) == 4
+
+        test_shape.rotation_angle = 180
+        assert len(test_shape.areas) == 6
+        assert len(set(test_shape.areas)) == 5
+
+    def test_BlanketFP_creation_noplasma(self):
+        """Checks that a cadquery solid can be created using the BlanketFP
+        parametric component when no plasma is passed."""
+
+        test_shape = paramak.BlanketFP(
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
             elongation=2,
-            thickness=200,
-            stop_angle=360,
-            start_angle=0,
+            thickness=150,
+            stop_angle=-90,
+            start_angle=240,
             rotation_angle=180
         )
 
@@ -42,14 +69,16 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketFP_full_cov_full_rotation(self):
-        """checks BlanketFP cannot have full coverage and 360 rotation at the same time"""
+        """Checks BlanketFP cannot have full coverage and a rotation_angle of
+        360 degrees at the same time."""
+
         def create_shape():
             test_shape = paramak.BlanketFP(
-                major_radius=300,
-                minor_radius=50,
-                triangularity=0.5,
+                major_radius=450,
+                minor_radius=150,
+                triangularity=0.55,
                 elongation=2,
-                thickness=200,
+                thickness=150,
                 stop_angle=360,
                 start_angle=0,
                 rotation_angle=360
@@ -59,42 +88,44 @@ class test_BlanketFP(unittest.TestCase):
             ValueError, create_shape)
 
     def test_BlanketFP_creation_variable_thickness_from_tuple(self):
-        """checks that a cadquery solid can be created using the BlanketFP parametric
-        component when a tuple of thicknesses is passed"""
+        """Checks that a cadquery solid can be created using the BlanketFP
+        parametric component when a tuple of thicknesses is passed as an
+        argument."""
 
         test_shape = paramak.BlanketFP(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
             elongation=2,
             thickness=(100, 200),
-            stop_angle=90,
-            start_angle=270,
+            start_angle=-90,
+            stop_angle=240
         )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
     def test_BlanketFP_creation_variable_thickness_from_2_lists(self):
-        """checks that a cadquery solid can be created using the BlanketFP
+        """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when a list of angles and a list of thicknesses
-        are passed"""
+        are passed as an argument."""
 
         test_shape = paramak.BlanketFP(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
             elongation=2,
-            thickness=[(270, 90), [10, 30]],
-            stop_angle=90,
-            start_angle=270,
+            thickness=[(-90, 240), [10, 30]],
+            start_angle=-90,
+            stop_angle=240,
         )
 
         assert test_shape.solid is not None
 
     def test_BlanketFP_creation_variable_thickness_function(self):
-        """checks that a cadquery solid can be created using the BlanketFP parametric
-        component when a thickness function is passed"""
+        """Checks that a cadquery solid can be created using the BlanketFP
+        parametric component when a thickness function is passed as an
+        argument."""
 
         def thickness(theta):
             return 100 + 3 * theta
@@ -113,8 +144,9 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketFP_creation_variable_offset_from_tuple(self):
-        """checks that a cadquery solid can be created using the BlanketFP
-        parametric component when a tuple of offsets is passed"""
+        """Checks that a cadquery solid can be created using the BlanketFP
+        parametric component when a tuple of offsets is passed as an
+        argument."""
 
         test_shape = paramak.BlanketFP(
             major_radius=300,
@@ -131,9 +163,9 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketFP_creation_variable_offset_from_2_lists(self):
-        """checks that a cadquery solid can be created using the BlanketFP
+        """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when a list of offsets and a list of angles are
-        passed"""
+        passed as an argument."""
 
         test_shape = paramak.BlanketFP(
             major_radius=300,
@@ -149,8 +181,9 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.solid is not None
 
     def test_BlanketFP_creation_variable_offset_error(self):
-        """checks that an error is raised when two lists with different
-        lengths are passed in offset_from_plasma"""
+        """Checks that an error is raised when two lists with different
+        lengths are passed in offset_from_plasma as an argument."""
+
         def test_different_lengths():
             test_shape = paramak.BlanketFP(
                 major_radius=300,
@@ -167,8 +200,8 @@ class test_BlanketFP(unittest.TestCase):
         self.assertRaises(ValueError, test_different_lengths)
 
     def test_BlanketFP_creation_variable_offset_function(self):
-        """checks that a cadquery solid can be created using the BlanketFP
-        parametric component when a offset function is passed"""
+        """Checks that a cadquery solid can be created using the BlanketFP
+        parametric component when an offset function is passed."""
 
         def offset(theta):
             return 100 + 3 * theta
@@ -188,15 +221,33 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.volume > 1000
 
     def test_BlanketFP_physical_groups(self):
-        """creates a blanket using the BlanketFP parametric component and checks that
-        physical groups can be exported using the export_physical_groups method"""
+        """Creates a blanket using the BlanketFP parametric component and
+        checks that physical groups can be exported using the
+        export_physical_groups method"""
 
-        test_shape = paramak.BlanketFP(100, stop_angle=90, start_angle=270,)
-        test_shape.export_physical_groups("tests/blanket.json")
+        outfile = "tests/blanket.json"
+
+        # 180 coverage, full rotation
+        test_shape = paramak.BlanketFP(100, stop_angle=180, start_angle=0,)
+        test_shape.export_physical_groups(outfile)
+
+        # full coverage, 180 rotation
+        test_shape = paramak.BlanketFP(
+            100, stop_angle=0, start_angle=360,
+            rotation_angle=180)
+        test_shape.export_physical_groups(outfile)
+
+        # 180 coverage, 180 rotation
+        test_shape = paramak.BlanketFP(
+            100, stop_angle=180, start_angle=0,
+            rotation_angle=180)
+        test_shape.export_physical_groups(outfile)
+        os.system("rm " + outfile)
 
     def test_BlanketFP_full_cov_stp_export(self):
-        """creates a blanket using the BlanketFP parametric component and checks that
-        an stp file with full coverage can be exported using the export_stp method"""
+        """Creates a blanket using the BlanketFP parametric component and
+        checks that a stp file with full coverage can be exported using the
+        export_stp method"""
 
         test_shape = paramak.BlanketFP(
             major_radius=300,

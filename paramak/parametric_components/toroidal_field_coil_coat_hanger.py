@@ -65,8 +65,14 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         self.number_of_coils = number_of_coils
         self.with_inner_leg = with_inner_leg
 
-        self.find_points()
+    @property
+    def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        self._azimuth_placement_angle = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the 2D
@@ -178,13 +184,13 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             inner_leg_solid = inner_leg_solid.close().extrude(
                 distance=-self.distance / 2.0, both=True)
 
-        solid = cq.Compound.makeCompound(
-            [a.val() for a in [inner_leg_solid, solid]]
-        )
+            solid = cq.Compound.makeCompound(
+                [a.val() for a in [inner_leg_solid, solid]]
+            )
 
         solid = self.rotate_solid(solid)
+        cutting_wedge = calculate_wedge_cut(self)
+        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+        self.solid = solid   # not necessarily required as set in boolean_operations
 
-        calculate_wedge_cut(self)
-        solid = self.perform_boolean_operations(solid)
-        self.solid = solid
         return solid
