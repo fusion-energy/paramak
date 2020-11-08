@@ -3,6 +3,7 @@ import paramak
 import numpy as np
 import cadquery as cq
 
+
 class SegmentedBlanketBallReactor(paramak.BallReactor):
     """Creates geometry for a single ball reactor with a single divertor
     including a plasma, cylindrical center column shielding, square toroidal
@@ -56,13 +57,13 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         number_of_tf_coils,
         gap_between_blankets,
         number_of_blanket_segments,
-        #TODO #blanket_fillet_radius,
+        # TODO #blanket_fillet_radius,
         **kwargs
     ):
 
         self.gap_between_blankets = gap_between_blankets
         self.number_of_blanket_segments = number_of_blanket_segments
-        #TODO #self.blanket_fillet_radius = blanket_fillet_radius
+        # TODO #self.blanket_fillet_radius = blanket_fillet_radius
 
         super().__init__(
             inner_bore_radial_thickness=inner_bore_radial_thickness,

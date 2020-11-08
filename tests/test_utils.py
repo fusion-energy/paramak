@@ -24,28 +24,28 @@ class test_utility_functions(unittest.TestCase):
         """tests the filleting of a RotateStraightShape results in an extra
         surface area"""
 
-        test_shape = paramak.RotateStraightShape(points=[(1, 1), (2, 1), (2, 2)])
-        
+        test_shape = paramak.RotateStraightShape(
+            points=[(1, 1), (2, 1), (2, 2)])
+
         assert len(test_shape.areas) == 3
 
         test_shape.solid = test_shape.solid.edges(
             EdgeLengthSelector(6.28)).fillet(0.1)
-        
-        assert len(test_shape.areas) == 4 
+
+        assert len(test_shape.areas) == 4
 
     def test_FaceAreaSelector_with_fillet_areas(self):
         """tests the filleting of a ExtrudeStraightShape"""
 
-        test_shape = paramak.ExtrudeStraightShape(distance=5,
-            points=[(1, 1), (2, 1), (2, 2)]
-        )
-        
+        test_shape = paramak.ExtrudeStraightShape(
+            distance=5, points=[(1, 1), (2, 1), (2, 2)])
+
         assert len(test_shape.areas) == 5
 
         test_shape.solid = test_shape.solid.faces(
             FaceAreaSelector(0.5)).fillet(0.1)
-        
-        assert len(test_shape.areas) == 11 
+
+        assert len(test_shape.areas) == 11
 
     def test_find_center_point_of_circle_zero_det(self):
         """Checks that None is given if det is zero

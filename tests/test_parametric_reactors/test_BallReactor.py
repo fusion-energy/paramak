@@ -352,7 +352,8 @@ class test_BallReactor(unittest.TestCase):
                              test_reactor_180.shapes_and_components):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
-    def test_SegmentedBlanketBallReactor_gap_between_blankets_impacts_volume(self):
+    def test_SegmentedBlanketBallReactor_gap_between_blankets_impacts_volume(
+        self):
         """creates a SegmentedBlanketBallReactor with different
         gap_between_blankets and checks the volume of the blankes and the
         firstwall changes."""
@@ -410,8 +411,8 @@ class test_BallReactor(unittest.TestCase):
         assert small_gap_reactor._blanket.volume < large_gap_reactor._blanket.volume
         assert small_gap_reactor._firstwall.volume < large_gap_reactor._firstwall.volume
 
-
-    def test_SegmentedBlanketBallReactor_number_of_blanket_segments_impacts_volume(self):
+    def test_SegmentedBlanketBallReactor_number_of_blanket_segments_impacts_volume(
+        self):
         """creates a SegmentedBlanketBallReactor with different
         number_of_blanket_segments and checks the volume of the blanket and
         firstwall changes"""
@@ -453,7 +454,7 @@ class test_BallReactor(unittest.TestCase):
             blanket_radial_thickness=50,
 
     def test_single_null_ball_reactor_error(self):
-        test_reactor = paramak.SingleNullBallReactor(
+        test_reactor=paramak.SingleNullBallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
             center_column_shield_radial_thickness=60,
@@ -472,7 +473,7 @@ class test_BallReactor(unittest.TestCase):
         )
 
         def invalid_position():
-            test_reactor.divertor_position = "coucou"
+            test_reactor.divertor_position="coucou"
 
         self.assertRaises(ValueError, invalid_position)
 
