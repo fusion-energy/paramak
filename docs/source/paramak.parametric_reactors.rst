@@ -32,6 +32,13 @@ RotateCircleShape in yellow and ExtrudeCircleShape in brown.
    :members:
    :show-inheritance:
 
+SegmentedBlanketBallReactor()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: paramak.parametric_reactors.segmented_blanket_ball_reactor
+   :members:
+   :show-inheritance:
+
 SingleNullBallReactor()
 ^^^^^^^^^^^^^^^^^^^^^^^
 
