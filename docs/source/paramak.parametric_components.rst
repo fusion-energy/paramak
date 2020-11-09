@@ -408,7 +408,7 @@ ToroidalFieldCoilRectangle()
     :width: 200px
 .. |ToroidalFieldCoilRectangleastp| image:: https://user-images.githubusercontent.com/8583900/94585086-6abbfa00-0277-11eb-91de-0b2548601587.png
     :width: 130px
-.. |ToroidalFieldCoilRectanglesvg| image:: https://user-images.githubusercontent.com/8583900/94585089-6c85bd80-0277-11eb-9be9-22befe19e86e.png
+.. |ToroidalFieldCoilRectanglesvg| image:: https://user-images.githubusercontent.com/56687624/98569834-a8fefd00-22aa-11eb-830e-e260d839caf6.png
     :width: 310px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_rectangle
@@ -420,7 +420,7 @@ ToroidalFieldCoilCoatHanger()
 
 |ToroidalFieldCoilCoatHangerallstp| |ToroidalFieldCoilCoatHangersvg| |ToroidalFieldCoilCoatHangerastp|
 
-.. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/8583900/94572025-79e77b80-0268-11eb-88da-828274539e9e.png
+.. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/56687624/98569842-aac8c080-22aa-11eb-8def-2de379b4522a.png
    :width: 300
 .. |ToroidalFieldCoilCoatHangerastp| image:: https://user-images.githubusercontent.com/8583900/94570773-1ad53700-0267-11eb-9003-3b5768745470.png
    :width: 130
