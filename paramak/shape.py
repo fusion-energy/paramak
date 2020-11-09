@@ -502,7 +502,7 @@ class Shape:
 
                 solid = cq.Workplane(self.workplane).moveTo(0, 0)
 
-                if self.flag == True:
+                if self.flag:
                     for point in self.path_points[:-1]:
                         solid = solid.workplane(
                             offset=point[1]).moveTo(
@@ -522,20 +522,23 @@ class Shape:
                                     p1, p2)
                         solid = solid.close().moveTo(
                             0, 0).moveTo(-point[0], 0).workplane(offset=-point[1])
-                
+
                 elif self.flag == False:
                     for entry in instructions:
                         if list(entry.keys())[0] == "spline":
-                            solid = solid.spline(listOfXYTuple=list(entry.values())[0])
+                            solid = solid.spline(
+                                listOfXYTuple=list(entry.values())[0])
                         if list(entry.keys())[0] == "straight":
                             solid = solid.polyline(list(entry.values())[0])
                         if list(entry.keys())[0] == "circle":
                             p0 = list(entry.values())[0][0]
                             p1 = list(entry.values())[0][1]
                             p2 = list(entry.values())[0][2]
-                            solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+                            solid = solid.moveTo(
+                                p0[0], p0[1]).threePointArc(
+                                p1, p2)
                     solid = solid.close()
-                
+
                 else:
                     raise ValueError
 
