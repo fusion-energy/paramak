@@ -153,8 +153,8 @@ class BlanketFPPoloidalSegments(BlanketFP):
 
             # Create cutters for each gap
             for inner_point, outer_point in zip(
-                    self.inner_points[1:-1],
-                    self.outer_points[-2:0:-1]):
+                    self.inner_points[:-1],
+                    self.outer_points[-1::-1]):
                 # initialise cutter for gap
                 cutter = RotateStraightShape(
                     rotation_angle=self.rotation_angle,
