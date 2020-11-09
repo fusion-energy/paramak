@@ -408,7 +408,7 @@ ToroidalFieldCoilRectangle()
     :width: 200px
 .. |ToroidalFieldCoilRectangleastp| image:: https://user-images.githubusercontent.com/8583900/94585086-6abbfa00-0277-11eb-91de-0b2548601587.png
     :width: 130px
-.. |ToroidalFieldCoilRectanglesvg| image:: https://user-images.githubusercontent.com/56687624/98569834-a8fefd00-22aa-11eb-830e-e260d839caf6.png
+.. |ToroidalFieldCoilRectanglesvg| image:: https://user-images.githubusercontent.com/56687624/98582375-cd62d580-22ba-11eb-8002-ea7c731bad8a.png
     :width: 310px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_rectangle
@@ -420,12 +420,12 @@ ToroidalFieldCoilCoatHanger()
 
 |ToroidalFieldCoilCoatHangerallstp| |ToroidalFieldCoilCoatHangersvg| |ToroidalFieldCoilCoatHangerastp|
 
-.. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/56687624/98569842-aac8c080-22aa-11eb-8def-2de379b4522a.png
-   :width: 300
+.. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/56687624/98582371-cb991200-22ba-11eb-8e15-86d273a8b819.png
+   :width: 300px
 .. |ToroidalFieldCoilCoatHangerastp| image:: https://user-images.githubusercontent.com/8583900/94570773-1ad53700-0267-11eb-9003-3b5768745470.png
-   :width: 130
+   :width: 130px
 .. |ToroidalFieldCoilCoatHangerallstp| image:: https://user-images.githubusercontent.com/8583900/87075236-f04f8100-c217-11ea-9ffa-4791b722b9e7.png
-   :width: 210
+   :width: 210px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_coat_hanger
    :members:
@@ -437,11 +437,11 @@ ToroidalFieldCoilPrincetonD()
 |ToroidalFieldCoilPrincetonDallstp| |ToroidalFieldCoilPrincetonDsvg| |ToroidalFieldCoilPrincetonDastp|
 
 .. |ToroidalFieldCoilPrincetonDallstp| image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
-   :width: 250
+   :width: 250px
 .. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/8583900/94529559-cd8aa280-0231-11eb-9919-48d3c642a5d7.png
-   :width: 220
+   :width: 220px
 .. |ToroidalFieldCoilPrincetonDastp| image:: https://user-images.githubusercontent.com/8583900/94479853-4c012900-01cd-11eb-9b59-0fcd5f4dc531.png
-   :width: 170
+   :width: 170px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_princeton_d
    :members:
@@ -453,11 +453,11 @@ ToroidalFieldCoilTripleArc()
 |ToroidalFieldCoilTripleArcallstp| |ToroidalFieldCoilTripleArcstp| |ToroidalFieldCoilTripleArcsvg|
 
 .. |ToroidalFieldCoilTripleArcallstp| image:: https://user-images.githubusercontent.com/56687624/92124454-b654c280-edf5-11ea-96d2-c0957f37a733.png
-   :width: 240
+   :width: 240px
 .. |ToroidalFieldCoilTripleArcstp| image:: https://user-images.githubusercontent.com/8583900/94835218-51e34e00-0409-11eb-9372-0272c43a4844.png
-   :width: 190
+   :width: 190px
 .. |ToroidalFieldCoilTripleArcsvg| image:: https://user-images.githubusercontent.com/8583900/94855159-fe332d80-0425-11eb-92a4-d1d43a066644.png
-   :width: 340
+   :width: 320px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_triple_arc
    :members:
