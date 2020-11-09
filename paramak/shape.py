@@ -531,7 +531,7 @@ class Shape:
                     p1 = list(entry.values())[0][1]
                     p2 = list(entry.values())[0][2]
                     solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
-            solid = solid.close()
+            # solid = solid.close()
 
         return solid
 
