@@ -138,7 +138,7 @@ def make_model_and_simulate():
     )
 
     # based on
-    # https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf?_ga=2.101398593.1139828080.1595493457-812289418.1595493457
+    # https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf
     center_column_shield_coolant_fraction = 0.13
     center_column_shield_structural_fraction = 0.57
     center_column_shield_coolant_material = "H2O"
@@ -164,7 +164,7 @@ def make_model_and_simulate():
         percent_type="vo")
 
     # based on
-    # https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf?_ga=2.101398593.1139828080.1595493457-812289418.1595493457
+    # https://pdfs.semanticscholar.org/95fa/4dae7d82af89adf711b97e75a241051c7129.pdf
     inboard_tf_coils_conductor_fraction = 0.57
     inboard_tf_coils_coolant_fraction = 0.05
     inboard_tf_coils_structure_fraction = 0.38
