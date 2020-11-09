@@ -9,32 +9,59 @@ class test_BlanketFP(unittest.TestCase):
         the BlanketFP parametric component."""
 
         plasma = paramak.Plasma(
-            major_radius=300, minor_radius=50, triangularity=0.5, elongation=2,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
+            elongation=2,
         )
         test_shape = paramak.BlanketFP(
             plasma=plasma,
-            thickness=200,
-            stop_angle=90,
-            start_angle=270,
+            thickness=150,
+            start_angle=-90,
+            stop_angle=240,
             offset_from_plasma=30,
-            rotation_angle=180,
         )
 
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
+
+    def test_BlanketFP_faces(self):
+        """creates a blanket using the BlanketFP parametric component and checks
+        that a solid with the correct number of faces is created"""
+
+        plasma = paramak.Plasma(
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
+            elongation=2,
+        )
+
+        test_shape = paramak.BlanketFP(
+            plasma=plasma,
+            thickness=150,
+            start_angle=-90,
+            stop_angle=240,
+            offset_from_plasma=30,
+        )
+        assert len(test_shape.areas) == 4
+        assert len(set(test_shape.areas)) == 4
+
+        test_shape.rotation_angle = 180
+        assert len(test_shape.areas) == 6
+        assert len(set(test_shape.areas)) == 5
 
     def test_BlanketFP_creation_noplasma(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when no plasma is passed."""
 
         test_shape = paramak.BlanketFP(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
             elongation=2,
-            thickness=200,
-            stop_angle=360,
-            start_angle=0,
+            thickness=150,
+            stop_angle=-90,
+            start_angle=240,
             rotation_angle=180
         )
 
@@ -47,11 +74,11 @@ class test_BlanketFP(unittest.TestCase):
 
         def create_shape():
             test_shape = paramak.BlanketFP(
-                major_radius=300,
-                minor_radius=50,
-                triangularity=0.5,
+                major_radius=450,
+                minor_radius=150,
+                triangularity=0.55,
                 elongation=2,
-                thickness=200,
+                thickness=150,
                 stop_angle=360,
                 start_angle=0,
                 rotation_angle=360
@@ -66,13 +93,13 @@ class test_BlanketFP(unittest.TestCase):
         argument."""
 
         test_shape = paramak.BlanketFP(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
             elongation=2,
             thickness=(100, 200),
-            stop_angle=90,
-            start_angle=270,
+            start_angle=-90,
+            stop_angle=240
         )
 
         assert test_shape.solid is not None
@@ -84,13 +111,13 @@ class test_BlanketFP(unittest.TestCase):
         are passed as an argument."""
 
         test_shape = paramak.BlanketFP(
-            major_radius=300,
-            minor_radius=50,
-            triangularity=0.5,
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
             elongation=2,
-            thickness=[(270, 90), [10, 30]],
-            stop_angle=90,
-            start_angle=270,
+            thickness=[(-90, 240), [10, 30]],
+            start_angle=-90,
+            stop_angle=240,
         )
 
         assert test_shape.solid is not None

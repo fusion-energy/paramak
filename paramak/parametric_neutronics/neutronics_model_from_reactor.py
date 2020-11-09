@@ -660,6 +660,7 @@ class NeutronicsModelFromReactor():
                     'flux_on_2D_mesh' + tally.name[-3:], dpi=300)
                 fig.clear()
 
+
         self.results = json.dumps(results, indent=4, sort_keys=True)
 
         return results
