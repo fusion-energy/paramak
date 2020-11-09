@@ -10,7 +10,8 @@ import pytest
 
 class test_SegmentedBlanketBallReactor(unittest.TestCase):
 
-    def test_SegmentedBlanketBallReactor_gap_between_blankets_impacts_volume(self):
+    def test_SegmentedBlanketBallReactor_gap_between_blankets_impacts_volume(
+            self):
         """creates a SegmentedBlanketBallReactor with different
         gap_between_blankets and checks the volume of the blankes and the
         firstwall changes."""
@@ -68,7 +69,8 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
         assert small_gap_reactor._blanket.volume > large_gap_reactor._blanket.volume
         assert small_gap_reactor._firstwall.volume > large_gap_reactor._firstwall.volume
 
-    def test_SegmentedBlanketBallReactor_number_of_blanket_segments_impacts_volume(self):
+    def test_SegmentedBlanketBallReactor_number_of_blanket_segments_impacts_volume(
+            self):
         """creates a SegmentedBlanketBallReactor with different
         number_of_blanket_segments and checks the volume of the blanket and
         firstwall changes"""
@@ -124,4 +126,4 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
         )
 
         assert many_segment_reactor._blanket.volume < few_segment_reactor._blanket.volume
-        assert many_segment_reactor._firstwall.volume > few_segment_reactor._firstwall.volume       
+        assert many_segment_reactor._firstwall.volume > few_segment_reactor._firstwall.volume

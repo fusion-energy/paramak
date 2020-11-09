@@ -152,6 +152,6 @@ class test_SingleNullBallReactor(unittest.TestCase):
         )
 
         def invalid_position():
-            test_reactor.divertor_position="coucou"
+            test_reactor.divertor_position = "coucou"
 
         self.assertRaises(ValueError, invalid_position)
