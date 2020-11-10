@@ -189,7 +189,7 @@ class test_object_properties(unittest.TestCase):
         """Checks that a solid can be created with workplane XZ and path_workplane XY"""
 
         test_shape = SweepMixedShape(
-            points = [
+            points=[
                 (-10, -10, "straight"),
                 (-10, 10, "spline"),
                 (0, 20, "spline"),
@@ -197,11 +197,11 @@ class test_object_properties(unittest.TestCase):
                 (0, 0, "circle"),
                 (10, -10, "straight")
             ],
-            path_points = [
+            path_points=[
                 (50, 0), (30, 50), (50, 100)
             ],
-            workplane = "XZ",
-            path_workplane = "XY"
+            workplane="XZ",
+            path_workplane="XY"
         )
 
         assert test_shape.solid is not None

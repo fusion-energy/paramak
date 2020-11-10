@@ -96,25 +96,25 @@ class SweepCircleShape(Shape):
         if self.flag:
             solid = cq.Workplane(self.workplane).moveTo(0, 0)
             for point in self.path_points[:-1]:
-                solid = solid.workplane(offset=point[1]*factor).\
-                            moveTo(point[0], 0).\
-                            circle(self.radius).\
-                            moveTo(0, 0).\
-                            workplane(offset=-point[1]*factor)
-            solid = solid.workplane(offset=self.path_points[-1][1]*factor).moveTo(
+                solid = solid.workplane(offset=point[1] * factor).\
+                    moveTo(point[0], 0).\
+                    circle(self.radius).\
+                    moveTo(0, 0).\
+                    workplane(offset=-point[1] * factor)
+            solid = solid.workplane(offset=self.path_points[-1][1] * factor).moveTo(
                 self.path_points[-1][0], 0).circle(self.radius).sweep(path, multisection=True)
 
-        if self.flag == False:
+        if not self.flag:
 
             solid = (
                 cq.Workplane(self.workplane)
-                .workplane(offset=self.path_points[0][1]*factor)
+                .workplane(offset=self.path_points[0][1] * factor)
                 .moveTo(self.path_points[0][0], 0)
                 .workplane()
                 .circle(self.radius)
                 .moveTo(-self.path_points[0][0], 0)
-                .workplane(offset=-self.path_points[0][1]*factor)
-                .workplane(offset=self.path_points[-1][1]*factor)
+                .workplane(offset=-self.path_points[0][1] * factor)
+                .workplane(offset=self.path_points[-1][1] * factor)
                 .moveTo(self.path_points[-1][0], 0)
                 .workplane()
                 .circle(self.radius)

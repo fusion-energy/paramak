@@ -89,7 +89,7 @@ class test_object_properties(unittest.TestCase):
         """Checks that a solid can be created with workplane XZ and
         path_workplane XY
         """
-        
+
         test_shape = SweepCircleShape(
             radius=20,
             path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
