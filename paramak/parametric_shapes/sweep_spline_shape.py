@@ -24,7 +24,7 @@ class SweepSplineShape(SweepMixedShape):
     def __init__(
         self,
         path_points,
-        flag=False,
+        force_area=False,
         workplane="XY",
         path_workplane="XZ",
         stp_filename="SweepSplineShape.stp",
@@ -39,6 +39,6 @@ class SweepSplineShape(SweepMixedShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             connection_type="spline",
-            flag=flag,
+            force_area=force_area,
             **kwargs
         )

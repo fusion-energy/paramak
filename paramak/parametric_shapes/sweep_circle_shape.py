@@ -26,7 +26,7 @@ class SweepCircleShape(Shape):
         self,
         radius,
         path_points,
-        flag=False,
+        force_area=False,
         workplane="XY",
         path_workplane="XZ",
         stp_filename="SweepMixedShape.stp",
@@ -44,7 +44,7 @@ class SweepCircleShape(Shape):
         self.radius = radius
         self.path_points = path_points
         self.path_workplane = path_workplane
-        self.flag = flag
+        self.force_area = force_area
 
     @property
     def radius(self):
@@ -93,7 +93,7 @@ class SweepCircleShape(Shape):
         if self.workplane in ["XZ", "YX", "ZY"]:
             factor *= -1
 
-        if self.flag:
+        if self.force_area:
             solid = cq.Workplane(self.workplane).moveTo(0, 0)
             for point in self.path_points[:-1]:
                 solid = solid.workplane(offset=point[1] * factor).\
@@ -104,7 +104,7 @@ class SweepCircleShape(Shape):
             solid = solid.workplane(offset=self.path_points[-1][1] * factor).moveTo(
                 self.path_points[-1][0], 0).circle(self.radius).sweep(path, multisection=True)
 
-        if not self.flag:
+        if not self.force_area:
 
             solid = (
                 cq.Workplane(self.workplane)

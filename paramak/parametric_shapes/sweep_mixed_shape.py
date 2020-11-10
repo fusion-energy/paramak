@@ -25,7 +25,7 @@ class SweepMixedShape(Shape):
     def __init__(
         self,
         path_points,
-        flag=False,
+        force_area=False,
         workplane="XY",
         path_workplane="XZ",
         stp_filename="SweepMixedShape.stp",
@@ -42,7 +42,7 @@ class SweepMixedShape(Shape):
 
         self.path_points = path_points
         self.path_workplane = path_workplane
-        self.flag = flag
+        self.force_area = force_area
 
     @property
     def path_points(self):
