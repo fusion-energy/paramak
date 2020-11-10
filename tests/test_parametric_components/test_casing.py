@@ -16,7 +16,6 @@ class test_TFCoilCasing(unittest.TestCase):
         magnet = paramak.ToroidalFieldCoilPrincetonD(
             R1=100, R2=200, thickness=magnet_thickness,
             distance=magnet_extrude_distance, number_of_coils=1)
-        magnet.find_points()
 
         casing = paramak.TFCoilCasing(
             magnet=magnet, distance=casing_extrude_distance,

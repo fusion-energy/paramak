@@ -14,15 +14,16 @@ class TFCoilCasing(ExtrudeMixedShape):
         self.vertical_section_offset = vertical_section_offset
 
     def find_points(self):
+        inner_points_magnet = self.magnet.inner_points
+        outer_points_magnet = self.magnet.outer_points
         inner_points_magnet = (
-            np.array(self.magnet.inner_points)[:, 0].astype(np.float),
-            np.array(self.magnet.inner_points)[:, 1].astype(np.float)
+            inner_points_magnet[:, 0],
+            inner_points_magnet[:, 1]
             )
         outer_points_magnet = (
-            np.array(self.magnet.outer_points)[:, 0].astype(np.float),
-            np.array(self.magnet.outer_points)[:, 1].astype(np.float)
+            outer_points_magnet[:, 0],
+            outer_points_magnet[:, 1]
             )
-
         inner_points = add_thickness(
             *inner_points_magnet,
             thickness=-self.inner_offset,

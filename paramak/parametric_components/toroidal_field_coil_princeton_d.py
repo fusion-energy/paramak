@@ -61,8 +61,26 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         self.number_of_coils = number_of_coils
         self.vertical_displacement = vertical_displacement
         self.with_inner_leg = with_inner_leg
-        self.inner_points, self.outer_points = None, None
-        self.dz_dr = None
+
+    @property
+    def inner_points(self):
+        if self.get_hash() != self.hash_value:
+            self.find_points()
+        return self._inner_points
+
+    @inner_points.setter
+    def inner_points(self, value):
+        self._inner_points = value
+
+    @property
+    def outer_points(self):
+        if self.get_hash() != self.hash_value:
+            self.find_points()
+        return self._outer_points
+
+    @outer_points.setter
+    def outer_points(self, value):
+        self._outer_points = value
 
     @property
     def azimuth_placement_angle(self):
@@ -161,8 +179,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         outer_points[-1][2] = 'straight'
 
         points = inner_points + outer_points
-        self.inner_points, self.outer_points = inner_points, outer_points
-        self.dz_dr = dz_dr
+        self.outer_points = np.vstack((R_outer, Z_outer)).T
+        self.inner_points = np.vstack((R_inner, Z_inner)).T
         self.points = points
 
     def find_azimuth_placement_angle(self):
