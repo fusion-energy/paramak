@@ -123,8 +123,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
 
         # compute outer points
         dz_dr = np.diff(Z_inner)/np.diff(R_inner)
-        dz_dr[0] = float("inf")
-        dz_dr = np.append(dz_dr, float("-inf"))
+        dz_dr[0] = float("-inf")
+        dz_dr = np.append(dz_dr, float("inf"))
         R_outer, Z_outer = add_thickness(
             R_inner, Z_inner, self.thickness, dy_dx=dz_dr
         )

@@ -206,9 +206,9 @@ def add_thickness(x, y, thickness, dy_dx=None):
     x_outer, y_outer = [], []
     for i in range(len(dy_dx)):
         if dy_dx[i] == float('-inf'):
-            nx, ny = 1, 0
-        elif dy_dx[i] == float('inf'):
             nx, ny = -1, 0
+        elif dy_dx[i] == float('inf'):
+            nx, ny = 1, 0
         else:
             nx = -dy_dx[i]
             ny = 1
