@@ -165,22 +165,34 @@ class BallReactor(paramak.Reactor):
               A list of CadQuery solids: A list of 3D solid volumes
 
         """
+        print('create_solids is called')
 
         self.hash_value = get_hash(self)
-        
+        print('hash_value check complete')
         self._rotation_angle_check()
+        print('rotation_angle check complete')
         self._make_plasma()
+        print('make_plasma complete')
         self._make_radial_build()
+        print('make_radial_build complete')
         self._make_vertical_build()
+        print('make vertical build complete')
         self._make_inboard_tf_coils()
+        print('inboard_tf_coils complete')
         self._make_center_column_shield()
-        self._make_blankets_layers()
+        print('center_column_shield complete')
+        self._make_blankets_layers()   # seems to be called several times?
+        print('make_blanket_layers complete')
         self._make_divertor()
+        print('make_divertor complete')
         self._make_component_cuts()
+        print('make_component cuts complete')
 
         return self.shapes_and_components
 
     def _rotation_angle_check(self):
+
+        print('rotation_angle check started')
 
         if self.rotation_angle == 360:
             warnings.warn(
@@ -188,6 +200,8 @@ class BallReactor(paramak.Reactor):
                 UserWarning)
 
     def _make_plasma(self):
+
+        print('make_plasma started')
 
         plasma = paramak.Plasma(
             major_radius=self.major_radius,
@@ -204,6 +218,8 @@ class BallReactor(paramak.Reactor):
         self._plasma = plasma
 
     def _make_radial_build(self):
+
+        print('make_radial build started')
 
         # this is the radial build sequence, where one component stops and
         # another starts
@@ -247,6 +263,8 @@ class BallReactor(paramak.Reactor):
             self.blanket_rear_wall_radial_thickness)
 
     def _make_vertical_build(self):
+
+        print('make_vertical_build started')
 
         # this is the vertical build sequence, components build on each other in
         # a similar manner to the radial build
@@ -321,6 +339,8 @@ class BallReactor(paramak.Reactor):
 
     def _make_inboard_tf_coils(self):
 
+        print('make_inboard_tf_coils started')
+
         self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
             height=self._tf_coil_height * 2,
             inner_radius=self._inboard_tf_coils_start_radius,
@@ -336,6 +356,8 @@ class BallReactor(paramak.Reactor):
 
     def _make_center_column_shield(self):
 
+        print('make_center_column_shield started')
+
         self._center_column_shield = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height,
             inner_radius=self._center_column_shield_start_radius,
@@ -350,6 +372,8 @@ class BallReactor(paramak.Reactor):
         self.shapes_and_components.append(self._center_column_shield)
 
     def _make_blankets_layers(self):
+
+        print('make_blanket_layers started')
 
         center_column_cutter = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
@@ -426,6 +450,8 @@ class BallReactor(paramak.Reactor):
 
     def _make_divertor(self):
 
+        print('make_divertor started')
+
         # # used as an intersect when making the divertor
         self._blanket_fw_rear_wall_envelope = paramak.BlanketFP(
             plasma=self._plasma,
@@ -471,6 +497,8 @@ class BallReactor(paramak.Reactor):
         self.shapes_and_components.append(self._blanket_rear_wall)
 
     def _make_component_cuts(self):
+
+        print('make_component_cuts started')
 
         if (
             self.pf_coil_vertical_thicknesses is not None
