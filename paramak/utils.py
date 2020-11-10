@@ -205,12 +205,16 @@ def get_hash(shape):
         "_blanket", 
         "_blanket_rear_wall", 
         "_blanket_fw_rear_wall_envelope", 
-        "_divertor"
+        "_divertor",
+        "_pf_coil",
+        "_tf_coil"
     ]
 
     for key in keys_to_ignore:
         if key in shape_dict.keys():
             shape_dict[key] = None
+
+    # print(shape_dict)
 
     hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
     value = hash_object.hexdigest()
