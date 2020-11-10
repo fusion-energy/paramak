@@ -93,7 +93,7 @@ class SweepCircleShape(Shape):
         if self.workplane in ["XZ", "YX", "ZY"]:
             factor *= -1
 
-        if self.flag == True:
+        if self.flag:
             solid = cq.Workplane(self.workplane).moveTo(0, 0)
             for point in self.path_points[:-1]:
                 solid = solid.workplane(offset=point[1]*factor).\
