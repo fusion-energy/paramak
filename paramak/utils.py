@@ -186,35 +186,47 @@ def calculate_wedge_cut(self):
         cutting_wedge = paramak.CuttingWedgeFS(self)
         return cutting_wedge
 
-
 def get_hash(shape):
 
     hash_object = blake2b()
     shape_dict = dict(shape.__dict__)
-    
-    # could maybe separate into different lists depending on shape or reactor
-    keys_to_ignore = [
-        "_solid", 
-        "_hash_value", 
-        "hash_value", 
-        "_shapes_and_components", 
-        "_plasma", 
-        "_inboard_tf_coils", 
-        "_center_column_shield", 
-        "_firstwall", 
-        "_blanket", 
-        "_blanket_rear_wall", 
-        "_blanket_fw_rear_wall_envelope", 
-        "_divertor",
-        "_pf_coil",
-        "_tf_coil"
-    ]
+
+    keys_to_ignore = ["_solid", "_hash_value"]
 
     for key in keys_to_ignore:
         if key in shape_dict.keys():
             shape_dict[key] = None
 
-    # print(shape_dict)
+    hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
+    value = hash_object.hexdigest()
+    return value
+
+def get_reactor_hash(shape):
+
+    hash_object = blake2b()
+    shape_dict = dict(shape.__dict__)
+
+    keys_to_ignore = [
+        "_plasma", 
+        "_inboard_tf_coils", 
+        "_center_column_shield", 
+        "_firstwall", 
+        "_blanket", 
+        "_blanket_rear_wall",
+        "_blanket_fw_rear_wall_envelope",
+        "_divertor",
+        "_pf_coil",
+        "_tf_coil",
+        "_shapes_and_components"
+    ]
+
+    # may need to take things out such as solid, graveyard etc, after when the actual construction happens
+
+    for key in keys_to_ignore:
+        if key in shape_dict.keys():
+            shape_dict[key] = None
+
+    print(shape_dict)
 
     hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
     value = hash_object.hexdigest()
