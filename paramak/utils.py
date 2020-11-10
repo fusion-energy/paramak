@@ -187,6 +187,51 @@ def calculate_wedge_cut(self):
         return cutting_wedge
 
 
+def add_thickness(x, y, thickness, dy_dx=None):
+    """Computes outer curve points based on thickness
+
+    Args:
+        x (list): list of floats containing x values
+        y (list): list of floats containing y values
+        thickness (float): thickness of the magnet
+        dy_dx (list): list of floats containing the first order
+            derivatives
+
+    Returns:
+        (list, list): R and Z lists for outer curve points
+    """
+    if dy_dx is None:
+        dy_dx = np.diff(y)/np.diff(x)
+
+    x_outer, y_outer = [], []
+    for i in range(len(dy_dx)):
+        if dy_dx[i] in [float('-inf'), float('inf')]:
+            nx, ny = 1, 0
+        else:
+            nx = -dy_dx[i]
+            ny = 1
+        if i != len(dy_dx) - 1:
+            if x[i] < x[i+1]:
+                convex = False
+            else:
+                convex = True
+
+        if convex:
+            nx *= -1
+            ny *= -1
+        # normalise normal vector
+        normal_vector_norm = (nx ** 2 + ny ** 2) ** 0.5
+        nx /= normal_vector_norm
+        ny /= normal_vector_norm
+        # calculate outer points
+        val_x_outer = x[i] + thickness * nx
+        val_y_outer = y[i] + thickness * ny
+        x_outer.append(val_x_outer)
+        y_outer.append(val_y_outer)
+
+    return x_outer, y_outer
+
+
 class FaceAreaSelector(cq.Selector):
     """A custom CadQuery selector the selects faces based on their area with a
     tolerance. The following useage example will fillet the faces of an extrude
