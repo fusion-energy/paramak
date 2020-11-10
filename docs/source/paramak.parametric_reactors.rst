@@ -6,7 +6,7 @@ These are the current reactor designs that can be created using the Paramak.
 BallReactor()
 ^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/89423931-070dc880-d72f-11ea-8cb3-1ce3ce840b7e.png
+.. image:: https://user-images.githubusercontent.com/8583900/98723423-3feeb680-238a-11eb-94b3-a424982f991c.png
    :width: 400
    :align: center
 
