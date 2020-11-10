@@ -27,15 +27,16 @@ class TFCoilCasing(ExtrudeMixedShape):
         inner_points = add_thickness(
             *inner_points_magnet,
             thickness=-self.inner_offset,
-            )
+        )
 
         outer_points = add_thickness(
             *outer_points_magnet,
             thickness=-self.outer_offset
-            )
+        )
         curve_points = []
         for distrib_points in [inner_points, outer_points]:
-            curve_points.append([[R, Z, 'spline'] for R, Z in zip(distrib_points[0], distrib_points[1])])
+            curve_points.append([[R, Z, 'spline'] for R, Z in zip(
+                distrib_points[0], distrib_points[1])])
 
         curve_points[0][-1][2] = 'straight'
         curve_points[1][-1][2] = "straight"
@@ -43,11 +44,8 @@ class TFCoilCasing(ExtrudeMixedShape):
         points = curve_points[0] + curve_points[1]
         self.points = points
 
-        yA = outer_points[1][
-            outer_points[0].index(
-                min(outer_points[0], key=lambda x:abs(x-min(inner_points[0])))
-                )
-            ]
+        yA = outer_points[1][outer_points[0].index(
+            min(outer_points[0], key=lambda x:abs(x - min(inner_points[0]))))]
         self.leg_points = [
             (
                 min(outer_points[0]) - self.vertical_section_offset,

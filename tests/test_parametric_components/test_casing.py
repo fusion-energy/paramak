@@ -10,7 +10,7 @@ class test_TFCoilCasing(unittest.TestCase):
         magnet_thickness = 5
         magnet_extrude_distance = 10
         vertical_section_offset = 20
-        casing_extrude_distance = magnet_extrude_distance*2
+        casing_extrude_distance = magnet_extrude_distance * 2
 
         # create a princeton D magnet
         magnet = paramak.ToroidalFieldCoilPrincetonD(
