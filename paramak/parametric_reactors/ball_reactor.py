@@ -239,7 +239,7 @@ class BallReactor(paramak.Reactor):
         # this is the vertical build sequence, components build on each other in
         # a similar manner to the radial build
 
-        if self.plasma_gap_vertical_thickness == None:
+        if self.plasma_gap_vertical_thickness is None:
             self.plasma_gap_vertical_thickness = self.outer_plasma_gap_radial_thickness
 
         self._firstwall_start_height = (
@@ -268,8 +268,8 @@ class BallReactor(paramak.Reactor):
 
             y_position_step = (2 * (
                 self._blanket_rear_wall_end_height
-                    + self.pf_coil_to_rear_blanket_radial_gap
-                )
+                + self.pf_coil_to_rear_blanket_radial_gap
+            )
             ) / (self._number_of_pf_coils + 1)
 
             self._pf_coils_xy_values = []
