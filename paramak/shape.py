@@ -503,7 +503,7 @@ class Shape:
                 
                 solid = cq.Workplane(self.workplane).moveTo(0, 0)
 
-                if self.flag == True:
+                if self.flag:
                     for point in self.path_points[:-1]:
                         solid = solid.workplane(offset=point[1]).moveTo(point[0], 0).workplane()
                         for entry in instructions:
@@ -522,7 +522,8 @@ class Shape:
                     solid = solid.workplane(offset=self.path_points[0][1]).moveTo(self.path_points[0][0], 0).workplane()
                     for entry in instructions:
                         if list(entry.keys())[0] == "spline":
-                            solid = solid.spline(listOfXYTuple=list(entry.values())[0])
+                            solid = solid.spline(
+                                listOfXYTuple=list(entry.values())[0])
                         if list(entry.keys())[0] == "straight":
                             solid = solid.polyline(list(entry.values())[0])
                         if list(entry.keys())[0] == "circle":
