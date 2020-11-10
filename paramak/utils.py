@@ -201,7 +201,7 @@ def add_thickness(x, y, thickness, dy_dx=None):
         (list, list): R and Z lists for outer curve points
     """
     if dy_dx is None:
-        dy_dx = np.diff(y)/np.diff(x)
+        dy_dx = np.diff(y) / np.diff(x)
 
     x_outer, y_outer = [], []
     for i in range(len(dy_dx)):
@@ -213,7 +213,7 @@ def add_thickness(x, y, thickness, dy_dx=None):
             nx = -dy_dx[i]
             ny = 1
         if i != len(dy_dx) - 1:
-            if x[i] < x[i+1]:
+            if x[i] < x[i + 1]:
                 convex = False
             else:
                 convex = True
