@@ -217,7 +217,8 @@ def get_reactor_hash(shape):
         "_divertor",
         "_pf_coil",
         "_tf_coil",
-        "_shapes_and_components"
+        "_shapes_and_components",
+        "reactor_hash_value"
     ]
 
     # may need to take things out such as solid, graveyard etc, after when the actual construction happens
@@ -226,7 +227,7 @@ def get_reactor_hash(shape):
         if key in shape_dict.keys():
             shape_dict[key] = None
 
-    print(shape_dict)
+    # print(shape_dict)
 
     hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
     value = hash_object.hexdigest()

@@ -157,6 +157,7 @@ class BallReactor(paramak.Reactor):
 
     def create_reactor(self):
         if get_reactor_hash(self) != self.reactor_hash_value:
+            print('create_solids has been called')
             self.create_solids()
         else:
             print('reactor not reconstructed')
