@@ -496,34 +496,30 @@ class Shape:
 
             if hasattr(self, "path_points"):
                 distance = float(
-                    self.path_points[-1][1] - self.path_points[0][1])
+                    self.path_points[-1][1] - self.path_points[0][1]
+                )
                 if self.workplane in ["XZ", "YX", "ZY"]:
                     distance *= 1
-
+                
                 solid = cq.Workplane(self.workplane).moveTo(0, 0)
 
                 if self.flag == True:
                     for point in self.path_points[:-1]:
-                        solid = solid.workplane(
-                            offset=point[1]).moveTo(
-                            point[0], 0).workplane()
+                        solid = solid.workplane(offset=point[1]).moveTo(point[0], 0).workplane()
                         for entry in instructions:
                             if list(entry.keys())[0] == "spline":
-                                solid = solid.spline(
-                                    listOfXYTuple=list(entry.values())[0])
+                                solid = solid.spline(listOfXYTuple=list(entry.values())[0])
                             if list(entry.keys())[0] == "straight":
                                 solid = solid.polyline(list(entry.values())[0])
                             if list(entry.keys())[0] == "circle":
                                 p0 = list(entry.values())[0][0]
                                 p1 = list(entry.values())[0][1]
                                 p2 = list(entry.values())[0][2]
-                                solid = solid.moveTo(
-                                    p0[0], p0[1]).threePointArc(
-                                    p1, p2)
-                        solid = solid.close().moveTo(
-                            0, 0).moveTo(-point[0], 0).workplane(offset=-point[1])
+                                solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+                        solid = solid.close().moveTo(0, 0).moveTo(-point[0], 0).workplane(offset=-point[1])
                 
                 elif self.flag == False:
+                    solid = solid.workplane(offset=self.path_points[0][1]).moveTo(self.path_points[0][0], 0).workplane()
                     for entry in instructions:
                         if list(entry.keys())[0] == "spline":
                             solid = solid.spline(listOfXYTuple=list(entry.values())[0])
@@ -534,29 +530,25 @@ class Shape:
                             p1 = list(entry.values())[0][1]
                             p2 = list(entry.values())[0][2]
                             solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
-                    solid = solid.close()
-                
-                else:
-                    raise ValueError
 
-                solid = solid.workplane(
-                    offset=self.path_points[-1][1]).moveTo(self.path_points[-1][0], 0).workplane()
+                    solid = solid.close().moveTo(0, 0).moveTo(-self.path_points[0][0], 0).workplane(offset=-self.path_points[0][1])
+
+                solid = solid.workplane(offset=self.path_points[-1][1]).moveTo(self.path_points[-1][0], 0).workplane()
 
             else:
-                # rotate or extrude shape
+                # for rotate and extrude shapes
                 solid = cq.Workplane(self.workplane)
 
             for entry in instructions:
-                if list(entry.keys())[0] == "spline":
-                    solid = solid.spline(listOfXYTuple=list(entry.values())[0])
-                if list(entry.keys())[0] == "straight":
-                    solid = solid.polyline(list(entry.values())[0])
-                if list(entry.keys())[0] == "circle":
-                    p0 = list(entry.values())[0][0]
-                    p1 = list(entry.values())[0][1]
-                    p2 = list(entry.values())[0][2]
-                    solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
-            # solid = solid.close()
+                    if list(entry.keys())[0] == "spline":
+                        solid = solid.spline(listOfXYTuple=list(entry.values())[0])
+                    if list(entry.keys())[0] == "straight":
+                        solid = solid.polyline(list(entry.values())[0])
+                    if list(entry.keys())[0] == "circle":
+                        p0 = list(entry.values())[0][0]
+                        p1 = list(entry.values())[0][1]
+                        p2 = list(entry.values())[0][2]
+                        solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
         return solid
 
