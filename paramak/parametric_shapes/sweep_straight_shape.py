@@ -24,6 +24,7 @@ class SweepStraightShape(SweepMixedShape):
     def __init__(
         self,
         path_points,
+        force_area=False,
         workplane="XY",
         path_workplane="XZ",
         stp_filename="SweepStraightShape.stp",
@@ -38,5 +39,6 @@ class SweepStraightShape(SweepMixedShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             connection_type="straight",
+            force_area=force_area,
             **kwargs
         )

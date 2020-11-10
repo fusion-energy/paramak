@@ -117,6 +117,17 @@ class test_object_properties(unittest.TestCase):
             ValueError,
             invalid_relative_workplane_and_path_workplane)
 
+    def test_workplane_opposite_direction(self):
+        """Checks that a solid can be created with workplane XZ and path_workplane XY"""
+
+        test_shape = SweepSplineShape(
+            points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+            path_points=[(50, 0), (30, 50), (50, 100)],
+            workplane="XZ",
+            path_workplane="XY"
+        )
+        assert test_shape.solid is not None
+
 
 if __name__ == "__main__":
     unittest.main()

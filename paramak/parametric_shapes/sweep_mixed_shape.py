@@ -25,6 +25,7 @@ class SweepMixedShape(Shape):
     def __init__(
         self,
         path_points,
+        force_area=False,
         workplane="XY",
         path_workplane="XZ",
         stp_filename="SweepMixedShape.stp",
@@ -41,6 +42,7 @@ class SweepMixedShape(Shape):
 
         self.path_points = path_points
         self.path_workplane = path_workplane
+        self.force_area = force_area
 
     @property
     def path_points(self):
@@ -76,7 +78,7 @@ class SweepMixedShape(Shape):
 
         solid = super().create_solid()
         path = cq.Workplane(self.path_workplane).spline(self.path_points)
-        solid = solid.sweep(path, multisection=True)
+        solid = solid.close().sweep(path, multisection=True)
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)
