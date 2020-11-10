@@ -6,7 +6,7 @@ from scipy import integrate
 from scipy.optimize import minimize
 
 from paramak import ExtrudeMixedShape
-from paramak.utils import calculate_wedge_cut
+from paramak.utils import calculate_wedge_cut, add_thickness
 
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
@@ -61,6 +61,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         self.number_of_coils = number_of_coils
         self.vertical_displacement = vertical_displacement
         self.with_inner_leg = with_inner_leg
+        self.inner_points, self.outer_points = None, None
+        self.dz_dr = None
 
     @property
     def azimuth_placement_angle(self):
@@ -111,46 +113,21 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
                             [1:], np.flip(segment2[0])[1:], segment1[0][1:]])
         Z = np.concatenate([np.flip(segment1[1]), segment2[1]
                             [1:], -np.flip(segment2[1])[1:], -segment1[1][1:]])
-        dz_dr = np.concatenate([np.flip(segment1[2]), segment2[2]])
-        return R, Z, dz_dr
-
-    def _compute_outer_points(self, R, Z, thickness, derivative):
-        """Computes outer curve points based on thickness
-
-        Args:
-            R (list): list of floats containing R values
-            Z (list): list of floats containing Z values
-            thickness (float): thickness of the magnet
-            derivative (list): list of floats containing the first order
-                derivatives
-
-        Returns:
-            (list, list): R and Z lists for outer curve points
-        """
-        R_outer, Z_outer = [], []
-        for i in range(len(derivative)):
-            nx = -derivative[i]
-            ny = 1
-            # normalise normal vector
-            normal_vector_norm = (nx ** 2 + ny ** 2) ** 0.5
-            nx /= normal_vector_norm
-            ny /= normal_vector_norm
-            # calculate outer points
-            val_R_outer = R[i] + thickness * nx
-            val_Z_outer = Z[i] + thickness * ny
-            R_outer.append(val_R_outer)
-            Z_outer.append(val_Z_outer)
-        R_outer = np.concatenate([R_outer, np.flip(np.array(R_outer))])
-        Z_outer = np.concatenate([Z_outer, np.flip(-np.array(Z_outer))])
-        return R_outer, Z_outer
+        return R, Z
 
     def find_points(self):
         """Finds the XZ points joined by connections that describe the 2D
         profile of the toroidal field coil shape."""
-        # compute inner and outer points
-        R_inner, Z_inner, dz_dr = self._compute_inner_points(self.R1, self.R2)
-        R_outer, Z_outer = self._compute_outer_points(
-            R_inner, Z_inner, self.thickness, dz_dr)
+        # compute inner points
+        R_inner, Z_inner = self._compute_inner_points(self.R1, self.R2)
+
+        # compute outer points
+        dz_dr = np.diff(Z_inner)/np.diff(R_inner)
+        dz_dr[0] = float("inf")
+        dz_dr = np.append(dz_dr, float("-inf"))
+        R_outer, Z_outer = add_thickness(
+            R_inner, Z_inner, self.thickness, dy_dx=dz_dr
+        )
         R_outer, Z_outer = np.flip(R_outer), np.flip(Z_outer)
 
         # add vertical displacement
@@ -184,7 +161,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         outer_points[-1][2] = 'straight'
 
         points = inner_points + outer_points
-
+        self.inner_points, self.outer_points = inner_points, outer_points
+        self.dz_dr = dz_dr
         self.points = points
 
     def find_azimuth_placement_angle(self):
