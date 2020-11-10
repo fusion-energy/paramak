@@ -93,29 +93,29 @@ class SweepCircleShape(Shape):
         if self.workplane in ["XZ", "YX", "ZY"]:
             distance *= -1
 
-        if self.flag == True:
+        if self.flag:
             solid = cq.Workplane(self.workplane).moveTo(0, 0)
             for point in self.path_points[:-1]:
                 solid = solid.workplane(offset=point[1]).\
-                            moveTo(point[0], 0).\
-                            circle(self.radius).\
-                            moveTo(0, 0).\
-                            workplane(offset=-point[1])
+                    moveTo(point[0], 0).\
+                    circle(self.radius).\
+                    moveTo(0, 0).\
+                    workplane(offset=-point[1])
             solid = solid.workplane(offset=self.path_points[-1][1]).moveTo(
                 self.path_points[-1][0], 0).circle(self.radius).sweep(path, multisection=True)
 
-        if self.flag == False:
+        if not self.flag:
             solid = cq.Workplane(self.workplane).\
-                        moveTo(0, 0).\
-                        workplane(offset=self.path_points[0][1]).\
-                        moveTo(self.path_points[0][0], 0).\
-                        circle(self.radius).\
-                        moveTo(0, 0).\
-                        workplane(offset=-self.path_points[0][1]).\
-                        workplane(offset=self.path_points[-1][1]).\
-                        moveTo(self.path_points[-1][0], 0).\
-                        circle(self.radius).\
-                        sweep(path, multisection=True)
+                moveTo(0, 0).\
+                workplane(offset=self.path_points[0][1]).\
+                moveTo(self.path_points[0][0], 0).\
+                circle(self.radius).\
+                moveTo(0, 0).\
+                workplane(offset=-self.path_points[0][1]).\
+                workplane(offset=self.path_points[-1][1]).\
+                moveTo(self.path_points[-1][0], 0).\
+                circle(self.radius).\
+                sweep(path, multisection=True)
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)
