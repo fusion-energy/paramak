@@ -4,6 +4,8 @@ import unittest
 import warnings
 from pathlib import Path
 
+from unittest.mock import MagicMock, Mock
+
 import paramak
 
 
@@ -297,16 +299,12 @@ class test_BallReactor(unittest.TestCase):
         for key in ["_plasma", "_inboard_tf_coils", "_center_column_shield", "_divertor", "_firstwall", "_blanket", "_blanket_rear_wall", "_pf_coil", "_tf_coil"]:
             assert key not in test_reactor.__dict__.keys()
         assert test_reactor.shapes_and_components is not None
-        # add assert that .create_solids() is called
-
-        assert test_reactor.reactor_hash_value is not None
-        initial_hash_value = test_reactor.reactor_hash_value
         for key in ["_plasma", "_inboard_tf_coils", "_center_column_shield", "_divertor", "_firstwall", "_blanket", "_blanket_rear_wall", "_pf_coil", "_tf_coil"]:
             assert key in test_reactor.__dict__.keys()
         assert len(test_reactor.shapes_and_components) == 9
+        assert test_reactor.reactor_hash_value is not None
+        initial_hash_value = test_reactor.reactor_hash_value
         test_reactor.rotation_angle = 270
-        assert initial_hash_value == test_reactor.reactor_hash_value
-        assert test_reactor.solid is not None
-        assert initial_hash_value != test_reactor.reactor_hash_value
-
-
+        assert test_reactor.reactor_hash_value == initial_hash_value
+        assert test_reactor.shapes_and_components is not None
+        assert test_reactor.reactor_hash_value != initial_hash_value
