@@ -1,5 +1,6 @@
 
 import os
+import time
 import unittest
 import warnings
 from pathlib import Path
@@ -326,3 +327,44 @@ class test_BallReactor(unittest.TestCase):
         assert test_reactor.reactor_hash_value == initial_hash_value
         assert test_reactor.shapes_and_components is not None
         assert test_reactor.reactor_hash_value != initial_hash_value
+
+    def test_hash_value_time_saving(self):
+        """Checks that use of conditional reactor reconstruction via the hash value
+        gives the expected time saving"""
+
+        test_reactor = paramak.BallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=150,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=50,
+            blanket_rear_wall_radial_thickness=30,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            rotation_angle=180,
+            pf_coil_radial_thicknesses=[50, 50, 50, 50],
+            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
+            pf_coil_to_rear_blanket_radial_gap=50,
+            pf_coil_to_tf_coil_radial_gap=50,
+            outboard_tf_coil_radial_thickness=100,
+            outboard_tf_coil_poloidal_thickness=50
+        )
+
+        start_time = time.time()
+        test_reactor.shapes_and_components
+        stop_time = time.time()
+        initial_construction_time = stop_time - start_time
+
+        start_time = time.time()
+        test_reactor.shapes_and_components
+        stop_time = time.time()
+        reconstruction_time = stop_time - start_time
+
+        assert reconstruction_time < initial_construction_time
+        assert reconstruction_time < initial_construction_time * 0.01
+
