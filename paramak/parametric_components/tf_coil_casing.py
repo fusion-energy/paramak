@@ -12,6 +12,9 @@ class TFCoilCasing(ExtrudeMixedShape):
         self.inner_offset = inner_offset
         self.outer_offset = outer_offset
         self.vertical_section_offset = vertical_section_offset
+        self.leg_shape = ExtrudeStraightShape(
+            distance=self.distance,
+            azimuth_placement_angle=self.azimuth_placement_angle)
 
     def find_points(self):
         inner_points_magnet = self.magnet.inner_points
@@ -49,38 +52,45 @@ class TFCoilCasing(ExtrudeMixedShape):
         self.leg_points = [
             (
                 min(outer_points[0]) - self.vertical_section_offset,
-                min(outer_points[1])),
+                min(outer_points[1])
+                ),
             (
                 outer_points[0][outer_points[1].index(min(outer_points[1]))],
-                min(outer_points[1])),
+                min(outer_points[1])
+                ),
             (
                 inner_points[0][inner_points[1].index(min(inner_points[1]))],
-                min(inner_points[1])),
-            (min(inner_points[0]), min(
-                yA, self.magnet.vertical_displacement - yA)),
+                min(inner_points[1])
+                ),
+            (
+                min(inner_points[0]),
+                min(inner_points[1])
+                ),
             # not having this line avoid unexpected surfaces
             (inner_points[0][-1], inner_points[1][-1]),
-            # (inner_points[0][0], inner_points[1][0]),
-            (min(inner_points[0]), max(
-                yA, self.magnet.vertical_displacement - yA)),
+            (
+                min(inner_points[0]),
+                max(inner_points[1])
+                ),
             (
                 inner_points[0][inner_points[1].index(min(inner_points[1]))],
-                max(inner_points[1])),
+                max(inner_points[1])
+                ),
             (
                 outer_points[0][outer_points[1].index(min(outer_points[1]))],
-                max(outer_points[1])),
+                max(outer_points[1])
+                ),
             (
                 min(outer_points[0]) - self.vertical_section_offset,
-                max(outer_points[1])),
+                max(outer_points[1])
+                ),
         ]
 
     def create_solid(self):
         solid = super().create_solid()
-        leg_shape = ExtrudeStraightShape(
-            distance=self.distance,
-            azimuth_placement_angle=self.azimuth_placement_angle)
-        leg_shape.points = self.leg_points
-        solid = union_solid(solid, leg_shape)
+
+        self.leg_shape.points = self.leg_points
+        solid = union_solid(solid, self.leg_shape)
         solid = cut_solid(solid, self.magnet)
         self.solid = solid
         return solid
