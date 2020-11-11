@@ -339,8 +339,10 @@ class test_SubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-                "_pf_coil"]:
+            "_pf_coil"
+        ]:
             assert key not in test_reactor.__dict__.keys()
+        
         assert test_reactor.shapes_and_components is not None
         for key in [
             "_inboard_tf_coils",
@@ -356,8 +358,10 @@ class test_SubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-                "_pf_coil"]:
+            "_pf_coil"
+        ]:
             assert key in test_reactor.__dict__.keys()
+        
         assert len(test_reactor.shapes_and_components) == 10
         assert test_reactor.reactor_hash_value is not None
         initial_hash_value = test_reactor.reactor_hash_value
