@@ -89,7 +89,7 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 ## Selection Of Parametric Components
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png" width="500">
+<img src="" width="500">
 </p>
 
 
