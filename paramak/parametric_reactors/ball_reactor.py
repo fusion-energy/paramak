@@ -126,15 +126,10 @@ class BallReactor(paramak.Reactor):
 
         self.reactor_hash_value = None
 
-        # self.create_solids()
-
     @property
     def shapes_and_components(self):
         if get_reactor_hash(self) != self.reactor_hash_value:
-            print('create_solids has been called')
             self.create_solids()
-        else:
-            print('reactor not reconstructed')
         return self._shapes_and_components
 
     @shapes_and_components.setter
@@ -160,13 +155,6 @@ class BallReactor(paramak.Reactor):
         if not isinstance(value, list) and value is not None:
             raise ValueError("pf_coil_vertical_thicknesses must be a list")
         self._pf_coil_vertical_thicknesses = value
-
-    # def create_reactor(self):
-    #     if get_reactor_hash(self) != self.reactor_hash_value:
-    #         print('create_solids has been called')
-    #         self.create_solids()
-    #     else:
-    #         print('reactor not reconstructed')
 
     def create_solids(self):
         """Creates a 3d solids for each component.
