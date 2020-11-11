@@ -95,6 +95,9 @@ class TFCoilCasing(ExtrudeMixedShape):
         solid = super().create_solid()
 
         self.leg_shape.points = self.leg_points
+        self.leg_shape.distance = self.distance
+        self.leg_shape.azimuth_placement_angle = \
+            self.azimuth_placement_angle
         solid = union_solid(solid, self.leg_shape)
         solid = cut_solid(solid, self.magnet)
         self.solid = solid
