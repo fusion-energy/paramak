@@ -265,8 +265,8 @@ class test_BallReactor(unittest.TestCase):
 
     def test_ball_reactor_hash_value(self):
         """Creates a ball reactor and checks that all shapes in the reactor are created
-        when .shapes_and_components is called. Checks that when .shapes_and_components is
-        called again with no changes to the reactor, the shapes in the reactor are not
+        when .shapes_and_components is first called. Checks that when .shapes_and_components 
+        is called again with no changes to the reactor, the shapes in the reactor are not
         reconstructed and the previously constructed shapes are returned. Checks that when
         .shapes_and_components is called again with changes to the reactor, the shapes 
         in the reactor are reconstructed and these new shapes are returned. Checks that
