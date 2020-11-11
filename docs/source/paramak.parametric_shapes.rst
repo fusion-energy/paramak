@@ -42,7 +42,7 @@ RotateMixedShape()
 RotateCircleShape()
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246778-72e69980-bba3-11ea-9b33-d74e2c2d084b.png
+.. image:: https://user-images.githubusercontent.com/56687624/98713427-868ae380-237f-11eb-87af-cf6b5fe032b2.png
    :width: 250
    :height: 200
    :align: center
@@ -66,7 +66,7 @@ ExtrudeStraightShape()
 ExtrudeSplineShape()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246774-71b56c80-bba3-11ea-94cb-d2496365ff18.png
+.. image:: hhttps://user-images.githubusercontent.com/56687624/98713431-87bc1080-237f-11eb-9075-01bca99b7018.png
    :width: 200
    :height: 280
    :align: center
@@ -102,7 +102,7 @@ ExtrudeCircleShape()
 SweepStraightShape()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/88060232-e0ac3280-cb5d-11ea-8bfe-b1db5f89a0d4.png
+.. image:: https://user-images.githubusercontent.com/56687624/98713447-8c80c480-237f-11eb-8615-c090e93138f6.png
    :width: 300
    :height: 230
    :align: center
@@ -114,7 +114,7 @@ SweepStraightShape()
 SweepSplineShape()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/88060236-e275f600-cb5d-11ea-87c3-330272a75904.png
+.. image:: https://user-images.githubusercontent.com/56687624/98713443-8b4f9780-237f-11eb-83bb-38ca7f222073.png
    :width: 300
    :height: 230
    :align: center
@@ -126,7 +126,7 @@ SweepSplineShape()
 SweepMixedShape()
 ^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/88064419-2b7c7900-cb63-11ea-901f-a7f8596e1f00.png
+.. image:: https://user-images.githubusercontent.com/56687624/98713440-8a1e6a80-237f-11eb-9eed-12b9d7731090.png
    :width: 300
    :height: 230
    :align: center
@@ -138,7 +138,7 @@ SweepMixedShape()
 SweepCircleShape()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/88064426-2d463c80-cb63-11ea-980b-29f8c010c2bf.png
+.. image:: https://user-images.githubusercontent.com/56687624/98713436-88ed3d80-237f-11eb-99cd-27dcb4f313b1.png
    :width: 300
    :height: 230
    :align: center

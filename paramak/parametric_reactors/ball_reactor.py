@@ -33,6 +33,9 @@ class BallReactor(paramak.Reactor):
             rear wall of the blanket (cm)
         elongation (float): the elongation of the plasma
         triangularity (float): the triangularity of the plasma
+        plasma_gap_vertical_thickness (float): the vertical thickness of the
+            gap between the plasma and firstwall (cm). If left as None then the
+            outer_plasma_gap_radial_thickness is used. Defaults to None.
         number_of_tf_coils (int, optional): the number of tf coils
         pf_coil_to_rear_blanket_radial_gap (float, optional): the radial
             distance between the rear blanket and the closest poloidal field
@@ -66,6 +69,7 @@ class BallReactor(paramak.Reactor):
         blanket_rear_wall_radial_thickness,
         elongation,
         triangularity,
+        plasma_gap_vertical_thickness=None,
         number_of_tf_coils=12,
         pf_coil_to_rear_blanket_radial_gap=None,
         pf_coil_radial_thicknesses=None,
@@ -96,6 +100,7 @@ class BallReactor(paramak.Reactor):
         self.pf_coil_to_tf_coil_radial_gap = pf_coil_to_tf_coil_radial_gap
         self.outboard_tf_coil_radial_thickness = outboard_tf_coil_radial_thickness
         self.outboard_tf_coil_poloidal_thickness = outboard_tf_coil_poloidal_thickness
+        self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
 
         # sets major radius and minor radius from equatorial_points to allow a radial build
         # this helps avoid the plasma overlapping the center column and other
@@ -234,7 +239,8 @@ class BallReactor(paramak.Reactor):
         # this is the vertical build sequence, components build on each other in
         # a similar manner to the radial build
 
-        self.plasma_gap_vertical_thickness = self.outer_plasma_gap_radial_thickness
+        if self.plasma_gap_vertical_thickness is None:
+            self.plasma_gap_vertical_thickness = self.outer_plasma_gap_radial_thickness
 
         self._firstwall_start_height = (
             self._plasma.high_point[1] + self.plasma_gap_vertical_thickness
@@ -260,12 +266,10 @@ class BallReactor(paramak.Reactor):
         ):
             self._number_of_pf_coils = len(self.pf_coil_vertical_thicknesses)
 
-            y_position_step = (
-                2
-                * (
-                    self._blanket_rear_wall_end_height
-                    + self.pf_coil_to_rear_blanket_radial_gap
-                )
+            y_position_step = (2 * (
+                self._blanket_rear_wall_end_height
+                + self.pf_coil_to_rear_blanket_radial_gap
+            )
             ) / (self._number_of_pf_coils + 1)
 
             self._pf_coils_xy_values = []
