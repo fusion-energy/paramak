@@ -1,20 +1,35 @@
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import union_solid, cut_solid, add_thickness
 
+import warnings
 import numpy as np
 
 
 class TFCoilCasing(ExtrudeMixedShape):
     def __init__(self, magnet, inner_offset, outer_offset,
                  vertical_section_offset, **kwargs):
-        super().__init__(**kwargs)
         self.magnet = magnet
+        super().__init__(**kwargs)
         self.inner_offset = inner_offset
         self.outer_offset = outer_offset
         self.vertical_section_offset = vertical_section_offset
         self.leg_shape = ExtrudeStraightShape(
             distance=self.distance,
             azimuth_placement_angle=self.azimuth_placement_angle)
+
+    @property
+    def azimuth_placement_angle(self):
+        self.azimuth_placement_angle = self.magnet.azimuth_placement_angle
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        correct_angles = self.magnet.azimuth_placement_angle
+        if value != correct_angles:
+            msg = "Casing azimuth_placement_angle should be the" + \
+                " same value as TFCoilCasing.magnet."
+            warnings.warn(msg, UserWarning)
+        self._azimuth_placement_angle = correct_angles
 
     def find_points(self):
         inner_points_magnet = self.magnet.inner_points
