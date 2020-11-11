@@ -325,10 +325,38 @@ class test_SubmersionTokamak(unittest.TestCase):
         )
 
         assert test_reactor.reactor_hash_value is None
-        for key in ["_inboard_tf_coils", "_center_column_shield", "_plasma", "_inboard_firstwall", "_inboard_blanket", "_firstwall", "_divertor", "_blanket", "_supports", "_outboard_rear_blanket_wall_upper", "_outboard_rear_blanket_wall_lower", "_outboard_rear_blanket_wall", "_tf_coil", "_pf_coil"]:
+        for key in [
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_plasma",
+            "_inboard_firstwall",
+            "_inboard_blanket",
+            "_firstwall",
+            "_divertor",
+            "_blanket",
+            "_supports",
+            "_outboard_rear_blanket_wall_upper",
+            "_outboard_rear_blanket_wall_lower",
+            "_outboard_rear_blanket_wall",
+            "_tf_coil",
+                "_pf_coil"]:
             assert key not in test_reactor.__dict__.keys()
         assert test_reactor.shapes_and_components is not None
-        for key in ["_inboard_tf_coils", "_center_column_shield", "_plasma", "_inboard_firstwall", "_inboard_blanket", "_firstwall", "_divertor", "_blanket", "_supports", "_outboard_rear_blanket_wall_upper", "_outboard_rear_blanket_wall_lower", "_outboard_rear_blanket_wall", "_tf_coil", "_pf_coil"]:
+        for key in [
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_plasma",
+            "_inboard_firstwall",
+            "_inboard_blanket",
+            "_firstwall",
+            "_divertor",
+            "_blanket",
+            "_supports",
+            "_outboard_rear_blanket_wall_upper",
+            "_outboard_rear_blanket_wall_lower",
+            "_outboard_rear_blanket_wall",
+            "_tf_coil",
+                "_pf_coil"]:
             assert key in test_reactor.__dict__.keys()
         assert len(test_reactor.shapes_and_components) == 10
         assert test_reactor.reactor_hash_value is not None

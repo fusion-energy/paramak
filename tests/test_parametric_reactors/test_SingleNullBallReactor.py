@@ -190,10 +190,28 @@ class test_SingleNullBallReactor(unittest.TestCase):
         )
 
         assert test_reactor.reactor_hash_value is None
-        for key in ["_plasma", "_inboard_tf_coils", "_center_column_shield", "_divertor", "_firstwall", "_blanket", "_blanket_rear_wall", "_pf_coil", "_tf_coil"]:
+        for key in [
+            "_plasma",
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_divertor",
+            "_firstwall",
+            "_blanket",
+            "_blanket_rear_wall",
+            "_pf_coil",
+                "_tf_coil"]:
             assert key not in test_reactor.__dict__.keys()
         assert test_reactor.shapes_and_components is not None
-        for key in ["_plasma", "_inboard_tf_coils", "_center_column_shield", "_divertor", "_firstwall", "_blanket", "_blanket_rear_wall", "_pf_coil", "_tf_coil"]:
+        for key in [
+            "_plasma",
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_divertor",
+            "_firstwall",
+            "_blanket",
+            "_blanket_rear_wall",
+            "_pf_coil",
+                "_tf_coil"]:
             assert key in test_reactor.__dict__.keys()
         assert len(test_reactor.shapes_and_components) == 9
         assert test_reactor.reactor_hash_value is not None
