@@ -19,11 +19,11 @@ class TFCoilCasing(ExtrudeMixedShape):
         inner_points_magnet = (
             inner_points_magnet[:, 0],
             inner_points_magnet[:, 1]
-            )
+        )
         outer_points_magnet = (
             outer_points_magnet[:, 0],
             outer_points_magnet[:, 1]
-            )
+        )
         inner_points = add_thickness(
             *inner_points_magnet,
             thickness=-self.inner_offset,
