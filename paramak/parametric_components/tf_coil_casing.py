@@ -52,38 +52,28 @@ class TFCoilCasing(ExtrudeMixedShape):
         self.leg_points = [
             (
                 min(outer_points[0]) - self.vertical_section_offset,
-                min(outer_points[1])
-            ),
+                min(outer_points[1])),
             (
                 outer_points[0][outer_points[1].index(min(outer_points[1]))],
-                min(outer_points[1])
-            ),
+                min(outer_points[1])),
             (
                 inner_points[0][inner_points[1].index(min(inner_points[1]))],
-                min(inner_points[1])
-            ),
-            (
-                min(inner_points[0]),
-                min(inner_points[1])
-            ),
+                min(inner_points[1])),
+            (min(inner_points[0]), min(
+                yA, self.magnet.vertical_displacement - yA)),
             # not having this line avoid unexpected surfaces
             (inner_points[0][-1], inner_points[1][-1]),
-            (
-                min(inner_points[0]),
-                max(inner_points[1])
-            ),
+            (min(inner_points[0]), max(
+                yA, self.magnet.vertical_displacement - yA)),
             (
                 inner_points[0][inner_points[1].index(min(inner_points[1]))],
-                max(inner_points[1])
-            ),
+                max(inner_points[1])),
             (
                 outer_points[0][outer_points[1].index(min(outer_points[1]))],
-                max(outer_points[1])
-            ),
+                max(outer_points[1])),
             (
                 min(outer_points[0]) - self.vertical_section_offset,
-                max(outer_points[1])
-            ),
+                max(outer_points[1])),
         ]
 
     def create_solid(self):
