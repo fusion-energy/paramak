@@ -68,7 +68,7 @@ more complex models (e.g. a Tokamak). The Tokamak images below are coloured
 based on the shape family that the component is made from. There are also
 parametric components which provide convenient fusion relevant shapes for
 common reactor components.
-https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
+[](https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png)
 
 
 ## Selection Of Parametric Reactors
