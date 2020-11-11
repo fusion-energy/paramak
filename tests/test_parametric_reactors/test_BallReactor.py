@@ -265,10 +265,10 @@ class test_BallReactor(unittest.TestCase):
 
     def test_ball_reactor_hash_value(self):
         """Creates a ball reactor and checks that all shapes in the reactor are created
-        when .shapes_and_components is first called. Checks that when .shapes_and_components 
+        when .shapes_and_components is first called. Checks that when .shapes_and_components
         is called again with no changes to the reactor, the shapes in the reactor are not
         reconstructed and the previously constructed shapes are returned. Checks that when
-        .shapes_and_components is called again with changes to the reactor, the shapes 
+        .shapes_and_components is called again with changes to the reactor, the shapes
         in the reactor are reconstructed and these new shapes are returned. Checks that
         the reactor_hash_value is only updated when the reactor is reconstructed."""
 
@@ -296,10 +296,28 @@ class test_BallReactor(unittest.TestCase):
         )
 
         assert test_reactor.reactor_hash_value is None
-        for key in ["_plasma", "_inboard_tf_coils", "_center_column_shield", "_divertor", "_firstwall", "_blanket", "_blanket_rear_wall", "_pf_coil", "_tf_coil"]:
+        for key in [
+            "_plasma",
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_divertor",
+            "_firstwall",
+            "_blanket",
+            "_blanket_rear_wall",
+            "_pf_coil",
+                "_tf_coil"]:
             assert key not in test_reactor.__dict__.keys()
         assert test_reactor.shapes_and_components is not None
-        for key in ["_plasma", "_inboard_tf_coils", "_center_column_shield", "_divertor", "_firstwall", "_blanket", "_blanket_rear_wall", "_pf_coil", "_tf_coil"]:
+        for key in [
+            "_plasma",
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_divertor",
+            "_firstwall",
+            "_blanket",
+            "_blanket_rear_wall",
+            "_pf_coil",
+                "_tf_coil"]:
             assert key in test_reactor.__dict__.keys()
         assert len(test_reactor.shapes_and_components) == 9
         assert test_reactor.reactor_hash_value is not None
