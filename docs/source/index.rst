@@ -157,25 +157,25 @@ are shown int he table below.
 .. |extrudestraight| image:: https://user-images.githubusercontent.com/56687624/87055493-56c6a600-c1fc-11ea-8c58-f5b62ae72e0e.png
                           :height: 120px
 
-.. |sweepstraight| image:: https://user-images.githubusercontent.com/56687624/88060232-e0ac3280-cb5d-11ea-8bfe-b1db5f89a0d4.png
+.. |sweepstraight| image:: https://user-images.githubusercontent.com/56687624/98713447-8c80c480-237f-11eb-8615-c090e93138f6.png
                           :height: 120px
 
 .. |rotatespline| image:: https://user-images.githubusercontent.com/56687624/87055473-50382e80-c1fc-11ea-95dd-b4932b1e78d9.png
                           :height: 120px
 
-.. |extrudespline| image:: https://user-images.githubusercontent.com/56687624/87055500-58906980-c1fc-11ea-879c-9f1845be3b57.png
+.. |extrudespline| image:: https://user-images.githubusercontent.com/56687624/98713431-87bc1080-237f-11eb-9075-01bca99b7018.png
                           :height: 120px
 
-.. |sweepspline| image:: https://user-images.githubusercontent.com/56687624/88060236-e275f600-cb5d-11ea-87c3-330272a75904.png
+.. |sweepspline| image:: https://user-images.githubusercontent.com/56687624/98713443-8b4f9780-237f-11eb-83bb-38ca7f222073.png
                           :height: 120px
 
-.. |rotatecircle| image:: https://user-images.githubusercontent.com/56687624/87055489-54fce280-c1fc-11ea-9545-a61582aea20a.png
+.. |rotatecircle| image:: https://user-images.githubusercontent.com/56687624/98713427-868ae380-237f-11eb-87af-cf6b5fe032b2.png
                           :height: 120px
 
 .. |extrudecircle| image:: https://user-images.githubusercontent.com/56687624/87055517-5b8b5a00-c1fc-11ea-83ef-d4329c6815f7.png
                           :height: 120px
 
-.. |sweepcircle| image:: https://user-images.githubusercontent.com/56687624/88064426-2d463c80-cb63-11ea-980b-29f8c010c2bf.png
+.. |sweepcircle| image:: https://user-images.githubusercontent.com/56687624/98713436-88ed3d80-237f-11eb-99cd-27dcb4f313b1.png
                           :height: 120px
 
 .. |rotatemixed| image:: https://user-images.githubusercontent.com/56687624/87055483-53cbb580-c1fc-11ea-878d-92835684c8ff.png
@@ -184,7 +184,7 @@ are shown int he table below.
 .. |extrudemixed| image:: https://user-images.githubusercontent.com/56687624/87055511-59c19680-c1fc-11ea-8740-8c7987745c45.png
                           :height: 120px
 
-.. |sweepmixed| image:: https://user-images.githubusercontent.com/56687624/88064419-2b7c7900-cb63-11ea-901f-a7f8596e1f00.png
+.. |sweepmixed| image:: https://user-images.githubusercontent.com/56687624/98713440-8a1e6a80-237f-11eb-9eed-12b9d7731090.png
                           :height: 120px
 
 
