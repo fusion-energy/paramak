@@ -56,11 +56,11 @@ class TFCoilCasing(ExtrudeMixedShape):
             (
                 inner_points[0][inner_points[1].index(min(inner_points[1]))],
                 min(inner_points[1])),
-            (min(inner_points[0]), yA),
+            (min(inner_points[0]), min(yA, self.magnet.vertical_displacement - yA)),
             # not having this line avoid unexpected surfaces
             (inner_points[0][-1], inner_points[1][-1]),
             # (inner_points[0][0], inner_points[1][0]),
-            (min(inner_points[0]), self.magnet.vertical_displacement - yA),
+            (min(inner_points[0]), max(yA, self.magnet.vertical_displacement - yA)),
             (
                 inner_points[0][inner_points[1].index(min(inner_points[1]))],
                 max(inner_points[1])),
