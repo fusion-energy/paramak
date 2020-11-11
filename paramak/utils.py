@@ -221,7 +221,8 @@ def get_reactor_hash(shape):
         "_pf_coil",
         "_tf_coil",
         "_shapes_and_components",
-        "reactor_hash_value"
+        "reactor_hash_value",
+        "_supports"
     ]
 
     for key in keys_to_ignore:
