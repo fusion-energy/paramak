@@ -223,8 +223,17 @@ my_reactor.export_html('reactor.html')
 
 It is possible to convert a parametric Reactor model into a neutronics model.
 
+To install two additional python packages needed to run neutronics with a
+modified pip install
+
+```bash
+pip install .[neutronics]
+```
+
 More information is avaialbe in the
 [documentation](https://paramak.readthedocs.io/en/latest/paramak.parametric_neutronics.html#parametric-neutronics).
+
+There are several examples in the [examples folder](https://github.com/ukaea/paramak/blob/main/examples/https://github.com/ukaea/paramak/tree/main/examples/example_neutronics_simulations).
 
 To create the neutronics model you will need
 [Trelis](https://www.coreform.com/products/trelis/) and the DAGMC plugin
