@@ -40,7 +40,9 @@ class NeutronicsModelFromReactor():
             Reactor() object must be accounted for. Material tags required
             for the reactor can be obtained with Reactor().material_tags.
         cell_tallies: (list of strings): the cell based tallies to calculate,
-            options include TBR, heat and flux
+            options include TBR, heating and flux
+        mesh_tally_2D: (list of strings): the mesh based tallies to calculate,
+            options include tritium_production, heating and flux
         fusion_power: (float): the power in watts emitted by the fusion
             reaction recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
@@ -72,13 +74,18 @@ class NeutronicsModelFromReactor():
             Defaults to 1e-4.
         faceting_tolerance(float): the tolerance to use when faceting surfaces.
             Defaults to 1e-1.
+        mesh_2D_resolution (tuple of ints): The mesh resolution in the height
+            and width directions. The larger the resolution the finer the mesh
+            and more computational intensity is required to converge each mesh
+            element.
     """
 
     def __init__(
         self,
         reactor,
         materials,
-        cell_tallies,
+        cell_tallies=None,
+        mesh_tally_2D=None,
         fusion_power=1e9,
         method='ppp',
         simulation_batches=100,
@@ -96,12 +103,14 @@ class NeutronicsModelFromReactor():
         ion_temperature_beta=6,
         max_lost_particles=10,
         faceting_tolerance=1e-1,
-        merge_tolerance=1e-4
+        merge_tolerance=1e-4,
+        mesh_2D_resolution=(400, 400)
     ):
 
         self.reactor = reactor
         self.materials = materials
         self.cell_tallies = cell_tallies
+        self.mesh_tally_2D = mesh_tally_2D
         self.ion_density_origin = ion_density_origin
         self.ion_density_peaking_factor = ion_density_peaking_factor
         self.ion_density_pedestal = ion_density_pedestal
@@ -119,6 +128,7 @@ class NeutronicsModelFromReactor():
         self.max_lost_particles = max_lost_particles
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
+        self.mesh_2D_resolution = mesh_2D_resolution
 
         self.model = None
         self.fusion_power = fusion_power
@@ -169,19 +179,42 @@ class NeutronicsModelFromReactor():
 
     @cell_tallies.setter
     def cell_tallies(self, value):
-        if not isinstance(value, list):
-            raise ValueError(
-                "NeutronicsModelFromReactor.cell_tallies should be a\
-                list")
-        output_options = ['TBR', 'heat', 'flux', 'fast flux', 'dose']
-        for entry in value:
-            if entry not in output_options:
+        if value is not None:
+            if not isinstance(value, list):
                 raise ValueError(
-                    "NeutronicsModelFromReactor.cell_tallies argument",
-                    entry,
-                    "not allowed, the following options are supported",
-                    output_options)
+                    "NeutronicsModelFromReactor.cell_tallies should be a\
+                    list")
+            output_options = ['TBR', 'heating', 'flux', 'fast flux', 'dose']
+            for entry in value:
+                if entry not in output_options:
+                    raise ValueError(
+                        "NeutronicsModelFromReactor.cell_tallies argument",
+                        entry,
+                        "not allowed, the following options are supported",
+                        output_options)
         self._cell_tallies = value
+
+    @property
+    def mesh_tally_2D(self):
+        return self._mesh_tally_2D
+
+    @mesh_tally_2D.setter
+    def mesh_tally_2D(self, value):
+        if value is not None:
+            if not isinstance(value, list):
+                raise ValueError(
+                    "NeutronicsModelFromReactor.mesh_tally_2D should be a\
+                    list")
+            output_options = ['tritium_production', 'heating', 'flux',
+                              'fast flux', 'dose']
+            for entry in value:
+                if entry not in output_options:
+                    raise ValueError(
+                        "NeutronicsModelFromReactor.mesh_tally_2D argument",
+                        entry,
+                        "not allowed, the following options are supported",
+                        output_options)
+        self._mesh_tally_2D = value
 
     @property
     def materials(self):
@@ -366,18 +399,10 @@ class NeutronicsModelFromReactor():
 
         print('neutronics model saved as dagmc.h5m')
 
-    def plot_neutronics_geometry(self):
-
-        plt.show(self.universe.plot(width=(1200, 1200), basis='xz'))
-        plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
-        plt.show(self.universe.plot(width=(1200, 1200), basis='xy'))
-
-        # TODO use colors already assigned to reactor components, like this ...
-        # plt.show(self.universe.plot(width=(1200, 1200), basis='xy', colors={cell_1: 'blue'}))
-
     def create_neutronics_model(self, method=None):
         """Uses OpenMC python API to make a neutronics model, including tallies
-        (cell_tallies), simulation settings (batches, particles per batch)
+        (cell_tallies and mesh_tally_2D), simulation settings (batches,
+        particles per batch)
 
         Arguments:
             method: (str): The method to use when making the imprinted and
@@ -409,31 +434,114 @@ class NeutronicsModelFromReactor():
         # details about what neutrons interactions to keep track of (tally)
         tallies = openmc.Tallies()
 
-        if 'TBR' in self.cell_tallies:
-            blanket_mat = self.openmc_materials['blanket_mat']
-            material_filter = openmc.MaterialFilter(blanket_mat)
-            tally = openmc.Tally(name="TBR")
-            tally.filters = [material_filter]
-            tally.scores = ["(n,Xt)"]  # where X is a wild card
-            tallies.append(tally)
+        if self.mesh_tally_2D is not None:
 
-        if 'heat' in self.cell_tallies:
-            for key, value in self.openmc_materials.items():
-                if key != 'DT_plasma':
-                    material_filter = openmc.MaterialFilter(value)
-                    tally = openmc.Tally(name=key + "_heat")
-                    tally.filters = [material_filter]
-                    tally.scores = ["heating"]
-                    tallies.append(tally)
+            # Create mesh which will be used for tally
+            mesh_width = self.mesh_2D_resolution[1]
+            mesh_height = self.mesh_2D_resolution[0]
 
-        if 'flux' in self.cell_tallies:
-            for key, value in self.openmc_materials.items():
-                if key != 'DT_plasma':
-                    material_filter = openmc.MaterialFilter(value)
-                    tally = openmc.Tally(name=key + "_flux")
-                    tally.filters = [material_filter]
-                    tally.scores = ["flux"]
-                    tallies.append(tally)
+            mesh_xz = openmc.RegularMesh()
+            mesh_xz.dimension = [mesh_width, 1, mesh_height]
+            mesh_xz.lower_left = [-1200, -1, -1200]
+            mesh_xz.upper_right = [1200, 1, 1200]
+
+            mesh_xy = openmc.RegularMesh()
+            mesh_xy.dimension = [mesh_width, mesh_height, 1]
+            mesh_xy.lower_left = [-1200, -1200, -1]
+            mesh_xy.upper_right = [1200, 1200, 1]
+
+            mesh_yz = openmc.RegularMesh()
+            mesh_yz.dimension = [1, mesh_width, mesh_height]
+            mesh_yz.lower_left = [-1, -1200, -1200]
+            mesh_yz.upper_right = [1, 1200, 1200]
+
+            if 'tritium_production' in self.mesh_tally_2D:
+                mesh_filter = openmc.MeshFilter(mesh_xz)
+                mesh_tally = openmc.Tally(
+                    name='tritium_production_on_2D_mesh_xz')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['(n,Xt)']
+                tallies.append(mesh_tally)
+
+                mesh_filter = openmc.MeshFilter(mesh_xy)
+                mesh_tally = openmc.Tally(
+                    name='tritium_production_on_2D_mesh_xy')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['(n,Xt)']
+                tallies.append(mesh_tally)
+
+                mesh_filter = openmc.MeshFilter(mesh_yz)
+                mesh_tally = openmc.Tally(
+                    name='tritium_production_on_2D_mesh_yz')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['(n,Xt)']
+                tallies.append(mesh_tally)
+
+            if 'heating' in self.mesh_tally_2D:
+                mesh_filter = openmc.MeshFilter(mesh_xz)
+                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_xz')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['heating']
+                tallies.append(mesh_tally)
+
+                mesh_filter = openmc.MeshFilter(mesh_xy)
+                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_xy')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['heating']
+                tallies.append(mesh_tally)
+
+                mesh_filter = openmc.MeshFilter(mesh_yz)
+                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_yz')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['heating']
+                tallies.append(mesh_tally)
+
+            if 'flux' in self.mesh_tally_2D:
+                mesh_filter = openmc.MeshFilter(mesh_xz)
+                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_xz')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['flux']
+                tallies.append(mesh_tally)
+
+                mesh_filter = openmc.MeshFilter(mesh_xy)
+                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_xy')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['flux']
+                tallies.append(mesh_tally)
+
+                mesh_filter = openmc.MeshFilter(mesh_yz)
+                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_yz')
+                mesh_tally.filters = [mesh_filter]
+                mesh_tally.scores = ['flux']
+                tallies.append(mesh_tally)
+
+        if self.cell_tallies is not None:
+
+            if 'TBR' in self.cell_tallies:
+                blanket_mat = self.openmc_materials['blanket_mat']
+                material_filter = openmc.MaterialFilter(blanket_mat)
+                tally = openmc.Tally(name="TBR")
+                tally.filters = [material_filter]
+                tally.scores = ["(n,Xt)"]  # where X is a wild card
+                tallies.append(tally)
+
+            if 'heating' in self.cell_tallies:
+                for key, value in self.openmc_materials.items():
+                    if key != 'DT_plasma':
+                        material_filter = openmc.MaterialFilter(value)
+                        tally = openmc.Tally(name=key + "_heating")
+                        tally.filters = [material_filter]
+                        tally.scores = ["heating"]
+                        tallies.append(tally)
+
+            if 'flux' in self.cell_tallies:
+                for key, value in self.openmc_materials.items():
+                    if key != 'DT_plasma':
+                        material_filter = openmc.MaterialFilter(value)
+                        tally = openmc.Tally(name=key + "_flux")
+                        tally.filters = [material_filter]
+                        tally.scores = ["flux"]
+                        tallies.append(tally)
 
         # make the model from gemonetry, materials, settings and tallies
         self.model = openmc.model.Model(geom, self.mats, settings, tallies)
@@ -482,19 +590,21 @@ class NeutronicsModelFromReactor():
         # access the tallies
         for key, tally in sp.tallies.items():
 
-            df = tally.get_pandas_dataframe()
-            tally_result = df["mean"].sum()
-            tally_std_dev = df['std. dev.'].sum()
-
             if tally.name == 'TBR':
 
+                df = tally.get_pandas_dataframe()
+                tally_result = df["mean"].sum()
+                tally_std_dev = df['std. dev.'].sum()
                 results[tally.name] = {
                     'result': tally_result,
                     'std. dev.': tally_std_dev,
                 }
 
-            if tally.name.endswith('heat'):
+            if tally.name.endswith('heating'):
 
+                df = tally.get_pandas_dataframe()
+                tally_result = df["mean"].sum()
+                tally_std_dev = df['std. dev.'].sum()
                 results[tally.name]['MeV per source particle'] = {
                     'result': tally_result / 1e6,
                     'std. dev.': tally_std_dev / 1e6,
@@ -506,10 +616,49 @@ class NeutronicsModelFromReactor():
 
             if tally.name.endswith('flux'):
 
+                df = tally.get_pandas_dataframe()
+                tally_result = df["mean"].sum()
+                tally_std_dev = df['std. dev.'].sum()
                 results[tally.name]['Flux per source particle'] = {
                     'result': tally_result,
                     'std. dev.': tally_std_dev,
                 }
+
+            if tally.name.startswith('tritium_production_on_2D_mesh'):
+
+                my_tally = sp.get_tally(name=tally.name)
+                my_slice = my_tally.get_slice(scores=['(n,Xt)'])
+
+                my_slice.mean.shape = self.mesh_2D_resolution
+
+                fig = plt.subplot()
+                fig.imshow(my_slice.mean).get_figure().savefig(
+                    'tritium_production_on_2D_mesh' + tally.name[-3:], dpi=300)
+                fig.clear()
+
+            if tally.name.startswith('heating_on_2D_mesh'):
+
+                my_tally = sp.get_tally(name=tally.name)
+                my_slice = my_tally.get_slice(scores=['heating'])
+
+                my_slice.mean.shape = self.mesh_2D_resolution
+
+                fig = plt.subplot()
+                fig.imshow(my_slice.mean).get_figure().savefig(
+                    'heating_on_2D_mesh' + tally.name[-3:], dpi=300)
+                fig.clear()
+
+            if tally.name.startswith('flux_on_2D_mesh'):
+
+                my_tally = sp.get_tally(name=tally.name)
+                my_slice = my_tally.get_slice(scores=['flux'])
+
+                my_slice.mean.shape = self.mesh_2D_resolution
+
+                fig = plt.subplot()
+                fig.imshow(my_slice.mean).get_figure().savefig(
+                    'flux_on_2D_mesh' + tally.name[-3:], dpi=300)
+                fig.clear()
 
         self.results = json.dumps(results, indent=4, sort_keys=True)
 

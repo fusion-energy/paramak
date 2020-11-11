@@ -2,37 +2,37 @@
 import os
 import json
 
-"""This script automatically produces DAGMC compatable geometry. A manifest
-file is required that specfies a the stp filenames and the materials names to
-assign. The name of the manifest file is manifest.json by default but can be
-specified using aprepro arguments. Other optional aprepro arguments are
-faceting_tolerance and merge_tolerance which default to 1e-1 and 1e-4 by
-default
+# This script automatically produces DAGMC compatable geometry. A manifest
+# file is required that specfies a the stp filenames and the materials names to
+# assign. The name of the manifest file is manifest.json by default but can be
+# specified using aprepro arguments. Other optional aprepro arguments are
+# faceting_tolerance and merge_tolerance which default to 1e-1 and 1e-4 by
+# default
 
-To using this script with Trelis it can be run in batch mode
-trelis -batch -nographics make_faceteted_neutronics_model.py
+# To using this script with Trelis it can be run in batch mode
+# trelis -batch -nographics make_faceteted_neutronics_model.py
 
-With the Trelis GUI
-trelis make_faceteted_neutronics_model.py
+# With the Trelis GUI
+# trelis make_faceteted_neutronics_model.py
 
-With additional arguments to overwrite the defaults
-trelis -batch -nographics make_faceteted_neutronics_model.py "faceting_tolerance='1e-4'" "merge_tolerance='1e-4'"
+# With additional arguments to overwrite the defaults
+# trelis -batch -nographics make_faceteted_neutronics_model.py "faceting_tolerance='1e-4'" "merge_tolerance='1e-4'"
 
-An example manifest file would contain a list of dictionaries with entry having
-stp_filename and material keywords. Here is an example manifest file with just
-two entries.
+# An example manifest file would contain a list of dictionaries with entry having
+# stp_filename and material keywords. Here is an example manifest file with just
+# two entries.
 
-[
-    {
-        "material": "m1",
-        "stp_filename": "inboard_tf_coils.stp",
-    },
-    {
-        "material": "m2",
-        "stp_filename": "center_column_shield.stp",
-    }
-]
-"""
+# [
+#     {
+#         "material": "m1",
+#         "stp_filename": "inboard_tf_coils.stp",
+#     },
+#     {
+#         "material": "m2",
+#         "stp_filename": "center_column_shield.stp",
+#     }
+# ]
+
 
 def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
     body_ids = ""
