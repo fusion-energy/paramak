@@ -203,18 +203,18 @@ def get_hash(shape):
     value = hash_object.hexdigest()
     return value
 
-  
+
 def get_reactor_hash(shape):
 
     hash_object = blake2b()
     shape_dict = dict(shape.__dict__)
 
     keys_to_ignore = [
-        "_plasma", 
-        "_inboard_tf_coils", 
-        "_center_column_shield", 
-        "_firstwall", 
-        "_blanket", 
+        "_plasma",
+        "_inboard_tf_coils",
+        "_center_column_shield",
+        "_firstwall",
+        "_blanket",
         "_blanket_rear_wall",
         "_blanket_fw_rear_wall_envelope",
         "_divertor",
