@@ -221,13 +221,9 @@ def get_reactor_hash(shape):
         "reactor_hash_value"
     ]
 
-    # may need to take things out such as solid, graveyard etc, after when the actual construction happens
-
     for key in keys_to_ignore:
         if key in shape_dict.keys():
             shape_dict[key] = None
-
-    # print(shape_dict)
 
     hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
     value = hash_object.hexdigest()
