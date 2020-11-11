@@ -164,6 +164,8 @@ class BallReactor(paramak.Reactor):
 
         """
 
+        self._shapes_and_components = []
+
         self._rotation_angle_check()
         self._make_plasma()
         self._make_radial_build()
