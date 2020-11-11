@@ -367,4 +367,3 @@ class test_BallReactor(unittest.TestCase):
 
         assert reconstruction_time < initial_construction_time
         assert reconstruction_time < initial_construction_time * 0.01
-
