@@ -141,7 +141,7 @@ encoded in each parametric Ractor design.
 
 The different parametric Components are shown below.
 
-.. image:: https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
+.. image:: https://user-images.githubusercontent.com/8583900/98823600-387eea00-242a-11eb-9fe3-df65aaa3dd21.png
    :width: 713
    :height: 245
    :align: center
