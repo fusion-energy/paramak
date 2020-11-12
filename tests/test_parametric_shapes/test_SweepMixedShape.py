@@ -243,6 +243,30 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
+    def test_force_cross_section_volume(self):
+        """Checks that when force_cross_section = True, a solid is created which has 
+        a larger volume than a solid created when force_cross_section = False"""
+
+        test_shape = SweepMixedShape(
+            points=[
+                (-10, -10, "straight"),
+                (-10, 10, "spline"),
+                (0, 20, "spline"),
+                (10, 10, "circle"),
+                (0, 0, "circle"),
+                (10, -10, "straight")
+            ],
+            path_points=[
+                (50, 0),
+                (30, 50),
+                (50, 100)
+            ],
+            force_cross_section=False
+        )
+        test_volume = test_shape.volume
+        test_shape.force_cross_section=True
+        assert test_shape.volume > test_volume
+
     def test_surface_count(self):
         """Creates a solid and checks that it has the correct number of surfaces"""
 

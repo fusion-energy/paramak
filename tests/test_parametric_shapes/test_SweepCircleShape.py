@@ -172,7 +172,14 @@ class test_object_properties(unittest.TestCase):
         """Checks that when force_cross_section = True, a solid is created which has 
         a larger volume than a solid created when force_cross_section = False"""
 
-        
+        test_shape = SweepCircleShape(
+            radius=10,
+            path_points=[(50, 0), (30, 50), (50, 100)],
+            force_cross_section=False
+        )
+        test_volume = test_shape.volume
+        test_shape.force_cross_section=True
+        assert test_shape.volume > test_volume
 
     def test_surface_count(self):
         """Creates a solid and checks that it has the correct number of surfaces"""
