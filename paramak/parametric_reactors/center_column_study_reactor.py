@@ -230,7 +230,6 @@ class CenterColumnStudyReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle)
         self.shapes_and_components.append(self._inboard_firstwall)
 
-
     def _make_outboard_blanket(self):
 
         center_column_cutter = paramak.CenterColumnShieldCylinder(
