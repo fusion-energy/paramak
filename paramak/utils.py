@@ -1,4 +1,5 @@
 import math
+from hashlib import blake2b
 from collections import Iterable
 
 import cadquery as cq
@@ -185,6 +186,38 @@ def calculate_wedge_cut(self):
     else:
         cutting_wedge = paramak.CuttingWedgeFS(self)
         return cutting_wedge
+
+
+def get_hash(shape):
+
+    hash_object = blake2b()
+    shape_dict = dict(shape.__dict__)
+
+    keys_to_ignore = ["_solid", "_hash_value"]
+
+    for key in keys_to_ignore:
+        if key in shape_dict.keys():
+            shape_dict[key] = None
+
+    hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
+    value = hash_object.hexdigest()
+    return value
+
+
+def get_reactor_hash(shape):
+
+    hash_object = blake2b()
+    shape_dict = dict(shape.__dict__)
+
+    keys_to_ignore = ["reactor_hash_value"]
+
+    for key in keys_to_ignore:
+        if key in shape_dict.keys():
+            shape_dict[key] = None
+
+    hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
+    value = hash_object.hexdigest()
+    return value
 
 
 class FaceAreaSelector(cq.Selector):

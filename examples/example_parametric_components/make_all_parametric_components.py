@@ -285,7 +285,7 @@ def main():
     component = paramak.ToroidalFieldCoilCoatHanger(
         horizontal_start_point=(200, 500),
         horizontal_length=400,
-        vertical_start_point=(700, 50),
+        vertical_mid_point=(700, 50),
         vertical_length=500,
         thickness=50,
         distance=50,
