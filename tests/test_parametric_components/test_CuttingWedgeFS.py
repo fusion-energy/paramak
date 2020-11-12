@@ -63,7 +63,7 @@ class test_CuttingWedgeFS(unittest.TestCase):
             points=[(-0.5, -0.5), (0.5, -0.5), (0.5, 0.5), (-0.5, 0.5)],
             workplane="XY",
             rotation_axis="Z"
-            )
+        )
         rectangle.rotation_angle = 360
         volume_full = rectangle.volume
         assert np.isclose(volume_full, 2)
