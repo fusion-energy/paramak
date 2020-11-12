@@ -502,7 +502,7 @@ class Shape:
 
                 solid = cq.Workplane(self.workplane).moveTo(0, 0)
 
-                if self.force_area:
+                if self.force_cross_section:
                     for point in self.path_points[:-1]:
                         solid = solid.workplane(
                             offset=point[1] *
@@ -525,7 +525,7 @@ class Shape:
                         solid = solid.close().moveTo(
                             0, 0).moveTo(-point[0], 0).workplane(offset=-point[1] * factor)
 
-                elif self.force_area == False:
+                elif self.force_cross_section == False:
                     solid = solid.workplane(
                         offset=self.path_points[0][1] *
                         factor).moveTo(

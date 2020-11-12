@@ -8,7 +8,7 @@ from paramak import Shape
 class SweepMixedShape(Shape):
     """Sweeps a 2D shape created from points connected with straight, spline
     or circle connections along a defined spline path to create a 3D CadQuery
-    solid.
+    solid. Note, some variation in cross-section of the solid may occur.
 
     Args:
         path_points (list of tuples each containing X (float), Z (float)): A
@@ -20,16 +20,19 @@ class SweepMixedShape(Shape):
             defined. Defaults to "XZ".
         stp_filename (str, optional): Defaults to "SweepMixedShape.stp".
         stl_filename (str, optional): Defaults to "SweepMixedShape.stl".
+        force_cross_section (bool, optional): If True, cross-section of solid
+            is forced to be shape defined by points in workplane at each
+            path_point. Defaults to False.
     """
 
     def __init__(
         self,
         path_points,
-        force_area=False,
         workplane="XY",
         path_workplane="XZ",
         stp_filename="SweepMixedShape.stp",
         stl_filename="SweepMixedShape.stl",
+        force_cross_section=False,
         **kwargs
     ):
 
@@ -42,7 +45,7 @@ class SweepMixedShape(Shape):
 
         self.path_points = path_points
         self.path_workplane = path_workplane
-        self.force_area = force_area
+        self.force_cross_section = force_cross_section
 
     @property
     def path_points(self):
