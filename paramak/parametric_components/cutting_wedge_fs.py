@@ -131,6 +131,6 @@ class CuttingWedgeFS(CuttingWedge):
 
         else:
             raise ValueError('cutting_wedge cannot be created')
-        safety_factor = 2.1
+        safety_factor = 3
         self.radius = safety_factor * max_x
         self.height = safety_factor * max_y
