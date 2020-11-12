@@ -29,7 +29,7 @@ class test_object_properties(unittest.TestCase):
         # TODO: fix issue #445
         # assert test_shape.volume > 100
         # test_volume = test_shape.volume
-        
+
         test_shape.rotation_angle = 180
         assert test_shape.solid is not None
 
