@@ -68,7 +68,7 @@ more complex models (e.g. a Tokamak). The Tokamak images below are coloured
 based on the shape family that the component is made from. There are also
 parametric components which provide convenient fusion relevant shapes for
 common reactor components.
-https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
+[](https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png)
 
 
 ## Selection Of Parametric Reactors
@@ -89,7 +89,7 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 ## Selection Of Parametric Components
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png" width="500">
+<img src="https://user-images.githubusercontent.com/8583900/98823600-387eea00-242a-11eb-9fe3-df65aaa3dd21.png" width="500">
 </p>
 
 
@@ -101,6 +101,13 @@ https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c
 | Points connected with spline curves                     | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246785-7548f380-bba3-11ea-90b7-03249be41a00.png" height="120"></p>  `RotateSplineShape()`      | <p align="center"><img src="https://user-images.githubusercontent.com/56687624/98713431-87bc1080-237f-11eb-9075-01bca99b7018.png" height="120"></p>  `ExtrudeSplineShape()`       | <p align="center"><img src="https://user-images.githubusercontent.com/56687624/98713443-8b4f9780-237f-11eb-83bb-38ca7f222073.png" height="120"></p> `SweepSplineShape()` |
 | Points connected with a mixture (splines, straights and circles) | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86258771-17240c80-bbb3-11ea-990f-e87de26b1589.png" height="120"></p>  `RotateMixedShape()`         | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86261239-34a6a580-bbb6-11ea-812c-ac6fa6a8f0e2.png" height="120"></p>  `ExtrudeMixedShape()`          | <p align="center"><img src="https://user-images.githubusercontent.com/56687624/98713440-8a1e6a80-237f-11eb-9eed-12b9d7731090.png" height="120"></p> `SweepMixedShape()` |
 | Circular shapes                                         | <p align="center"><img src="https://user-images.githubusercontent.com/56687624/98713427-868ae380-237f-11eb-87af-cf6b5fe032b2.png" height="120"></p> `RotateCircleShape()`      | <p align="center"><img src="https://user-images.githubusercontent.com/8583900/86246768-6feba900-bba3-11ea-81a8-0d77a843b943.png" height="120"></p> `ExtrudeCircleShape()`         | <p align="center"><img src="https://user-images.githubusercontent.com/56687624/98713436-88ed3d80-237f-11eb-99cd-27dcb4f313b1.png" height="120"></p> `SweepCircleShape()` |
+
+# Example Scripts
+
+There are several example scripts for making shapes, components, reactors and
+neutronics models in the 
+[examples folder](https://github.com/ukaea/paramak/blob/main/examples/).
+The following examples are minimal examples to demonstrate some basic usage.
 
 
 ## Usage - Parametric Shapes
@@ -214,67 +221,23 @@ my_reactor.export_html('reactor.html')
 
 ## Usage - Neutronics Model Creation
 
-First assign stp_filenames to each of the Shape objects that were created
-earlier on.
+It is possible to convert a parametric Reactor model into a neutronics model.
 
-```python
-my_shape.stp_filename = 'my_shape.stp'
+To install two additional python packages needed to run neutronics with a
+modified pip install
 
-my_plasma.stp_filename = 'my_plasma.stp'
+```bash
+pip install .[neutronics]
 ```
 
-Then assign material_tags to each of the Shape objects.
+More information is avaialbe in the
+[documentation](https://paramak.readthedocs.io/en/latest/paramak.parametric_neutronics.html#parametric-neutronics).
 
-```python
-my_shape.material_tag = 'steel'
+There are several examples in the [examples folder](https://github.com/ukaea/paramak/blob/main/examples/https://github.com/ukaea/paramak/tree/main/examples/example_neutronics_simulations).
 
-my_plasma.material_tag = 'DT_plasma'
-```
-
-Note - Tetrahedral meshes can also be assigned to Shape objects.
-
-Now add the Shape objects to a freshly created reactor object.
-
-```python
-new_reactor = paramak.Reactor(shapes_and_components = [my_shape, my_plasma])
-```
-
-The entire reactor can now be exported as STP files. This also generates a
-DAGMC graveyard automatically.
-
-```python
-my_reactor.export_stp()
-```
-
-A manifest.json file that contains all the STP filenames and materials can now
-be created.
-
-```python
-my_reactor.export_neutronics_description()
-```
-
-Once your STP files and the neutronics description has been exported then
-[Trelis](https://www.csimsoft.com/trelis) can be used to generate a DAGMC
-geometry in the usual manner. There is also a convenient script included in
-task 12 of the UKAEA openmc workshop which can be used in conjunction with the
-neutronics description json file to automatically create a DAGMC geometry.
-Download [this script](https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py)
-and place it in the same directory as the manifest.json and STP files.
-Then run the following command from the terminal. You will need to have
-previously installed the 
-[DAGMC plugin](https://github.com/svalinn/Trelis-plugin) for Trelis.
-
-```python
-trelis make_faceteted_neutronics_model.py
-```
-
-Alternatively, run this without the GUI in batch mode using:
-
-```python
-trelis -batch -nographics make_faceteted_neutronics_model.py
-```
-
-This should export a h5m file for use in DAGMC.
+To create the neutronics model you will need
+[Trelis](https://www.coreform.com/products/trelis/) and the DAGMC plugin
+installed [DAGMC plugin](https://github.com/svalinn/Trelis-plugin).
 
 Further information on DAGMC neutronics can be found
 [here](https://svalinn.github.io/DAGMC/) and information on OpenMC can be found
@@ -283,13 +246,3 @@ simulate neutron transport on the h5m file created. The UKAEA openmc workshop
 also has two tasks that might be of interest 
 [task 10](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10)
 and [task 12](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12).
-
-
-# Example Scripts
-
-There are several example scripts in the 
-[examples folder](https://github.com/ukaea/paramak/blob/main/examples/).
-A good one to start with is 
-[make_CAD_from_points.py](https://github.com/ukaea/paramak/blob/main/examples/example_parametric_shapes/make_CAD_from_points.py)
-which makes simple examples of the different types of shapes (extrude, rotate)
-with different connection methods (splines, straight lines and circles).
