@@ -28,7 +28,6 @@ class Reactor:
 
     def __init__(self, shapes_and_components, graveyard_offset=100):
 
-        # calculated internally
         self.material_tags = []
         self.stp_filenames = []
         self.stl_filenames = []
