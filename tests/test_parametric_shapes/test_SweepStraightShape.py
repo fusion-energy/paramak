@@ -168,11 +168,20 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
 
-        test_shape.points = [(0, 100), (0, 200), (100, 200), (100, 100)]
+        cutting_shape.points = [(0, 100), (0, 200), (100, 200), (100, 100)]
         test_shape.cut = cutting_shape
 
         assert test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
 
+    def test_surface_count(self):
+        """Creates a solid and checks that it has the correct number of surfaces"""
+
+        test_shape = SweepStraightShape(
+            points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+            path_points=[(50, 0), (30, 50), (50, 100)]
+        )
+
+        assert len(test_shape.areas) == 6
 
 
 if __name__ == "__main__":
