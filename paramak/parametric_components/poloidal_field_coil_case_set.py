@@ -121,48 +121,50 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
                 self.heights, self.widths,
                 self.center_points, casing_thicknesses_list):
 
-            all_points = all_points + [
-                (
-                    center_point[0] + width / 2.0,
-                    center_point[1] + height / 2.0,
-                ),  # upper right
-                (
-                    center_point[0] + width / 2.0,
-                    center_point[1] - height / 2.0,
-                ),  # lower right
-                (
-                    center_point[0] - width / 2.0,
-                    center_point[1] - height / 2.0,
-                ),  # lower left
-                (
-                    center_point[0] - width / 2.0,
-                    center_point[1] + height / 2.0,
-                ),  # upper left
-                (
-                    center_point[0] + width / 2.0,
-                    center_point[1] + height / 2.0,
-                ),  # upper right
-                (
-                    center_point[0] + (casing_thickness + width / 2.0),
-                    center_point[1] + (casing_thickness + height / 2.0),
-                ),
-                (
-                    center_point[0] + (casing_thickness + width / 2.0),
-                    center_point[1] - (casing_thickness + height / 2.0),
-                ),
-                (
-                    center_point[0] - (casing_thickness + width / 2.0),
-                    center_point[1] - (casing_thickness + height / 2.0),
-                ),
-                (
-                    center_point[0] - (casing_thickness + width / 2.0),
-                    center_point[1] + (casing_thickness + height / 2.0),
-                ),
-                (
-                    center_point[0] + (casing_thickness + width / 2.0),
-                    center_point[1] + (casing_thickness + height / 2.0),
-                )
-            ]
+            if casing_thickness != 0:
+
+                all_points = all_points + [
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] + height / 2.0,
+                    ),  # upper right
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] - height / 2.0,
+                    ),  # lower right
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1] - height / 2.0,
+                    ),  # lower left
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1] + height / 2.0,
+                    ),  # upper left
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] + height / 2.0,
+                    ),  # upper right
+                    (
+                        center_point[0] + (casing_thickness + width / 2.0),
+                        center_point[1] + (casing_thickness + height / 2.0),
+                    ),
+                    (
+                        center_point[0] + (casing_thickness + width / 2.0),
+                        center_point[1] - (casing_thickness + height / 2.0),
+                    ),
+                    (
+                        center_point[0] - (casing_thickness + width / 2.0),
+                        center_point[1] - (casing_thickness + height / 2.0),
+                    ),
+                    (
+                        center_point[0] - (casing_thickness + width / 2.0),
+                        center_point[1] + (casing_thickness + height / 2.0),
+                    ),
+                    (
+                        center_point[0] + (casing_thickness + width / 2.0),
+                        center_point[1] + (casing_thickness + height / 2.0),
+                    )
+                ]
 
         self.points = all_points
 
