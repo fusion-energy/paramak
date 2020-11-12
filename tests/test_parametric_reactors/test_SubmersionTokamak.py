@@ -251,10 +251,12 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         def small_plasma_high_point():
             test_reactor.plasma_high_point = (1, 240)
+            test_reactor._make_radial_build()
             test_reactor._make_vertical_build()
 
         def large_plasma_high_point():
             test_reactor.plasma_high_point = (1000, 240)
+            test_reactor._make_radial_build()
             test_reactor._make_vertical_build()
 
         self.assertRaises(ValueError, small_plasma_high_point)
@@ -283,7 +285,7 @@ class test_SubmersionTokamak(unittest.TestCase):
                         50 + 50 + 50 + 100 + 50 + 50 + 100,
                         350),
                     rotation_angle=360,
-                )
+                )._rotation_angle_check()
             except BaseException:
                 pass
         msg = "360 degree rotation may result in a " + \
