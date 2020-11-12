@@ -589,7 +589,7 @@ class Shape:
             return (
                 rotation_axis[self.rotation_axis.replace("+", "")],
                 self.rotation_axis
-                )
+            )
         elif isinstance(self.rotation_axis, Iterable):
             # Custom axis
             return self.rotation_axis, "custom_axis"
