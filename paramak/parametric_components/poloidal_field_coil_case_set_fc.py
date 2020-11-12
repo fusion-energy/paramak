@@ -11,8 +11,10 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
     Args:
         pf_coils (paramak.PoloidalFieldCoil): a list of pf coil objects or a
             CadQuery compound object
-        casing_thicknesses (list of floats): the thicknesses of the coil
-            casing (cm).
+        casing_thicknesses (float or list of floats): the thicknesses of the
+            coil casing (cm). If float then the same thickness is applied to
+            all coils. If list of floats then each entry is applied to a
+            seperate pf_coil, one entry for each pf_coil.
         stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
         stl_filename (str, optional): defaults to "PoloidalFieldCoil.stl".
         name (str, optional): defaults to "pf_coil".
@@ -38,8 +40,8 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
             **kwargs
         )
 
-        self.pf_coils = pf_coils
         self.casing_thicknesses = casing_thicknesses
+        self.pf_coils = pf_coils
 
     @property
     def solid(self):
@@ -52,63 +54,65 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         self._solid = value
 
     @property
-    def center_points(self):
-        return self._center_points
+    def casing_thicknesses(self):
+        return self._casing_thicknesses
 
-    @center_points.setter
-    def center_points(self, center_points):
-        self._center_points = center_points
+    @casing_thicknesses.setter
+    def casing_thicknesses(self, value):
+        if isinstance(value, list):
+            if not all(isinstance(x, (int, float)) for x in value):
+                raise ValueError(
+                    "Every entry in Casing_thicknesses must be a float or int")
+        else:
+            if not isinstance(value, (float, int)):
+                raise ValueError(
+                    "Casing_thicknesses must be a list of numbers or a number")
+        self._casing_thicknesses = value
 
     @property
-    def heights(self):
-        return self._heights
+    def pf_coils(self):
+        return self._pf_coils
 
-    @heights.setter
-    def heights(self, heights):
-        self._heights = heights
-
-    @property
-    def widths(self):
-        return self._widths
-
-    @widths.setter
-    def widths(self, widths):
-        self._widths = widths
+    @pf_coils.setter
+    def pf_coils(self, value):
+        if not isinstance(value, (list, PoloidalFieldCoilSet)):
+            raise ValueError(
+                "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list \
+                paramak.PoloidalFieldCoil or a \
+                paramak.PoloidalFieldCoilSet object")
+        self._pf_coils = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the poloidal field coil shape."""
 
-        all_points = []
-
         if isinstance(self.pf_coils, list):
             self.heights = [entry.height for entry in self.pf_coils]
             self.widths = [entry.width for entry in self.pf_coils]
-            self.center_points = [
-                entry.center_point for entry in self.pf_coils]
-            if len(self.pf_coils) != len(self.casing_thicknesses):
-                raise ValueError(
-                    "The number of pf_coils should be the same as the number \
-                    of casing_thickness")
+            self.center_points = [entry.center_point for entry in self.pf_coils]
+
+            num_of_coils = len(self.pf_coils)
+
         elif isinstance(self.pf_coils, PoloidalFieldCoilSet):
             self.heights = self.pf_coils.heights
             self.widths = self.pf_coils.widths
             self.center_points = self.pf_coils.center_points
-            if len(
-                    self.pf_coils.solid.Solids()) != len(
-                    self.casing_thicknesses):
-                raise ValueError(
-                    "The number of pf_coils should be the same as the number \
-                    of casing_thickness")
+            
+            num_of_coils = len(self.pf_coils.solid.Solids())
+
+        if isinstance(self.casing_thicknesses, list):
+            if len(self.casing_thicknesses) != num_of_coils:
+                raise ValueError("The number pf_coils is not equal to the" \
+                    "number of thichnesses provided")
+            casing_thicknesses_list = self.casing_thicknesses
         else:
-            raise ValueError(
-                "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list \
-                paramak.PoloidalFieldCoil or a \
-                paramak.PoloidalFieldCoilSet object")
+            casing_thicknesses_list = [self.casing_thicknesses] * num_of_coils
+
+        all_points = []
 
         for height, width, center_point, casing_thickness in zip(
                 self.heights, self.widths,
-                self.center_points, self.casing_thicknesses):
+                self.center_points, casing_thicknesses_list):
 
             all_points = all_points + [
                 (
