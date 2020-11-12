@@ -422,7 +422,7 @@ ToroidalFieldCoilCoatHanger()
 
 .. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/56687624/98582371-cb991200-22ba-11eb-8e15-86d273a8b819.png
    :width: 300px
-.. |ToroidalFieldCoilCoatHangerastp| image:: https://user-images.githubusercontent.com/8583900/94570773-1ad53700-0267-11eb-9003-3b5768745470.png
+.. |ToroidalFieldCoilCoatHangerastp| image:: https://user-images.githubusercontent.com/8583900/98979392-3775b780-2513-11eb-9649-46839571f5dd.png
    :width: 130px
 .. |ToroidalFieldCoilCoatHangerallstp| image:: https://user-images.githubusercontent.com/8583900/87075236-f04f8100-c217-11ea-9ffa-4791b722b9e7.png
    :width: 210px
