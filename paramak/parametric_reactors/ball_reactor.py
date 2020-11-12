@@ -183,7 +183,6 @@ class BallReactor(paramak.Reactor):
             elongation=self.elongation,
             triangularity=self.triangularity,
             rotation_angle=self.rotation_angle,
-            stl_filename="plasma.stl",
         )
         plasma.create_solid()
 
