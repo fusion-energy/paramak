@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from paramak import SweepMixedShape
+from paramak import SweepMixedShape, RotateStraightShape
 
 
 class test_object_properties(unittest.TestCase):
@@ -205,6 +205,44 @@ class test_object_properties(unittest.TestCase):
         )
 
         assert test_shape.solid is not None
+
+    def test_force_cross_section(self):
+        """Checks that a solid with the same cross-section at each path_point is created
+        when force_cross_section = True"""
+
+        test_shape = SweepMixedShape(
+            points=[
+                (-10, -10, "straight"),
+                (-10, 10, "spline"),
+                (0, 20, "spline"),
+                (10, 10, "circle"),
+                (0, 0, "circle"),
+                (10, -10, "straight")
+            ],
+            path_points=[
+                (50, 0), (30, 50), (50, 100), (70, 150)
+            ],
+            workplane="XY",
+            path_workplane="XZ",
+            force_cross_section=True
+        )
+
+        test_area = round(min(test_shape.areas))
+
+        assert test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+
+        cutting_shape = RotateStraightShape(
+            points=[(0, 50), (0, 200), (100, 200), (100, 50)]
+        )
+        test_shape.cut = cutting_shape
+
+        assert test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+
+        cutting_shape.points = [(0, 100), (0, 200), (100, 200), (100, 100)]
+        test_shape.cut = cutting_shape
+
+        assert test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+
 
 
 if __name__ == "__main__":
