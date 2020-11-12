@@ -27,8 +27,8 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
             outer_radius=200,
             rotation_angle=360)
         assert len(test_shape.areas) == 4
-        # assert len(set(test_shape.areas)) == 3
+        assert len(set([round(i) for i in test_shape.areas])) == 3
 
         test_shape.rotation_angle = 180
         assert len(test_shape.areas) == 6
-        assert len(set(test_shape.areas)) == 4
+        assert len(set([round(i) for i in test_shape.areas])) == 4
