@@ -31,6 +31,32 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
         assert len(test_shape.solid.Solids()) == 4
         assert len(pf_coils_set.solid.Solids()) == 4
 
+    def test_PoloidalFieldCoilCaseSetFC_with_zero_thickness(self):
+        """Creates a set of PF coil cases from a PF coils object and sets one
+        of the casing thicknesses to 0"""
+
+        pf_coils_set = paramak.PoloidalFieldCoilSet(
+            heights=[10, 10, 20, 20],
+            widths=[10, 10, 20, 40],
+            center_points=[
+                (100, 100),
+                (100, 150),
+                (50, 200),
+                (50, 50)
+            ],
+            rotation_angle=180
+        )
+
+        test_shape = paramak.PoloidalFieldCoilCaseSetFC(
+            pf_coils=pf_coils_set,
+            casing_thicknesses=[5, 5, 0, 10],
+            rotation_angle=180
+        )
+
+        assert test_shape.solid is not None
+        assert len(test_shape.solid.Solids()) == 3
+        assert len(pf_coils_set.solid.Solids()) == 4
+
     def test_PoloidalFieldCoilCaseSetFC_from_pf_coil_set_absolute_volume(self):
         """Creates a set of pf coil cases from a pf coil set object and checks
         that the volume is correct"""
