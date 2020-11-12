@@ -124,8 +124,6 @@ class CuttingWedgeFS(CuttingWedge):
             if shape.get_rotation_axis()[1] not in shape.workplane and \
                     hasattr(shape, "distance"):
                 max_y = shape.distance
-                if shape.extrude_both is False:
-                    max_y *= 0.5
             else:
                 max_y = max(shape_points, key=itemgetter(1))[1]
 
