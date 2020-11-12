@@ -2,7 +2,6 @@ import json
 import numbers
 import warnings
 from collections import Iterable
-from hashlib import blake2b
 from os import fdopen, remove
 from pathlib import Path
 from shutil import copymode, move
@@ -16,7 +15,7 @@ import cadquery as cq
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
-from paramak.utils import cut_solid, intersect_solid, union_solid
+from paramak.utils import cut_solid, intersect_solid, union_solid, get_hash
 
 
 class Shape:
@@ -115,7 +114,7 @@ class Shape:
     def solid(self):
         """The CadQuery solid of the 3d object. Returns a CadQuery workplane
         or CadQuery Compound"""
-        if self.get_hash() != self.hash_value:
+        if get_hash(self) != self.hash_value:
             self.create_solid()
         return self._solid
 
@@ -495,14 +494,65 @@ class Shape:
                 instructions[-1][keyname].append(XZ_points[0])
 
             if hasattr(self, "path_points"):
-                # sweep shape
-                solid = cq.Workplane(
-                    self.workplane).workplane(
-                    offset=self.path_points[0][1]).moveTo(
-                    self.path_points[0][0],
-                    0).workplane()
+
+                factor = 1
+                if self.workplane in ["XZ", "YX", "ZY"]:
+                    factor *= -1
+
+                solid = cq.Workplane(self.workplane).moveTo(0, 0)
+
+                if self.force_cross_section:
+                    for point in self.path_points[:-1]:
+                        solid = solid.workplane(
+                            offset=point[1] *
+                            factor).moveTo(
+                            point[0],
+                            0).workplane()
+                        for entry in instructions:
+                            if list(entry.keys())[0] == "spline":
+                                solid = solid.spline(
+                                    listOfXYTuple=list(entry.values())[0])
+                            if list(entry.keys())[0] == "straight":
+                                solid = solid.polyline(list(entry.values())[0])
+                            if list(entry.keys())[0] == "circle":
+                                p0 = list(entry.values())[0][0]
+                                p1 = list(entry.values())[0][1]
+                                p2 = list(entry.values())[0][2]
+                                solid = solid.moveTo(
+                                    p0[0], p0[1]).threePointArc(
+                                    p1, p2)
+                        solid = solid.close().moveTo(
+                            0, 0).moveTo(-point[0], 0).workplane(offset=-point[1] * factor)
+
+                elif self.force_cross_section == False:
+                    solid = solid.workplane(
+                        offset=self.path_points[0][1] *
+                        factor).moveTo(
+                        self.path_points[0][0],
+                        0).workplane()
+                    for entry in instructions:
+                        if list(entry.keys())[0] == "spline":
+                            solid = solid.spline(
+                                listOfXYTuple=list(entry.values())[0])
+                        if list(entry.keys())[0] == "straight":
+                            solid = solid.polyline(list(entry.values())[0])
+                        if list(entry.keys())[0] == "circle":
+                            p0 = list(entry.values())[0][0]
+                            p1 = list(entry.values())[0][1]
+                            p2 = list(entry.values())[0][2]
+                            solid = solid.moveTo(
+                                p0[0], p0[1]).threePointArc(
+                                p1, p2)
+
+                    solid = solid.close().moveTo(0,
+                                                 0).moveTo(-self.path_points[0][0],
+                                                           0).workplane(offset=-self.path_points[0][1] * factor)
+
+                solid = solid.workplane(
+                    offset=self.path_points[-1][1] * factor).moveTo(self.path_points[-1][0], 0).workplane()
+
             else:
-                # rotate or extrude shape
+                # for rotate and extrude shapes
                 solid = cq.Workplane(self.workplane)
 
             for entry in instructions:
@@ -516,32 +566,6 @@ class Shape:
                     p2 = list(entry.values())[0][2]
                     solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
-            if hasattr(self, "path_points"):
-                distance = float(
-                    self.path_points[-1][1] - self.path_points[0][1])
-                if self.workplane in ["XZ", "YX", "ZY"]:
-                    distance *= -1
-                # sweep shape
-                solid = solid.close().\
-                    moveTo(-self.path_points[0][0], 0).\
-                    workplane(offset=distance).\
-                    moveTo(self.path_points[-1][0], 0).\
-                    workplane()
-
-                for entry in instructions:
-                    if list(entry.keys())[0] == "spline":
-                        solid = solid.spline(
-                            listOfXYTuple=list(
-                                entry.values())[0])
-                    if list(entry.keys())[0] == "straight":
-                        solid = solid.polyline(list(entry.values())[0])
-                    if list(entry.keys())[0] == "circle":
-                        p0 = list(entry.values())[0][0]
-                        p1 = list(entry.values())[0][1]
-                        p2 = list(entry.values())[0][2]
-                        solid = solid.moveTo(
-                            p0[0], p0[1]).threePointArc(
-                            p1, p2)
         return solid
 
     def rotate_solid(self, solid):
@@ -556,7 +580,7 @@ class Shape:
         for angle in azimuth_placement_angles:
             rotated_solids.append(
                 solid.rotate(
-                    *self.get_rotation_axis(), angle))
+                    *self.get_rotation_axis()[0], angle))
         solid = cq.Workplane(self.workplane)
 
         # Joins the seperate solids together
@@ -573,7 +597,8 @@ class Shape:
         will be used to form an axis.
 
         Returns:
-            list: list of two XYZ points
+            list, str: list of two XYZ points and the string of the axis (eg.
+                "X", "Y"..)
         """
         rotation_axis = {
             "X": [(-1, 0, 0), (1, 0, 0)],
@@ -585,10 +610,13 @@ class Shape:
         }
         if isinstance(self.rotation_axis, str):
             # X, Y or Z axis
-            return rotation_axis[self.rotation_axis.replace("+", "")]
+            return (
+                rotation_axis[self.rotation_axis.replace("+", "")],
+                self.rotation_axis
+            )
         elif isinstance(self.rotation_axis, Iterable):
             # Custom axis
-            return self.rotation_axis
+            return self.rotation_axis, "custom_axis"
         elif self.rotation_axis is None:
             # Axis from workplane or path_workplane
             if hasattr(self, "path_workplane"):
@@ -596,7 +624,7 @@ class Shape:
                 workplane = self.path_workplane
             else:
                 workplane = self.workplane
-            return rotation_axis[workplane[1]]
+            return rotation_axis[workplane[1]], workplane[1]
 
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the
@@ -939,18 +967,6 @@ class Shape:
 
         return neutronics_description
 
-    def get_hash(self):
-        hash_object = blake2b()
-        shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary
-        # reconstruction
-        shape_dict["_solid"] = None
-        shape_dict["_hash_value"] = None
-
-        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
-        value = hash_object.hexdigest()
-        return value
-
     def perform_boolean_operations(self, solid, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""
@@ -974,7 +990,7 @@ class Shape:
         if self.union is not None:
             solid = union_solid(solid, self.union)
 
-        self.hash_value = self.get_hash()
+        self.hash_value = get_hash(self)
 
         return solid
 

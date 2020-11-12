@@ -34,8 +34,8 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             the blanket (cm)
         blanket_rear_wall_radial_thickness (float): the radial thickness of
             the rear wall of the blanket (cm)
-        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of
-            the top of the plasma (cm)
+        elongation (float): the elongation of the plasma
+        triangularity (float): the triangularity of the plasma
         number_of_tf_coils (int): the number of tf coils
         rotation_angle (float): the angle of the sector that is desired
         outboard_tf_coil_radial_thickness (float): the radial thickness of
@@ -75,7 +75,8 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         outer_plasma_gap_radial_thickness,
         outboard_blanket_radial_thickness,
         blanket_rear_wall_radial_thickness,
-        plasma_high_point,
+        elongation,
+        triangularity,
         divertor_position="upper",
         support_position="upper",
         **kwargs
@@ -97,7 +98,8 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             blanket_rear_wall_radial_thickness=blanket_rear_wall_radial_thickness,
             divertor_radial_thickness=divertor_radial_thickness,
             support_radial_thickness=support_radial_thickness,
-            plasma_high_point=plasma_high_point,
+            elongation=elongation,
+            triangularity=triangularity,
             **kwargs)
 
     @property
@@ -145,7 +147,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             name="divertor",
             material_tag="divertor_mat"
         )
-        self.shapes_and_components.append(self._divertor)
+        self._shapes_and_components.append(self._divertor)
 
     def _make_supports(self):
 
@@ -168,4 +170,4 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             name="supports",
             material_tag="supports_mat",
         )
-        self.shapes_and_components.append(self._supports)
+        self._shapes_and_components.append(self._supports)
