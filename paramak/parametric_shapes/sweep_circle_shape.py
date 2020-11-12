@@ -7,7 +7,8 @@ from paramak import Shape
 
 class SweepCircleShape(Shape):
     """Sweeps a 2D circle of a defined radius along a defined spline path to
-    create a 3D CadQuery solid.
+    create a 3D CadQuery solid. Note, some variation in the cross-section of
+    the solid may occur.
 
     Args:
         radius (float): Radius of 2D circle to be swept.
@@ -20,6 +21,9 @@ class SweepCircleShape(Shape):
             defined. Defaults to "XZ".
         stp_filename (str, optional): Defaults to "SweepCircleShape.stp".
         stl_filename (str, optional): Defaults to "SweepCircleShape.stl".
+        force_cross_section (bool, optional): If True, cross-section of solid
+            is forced to be shape defined by points in workplane at each
+            path_point. Defaults to False.
     """
 
     def __init__(
@@ -30,6 +34,7 @@ class SweepCircleShape(Shape):
         path_workplane="XZ",
         stp_filename="SweepMixedShape.stp",
         stl_filename="SweepMixedShape.stl",
+        force_cross_section=False,
         **kwargs
     ):
 
@@ -43,6 +48,7 @@ class SweepCircleShape(Shape):
         self.radius = radius
         self.path_points = path_points
         self.path_workplane = path_workplane
+        self.force_cross_section = force_cross_section
 
     @property
     def radius(self):
@@ -86,24 +92,38 @@ class SweepCircleShape(Shape):
         """
 
         path = cq.Workplane(self.path_workplane).spline(self.path_points)
-        distance = float(self.path_points[-1][1] - self.path_points[0][1])
 
+        factor = 1
         if self.workplane in ["XZ", "YX", "ZY"]:
-            distance *= -1
+            factor *= -1
 
-        solid = (
-            cq.Workplane(self.workplane)
-            .workplane(offset=self.path_points[0][1])
-            .moveTo(self.path_points[0][0], 0)
-            .workplane()
-            .circle(self.radius)
-            .moveTo(-self.path_points[0][0], 0)
-            .workplane(offset=distance)
-            .moveTo(self.path_points[-1][0], 0)
-            .workplane()
-            .circle(self.radius)
-            .sweep(path, multisection=True)
-        )
+        if self.force_cross_section:
+            solid = cq.Workplane(self.workplane).moveTo(0, 0)
+            for point in self.path_points[:-1]:
+                solid = solid.workplane(offset=point[1] * factor).\
+                    moveTo(point[0], 0).\
+                    circle(self.radius).\
+                    moveTo(0, 0).\
+                    workplane(offset=-point[1] * factor)
+            solid = solid.workplane(offset=self.path_points[-1][1] * factor).moveTo(
+                self.path_points[-1][0], 0).circle(self.radius).sweep(path, multisection=True)
+
+        if not self.force_cross_section:
+
+            solid = (
+                cq.Workplane(self.workplane)
+                .workplane(offset=self.path_points[0][1] * factor)
+                .moveTo(self.path_points[0][0], 0)
+                .workplane()
+                .circle(self.radius)
+                .moveTo(-self.path_points[0][0], 0)
+                .workplane(offset=-self.path_points[0][1] * factor)
+                .workplane(offset=self.path_points[-1][1] * factor)
+                .moveTo(self.path_points[-1][0], 0)
+                .workplane()
+                .circle(self.radius)
+                .sweep(path, multisection=True)
+            )
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)

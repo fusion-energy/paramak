@@ -70,7 +70,8 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert test_shape.volume == pytest.approx((400 * 50 * 30 * 2) +
                                                   ((50 * 50 * 30 / 2) * 2) + (50 * 500 * 30) +
                                                   (((150 * 250 * 30) - (((100 * 250) / 2) * 30) -
-                                                    (((100 * 250) / 2) * 30)) * 2) + (50 * 1000 * 30), rel=0.1)
+                                                  (((100 * 250) / 2) * 30)) * 2) + (50 * 1000 * 30), rel=0.1)
+
 
         test_shape.with_inner_leg = False
         assert test_shape.volume == pytest.approx((400 * 50 * 30 * 2) +
@@ -79,18 +80,19 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
                                                                       (((100 * 250) / 2) * 30) -
                                                                       (((100 * 250) / 2) * 30)) * 2), rel=0.1)
 
+
         test_shape.with_inner_leg = True
         test_shape.number_of_coils = 8
         assert test_shape.volume == pytest.approx(((400 * 50 * 30 * 2) +
                                                    ((50 * 50 * 30 / 2) * 2) + (50 * 500 * 30) +
                                                    (((150 * 250 * 30) - (((100 * 250) / 2) * 30) -
-                                                     (((100 * 250) / 2) * 30)) * 2) + (50 * 1000 * 30)) * 8, rel=0.1)
+                                                   (((100 * 250) / 2) * 30)) * 2) + (50 * 1000 * 30)) * 8, rel=0.1)
 
         test_shape.with_inner_leg = False
         assert test_shape.volume == pytest.approx(((400 * 50 * 30 * 2) +
                                                    ((50 * 50 * 30 / 2) * 2) + (50 * 500 * 30) +
                                                    (((150 * 250 * 30) - (((100 * 250) / 2) * 30) -
-                                                     (((100 * 250) / 2) * 30)) * 2)) * 8, rel=0.1)
+                                                   (((100 * 250) / 2) * 30)) * 2)) * 8, rel=0.1)
 
     def test_ToroidalFieldCoilCoatHanger_absolute_area(self):
         """creates a tf coil using the ToroidalFieldCoilCoatHanger parametric
@@ -114,6 +116,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
                                                 ((((100**2 + 250**2)**0.5) * 30) * 4) + ((50 * 1000) * 2) +
                                                 ((1000 * 30) * 2), rel=0.1)
         assert len(test_shape.areas) == 24
+
         assert test_shape.areas.count(pytest.approx(50 * 30)) == 4
         assert test_shape.areas.count(pytest.approx(400 * 30)) == 4
         assert test_shape.areas.count(pytest.approx(500 * 30)) == 2

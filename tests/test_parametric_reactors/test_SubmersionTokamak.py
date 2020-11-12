@@ -23,7 +23,8 @@ class test_SubmersionTokamak(unittest.TestCase):
             outboard_blanket_radial_thickness=200,
             blanket_rear_wall_radial_thickness=50,
             support_radial_thickness=150,
-            plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
+            elongation=2.3,
+            triangularity=0.45,
             rotation_angle=359,
         )
 
@@ -41,7 +42,8 @@ class test_SubmersionTokamak(unittest.TestCase):
             support_radial_thickness=20,
             inboard_blanket_radial_thickness=20,
             outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
+            elongation=2.3,
+            triangularity=0.45,
             divertor_position="upper",
             support_position="upper",
             rotation_angle=359,
@@ -85,7 +87,8 @@ class test_SubmersionTokamak(unittest.TestCase):
             outboard_blanket_radial_thickness=200,
             blanket_rear_wall_radial_thickness=50,
             divertor_radial_thickness=50,
-            plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
+            elongation=2.3,
+            triangularity=0.45,
             support_radial_thickness=150,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=50,
@@ -112,7 +115,8 @@ class test_SubmersionTokamak(unittest.TestCase):
             outboard_blanket_radial_thickness=200,
             blanket_rear_wall_radial_thickness=50,
             divertor_radial_thickness=50,
-            plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
+            elongation=2.3,
+            triangularity=0.45,
             support_radial_thickness=150,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=50,
@@ -170,7 +174,8 @@ class test_SubmersionTokamak(unittest.TestCase):
             outboard_blanket_radial_thickness=200,
             blanket_rear_wall_radial_thickness=50,
             divertor_radial_thickness=50,
-            plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
+            elongation=2.3,
+            triangularity=0.45,
             support_radial_thickness=150,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=50,
@@ -215,7 +220,8 @@ class test_SubmersionTokamak(unittest.TestCase):
             outboard_blanket_radial_thickness=200,
             blanket_rear_wall_radial_thickness=50,
             divertor_radial_thickness=50,
-            plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
+            elongation=2.3,
+            triangularity=0.45,
             support_radial_thickness=150,
             outboard_tf_coil_radial_thickness=50,
             tf_coil_to_rear_blanket_radial_gap=50,
@@ -244,24 +250,6 @@ class test_SubmersionTokamak(unittest.TestCase):
             assert Path(output_filename).exists() is True
         os.system("rm -r tf_pf_SubmersionTokamak")
 
-    def test_plasma_high_point_error(self):
-        """checks that error are raised when invalid plasma_high_point is set
-        """
-        test_reactor = self.Submersion_Tokamak_reactor
-
-        def small_plasma_high_point():
-            test_reactor.plasma_high_point = (1, 240)
-            test_reactor._make_radial_build()
-            test_reactor._make_vertical_build()
-
-        def large_plasma_high_point():
-            test_reactor.plasma_high_point = (1000, 240)
-            test_reactor._make_radial_build()
-            test_reactor._make_vertical_build()
-
-        self.assertRaises(ValueError, small_plasma_high_point)
-        self.assertRaises(ValueError, large_plasma_high_point)
-
     def test_rotation_angle_warning(self):
         """checks that the correct warning message is printed when
         rotation_angle = 360"""
@@ -281,9 +269,8 @@ class test_SubmersionTokamak(unittest.TestCase):
                     outboard_blanket_radial_thickness=200,
                     blanket_rear_wall_radial_thickness=50,
                     support_radial_thickness=150,
-                    plasma_high_point=(
-                        50 + 50 + 50 + 100 + 50 + 50 + 100,
-                        350),
+                    elongation=2.3,
+                    triangularity=0.45,
                     rotation_angle=360,
                 )._rotation_angle_check()
             except BaseException:
@@ -317,7 +304,8 @@ class test_SubmersionTokamak(unittest.TestCase):
             support_radial_thickness=50,
             inboard_blanket_radial_thickness=30,
             outboard_blanket_radial_thickness=30,
-            plasma_high_point=(200, 150),
+            elongation=2.4,
+            triangularity=0.5,
             pf_coil_radial_thicknesses=[30, 30, 30, 30],
             pf_coil_vertical_thicknesses=[30, 30, 30, 30],
             pf_coil_to_tf_coil_radial_gap=50,

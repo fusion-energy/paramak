@@ -137,7 +137,7 @@ the firstwall is grey and the blanket is teal.
 The above image is colored by Shape type with RotateStraightShape in red,
 ExtrudeSplineShape in pink and RotateMixedShape in blue
 
-.. image:: https://user-images.githubusercontent.com/8583900/94273259-1265bf00-ff3c-11ea-95ed-89123be3bd16.png
+.. image:: https://user-images.githubusercontent.com/8583900/98946297-9e7f7600-24eb-11eb-92cd-1c3bd13ad49b.png
    :width: 600
    :align: center
 

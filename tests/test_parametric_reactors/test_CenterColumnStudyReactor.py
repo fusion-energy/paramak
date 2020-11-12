@@ -23,8 +23,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=80,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=90,
-            # first number must be between plasma inner/outer radius
-            plasma_high_point=(245, 240),
+            elongation=2.3,
+            triangularity=0.45,
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
@@ -49,8 +49,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=80,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=90,
-            # first number must be between plasma inner/outer radius
-            plasma_high_point=(245, 240),
+            elongation=2.3,
+            triangularity=0.45,
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
@@ -75,8 +75,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=80,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=90,
-            # first number must be between plasma inner/outer radius
-            plasma_high_point=(245, 240),
+            elongation=2.3,
+            triangularity=0.45,
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=90)
@@ -91,8 +91,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=80,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=90,
-            # first number must be between plasma inner/outer radius
-            plasma_high_point=(245, 240),
+            elongation=2.3,
+            triangularity=0.45,
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
@@ -117,8 +117,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
                     inner_plasma_gap_radial_thickness=80,
                     plasma_radial_thickness=200,
                     outer_plasma_gap_radial_thickness=90,
-                    # first number must be between plasma inner/outer radius
-                    plasma_high_point=(245, 240),
+                    elongation=2.3,
+                    triangularity=0.45,
                     plasma_gap_vertical_thickness=40,
                     center_column_arc_vertical_thickness=520,
                     rotation_angle=360)
@@ -133,43 +133,3 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             assert issubclass(w[-1].category, UserWarning)
             assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
                 w[-1].message)
-
-    def test_plasma_high_point_error(self):
-        def small_plasma_high_point():
-            test_reactor = paramak.CenterColumnStudyReactor(
-                inner_bore_radial_thickness=30,
-                inboard_tf_leg_radial_thickness=50,
-                center_column_shield_radial_thickness_mid=50,
-                center_column_shield_radial_thickness_upper=100,
-                inboard_firstwall_radial_thickness=30,
-                divertor_radial_thickness=10,
-                inner_plasma_gap_radial_thickness=80,
-                plasma_radial_thickness=200,
-                outer_plasma_gap_radial_thickness=90,
-                # first number must be between plasma inner/outer radius
-                plasma_high_point=(1, 240),
-                plasma_gap_vertical_thickness=40,
-                center_column_arc_vertical_thickness=520,
-                rotation_angle=180)
-            test_reactor._make_vertical_build()
-
-        def large_plasma_high_point():
-            test_reactor = paramak.CenterColumnStudyReactor(
-                inner_bore_radial_thickness=30,
-                inboard_tf_leg_radial_thickness=50,
-                center_column_shield_radial_thickness_mid=50,
-                center_column_shield_radial_thickness_upper=100,
-                inboard_firstwall_radial_thickness=30,
-                divertor_radial_thickness=10,
-                inner_plasma_gap_radial_thickness=80,
-                plasma_radial_thickness=200,
-                outer_plasma_gap_radial_thickness=90,
-                # first number must be between plasma inner/outer radius
-                plasma_high_point=(10000, 240),
-                plasma_gap_vertical_thickness=40,
-                center_column_arc_vertical_thickness=520,
-                rotation_angle=180)
-            test_reactor._make_vertical_build()
-
-        self.assertRaises(ValueError, small_plasma_high_point)
-        self.assertRaises(ValueError, large_plasma_high_point)
