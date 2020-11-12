@@ -253,7 +253,7 @@ class test_BallReactor(unittest.TestCase):
                 number_of_tf_coils=16,
                 rotation_angle=360,
             )._rotation_angle_check()
-        
+
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             warning_trigger()
