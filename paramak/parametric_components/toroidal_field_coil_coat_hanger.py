@@ -101,8 +101,10 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         # -    -
         # 7---8
 
-        adjacent_length = self.vertical_mid_point[0] - (self.horizontal_start_point[0] + self.horizontal_length)
-        oppersite_length = self.horizontal_start_point[1] - (self.vertical_mid_point[1] + 0.5 * self.vertical_length)
+        adjacent_length = self.vertical_mid_point[0] - (
+            self.horizontal_start_point[0] + self.horizontal_length)
+        oppersite_length = self.horizontal_start_point[1] - (
+            self.vertical_mid_point[1] + 0.5 * self.vertical_length)
 
         point_rotation = math.atan(oppersite_length / adjacent_length)
         point_rotation_mid = math.radians(90) - point_rotation
@@ -150,8 +152,8 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             ),  # point 9
             rotate(
                 (
-                self.vertical_mid_point[0],
-                self.vertical_mid_point[1] - 0.5 * self.vertical_length,
+                    self.vertical_mid_point[0],
+                    self.vertical_mid_point[1] - 0.5 * self.vertical_length,
                 ),  # same as point 4
                 (
                     self.vertical_mid_point[0] + self.thickness,
@@ -177,7 +179,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                     self.vertical_mid_point[1] + 0.5 * self.vertical_length,
                 ),  # same as point 12
                 point_rotation_mid
-            ), # point 13
+            ),  # point 13
             rotate(
                 (
                     self.horizontal_start_point[0] + self.horizontal_length,
@@ -187,7 +189,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                     self.horizontal_start_point[0] + self.horizontal_length,
                     self.horizontal_start_point[1] + self.thickness,
                 ),  # same as point 15
-                -point_rotation         
+                -point_rotation
             ),  # point 14
             (
                 self.horizontal_start_point[0] + self.horizontal_length,
