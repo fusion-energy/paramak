@@ -57,7 +57,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         number_of_tf_coils,
         gap_between_blankets,
         number_of_blanket_segments,
-        blanket_fillet_radius,
+        blanket_fillet_radius=10,
         **kwargs
     ):
 
