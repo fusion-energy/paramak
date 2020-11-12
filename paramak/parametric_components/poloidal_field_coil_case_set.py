@@ -2,6 +2,8 @@
 import cadquery as cq
 from paramak import RotateStraightShape
 
+from paramak.utils import get_hash
+
 
 class PoloidalFieldCoilCaseSet(RotateStraightShape):
     """Creates a series of rectangular poloidal field coils.
@@ -48,7 +50,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
 
     @property
     def solid(self):
-        if self.get_hash() != self.hash_value:
+        if get_hash(self) != self.hash_value:
             self.create_solid()
         return self._solid
 
@@ -167,6 +169,6 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         self.solid = compound
 
         # Calculate hash value for current solid
-        self.hash_value = self.get_hash()
+        self.hash_value = get_hash(self)
 
         return compound

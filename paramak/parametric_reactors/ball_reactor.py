@@ -3,6 +3,8 @@ import warnings
 
 import paramak
 
+from paramak.utils import get_reactor_hash
+
 
 class BallReactor(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,
@@ -33,6 +35,9 @@ class BallReactor(paramak.Reactor):
             rear wall of the blanket (cm)
         elongation (float): the elongation of the plasma
         triangularity (float): the triangularity of the plasma
+        plasma_gap_vertical_thickness (float): the vertical thickness of the
+            gap between the plasma and firstwall (cm). If left as None then the
+            outer_plasma_gap_radial_thickness is used. Defaults to None.
         number_of_tf_coils (int, optional): the number of tf coils
         pf_coil_to_rear_blanket_radial_gap (float, optional): the radial
             distance between the rear blanket and the closest poloidal field
@@ -66,6 +71,7 @@ class BallReactor(paramak.Reactor):
         blanket_rear_wall_radial_thickness,
         elongation,
         triangularity,
+        plasma_gap_vertical_thickness=None,
         number_of_tf_coils=12,
         pf_coil_to_rear_blanket_radial_gap=None,
         pf_coil_radial_thicknesses=None,
@@ -96,6 +102,7 @@ class BallReactor(paramak.Reactor):
         self.pf_coil_to_tf_coil_radial_gap = pf_coil_to_tf_coil_radial_gap
         self.outboard_tf_coil_radial_thickness = outboard_tf_coil_radial_thickness
         self.outboard_tf_coil_poloidal_thickness = outboard_tf_coil_poloidal_thickness
+        self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
 
         # sets major radius and minor radius from equatorial_points to allow a radial build
         # this helps avoid the plasma overlapping the center column and other
@@ -122,7 +129,17 @@ class BallReactor(paramak.Reactor):
 
         self.shapes_and_components = []
 
-        self.create_solids()
+        self.reactor_hash_value = None
+
+    @property
+    def shapes_and_components(self):
+        if get_reactor_hash(self) != self.reactor_hash_value:
+            self.create_solids()
+        return self._shapes_and_components
+
+    @shapes_and_components.setter
+    def shapes_and_components(self, value):
+        self._shapes_and_components = value
 
     @property
     def pf_coil_radial_thicknesses(self):
@@ -151,6 +168,9 @@ class BallReactor(paramak.Reactor):
               A list of CadQuery solids: A list of 3D solid volumes
 
         """
+
+        self._shapes_and_components = []
+
         self._rotation_angle_check()
         self._make_plasma()
         self._make_radial_build()
@@ -161,7 +181,7 @@ class BallReactor(paramak.Reactor):
         self._make_divertor()
         self._make_component_cuts()
 
-        return self.shapes_and_components
+        self.reactor_hash_value = get_reactor_hash(self)
 
     def _rotation_angle_check(self):
 
@@ -182,7 +202,7 @@ class BallReactor(paramak.Reactor):
         )
         plasma.create_solid()
 
-        self.shapes_and_components.append(plasma)
+        self._shapes_and_components.append(plasma)
 
         self._plasma = plasma
 
@@ -234,7 +254,8 @@ class BallReactor(paramak.Reactor):
         # this is the vertical build sequence, components build on each other in
         # a similar manner to the radial build
 
-        self.plasma_gap_vertical_thickness = self.outer_plasma_gap_radial_thickness
+        if self.plasma_gap_vertical_thickness is None:
+            self.plasma_gap_vertical_thickness = self.outer_plasma_gap_radial_thickness
 
         self._firstwall_start_height = (
             self._plasma.high_point[1] + self.plasma_gap_vertical_thickness
@@ -260,12 +281,10 @@ class BallReactor(paramak.Reactor):
         ):
             self._number_of_pf_coils = len(self.pf_coil_vertical_thicknesses)
 
-            y_position_step = (
-                2
-                * (
-                    self._blanket_rear_wall_end_height
-                    + self.pf_coil_to_rear_blanket_radial_gap
-                )
+            y_position_step = (2 * (
+                self._blanket_rear_wall_end_height
+                + self.pf_coil_to_rear_blanket_radial_gap
+            )
             ) / (self._number_of_pf_coils + 1)
 
             self._pf_coils_xy_values = []
@@ -315,7 +334,7 @@ class BallReactor(paramak.Reactor):
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
         )
-        self.shapes_and_components.append(self._inboard_tf_coils)
+        self._shapes_and_components.append(self._inboard_tf_coils)
 
     def _make_center_column_shield(self):
 
@@ -330,7 +349,7 @@ class BallReactor(paramak.Reactor):
             name="center_column_shield",
             material_tag="center_column_shield_mat",
         )
-        self.shapes_and_components.append(self._center_column_shield)
+        self._shapes_and_components.append(self._center_column_shield)
 
     def _make_blankets_layers(self):
 
@@ -436,7 +455,7 @@ class BallReactor(paramak.Reactor):
             material_tag="divertor_mat",
             rotation_angle=self.rotation_angle
         )
-        self.shapes_and_components.append(self._divertor)
+        self._shapes_and_components.append(self._divertor)
 
         blanket_cutter = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
@@ -449,9 +468,9 @@ class BallReactor(paramak.Reactor):
         self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
         self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
             blanket_cutter.solid)
-        self.shapes_and_components.append(self._firstwall)
-        self.shapes_and_components.append(self._blanket)
-        self.shapes_and_components.append(self._blanket_rear_wall)
+        self._shapes_and_components.append(self._firstwall)
+        self._shapes_and_components.append(self._blanket)
+        self._shapes_and_components.append(self._blanket_rear_wall)
 
     def _make_component_cuts(self):
 
@@ -472,7 +491,7 @@ class BallReactor(paramak.Reactor):
                 material_tag="pf_coil_mat",
             )
 
-            self.shapes_and_components.append(self._pf_coil)
+            self._shapes_and_components.append(self._pf_coil)
 
             if (
                 self.pf_coil_to_tf_coil_radial_gap is not None
@@ -496,4 +515,4 @@ class BallReactor(paramak.Reactor):
                     rotation_angle=self.rotation_angle
                 )
 
-                self.shapes_and_components.append(self._tf_coil)
+                self._shapes_and_components.append(self._tf_coil)

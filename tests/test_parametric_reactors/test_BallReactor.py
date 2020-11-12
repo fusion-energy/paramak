@@ -1,11 +1,14 @@
 
 import os
+import time
 import unittest
+import pytest
 import warnings
 from pathlib import Path
 
+from unittest.mock import MagicMock, Mock
+
 import paramak
-import pytest
 
 
 class test_BallReactor(unittest.TestCase):
@@ -229,278 +232,27 @@ class test_BallReactor(unittest.TestCase):
 
         # insert assertion
 
-    def test_SingleNullBallReactor_with_pf_and_tf_coils(self):
-        """checks that a single null ball reactor with optional pf and tf
-        coils can be created using the SingleNullBallReactor parametric_reactor,
-        and that the correct number of components are produced"""
-
-        test_reactor = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            pf_coil_radial_thicknesses=[50, 50, 50, 50],
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
-            pf_coil_to_rear_blanket_radial_gap=50,
-            pf_coil_to_tf_coil_radial_gap=50,
-            outboard_tf_coil_radial_thickness=100,
-            outboard_tf_coil_poloidal_thickness=50,
-            divertor_position="lower",
-            rotation_angle=360,
-        )
-        assert len(test_reactor.shapes_and_components) == 9
-
-    def test_single_null_ball_reactor_divertor_lower(self):
-        """checks that a single null reactor with a lower divertor can be
-        created using the SingleNullBallReactor parametric_reactor"""
-
-        test_reactor = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="lower",
-            rotation_angle=360,
-        )
-
-        assert len(test_reactor.shapes_and_components) == 7
-
-    def test_single_null_ball_reactor_divertor_upper(self):
-        """checks that a single null reactor with an upper divertor can be
-        created using the SingleNullBallReactor parametric_reactor"""
-
-        test_reactor = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="upper",
-            rotation_angle=360,
-        )
-
-        assert len(test_reactor.shapes_and_components) == 7
-
-    def test_SingleNullBallReactor_rotation_angle_impacts_volume(self):
-        """creates a single null ball reactor with a rotation angle of
-        90 and another reactor with a rotation angle of 180. Then checks the
-        volumes of all the components is double in the 180 reactor"""
-
-        test_reactor_90 = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="upper",
-            rotation_angle=90,
-        )
-
-        test_reactor_180 = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="upper",
-            rotation_angle=180,
-        )
-
-        for r90, r180 in zip(test_reactor_90.shapes_and_components,
-                             test_reactor_180.shapes_and_components):
-            assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
-
-    def test_SegmentedBlanketBallReactor_gap_between_blankets_impacts_volume(
-        self):
-        """creates a SegmentedBlanketBallReactor with different
-        gap_between_blankets and checks the volume of the blankes and the
-        firstwall changes."""
-
-        small_gap_reactor = paramak.SegmentedBlanketBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=150,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=20,
-            blanket_radial_thickness=50,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            rotation_angle=180,
-            pf_coil_radial_thicknesses=[50, 50, 50, 50],
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
-            pf_coil_to_rear_blanket_radial_gap=50,
-            pf_coil_to_tf_coil_radial_gap=50,
-            outboard_tf_coil_radial_thickness=100,
-            outboard_tf_coil_poloidal_thickness=50,
-            gap_between_blankets=30,
-            number_of_blanket_segments=10,
-        )
-
-        large_gap_reactor = paramak.SegmentedBlanketBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=150,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=20,
-            blanket_radial_thickness=50,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            rotation_angle=180,
-            pf_coil_radial_thicknesses=[50, 50, 50, 50],
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
-            pf_coil_to_rear_blanket_radial_gap=50,
-            pf_coil_to_tf_coil_radial_gap=50,
-            outboard_tf_coil_radial_thickness=100,
-            outboard_tf_coil_poloidal_thickness=50,
-            gap_between_blankets=60,
-            number_of_blanket_segments=10,
-        )
-
-        assert small_gap_reactor._blanket.volume < large_gap_reactor._blanket.volume
-        assert small_gap_reactor._firstwall.volume < large_gap_reactor._firstwall.volume
-
-    def test_SegmentedBlanketBallReactor_number_of_blanket_segments_impacts_volume(
-        self):
-        """creates a SegmentedBlanketBallReactor with different
-        number_of_blanket_segments and checks the volume of the blanket and
-        firstwall changes"""
-
-        few_segment_reactor = paramak.SegmentedBlanketBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=150,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=20,
-            blanket_radial_thickness=50,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            rotation_angle=180,
-            pf_coil_radial_thicknesses=[50, 50, 50, 50],
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
-            pf_coil_to_rear_blanket_radial_gap=50,
-            pf_coil_to_tf_coil_radial_gap=50,
-            outboard_tf_coil_radial_thickness=100,
-            outboard_tf_coil_poloidal_thickness=50,
-            gap_between_blankets=30,
-            number_of_blanket_segments=5,
-        )
-
-        many_segment_reactor = paramak.SegmentedBlanketBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=150,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=20,
-            blanket_radial_thickness=50,
-
-    def test_single_null_ball_reactor_error(self):
-        test_reactor=paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="upper",
-            rotation_angle=180,
-        )
-
-        def invalid_position():
-            test_reactor.divertor_position="coucou"
-
-        self.assertRaises(ValueError, invalid_position)
-
     def test_rotation_angle_warning(self):
         """checks that the correct warning message is printed when
         rotation_angle = 360"""
 
         def warning_trigger():
-            try:
-                paramak.BallReactor(
-                    inner_bore_radial_thickness=50,
-                    inboard_tf_leg_radial_thickness=50,
-                    center_column_shield_radial_thickness=50,
-                    divertor_radial_thickness=100,
-                    inner_plasma_gap_radial_thickness=50,
-                    plasma_radial_thickness=200,
-                    outer_plasma_gap_radial_thickness=50,
-                    firstwall_radial_thickness=50,
-                    blanket_radial_thickness=100,
-                    blanket_rear_wall_radial_thickness=50,
-                    elongation=2,
-                    triangularity=0.55,
-                    number_of_tf_coils=16,
-                    rotation_angle=360,
-                )
-            except BaseException:
-                pass
+            paramak.BallReactor(
+                inner_bore_radial_thickness=50,
+                inboard_tf_leg_radial_thickness=50,
+                center_column_shield_radial_thickness=50,
+                divertor_radial_thickness=100,
+                inner_plasma_gap_radial_thickness=50,
+                plasma_radial_thickness=200,
+                outer_plasma_gap_radial_thickness=50,
+                firstwall_radial_thickness=50,
+                blanket_radial_thickness=100,
+                blanket_rear_wall_radial_thickness=50,
+                elongation=2,
+                triangularity=0.55,
+                number_of_tf_coils=16,
+                rotation_angle=360,
+            )._rotation_angle_check()
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
@@ -509,3 +261,107 @@ class test_BallReactor(unittest.TestCase):
             assert issubclass(w[-1].category, UserWarning)
             assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
                 w[-1].message)
+
+    def test_ball_reactor_hash_value(self):
+        """Creates a ball reactor and checks that all shapes in the reactor are created
+        when .shapes_and_components is first called. Checks that when .shapes_and_components
+        is called again with no changes to the reactor, the shapes in the reactor are not
+        reconstructed and the previously constructed shapes are returned. Checks that when
+        .shapes_and_components is called again with changes to the reactor, the shapes
+        in the reactor are reconstructed and these new shapes are returned. Checks that
+        the reactor_hash_value is only updated when the reactor is reconstructed."""
+
+        test_reactor = paramak.BallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=150,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=50,
+            blanket_rear_wall_radial_thickness=30,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            rotation_angle=180,
+            pf_coil_radial_thicknesses=[50, 50, 50, 50],
+            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
+            pf_coil_to_rear_blanket_radial_gap=50,
+            pf_coil_to_tf_coil_radial_gap=50,
+            outboard_tf_coil_radial_thickness=100,
+            outboard_tf_coil_poloidal_thickness=50
+        )
+
+        assert test_reactor.reactor_hash_value is None
+        for key in [
+            "_plasma",
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_divertor",
+            "_firstwall",
+            "_blanket",
+            "_blanket_rear_wall",
+            "_pf_coil",
+                "_tf_coil"]:
+            assert key not in test_reactor.__dict__.keys()
+        assert test_reactor.shapes_and_components is not None
+        for key in [
+            "_plasma",
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_divertor",
+            "_firstwall",
+            "_blanket",
+            "_blanket_rear_wall",
+            "_pf_coil",
+                "_tf_coil"]:
+            assert key in test_reactor.__dict__.keys()
+        assert len(test_reactor.shapes_and_components) == 9
+        assert test_reactor.reactor_hash_value is not None
+        initial_hash_value = test_reactor.reactor_hash_value
+        test_reactor.rotation_angle = 270
+        assert test_reactor.reactor_hash_value == initial_hash_value
+        assert test_reactor.shapes_and_components is not None
+        assert test_reactor.reactor_hash_value != initial_hash_value
+
+    def test_hash_value_time_saving(self):
+        """Checks that use of conditional reactor reconstruction via the hash value
+        gives the expected time saving"""
+
+        test_reactor = paramak.BallReactor(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=150,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_radial_thickness=50,
+            blanket_rear_wall_radial_thickness=30,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            rotation_angle=180,
+            pf_coil_radial_thicknesses=[50, 50, 50, 50],
+            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
+            pf_coil_to_rear_blanket_radial_gap=50,
+            pf_coil_to_tf_coil_radial_gap=50,
+            outboard_tf_coil_radial_thickness=100,
+            outboard_tf_coil_poloidal_thickness=50
+        )
+
+        start_time = time.time()
+        test_reactor.shapes_and_components
+        stop_time = time.time()
+        initial_construction_time = stop_time - start_time
+
+        start_time = time.time()
+        test_reactor.shapes_and_components
+        stop_time = time.time()
+        reconstruction_time = stop_time - start_time
+
+        assert reconstruction_time < initial_construction_time
+        assert reconstruction_time < initial_construction_time * 0.01

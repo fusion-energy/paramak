@@ -14,8 +14,8 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             the inner upper point (cm).
         horizontal_length (tuple of 2 floats): the radial length of the
             horizontal section of the TF coil (cm).
-        vertical_start_point (tuple of 2 points): the (x,z) coordinates of the
-            start point of the outboard vertical section (cm).
+        vertical_mid_point (tuple of 2 points): the (x,z) coordinates of the
+            mid point of the outboard vertical section (cm).
         vertical_length (tuple of 2 floats): the radial length of the outboard
             vertical section of the TF coil (cm).
         thickness (float): the thickness of the toroidal field coil.
@@ -36,7 +36,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         self,
         horizontal_start_point,
         horizontal_length,
-        vertical_start_point,
+        vertical_mid_point,
         vertical_length,
         thickness,
         distance,
@@ -58,7 +58,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
 
         self.horizontal_start_point = horizontal_start_point
         self.horizontal_length = horizontal_length
-        self.vertical_start_point = vertical_start_point
+        self.vertical_mid_point = vertical_mid_point
         self.vertical_length = vertical_length
         self.thickness = thickness
         self.distance = distance
@@ -85,12 +85,12 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                 self.horizontal_start_point[1],
             ),
             (
-                self.vertical_start_point[0],
-                self.vertical_start_point[1] + 0.5 * self.vertical_length,
+                self.vertical_mid_point[0],
+                self.vertical_mid_point[1] + 0.5 * self.vertical_length,
             ),  # upper inner horizontal section
             (
-                self.vertical_start_point[0],
-                self.vertical_start_point[1] - 0.5 * self.vertical_length,
+                self.vertical_mid_point[0],
+                self.vertical_mid_point[1] - 0.5 * self.vertical_length,
             ),  # lower inner horizontal section
             (
                 self.horizontal_start_point[0] + self.horizontal_length,
@@ -115,12 +115,12 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                 -self.horizontal_start_point[1],
             ),  # lower left vertical section
             (
-                self.vertical_start_point[0] + self.thickness,
-                self.vertical_start_point[1] - 0.5 * self.vertical_length,
+                self.vertical_mid_point[0] + self.thickness,
+                self.vertical_mid_point[1] - 0.5 * self.vertical_length,
             ),  # lower inner horizontal section
             (
-                self.vertical_start_point[0] + self.thickness,
-                self.vertical_start_point[1] + 0.5 * self.vertical_length,
+                self.vertical_mid_point[0] + self.thickness,
+                self.vertical_mid_point[1] + 0.5 * self.vertical_length,
             ),  # upper inner horizontal section
             (
                 self.horizontal_start_point[0]

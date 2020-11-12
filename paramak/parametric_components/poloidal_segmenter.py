@@ -3,7 +3,7 @@ import cadquery as cq
 
 from paramak import RotateStraightShape
 from paramak.utils import rotate, intersect_solid, \
-    coefficients_of_line_from_points
+    coefficients_of_line_from_points, get_hash
 
 
 class PoloidalSegments(RotateStraightShape):
@@ -93,7 +93,7 @@ class PoloidalSegments(RotateStraightShape):
 
     @property
     def solid(self):
-        if self.get_hash() != self.hash_value:
+        if get_hash(self) != self.hash_value:
             self.create_solid()
         return self._solid
 
@@ -185,6 +185,6 @@ class PoloidalSegments(RotateStraightShape):
 
         self.solid = compound
 
-        self.hash_value = self.get_hash()
+        self.hash_value = get_hash(self)
 
         return compound
