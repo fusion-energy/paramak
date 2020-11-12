@@ -202,4 +202,5 @@ class test_Plasma(unittest.TestCase):
         test_plasma = paramak.Plasma(rotation_angle=90)
         test_plasma_volume = test_plasma.volume
         test_plasma.rotation_angle = 180
-        assert test_plasma.volume == pytest.approx(test_plasma_volume * 2, rel=0.05)
+        assert test_plasma.volume == pytest.approx(
+            test_plasma_volume * 2, rel=0.05)
