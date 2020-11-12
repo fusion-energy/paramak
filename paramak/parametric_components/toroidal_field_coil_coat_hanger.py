@@ -1,9 +1,10 @@
+import math
 from collections import Iterable
 
 import cadquery as cq
 import numpy as np
 from paramak import ExtrudeStraightShape
-from paramak.utils import calculate_wedge_cut
+from paramak.utils import calculate_wedge_cut, rotate
 
 
 class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
@@ -78,27 +79,33 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         """Finds the XZ points joined by straight connections that describe the 2D
         profile of the poloidal field coil shape."""
 
-        # 14---13
+        # 16---15
         # -     -
-        # -       12
+        # -       14
         # -        -
         # 1---2     -
         #       -    -
-        #        -    -
+        #        -    13
         #         -    -
-        #          3    11
+        #          3    12
         #          -    -
         #          -    -
         #          -    -
-        #          4    10
+        #          4    11
         #         -    -
-        #        -    -
+        #        -    10
         #       -    -
         # 6---5     -
         # -       -
-        # -     9
+        # -      9
         # -    -
         # 7---8
+
+        adjacent_length = self.vertical_mid_point[0] - (self.horizontal_start_point[0] + self.horizontal_length)
+        oppersite_length = self.horizontal_start_point[1] - (self.vertical_mid_point[1] + 0.5 * self.vertical_length)
+
+        point_rotation = math.atan(oppersite_length / adjacent_length)
+        point_rotation_mid = math.radians(90) - point_rotation
 
         points = [
             self.horizontal_start_point,  # point 1
@@ -130,34 +137,66 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                 self.horizontal_start_point[0] + self.horizontal_length,
                 -self.horizontal_start_point[1] - self.thickness,
             ),  # point 8
-            (
-                self.horizontal_start_point[0]
-                + self.horizontal_length
-                + self.thickness,
-                -self.horizontal_start_point[1],
+            rotate(
+                (
+                    self.horizontal_start_point[0] + self.horizontal_length,
+                    -self.horizontal_start_point[1],
+                ),  # same as point 5
+                (
+                    self.horizontal_start_point[0] + self.horizontal_length,
+                    -self.horizontal_start_point[1] - self.thickness,
+                ),  # same as point 8
+                point_rotation
             ),  # point 9
-            (
-                self.vertical_mid_point[0] + self.thickness,
+            rotate(
+                (
+                self.vertical_mid_point[0],
                 self.vertical_mid_point[1] - 0.5 * self.vertical_length,
+                ),  # same as point 4
+                (
+                    self.vertical_mid_point[0] + self.thickness,
+                    self.vertical_mid_point[1] - 0.5 * self.vertical_length,
+                ),  # same as point 11
+                -point_rotation_mid
             ),  # point 10
             (
                 self.vertical_mid_point[0] + self.thickness,
-                self.vertical_mid_point[1] + 0.5 * self.vertical_length,
+                self.vertical_mid_point[1] - 0.5 * self.vertical_length,
             ),  # point 11
             (
-                self.horizontal_start_point[0]
-                + self.horizontal_length
-                + self.thickness,
-                self.horizontal_start_point[1],
+                self.vertical_mid_point[0] + self.thickness,
+                self.vertical_mid_point[1] + 0.5 * self.vertical_length,
             ),  # point 12
+            rotate(
+                (
+                    self.vertical_mid_point[0],
+                    self.vertical_mid_point[1] + 0.5 * self.vertical_length,
+                ),  # same as point 3
+                (
+                    self.vertical_mid_point[0] + self.thickness,
+                    self.vertical_mid_point[1] + 0.5 * self.vertical_length,
+                ),  # same as point 12
+                point_rotation_mid
+            ), # point 13
+            rotate(
+                (
+                    self.horizontal_start_point[0] + self.horizontal_length,
+                    self.horizontal_start_point[1],
+                ),  # same as point 2
+                (
+                    self.horizontal_start_point[0] + self.horizontal_length,
+                    self.horizontal_start_point[1] + self.thickness,
+                ),  # same as point 15
+                -point_rotation         
+            ),  # point 14
             (
                 self.horizontal_start_point[0] + self.horizontal_length,
                 self.horizontal_start_point[1] + self.thickness,
-            ),  # point 13
+            ),  # point 15
             (
                 self.horizontal_start_point[0],
                 self.horizontal_start_point[1] + self.thickness,
-            )   # point 14
+            )   # point 16
         ]
 
         self.inner_leg_connection_points = [
