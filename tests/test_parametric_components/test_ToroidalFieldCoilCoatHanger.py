@@ -12,7 +12,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         test_shape = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500),
             horizontal_length=400,
-            vertical_start_point=(700, 0),
+            vertical_mid_point=(700, 0),
             vertical_length=500,
             thickness=50,
             distance=50,
@@ -34,7 +34,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
 
         test_shape_1 = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500), horizontal_length=400,
-            vertical_start_point=(700, 0), vertical_length=500, thickness=50,
+            vertical_mid_point=(700, 0), vertical_length=500, thickness=50,
             distance=50, number_of_coils=1, with_inner_leg=True,
         )
         test_volume_1 = test_shape_1.volume
@@ -46,7 +46,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
 
         test_shape_2 = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500), horizontal_length=400,
-            vertical_start_point=(700, 0), vertical_length=500, thickness=50,
+            vertical_mid_point=(700, 0), vertical_length=500, thickness=50,
             distance=50, number_of_coils=1, with_inner_leg=False,
         )
         assert test_shape_2.solid is not None
@@ -60,7 +60,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         test_shape = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500),
             horizontal_length=400,
-            vertical_start_point=(700, 0),
+            vertical_mid_point=(700, 0),
             vertical_length=500,
             thickness=50,
             distance=30,
@@ -90,7 +90,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         test_shape = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500),
             horizontal_length=400,
-            vertical_start_point=(700, 0),
+            vertical_mid_point=(700, 0),
             vertical_length=500,
             thickness=50,
             distance=30,
@@ -125,7 +125,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         test_shape = paramak.ToroidalFieldCoilCoatHanger(
             horizontal_start_point=(200, 500),
             horizontal_length=400,
-            vertical_start_point=(700, 0),
+            vertical_mid_point=(700, 0),
             vertical_length=500,
             thickness=50,
             distance=50,
