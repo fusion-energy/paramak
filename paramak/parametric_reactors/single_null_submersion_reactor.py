@@ -147,7 +147,7 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             name="divertor",
             material_tag="divertor_mat"
         )
-        self.shapes_and_components.append(self._divertor)
+        self._shapes_and_components.append(self._divertor)
 
     def _make_supports(self):
 
@@ -170,4 +170,4 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             name="supports",
             material_tag="supports_mat",
         )
-        self.shapes_and_components.append(self._supports)
+        self._shapes_and_components.append(self._supports)

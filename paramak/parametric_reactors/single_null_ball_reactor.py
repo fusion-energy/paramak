@@ -122,7 +122,7 @@ class SingleNullBallReactor(paramak.BallReactor):
             rotation_angle=self.rotation_angle
         )
 
-        self.shapes_and_components.append(self._divertor)
+        self._shapes_and_components.append(self._divertor)
 
         blanket_cutter = paramak.RotateStraightShape(
             points=[
@@ -142,6 +142,6 @@ class SingleNullBallReactor(paramak.BallReactor):
         self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
         self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
             blanket_cutter.solid)
-        self.shapes_and_components.append(self._firstwall)
-        self.shapes_and_components.append(self._blanket)
-        self.shapes_and_components.append(self._blanket_rear_wall)
+        self._shapes_and_components.append(self._firstwall)
+        self._shapes_and_components.append(self._blanket)
+        self._shapes_and_components.append(self._blanket_rear_wall)
