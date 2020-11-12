@@ -311,7 +311,8 @@ class SubmersionTokamak(paramak.Reactor):
             )
 
             if not isinstance(self.pf_coil_case_thickness, list):
-                self.pf_coil_case_thickness = [self.pf_coil_case_thickness] * self._number_of_pf_coils
+                self.pf_coil_case_thickness = [
+                    self.pf_coil_case_thickness] * self._number_of_pf_coils
 
             self._pf_coils_xy_values = []
             # adds in coils with equal spacing strategy, should be updated to
