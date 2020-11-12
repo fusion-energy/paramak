@@ -89,7 +89,8 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         if isinstance(self.pf_coils, list):
             self.heights = [entry.height for entry in self.pf_coils]
             self.widths = [entry.width for entry in self.pf_coils]
-            self.center_points = [entry.center_point for entry in self.pf_coils]
+            self.center_points = [
+                entry.center_point for entry in self.pf_coils]
 
             num_of_coils = len(self.pf_coils)
 
@@ -97,13 +98,13 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
             self.heights = self.pf_coils.heights
             self.widths = self.pf_coils.widths
             self.center_points = self.pf_coils.center_points
-            
+
             num_of_coils = len(self.pf_coils.solid.Solids())
 
         if isinstance(self.casing_thicknesses, list):
             if len(self.casing_thicknesses) != num_of_coils:
-                raise ValueError("The number pf_coils is not equal to the" \
-                    "number of thichnesses provided")
+                raise ValueError("The number pf_coils is not equal to the"
+                                 "number of thichnesses provided")
             casing_thicknesses_list = self.casing_thicknesses
         else:
             casing_thicknesses_list = [self.casing_thicknesses] * num_of_coils

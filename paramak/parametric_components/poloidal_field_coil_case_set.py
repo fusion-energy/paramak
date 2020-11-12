@@ -110,11 +110,15 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         if isinstance(self.casing_thicknesses, list):
             casing_thicknesses_list = self.casing_thicknesses
         else:
-            casing_thicknesses_list = [self.casing_thicknesses] * len(self.widths)
+            casing_thicknesses_list = [
+                self.casing_thicknesses] * len(self.widths)
 
-        if not len(self.heights) == len(self.widths) == len(self.center_points) == len(casing_thicknesses_list):
+        if not len(
+            self.heights) == len(
+            self.widths) == len(
+                self.center_points) == len(casing_thicknesses_list):
             raise ValueError(
-                "The number of heights, widths, center_points and " \
+                "The number of heights, widths, center_points and "
                 "casing_thicknesses must be equal")
 
         for height, width, center_point, casing_thickness in zip(
