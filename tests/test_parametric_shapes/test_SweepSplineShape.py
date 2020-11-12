@@ -139,7 +139,7 @@ class test_object_properties(unittest.TestCase):
             path_workplane="XZ",
             force_cross_section=True,
         )
-        
+
         test_area = round(min(test_shape.areas))
 
         assert test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
@@ -157,7 +157,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
     def test_force_cross_section_volume(self):
-        """Checks that when force_cross_section = True, a solid is created which has 
+        """Checks that when force_cross_section = True, a solid is created which has
         a larger volume than a solid created when force_cross_section = False"""
 
         test_shape = SweepSplineShape(
@@ -166,7 +166,7 @@ class test_object_properties(unittest.TestCase):
             force_cross_section=False
         )
         test_volume = test_shape.volume
-        test_shape.force_cross_section=True
+        test_shape.force_cross_section = True
         assert test_shape.volume > test_volume
 
     def test_surface_count(self):
@@ -178,7 +178,6 @@ class test_object_properties(unittest.TestCase):
         )
 
         assert len(test_shape.areas) == 3
-
 
 
 if __name__ == "__main__":

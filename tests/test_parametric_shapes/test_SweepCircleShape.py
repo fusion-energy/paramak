@@ -152,24 +152,27 @@ class test_object_properties(unittest.TestCase):
             path_workplane="XZ",
             force_cross_section=True
         )
-        assert test_shape.areas.count(pytest.approx(math.pi*(10**2), rel=0.01)) == 2
+        assert test_shape.areas.count(
+            pytest.approx(math.pi * (10**2), rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
             points=[(0, 50), (0, 200), (100, 200), (100, 50)],
         )
         test_shape.cut = cutting_shape
 
-        assert test_shape.areas.count(pytest.approx(math.pi*(10**2), rel=0.01)) == 2
+        assert test_shape.areas.count(
+            pytest.approx(math.pi * (10**2), rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
             points=[(0, 100), (0, 200), (100, 200), (100, 100)]
         )
         test_shape.cut = cutting_shape
 
-        assert test_shape.areas.count(pytest.approx(math.pi*(10**2), rel=0.01)) == 2
+        assert test_shape.areas.count(
+            pytest.approx(math.pi * (10**2), rel=0.01)) == 2
 
     def test_force_cross_section_volume(self):
-        """Checks that when force_cross_section = True, a solid is created which has 
+        """Checks that when force_cross_section = True, a solid is created which has
         a larger volume than a solid created when force_cross_section = False"""
 
         test_shape = SweepCircleShape(
@@ -178,7 +181,7 @@ class test_object_properties(unittest.TestCase):
             force_cross_section=False
         )
         test_volume = test_shape.volume
-        test_shape.force_cross_section=True
+        test_shape.force_cross_section = True
         assert test_shape.volume > test_volume
 
     def test_surface_count(self):
@@ -188,7 +191,7 @@ class test_object_properties(unittest.TestCase):
             radius=10,
             path_points=[(50, 0), (30, 50), (50, 100)],
         )
-        
+
         assert len(test_shape.areas) == 3
 
 
