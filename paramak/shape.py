@@ -555,7 +555,7 @@ class Shape:
         for angle in azimuth_placement_angles:
             rotated_solids.append(
                 solid.rotate(
-                    *self.get_rotation_axis(), angle))
+                    *self.get_rotation_axis()[0], angle))
         solid = cq.Workplane(self.workplane)
 
         # Joins the seperate solids together
@@ -572,7 +572,8 @@ class Shape:
         will be used to form an axis.
 
         Returns:
-            list: list of two XYZ points
+            list, str: list of two XYZ points and the string of the axis (eg.
+                "X", "Y"..)
         """
         rotation_axis = {
             "X": [(-1, 0, 0), (1, 0, 0)],
@@ -584,10 +585,13 @@ class Shape:
         }
         if isinstance(self.rotation_axis, str):
             # X, Y or Z axis
-            return rotation_axis[self.rotation_axis.replace("+", "")]
+            return (
+                rotation_axis[self.rotation_axis.replace("+", "")],
+                self.rotation_axis
+            )
         elif isinstance(self.rotation_axis, Iterable):
             # Custom axis
-            return self.rotation_axis
+            return self.rotation_axis, "custom_axis"
         elif self.rotation_axis is None:
             # Axis from workplane or path_workplane
             if hasattr(self, "path_workplane"):
@@ -595,7 +599,7 @@ class Shape:
                 workplane = self.path_workplane
             else:
                 workplane = self.workplane
-            return rotation_axis[workplane[1]]
+            return rotation_axis[workplane[1]], workplane[1]
 
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the

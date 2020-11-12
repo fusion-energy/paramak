@@ -195,7 +195,6 @@ class test_Plasma(unittest.TestCase):
         assert Path("plasma.stp").exists()
         os.system("rm plasma.stp")
 
-
     # TODO: fix issue #435
     # def test_plasma_relative_volume(self):
     #     """Creates plasmas using the Plasma parametric component and checks that
