@@ -116,7 +116,7 @@ class test_BallReactor(unittest.TestCase):
             rotation_angle=360,
         )
         test_reactor.export_stp()
-        assert len(test_reactor.shapes_and_components) == 8
+        assert len(test_reactor.shapes_and_components) == 9
         assert test_reactor.pf_coil_radial_thicknesses == [50, 50, 50, 50]
         assert test_reactor.pf_coil_vertical_thicknesses == [50, 50, 50, 50]
 
@@ -200,7 +200,7 @@ class test_BallReactor(unittest.TestCase):
             rotation_angle=360,
         )
         test_reactor.export_stp()
-        assert len(test_reactor.shapes_and_components) == 9
+        assert len(test_reactor.shapes_and_components) == 10
 
     def test_BallReactor_with_pf_and_tf_coils_export_physical_groups(self):
         """creates a ball reactor using the BallReactor parametric_reactor and
@@ -304,7 +304,9 @@ class test_BallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-                "_tf_coil"]:
+            "_pf_coils_casing",
+            "_tf_coil"
+            ]:
             assert key not in test_reactor.__dict__.keys()
         assert test_reactor.shapes_and_components is not None
         for key in [
@@ -316,7 +318,9 @@ class test_BallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-                "_tf_coil"]:
+            "_pf_coils_casing",
+            "_tf_coil"
+            ]:
             assert key in test_reactor.__dict__.keys()
         assert len(test_reactor.shapes_and_components) == 9
         assert test_reactor.reactor_hash_value is not None

@@ -34,7 +34,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
             divertor_position="lower",
             rotation_angle=360,
         )
-        assert len(test_reactor.shapes_and_components) == 9
+        assert len(test_reactor.shapes_and_components) == 10
 
     def test_single_null_ball_reactor_divertor_lower(self):
         """checks that a single null reactor with a lower divertor can be
@@ -199,7 +199,9 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-                "_tf_coil"]:
+            "_pf_coils_casing",
+            "_tf_coil"
+            ]:
             assert key not in test_reactor.__dict__.keys()
         assert test_reactor.shapes_and_components is not None
         for key in [
@@ -211,7 +213,9 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-                "_tf_coil"]:
+            "_pf_coils_casing",
+            "_tf_coil"
+            ]:
             assert key in test_reactor.__dict__.keys()
         assert len(test_reactor.shapes_and_components) == 9
         assert test_reactor.reactor_hash_value is not None
