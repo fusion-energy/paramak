@@ -237,7 +237,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_pf_coil",
         ]:
             assert key in test_reactor.__dict__.keys()
-        assert len(test_reactor.shapes_and_components) == 10
+        assert len(test_reactor.shapes_and_components) == 11
         assert test_reactor.reactor_hash_value is not None
         initial_hash_value = test_reactor.reactor_hash_value
         test_reactor.rotation_angle = 270
