@@ -372,6 +372,8 @@ def main():
         ring_radius=70,
         mid_offset=-20,
         number_of_coolant_channels=8,
+        workplane="XY",
+        path_workplane="XZ",
         stp_filename="coolant_channel_ring_curved.stp",
     )
     all_components.append(component)
