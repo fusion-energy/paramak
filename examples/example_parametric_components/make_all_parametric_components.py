@@ -375,6 +375,7 @@ def main():
         workplane="XY",
         path_workplane="XZ",
         stp_filename="coolant_channel_ring_curved.stp",
+        force_cross_section=True
     )
     all_components.append(component)
 
