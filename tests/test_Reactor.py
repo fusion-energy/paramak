@@ -137,7 +137,7 @@ class test_object_properties(unittest.TestCase):
             my_reactor.export_stp()
 
         self.assertRaises(ValueError, test_stp_filename_duplication)
-    
+
     def test_adding_shape_with_duplicate_stl_filename_to_reactor(self):
         """Adds shapes to a Reactor object to checks errors are raised
         correctly"""
@@ -150,7 +150,7 @@ class test_object_properties(unittest.TestCase):
                 points=[(0, 0), (0, 20), (20, 20)], stl_filename="filename.stl"
             )
             test_shape_2 = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)],  stl_filename="filename.stl"
+                points=[(0, 0), (0, 20), (20, 20)], stl_filename="filename.stl"
             )
             test_shape_1.rotation_angle = 90
             my_reactor = paramak.Reactor([test_shape_1, test_shape_2])
