@@ -6,7 +6,7 @@ from scipy import integrate
 from scipy.optimize import minimize
 
 from paramak import ExtrudeMixedShape
-from paramak.utils import calculate_wedge_cut, add_thickness
+from paramak.utils import calculate_wedge_cut, add_thickness, get_hash
 
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
@@ -64,7 +64,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
 
     @property
     def inner_points(self):
-        self.find_points()
+        self.points
         return self._inner_points
 
     @inner_points.setter
@@ -73,7 +73,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
 
     @property
     def outer_points(self):
-        self.find_points()
+        self.points
         return self._outer_points
 
     @outer_points.setter
