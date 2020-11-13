@@ -13,7 +13,10 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
             (cm).
         widths (list of floats): the horizontal (x axis) widths of the coil
             (cm).
-        casing_thicknesses (list of floats): the thickness of the casing (cm).
+        casing_thicknesses (float or list of floats): the thicknesses of the
+            coil casing (cm). If float then the same thickness is applied to
+            all coils. If list of floats then each entry is applied to a
+            seperate pf_coil, one entry for each pf_coil.
         center_points (tuple of floats): the center of the coil (x,z) values
             (cm).
         stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
@@ -82,58 +85,90 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
     def widths(self, widths):
         self._widths = widths
 
+    @property
+    def casing_thicknesses(self):
+        return self._casing_thicknesses
+
+    @casing_thicknesses.setter
+    def casing_thicknesses(self, value):
+        if isinstance(value, list):
+            if not all(isinstance(x, (int, float)) for x in value):
+                raise ValueError(
+                    "Every entry in Casing_thicknesses must be a float or int")
+        else:
+            if not isinstance(value, (float, int)):
+                raise ValueError(
+                    "Casing_thicknesses must be a list of numbers or a number")
+        self._casing_thicknesses = value
+
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the poloidal field coil shape."""
 
         all_points = []
 
+        if isinstance(self.casing_thicknesses, list):
+            casing_thicknesses_list = self.casing_thicknesses
+        else:
+            casing_thicknesses_list = [
+                self.casing_thicknesses] * len(self.widths)
+
+        if not len(
+            self.heights) == len(
+            self.widths) == len(
+                self.center_points) == len(casing_thicknesses_list):
+            raise ValueError(
+                "The number of heights, widths, center_points and "
+                "casing_thicknesses must be equal")
+
         for height, width, center_point, casing_thickness in zip(
                 self.heights, self.widths,
-                self.center_points, self.casing_thicknesses):
+                self.center_points, casing_thicknesses_list):
 
-            all_points = all_points + [
-                (
-                    center_point[0] + width / 2.0,
-                    center_point[1] + height / 2.0,
-                ),  # upper right
-                (
-                    center_point[0] + width / 2.0,
-                    center_point[1] - height / 2.0,
-                ),  # lower right
-                (
-                    center_point[0] - width / 2.0,
-                    center_point[1] - height / 2.0,
-                ),  # lower left
-                (
-                    center_point[0] - width / 2.0,
-                    center_point[1] + height / 2.0,
-                ),  # upper left
-                (
-                    center_point[0] + width / 2.0,
-                    center_point[1] + height / 2.0,
-                ),  # upper right
-                (
-                    center_point[0] + (casing_thickness + width / 2.0),
-                    center_point[1] + (casing_thickness + height / 2.0),
-                ),
-                (
-                    center_point[0] + (casing_thickness + width / 2.0),
-                    center_point[1] - (casing_thickness + height / 2.0),
-                ),
-                (
-                    center_point[0] - (casing_thickness + width / 2.0),
-                    center_point[1] - (casing_thickness + height / 2.0),
-                ),
-                (
-                    center_point[0] - (casing_thickness + width / 2.0),
-                    center_point[1] + (casing_thickness + height / 2.0),
-                ),
-                (
-                    center_point[0] + (casing_thickness + width / 2.0),
-                    center_point[1] + (casing_thickness + height / 2.0),
-                )
-            ]
+            if casing_thickness != 0:
+
+                all_points = all_points + [
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] + height / 2.0,
+                    ),  # upper right
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] - height / 2.0,
+                    ),  # lower right
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1] - height / 2.0,
+                    ),  # lower left
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1] + height / 2.0,
+                    ),  # upper left
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] + height / 2.0,
+                    ),  # upper right
+                    (
+                        center_point[0] + (casing_thickness + width / 2.0),
+                        center_point[1] + (casing_thickness + height / 2.0),
+                    ),
+                    (
+                        center_point[0] + (casing_thickness + width / 2.0),
+                        center_point[1] - (casing_thickness + height / 2.0),
+                    ),
+                    (
+                        center_point[0] - (casing_thickness + width / 2.0),
+                        center_point[1] - (casing_thickness + height / 2.0),
+                    ),
+                    (
+                        center_point[0] - (casing_thickness + width / 2.0),
+                        center_point[1] + (casing_thickness + height / 2.0),
+                    ),
+                    (
+                        center_point[0] + (casing_thickness + width / 2.0),
+                        center_point[1] + (casing_thickness + height / 2.0),
+                    )
+                ]
 
         self.points = all_points
 
