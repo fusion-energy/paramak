@@ -484,11 +484,11 @@ CoolantChannelRingStraight()
 
 |CoolantChannelRingStraightallstp| |CoolantChannelRingStraightsvg| |CoolantChannelRingStraightstp|
 
-.. |CoolantChannelRingStraightallstp| image:: https://user-images.githubusercontent.com/56687624/97892655-34671400-1d28-11eb-8051-5c6411678182.png
+.. |CoolantChannelRingStraightallstp| image:: https://user-images.githubusercontent.com/56687624/99049969-6467b000-258f-11eb-93b2-73e533b366c0.png
    :width: 200
-.. |CoolantChannelRingStraightsvg| image:: https://user-images.githubusercontent.com/56687624/97979546-46e45a80-1dc7-11eb-8895-0b3ba217d876.png
+.. |CoolantChannelRingStraightsvg| image:: https://user-images.githubusercontent.com/56687624/99048848-ff5f8a80-258d-11eb-9073-123185d7a4fb.png
    :width: 230
-.. |CoolantChannelRingStraightstp| image:: https://user-images.githubusercontent.com/56687624/97979975-fb7e7c00-1dc7-11eb-8ae6-35451470f048.png
+.. |CoolantChannelRingStraightstp| image:: https://user-images.githubusercontent.com/56687624/99049922-574ac100-258f-11eb-8cb9-a57cef2b8086.png
    :width: 170
 
 .. automodule:: paramak.parametric_components.coolant_channel_ring_straight
@@ -500,11 +500,11 @@ CoolantChannelRingCurved()
 
 |CoolantChannelRingCurvedallstp| |CoolantChannelRingCurvedsvg| |CoolantChannelRingCurvedstp|
 
-.. |CoolantChannelRingCurvedallstp| image:: https://user-images.githubusercontent.com/56687624/97892650-3335e700-1d28-11eb-8b59-96da81bc159e.png
+.. |CoolantChannelRingCurvedallstp| image:: https://user-images.githubusercontent.com/56687624/99049933-5ade4800-258f-11eb-96c1-4506a8f646a9.png
    :width: 200
-.. |CoolantChannelRingCurvedsvg| image:: https://user-images.githubusercontent.com/56687624/97979551-48158780-1dc7-11eb-9680-4cfa5661818d.png
+.. |CoolantChannelRingCurvedsvg| image:: https://user-images.githubusercontent.com/56687624/99048853-0090b780-258e-11eb-862e-763f7a0f7ec6.png
    :width: 230
-.. |CoolantChannelRingCurvedstp| image:: https://user-images.githubusercontent.com/56687624/97979979-fcafa900-1dc7-11eb-9c13-f8482eb9d9c2.png
+.. |CoolantChannelRingCurvedstp| image:: https://user-images.githubusercontent.com/56687624/99049900-4f8b1c80-258f-11eb-81be-bc101e2168e2.png
    :width: 170
 
 .. automodule:: paramak.parametric_components.coolant_channel_ring_curved
