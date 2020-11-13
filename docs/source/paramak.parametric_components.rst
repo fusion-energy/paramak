@@ -408,7 +408,7 @@ TFCoilCasing()
     :width: 200px
 .. |TFCoilCasingaCutstp| image:: https://user-images.githubusercontent.com/8583900/98821532-96f69900-2427-11eb-99e1-e2461be67511.png
     :width: 130px
-.. |TFCoilCasingsvg| image:: https://user-images.githubusercontent.com/8583900/98822857-3ff1c380-2429-11eb-80ae-83f2ff875fea.png
+.. |TFCoilCasingsvg| image:: https://user-images.githubusercontent.com/8583900/99081345-904c5b00-25ba-11eb-8a4f-956d4ad6bbc0.png
     :width: 310px
 
 .. automodule:: paramak.parametric_components.tf_coil_casing
