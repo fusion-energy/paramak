@@ -66,7 +66,7 @@ ExtrudeStraightShape()
 ExtrudeSplineShape()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: hhttps://user-images.githubusercontent.com/56687624/98713431-87bc1080-237f-11eb-9075-01bca99b7018.png
+.. image:: https://user-images.githubusercontent.com/56687624/98713431-87bc1080-237f-11eb-9075-01bca99b7018.png
    :width: 200
    :height: 280
    :align: center
