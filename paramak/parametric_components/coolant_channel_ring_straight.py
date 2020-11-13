@@ -12,6 +12,10 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         channel_radius (float): radius of each coolant channel in ring.
         number_of_coolant_channels (float): number of coolant channels in ring.
         ring radius (float): radius of coolant channel ring.
+        workplane (str, optional): plane in which the cross-sections of the
+            coolant channels lie. Defaults to "XY".
+        rotation_axis (str, optional): azimuthal axis around which the separate
+            coolant channels are placed.
         stp_filename (str, optional): Defaults to
             "CoolantChannelRingStraight.stp".
         stl_filename (str, optional): Defaults to
