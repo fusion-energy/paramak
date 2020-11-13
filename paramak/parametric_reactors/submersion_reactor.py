@@ -9,9 +9,10 @@ from paramak.utils import get_reactor_hash
 
 
 class SubmersionTokamak(paramak.Reactor):
-    """Creates geometry for a simple submersion reactor including a
-    plasma, cylindrical center column shielding, square toroidal field
-    coils. There is an inboard breeder blanket on this ball reactor.
+    """Creates geometry for a simple submersion reactor including a plasma,
+    cylindrical center column shielding, inboard and outboard breeder blanket,
+    divertor (upper and lower), support legs. Optional coat hanger shaped
+    toroidal field coils and pf coils.
 
     Arguments:
         inner_bore_radial_thickness (float): the radial thickness of the
@@ -301,6 +302,10 @@ class SubmersionTokamak(paramak.Reactor):
             self._blanket_rear_wall_start_height +
             self.blanket_rear_wall_radial_thickness)
 
+        if self._tf_info_provided:
+            self._outboard_tf_coils_vertical_height = self._blanket_rear_wall_end_height * 1.5
+            self._outboard_tf_coils_horizontal_length = self._blanket_rear_wall_end_radius * 0.75
+
         if self._tf_info_provided and self._pf_info_provided:
             self._number_of_pf_coils = len(self.pf_coil_vertical_thicknesses)
 
@@ -527,7 +532,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._shapes_and_components.append(self._outboard_rear_blanket_wall)
 
         if self._tf_info_provided:
-            self._tf_coil = paramak.ToroidalFieldCoilRectangle(
+            self._tf_coil = paramak.ToroidalFieldCoilCoatHanger(
                 with_inner_leg=False,
                 horizontal_start_point=(
                     self._inboard_tf_coils_start_radius,
@@ -539,7 +544,9 @@ class SubmersionTokamak(paramak.Reactor):
                 distance=self.outboard_tf_coil_poloidal_thickness,
                 stp_filename="outboard_tf_coil.stp",
                 stl_filename="outboard_tf_coil.stl",
-                rotation_angle=self.rotation_angle
+                rotation_angle=self.rotation_angle,
+                horizontal_length=self._outboard_tf_coils_horizontal_length,
+                vertical_length=self._outboard_tf_coils_vertical_height
             )
             self._shapes_and_components.append(self._tf_coil)
 
