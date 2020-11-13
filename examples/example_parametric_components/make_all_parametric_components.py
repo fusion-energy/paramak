@@ -361,6 +361,7 @@ def main():
         ring_radius=70,
         number_of_coolant_channels=8,
         workplane="XY",
+        rotation_axis="Z",
         stp_filename="coolant_channel_ring_straight.stp",
     )
     all_components.append(component)
