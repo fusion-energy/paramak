@@ -1,13 +1,59 @@
+import os
 import unittest
+from pathlib import Path
 
 import pytest
 
 from paramak import RotateMixedShape
-import os
-from pathlib import Path
 
 
 class test_object_properties(unittest.TestCase):
+
+    def setUp(self):
+        self.test_shape = RotateMixedShape(
+            points=[(50, 0, "straight"), (50, 50, "spline"), (60, 70, "spline"),
+                (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")]
+        )
+    
+    def test_default_parameters(self):
+        """Checks that the default parameters of a RotateMixedShape are correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "RotateMixedShape.stp"
+        assert self.test_shape.stl_filename == "RotateMixedShape.stl"
+        assert self.test_shape.azimuth_placement_angle == 0
+
+    def test_relative_shape_volume_rotation_angle(self):
+        """Creates two RotateMixedShapes with different rotation_angles and checks
+        that their relative volumes are correct."""
+
+        assert self.test_shape.volume > 100
+        test_volume = self.test_shape.volume
+        self.test_shape.rotation_angle = 180
+        assert test_volume == pytest.approx(self.test_shape.volume * 2)
+
+    def test_relative_shape_volume_azimuth_placement_angle(self):
+        """Creates two RotateMixedShapes with different azimuth_placement_angles and
+        checks that their relative volumes are correct."""
+
+        self.test_shape.rotation_angle = 10
+        self.test_shape.azimuth_placement_angle = 0
+        test_volume_1 = self.test_shape.volume
+
+        self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
+        assert self.test_shape.volume == pytest.approx(test_volume_1 * 4)
+        
+    def test_shape_face_areas(self):
+        """Creates RotateMixedShapes and checks that the face areas are expected."""
+
+        assert len(self.test_shape.areas) == 4
+        assert len(set(self.test_shape.areas)) == 4
+
+        self.test_shape.rotation_angle = 180
+        assert len(self.test_shape.areas) == 6
+        assert len(set([round(i) for i in self.test_shape.areas])) == 5
+
+    # here
     def test_union_volume_addition(self):
         """Fuses two RotateMixedShapes and checks that their fused volume
         is correct."""
@@ -46,115 +92,6 @@ class test_object_properties(unittest.TestCase):
         assert inner_box.volume + outer_box.volume == pytest.approx(
             outer_box_and_inner_box.volume
         )
-
-    def test_absolute_shape_volume(self):
-        """Creates rotated shapes using mixed connections and checks the
-        volumes are correct."""
-
-        test_shape = RotateMixedShape(
-            points=[
-                (0, 0, "straight"),
-                (0, 20, "spline"),
-                (20, 20, "spline"),
-                (20, 0, "spline"),
-            ]
-        )
-
-        test_shape.rotation_angle = 360
-        test_shape.create_solid()
-
-        assert test_shape.solid is not None
-        assert test_shape.volume > 100
-
-        test_shape2 = RotateMixedShape(
-            points=[
-                (0, 0, "straight"),
-                (0, 20, "spline"),
-                (20, 20, "spline"),
-                (20, 0, "spline"),
-            ]
-        )
-
-        test_shape2.rotation_angle = 180
-        test_shape2.create_solid()
-
-        assert test_shape2.solid is not None
-        assert 2 * test_shape2.volume == test_shape.volume
-
-    def test_shape_areas(self):
-        """Creates rotated shapes using mixed connections and checks the
-        areas are expected"""
-
-        test_shape = RotateMixedShape(
-            points=[
-                (50, 0, "straight"),
-                (50, 50, "spline"),
-                (60, 70, "spline"),
-                (70, 50, "circle"),
-                (60, 25, "circle"),
-                (70, 0, "straight")
-            ]
-        )
-
-        assert len(test_shape.areas) == 4
-        assert len(set(test_shape.areas)) == 4
-
-        test_shape.rotation_angle = 180
-
-        assert len(test_shape.areas) == 6
-        assert len(set(test_shape.areas)) == 5
-
-    def test_shape_volume_with_multiple_azimuth_placement_angles(self):
-        """Creates rotated shapes at multiple placement angles using mixed
-        connections and checks the volumes are correct."""
-
-        test_shape = RotateMixedShape(
-            points=[
-                (1, 1, "straight"),
-                (1, 20, "spline"),
-                (20, 20, "spline"),
-                (20, 1, "spline"),
-            ]
-        )
-
-        test_shape.rotation_angle = 10
-        test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        test_shape.create_solid()
-
-        assert test_shape.solid is not None
-        assert test_shape.volume > 100
-
-        test_shape2 = RotateMixedShape(
-            points=[
-                (1, 1, "straight"),
-                (1, 20, "spline"),
-                (20, 20, "spline"),
-                (20, 1, "spline"),
-            ]
-        )
-
-        test_shape2.rotation_angle = 5
-        test_shape2.azimuth_placement_angle = [0, 90, 180, 270]
-        test_shape2.create_solid()
-
-        assert test_shape2.solid is not None
-        assert 2 * test_shape2.volume == pytest.approx(test_shape.volume)
-
-        test_shape3 = RotateMixedShape(
-            points=[
-                (1, 1, "straight"),
-                (1, 20, "spline"),
-                (20, 20, "spline"),
-                (20, 1, "spline"),
-            ]
-        )
-
-        test_shape3.rotation_angle = 20
-        test_shape3.azimuth_placement_angle = [0, 180]
-        test_shape3.create_solid()
-
-        assert test_shape3.solid is not None
-        assert test_shape3.volume == pytest.approx(test_shape.volume)
 
     def test_incorrect_connections(self):
         """Creates rotated straight shapes to check errors are correctly raised
