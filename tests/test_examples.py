@@ -149,7 +149,9 @@ class test_object_properties(unittest.TestCase):
             'toroidal_field_coil_coat_hanger.stp',
             'toroidal_field_coil_triple_arc.stp',
             'toroidal_field_coil_princeton_d.stp',
-            'ITER_type_divertor.stp']
+            'ITER_type_divertor.stp',
+            'coolant_channel_ring_straight.stp',
+            'coolant_channel_ring_curved.stp']
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
         os.system("python make_all_parametric_components.py")
