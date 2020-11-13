@@ -38,6 +38,9 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         elongation (float): the elongation of the plasma
         triangularity (float): the triangularity of the plasma
         number_of_tf_coils (int): the number of tf coils
+        blanket_fillet_radius (float): the fillet radius to apply to the
+            interface between the firstwall and th breeder zone. Set to 0 for
+            no fillet. Defaults to 10.
     """
 
     def __init__(
