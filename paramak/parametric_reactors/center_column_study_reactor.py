@@ -31,17 +31,14 @@ class CenterColumnStudyReactor(paramak.Reactor):
             (cm)
         outer_plasma_gap_radial_thickness (float): the radial thickness of
             the outboard gap between the plasma and the first wall (cm)
+        elongation (float): the elongation of the plasma
+        triangularity (float): the triangularity of the plasma
         center_column_arc_vertical_thickness (float): height of the outer
             hyperbolic profile of the center column shield.
-        plasma_high_point (tuple of 2 floats): the (x,z) coordinate value of
-            the top of the plasma (cm)
         plasma_gap_vertical_thickness (float): the vertical thickness of
             the upper gap between the plasma and the blanket (cm)
         rotation_angle (float): the angle of the sector that is desired.
             Defaults to 360.0.
-
-    Returns:
-        a paramak shape object: a Reactor object that has generic functionality
     """
 
     def __init__(
@@ -56,7 +53,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
         plasma_radial_thickness,
         outer_plasma_gap_radial_thickness,
         center_column_arc_vertical_thickness,
-        plasma_high_point,
+        elongation,
+        triangularity,
         plasma_gap_vertical_thickness,
         rotation_angle=360.0,
     ):
@@ -72,16 +70,28 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.inner_plasma_gap_radial_thickness = inner_plasma_gap_radial_thickness
         self.plasma_radial_thickness = plasma_radial_thickness
         self.outer_plasma_gap_radial_thickness = outer_plasma_gap_radial_thickness
-        self.plasma_high_point = plasma_high_point
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
         self.center_column_arc_vertical_thickness = center_column_arc_vertical_thickness
         self.rotation_angle = rotation_angle
+        self.elongation = elongation
+        self.triangularity = triangularity
 
-        # these are set later by the plasma when it is created
-        self.major_radius = None
-        self.minor_radius = None
-        self.elongation = None
-        self.triangularity = None
+        # sets major radius and minor radius from equatorial_points to allow a
+        # radial build this helps avoid the plasma overlapping the center
+        # column and other components
+
+        inner_equatorial_point = (
+            inner_bore_radial_thickness
+            + inboard_tf_leg_radial_thickness
+            + center_column_shield_radial_thickness_mid
+            + inner_plasma_gap_radial_thickness
+        )
+        outer_equatorial_point = inner_equatorial_point + plasma_radial_thickness
+        self.major_radius = (
+            inner_equatorial_point + plasma_radial_thickness + inner_equatorial_point) / 2
+        self.minor_radius = (
+            (outer_equatorial_point + inner_equatorial_point) / 2
+        ) - inner_equatorial_point
 
         self.shapes_and_components = []
 
@@ -95,12 +105,12 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
         """
         self._rotation_angle_check()
+        self._make_plasma()
         self._make_radial_build()
         self._make_vertical_build()
         self._make_inboard_tf_coils()
         self._make_center_column_shield()
         self._make_inboard_firstwall()
-        self._make_plasma()
         self._make_outboard_blanket()
         self._make_divertor()
         self._make_component_cuts()
@@ -113,6 +123,21 @@ class CenterColumnStudyReactor(paramak.Reactor):
             warnings.warn(
                 "360 degree rotation may result in a Standard_ConstructionError or AttributeError",
                 UserWarning)
+
+    def _make_plasma(self):
+
+        plasma = paramak.Plasma(
+            major_radius=self.major_radius,
+            minor_radius=self.minor_radius,
+            elongation=self.elongation,
+            triangularity=self.triangularity,
+            rotation_angle=self.rotation_angle,
+        )
+        plasma.create_solid()
+
+        self.shapes_and_components.append(plasma)
+
+        self._plasma = plasma
 
     def _make_radial_build(self):
 
@@ -162,11 +187,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         # this is the vertical build sequence, componets build on each other in
         # a similar manner to the radial build
 
-        self._plasma_start_height = 0
-        self._plasma_end_height = self._plasma_start_height + \
-            self.plasma_high_point[1]
-
-        self._plasma_to_blanket_gap_start_height = self._plasma_end_height
+        self._plasma_to_blanket_gap_start_height = self._plasma.high_point[1]
         self._plasma_to_blanket_gap_end_height = self._plasma_to_blanket_gap_start_height + \
             self.plasma_gap_vertical_thickness
 
@@ -175,19 +196,6 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
         self._center_column_shield_end_height = self._blanket_end_height
         self._inboard_firstwall_end_height = self._blanket_end_height
-
-        # raises an error if the plasma high point is not above part of the
-        # plasma
-        if self.plasma_high_point[0] < self._plasma_start_radius:
-            raise ValueError(
-                "The first value in plasma high_point is too small, it should be larger than",
-                self._plasma_start_radius,
-            )
-        if self.plasma_high_point[0] > self._plasma_end_radius:
-            raise ValueError(
-                "The first value in plasma high_point is too large, it should be smaller than",
-                self._plasma_end_radius,
-            )
 
     def _make_inboard_tf_coils(self):
 
@@ -221,22 +229,6 @@ class CenterColumnStudyReactor(paramak.Reactor):
             thickness=self.inboard_firstwall_radial_thickness,
             rotation_angle=self.rotation_angle)
         self.shapes_and_components.append(self._inboard_firstwall)
-
-    def _make_plasma(self):
-
-        self._plasma = paramak.PlasmaFromPoints(
-            outer_equatorial_x_point=self._plasma_end_radius,
-            inner_equatorial_x_point=self._plasma_start_radius,
-            high_point=self.plasma_high_point,
-            rotation_angle=self.rotation_angle,
-        )
-
-        self.major_radius = self._plasma.major_radius
-        self.minor_radius = self._plasma.minor_radius
-        self.elongation = self._plasma.elongation
-        self.triangularity = self._plasma.triangularity
-
-        self.shapes_and_components.append(self._plasma)
 
     def _make_outboard_blanket(self):
 

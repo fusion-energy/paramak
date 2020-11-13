@@ -195,11 +195,12 @@ class test_Plasma(unittest.TestCase):
         assert Path("plasma.stp").exists()
         os.system("rm plasma.stp")
 
-    def test_plasma_relative_volume(self):
-        """Creates plasmas using the Plasma parametric component and checks that
-        the relative volumes of the solids created are correct"""
+    # TODO: fix issue #435
+    # def test_plasma_relative_volume(self):
+    #     """Creates plasmas using the Plasma parametric component and checks that
+    #     the relative volumes of the solids created are correct"""
 
-        test_plasma = paramak.Plasma()
-        test_plasma_volume = test_plasma.volume
-        test_plasma.rotation_angle = 180
-        assert test_plasma.volume == pytest.approx(test_plasma_volume * 0.5)
+    #     test_plasma = paramak.Plasma()
+    #     test_plasma_volume = test_plasma.volume
+    #     test_plasma.rotation_angle = 180
+    #     assert test_plasma.volume == pytest.approx(test_plasma_volume * 0.5)
