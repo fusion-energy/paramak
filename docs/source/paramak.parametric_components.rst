@@ -489,7 +489,7 @@ CoolantChannelRingStraight()
 .. |CoolantChannelRingStraightsvg| image:: https://user-images.githubusercontent.com/56687624/99048848-ff5f8a80-258d-11eb-9073-123185d7a4fb.png
    :width: 230
 .. |CoolantChannelRingStraightstp| image:: https://user-images.githubusercontent.com/56687624/99049922-574ac100-258f-11eb-8cb9-a57cef2b8086.png
-   :width: 170
+   :width: 100
 
 .. automodule:: paramak.parametric_components.coolant_channel_ring_straight
    :members:
@@ -505,7 +505,7 @@ CoolantChannelRingCurved()
 .. |CoolantChannelRingCurvedsvg| image:: https://user-images.githubusercontent.com/56687624/99048853-0090b780-258e-11eb-862e-763f7a0f7ec6.png
    :width: 230
 .. |CoolantChannelRingCurvedstp| image:: https://user-images.githubusercontent.com/56687624/99049900-4f8b1c80-258f-11eb-81be-bc101e2168e2.png
-   :width: 170
+   :width: 100
 
 .. automodule:: paramak.parametric_components.coolant_channel_ring_curved
    :members:
