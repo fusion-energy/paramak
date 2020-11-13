@@ -240,7 +240,7 @@ def get_hash(shape):
     hash_object = blake2b()
     shape_dict = dict(shape.__dict__)
 
-    keys_to_ignore = ["_solid", "_hash_value"]
+    keys_to_ignore = ["_solid", "_hash_value", "_points", "_points_hash_value"]
 
     for key in keys_to_ignore:
         if key in shape_dict.keys():
