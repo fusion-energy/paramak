@@ -373,6 +373,7 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
+            stl_filename="firstwall.stl",
             cut=center_column_cutter
         )
 
@@ -396,6 +397,7 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             material_tag="blanket_mat",
             stp_filename="blanket.stp",
+            stl_filename="blanket.stl",
             cut=center_column_cutter)
 
         self._blanket_rear_wall = paramak.BlanketFP(
@@ -423,6 +425,7 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
+            stl_filename="blanket_rear_wall.stl",
             cut=center_column_cutter)
 
     def _make_divertor(self):
