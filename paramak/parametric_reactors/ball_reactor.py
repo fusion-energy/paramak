@@ -127,22 +127,6 @@ class BallReactor(paramak.Reactor):
         self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
 
-        self.shapes_and_components = []
-
-        self.reactor_hash_value = None
-
-    @property
-    def shapes_and_components(self):
-        ignored_keys = ["reactor_hash_value"]
-        if get_hash(self, ignored_keys) != self.reactor_hash_value:
-            self.create_solids()
-            self.reactor_hash_value = get_hash(self, ignored_keys)
-        return self._shapes_and_components
-
-    @shapes_and_components.setter
-    def shapes_and_components(self, value):
-        self._shapes_and_components = value
-
     @property
     def pf_coil_radial_thicknesses(self):
         return self._pf_coil_radial_thicknesses
@@ -170,7 +154,7 @@ class BallReactor(paramak.Reactor):
               A list of CadQuery solids: A list of 3D solid volumes
 
         """
-
+        print('coucoucoucoucou')
         self._shapes_and_components = []
 
         self._rotation_angle_check()

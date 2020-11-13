@@ -139,7 +139,7 @@ class SubmersionTokamak(paramak.Reactor):
 
     @property
     def shapes_and_components(self):
-        ignored_keys = ["reactor_hash_value"]
+        ignored_keys = ["_reactor_hash_value"]
         if get_hash(self, ignored_keys) != self.reactor_hash_value:
             self.create_solids()
             self.reactor_hash_value = get_hash(self, ignored_keys)
