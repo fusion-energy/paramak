@@ -5,7 +5,7 @@ import cadquery as cq
 
 import paramak
 
-from paramak.utils import get_reactor_hash
+from paramak.utils import get_hash
 
 
 class SubmersionTokamak(paramak.Reactor):
@@ -139,8 +139,10 @@ class SubmersionTokamak(paramak.Reactor):
 
     @property
     def shapes_and_components(self):
-        if get_reactor_hash(self) != self.reactor_hash_value:
+        ignored_keys = ["reactor_hash_value"]
+        if get_hash(self, ignored_keys) != self.reactor_hash_value:
             self.create_solids()
+            self.reactor_hash_value = get_hash(self, ignored_keys)
         return self._shapes_and_components
 
     @shapes_and_components.setter
@@ -168,8 +170,6 @@ class SubmersionTokamak(paramak.Reactor):
         self._make_outboard_blanket()
         self._make_supports()
         self._make_component_cuts()
-
-        self.reactor_hash_value = get_reactor_hash(self)
 
     def _rotation_angle_check(self):
 

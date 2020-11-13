@@ -3,7 +3,7 @@ import warnings
 
 import paramak
 
-from paramak.utils import get_reactor_hash
+from paramak.utils import get_hash
 
 
 class BallReactor(paramak.Reactor):
@@ -133,8 +133,10 @@ class BallReactor(paramak.Reactor):
 
     @property
     def shapes_and_components(self):
-        if get_reactor_hash(self) != self.reactor_hash_value:
+        ignored_keys = ["reactor_hash_value"]
+        if get_hash(self, ignored_keys) != self.reactor_hash_value:
             self.create_solids()
+            self.reactor_hash_value = get_hash(self, ignored_keys)
         return self._shapes_and_components
 
     @shapes_and_components.setter
@@ -180,8 +182,6 @@ class BallReactor(paramak.Reactor):
         self._make_blankets_layers()
         self._make_divertor()
         self._make_component_cuts()
-
-        self.reactor_hash_value = get_reactor_hash(self)
 
     def _rotation_angle_check(self):
 

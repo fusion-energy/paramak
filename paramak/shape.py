@@ -115,8 +115,12 @@ class Shape:
     def solid(self):
         """The CadQuery solid of the 3d object. Returns a CadQuery workplane
         or CadQuery Compound"""
-        if get_hash(self) != self.hash_value:
+
+        ignored_keys = ["_solid", "_hash_value"]
+        if get_hash(self, ignored_keys) != self.hash_value:
             self.create_solid()
+            self.hash_value = get_hash(self, ignored_keys)
+
         return self._solid
 
     @solid.setter
@@ -331,10 +335,11 @@ class Shape:
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
+        ignored_keys = ["_points", "_points_hash_value"]
         if hasattr(self, 'find_points') and \
-                self.points_hash_value != get_hash(self):
+                self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
-            self.points_hash_value = get_hash(self)
+            self.points_hash_value = get_hash(self, ignored_keys)
 
         return self._points
 
@@ -1000,8 +1005,6 @@ class Shape:
         # If an intersect is provided then perform a boolean intersect
         if self.union is not None:
             solid = union_solid(solid, self.union)
-
-        self.hash_value = get_hash(self)
 
         return solid
 
