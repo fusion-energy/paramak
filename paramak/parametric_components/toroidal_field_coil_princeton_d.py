@@ -64,7 +64,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
 
     @property
     def inner_points(self):
-        self.find_points()
+        self.points
         return self._inner_points
 
     @inner_points.setter
@@ -73,7 +73,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
 
     @property
     def outer_points(self):
-        self.find_points()
+        self.points
         return self._outer_points
 
     @outer_points.setter
