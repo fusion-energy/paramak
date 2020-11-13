@@ -478,3 +478,35 @@ VacuumVessel()
 .. automodule:: paramak.parametric_components.vacuum_vessel
    :members:
    :show-inheritance:
+
+CoolantChannelRingStraight()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|CoolantChannelRingStraightallstp| |CoolantChannelRingStraightsvg| |CoolantChannelRingStraightstp|
+
+.. |CoolantChannelRingStraightallstp| image:: https://user-images.githubusercontent.com/56687624/97892655-34671400-1d28-11eb-8051-5c6411678182.png
+   :width: 200
+.. |CoolantChannelRingStraightsvg| image:: https://user-images.githubusercontent.com/56687624/97979546-46e45a80-1dc7-11eb-8895-0b3ba217d876.png
+   :width: 230
+.. |CoolantChannelRingStraightstp| image:: https://user-images.githubusercontent.com/56687624/97979975-fb7e7c00-1dc7-11eb-8ae6-35451470f048.png
+   :width: 170
+
+.. automodule:: paramak.parametric_components.coolant_channel_ring_straight
+   :members:
+   :show-inheritance:
+
+CoolantChannelRingCurved()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|CoolantChannelRingCurvedallstp| |CoolantChannelRingCurvedsvg| |CoolantChannelRingCurvedstp|
+
+.. |CoolantChannelRingCurvedallstp| image:: https://user-images.githubusercontent.com/56687624/97892650-3335e700-1d28-11eb-8b59-96da81bc159e.png
+   :width: 200
+.. |CoolantChannelRingCurvedsvg| image:: https://user-images.githubusercontent.com/56687624/97979551-48158780-1dc7-11eb-9680-4cfa5661818d.png
+   :width: 230
+.. |CoolantChannelRingCurvedstp| image:: https://user-images.githubusercontent.com/56687624/97979979-fcafa900-1dc7-11eb-9c13-f8482eb9d9c2.png
+   :width: 170
+
+.. automodule:: paramak.parametric_components.coolant_channel_ring_curved
+   :members:
+   :show-inheritance:
