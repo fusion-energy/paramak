@@ -334,6 +334,7 @@ class Shape:
         if hasattr(self, 'find_points') and \
                 self.points_hash_value != get_hash(self):
             self.find_points()
+            self.points_hash_value = get_hash(self)
 
         return self._points
 
