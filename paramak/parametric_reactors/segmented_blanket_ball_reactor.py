@@ -180,13 +180,16 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             cut=[center_column_cutter, thick_cutter])
 
         if self.blanket_fillet_radius != 0:
-            x = self.major_radius+1 # tried firstwall start radius here already
-            front_face_b = self._blanket.solid.faces(cq.NearestToPointSelector((0, x, 0)))
-            front_edge_b = front_face_b.edges(cq.NearestToPointSelector((0, x, 0)))
+            x = self.major_radius + 1  # tried firstwall start radius here already
+            front_face_b = self._blanket.solid.faces(
+                cq.NearestToPointSelector((0, x, 0)))
+            front_edge_b = front_face_b.edges(
+                cq.NearestToPointSelector((0, x, 0)))
             front_edge_length_b = front_edge_b.val().Length()
             self._blanket.solid = self._blanket.solid.edges(
-                paramak.EdgeLengthSelector(front_edge_length_b)).fillet(self.blanket_fillet_radius)
-        
+                paramak.EdgeLengthSelector(front_edge_length_b)).fillet(
+                self.blanket_fillet_radius)
+
         # TODO this segfaults at the moment but works as an opperation on the
         # reactor after construction in jupyter
         # tried different x values and (0, x, 0)
@@ -207,7 +210,6 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             self._blanket.solid)
 
         self._firstwall = self._blanket_envelope
-        
 
         self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
