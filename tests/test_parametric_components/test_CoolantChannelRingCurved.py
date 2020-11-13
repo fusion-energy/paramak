@@ -44,8 +44,40 @@ class test_CoolantChannelRingCurved(unittest.TestCase):
             mid_offset=-20,
             number_of_coolant_channels=8
         )
-
         assert test_shape_1.volume == pytest.approx(test_shape_2.volume * 0.5)
 
-        # needs similar test for mid_offset (volume should increase with
-        # mid_offset)
+        test_shape_1 = paramak.CoolantChannelRingCurved(
+            height=200,
+            channel_radius=10,
+            ring_radius=70,
+            mid_offset=-20,
+            number_of_coolant_channels=8
+        )
+
+        test_shape_2 = paramak.CoolantChannelRingCurved(
+            height=200,
+            channel_radius=10,
+            ring_radius=70,
+            mid_offset=-30,
+            number_of_coolant_channels=8
+        )
+        assert test_shape_1.volume > test_shape_2.volume
+
+        test_shape_1 = paramak.CoolantChannelRingCurved(
+            height=200,
+            channel_radius=10,
+            ring_radius=70,
+            mid_offset=-20,
+            number_of_coolant_channels=8,
+            force_cross_section=True,
+        )
+
+        test_shape_2 = paramak.CoolantChannelRingCurved(
+            height=200,
+            channel_radius=10,
+            ring_radius=70,
+            mid_offset=-30,
+            number_of_coolant_channels=8,
+            force_cross_section=True,
+        )
+        assert test_shape_1.volume < test_shape_2.volume
