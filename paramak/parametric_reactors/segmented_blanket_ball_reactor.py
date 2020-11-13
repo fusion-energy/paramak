@@ -57,13 +57,13 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         number_of_tf_coils,
         gap_between_blankets,
         number_of_blanket_segments,
-        # TODO #blanket_fillet_radius,
+        blanket_fillet_radius=10,
         **kwargs
     ):
 
         self.gap_between_blankets = gap_between_blankets
         self.number_of_blanket_segments = number_of_blanket_segments
-        # TODO #self.blanket_fillet_radius = blanket_fillet_radius
+        self.blanket_fillet_radius = blanket_fillet_radius
 
         super().__init__(
             inner_bore_radial_thickness=inner_bore_radial_thickness,
@@ -124,7 +124,8 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         )
 
         thin_cutter = paramak.BlanketCutterStar(
-            distance=self.gap_between_blankets, azimuth_placement_angle=np.linspace(
+            distance=self.gap_between_blankets,
+            azimuth_placement_angle=np.linspace(
                 0, 360, self.number_of_blanket_segments, endpoint=False))
 
         self._blanket_envelope = paramak.BlanketFP(
@@ -137,8 +138,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
                 self.outer_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
                 self.inner_plasma_gap_radial_thickness],
-            start_angle=-
-            179,
+            start_angle=-179,
             stop_angle=179,
             rotation_angle=self.rotation_angle,
             material_tag="firstwall_mat",

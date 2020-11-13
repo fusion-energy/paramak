@@ -86,6 +86,7 @@ class SubmersionTokamak(paramak.Reactor):
         pf_coil_vertical_thicknesses=None,
         pf_coil_radial_thicknesses=None,
         pf_coil_to_tf_coil_radial_gap=None,
+        pf_coil_case_thickness=10,
     ):
 
         super().__init__([])
@@ -112,6 +113,7 @@ class SubmersionTokamak(paramak.Reactor):
         self.triangularity = triangularity
         self.tf_coil_to_rear_blanket_radial_gap = tf_coil_to_rear_blanket_radial_gap
         self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
+        self.pf_coil_case_thickness = pf_coil_case_thickness
         self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
 
@@ -333,6 +335,10 @@ class SubmersionTokamak(paramak.Reactor):
                 self._number_of_pf_coils + 1
             )
 
+            if not isinstance(self.pf_coil_case_thickness, list):
+                self.pf_coil_case_thickness = [
+                    self.pf_coil_case_thickness] * self._number_of_pf_coils
+
             self._pf_coils_xy_values = []
             # adds in coils with equal spacing strategy, should be updated to
             # allow user positions
@@ -346,6 +352,7 @@ class SubmersionTokamak(paramak.Reactor):
                     self._outboard_tf_coil_end_radius
                     + self.pf_coil_to_tf_coil_radial_gap
                     + 0.5 * self.pf_coil_radial_thicknesses[i]
+                    + self.pf_coil_case_thickness[i]
                 )
                 self._pf_coils_xy_values.append((x_value, y_value))
 
@@ -583,3 +590,15 @@ class SubmersionTokamak(paramak.Reactor):
                 )
 
                 self._shapes_and_components.append(self._pf_coil)
+
+                self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
+                    pf_coils=self._pf_coil,
+                    casing_thicknesses=self.pf_coil_case_thickness,
+                    rotation_angle=self.rotation_angle,
+                    stp_filename='pf_coil_cases.stp',
+                    stl_filename='pf_coil_cases.stl',
+                    name="pf_coil_case",
+                    material_tag="pf_coil_case_mat",
+                )
+
+                self._shapes_and_components.append(self._pf_coils_casing)

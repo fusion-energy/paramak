@@ -60,7 +60,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             support_position="upper",
             rotation_angle=359,
         )
-        assert len(test_reactor.shapes_and_components) == 10
+        assert len(test_reactor.shapes_and_components) == 11
 
     def test_SingleNullSubmersionTokamak_divertor_lower_support_lower(self):
         """creates a single null submersion reactor with lower supports and
@@ -212,7 +212,10 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-                "_pf_coil"]:
+            "_pf_coils_casing",
+            "_pf_coil",
+            "_pf_coils_casing",
+        ]:
             assert key not in test_reactor.__dict__.keys()
         assert test_reactor.shapes_and_components is not None
         for key in [
@@ -229,9 +232,12 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-                "_pf_coil"]:
+            "_pf_coils_casing",
+            "_pf_coils_casing",
+            "_pf_coil",
+        ]:
             assert key in test_reactor.__dict__.keys()
-        assert len(test_reactor.shapes_and_components) == 10
+        assert len(test_reactor.shapes_and_components) == 11
         assert test_reactor.reactor_hash_value is not None
         initial_hash_value = test_reactor.reactor_hash_value
         test_reactor.rotation_angle = 270
