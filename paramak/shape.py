@@ -109,6 +109,7 @@ class Shape:
         self.render_mesh = None
         # self.volume = None
         self.hash_value = None
+        self.points_hash_value = None
 
     @property
     def solid(self):
@@ -248,6 +249,14 @@ class Shape:
         self._hash_value = value
 
     @property
+    def points_hash_value(self):
+        return self._points_hash_value
+
+    @points_hash_value.setter
+    def points_hash_value(self, value):
+        self._points_hash_value = value
+
+    @property
     def color(self):
         return self._color
 
@@ -322,7 +331,8 @@ class Shape:
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
-        if hasattr(self, 'find_points'):
+        if hasattr(self, 'find_points') and \
+                self.points_hash_value != get_hash(self):
             self.find_points()
 
         return self._points
