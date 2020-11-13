@@ -18,7 +18,8 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
             channel_radius=10,
             ring_radius=70,
             number_of_coolant_channels=8,
-            workplane="XY"
+            workplane="XY",
+            rotation_axis="Z"
         )
 
         assert test_shape.solid is not None
@@ -33,7 +34,8 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
             channel_radius=10,
             ring_radius=70,
             number_of_coolant_channels=1,
-            workplane="XY"
+            workplane="XY",
+            rotation_axis="Z"
         )
 
         assert test_shape.area == pytest.approx(
@@ -59,7 +61,8 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
             channel_radius=10,
             ring_radius=70,
             number_of_coolant_channels=8,
-            workplane="XY"
+            workplane="XY",
+            rotation_axis="Z"
         )
         assert test_shape.volume == pytest.approx(
             math.pi * (10 ** 2) * 200 * 8)
@@ -69,7 +72,8 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
             channel_radius=20,
             ring_radius=70,
             number_of_coolant_channels=5,
-            workplane="XY"
+            workplane="XY",
+            rotation_axis="Z"
         )
         assert test_shape.volume == pytest.approx(
             math.pi * (20 ** 2) * 100 * 5)
