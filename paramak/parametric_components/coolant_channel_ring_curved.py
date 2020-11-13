@@ -19,6 +19,8 @@ class CoolantChannelRingCurved(SweepCircleShape):
         rotation_axis (str, optional): azimuthal axis around which the separate
             coolant channels are placed. Default calculated by workplane and
             path_workplane.
+        force_cross_section (bool, optional): forces coolant channels to have a
+            more constant cross-section along their curve. Defaults to False.
         stp_filename (str, optional): Defaults to
             "CoolantChannelRingCurved.stp".
         stl_filename (str, optional): Defaults to
