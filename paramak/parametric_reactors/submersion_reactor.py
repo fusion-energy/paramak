@@ -148,6 +148,26 @@ class SubmersionTokamak(paramak.Reactor):
     def shapes_and_components(self, value):
         self._shapes_and_components = value
 
+    @property
+    def pf_coil_radial_thicknesses(self):
+        return self._pf_coil_radial_thicknesses
+
+    @pf_coil_radial_thicknesses.setter
+    def pf_coil_radial_thicknesses(self, value):
+        if not isinstance(value, list) and value is not None:
+            raise ValueError("pf_coil_radial_thicknesses must be a list")
+        self._pf_coil_radial_thicknesses = value
+
+    @property
+    def pf_coil_vertical_thicknesses(self):
+        return self._pf_coil_vertical_thicknesses
+
+    @pf_coil_vertical_thicknesses.setter
+    def pf_coil_vertical_thicknesses(self, value):
+        if not isinstance(value, list) and value is not None:
+            raise ValueError("pf_coil_vertical_thicknesses must be a list")
+        self._pf_coil_vertical_thicknesses = value
+
     def create_solids(self):
         """Creates a 3d solids for each component.
 
