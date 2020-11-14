@@ -1,6 +1,7 @@
 """
-This example creates a submersion reactor using the SubmersionTokamak
-parametric reactor. By default the script saves stp, stl, html and svg files.
+This example creates a single null submersion reactor using the
+SubmersionTokamak parametric reactor. By default the script saves stp, stl,
+html and svg files.
 """
 
 import paramak

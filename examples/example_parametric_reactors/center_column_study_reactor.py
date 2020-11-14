@@ -1,6 +1,7 @@
 """
-This example creates a center column study reactor using a parametric reactor
-Adds some TF coils to the reactor
+This example creates a center column study reactor using a parametric reactor.
+Adds some TF coils to the reactor. By default the script saves stp, stl,
+html and svg files.
 """
 
 import paramak
