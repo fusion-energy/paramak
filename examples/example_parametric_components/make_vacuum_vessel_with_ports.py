@@ -11,7 +11,7 @@ import numpy as np
 def main():
 
     number_of_ports_in_360_degrees = 12
-    angles_for_ports = np.linspace(0,360, number_of_ports_in_360_degrees)
+    angles_for_ports = np.linspace(0, 360, number_of_ports_in_360_degrees)
 
     # makes the upper row of ports
     rotated_ports = paramak.PortCutterRotated(
