@@ -8,6 +8,7 @@ done in the SegmentedBlanketBallReactor reactor class.
 import paramak
 import cadquery as cq
 
+
 def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
 
     my_reactor = paramak.SegmentedBlanketBallReactor(
@@ -38,11 +39,13 @@ def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
 
     # finds the correct edges to fillet
     x = my_reactor.major_radius
-    front_face = my_reactor._blanket_envelope.solid.faces(cq.NearestToPointSelector((x, 0, 0)))
+    front_face = my_reactor._blanket_envelope.solid.faces(
+        cq.NearestToPointSelector((x, 0, 0)))
     front_edge = front_face.edges(cq.NearestToPointSelector((x, 0, 0)))
     front_edge_length = front_edge.val().Length()
     my_reactor._blanket_envelope.solid = my_reactor._blanket_envelope.solid.edges(
-        paramak.EdgeLengthSelector(front_edge_length)).fillet(my_reactor.blanket_fillet_radius)
+        paramak.EdgeLengthSelector(front_edge_length)).fillet(
+        my_reactor.blanket_fillet_radius)
 
     # cuts away the breeder zone
     my_reactor._blanket_envelope.solid = my_reactor._blanket_envelope.solid.cut(
@@ -53,7 +56,8 @@ def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
     if 'stp' in outputs:
         my_reactor.export_stp(output_folder='SegmentedBlanketBallReactor')
     if 'neutronics' in outputs:
-        my_reactor.export_neutronics_description('SegmentedBlanketBallReactor/manifest.json')
+        my_reactor.export_neutronics_description(
+            'SegmentedBlanketBallReactor/manifest.json')
     if 'stl' in outputs:
         my_reactor.export_stl(output_folder='SegmentedBlanketBallReactor')
     if 'html' in outputs:

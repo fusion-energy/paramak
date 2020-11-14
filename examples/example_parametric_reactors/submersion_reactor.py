@@ -36,7 +36,8 @@ def make_submersion(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
     if 'stp' in outputs:
         my_reactor.export_stp(output_folder='SubmersionTokamak')
     if 'neutronics' in outputs:
-        my_reactor.export_neutronics_description('SubmersionTokamak/manifest.json')
+        my_reactor.export_neutronics_description(
+            'SubmersionTokamak/manifest.json')
     if 'stl' in outputs:
         my_reactor.export_stl(output_folder='SubmersionTokamak')
     if 'html' in outputs:

@@ -5,7 +5,14 @@ Adds some TF coils to the reactor
 
 import paramak
 
-def make_center_column_study_reactor(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
+
+def make_center_column_study_reactor(
+    outputs=[
+        'stp',
+        'neutronics',
+        'svg',
+        'stl',
+        'html']):
 
     my_reactor = paramak.CenterColumnStudyReactor(
         inner_bore_radial_thickness=20,
@@ -25,8 +32,8 @@ def make_center_column_study_reactor(outputs=['stp', 'neutronics', 'svg', 'stl',
 
     # adding in some TF coils
     tf_magnet = paramak.ToroidalFieldCoilPrincetonD(
-        R1=20+50,
-        R2=20+50+50+80+200+90+100+20,
+        R1=20 + 50,
+        R2=20 + 50 + 50 + 80 + 200 + 90 + 100 + 20,
         thickness=50,
         distance=50,
         number_of_coils=12,
@@ -38,7 +45,8 @@ def make_center_column_study_reactor(outputs=['stp', 'neutronics', 'svg', 'stl',
     if 'stp' in outputs:
         my_reactor.export_stp(output_folder='CenterColumnStudyReactor')
     if 'neutronics' in outputs:
-        my_reactor.export_neutronics_description('CenterColumnStudyReactor/manifest.json')
+        my_reactor.export_neutronics_description(
+            'CenterColumnStudyReactor/manifest.json')
     if 'stl' in outputs:
         my_reactor.export_stl(output_folder='CenterColumnStudyReactor')
     if 'html' in outputs:
