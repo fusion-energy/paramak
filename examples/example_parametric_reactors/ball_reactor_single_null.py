@@ -35,7 +35,8 @@ def make_ball_reactor_sn(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
     if 'stp' in outputs:
         my_reactor.export_stp(output_folder='BallReactor_sn')
     if 'neutronics' in outputs:
-        my_reactor.export_neutronics_description('BallReactor_sn/manifest.json')
+        my_reactor.export_neutronics_description(
+            'BallReactor_sn/manifest.json')
     if 'stl' in outputs:
         my_reactor.export_stl(output_folder='BallReactor_sn')
     if 'html' in outputs:
