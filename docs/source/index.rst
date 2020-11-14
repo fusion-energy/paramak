@@ -139,6 +139,12 @@ Parametric Reactors build upon these two lower level objects to create an
 entire reactor model from input parameters. Linkage between the componets is
 encoded in each parametric Ractor design.
 
+The different parametric reactor families are shown below.
+
+.. image:: https://user-images.githubusercontent.com/8583900/99137324-fddfa200-2621-11eb-9063-f5f7f60ddd8d.png
+   :width: 713
+   :align: center
+
 The different parametric Components are shown below.
 
 .. image:: https://user-images.githubusercontent.com/8583900/98823600-387eea00-242a-11eb-9fe3-df65aaa3dd21.png

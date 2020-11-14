@@ -3,6 +3,10 @@ Parametric Reactors
 
 These are the current reactor designs that can be created using the Paramak.
 
+.. image:: https://user-images.githubusercontent.com/8583900/99137324-fddfa200-2621-11eb-9063-f5f7f60ddd8d.png
+   :width: 713
+   :align: center
+
 BallReactor()
 ^^^^^^^^^^^^^
 
