@@ -29,7 +29,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             rotation_angle=359,
         )
 
-    def test_SingleNullSubmersionTokamak_with_pf_and_tf_coils(self):
+    def test_with_pf_and_tf_coils(self):
         """creates a single null submersion reactor with pf and tf coils using
         the SingleNullSubmersionTokamak parametric reactor and checks that the
         correct number of components are created"""
@@ -62,7 +62,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         )
         assert len(test_reactor.shapes_and_components) == 11
 
-    def test_SingleNullSubmersionTokamak_divertor_lower_support_lower(self):
+    def test_divertor_lower_support_lower(self):
         """creates a single null submersion reactor with lower supports and
         divertor using the SingleNullSubmersionTokamak parametric reactor and
         checks that the correct number of components are created"""
@@ -89,7 +89,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         )
         assert len(test_reactor.shapes_and_components) == 8
 
-    def test_SingleNullSubmersionTokamak_divertor_upper_support_upper(self):
+    def test_divertor_upper_support_upper(self):
         """creates a single null submersion reactor with upper supports and
         divertor using the SingleNullSubmersionTokamak parametric reactor and
         checks that the correct number of components are created"""
@@ -97,7 +97,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         test_reactor = self.SingleNullSubmersionTokamak
         assert len(test_reactor.shapes_and_components) == 8
 
-    def test_SingleNullSubmersionTokamak_rotation_angle_impacts_volume(self):
+    def test_rotation_angle_impacts_volume(self):
         """creates a single null submersion reactor with a rotation angle of
         90 and another reactor with a rotation angle of 180. Then checks the
         volumes of all the components is double in the 180 reactor"""
@@ -161,7 +161,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
 
         self.assertRaises(ValueError, invalid_support_position)
 
-    def test_SingleNullSubmersionTokamak_hash_value(self):
+    def test_hash_value(self):
         """Creates a single null submersion reactor and checks that all shapes in the reactor
         are created when .shapes_and_components is first called. Checks that when
         .shapes_and_components is called again with no changes to the reactor, the shapes in
