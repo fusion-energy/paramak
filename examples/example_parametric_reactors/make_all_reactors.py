@@ -12,11 +12,11 @@ from submersion_reactor import make_submersion
 
 def main(outputs=['stp']):
 
-    # make_submersion(outputs=outputs)
-    # make_submersion_sn(outputs=outputs)
-    # make_center_column_study_reactor(outputs=outputs)
-    # make_ball_reactor(outputs=outputs)
-    # make_ball_reactor_sn(outputs=outputs)
+    make_submersion(outputs=outputs)
+    make_submersion_sn(outputs=outputs)
+    make_center_column_study_reactor(outputs=outputs)
+    make_ball_reactor(outputs=outputs)
+    make_ball_reactor_sn(outputs=outputs)
     make_ball_reactor_seg(outputs=outputs)
 
 
