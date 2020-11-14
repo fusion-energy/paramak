@@ -1,4 +1,8 @@
-name: dockerhub-publish
+# This yml file will trigger a Github Action on pushes to the develop branch.
+# This Action will build and upload a Docker image to Dockerhub
+# https://github.com/marketplace/actions/publish-docker
+
+name: dockerhub-publish-dev
 
 on:
   push:

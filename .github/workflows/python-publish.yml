@@ -1,5 +1,7 @@
-# This workflows will upload a Python Package using Twine when a release is created
-# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+# This yml file will trigger a Github Actions event that builds and upload the
+# Python package to PiPy. This makes use of Twine and is triggered when a push
+# to the main branch occures. For more information see:
+# https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
 
 name: Upload Python Package
 
