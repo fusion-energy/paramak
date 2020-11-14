@@ -355,6 +355,30 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.CoolantChannelRingStraight(
+        height=200,
+        channel_radius=10,
+        ring_radius=70,
+        number_of_coolant_channels=8,
+        workplane="XY",
+        rotation_axis="Z",
+        stp_filename="coolant_channel_ring_straight.stp",
+    )
+    all_components.append(component)
+
+    component = paramak.CoolantChannelRingCurved(
+        height=200,
+        channel_radius=10,
+        ring_radius=70,
+        mid_offset=-20,
+        number_of_coolant_channels=8,
+        workplane="XY",
+        path_workplane="XZ",
+        stp_filename="coolant_channel_ring_curved.stp",
+        force_cross_section=True
+    )
+    all_components.append(component)
+
     return all_components
 
 
