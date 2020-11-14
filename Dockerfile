@@ -4,22 +4,18 @@
 # Run with the follwoing command
 # sudo docker run -it paramak
 
-# We will use Ubuntu for our image
+# test with the folowing command
+# sudo docker run --rm paramak pytest /tests
+
 FROM continuumio/miniconda3
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-RUN useradd -ms /bin/bash cq
-
-WORKDIR /home/cq/
-
-USER root
+RUN apt-get --yes update
 
 RUN apt-get install -y libgl1-mesa-glx
 
-RUN conda install -c cadquery -c conda-forge cadquery=master
-
-USER cq
+RUN conda install -c conda-forge -c cadquery cadquery=2
 
 # Copy over the source code
 COPY paramak paramak/
