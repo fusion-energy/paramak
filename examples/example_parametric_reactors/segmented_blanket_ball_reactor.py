@@ -33,7 +33,7 @@ def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
         outboard_tf_coil_radial_thickness=100,
         outboard_tf_coil_poloidal_thickness=50,
         gap_between_blankets=30,
-        number_of_blanket_segments=14,
+        number_of_blanket_segments=15,
         blanket_fillet_radius=15,
     )
 
