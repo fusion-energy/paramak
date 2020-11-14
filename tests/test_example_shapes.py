@@ -46,7 +46,6 @@ class test_object_properties(unittest.TestCase):
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
-
     def test_make_can_reactor_from_parameters(self):
         """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
