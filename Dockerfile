@@ -21,7 +21,6 @@ RUN apt-get --yes update
 RUN apt-get install -y libgl1-mesa-glx
 
 RUN conda install -c conda-forge -c cadquery cadquery=2 && \
-    nomkl && \
     conda clean -afy && \
     find /opt/conda/ -follow -type f -name '*.a' -delete && \
     find /opt/conda/ -follow -type f -name '*.pyc' -delete && \
