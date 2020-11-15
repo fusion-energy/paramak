@@ -21,10 +21,7 @@ RUN apt-get --yes update
 RUN apt-get install -y libgl1-mesa-glx
 
 RUN conda install -c conda-forge -c cadquery cadquery=2 && \
-    conda clean -afy && \
-    find /opt/conda/ -follow -type f -name '*.a' -delete && \
-    find /opt/conda/ -follow -type f -name '*.pyc' -delete && \
-    find /opt/conda/ -follow -type f -name '*.js.map' -delete
+    conda clean -afy
 
 # Copy over the source code
 COPY paramak paramak/
@@ -33,15 +30,7 @@ COPY README.md README.md
 
 RUN apt-get clean
 
-RUN pip install pytest-cov
-RUN pip install plotly
-RUN pip install scipy
-RUN pip install sympy
-RUN pip install numpy
-RUN pip install tqdm
-RUN pip install matplotlib
-RUN pip install plasmaboundaries
-
+# using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
 
 # Copy over the test folder
