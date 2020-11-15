@@ -122,24 +122,23 @@ class PoloidalSegments(RotateStraightShape):
             outer_point_1 = rotate(
                 self.center_point,
                 outer_point,
-                math.radians(current_angle))
+                math.radians(current_angle)
+            )
+
             outer_point_2 = rotate(
-                self.center_point, outer_point, math.radians(
-                    current_angle + angle_per_segment))
+                self.center_point,
+                outer_point,
+                math.radians(current_angle + angle_per_segment)
+            )
 
-            if outer_point_1[0] < 0:
-                m, c = coefficients_of_line_from_points(
-                    outer_point_1, self.center_point)
-                points.append((0, c))
-            else:
-                points.append(outer_point_1)
-
-            if outer_point_2[0] < 0:
-                m, c = coefficients_of_line_from_points(
-                    outer_point_2, self.center_point)
-                points.append((0, c))
-            else:
-                points.append(outer_point_2)
+            # if the point goes beyond the zero line then set to zero
+            for new_point in [outer_point_1, outer_point_2]:
+                if new_point[0] < 0:
+                    m, c = coefficients_of_line_from_points(
+                        new_point, self.center_point)
+                    points.append((0, c))
+                else:
+                    points.append(new_point)
 
             current_angle = current_angle + angle_per_segment
 
