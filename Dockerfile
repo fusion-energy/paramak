@@ -4,8 +4,15 @@
 # Run with the follwoing command
 # sudo docker run -it paramak
 
+<<<<<<< HEAD
 # Run with the following command
 # docker run -p 8888:8888 paramak
+=======
+# test with the folowing command
+# sudo docker run --rm paramak pytest /tests
+
+FROM continuumio/miniconda3
+>>>>>>> 3c9586dba7b40ec0a90b4835b2e34a4a144b80f0
 
 # test with the folowing command
 # sudo docker run --rm paramak pytest /tests
