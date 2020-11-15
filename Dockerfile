@@ -1,49 +1,49 @@
-# Build with the following command
-# sudo docker build -t paramak .
+# This docker image is available on dockerhub and can be downloaded using
+# docker pull ukaea/paramak
+# However the docker image can also be build locally with these commands
 
-# Run with the follwoing command
-# sudo docker run -it paramak
+# Build with the following command from within the base repository directory
+# sudo docker build -t ukaea/paramak .
 
-# Run with the following command
-# docker run -p 8888:8888 paramak
+# Run with the following command for terminal access
+# sudo docker run -it ukaea/paramak
+
+# Run with the following command for jupyter notebook interface
+# sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser"
 
 # test with the folowing command
-# sudo docker run --rm paramak pytest /tests
+# sudo docker run --rm ukaea/paramak pytest /tests
 
 FROM continuumio/miniconda3
-
-ENV PYTHONDONTWRITEBYTECODE=true
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
 RUN apt-get --yes update
 
-RUN apt-get install -y libgl1-mesa-glx
-RUN apt-get install -y libgl1-mesa-dev 
-RUN apt-get install -y libglu1-mesa-dev
-RUN apt-get install -y freeglut3-dev
-RUN apt-get install -y libosmesa6
-RUN apt-get install -y libosmesa6-dev
-RUN apt-get install -y libgles2-mesa-dev
+RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
+                       freeglut3-dev libosmesa6 libosmesa6-dev \
+                       libgles2-mesa-dev && \
+                       apt-get clean
+
+RUN useradd -ms /bin/bash newuser
 
 RUN conda install -c conda-forge -c cadquery cadquery=2 && \
+    conda install jupyter -y --quiet && \
     conda clean -afy
 
 # Copy over the source code
 COPY paramak paramak/
+COPY examples examples/
 COPY setup.py setup.py
+COPY requirements.txt requirements.txt
 COPY README.md README.md
+COPY tests tests/
 
-RUN apt-get clean
+# includes optional dependancies like neutronics_material_maker
+RUN pip install -r requirements.txt
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
 
-# Copy over the test folder
-COPY tests tests/
+WORKDIR examples
 
-WORKDIR paramak/examples
-
-RUN pip install neutronics-material-maker
-
-CMD ["/bin/bash"]
