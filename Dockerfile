@@ -42,7 +42,7 @@ RUN pip install tqdm
 RUN pip install matplotlib
 RUN pip install plasmaboundaries
 
-RUN pip install .
+RUN pip install . --verbose
 
 # Copy over the test folder
 COPY tests tests/
