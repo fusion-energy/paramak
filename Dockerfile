@@ -15,7 +15,7 @@ RUN apt-get --yes update
 
 RUN apt-get install -y libgl1-mesa-glx
 
-RUN conda install -c conda-forge -c cadquery cadquery=2
+RUN conda install -c conda-forge -c cadquery cadquery=2 && conda clean -afy
 
 # Copy over the source code
 COPY paramak paramak/
@@ -23,7 +23,7 @@ COPY setup.py setup.py
 COPY README.md README.md
 
 RUN apt-get clean
-RUN pip install .[neutronics]
+RUN pip install .
 
 # Copy over the test folder
 COPY tests tests/
