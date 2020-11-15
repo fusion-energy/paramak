@@ -19,6 +19,12 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 RUN apt-get --yes update
 
 RUN apt-get install -y libgl1-mesa-glx
+RUN apt-get install -y libgl1-mesa-dev 
+RUN apt-get install -y libglu1-mesa-dev
+RUN apt-get install -y freeglut3-dev
+RUN apt-get install -y libosmesa6
+RUN apt-get install -y libosmesa6-dev
+RUN apt-get install -y libgles2-mesa-dev
 
 RUN conda install -c conda-forge -c cadquery cadquery=2 && \
     conda clean -afy
@@ -37,5 +43,7 @@ RUN python setup.py install
 COPY tests tests/
 
 WORKDIR paramak/examples
+
+RUN pip install neutronics-material-maker
 
 CMD ["/bin/bash"]
