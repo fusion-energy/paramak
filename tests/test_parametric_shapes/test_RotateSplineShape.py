@@ -10,8 +10,8 @@ class test_object_properties(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = RotateSplineShape(
-            points = [(50, 0), (50, 20), (70, 80), (90, 50), (70, 0), 
-                (90, -50), (70, -80), (50, -20)])
+            points=[(50, 0), (50, 20), (70, 80), (90, 50), (70, 0),
+                    (90, -50), (70, -80), (50, -20)])
 
     def test_default_parameters(self):
         """Checks that the default parameters of a RotateSplineShape are correct."""

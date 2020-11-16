@@ -50,7 +50,8 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.area == pytest.approx(
             ((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * math.pi * (60 * 2) / 2), rel=0.01)
         assert len(self.test_shape.areas) == 3
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(math.pi * (10**2))) == 2
         assert self.test_shape.areas.count(pytest.approx(
             math.pi * (10 * 2) * math.pi * (60 * 2) / 2, rel=0.01)) == 1
 

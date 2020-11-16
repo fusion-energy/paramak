@@ -14,7 +14,7 @@ class test_object_properties(unittest.TestCase):
             points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
             path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
         )
-    
+
     def test_default_parameters(self):
         """Checks that the default parameters of a SweepStraightShape are correct."""
 
@@ -38,7 +38,7 @@ class test_object_properties(unittest.TestCase):
         are correct."""
 
         test_volume = self.test_shape.volume
-        self.test_shape.points=[(-20, 20), (20, 20), (20, -20), (-20, -20)]
+        self.test_shape.points = [(-20, 20), (20, 20), (20, -20), (-20, -20)]
         assert self.test_shape.volume == pytest.approx(test_volume * 4)
 
     def test_relative_shape_volume(self):
@@ -46,7 +46,7 @@ class test_object_properties(unittest.TestCase):
         are correct."""
 
         test_volume = self.test_shape.volume
-        self.test_shape.azimuth_placement_angle=[0, 90, 180, 270]
+        self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         assert self.test_shape.volume == pytest.approx(test_volume * 4)
 
     def test_force_cross_section(self):
@@ -54,7 +54,7 @@ class test_object_properties(unittest.TestCase):
         is created when force_cross_section = True."""
 
         self.test_shape.force_cross_section = True
-        
+
         assert self.test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(

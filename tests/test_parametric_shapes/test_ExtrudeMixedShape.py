@@ -12,10 +12,10 @@ class test_object_properties(unittest.TestCase):
     def setUp(self):
         self.test_shape = ExtrudeMixedShape(
             points=[(50, 0, "straight"), (50, 50, "spline"), (60, 70, "spline"),
-                (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")],
+                    (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")],
             distance=50
         )
-    
+
     def test_default_parameters(self):
         """Checks that the default parameters of an ExtrudeMixedShape are correct."""
 
@@ -23,12 +23,12 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.stp_filename == "ExtrudeMixedShape.stp"
         assert self.test_shape.stl_filename == "ExtrudeMixedShape.stl"
         assert self.test_shape.azimuth_placement_angle == 0
-    
+
     def test_absolute_shape_volume(self):
         """Creates an ExtrudeMixedShape and checks that the volume is correct."""
 
         assert self.test_shape.volume > 20 * 20 * 30
-    
+
     def test_relative_shape_volume(self):
         """Creates two ExtrudeMixedShapes and checks that their relative volumes
         are correct."""
@@ -36,12 +36,13 @@ class test_object_properties(unittest.TestCase):
         test_volume = self.test_shape.volume
         self.test_shape.azimuth_placement_angle = [0, 180]
 
-        assert self.test_shape.volume == pytest.approx(test_volume * 2, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 2, rel=0.01)
 
     def test_shape_face_areas(self):
         """Creates an ExtrudeMixedShape and checks that the face areas are expected."""
 
-        self.test_shape.extrude_both=False
+        self.test_shape.extrude_both = False
         assert len(self.test_shape.areas) == 6
         assert len(set([round(i) for i in self.test_shape.areas])) == 5
 
@@ -117,7 +118,8 @@ class test_object_properties(unittest.TestCase):
         self.test_shape.azimuth_placement_angle = [45, 135, 225, 315]
         test_volume = self.test_shape.volume
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 0.5, rel=0.01)
 
     # def test_extrude_both(self):
     #     """test that the volume with extrude_both=True is twice as when

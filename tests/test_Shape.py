@@ -20,7 +20,7 @@ class test_object_properties(unittest.TestCase):
         changed to a single value or iterable."""
 
         test_shape = paramak.Shape()
-        
+
         assert test_shape.azimuth_placement_angle == 0
         test_shape.azimuth_placement_angle = 180
         assert test_shape.azimuth_placement_angle == 180
@@ -28,7 +28,7 @@ class test_object_properties(unittest.TestCase):
         assert test_shape.azimuth_placement_angle == [0, 90, 180, 270]
 
     def test_incorrect_color_values(self):
-        """Checks that an error is raised when the color of a shape is 
+        """Checks that an error is raised when the color of a shape is
         defined as an invalid string."""
 
         def incorrect_color_string():

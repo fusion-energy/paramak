@@ -15,7 +15,7 @@ class test_object_properties(unittest.TestCase):
             radius=10,
             path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
         )
-    
+
     def test_default_parameters(self):
         """Checks that the default parameters of a SweepCircleShape are correct."""
 
@@ -30,12 +30,12 @@ class test_object_properties(unittest.TestCase):
     def test_solid_construction_workplane(self):
         """Checks that SweepSplineShapes can be created in different workplanes."""
 
-        self.test_shape.workplane="YZ"
-        self.test_shape.path_workplane="YX"
+        self.test_shape.workplane = "YZ"
+        self.test_shape.path_workplane = "YX"
         assert self.test_shape.solid is not None
 
-        self.test_shape.workplane="XZ"
-        self.test_shape.path_workplane="XY"
+        self.test_shape.workplane = "XZ"
+        self.test_shape.path_workplane = "XY"
         assert self.test_shape.solid is not None
 
     def test_absolute_shape_volume(self):
@@ -51,18 +51,20 @@ class test_object_properties(unittest.TestCase):
 
         test_volume = self.test_shape.volume
         self.test_shape.radius = 20
-        assert self.test_shape.volume == pytest.approx(test_volume * 4, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 4, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepCircleShapes and checks that their relative volumes
         are correct."""
 
         test_volume = self.test_shape.volume
-        self.test_shape.azimuth_placement_angle=[0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(test_volume * 4, rel=0.01)
+        self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 4, rel=0.01)
 
     def test_points_equal_path_points(self):
-        """Checks that shape.points = shape.path_points upon construction of a 
+        """Checks that shape.points = shape.path_points upon construction of a
         SweepCircleShape."""
 
         assert self.test_shape.points == self.test_shape.path_points
@@ -77,7 +79,7 @@ class test_object_properties(unittest.TestCase):
         """Checks that a SweepCircleShape with the same cross-section at each path_point
         is created when force_cross_section = True."""
 
-        self.test_shape.force_cross_section = True 
+        self.test_shape.force_cross_section = True
 
         assert self.test_shape.areas.count(
             pytest.approx(math.pi * (10**2), rel=0.01)) == 2
