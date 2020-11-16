@@ -25,7 +25,8 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        libgles2-mesa-dev && \
                        apt-get clean
 
-RUN conda install -c conda-forge -c cadquery cadquery=2 && \
+# Set cadquery version to master to fix issue 445
+RUN conda install -c conda-forge -c cadquery cadquery=master && \
     conda install jupyter -y --quiet && \
     conda clean -afy
 
@@ -44,4 +45,3 @@ RUN pip install -r requirements.txt
 RUN python setup.py install
 
 WORKDIR examples
-
