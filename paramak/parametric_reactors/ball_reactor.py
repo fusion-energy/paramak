@@ -422,7 +422,7 @@ class BallReactor(paramak.Reactor):
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
             cut=center_column_cutter,
-            )
+        )
 
     def _make_divertor(self):
         list_of_components = []
