@@ -365,8 +365,8 @@ class BallReactor(paramak.Reactor):
                 self.outer_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
                 self.inner_plasma_gap_radial_thickness],
-            start_angle=-179,
-            stop_angle=179,
+            start_angle=-180,
+            stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
@@ -388,8 +388,8 @@ class BallReactor(paramak.Reactor):
                 self.firstwall_radial_thickness,
                 self.inner_plasma_gap_radial_thickness +
                 self.firstwall_radial_thickness],
-            start_angle=-179,
-            stop_angle=179,
+            start_angle=-180,
+            stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="blanket_mat",
             stp_filename="blanket.stp",
@@ -415,13 +415,14 @@ class BallReactor(paramak.Reactor):
                 self.inner_plasma_gap_radial_thickness +
                 self.firstwall_radial_thickness +
                 self.blanket_radial_thickness],
-            start_angle=-90,
-            stop_angle=90,
+            start_angle=-180,
+            stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
-            cut=center_column_cutter)
+            cut=center_column_cutter,
+            )
 
     def _make_divertor(self):
         list_of_components = []
@@ -441,10 +442,6 @@ class BallReactor(paramak.Reactor):
             stop_angle=180,
             rotation_angle=self.rotation_angle,
         )
-
-        # remove negative points for _blanket_fw_rear_wall_envelope
-        for p in self._blanket_fw_rear_wall_envelope.points:
-            p[0] = max(p[0], 0)
 
         self._divertor = paramak.CenterColumnShieldCylinder(
             height=self._blanket_rear_wall_end_height * 2,
