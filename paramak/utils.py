@@ -188,30 +188,59 @@ def calculate_wedge_cut(self):
         return cutting_wedge
 
 
-def get_hash(shape):
+def add_thickness(x, y, thickness, dy_dx=None):
+    """Computes outer curve points based on thickness
+
+    Args:
+        x (list): list of floats containing x values
+        y (list): list of floats containing y values
+        thickness (float): thickness of the magnet
+        dy_dx (list): list of floats containing the first order
+            derivatives
+
+    Returns:
+        (list, list): R and Z lists for outer curve points
+    """
+    if dy_dx is None:
+        dy_dx = np.diff(y) / np.diff(x)
+
+    x_outer, y_outer = [], []
+    for i in range(len(dy_dx)):
+        if dy_dx[i] == float('-inf'):
+            nx, ny = -1, 0
+        elif dy_dx[i] == float('inf'):
+            nx, ny = 1, 0
+        else:
+            nx = -dy_dx[i]
+            ny = 1
+        if i != len(dy_dx) - 1:
+            if x[i] < x[i + 1]:
+                convex = False
+            else:
+                convex = True
+
+        if convex:
+            nx *= -1
+            ny *= -1
+        # normalise normal vector
+        normal_vector_norm = (nx ** 2 + ny ** 2) ** 0.5
+        nx /= normal_vector_norm
+        ny /= normal_vector_norm
+        # calculate outer points
+        val_x_outer = x[i] + thickness * nx
+        val_y_outer = y[i] + thickness * ny
+        x_outer.append(val_x_outer)
+        y_outer.append(val_y_outer)
+
+    return x_outer, y_outer
+
+
+def get_hash(shape, ignored_keys=[]):
 
     hash_object = blake2b()
     shape_dict = dict(shape.__dict__)
 
-    keys_to_ignore = ["_solid", "_hash_value"]
-
-    for key in keys_to_ignore:
-        if key in shape_dict.keys():
-            shape_dict[key] = None
-
-    hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
-    value = hash_object.hexdigest()
-    return value
-
-
-def get_reactor_hash(shape):
-
-    hash_object = blake2b()
-    shape_dict = dict(shape.__dict__)
-
-    keys_to_ignore = ["reactor_hash_value"]
-
-    for key in keys_to_ignore:
+    for key in ignored_keys:
         if key in shape_dict.keys():
             shape_dict[key] = None
 

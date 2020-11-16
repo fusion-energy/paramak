@@ -417,6 +417,23 @@ PlasmaBoundaries()
    :members:
    :show-inheritance:
 
+TFCoilCasing()
+^^^^^^^^^^^^^^
+
+|TFCoilCasingallstp| |TFCoilCasingaCutstp| |TFCoilCasingsvg|
+
+.. |TFCoilCasingallstp| image:: https://user-images.githubusercontent.com/8583900/98821523-94943f00-2427-11eb-8047-68f2762c56d7.png
+    :width: 200px
+.. |TFCoilCasingaCutstp| image:: https://user-images.githubusercontent.com/8583900/98821532-96f69900-2427-11eb-99e1-e2461be67511.png
+    :width: 130px
+.. |TFCoilCasingsvg| image:: https://user-images.githubusercontent.com/8583900/99081345-904c5b00-25ba-11eb-8a4f-956d4ad6bbc0.png
+    :width: 310px
+
+.. automodule:: paramak.parametric_components.tf_coil_casing
+   :members:
+   :show-inheritance:
+
+
 ToroidalFieldCoilRectangle()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
