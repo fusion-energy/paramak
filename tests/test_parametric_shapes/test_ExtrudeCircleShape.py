@@ -7,113 +7,81 @@ from paramak import ExtrudeCircleShape
 
 
 class test_object_properties(unittest.TestCase):
+
+    def setUp(self):
+        self.test_shape = ExtrudeCircleShape(
+            points=[(30, 0)], radius=10, distance=30
+        )
+
+    def test_default_parameters(self):
+        """Checks that the default parameters of an ExtrudeCircleShape are correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "ExtrudeCircleShape.stp"
+        assert self.test_shape.stl_filename == "ExtrudeCircleShape.stl"
+        assert self.test_shape.extrude_both == True
+
     def test_absolute_shape_volume(self):
-        """creates extruded shapes using circles and checks the volumes are correct"""
+        """Creates an ExtrudeCircleShape and checks that its volume is correct."""
 
-        test_shape = ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=20
-        )
+        assert self.test_shape.solid is not None
+        assert self.test_shape.volume == pytest.approx(math.pi*(10**2)*30)
 
-        test_shape.create_solid()
+    def test_relative_shape_volume(self):
+        """Creates two ExtrudeCircleShapes and checks that their relative volumes
+        are correct."""
 
-        assert test_shape.solid is not None
-        assert test_shape.volume == pytest.approx(math.pi * 10 ** 2 * 20)
-
-        test_shape2 = ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=10
-        )
-
-        test_shape2.create_solid()
-
-        assert test_shape2.solid is not None
-        assert 2 * test_shape2.volume == pytest.approx(test_shape.volume)
-
-    def test_extruded_shape_relative_volume(self):
-        """creates two extruded shapes at different placement angles using
-        circles and checks their relative volumes are correct"""
-
-        test_shape1 = ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=20, azimuth_placement_angle=0
-        )
-
-        test_shape2 = ExtrudeCircleShape(
-            points=[(30, 0)],
-            radius=10,
-            distance=20,
-            azimuth_placement_angle=[0, 90, 180, 270],
-        )
-
-        assert test_shape1.volume * 4 == pytest.approx(test_shape2.volume)
+        test_volume = self.test_shape.volume
+        self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
+        assert test_volume * 4 == pytest.approx(self.test_shape.volume)
 
     def test_absolute_shape_areas(self):
-        """creates extruded circle shapes and checks that the areas of each face
-        are correct"""
+        """Creates ExtrudeCircleShapes and checks that the areas of each face
+        are correct."""
 
-        test_shape = ExtrudeCircleShape(
-            points=[(50, 0)], radius=10, distance=50
+        assert self.test_shape.area == pytest.approx(
+            (math.pi * (10**2) * 2) + (math.pi * (2 * 10) * 30)
         )
-
-        assert test_shape.area == pytest.approx(
-            (math.pi * (10**2) * 2) + (math.pi * (2 * 10) * 50))
-        assert len(test_shape.areas) == 3
-        assert test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
-        assert test_shape.areas.count(
-            pytest.approx(math.pi * (2 * 10) * 50)) == 1
+        assert len(self.test_shape.areas) == 3
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(math.pi * (2 * 10) * 30)) == 1
 
     def test_cut_volume(self):
-        """creates an extruded shape using circles with another shape cut out and
-        checks that the volume is correct"""
+        """Creates an ExtrudeCircleShape with another ExtrudeCircleShape cut out
+        and checks that the volume is correct."""
 
-        inner_shape = ExtrudeCircleShape(
-            points=[(30, 0)], radius=5, distance=20
+        shape_with_cut = ExtrudeCircleShape(
+            points=[(30, 0)], radius=20, distance=40,
+            cut=self.test_shape
         )
 
-        outer_shape = ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=20
+        assert shape_with_cut.volume == pytest.approx(
+            (math.pi * (20**2) * 40) - (math.pi * (10**2) * 30)
         )
 
-        outer_shape_with_cut = ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=20, cut=inner_shape
-        )
+    def test_intersect_volume(self):
+        """Creates an ExtrudeCircleShape with another ExtrudeCircleShape intersected
+        and checks that the volume is correct."""
 
-        assert inner_shape.volume == pytest.approx(math.pi * 5 ** 2 * 20)
-        assert outer_shape.volume == pytest.approx(math.pi * 10 ** 2 * 20)
-        assert outer_shape_with_cut.volume == pytest.approx(
-            (math.pi * 10 ** 2 * 20) - (math.pi * 5 ** 2 * 20)
-        )
+        
 
     def test_rotation_angle(self):
-        """creates an extruded shape with a rotation_angle < 360 and checks that the
-        correct cut is performed and the volume is correct"""
+        """Creates an ExtrudeCircleShape with a rotation_angle < 360 and checks that
+        the correct cut is performed and the volume is correct."""
 
-        test_shape = ExtrudeCircleShape(
-            points=[(50, 0)],
-            radius=10,
-            distance=10,
-            azimuth_placement_angle=[45, 135, 225, 315]
-        )
-        test_volume = test_shape.volume
-
-        test_shape.rotation_angle = 180
-
-        assert test_shape.volume == pytest.approx(test_volume * 0.5)
-
+        self.test_shape.azimuth_placement_angle=[45, 135, 225, 315]
+        test_volume = self.test_shape.volume
+        self.test_shape.rotation_angle = 180
+        assert self.test_shape.volume == pytest.approx(test_volume * 0.5)
+        
     def test_extrude_both(self):
-        """test that the volume with extrude_both=True is twice as when
-        extrude_both=False
-        """
-        test_shape = ExtrudeCircleShape(
-            points=[
-                (10, 20),
-            ],
-            radius=1,
-            distance=10,
-        )
-        test_volume_double_extrude = test_shape.volume
-        test_shape.extrude_both = False
+        """Creates an ExtrudeCircleShape with extrude_both = True and False and checks
+        that the volumes are correct."""
 
-        assert test_shape.volume == \
-            pytest.approx(test_volume_double_extrude * 0.5)
+        test_volume_double_extrude = self.test_shape.volume
+        self.test_shape.extrude_both = False
+        assert self.test_shape.volume == pytest.approx(test_volume_double_extrude * 0.5)
 
 
 if __name__ == "__main__":
