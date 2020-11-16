@@ -9,7 +9,7 @@
 # sudo docker run -it ukaea/paramak
 
 # Run with the following command for jupyter notebook interface
-# sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser --allow-root"
+# sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
 
 # test with the folowing command
 # sudo docker run --rm ukaea/paramak pytest /tests
@@ -25,8 +25,16 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        libgles2-mesa-dev && \
                        apt-get clean
 
-# Set cadquery version to master to fix issue 445
-RUN conda install -c conda-forge -c cadquery cadquery=master && \
+# # appears to work best if jupyter is installed before cadquery master version
+# RUN conda install jupyter -y --quiet && \
+#     conda clean -afy
+
+# # cadquery version set to master to fix paramak issue 445
+# RUN conda install -c cadquery -c conda-forge cadquery=master && \
+#     conda clean -afy
+
+# TODO move back to version 2. when the next CADQuery release happens
+RUN conda install -c conda-forge -c cadquery cadquery=2 && \
     conda install jupyter -y --quiet && \
     conda clean -afy
 
