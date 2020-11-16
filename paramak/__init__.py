@@ -25,6 +25,7 @@ from .parametric_components.tokamak_plasma_plasmaboundaries import PlasmaBoundar
 from .parametric_components.blanket_constant_thickness_arc_h import BlanketConstantThicknessArcH
 from .parametric_components.blanket_constant_thickness_arc_v import BlanketConstantThicknessArcV
 from .parametric_components.blanket_fp import BlanketFP
+from .parametric_components.blanket_poloidal_segment import BlanketFPPoloidalSegments
 
 from .parametric_components.divertor_ITER import ITERtypeDivertor
 from .parametric_components.divertor_ITER_no_dome import ITERtypeDivertorNoDome

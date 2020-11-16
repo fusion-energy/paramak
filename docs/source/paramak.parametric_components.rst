@@ -33,19 +33,6 @@ BlanketConstantThicknessArcV()
    :members:
    :show-inheritance:
 
-BlanketFP()
-^^^^^^^^^^^
-
-|BlanketFPstp| |BlanketFPsvg|
-
-.. |BlanketFPstp| image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
-   :width: 220
-.. |BlanketFPsvg| image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
-   :width: 350
-
-.. automodule:: paramak.parametric_components.blanket_fp
-   :members:
-   :show-inheritance:
 
 BlanketCutterParallels()
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -75,6 +62,37 @@ BlanketCutterStar()
 .. automodule:: paramak.parametric_components.blanket_cutters_star
    :members:
    :show-inheritance:
+
+
+BlanketFP()
+^^^^^^^^^^^
+
+|BlanketFPstp| |BlanketFPsvg|
+
+.. |BlanketFPstp| image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
+   :width: 220
+.. |BlanketFPsvg| image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
+   :width: 350
+
+.. automodule:: paramak.parametric_components.blanket_fp
+   :members:
+   :show-inheritance:
+
+
+BlanketFPPoloidalSegments()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|BlanketFPPoloidalSegmentsstp| |BlanketFPPoloidalSegmentssvg|
+
+.. |BlanketFPPoloidalSegmentsstp| image:: https://user-images.githubusercontent.com/8583900/98735027-af6ca200-239a-11eb-9a59-4a570f91a1fc.png
+   :width: 220
+.. |BlanketFPPoloidalSegmentssvg| image:: https://user-images.githubusercontent.com/8583900/98870151-ca0e4c00-246a-11eb-8a37-e7620344d8c1.png
+   :width: 350
+
+.. automodule:: paramak.parametric_components.blanket_poloidal_segment
+   :members:
+   :show-inheritance:
+
 
 CenterColumnShieldCylinder()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

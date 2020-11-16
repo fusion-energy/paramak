@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 import sympy as sp
+import mpmath
 
 from paramak import RotateMixedShape, diff_between_angles
 
@@ -71,12 +72,9 @@ class BlanketFP(RotateMixedShape):
             stl_filename=stl_filename,
             **kwargs
         )
-        # raise error if full coverage and full rotation angle are set
-        if diff_between_angles(start_angle,
-                               stop_angle) == 0 and self.rotation_angle == 360:
-            raise ValueError("Full coverage and 360 rotation will result in a \
-                standard construction error.")
+
         self.thickness = thickness
+        self.start_angle, self.stop_angle = None, None
         self.start_angle = start_angle
         self.stop_angle = stop_angle
         self.plasma = plasma
@@ -94,6 +92,38 @@ class BlanketFP(RotateMixedShape):
         self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
         self.physical_groups = None
+
+    @property
+    def start_angle(self):
+        return self._start_angle
+
+    @start_angle.setter
+    def start_angle(self, value):
+        if value is not None:
+            if self.stop_angle is not None:
+                if diff_between_angles(value,
+                                       self.stop_angle) == 0:
+                    if self.rotation_angle == 360:
+                        msg = "Full coverage and 360 rotation will" + \
+                            " result in a standard construction error."
+                        raise ValueError(msg)
+        self._start_angle = value
+
+    @property
+    def stop_angle(self):
+        return self._stop_angle
+
+    @stop_angle.setter
+    def stop_angle(self, value):
+        if value is not None:
+            if self.start_angle is not None:
+                if diff_between_angles(self.start_angle,
+                                       value) == 0:
+                    if self.rotation_angle == 360:
+                        msg = "Full coverage and 360 rotation will" + \
+                            " result in a standard construction error."
+                        raise ValueError(msg)
+        self._stop_angle = value
 
     @property
     def physical_groups(self):
@@ -119,6 +149,24 @@ class BlanketFP(RotateMixedShape):
     @thickness.setter
     def thickness(self, thickness):
         self._thickness = thickness
+
+    @property
+    def inner_points(self):
+        self.find_points()
+        return self._inner_points
+
+    @inner_points.setter
+    def inner_points(self, value):
+        self._inner_points = value
+
+    @property
+    def outer_points(self):
+        self.find_points()
+        return self._outer_points
+
+    @outer_points.setter
+    def outer_points(self, value):
+        self._outer_points = value
 
     def make_callable(self, attribute):
         """This function transforms an attribute (thickness or offset) into a
@@ -155,40 +203,24 @@ class BlanketFP(RotateMixedShape):
                 return attribute
         return fun
 
-    def find_points(self):
-        conversion_factor = 2 * np.pi / 360
-
-        def R(theta, pkg=np):
-            """R(theta) plasma profile, theta being the angle in degree
-            """
-            theta *= conversion_factor
-            return self.major_radius + self.minor_radius * pkg.cos(
-                theta + self.triangularity * pkg.sin(theta)
-            )
-
-        def Z(theta, pkg=np):
-            """R(theta) plasma profile, theta being the angle in degree
-            """
-            theta *= conversion_factor
-            return (
-                self.elongation * self.minor_radius * pkg.sin(theta)
-                + self.vertical_displacement
-            )
+    def find_points(self, angles=None):
 
         # create array of angles theta
-        thetas = np.linspace(
-            self.start_angle,
-            self.stop_angle,
-            num=self.num_points,
-            endpoint=True,
-        )
+        if angles is None:
+            thetas = np.linspace(
+                self.start_angle,
+                self.stop_angle,
+                num=self.num_points,
+                endpoint=True,
+            )
+        else:
+            thetas = angles
 
         # create inner points
         inner_offset = self.make_callable(self.offset_from_plasma)
-        inner_points = self.create_offset_points(
-            thetas, R, Z, inner_offset
-        )
+        inner_points = self.create_offset_points(thetas, inner_offset)
         inner_points[-1][2] = "straight"
+        self.inner_points = inner_points
 
         # create outer points
         thickness = self.make_callable(self.thickness)
@@ -196,37 +228,32 @@ class BlanketFP(RotateMixedShape):
         def outer_offset(theta):
             return inner_offset(theta) + thickness(theta)
 
-        outer_points = self.create_offset_points(
-            np.flip(thetas), R, Z, outer_offset)
+        outer_points = self.create_offset_points(np.flip(thetas), outer_offset)
+        outer_points[-1][2] = "straight"
+        self.outer_points = outer_points
 
         # assemble
         points = inner_points + outer_points
-        points[-1][2] = "straight"
         self.points = points
+        return points
 
-    def create_offset_points(self, thetas, R_fun, Z_fun, offset):
+    def create_offset_points(self, thetas, offset):
         """generates a list of points following parametric equations with an
         offset
 
-        :param thetas: list of angles (radians)
-        :type thetas: list
-        :param R_fun: parametric function for R coordinate (cm)
-        :type R_fun: callable
-        :param Z_fun: parametric function for Z coordinate (cm)
-        :type Z_fun: callable
-        :param offset: offset value (cm). offset=0 will follow the parametric
-         equations.
-        :type offset: callable
-        :return: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
+        Args:
+            thetas (np.array): the angles in degrees.
+            offset (callable): offset value (cm). offset=0 will follow the
+                parametric equations.
+
+        Returns:
+            list: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
             ...]
-        :rtype: list
         """
         # create sympy objects and derivatives
         theta_sp = sp.Symbol("theta")
 
-        R_sp = R_fun(theta_sp, pkg=sp)
-        Z_sp = Z_fun(theta_sp, pkg=sp)
-
+        R_sp, Z_sp = self.distribution(theta_sp, pkg=sp)
         R_derivative = sp.diff(R_sp, theta_sp)
         Z_derivative = sp.diff(Z_sp, theta_sp)
         points = []
@@ -246,8 +273,8 @@ class BlanketFP(RotateMixedShape):
             ny /= normal_vector_norm
 
             # calculate outer points
-            val_R_outer = R_fun(theta) + offset(theta) * nx
-            val_Z_outer = Z_fun(theta) + offset(theta) * ny
+            val_R_outer = self.distribution(theta)[0] + offset(theta) * nx
+            val_Z_outer = self.distribution(theta)[1] + offset(theta) * ny
 
             points.append([float(val_R_outer), float(val_Z_outer), "spline"])
         return points
@@ -313,3 +340,30 @@ class BlanketFP(RotateMixedShape):
             group = {"dim": 2, "id": i, "name": surface_names[i - 1]}
             groups.append(group)
         self.physical_groups = groups
+
+    def distribution(self, theta, pkg=np):
+        """Plasma distribution theta in degrees
+
+        Args:
+            theta (float or np.array or sp.Symbol): the angle(s) in degrees.
+            pkg (module, optional): Module to use in the funciton. If sp, as
+                sympy object will be returned. If np, a np.array or a float
+                will be returned. Defaults to np.
+
+        Returns:
+            (float, float) or (sympy.Add, sympy.Mul) or
+                (numpy.array, numpy.array): The R and Z coordinates of the
+                point with angle theta
+        """
+        if pkg == np:
+            theta = np.radians(theta)
+        else:
+            theta = mpmath.radians(theta)
+        R = self.major_radius + self.minor_radius * pkg.cos(
+            theta + self.triangularity * pkg.sin(theta)
+        )
+        Z = (
+            self.elongation * self.minor_radius * pkg.sin(theta)
+            + self.vertical_displacement
+        )
+        return R, Z
