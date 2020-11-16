@@ -146,15 +146,15 @@ class test_BlanketFP(unittest.TestCase):
         argument."""
 
         def thickness(theta):
-            return 100 + 3 * theta
+            return 10 + 0.1 * theta
 
         test_shape = paramak.BlanketFP(
-            major_radius=300,
+            major_radius=200,
             minor_radius=50,
             triangularity=0.5,
             elongation=2,
             thickness=thickness,
-            stop_angle=90,
+            stop_angle=10,
             start_angle=270,
         )
 
@@ -222,7 +222,7 @@ class test_BlanketFP(unittest.TestCase):
         parametric component when an offset function is passed."""
 
         def offset(theta):
-            return 100 + 3 * theta
+            return 10 + 0.1 * theta
 
         test_shape = paramak.BlanketFP(
             major_radius=300,
