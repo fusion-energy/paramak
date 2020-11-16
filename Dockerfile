@@ -9,7 +9,7 @@
 # sudo docker run -it ukaea/paramak
 
 # Run with the following command for jupyter notebook interface
-# sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser"
+# sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser --allow-root"
 
 # test with the folowing command
 # sudo docker run --rm ukaea/paramak pytest /tests
@@ -24,8 +24,6 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        freeglut3-dev libosmesa6 libosmesa6-dev \
                        libgles2-mesa-dev && \
                        apt-get clean
-
-RUN useradd -ms /bin/bash newuser
 
 RUN conda install -c conda-forge -c cadquery cadquery=2 && \
     conda install jupyter -y --quiet && \
