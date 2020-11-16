@@ -17,6 +17,7 @@ def coefficients_of_line_from_points(point1, point2):
     Returns:
         (float, float): m coefficient and c coefficient
     """
+
     points = [point1, point2]
     x_coords, y_coords = zip(*points)
     A = np.vstack([x_coords, np.ones(len(x_coords))]).T
@@ -33,6 +34,7 @@ def cut_solid(solid, cutter):
     Returns:
         Shape: The original shape cut with the cutter shape(s)
     """
+
     # Allows for multiple cuts to be applied
     if isinstance(cutter, Iterable):
         for cutting_solid in cutter:
@@ -50,6 +52,7 @@ def diff_between_angles(a, b):
     Returns:
         float: difference between the two angles in degree.
     """
+
     c = (b - a) % 360
     if c > 180:
         c -= 360
@@ -64,6 +67,7 @@ def distance_between_two_points(A, B):
     Returns:
         float: distance between A and B
     """
+
     xa, ya = A
     xb, yb = B
     u_vec = [xb - xa, yb - ya]
@@ -79,6 +83,7 @@ def extend(A, B, L):
     Returns:
         float, float: point C coordinates
     """
+
     xa, ya = A
     xb, yb = B
     u_vec = [xb - xa, yb - ya]
@@ -101,6 +106,7 @@ def find_center_point_of_circle(point1, point2, point3):
         float, float: center of the circle coordinates or
         None if 3 points on a line are input.
     """
+
     temp = point2[0] * point2[0] + point2[1] * point2[1]
     bc = (point1[0] * point1[0] + point1[1] * point1[1] - temp) / 2
     cd = (temp - point3[0] * point3[0] - point3[1] * point3[1]) / 2
@@ -130,6 +136,7 @@ def intersect_solid(solid, intersecter):
     Returns:
         Shape: The original shape cut with the intersecter shape(s)
     """
+
     # Allows for multiple cuts to be applied
     if isinstance(intersecter, Iterable):
         for intersecting_solid in intersecter:
@@ -143,6 +150,7 @@ def rotate(origin, point, angle):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
     The angle should be given in radians.
+
     Args:
         origin (float, float): coordinates of origin point
         point (float, float): coordinates of point to be rotated
@@ -150,6 +158,7 @@ def rotate(origin, point, angle):
     Returns:
         float, float: rotated point coordinates.
     """
+
     ox, oy = origin
     px, py = point
 
@@ -161,6 +170,7 @@ def rotate(origin, point, angle):
 def union_solid(solid, joiner):
     """
     Performs a boolean union of a solid with another solid or iterable of solids
+
     Args:
         solid (Shape): The Shape that you want to union from
         joiner (Shape): The Shape(s) that you want to form the union with the
@@ -168,6 +178,7 @@ def union_solid(solid, joiner):
     Returns:
         Shape: The original shape union with the joiner shape(s)
     """
+
     # Allows for multiple unions to be applied
     if isinstance(joiner, Iterable):
         for joining_solid in joiner:
@@ -201,6 +212,7 @@ def add_thickness(x, y, thickness, dy_dx=None):
     Returns:
         (list, list): R and Z lists for outer curve points
     """
+
     if dy_dx is None:
         dy_dx = np.diff(y) / np.diff(x)
 
@@ -236,6 +248,16 @@ def add_thickness(x, y, thickness, dy_dx=None):
 
 
 def get_hash(shape, ignored_keys=[]):
+    """Computes a unique hash vaue for the shape.
+
+    Args:
+        shape (list): The paramak.Shape object to find the hash value for.
+        ignored_keys (list, optional): list of shape.__dict__ keys to ignore
+            when creating the hash.
+
+    Returns:
+        (list, list): R and Z lists for outer curve points
+    """
 
     hash_object = blake2b()
     shape_dict = dict(shape.__dict__)
@@ -254,7 +276,6 @@ class FaceAreaSelector(cq.Selector):
     tolerance. The following useage example will fillet the faces of an extrude
     shape with an area of 0.5. paramak.ExtrudeStraightShape(points=[(1,1),(2,1),
     (2,2)], distance=5).solid.faces(FaceAreaSelector(0.5)).fillet(0.1)
-
 
     Args:
         area (float): The area of the surface to select.
@@ -277,6 +298,7 @@ class FaceAreaSelector(cq.Selector):
             objectList (cadquery): The face that match the selector area within
                 the specified tolerance.
         """
+
         new_obj_list = []
         for obj in objectList:
             face_area = obj.Area()
@@ -316,6 +338,7 @@ class EdgeLengthSelector(cq.Selector):
             objectList (cadquery): The edge that match the selector length
                 within the specified tolerance.
         """
+
         new_obj_list = []
         print('filleting edge#')
         for obj in objectList:
