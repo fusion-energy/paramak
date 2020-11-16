@@ -56,10 +56,10 @@ make_firstwall_for_neutron_wall_loading.py
 
 `Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.py>`_
 
-make_vacuum_vessel_with_ports.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+make_magnet_set
+^^^^^^^^^^^^^^^
 
-.. image:: 
+.. image:: https://user-images.githubusercontent.com/8583900/99276201-5088ac00-2824-11eb-9927-a7ea1094b1e5.png
    :width: 500
    :align: center
 
