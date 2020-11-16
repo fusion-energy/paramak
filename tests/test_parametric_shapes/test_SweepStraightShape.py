@@ -8,128 +8,58 @@ from paramak import SweepStraightShape, RotateStraightShape
 
 
 class test_object_properties(unittest.TestCase):
-    def test_solid_construction(self):
-        """checks that a SweepStraightShape solid can be created"""
 
-        test_shape = SweepStraightShape(
-            points=[
-                (-20, 20),
-                (20, 20),
-                (20, -20),
-                (-20, -20)
-            ],
-            path_points=[
-                (50, 0),
-                (20, 200),
-                (50, 400)
-            ]
+    def setUp(self):
+        self.test_shape = SweepStraightShape(
+            points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+            path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
         )
-        test_shape.create_solid()
+    
+    def test_default_parameters(self):
+        """Checks that the default parameters of a SweepStraightShape are correct."""
 
-        assert test_shape.solid is not None
+        # assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "SweepStraightShape.stp"
+        assert self.test_shape.stl_filename == "SweepStraightShape.stl"
+        assert self.test_shape.azimuth_placement_angle == 0
+        assert self.test_shape.workplane == "XY"
+        assert self.test_shape.path_workplane == "XZ"
+        assert self.test_shape.force_cross_section == False
 
     def test_absolute_shape_volume(self):
-        """creates a SweepStraightShape and checks that the volume is correct"""
+        """Creates a SweepStraightShape and checks that the volume is correct."""
 
-        test_shape = SweepStraightShape(
-            points=[
-                (-20, 20),
-                (20, 20),
-                (20, -20),
-                (-20, -20)
-            ],
-            path_points=[
-                (50, 0),
-                (50, 50),
-                (50, 100)
-            ]
-        )
-        test_shape.create_solid()
-
-        assert test_shape.volume == pytest.approx(40 * 40 * 100)
+        self.test_shape.path_points = [(50, 0), (50, 50), (50, 100)]
+        assert self.test_shape.solid is not None
+        assert self.test_shape.volume == pytest.approx(20 * 20 * 100)
 
     def test_relative_shape_volume(self):
-        """creates two SweepStraightShapes and checks that their relative volumes
-        are correct"""
+        """Creates two SweepStraightShapes and checks that their relative volumes
+        are correct."""
 
-        test_shape_1 = SweepStraightShape(
-            points=[
-                (-20, 20),
-                (20, 20),
-                (20, -20),
-                (-20, -20)
-            ],
-            path_points=[
-                (50, 0),
-                (30, 50),
-                (60, 100),
-                (50, 150)
-            ]
-        )
-        test_shape_1.create_solid()
+        test_volume = self.test_shape.volume
+        self.test_shape.points=[(-20, 20), (20, 20), (20, -20), (-20, -20)]
+        assert self.test_shape.volume == pytest.approx(test_volume * 4)
 
-        test_shape_2 = SweepStraightShape(
-            points=[
-                (-10, 10),
-                (10, 10),
-                (10, -10),
-                (-10, -10)
-            ],
-            path_points=[
-                (50, 0),
-                (30, 50),
-                (60, 100),
-                (50, 150)
-            ]
-        )
-        test_shape_2.create_solid()
+    def test_relative_shape_volume(self):
+        """Creates two SweepStraightShapes and checks that their relative volumes
+        are correct."""
 
-        assert test_shape_1.volume == pytest.approx(test_shape_2.volume * 4)
-
-    def test_iterable_azimuthal_placement(self):
-        """checks that swept solids can be placed at multiple azimuth placement angles"""
-
-        test_shape = SweepStraightShape(
-            points=[
-                (-10, 10),
-                (10, 10),
-                (10, -10),
-                (-10, -10)
-            ],
-            path_points=[
-                (50, 0),
-                (30, 50),
-                (60, 100),
-                (50, 150)
-            ]
-        )
-        test_shape.create_solid()
-
-        test_volume = test_shape.volume
-
-        test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-
-        assert test_shape.volume == pytest.approx(test_volume * 4)
+        test_volume = self.test_shape.volume
+        self.test_shape.azimuth_placement_angle=[0, 90, 180, 270]
+        assert self.test_shape.volume == pytest.approx(test_volume * 4)
 
     def test_workplane_path_workplane_error_raises(self):
-        """checks that errors are raised when disallowed workplane and path_workplane
-        combinations are used"""
+        """Checks that errors are raised when SweepStraightShapes are created with
+        disallowed workplane and path_workplane combinations."""
 
         def workplane_and_path_workplane_equal():
-            test_shape = SweepStraightShape(
-                points=[(-20, 20), (20, 20), (20, -20), (-20, -20)],
-                path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
-                workplane="XZ",
-                path_workplane="XZ"
-            )
+            self.test_shape.workplane = "XZ"
+            self.test_shape.path_workplane = "XZ"
 
         def invalid_relative_workplane_and_path_workplane():
-            test_shape = SweepStraightShape(
-                points=[(-20, 20), (20, 20), (20, -20), (-20, -20)],
-                path_points=[(50, 0), (30, 50), (60, 100), (50, 150)],
-                workplane="XZ",
-                path_workplane="YZ"
-            )
+            self.test_shape.workplane = "XZ"
+            self.test_shape.path_workplane = "YZ"
 
         self.assertRaises(ValueError, workplane_and_path_workplane_equal)
         self.assertRaises(
@@ -137,64 +67,48 @@ class test_object_properties(unittest.TestCase):
             invalid_relative_workplane_and_path_workplane)
 
     def test_workplane_opposite_distance(self):
-        """Checks that a solid can be created with workplane XZ and path_workplane XY"""
+        """Checks that a SweepStraightShape can be created with workplane XZ and
+        path_workplane XY"""
 
-        test_shape = SweepStraightShape(
-            points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
-            path_points=[(50, 0), (30, 50), (50, 100)],
-            workplane="XZ",
-            path_workplane="XY",
-        )
-        assert test_shape.solid is not None
+        self.test_shape.workplane = "XZ"
+        self.test_shape.path_workplane = "XY"
+
+        assert self.test_shape.solid is not None
 
     def test_force_cross_section(self):
-        """Checks that a solid with the same cross-section at each path_point is created
-        when force_cross_section = True"""
+        """Checks that a SweepStraightShape with the same cross-section at each path_point
+        is created when force_cross_section = True."""
 
-        test_shape = SweepStraightShape(
-            points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
-            path_points=[(50, 0), (30, 50), (50, 100), (70, 150)],
-            workplane="XY",
-            path_workplane="XZ",
-            force_cross_section=True,
-        )
-
-        assert test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
+        self.test_shape.force_cross_section = True
+        
+        assert self.test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
             points=[(0, 50), (0, 200), (100, 200), (100, 50)],
         )
-        test_shape.cut = cutting_shape
+        self.test_shape.cut = cutting_shape
 
-        assert test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
+        assert self.test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
 
         cutting_shape.points = [(0, 100), (0, 200), (100, 200), (100, 100)]
-        test_shape.cut = cutting_shape
+        self.test_shape.cut = cutting_shape
 
-        assert test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
+        assert self.test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
 
     def test_force_cross_section_volume(self):
-        """Checks that when force_cross_section = True, a solid is created which has
-        a larger volume than a solid created when force_cross_section = False"""
+        """Checks that a SweepStraightShape with a larger volume is created when
+        force_cross_section = True than when force_cross_section = False."""
 
-        test_shape = SweepStraightShape(
-            points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
-            path_points=[(50, 0), (30, 50), (50, 100)],
-            force_cross_section=False,
-        )
-        test_volume = test_shape.volume
-        test_shape.force_cross_section = True
-        assert test_shape.volume > test_volume
+        test_volume = self.test_shape.volume
+        self.test_shape.force_cross_section = True
+        assert self.test_shape.volume > test_volume
 
     def test_surface_count(self):
-        """Creates a solid and checks that it has the correct number of surfaces"""
+        """Creates a SweepStraightShape and checks that it has the correct number
+        of surfaces."""
 
-        test_shape = SweepStraightShape(
-            points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
-            path_points=[(50, 0), (30, 50), (50, 100)]
-        )
-
-        assert len(test_shape.areas) == 6
+        assert len(self.test_shape.areas) == 6
+        assert len(set(round(i) for i in self.test_shape.areas)) == 3
 
 
 if __name__ == "__main__":
