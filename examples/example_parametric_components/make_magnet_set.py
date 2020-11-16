@@ -1,6 +1,7 @@
 
 """
-This script makes a set of toroidal and poloidal field coils
+This script makes a set of toroidal and poloidal field coils. Including PF
+coils, PF coil cases, TF coils, TF coil cases and inboard TF coil supports.
 """
 
 import paramak
@@ -41,6 +42,7 @@ def main():
         inner_offset=tf_coil_casing_thickness,
         outer_offset=tf_coil_casing_thickness,
         vertical_section_offset=tf_coil_casing_thickness,
+        # rotation_angle=180,  # producing occational errors with this arg
     )
 
     pf_coils = paramak.PoloidalFieldCoilSet(
