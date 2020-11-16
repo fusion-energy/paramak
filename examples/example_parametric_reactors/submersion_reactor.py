@@ -33,7 +33,6 @@ def make_submersion(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
         tf_coil_to_rear_blanket_radial_gap=20,
     )
 
-
     if 'stp' in outputs:
         my_reactor.export_stp(output_folder='SubmersionTokamak')
     if 'neutronics' in outputs:
