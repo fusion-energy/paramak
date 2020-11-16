@@ -41,6 +41,7 @@ def main():
         inner_offset=tf_coil_casing_thickness,
         outer_offset=tf_coil_casing_thickness,
         vertical_section_offset=tf_coil_casing_thickness,
+        # rotation_angle=180,  # producing occational errors with this arg
     )
 
     pf_coils = paramak.PoloidalFieldCoilSet(
