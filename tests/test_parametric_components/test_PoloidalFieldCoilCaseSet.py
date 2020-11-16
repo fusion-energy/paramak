@@ -140,7 +140,7 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
             rotation_angle=180
         )
 
-        assert test_shape.casing_thicknesses == 42
+        assert test_shape.casing_thicknesses == 5
         assert test_shape.solid is not None
         assert len(test_shape.solid.Solids()) == 4
 
