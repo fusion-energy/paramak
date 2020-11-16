@@ -43,8 +43,8 @@ class Reactor:
     @property
     def stp_filenames(self):
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.stp_filename)
+        for shape_or_component in self.shapes_and_components:
+            values.append(shape_or_component.stp_filename)
         return values
 
     @stp_filenames.setter
@@ -54,8 +54,8 @@ class Reactor:
     @property
     def stl_filenames(self):
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.stl_filename)
+        for shape_or_component in self.shapes_and_components:
+            values.append(shape_or_component.stl_filename)
         return values
 
     @stl_filenames.setter
@@ -67,13 +67,13 @@ class Reactor:
         """Returns a set of all the materials_tags used in the Reactor
         (excluding the plasma)"""
         values = []
-        for shape_or_componet in self.shapes_and_components:
+        for shape_or_component in self.shapes_and_components:
             if isinstance(
-                shape_or_componet,
+                shape_or_component,
                 (paramak.Plasma,
                  paramak.PlasmaFromPoints,
                  paramak.PlasmaBoundaries)) is False:
-                values.append(shape_or_componet.material_tag)
+                values.append(shape_or_component.material_tag)
         return values
 
     @material_tags.setter
