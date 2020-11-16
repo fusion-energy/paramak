@@ -17,6 +17,7 @@
 # Run with the following command for a jupyter notebook interface
 # docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
 
+
 # test with the folowing command
 # docker run --rm ukaea/paramak pytest /tests
 
