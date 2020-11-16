@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/ukaea/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
 [![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openmcworkshop/paramak)](https://hub.docker.com/r/openmcworkshop/paramak)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/ukaea/paramak)](https://hub.docker.com/r/openmcworkshop/paramak)
 
 
 # Paramak
@@ -33,7 +33,7 @@ have helped the development in the
 [github contributions](https://github.com/ukaea/paramak/graphs/contributors). 
 
 
-## Installation
+## System Installation
 
 To install the Paramak you need to have 
 [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), 
@@ -49,6 +49,41 @@ Detailed installation
 [instructions](https://paramak.readthedocs.io/en/main/#prerequisites)
 can be found in the User's Guide.
 
+
+## Docker Image Installation
+
+Another option is to use the Docker image which contains all the required
+dependencies.
+
+1. Install Docker CE for
+[Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/),
+[Mac OS](https://store.docker.com/editions/community/docker-ce-desktop-mac), or
+[Windows](https://hub.docker.com/editions/community/docker-ce-desktop-windows),
+including the part where you enable docker use as a non-root user.
+
+2. Pull the docker image from the store by typing the following command in a
+terminal window, or Windows users might prefer PowerShell.
+
+    ```docker pull ukaea/paramak```
+
+3. Now that you have the docker image you can enable graphics linking between
+your os and docker, and then run the docker container by typing the following
+commands in a terminal window.
+
+    ```sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser" --allow-root```
+
+4. A URL should be displayed in the terminal and can now be opened in the
+internet browser of your choice. This will load up the examples folder where
+you can view the 3D objects created. Alternatively the Docker imag can be run
+in terminal mode ```docker run -it ukaea/paramak```
+
+Alternatively the Docker image can be run in terminal mode .
+```docker run -it ukaea/paramak```
+
+You may also want to make use of the
+[--volume](https://docs.docker.com/storage/volumes/)
+flag when running Docker so that you can retrieve files from the Docker
+enviroment to your base system.
 
 ## Features
 
@@ -74,10 +109,7 @@ common reactor components.
 ## Selection Of Parametric Reactors
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/89423931-070dc880-d72f-11ea-8cb3-1ce3ce840b7e.png" width="150">
-<img src="https://user-images.githubusercontent.com/8583900/89407027-fb61d800-d715-11ea-892a-59283742687f.png" width="150">
-<img src="https://user-images.githubusercontent.com/8583900/89411100-c0af6e00-d71c-11ea-8d6a-cef2558b82dd.png" width="150">
-<img src="https://user-images.githubusercontent.com/8583900/94269600-c82e0f00-ff36-11ea-84f1-a973859a0c6c.png" width="150">
+<img src="https://user-images.githubusercontent.com/8583900/99137324-fddfa200-2621-11eb-9063-f5f7f60ddd8d.png" width="713">
 
 </p>
 

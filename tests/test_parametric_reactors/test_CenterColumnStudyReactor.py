@@ -107,7 +107,7 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
 
         def warning_trigger():
             try:
-                paramak.CenterColumnStudyReactor(
+                reactor = paramak.CenterColumnStudyReactor(
                     inner_bore_radial_thickness=20,
                     inboard_tf_leg_radial_thickness=50,
                     center_column_shield_radial_thickness_mid=50,
@@ -122,7 +122,7 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
                     plasma_gap_vertical_thickness=40,
                     center_column_arc_vertical_thickness=520,
                     rotation_angle=360)
-
+                reactor.shapes_and_components
             except BaseException:
                 pass
 

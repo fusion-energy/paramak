@@ -4,16 +4,15 @@ Examples - Parametric Components
 make_all_parametric_components.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
+.. image:: https://user-images.githubusercontent.com/8583900/98823600-387eea00-242a-11eb-9fe3-df65aaa3dd21.png
    :width: 713
-   :height: 245
    :align: center
 
 .. automodule:: examples.example_parametric_components.make_all_parametric_components
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_all_parametric_components.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_all_parametric_components.py>`_
 
 make_plasmas.py
 ^^^^^^^^^^^^^^^
@@ -27,7 +26,7 @@ make_plasmas.py
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_plasmas.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_plasmas.py>`_
 
 make_demo_style_blankets.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -41,7 +40,7 @@ make_demo_style_blankets.py
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_demo_style_blankets.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_demo_style_blankets.py>`_
 
 make_firstwall_for_neutron_wall_loading.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -55,4 +54,23 @@ make_firstwall_for_neutron_wall_loading.py
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.py>`_
+
+make_vacuum_vessel_with_ports.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+|vacuumvesselstp| |vacuumvesselcutstp| |vacuumvesselsvg| 
+
+.. |vacuumvesselstp| image:: https://user-images.githubusercontent.com/8583900/99148226-76744c00-267e-11eb-837a-8481aa271d13.png
+   :width: 220px
+.. |vacuumvesselcutstp| image:: https://user-images.githubusercontent.com/8583900/99148228-77a57900-267e-11eb-9b9a-73d34ac6588d.png
+   :width: 220px
+.. |vacuumvesselsvg| image:: https://user-images.githubusercontent.com/8583900/99148306-e387e180-267e-11eb-80a6-41f265ec9e7c.png
+   :width: 220px
+
+.. automodule:: examples.example_parametric_components.make_vacuum_vessel_with_ports
+   :members:
+   :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_vacuum_vessel_with_ports.py>`_
