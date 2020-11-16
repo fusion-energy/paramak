@@ -127,7 +127,6 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             raise ValueError("support position must be 'upper' or 'lower'")
 
     def _make_divertor(self):
-        list_of_components = []
         if self.divertor_position == "upper":
             divertor_height = self._blanket_rear_wall_end_height
         elif self.divertor_position == "lower":
@@ -147,10 +146,9 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             name="divertor",
             material_tag="divertor_mat"
         )
-        list_of_components.append(self._divertor)
+        return self._divertor
 
     def _make_supports(self):
-        list_of_components = []
         if self.support_position == "upper":
             support_height = self._blanket_rear_wall_end_height
         elif self.support_position == "lower":
@@ -170,5 +168,4 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             name="supports",
             material_tag="supports_mat",
         )
-        list_of_components.append(self._supports)
-        return list_of_components
+        return self._supports
