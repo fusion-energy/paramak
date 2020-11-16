@@ -104,6 +104,7 @@ class test_object_properties(unittest.TestCase):
         output_filenames = [
             "vacuum_vessel_with_ports.stp",
             "vacuum_vessel_with_ports.svg",
+        ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
         os.system("python make_vacuum_vessel_with_ports.py")
