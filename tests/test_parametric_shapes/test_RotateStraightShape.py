@@ -37,7 +37,7 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.volume == pytest.approx(math.pi*(20**2)*20)
 
     def test_relative_shape_volume(self):
-        """Creates to RotateStraightShapes and checks that their relative volumes
+        """Creates two RotateStraightShapes and checks that their relative volumes
         are correct."""
 
         test_volume = self.test_shape.volume

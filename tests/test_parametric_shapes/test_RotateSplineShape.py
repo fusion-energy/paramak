@@ -14,7 +14,7 @@ class test_object_properties(unittest.TestCase):
                 (90, -50), (70, -80), (50, -20)])
 
     def test_default_parameters(self):
-        """Checks taht the default parameters of a RotateSplineShape are correct."""
+        """Checks that the default parameters of a RotateSplineShape are correct."""
 
         assert self.test_shape.rotation_angle == 360
         assert self.test_shape.stp_filename == "RotateSplineShape.stp"
