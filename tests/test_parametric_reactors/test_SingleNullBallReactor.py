@@ -6,7 +6,7 @@ import pytest
 
 
 class test_SingleNullBallReactor(unittest.TestCase):
-    def test_SingleNullBallReactor_with_pf_and_tf_coils(self):
+    def test_with_pf_and_tf_coils(self):
         """checks that a single null ball reactor with optional pf and tf
         coils can be created using the SingleNullBallReactor parametric_reactor,
         and that the correct number of components are produced"""
@@ -36,7 +36,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
         )
         assert len(test_reactor.shapes_and_components) == 10
 
-    def test_single_null_ball_reactor_divertor_lower(self):
+    def test_divertor_lower(self):
         """checks that a single null reactor with a lower divertor can be
         created using the SingleNullBallReactor parametric_reactor"""
 
@@ -60,7 +60,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
 
         assert len(test_reactor.shapes_and_components) == 7
 
-    def test_single_null_ball_reactor_divertor_upper(self):
+    def test_divertor_upper(self):
         """checks that a single null reactor with an upper divertor can be
         created using the SingleNullBallReactor parametric_reactor"""
 
@@ -84,7 +84,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
 
         assert len(test_reactor.shapes_and_components) == 7
 
-    def test_SingleNullBallReactor_rotation_angle_impacts_volume(self):
+    def test_rotation_angle_impacts_volume(self):
         """creates a single null ball reactor with a rotation angle of
         90 and another reactor with a rotation angle of 180. Then checks the
         volumes of all the components is double in the 180 reactor"""
@@ -129,7 +129,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
                              test_reactor_180.shapes_and_components):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
-    def test_single_null_ball_reactor_error(self):
+    def test_divertor_name_error(self):
         """Trys to build a SingleNullBallReactor with an invalid divertor
         position and checks a ValueError is raised"""
 
@@ -156,7 +156,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
 
         self.assertRaises(ValueError, invalid_position)
 
-    def test_single_null_ball_reactor_hash_value(self):
+    def test_hash_value(self):
         """Creates a single null ball reactor and checks that all shapes in the reactor are created
         when .shapes_and_components is first called. Checks that when .shapes_and_components is
         called again with no changes to the reactor, the shapes in the reactor are not reconstructed

@@ -49,20 +49,20 @@ class test_SubmersionTokamak(unittest.TestCase):
             rotation_angle=359,
         )
 
-    def test_SubmersionTokamak_svg_creation(self):
+    def test_svg_creation(self):
         """creates a submersion reactor using the SubmersionTokamak parametric
         reactor and checks that an svg file of the reactor can be exported
         using the export_svg method"""
 
-        os.system("rm test_SubmersionTokamak_image.svg")
+        os.system("rm test_image.svg")
 
         test_reactor = self.Submersion_Tokamak_reactor
-        test_reactor.export_svg("test_SubmersionTokamak_image.svg")
+        test_reactor.export_svg("test_image.svg")
 
-        assert Path("test_SubmersionTokamak_image.svg").exists() is True
-        os.system("rm test_SubmersionTokamak_image.svg")
+        assert Path("test_image.svg").exists() is True
+        os.system("rm test_image.svg")
 
-    def test_minimal_SubmersionTokamak_creation(self):
+    def test_minimal_creation(self):
         """creates a submersion reactor using the SubmersionTokamak parametric
         reactor and checks that the correct number of components are created"""
 
@@ -70,7 +70,7 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         assert len(test_reactor.shapes_and_components) == 8
 
-    def test_SubmersionTokamak_with_tf_coils_creation(self):
+    def test_with_tf_coils_creation(self):
         """creates a submersion reactor with tf coils using the
         SubmersionTokamak parametric reactor and checks that the correct number
         of components are created"""
@@ -98,7 +98,7 @@ class test_SubmersionTokamak(unittest.TestCase):
         )
         assert len(test_reactor.shapes_and_components) == 9
 
-    def test_SubmersionTokamak_with_tf_and_pf_coils_creation(self):
+    def test_with_tf_and_pf_coils_creation(self):
         """creates a submersion reactor with tf and pf coils using the
         Submersion Tokamak parametric reactor and checks that the correct
         number of components are created"""
@@ -129,7 +129,7 @@ class test_SubmersionTokamak(unittest.TestCase):
         )
         assert len(test_reactor.shapes_and_components) == 11
 
-    def test_minimal_SubmersionTokamak_stp_creation(self):
+    def test_minimal_stp_creation(self):
         """creates a submersion reactor using the SubmersionTokamak parameteric
         reactor and checks that stp files of all components can be exported
         using the export_stp method"""
@@ -155,7 +155,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             assert Path(output_filename).exists() is True
         os.system("rm -r minimal_SubmersionTokamak")
 
-    def test_SubmersionTokamak_with_pf_coils_stp_creation(self):
+    def test_with_pf_coils_stp_creation(self):
         """creates a submersion reactor with pf coils using the
         SubmersionTokamak parametric reactor and checks that stp files of all
         components can be exported using the export_stp method"""
@@ -201,7 +201,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             assert Path(output_filename).exists() is True
         os.system("rm -r pf_SubmersionTokamak")
 
-    def test_SubmersionTokamak_with_tf_and_pf_coils_stp_creation(self):
+    def test_with_tf_and_pf_coils_stp_creation(self):
         """creates a submersion reactor with tf and pf coils using the
         SubmersionTokamak parametric reactor and checks that stp files of all
         components can be exported using the export_stp method"""
