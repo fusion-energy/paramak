@@ -6,12 +6,9 @@ import pytest
 
 
 class test_SingleNullBallReactor(unittest.TestCase):
-    def test_SingleNullBallReactor_with_pf_and_tf_coils(self):
-        """checks that a single null ball reactor with optional pf and tf
-        coils can be created using the SingleNullBallReactor parametric_reactor,
-        and that the correct number of components are produced"""
 
-        test_reactor = paramak.SingleNullBallReactor(
+    def setUp(self):
+        self.test_reactor = paramak.SingleNullBallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
             center_column_shield_radial_thickness=60,
@@ -32,127 +29,44 @@ class test_SingleNullBallReactor(unittest.TestCase):
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
             divertor_position="lower",
-            rotation_angle=360,
-        )
-        assert len(test_reactor.shapes_and_components) == 9
-
-    def test_single_null_ball_reactor_divertor_lower(self):
-        """checks that a single null reactor with a lower divertor can be
-        created using the SingleNullBallReactor parametric_reactor"""
-
-        test_reactor = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="lower",
-            rotation_angle=360,
-        )
-
-        assert len(test_reactor.shapes_and_components) == 7
-
-    def test_single_null_ball_reactor_divertor_upper(self):
-        """checks that a single null reactor with an upper divertor can be
-        created using the SingleNullBallReactor parametric_reactor"""
-
-        test_reactor = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="upper",
-            rotation_angle=360,
-        )
-
-        assert len(test_reactor.shapes_and_components) == 7
-
-    def test_SingleNullBallReactor_rotation_angle_impacts_volume(self):
-        """creates a single null ball reactor with a rotation angle of
-        90 and another reactor with a rotation angle of 180. Then checks the
-        volumes of all the components is double in the 180 reactor"""
-
-        test_reactor_90 = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="upper",
-            rotation_angle=90,
-        )
-
-        test_reactor_180 = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="upper",
             rotation_angle=180,
         )
+    
+    def test_SingleNullBallReactor_with_pf_and_tf_coils(self):
+        """Checks that a SingleNullBallReactor with optional pf and tf coils can
+        be created and that the correct number of components are produced."""
 
-        for r90, r180 in zip(test_reactor_90.shapes_and_components,
-                             test_reactor_180.shapes_and_components):
+        assert len(self.test_reactor.shapes_and_components) == 9
+
+    def test_single_null_ball_reactor_divertor_upper_lower(self):
+        """Checks that SingleNullBallReactors with lower and upper divertors can
+        be created."""
+
+        self.test_reactor.divertor_position = "lower"
+        assert self.test_reactor.solid is not None 
+        assert len(self.test_reactor.shapes_and_components) == 9
+        self.test_reactor.divertor_position = "upper"
+        assert self.test_reactor.solid is not None
+        assert len(self.test_reactor.shapes_and_components) == 9
+
+    def test_SingleNullBallReactor_rotation_angle_impacts_volume(self):
+        """Creates SingleNullBallReactors with different rotation angles and checks
+        that the relative volumes of the components are correct."""
+
+        self.test_reactor.rotation_angle = 90
+        test_reactor_90_components = [component for component in self.test_reactor.shapes_and_components]
+        self.test_reactor.rotation_angle = 180
+        test_reactor_180_components = [component for component in self.test_reactor.shapes_and_components]
+
+        for r90, r180 in zip(test_reactor_90_components, test_reactor_180_components):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
     def test_single_null_ball_reactor_error(self):
-        """Trys to build a SingleNullBallReactor with an invalid divertor
-        position and checks a ValueError is raised"""
-
-        test_reactor = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            divertor_position="upper",
-            rotation_angle=180,
-        )
+        """Creates a SingleNullBallReactor with an invalid divertor position
+        and checks that the correct ValueError is raised."""
 
         def invalid_position():
-            test_reactor.divertor_position = "coucou"
+            self.test_reactor.divertor_position = "coucou"
 
         self.assertRaises(ValueError, invalid_position)
 
@@ -165,31 +79,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
         these new shapes are returned. Checks that the reactor_hash_value is only updated when the
         reactor is reconstruced."""
 
-        test_reactor = paramak.SingleNullBallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=150,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=50,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            rotation_angle=180,
-            pf_coil_radial_thicknesses=[50, 50, 50, 50],
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
-            pf_coil_to_rear_blanket_radial_gap=50,
-            pf_coil_to_tf_coil_radial_gap=50,
-            outboard_tf_coil_radial_thickness=100,
-            outboard_tf_coil_poloidal_thickness=50,
-            divertor_position="upper"
-        )
-
-        assert test_reactor.reactor_hash_value is None
+        assert self.test_reactor.reactor_hash_value is None
         for key in [
             "_plasma",
             "_inboard_tf_coils",
@@ -200,8 +90,8 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
                 "_tf_coil"]:
-            assert key not in test_reactor.__dict__.keys()
-        assert test_reactor.shapes_and_components is not None
+            assert key not in self.test_reactor.__dict__.keys()
+        assert self.test_reactor.shapes_and_components is not None
         for key in [
             "_plasma",
             "_inboard_tf_coils",
@@ -212,11 +102,11 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
                 "_tf_coil"]:
-            assert key in test_reactor.__dict__.keys()
-        assert len(test_reactor.shapes_and_components) == 9
-        assert test_reactor.reactor_hash_value is not None
-        initial_hash_value = test_reactor.reactor_hash_value
-        test_reactor.rotation_angle = 270
-        assert test_reactor.reactor_hash_value == initial_hash_value
-        assert test_reactor.shapes_and_components is not None
-        assert test_reactor.reactor_hash_value != initial_hash_value
+            assert key in self.test_reactor.__dict__.keys()
+        assert len(self.test_reactor.shapes_and_components) == 9
+        assert self.test_reactor.reactor_hash_value is not None
+        initial_hash_value = self.test_reactor.reactor_hash_value
+        self.test_reactor.rotation_angle = 270
+        assert self.test_reactor.reactor_hash_value == initial_hash_value
+        assert self.test_reactor.shapes_and_components is not None
+        assert self.test_reactor.reactor_hash_value != initial_hash_value
