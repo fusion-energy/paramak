@@ -12,9 +12,9 @@ class test_object_properties(unittest.TestCase):
     def setUp(self):
         self.test_shape = RotateMixedShape(
             points=[(50, 0, "straight"), (50, 50, "spline"), (60, 70, "spline"),
-                (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")]
+                    (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")]
         )
-    
+
     def test_default_parameters(self):
         """Checks that the default parameters of a RotateMixedShape are correct."""
 
@@ -42,7 +42,7 @@ class test_object_properties(unittest.TestCase):
 
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         assert self.test_shape.volume == pytest.approx(test_volume_1 * 4)
-        
+
     def test_shape_face_areas(self):
         """Creates RotateMixedShapes and checks that the face areas are expected."""
 

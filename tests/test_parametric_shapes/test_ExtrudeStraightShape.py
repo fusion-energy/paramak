@@ -18,7 +18,7 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.rotation_angle == 360
         assert self.test_shape.stp_filename == "ExtrudeStraightShape.stp"
         assert self.test_shape.stl_filename == "ExtrudeStraightShape.stl"
-        assert self.test_shape.extrude_both == True
+        assert self.test_shape.extrude_both
 
     def test_absolute_shape_volume(self):
         """Creates an ExtrudeStraightShape and checks that the volume is correct."""
@@ -35,7 +35,7 @@ class test_object_properties(unittest.TestCase):
         assert len(self.test_shape.areas) == 6
         assert self.test_shape.areas.count(pytest.approx(20 * 20)) == 2
         assert self.test_shape.areas.count(pytest.approx(20 * 30)) == 4
-    
+
     def test_relative_shape_volume(self):
         """Creates two ExtrudeStraightShapes and checks that their relative volumes
         are correct."""
@@ -86,7 +86,8 @@ class test_object_properties(unittest.TestCase):
         self.rotation_axis = "Y"
         test_volume = self.test_shape.volume
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 0.5, rel=0.01)
 
 
 if __name__ == "__main__":

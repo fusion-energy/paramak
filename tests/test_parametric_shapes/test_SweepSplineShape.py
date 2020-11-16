@@ -25,26 +25,27 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.path_workplane == "XZ"
         assert self.test_shape.force_cross_section == False
-    
+
     def test_solid_construction_workplane(self):
         """Checks that SweepSplineShapes can be created in different workplanes."""
 
-        self.test_shape.workplane="YZ"
-        self.test_shape.path_workplane="YX"
+        self.test_shape.workplane = "YZ"
+        self.test_shape.path_workplane = "YX"
         assert self.test_shape.solid is not None
 
-        self.test_shape.workplane="XZ"
-        self.test_shape.path_workplane="XY"
+        self.test_shape.workplane = "XZ"
+        self.test_shape.path_workplane = "XY"
         assert self.test_shape.solid is not None
 
     def test_relative_shape_volume_points(self):
         """Creates two SweepSplineShapes and checks that their relative volumes
         are correct."""
 
-        self.test_shape.points=[(-20, 20), (20, 20), (20, -20), (-20, -20)]
+        self.test_shape.points = [(-20, 20), (20, 20), (20, -20), (-20, -20)]
         test_volume = self.test_shape.volume
-        self.test_shape.points=[(-10, 10), (10, 10), (10, -10), (-10, -10)]
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.25, rel=0.01)
+        self.test_shape.points = [(-10, 10), (10, 10), (10, -10), (-10, -10)]
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 0.25, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepSplineShapes and checks that their relative volumes
@@ -52,7 +53,8 @@ class test_object_properties(unittest.TestCase):
 
         test_volume = self.test_shape.volume
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(test_volume * 4, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 4, rel=0.01)
 
     def test_force_cross_section(self):
         """Checks that a SweepSplineShape with the same cross-section at each path_point
@@ -62,19 +64,22 @@ class test_object_properties(unittest.TestCase):
 
         test_area = round(min(self.test_shape.areas))
 
-        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(test_area, rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
             points=[(0, 50), (0, 200), (100, 200), (100, 50)]
         )
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(test_area, rel=0.01)) == 2
 
         cutting_shape.points = [(0, 100), (0, 200), (100, 200), (100, 100)]
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(test_area, rel=0.01)) == 2
 
     def test_force_cross_section_volume(self):
         """Checks that a SweepSplineShape with a larger volume is created when

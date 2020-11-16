@@ -34,7 +34,7 @@ class test_object_properties(unittest.TestCase):
         """Creates a RotateStraightShape and checks that its volume is correct."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume == pytest.approx(math.pi*(20**2)*20)
+        assert self.test_shape.volume == pytest.approx(math.pi * (20**2) * 20)
 
     def test_relative_shape_volume(self):
         """Creates two RotateStraightShapes and checks that their relative volumes
@@ -45,7 +45,7 @@ class test_object_properties(unittest.TestCase):
         assert test_volume == pytest.approx(self.test_shape.volume * 2)
 
     def test_union_volume_addition(self):
-        """Fuses two RotateStraightShapes and checks that their fused volume is 
+        """Fuses two RotateStraightShapes and checks that their fused volume is
         correct."""
 
         inner_box = RotateStraightShape(
@@ -72,8 +72,10 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.area == pytest.approx(
             (math.pi * (20**2) * 2) + (math.pi * (20 * 2) * 20))
         assert len(self.test_shape.areas) == 3
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (20**2))) == 2
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (20 * 2) * 20)) == 1
+        assert self.test_shape.areas.count(
+            pytest.approx(math.pi * (20**2))) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(math.pi * (20 * 2) * 20)) == 1
 
         self.test_shape.rotation_angle = 180
         assert self.test_shape.area == pytest.approx(
@@ -140,7 +142,7 @@ class test_object_properties(unittest.TestCase):
         os.system("rm filename.stl")
 
     def test_export_svg(self):
-        """Creates a RotateStraightShape and checks that a svg file of the 
+        """Creates a RotateStraightShape and checks that a svg file of the
         shape can be exported with the correct suffix using the export_svg
         method."""
 
@@ -187,8 +189,8 @@ class test_object_properties(unittest.TestCase):
         )
 
         assert main_shape_with_cuts.volume == pytest.approx(
-            (math.pi * (200**2) * 200) - 
-            ((math.pi * (40**2) * 200) - (math.pi * (20**2) * 200)) - 
+            (math.pi * (200**2) * 200) -
+            ((math.pi * (40**2) * 200) - (math.pi * (20**2) * 200)) -
             ((math.pi * (140**2) * 200) - (math.pi * (120**2) * 200))
         )
 
@@ -197,13 +199,13 @@ class test_object_properties(unittest.TestCase):
         a unique has value is created when .solid is called. Checks that the same
         solid is returned when .solid is called again after no changes have been
         made to the shape. Checks that a new solid with a new unique has is
-        constructed when .solid is called after changes to the shape have been 
+        constructed when .solid is called after changes to the shape have been
         made. Checks that the hash_value of the shape is not updated until a new
         solid has been constructed."""
 
         assert self.test_shape.hash_value is None
         assert self.test_shape.solid is not None
-        assert self.test_shape.hash_value is not None 
+        assert self.test_shape.hash_value is not None
         initial_hash_value = self.test_shape.hash_value
         assert self.test_shape.solid is not None
         assert initial_hash_value == self.test_shape.hash_value

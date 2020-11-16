@@ -12,7 +12,7 @@ class test_object_properties(unittest.TestCase):
     def setUp(self):
         self.test_shape = SweepMixedShape(
             points=[(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"),
-                (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")],
+                    (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")],
             path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
         )
 
@@ -30,24 +30,25 @@ class test_object_properties(unittest.TestCase):
     def test_solid_construction_workplane(self):
         """Checks that SweepMixedShapes can be created in different workplanes"""
 
-        self.test_shape.workplane="YZ"
-        self.test_shape.path_workplane="YX"
+        self.test_shape.workplane = "YZ"
+        self.test_shape.path_workplane = "YX"
         assert self.test_shape.solid is not None
 
-        self.test_shape.workplane="XZ"
-        self.test_shape.path_workplane="XY"
+        self.test_shape.workplane = "XZ"
+        self.test_shape.path_workplane = "XY"
         assert self.test_shape.solid is not None
 
     def test_relative_shape_volume_points(self):
         """Creates two SweepMixedShapes and checks that their relative volumes
         are correct."""
 
-        self.test_shape.points=[(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"), 
-            (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")]
+        self.test_shape.points = [(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"),
+                                  (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")]
         test_volume = self.test_shape.volume
-        self.test_shape.points=[(-20, -20, "straight"), (-20, 20, "spline"), (0, 40, "spline"),
-            (20, 20, "circle"), (0, 0, "circle"), (20, -20, "straight")]
-        assert self.test_shape.volume == pytest.approx(test_volume * 4, rel=0.01)
+        self.test_shape.points = [(-20, -20, "straight"), (-20, 20, "spline"), (0, 40, "spline"),
+                                  (20, 20, "circle"), (0, 0, "circle"), (20, -20, "straight")]
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 4, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepMixedShapes and checks that their relative volumes
@@ -55,7 +56,8 @@ class test_object_properties(unittest.TestCase):
 
         test_volume = self.test_shape.volume
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(test_volume * 4, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 4, rel=0.01)
 
     def test_workplane_path_workplane_error_raises(self):
         """Checks that errors are raised when SweepMixedShapes are created with
@@ -91,27 +93,30 @@ class test_object_properties(unittest.TestCase):
 
         test_area = round(min(self.test_shape.areas))
 
-        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(test_area, rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
             points=[(0, 50), (0, 200), (100, 200), (100, 50)]
         )
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(test_area, rel=0.01)) == 2
 
         cutting_shape.points = [(0, 100), (0, 200), (100, 200), (100, 100)]
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(
+            pytest.approx(test_area, rel=0.01)) == 2
 
     def test_force_cross_section_volume(self):
-        """Checks that a SweepMixedShape with a larger volume is created when 
+        """Checks that a SweepMixedShape with a larger volume is created when
         force_cross_section = True than when force_cross_section = False."""
 
         test_volume = self.test_shape.volume
         self.test_shape.force_cross_section = True
-        assert self.test_shape.volume > test_volume 
+        assert self.test_shape.volume > test_volume
 
     def test_surface_count(self):
         """Creates a SweepStraightShape and checks that it has the correct number
