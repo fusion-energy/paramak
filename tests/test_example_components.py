@@ -97,6 +97,21 @@ class test_object_properties(unittest.TestCase):
         assert Path(output_filename).exists() is True
         os.system("rm " + output_filename)
 
+    def test_make_segmented_firstwall(self):
+        """Runs the example and checks the output files are produced"""
+        os.chdir(Path(cwd))
+        os.chdir(Path("examples/example_parametric_components"))
+        output_filenames = [
+            "vacuum_vessel_with_ports.stp",
+            "vacuum_vessel_with_ports.svg",
+        ]
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        os.system("python make_vacuum_vessel_with_ports.py")
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
 
 if __name__ == "__main__":
     unittest.main()
