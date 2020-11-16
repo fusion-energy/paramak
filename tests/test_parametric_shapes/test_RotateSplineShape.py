@@ -24,16 +24,14 @@ class test_object_properties(unittest.TestCase):
             ]
         )
         test_shape.rotation_angle = 360
-
-        # TODO: fix issue #445
-        # assert test_shape.solid is not None
-        # assert test_shape.volume > 100
+        volume_360 = test_shape.volume
+        assert test_shape.solid is not None
+        assert volume_360 > 100
 
         test_shape.rotation_angle = 180
         assert test_shape.solid is not None
 
-        # TODO: fix issue #435
-        # assert test_shape.volume == pytest.approx(test_volume * 0.5)
+        assert test_shape.volume == pytest.approx(volume_360 * 0.5)
 
     def test_cut_volume(self):
         """creates a rotated shape using spline connections with another shape cut
