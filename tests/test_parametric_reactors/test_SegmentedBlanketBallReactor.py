@@ -63,7 +63,6 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
             gap_between_blankets=60,
-            number_of_blanket_segments=5,
             number_of_blanket_segments=4,
         )
 
