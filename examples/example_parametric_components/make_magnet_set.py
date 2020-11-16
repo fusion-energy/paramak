@@ -1,6 +1,7 @@
 
 """
-This script makes a set of toroidal and poloidal field coils
+This script makes a set of toroidal and poloidal field coils. Including PF
+coils, PF coil cases, TF coils, TF coil cases and inboard TF coil supports.
 """
 
 import paramak
