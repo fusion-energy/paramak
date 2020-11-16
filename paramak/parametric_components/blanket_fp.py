@@ -99,14 +99,14 @@ class BlanketFP(RotateMixedShape):
 
     @start_angle.setter
     def start_angle(self, value):
-        if value is not None:
-            if self.stop_angle is not None:
-                if diff_between_angles(value,
-                                       self.stop_angle) == 0:
-                    if self.rotation_angle == 360:
-                        msg = "Full coverage and 360 rotation will" + \
-                            " result in a standard construction error."
-                        raise ValueError(msg)
+        # if value is not None:
+        #     if self.stop_angle is not None:
+        #         if diff_between_angles(value,
+        #                                self.stop_angle) == 0:
+        #             if self.rotation_angle == 360:
+        #                 msg = "Full coverage and 360 rotation will" + \
+        #                     " result in a standard construction error."
+        #                 raise ValueError(msg)
         self._start_angle = value
 
     @property
@@ -115,14 +115,14 @@ class BlanketFP(RotateMixedShape):
 
     @stop_angle.setter
     def stop_angle(self, value):
-        if value is not None:
-            if self.start_angle is not None:
-                if diff_between_angles(self.start_angle,
-                                       value) == 0:
-                    if self.rotation_angle == 360:
-                        msg = "Full coverage and 360 rotation will" + \
-                            " result in a standard construction error."
-                        raise ValueError(msg)
+        # if value is not None:
+        #     if self.start_angle is not None:
+        #         if diff_between_angles(self.start_angle,
+        #                                value) == 0:
+        #             if self.rotation_angle == 360:
+        #                 msg = "Full coverage and 360 rotation will" + \
+        #                     " result in a standard construction error."
+        #                 raise ValueError(msg)
         self._stop_angle = value
 
     @property
