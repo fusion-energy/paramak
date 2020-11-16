@@ -48,6 +48,8 @@ def make_center_column_study_reactor(
     if 'neutronics' in outputs:
         my_reactor.export_neutronics_description(
             'CenterColumnStudyReactor/manifest.json')
+    if 'svg' in outputs:
+        my_reactor.export_svg('CenterColumnStudyReactor/reactor.svg')
     if 'stl' in outputs:
         my_reactor.export_stl(output_folder='CenterColumnStudyReactor')
     if 'html' in outputs:

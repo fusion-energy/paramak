@@ -10,7 +10,7 @@ from submersion_reactor_single_null import make_submersion_sn
 from submersion_reactor import make_submersion
 
 
-def main(outputs=['stp']):
+def main(outputs=['stp', 'svg']):
 
     make_submersion(outputs=outputs)
     make_submersion_sn(outputs=outputs)

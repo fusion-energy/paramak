@@ -58,6 +58,8 @@ def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
     if 'neutronics' in outputs:
         my_reactor.export_neutronics_description(
             'SegmentedBlanketBallReactor/manifest.json')
+    if 'svg' in outputs:
+        my_reactor.export_svg('SegmentedBlanketBallReactor/reactor.svg')
     if 'stl' in outputs:
         my_reactor.export_stl(output_folder='SegmentedBlanketBallReactor')
     if 'html' in outputs:
