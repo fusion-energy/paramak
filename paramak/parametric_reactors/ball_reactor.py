@@ -173,7 +173,6 @@ class BallReactor(paramak.Reactor):
         self._make_blankets_layers()
         shapes_and_components += self._make_divertor()
         shapes_and_components += self._make_component_cuts()
-        print(shapes_and_components)
         self.shapes_and_components = shapes_and_components
 
     def _rotation_angle_check(self):
