@@ -55,8 +55,8 @@ A more detailed description of installing Cadquery 2.0 can be found here:
 * `Cadquery 2.0 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
 
 
-Installation
-------------
+System Installation
+-------------------
 
 The quickest way to install the Paramak is to use pip. In the terminal type...
 
@@ -94,17 +94,47 @@ a method of imprinting and merging.
 
    pip install .[neutronics]
 
-Docker
-------
 
-The paramak is availabie as a Docker image and can be downloaded using Docker
-commands.
+Docker Image Installation
+-------------------------
+
+Another option is to use the Docker image which contains all the required
+dependencies.
+
+1. Install Docker CE for `Ubuntu <https://docs.docker.com/install/linux/docker-ce/ubuntu/>`_ ,
+`Mac OS <https://store.docker.com/editions/community/docker-ce-desktop-mac>`_ or
+`Windows <https://hub.docker.com/editions/community/docker-ce-desktop-windows>`_
+including the part where you enable docker use as a non-root user.
+
+2. Pull the docker image from the store by typing the following command in a
+terminal window, or Windows users might prefer PowerShell.
 
 .. code-block:: bash
 
-   docker build -t openmcworkshop/paramak . 
+   docker pull ukaea/paramak
 
-   docker run -it openmcworkshop/paramak
+3. Now that you have the docker image you can enable graphics linking between
+your os and docker, and then run the docker container by typing the following
+commands in a terminal window.
+
+.. code-block:: bash
+
+   sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser --allow-root"
+
+4. A URL should be displayed in the terminal and can now be opened in the
+internet browser of your choice. This will load up the examples folder where
+you can view the 3D objects created.
+
+Alternatively the Docker image can be run in terminal mode .
+
+.. code-block:: bash
+
+   docker run -it ukaea/paramak
+
+You may also want to make use of the
+`--volume <https://docs.docker.com/storage/volumes/>`_
+flag when running Docker so that you can retrieve files from the Docker
+enviroment to your base system.
 
 Presentations
 -------------
