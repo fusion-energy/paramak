@@ -173,7 +173,7 @@ class BallReactor(paramak.Reactor):
         self._make_blankets_layers()
         shapes_and_components += self._make_divertor()
         shapes_and_components += self._make_component_cuts()
-
+        print(shapes_and_components)
         self.shapes_and_components = shapes_and_components
 
     def _rotation_angle_check(self):
@@ -504,7 +504,7 @@ class BallReactor(paramak.Reactor):
                 material_tag="pf_coil_case_mat",
             )
 
-            self._shapes_and_components.append(self._pf_coils_casing)
+            list_of_components.append(self._pf_coils_casing)
 
             if (
                 self.pf_coil_to_tf_coil_radial_gap is not None
