@@ -49,32 +49,6 @@ class test_object_properties(unittest.TestCase):
         self.test_shape.azimuth_placement_angle=[0, 90, 180, 270]
         assert self.test_shape.volume == pytest.approx(test_volume * 4)
 
-    def test_workplane_path_workplane_error_raises(self):
-        """Checks that errors are raised when SweepStraightShapes are created with
-        disallowed workplane and path_workplane combinations."""
-
-        def workplane_and_path_workplane_equal():
-            self.test_shape.workplane = "XZ"
-            self.test_shape.path_workplane = "XZ"
-
-        def invalid_relative_workplane_and_path_workplane():
-            self.test_shape.workplane = "XZ"
-            self.test_shape.path_workplane = "YZ"
-
-        self.assertRaises(ValueError, workplane_and_path_workplane_equal)
-        self.assertRaises(
-            ValueError,
-            invalid_relative_workplane_and_path_workplane)
-
-    def test_workplane_opposite_distance(self):
-        """Checks that a SweepStraightShape can be created with workplane XZ and
-        path_workplane XY"""
-
-        self.test_shape.workplane = "XZ"
-        self.test_shape.path_workplane = "XY"
-
-        assert self.test_shape.solid is not None
-
     def test_force_cross_section(self):
         """Checks that a SweepStraightShape with the same cross-section at each path_point
         is created when force_cross_section = True."""
