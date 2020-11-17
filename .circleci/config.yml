@@ -9,8 +9,7 @@ jobs:
   build:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
-    docker:
-      - image: circleci/buildpack-deps:stretch
+    machine: true
     steps:
       - checkout
       # - setup_remote_docker
