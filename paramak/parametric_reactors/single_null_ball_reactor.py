@@ -84,6 +84,7 @@ class SingleNullBallReactor(paramak.BallReactor):
             raise ValueError("divertor position must be 'upper' or 'lower'")
 
     def _make_divertor(self):
+        list_of_components = []
 
         if self.divertor_position == "upper":
             divertor_height = self._blanket_rear_wall_end_height
@@ -122,7 +123,7 @@ class SingleNullBallReactor(paramak.BallReactor):
             rotation_angle=self.rotation_angle
         )
 
-        self._shapes_and_components.append(self._divertor)
+        list_of_components.append(self._divertor)
 
         blanket_cutter = paramak.RotateStraightShape(
             points=[
@@ -142,6 +143,7 @@ class SingleNullBallReactor(paramak.BallReactor):
         self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
         self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
             blanket_cutter.solid)
-        self._shapes_and_components.append(self._firstwall)
-        self._shapes_and_components.append(self._blanket)
-        self._shapes_and_components.append(self._blanket_rear_wall)
+        list_of_components.append(self._firstwall)
+        list_of_components.append(self._blanket)
+        list_of_components.append(self._blanket_rear_wall)
+        return list_of_components

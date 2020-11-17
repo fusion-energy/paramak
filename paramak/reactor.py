@@ -10,6 +10,7 @@ from cadquery import exporters
 import paramak
 import plotly.graph_objects as go
 from paramak.shape import Shape
+from paramak.utils import get_hash
 
 
 class Reactor:
@@ -37,12 +38,13 @@ class Reactor:
 
         self.shapes_and_components = shapes_and_components
         self.graveyard_offset = graveyard_offset
+        self.reactor_hash_value = None
 
     @property
     def stp_filenames(self):
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.stp_filename)
+        for shape_or_component in self.shapes_and_components:
+            values.append(shape_or_component.stp_filename)
         return values
 
     @stp_filenames.setter
@@ -52,8 +54,8 @@ class Reactor:
     @property
     def stl_filenames(self):
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.stl_filename)
+        for shape_or_component in self.shapes_and_components:
+            values.append(shape_or_component.stl_filename)
         return values
 
     @stl_filenames.setter
@@ -65,13 +67,13 @@ class Reactor:
         """Returns a set of all the materials_tags used in the Reactor
         (excluding the plasma)"""
         values = []
-        for shape_or_componet in self.shapes_and_components:
+        for shape_or_component in self.shapes_and_components:
             if isinstance(
-                shape_or_componet,
+                shape_or_component,
                 (paramak.Plasma,
                  paramak.PlasmaFromPoints,
                  paramak.PlasmaBoundaries)) is False:
-                values.append(shape_or_componet.material_tag)
+                values.append(shape_or_component.material_tag)
         return values
 
     @material_tags.setter
@@ -95,7 +97,11 @@ class Reactor:
         to the Reactor object. This allows collective operations to be
         performed on all the shapes in the reactor. When adding a shape or
         component the stp_filename of the shape or component should be unique"""
-
+        if hasattr(self, "create_solids"):
+            ignored_keys = ["reactor_hash_value"]
+            if get_hash(self, ignored_keys) != self.reactor_hash_value:
+                self.create_solids()
+                self.reactor_hash_value = get_hash(self, ignored_keys)
         return self._shapes_and_components
 
     @shapes_and_components.setter

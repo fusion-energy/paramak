@@ -1,34 +1,56 @@
 Examples - Parametric Reactors
 ==============================
 
-make_parametric_ball_reactor.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ball_reactor.py
+^^^^^^^^^^^^^^^
 
-.. automodule:: examples.example_parametric_reactors.make_parametric_ball_reactor
+.. automodule:: examples.example_parametric_reactors.ball_reactor
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_reactors/make_parametric_ball_reactor.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor.py>`_
 
-make_parametric_single_null_ball_reactor.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ball_reactor_single_null.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: examples.example_parametric_reactors.make_parametric_single_null_ball_reactor
+.. automodule:: examples.example_parametric_reactors.ball_reactor_single_null
    :members:
    :show-inheritance:
 
-make_parametric_submersion_reactor.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor_single_null.py>`_
 
-.. automodule:: examples.example_parametric_reactors.make_parametric_submersion_reactor
+segmented_blanket_ball_reactor.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: examples.example_parametric_reactors.segmented_blanket_ball_reactor
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_reactors/make_parametric_submersion_reactor.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/segmented_blanket_ball_reactor.py>`_
 
-make_parametric_single_null_submersion_reactor.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+submersion_reactor.py
+^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: examples.example_parametric_reactors.make_parametric_single_null_submersion_reactor
+.. automodule:: examples.example_parametric_reactors.submersion_reactor
    :members:
    :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.py>`_
+
+submersion_reactor_single_null.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: examples.example_parametric_reactors.submersion_reactor_single_null
+   :members:
+   :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor_single_null.py>`_
+
+center_column_study_reactor.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: examples.example_parametric_reactors.center_column_study_reactor
+   :members:
+   :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/center_column_study_reactor.py>`_

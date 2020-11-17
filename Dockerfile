@@ -1,36 +1,55 @@
-# build with the following command
-# sudo docker build -t paramak .
+# This docker image is available on dockerhub and can be downloaded using
+# docker pull ukaea/paramak
+# However the docker image can also be build locally with these commands
 
-# Run with the follwoing command
-# sudo docker run -it paramak
+# Build with the following command from within the base repository directory
+# sudo docker build -t ukaea/paramak .
 
-# We will use Ubuntu for our image
+# Run with the following command for terminal access
+# sudo docker run -it ukaea/paramak
+
+# Run with the following command for jupyter notebook interface
+# sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
+
+# test with the folowing command
+# sudo docker run --rm ukaea/paramak pytest /tests
+
 FROM continuumio/miniconda3
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-RUN useradd -ms /bin/bash cq
+RUN apt-get --yes update
 
-WORKDIR /home/cq/
+RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
+                       freeglut3-dev libosmesa6 libosmesa6-dev \
+                       libgles2-mesa-dev && \
+                       apt-get clean
 
-USER root
+# # appears to work best if jupyter is installed before cadquery master version
+# RUN conda install jupyter -y --quiet && \
+#     conda clean -afy
 
-RUN apt-get install -y libgl1-mesa-glx
+# # cadquery version set to master to fix paramak issue 445
+# RUN conda install -c cadquery -c conda-forge cadquery=master && \
+#     conda clean -afy
 
-RUN conda install -c cadquery -c conda-forge cadquery=master
-
-USER cq
+# TODO move back to version 2. when the next CADQuery release happens
+RUN conda install -c conda-forge -c cadquery cadquery=2 && \
+    conda install jupyter -y --quiet && \
+    conda clean -afy
 
 # Copy over the source code
 COPY paramak paramak/
+COPY examples examples/
 COPY setup.py setup.py
+COPY requirements.txt requirements.txt
 COPY README.md README.md
-
-RUN pip install .[neutronics]
-
-# Copy over the test folder
 COPY tests tests/
 
-WORKDIR paramak/examples
+# includes optional dependancies like neutronics_material_maker
+RUN pip install -r requirements.txt
 
-CMD ["/bin/bash"]
+# using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
+RUN python setup.py install
+
+WORKDIR examples

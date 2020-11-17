@@ -38,23 +38,23 @@ class test_SubmersionTokamak(unittest.TestCase):
         os.system("rm test_SubmersionTokamak_image.svg")
         self.test_reactor.export_svg("test_SubmersionTokamak_image.svg")
 
-        assert Path("test_SubmersionTokamak_image.svg").exists() is True
-        os.system("rm test_SubmersionTokamak_image.svg")
+        assert Path("test_image.svg").exists() is True
+        os.system("rm test_image.svg")
 
     def test_minimal_SubmersionTokamak_creation(self):
-        """Creates a SubmersionTokamak and checks that the correct number of 
+        """Creates a SubmersionTokamak and checks that the correct number of
         components are created."""
 
         assert len(self.test_reactor.shapes_and_components) == 8
 
     def test_SubmersionTokamak_with_tf_coils_creation(self):
-        """Creates a SubmersionTokamak with tf coils and checks that the correct 
+        """Creates a SubmersionTokamak with tf coils and checks that the correct
         number of components are created."""
 
-        self.test_reactor.outboard_tf_coil_radial_thickness=50
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=70
-        self.test_reactor.number_of_tf_coils=4
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.number_of_tf_coils = 4
 
         assert len(self.test_reactor.shapes_and_components) == 9
 
@@ -102,11 +102,11 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         os.system("rm -r pf_SubmersionTokamak")
 
-        self.test_reactor.outboard_tf_coil_radial_thickness=50
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=70
-        self.test_reactor.number_of_tf_coils=4
-        
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.number_of_tf_coils = 4
+
         self.test_reactor.export_stp("pf_SubmersionTokamak")
 
         output_filenames = [

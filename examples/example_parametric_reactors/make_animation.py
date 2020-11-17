@@ -46,7 +46,6 @@ for i in tqdm(range(args.number_of_models)):
     my_reactor.export_svg(
         filename="output_for_animation_svg/" + str(uuid.uuid4()) + ".svg"
     )
-    # my_reactor.export_3d_image(filename="output_for_animation_3d/" + str(uuid.uuid4()) + ".png")
 
     print(str(args.number_of_models), "models made")
 

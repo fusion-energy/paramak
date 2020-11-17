@@ -68,11 +68,14 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         checks that the relative volumes of the components are correct."""
 
         self.test_reactor.rotation_angle = 90
-        test_reactor_90_components = [component for component in self.test_reactor.shapes_and_components]
+        test_reactor_90_components = [
+            component for component in self.test_reactor.shapes_and_components]
         self.test_reactor.rotation_angle = 180
-        test_reactor_180_components = [component for component in self.test_reactor.shapes_and_components]
+        test_reactor_180_components = [
+            component for component in self.test_reactor.shapes_and_components]
 
-        for r90, r180 in zip(test_reactor_90_components, test_reactor_180_components):
+        for r90, r180 in zip(test_reactor_90_components,
+                             test_reactor_180_components):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
     def test_SubmersionTokamak_error_divertor_pos(self):
@@ -89,7 +92,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
 
         self.assertRaises(ValueError, invalid_support_position)
 
-    def test_SingleNullSubmersionTokamak_hash_value(self):
+    def test_hash_value(self):
         """Creates a single null submersion reactor and checks that all shapes in the reactor
         are created when .shapes_and_components is first called. Checks that when
         .shapes_and_components is called again with no changes to the reactor, the shapes in
@@ -127,6 +130,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         ]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
+
         for key in [
             "_inboard_tf_coils",
             "_center_column_shield",

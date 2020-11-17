@@ -33,19 +33,6 @@ BlanketConstantThicknessArcV()
    :members:
    :show-inheritance:
 
-BlanketFP()
-^^^^^^^^^^^
-
-|BlanketFPstp| |BlanketFPsvg|
-
-.. |BlanketFPstp| image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
-   :width: 220
-.. |BlanketFPsvg| image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
-   :width: 350
-
-.. automodule:: paramak.parametric_components.blanket_fp
-   :members:
-   :show-inheritance:
 
 BlanketCutterParallels()
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -75,6 +62,37 @@ BlanketCutterStar()
 .. automodule:: paramak.parametric_components.blanket_cutters_star
    :members:
    :show-inheritance:
+
+
+BlanketFP()
+^^^^^^^^^^^
+
+|BlanketFPstp| |BlanketFPsvg|
+
+.. |BlanketFPstp| image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
+   :width: 220
+.. |BlanketFPsvg| image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
+   :width: 350
+
+.. automodule:: paramak.parametric_components.blanket_fp
+   :members:
+   :show-inheritance:
+
+
+BlanketFPPoloidalSegments()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|BlanketFPPoloidalSegmentsstp| |BlanketFPPoloidalSegmentssvg|
+
+.. |BlanketFPPoloidalSegmentsstp| image:: https://user-images.githubusercontent.com/8583900/98735027-af6ca200-239a-11eb-9a59-4a570f91a1fc.png
+   :width: 220
+.. |BlanketFPPoloidalSegmentssvg| image:: https://user-images.githubusercontent.com/8583900/98870151-ca0e4c00-246a-11eb-8a37-e7620344d8c1.png
+   :width: 350
+
+.. automodule:: paramak.parametric_components.blanket_poloidal_segment
+   :members:
+   :show-inheritance:
+
 
 CenterColumnShieldCylinder()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -399,6 +417,23 @@ PlasmaBoundaries()
    :members:
    :show-inheritance:
 
+TFCoilCasing()
+^^^^^^^^^^^^^^
+
+|TFCoilCasingallstp| |TFCoilCasingaCutstp| |TFCoilCasingsvg|
+
+.. |TFCoilCasingallstp| image:: https://user-images.githubusercontent.com/8583900/98821523-94943f00-2427-11eb-8047-68f2762c56d7.png
+    :width: 200px
+.. |TFCoilCasingaCutstp| image:: https://user-images.githubusercontent.com/8583900/98821532-96f69900-2427-11eb-99e1-e2461be67511.png
+    :width: 130px
+.. |TFCoilCasingsvg| image:: https://user-images.githubusercontent.com/8583900/99081345-904c5b00-25ba-11eb-8a4f-956d4ad6bbc0.png
+    :width: 310px
+
+.. automodule:: paramak.parametric_components.tf_coil_casing
+   :members:
+   :show-inheritance:
+
+
 ToroidalFieldCoilRectangle()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -476,5 +511,37 @@ VacuumVessel()
    :width: 255
 
 .. automodule:: paramak.parametric_components.vacuum_vessel
+   :members:
+   :show-inheritance:
+
+CoolantChannelRingStraight()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|CoolantChannelRingStraightallstp| |CoolantChannelRingStraightsvg| |CoolantChannelRingStraightstp|
+
+.. |CoolantChannelRingStraightallstp| image:: https://user-images.githubusercontent.com/56687624/99049969-6467b000-258f-11eb-93b2-73e533b366c0.png
+   :width: 200
+.. |CoolantChannelRingStraightsvg| image:: https://user-images.githubusercontent.com/56687624/99048848-ff5f8a80-258d-11eb-9073-123185d7a4fb.png
+   :width: 230
+.. |CoolantChannelRingStraightstp| image:: https://user-images.githubusercontent.com/56687624/99049922-574ac100-258f-11eb-8cb9-a57cef2b8086.png
+   :width: 100
+
+.. automodule:: paramak.parametric_components.coolant_channel_ring_straight
+   :members:
+   :show-inheritance:
+
+CoolantChannelRingCurved()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|CoolantChannelRingCurvedallstp| |CoolantChannelRingCurvedsvg| |CoolantChannelRingCurvedstp|
+
+.. |CoolantChannelRingCurvedallstp| image:: https://user-images.githubusercontent.com/56687624/99049933-5ade4800-258f-11eb-96c1-4506a8f646a9.png
+   :width: 200
+.. |CoolantChannelRingCurvedsvg| image:: https://user-images.githubusercontent.com/56687624/99048853-0090b780-258e-11eb-862e-763f7a0f7ec6.png
+   :width: 230
+.. |CoolantChannelRingCurvedstp| image:: https://user-images.githubusercontent.com/56687624/99049900-4f8b1c80-258f-11eb-81be-bc101e2168e2.png
+   :width: 100
+
+.. automodule:: paramak.parametric_components.coolant_channel_ring_curved
    :members:
    :show-inheritance:

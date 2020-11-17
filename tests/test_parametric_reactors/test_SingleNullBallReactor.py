@@ -32,7 +32,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
             divertor_position="lower",
             rotation_angle=180,
         )
-    
+
     def test_SingleNullBallReactor_with_pf_and_tf_coils(self):
         """Checks that a SingleNullBallReactor with optional pf and tf coils can
         be created and that the correct number of components are produced."""
@@ -46,6 +46,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
         self.test_reactor.divertor_position = "lower"
         assert self.test_reactor.solid is not None 
         assert len(self.test_reactor.shapes_and_components) == 10
+
         self.test_reactor.divertor_position = "upper"
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 10
@@ -55,11 +56,14 @@ class test_SingleNullBallReactor(unittest.TestCase):
         that the relative volumes of the components are correct."""
 
         self.test_reactor.rotation_angle = 90
-        test_reactor_90_components = [component for component in self.test_reactor.shapes_and_components]
+        test_reactor_90_components = [
+            component for component in self.test_reactor.shapes_and_components]
         self.test_reactor.rotation_angle = 180
-        test_reactor_180_components = [component for component in self.test_reactor.shapes_and_components]
+        test_reactor_180_components = [
+            component for component in self.test_reactor.shapes_and_components]
 
-        for r90, r180 in zip(test_reactor_90_components, test_reactor_180_components):
+        for r90, r180 in zip(test_reactor_90_components,
+                             test_reactor_180_components):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
     def test_single_null_ball_reactor_error(self):
@@ -71,7 +75,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
 
         self.assertRaises(ValueError, invalid_position)
 
-    def test_single_null_ball_reactor_hash_value(self):
+    def test_hash_value(self):
         """Creates a single null ball reactor and checks that all shapes in the reactor are created
         when .shapes_and_components is first called. Checks that when .shapes_and_components is
         called again with no changes to the reactor, the shapes in the reactor are not reconstructed
@@ -91,9 +95,11 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
             "_pf_coil_cases",
-                "_tf_coil"]:
+            "_tf_coil"
+        ]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
+
         for key in [
             "_plasma",
             "_inboard_tf_coils",
@@ -104,7 +110,8 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
             "_pf_coil_cases",
-                "_tf_coil"]:
+            "_tf_coil"
+        ]:
             assert key in self.test_reactor.__dict__.keys()
         assert len(self.test_reactor.shapes_and_components) == 10
         assert self.test_reactor.reactor_hash_value is not None

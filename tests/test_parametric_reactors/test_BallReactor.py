@@ -15,28 +15,28 @@ class test_BallReactor(unittest.TestCase):
 
     def setUp(self):
         self.test_reactor = paramak.BallReactor(
-                inner_bore_radial_thickness=50,
-                inboard_tf_leg_radial_thickness=200,
-                center_column_shield_radial_thickness=50,
-                divertor_radial_thickness=100,
-                inner_plasma_gap_radial_thickness=150,
-                plasma_radial_thickness=100,
-                outer_plasma_gap_radial_thickness=50,
-                firstwall_radial_thickness=50,
-                blanket_radial_thickness=100,
-                blanket_rear_wall_radial_thickness=10,
-                elongation=2,
-                triangularity=0.55,
-                number_of_tf_coils=16,
-                rotation_angle=180,
-            )
+            inner_bore_radial_thickness=50,
+            inboard_tf_leg_radial_thickness=200,
+            center_column_shield_radial_thickness=50,
+            divertor_radial_thickness=100,
+            inner_plasma_gap_radial_thickness=150,
+            plasma_radial_thickness=100,
+            outer_plasma_gap_radial_thickness=50,
+            firstwall_radial_thickness=50,
+            blanket_radial_thickness=100,
+            blanket_rear_wall_radial_thickness=10,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            rotation_angle=180,
+        )
 
     def test_BallReactor_creation_with_narrow_divertor(self):
         """Creates a BallReactor with a narrow divertor and checks that the correct
         number of components are created."""
 
         self.test_reactor.divertor_radial_thickness = 50
-        
+
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 7
 
@@ -102,7 +102,7 @@ class test_BallReactor(unittest.TestCase):
         works correctly."""
 
         self.test_reactor.export_physical_groups()
-        
+
         # insert assertion
 
     def test_rotation_angle_warning(self):
@@ -149,9 +149,11 @@ class test_BallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
             "_pf_coil_cases",
-            "_tf_coil"]:
+            "_tf_coil"
+        ]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
+
         for key in [
             "_plasma",
             "_inboard_tf_coils",

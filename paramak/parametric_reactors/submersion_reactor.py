@@ -5,7 +5,7 @@ import cadquery as cq
 
 import paramak
 
-from paramak.utils import get_reactor_hash
+from paramak.utils import get_hash
 
 
 class SubmersionTokamak(paramak.Reactor):
@@ -86,6 +86,7 @@ class SubmersionTokamak(paramak.Reactor):
         pf_coil_vertical_thicknesses=None,
         pf_coil_radial_thicknesses=None,
         pf_coil_to_tf_coil_radial_gap=None,
+        pf_coil_case_thickness=10,
     ):
 
         super().__init__([])
@@ -112,6 +113,7 @@ class SubmersionTokamak(paramak.Reactor):
         self.triangularity = triangularity
         self.tf_coil_to_rear_blanket_radial_gap = tf_coil_to_rear_blanket_radial_gap
         self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
+        self.pf_coil_case_thickness = pf_coil_case_thickness
         self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
 
@@ -133,20 +135,6 @@ class SubmersionTokamak(paramak.Reactor):
         self.minor_radius = (
             (outer_equatorial_point + inner_equatorial_point) / 2
         ) - inner_equatorial_point
-
-        self.shapes_and_components = []
-
-        self.reactor_hash_value = None
-
-    @property
-    def shapes_and_components(self):
-        if get_reactor_hash(self) != self.reactor_hash_value:
-            self.create_solids()
-        return self._shapes_and_components
-
-    @shapes_and_components.setter
-    def shapes_and_components(self, value):
-        self._shapes_and_components = value
 
     @property
     def pf_coil_radial_thicknesses(self):
@@ -176,21 +164,21 @@ class SubmersionTokamak(paramak.Reactor):
 
         """
 
-        self._shapes_and_components = []
+        shapes_and_components = []
 
         self._rotation_angle_check()
-        self._make_plasma()
+        shapes_and_components.append(self._make_plasma())
         self._make_radial_build()
         self._make_vertical_build()
-        self._make_inboard_tf_coils()
-        self._make_center_column_shield()
+        shapes_and_components.append(self._make_inboard_tf_coils())
+        shapes_and_components.append(self._make_center_column_shield())
         self._make_inboard_blanket_and_firstwall()
-        self._make_divertor()
+        shapes_and_components.append(self._make_divertor())
         self._make_outboard_blanket()
-        self._make_supports()
-        self._make_component_cuts()
+        shapes_and_components.append(self._make_supports())
+        shapes_and_components += self._make_component_cuts()
 
-        self.reactor_hash_value = get_reactor_hash(self)
+        self.shapes_and_components = shapes_and_components
 
     def _rotation_angle_check(self):
 
@@ -333,6 +321,10 @@ class SubmersionTokamak(paramak.Reactor):
                 self._number_of_pf_coils + 1
             )
 
+            if not isinstance(self.pf_coil_case_thickness, list):
+                self.pf_coil_case_thickness = [
+                    self.pf_coil_case_thickness] * self._number_of_pf_coils
+
             self._pf_coils_xy_values = []
             # adds in coils with equal spacing strategy, should be updated to
             # allow user positions
@@ -346,6 +338,7 @@ class SubmersionTokamak(paramak.Reactor):
                     self._outboard_tf_coil_end_radius
                     + self.pf_coil_to_tf_coil_radial_gap
                     + 0.5 * self.pf_coil_radial_thicknesses[i]
+                    + self.pf_coil_case_thickness[i]
                 )
                 self._pf_coils_xy_values.append((x_value, y_value))
 
@@ -369,7 +362,7 @@ class SubmersionTokamak(paramak.Reactor):
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
         )
-        self._shapes_and_components.append(self._inboard_tf_coils)
+        return self._inboard_tf_coils
 
     def _make_center_column_shield(self):
 
@@ -383,7 +376,7 @@ class SubmersionTokamak(paramak.Reactor):
             name="center_column_shield",
             material_tag="center_column_shield_mat",
         )
-        self._shapes_and_components.append(self._center_column_shield)
+        return self._center_column_shield
 
     def _make_plasma(self):
 
@@ -396,7 +389,7 @@ class SubmersionTokamak(paramak.Reactor):
         )
         self._plasma.create_solid()
 
-        self._shapes_and_components.append(self._plasma)
+        return self._plasma
 
     def _make_inboard_blanket_and_firstwall(self):
 
@@ -452,7 +445,7 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="divertor_mat",
             intersect=self._firstwall,
         )
-        self._shapes_and_components.append(self._divertor)
+        return self._divertor
 
     def _make_outboard_blanket(self):
 
@@ -486,18 +479,18 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="supports_mat",
             intersect=self._blanket,
         )
-        self._shapes_and_components.append(self._supports)
+        return self._supports
 
     def _make_component_cuts(self):
-
+        list_of_components = []
         # the divertor is cut away then the firstwall can be added to the
         # reactor using CQ operations
         self._firstwall.solid = self._firstwall.solid.cut(self._divertor.solid)
-        self._shapes_and_components.append(self._firstwall)
+        list_of_components.append(self._firstwall)
 
         # cutting the supports away from the blanket
         self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
-        self._shapes_and_components.append(self._blanket)
+        list_of_components.append(self._blanket)
 
         self._outboard_rear_blanket_wall_upper = paramak.RotateStraightShape(
             points=[
@@ -549,7 +542,7 @@ class SubmersionTokamak(paramak.Reactor):
                 self._outboard_rear_blanket_wall_lower],
         )
 
-        self._shapes_and_components.append(self._outboard_rear_blanket_wall)
+        list_of_components.append(self._outboard_rear_blanket_wall)
 
         if self._tf_info_provided:
             self._tf_coil = paramak.ToroidalFieldCoilCoatHanger(
@@ -568,7 +561,7 @@ class SubmersionTokamak(paramak.Reactor):
                 horizontal_length=self._outboard_tf_coils_horizontal_length,
                 vertical_length=self._outboard_tf_coils_vertical_height
             )
-            self._shapes_and_components.append(self._tf_coil)
+            list_of_components.append(self._tf_coil)
 
             if self._pf_info_provided:
 
@@ -582,4 +575,18 @@ class SubmersionTokamak(paramak.Reactor):
                     material_tag="pf_coil_mat",
                 )
 
-                self._shapes_and_components.append(self._pf_coil)
+                list_of_components.append(self._pf_coil)
+
+                self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
+                    pf_coils=self._pf_coil,
+                    casing_thicknesses=self.pf_coil_case_thickness,
+                    rotation_angle=self.rotation_angle,
+                    stp_filename='pf_coil_cases.stp',
+                    stl_filename='pf_coil_cases.stl',
+                    name="pf_coil_case",
+                    material_tag="pf_coil_case_mat",
+                )
+
+                list_of_components.append(self._pf_coils_casing)
+
+        return list_of_components
