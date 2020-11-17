@@ -28,6 +28,8 @@ class PlasmaBoundaries(Plasma):
             Defaults to "non-null".
         x_point_shift (float, optional): Shift parameters for locating the
             X points in [0, 1]. Defaults to 0.1.
+        step (float, optional): Discretisation step of the domain. Defaults to
+            0.01.
     """
 
     def __init__(
@@ -40,6 +42,7 @@ class PlasmaBoundaries(Plasma):
         vertical_displacement=0.0,
         configuration="non-null",
         x_point_shift=0.1,
+        step=0.01,
         **kwargs
     ):
 
@@ -56,6 +59,7 @@ class PlasmaBoundaries(Plasma):
 
         # properties needed for plasma shapes
         self.A = A
+        self.step = step
 
     def find_points(self):
         """Finds the XZ points that describe the 2D profile of the plasma."""
@@ -66,7 +70,8 @@ class PlasmaBoundaries(Plasma):
             "elongation": self.elongation,
             "triangularity": self.triangularity,
         }
-        points = get_separatrix_coordinates(params, self.configuration)
+        points = get_separatrix_coordinates(
+            params, self.configuration, step=self.step)
         # add vertical displacement
         points[:, 1] += self.vertical_displacement
         # rescale to cm
