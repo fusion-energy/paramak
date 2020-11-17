@@ -186,7 +186,7 @@ class test_Plasma(unittest.TestCase):
     def test_plasmaboundaries_solid(self):
         """Create a default PlasmaBoundaries shape and check a solid can be
         created"""
-        test_plasma = paramak.PlasmaBoundaries()
+        test_plasma = paramak.PlasmaBoundaries(step=0.15)
         for config in ["non-null", "single-null", "double-null"]:
             test_plasma.configuration = config
             assert test_plasma.solid is not None
