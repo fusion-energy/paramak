@@ -42,19 +42,19 @@ class test_SubmersionTokamak(unittest.TestCase):
         os.system("rm test_image.svg")
 
     def test_minimal_SubmersionTokamak_creation(self):
-        """Creates a SubmersionTokamak and checks that the correct number of 
+        """Creates a SubmersionTokamak and checks that the correct number of
         components are created."""
 
         assert len(self.test_reactor.shapes_and_components) == 8
 
     def test_SubmersionTokamak_with_tf_coils_creation(self):
-        """Creates a SubmersionTokamak with tf coils and checks that the correct 
+        """Creates a SubmersionTokamak with tf coils and checks that the correct
         number of components are created."""
 
-        self.test_reactor.outboard_tf_coil_radial_thickness=50
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=70
-        self.test_reactor.number_of_tf_coils=4
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.number_of_tf_coils = 4
 
         assert len(self.test_reactor.shapes_and_components) == 9
 
@@ -62,13 +62,13 @@ class test_SubmersionTokamak(unittest.TestCase):
         """Creates a SubmersionTokamak with tf and pf coils and checks that the
         correct number of components are created."""
 
-        self.test_reactor.outboard_tf_coil_radial_thickness=50
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=70
-        self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50, 50]
-        self.test_reactor.pf_coil_radial_thicknesses=[40, 40, 40, 40, 40]
-        self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
-        self.test_reactor.number_of_tf_coils=4
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50, 50]
+        self.test_reactor.pf_coil_radial_thicknesses = [40, 40, 40, 40, 40]
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.number_of_tf_coils = 4
 
         assert len(self.test_reactor.shapes_and_components) == 10
 
@@ -101,11 +101,11 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         os.system("rm -r pf_SubmersionTokamak")
 
-        self.test_reactor.outboard_tf_coil_radial_thickness=50
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=70
-        self.test_reactor.number_of_tf_coils=4
-        
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.number_of_tf_coils = 4
+
         self.test_reactor.export_stp("pf_SubmersionTokamak")
 
         output_filenames = [
@@ -130,13 +130,13 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         os.system("rm -r tf_pf_SubmersionTokamak")
 
-        self.test_reactor.outboard_tf_coil_radial_thickness=50
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=70
-        self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50, 50]
-        self.test_reactor.pf_coil_radial_thicknesses=[40, 40, 40, 40, 40]
-        self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
-        self.test_reactor.number_of_tf_coils=4
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50, 50]
+        self.test_reactor.pf_coil_radial_thicknesses = [40, 40, 40, 40, 40]
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.number_of_tf_coils = 4
 
         self.test_reactor.export_stp("tf_pf_SubmersionTokamak")
 
@@ -180,13 +180,13 @@ class test_SubmersionTokamak(unittest.TestCase):
         the reactor are reconstructed and these new shapes are returned. Checks that the
         reactor_hash_value is only updated when the reactor is reconstructed."""
 
-        self.test_reactor.pf_coil_radial_thicknesses=[30, 30, 30, 30]
-        self.test_reactor.pf_coil_vertical_thicknesses=[30, 30, 30, 30]
-        self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
-        self.test_reactor.outboard_tf_coil_radial_thickness=30
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=30
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap=20
-        self.test_reactor.number_of_tf_coils=16
+        self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
+        self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_radial_thickness = 30
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 30
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 20
+        self.test_reactor.number_of_tf_coils = 16
 
         assert self.test_reactor.reactor_hash_value is None
         for key in [

@@ -15,28 +15,28 @@ class test_BallReactor(unittest.TestCase):
 
     def setUp(self):
         self.test_reactor = paramak.BallReactor(
-                inner_bore_radial_thickness=50,
-                inboard_tf_leg_radial_thickness=200,
-                center_column_shield_radial_thickness=50,
-                divertor_radial_thickness=100,
-                inner_plasma_gap_radial_thickness=150,
-                plasma_radial_thickness=100,
-                outer_plasma_gap_radial_thickness=50,
-                firstwall_radial_thickness=50,
-                blanket_radial_thickness=100,
-                blanket_rear_wall_radial_thickness=10,
-                elongation=2,
-                triangularity=0.55,
-                number_of_tf_coils=16,
-                rotation_angle=180,
-            )
+            inner_bore_radial_thickness=50,
+            inboard_tf_leg_radial_thickness=200,
+            center_column_shield_radial_thickness=50,
+            divertor_radial_thickness=100,
+            inner_plasma_gap_radial_thickness=150,
+            plasma_radial_thickness=100,
+            outer_plasma_gap_radial_thickness=50,
+            firstwall_radial_thickness=50,
+            blanket_radial_thickness=100,
+            blanket_rear_wall_radial_thickness=10,
+            elongation=2,
+            triangularity=0.55,
+            number_of_tf_coils=16,
+            rotation_angle=180,
+        )
 
     def test_BallReactor_creation_with_narrow_divertor(self):
         """Creates a BallReactor with a narrow divertor and checks that the correct
         number of components are created."""
 
         self.test_reactor.divertor_radial_thickness = 50
-        
+
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 7
 
@@ -62,10 +62,10 @@ class test_BallReactor(unittest.TestCase):
         """Checks that a BallReactor with optional pf coils can be created and that
         the correct number of components are created."""
 
-        self.test_reactor.pf_coil_radial_thicknesses=[50, 50, 50, 50]
-        self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
-        self.test_reactor.pf_coil_to_rear_blanket_radial_gap=50
-        
+        self.test_reactor.pf_coil_radial_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_to_rear_blanket_radial_gap = 50
+
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 8
 
@@ -85,14 +85,14 @@ class test_BallReactor(unittest.TestCase):
         """Checks that a BallReactor with optional pf and tf coils can be created and
         that the correct number of components are created."""
 
-        self.test_reactor.pf_coil_radial_thicknesses=[50, 50, 50, 50]
-        self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
-        self.test_reactor.pf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
-        self.test_reactor.outboard_tf_coil_radial_thickness=50
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=50
+        self.test_reactor.pf_coil_radial_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
-        assert self.test_reactor.solid is not None 
+        assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 9
 
     def test_BallReactor_with_pf_and_tf_coils_export_physical_groups(self):
@@ -100,7 +100,7 @@ class test_BallReactor(unittest.TestCase):
         works correctly."""
 
         self.test_reactor.export_physical_groups()
-        
+
         # insert assertion
 
     def test_rotation_angle_warning(self):
@@ -128,12 +128,12 @@ class test_BallReactor(unittest.TestCase):
         in the reactor are reconstructed and these new shapes are returned. Checks that
         the reactor_hash_value is only updated when the reactor is reconstructed."""
 
-        self.test_reactor.pf_coil_radial_thicknesses=[50, 50, 50, 50]
-        self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
-        self.test_reactor.pf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
-        self.test_reactor.outboard_tf_coil_radial_thickness=100
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=50
+        self.test_reactor.pf_coil_radial_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_radial_thickness = 100
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
         assert self.test_reactor.reactor_hash_value is None
         for key in [
@@ -145,7 +145,7 @@ class test_BallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-            "_tf_coil"]:
+                "_tf_coil"]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
 
@@ -158,7 +158,7 @@ class test_BallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-            "_tf_coil"]:
+                "_tf_coil"]:
             assert key in self.test_reactor.__dict__.keys()
         assert len(self.test_reactor.shapes_and_components) == 9
         assert self.test_reactor.reactor_hash_value is not None
@@ -172,12 +172,12 @@ class test_BallReactor(unittest.TestCase):
         """Checks that use of conditional reactor reconstruction via the hash value
         gives the expected time saving."""
 
-        self.test_reactor.pf_coil_radial_thicknesses=[50, 50, 50, 50]
-        self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
-        self.test_reactor.pf_coil_to_rear_blanket_radial_gap=50
-        self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
-        self.test_reactor.outboard_tf_coil_radial_thickness=100
-        self.test_reactor.outboard_tf_coil_poloidal_thickness=50
+        self.test_reactor.pf_coil_radial_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_radial_thickness = 100
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
         start_time = time.time()
         self.test_reactor.shapes_and_components
