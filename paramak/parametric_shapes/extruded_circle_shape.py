@@ -79,7 +79,7 @@ class ExtrudeCircleShape(Shape):
         if not self.extrude_both:
             extrusion_distance = -self.distance
         else:
-            extrusion_distance = -self.distance / 2
+            extrusion_distance = -self.distance / 2.0
 
         solid = (
             cq.Workplane(self.workplane)
