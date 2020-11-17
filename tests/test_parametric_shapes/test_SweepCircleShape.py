@@ -38,6 +38,23 @@ class test_object_properties(unittest.TestCase):
         self.test_shape.path_workplane = "XY"
         assert self.test_shape.solid is not None
 
+    def test_workplane_path_workplane_error_raises(self):
+        """Checks that errors are raised when SweepCircleShapes are created with
+        disallowed workplane and path_workplane combinations."""
+
+        def workplane_and_path_workplane_equal():
+            self.test_shape.workplane = "XZ"
+            self.test_shape.path_workplane = "XZ"
+
+        def invalid_relative_workplane_and_path_workplane():
+            self.test_shape.workplane = "XZ"
+            self.test_shape.path_workplane = "YZ"
+
+        self.assertRaises(ValueError, workplane_and_path_workplane_equal)
+        self.assertRaises(
+            ValueError,
+            invalid_relative_workplane_and_path_workplane)
+
     def test_absolute_shape_volume(self):
         """Creates a SweepCircleShape and checks that the volume is correct."""
 
