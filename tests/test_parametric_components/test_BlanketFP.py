@@ -1,6 +1,7 @@
 import os
 import paramak
 import unittest
+import warnings
 
 
 class test_BlanketFP(unittest.TestCase):
@@ -258,3 +259,21 @@ class test_BlanketFP(unittest.TestCase):
         )
 
         assert test_shape.solid is not None
+
+    def test_overlapping(self):
+        """Creates an overlapping geometry and checks that a warning is raised
+        """
+        test_shape = paramak.BlanketFP(
+            major_radius=100,
+            minor_radius=100,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=360,
+            start_angle=0,
+        )
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            assert test_shape.solid is not None
+            assert len(w) == 1
+
