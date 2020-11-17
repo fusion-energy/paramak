@@ -35,8 +35,8 @@ class test_SubmersionTokamak(unittest.TestCase):
         """Creates a SubmersionTokamak and checks that an svg file of the reactor
         can be exported using the export_svg method."""
 
-        os.system("rm test_SubmersionTokamak_image.svg")
-        self.test_reactor.export_svg("test_SubmersionTokamak_image.svg")
+        os.system("rm test_image.svg")
+        self.test_reactor.export_svg("test_image.svg")
 
         assert Path("test_image.svg").exists() is True
         os.system("rm test_image.svg")
