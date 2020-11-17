@@ -7,20 +7,23 @@ version: 2.1
 
 jobs:
   build:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
     docker:
-      - image: ukaea/paramak:dev
-      auth:
-        username: $DOCKERHUB_TOKEN
-        password: $DOCKERHUB_PASSWORD 
-        steps:
-          - checkout
-          - run: my-build-commands
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME:latest .
+
   test:
     docker:
-      - image: ukaea/paramak:dev
-      auth:
-        username: $DOCKERHUB_TOKEN
-        password: $DOCKERHUB_PASSWORD 
+      - image: ukaea/paramak
+      # auth:
+      #   username: $DOCKERHUB_TOKEN
+      #   password: $DOCKERHUB_PASSWORD 
 
       - run:
           name: run utils tests
