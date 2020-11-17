@@ -70,10 +70,10 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         self.test_reactor.rotation_angle = 90
 
         comps_90_vol = [
-            comp.vol for comp in self.test_reactor.shapes_and_components]
+            comp.volume for comp in self.test_reactor.shapes_and_components]
         self.test_reactor.rotation_angle = 180
         comps_180_vol = [
-            comp.vol for comp in self.test_reactor.shapes_and_components]
+            comp.volume for comp in self.test_reactor.shapes_and_components]
 
         for vol_90, vol_180 in zip(comps_90_vol, comps_180_vol):
             assert vol_90 == pytest.approx(vol_180, rel=0.1)
