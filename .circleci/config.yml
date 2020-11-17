@@ -96,5 +96,5 @@ workflows:
     jobs:
       - build-docker
       - test:
-        requires:
-          - build-docker
+          requires:
+            - build-docker
