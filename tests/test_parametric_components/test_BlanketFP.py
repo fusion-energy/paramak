@@ -276,4 +276,3 @@ class test_BlanketFP(unittest.TestCase):
             warnings.simplefilter("always")
             assert test_shape.solid is not None
             assert len(w) == 1
-

@@ -266,7 +266,8 @@ class BlanketFP(RotateMixedShape):
             val_R_outer = self.distribution(theta)[0] + offset(theta) * nx
             val_Z_outer = self.distribution(theta)[1] + offset(theta) * ny
             if float(val_R_outer) > 0:
-                points.append([float(val_R_outer), float(val_Z_outer), "spline"])
+                points.append(
+                    [float(val_R_outer), float(val_Z_outer), "spline"])
             else:
                 self._overlapping_shape = True
         return points
