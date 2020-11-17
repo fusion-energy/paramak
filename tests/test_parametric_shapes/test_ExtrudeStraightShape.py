@@ -89,6 +89,15 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.volume == pytest.approx(
             test_volume * 0.5, rel=0.01)
 
+    def test_extrude_both(self):
+        """Creates an ExtrudeStraightShape with extrude_both = True and False and checks
+        that the volumes are correct."""
+
+        test_volume_extrude_both = self.test_shape.volume
+        self.test_shape.extrude_both = False
+        assert self.test_shape.volume == pytest.approx(
+            test_volume_extrude_both)
+
 
 if __name__ == "__main__":
     unittest.main()

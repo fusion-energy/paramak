@@ -76,17 +76,21 @@ class ExtrudeCircleShape(Shape):
         :rtype: a cadquery solid
         """
 
-        # Creates a cadquery solid from points and revolves
+        if not self.extrude_both:
+            extrusion_distance = -self.distance
+        else:
+            extrusion_distance = -self.distance / 2
+
         solid = (
             cq.Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
-            .extrude(distance=-self.distance / 2.0, both=self.extrude_both)
+            .extrude(distance=extrusion_distance, both=self.extrude_both)
         )
 
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)
         solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
-        self.solid = solid   # not necessarily required as set in boolean_operations
+        self.solid = solid
 
         return solid
