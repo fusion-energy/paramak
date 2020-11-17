@@ -159,7 +159,14 @@ class test_Plasma(unittest.TestCase):
                     [expected_lower_x_point, expected_upper_x_point],
                 ):
                     assert point == expected_point
-                assert test_plasma.solid is not None
+
+    def test_plasmaboundaries_solid(self):
+        """Create a default PlasmaBoundaries shape and check a solid can be
+        created"""
+        test_plasma = paramak.PlasmaBoundaries()
+        for config in ["non-null", "single-null", "double-null"]:
+            test_plasma.configuration = config
+            assert test_plasma.solid is not None
 
     def test_export_plasma_source(self):
         """Creates a plasma using the Plasma parametric component and checks a
