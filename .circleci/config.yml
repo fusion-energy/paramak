@@ -23,12 +23,12 @@ jobs:
       # auth:
       #   username: $DOCKERHUB_TOKEN
       #   password: $DOCKERHUB_PASSWORD 
-      steps:
-        - run:
-            name: run utils tests
-            command: 
+    steps:
+      - run:
+          name: run utils tests
+          command: 
 
-              pytest tests/test_utils.py -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_utils.py -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
   #     - run:
   #         name: run shape tests
   #         command: 
