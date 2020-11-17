@@ -126,7 +126,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coil_cases"
+            "_pf_coil_casing"
         ]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
@@ -146,7 +146,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coil_cases"
+            "_pf_coil_casing"
         ]:
             assert key in self.test_reactor.__dict__.keys()
         assert len(self.test_reactor.shapes_and_components) == 11

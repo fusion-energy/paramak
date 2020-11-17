@@ -152,6 +152,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             "tf_pf_SubmersionTokamak/blanket.stp",
             "tf_pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
             "tf_pf_SubmersionTokamak/Graveyard.stp",
+            "tf_pf_SubmersionTokamak/pf_coil_cases.stp"
         ]
 
         for output_filename in output_filenames:
@@ -207,7 +208,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coil_cases"
+            "_pf_coil_casing"
         ]:
             assert key not in self.test_reactor.__dict__.keys()
 
@@ -227,7 +228,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coil_cases"
+            "_pf_coil_casing"
         ]:
             assert key in self.test_reactor.__dict__.keys()
 

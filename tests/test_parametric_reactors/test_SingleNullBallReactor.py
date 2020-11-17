@@ -94,7 +94,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-            "_pf_coil_cases",
+            "_pf_coil_casing",
             "_tf_coil"
         ]:
             assert key not in self.test_reactor.__dict__.keys()
@@ -109,7 +109,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-            "_pf_coil_cases",
+            "_pf_coil_casing",
             "_tf_coil"
         ]:
             assert key in self.test_reactor.__dict__.keys()
