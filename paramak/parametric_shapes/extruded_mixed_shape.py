@@ -68,7 +68,7 @@ class ExtrudeMixedShape(Shape):
 
         solid = super().create_solid()
 
-        if self.extrude_both == False:
+        if not self.extrude_both:
             extrusion_distance = -self.distance
         else:
             extrusion_distance = -self.distance / 2
