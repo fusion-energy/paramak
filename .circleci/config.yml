@@ -13,10 +13,10 @@ jobs:
       - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
-      - setup_remote_docker
-      - run:
-          name: Build Docker image
-          command: docker build -t $IMAGE_NAME:rem .
+      # - setup_remote_docker
+      # - run:
+      #     name: Build Docker image
+      #     command: docker build -t $IMAGE_NAME:rem .
 
   test:
     docker:
