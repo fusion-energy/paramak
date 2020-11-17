@@ -29,6 +29,7 @@ and the rear wall of the blanket is teal.
 
 SegmentedBlanketBallReactor()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. image:: https://user-images.githubusercontent.com/8583900/99136727-94aa5f80-261e-11eb-965d-0ccceb2743fc.png
    :width: 400
    :align: center
@@ -40,6 +41,13 @@ and the rear wall of the blanket is teal.
 
 Note that there is an odd number of blanket segments in this diagram so that
 the blanket breeder zone and the first wall can be see in this 180 slice.
+
+.. image:: https://user-images.githubusercontent.com/8583900/99431100-1db4e580-2902-11eb-82ce-3f864d13524c.png
+   :width: 450
+   :align: center
+
+Note the above image has the plasma purposefully hidden on the right hand side
+so that the internal blanket structure can be seen.
 
 .. automodule:: paramak.parametric_reactors.segmented_blanket_ball_reactor
    :members:
