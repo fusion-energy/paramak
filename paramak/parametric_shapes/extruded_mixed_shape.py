@@ -68,9 +68,13 @@ class ExtrudeMixedShape(Shape):
 
         solid = super().create_solid()
 
-        # performs extrude in both directions, hence distance / 2
+        if not self.extrude_both:
+            extrusion_distance = -self.distance
+        else:
+            extrusion_distance = -self.distance / 2
+
         solid = solid.close().extrude(
-            distance=-self.distance / 2.0,
+            distance=extrusion_distance,
             both=self.extrude_both)
 
         solid = self.rotate_solid(solid)
