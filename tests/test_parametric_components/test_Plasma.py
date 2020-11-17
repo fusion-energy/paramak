@@ -47,6 +47,29 @@ class test_Plasma(unittest.TestCase):
 
         self.assertRaises(ValueError, major_radius_out_of_range)
 
+    def test_plasma_points_of_interest(self):
+        test_plasma = paramak.Plasma(vertical_displacement=2)
+        assert test_plasma.high_point == (
+            test_plasma.major_radius -
+            test_plasma.triangularity * test_plasma.minor_radius,
+            test_plasma.elongation * test_plasma.minor_radius +
+            test_plasma.vertical_displacement,
+        )
+        assert test_plasma.low_point == (
+            test_plasma.major_radius -
+            test_plasma.triangularity * test_plasma.minor_radius,
+            -test_plasma.elongation * test_plasma.minor_radius +
+            test_plasma.vertical_displacement,
+        )
+        assert test_plasma.outer_equatorial_point == (
+            test_plasma.major_radius + test_plasma.minor_radius,
+            test_plasma.vertical_displacement
+        )
+        assert test_plasma.inner_equatorial_point == (
+            test_plasma.major_radius - test_plasma.minor_radius,
+            test_plasma.vertical_displacement
+        )
+
     def test_plasma_x_points(self):
         """Creates several plasmas with different configurations using the
         Plasma parametric component and checks the location of the x point for
