@@ -46,6 +46,9 @@ the blanket breeder zone and the first wall can be see in this 180 slice.
    :width: 450
    :align: center
 
+Note the above image has the plasma purposefully hidden on the right hand side
+so that the internal blanket structure can be seen.
+
 .. automodule:: paramak.parametric_reactors.segmented_blanket_ball_reactor
    :members:
    :show-inheritance:
