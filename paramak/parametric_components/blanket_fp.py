@@ -302,7 +302,7 @@ class BlanketFP(RotateMixedShape):
             stop_equals_start = True
 
         # rearrange order
-        # TODO: fix issue #86 (full coverage)
+        new_order = [i for i in range(len(surface_names))]
         if full_rot:
             if not stop_equals_start:
                 # from ["inner", "outer", "inner_section", "outer_section"]
