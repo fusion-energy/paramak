@@ -214,7 +214,7 @@ class Plasma(RotateSplineShape):
         """Finds the XZ points that describe the 2D profile of the plasma."""
 
         # create array of angles theta
-        theta = np.linspace(0, 2 * np.pi, num=self.num_points)
+        theta = np.linspace(0, 2 * np.pi, num=self.num_points, endpoint=False)
 
         # parametric equations for plasma
         def R(theta):
@@ -228,12 +228,4 @@ class Plasma(RotateSplineShape):
                 + self.vertical_displacement
             )
 
-        # R and Z coordinates
-        R_points, Z_points = R(theta), Z(theta)
-
-        # create a 2D array for points coordinates
-        points = np.stack((R_points, Z_points), axis=1)
-
-        # set self.points
-        # last entry not accounted for since equals to first entry
-        self.points = [(p[0], p[1]) for p in points[:-1]]
+        self.points = np.stack((R(theta), Z(theta)), axis=1).tolist()
