@@ -93,10 +93,6 @@ class CenterColumnStudyReactor(paramak.Reactor):
             (outer_equatorial_point + inner_equatorial_point) / 2
         ) - inner_equatorial_point
 
-        self.shapes_and_components = []
-
-        self.create_solids()
-
     def create_solids(self):
         """Creates a 3d solids for each component.
 
@@ -104,18 +100,20 @@ class CenterColumnStudyReactor(paramak.Reactor):
               A list of CadQuery solids: A list of 3D solid volumes
 
         """
+        shapes_and_components = []
+
         self._rotation_angle_check()
-        self._make_plasma()
+        shapes_and_components.append(self._make_plasma())
         self._make_radial_build()
         self._make_vertical_build()
-        self._make_inboard_tf_coils()
-        self._make_center_column_shield()
-        self._make_inboard_firstwall()
+        shapes_and_components.append(self._make_inboard_tf_coils())
+        shapes_and_components.append(self._make_center_column_shield())
+        shapes_and_components.append(self._make_inboard_firstwall())
         self._make_outboard_blanket()
-        self._make_divertor()
-        self._make_component_cuts()
+        shapes_and_components.append(self._make_divertor())
+        shapes_and_components.append(self._make_component_cuts())
 
-        return self.shapes_and_components
+        self.shapes_and_components = shapes_and_components
 
     def _rotation_angle_check(self):
 
@@ -135,9 +133,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
         )
         plasma.create_solid()
 
-        self.shapes_and_components.append(plasma)
-
         self._plasma = plasma
+
+        return plasma
 
     def _make_radial_build(self):
 
@@ -209,7 +207,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
         )
-        self.shapes_and_components.append(self._inboard_tf_coils)
+        return self._inboard_tf_coils
 
     def _make_center_column_shield(self):
 
@@ -220,7 +218,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             mid_radius=self._center_column_shield_end_radius_mid,
             outer_radius=self._center_column_shield_end_radius_upper,
             rotation_angle=self.rotation_angle)
-        self.shapes_and_components.append(self._center_column_shield)
+        return self._center_column_shield
 
     def _make_inboard_firstwall(self):
 
@@ -228,7 +226,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             central_column_shield=self._center_column_shield,
             thickness=self.inboard_firstwall_radial_thickness,
             rotation_angle=self.rotation_angle)
-        self.shapes_and_components.append(self._inboard_firstwall)
+        return self._inboard_firstwall
 
     def _make_outboard_blanket(self):
 
@@ -268,10 +266,10 @@ class CenterColumnStudyReactor(paramak.Reactor):
             material_tag="divertor_mat",
             intersect=self._blanket,
         )
-        self.shapes_and_components.append(self._divertor)
+        return self._divertor
 
     def _make_component_cuts(self):
 
         # the divertor is cut away then the blanket can be added to the
         self._blanket.solid = self._blanket.solid.cut(self._divertor.solid)
-        self.shapes_and_components.append(self._blanket)
+        return self._blanket

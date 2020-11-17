@@ -88,7 +88,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
 
         self.assertRaises(ValueError, invalid_support_position)
 
-    def test_SingleNullSubmersionTokamak_hash_value(self):
+    def test_hash_value(self):
         """Creates a single null submersion reactor and checks that all shapes in the reactor
         are created when .shapes_and_components is first called. Checks that when
         .shapes_and_components is called again with no changes to the reactor, the shapes in
@@ -120,9 +120,10 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-                "_pf_coil"]:
+            "_pf_coil"]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
+        
         for key in [
             "_inboard_tf_coils",
             "_center_column_shield",
@@ -137,7 +138,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-                "_pf_coil"]:
+            "_pf_coil"]:
             assert key in self.test_reactor.__dict__.keys()
         assert len(self.test_reactor.shapes_and_components) == 10
         assert self.test_reactor.reactor_hash_value is not None

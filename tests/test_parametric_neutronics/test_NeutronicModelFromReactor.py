@@ -49,7 +49,7 @@ class test_neutronics_BallReactor(unittest.TestCase):
                 'firstwall_mat': 'eurofer',
                 'blanket_mat': self.blanket_material,  # use of homogenised material
                 'blanket_rear_wall_mat': 'eurofer'},
-            cell_tallies=['TBR', 'flux', 'heat'],
+            cell_tallies=['TBR', 'flux', 'heating'],
             simulation_batches=42,
             simulation_particles_per_batch=84,
         )
@@ -64,7 +64,7 @@ class test_neutronics_BallReactor(unittest.TestCase):
             'blanket_mat': self.blanket_material,
             'blanket_rear_wall_mat': 'eurofer'}
 
-        assert neutronics_model.cell_tallies == ['TBR', 'flux', 'heat']
+        assert neutronics_model.cell_tallies == ['TBR', 'flux', 'heating']
 
         assert neutronics_model.simulation_batches == 42
         assert isinstance(neutronics_model.simulation_batches, int)

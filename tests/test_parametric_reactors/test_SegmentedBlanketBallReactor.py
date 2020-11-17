@@ -10,7 +10,7 @@ import pytest
 
 class test_SegmentedBlanketBallReactor(unittest.TestCase):
 
-    def test_SegmentedBlanketBallReactor_gap_between_blankets_impacts_volume(
+    def test_gap_between_blankets_impacts_volume(
             self):
         """creates a SegmentedBlanketBallReactor with different
         gap_between_blankets and checks the volume of the blankes and the
@@ -38,7 +38,7 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
             gap_between_blankets=30,
-            number_of_blanket_segments=10,
+            number_of_blanket_segments=4,
         )
 
         large_gap_reactor = paramak.SegmentedBlanketBallReactor(
@@ -63,14 +63,13 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
             gap_between_blankets=60,
-            number_of_blanket_segments=10,
+            number_of_blanket_segments=4,
         )
 
         assert small_gap_reactor._blanket.volume > large_gap_reactor._blanket.volume
         assert small_gap_reactor._firstwall.volume > large_gap_reactor._firstwall.volume
 
-    def test_SegmentedBlanketBallReactor_number_of_blanket_segments_impacts_volume(
-            self):
+    def test_number_of_blanket_segments_impacts_volume(self):
         """creates a SegmentedBlanketBallReactor with different
         number_of_blanket_segments and checks the volume of the blanket and
         firstwall changes"""
@@ -97,7 +96,8 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
             gap_between_blankets=30,
-            number_of_blanket_segments=5,
+            blanket_fillet_radius=0,
+            number_of_blanket_segments=4,
         )
 
         many_segment_reactor = paramak.SegmentedBlanketBallReactor(
@@ -122,7 +122,8 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
             gap_between_blankets=30,
-            number_of_blanket_segments=8,
+            blanket_fillet_radius=0,
+            number_of_blanket_segments=6,
         )
 
         assert many_segment_reactor._blanket.volume < few_segment_reactor._blanket.volume

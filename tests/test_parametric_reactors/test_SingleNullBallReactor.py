@@ -70,7 +70,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
 
         self.assertRaises(ValueError, invalid_position)
 
-    def test_single_null_ball_reactor_hash_value(self):
+    def test_hash_value(self):
         """Creates a single null ball reactor and checks that all shapes in the reactor are created
         when .shapes_and_components is first called. Checks that when .shapes_and_components is
         called again with no changes to the reactor, the shapes in the reactor are not reconstructed
@@ -89,9 +89,10 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-                "_tf_coil"]:
+            "_tf_coil"]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
+
         for key in [
             "_plasma",
             "_inboard_tf_coils",
@@ -101,7 +102,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-                "_tf_coil"]:
+            "_tf_coil"]:
             assert key in self.test_reactor.__dict__.keys()
         assert len(self.test_reactor.shapes_and_components) == 9
         assert self.test_reactor.reactor_hash_value is not None

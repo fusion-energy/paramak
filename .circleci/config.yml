@@ -51,10 +51,21 @@ jobs:
             pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
-          name: run example tests
+          name: run example shape tests
           command: 
 
-            pytest tests/test_examples.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_example_shapes.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
+          name: run example component tests
+          command: 
+
+            pytest tests/test_example_components.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      - run:
+          name: run example reactor tests
+          command: 
+
+            pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run parametric_reactors tests

@@ -4,16 +4,15 @@ Examples - Parametric Components
 make_all_parametric_components.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/94205189-a68f4200-feba-11ea-8c2d-789d1617ceea.png
+.. image:: https://user-images.githubusercontent.com/8583900/98823600-387eea00-242a-11eb-9fe3-df65aaa3dd21.png
    :width: 713
-   :height: 245
    :align: center
 
 .. automodule:: examples.example_parametric_components.make_all_parametric_components
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_all_parametric_components.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_all_parametric_components.py>`_
 
 make_plasmas.py
 ^^^^^^^^^^^^^^^
@@ -27,7 +26,7 @@ make_plasmas.py
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_plasmas.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_plasmas.py>`_
 
 make_demo_style_blankets.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -41,7 +40,7 @@ make_demo_style_blankets.py
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_demo_style_blankets.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_demo_style_blankets.py>`_
 
 make_firstwall_for_neutron_wall_loading.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -55,4 +54,17 @@ make_firstwall_for_neutron_wall_loading.py
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/main/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.py>`_
+
+make_magnet_set
+^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/99276201-5088ac00-2824-11eb-9927-a7ea1094b1e5.png
+   :width: 500
+   :align: center
+
+.. automodule:: examples.example_parametric_components.make_magnet_set
+   :members:
+   :show-inheritance:
+
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_magnet_set.py>`_

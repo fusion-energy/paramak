@@ -1,12 +1,12 @@
 """
-This example creates a submersion ball reactor using the SubmersionTokamak
-parametric shape
+This example creates a submersion reactor using the SubmersionTokamak
+parametric reactor. By default the script saves stp, stl, html and svg files.
 """
 
 import paramak
 
 
-def main():
+def make_submersion(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
 
     my_reactor = paramak.SubmersionTokamak(
         inner_bore_radial_thickness=30,
@@ -20,7 +20,7 @@ def main():
         blanket_rear_wall_radial_thickness=30,
         number_of_tf_coils=16,
         rotation_angle=180,
-        support_radial_thickness=50,
+        support_radial_thickness=90,
         inboard_blanket_radial_thickness=30,
         outboard_blanket_radial_thickness=30,
         elongation=2.01,
@@ -33,10 +33,18 @@ def main():
         tf_coil_to_rear_blanket_radial_gap=20,
     )
 
-    my_reactor.export_stp()
-
-    my_reactor.export_neutronics_description()
+    if 'stp' in outputs:
+        my_reactor.export_stp(output_folder='SubmersionTokamak')
+    if 'neutronics' in outputs:
+        my_reactor.export_neutronics_description(
+            'SubmersionTokamak/manifest.json')
+    if 'svg' in outputs:
+        my_reactor.export_svg('SubmersionTokamak/reactor.svg')
+    if 'stl' in outputs:
+        my_reactor.export_stl(output_folder='SubmersionTokamak')
+    if 'html' in outputs:
+        my_reactor.export_html('SubmersionTokamak/reactor.html')
 
 
 if __name__ == "__main__":
-    main()
+    make_submersion(['stp', 'neutronics', 'svg', 'stl', 'html'])

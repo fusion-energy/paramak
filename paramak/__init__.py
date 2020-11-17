@@ -25,6 +25,7 @@ from .parametric_components.tokamak_plasma_plasmaboundaries import PlasmaBoundar
 from .parametric_components.blanket_constant_thickness_arc_h import BlanketConstantThicknessArcH
 from .parametric_components.blanket_constant_thickness_arc_v import BlanketConstantThicknessArcV
 from .parametric_components.blanket_fp import BlanketFP
+from .parametric_components.blanket_poloidal_segment import BlanketFPPoloidalSegments
 
 from .parametric_components.divertor_ITER import ITERtypeDivertor
 from .parametric_components.divertor_ITER_no_dome import ITERtypeDivertorNoDome
@@ -35,6 +36,9 @@ from .parametric_components.center_column_flat_top_hyperbola import CenterColumn
 from .parametric_components.center_column_plasma_dependant import CenterColumnShieldPlasmaHyperbola
 from .parametric_components.center_column_circular import CenterColumnShieldCircular
 from .parametric_components.center_column_flat_top_circular import CenterColumnShieldFlatTopCircular
+
+from .parametric_components.coolant_channel_ring_straight import CoolantChannelRingStraight
+from .parametric_components.coolant_channel_ring_curved import CoolantChannelRingCurved
 
 from .parametric_components.inboard_firstwall_fccs import InboardFirstwallFCCS
 
@@ -62,6 +66,7 @@ from .parametric_components.toroidal_field_coil_coat_hanger import ToroidalField
 from .parametric_components.toroidal_field_coil_rectangle import ToroidalFieldCoilRectangle
 from .parametric_components.toroidal_field_coil_triple_arc import ToroidalFieldCoilTripleArc
 from .parametric_components.toroidal_field_coil_princeton_d import ToroidalFieldCoilPrincetonD
+from .parametric_components.tf_coil_casing import TFCoilCasing
 
 from .parametric_components.vacuum_vessel import VacuumVessel
 

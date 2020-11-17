@@ -1,13 +1,14 @@
 """
-This example creates a single null reactor using the SingleNullBallReactor shape
+This example creates a ball reactor using the BallReactor parametric reactor.
+By default the script saves stp, stl, html and svg files.
 """
 
 import paramak
 
 
-def main():
+def make_ball_reactor(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
 
-    my_reactor = paramak.SingleNullBallReactor(
+    my_reactor = paramak.BallReactor(
         inner_bore_radial_thickness=10,
         inboard_tf_leg_radial_thickness=30,
         center_column_shield_radial_thickness=60,
@@ -27,14 +28,20 @@ def main():
         pf_coil_to_rear_blanket_radial_gap=50,
         pf_coil_to_tf_coil_radial_gap=50,
         outboard_tf_coil_radial_thickness=100,
-        outboard_tf_coil_poloidal_thickness=50,
-        divertor_position="upper"
+        outboard_tf_coil_poloidal_thickness=50
     )
 
-    my_reactor.export_stp()
-
-    my_reactor.export_neutronics_description()
+    if 'stp' in outputs:
+        my_reactor.export_stp(output_folder='BallReactor')
+    if 'neutronics' in outputs:
+        my_reactor.export_neutronics_description('BallReactor/manifest.json')
+    if 'svg' in outputs:
+        my_reactor.export_svg('BallReactor/reactor.svg')
+    if 'stl' in outputs:
+        my_reactor.export_stl(output_folder='BallReactor')
+    if 'html' in outputs:
+        my_reactor.export_html('BallReactor/reactor.html')
 
 
 if __name__ == "__main__":
-    main()
+    make_ball_reactor(['stp', 'neutronics', 'svg', 'stl', 'html'])

@@ -38,8 +38,8 @@ class test_SubmersionTokamak(unittest.TestCase):
         os.system("rm test_SubmersionTokamak_image.svg")
         self.test_reactor.export_svg("test_SubmersionTokamak_image.svg")
 
-        assert Path("test_SubmersionTokamak_image.svg").exists() is True
-        os.system("rm test_SubmersionTokamak_image.svg")
+        assert Path("test_image.svg").exists() is True
+        os.system("rm test_image.svg")
 
     def test_minimal_SubmersionTokamak_creation(self):
         """Creates a SubmersionTokamak and checks that the correct number of 
