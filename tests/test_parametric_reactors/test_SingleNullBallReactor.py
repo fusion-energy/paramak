@@ -44,7 +44,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
         be created."""
 
         self.test_reactor.divertor_position = "lower"
-        assert self.test_reactor.solid is not None 
+        assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 10
 
         self.test_reactor.divertor_position = "upper"
