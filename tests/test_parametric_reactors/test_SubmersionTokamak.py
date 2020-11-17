@@ -208,7 +208,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coil_casing"
+            "_pf_coils_casing"
         ]:
             assert key not in self.test_reactor.__dict__.keys()
 
@@ -228,7 +228,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coil_casing"
+            "_pf_coils_casing"
         ]:
             assert key in self.test_reactor.__dict__.keys()
 

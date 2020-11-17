@@ -148,7 +148,7 @@ class test_BallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-            "_pf_coil_casing",
+            "_pf_coils_casing",
             "_tf_coil"
         ]:
             assert key not in self.test_reactor.__dict__.keys()
@@ -163,7 +163,7 @@ class test_BallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
-            "_pf_coil_casing",
+            "_pf_coils_casing",
             "_tf_coil"
         ]:
             assert key in self.test_reactor.__dict__.keys()
