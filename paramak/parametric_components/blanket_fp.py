@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 from scipy.interpolate import interp1d
 import sympy as sp
@@ -188,7 +189,7 @@ class BlanketFP(RotateMixedShape):
         return fun
 
     def find_points(self, angles=None):
-
+        self._overlapping_shape = False
         # create array of angles theta
         if angles is None:
             thetas = np.linspace(
@@ -218,6 +219,11 @@ class BlanketFP(RotateMixedShape):
 
         # assemble
         points = inner_points + outer_points
+        if self._overlapping_shape:
+            msg = "BlanketFP: Some points with negative R" + \
+                " coordinate have been ignored."
+            warnings.warn(msg)
+
         self.points = points
         return points
 
@@ -259,8 +265,11 @@ class BlanketFP(RotateMixedShape):
             # calculate outer points
             val_R_outer = self.distribution(theta)[0] + offset(theta) * nx
             val_Z_outer = self.distribution(theta)[1] + offset(theta) * ny
-
-            points.append([float(val_R_outer), float(val_Z_outer), "spline"])
+            if float(val_R_outer) > 0:
+                points.append(
+                    [float(val_R_outer), float(val_Z_outer), "spline"])
+            else:
+                self._overlapping_shape = True
         return points
 
     def create_physical_groups(self):
@@ -294,7 +303,7 @@ class BlanketFP(RotateMixedShape):
             stop_equals_start = True
 
         # rearrange order
-        # TODO: fix issue #86 (full coverage)
+        new_order = [i for i in range(len(surface_names))]
         if full_rot:
             if not stop_equals_start:
                 # from ["inner", "outer", "inner_section", "outer_section"]
