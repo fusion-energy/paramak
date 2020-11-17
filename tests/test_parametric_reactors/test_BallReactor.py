@@ -65,9 +65,10 @@ class test_BallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_radial_thicknesses=[50, 50, 50, 50]
         self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
         self.test_reactor.pf_coil_to_rear_blanket_radial_gap=50
+        self.test_reactor.pf_coil_case_thickness=10
         
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 8
+        assert len(self.test_reactor.shapes_and_components) == 9
 
     def test_pf_coil_thicknesses_error(self):
         """Checks that an error is raised when invalid pf_coil_radial_thicknesses and
@@ -89,11 +90,12 @@ class test_BallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
         self.test_reactor.pf_coil_to_rear_blanket_radial_gap=50
         self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
+        self.test_reactor.pf_coil_case_thickness=10
         self.test_reactor.outboard_tf_coil_radial_thickness=50
         self.test_reactor.outboard_tf_coil_poloidal_thickness=50
 
         assert self.test_reactor.solid is not None 
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 10
 
     def test_BallReactor_with_pf_and_tf_coils_export_physical_groups(self):
         """Creates a BallReactor and checks that the export_physical_groups method
@@ -132,6 +134,7 @@ class test_BallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
         self.test_reactor.pf_coil_to_rear_blanket_radial_gap=50
         self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
+        self.test_reactor.pf_coil_case_thickness=10
         self.test_reactor.outboard_tf_coil_radial_thickness=100
         self.test_reactor.outboard_tf_coil_poloidal_thickness=50
 
@@ -145,6 +148,7 @@ class test_BallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
+            "_pf_coil_cases",
             "_tf_coil"]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
@@ -157,9 +161,10 @@ class test_BallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
+            "_pf_coil_cases"
                 "_tf_coil"]:
             assert key in self.test_reactor.__dict__.keys()
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 10
         assert self.test_reactor.reactor_hash_value is not None
         initial_hash_value = self.test_reactor.reactor_hash_value
         self.test_reactor.rotation_angle = 270
@@ -175,6 +180,7 @@ class test_BallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
         self.test_reactor.pf_coil_to_rear_blanket_radial_gap=50
         self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
+        self.test_reactor.pf_coil_case_thickness=10
         self.test_reactor.outboard_tf_coil_radial_thickness=100
         self.test_reactor.outboard_tf_coil_poloidal_thickness=50
 

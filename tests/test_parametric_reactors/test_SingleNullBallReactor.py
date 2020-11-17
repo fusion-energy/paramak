@@ -26,6 +26,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
             pf_coil_vertical_thicknesses=[50, 50, 50, 50],
             pf_coil_to_rear_blanket_radial_gap=50,
             pf_coil_to_tf_coil_radial_gap=50,
+            pf_coil_case_thickness=10,
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
             divertor_position="lower",
@@ -36,7 +37,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
         """Checks that a SingleNullBallReactor with optional pf and tf coils can
         be created and that the correct number of components are produced."""
 
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 10
 
     def test_single_null_ball_reactor_divertor_upper_lower(self):
         """Checks that SingleNullBallReactors with lower and upper divertors can
@@ -44,10 +45,10 @@ class test_SingleNullBallReactor(unittest.TestCase):
 
         self.test_reactor.divertor_position = "lower"
         assert self.test_reactor.solid is not None 
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 10
         self.test_reactor.divertor_position = "upper"
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 10
 
     def test_SingleNullBallReactor_rotation_angle_impacts_volume(self):
         """Creates SingleNullBallReactors with different rotation angles and checks
@@ -89,6 +90,7 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
+            "_pf_coil_cases",
                 "_tf_coil"]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
@@ -101,9 +103,10 @@ class test_SingleNullBallReactor(unittest.TestCase):
             "_blanket",
             "_blanket_rear_wall",
             "_pf_coil",
+            "_pf_coil_cases",
                 "_tf_coil"]:
             assert key in self.test_reactor.__dict__.keys()
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 10
         assert self.test_reactor.reactor_hash_value is not None
         initial_hash_value = self.test_reactor.reactor_hash_value
         self.test_reactor.rotation_angle = 270

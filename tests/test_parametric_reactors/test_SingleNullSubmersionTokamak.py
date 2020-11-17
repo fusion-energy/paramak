@@ -35,12 +35,13 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_radial_thicknesses=[50, 50, 50, 50]
         self.test_reactor.pf_coil_vertical_thicknesses=[50, 50, 50, 50]
         self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
+        self.test_reactor.pf_coil_case_thickness=10
         self.test_reactor.outboard_tf_coil_radial_thickness=100
         self.test_reactor.outboard_tf_coil_poloidal_thickness=50
         self.test_reactor.tf_coil_to_rear_blanket_radial_gap=20
         self.test_reactor.number_of_tf_coils=16
         
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 11
 
     def test_SingleNullSubmersionTokamak_divertors_supports(self):
         """Checks that SingleNullSubmersionTokamaks with lower and upper supports
@@ -100,6 +101,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_radial_thicknesses=[30, 30, 30, 30]
         self.test_reactor.pf_coil_vertical_thicknesses=[30, 30, 30, 30]
         self.test_reactor.pf_coil_to_tf_coil_radial_gap=50
+        self.test_reactor.pf_coil_case_thickness=10
         self.test_reactor.outboard_tf_coil_radial_thickness=30
         self.test_reactor.outboard_tf_coil_poloidal_thickness=30
         self.test_reactor.tf_coil_to_rear_blanket_radial_gap=20
@@ -120,7 +122,9 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-                "_pf_coil"]:
+            "_pf_coil",
+            "_pf_coil_cases"
+        ]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
         for key in [
@@ -137,9 +141,11 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-                "_pf_coil"]:
+            "_pf_coil",
+            "_pf_coil_cases"
+        ]:
             assert key in self.test_reactor.__dict__.keys()
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 11
         assert self.test_reactor.reactor_hash_value is not None
         initial_hash_value = self.test_reactor.reactor_hash_value
         self.test_reactor.rotation_angle = 270
