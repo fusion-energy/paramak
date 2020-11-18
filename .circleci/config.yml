@@ -34,8 +34,8 @@ jobs:
       - run:
           name: Setup Docker environment
           command: |
-            docker images
             docker load -i my_image.tar.gz
+            docker images
             docker start $IMAGE_NAME:rem
             docker attach $IMAGE_NAME:rem
       - run:
