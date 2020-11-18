@@ -48,7 +48,6 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert test_shape.volume == pytest.approx(volume_360 * 0.5)
 
-
     def test_cut_volume(self):
         """Creates a RotateSplineShape with another RotateSplineShape cut out
         and checks that the volume is correct."""
