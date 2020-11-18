@@ -8,7 +8,6 @@ jobs:
   build-docker:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
-      IMAGE_TAG: ${CIRCLE_TAG/v/''}
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -17,7 +16,7 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t $IMAGE_NAME:$IMAGE_TAG .
+            docker build -t $IMAGE_NAME:$CIRCLE_TAG .
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
@@ -28,9 +27,8 @@ jobs:
   test:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
-      IMAGE_TAG: ${CIRCLE_TAG/v/''}
     docker:
-      - image: $IMAGE_NAME:$IMAGE_TAG
+      - image: $IMAGE_NAME:$CIRCLE_TAG
     steps:
       - run:
           name: run utils tests
