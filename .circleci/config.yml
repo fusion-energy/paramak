@@ -16,19 +16,19 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t $IMAGE_NAME:rem .
+            docker build -t $IMAGE_NAME:${CIRCLE_TAG/v/''} .
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=${CIRCLE_TAG/v/''}
-            docker push $IMAGE_NAME:rem
+            
+            docker push $IMAGE_NAME:${CIRCLE_TAG/v/''}
 
   test:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
     docker:
-      - image: $IMAGE_NAME:rem
+      - image: $IMAGE_NAME:${CIRCLE_TAG/v/''}
     steps:
       - run:
           name: run utils tests
