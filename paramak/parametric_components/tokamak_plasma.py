@@ -71,7 +71,68 @@ class Plasma(RotateSplineShape):
         self.inner_equatorial_point = None
         self.high_point = None
         self.low_point = None
-        self.lower_x_point, self.upper_x_point = self.compute_x_points()
+
+    @property
+    def high_point(self):
+        self.high_point = (
+            self.major_radius - self.triangularity * self.minor_radius,
+            self.elongation * self.minor_radius + self.vertical_displacement,
+        )
+        return self._high_point
+
+    @high_point.setter
+    def high_point(self, value):
+        self._high_point = value
+
+    @property
+    def low_point(self):
+        self.low_point = (
+            self.major_radius - self.triangularity * self.minor_radius,
+            -self.elongation * self.minor_radius + self.vertical_displacement,
+        )
+        return self._low_point
+
+    @low_point.setter
+    def low_point(self, value):
+        self._low_point = value
+
+    @property
+    def outer_equatorial_point(self):
+        self.outer_equatorial_point = (
+            self.major_radius + self.minor_radius, self.vertical_displacement)
+        return self._outer_equatorial_point
+
+    @outer_equatorial_point.setter
+    def outer_equatorial_point(self, value):
+        self._outer_equatorial_point = value
+
+    @property
+    def inner_equatorial_point(self):
+        self.inner_equatorial_point = (
+            self.major_radius - self.minor_radius, self.vertical_displacement)
+        return self._inner_equatorial_point
+
+    @inner_equatorial_point.setter
+    def inner_equatorial_point(self, value):
+        self._inner_equatorial_point = value
+
+    @property
+    def lower_x_point(self):
+        self.compute_x_points()
+        return self._lower_x_point
+
+    @lower_x_point.setter
+    def lower_x_point(self, value):
+        self._lower_x_point = value
+
+    @property
+    def upper_x_point(self):
+        self.compute_x_points()
+        return self._upper_x_point
+
+    @upper_x_point.setter
+    def upper_x_point(self, value):
+        self._upper_x_point = value
 
     @property
     def vertical_displacement(self):
@@ -146,13 +207,14 @@ class Plasma(RotateSplineShape):
                     (1 + shift) * elongation * self.minor_radius
                     + self.vertical_displacement,
                 )
-        return lower_x_point, upper_x_point
+        self.lower_x_point = lower_x_point
+        self.upper_x_point = upper_x_point
 
     def find_points(self):
         """Finds the XZ points that describe the 2D profile of the plasma."""
 
         # create array of angles theta
-        theta = np.linspace(0, 2 * np.pi, num=self.num_points)
+        theta = np.linspace(0, 2 * np.pi, num=self.num_points, endpoint=False)
 
         # parametric equations for plasma
         def R(theta):
@@ -166,25 +228,4 @@ class Plasma(RotateSplineShape):
                 + self.vertical_displacement
             )
 
-        # R and Z coordinates
-        R_points, Z_points = R(theta), Z(theta)
-
-        # create a 2D array for points coordinates
-        points = np.stack((R_points, Z_points), axis=1)
-
-        # set self.points
-        # last entry not accounted for since equals to first entry
-        self.points = [(p[0], p[1]) for p in points[:-1]]
-        # set the points of interest
-        self.high_point = (
-            self.major_radius - self.triangularity * self.minor_radius,
-            self.elongation * self.minor_radius,
-        )
-        self.low_point = (
-            self.major_radius - self.triangularity * self.minor_radius,
-            -self.elongation * self.minor_radius,
-        )
-        self.outer_equatorial_point = (
-            self.major_radius + self.minor_radius, 0)
-        self.inner_equatorial_point = (
-            self.major_radius - self.minor_radius, 0)
+        self.points = np.stack((R(theta), Z(theta)), axis=1).tolist()
