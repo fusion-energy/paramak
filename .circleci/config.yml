@@ -24,6 +24,8 @@ jobs:
           paths : my_image.tar.gz
 
   test:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
     machine: true
     steps:
       - attach_workspace:
@@ -33,6 +35,8 @@ jobs:
           name: run utils tests
           command: |
             docker load -i my_image.tar.gz
+            docker start $IMAGE_NAME:rem
+            docker attach $IMAGE_NAME:rem
 
 workflows:
   version: 2
