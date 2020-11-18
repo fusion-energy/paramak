@@ -62,15 +62,17 @@ class test_object_properties(unittest.TestCase):
         )
 
     def test_intersect_volume(self):
-        """Creates an ExtrudeCircleShape with another ExtrudeCircleShape intersected
-        and checks that the volume is correct."""
+        """Creates ExtrudeCircleShapes with other ExtrudeCircleShapes intersected
+        and checks that their volumes are correct."""
+
+        intersect_shape = ExtrudeCircleShape(points=[(30, 0)], radius=5, distance=50)
 
         intersected_shape = ExtrudeCircleShape(
             points=[(30, 0)], radius=10, distance=50,
-            intersect=self.test_shape
+            intersect=[self.test_shape, intersect_shape]
         )
 
-        assert intersected_shape.volume == pytest.approx(math.pi * 10**2 * 30)
+        assert intersected_shape.volume == pytest.approx(math.pi * 5**2 * 30)
 
     def test_rotation_angle(self):
         """Creates an ExtrudeCircleShape with a rotation_angle < 360 and checks that
