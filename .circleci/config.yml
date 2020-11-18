@@ -17,7 +17,7 @@ jobs:
           name: Build Docker image
           command: |
             docker build -t $IMAGE_NAME:rem .
-            docker save -o my_image.tar $IMAGE_NAME:rem
+            docker save $IMAGE_NAME:rem | gzip > my_image.tar.gz
       # https://support.circleci.com/hc/en-us/articles/360019182513-Build-a-Docker-image-in-one-job-and-use-it-in-another-job
       - persist_to_workspace:
           root: .
