@@ -32,12 +32,21 @@ ARG include_neutronics=false
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-RUN apt-get --yes update
+RUN apt-get update -y && \
+    apt-get upgrade -y
 
 RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        freeglut3-dev libosmesa6 libosmesa6-dev \
                        libgles2-mesa-dev && \
                        apt-get clean
+
+# Install neutronics dependencies from Debian package manager
+RUN if [ "$include_neutronics" = "true" ] ; \
+    then apt-get install -y \
+            python3-pip python-is-python3 wget git gfortran g++ cmake \
+            mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
+            imagemagick autoremove ; \
+    fi
 
 # Installing CadQuery release
 RUN if [ "$cq_version" = "release" ] ; \
