@@ -1,3 +1,4 @@
+
 import json
 from collections import Iterable
 from pathlib import Path
@@ -5,10 +6,10 @@ from pathlib import Path
 import cadquery as cq
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
-import plotly.graph_objects as go
 from paramak.shape import Shape
 from paramak.utils import get_hash
 

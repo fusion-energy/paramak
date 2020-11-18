@@ -4,8 +4,8 @@ This python script demonstrates the creation of a vacuum vessel with shaped
 different ports cut out.
 """
 
-import paramak
 import numpy as np
+import paramak
 
 
 def main():

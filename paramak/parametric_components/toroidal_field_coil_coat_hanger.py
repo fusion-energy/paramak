@@ -1,5 +1,5 @@
+
 import math
-from collections import Iterable
 
 import cadquery as cq
 import numpy as np

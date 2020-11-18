@@ -1,7 +1,6 @@
 
 import cadquery as cq
 from paramak import RotateStraightShape
-
 from paramak.utils import get_hash
 
 

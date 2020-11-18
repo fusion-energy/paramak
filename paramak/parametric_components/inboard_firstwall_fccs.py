@@ -1,8 +1,11 @@
-from paramak import RotateMixedShape, CenterColumnShieldCylinder, \
-    CenterColumnShieldHyperbola, CenterColumnShieldFlatTopHyperbola, \
-    CenterColumnShieldPlasmaHyperbola, CenterColumnShieldCircular, \
-    CenterColumnShieldFlatTopCircular
+
 from collections import Iterable
+
+from paramak import (CenterColumnShieldCircular, CenterColumnShieldCylinder,
+                     CenterColumnShieldFlatTopCircular,
+                     CenterColumnShieldFlatTopHyperbola,
+                     CenterColumnShieldHyperbola,
+                     CenterColumnShieldPlasmaHyperbola, RotateMixedShape)
 
 
 class InboardFirstwallFCCS(RotateMixedShape):

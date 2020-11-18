@@ -1,8 +1,6 @@
 
-import cadquery as cq
 import numpy as np
 from paramak import ExtrudeMixedShape
-from collections import Iterable
 
 
 class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):

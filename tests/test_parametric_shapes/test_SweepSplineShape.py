@@ -1,10 +1,8 @@
-import os
+
 import unittest
-from pathlib import Path
 
 import pytest
-
-from paramak import SweepSplineShape, RotateStraightShape
+from paramak import RotateStraightShape, SweepSplineShape
 
 
 class test_object_properties(unittest.TestCase):

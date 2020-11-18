@@ -1,9 +1,9 @@
-import numpy as np
-from scipy.interpolate import interp1d
-import sympy as sp
-import mpmath
 
+import mpmath
+import numpy as np
+import sympy as sp
 from paramak import RotateMixedShape, diff_between_angles
+from scipy.interpolate import interp1d
 
 
 class BlanketFP(RotateMixedShape):

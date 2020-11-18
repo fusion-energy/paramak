@@ -1,6 +1,7 @@
+
 import math
-from hashlib import blake2b
 from collections import Iterable
+from hashlib import blake2b
 
 import cadquery as cq
 import numpy as np

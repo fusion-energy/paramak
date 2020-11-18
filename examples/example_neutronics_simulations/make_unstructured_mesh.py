@@ -1,6 +1,6 @@
 #!/usr/env/python3
-import os
 import json
+import os
 
 
 def byteify(input):

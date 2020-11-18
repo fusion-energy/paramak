@@ -1,3 +1,4 @@
+
 import json
 import numbers
 import warnings
@@ -7,15 +8,14 @@ from pathlib import Path
 from shutil import copymode, move
 from tempfile import mkstemp
 
+import cadquery as cq
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import cadquery as cq
 from cadquery import exporters
-import cadquery as cq
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
-from paramak.utils import cut_solid, intersect_solid, union_solid, get_hash
+from paramak.utils import cut_solid, get_hash, intersect_solid, union_solid
 
 
 class Shape:

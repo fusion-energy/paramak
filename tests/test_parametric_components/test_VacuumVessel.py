@@ -1,6 +1,7 @@
 
-import paramak
 import unittest
+
+import paramak
 
 
 class test_VacuumVessel(unittest.TestCase):

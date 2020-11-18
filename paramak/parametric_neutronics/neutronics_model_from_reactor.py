@@ -1,8 +1,10 @@
-import os
+
 import json
-from collections import defaultdict
+import os
 import warnings
+from collections import defaultdict
 from pathlib import Path
+
 import matplotlib.pyplot as plt
 
 try:
@@ -23,7 +25,6 @@ except BaseException:
     warnings.warn("neutronics_material_maker not found, \
             NeutronicsModelFromReactor.materials can't accept strings or \
             neutronics_material_maker objects", UserWarning)
-
 
 class NeutronicsModelFromReactor():
     """Creates a neuronics model of the provided reactor geometry with assigned

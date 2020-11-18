@@ -1,10 +1,10 @@
 
 import unittest
+
 import numpy as np
-
 import paramak
-
-from paramak.utils import find_center_point_of_circle, EdgeLengthSelector, FaceAreaSelector
+from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
+                           find_center_point_of_circle)
 
 
 class test_utility_functions(unittest.TestCase):
