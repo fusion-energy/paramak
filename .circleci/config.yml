@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Run container
           command: |
-            docker run $IMAGE_NAME:rem
+            docker run -it $IMAGE_NAME
       - run:
           name: run utils tests
           command:
