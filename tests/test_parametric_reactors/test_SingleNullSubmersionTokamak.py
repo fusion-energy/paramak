@@ -68,7 +68,6 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         checks that the relative volumes of the components are correct."""
 
         self.test_reactor.rotation_angle = 90
-
         comps_90_vol = [
             comp.volume for comp in self.test_reactor.shapes_and_components]
         self.test_reactor.rotation_angle = 180
@@ -76,7 +75,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
             comp.volume for comp in self.test_reactor.shapes_and_components]
 
         for vol_90, vol_180 in zip(comps_90_vol, comps_180_vol):
-            assert vol_90 != vol_180
+            assert vol_90 == pytest.approx(vol_180 * 0.5, rel=0.1)
 
     def test_SubmersionTokamak_error_divertor_pos(self):
         """Creates a SingleNullSubmersionTokamak with an invalid divertor and support
