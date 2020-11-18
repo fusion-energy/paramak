@@ -17,28 +17,19 @@ jobs:
           name: Build Docker image
           command: |
             docker build -t $IMAGE_NAME:rem .
-            docker save $IMAGE_NAME:rem | gzip > my_image.tar.gz
-      # https://support.circleci.com/hc/en-us/articles/360019182513-Build-a-Docker-image-in-one-job-and-use-it-in-another-job
-      - persist_to_workspace:
-          root: .
-          paths : my_image.tar.gz
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            IMAGE_TAG=${CIRCLE_TAG/v/''}
+            docker push $IMAGE_NAME:rem
 
   test:
     environment:
-      IMAGE_NAME: openmcworkshop/paramak
-    machine: true
+      IMAGE_NAME: $IMAGE_NAME:rem
+    docker:
+      - image: $IMAGE_NAME:rem
     steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Setup Docker environment
-          command: |
-            docker load -i my_image.tar.gz
-            docker images
-      - run:
-          name: Run container
-          command: |
-            docker run -it $IMAGE_NAME:rem
       - run:
           name: run utils tests
           command:
