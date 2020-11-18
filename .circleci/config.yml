@@ -16,79 +16,18 @@ jobs:
       - run:
           name: Build Docker image
           command: docker build -t $IMAGE_NAME:rem .
+      # https://support.circleci.com/hc/en-us/articles/360019182513-Build-a-Docker-image-in-one-job-and-use-it-in-another-job
+      - persist_to_workspace:
+          command : docker save -o image/my_image.tar $IMAGE_NAME:rem
 
   test:
     docker:
       - image: openmcworkshop/paramak:rem
-      # auth:
-      #   username: $DOCKERHUB_TOKEN
-      #   password: $DOCKERHUB_PASSWORD 
     steps:
       - run:
           name: run utils tests
           command: 
-
-            pytest tests/test_utils.py -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-  #     - run:
-  #         name: run shape tests
-  #         command: 
-
-  #           pytest tests/test_Shape.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-  #     - run:
-  #         name: run Reactor tests
-  #         command: 
-
-  #           pytest tests/test_Reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-  #     - run:
-  #         name: run parametric_shapes tests
-  #         command: 
-
-  #           pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-  #     - run:
-  #         name: run parametric_components tests
-  #         command: 
-
-  #           pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-  #     - run:
-  #         name: run example shape tests
-  #         command: 
-
-  #           pytest tests/test_example_shapes.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-  #     - run:
-  #         name: run example component tests
-  #         command: 
-
-  #           pytest tests/test_example_components.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-  #     - run:
-  #         name: run example reactor tests
-  #         command: 
-
-  #           pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-  #     - run:
-  #         name: run parametric_reactors tests
-  #         command: 
-
-  #           pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-  #     # - run:
-  #     #     name: run neutronics tests
-  #     #     command: 
-
-  #     #       pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-  #     - store_test_results:
-  #         path: test-reports
-
-  #     - store_artifacts:
-  #         path: test-reports
-
-  #     - run: curl -s https://codecov.io/bash | bash
+            echo 'coucou'
 
 workflows:
   version: 2
