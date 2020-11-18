@@ -127,6 +127,9 @@ class test_object_properties(unittest.TestCase):
         self.test_shape.export_stp("filename")
         assert Path("filename.stp").exists() is True
         os.system("rm filename.stp")
+        self.test_shape.export_stp()
+        assert Path("RotateStraightShape.stp") is True
+        os.system("rm RotateStraightShape.stp")
 
     def test_export_stl(self):
         """Creates a RotateStraightShape and checks that a stl file of the
@@ -140,6 +143,9 @@ class test_object_properties(unittest.TestCase):
         self.test_shape.export_stl("filename")
         assert Path("filename.stl").exists() is True
         os.system("rm filename.stl")
+        self.test_shape.export_stl()
+        assert Path("RotateStraightShape.stl") is True
+        os.system("rm RotateStraightShape.stl")
 
     def test_export_svg(self):
         """Creates a RotateStraightShape and checks that a svg file of the
