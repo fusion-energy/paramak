@@ -24,8 +24,7 @@ jobs:
           paths : my_image.tar.gz
 
   test:
-    docker:
-      - image: circleci/buildpack-deps:stretch
+    machine: true
     steps:
       - attach_workspace:
           at: .
