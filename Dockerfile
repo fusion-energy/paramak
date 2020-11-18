@@ -1,20 +1,30 @@
-# This docker image is available on dockerhub and can be downloaded using
-# docker pull ukaea/paramak
-# However the docker image can also be build locally with these commands
+# This dockerfile can be built in a few different ways.
 
-# Build with the following command from within the base repository directory
-# sudo docker build -t ukaea/paramak .
+# Building using the latest release version of CadQuery (default).
+# Run command from within the base repository directory
+# docker build -t ukaea/paramak
 
+# Building using master branch version of CadQuery.
 # Run with the following command for terminal access
-# sudo docker run -it ukaea/paramak
+# docker build -t ukaea/paramak --build-arg cq_version=master .
 
-# Run with the following command for jupyter notebook interface
-# sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
+
+# This dockerfile can be run in a few different ways.
+
+# Run with the following command for a jupyter notebook interface
+# docker run -it ukaea/paramak .
+
+# Run with the following command for a jupyter notebook interface
+# docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
+
 
 # test with the folowing command
-# sudo docker run --rm ukaea/paramak pytest /tests
+# docker run --rm ukaea/paramak pytest /tests
 
 FROM continuumio/miniconda3
+
+# By default this Dockerfile builds with the latest release of CadQuery 2
+ARG cq_version=release
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
@@ -25,17 +35,18 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        libgles2-mesa-dev && \
                        apt-get clean
 
-# # appears to work best if jupyter is installed before cadquery master version
-# RUN conda install jupyter -y --quiet && \
-#     conda clean -afy
+# Installing CadQuery release
+RUN if [ "$cq_version" = "release" ] ; \
+    conda install -c conda-forge -c cadquery cadquery=2 ; \
+    conda install jupyter -y --quiet ; \
+    conda clean -afy
 
-# # cadquery version set to master to fix paramak issue 445
-# RUN conda install -c cadquery -c conda-forge cadquery=master && \
-#     conda clean -afy
-
-# TODO move back to version 2. when the next CADQuery release happens
-RUN conda install -c conda-forge -c cadquery cadquery=2 && \
-    conda install jupyter -y --quiet && \
+# Installing CadQuery master
+# jupyter is installed before cadquery master version to avoid a conflict
+RUN if [ "$cq_version" = "master" ] ; \
+    conda install jupyter -y --quiet ; \
+    conda clean -afy ; \
+    conda install -c cadquery -c conda-forge cadquery=master ; \
     conda clean -afy
 
 # Copy over the source code
