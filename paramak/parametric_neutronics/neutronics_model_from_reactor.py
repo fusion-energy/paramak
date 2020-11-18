@@ -26,6 +26,7 @@ except BaseException:
             NeutronicsModelFromReactor.materials can't accept strings or \
             neutronics_material_maker objects", UserWarning)
 
+
 class NeutronicsModelFromReactor():
     """Creates a neuronics model of the provided reactor geometry with assigned
     materials, plasma source and neutronics tallies.
