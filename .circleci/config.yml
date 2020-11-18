@@ -95,7 +95,7 @@ jobs:
 
       - store_artifacts:
           path: test-reports
-
+      - run: apt-get install curl
       - run: curl -s https://codecov.io/bash | bash
 
 workflows:
