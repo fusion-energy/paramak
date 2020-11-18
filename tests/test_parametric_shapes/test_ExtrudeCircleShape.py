@@ -65,7 +65,8 @@ class test_object_properties(unittest.TestCase):
         """Creates ExtrudeCircleShapes with other ExtrudeCircleShapes intersected
         and checks that their volumes are correct."""
 
-        intersect_shape = ExtrudeCircleShape(points=[(30, 0)], radius=5, distance=50)
+        intersect_shape = ExtrudeCircleShape(
+            points=[(30, 0)], radius=5, distance=50)
 
         intersected_shape = ExtrudeCircleShape(
             points=[(30, 0)], radius=10, distance=50,
