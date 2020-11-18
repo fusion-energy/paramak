@@ -66,43 +66,23 @@ class PlasmaBoundaries(Plasma):
             "elongation": self.elongation,
             "triangularity": self.triangularity,
         }
-        points = get_separatrix_coordinates(params, self.configuration)
+        points = get_separatrix_coordinates(
+            params, self.configuration)
         # add vertical displacement
         points[:, 1] += self.vertical_displacement
         # rescale to cm
         points[:] *= self.major_radius
 
         # remove unnecessary points
-        lower_x_point, upper_x_point = self.compute_x_points()
         # if non-null these are the y bounds
-        lower_point_y = (
-            -self.elongation * self.minor_radius + self.vertical_displacement
-        )
-        upper_point_y = self.elongation * self.minor_radius + \
-            self.vertical_displacement
+        lower_point_y = self.low_point[1]
+        upper_point_y = self.high_point[1]
         # else use x points
         if self.configuration in ["single-null", "double-null"]:
-            lower_point_y = lower_x_point[1]
+            lower_point_y = self.lower_x_point[1]
             if self.configuration == "double-null":
-                upper_point_y = upper_x_point[1]
-        points2 = []
-        for p in points:
-            if p[1] >= lower_point_y and p[1] <= upper_point_y:
-                points2.append(p)
-        points = points2
+                upper_point_y = self.upper_x_point[1]
 
-        self.points = [(p[0], p[1]) for p in points[:-1]]
-
-        # set the points of interest
-        self.high_point = (
-            self.major_radius - self.triangularity * self.minor_radius,
-            self.elongation * self.minor_radius,
-        )
-        self.low_point = (
-            self.major_radius - self.triangularity * self.minor_radius,
-            -self.elongation * self.minor_radius,
-        )
-        self.outer_equatorial_point = (
-            self.major_radius + self.minor_radius, 0)
-        self.inner_equatorial_point = (
-            self.major_radius - self.minor_radius, 0)
+        points = points[
+            (points[:, 1] >= lower_point_y) & (points[:, 1] <= upper_point_y)]
+        self.points = points.tolist()[:-1]
