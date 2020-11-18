@@ -45,7 +45,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     then apt-get install -y \
             wget git gfortran g++ cmake \
             mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
-            imagemagick autoremove ; \
+            imagemagick ; \
     fi
 
 # Installing CadQuery release
