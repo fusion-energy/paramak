@@ -10,7 +10,7 @@ import pytest
 class test_SubmersionTokamak(unittest.TestCase):
 
     def setUp(self):
-        self.test_reactor = paramak.SingleNullSubmersionTokamak(
+        self.test_reactor = paramak.SubmersionTokamak(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
             center_column_shield_radial_thickness=60,
@@ -26,8 +26,6 @@ class test_SubmersionTokamak(unittest.TestCase):
             outboard_blanket_radial_thickness=20,
             elongation=2.3,
             triangularity=0.45,
-            divertor_position="upper",
-            support_position="upper",
             rotation_angle=359,
         )
 
