@@ -30,13 +30,12 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      # - setup_remote_docker
       - run:
           name: Setup Docker environment
           command: |
             docker load -i my_image.tar.gz
             docker run -it $IMAGE_NAME:rem
-            ls
+            cd ..
       - run:
           name: run utils tests
           command:
