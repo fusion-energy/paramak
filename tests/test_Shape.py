@@ -15,6 +15,30 @@ class test_object_properties(unittest.TestCase):
 
         assert test_shape.points is None
 
+    def test_azimuth_placement_angle_getting_setting(self):
+        """Checks that the azimuth_placement_angle of a Shape can be
+        changed to a single value or iterable."""
+
+        test_shape = paramak.Shape()
+
+        assert test_shape.azimuth_placement_angle == 0
+        test_shape.azimuth_placement_angle = 180
+        assert test_shape.azimuth_placement_angle == 180
+        test_shape.azimuth_placement_angle = [0, 90, 180, 270]
+        assert test_shape.azimuth_placement_angle == [0, 90, 180, 270]
+
+    def test_incorrect_color_values(self):
+        """Checks that an error is raised when the color of a shape is
+        defined as an invalid string."""
+
+        def incorrect_color_string():
+            paramak.Shape(color=('1', '0', '1'))
+
+        self.assertRaises(
+            ValueError,
+            incorrect_color_string
+        )
+
     def test_incorrect_workplane(self):
         """Creates Shape object with incorrect workplane and checks ValueError
         is raised."""

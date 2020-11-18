@@ -6,171 +6,97 @@ from paramak import ExtrudeStraightShape
 
 
 class test_object_properties(unittest.TestCase):
-    def test_intersect_volume_2_shapes(self):
-        """Creates two extruded shapes using straight connections with the
-        second shape intersecting the first and checks that the volume is
-        correct."""
 
-        test_shape1 = ExtrudeStraightShape(
+    def setUp(self):
+        self.test_shape = ExtrudeStraightShape(
             points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
         )
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            distance=30,
-            intersect=test_shape1,
-        )
 
-        assert test_shape.solid is not None
-        assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25)
+    def test_default_parameters(self):
+        """Checks that the default parameters of an ExtrudeStraightShape are correct."""
 
-    def test_intersect_volume_3_shapes(self):
-        """Creates three extruded shapes using straight connections with the
-        second and third shapes intersecting the first and checks that the
-        volume is correct."""
-
-        test_shape1 = ExtrudeStraightShape(
-            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
-        )
-        test_shape2 = ExtrudeStraightShape(
-            points=[(0, 15), (0, 30), (30, 30), (30, 15)], distance=30
-        )
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            distance=30,
-            intersect=[test_shape1, test_shape2],
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25 * 0.5)
-
-    def test_intersect_volume_3_extruded_shapes(self):
-        """Creates three different extruded shapes using straight connections
-        with the second and third shapes intersecting the first and checks that
-        the volume is correct."""
-
-        test_shape1 = ExtrudeStraightShape(
-            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=10
-        )
-        test_shape2 = ExtrudeStraightShape(
-            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=3
-        )
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            distance=30,
-            intersect=[test_shape1, test_shape2],
-        )
-
-        assert test_shape.solid is not None
-        assert test_shape.volume == pytest.approx(20 * 20 * 30 * 0.25 * 0.1)
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "ExtrudeStraightShape.stp"
+        assert self.test_shape.stl_filename == "ExtrudeStraightShape.stl"
+        assert self.test_shape.extrude_both
 
     def test_absolute_shape_volume(self):
-        """Creates an extruded shape at one placement angle using straight
-        connections and checks that the volume is correct."""
+        """Creates an ExtrudeStraightShape and checks that the volume is correct."""
 
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], distance=30
-        )
-
-        test_shape.create_solid()
-
-        assert test_shape.solid is not None
-        assert test_shape.volume == pytest.approx(20 * 20 * 30)
+        assert self.test_shape.solid is not None
+        assert self.test_shape.volume == pytest.approx(20 * 20 * 30)
 
     def test_absolute_shape_areas(self):
-        """creates extruded straight shapes using straight connections and checks that the
-        areas of each face are correct"""
+        """Creates an ExtrudeStraightShape and checks that the volume is correct."""
 
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 50), (20, 50), (20, 0)], distance=30
+        assert self.test_shape.area == pytest.approx(
+            (20 * 20 * 2) + (20 * 30 * 4)
         )
+        assert len(self.test_shape.areas) == 6
+        assert self.test_shape.areas.count(pytest.approx(20 * 20)) == 2
+        assert self.test_shape.areas.count(pytest.approx(20 * 30)) == 4
 
-        assert test_shape.area == pytest.approx(
-            (50 * 20 * 2) + (30 * 20 * 2) + (50 * 30 * 2))
-        assert len(test_shape.areas) == 6
-        assert test_shape.areas.count(pytest.approx(50 * 20)) == 2
-        assert test_shape.areas.count(pytest.approx(30 * 20)) == 2
-        assert test_shape.areas.count(pytest.approx(50 * 30)) == 2
+    def test_relative_shape_volume(self):
+        """Creates two ExtrudeStraightShapes and checks that their relative volumes
+        are correct."""
 
-        test_shape = ExtrudeStraightShape(
-            points=[(50, 0), (70, 50), (50, 100), (70, 100), (90, 50), (70, 0)],
-            distance=50
-        )
-
-        assert test_shape.area == pytest.approx(
-            (20 * 50 * 2 * 2) + (20 * 50 * 2) + (10 * (29 ** 0.5) * 50 * 4))
-        assert len(test_shape.areas) == 8
-        assert test_shape.areas.count(pytest.approx(20 * 50 * 2)) == 2
-        assert test_shape.areas.count(pytest.approx(50 * 20)) == 2
-        assert test_shape.areas.count(
-            pytest.approx(10 * (29 ** 0.5) * 50)) == 4
-
-    def test_extruded_shape_relative_volume(self):
-        """Creates two extruded shapes at different placement angles using
-        straight connections and checks that their relative volumes are
-        correct."""
-
-        test_shape = ExtrudeStraightShape(
-            points=[(5, 0), (5, 20), (15, 20), (15, 0)], distance=10
-        )
-
-        test_shape.azimuth_placement_angle = 0
-
-        assert test_shape.volume == pytest.approx(10 * 20 * 10 * 1)
-
-        test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-
-        assert test_shape.volume == pytest.approx(10 * 20 * 10 * 4)
-
-    def test_extruded_shape_with_overlap_volume(self):
-        """Creates two overlapping extruded shapes at different placement
-        angles using straight connections and checks that their volume is
-        correct."""
-
-        test_shape = ExtrudeStraightShape(
-            points=[(0, 0), (0, 20), (10, 20), (10, 0)], distance=10
-        )
-
-        test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-
-        assert test_shape.volume == pytest.approx(
-            (10 * 20 * 10 * 4) - (5 * 20 * 5 * 4))
+        test_volume = self.test_shape.volume
+        self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
+        self.test_shape.rotation_axis = "Y"
+        assert self.test_shape.volume == pytest.approx(test_volume * 4)
 
     def test_cut_volume(self):
-        """Creates an extruded shape using straight connections with another
-        shape cut out and checks that the volume is correct."""
+        """Creates an ExtrudeStraightShape with another ExtrudeStraightShape cut out
+        and checks that the volume is correct."""
 
-        inner_shape = ExtrudeStraightShape(
-            points=[(5, 5), (5, 10), (10, 10), (10, 5)], distance=30
+        shape_with_cut = ExtrudeStraightShape(
+            points=[(0, 0), (0, 40), (40, 40), (40, 0)], distance=40,
+            cut=self.test_shape
         )
 
-        outer_shape = ExtrudeStraightShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3)], distance=30
+        assert shape_with_cut.volume == pytest.approx(
+            (40 * 40 * 40) - (20 * 20 * 30)
         )
 
-        outer_shape_with_cut = ExtrudeStraightShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3)], cut=inner_shape, distance=30,
-        )
+    def test_union_volume(self):
+        """Creates a union of two ExtrudeStraightShapes and checks that the volume is
+        correct."""
 
-        assert inner_shape.volume == pytest.approx(5 * 5 * 30)
-        assert outer_shape.volume == pytest.approx(9 * 9 * 30)
-        assert outer_shape_with_cut.volume == pytest.approx(
-            (9 * 9 * 30) - (5 * 5 * 30), abs=0.1
+        unioned_shape = ExtrudeStraightShape(
+            points=[(0, 10), (0, 30), (20, 30), (20, 10)], distance=30,
+            union=self.test_shape
         )
+        assert unioned_shape.volume == pytest.approx(30 * 20 * 30)
+
+    def test_intersect_volume(self):
+        """Creates an ExtrudeStraightShape with another ExtrudeStraightShape intersected
+        and checks that the volume is correct."""
+
+        intersected_shape = ExtrudeStraightShape(
+            points=[(0, 10), (0, 30), (20, 30), (20, 10)], distance=30,
+            intersect=self.test_shape
+        )
+        assert intersected_shape.volume == pytest.approx(10 * 20 * 30)
 
     def test_rotation_angle(self):
-        """Creates an extruded shape with a rotation_angle < 360 and checks
-        that the correct cut is performed and the volume is correct."""
+        """Creates an ExtrudeStraightShape with a rotation_angle < 360 and checks that
+        the correct cut is performed and the volume is correct."""
 
-        test_shape = ExtrudeStraightShape(
-            points=[(50, 0), (50, 20), (70, 20), (70, 0)],
-            distance=50,
-            azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315, 360]
-        )
-        test_volume = test_shape.volume
+        self.test_shape.azimuth_placement_angle = [45, 135, 225, 315]
+        self.rotation_axis = "Y"
+        test_volume = self.test_shape.volume
+        self.test_shape.rotation_angle = 180
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 0.5, rel=0.01)
 
-        test_shape.rotation_angle = 180
+    def test_extrude_both(self):
+        """Creates an ExtrudeStraightShape with extrude_both = True and False and checks
+        that the volumes are correct."""
 
-        assert test_shape.volume == pytest.approx(test_volume * 0.5)
+        test_volume_extrude_both = self.test_shape.volume
+        self.test_shape.extrude_both = False
+        assert self.test_shape.volume == pytest.approx(
+            test_volume_extrude_both)
 
 
 if __name__ == "__main__":
