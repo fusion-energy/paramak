@@ -32,11 +32,15 @@ jobs:
           at: .
       - setup_remote_docker
       - run:
-          name: run utils tests
+          name: Setup Docker environment
           command: |
             docker load -i my_image.tar.gz
             docker start $IMAGE_NAME:rem
             docker attach $IMAGE_NAME:rem
+      - run:
+          name: run utils tests
+          command:
+            pytest tests/test_utils.py -v --cov=paramak --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
 workflows:
   version: 2
