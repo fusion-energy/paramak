@@ -132,10 +132,6 @@ class SingleNullBallReactor(paramak.BallReactor):
                 (self._divertor_end_radius, divertor_height),
                 (self._divertor_start_radius, divertor_height)
             ],
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
-            name="divertor",
-            material_tag="divertor_mat",
             rotation_angle=self.rotation_angle
         )
 
