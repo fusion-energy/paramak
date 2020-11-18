@@ -43,7 +43,7 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
     then apt-get install -y \
-            python3-pip python-is-python3 wget git gfortran g++ cmake \
+            wget git gfortran g++ cmake \
             mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
             imagemagick autoremove ; \
     fi
