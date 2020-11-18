@@ -24,7 +24,7 @@ jobs:
             
   #           docker push $IMAGE_NAME:$CIRCLE_SHA1
 
-  test:
+  build:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
     docker:
