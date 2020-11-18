@@ -15,10 +15,13 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker image
-          command: docker build -t $IMAGE_NAME:rem .
+          command: |
+            docker build -t $IMAGE_NAME:rem .
+            docker save -o image/my_image.tar $IMAGE_NAME:rem
       # https://support.circleci.com/hc/en-us/articles/360019182513-Build-a-Docker-image-in-one-job-and-use-it-in-another-job
       - persist_to_workspace:
-          command : docker save -o image/my_image.tar $IMAGE_NAME:rem
+          root: /image
+          paths : my_image.tar
 
   test:
     docker:
