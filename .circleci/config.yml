@@ -29,11 +29,12 @@ jobs:
       IMAGE_NAME: openmcworkshop/paramak
     docker:
       - image: $IMAGE_NAME:$CIRCLE_SHA1
+    working_directory: ../
     steps:
       - run:
           name: run utils tests
           command: |
-            ls
+            pytest tests/test_utils.py
 
 workflows:
   version: 2
