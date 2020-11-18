@@ -27,6 +27,8 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
+      - attach_workspace:
+          at: .
       - run:
           name: run utils tests
           command: |
