@@ -21,16 +21,16 @@ jobs:
       # https://support.circleci.com/hc/en-us/articles/360019182513-Build-a-Docker-image-in-one-job-and-use-it-in-another-job
       - persist_to_workspace:
           root: .
-          paths : my_image.tar
+          paths : my_image.tar.gz
 
   test:
     docker:
-      - image: openmcworkshop/paramak:rem
+      - image: circleci/buildpack-deps:stretch
     steps:
       - run:
           name: run utils tests
-          command: 
-            echo 'coucou'
+          command: |
+            docker load -i my_image.tar.gz
 
 workflows:
   version: 2
