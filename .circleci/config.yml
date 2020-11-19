@@ -2,14 +2,31 @@
 ##
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 
-
 version: 2
 jobs:
-  build:
+  build-docker:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
     docker:
-      - image: openmcworkshop/paramak:24220a4cef30d6e5119036d4ae39fd7d6034e0bf
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t $IMAGE_NAME:$CIRCLE_SHA1 --build-arg include_neutronics=true --build-arg cq_version=master .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            
+            docker push $IMAGE_NAME:$CIRCLE_SHA1
+  test:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
+    docker:
+      - image: $IMAGE_NAME:$CIRCLE_SHA1
     working_directory: ../
     steps:
       - run:
@@ -23,58 +40,91 @@ jobs:
 
             pytest tests/test_Shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      # - run:
-      #     name: run Reactor tests
-      #     command: 
+      - run:
+          name: run Reactor tests
+          command: 
 
-      #       pytest tests/test_Reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
+            pytest tests/test_Reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      # - run:
-      #     name: run parametric_shapes tests
-      #     command: 
+      - run:
+          name: run parametric_shapes tests
+          command: 
 
-      #       pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
+            pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      # - run:
-      #     name: run parametric_components tests
-      #     command: 
+      - run:
+          name: run parametric_components tests
+          command: 
 
-      #       pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
+            pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      # - run:
-      #     name: run example shape tests
-      #     command: 
+      - run:
+          name: run example shape tests
+          command: 
 
-      #       pytest tests/test_example_shapes.py -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
+            pytest tests/test_example_shapes.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      # - run:
-      #     name: run example component tests
-      #     command: 
+      - run:
+          name: run example component tests
+          command: 
 
-      #       pytest tests/test_example_components.py -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
-      # - run:
-      #     name: run example reactor tests
-      #     command: 
+            pytest tests/test_example_components.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+      - run:
+          name: run example reactor tests
+          command: 
 
-      #       pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
+            pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      # - run:
-      #     name: run parametric_reactors tests
-      #     command: 
+      - run:
+          name: run parametric_reactors tests
+          command: 
 
-      #       pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
+            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       # TODO once the open-source neutronics workflow is more stable include these tests
       # - run:
       #     name: run neutronics tests
       #     command: 
 
-      #       pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
+      #       pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - store_test_results:
           path: test-reports
 
-      - store_artifacts:
-          path: test-reports
       - run: apt-get -y install curl
       - run: curl -s https://codecov.io/bash | bash
+
+  del-docker:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker
+      - run:
+          name: del temp Docker image
+          command: |
+            login_data() {
+            cat <<EOF
+            {
+              "username": "$DOCKERHUB_USERNAME",
+              "password": "$DOCKERHUB_TOKEN"
+            }
+            EOF
+            }
+            TOKEN=`curl -s -H "Content-Type: application/json" -X POST -d "$(login_data)" "https://hub.docker.com/v2/users/login/" | jq -r .token`
+            curl "https://hub.docker.com/v2/repositories/$IMAGE_NAME/tags/$CIRCLE_SHA1/" \
+            -X DELETE \
+            -H "Authorization: JWT ${TOKEN}"
+
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - build-docker
+      - test:
+          requires:
+            - build-docker
+      - del-docker:
+          requires:
+            - test
