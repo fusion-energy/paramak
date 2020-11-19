@@ -349,7 +349,7 @@ class BallReactor(paramak.Reactor):
 
     def _make_blankets_layers(self):
 
-        center_column_cutter = paramak.CenterColumnShieldCylinder(
+        self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
             inner_radius=0,
             outer_radius=self._center_column_shield_end_radius,
@@ -371,7 +371,7 @@ class BallReactor(paramak.Reactor):
             material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
             stl_filename="firstwall.stl",
-            cut=[center_column_cutter]
+            cut=[self._center_column_cutter]
         )
 
         self._blanket = paramak.BlanketFP(
@@ -394,7 +394,7 @@ class BallReactor(paramak.Reactor):
             material_tag="blanket_mat",
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
-            cut=[center_column_cutter])
+            cut=[self._center_column_cutter])
 
         self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
@@ -421,7 +421,7 @@ class BallReactor(paramak.Reactor):
             material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
-            cut=[center_column_cutter],
+            cut=[self._center_column_cutter],
         )
 
     def _make_divertor(self):
