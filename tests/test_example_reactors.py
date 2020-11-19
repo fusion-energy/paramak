@@ -1,13 +1,12 @@
 
+from examples.example_parametric_reactors import (
+    ball_reactor, ball_reactor_single_null, submersion_reactor_single_null)
 import os
 import sys
 import unittest
 from pathlib import Path
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
-
-from examples.example_parametric_reactors import (
-    ball_reactor, ball_reactor_single_null, submersion_reactor_single_null)
 
 
 class test_object_properties(unittest.TestCase):

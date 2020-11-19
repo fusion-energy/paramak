@@ -9,7 +9,7 @@ import paramak
 
 
 def make_ball_reactor_sn(outputs=['stp', 'neutronics', 'svg', 'stl', 'html'],
-    output_folder='BallReactor_sn'):
+                         output_folder='BallReactor_sn'):
 
     my_reactor = paramak.SingleNullBallReactor(
         inner_bore_radial_thickness=50,
@@ -38,13 +38,14 @@ def make_ball_reactor_sn(outputs=['stp', 'neutronics', 'svg', 'stl', 'html'],
     if 'stp' in outputs:
         my_reactor.export_stp(output_folder=output_folder)
     if 'neutronics' in outputs:
-        my_reactor.export_neutronics_description(Path(output_folder)/'manifest.json')
+        my_reactor.export_neutronics_description(
+            Path(output_folder) / 'manifest.json')
     if 'svg' in outputs:
-        my_reactor.export_svg(Path(output_folder)/'reactor.svg')
+        my_reactor.export_svg(Path(output_folder) / 'reactor.svg')
     if 'stl' in outputs:
         my_reactor.export_stl(output_folder=output_folder)
     if 'html' in outputs:
-        my_reactor.export_html(Path(output_folder)/'reactor.html')
+        my_reactor.export_html(Path(output_folder) / 'reactor.html')
 
 
 if __name__ == "__main__":
