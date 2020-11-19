@@ -104,6 +104,7 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
+      - setup_remote_docker
       - run:
           name: del temp Docker image
           command: |
@@ -120,3 +121,5 @@ workflows:
           requires:
             - build-docker
       - del-docker:
+          requires:
+            - build-docker
