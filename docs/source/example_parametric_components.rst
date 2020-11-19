@@ -56,21 +56,15 @@ make_firstwall_for_neutron_wall_loading.py
 
 `Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.py>`_
 
-make_vacuum_vessel_with_ports.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+make_magnet_set
+^^^^^^^^^^^^^^^
 
+.. image:: https://user-images.githubusercontent.com/8583900/99276201-5088ac00-2824-11eb-9927-a7ea1094b1e5.png
+   :width: 500
+   :align: center
 
-|vacuumvesselstp| |vacuumvesselcutstp| |vacuumvesselsvg| 
-
-.. |vacuumvesselstp| image:: https://user-images.githubusercontent.com/8583900/99148226-76744c00-267e-11eb-837a-8481aa271d13.png
-   :width: 220px
-.. |vacuumvesselcutstp| image:: https://user-images.githubusercontent.com/8583900/99148228-77a57900-267e-11eb-9b9a-73d34ac6588d.png
-   :width: 220px
-.. |vacuumvesselsvg| image:: https://user-images.githubusercontent.com/8583900/99148306-e387e180-267e-11eb-80a6-41f265ec9e7c.png
-   :width: 220px
-
-.. automodule:: examples.example_parametric_components.make_vacuum_vessel_with_ports
+.. automodule:: examples.example_parametric_components.make_magnet_set
    :members:
    :show-inheritance:
 
-`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_vacuum_vessel_with_ports.py>`_
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_magnet_set.py>`_

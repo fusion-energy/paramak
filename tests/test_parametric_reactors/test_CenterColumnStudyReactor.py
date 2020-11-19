@@ -9,7 +9,7 @@ import pytest
 
 
 class test_CenterColumnStudyReactor(unittest.TestCase):
-    def test_CenterColumnStudyReactor_creation_with_narrow_divertor(self):
+    def test_creation_with_narrow_divertor(self):
         """creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
         the correct number of components are created"""
 
@@ -33,11 +33,11 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
 
         assert len(test_reactor.shapes_and_components) == 6
 
-    def test_CenterColumnStudyReactor_svg_creation(self):
+    def test_svg_creation(self):
         """creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
         an svg image of the reactor can be exported"""
 
-        os.system("rm test_CenterColumnStudyReactor_image.svg")
+        os.system("rm test_image.svg")
 
         test_reactor = paramak.CenterColumnStudyReactor(
             inner_bore_radial_thickness=30,
@@ -55,12 +55,12 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             center_column_arc_vertical_thickness=520,
             rotation_angle=180)
 
-        test_reactor.export_svg("test_CenterColumnStudyReactor_image.svg")
+        test_reactor.export_svg("test_image.svg")
 
-        assert Path("test_CenterColumnStudyReactor_image.svg").exists() is True
-        os.system("rm test_CenterColumnStudyReactor_image.svg")
+        assert Path("test_image.svg").exists() is True
+        os.system("rm test_image.svg")
 
-    def test_CenterColumnStudyReactor_rotation_angle_impacts_volume(self):
+    def test_rotation_angle_impacts_volume(self):
         """creates a CenterColumnStudyReactor reactor with a rotation angle of
         90 and another reactor with a rotation angle of 180. Then checks the
         volumes of all the components is double in the 180 reactor"""

@@ -3,24 +3,34 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 
 
-version: 2.1
-
+version: 2
 jobs:
-  build:
+  build-docker:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
     docker:
-      - image: openmcworkshop/paramak:dependencies_cq_master
-
-    working_directory: ~/repo
-
+      - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
+      - setup_remote_docker
       - run:
-          name: install
-          command:
-            pip install .[neutronics]
+          name: Build Docker image
+          command: |
+            docker build -t $IMAGE_NAME:$CIRCLE_SHA1 --build-arg include_neutronics=true --build-arg cq_version=master .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            
+            docker push $IMAGE_NAME:$CIRCLE_SHA1
 
-      # run tests!
-
+  test:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
+    docker:
+      - image: $IMAGE_NAME:$CIRCLE_SHA1
+    working_directory: ../
+    steps:
       - run:
           name: run utils tests
           command: 
@@ -73,6 +83,7 @@ jobs:
 
             pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
+      # TODO once the open-source neutronics workflow is more stable include these tests
       # - run:
       #     name: run neutronics tests
       #     command: 
@@ -84,6 +95,14 @@ jobs:
 
       - store_artifacts:
           path: test-reports
-
+      - run: apt-get install curl
       - run: curl -s https://codecov.io/bash | bash
 
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - build-docker
+      - test:
+          requires:
+            - build-docker

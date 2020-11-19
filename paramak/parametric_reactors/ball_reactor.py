@@ -360,7 +360,7 @@ class BallReactor(paramak.Reactor):
             plasma=self._plasma,
             thickness=self.firstwall_radial_thickness,
             offset_from_plasma=[
-                self.inner_plasma_gap_radial_thickness,
+                self.major_radius - self.minor_radius,
                 self.plasma_gap_vertical_thickness,
                 self.outer_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
@@ -378,7 +378,7 @@ class BallReactor(paramak.Reactor):
             plasma=self._plasma,
             thickness=self.blanket_radial_thickness,
             offset_from_plasma=[
-                self.inner_plasma_gap_radial_thickness +
+                self.major_radius - self.minor_radius +
                 self.firstwall_radial_thickness,
                 self.plasma_gap_vertical_thickness +
                 self.firstwall_radial_thickness,
@@ -386,7 +386,7 @@ class BallReactor(paramak.Reactor):
                 self.firstwall_radial_thickness,
                 self.plasma_gap_vertical_thickness +
                 self.firstwall_radial_thickness,
-                self.inner_plasma_gap_radial_thickness +
+                self.major_radius - self.minor_radius +
                 self.firstwall_radial_thickness],
             start_angle=-180,
             stop_angle=180,
@@ -400,7 +400,7 @@ class BallReactor(paramak.Reactor):
             plasma=self._plasma,
             thickness=self.blanket_rear_wall_radial_thickness,
             offset_from_plasma=[
-                self.inner_plasma_gap_radial_thickness +
+                self.major_radius - self.minor_radius +
                 self.firstwall_radial_thickness +
                 self.blanket_radial_thickness,
                 self.plasma_gap_vertical_thickness +
@@ -412,7 +412,7 @@ class BallReactor(paramak.Reactor):
                 self.plasma_gap_vertical_thickness +
                 self.firstwall_radial_thickness +
                 self.blanket_radial_thickness,
-                self.inner_plasma_gap_radial_thickness +
+                self.major_radius - self.minor_radius +
                 self.firstwall_radial_thickness +
                 self.blanket_radial_thickness],
             start_angle=-180,

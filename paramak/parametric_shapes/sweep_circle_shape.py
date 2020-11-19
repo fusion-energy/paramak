@@ -32,8 +32,8 @@ class SweepCircleShape(Shape):
         path_points,
         workplane="XY",
         path_workplane="XZ",
-        stp_filename="SweepMixedShape.stp",
-        stl_filename="SweepMixedShape.stl",
+        stp_filename="SweepCircleShape.stp",
+        stl_filename="SweepCircleShape.stl",
         force_cross_section=False,
         **kwargs
     ):

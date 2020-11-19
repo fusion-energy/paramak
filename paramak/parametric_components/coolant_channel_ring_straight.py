@@ -7,7 +7,8 @@ from paramak import ExtrudeCircleShape
 class CoolantChannelRingStraight(ExtrudeCircleShape):
     """A ring of equally-spaced straight circular coolant channels with
     constant thickness.
-    Arguments:
+
+    Args:
         height (float): height of each coolant channel in ring.
         channel_radius (float): radius of each coolant channel in ring.
         number_of_coolant_channels (float): number of coolant channels in ring.
