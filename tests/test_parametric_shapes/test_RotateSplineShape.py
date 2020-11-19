@@ -25,28 +25,15 @@ class test_object_properties(unittest.TestCase):
         """creates a rotated shape using spline connections and checks the volume
         is correct"""
 
-        test_shape = RotateSplineShape(
-            points=[
-                (50, 0),
-                (50, 20),
-                (70, 80),
-                (90, 50),
-                (70, 0),
-                (90, -50),
-                (70, -80),
-                (50, -20)
-            ]
-        )
+        self.test_shape.rotation_angle = 360
+        volume_360 = self.test_shape.volume
 
-        test_shape.rotation_angle = 360
-        volume_360 = test_shape.volume
-
-        assert test_shape.solid is not None
+        assert self.test_shape.solid is not None
         assert volume_360 > 100
 
         self.test_shape.rotation_angle = 180
         assert self.test_shape.solid is not None
-        assert test_shape.volume == pytest.approx(volume_360 * 0.5)
+        assert self.test_shape.volume == pytest.approx(volume_360 * 0.5)
 
     def test_cut_volume(self):
         """Creates a RotateSplineShape with another RotateSplineShape cut out
