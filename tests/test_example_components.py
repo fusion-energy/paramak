@@ -1,12 +1,13 @@
 
-from examples.example_parametric_components import (
-    make_all_parametric_components, make_demo_style_blankets,
-    make_firstwall_for_neutron_wall_loading, make_plasmas,
-    make_vacuum_vessel_with_ports)
 import os
 import sys
 import unittest
 from pathlib import Path
+
+from examples.example_parametric_components import (
+    make_all_parametric_components, make_demo_style_blankets,
+    make_firstwall_for_neutron_wall_loading, make_plasmas,
+    make_vacuum_vessel_with_ports)
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
