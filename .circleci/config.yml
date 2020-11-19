@@ -122,4 +122,4 @@ workflows:
             - build-docker
       - del-docker:
           requires:
-            - build-docker
+            - test
