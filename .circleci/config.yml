@@ -16,12 +16,12 @@ jobs:
           name: run utils tests
           command: 
 
-            pytest tests/test_utils.py -v --cov=paramak --cov-report term --cov-report xml:cov.xml 
+            pytest tests/test_utils.py -v --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
       - run:
           name: run shape tests
           command: 
 
-            pytest tests/test_Shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
+            pytest tests/test_Shape.py -v --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       # - run:
       #     name: run Reactor tests
@@ -72,9 +72,9 @@ jobs:
       #       pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
 
       - store_test_results:
-          path: ../test-reports
+          path: test-reports
 
       - store_artifacts:
-          path: ../test-reports
+          path: test-reports
       - run: apt-get -y install curl
       - run: curl -s https://codecov.io/bash | bash
