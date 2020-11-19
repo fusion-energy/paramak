@@ -1,17 +1,16 @@
 
-import os
-import sys
-import unittest
-from pathlib import Path
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
-
 from examples.example_parametric_shapes import (
     make_blanket_from_parameters,
     make_blanket_from_points,
     make_CAD_from_points,
     make_can_reactor_from_parameters,
     make_can_reactor_from_points)
+import os
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
 class test_object_properties(unittest.TestCase):
