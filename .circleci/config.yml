@@ -92,7 +92,7 @@ jobs:
           path: test-reports
 
       - run: apt-get -y install curl
-      - run: curl -s https://codecov.io/bash | bash
+      - run: bash <(curl -s https://codecov.io/bash) -X fix
 
   del-docker:
     environment:
