@@ -4,10 +4,13 @@ SubmersionTokamak parametric reactor. By default the script saves stp, stl,
 html and svg files.
 """
 
+from pathlib import Path
+
 import paramak
 
 
-def make_submersion_sn(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
+def make_submersion_sn(outputs=['stp', 'neutronics', 'svg', 'stl', 'html'],
+                       output_folder='SubmersionTokamak_sn'):
 
     my_reactor = paramak.SingleNullSubmersionTokamak(
         inner_bore_radial_thickness=30,
@@ -37,16 +40,16 @@ def make_submersion_sn(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
     )
 
     if 'stp' in outputs:
-        my_reactor.export_stp(output_folder='SubmersionTokamak_sn')
+        my_reactor.export_stp(output_folder=output_folder)
     if 'neutronics' in outputs:
         my_reactor.export_neutronics_description(
-            'SubmersionTokamak_sn/manifest.json')
+            Path(output_folder) / 'manifest.json')
     if 'svg' in outputs:
-        my_reactor.export_svg('SubmersionTokamak_sn/reactor.svg')
+        my_reactor.export_svg(Path(output_folder) / 'reactor.svg')
     if 'stl' in outputs:
-        my_reactor.export_stl(output_folder='SubmersionTokamak_sn')
+        my_reactor.export_stl(output_folder=output_folder)
     if 'html' in outputs:
-        my_reactor.export_html('SubmersionTokamak_sn/reactor.html')
+        my_reactor.export_html(Path(output_folder) / 'reactor.html')
 
 
 if __name__ == "__main__":
