@@ -16,12 +16,12 @@ jobs:
           name: run utils tests
           command: 
 
-            pytest tests/test_utils.py -v --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_utils.py -v --cov-report term --cov-report test-reports/coverage.xml --junitxml=test-reports/junit.xml
       - run:
           name: run shape tests
           command: 
 
-            pytest tests/test_Shape.py -v --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_Shape.py -v --cov-report term --cov-report test-reports/coverage.xml --junitxml=test-reports/junit.xml
 
       # - run:
       #     name: run Reactor tests
@@ -77,4 +77,4 @@ jobs:
       - store_artifacts:
           path: test-reports
       - run: apt-get -y install curl
-      - run: curl -s https://codecov.io/bash | bash
+      - run: curl -s "test-reports/" https://codecov.io/bash | bash
