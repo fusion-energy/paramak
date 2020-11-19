@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
-from example_parametric_components import (
+from examples.example_parametric_components import (
     make_all_parametric_components,
     make_plasmas,
     make_demo_style_blankets,
