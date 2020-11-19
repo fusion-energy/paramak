@@ -3,10 +3,13 @@ This example creates a ball reactor using the BallReactor parametric reactor.
 By default the script saves stp, stl, html and svg files.
 """
 
+from pathlib import Path
+
 import paramak
 
 
-def make_ball_reactor(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
+def make_ball_reactor(outputs=['stp', 'neutronics', 'svg', 'stl', 'html'],
+    output_folder='BallReactor'):
 
     my_reactor = paramak.BallReactor(
         inner_bore_radial_thickness=10,
@@ -32,15 +35,15 @@ def make_ball_reactor(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
     )
 
     if 'stp' in outputs:
-        my_reactor.export_stp(output_folder='BallReactor')
+        my_reactor.export_stp(output_folder=output_folder)
     if 'neutronics' in outputs:
-        my_reactor.export_neutronics_description('BallReactor/manifest.json')
+        my_reactor.export_neutronics_description(Path(output_folder)/'manifest.json')
     if 'svg' in outputs:
-        my_reactor.export_svg('BallReactor/reactor.svg')
+        my_reactor.export_svg(Path(output_folder)/'reactor.svg')
     if 'stl' in outputs:
-        my_reactor.export_stl(output_folder='BallReactor')
+        my_reactor.export_stl(output_folder=output_folder)
     if 'html' in outputs:
-        my_reactor.export_html('BallReactor/reactor.html')
+        my_reactor.export_html(Path(output_folder)/'reactor.html')
 
 
 if __name__ == "__main__":
