@@ -125,17 +125,10 @@ class SingleNullBallReactor(paramak.BallReactor):
 
         list_of_components.append(self._divertor)
 
-        center_column_cutter = paramak.CenterColumnShieldCylinder(
-            height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
-            inner_radius=0,
-            outer_radius=self._center_column_shield_end_radius,
-            rotation_angle=360
-        )
-
         self._firstwall.cut.append(self._divertor)
         self._blanket.cut.append(self._divertor)
         self._blanket_rear_wall.cut.append(self._divertor)
-        self._blanket_rear_wall.cut.append(center_column_cutter)
+        self._blanket_rear_wall.cut.append(self._center_column_cutter)
 
         list_of_components.append(self._firstwall)
         list_of_components.append(self._blanket)
