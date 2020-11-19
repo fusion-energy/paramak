@@ -5,30 +5,11 @@
 
 version: 2
 jobs:
-  # build-docker:
-  #   environment:
-  #     IMAGE_NAME: openmcworkshop/paramak
-  #   docker:
-  #     - image: circleci/buildpack-deps:stretch
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker
-  #     - run:
-  #         name: Build Docker image
-  #         command: |
-  #           docker build -t $IMAGE_NAME:$CIRCLE_SHA1 --build-arg include_neutronics=true --build-arg cq_version=master .
-  #     - run:
-  #         name: Publish Docker Image to Docker Hub
-  #         command: |
-  #           echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            
-  #           docker push $IMAGE_NAME:$CIRCLE_SHA1
-
-  test:
+  build:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
     docker:
-      - image: $IMAGE_NAME:latest
+      - image: openmcworkshop/paramak:24220a4cef30d6e5119036d4ae39fd7d6034e0bf
     working_directory: ../
     steps:
       - run:
@@ -97,40 +78,3 @@ jobs:
           path: test-reports
       - run: apt-get install curl
       - run: curl -s ../ https://codecov.io/bash | bash
-
-  # del-docker:
-  #   environment:
-  #     IMAGE_NAME: openmcworkshop/paramak
-  #   docker:
-  #     - image: circleci/buildpack-deps:stretch
-  #   steps:
-  #     - setup_remote_docker
-  #     - run:
-  #         name: del temp Docker image
-  #         command: |
-  #           login_data() {
-  #           cat <<EOF
-  #           {
-  #             "username": "$DOCKERHUB_USERNAME",
-  #             "password": "$DOCKERHUB_TOKEN"
-  #           }
-  #           EOF
-  #           }
-
-  #           TOKEN=`curl -s -H "Content-Type: application/json" -X POST -d "$(login_data)" "https://hub.docker.com/v2/users/login/" | jq -r .token`
-
-  #           curl "https://hub.docker.com/v2/repositories/$IMAGE_NAME/tags/$CIRCLE_SHA1/" \
-  #           -X DELETE \
-  #           -H "Authorization: JWT ${TOKEN}"
-
-workflows:
-  version: 2
-  build-test:
-    jobs:
-      # - build-docker
-      - test:
-      #     requires:
-      #       - build-docker
-      # - del-docker:
-      #     requires:
-      #       - test
