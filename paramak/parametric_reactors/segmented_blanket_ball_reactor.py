@@ -239,4 +239,4 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             rotation_angle=self.rotation_angle,
             material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
-            cut=center_column_cutter)
+            cut=[center_column_cutter])
