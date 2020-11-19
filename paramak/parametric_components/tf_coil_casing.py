@@ -1,8 +1,8 @@
-from paramak import ExtrudeMixedShape, ExtrudeStraightShape
-from paramak.utils import union_solid, cut_solid, add_thickness
 
 import warnings
-import numpy as np
+
+from paramak import ExtrudeMixedShape, ExtrudeStraightShape
+from paramak.utils import add_thickness, cut_solid, union_solid
 
 
 class TFCoilCasing(ExtrudeMixedShape):

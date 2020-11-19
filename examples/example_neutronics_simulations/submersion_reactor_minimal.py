@@ -1,8 +1,8 @@
 """This is a minimal example that obtains the particle flux in each component
 for a parametric submersion reactor"""
 
-import paramak
 import neutronics_material_maker as nmm
+import paramak
 
 
 def make_model_and_simulate():

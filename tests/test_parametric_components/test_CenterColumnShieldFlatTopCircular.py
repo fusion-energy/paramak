@@ -1,6 +1,7 @@
 
-import paramak
 import unittest
+
+import paramak
 
 
 class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):

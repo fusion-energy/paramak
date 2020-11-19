@@ -1,3 +1,4 @@
+
 import json
 from collections import Iterable
 from pathlib import Path
@@ -5,10 +6,10 @@ from pathlib import Path
 import cadquery as cq
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
-import plotly.graph_objects as go
 from paramak.shape import Shape
 from paramak.utils import get_hash
 
@@ -233,14 +234,14 @@ class Reactor:
                 included. Defaults to True as this is needed for DAGMC models.
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".json":
-            Pfilename = Pfilename.with_suffix(".json")
+        if path_filename.suffix != ".json":
+            path_filename = path_filename.with_suffix(".json")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(Pfilename, "w") as outfile:
+        with open(path_filename, "w") as outfile:
             json.dump(
                 self.neutronics_description(
                     include_plasma=include_plasma,
@@ -250,9 +251,9 @@ class Reactor:
                 indent=4,
             )
 
-        print("saved geometry description to ", Pfilename)
+        print("saved geometry description to ", path_filename)
 
-        return str(Pfilename)
+        return str(path_filename)
 
     def export_stp(self, output_folder=""):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
@@ -370,12 +371,12 @@ class Reactor:
         except ImportError as err:
             raise err('PyMoab not found, Reactor.export_h5m method not available')
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".h5m":
-            Pfilename = Pfilename.with_suffix(".h5m")
+        if path_filename.suffix != ".h5m":
+            path_filename = path_filename.with_suffix(".h5m")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         self.export_stl(tolerance=tolerance)
         material_dict = self.neutronics_description()
@@ -474,14 +475,14 @@ class Reactor:
 
         mb.add_entities(file_set, all_sets)
 
-        mb.write_file(str(Pfilename))
+        mb.write_file(str(path_filename))
 
         return filename
 
     def export_physical_groups(self, output_folder=""):
-        """Exports several JSON files containing a look up table which is useful
-        for identifying faces and volumes. The output file names are generated
-        from .stp_filename properties.
+        """Exports several JSON files containing a look up table which is
+        useful for identifying faces and volumes. The output file names are
+        generated from .stp_filename properties.
 
         Args:
             output_folder (str, optional): directory of outputfiles.
@@ -514,16 +515,16 @@ class Reactor:
             filename (str): the filename of the svg file to be exported
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".svg":
-            Pfilename = Pfilename.with_suffix(".svg")
+        if path_filename.suffix != ".svg":
+            path_filename = path_filename.with_suffix(".svg")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(Pfilename, "w") as f:
+        with open(path_filename, "w") as f:
             exporters.exportShape(self.solid, "SVG", f)
-        print("Saved file as ", Pfilename)
+        print("Saved file as ", path_filename)
 
     def export_graveyard(
             self,
@@ -648,19 +649,19 @@ class Reactor:
             str: png filename created
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".png":
-            Pfilename = Pfilename.with_suffix(".png")
+        if path_filename.suffix != ".png":
+            path_filename = path_filename.with_suffix(".png")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         fig, ax = plt.subplots()
 
         # creates indvidual patches for each Shape which are combined together
         for entry in self.shapes_and_components:
-            p = entry._create_patch()
-            ax.add_collection(p)
+            patch = entry._create_patch()
+            ax.add_collection(patch)
 
         ax.axis("equal")
         ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax))
@@ -670,9 +671,9 @@ class Reactor:
         plt.savefig(filename, dpi=100)
         plt.close()
 
-        print("\n saved 2d image to ", str(Pfilename))
+        print("\n saved 2d image to ", str(path_filename))
 
-        return str(Pfilename)
+        return str(path_filename)
 
     def export_html(self, filename="reactor.html"):
         """Creates a html graph representation of the points for the Shape
@@ -686,12 +687,12 @@ class Reactor:
             plotly figure: figure object
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".html":
-            Pfilename = Pfilename.with_suffix(".html")
+        if path_filename.suffix != ".html":
+            path_filename = path_filename.with_suffix(".html")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         fig = go.Figure()
         fig.update_layout(
@@ -702,7 +703,7 @@ class Reactor:
         for entry in self.shapes_and_components:
             fig.add_trace(entry._trace())
 
-        fig.write_html(str(Pfilename))
-        print("Exported html graph to ", str(Pfilename))
+        fig.write_html(str(path_filename))
+        print("Exported html graph to ", str(path_filename))
 
         return fig

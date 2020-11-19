@@ -1,6 +1,7 @@
 
-import paramak
 import unittest
+
+import paramak
 
 
 class test_InnerTfCoilsFlat(unittest.TestCase):

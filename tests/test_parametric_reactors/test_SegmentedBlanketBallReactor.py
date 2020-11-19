@@ -1,11 +1,7 @@
 
-import os
 import unittest
-import warnings
-from pathlib import Path
 
 import paramak
-import pytest
 
 
 class test_SegmentedBlanketBallReactor(unittest.TestCase):

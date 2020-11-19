@@ -1,6 +1,8 @@
+
+import unittest
+
 import numpy as np
 import paramak
-import unittest
 
 
 class test_PortCutterRotated(unittest.TestCase):

@@ -1,11 +1,9 @@
-import os
+
 import math
 import unittest
-from pathlib import Path
 
 import pytest
-
-from paramak import SweepCircleShape, RotateStraightShape
+from paramak import RotateStraightShape, SweepCircleShape
 
 
 class test_object_properties(unittest.TestCase):

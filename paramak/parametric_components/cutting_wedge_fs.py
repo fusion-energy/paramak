@@ -1,7 +1,8 @@
-from paramak import CuttingWedge
 
 from collections import Iterable
 from operator import itemgetter
+
+from paramak import CuttingWedge
 
 
 class CuttingWedgeFS(CuttingWedge):

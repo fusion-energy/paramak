@@ -2,11 +2,8 @@
 import os
 import time
 import unittest
-import pytest
 import warnings
 from pathlib import Path
-
-from unittest.mock import MagicMock, Mock
 
 import paramak
 
