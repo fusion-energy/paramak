@@ -93,9 +93,17 @@ jobs:
       - store_test_results:
           path: test-reports
 
+      - run: apt-get install curl
+
+      - run:
+          name: delete tempory docker image
+          command: |
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            
+            docker rmi $IMAGE_NAME:$CIRCLE_SHA1
+
       - store_artifacts:
           path: test-reports
-      - run: apt-get install curl
       - run: curl -s https://codecov.io/bash | bash
 
 workflows:
