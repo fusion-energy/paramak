@@ -30,7 +30,6 @@ FROM continuumio/miniconda3
 ARG cq_version=release
 ARG include_neutronics=false
 
-
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
 RUN apt-get update -y && \
@@ -43,7 +42,8 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then apt-get install -y \
+    then echo installing with cq_version=master ; \
+         apt-get install -y \
             wget git gfortran g++ cmake \
             mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
             imagemagick ; \
@@ -51,7 +51,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 
 # Installing CadQuery release
 RUN if [ "$cq_version" = "release" ] ; \
-    then conda install -c conda-forge -c cadquery cadquery=2 ; \
+    then  echo installing with cq_version=release ; \
+    conda install -c conda-forge -c cadquery cadquery=2 ; \
     conda install jupyter -y --quiet ; \
     conda clean -afy ; \
     fi
@@ -67,7 +68,8 @@ RUN if [ "$cq_version" = "master" ] ; \
 
 # install addition packages required for MOAB
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then apt-get --yes install libeigen3-dev ; \
+    then echo installing with include_neutronics=true ; \
+    apt-get --yes install libeigen3-dev ; \
     apt-get --yes install libblas-dev ; \
     apt-get --yes install liblapack-dev ; \
     apt-get --yes install libnetcdf-dev ; \
