@@ -61,26 +61,27 @@ jobs:
             pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
-          name: run parametric_reactors tests
-          command: 
-
-            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-
-      - run:
           name: run example shape tests
           command: 
 
-            pytest tests/test_example_shapes.py
+            pytest tests/test_example_shapes.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
       - run:
           name: run example component tests
           command: 
 
-            pytest tests/test_example_components.py
+            pytest tests/test_example_components.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
       - run:
           name: run example reactor tests
           command: 
 
-            pytest tests/test_example_reactors.py
+            pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
+          name: run parametric_reactors tests
+          command: 
+
+            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       # TODO once the open-source neutronics workflow is more stable include these tests
       # - run:
@@ -92,18 +93,23 @@ jobs:
       - store_test_results:
           path: test-reports
 
+      - store_artifacts:
+          path: test-reports
       - run: apt-get install curl
+      - run: curl -s https://codecov.io/bash | bash
 
+  del-docker:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
       - run:
-          name: delete tempory docker image
+          name: del temp Docker image
           command: |
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             
             docker rmi $IMAGE_NAME:$CIRCLE_SHA1
-
-      - store_artifacts:
-          path: test-reports
-      - run: curl -s https://codecov.io/bash | bash
 
 workflows:
   version: 2
