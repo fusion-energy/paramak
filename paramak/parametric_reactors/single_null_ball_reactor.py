@@ -125,24 +125,19 @@ class SingleNullBallReactor(paramak.BallReactor):
 
         list_of_components.append(self._divertor)
 
-        blanket_cutter = paramak.RotateStraightShape(
-            points=[
-                (self._divertor_start_radius, 0),
-                (self._divertor_end_radius, 0),
-                (self._divertor_end_radius, divertor_height),
-                (self._divertor_start_radius, divertor_height)
-            ],
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
-            name="divertor",
-            material_tag="divertor_mat",
-            rotation_angle=self.rotation_angle
+        center_column_cutter = paramak.CenterColumnShieldCylinder(
+            height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
+            inner_radius=0,
+            outer_radius=self._center_column_shield_end_radius,
+            rotation_angle=360
         )
 
-        self._firstwall.solid = self._firstwall.solid.cut(blanket_cutter.solid)
-        self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
+        self._firstwall.solid = self._firstwall.solid.cut(self._divertor.solid)
+        self._blanket.solid = self._blanket.solid.cut(self._divertor.solid)
         self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
-            blanket_cutter.solid)
+            self._divertor.solid)
+        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
+            center_column_cutter.solid)
         list_of_components.append(self._firstwall)
         list_of_components.append(self._blanket)
         list_of_components.append(self._blanket_rear_wall)
