@@ -1,10 +1,8 @@
-from paramak import ExtrudeStraightShape
-import numpy as np
-from collections import Iterable
-
-from paramak.utils import calculate_wedge_cut
 
 import cadquery as cq
+import numpy as np
+from paramak import ExtrudeStraightShape
+from paramak.utils import calculate_wedge_cut
 
 
 class ToroidalFieldCoilRectangle(ExtrudeStraightShape):

@@ -1,5 +1,5 @@
-from paramak import RotateMixedShape
-from paramak import Plasma
+
+from paramak import Plasma, RotateMixedShape
 
 
 class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):

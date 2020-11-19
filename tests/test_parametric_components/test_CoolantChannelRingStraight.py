@@ -1,8 +1,6 @@
 
-import os
 import math
 import unittest
-from pathlib import Path
 
 import paramak
 import pytest

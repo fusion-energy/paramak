@@ -1,9 +1,10 @@
-import math
-import cadquery as cq
 
+import math
+
+import cadquery as cq
 from paramak import RotateStraightShape
-from paramak.utils import rotate, intersect_solid, \
-    coefficients_of_line_from_points, get_hash
+from paramak.utils import (coefficients_of_line_from_points, get_hash,
+                           intersect_solid, rotate)
 
 
 class PoloidalSegments(RotateStraightShape):

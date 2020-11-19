@@ -1,6 +1,7 @@
-import pytest
-import paramak
+
 import unittest
+
+import paramak
 
 
 class test_InnerTfCoilsCircular(unittest.TestCase):

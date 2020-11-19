@@ -1,3 +1,4 @@
+
 import json
 import numbers
 import warnings
@@ -7,15 +8,14 @@ from pathlib import Path
 from shutil import copymode, move
 from tempfile import mkstemp
 
+import cadquery as cq
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import cadquery as cq
 from cadquery import exporters
-import cadquery as cq
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
-from paramak.utils import cut_solid, intersect_solid, union_solid, get_hash
+from paramak.utils import cut_solid, get_hash, intersect_solid, union_solid
 
 
 class Shape:
@@ -110,6 +110,10 @@ class Shape:
         # self.volume = None
         self.hash_value = None
         self.points_hash_value = None
+        self.x_min = None
+        self.x_max = None
+        self.z_min = None
+        self.z_max = None
 
     @property
     def solid(self):
@@ -207,8 +211,8 @@ class Shape:
         """Get the total volume of the Shape. Returns a float"""
         if isinstance(self.solid, cq.Compound):
             return self.solid.Volume()
-        else:
-            return self.solid.val().Volume()
+
+        return self.solid.val().Volume()
 
     @property
     def volumes(self):
@@ -396,8 +400,8 @@ class Shape:
                     msg = "The coordinates of the last and first points are \
                         the same."
                     raise ValueError(msg)
-                else:
-                    values.append(values[0])
+
+                values.append(values[0])
             if self.connection_type != "mixed":
                 values = [(*p, self.connection_type) for p in values]
 
@@ -677,18 +681,18 @@ class Shape:
             tolerance (float): the precision of the faceting
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".stl":
-            Pfilename = Pfilename.with_suffix(".stl")
+        if path_filename.suffix != ".stl":
+            path_filename = path_filename.with_suffix(".stl")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(Pfilename, "w") as f:
+        with open(path_filename, "w") as f:
             exporters.exportShape(self.solid, "STL", f, tolerance)
-        print("Saved file as ", Pfilename)
+        print("Saved file as ", path_filename)
 
-        return str(Pfilename)
+        return str(path_filename)
 
     def export_stp(self, filename=None, units='mm'):
         """Exports an stp file for the Shape.solid. If the filename provided
@@ -703,29 +707,29 @@ class Shape:
         """
 
         if filename is not None:
-            Pfilename = Path(filename)
+            path_filename = Path(filename)
 
-            if Pfilename.suffix == ".stp" or Pfilename.suffix == ".step":
+            if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
                 pass
             else:
-                Pfilename = Pfilename.with_suffix(".stp")
+                path_filename = path_filename.with_suffix(".stp")
 
-            Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
         elif self.stp_filename is not None:
-            Pfilename = Path(self.stp_filename)
+            path_filename = Path(self.stp_filename)
 
-        with open(Pfilename, "w") as f:
+        with open(path_filename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)
 
         if units == 'cm':
             self._replace(
-                Pfilename,
+                path_filename,
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
 
-        print("Saved file as ", Pfilename)
+        print("Saved file as ", path_filename)
 
-        return str(Pfilename)
+        return str(path_filename)
 
     def export_physical_groups(self, filename):
         """Exports a JSON file containing a look up table which is useful for
@@ -736,17 +740,17 @@ class Shape:
             filename (str): the filename used to save the json file
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".json":
-            Pfilename = Pfilename.with_suffix(".json")
+        if path_filename.suffix != ".json":
+            path_filename = path_filename.with_suffix(".json")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
         if self.physical_groups is not None:
             with open(filename, "w") as outfile:
                 json.dump(self.physical_groups, outfile, indent=4)
 
-            print("Saved physical_groups description to ", Pfilename)
+            print("Saved physical_groups description to ", path_filename)
         else:
             print(
                 "Warning: physical_groups attribute is None \
@@ -765,18 +769,18 @@ class Shape:
             filename (str): the filename of the svg file to be exported
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".svg":
-            Pfilename = Pfilename.with_suffix(".svg")
+        if path_filename.suffix != ".svg":
+            path_filename = path_filename.with_suffix(".svg")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(Pfilename, "w") as f:
+        with open(path_filename, "w") as f:
             exporters.exportShape(self.solid, "SVG", f)
-        print("Saved file as ", Pfilename)
+        print("Saved file as ", path_filename)
 
-        return str(Pfilename)
+        return str(path_filename)
 
     def export_html(self, filename):
         """Creates a html graph representation of the points and connections
@@ -801,10 +805,10 @@ class Shape:
 
         Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".html":
-            Pfilename = Pfilename.with_suffix(".html")
+        if path_filename.suffix != ".html":
+            path_filename = path_filename.with_suffix(".html")
 
         fig = go.Figure()
         fig.update_layout(
@@ -813,9 +817,9 @@ class Shape:
 
         fig.add_trace(self._trace())
 
-        fig.write_html(str(Pfilename))
+        fig.write_html(str(path_filename))
 
-        print("Exported html graph to ", Pfilename)
+        print("Exported html graph to ", path_filename)
 
         return fig
 
@@ -907,9 +911,9 @@ class Shape:
 
         fig, ax = plt.subplots()
 
-        p = self._create_patch()
+        patch = self._create_patch()
 
-        ax.add_collection(p)
+        ax.add_collection(patch)
 
         ax.axis("equal")
         ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax))
@@ -944,18 +948,18 @@ class Shape:
         polygon = Polygon(xylist, closed=True)
         patches.append(polygon)
 
-        p = PatchCollection(patches)
+        patch = PatchCollection(patches)
 
         if self.color is not None:
-            p.set_facecolor(self.color)
-            p.set_color(self.color)
-            p.color = self.color
-            p.edgecolor = self.color
+            patch.set_facecolor(self.color)
+            patch.set_color(self.color)
+            patch.color = self.color
+            patch.edgecolor = self.color
             # checks to see if an alpha value is provided in the color
             if len(self.color) == 4:
-                p.set_alpha = self.color[-1]
-        self.patch = p
-        return p
+                patch.set_alpha = self.color[-1]
+        self.patch = patch
+        return patch
 
     def neutronics_description(self):
         """Returns a neutronics description of the Shape object. This is needed

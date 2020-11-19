@@ -1,12 +1,9 @@
-from collections import Iterable
 
-import cadquery as cq
 import numpy as np
+from paramak import ExtrudeMixedShape
+from paramak.utils import add_thickness
 from scipy import integrate
 from scipy.optimize import minimize
-
-from paramak import ExtrudeMixedShape
-from paramak.utils import calculate_wedge_cut, add_thickness
 
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
@@ -100,13 +97,13 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             (list, list, list): R, Z and derivative lists for outer curve
             points
         """
-        def error(Z0, R0, R2):
-            segment = get_segment(R0, R2, Z0)
+        def error(z_0, R0, R2):
+            segment = get_segment(R0, R2, z_0)
             return abs(segment[1][-1])
 
-        def get_segment(a, b, Z0):
+        def get_segment(a, b, z_0):
             a_R = np.linspace(a, b, num=70, endpoint=True)
-            asol = integrate.odeint(solvr, [Z0, 0], a_R)
+            asol = integrate.odeint(solvr, [z_0, 0], a_R)
             return a_R, asol[:, 0], asol[:, 1]
 
         def solvr(Y, R):
@@ -115,15 +112,15 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         R0 = (R1 * R2)**0.5
         k = 0.5 * np.log(R2 / R1)
 
-        # computing of Z0
-        # Z0 is computed by ensuring outer segment end is zero
-        Z0 = 10  # initial guess for Z0
-        res = minimize(error, Z0, args=(R0, R2))
-        Z0 = res.x
+        # computing of z_0
+        # z_0 is computed by ensuring outer segment end is zero
+        z_0 = 10  # initial guess for z_0
+        res = minimize(error, z_0, args=(R0, R2))
+        z_0 = res.x
 
         # compute inner and outer segments
-        segment1 = get_segment(R0, R1, Z0)
-        segment2 = get_segment(R0, R2, Z0)
+        segment1 = get_segment(R0, R1, z_0)
+        segment2 = get_segment(R0, R2, z_0)
 
         R = np.concatenate([np.flip(segment1[0]), segment2[0]
                             [1:], np.flip(segment2[0])[1:], segment1[0][1:]])

@@ -1,8 +1,9 @@
 
-import paramak
-import unittest
-import pytest
 import math
+import unittest
+
+import paramak
+import pytest
 
 
 class test_PoloidalFieldCoilCase(unittest.TestCase):

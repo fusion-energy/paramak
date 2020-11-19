@@ -1,12 +1,11 @@
-import numpy as np
-from scipy.interpolate import interp1d
-from scipy.optimize import minimize
-import sympy as sp
+
 import warnings
 
+import numpy as np
 from paramak import BlanketFP, RotateStraightShape
-from paramak.utils import cut_solid, rotate, extend, \
-    distance_between_two_points
+from paramak.utils import (cut_solid, distance_between_two_points, extend,
+                           rotate)
+from scipy.optimize import minimize
 
 
 class BlanketFPPoloidalSegments(BlanketFP):

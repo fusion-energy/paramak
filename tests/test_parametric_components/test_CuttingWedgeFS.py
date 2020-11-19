@@ -1,7 +1,8 @@
 
-import paramak
 import unittest
+
 import numpy as np
+import paramak
 
 
 class test_CuttingWedgeFS(unittest.TestCase):
