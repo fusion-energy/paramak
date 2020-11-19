@@ -90,8 +90,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
                 -DBUILD_SHARED_LIBS=OFF \
                 -DENABLE_FORTRAN=OFF \
                 -DCMAKE_INSTALL_PREFIX=/MOAB ; \
-    make ; \
-    make install ; \
+    make -j4 ; \
+    make -j4  install ; \
     rm -rf * ; \
     cmake ../moab -DBUILD_SHARED_LIBS=ON \
                 -DENABLE_HDF5=ON \
@@ -99,8 +99,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
                 -DENABLE_BLASLAPACK=OFF \
                 -DENABLE_FORTRAN=OFF \
                 -DCMAKE_INSTALL_PREFIX=/MOAB ; \
-    make ; \
-    make install ; \
+    make -j4  ; \
+    make -j4  install ; \
     cd pymoab ; \
     bash install.sh ; \
     python setup.py install ; \
