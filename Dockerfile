@@ -51,7 +51,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 
 # Installing CadQuery release
 RUN if [ "$cq_version" = "release" ] ; \
-    then conda install -c conda-forge -c cadquery cadquery=2 ; \
+    then conda install -c conda-forge -c cadquery cadquery="$cq_version" ; \
     conda install jupyter -y --quiet ; \
     conda clean -afy ; \
     fi
@@ -61,7 +61,7 @@ RUN if [ "$cq_version" = "release" ] ; \
 RUN if [ "$cq_version" = "master" ] ; \
     then conda install jupyter -y --quiet ; \
     conda clean -afy ; \
-    conda install -c cadquery -c conda-forge cadquery=master ; \
+    conda install -c cadquery -c conda-forge cadquery="$cq_version" ; \
     conda clean -afy ; \
     fi
 
