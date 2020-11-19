@@ -132,12 +132,11 @@ class SingleNullBallReactor(paramak.BallReactor):
             rotation_angle=360
         )
 
-        self._firstwall.solid = self._firstwall.solid.cut(self._divertor.solid)
-        self._blanket.solid = self._blanket.solid.cut(self._divertor.solid)
-        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
-            self._divertor.solid)
-        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
-            center_column_cutter.solid)
+        self._firstwall.cut.append(self._divertor)
+        self._blanket.cut.append(self._divertor)
+        self._blanket_rear_wall.cut.append(self._divertor)
+        self._blanket_rear_wall.cut.append(center_column_cutter)
+
         list_of_components.append(self._firstwall)
         list_of_components.append(self._blanket)
         list_of_components.append(self._blanket_rear_wall)
