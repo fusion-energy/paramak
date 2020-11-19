@@ -72,9 +72,9 @@ jobs:
       #       pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report xml:cov.xml 
 
       - store_test_results:
-          path: test-reports
+          path: ../test-reports
 
       - store_artifacts:
-          path: test-reports
+          path: ../test-reports
       - run: apt-get -y install curl
       - run: curl -s https://codecov.io/bash | bash
