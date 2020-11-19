@@ -77,4 +77,4 @@ jobs:
       - store_artifacts:
           path: test-reports
       - run: apt-get install curl
-      - run: curl -s ../ https://codecov.io/bash | bash
+      - run: curl -f ./coverage.xml https://codecov.io/bash | bash
