@@ -28,7 +28,7 @@ jobs:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
     docker:
-      - image: $IMAGE_NAME:$CIRCLE_SHA1
+      - image: $IMAGE_NAME:latest
     working_directory: ../
     steps:
       - run:
@@ -42,46 +42,46 @@ jobs:
 
             pytest tests/test_Shape.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run Reactor tests
-          command: 
+      # - run:
+      #     name: run Reactor tests
+      #     command: 
 
-            pytest tests/test_Reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      #       pytest tests/test_Reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run parametric_shapes tests
-          command: 
+      # - run:
+      #     name: run parametric_shapes tests
+      #     command: 
 
-            pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      #       pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run parametric_components tests
-          command: 
+      # - run:
+      #     name: run parametric_components tests
+      #     command: 
 
-            pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      #       pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run example shape tests
-          command: 
+      # - run:
+      #     name: run example shape tests
+      #     command: 
 
-            pytest tests/test_example_shapes.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      #       pytest tests/test_example_shapes.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run example component tests
-          command: 
+      # - run:
+      #     name: run example component tests
+      #     command: 
 
-            pytest tests/test_example_components.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
-      - run:
-          name: run example reactor tests
-          command: 
+      #       pytest tests/test_example_components.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      # - run:
+      #     name: run example reactor tests
+      #     command: 
 
-            pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      #       pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run parametric_reactors tests
-          command: 
+      # - run:
+      #     name: run parametric_reactors tests
+      #     command: 
 
-            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
+      #       pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report html:htmlcov --cov-report xml --junitxml=test-reports/junit.xml
 
       # TODO once the open-source neutronics workflow is more stable include these tests
       # - run:
@@ -96,7 +96,7 @@ jobs:
       - store_artifacts:
           path: test-reports
       - run: apt-get install curl
-      - run: curl -s https://codecov.io/bash | bash
+      - run: curl -s ../ https://codecov.io/bash | bash
 
   del-docker:
     environment:
