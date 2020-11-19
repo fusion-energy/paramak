@@ -108,9 +108,20 @@ jobs:
       - run:
           name: del temp Docker image
           command: |
-            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            
-            docker rmi $IMAGE_NAME:$CIRCLE_SHA1
+            login_data() {
+            cat <<EOF
+            {
+              "username": "$DOCKERHUB_USERNAME",
+              "password": "$DOCKERHUB_TOKEN"
+            }
+            EOF
+            }
+
+            TOKEN=`curl -s -H "Content-Type: application/json" -X POST -d "$(login_data)" "https://hub.docker.com/v2/users/login/" | jq -r .token`
+
+            curl "https://hub.docker.com/v2/repositories/$IMAGE_NAME/tags/$CIRCLE_SHA1/" \
+            -X DELETE \
+            -H "Authorization: JWT ${TOKEN}"
 
 workflows:
   version: 2
