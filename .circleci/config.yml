@@ -91,7 +91,7 @@ jobs:
       - store_test_results:
           path: test-reports
 
-      - run: apt-get -y install curl
+      - run: apt-get -y install curl jq
       - run: bash <(curl -s https://codecov.io/bash) -X fix
       - run:
           name: del temp Docker image
