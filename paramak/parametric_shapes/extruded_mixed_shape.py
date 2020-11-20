@@ -25,6 +25,7 @@ class ExtrudeMixedShape(Shape):
         distance,
         extrude_both=True,
         rotation_angle=360.0,
+        extrusion_start_offset=0,
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
         **kwargs
@@ -38,6 +39,7 @@ class ExtrudeMixedShape(Shape):
         self.distance = distance
         self.extrude_both = extrude_both
         self.rotation_angle = rotation_angle
+        self.extrusion_start_offset = extrusion_start_offset
 
     @property
     def distance(self):
@@ -54,6 +56,14 @@ class ExtrudeMixedShape(Shape):
     @rotation_angle.setter
     def rotation_angle(self, value):
         self._rotation_angle = value
+
+    @property
+    def extrusion_start_offset(self):
+        return self._extrusion_start_offset
+
+    @extrusion_start_offset.setter
+    def extrusion_start_offset(self, value):
+        self._extrusion_start_offset = value
 
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with straight
