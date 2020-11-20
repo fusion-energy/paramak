@@ -1,10 +1,10 @@
 scipy
 sympy
-cadquery
+# cadquery not installed via pip to avoid installing cadquery version 1
 plotly
 pytest
 numpy
 plasmaboundaries
 matplotlib
-Pillow
+pillow
 neutronics_material_maker
