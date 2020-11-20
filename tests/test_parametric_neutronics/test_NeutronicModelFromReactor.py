@@ -29,11 +29,7 @@ class test_neutronics_BallReactor(unittest.TestCase):
     blanket_material = nmm.MultiMaterial(
         fracs=[0.8, 0.2],
         materials=[
-            nmm.Material(
-                'Pb842Li158',
-                # can't be enriched without openmc installed see issue
-                # https://github.com/ukaea/neutronics_material_maker/issues/105
-                # enrichment=90,
+            nmm.Material('Pb842Li158')
                 temperature_in_K=500),
             nmm.Material('eurofer')
         ])
