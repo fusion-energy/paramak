@@ -574,6 +574,10 @@ class Shape:
             else:
                 # for rotate and extrude shapes
                 solid = cq.Workplane(self.workplane)
+                # for extrude shapes
+                if hasattr(self, "extrusion_start_offset"):
+                    extrusion_offset = -self.extrusion_start_offset
+                    solid = solid.workplane(offset=extrusion_offset)
 
             for entry in instructions:
                 if list(entry.keys())[0] == "spline":
