@@ -1,7 +1,8 @@
 
+import unittest
+
 import paramak
 import pytest
-import unittest
 
 
 class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):

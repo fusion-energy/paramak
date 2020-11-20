@@ -1,6 +1,6 @@
 #!/usr/env/python3
-import os
 import json
+import os
 
 # This script automatically produces DAGMC compatable geometry. A manifest
 # file is required that specfies a the stp filenames and the materials names to

@@ -5,8 +5,8 @@ stp, stl, html and svg files. Fillets the firstwall as this is not currently
 done in the SegmentedBlanketBallReactor reactor class.
 """
 
-import paramak
 import cadquery as cq
+import paramak
 
 
 def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):

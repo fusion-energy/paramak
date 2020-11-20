@@ -1,7 +1,7 @@
-import os
-import paramak
-import numpy as np
+
 import unittest
+
+import paramak
 
 
 class test_BlanketFP(unittest.TestCase):

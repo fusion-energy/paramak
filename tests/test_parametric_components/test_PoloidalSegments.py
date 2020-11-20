@@ -1,6 +1,7 @@
 
-import paramak
 import unittest
+
+import paramak
 
 
 class test_PoloidalSegments(unittest.TestCase):

@@ -2,9 +2,9 @@
 for a parametric submersion reactor and specified the faceting and merge
 tolerance when creating the dagmc model"""
 
-import paramak
-import neutronics_material_maker as nmm
 import matplotlib.pyplot as plt
+import neutronics_material_maker as nmm
+import paramak
 
 
 def make_model_and_simulate(temperature):

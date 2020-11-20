@@ -1,8 +1,9 @@
 
-from paramak import RotateMixedShape, extend, rotate, \
-    distance_between_two_points
 import math
+
 import numpy as np
+from paramak import (RotateMixedShape, distance_between_two_points, extend,
+                     rotate)
 
 
 class ITERtypeDivertor(RotateMixedShape):

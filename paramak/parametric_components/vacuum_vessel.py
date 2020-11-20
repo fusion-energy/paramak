@@ -1,6 +1,5 @@
-from paramak import \
-    RotateStraightShape, ExtrudeCircleShape, \
-    ExtrudeStraightShape, PortCutterRotated
+
+from paramak import RotateStraightShape
 
 
 class VacuumVessel(RotateStraightShape):

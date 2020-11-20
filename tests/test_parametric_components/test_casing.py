@@ -1,6 +1,7 @@
-import paramak
-import pytest
+
 import unittest
+
+import paramak
 
 
 class test_TFCoilCasing(unittest.TestCase):

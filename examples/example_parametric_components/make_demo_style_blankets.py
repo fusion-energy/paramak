@@ -5,6 +5,7 @@ manner to the EU DEMO segmentation for remote maintenance.
 """
 
 import math
+
 import numpy as np
 import paramak
 

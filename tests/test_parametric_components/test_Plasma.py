@@ -5,8 +5,6 @@ from pathlib import Path
 
 import paramak
 
-import pytest
-
 
 class test_Plasma(unittest.TestCase):
     def test_plasma_attributes(self):
