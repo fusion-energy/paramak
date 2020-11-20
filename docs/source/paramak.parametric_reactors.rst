@@ -81,7 +81,7 @@ are red, PF coil cases are yellow, the center column shielding is dark green, th
 divertor is orange, the firstwall is grey and the rear wall of the blanket is
 teal and the support legs are black.
 
-.. image:: https://user-images.githubusercontent.com/8583900/89407027-fb61d800-d715-11ea-892a-59283742687f.png
+.. image:: 
    :width: 450
    :align: center
 
