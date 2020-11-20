@@ -10,7 +10,7 @@ of poloidal angle.
 import paramak
 
 
-def make_segmented_firstwall():
+def main():
 
     # makes the firstwall
     firstwall = paramak.BlanketFP(minor_radius=150,
@@ -34,4 +34,4 @@ def make_segmented_firstwall():
 
 
 if __name__ == "__main__":
-    make_segmented_firstwall()
+    main()

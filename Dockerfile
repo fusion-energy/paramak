@@ -106,7 +106,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     python setup.py install ; \
     fi
 
-
 # Copy over the source code
 COPY paramak paramak/
 COPY examples examples/
