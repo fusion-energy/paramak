@@ -1,8 +1,5 @@
 # This dockerfile can be built in a few different ways.
 
-# Building using the latest release version of CadQuery (default).
-# Run command from within the base repository directory
-# docker build -t ukaea/paramak
 # Building using the latest release version of CadQuery (default)
 # Run command from within the base repository directory
 # docker build -t ukaea/paramak .
@@ -43,22 +40,10 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        libgles2-mesa-dev && \
                        apt-get clean
 
-# Installing CadQuery release
-RUN if [ "$cq_version" = "release" ] ; \
-    conda install -c conda-forge -c cadquery cadquery=2 ; \
-    conda install jupyter -y --quiet ; \
-    conda clean -afy
-
-# Installing CadQuery master
-# jupyter is installed before cadquery master version to avoid a conflict
-RUN if [ "$cq_version" = "master" ] ; \
-    conda install jupyter -y --quiet ; \
-    conda clean -afy ; \
-    conda install -c cadquery -c conda-forge cadquery=master ; \
-    conda clean -afy
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then apt-get install -y \
+    then echo installing with cq_version=master ; \
+         apt-get install -y \
             wget git gfortran g++ cmake \
             mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
             imagemagick ; \
@@ -66,7 +51,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 
 # Installing CadQuery release
 RUN if [ "$cq_version" = "release" ] ; \
-    then conda install -c conda-forge -c cadquery cadquery=2 ; \
+    then  echo installing with cq_version=release ; \
+    conda install -c conda-forge -c cadquery cadquery=2 ; \
     conda install jupyter -y --quiet ; \
     conda clean -afy ; \
     fi
@@ -82,7 +68,8 @@ RUN if [ "$cq_version" = "master" ] ; \
 
 # install addition packages required for MOAB
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then apt-get --yes install libeigen3-dev ; \
+    then echo installing with include_neutronics=true ; \
+    apt-get --yes install libeigen3-dev ; \
     apt-get --yes install libblas-dev ; \
     apt-get --yes install liblapack-dev ; \
     apt-get --yes install libnetcdf-dev ; \
@@ -103,8 +90,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
                 -DBUILD_SHARED_LIBS=OFF \
                 -DENABLE_FORTRAN=OFF \
                 -DCMAKE_INSTALL_PREFIX=/MOAB ; \
-    make ; \
-    make install ; \
+    make -j2 ; \
+    make -j2  install ; \
     rm -rf * ; \
     cmake ../moab -DBUILD_SHARED_LIBS=ON \
                 -DENABLE_HDF5=ON \
@@ -112,8 +99,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
                 -DENABLE_BLASLAPACK=OFF \
                 -DENABLE_FORTRAN=OFF \
                 -DCMAKE_INSTALL_PREFIX=/MOAB ; \
-    make ; \
-    make install ; \
+    make -j2  ; \
+    make -j2  install ; \
     cd pymoab ; \
     bash install.sh ; \
     python setup.py install ; \
