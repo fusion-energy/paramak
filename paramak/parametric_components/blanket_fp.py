@@ -1,5 +1,8 @@
 
+import warnings
+
 import mpmath
+
 import numpy as np
 import sympy as sp
 from paramak import RotateMixedShape, diff_between_angles
@@ -99,14 +102,6 @@ class BlanketFP(RotateMixedShape):
 
     @start_angle.setter
     def start_angle(self, value):
-        if value is not None:
-            if self.stop_angle is not None:
-                if diff_between_angles(value,
-                                       self.stop_angle) == 0:
-                    if self.rotation_angle == 360:
-                        msg = "Full coverage and 360 rotation will" + \
-                            " result in a standard construction error."
-                        raise ValueError(msg)
         self._start_angle = value
 
     @property
@@ -115,14 +110,6 @@ class BlanketFP(RotateMixedShape):
 
     @stop_angle.setter
     def stop_angle(self, value):
-        if value is not None:
-            if self.start_angle is not None:
-                if diff_between_angles(self.start_angle,
-                                       value) == 0:
-                    if self.rotation_angle == 360:
-                        msg = "Full coverage and 360 rotation will" + \
-                            " result in a standard construction error."
-                        raise ValueError(msg)
         self._stop_angle = value
 
     @property
@@ -204,7 +191,7 @@ class BlanketFP(RotateMixedShape):
         return fun
 
     def find_points(self, angles=None):
-
+        self._overlapping_shape = False
         # create array of angles theta
         if angles is None:
             thetas = np.linspace(
@@ -234,6 +221,11 @@ class BlanketFP(RotateMixedShape):
 
         # assemble
         points = inner_points + outer_points
+        if self._overlapping_shape:
+            msg = "BlanketFP: Some points with negative R" + \
+                " coordinate have been ignored."
+            warnings.warn(msg)
+
         self.points = points
         return points
 
@@ -275,8 +267,11 @@ class BlanketFP(RotateMixedShape):
             # calculate outer points
             val_R_outer = self.distribution(theta)[0] + offset(theta) * nx
             val_Z_outer = self.distribution(theta)[1] + offset(theta) * ny
-
-            points.append([float(val_R_outer), float(val_Z_outer), "spline"])
+            if float(val_R_outer) > 0:
+                points.append(
+                    [float(val_R_outer), float(val_Z_outer), "spline"])
+            else:
+                self._overlapping_shape = True
         return points
 
     def create_physical_groups(self):
@@ -310,7 +305,7 @@ class BlanketFP(RotateMixedShape):
             stop_equals_start = True
 
         # rearrange order
-        # TODO: fix issue #86 (full coverage)
+        new_order = [i for i in range(len(surface_names))]
         if full_rot:
             if not stop_equals_start:
                 # from ["inner", "outer", "inner_section", "outer_section"]

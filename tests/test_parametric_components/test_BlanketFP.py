@@ -1,6 +1,7 @@
 
 import os
 import unittest
+import warnings
 
 import paramak
 
@@ -70,43 +71,6 @@ class test_BlanketFP(unittest.TestCase):
         assert test_shape.solid is not None
         assert test_shape.volume > 1000
 
-    def test_BlanketFP_full_cov_full_rotation(self):
-        """Checks BlanketFP cannot have full coverage and a rotation_angle of
-        360 degrees at the same time."""
-
-        def create_shape_incorrect_stop_angle():
-            test_shape = paramak.BlanketFP(
-                major_radius=450,
-                minor_radius=150,
-                triangularity=0.55,
-                elongation=2,
-                thickness=150,
-                stop_angle=90,
-                start_angle=45,
-                rotation_angle=360
-            )
-
-            test_shape.start_angle = 0
-            test_shape.stop_angle = 360
-        self.assertRaises(
-            ValueError, create_shape_incorrect_stop_angle)
-
-        def create_shape_incorrect_start_angle():
-            test_shape = paramak.BlanketFP(
-                major_radius=450,
-                minor_radius=150,
-                triangularity=0.55,
-                elongation=2,
-                thickness=150,
-                stop_angle=90,
-                start_angle=45,
-                rotation_angle=360
-            )
-            test_shape.stop_angle = 360
-            test_shape.start_angle = 0
-        self.assertRaises(
-            ValueError, create_shape_incorrect_start_angle)
-
     def test_BlanketFP_creation_variable_thickness_from_tuple(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when a tuple of thicknesses is passed as an
@@ -148,15 +112,15 @@ class test_BlanketFP(unittest.TestCase):
         argument."""
 
         def thickness(theta):
-            return 100 + 3 * theta
+            return 10 + 0.1 * theta
 
         test_shape = paramak.BlanketFP(
-            major_radius=300,
+            major_radius=200,
             minor_radius=50,
             triangularity=0.5,
             elongation=2,
             thickness=thickness,
-            stop_angle=90,
+            stop_angle=10,
             start_angle=270,
         )
 
@@ -224,7 +188,7 @@ class test_BlanketFP(unittest.TestCase):
         parametric component when an offset function is passed."""
 
         def offset(theta):
-            return 100 + 3 * theta
+            return 10 + 0.1 * theta
 
         test_shape = paramak.BlanketFP(
             major_radius=300,
@@ -281,3 +245,36 @@ class test_BlanketFP(unittest.TestCase):
         )
 
         test_shape.export_stp("tests/test_blanket_full_cov")
+
+    def test_full_cov_full_rotation(self):
+        """Creates a blanket with full rotation and full coverage
+        """
+        test_shape = paramak.BlanketFP(
+            major_radius=300,
+            minor_radius=50,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=360,
+            start_angle=0,
+            rotation_angle=360,
+        )
+
+        assert test_shape.solid is not None
+
+    def test_overlapping(self):
+        """Creates an overlapping geometry and checks that a warning is raised
+        """
+        test_shape = paramak.BlanketFP(
+            major_radius=100,
+            minor_radius=100,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=360,
+            start_angle=0,
+        )
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            assert test_shape.solid is not None
+            assert len(w) == 1

@@ -21,18 +21,18 @@ class test_object_properties(unittest.TestCase):
         assert self.test_shape.azimuth_placement_angle == 0
 
     def test_absolute_shape_volume(self):
-        """Creates a RotateStraightShape and checks that the volume is correct."""
+        """creates a rotated shape using spline connections and checks the volume
+        is correct"""
 
-        # TODO: fix issue #445
-        # assert self.test_shape.solid is not None
-        # assert self.test_shape.volume > 100
-        test_volume = self.test_shape.volume
+        self.test_shape.rotation_angle = 360
+        volume_360 = self.test_shape.volume
+
+        assert self.test_shape.solid is not None
+        assert volume_360 > 100
 
         self.test_shape.rotation_angle = 180
         assert self.test_shape.solid is not None
-
-        # TODO: fix issue #435
-        # assert self.test_shape.volume == pytest.approx(test_volume * 0.5)
+        assert self.test_shape.volume == pytest.approx(volume_360 * 0.5)
 
     def test_cut_volume(self):
         """Creates a RotateSplineShape with another RotateSplineShape cut out
