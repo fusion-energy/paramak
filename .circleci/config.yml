@@ -93,16 +93,9 @@ jobs:
 
       - run: apt-get -y install curl
       - run: bash <(curl -s https://codecov.io/bash) -X fix
-
-  del-docker:
-    environment:
-      IMAGE_NAME: openmcworkshop/paramak
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - setup_remote_docker
       - run:
           name: del temp Docker image
+          when: always
           command: |
             login_data() {
             cat <<EOF
@@ -125,6 +118,3 @@ workflows:
       - test:
           requires:
             - build-docker
-      - del-docker:
-          requires:
-            - test
