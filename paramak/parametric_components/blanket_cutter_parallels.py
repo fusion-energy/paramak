@@ -1,7 +1,4 @@
 
-from collections import Iterable
-
-import cadquery as cq
 from paramak import ExtrudeStraightShape
 
 

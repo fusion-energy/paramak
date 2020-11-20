@@ -7,9 +7,8 @@ import os
 import uuid
 
 import numpy as np
-from tqdm import tqdm
-
 import paramak
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--number_of_models", type=int, default=10)

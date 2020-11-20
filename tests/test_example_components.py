@@ -1,16 +1,24 @@
+
 import os
+import sys
 import unittest
 from pathlib import Path
 
-cwd = os.getcwd()
+from examples.example_parametric_components import (
+    make_all_parametric_components, make_demo_style_blankets,
+    make_firstwall_for_neutron_wall_loading, make_plasmas,
+    make_vacuum_vessel_with_ports)
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
+
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
 class test_object_properties(unittest.TestCase):
 
     def test_make_all_parametric_components(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_components"))
         output_filenames = [
             'plasma_shape.stp',
             'blanket_constant_thickness_outboard_plasma.stp',
@@ -46,15 +54,18 @@ class test_object_properties(unittest.TestCase):
             'ITER_type_divertor.stp']
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        os.system("python make_all_parametric_components.py")
+        all_components = make_all_parametric_components.main()
+        filenames = []
+        for components in all_components:
+            components.export_stp()
+            filenames.append(components.stp_filename)
+
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
     def test_make_plasma(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_components"))
         output_filenames = [
             "ITER_plasma.html",
             "EU_DEMO_plasma.html",
@@ -72,42 +83,36 @@ class test_object_properties(unittest.TestCase):
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        os.system("python make_plasmas.py")
+        make_plasmas.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
     def test_make_demo_style_blanket(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_components"))
         output_filename = "blanket.stp"
         os.system("rm " + output_filename)
-        os.system("python make_demo_style_blankets.py")
+        make_demo_style_blankets.main()
         assert Path(output_filename).exists() is True
         os.system("rm " + output_filename)
 
     def test_make_segmented_firstwall(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_components"))
         output_filename = "segmented_firstwall.stp"
         os.system("rm " + output_filename)
-        os.system("python make_firstwall_for_neutron_wall_loading.py")
+        make_firstwall_for_neutron_wall_loading.main()
         assert Path(output_filename).exists() is True
         os.system("rm " + output_filename)
 
-    def test_make_segmented_firstwall(self):
+    def test_make_vacuum_vessel(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_components"))
         output_filenames = [
             "vacuum_vessel_with_ports.stp",
             "vacuum_vessel_with_ports.svg",
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        os.system("python make_vacuum_vessel_with_ports.py")
+        make_vacuum_vessel_with_ports.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)

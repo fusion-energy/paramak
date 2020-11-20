@@ -1,9 +1,8 @@
-import math
 
+import math
 import unittest
 
 import pytest
-
 from paramak import RotateCircleShape
 
 

@@ -1,7 +1,6 @@
 
 import cadquery as cq
-from paramak import RotateStraightShape, PoloidalFieldCoilSet
-
+from paramak import PoloidalFieldCoilSet, RotateStraightShape
 from paramak.utils import get_hash
 
 

@@ -1,4 +1,3 @@
-import cadquery as cq
 
 from paramak import RotateMixedShape
 

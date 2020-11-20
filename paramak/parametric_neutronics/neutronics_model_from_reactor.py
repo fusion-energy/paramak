@@ -1,8 +1,10 @@
-import os
+
 import json
-from collections import defaultdict
+import os
 import warnings
+from collections import defaultdict
 from pathlib import Path
+
 import matplotlib.pyplot as plt
 
 try:

@@ -85,6 +85,9 @@ You may also want to make use of the
 flag when running Docker so that you can retrieve files from the Docker
 enviroment to your base system.
 
+Docker can also be used to run the tests using the command
+```docker run -rm ukaea/parama pytest tests```
+
 ## Features
 
 In general the Paramak takes points and connection information in 2D space (XY)

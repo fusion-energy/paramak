@@ -1,6 +1,5 @@
+
 from paramak import ITERtypeDivertor
-import math
-import numpy as np
 
 
 class ITERtypeDivertorNoDome(ITERtypeDivertor):

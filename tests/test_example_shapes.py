@@ -1,36 +1,37 @@
+
 import os
+import sys
 import unittest
 from pathlib import Path
 
-cwd = os.getcwd()
+from examples.example_parametric_shapes import (
+    make_blanket_from_parameters, make_blanket_from_points,
+    make_CAD_from_points, make_can_reactor_from_parameters,
+    make_can_reactor_from_points)
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
 class test_object_properties(unittest.TestCase):
 
     def test_make_blanket_from_points(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_shapes"))
-        output_filename = "blanket_from_points.stp"
-        os.system("rm " + output_filename)
-        os.system("python make_blanket_from_points.py")
-        assert Path(output_filename).exists() is True
-        os.system("rm " + output_filename)
+        filename = "blanket_from_points.stp"
+        os.system("rm " + filename)
+        make_blanket_from_points.main(filename=filename)
+        assert Path(filename).exists() is True
+        os.system("rm " + filename)
 
     def test_make_blanket_parametrically(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_shapes"))
-        output_filename = "blanket_from_parameters.stp"
-        os.system("rm " + output_filename)
-        os.system("python make_blanket_from_parameters.py")
-        assert Path(output_filename).exists() is True
-        os.system("rm " + output_filename)
+        filename = "blanket_from_parameters.stp"
+        os.system("rm " + filename)
+        make_blanket_from_parameters.main(filename=filename)
+        assert Path(filename).exists() is True
+        os.system("rm " + filename)
 
     def test_make_CAD_from_points(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
             "extruded_mixed.stp",
             "extruded_straight.stp",
@@ -41,15 +42,13 @@ class test_object_properties(unittest.TestCase):
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        os.system("python make_CAD_from_points.py")
+        make_CAD_from_points.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
     def test_make_can_reactor_from_parameters(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
             "can_reactor_from_parameters/plasma.stp",
             "can_reactor_from_parameters/centre_column.stp",
@@ -62,15 +61,13 @@ class test_object_properties(unittest.TestCase):
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        os.system("python make_can_reactor_from_parameters.py")
+        make_can_reactor_from_parameters.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
     def test_make_can_reactor_from_points(self):
         """Runs the example and checks the output files are produced"""
-        os.chdir(Path(cwd))
-        os.chdir(Path("examples/example_parametric_shapes"))
         output_filenames = [
             "can_reactor_from_points/plasma.stp",
             "can_reactor_from_points/centre_column.stp",
@@ -83,7 +80,7 @@ class test_object_properties(unittest.TestCase):
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        os.system("python make_can_reactor_from_points.py")
+        make_can_reactor_from_points.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)

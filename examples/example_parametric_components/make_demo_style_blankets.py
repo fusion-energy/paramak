@@ -5,14 +5,12 @@ manner to the EU DEMO segmentation for remote maintenance.
 """
 
 import math
+
 import numpy as np
 import paramak
 
 
-def make_demo_blanket(
-        number_of_sections=8,
-        gap_size=15,
-        central_block_width=200):
+def main(number_of_sections=8, gap_size=15, central_block_width=200):
 
     number_of_segments = 8
     gap_size = 15.
@@ -92,4 +90,4 @@ def make_demo_blanket(
 
 
 if __name__ == "__main__":
-    make_demo_blanket()
+    main()
