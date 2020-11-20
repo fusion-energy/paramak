@@ -12,6 +12,10 @@
 # Run command from within the base repository directory
 # docker build -t ukaea/paramak --build-arg include_neutronics=true .
 
+# Building using the master version of CadQuery and MOAB.
+# Run command from within the base repository directory
+# docker build -t ukaea/paramak --build-arg include_neutronics=true --build-arg cq_version=master .
+
 # This dockerfile can be run in a few different ways.
 
 # Run with the following command for a jupyter notebook interface
@@ -106,16 +110,17 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     python setup.py install ; \
     fi
 
-# Copy over the source code
+
+COPY requirements.txt requirements.txt
+# includes optional dependancies like neutronics_material_maker
+RUN pip install -r requirements.txt
+
+# Copy over the source code, examples and tests
 COPY paramak paramak/
 COPY examples examples/
 COPY setup.py setup.py
-COPY requirements.txt requirements.txt
-COPY README.md README.md
 COPY tests tests/
-
-# includes optional dependancies like neutronics_material_maker
-RUN pip install -r requirements.txt
+COPY README.md README.md
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install

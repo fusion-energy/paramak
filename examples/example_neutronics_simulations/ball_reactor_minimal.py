@@ -35,7 +35,7 @@ def make_model_and_simulate():
             'firstwall_mat': 'eurofer',
             'blanket_rear_wall_mat': 'eurofer',
             'blanket_mat': 'Li4SiO4'},
-        cell_tallies=['TBR', 'heat'],
+        cell_tallies=['TBR', 'heating'],
         simulation_batches=5,
         simulation_particles_per_batch=1e4,
     )
