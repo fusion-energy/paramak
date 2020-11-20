@@ -38,18 +38,18 @@ class test_neutronics_BallReactor(unittest.TestCase):
         """Makes a BallReactor neutronics model and simulates the TBR"""
 
         # makes the neutronics material
-        neutronics_model = paramak.NeutronicsModelFromReactor(
-            reactor=self.my_reactor,
-            materials={
+        neutronics_model=paramak.NeutronicsModelFromReactor(
+            reactor = self.my_reactor,
+            materials = {
                 'inboard_tf_coils_mat': 'copper',
                 'center_column_shield_mat': 'WC',
                 'divertor_mat': 'eurofer',
                 'firstwall_mat': 'eurofer',
                 'blanket_mat': self.blanket_material,  # use of homogenised material
                 'blanket_rear_wall_mat': 'eurofer'},
-            cell_tallies=['TBR', 'flux', 'heating'],
-            simulation_batches=42,
-            simulation_particles_per_batch=84,
+            cell_tallies = ['TBR', 'flux', 'heating'],
+            simulation_batches = 42,
+            simulation_particles_per_batch = 84,
         )
 
         assert neutronics_model.reactor == self.my_reactor
