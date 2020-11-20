@@ -4,8 +4,8 @@ import unittest
 import paramak
 
 
-class test_PortCutterCircular(unittest.TestCase):
-    def test_PortCutterCircular_creation(self):
+class test_component(unittest.TestCase):
+    def test_creation(self):
         """Checks a PortCutterCircular creation."""
 
         test_component = paramak.PortCutterCircular(
