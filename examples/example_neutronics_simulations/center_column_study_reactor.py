@@ -45,7 +45,7 @@ def make_model_and_simulate():
                 'divertor_mat': 'eurofer',
                 'firstwall_mat': 'eurofer',
                 'blanket_mat': 'Li4SiO4'},
-            cell_tallies=['heat'],
+            cell_tallies=['heating'],
             simulation_batches=5,
             simulation_particles_per_batch=1e4,
         )
@@ -54,7 +54,7 @@ def make_model_and_simulate():
         neutronics_model.simulate(method='trelis')
 
         # converts the results to mega watts
-        total_heat_in_MW = neutronics_model.results['firstwall_mat_heat']['Watts']['result'] / 1e6
+        total_heat_in_MW = neutronics_model.results['firstwall_mat_heating']['Watts']['result'] / 1e6
 
         # adds the results and inputs to a list
         total_heats_in_MW.append(total_heat_in_MW)
