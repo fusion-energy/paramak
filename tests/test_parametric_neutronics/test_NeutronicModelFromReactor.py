@@ -29,7 +29,7 @@ class test_neutronics_BallReactor(unittest.TestCase):
     blanket_material = nmm.MultiMaterial(
         fracs=[0.8, 0.2],
         materials=[
-            nmm.Material('Pb842Li158'),
+            nmm.Material('SiC'),
             nmm.Material('eurofer')
         ])
 
