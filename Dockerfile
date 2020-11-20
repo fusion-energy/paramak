@@ -115,7 +115,6 @@ COPY setup.py setup.py
 COPY requirements.txt requirements.txt
 COPY README.md README.md
 COPY tests tests/
-COPY run_test.sh run_test.sh
 
 # includes optional dependancies like neutronics_material_maker
 RUN pip install -r requirements.txt
