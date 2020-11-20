@@ -22,6 +22,8 @@ class PortCutterCircular(ExtrudeCircleShape):
         z_pos,
         radius,
         distance,
+        workplane="ZY",
+        rotation_axis="Z",
         stp_filename="PortCutterCircular.stp",
         stl_filename="PortCutterCircular.stl",
         name="circular_port_cutter",
@@ -29,6 +31,8 @@ class PortCutterCircular(ExtrudeCircleShape):
         **kwargs
     ):
         super().__init__(
+            workplane=workplane,
+            rotation_axis=rotation_axis,
             radius=radius,
             extrude_both=False,
             name=name,
