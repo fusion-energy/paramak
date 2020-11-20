@@ -84,7 +84,6 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             number_of_tf_coils=number_of_tf_coils,
             **kwargs)
 
-
     @property
     def gap_between_blankets(self):
         return self._gap_between_blankets
