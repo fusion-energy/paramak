@@ -83,7 +83,8 @@ class ExtrudeCircleShape(Shape):
         :rtype: a cadquery solid
         """
 
-        # so a positive offset moves extrusion further from axis of azimuthal placement rotation
+        # so a positive offset moves extrusion further from axis of azimuthal
+        # placement rotation
         extrusion_offset = -self.extrusion_start_offset
 
         if not self.extrude_both:
