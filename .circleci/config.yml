@@ -4,7 +4,7 @@
 
 version: 2
 jobs:
-  build:
+  test:
     docker:
       - image: openmcworkshop/paramak:dependencies_cq_master
     steps:
@@ -76,3 +76,32 @@ jobs:
           path: test-reports
 
       - run: bash <(curl -s https://codecov.io/bash)
+  build-deploy:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME .
+        - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME
+
+
+workflows:
+  version: 2
+  test-build-deploy:
+    jobs:
+      - test
+      - build-deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
