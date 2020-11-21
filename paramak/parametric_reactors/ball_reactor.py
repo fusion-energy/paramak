@@ -364,7 +364,7 @@ class BallReactor(paramak.Reactor):
                 self.plasma_gap_vertical_thickness,
                 self.outer_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
-                self.inner_plasma_gap_radial_thickness],
+                self.major_radius - self.minor_radius],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
