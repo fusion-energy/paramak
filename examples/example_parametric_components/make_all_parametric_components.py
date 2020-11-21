@@ -346,7 +346,8 @@ def main():
         distance=3,
         z_pos=0.25,
         radius=0.1,
-        azimuth_placement_angle=[0, 45, 90, 180]
+        # azimuth_placement_angle=[0, 45, 90, 180], # TODO: fix issue #548
+        azimuth_placement_angle=[0, 45, 90],
     )
     all_components.append(component)
 
