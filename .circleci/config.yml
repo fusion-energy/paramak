@@ -8,6 +8,11 @@ jobs:
     docker:
       - image: openmcworkshop/paramak:dependencies_cq_master
     steps:
+      - checkout
+      - run:
+          name: install
+          command:
+            python setup.py install
       - run:
           name: run utils tests
           command: 
