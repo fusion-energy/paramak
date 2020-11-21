@@ -43,6 +43,12 @@ jobs:
             pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
+          name: run parametric_reactors tests
+          command: 
+
+            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
           name: run example shape tests
           command: 
 
@@ -59,11 +65,7 @@ jobs:
 
             pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run parametric_reactors tests
-          command: 
 
-            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       # TODO once the open-source neutronics workflow is more stable include these tests
       # - run:
