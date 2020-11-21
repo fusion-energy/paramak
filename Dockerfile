@@ -12,7 +12,7 @@
 
 # Building using the latest release version of CadQuery (default) and MOAB.
 # Run command from within the base repository directory
-# docker build -t ukaea/paramak --build-arg include_neutronics=true .
+# docker build -t ukaea/paramak --build-arg include_neutronics=true  --build-arg cq_version=master .
 
 # Building using the master version of CadQuery and MOAB.
 # Run command from within the base repository directory
@@ -55,7 +55,7 @@ RUN echo installing CadQuery version $cq_version && \
 
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then echo installing with cq_version=master ; \
+    then echo installing with include_neutronics=true ; \
          apt-get install -y \
             wget git gfortran g++ cmake \
             mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
