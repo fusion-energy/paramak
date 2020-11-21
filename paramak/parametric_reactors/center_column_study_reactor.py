@@ -117,9 +117,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
     def _rotation_angle_check(self):
 
         if self.rotation_angle == 360:
-            warnings.warn(
-                "360 degree rotation may result in a Standard_ConstructionError or AttributeError",
-                UserWarning)
+            msg = "360 degree rotation may result " + \
+                "in a Standard_ConstructionError or AttributeError"
+            warnings.warn(msg, UserWarning)
 
     def _make_plasma(self):
 
@@ -245,8 +245,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
                 self.outer_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
                 self.inner_plasma_gap_radial_thickness],
-            start_angle=-179,
-            stop_angle=179,
+            start_angle=-180,
+            stop_angle=180,
             rotation_angle=self.rotation_angle,
             cut=center_column_cutter
         )
