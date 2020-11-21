@@ -81,8 +81,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         # makes a thicker star shaped cutting tool
         thick_cutter = paramak.BlanketCutterStar(
             distance=self.gap_between_blankets +
-            2 *
-            self.firstwall_radial_thickness,
+            2 * self.firstwall_radial_thickness,
             azimuth_placement_angle=np.linspace(
                 0,
                 360,
