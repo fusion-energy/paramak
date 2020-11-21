@@ -177,7 +177,9 @@ class BallReactor(paramak.Reactor):
         shapes_and_components.append(self._make_center_column_shield())
         shapes_and_components += self._make_blankets_layers()
         shapes_and_components.append(self._make_divertor())
-        shapes_and_components += self._make_component_cuts()
+        shapes_and_components += self._make_pf_coils()
+        shapes_and_components += self._make_tf_coils()
+
         self.shapes_and_components = shapes_and_components
 
     def _rotation_angle_check(self):
@@ -440,7 +442,7 @@ class BallReactor(paramak.Reactor):
 
         return self._divertor
 
-    def _make_component_cuts(self):
+    def _make_pf_coils(self):
         list_of_components = []
         if (self.pf_coil_vertical_thicknesses,
                 self.pf_coil_radial_thicknesses,
@@ -457,8 +459,6 @@ class BallReactor(paramak.Reactor):
                 material_tag="pf_coil_mat",
             )
 
-            list_of_components.append(self._pf_coil)
-
             self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
                 pf_coils=self._pf_coil,
                 casing_thicknesses=self.pf_coil_case_thickness,
@@ -469,27 +469,29 @@ class BallReactor(paramak.Reactor):
                 material_tag="pf_coil_case_mat",
             )
 
-            list_of_components.append(self._pf_coils_casing)
-
-            if (self.pf_coil_to_tf_coil_radial_gap,
-                    self.outboard_tf_coil_radial_thickness) != (None, None):
-
-                self._tf_coil = paramak.ToroidalFieldCoilRectangle(
-                    with_inner_leg=False,
-                    horizontal_start_point=(
-                        self._inboard_tf_coils_start_radius,
-                        self._tf_coil_height),
-                    vertical_mid_point=(
-                        self._tf_coil_start_radius, 0),
-                    thickness=self.outboard_tf_coil_radial_thickness,
-                    number_of_coils=self.number_of_tf_coils,
-                    distance=self.outboard_tf_coil_poloidal_thickness,
-                    stp_filename="tf_coil.stp",
-                    name="tf_coil",
-                    material_tag="tf_coil_mat",
-                    stl_filename="tf_coil.stl",
-                    rotation_angle=self.rotation_angle
-                )
-
-                list_of_components.append(self._tf_coil)
+            list_of_components = [self._pf_coils_casing, self._pf_coil]
         return list_of_components
+
+    def _make_tf_coils(self):
+        comp = []
+        if (self.pf_coil_to_tf_coil_radial_gap,
+                self.outboard_tf_coil_radial_thickness) != (None, None):
+
+            self._tf_coil = paramak.ToroidalFieldCoilRectangle(
+                with_inner_leg=False,
+                horizontal_start_point=(
+                    self._inboard_tf_coils_start_radius,
+                    self._tf_coil_height),
+                vertical_mid_point=(
+                    self._tf_coil_start_radius, 0),
+                thickness=self.outboard_tf_coil_radial_thickness,
+                number_of_coils=self.number_of_tf_coils,
+                distance=self.outboard_tf_coil_poloidal_thickness,
+                stp_filename="tf_coil.stp",
+                name="tf_coil",
+                material_tag="tf_coil_mat",
+                stl_filename="tf_coil.stl",
+                rotation_angle=self.rotation_angle
+            )
+            comp = [self._tf_coil]
+        return comp
