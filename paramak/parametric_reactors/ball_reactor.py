@@ -151,6 +151,7 @@ class BallReactor(paramak.Reactor):
             self.outer_plasma_gap_radial_thickness,
             self.plasma_gap_vertical_thickness,
             self.major_radius - self.minor_radius]
+
     @property
     def pf_coil_radial_thicknesses(self):
         return self._pf_coil_radial_thicknesses
