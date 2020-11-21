@@ -4,31 +4,15 @@
 
 version: 2
 jobs:
-  build-docker:
-    environment:
-      IMAGE_NAME: openmcworkshop/paramak
+  test:
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: openmcworkshop/paramak:dependencies_cq_master
     steps:
       - checkout
-      - setup_remote_docker
       - run:
-          name: Build Docker image
-          command: |
-            docker build -t $IMAGE_NAME:$CIRCLE_SHA1 --build-arg include_neutronics=true --build-arg cq_version=master .
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            
-            docker push $IMAGE_NAME:$CIRCLE_SHA1
-  test:
-    environment:
-      IMAGE_NAME: openmcworkshop/paramak
-    docker:
-      - image: $IMAGE_NAME:$CIRCLE_SHA1
-    working_directory: ../
-    steps:
+          name: install
+          command:
+            python setup.py install
       - run:
           name: run utils tests
           command: 
@@ -59,6 +43,12 @@ jobs:
             pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
+          name: run parametric_reactors tests
+          command: 
+
+            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
           name: run example shape tests
           command: 
 
@@ -75,11 +65,7 @@ jobs:
 
             pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      - run:
-          name: run parametric_reactors tests
-          command: 
 
-            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       # TODO once the open-source neutronics workflow is more stable include these tests
       # - run:
@@ -91,30 +77,54 @@ jobs:
       - store_test_results:
           path: test-reports
 
-      - run: apt-get -y install curl jq
-      - run: bash <(curl -s https://codecov.io/bash) -X fix
+      - run: bash <(curl -s https://codecov.io/bash)
+  build-deploy-master:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
       - run:
-          name: del temp Docker image
-          when: always
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME .
+      - run:
+          name: Publish Docker Image to Docker Hub
           command: |
-            login_data() {
-            cat <<EOF
-            {
-              "username": "$DOCKERHUB_USERNAME",
-              "password": "$DOCKERHUB_TOKEN"
-            }
-            EOF
-            }
-            TOKEN=`curl -s -H "Content-Type: application/json" -X POST -d "$(login_data)" "https://hub.docker.com/v2/users/login/" | jq -r .token`
-            curl "https://hub.docker.com/v2/repositories/$IMAGE_NAME/tags/$CIRCLE_SHA1/" \
-            -X DELETE \
-            -H "Authorization: JWT ${TOKEN}"
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME
+  build-deploy-dev:
+    environment:
+      IMAGE_NAME: openmcworkshop/paramak
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME:dev .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:dev
 
 workflows:
   version: 2
-  build-test:
+  test-build-deploy:
     jobs:
-      - build-docker
-      - test:
+      - test
+      - build-deploy-master:
           requires:
-            - build-docker
+            - test
+          filters:
+            branches:
+              only: master
+      - build-deploy-dev:
+          requires:
+            - test
+          filters:
+            branches:
+              only: develop
