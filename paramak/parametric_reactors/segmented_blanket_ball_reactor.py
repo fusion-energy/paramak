@@ -11,43 +11,20 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
     most spherical reactors.
 
     Arguments:
-        inner_bore_radial_thickness (float): the radial thickness of the
-            inner bore (cm)
-        inboard_tf_leg_radial_thickness (float): the radial thickness of the
-            inner leg of the toroidal field coils (cm)
-        center_column_shield_radial_thickness (float): the radial thickness of
-            the center column shield (cm)
-        divertor_radial_thickness (float): the radial thickness of the divertor
-            (cm), this fills the gap between the center column shield and
-            blanket
-        inner_plasma_gap_radial_thickness (float): the radial thickness of the
-            inboard gap between the plasma and the center column shield (cm)
-        plasma_radial_thickness (float): the radial thickness of the plasma
-        outer_plasma_gap_radial_thickness (float): the radial thickness of the
-            outboard gap between the plasma and firstwall (cm)
-        firstwall_radial_thickness (float): the radial thickness of the first
-            wall (cm)
-        blanket_radial_thickness (float): the radial thickness of the blanket
-            (cm)
-        blanket_rear_wall_radial_thickness (float): the radial thickness of the
-            rear wall of the blanket (cm)
         gap_between_blankets (float): the distance between adjacent blanket
             segments,
         number_of_blanket_segments (int): the number of segments to divide the
             blanket up into. This for a full 360 degrees rotation
-        elongation (float): the elongation of the plasma
-        triangularity (float): the triangularity of the plasma
-        number_of_tf_coils (int): the number of tf coils
         blanket_fillet_radius (float): the fillet radius to apply to the
             interface between the firstwall and th breeder zone. Set to 0 for
-            no fillet. Defaults to 10.
+            no fillet. Defaults to 10.0.
     """
 
     def __init__(
         self,
         gap_between_blankets,
         number_of_blanket_segments,
-        blanket_fillet_radius=10,
+        blanket_fillet_radius=10.0,
         **kwargs
     ):
 
@@ -114,8 +91,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="firstwall_mat",
-            stp_filename="firstwall.stp",
-            stl_filename="firstwall.stl",
+            name="firstwall",
             cut=[
                 self._center_column_cutter,
                 thin_cutter])
@@ -149,8 +125,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="blanket_mat",
-            stp_filename="blanket.stp",
-            stl_filename="blanket.stl",
+            name="blanket",
             cut=[self._center_column_cutter, thick_cutter])
 
         if self.blanket_fillet_radius != 0:
@@ -207,6 +182,5 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="blanket_rear_wall_mat",
-            stp_filename="blanket_rear_wall.stp",
-            stl_filename="blanket_rear_wall.stl",
+            name="blanket_rear_wall",
             cut=[self._center_column_cutter])
