@@ -45,19 +45,6 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
 
     def __init__(
         self,
-        inner_bore_radial_thickness,
-        inboard_tf_leg_radial_thickness,
-        center_column_shield_radial_thickness,
-        divertor_radial_thickness,
-        inner_plasma_gap_radial_thickness,
-        plasma_radial_thickness,
-        outer_plasma_gap_radial_thickness,
-        firstwall_radial_thickness,
-        blanket_radial_thickness,
-        blanket_rear_wall_radial_thickness,
-        elongation,
-        triangularity,
-        number_of_tf_coils,
         gap_between_blankets,
         number_of_blanket_segments,
         blanket_fillet_radius=10,
@@ -68,25 +55,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         self.number_of_blanket_segments = number_of_blanket_segments
         self.blanket_fillet_radius = blanket_fillet_radius
 
-        super().__init__(
-            inner_bore_radial_thickness=inner_bore_radial_thickness,
-            inboard_tf_leg_radial_thickness=inboard_tf_leg_radial_thickness,
-            center_column_shield_radial_thickness=center_column_shield_radial_thickness,
-            divertor_radial_thickness=divertor_radial_thickness,
-            inner_plasma_gap_radial_thickness=inner_plasma_gap_radial_thickness,
-            plasma_radial_thickness=plasma_radial_thickness,
-            outer_plasma_gap_radial_thickness=outer_plasma_gap_radial_thickness,
-            firstwall_radial_thickness=firstwall_radial_thickness,
-            blanket_radial_thickness=blanket_radial_thickness,
-            blanket_rear_wall_radial_thickness=blanket_rear_wall_radial_thickness,
-            elongation=elongation,
-            triangularity=triangularity,
-            number_of_tf_coils=number_of_tf_coils,
-            **kwargs)
-
-        self.shapes_and_components = []
-
-        self.create_solids()
+        super().__init__(**kwargs)
 
     @property
     def gap_between_blankets(self):
