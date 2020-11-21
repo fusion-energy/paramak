@@ -64,6 +64,12 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
                 "number_of_blanket_segments but be an int greater than 2")
 
     def _make_blankets_layers(self):
+        self.offset_from_plasma = [
+            self.major_radius - self.minor_radius,
+            self.plasma_gap_vertical_thickness,
+            self.outer_plasma_gap_radial_thickness,
+            self.plasma_gap_vertical_thickness,
+            self.major_radius - self.minor_radius]
 
         self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             # extra 0.5 to ensure overlap,
@@ -91,17 +97,8 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         self._blanket = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_radial_thickness,
-            offset_from_plasma=[
-                self.inner_plasma_gap_radial_thickness +
-                self.firstwall_radial_thickness,
-                self.plasma_gap_vertical_thickness +
-                self.firstwall_radial_thickness,
-                self.outer_plasma_gap_radial_thickness +
-                self.firstwall_radial_thickness,
-                self.plasma_gap_vertical_thickness +
-                self.firstwall_radial_thickness,
-                self.inner_plasma_gap_radial_thickness +
-                self.firstwall_radial_thickness],
+            offset_from_plasma=[e + self.firstwall_radial_thickness
+                                for e in self.offset_from_plasma],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -125,12 +122,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             plasma=self._plasma,
             thickness=self.firstwall_radial_thickness +
             self.blanket_radial_thickness,
-            offset_from_plasma=[
-                self.inner_plasma_gap_radial_thickness,
-                self.plasma_gap_vertical_thickness,
-                self.outer_plasma_gap_radial_thickness,
-                self.plasma_gap_vertical_thickness,
-                self.inner_plasma_gap_radial_thickness],
+            offset_from_plasma=self.offset_from_plasma,
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -164,25 +156,13 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_rear_wall_radial_thickness,
-            offset_from_plasma=[
-                self.inner_plasma_gap_radial_thickness +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness,
-                self.plasma_gap_vertical_thickness +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness,
-                self.outer_plasma_gap_radial_thickness +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness,
-                self.plasma_gap_vertical_thickness +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness,
-                self.inner_plasma_gap_radial_thickness +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness],
+            offset_from_plasma=[e + self.firstwall_radial_thickness
+                                + self.blanket_radial_thickness
+                                for e in self.offset_from_plasma],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="blanket_rear_wall_mat",
             name="blanket_rear_wall",
             cut=[self._center_column_cutter])
+        return [self._firstwall, self._blanket, self._blanket_rear_wall]
