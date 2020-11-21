@@ -95,9 +95,9 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
                 self.blanket_fillet_radius)
         self._firstwall.thickness += self.blanket_radial_thickness
         self._firstwall.cut = [
-                self._center_column_cutter,
-                thin_cutter,
-                self._blanket]
+            self._center_column_cutter,
+            thin_cutter,
+            self._blanket]
 
         # TODO this segfaults at the moment but works as an opperation on the
         # reactor after construction in jupyter
