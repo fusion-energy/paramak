@@ -116,13 +116,13 @@ workflows:
   test-build-deploy:
     jobs:
       - test
-      - build-deploy:
+      - build-deploy-master:
           requires:
             - test
           filters:
             branches:
               only: master
-      - build-deploy:
+      - build-deploy-dev:
           requires:
             - test
           filters:
