@@ -64,6 +64,64 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
                 "number_of_blanket_segments but be an int greater than 2")
 
     def _make_blankets_layers(self):
+        super()._make_blankets_layers()
+
+        thin_cutter = paramak.BlanketCutterStar(
+            distance=self.gap_between_blankets,
+            azimuth_placement_angle=np.linspace(
+                0, 360, self.number_of_blanket_segments, endpoint=False))
+
+        thick_cutter = paramak.BlanketCutterStar(
+            distance=self.gap_between_blankets +
+            2 * self.firstwall_radial_thickness,
+            azimuth_placement_angle=np.linspace(
+                0,
+                360,
+                self.number_of_blanket_segments,
+                endpoint=False))
+
+        self._blanket.cut = [self._center_column_cutter, thick_cutter]
+
+        if self.blanket_fillet_radius != 0:
+            # tried firstwall start radius here already
+            x = self.major_radius + 1
+            front_face_b = self._blanket.solid.faces(
+                cq.NearestToPointSelector((0, x, 0)))
+            front_edge_b = front_face_b.edges(
+                cq.NearestToPointSelector((0, x, 0)))
+            front_edge_length_b = front_edge_b.val().Length()
+            self._blanket.solid = self._blanket.solid.edges(
+                paramak.EdgeLengthSelector(front_edge_length_b)).fillet(
+                self.blanket_fillet_radius)
+        self._firstwall.thickness += self.blanket_radial_thickness
+        self._firstwall.cut = [
+                self._center_column_cutter,
+                thin_cutter,
+                self._blanket]
+
+        # TODO this segfaults at the moment but works as an opperation on the
+        # reactor after construction in jupyter
+        # tried different x values and (0, x, 0)
+        # noticed that it much quicker as a post process so perhaps some
+        # unwanted looping is happening
+        # if self.blanket_fillet_radius != 0:
+        #     x = self.major_radius # tried firstwall start radius here already
+        #     front_face = \
+        #       self._firstwall.solid.faces(
+        #           cq.NearestToPointSelector((x, 0, 0)))
+        #     print('found front face')
+        #     front_edge = front_face.edges(
+        #           cq.NearestToPointSelector((x, 0, 0)))
+        #     print('found front edge')
+        #     front_edge_length = front_edge.val().Length()
+        #     print('found front edge length', front_edge_length)
+        #     self._firstwall.solid = self._firstwall.solid.edges(
+        #         paramak.EdgeLengthSelector(front_edge_length)).fillet(self.blanket_fillet_radius)
+        # print('finished')
+
+        return [self._firstwall, self._blanket, self._blanket_rear_wall]
+
+    def _make_blankets_layers_bak(self):
 
         self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             # extra 0.5 to ensure overlap,
