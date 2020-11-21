@@ -130,10 +130,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
             triangularity=self.triangularity,
             rotation_angle=self.rotation_angle,
         )
-        plasma.create_solid()
 
         self._plasma = plasma
-
         return plasma
 
     def _make_radial_build(self):

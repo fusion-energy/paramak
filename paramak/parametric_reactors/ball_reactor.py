@@ -198,7 +198,6 @@ class BallReactor(paramak.Reactor):
             triangularity=self.triangularity,
             rotation_angle=self.rotation_angle,
         )
-        plasma.create_solid()
 
         self._plasma = plasma
         return self._plasma

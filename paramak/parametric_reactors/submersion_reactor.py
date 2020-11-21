@@ -379,15 +379,15 @@ class SubmersionTokamak(paramak.Reactor):
 
     def _make_plasma(self):
 
-        self._plasma = paramak.Plasma(
+        plasma = paramak.Plasma(
             major_radius=self.major_radius,
             minor_radius=self.minor_radius,
             elongation=self.elongation,
             triangularity=self.triangularity,
             rotation_angle=self.rotation_angle,
         )
-        self._plasma.create_solid()
 
+        self._plasma = plasma
         return self._plasma
 
     def _make_inboard_blanket_and_firstwall(self):
