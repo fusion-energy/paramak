@@ -66,7 +66,7 @@ RUN if [ "$cq_version" = "release" ] ; \
 RUN if [ "$cq_version" = "master" ] ; \
     then conda install jupyter -y --quiet ; \
     conda clean -afy ; \
-    conda install -c cadquery -c conda-forge cadquery=master ; \
+    conda install -c cadquery -c conda-forge cadquery="$cq_version" ; \
     conda clean -afy ; \
     fi
 

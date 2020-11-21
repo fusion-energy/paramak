@@ -125,24 +125,11 @@ class SingleNullBallReactor(paramak.BallReactor):
 
         list_of_components.append(self._divertor)
 
-        blanket_cutter = paramak.RotateStraightShape(
-            points=[
-                (self._divertor_start_radius, 0),
-                (self._divertor_end_radius, 0),
-                (self._divertor_end_radius, divertor_height),
-                (self._divertor_start_radius, divertor_height)
-            ],
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
-            name="divertor",
-            material_tag="divertor_mat",
-            rotation_angle=self.rotation_angle
-        )
+        self._firstwall.cut.append(self._divertor)
+        self._blanket.cut.append(self._divertor)
+        self._blanket_rear_wall.cut.append(self._divertor)
+        self._blanket_rear_wall.cut.append(self._center_column_cutter)
 
-        self._firstwall.solid = self._firstwall.solid.cut(blanket_cutter.solid)
-        self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
-        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
-            blanket_cutter.solid)
         list_of_components.append(self._firstwall)
         list_of_components.append(self._blanket)
         list_of_components.append(self._blanket_rear_wall)

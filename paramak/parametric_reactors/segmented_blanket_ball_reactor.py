@@ -88,7 +88,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
 
     def _make_blankets_layers(self):
 
-        center_column_cutter = paramak.CenterColumnShieldCylinder(
+        self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
             inner_radius=0,
             outer_radius=self._center_column_shield_end_radius,
@@ -110,13 +110,14 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
                 self.outer_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
                 self.inner_plasma_gap_radial_thickness],
-            start_angle=-179,
-            stop_angle=179,
+            start_angle=-180,
+            stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
+            stl_filename="firstwall.stl",
             cut=[
-                center_column_cutter,
+                self._center_column_cutter,
                 thin_cutter])
 
         # makes a thicker star shaped cutting tool
@@ -144,12 +145,13 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
                 self.firstwall_radial_thickness,
                 self.inner_plasma_gap_radial_thickness +
                 self.firstwall_radial_thickness],
-            start_angle=-179,
-            stop_angle=179,
+            start_angle=-180,
+            stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="blanket_mat",
             stp_filename="blanket.stp",
-            cut=[center_column_cutter, thick_cutter])
+            stl_filename="blanket.stl",
+            cut=[self._center_column_cutter, thick_cutter])
 
         if self.blanket_fillet_radius != 0:
             x = self.major_radius + 1  # tried firstwall start radius here already
@@ -178,8 +180,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         #         paramak.EdgeLengthSelector(front_edge_length)).fillet(self.blanket_fillet_radius)
         # print('finished')
 
-        self._blanket_envelope.solid = self._blanket_envelope.solid.cut(
-            self._blanket.solid)
+        self._blanket_envelope.cut.append(self._blanket)
 
         self._firstwall = self._blanket_envelope
 
@@ -202,10 +203,10 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
                 self.inner_plasma_gap_radial_thickness +
                 self.firstwall_radial_thickness +
                 self.blanket_radial_thickness],
-            start_angle=-
-            179,
-            stop_angle=179,
+            start_angle=-180,
+            stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
-            cut=center_column_cutter)
+            stl_filename="blanket_rear_wall.stl",
+            cut=[self._center_column_cutter])
