@@ -10,7 +10,7 @@
 
 # Building using the latest release version of CadQuery (default) and MOAB.
 # Run command from within the base repository directory
-# docker build -t ukaea/paramak --build-arg include_neutronics=true .
+# docker build -t ukaea/paramak --build-arg include_neutronics=true  --build-arg cq_version=master .
 
 # Building using the master version of CadQuery and MOAB.
 # Run command from within the base repository directory
@@ -46,7 +46,7 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then echo installing with cq_version=master ; \
+    then echo installing with include_neutronics=true ; \
          apt-get install -y \
             wget git gfortran g++ cmake \
             mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
@@ -64,7 +64,8 @@ RUN if [ "$cq_version" = "release" ] ; \
 # Installing CadQuery master
 # jupyter is installed before cadquery master version to avoid a conflict
 RUN if [ "$cq_version" = "master" ] ; \
-    then conda install jupyter -y --quiet ; \
+    then echo installing with cq_version=master ; \
+    conda install jupyter -y --quiet ; \
     conda clean -afy ; \
     conda install -c cadquery -c conda-forge cadquery=master ; \
     conda clean -afy ; \
