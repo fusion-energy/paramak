@@ -87,7 +87,6 @@ def main():
     divertor_bottom.stl_filename = "divertor_bottom.stl"
     divertor_bottom.stp_filename = "divertor_bottom.stp"
 
-
     divertor_top = paramak.RotateMixedShape(
         rotation_angle=180,
         points=[
@@ -117,7 +116,6 @@ def main():
     )
     core.stp_filename = "core.stp"
     core.stl_filename = "core.stp"
-
 
     # initiates a reactor object
     myreactor = paramak.Reactor([plasma,
