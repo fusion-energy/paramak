@@ -3,6 +3,8 @@
 # Building using the latest release version of CadQuery (default)
 # Run command from within the base repository directory
 # docker build -t ukaea/paramak .
+# or using the build arguments
+# docker build -t ukaea/paramak --build-arg cq_version=2 .
 
 # Building using master branch version of CadQuery.
 # Run with the following command for terminal access
@@ -31,7 +33,7 @@
 FROM continuumio/miniconda3
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
-ARG cq_version=release
+ARG cq_version=2
 ARG include_neutronics=false
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
@@ -44,6 +46,13 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        libgles2-mesa-dev && \
                        apt-get clean
 
+# Installing CadQuery
+# jupyter is installed before cadquery to avoid a conflict
+RUN echo installing CadQuery version $cq_version && \
+    conda install jupyter -y --quiet && \
+    conda install -c cadquery -c conda-forge cadquery="$cq_version" && \
+    conda clean -afy
+
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
     then echo installing with cq_version=master ; \
@@ -51,23 +60,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
             wget git gfortran g++ cmake \
             mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
             imagemagick ; \
-    fi
-
-# Installing CadQuery release
-RUN if [ "$cq_version" = "release" ] ; \
-    then  echo installing with cq_version=release ; \
-    conda install -c conda-forge -c cadquery cadquery=2 ; \
-    conda install jupyter -y --quiet ; \
-    conda clean -afy ; \
-    fi
-
-# Installing CadQuery master
-# jupyter is installed before cadquery master version to avoid a conflict
-RUN if [ "$cq_version" = "master" ] ; \
-    then conda install jupyter -y --quiet ; \
-    conda clean -afy ; \
-    conda install -c cadquery -c conda-forge cadquery=master ; \
-    conda clean -afy ; \
     fi
 
 # install addition packages required for MOAB
