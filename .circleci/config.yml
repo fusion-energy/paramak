@@ -87,7 +87,7 @@ jobs:
       - run:
           name: Build Docker image
           command: docker build -t $IMAGE_NAME .
-        - run:
+      - run:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
@@ -103,7 +103,7 @@ jobs:
       - run:
           name: Build Docker image
           command: docker build -t $IMAGE_NAME:dev .
-        - run:
+      - run:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
