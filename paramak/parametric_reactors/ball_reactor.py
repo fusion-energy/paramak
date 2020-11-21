@@ -349,7 +349,7 @@ class BallReactor(paramak.Reactor):
 
     def _make_blankets_layers(self):
 
-        center_column_cutter = paramak.CenterColumnShieldCylinder(
+        self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_height * 1.5,  # extra 0.5 to ensure overlap,
             inner_radius=0,
             outer_radius=self._center_column_shield_end_radius,
@@ -364,14 +364,14 @@ class BallReactor(paramak.Reactor):
                 self.plasma_gap_vertical_thickness,
                 self.outer_plasma_gap_radial_thickness,
                 self.plasma_gap_vertical_thickness,
-                self.inner_plasma_gap_radial_thickness],
+                self.major_radius - self.minor_radius],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
             material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
             stl_filename="firstwall.stl",
-            cut=center_column_cutter
+            cut=[self._center_column_cutter]
         )
 
         self._blanket = paramak.BlanketFP(
@@ -394,7 +394,7 @@ class BallReactor(paramak.Reactor):
             material_tag="blanket_mat",
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
-            cut=center_column_cutter)
+            cut=[self._center_column_cutter])
 
         self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
@@ -421,7 +421,7 @@ class BallReactor(paramak.Reactor):
             material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
-            cut=center_column_cutter,
+            cut=[self._center_column_cutter],
         )
 
     def _make_divertor(self):
@@ -462,10 +462,9 @@ class BallReactor(paramak.Reactor):
             rotation_angle=360
         )
 
-        self._firstwall.solid = self._firstwall.solid.cut(blanket_cutter.solid)
-        self._blanket.solid = self._blanket.solid.cut(blanket_cutter.solid)
-        self._blanket_rear_wall.solid = self._blanket_rear_wall.solid.cut(
-            blanket_cutter.solid)
+        self._firstwall.cut.append(blanket_cutter)
+        self._blanket.cut.append(blanket_cutter)
+        self._blanket_rear_wall.cut.append(blanket_cutter)
 
         list_of_components.append(self._divertor)
         list_of_components.append(self._firstwall)
