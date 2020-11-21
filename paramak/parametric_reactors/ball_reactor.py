@@ -175,8 +175,8 @@ class BallReactor(paramak.Reactor):
         self._make_vertical_build()
         shapes_and_components.append(self._make_inboard_tf_coils())
         shapes_and_components.append(self._make_center_column_shield())
-        self._make_blankets_layers()
-        shapes_and_components += self._make_divertor()
+        shapes_and_components += self._make_blankets_layers()
+        shapes_and_components.append(self._make_divertor())
         shapes_and_components += self._make_component_cuts()
         self.shapes_and_components = shapes_and_components
 
@@ -430,9 +430,13 @@ class BallReactor(paramak.Reactor):
             stl_filename="blanket_rear_wall.stl",
             cut=[self._center_column_cutter],
         )
+        list_of_components = []
+        list_of_components.append(self._firstwall)
+        list_of_components.append(self._blanket)
+        list_of_components.append(self._blanket_rear_wall)
+        return list_of_components
 
     def _make_divertor(self):
-        list_of_components = []
         # # used as an intersect when making the divertor
         self._blanket_fw_rear_wall_envelope = paramak.BlanketFP(
             plasma=self._plasma,
@@ -475,11 +479,7 @@ class BallReactor(paramak.Reactor):
         self._blanket.cut.append(blanket_cutter)
         self._blanket_rear_wall.cut.append(blanket_cutter)
 
-        list_of_components.append(self._divertor)
-        list_of_components.append(self._firstwall)
-        list_of_components.append(self._blanket)
-        list_of_components.append(self._blanket_rear_wall)
-        return list_of_components
+        return self._divertor
 
     def _make_component_cuts(self):
         list_of_components = []
