@@ -2,12 +2,13 @@
 This python script demonstrates the creation of a breeder blanket from points
 """
 
-from paramak import RotateMixedShape
+from paramak
 
 
 def main(filename="blanket_from_points.stp"):
 
-    blanket = RotateMixedShape(
+    blanket = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (538, 305, "straight"),
             (538, -305, "straight"),
@@ -17,7 +18,6 @@ def main(filename="blanket_from_points.stp"):
         ]
     )
 
-    blanket.rotation_angle = 180
     blanket.export_stp(filename=filename)
 
 
