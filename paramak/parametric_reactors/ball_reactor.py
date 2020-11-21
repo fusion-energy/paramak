@@ -355,23 +355,25 @@ class BallReactor(paramak.Reactor):
 
     def _make_blankets_layers(self):
 
+        self.offset_from_plasma = [
+            self.major_radius - self.minor_radius,
+            self.plasma_gap_vertical_thickness,
+            self.outer_plasma_gap_radial_thickness,
+            self.plasma_gap_vertical_thickness,
+            self.major_radius - self.minor_radius]
+
         self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             # extra 0.5 to ensure overlap,
             height=self._center_column_shield_height * 1.5,
             inner_radius=0,
-            outer_radius=self._center_column_shield_end_radius,
+            outer_radius=self._divertor_end_radius,
             rotation_angle=360
         )
 
         self._firstwall = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.firstwall_radial_thickness,
-            offset_from_plasma=[
-                self.major_radius - self.minor_radius,
-                self.plasma_gap_vertical_thickness,
-                self.outer_plasma_gap_radial_thickness,
-                self.plasma_gap_vertical_thickness,
-                self.major_radius - self.minor_radius],
+            offset_from_plasma=self.offset_from_plasma,
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -384,17 +386,8 @@ class BallReactor(paramak.Reactor):
         self._blanket = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_radial_thickness,
-            offset_from_plasma=[
-                self.major_radius - self.minor_radius +
-                self.firstwall_radial_thickness,
-                self.plasma_gap_vertical_thickness +
-                self.firstwall_radial_thickness,
-                self.outer_plasma_gap_radial_thickness +
-                self.firstwall_radial_thickness,
-                self.plasma_gap_vertical_thickness +
-                self.firstwall_radial_thickness,
-                self.major_radius - self.minor_radius +
-                self.firstwall_radial_thickness],
+            offset_from_plasma=[e + self.firstwall_radial_thickness
+                                for e in self.offset_from_plasma],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -406,22 +399,9 @@ class BallReactor(paramak.Reactor):
         self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_rear_wall_radial_thickness,
-            offset_from_plasma=[
-                self.major_radius - self.minor_radius +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness,
-                self.plasma_gap_vertical_thickness +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness,
-                self.outer_plasma_gap_radial_thickness +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness,
-                self.plasma_gap_vertical_thickness +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness,
-                self.major_radius - self.minor_radius +
-                self.firstwall_radial_thickness +
-                self.blanket_radial_thickness],
+            offset_from_plasma=[e + self.firstwall_radial_thickness
+                                + self.blanket_radial_thickness
+                                for e in self.offset_from_plasma],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -430,11 +410,8 @@ class BallReactor(paramak.Reactor):
             stl_filename="blanket_rear_wall.stl",
             cut=[self._center_column_cutter],
         )
-        list_of_components = []
-        list_of_components.append(self._firstwall)
-        list_of_components.append(self._blanket)
-        list_of_components.append(self._blanket_rear_wall)
-        return list_of_components
+
+        return [self._firstwall, self._blanket, self._blanket_rear_wall]
 
     def _make_divertor(self):
         # # used as an intersect when making the divertor
@@ -443,13 +420,7 @@ class BallReactor(paramak.Reactor):
             thickness=self.firstwall_radial_thickness +
             self.blanket_radial_thickness +
             self.blanket_rear_wall_radial_thickness,
-            offset_from_plasma=[
-                self.major_radius - self.minor_radius,
-                self.plasma_gap_vertical_thickness,
-                self.outer_plasma_gap_radial_thickness,
-                self.plasma_gap_vertical_thickness,
-                # self.inner_plasma_gap_radial_thickness],
-                self.major_radius - self.minor_radius],
+            offset_from_plasma=self.offset_from_plasma,
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -466,18 +437,6 @@ class BallReactor(paramak.Reactor):
             material_tag="divertor_mat",
             rotation_angle=self.rotation_angle
         )
-
-        blanket_cutter = paramak.CenterColumnShieldCylinder(
-            # extra 0.5 to ensure overlap,
-            height=self._center_column_shield_height * 1.5,
-            inner_radius=0,
-            outer_radius=self._divertor_end_radius,
-            rotation_angle=360
-        )
-
-        self._firstwall.cut.append(blanket_cutter)
-        self._blanket.cut.append(blanket_cutter)
-        self._blanket_rear_wall.cut.append(blanket_cutter)
 
         return self._divertor
 
