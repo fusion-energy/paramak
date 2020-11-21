@@ -87,7 +87,7 @@ class BallReactor(paramak.Reactor):
             outboard_tf_coil_radial_thickness=None,
             outboard_tf_coil_poloidal_thickness=None,
             rotation_angle=360.0,
-            ):
+    ):
 
         super().__init__([])
 
@@ -186,7 +186,7 @@ class BallReactor(paramak.Reactor):
 
         if self.rotation_angle == 360:
             msg = "360 degree rotation may result " + \
-                 "in a Standard_ConstructionError or AttributeError"
+                "in a Standard_ConstructionError or AttributeError"
             warnings.warn(msg, UserWarning)
 
     def _make_plasma(self):
