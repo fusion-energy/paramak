@@ -122,12 +122,11 @@ class BallReactor(paramak.Reactor):
             + center_column_shield_radial_thickness
             + inner_plasma_gap_radial_thickness
         )
-        outer_equatorial_point = inner_equatorial_point + plasma_radial_thickness
+        outer_equatorial_point = \
+            inner_equatorial_point + plasma_radial_thickness
         self.major_radius = (
-            inner_equatorial_point + plasma_radial_thickness + inner_equatorial_point) / 2
-        self.minor_radius = (
-            (outer_equatorial_point + inner_equatorial_point) / 2
-        ) - inner_equatorial_point
+            outer_equatorial_point + inner_equatorial_point) / 2
+        self.minor_radius = self.major_radius - inner_equatorial_point
 
         self.elongation = elongation
         self.triangularity = triangularity
