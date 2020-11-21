@@ -64,12 +64,6 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
                 "number_of_blanket_segments but be an int greater than 2")
 
     def _make_blankets_layers(self):
-        self.offset_from_plasma = [
-            self.major_radius - self.minor_radius,
-            self.plasma_gap_vertical_thickness,
-            self.outer_plasma_gap_radial_thickness,
-            self.plasma_gap_vertical_thickness,
-            self.major_radius - self.minor_radius]
 
         self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             # extra 0.5 to ensure overlap,

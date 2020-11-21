@@ -115,8 +115,13 @@ class BallReactor(paramak.Reactor):
             outboard_tf_coil_radial_thickness
         self.outboard_tf_coil_poloidal_thickness = \
             outboard_tf_coil_poloidal_thickness
-        self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
 
+        if plasma_gap_vertical_thickness is None:
+            self.plasma_gap_vertical_thickness = \
+                self.outer_plasma_gap_radial_thickness
+        else:
+            self.plasma_gap_vertical_thickness = \
+                plasma_gap_vertical_thickness
         # sets major radius and minor radius from equatorial_points to allow a
         # radial build
         # this helps avoid the plasma overlapping the center column and other
@@ -140,6 +145,12 @@ class BallReactor(paramak.Reactor):
         self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
 
+        self.offset_from_plasma = [
+            self.major_radius - self.minor_radius,
+            self.plasma_gap_vertical_thickness,
+            self.outer_plasma_gap_radial_thickness,
+            self.plasma_gap_vertical_thickness,
+            self.major_radius - self.minor_radius]
     @property
     def pf_coil_radial_thicknesses(self):
         return self._pf_coil_radial_thicknesses
@@ -252,10 +263,6 @@ class BallReactor(paramak.Reactor):
         # this is the vertical build sequence, components build on each other
         # in a similar manner to the radial build
 
-        if self.plasma_gap_vertical_thickness is None:
-            self.plasma_gap_vertical_thickness = \
-                self.outer_plasma_gap_radial_thickness
-
         self._firstwall_start_height = (
             self._plasma.high_point[1] + self.plasma_gap_vertical_thickness
         )
@@ -355,13 +362,6 @@ class BallReactor(paramak.Reactor):
         return self._center_column_shield
 
     def _make_blankets_layers(self):
-
-        self.offset_from_plasma = [
-            self.major_radius - self.minor_radius,
-            self.plasma_gap_vertical_thickness,
-            self.outer_plasma_gap_radial_thickness,
-            self.plasma_gap_vertical_thickness,
-            self.major_radius - self.minor_radius]
 
         self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             # extra 0.5 to ensure overlap,
