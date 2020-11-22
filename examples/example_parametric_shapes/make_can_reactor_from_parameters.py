@@ -117,7 +117,6 @@ def main():
     core.stp_filename = "core.stp"
     core.stl_filename = "core.stp"
 
-
     # initiates a reactor object
     myreactor = paramak.Reactor([plasma,
                                  blanket,

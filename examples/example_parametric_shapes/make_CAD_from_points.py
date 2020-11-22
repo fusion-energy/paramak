@@ -38,7 +38,7 @@ def main():
     # this makes a shape with straight, spline and circular edges and rotates
     # it to make a solid
     rotated_mixed = paramak.RotateMixedShape(
-        rotation_angle = 180
+        rotation_angle=180,
         points=[
             (100, 0, "straight"),
             (200, 0, "circle"),
@@ -54,14 +54,13 @@ def main():
 
     # this makes a circular shape and rotates it to make a solid
     rotated_circle = paramak.RotateCircleShape(
-        rotation_angle = 180
+        rotation_angle=180,
         points=[(50, 0)],
         radius=5,
         workplane="XZ"
     )
     rotated_circle.export_stp("rotated_circle.stp")
     rotated_circle.export_html("rotated_circle.html")
-
 
     # extrude examples
 
