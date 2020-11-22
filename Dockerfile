@@ -36,7 +36,7 @@
 # docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
 
 
-# Once build the docker image can be tested with the following command
+# Once built, the docker image can be tested with the following command
 # docker run --rm ukaea/paramak pytest /tests
 
 FROM continuumio/miniconda3
