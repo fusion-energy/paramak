@@ -443,7 +443,7 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        divertor_height = self._blanket_rear_wall_end_height*2
+        divertor_height = self._blanket_rear_wall_end_height * 2
 
         divertor_height_top = divertor_height
         divertor_height_bottom = -divertor_height
@@ -467,7 +467,10 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle
         )
 
-        for component in [self._firstwall, self._blanket, self._blanket_rear_wall]:
+        for component in [
+                self._firstwall,
+                self._blanket,
+                self._blanket_rear_wall]:
             component.cut.append(self._divertor)
 
         return self._divertor
