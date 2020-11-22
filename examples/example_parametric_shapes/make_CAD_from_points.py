@@ -54,7 +54,7 @@ def main():
 
     # this makes a circular shape and rotates it to make a solid
     rotated_circle = paramak.RotateCircleShape(
-        rotation_angle=180
+        rotation_angle=180,
         points=[(50, 0)],
         radius=5,
         workplane="XZ"
