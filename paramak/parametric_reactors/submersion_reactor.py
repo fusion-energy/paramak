@@ -483,8 +483,8 @@ class SubmersionTokamak(paramak.Reactor):
         fw_enveloppe_inboard = paramak.BlanketFP(
             plasma=self._plasma,
             offset_from_plasma=self.inner_plasma_gap_radial_thickness,
-            start_angle=-90,
-            stop_angle=90,
+            start_angle=90,
+            stop_angle=270,
             thickness=self.firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
         )
