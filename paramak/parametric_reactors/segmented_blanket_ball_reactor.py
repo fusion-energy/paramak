@@ -65,20 +65,16 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
 
     def _make_blankets_layers(self):
         super()._make_blankets_layers()
-
+        azimuth_placement_angles = np.linspace(
+                0, 360, self.number_of_blanket_segments, endpoint=False)
         thin_cutter = paramak.BlanketCutterStar(
             distance=self.gap_between_blankets,
-            azimuth_placement_angle=np.linspace(
-                0, 360, self.number_of_blanket_segments, endpoint=False))
+            azimuth_placement_angle=azimuth_placement_angles)
 
         thick_cutter = paramak.BlanketCutterStar(
             distance=self.gap_between_blankets +
             2 * self.firstwall_radial_thickness,
-            azimuth_placement_angle=np.linspace(
-                0,
-                360,
-                self.number_of_blanket_segments,
-                endpoint=False))
+            azimuth_placement_angle=azimuth_placement_angles)
 
         self._blanket.cut = [self._center_column_cutter, thick_cutter]
 
