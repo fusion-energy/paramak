@@ -39,19 +39,19 @@ def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
 
     # finds the correct edges to fillet
     x = my_reactor.major_radius
-    front_face = my_reactor._blanket_envelope.solid.faces(
+    front_face = my_reactor._blanket.solid.faces(
         cq.NearestToPointSelector((x, 0, 0)))
     front_edge = front_face.edges(cq.NearestToPointSelector((x, 0, 0)))
     front_edge_length = front_edge.val().Length()
-    my_reactor._blanket_envelope.solid = my_reactor._blanket_envelope.solid.edges(
+    my_reactor._blanket.solid = my_reactor._blanket.solid.edges(
         paramak.EdgeLengthSelector(front_edge_length)).fillet(
         my_reactor.blanket_fillet_radius)
 
     # cuts away the breeder zone
-    my_reactor._blanket_envelope.solid = my_reactor._blanket_envelope.solid.cut(
+    my_reactor._blanket.solid = my_reactor._blanket.solid.cut(
         my_reactor._blanket.solid)
 
-    my_reactor._blanket_envelope.export_stp('firstwall_with_fillet.stp')
+    my_reactor._blanket.export_stp('firstwall_with_fillet.stp')
 
     if 'stp' in outputs:
         my_reactor.export_stp(output_folder='SegmentedBlanketBallReactor')
