@@ -172,7 +172,8 @@ class SubmersionTokamak(paramak.Reactor):
         if value in acceptable_values:
             self._divertor_position = value
         else:
-            raise ValueError("divertor position must be 'upper', 'lower' or 'both'")
+            msg = "divertor_position must be 'upper', 'lower' or 'both'"
+            raise ValueError(msg)
 
     @property
     def support_position(self):
@@ -184,7 +185,8 @@ class SubmersionTokamak(paramak.Reactor):
         if value in acceptable_values:
             self._support_position = value
         else:
-            raise ValueError("support position must be 'upper', 'lower' or 'both'")
+            msg = "support_position must be 'upper', 'lower' or 'both'"
+            raise ValueError(msg)
 
     def create_solids(self):
         """Creates a 3d solids for each component.
