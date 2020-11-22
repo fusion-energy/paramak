@@ -42,7 +42,7 @@
 FROM continuumio/miniconda3
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
-ARG cq_version=release
+ARG cq_version=2
 ARG include_neutronics=false
 ARG compile_cores=1
 
@@ -56,6 +56,13 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        libgles2-mesa-dev && \
                        apt-get clean
 
+# Installing CadQuery
+# jupyter is installed before cadquery to avoid a conflict
+RUN echo installing CadQuery version $cq_version && \
+    conda install jupyter -y --quiet && \
+    conda install -c cadquery -c conda-forge cadquery="$cq_version" && \
+    conda clean -afy
+
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
     then echo installing with include_neutronics=true ; \
@@ -63,24 +70,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
             wget git gfortran g++ cmake \
             mpich libmpich-dev libhdf5-serial-dev libhdf5-mpich-dev \
             imagemagick ; \
-    fi
-
-# Installing CadQuery release
-RUN if [ "$cq_version" = "release" ] ; \
-    then  echo installing with cq_version=release ; \
-    conda install -c conda-forge -c cadquery cadquery=2 ; \
-    conda install jupyter -y --quiet ; \
-    conda clean -afy ; \
-    fi
-
-# Installing CadQuery master
-# jupyter is installed before cadquery master version to avoid a conflict
-RUN if [ "$cq_version" = "master" ] ; \
-    then echo installing with cq_version=master ; \
-    conda install jupyter -y --quiet ; \
-    conda clean -afy ; \
-    conda install -c cadquery -c conda-forge cadquery="$cq_version" ; \
-    conda clean -afy ; \
     fi
 
 # install addition packages required for MOAB
