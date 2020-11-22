@@ -1,33 +1,42 @@
 # This dockerfile can be built in a few different ways.
-
-# Building using the latest release version of CadQuery (default)
-# Run command from within the base repository directory
+# Docker build commands must be run from within the base repository directory
+#
+# There are build args availalbe for specifying the:
+# - cq_version
+#   The version of CadQuery to use master or 2. 
+#   Default is 2.
+#   Options: [master, 2]
+#
+# - include_neutronics
+#   If software dependencies needed for neutronics simulations should be
+#   included true or false.
+#   Default is false.
+#   Options: [true, false]
+#
+# - compile_cores
+#   The number of CPU cores to compile the image with.
+#   Default is 1.
+#   Options: [1, 2, 3, 4, 5, 6...]
+#
+# Example builds:
+# Building using the defaults (cq_version 2, no neutronics and 1 core compile)
 # docker build -t ukaea/paramak .
-# or using the build arguments
-# docker build -t ukaea/paramak --build-arg cq_version=2 .
-
-# Building using master branch version of CadQuery.
-# Run with the following command for terminal access
-# docker build -t ukaea/paramak --build-arg cq_version=master .
-
-# Building using the latest release version of CadQuery (default) and MOAB.
+#
+# Building to include neutronics dependencies and using 8 cores.
 # Run command from within the base repository directory
-# docker build -t ukaea/paramak --build-arg include_neutronics=true  --build-arg cq_version=master .
+# docker build -t ukaea/paramak --build-arg include_neutronics=true --build-arg compile_cores=8 .
 
-# Building using the master version of CadQuery and MOAB.
-# Run command from within the base repository directory
-# docker build -t ukaea/paramak --build-arg include_neutronics=true --build-arg cq_version=master .
 
-# This dockerfile can be run in a few different ways.
-
-# Run with the following command for a jupyter notebook interface
+# Once build the dockerimage can be run in a few different ways.
+#
+# Run with the following command for a terminal notebook interface
 # docker run -it ukaea/paramak .
-
+#
 # Run with the following command for a jupyter notebook interface
 # docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
 
 
-# test with the folowing command
+# Once built, the docker image can be tested with the following command
 # docker run --rm ukaea/paramak pytest /tests
 
 FROM continuumio/miniconda3
@@ -35,6 +44,7 @@ FROM continuumio/miniconda3
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2
 ARG include_neutronics=false
+ARG compile_cores=1
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
@@ -86,8 +96,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
                 -DBUILD_SHARED_LIBS=OFF \
                 -DENABLE_FORTRAN=OFF \
                 -DCMAKE_INSTALL_PREFIX=/MOAB ; \
-    make -j2 ; \
-    make -j2  install ; \
+    make -j"$compile_cores" ; \
+    make -j"$compile_cores" install ; \
     rm -rf * ; \
     cmake ../moab -DBUILD_SHARED_LIBS=ON \
                 -DENABLE_HDF5=ON \
@@ -95,8 +105,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
                 -DENABLE_BLASLAPACK=OFF \
                 -DENABLE_FORTRAN=OFF \
                 -DCMAKE_INSTALL_PREFIX=/MOAB ; \
-    make -j2  ; \
-    make -j2  install ; \
+    make -j"$compile_cores" ; \
+    make -j"$compile_cores" install ; \
     cd pymoab ; \
     bash install.sh ; \
     python setup.py install ; \
