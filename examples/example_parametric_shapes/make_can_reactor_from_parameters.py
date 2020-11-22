@@ -84,8 +84,8 @@ def main():
             (237.48395, -497.21782, "spline"),
         ]
     )
-    divertor_bottom.stl_filename = "divertor_bottom.stl"
     divertor_bottom.stp_filename = "divertor_bottom.stp"
+    divertor_bottom.stl_filename = "divertor_bottom.stl"
 
     divertor_top = paramak.RotateMixedShape(
         rotation_angle=180,
@@ -103,8 +103,8 @@ def main():
             (237.48395, 497.21782, "spline"),
         ]
     )
-    divertor_top.stl_filename = "divertor_top.stl"
     divertor_top.stp_filename = "divertor_top.stp"
+    divertor_top.stl_filename = "divertor_top.stl"
 
     core = paramak.RotateStraightShape(
         rotation_angle=180,
@@ -115,7 +115,7 @@ def main():
             (0, -687.0)]
     )
     core.stp_filename = "core.stp"
-    core.stl_filename = "core.stp"
+    core.stl_filename = "core.stl"
 
     # initiates a reactor object
     myreactor = paramak.Reactor([plasma,
