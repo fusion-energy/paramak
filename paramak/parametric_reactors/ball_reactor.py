@@ -59,6 +59,8 @@ class BallReactor(paramak.Reactor):
             thickness of the toroidal field coil. Defaults to None.
         outboard_tf_coil_poloidal_thickness (float, optional): the poloidal
             thickness of the toroidal field coil. Defaults to None.
+        divertor_position (str, optional): the position of the divertor,
+            "upper", "lower" or "both". Defaults to "both".
         rotation_angle (float): the angle of the sector that is desired.
             Defaults to 360.0.
     """
@@ -86,6 +88,7 @@ class BallReactor(paramak.Reactor):
             pf_coil_case_thickness=10,
             outboard_tf_coil_radial_thickness=None,
             outboard_tf_coil_poloidal_thickness=None,
+            divertor_position="both",
             rotation_angle=360.0,
     ):
 
@@ -115,6 +118,7 @@ class BallReactor(paramak.Reactor):
             outboard_tf_coil_radial_thickness
         self.outboard_tf_coil_poloidal_thickness = \
             outboard_tf_coil_poloidal_thickness
+        self.divertor_position = divertor_position
 
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
         if self.plasma_gap_vertical_thickness is None:
@@ -169,6 +173,19 @@ class BallReactor(paramak.Reactor):
         if not isinstance(value, list) and value is not None:
             raise ValueError("pf_coil_vertical_thicknesses must be a list")
         self._pf_coil_vertical_thicknesses = value
+
+    @property
+    def divertor_position(self):
+        return self._divertor_position
+
+    @divertor_position.setter
+    def divertor_position(self, value):
+        acceptable_values = ["upper", "lower", "both"]
+        if value in acceptable_values:
+            self._divertor_position = value
+        else:
+            msg = "divertor_position must be 'upper', 'lower' or 'both'"
+            raise ValueError(msg)
 
     def create_solids(self):
         """Creates a 3d solids for each component.
@@ -366,7 +383,7 @@ class BallReactor(paramak.Reactor):
             # extra 0.5 to ensure overlap,
             height=self._center_column_shield_height * 1.5,
             inner_radius=0,
-            outer_radius=self._divertor_end_radius,
+            outer_radius=self._center_column_shield_end_radius,
             rotation_angle=360
         )
 
@@ -426,10 +443,22 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        self._divertor = paramak.CenterColumnShieldCylinder(
-            height=self._blanket_rear_wall_end_height * 2,
-            inner_radius=self._divertor_start_radius,
-            outer_radius=self._divertor_end_radius,
+        divertor_height = self._blanket_rear_wall_end_height*2
+
+        divertor_height_top = divertor_height
+        divertor_height_bottom = -divertor_height
+
+        if self.divertor_position == "lower":
+            divertor_height_top = 0
+        elif self.divertor_position == "upper":
+            divertor_height_bottom = 0
+        self._divertor = paramak.RotateStraightShape(
+            points=[
+                (self._divertor_start_radius, divertor_height_bottom),
+                (self._divertor_end_radius, divertor_height_bottom),
+                (self._divertor_end_radius, divertor_height_top),
+                (self._divertor_start_radius, divertor_height_top)
+            ],
             intersect=self._blanket_fw_rear_wall_envelope,
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
@@ -437,6 +466,9 @@ class BallReactor(paramak.Reactor):
             material_tag="divertor_mat",
             rotation_angle=self.rotation_angle
         )
+
+        for component in [self._firstwall, self._blanket, self._blanket_rear_wall]:
+            component.cut.append(self._divertor)
 
         return self._divertor
 
