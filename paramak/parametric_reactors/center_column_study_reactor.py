@@ -108,9 +108,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
         shapes_and_components.append(self._make_inboard_tf_coils())
         shapes_and_components.append(self._make_center_column_shield())
         shapes_and_components.append(self._make_inboard_firstwall())
-        self._make_outboard_blanket()
+        shapes_and_components.append(self._make_outboard_blanket())
         shapes_and_components.append(self._make_divertor())
-        shapes_and_components.append(self._make_component_cuts())
 
         self.shapes_and_components = shapes_and_components
 
@@ -227,7 +226,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
     def _make_outboard_blanket(self):
 
-        center_column_cutter = paramak.CenterColumnShieldCylinder(
+        self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             height=self._inboard_firstwall_end_height * 2.5,  # extra 0.5 to ensure overlap,
             inner_radius=0,
             outer_radius=self._inboard_firstwall_end_radius,
@@ -246,10 +245,25 @@ class CenterColumnStudyReactor(paramak.Reactor):
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            cut=center_column_cutter
+            cut=[self._center_column_cutter]
         )
+        return self._blanket
 
     def _make_divertor(self):
+        self._blanket_enveloppe = paramak.BlanketFP(
+            plasma=self._plasma,
+            thickness=100.,
+            offset_from_plasma=[
+                self.inner_plasma_gap_radial_thickness,
+                self.plasma_gap_vertical_thickness,
+                self.outer_plasma_gap_radial_thickness,
+                self.plasma_gap_vertical_thickness,
+                self.inner_plasma_gap_radial_thickness],
+            start_angle=-180,
+            stop_angle=180,
+            rotation_angle=self.rotation_angle,
+            cut=[self._center_column_cutter]
+        )
 
         self._divertor = paramak.CenterColumnShieldCylinder(
             height=self._center_column_shield_end_height *
@@ -261,12 +275,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             stl_filename="divertor.stl",
             name="divertor",
             material_tag="divertor_mat",
-            intersect=self._blanket,
+            intersect=self._blanket_enveloppe,
         )
+        self._blanket.cut.append(self._divertor)
         return self._divertor
-
-    def _make_component_cuts(self):
-
-        # the divertor is cut away then the blanket can be added to the
-        self._blanket.solid = self._blanket.solid.cut(self._divertor.solid)
-        return self._blanket
