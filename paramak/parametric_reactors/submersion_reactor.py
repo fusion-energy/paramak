@@ -60,6 +60,10 @@ class SubmersionTokamak(paramak.Reactor):
         pf_coil_to_tf_coil_radial_gap (float, optional): the radial distance
             between the rear of the poloidal field coil and the toroidal field
             coil. Defaults to None.
+        divertor_position (str, optional): the position of the divertor,
+            "upper", "lower" or "both". Defaults to "both".
+        support_position (str, optional): the position of the supports,
+            "upper", "lower" or "both". Defaults to "both".
     """
 
     def __init__(
@@ -87,6 +91,8 @@ class SubmersionTokamak(paramak.Reactor):
         pf_coil_radial_thicknesses=None,
         pf_coil_to_tf_coil_radial_gap=None,
         pf_coil_case_thickness=10,
+        divertor_position="both",
+        support_position="both",
     ):
 
         super().__init__([])
@@ -116,7 +122,8 @@ class SubmersionTokamak(paramak.Reactor):
         self.pf_coil_case_thickness = pf_coil_case_thickness
         self.number_of_tf_coils = number_of_tf_coils
         self.rotation_angle = rotation_angle
-
+        self.divertor_position = divertor_position
+        self.support_position = support_position
         # sets major radius and minor radius from equatorial_points to allow a
         # radial build this helps avoid the plasma overlapping the center
         # column and other components
@@ -154,6 +161,30 @@ class SubmersionTokamak(paramak.Reactor):
         if not isinstance(value, list) and value is not None:
             raise ValueError("pf_coil_vertical_thicknesses must be a list")
         self._pf_coil_vertical_thicknesses = value
+
+    @property
+    def divertor_position(self):
+        return self._divertor_position
+
+    @divertor_position.setter
+    def divertor_position(self, value):
+        acceptable_values = ["upper", "lower", "both"]
+        if value in acceptable_values:
+            self._divertor_position = value
+        else:
+            raise ValueError("divertor position must be 'upper', 'lower' or 'both'")
+
+    @property
+    def support_position(self):
+        return self._support_position
+
+    @support_position.setter
+    def support_position(self, value):
+        acceptable_values = ["upper", "lower", "both"]
+        if value in acceptable_values:
+            self._support_position = value
+        else:
+            raise ValueError("support position must be 'upper', 'lower' or 'both'")
 
     def create_solids(self):
         """Creates a 3d solids for each component.
@@ -433,16 +464,29 @@ class SubmersionTokamak(paramak.Reactor):
 
     def _make_divertor(self):
 
-        self._divertor = paramak.CenterColumnShieldCylinder(
-            height=self._blanket_rear_wall_end_height * 2,
-            inner_radius=self._divertor_start_radius,
-            outer_radius=self._divertor_end_radius,
+        divertor_height = self._blanket_rear_wall_end_height
+
+        divertor_height_top = divertor_height
+        divertor_height_bottom = -divertor_height
+
+        if self.divertor_position == "lower":
+            divertor_height_top = 0
+        elif self.divertor_position == "upper":
+            divertor_height_bottom = 0
+
+        self._divertor = paramak.RotateStraightShape(
+            points=[
+                (self._divertor_start_radius, divertor_height_bottom),
+                (self._divertor_end_radius, divertor_height_bottom),
+                (self._divertor_end_radius, divertor_height_top),
+                (self._divertor_start_radius, divertor_height_top)
+            ],
+            intersect=self._firstwall,
             rotation_angle=self.rotation_angle,
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
             name="divertor",
-            material_tag="divertor_mat",
-            intersect=self._firstwall,
+            material_tag="divertor_mat"
         )
         return self._divertor
 
@@ -466,11 +510,22 @@ class SubmersionTokamak(paramak.Reactor):
         )
 
     def _make_supports(self):
+        support_height = self._blanket_rear_wall_end_height
+        support_height_top = support_height
+        support_height_bottom = -support_height
 
-        self._supports = paramak.CenterColumnShieldCylinder(
-            height=self._blanket_rear_wall_end_height * 2,
-            inner_radius=self._support_start_radius,
-            outer_radius=self._support_end_radius,
+        if self.support_position == "lower":
+            support_height_top = 0
+        elif self.support_position == "upper":
+            support_height_bottom = 0
+
+        self._supports = paramak.RotateStraightShape(
+            points=[
+                (self._support_start_radius, support_height_bottom),
+                (self._support_end_radius, support_height_bottom),
+                (self._support_end_radius, support_height_top),
+                (self._support_start_radius, support_height_top)
+            ],
             rotation_angle=self.rotation_angle,
             stp_filename="supports.stp",
             stl_filename="supports.stl",
