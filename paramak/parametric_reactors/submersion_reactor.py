@@ -213,6 +213,7 @@ class SubmersionTokamak(paramak.Reactor):
         shapes_and_components.append(self._make_divertor())
         self._make_outboard_blanket()
         shapes_and_components.append(self._make_supports())
+        shapes_and_components.append(self._make_rear_blanket_wall())
         shapes_and_components += self._make_component_cuts()
 
         self.shapes_and_components = shapes_and_components
@@ -573,19 +574,8 @@ class SubmersionTokamak(paramak.Reactor):
         )
         return self._supports
 
-    def _make_component_cuts(self):
-        list_of_components = []
-        # the divertor is cut away then the firstwall can be added to the
-        # reactor using CQ operations
-        self._firstwall.cut = self._divertor
-        self._inboard_firstwall.cut = self._divertor
-        list_of_components.append(self._firstwall)
-
-        # cutting the supports away from the blanket
-        self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
-        list_of_components.append(self._blanket)
-
-        self._outboard_rear_blanket_wall_upper = paramak.RotateStraightShape(
+    def _make_rear_blanket_wall(self):
+        outboard_rear_blanket_wall_upper = paramak.RotateStraightShape(
             points=[
                 (
                     self._center_column_shield_end_radius,
@@ -607,7 +597,7 @@ class SubmersionTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        self._outboard_rear_blanket_wall_lower = paramak.RotateStraightShape(
+        outboard_rear_blanket_wall_lower = paramak.RotateStraightShape(
             points=[
                 (
                     self._center_column_shield_end_radius,
@@ -643,11 +633,23 @@ class SubmersionTokamak(paramak.Reactor):
             name="outboard_rear_blanket_wall",
             material_tag="blanket_rear_wall_mat",
             union=[
-                self._outboard_rear_blanket_wall_upper,
-                self._outboard_rear_blanket_wall_lower],
+                outboard_rear_blanket_wall_upper,
+                outboard_rear_blanket_wall_lower],
         )
 
-        list_of_components.append(self._outboard_rear_blanket_wall)
+        return self._outboard_rear_blanket_wall
+
+    def _make_component_cuts(self):
+        list_of_components = []
+        # the divertor is cut away then the firstwall can be added to the
+        # reactor using CQ operations
+        self._firstwall.cut = self._divertor
+        self._inboard_firstwall.cut = self._divertor
+        list_of_components.append(self._firstwall)
+
+        # cutting the supports away from the blanket
+        self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
+        list_of_components.append(self._blanket)
 
         if self._tf_info_provided:
             self._tf_coil = paramak.ToroidalFieldCoilCoatHanger(
