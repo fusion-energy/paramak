@@ -568,11 +568,11 @@ class SubmersionTokamak(paramak.Reactor):
                 (
                     self._center_column_shield_end_radius,
                     self._blanket_rear_wall_start_height
-                    ),
+                ),
                 (
                     self._center_column_shield_end_radius,
                     self._blanket_rear_wall_end_height
-                    ),
+                ),
                 (
                     max(self._inboard_firstwall.points)[0],
                     self._blanket_rear_wall_end_height,
@@ -590,11 +590,11 @@ class SubmersionTokamak(paramak.Reactor):
                 (
                     self._center_column_shield_end_radius,
                     -self._blanket_rear_wall_start_height
-                    ),
+                ),
                 (
                     self._center_column_shield_end_radius,
                     -self._blanket_rear_wall_end_height
-                    ),
+                ),
                 (
                     max(self._inboard_firstwall.points)[0],
                     -self._blanket_rear_wall_end_height,
