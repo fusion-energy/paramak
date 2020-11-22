@@ -2,7 +2,7 @@
 This python script demonstrates the creation of a breeder blanket from points
 """
 
-from paramak
+import paramak
 
 
 def main(filename="blanket_from_points.stp"):

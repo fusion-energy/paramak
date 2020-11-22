@@ -31,6 +31,7 @@ def main():
         ]
     )
     centre_column.stp_filename = "centre_column.stp"
+    centre_column.stl_filename = "centre_column.stl"
 
     blanket = paramak.RotateMixedShape(
         rotation_angle=180,
@@ -45,6 +46,7 @@ def main():
         ]
     )
     blanket.stp_filename = "blanket.stp"
+    blanket.stl_filename = "blanket.stl"
 
     firstwall = paramak.RotateMixedShape(
         rotation_angle=180,
@@ -62,6 +64,7 @@ def main():
         ]
     )
     firstwall.stp_filename = "firstwall.stp"
+    firstwall.stl_filename = "firstwall.stl"
 
     divertor_bottom = paramak.RotateMixedShape(
         rotation_angle=180,
@@ -80,6 +83,7 @@ def main():
         ]
     )
     divertor_bottom.stp_filename = "divertor_bottom.stp"
+    divertor_bottom.stl_filename = "divertor_bottom.stl"
 
     divertor_top = paramak.RotateMixedShape(
         rotation_angle=180,
@@ -98,12 +102,14 @@ def main():
         ]
     )
     divertor_top.stp_filename = "divertor_top.stp"
+    divertor_top.stl_filename = "divertor_top.stl"
 
     core = paramak.RotateStraightShape(
         rotation_angle=180,
         points=[(0, 687.0), (74.6, 687.0), (74.6, -687.0), (0, -687.0)]
     )
     core.stp_filename = "core.stp"
+    core.stl_filename = "core.stl"
 
     myreactor = paramak.Reactor([plasma,
                                  blanket,
