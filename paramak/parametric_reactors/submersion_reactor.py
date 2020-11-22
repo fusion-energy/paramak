@@ -480,7 +480,28 @@ class SubmersionTokamak(paramak.Reactor):
         )
 
     def _make_divertor(self):
+        fw_enveloppe_inboard = paramak.BlanketFP(
+            plasma=self._plasma,
+            offset_from_plasma=self.inner_plasma_gap_radial_thickness,
+            start_angle=-90,
+            stop_angle=90,
+            thickness=self.firstwall_radial_thickness,
+            rotation_angle=self.rotation_angle,
+        )
 
+        fw_enveloppe = paramak.BlanketFP(
+            plasma=self._plasma,
+            offset_from_plasma=self.outer_plasma_gap_radial_thickness,
+            start_angle=90,
+            stop_angle=-90,
+            thickness=self.firstwall_radial_thickness,
+            rotation_angle=self.rotation_angle,
+            stp_filename="outboard_firstwall.stp",
+            stl_filename="outboard_firstwall.stl",
+            name="outboard_firstwall",
+            material_tag="firstwall_mat",
+            union=fw_enveloppe_inboard,
+        )
         divertor_height = self._blanket_rear_wall_end_height
 
         divertor_height_top = divertor_height
@@ -498,7 +519,7 @@ class SubmersionTokamak(paramak.Reactor):
                 (self._divertor_end_radius, divertor_height_top),
                 (self._divertor_start_radius, divertor_height_top)
             ],
-            intersect=self._firstwall,
+            intersect=fw_enveloppe,
             rotation_angle=self.rotation_angle,
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
@@ -556,7 +577,8 @@ class SubmersionTokamak(paramak.Reactor):
         list_of_components = []
         # the divertor is cut away then the firstwall can be added to the
         # reactor using CQ operations
-        self._firstwall.solid = self._firstwall.solid.cut(self._divertor.solid)
+        self._firstwall.cut = self._divertor
+        self._inboard_firstwall.cut = self._divertor
         list_of_components.append(self._firstwall)
 
         # cutting the supports away from the blanket
