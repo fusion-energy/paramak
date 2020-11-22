@@ -102,22 +102,30 @@ class SubmersionTokamak(paramak.Reactor):
         self.center_column_shield_radial_thickness = (
             center_column_shield_radial_thickness
         )
-        self.inboard_blanket_radial_thickness = inboard_blanket_radial_thickness
+        self.inboard_blanket_radial_thickness = \
+            inboard_blanket_radial_thickness
         self.firstwall_radial_thickness = firstwall_radial_thickness
-        self.inner_plasma_gap_radial_thickness = inner_plasma_gap_radial_thickness
+        self.inner_plasma_gap_radial_thickness = \
+            inner_plasma_gap_radial_thickness
         self.plasma_radial_thickness = plasma_radial_thickness
-        self.outer_plasma_gap_radial_thickness = outer_plasma_gap_radial_thickness
-        self.outboard_blanket_radial_thickness = outboard_blanket_radial_thickness
-        self.blanket_rear_wall_radial_thickness = blanket_rear_wall_radial_thickness
+        self.outer_plasma_gap_radial_thickness = \
+            outer_plasma_gap_radial_thickness
+        self.outboard_blanket_radial_thickness = \
+            outboard_blanket_radial_thickness
+        self.blanket_rear_wall_radial_thickness = \
+            blanket_rear_wall_radial_thickness
         self.pf_coil_radial_thicknesses = pf_coil_radial_thicknesses
         self.pf_coil_to_tf_coil_radial_gap = pf_coil_to_tf_coil_radial_gap
-        self.outboard_tf_coil_radial_thickness = outboard_tf_coil_radial_thickness
-        self.outboard_tf_coil_poloidal_thickness = outboard_tf_coil_poloidal_thickness
+        self.outboard_tf_coil_radial_thickness = \
+            outboard_tf_coil_radial_thickness
+        self.outboard_tf_coil_poloidal_thickness = \
+            outboard_tf_coil_poloidal_thickness
         self.divertor_radial_thickness = divertor_radial_thickness
         self.support_radial_thickness = support_radial_thickness
         self.elongation = elongation
         self.triangularity = triangularity
-        self.tf_coil_to_rear_blanket_radial_gap = tf_coil_to_rear_blanket_radial_gap
+        self.tf_coil_to_rear_blanket_radial_gap = \
+            tf_coil_to_rear_blanket_radial_gap
         self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
         self.pf_coil_case_thickness = pf_coil_case_thickness
         self.number_of_tf_coils = number_of_tf_coils
@@ -189,11 +197,8 @@ class SubmersionTokamak(paramak.Reactor):
             raise ValueError(msg)
 
     def create_solids(self):
-        """Creates a 3d solids for each component.
-
-           Returns:
-              A list of CadQuery solids: A list of 3D solid volumes
-
+        """Creates a list of paramak.Shape for components and saves it in
+        self.shapes_and_components
         """
 
         shapes_and_components = []
@@ -215,9 +220,9 @@ class SubmersionTokamak(paramak.Reactor):
     def _rotation_angle_check(self):
 
         if self.rotation_angle == 360:
-            warnings.warn(
-                "360 degree rotation may result in a Standard_ConstructionError or AttributeError",
-                UserWarning)
+            msg = "360 degree rotation may result" + \
+                " in a Standard_ConstructionError or AttributeError"
+            warnings.warn(msg, UserWarning)
 
     def _make_radial_build(self):
 
@@ -234,13 +239,15 @@ class SubmersionTokamak(paramak.Reactor):
             self._inboard_tf_coils_start_radius +
             self.inboard_tf_leg_radial_thickness)
 
-        self._center_column_shield_start_radius = self._inboard_tf_coils_end_radius
+        self._center_column_shield_start_radius = \
+            self._inboard_tf_coils_end_radius
         self._center_column_shield_end_radius = (
             self._center_column_shield_start_radius
             + self.center_column_shield_radial_thickness
         )
 
-        self._inboard_blanket_start_radius = self._center_column_shield_end_radius
+        self._inboard_blanket_start_radius = \
+            self._center_column_shield_end_radius
         self._inboard_blanket_end_radius = (
             self._inboard_blanket_start_radius +
             self.inboard_blanket_radial_thickness)
@@ -250,30 +257,36 @@ class SubmersionTokamak(paramak.Reactor):
             self._inboard_firstwall_start_radius +
             self.firstwall_radial_thickness)
 
-        self._inner_plasma_gap_start_radius = self._inboard_firstwall_end_radius
+        self._inner_plasma_gap_start_radius = \
+            self._inboard_firstwall_end_radius
         self._inner_plasma_gap_end_radius = (
             self._inner_plasma_gap_start_radius +
             self.inner_plasma_gap_radial_thickness)
 
         self._plasma_start_radius = self._inner_plasma_gap_end_radius
-        self._plasma_end_radius = self._plasma_start_radius + self.plasma_radial_thickness
+        self._plasma_end_radius = \
+            self._plasma_start_radius + \
+            self.plasma_radial_thickness
 
         self._outer_plasma_gap_start_radius = self._plasma_end_radius
         self._outer_plasma_gap_end_radius = (
             self._outer_plasma_gap_start_radius +
             self.outer_plasma_gap_radial_thickness)
 
-        self._outboard_firstwall_start_radius = self._outer_plasma_gap_end_radius
+        self._outboard_firstwall_start_radius = \
+            self._outer_plasma_gap_end_radius
         self._outboard_firstwall_end_radius = (
             self._outboard_firstwall_start_radius +
             self.firstwall_radial_thickness)
 
-        self._outboard_blanket_start_radius = self._outboard_firstwall_end_radius
+        self._outboard_blanket_start_radius = \
+            self._outboard_firstwall_end_radius
         self._outboard_blanket_end_radius = (
             self._outboard_blanket_start_radius +
             self.outboard_blanket_radial_thickness)
 
-        self._blanket_rear_wall_start_radius = self._outboard_blanket_end_radius
+        self._blanket_rear_wall_start_radius = \
+            self._outboard_blanket_end_radius
         self._blanket_rear_wall_end_radius = (
             self._blanket_rear_wall_start_radius +
             self.blanket_rear_wall_radial_thickness)
@@ -343,8 +356,10 @@ class SubmersionTokamak(paramak.Reactor):
             self.blanket_rear_wall_radial_thickness)
 
         if self._tf_info_provided:
-            self._outboard_tf_coils_vertical_height = self._blanket_rear_wall_end_height * 1.5
-            self._outboard_tf_coils_horizontal_length = self._blanket_rear_wall_end_radius * 0.75
+            self._outboard_tf_coils_vertical_height = \
+                self._blanket_rear_wall_end_height * 1.5
+            self._outboard_tf_coils_horizontal_length = \
+                self._blanket_rear_wall_end_radius * 0.75
 
         if self._tf_info_provided and self._pf_info_provided:
             self._number_of_pf_coils = len(self.pf_coil_vertical_thicknesses)
@@ -439,7 +454,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._inboard_blanket = paramak.CenterColumnShieldCylinder(
             height=self._blanket_end_height * 2,
             inner_radius=self._inboard_blanket_start_radius,
-            outer_radius=max([item[0] for item in self._inboard_firstwall.points]),
+            outer_radius=max(self._inboard_firstwall.points)[0],
             rotation_angle=self.rotation_angle,
             cut=self._inboard_firstwall,
         )
@@ -550,14 +565,20 @@ class SubmersionTokamak(paramak.Reactor):
 
         self._outboard_rear_blanket_wall_upper = paramak.RotateStraightShape(
             points=[
-                (self._center_column_shield_end_radius, self._blanket_rear_wall_start_height),
-                (self._center_column_shield_end_radius, self._blanket_rear_wall_end_height),
                 (
-                    max([item[0] for item in self._inboard_firstwall.points]),
+                    self._center_column_shield_end_radius,
+                    self._blanket_rear_wall_start_height
+                    ),
+                (
+                    self._center_column_shield_end_radius,
+                    self._blanket_rear_wall_end_height
+                    ),
+                (
+                    max(self._inboard_firstwall.points)[0],
                     self._blanket_rear_wall_end_height,
                 ),
                 (
-                    max([item[0] for item in self._inboard_firstwall.points]),
+                    max(self._inboard_firstwall.points)[0],
                     self._blanket_rear_wall_start_height,
                 ),
             ],
@@ -566,14 +587,20 @@ class SubmersionTokamak(paramak.Reactor):
 
         self._outboard_rear_blanket_wall_lower = paramak.RotateStraightShape(
             points=[
-                (self._center_column_shield_end_radius, -self._blanket_rear_wall_start_height),
-                (self._center_column_shield_end_radius, -self._blanket_rear_wall_end_height),
                 (
-                    max([item[0] for item in self._inboard_firstwall.points]),
+                    self._center_column_shield_end_radius,
+                    -self._blanket_rear_wall_start_height
+                    ),
+                (
+                    self._center_column_shield_end_radius,
+                    -self._blanket_rear_wall_end_height
+                    ),
+                (
+                    max(self._inboard_firstwall.points)[0],
                     -self._blanket_rear_wall_end_height,
                 ),
                 (
-                    max([item[0] for item in self._inboard_firstwall.points]),
+                    max(self._inboard_firstwall.points)[0],
                     -self._blanket_rear_wall_start_height,
                 ),
             ],
@@ -627,6 +654,7 @@ class SubmersionTokamak(paramak.Reactor):
                     center_points=self._pf_coils_xy_values,
                     rotation_angle=self.rotation_angle,
                     stp_filename='pf_coils.stp',
+                    stl_filename='pf_coils.stl',
                     name="pf_coil",
                     material_tag="pf_coil_mat",
                 )

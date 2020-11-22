@@ -188,11 +188,8 @@ class BallReactor(paramak.Reactor):
             raise ValueError(msg)
 
     def create_solids(self):
-        """Creates a 3d solids for each component.
-
-           Returns:
-              A list of CadQuery solids: A list of 3D solid volumes
-
+        """Creates a list of paramak.Shape for components and saves it in
+        self.shapes_and_components
         """
         shapes_and_components = []
 

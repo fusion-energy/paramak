@@ -63,15 +63,21 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
-        self.center_column_shield_radial_thickness_mid = center_column_shield_radial_thickness_mid
-        self.center_column_shield_radial_thickness_upper = center_column_shield_radial_thickness_upper
-        self.inboard_firstwall_radial_thickness = inboard_firstwall_radial_thickness
+        self.center_column_shield_radial_thickness_mid = \
+            center_column_shield_radial_thickness_mid
+        self.center_column_shield_radial_thickness_upper = \
+            center_column_shield_radial_thickness_upper
+        self.inboard_firstwall_radial_thickness = \
+            inboard_firstwall_radial_thickness
         self.divertor_radial_thickness = divertor_radial_thickness
-        self.inner_plasma_gap_radial_thickness = inner_plasma_gap_radial_thickness
+        self.inner_plasma_gap_radial_thickness = \
+            inner_plasma_gap_radial_thickness
         self.plasma_radial_thickness = plasma_radial_thickness
-        self.outer_plasma_gap_radial_thickness = outer_plasma_gap_radial_thickness
+        self.outer_plasma_gap_radial_thickness = \
+            outer_plasma_gap_radial_thickness
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
-        self.center_column_arc_vertical_thickness = center_column_arc_vertical_thickness
+        self.center_column_arc_vertical_thickness = \
+            center_column_arc_vertical_thickness
         self.rotation_angle = rotation_angle
         self.elongation = elongation
         self.triangularity = triangularity
@@ -143,38 +149,50 @@ class CenterColumnStudyReactor(paramak.Reactor):
             self.inner_bore_radial_thickness
 
         self._inboard_tf_coils_start_radius = self._inner_bore_end_radius
-        self._inboard_tf_coils_end_radius = self._inboard_tf_coils_start_radius + \
+        self._inboard_tf_coils_end_radius = \
+            self._inboard_tf_coils_start_radius + \
             self.inboard_tf_leg_radial_thickness
 
-        self._center_column_shield_start_radius = self._inboard_tf_coils_end_radius
-        self._center_column_shield_end_radius_upper = self._center_column_shield_start_radius + \
+        self._center_column_shield_start_radius = \
+            self._inboard_tf_coils_end_radius
+        self._center_column_shield_end_radius_upper = \
+            self._center_column_shield_start_radius + \
             self.center_column_shield_radial_thickness_upper
-        self._center_column_shield_end_radius_mid = self._center_column_shield_start_radius + \
+        self._center_column_shield_end_radius_mid = \
+            self._center_column_shield_start_radius + \
             self.center_column_shield_radial_thickness_mid
 
-        self._inboard_firstwall_start_radius = self._center_column_shield_end_radius_upper
-        self._inboard_firstwall_end_radius = self._inboard_firstwall_start_radius + \
+        self._inboard_firstwall_start_radius = \
+            self._center_column_shield_end_radius_upper
+        self._inboard_firstwall_end_radius = \
+            self._inboard_firstwall_start_radius + \
             self.inboard_firstwall_radial_thickness
 
         self._divertor_start_radius = self._inboard_firstwall_end_radius
         self._divertor_end_radius = self._divertor_start_radius + \
             self.divertor_radial_thickness
 
-        self._inner_plasma_gap_start_radius = self._center_column_shield_end_radius_mid + \
+        self._inner_plasma_gap_start_radius = \
+            self._center_column_shield_end_radius_mid + \
             self.inboard_firstwall_radial_thickness
 
-        self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + \
+        self._inner_plasma_gap_end_radius = \
+            self._inner_plasma_gap_start_radius + \
             self.inner_plasma_gap_radial_thickness
 
         self._plasma_start_radius = self._inner_plasma_gap_end_radius
-        self._plasma_end_radius = self._plasma_start_radius + self.plasma_radial_thickness
+        self._plasma_end_radius = \
+            self._plasma_start_radius + \
+            self.plasma_radial_thickness
 
         self._outer_plasma_gap_start_radius = self._plasma_end_radius
-        self._outer_plasma_gap_end_radius = self._outer_plasma_gap_start_radius + \
+        self._outer_plasma_gap_end_radius = \
+            self._outer_plasma_gap_start_radius + \
             self.outer_plasma_gap_radial_thickness
 
         self._outboard_blanket_start_radius = self._outer_plasma_gap_end_radius
-        self._outboard_blanket_end_radius = self._outboard_blanket_start_radius + 100.
+        self._outboard_blanket_end_radius = \
+            self._outboard_blanket_start_radius + 100.
 
     def _make_vertical_build(self):
 
@@ -182,7 +200,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
         # a similar manner to the radial build
 
         self._plasma_to_blanket_gap_start_height = self._plasma.high_point[1]
-        self._plasma_to_blanket_gap_end_height = self._plasma_to_blanket_gap_start_height + \
+        self._plasma_to_blanket_gap_end_height = \
+            self._plasma_to_blanket_gap_start_height + \
             self.plasma_gap_vertical_thickness
 
         self._blanket_start_height = self._plasma_to_blanket_gap_end_height
@@ -207,13 +226,14 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
     def _make_center_column_shield(self):
 
-        self._center_column_shield = paramak.CenterColumnShieldFlatTopHyperbola(
-            height=self._center_column_shield_end_height * 2.,
-            arc_height=self.center_column_arc_vertical_thickness,
-            inner_radius=self._center_column_shield_start_radius,
-            mid_radius=self._center_column_shield_end_radius_mid,
-            outer_radius=self._center_column_shield_end_radius_upper,
-            rotation_angle=self.rotation_angle)
+        self._center_column_shield = \
+            paramak.CenterColumnShieldFlatTopHyperbola(
+                height=self._center_column_shield_end_height * 2.,
+                arc_height=self.center_column_arc_vertical_thickness,
+                inner_radius=self._center_column_shield_start_radius,
+                mid_radius=self._center_column_shield_end_radius_mid,
+                outer_radius=self._center_column_shield_end_radius_upper,
+                rotation_angle=self.rotation_angle)
         return self._center_column_shield
 
     def _make_inboard_firstwall(self):
@@ -227,7 +247,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
     def _make_outboard_blanket(self):
 
         self._center_column_cutter = paramak.CenterColumnShieldCylinder(
-            height=self._inboard_firstwall_end_height * 2.5,  # extra 0.5 to ensure overlap,
+            # extra 1.5 to ensure overlap,
+            height=self._inboard_firstwall_end_height * 2.5,
             inner_radius=0,
             outer_radius=self._inboard_firstwall_end_radius,
             rotation_angle=self.rotation_angle
