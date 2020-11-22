@@ -38,7 +38,7 @@ def main():
     # this makes a shape with straight, spline and circular edges and rotates
     # it to make a solid
     rotated_mixed = paramak.RotateMixedShape(
-        rotation_angle=180
+        rotation_angle=180,
         points=[
             (100, 0, "straight"),
             (200, 0, "circle"),
