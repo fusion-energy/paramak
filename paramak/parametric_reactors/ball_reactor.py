@@ -116,12 +116,10 @@ class BallReactor(paramak.Reactor):
         self.outboard_tf_coil_poloidal_thickness = \
             outboard_tf_coil_poloidal_thickness
 
-        if plasma_gap_vertical_thickness is None:
+        self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
+        if self.plasma_gap_vertical_thickness is None:
             self.plasma_gap_vertical_thickness = \
                 self.outer_plasma_gap_radial_thickness
-        else:
-            self.plasma_gap_vertical_thickness = \
-                plasma_gap_vertical_thickness
         # sets major radius and minor radius from equatorial_points to allow a
         # radial build
         # this helps avoid the plasma overlapping the center column and other
