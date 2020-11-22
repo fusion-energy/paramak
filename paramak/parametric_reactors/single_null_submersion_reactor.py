@@ -9,10 +9,8 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
     reactor.
 
     Arguments:
-        divertor_position (str): the position of the divertor, "upper", or
-            "lower". Defaults to "upper".
-        support_position (str): the position of the supports, "upper" or
-            "lower". Defaults to "upper".
+        divertor_position (str): Defaults to "upper".
+        support_position (str): Defaults to "upper".
     """
 
     def __init__(

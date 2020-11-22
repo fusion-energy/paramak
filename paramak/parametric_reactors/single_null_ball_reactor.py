@@ -9,7 +9,7 @@ class SingleNullBallReactor(paramak.BallReactor):
     most spherical reactors.
 
     Arguments:
-
+        divertor_position (str): Defaults to "upper".
     """
 
     def __init__(
@@ -17,7 +17,5 @@ class SingleNullBallReactor(paramak.BallReactor):
         divertor_position="upper",
         **kwargs
     ):
-
-        self.divertor_position = divertor_position
 
         super().__init__(divertor_position=divertor_position, **kwargs)
