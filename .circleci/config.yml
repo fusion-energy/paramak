@@ -83,6 +83,9 @@ jobs:
       IMAGE_NAME: openmcworkshop/paramak
     docker:
       - image: circleci/buildpack-deps:stretch
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_TOKEN
     steps:
       - checkout
       - setup_remote_docker
@@ -92,13 +95,15 @@ jobs:
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
-            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME
   build-deploy-dev:
     environment:
       IMAGE_NAME: openmcworkshop/paramak
     docker:
       - image: circleci/buildpack-deps:stretch
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_TOKEN
     steps:
       - checkout
       - setup_remote_docker
@@ -108,7 +113,6 @@ jobs:
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
-            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:dev
 
 workflows:
