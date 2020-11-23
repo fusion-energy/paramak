@@ -4,7 +4,8 @@
 
 version: 2
 jobs:
-  test:
+  # test:
+  build:
     docker:
       - image: openmcworkshop/paramak:dependencies_cq_master
     steps:
@@ -78,57 +79,60 @@ jobs:
           path: test-reports
 
       - run: bash <(curl -s https://codecov.io/bash)
-  build-deploy-master:
-    environment:
-      IMAGE_NAME: openmcworkshop/paramak
-    docker:
-      - image: circleci/buildpack-deps:stretch
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_TOKEN
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build Docker image
-          command: docker build -t $IMAGE_NAME .
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            docker push $IMAGE_NAME
-  build-deploy-dev:
-    environment:
-      IMAGE_NAME: openmcworkshop/paramak
-    docker:
-      - image: circleci/buildpack-deps:stretch
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_TOKEN
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build Docker image
-          command: docker build -t $IMAGE_NAME:dev .
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            docker push $IMAGE_NAME:dev
+  # the following jobs fail on the publish to Dockerhub step. This may be due to a bad authentification
+  # build-deploy-master:
+  #   environment:
+  #     IMAGE_NAME: openmcworkshop/paramak
+  #   docker:
+  #     - image: circleci/buildpack-deps:stretch
+  #       auth:
+  #         username: $DOCKERHUB_USERNAME
+  #         password: $DOCKERHUB_TOKEN
+  #   steps:
+  #     - checkout
+  #     - setup_remote_docker
+  #     - run:
+  #         name: Build Docker image
+  #         command: docker build -t $IMAGE_NAME .
+  #     - run:
+  #         name: Publish Docker Image to Docker Hub
+  #         command: |
+  #           docker login
+  #           docker push $IMAGE_NAME
+  # build-deploy-dev:
+  #   environment:
+  #     IMAGE_NAME: openmcworkshop/paramak
+  #   docker:
+  #     - image: circleci/buildpack-deps:stretch
+  #       auth:
+  #         username: $DOCKERHUB_USERNAME
+  #         password: $DOCKERHUB_TOKEN
+  #   steps:
+  #     - checkout
+  #     - setup_remote_docker
+  #     - run:
+  #         name: Build Docker image
+  #         command: docker build -t $IMAGE_NAME:dev .
+  #     - run:
+  #         name: Publish Docker Image to Docker Hub
+  #         command: |
+  #           docker push $IMAGE_NAME:dev
 
 workflows:
   version: 2
   test-build-deploy:
     jobs:
-      - test
-      - build-deploy-master:
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
-      - build-deploy-dev:
-          requires:
-            - test
-          filters:
-            branches:
-              only: develop
+      - build
+      # - test
+      # - build-deploy-master:
+      #     requires:
+      #       - test
+      #     filters:
+      #       branches:
+      #         only: master
+      # - build-deploy-dev:
+      #     requires:
+      #       - test
+      #     filters:
+      #       branches:
+      #         only: develop
