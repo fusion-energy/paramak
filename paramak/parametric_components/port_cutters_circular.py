@@ -24,6 +24,7 @@ class PortCutterCircular(ExtrudeCircleShape):
         distance,
         workplane="ZY",
         rotation_axis="Z",
+        extrusion_start_offset=1,
         stp_filename="PortCutterCircular.stp",
         stl_filename="PortCutterCircular.stl",
         name="circular_port_cutter",
@@ -33,6 +34,7 @@ class PortCutterCircular(ExtrudeCircleShape):
         super().__init__(
             workplane=workplane,
             rotation_axis=rotation_axis,
+            extrusion_start_offset=extrusion_start_offset,
             radius=radius,
             extrude_both=False,
             name=name,

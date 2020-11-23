@@ -28,6 +28,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
         distance,
         workplane="ZY",
         rotation_axis="Z",
+        extrusion_start_offset=1,
         fillet_radius=None,
         stp_filename="PortCutterRectangular.stp",
         stl_filename="PortCutterRectangular.stl",
@@ -39,6 +40,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
         super().__init__(
             workplane=workplane,
             rotation_axis=rotation_axis,
+            extrusion_start_offset=extrusion_start_offset,
             extrude_both=False,
             name=name,
             material_tag=material_tag,
