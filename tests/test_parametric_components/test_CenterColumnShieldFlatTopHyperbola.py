@@ -33,18 +33,25 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
         """Checks that the correct errors are raised when invalid arguments are input as
         shape parameters."""
 
-        def incorrect_radii():
-            self.test_shape.inner_radius = 200
-            self.test_shape.mid_radius = 100
-            self.test_shape.outer_radius = 150
+        def incorrect_inner_radius():
+            self.test_shape.inner_radius = 180
+            self.test_shape.solid
+
+        def incorrect_mid_radius():
+            self.test_shape.mid_radius = 80
+            self.test_shape.solid
+
+        def incorrect_outer_radius():
+            self.test_shape.outer_radius = 130
             self.test_shape.solid
 
         def incorrect_arc_height():
-            self.test_shape.height = 600
             self.test_shape.arc_height = 700
             self.test_shape.solid
 
-        self.assertRaises(ValueError, incorrect_radii)
+        self.assertRaises(ValueError, incorrect_inner_radius)
+        self.assertRaises(ValueError, incorrect_mid_radius)
+        self.assertRaises(ValueError, incorrect_outer_radius)
         self.assertRaises(ValueError, incorrect_arc_height)
 
     def test_CenterColumnShieldFlatTopHyperbola_faces(self):
