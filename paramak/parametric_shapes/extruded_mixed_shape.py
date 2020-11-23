@@ -25,7 +25,7 @@ class ExtrudeMixedShape(Shape):
         distance,
         extrude_both=True,
         rotation_angle=360.0,
-        extrusion_start_offset=1,
+        extrusion_start_offset=0.0,
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
         **kwargs
