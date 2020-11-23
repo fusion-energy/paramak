@@ -11,6 +11,18 @@ class test_BlanketCutterParallels(unittest.TestCase):
             thickness=50,
             gap_size=200
         )
+
+    def test_default_parameters(self):
+        """Checks that the default parameters of a BlanketCutterParallel are correct."""
+
+        assert self.test_shape.azimuth_placement_angle == [0., 36., 72., 108., 144., 180., 
+                                                           216., 252., 288., 324.]
+        assert self.test_shape.height == 2000
+        assert self.test_shape.width == 2000
+        assert self.test_shape.stp_filename == "BlanketCutterParallels.stp"
+        assert self.test_shape.stl_filename == "BlanketCutterParallels.stl"
+        assert self.test_shape.name == "blanket_cutter_parallels"
+        assert self.test_shape.material_tag == "blanket_cutter_parallels_mat"
     
     def test_BlanketCutterParallels_creation(self):
         """Creates solid using the BlanketCutterParallels parametric component
