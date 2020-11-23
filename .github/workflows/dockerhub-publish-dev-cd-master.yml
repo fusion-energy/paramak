@@ -34,6 +34,8 @@ jobs:
           tags: ukaea/paramak:dev-cq-master
           build-args: |
             cq_version=master
+            compile_cores=2
+            include_neutronics=true
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
