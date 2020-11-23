@@ -14,7 +14,16 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         self.test_shape = CenterColumnShieldCylinder(
             height=600, inner_radius=100, outer_radius=200
         )
-        
+
+    def test_default_parameters(self):
+        """Checks that the default parameters of a CenterColumnShieldCylinder are correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "CenterColumnShieldCylinder.stp"
+        assert self.test_shape.stl_filename == "CenterColumnShieldCylinder.stl"
+        # assert self.test_shape.name == "center_column_shield"
+        assert self.test_shape.material_tag == "center_column_shield_mat"
+
     def test_CenterColumnShieldCylinder_creation(self):
         """Creates a center column shield using the CenterColumnShieldCylinder
         parametric component and checks that a cadquery solid is created."""
