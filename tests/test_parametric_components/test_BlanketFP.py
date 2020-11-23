@@ -181,6 +181,7 @@ class test_BlanketFP(unittest.TestCase):
 
         self.test_shape.export_stp("test_blanket_full_cov.stp")
         assert Path("test_blanket_full_cov.stp").exists() == True
+        os.system("rm test_blanket_full_cov.stp")
 
     def test_full_cov_full_rotation(self):
         """Creates a blanket using the BlanketFP parametric component with full
@@ -193,6 +194,7 @@ class test_BlanketFP(unittest.TestCase):
 
         self.test_shape.export_stp("test_blanket_full_cov_full_rot.stp")
         assert Path("test_blanket_full_cov_full_rot.stp").exists() == True
+        os.system("rm test_blanket_full_cov_full_rot.stp")
 
     def test_overlapping(self):
         """Creates an overlapping geometry and checks that a warning is raised.
