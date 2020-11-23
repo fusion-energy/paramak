@@ -48,7 +48,7 @@
 #             component for component in self.test_reactor.shapes_and_components]
 #         self.test_reactor.rotation_angle = 180
 #         test_reactor_180_components = [
-#             component for component in self.test_reactor.shapes_and_components]
+# component for component in self.test_reactor.shapes_and_components]
 
 #         for r90, r180 in zip(test_reactor_90_components,
 #                              test_reactor_180_components):
