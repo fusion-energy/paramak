@@ -5,6 +5,12 @@ import paramak
 
 
 class test_CenterColumnShieldHyperbola(unittest.TestCase):
+
+    def setUp(self):
+        self.test_shape = paramak.CenterColumnShieldHyperbola(
+            height=600, inner_radius=100, mid_radius=150, outer_radius=200
+        )
+    
     def test_CenterColumnShieldHyperbola_creation(self):
         """Creates a center column shield using the
         CenterColumnShieldHyperbola parametric component and checks that a
