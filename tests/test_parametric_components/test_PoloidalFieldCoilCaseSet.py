@@ -131,7 +131,7 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         test_shape = paramak.PoloidalFieldCoilCaseSet(
             heights=[10, 10, 20, 20],
             widths=[10, 10, 20, 40],
-            casing_thicknesses=42,
+            casing_thicknesses=5,
             center_points=[
                 (100, 100),
                 (100, 150),
@@ -141,7 +141,7 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
             rotation_angle=180
         )
 
-        assert test_shape.casing_thicknesses == 42
+        assert test_shape.casing_thicknesses == 5
         assert test_shape.solid is not None
         assert len(test_shape.solid.Solids()) == 4
 

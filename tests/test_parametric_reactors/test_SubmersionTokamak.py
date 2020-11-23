@@ -237,3 +237,37 @@ class test_SubmersionTokamak(unittest.TestCase):
         assert self.test_reactor.reactor_hash_value == initial_hash_value
         assert self.test_reactor.shapes_and_components is not None
         assert self.test_reactor.reactor_hash_value != initial_hash_value
+
+    def test_error_divertor_pos(self):
+        """Checks an invalid divertor and support
+        position raises the correct ValueError."""
+
+        def invalid_divertor_position():
+            self.test_reactor.divertor_position = "coucou"
+
+        self.assertRaises(ValueError, invalid_divertor_position)
+
+        def invalid_support_position():
+            self.test_reactor.support_position = "coucou"
+
+        self.assertRaises(ValueError, invalid_support_position)
+
+    def test_divertors_supports(self):
+        """Checks that SubmersionTokamaks with lower and upper supports
+        and divertors can be created."""
+
+        self.test_reactor.divertor_position = "lower"
+        self.test_reactor.support_position = "lower"
+        assert self.test_reactor.solid is not None
+
+        self.test_reactor.divertor_position = "lower"
+        self.test_reactor.support_position = "upper"
+        assert self.test_reactor.solid is not None
+
+        self.test_reactor.divertor_position = "upper"
+        self.test_reactor.support_position = "lower"
+        assert self.test_reactor.solid is not None
+
+        self.test_reactor.divertor_position = "upper"
+        self.test_reactor.support_position = "upper"
+        assert self.test_reactor.solid is not None
