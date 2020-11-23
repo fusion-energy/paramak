@@ -5,6 +5,26 @@ import paramak
 
 
 class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
+
+    def setUp(self):
+        self.test_shape = paramak.CenterColumnShieldPlasmaHyperbola(
+            height=600, inner_radius=100, mid_offset=40, edge_offset=30
+        )
+    
+    def test_default_parameters(self):
+        """Checks that the default parameters of a CenterColumnShieldPlasmaHyperbola are
+        correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.major_radius == 450
+        assert self.test_shape.minor_radius == 150
+        assert self.test_shape.triangularity == 0.55
+        assert self.test_shape.elongation == 2
+        assert self.test_shape.stp_filename == "CenterColumnShieldPlasmaHyperbola.stp"
+        assert self.test_shape.stl_filename == "CenterColumnShieldPlasmaHyperbola.stl"
+        # assert self.test_shape.name == "center_column"
+        assert self.test_shape.material_tag == "center_column_shield_mat"
+
     def test_CenterColumnShieldPlasmaHyperbola_creation(self):
         """Creates a center column shield using the
         CenterColumnShieldPlasmaHyperbola parametric component and checks that
