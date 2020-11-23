@@ -10,6 +10,18 @@ class test_BlanketCutterStar(unittest.TestCase):
     def setUp(self):
         self.test_shape = paramak.BlanketCutterStar(distance=100)
 
+    def test_default_parameters(self):
+        """Checks that the default parameters of a BlanketCutterStrar are correct."""
+
+        assert self.test_shape.azimuth_placement_angle == [0., 36., 72., 108., 144., 180.,
+                                                           216., 252., 288., 324.]
+        assert self.test_shape.height == 2000
+        assert self.test_shape.width == 2000
+        assert self.test_shape.stp_filename == "BlanketCutterStar.stp"
+        assert self.test_shape.stl_filename == "BlanketCutterStar.stl"
+        assert self.test_shape.name == "blanket_cutter_star"
+        assert self.test_shape.material_tag == "blanket_cutter_star_mat"
+
     def test_BlanketCutterStar_creation(self):
         """Creates a solid using the BlanketCutterStar parametric component
         and checks that a cadquery solid is created."""
