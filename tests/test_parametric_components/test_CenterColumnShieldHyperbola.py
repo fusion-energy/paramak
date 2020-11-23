@@ -10,6 +10,16 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
         self.test_shape = paramak.CenterColumnShieldHyperbola(
             height=600, inner_radius=100, mid_radius=150, outer_radius=200
         )
+
+    def test_default_parameters(self):
+        """Checks that the default parameters of a CenterColumnShieldHyperbola are
+        correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "CenterColumnShieldHyperbola.stp"
+        assert self.test_shape.stl_filename == "CenterColumnShieldHyperbola.stl"
+        # assert self.test_shape.name == "center_column"
+        assert self.test_shape.material_tag == "center_column_shield_mat"
     
     def test_CenterColumnShieldHyperbola_creation(self):
         """Creates a center column shield using the
