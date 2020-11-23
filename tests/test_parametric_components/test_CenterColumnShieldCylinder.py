@@ -9,6 +9,12 @@ import pytest
 
 
 class test_CenterColumnShieldCylinder(unittest.TestCase):
+
+    def setUp(self):
+        self.test_shape = CenterColumnShieldCylinder(
+            height=600, inner_radius=100, outer_radius=200
+        )
+        
     def test_CenterColumnShieldCylinder_creation(self):
         """Creates a center column shield using the CenterColumnShieldCylinder
         parametric component and checks that a cadquery solid is created."""
