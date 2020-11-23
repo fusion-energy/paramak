@@ -12,8 +12,9 @@ jobs:
       - checkout
       - run:
           name: install
-          command:
-            python setup.py install
+          command: |
+            pip install -r requirements.txt  # this includes optional packages
+            python setup.py install  # this dosen't support the optional packages like pip install .[neutronics] does
       - run:
           name: run utils tests
           command: 
