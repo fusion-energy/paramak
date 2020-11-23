@@ -23,7 +23,7 @@ class ExtrudeCircleShape(Shape):
         self,
         distance,
         radius,
-        extrusion_start_offset=1,
+        extrusion_start_offset=0.0,
         rotation_angle=360,
         extrude_both=True,
         stp_filename="ExtrudeCircleShape.stp",
