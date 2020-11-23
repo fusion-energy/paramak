@@ -28,7 +28,7 @@ class test_BallReactor(unittest.TestCase):
             rotation_angle=180,
         )
 
-    def test_BallReactor_creation_with_narrow_divertor(self):
+    def test_creation_with_narrow_divertor(self):
         """Creates a BallReactor with a narrow divertor and checks that the correct
         number of components are created."""
 
@@ -37,7 +37,7 @@ class test_BallReactor(unittest.TestCase):
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 7
 
-    def test_BallReactor_creation_with_narrow_divertor(self):
+    def test_creation_with_narrow_divertor(self):
         """Creates a BallReactor with a wide divertor and checks that the correct
         number of components are created."""
 
@@ -46,7 +46,7 @@ class test_BallReactor(unittest.TestCase):
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 7
 
-    def test_BallReactor_svg_creation(self):
+    def test_svg_creation(self):
         """Creates a BallReactor and checks that an svg image of the reactor can be
         exported using the export_svg method."""
 
@@ -55,7 +55,7 @@ class test_BallReactor(unittest.TestCase):
         assert Path("filename.svg").exists() is True
         os.system("rm filename.svg")
 
-    def test_BallReactor_with_pf_coils(self):
+    def test_with_pf_coils(self):
         """Checks that a BallReactor with optional pf coils can be created and that
         the correct number of components are created."""
 
@@ -79,7 +79,7 @@ class test_BallReactor(unittest.TestCase):
             self.test_reactor.pf_coil_vertical_thicknesses = 2
         self.assertRaises(ValueError, invalid_pf_coil_vertical_thicknesses)
 
-    def test_BallReactor_with_pf_and_tf_coils(self):
+    def test_with_pf_and_tf_coils(self):
         """Checks that a BallReactor with optional pf and tf coils can be created and
         that the correct number of components are created."""
 
@@ -94,7 +94,7 @@ class test_BallReactor(unittest.TestCase):
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 10
 
-    def test_BallReactor_with_pf_and_tf_coils_export_physical_groups(self):
+    def test_with_pf_and_tf_coils_export_physical_groups(self):
         """Creates a BallReactor and checks that the export_physical_groups method
         works correctly."""
 
@@ -196,3 +196,24 @@ class test_BallReactor(unittest.TestCase):
 
         assert reconstruction_time < initial_construction_time
         # assert reconstruction_time < initial_construction_time * 0.01
+
+    def test_divertor_position_error(self):
+        """checks an invalid divertor position raises the correct
+        ValueError."""
+
+        def invalid_position():
+            self.test_reactor.divertor_position = "coucou"
+
+        self.assertRaises(ValueError, invalid_position)
+
+    def test_divertor_upper_lower(self):
+        """Checks that BallReactors with lower and upper divertors can
+        be created."""
+
+        self.test_reactor.divertor_position = "lower"
+        assert self.test_reactor.solid is not None
+        assert len(self.test_reactor.shapes_and_components) == 10
+
+        self.test_reactor.divertor_position = "upper"
+        assert self.test_reactor.solid is not None
+        assert len(self.test_reactor.shapes_and_components) == 10
