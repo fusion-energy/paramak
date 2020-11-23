@@ -17,6 +17,7 @@ def main():
     )
 
     centre_column = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (74.6, 687.0, "straight"),
             (171.0, 687.0, "straight"),
@@ -30,9 +31,10 @@ def main():
         ]
     )
     centre_column.stp_filename = "centre_column.stp"
-    centre_column.rotation_angle = 180
+    centre_column.stl_filename = "centre_column.stl"
 
     blanket = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (325.4886, 300.5, "straight"),
             (538.4886, 300.5, "straight"),
@@ -44,9 +46,10 @@ def main():
         ]
     )
     blanket.stp_filename = "blanket.stp"
-    blanket.rotation_angle = 180
+    blanket.stl_filename = "blanket.stl"
 
     firstwall = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (322.9528, 300.5, "straight"),
             (325.4528, 300.5, "spline"),
@@ -61,9 +64,10 @@ def main():
         ]
     )
     firstwall.stp_filename = "firstwall.stp"
-    firstwall.rotation_angle = 180
+    firstwall.stl_filename = "firstwall.stl"
 
     divertor_bottom = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (192.4782, -447.204, "spline"),
             (272.4957, -370.5, "spline"),
@@ -79,9 +83,10 @@ def main():
         ]
     )
     divertor_bottom.stp_filename = "divertor_bottom.stp"
-    divertor_bottom.rotation_angle = 180
+    divertor_bottom.stl_filename = "divertor_bottom.stl"
 
     divertor_top = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (192.4782, 447.204, "spline"),
             (272.4957, 370.5, "spline"),
@@ -97,13 +102,14 @@ def main():
         ]
     )
     divertor_top.stp_filename = "divertor_top.stp"
-    divertor_top.rotation_angle = 180
+    divertor_top.stl_filename = "divertor_top.stl"
 
     core = paramak.RotateStraightShape(
+        rotation_angle=180,
         points=[(0, 687.0), (74.6, 687.0), (74.6, -687.0), (0, -687.0)]
     )
     core.stp_filename = "core.stp"
-    core.rotation_angle = 180
+    core.stl_filename = "core.stl"
 
     myreactor = paramak.Reactor([plasma,
                                  blanket,
@@ -114,6 +120,7 @@ def main():
                                  centre_column])
 
     myreactor.export_stp(output_folder="can_reactor_from_points")
+    myreactor.export_stl(output_folder="can_reactor_from_points")
     myreactor.export_html("can_reactor_from_points/reactor.html")
 
 
