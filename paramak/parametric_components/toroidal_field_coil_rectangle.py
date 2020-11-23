@@ -1,10 +1,8 @@
-from paramak import ExtrudeStraightShape
-import numpy as np
-from collections import Iterable
-
-from paramak.utils import calculate_wedge_cut
 
 import cadquery as cq
+import numpy as np
+from paramak import ExtrudeStraightShape
+from paramak.utils import calculate_wedge_cut
 
 
 class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
@@ -132,9 +130,10 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         """
 
         # Creates a cadquery solid from points and revolves
+        points_without_connections = [p[:2] for p in self.points]
         solid = (
             cq.Workplane(self.workplane)
-            .polyline(self.points)
+            .polyline(points_without_connections)
             .close()
             .extrude(distance=-self.distance / 2.0, both=True)
         )
@@ -150,25 +149,9 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
                 [a.val() for a in [inner_leg_solid, solid]]
             )
 
-        # Checks if the azimuth_placement_angle is a list of angles
-        if isinstance(self.azimuth_placement_angle, Iterable):
-            rotated_solids = []
-            # Perform seperate rotations for each angle
-            for angle in self.azimuth_placement_angle:
-                rotated_solids.append(
-                    solid.rotate(
-                        (0, 0, -1), (0, 0, 1), angle))
-            solid = cq.Workplane(self.workplane)
-
-            # Joins the seperate solids together
-            for i in rotated_solids:
-                solid = solid.union(i)
-        else:
-            # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate(
-                (0, 0, 1), (0, 0, -1), self.azimuth_placement_angle)
-
-        calculate_wedge_cut(self)
-        self.perform_boolean_operations(solid)
+        solid = self.rotate_solid(solid)
+        cutting_wedge = calculate_wedge_cut(self)
+        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+        self.solid = solid   # not necessarily required as set in boolean_operations
 
         return solid

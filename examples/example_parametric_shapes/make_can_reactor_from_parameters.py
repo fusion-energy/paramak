@@ -10,14 +10,16 @@ def main():
     outer_most_x = 900
     blanket_height = 300
 
-    plasma = paramak.Plasma()
-    plasma.major_radius = 250
-    plasma.minor_radius = 100
-    plasma.triangularity = 0.5
-    plasma.elongation = 2.5
-    plasma.rotation_angle = 180
+    plasma = paramak.Plasma(
+        major_radius=250,
+        minor_radius=100,
+        triangularity=0.5,
+        elongation=2.5,
+        rotation_angle=180
+    )
 
     centre_column = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (74.6, 687.0, "straight"),
             (171.0, 687.0, "straight"),
@@ -32,9 +34,9 @@ def main():
     )
     centre_column.stp_filename = "centre_column.stp"
     centre_column.stl_filename = "centre_column.stl"
-    centre_column.rotation_angle = 180
 
     blanket = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (325.4528, blanket_height, "straight"),
             (outer_most_x, blanket_height, "straight"),
@@ -47,9 +49,9 @@ def main():
     )
     blanket.stp_filename = "blanket.stp"
     blanket.stl_filename = "blanket.stl"
-    blanket.rotation_angle = 180
 
     firstwall = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (322.9528, blanket_height, "straight"),
             (325.4528, blanket_height, "spline"),
@@ -65,9 +67,9 @@ def main():
     )
     firstwall.stp_filename = "firstwall.stp"
     firstwall.stl_filename = "firstwall.stl"
-    firstwall.rotation_angle = 180
 
     divertor_bottom = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (192.4782, -447.204, "spline"),
             (272.4957, -370.5, "spline"),
@@ -82,11 +84,11 @@ def main():
             (237.48395, -497.21782, "spline"),
         ]
     )
-    divertor_bottom.stl_filename = "divertor_bottom.stl"
     divertor_bottom.stp_filename = "divertor_bottom.stp"
-    divertor_bottom.rotation_angle = 180
+    divertor_bottom.stl_filename = "divertor_bottom.stl"
 
     divertor_top = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (192.4782, 447.204, "spline"),
             (272.4957, 370.5, "spline"),
@@ -101,15 +103,19 @@ def main():
             (237.48395, 497.21782, "spline"),
         ]
     )
-    divertor_top.stl_filename = "divertor_top.stl"
     divertor_top.stp_filename = "divertor_top.stp"
-    divertor_top.rotation_angle = 180
+    divertor_top.stl_filename = "divertor_top.stl"
 
     core = paramak.RotateStraightShape(
-        points=[(0, 687.0), (74.6, 687.0), (74.6, -687.0), (0, -687.0)]
+        rotation_angle=180,
+        points=[
+            (0, 687.0),
+            (74.6, 687.0),
+            (74.6, -687.0),
+            (0, -687.0)]
     )
     core.stp_filename = "core.stp"
-    core.rotation_angle = 180
+    core.stl_filename = "core.stl"
 
     # initiates a reactor object
     myreactor = paramak.Reactor([plasma,
@@ -121,6 +127,7 @@ def main():
                                  centre_column])
 
     myreactor.export_stp(output_folder="can_reactor_from_parameters")
+    myreactor.export_stl(output_folder="can_reactor_from_parameters")
     myreactor.export_html(filename="can_reactor_from_parameters/reactor.html")
 
 

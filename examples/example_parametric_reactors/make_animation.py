@@ -7,9 +7,8 @@ import os
 import uuid
 
 import numpy as np
-from tqdm import tqdm
-
 import paramak
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--number_of_models", type=int, default=10)
@@ -46,7 +45,6 @@ for i in tqdm(range(args.number_of_models)):
     my_reactor.export_svg(
         filename="output_for_animation_svg/" + str(uuid.uuid4()) + ".svg"
     )
-    # my_reactor.export_3d_image(filename="output_for_animation_3d/" + str(uuid.uuid4()) + ".png")
 
     print(str(args.number_of_models), "models made")
 

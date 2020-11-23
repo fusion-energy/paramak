@@ -1,6 +1,3 @@
-from collections import Iterable
-
-import cadquery as cq
 
 from paramak import Shape
 from paramak.utils import calculate_wedge_cut
@@ -12,9 +9,12 @@ class ExtrudeMixedShape(Shape):
 
     Args:
         distance (float): the extrusion distance to use (cm units if used for
-            neutronics).
-        rotation_angle (float): rotation angle of solid created. a cut is performed
-            from rotation_angle to 360 degrees. Defaults to 360.
+            neutronics)
+        extrude_both (bool, optional): If set to True, the extrusion will
+            occur in both directions. Defaults to True.
+        rotation_angle (float, optional): rotation angle of solid created. A
+            cut is performed from rotation_angle to 360 degrees. Defaults to
+            360.0.
         stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".
         stl_filename (str, optional): Defaults to "ExtrudeMixedShape.stl".
 
@@ -23,7 +23,9 @@ class ExtrudeMixedShape(Shape):
     def __init__(
         self,
         distance,
-        rotation_angle=360,
+        extrude_both=True,
+        rotation_angle=360.0,
+        extrusion_start_offset=0.0,
         stp_filename="ExtrudeMixedShape.stp",
         stl_filename="ExtrudeMixedShape.stl",
         **kwargs
@@ -34,9 +36,10 @@ class ExtrudeMixedShape(Shape):
             stl_filename=stl_filename,
             **kwargs
         )
-
         self.distance = distance
+        self.extrude_both = extrude_both
         self.rotation_angle = rotation_angle
+        self.extrusion_start_offset = extrusion_start_offset
 
     @property
     def distance(self):
@@ -54,74 +57,36 @@ class ExtrudeMixedShape(Shape):
     def rotation_angle(self, value):
         self._rotation_angle = value
 
+    @property
+    def extrusion_start_offset(self):
+        return self._extrusion_start_offset
+
+    @extrusion_start_offset.setter
+    def extrusion_start_offset(self, value):
+        self._extrusion_start_offset = value
+
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with straight
         and spline edges.
 
-        :return: a 3d solid volume
-        :rtype: a cadquery solid
+           Returns:
+              A CadQuery solid: A 3D solid volume
         """
 
-        # obtains the first two values of the points list
-        XZ_points = [(p[0], p[1]) for p in self.points]
+        solid = super().create_solid()
 
-        # obtains the last values of the points list
-        connections = [p[2] for p in self.points[:-1]]
-
-        current_linetype = connections[0]
-        current_points_list = []
-        instructions = []
-        # groups together common connection types
-        for i, c in enumerate(connections):
-            if c == current_linetype:
-                current_points_list.append(XZ_points[i])
-            else:
-                current_points_list.append(XZ_points[i])
-                instructions.append({current_linetype: current_points_list})
-                current_linetype = c
-                current_points_list = [XZ_points[i]]
-        instructions.append({current_linetype: current_points_list})
-
-        if list(instructions[-1].values())[0][-1] != XZ_points[0]:
-            keyname = list(instructions[-1].keys())[0]
-            instructions[-1][keyname].append(XZ_points[0])
-
-        solid = cq.Workplane(self.workplane)
-        solid.moveTo(XZ_points[0][0], XZ_points[0][1])
-
-        for entry in instructions:
-            if list(entry.keys())[0] == "spline":
-                solid = solid.spline(listOfXYTuple=list(entry.values())[0])
-            if list(entry.keys())[0] == "straight":
-                solid = solid.polyline(list(entry.values())[0])
-            if list(entry.keys())[0] == "circle":
-                p0 = list(entry.values())[0][0]
-                p1 = list(entry.values())[0][1]
-                p2 = list(entry.values())[0][2]
-                solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
-
-        # performs extrude in both directions, hence distance / 2
-        solid = solid.close().extrude(distance=-self.distance / 2.0, both=True)
-
-        # Checks if the azimuth_placement_angle is a list of angles
-        if isinstance(self.azimuth_placement_angle, Iterable):
-            rotated_solids = []
-            # Perform seperate rotations for each angle
-            for angle in self.azimuth_placement_angle:
-                rotated_solids.append(
-                    solid.rotate(
-                        (0, 0, -1), (0, 0, 1), angle))
-            solid = cq.Workplane(self.workplane)
-
-            # Joins the seperate solids together
-            for i in rotated_solids:
-                solid = solid.union(i)
+        if not self.extrude_both:
+            extrusion_distance = -self.distance
         else:
-            # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate(
-                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
+            extrusion_distance = -self.distance / 2.0
 
-        calculate_wedge_cut(self)
-        self.perform_boolean_operations(solid)
+        solid = solid.close().extrude(
+            distance=extrusion_distance,
+            both=self.extrude_both)
+
+        solid = self.rotate_solid(solid)
+        cutting_wedge = calculate_wedge_cut(self)
+        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+        self.solid = solid
 
         return solid

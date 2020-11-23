@@ -1,7 +1,6 @@
 
 import os
 import unittest
-import warnings
 from pathlib import Path
 
 import paramak
@@ -9,138 +8,75 @@ import pytest
 
 
 class test_SubmersionTokamak(unittest.TestCase):
-    def test_SubmersionTokamak_svg_creation(self):
-        """creates a submersion reactor using the SubmersionTokamak parametric
-        reactor and checks that an svg file of the reactor can be exported
-        using the export_svg method"""
 
-        os.system("rm test_SubmersionTokamak_image.svg")
-
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=100,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
+    def setUp(self):
+        self.test_reactor = paramak.SubmersionTokamak(
+            inner_bore_radial_thickness=10,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
             plasma_radial_thickness=300,
-            divertor_radial_thickness=100,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            support_radial_thickness=150,
-            plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=30,
+            blanket_rear_wall_radial_thickness=30,
+            number_of_tf_coils=16,
+            support_radial_thickness=20,
+            inboard_blanket_radial_thickness=20,
+            outboard_blanket_radial_thickness=20,
+            elongation=2.3,
+            triangularity=0.45,
             rotation_angle=359,
         )
-        test_reactor.export_svg("test_SubmersionTokamak_image.svg")
 
-        assert Path("test_SubmersionTokamak_image.svg").exists() is True
-        os.system("rm test_SubmersionTokamak_image.svg")
+    def test_SubmersionTokamak_svg_creation(self):
+        """Creates a SubmersionTokamak and checks that an svg file of the reactor
+        can be exported using the export_svg method."""
+
+        os.system("rm test_image.svg")
+        self.test_reactor.export_svg("test_image.svg")
+
+        assert Path("test_image.svg").exists() is True
+        os.system("rm test_image.svg")
 
     def test_minimal_SubmersionTokamak_creation(self):
-        """creates a submersion reactor using the SubmersionTokamak parametric
-        reactor and checks that the correct number of components are created"""
+        """Creates a SubmersionTokamak and checks that the correct number of
+        components are created."""
 
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=100,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            divertor_radial_thickness=100,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            support_radial_thickness=150,
-            plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-            rotation_angle=359,
-        )
-
-        assert len(test_reactor.shapes_and_components) == 8
+        assert len(self.test_reactor.shapes_and_components) == 8
 
     def test_SubmersionTokamak_with_tf_coils_creation(self):
-        """creates a submersion reactor with tf coils using the
-        SubmersionTokamak parametric reactor and checks that the correct number
-        of components are created"""
+        """Creates a SubmersionTokamak with tf coils and checks that the correct
+        number of components are created."""
 
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=50,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            divertor_radial_thickness=50,
-            plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
-            support_radial_thickness=150,
-            outboard_tf_coil_radial_thickness=50,
-            tf_coil_to_rear_blanket_radial_gap=50,
-            outboard_tf_coil_poloidal_thickness=70,
-            number_of_tf_coils=4,
-            rotation_angle=359,
-        )
-        assert len(test_reactor.shapes_and_components) == 9
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.number_of_tf_coils = 4
+
+        assert len(self.test_reactor.shapes_and_components) == 9
 
     def test_SubmersionTokamak_with_tf_and_pf_coils_creation(self):
-        """creates a submersion reactor with tf and pf coils using the
-        Submersion Tokamak parametric reactor and checks that the correct
-        number of components are created"""
+        """Creates a SubmersionTokamak with tf and pf coils and checks that the
+        correct number of components are created."""
 
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=50,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            divertor_radial_thickness=50,
-            plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
-            support_radial_thickness=150,
-            outboard_tf_coil_radial_thickness=50,
-            tf_coil_to_rear_blanket_radial_gap=50,
-            outboard_tf_coil_poloidal_thickness=70,
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50, 50],
-            pf_coil_radial_thicknesses=[40, 40, 40, 40, 40],
-            pf_coil_to_tf_coil_radial_gap=50,
-            number_of_tf_coils=4,
-            rotation_angle=359,
-        )
-        assert len(test_reactor.shapes_and_components) == 10
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50, 50]
+        self.test_reactor.pf_coil_radial_thicknesses = [40, 40, 40, 40, 40]
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.number_of_tf_coils = 4
+
+        assert len(self.test_reactor.shapes_and_components) == 11
 
     def test_minimal_SubmersionTokamak_stp_creation(self):
-        """creates a submersion reactor using the SubmersionTokamak parameteric
-        reactor and checks that stp files of all components can be exported
-        using the export_stp method"""
+        """Creates a SubmersionTokamak and checks that stp files of all components
+        can be exported using the export_stp method."""
 
         os.system("rm -r minimal_SubmersionTokamak")
-
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=100,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            divertor_radial_thickness=100,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            support_radial_thickness=150,
-            plasma_high_point=(50 + 50 + 50 + 100 + 50 + 50 + 100, 350),
-            rotation_angle=359,
-        )
-        test_reactor.export_stp("minimal_SubmersionTokamak")
+        self.test_reactor.export_stp("minimal_SubmersionTokamak")
 
         output_filenames = [
             "minimal_SubmersionTokamak/inboard_tf_coils.stp",
@@ -159,33 +95,17 @@ class test_SubmersionTokamak(unittest.TestCase):
         os.system("rm -r minimal_SubmersionTokamak")
 
     def test_SubmersionTokamak_with_pf_coils_stp_creation(self):
-        """creates a submersion reactor with pf coils using the
-        SubmersionTokamak parametric reactor and checks that stp files of all
-        components can be exported using the export_stp method"""
+        """Creates a SubmersionTokamak with pf coils and checks that stp files
+        of all components can be exported using the export_stp method."""
 
         os.system("rm -r pf_SubmersionTokamak")
 
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=50,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            divertor_radial_thickness=50,
-            plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
-            support_radial_thickness=150,
-            outboard_tf_coil_radial_thickness=50,
-            tf_coil_to_rear_blanket_radial_gap=50,
-            outboard_tf_coil_poloidal_thickness=70,
-            number_of_tf_coils=4,
-            rotation_angle=359
-        )
-        test_reactor.export_stp("pf_SubmersionTokamak")
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.number_of_tf_coils = 4
+
+        self.test_reactor.export_stp("pf_SubmersionTokamak")
 
         output_filenames = [
             "pf_SubmersionTokamak/inboard_tf_coils.stp",
@@ -204,36 +124,21 @@ class test_SubmersionTokamak(unittest.TestCase):
         os.system("rm -r pf_SubmersionTokamak")
 
     def test_SubmersionTokamak_with_tf_and_pf_coils_stp_creation(self):
-        """creates a submersion reactor with tf and pf coils using the
-        SubmersionTokamak parametric reactor and checks that stp files of all
-        components can be exported using the export_stp method"""
+        """Creates a SubmersionTokamak with tf and pf coils and checks that
+        stp files of all components can be exported using the export_stp method."""
 
         os.system("rm -r tf_pf_SubmersionTokamak")
 
-        test_reactor = paramak.SubmersionTokamak(
-            inner_bore_radial_thickness=25,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness=50,
-            inboard_blanket_radial_thickness=50,
-            firstwall_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=70,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=70,
-            outboard_blanket_radial_thickness=200,
-            blanket_rear_wall_radial_thickness=50,
-            divertor_radial_thickness=50,
-            plasma_high_point=(50 + 50 + 50 + 100 + 100, 350),
-            support_radial_thickness=150,
-            outboard_tf_coil_radial_thickness=50,
-            tf_coil_to_rear_blanket_radial_gap=50,
-            outboard_tf_coil_poloidal_thickness=70,
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50, 50],
-            pf_coil_radial_thicknesses=[40, 40, 40, 40, 40],
-            pf_coil_to_tf_coil_radial_gap=50,
-            number_of_tf_coils=4,
-            rotation_angle=359,
-        )
-        test_reactor.export_stp("tf_pf_SubmersionTokamak")
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50, 50]
+        self.test_reactor.pf_coil_radial_thicknesses = [40, 40, 40, 40, 40]
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.number_of_tf_coils = 4
+
+        self.test_reactor.export_stp("tf_pf_SubmersionTokamak")
 
         output_filenames = [
             "tf_pf_SubmersionTokamak/inboard_tf_coils.stp",
@@ -245,176 +150,124 @@ class test_SubmersionTokamak(unittest.TestCase):
             "tf_pf_SubmersionTokamak/blanket.stp",
             "tf_pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
             "tf_pf_SubmersionTokamak/Graveyard.stp",
+            "tf_pf_SubmersionTokamak/pf_coil_cases.stp"
         ]
 
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
         os.system("rm -r tf_pf_SubmersionTokamak")
 
-    def test_SingleNullSubmersionTokamak_with_pf_and_tf_coils(self):
-        """creates a single null submersion reactor with pf and tf coils using
-        the SingleNullSubmersionTokamak parametric reactor and checks that the
-        correct number of components are created"""
-
-        test_reactor = paramak.SingleNullSubmersionTokamak(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            support_radial_thickness=20,
-            inboard_blanket_radial_thickness=20,
-            outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
-            pf_coil_radial_thicknesses=[50, 50, 50, 50],
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
-            pf_coil_to_tf_coil_radial_gap=50,
-            outboard_tf_coil_radial_thickness=100,
-            outboard_tf_coil_poloidal_thickness=50,
-            tf_coil_to_rear_blanket_radial_gap=20,
-            divertor_position="upper",
-            support_position="upper",
-            rotation_angle=359,
-        )
-        assert len(test_reactor.shapes_and_components) == 10
-
-    def test_SingleNullSubmersionTokamak_divertor_lower_support_lower(self):
-        """creates a single null submersion reactor with lower supports and
-        divertor using the SingleNullSubmersionTokamak parametric reactor and
-        checks that the correct number of components are created"""
-
-        test_reactor = paramak.SingleNullSubmersionTokamak(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            support_radial_thickness=20,
-            inboard_blanket_radial_thickness=20,
-            outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
-            divertor_position="lower",
-            support_position="lower",
-            rotation_angle=359,
-        )
-        assert len(test_reactor.shapes_and_components) == 8
-
-    def test_SingleNullSubmersionTokamak_divertor_upper_support_upper(self):
-        """creates a single null submersion reactor with upper supports and
-        divertor using the SingleNullSubmersionTokamak parametric reactor and
-        checks that the correct number of components are created"""
-
-        test_reactor = paramak.SingleNullSubmersionTokamak(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            support_radial_thickness=20,
-            inboard_blanket_radial_thickness=20,
-            outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
-            divertor_position="upper",
-            support_position="upper",
-            rotation_angle=359,
-        )
-        assert len(test_reactor.shapes_and_components) == 8
-
-    def test_SingleNullSubmersionTokamak_rotation_angle_impacts_volume(self):
-        """creates a single null submersion reactor with a rotation angle of
-        90 and another reactor with a rotation angle of 180. Then checks the
-        volumes of all the components is double in the 180 reactor"""
-
-        test_reactor_90 = paramak.SingleNullSubmersionTokamak(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            support_radial_thickness=20,
-            inboard_blanket_radial_thickness=20,
-            outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
-            divertor_position="upper",
-            support_position="upper",
-            rotation_angle=90,
-        )
-
-        test_reactor_180 = paramak.SingleNullSubmersionTokamak(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            support_radial_thickness=20,
-            inboard_blanket_radial_thickness=20,
-            outboard_blanket_radial_thickness=20,
-            plasma_high_point=(200, 200),
-            divertor_position="upper",
-            support_position="upper",
-            rotation_angle=180,
-        )
-
-        for r90, r180 in zip(test_reactor_90.shapes_and_components,
-                             test_reactor_180.shapes_and_components):
-            assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
-
     def test_rotation_angle_warning(self):
-        """checks that the correct warning message is printed when
-        rotation_angle = 360"""
+        """Creates a SubmersionTokamak with rotation_angle = 360 and checks that the
+        correct warning message is printed."""
 
         def warning_trigger():
             try:
-                paramak.SubmersionTokamak(
-                    inner_bore_radial_thickness=25,
-                    inboard_tf_leg_radial_thickness=50,
-                    center_column_shield_radial_thickness=50,
-                    inboard_blanket_radial_thickness=100,
-                    firstwall_radial_thickness=50,
-                    inner_plasma_gap_radial_thickness=70,
-                    plasma_radial_thickness=300,
-                    divertor_radial_thickness=100,
-                    outer_plasma_gap_radial_thickness=70,
-                    outboard_blanket_radial_thickness=200,
-                    blanket_rear_wall_radial_thickness=50,
-                    support_radial_thickness=150,
-                    plasma_high_point=(
-                        50 + 50 + 50 + 100 + 50 + 50 + 100,
-                        350),
-                    rotation_angle=360,
-                )
+                self.test_reactor.rotation_angle = 360
+                self.test_reactor._rotation_angle_check()
             except BaseException:
                 pass
-
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")
+        msg = "360 degree rotation may result in a " + \
+            "Standard_ConstructionError or AttributeError"
+        with pytest.warns(UserWarning, match=msg):
             warning_trigger()
-            assert len(w) == 1
-            assert issubclass(w[-1].category, UserWarning)
-            assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
-                w[-1].message)
+
+    def test_submersion_reactor_hash_value(self):
+        """Creates a submersion reactor and checks that all shapes in the reactor are created
+        when .shapes_and_components is first called. Checks that when .shapes_and_components
+        is called again with no changes to the reactor, the shapes in the reactor are
+        reconstructed and the previously constructed shapes are returned. Checks that when
+        .shapes_and_components is called again with no changes to the reactor, the shapes in
+        the reactor are reconstructed and these new shapes are returned. Checks that the
+        reactor_hash_value is only updated when the reactor is reconstructed."""
+
+        self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
+        self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.outboard_tf_coil_radial_thickness = 30
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 30
+        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 20
+        self.test_reactor.number_of_tf_coils = 16
+
+        assert self.test_reactor.reactor_hash_value is None
+        for key in [
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_plasma",
+            "_inboard_firstwall",
+            "_inboard_blanket",
+            "_firstwall",
+            "_divertor",
+            "_blanket",
+            "_supports",
+            "_outboard_rear_blanket_wall_upper",
+            "_outboard_rear_blanket_wall_lower",
+            "_outboard_rear_blanket_wall",
+            "_tf_coil",
+            "_pf_coil",
+            "_pf_coils_casing"
+        ]:
+            assert key not in self.test_reactor.__dict__.keys()
+
+        assert self.test_reactor.shapes_and_components is not None
+        for key in [
+            "_inboard_tf_coils",
+            "_center_column_shield",
+            "_plasma",
+            "_inboard_firstwall",
+            "_inboard_blanket",
+            "_firstwall",
+            "_divertor",
+            "_blanket",
+            "_supports",
+            "_outboard_rear_blanket_wall_upper",
+            "_outboard_rear_blanket_wall_lower",
+            "_outboard_rear_blanket_wall",
+            "_tf_coil",
+            "_pf_coil",
+            "_pf_coils_casing"
+        ]:
+            assert key in self.test_reactor.__dict__.keys()
+
+        assert len(self.test_reactor.shapes_and_components) == 11
+        assert self.test_reactor.reactor_hash_value is not None
+        initial_hash_value = self.test_reactor.reactor_hash_value
+        self.test_reactor.rotation_angle = 270
+        assert self.test_reactor.reactor_hash_value == initial_hash_value
+        assert self.test_reactor.shapes_and_components is not None
+        assert self.test_reactor.reactor_hash_value != initial_hash_value
+
+    def test_error_divertor_pos(self):
+        """Checks an invalid divertor and support
+        position raises the correct ValueError."""
+
+        def invalid_divertor_position():
+            self.test_reactor.divertor_position = "coucou"
+
+        self.assertRaises(ValueError, invalid_divertor_position)
+
+        def invalid_support_position():
+            self.test_reactor.support_position = "coucou"
+
+        self.assertRaises(ValueError, invalid_support_position)
+
+    def test_divertors_supports(self):
+        """Checks that SubmersionTokamaks with lower and upper supports
+        and divertors can be created."""
+
+        self.test_reactor.divertor_position = "lower"
+        self.test_reactor.support_position = "lower"
+        assert self.test_reactor.solid is not None
+
+        self.test_reactor.divertor_position = "lower"
+        self.test_reactor.support_position = "upper"
+        assert self.test_reactor.solid is not None
+
+        self.test_reactor.divertor_position = "upper"
+        self.test_reactor.support_position = "lower"
+        assert self.test_reactor.solid is not None
+
+        self.test_reactor.divertor_position = "upper"
+        self.test_reactor.support_position = "upper"
+        assert self.test_reactor.solid is not None

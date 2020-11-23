@@ -1,5 +1,5 @@
 Parametric Shapes
-==============
+=================
 
 
 
@@ -32,7 +32,7 @@ RotateMixedShape()
 
 .. image:: https://user-images.githubusercontent.com/8583900/86258771-17240c80-bbb3-11ea-990f-e87de26b1589.png
    :width: 250
-   :height: 250
+   :height: 230
    :align: center
 
 .. automodule:: paramak.parametric_shapes.rotate_mixed_shape
@@ -42,7 +42,7 @@ RotateMixedShape()
 RotateCircleShape()
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246778-72e69980-bba3-11ea-9b33-d74e2c2d084b.png
+.. image:: https://user-images.githubusercontent.com/56687624/98713427-868ae380-237f-11eb-87af-cf6b5fe032b2.png
    :width: 250
    :height: 200
    :align: center
@@ -66,9 +66,9 @@ ExtrudeStraightShape()
 ExtrudeSplineShape()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246774-71b56c80-bba3-11ea-94cb-d2496365ff18.png
+.. image:: https://user-images.githubusercontent.com/56687624/98713431-87bc1080-237f-11eb-9075-01bca99b7018.png
    :width: 200
-   :height: 270
+   :height: 280
    :align: center
 
 .. automodule:: paramak.parametric_shapes.extruded_spline_shape
@@ -80,7 +80,7 @@ ExtrudeMixedShape()
 
 .. image:: https://user-images.githubusercontent.com/8583900/86261239-34a6a580-bbb6-11ea-812c-ac6fa6a8f0e2.png
    :width: 200
-   :height: 270
+   :height: 200
    :align: center
 
 .. automodule:: paramak.parametric_shapes.extruded_mixed_shape
@@ -96,5 +96,53 @@ ExtrudeCircleShape()
    :align: center
 
 .. automodule:: paramak.parametric_shapes.extruded_circle_shape
+   :members:
+   :show-inheritance:
+
+SweepStraightShape()
+^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/98713447-8c80c480-237f-11eb-8615-c090e93138f6.png
+   :width: 300
+   :height: 230
+   :align: center
+
+.. automodule:: paramak.parametric_shapes.sweep_straight_shape
+   :members:
+   :show-inheritance:
+
+SweepSplineShape()
+^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/98713443-8b4f9780-237f-11eb-83bb-38ca7f222073.png
+   :width: 300
+   :height: 230
+   :align: center
+
+.. automodule:: paramak.parametric_shapes.sweep_spline_shape
+   :members:
+   :show-inheritance:
+
+SweepMixedShape()
+^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/98713440-8a1e6a80-237f-11eb-9eed-12b9d7731090.png
+   :width: 300
+   :height: 230
+   :align: center
+
+.. automodule:: paramak.parametric_shapes.sweep_mixed_shape
+   :members:
+   :show-inheritance:
+
+SweepCircleShape()
+^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/98713436-88ed3d80-237f-11eb-99cd-27dcb4f313b1.png
+   :width: 300
+   :height: 230
+   :align: center
+
+.. automodule:: paramak.parametric_shapes.sweep_circle_shape
    :members:
    :show-inheritance:

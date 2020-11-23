@@ -1,4 +1,8 @@
-name: dockerhub-publish
+# This yml file will trigger a Github Action on pushes to the develop branch.
+# This Action will build and upload a Docker image to Dockerhub
+# https://github.com/marketplace/actions/publish-docker
+
+name: dockerhub-publish-dev
 
 on:
   push:
@@ -26,7 +30,11 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ukaea/paramak:dev
+          tags: ukaea/paramak:dev-cq-master
+          build-args: |
+            cq_version=master
+            compile_cores=2
+            include_neutronics=true
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

@@ -1,7 +1,8 @@
+
 import math
 
 from paramak import RotateStraightShape
-from paramak.utils import rotate, coefficients_of_line_from_points
+from paramak.utils import coefficients_of_line_from_points, get_hash, rotate
 
 
 class PortCutterRotated(RotateStraightShape):
@@ -78,7 +79,7 @@ class PortCutterRotated(RotateStraightShape):
 
     @property
     def solid(self):
-        if self.get_hash() != self.hash_value:
+        if get_hash(self) != self.hash_value:
             self.create_solid()
         return self._solid
 

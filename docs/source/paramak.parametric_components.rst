@@ -33,6 +33,37 @@ BlanketConstantThicknessArcV()
    :members:
    :show-inheritance:
 
+
+BlanketCutterParallels()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+|BlanketCutterParallelsstp| |BlanketCutterParallelssvg|
+
+.. |BlanketCutterParallelsstp| image:: https://user-images.githubusercontent.com/8583900/97328431-eb1d4d00-186d-11eb-9f5d-4bbee9e3b17d.png
+   :width: 250
+.. |BlanketCutterParallelssvg| image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
+   :width: 400
+
+.. automodule:: paramak.parametric_components.blanket_cutter_parallels
+   :members:
+   :show-inheritance:
+
+
+BlanketCutterStar()
+^^^^^^^^^^^^^^^^^^^
+
+|BlanketCutterStarstp| |BlanketCutterStarsvg|
+
+.. |BlanketCutterStarstp| image:: https://user-images.githubusercontent.com/8583900/97103699-0178ac80-16a6-11eb-8e5a-ec3575d265fe.png
+   :width: 250
+.. |BlanketCutterStarsvg| image:: https://user-images.githubusercontent.com/8583900/97103794-b0b58380-16a6-11eb-86f0-fb5530d630af.png
+   :width: 400
+
+.. automodule:: paramak.parametric_components.blanket_cutters_star
+   :members:
+   :show-inheritance:
+
+
 BlanketFP()
 ^^^^^^^^^^^
 
@@ -46,6 +77,22 @@ BlanketFP()
 .. automodule:: paramak.parametric_components.blanket_fp
    :members:
    :show-inheritance:
+
+
+BlanketFPPoloidalSegments()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|BlanketFPPoloidalSegmentsstp| |BlanketFPPoloidalSegmentssvg|
+
+.. |BlanketFPPoloidalSegmentsstp| image:: https://user-images.githubusercontent.com/8583900/98735027-af6ca200-239a-11eb-9a59-4a570f91a1fc.png
+   :width: 220
+.. |BlanketFPPoloidalSegmentssvg| image:: https://user-images.githubusercontent.com/8583900/98870151-ca0e4c00-246a-11eb-8a37-e7620344d8c1.png
+   :width: 350
+
+.. automodule:: paramak.parametric_components.blanket_poloidal_segment
+   :members:
+   :show-inheritance:
+
 
 CenterColumnShieldCylinder()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -315,7 +362,11 @@ PortCutterRotated()
 PortCutterRectangular()
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/95790579-8f808a80-0cd7-11eb-83e1-872a98fe0bc8.png
+|PortCutterRectangularstp| |PortCutterRectangularsvg|
+
+.. |PortCutterRectangularstp| image:: https://user-images.githubusercontent.com/8583900/95790579-8f808a80-0cd7-11eb-83e1-872a98fe0bc8.png
+    :width: 300px
+.. |PortCutterRectangularsvg| image:: https://user-images.githubusercontent.com/8583900/99831528-1fc3b200-2b57-11eb-9b73-8efab06cf3ef.png
     :width: 300px
 
 .. automodule:: paramak.parametric_components.port_cutters_rectangular
@@ -325,7 +376,11 @@ PortCutterRectangular()
 PortCutterCircular()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/95790580-90b1b780-0cd7-11eb-944f-14fe290f8442.png
+|PortCutterCircularstp| |PortCutterCircularsvg|
+
+.. |PortCutterCircularstp| image:: https://user-images.githubusercontent.com/8583900/95790580-90b1b780-0cd7-11eb-944f-14fe290f8442.png
+    :width: 300px
+.. |PortCutterCircularsvg| image:: https://user-images.githubusercontent.com/8583900/99830949-53eaa300-2b56-11eb-886e-d5ee04c85b4a.png
     :width: 300px
 
 .. automodule:: paramak.parametric_components.port_cutters_circular
@@ -363,12 +418,29 @@ PlasmaFromPoints()
 PlasmaBoundaries()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/87316638-f39b8300-c51d-11ea-918b-5194d600d068.png
+.. image:: https://user-images.githubusercontent.com/8583900/97366104-a958ca80-189e-11eb-8bc6-9892b04ab053.png
     :width: 300px
 
 .. automodule:: paramak.parametric_components.tokamak_plasma_plasmaboundaries
    :members:
    :show-inheritance:
+
+TFCoilCasing()
+^^^^^^^^^^^^^^
+
+|TFCoilCasingallstp| |TFCoilCasingaCutstp| |TFCoilCasingsvg|
+
+.. |TFCoilCasingallstp| image:: https://user-images.githubusercontent.com/8583900/98821523-94943f00-2427-11eb-8047-68f2762c56d7.png
+    :width: 200px
+.. |TFCoilCasingaCutstp| image:: https://user-images.githubusercontent.com/8583900/98821532-96f69900-2427-11eb-99e1-e2461be67511.png
+    :width: 130px
+.. |TFCoilCasingsvg| image:: https://user-images.githubusercontent.com/8583900/99081345-904c5b00-25ba-11eb-8a4f-956d4ad6bbc0.png
+    :width: 310px
+
+.. automodule:: paramak.parametric_components.tf_coil_casing
+   :members:
+   :show-inheritance:
+
 
 ToroidalFieldCoilRectangle()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -379,7 +451,7 @@ ToroidalFieldCoilRectangle()
     :width: 200px
 .. |ToroidalFieldCoilRectangleastp| image:: https://user-images.githubusercontent.com/8583900/94585086-6abbfa00-0277-11eb-91de-0b2548601587.png
     :width: 130px
-.. |ToroidalFieldCoilRectanglesvg| image:: https://user-images.githubusercontent.com/8583900/94585089-6c85bd80-0277-11eb-9be9-22befe19e86e.png
+.. |ToroidalFieldCoilRectanglesvg| image:: https://user-images.githubusercontent.com/56687624/98582375-cd62d580-22ba-11eb-8002-ea7c731bad8a.png
     :width: 310px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_rectangle
@@ -391,12 +463,12 @@ ToroidalFieldCoilCoatHanger()
 
 |ToroidalFieldCoilCoatHangerallstp| |ToroidalFieldCoilCoatHangersvg| |ToroidalFieldCoilCoatHangerastp|
 
-.. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/8583900/94572025-79e77b80-0268-11eb-88da-828274539e9e.png
-   :width: 300
-.. |ToroidalFieldCoilCoatHangerastp| image:: https://user-images.githubusercontent.com/8583900/94570773-1ad53700-0267-11eb-9003-3b5768745470.png
-   :width: 130
+.. |ToroidalFieldCoilCoatHangersvg| image:: https://user-images.githubusercontent.com/56687624/98582371-cb991200-22ba-11eb-8e15-86d273a8b819.png
+   :width: 300px
+.. |ToroidalFieldCoilCoatHangerastp| image:: https://user-images.githubusercontent.com/8583900/98979392-3775b780-2513-11eb-9649-46839571f5dd.png
+   :width: 130px
 .. |ToroidalFieldCoilCoatHangerallstp| image:: https://user-images.githubusercontent.com/8583900/87075236-f04f8100-c217-11ea-9ffa-4791b722b9e7.png
-   :width: 210
+   :width: 210px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_coat_hanger
    :members:
@@ -408,11 +480,11 @@ ToroidalFieldCoilPrincetonD()
 |ToroidalFieldCoilPrincetonDallstp| |ToroidalFieldCoilPrincetonDsvg| |ToroidalFieldCoilPrincetonDastp|
 
 .. |ToroidalFieldCoilPrincetonDallstp| image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
-   :width: 250
+   :width: 250px
 .. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/8583900/94529559-cd8aa280-0231-11eb-9919-48d3c642a5d7.png
-   :width: 220
+   :width: 220px
 .. |ToroidalFieldCoilPrincetonDastp| image:: https://user-images.githubusercontent.com/8583900/94479853-4c012900-01cd-11eb-9b59-0fcd5f4dc531.png
-   :width: 170
+   :width: 170px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_princeton_d
    :members:
@@ -424,11 +496,11 @@ ToroidalFieldCoilTripleArc()
 |ToroidalFieldCoilTripleArcallstp| |ToroidalFieldCoilTripleArcstp| |ToroidalFieldCoilTripleArcsvg|
 
 .. |ToroidalFieldCoilTripleArcallstp| image:: https://user-images.githubusercontent.com/56687624/92124454-b654c280-edf5-11ea-96d2-c0957f37a733.png
-   :width: 240
+   :width: 240px
 .. |ToroidalFieldCoilTripleArcstp| image:: https://user-images.githubusercontent.com/8583900/94835218-51e34e00-0409-11eb-9372-0272c43a4844.png
-   :width: 190
-.. |ToroidalFieldCoilTripleArcsvg| image:: https://user-images.githubusercontent.com/8583900/94855159-fe332d80-0425-11eb-92a4-d1d43a066644.png
-   :width: 340
+   :width: 190px
+.. |ToroidalFieldCoilTripleArcsvg| image:: https://user-images.githubusercontent.com/8583900/99848162-2eb75e00-2b71-11eb-80d2-6c695b56821d.png
+   :width: 320px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_triple_arc
    :members:
@@ -447,5 +519,37 @@ VacuumVessel()
    :width: 255
 
 .. automodule:: paramak.parametric_components.vacuum_vessel
+   :members:
+   :show-inheritance:
+
+CoolantChannelRingStraight()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|CoolantChannelRingStraightallstp| |CoolantChannelRingStraightsvg| |CoolantChannelRingStraightstp|
+
+.. |CoolantChannelRingStraightallstp| image:: https://user-images.githubusercontent.com/56687624/99049969-6467b000-258f-11eb-93b2-73e533b366c0.png
+   :width: 200
+.. |CoolantChannelRingStraightsvg| image:: https://user-images.githubusercontent.com/56687624/99048848-ff5f8a80-258d-11eb-9073-123185d7a4fb.png
+   :width: 230
+.. |CoolantChannelRingStraightstp| image:: https://user-images.githubusercontent.com/56687624/99049922-574ac100-258f-11eb-8cb9-a57cef2b8086.png
+   :width: 100
+
+.. automodule:: paramak.parametric_components.coolant_channel_ring_straight
+   :members:
+   :show-inheritance:
+
+CoolantChannelRingCurved()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+|CoolantChannelRingCurvedallstp| |CoolantChannelRingCurvedsvg| |CoolantChannelRingCurvedstp|
+
+.. |CoolantChannelRingCurvedallstp| image:: https://user-images.githubusercontent.com/56687624/99049933-5ade4800-258f-11eb-96c1-4506a8f646a9.png
+   :width: 200
+.. |CoolantChannelRingCurvedsvg| image:: https://user-images.githubusercontent.com/56687624/99048853-0090b780-258e-11eb-862e-763f7a0f7ec6.png
+   :width: 230
+.. |CoolantChannelRingCurvedstp| image:: https://user-images.githubusercontent.com/56687624/99049900-4f8b1c80-258f-11eb-81be-bc101e2168e2.png
+   :width: 100
+
+.. automodule:: paramak.parametric_components.coolant_channel_ring_curved
    :members:
    :show-inheritance:

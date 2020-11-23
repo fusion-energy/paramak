@@ -1,18 +1,21 @@
+
 import json
 import numbers
 import warnings
 from collections import Iterable
-from hashlib import blake2b
+from os import fdopen, remove
 from pathlib import Path
+from shutil import copymode, move
+from tempfile import mkstemp
 
+import cadquery as cq
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from cadquery import exporters
-import cadquery as cq
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
-from paramak.utils import cut_solid, intersect_solid, union_solid
+from paramak.utils import cut_solid, get_hash, intersect_solid, union_solid
 
 
 class Shape:
@@ -35,11 +38,17 @@ class Shape:
             Defaults to None.
         stl_filename (str, optional): the filename used when saving stl files.
             Defaults to None.
-        azimuth_placement_angle (float, optional): the azimuth angle(s) used
-            when positioning the shape. If a list of angles is provided, the
-            shape is duplicated at all angles. Defaults to 0.0.
+        azimuth_placement_angle (iterable of floats or float, optional): the
+            azimuth angle(s) used when positioning the shape. If a list of
+            angles is provided, the shape is duplicated at all angles.
+            Defaults to 0.0.
         workplane (str, optional): the orientation of the Cadquery workplane.
             (XY, YZ or XZ). Defaults to "XZ".
+        rotation_axis (str or list, optional): rotation axis around which the
+            solid is rotated. If None, the rotation axis will depend on the
+            workplane or path_workplane if applicable. Can be set to "X", "-Y",
+            "Z", etc. A custom axis can be set by setting a list of two XYZ
+            floats. Defaults to None.
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
             the neutronics description output. Defaults to None.
         physical_groups (dict, optional): contains information on physical
@@ -58,6 +67,7 @@ class Shape:
     def __init__(
         self,
         points=None,
+        connection_type="mixed",
         name=None,
         color=(0.5, 0.5, 0.5),
         material_tag=None,
@@ -65,6 +75,7 @@ class Shape:
         stl_filename=None,
         azimuth_placement_angle=0.0,
         workplane="XZ",
+        rotation_axis=None,
         tet_mesh=None,
         physical_groups=None,
         cut=None,
@@ -72,6 +83,7 @@ class Shape:
         union=None
     ):
 
+        self.connection_type = connection_type
         self.points = points
         self.stp_filename = stp_filename
         self.stl_filename = stl_filename
@@ -84,6 +96,7 @@ class Shape:
 
         self.azimuth_placement_angle = azimuth_placement_angle
         self.workplane = workplane
+        self.rotation_axis = rotation_axis
 
         # neutronics specific properties
         self.material_tag = material_tag
@@ -96,11 +109,22 @@ class Shape:
         self.render_mesh = None
         # self.volume = None
         self.hash_value = None
+        self.points_hash_value = None
+        self.x_min = None
+        self.x_max = None
+        self.z_min = None
+        self.z_max = None
 
     @property
     def solid(self):
-        if self.get_hash() != self.hash_value:
+        """The CadQuery solid of the 3d object. Returns a CadQuery workplane
+        or CadQuery Compound"""
+
+        ignored_keys = ["_solid", "_hash_value"]
+        if get_hash(self, ignored_keys) != self.hash_value:
             self.create_solid()
+            self.hash_value = get_hash(self, ignored_keys)
+
         return self._solid
 
     @solid.setter
@@ -137,7 +161,7 @@ class Shape:
 
     @workplane.setter
     def workplane(self, value):
-        acceptable_values = ["XY", "YZ", "XZ"]
+        acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
         if value in acceptable_values:
             self._workplane = value
         else:
@@ -148,11 +172,81 @@ class Shape:
                 value)
 
     @property
+    def rotation_axis(self):
+        return self._rotation_axis
+
+    @rotation_axis.setter
+    def rotation_axis(self, value):
+        if isinstance(value, str):
+            acceptable_values = \
+                ["X", "Y", "Z", "-X", "-Y", "-Z", "+X", "+Y", "+Z"]
+            if value not in acceptable_values:
+                msg = "Shape.rotation_axis must be one of " + \
+                    " ".join(acceptable_values) + \
+                    " not " + value
+                raise ValueError(msg)
+        elif isinstance(value, Iterable):
+            msg = "Shape.rotation_axis must be a list of two (X, Y, Z) floats"
+            if len(value) != 2:
+                raise ValueError(msg)
+            for point in value:
+                if not isinstance(point, tuple):
+                    raise ValueError(msg)
+                if len(point) != 3:
+                    raise ValueError(msg)
+                for val in point:
+                    if not isinstance(val, (int, float)):
+                        raise ValueError(msg)
+
+            if value[0] == value[1]:
+                msg = "The two points must be different"
+                raise ValueError(msg)
+        elif value is not None:
+            msg = "Shape.rotation_axis must be a list or a string or None"
+            raise ValueError(msg)
+        self._rotation_axis = value
+
+    @property
     def volume(self):
+        """Get the total volume of the Shape. Returns a float"""
         if isinstance(self.solid, cq.Compound):
             return self.solid.Volume()
+
+        return self.solid.val().Volume()
+
+    @property
+    def volumes(self):
+        """Get the volumes of the Shape. Compound shapes provide a seperate
+        volume value for each entry. Returns a list of floats"""
+        all_volumes = []
+        if isinstance(self.solid, cq.Compound):
+            for solid in self.solid.Solids():
+                all_volumes.append(solid.Volume())
+            return all_volumes
         else:
-            return self.solid.val().Volume()
+            return [self.solid.val().Volume()]
+
+    @property
+    def area(self):
+        """Get the total surface area of the Shape. Returns a float"""
+        if isinstance(self.solid, cq.Compound):
+            return self.solid.Area()
+        else:
+            return self.solid.val().Area()
+
+    @property
+    def areas(self):
+        """Get the surface areas of the Shape. Compound shapes provide a
+        seperate area value for each entry. Returns a list of floats"""
+        all_areas = []
+        if isinstance(self.solid, cq.Compound):
+            for face in self.solid.Faces():
+                all_areas.append(face.Area())
+            return all_areas
+        else:
+            for face in self.solid.val().Faces():
+                all_areas.append(face.Area())
+            return all_areas
 
     @property
     def hash_value(self):
@@ -163,28 +257,40 @@ class Shape:
         self._hash_value = value
 
     @property
+    def points_hash_value(self):
+        return self._points_hash_value
+
+    @points_hash_value.setter
+    def points_hash_value(self, value):
+        self._points_hash_value = value
+
+    @property
     def color(self):
         return self._color
 
     @color.setter
     def color(self, value):
+        error = False
         if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 for i in value:
-                    if isinstance(i, (int, float)) is False:
-                        raise ValueError(
-                            "Shape.color must be a list or tuple of 3 or 4 floats"
-                        )
-                self._color = value
+                    if not isinstance(i, (int, float)):
+                        error = True
             else:
-                raise ValueError(
-                    "Shape.color must be a list or tuple of 3 or 4 floats")
+                error = True
         else:
+            error = True
+        # raise error
+        if error:
             raise ValueError(
                 "Shape.color must be a list or tuple of 3 or 4 floats")
+        self._color = value
 
     @property
     def material_tag(self):
+        """The material_tag assigned to the Shape. Used when taging materials
+        for use in neutronics descriptions"""
+
         return self._material_tag
 
     @material_tag.setter
@@ -193,10 +299,9 @@ class Shape:
             self._material_tag = value
         elif isinstance(value, str):
             if len(value) > 27:
-                warnings.warn(
-                    "Shape.material_tag > 28 characters. Use with DAGMC will be affected." +
-                    str(value),
-                    UserWarning)
+                msg = "Shape.material_tag > 28 characters." + \
+                      "Use with DAGMC will be affected." + str(value)
+                warnings.warn(msg, UserWarning)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
@@ -207,110 +312,100 @@ class Shape:
 
     @tet_mesh.setter
     def tet_mesh(self, value):
-        if value is None:
-            self._tet_mesh = value
-        elif isinstance(value, str):
-            self._tet_mesh = value
-        else:
+        if value is not None and not isinstance(value, str):
             raise ValueError("Shape.tet_mesh must be a string", value)
+        self._tet_mesh = value
 
     @property
     def name(self):
+        """The name of the Shape, used to identify Shapes when exporting_html
+        """
         return self._name
 
     @name.setter
     def name(self, value):
-        if value is None:
-            self._name = value
-        elif isinstance(value, str):
-            self._name = value
-        else:
+        if value is not None and not isinstance(value, str):
             raise ValueError("Shape.name must be a string", value)
+        self._name = value
 
     @property
     def points(self):
         """Sets the Shape.point attributes.
 
         Args:
-            points (a list of lists or tuples): list of points that create the shape
+            points (a list of lists or tuples): list of points that create the
+                shape
 
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
-        if hasattr(self, 'find_points'):
+        ignored_keys = ["_points", "_points_hash_value"]
+        if hasattr(self, 'find_points') and \
+                self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
+            self.points_hash_value = get_hash(self, ignored_keys)
 
         return self._points
 
     @points.setter
     def points(self, values):
 
-        if values is None:
-            self._points = values
-        else:
+        if values is not None:
             if not isinstance(values, list):
                 raise ValueError("points must be a list")
 
             for value in values:
                 if type(value) not in [list, tuple]:
-                    raise ValueError(
-                        "individual points must be a list or a tuple.",
-                        value,
-                        " in of type ",
-                        type(value),
-                    )
+                    msg = "individual points must be a list or a tuple." + \
+                        "{} in of type {}".format(value, type(value))
+                    raise ValueError(msg)
 
             for value in values:
                 # Checks that the length of each tuple in points is 2 or 3
                 if len(value) not in [2, 3]:
-                    raise ValueError(
-                        "individual points contain 2 or 3 entries",
-                        value,
-                        " has a length of ",
-                        len(values[0]),
-                    )
+                    msg = "individual points contain 2 or 3 entries {} has a \
+                        length of {}".format(value, len(values[0]))
+                    raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
-                    raise ValueError(
-                        "The first value in the tuples that make \
+                    msg = "The first value in the tuples that make \
                                         up the points represents the X value \
-                                        and must be a number",
-                        value,
-                    )
+                                        and must be a number {}".format(value)
+                    raise ValueError(msg)
                 if not isinstance(value[1], numbers.Number):
-                    raise ValueError(
-                        "The second value in the tuples that make \
-                                      up the points represents the X value and \
-                                      must be a number",
-                        value,
-                    )
+                    msg = "The second value in the tuples that make \
+                                      up the points represents the X value \
+                                      and must be a number {}".format(value)
+                    raise ValueError(msg)
 
                 # Checks that only straight and spline are in the connections
                 # part of points
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
-                        raise ValueError(
-                            'individual connections must be either "straight" or "spline"'
-                        )
+                        msg = 'individual connections must be either \
+                            "straight", "circle" or "spline"'
+                        raise ValueError(msg)
 
             # checks that the entries in the points are either all 2 long or
             # all 3 long, not a mixture
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
-                    raise ValueError(
-                        "The points list should contain entries of length 2 or \
-                            3 but not a mixture of 2 and 3")
+                    msg = "The points list should contain entries of length 2 \
+                            or 3 but not a mixture of 2 and 3"
+                    raise ValueError(msg)
 
             if len(values) > 1:
-                if values[-1][0] == values[0][0] and values[-1][1] == values[0][1]:
-                    raise ValueError(
-                        "The coordinates of the last and first points are the same."
-                    )
-                else:
-                    values.append(values[0])
+                if values[0][:2] == values[-1][:2]:
+                    msg = "The coordinates of the last and first points are \
+                        the same."
+                    raise ValueError(msg)
 
-            self._points = values
+                values.append(values[0])
+            if self.connection_type != "mixed":
+                values = [(*p, self.connection_type) for p in values]
+
+        self._points = values
 
     @property
     def stp_filename(self):
@@ -329,21 +424,17 @@ class Shape:
 
     @stp_filename.setter
     def stp_filename(self, value):
-        if value is None:
-            # print("stp_filename will need setting to use this shape in a Reactor")
-            self._stp_filename = value
-        elif isinstance(value, str):
-            if Path(value).suffix == ".stp" or Path(value).suffix == ".step":
-                self._stp_filename = value
+        if value is not None:
+            if isinstance(value, str):
+                if Path(value).suffix not in [".stp", ".step"]:
+                    msg = "Incorrect filename ending, filename must end with \
+                            .stp or .step"
+                    raise ValueError(msg)
             else:
-                raise ValueError(
-                    "Incorrect filename ending, filename must end with .stp or \
-                        .step")
-        else:
-            raise ValueError(
-                "stp_filename must be a string",
-                value,
-                type(value))
+                msg = "stp_filename must be a \
+                    string {} {}".format(value, type(value))
+                raise ValueError(msg)
+        self._stp_filename = value
 
     @property
     def stl_filename(self):
@@ -361,21 +452,17 @@ class Shape:
 
     @stl_filename.setter
     def stl_filename(self, value):
-        if value is None:
-            # print("stl_filename will need setting to use this shape in a Reactor")
-            self._stl_filename = value
-        elif isinstance(value, str):
-            if Path(value).suffix == ".stl":
-                self._stl_filename = value
+        if value is not None:
+            if isinstance(value, str):
+                if Path(value).suffix != ".stl":
+                    msg = "Incorrect filename ending, filename must end with \
+                            .stl"
+                    raise ValueError(msg)
             else:
-                raise ValueError(
-                    "Incorrect filename ending, filename must end with .stl"
-                )
-        else:
-            raise ValueError(
-                "stl_filename must be a string",
-                value,
-                type(value))
+                msg = "stl_filename must be a string \
+                    {} {}".format(value, type(value))
+                raise ValueError(msg)
+        self._stl_filename = value
 
     @property
     def azimuth_placement_angle(self):
@@ -383,25 +470,185 @@ class Shape:
 
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
-        if isinstance(value, (int, float, Iterable)):
+        error = False
+        if isinstance(value, (int, float, Iterable)) and \
+                not isinstance(value, str):
             if isinstance(value, Iterable):
                 for i in value:
-                    if isinstance(i, (int, float)) is False:
-                        raise ValueError(
-                            "azimuth_placement_angle must be a float or list of floats"
-                        )
-                self._azimuth_placement_angle = value
-            else:
-                self._azimuth_placement_angle = value
+                    if not isinstance(i, (int, float)):
+                        error = True
         else:
-            raise ValueError(
-                "azimuth_placement_angle must be a float or list of floats"
-            )
+            error = True
+
+        if error:
+            msg = "azimuth_placement_angle must be a float or list of floats"
+            raise ValueError(msg)
+        self._azimuth_placement_angle = value
 
     def create_solid(self):
-        """Dummy create_solid method
+        solid = None
+        if self.points is not None:
+            # obtains the first two values of the points list
+            XZ_points = [(p[0], p[1]) for p in self.points]
+
+            # obtains the last values of the points list
+            connections = [p[2] for p in self.points[:-1]]
+
+            current_linetype = connections[0]
+            current_points_list = []
+            instructions = []
+            # groups together common connection types
+            for i, c in enumerate(connections):
+                if c == current_linetype:
+                    current_points_list.append(XZ_points[i])
+                else:
+                    current_points_list.append(XZ_points[i])
+                    instructions.append(
+                        {current_linetype: current_points_list})
+                    current_linetype = c
+                    current_points_list = [XZ_points[i]]
+            instructions.append({current_linetype: current_points_list})
+
+            if list(instructions[-1].values())[0][-1] != XZ_points[0]:
+                keyname = list(instructions[-1].keys())[0]
+                instructions[-1][keyname].append(XZ_points[0])
+
+            if hasattr(self, "path_points"):
+
+                factor = 1
+                if self.workplane in ["XZ", "YX", "ZY"]:
+                    factor *= -1
+
+                solid = cq.Workplane(self.workplane).moveTo(0, 0)
+
+                if self.force_cross_section:
+                    for point in self.path_points[:-1]:
+                        solid = solid.workplane(
+                            offset=point[1] *
+                            factor).moveTo(
+                            point[0],
+                            0).workplane()
+                        for entry in instructions:
+                            if list(entry.keys())[0] == "spline":
+                                solid = solid.spline(
+                                    listOfXYTuple=list(entry.values())[0])
+                            if list(entry.keys())[0] == "straight":
+                                solid = solid.polyline(list(entry.values())[0])
+                            if list(entry.keys())[0] == "circle":
+                                p0 = list(entry.values())[0][0]
+                                p1 = list(entry.values())[0][1]
+                                p2 = list(entry.values())[0][2]
+                                solid = solid.moveTo(
+                                    p0[0], p0[1]).threePointArc(
+                                    p1, p2)
+                        solid = solid.close().moveTo(
+                            0, 0).moveTo(-point[0], 0).workplane(offset=-point[1] * factor)
+
+                elif self.force_cross_section == False:
+                    solid = solid.workplane(
+                        offset=self.path_points[0][1] *
+                        factor).moveTo(
+                        self.path_points[0][0],
+                        0).workplane()
+                    for entry in instructions:
+                        if list(entry.keys())[0] == "spline":
+                            solid = solid.spline(
+                                listOfXYTuple=list(entry.values())[0])
+                        if list(entry.keys())[0] == "straight":
+                            solid = solid.polyline(list(entry.values())[0])
+                        if list(entry.keys())[0] == "circle":
+                            p0 = list(entry.values())[0][0]
+                            p1 = list(entry.values())[0][1]
+                            p2 = list(entry.values())[0][2]
+                            solid = solid.moveTo(
+                                p0[0], p0[1]).threePointArc(
+                                p1, p2)
+
+                    solid = solid.close().moveTo(0,
+                                                 0).moveTo(-self.path_points[0][0],
+                                                           0).workplane(offset=-self.path_points[0][1] * factor)
+
+                solid = solid.workplane(
+                    offset=self.path_points[-1][1] * factor).moveTo(self.path_points[-1][0], 0).workplane()
+
+            else:
+                # for rotate and extrude shapes
+                solid = cq.Workplane(self.workplane)
+                # for extrude shapes
+                if hasattr(self, "extrusion_start_offset"):
+                    extrusion_offset = -self.extrusion_start_offset
+                    solid = solid.workplane(offset=extrusion_offset)
+
+            for entry in instructions:
+                if list(entry.keys())[0] == "spline":
+                    solid = solid.spline(listOfXYTuple=list(entry.values())[0])
+                if list(entry.keys())[0] == "straight":
+                    solid = solid.polyline(list(entry.values())[0])
+                if list(entry.keys())[0] == "circle":
+                    p0 = list(entry.values())[0][0]
+                    p1 = list(entry.values())[0][1]
+                    p2 = list(entry.values())[0][2]
+                    solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+
+        return solid
+
+    def rotate_solid(self, solid):
+        # Checks if the azimuth_placement_angle is a list of angles
+        if isinstance(self.azimuth_placement_angle, Iterable):
+            azimuth_placement_angles = self.azimuth_placement_angle
+        else:
+            azimuth_placement_angles = [self.azimuth_placement_angle]
+
+        rotated_solids = []
+        # Perform seperate rotations for each angle
+        for angle in azimuth_placement_angles:
+            rotated_solids.append(
+                solid.rotate(
+                    *self.get_rotation_axis()[0], angle))
+        solid = cq.Workplane(self.workplane)
+
+        # Joins the seperate solids together
+        for i in rotated_solids:
+            solid = solid.union(i)
+        return solid
+
+    def get_rotation_axis(self):
+        """Returns the rotation axis for a given shape. If self.rotation_axis
+        is None, the rotation axis will be computed from self.workplane (or
+        from self.path_workplane if applicable). If self.rotation_axis is an
+        acceptable string (eg. "X", "+Y", "-Z"...) then this axis will be used.
+        If self.rotation_axis is a list of two points, then these two points
+        will be used to form an axis.
+
+        Returns:
+            list, str: list of two XYZ points and the string of the axis (eg.
+                "X", "Y"..)
         """
-        return
+        rotation_axis = {
+            "X": [(-1, 0, 0), (1, 0, 0)],
+            "-X": [(1, 0, 0), (-1, 0, 0)],
+            "Y": [(0, -1, 0), (0, 1, 0)],
+            "-Y": [(0, 1, 0), (0, -1, 0)],
+            "Z": [(0, 0, -1), (0, 0, 1)],
+            "-Z": [(0, 0, 1), (0, 0, -1)],
+        }
+        if isinstance(self.rotation_axis, str):
+            # X, Y or Z axis
+            return (
+                rotation_axis[self.rotation_axis.replace("+", "")],
+                self.rotation_axis
+            )
+        elif isinstance(self.rotation_axis, Iterable):
+            # Custom axis
+            return self.rotation_axis, "custom_axis"
+        elif self.rotation_axis is None:
+            # Axis from workplane or path_workplane
+            if hasattr(self, "path_workplane"):
+                # compute from path_workplane instead
+                workplane = self.path_workplane
+            else:
+                workplane = self.workplane
+            return rotation_axis[workplane[1]], workplane[1]
 
     def create_limits(self):
         """Finds the x,y,z limits (min and max) of the points that make up the
@@ -419,7 +666,7 @@ class Shape:
         if hasattr(self, "find_points"):
             self.find_points()
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         self.x_min = float(min([row[0] for row in self.points]))
         self.x_max = float(max([row[0] for row in self.points]))
@@ -438,20 +685,20 @@ class Shape:
             tolerance (float): the precision of the faceting
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".stl":
-            Pfilename = Pfilename.with_suffix(".stl")
+        if path_filename.suffix != ".stl":
+            path_filename = path_filename.with_suffix(".stl")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(Pfilename, "w") as f:
+        with open(path_filename, "w") as f:
             exporters.exportShape(self.solid, "STL", f, tolerance)
-        print("Saved file as ", Pfilename)
+        print("Saved file as ", path_filename)
 
-        return str(Pfilename)
+        return str(path_filename)
 
-    def export_stp(self, filename=None):
+    def export_stp(self, filename=None, units='mm'):
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -459,25 +706,34 @@ class Shape:
 
         Args:
             filename (str): the filename of the stp
+            units (str): the units of the stp file, options are 'cm' or 'mm'.
+                Default is mm.
         """
 
         if filename is not None:
-            Pfilename = Path(filename)
+            path_filename = Path(filename)
 
-            if Pfilename.suffix == ".stp" or Pfilename.suffix == ".step":
+            if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
                 pass
             else:
-                Pfilename = Pfilename.with_suffix(".stp")
+                path_filename = path_filename.with_suffix(".stp")
 
-            Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
         elif self.stp_filename is not None:
-            Pfilename = Path(self.stp_filename)
+            path_filename = Path(self.stp_filename)
 
-        with open(Pfilename, "w") as f:
+        with open(path_filename, "w") as f:
             exporters.exportShape(self.solid, "STEP", f)
-        print("Saved file as ", Pfilename)
 
-        return str(Pfilename)
+        if units == 'cm':
+            self._replace(
+                path_filename,
+                'SI_UNIT(.MILLI.,.METRE.)',
+                'SI_UNIT(.CENTI.,.METRE.)')
+
+        print("Saved file as ", path_filename)
+
+        return str(path_filename)
 
     def export_physical_groups(self, filename):
         """Exports a JSON file containing a look up table which is useful for
@@ -488,17 +744,17 @@ class Shape:
             filename (str): the filename used to save the json file
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".json":
-            Pfilename = Pfilename.with_suffix(".json")
+        if path_filename.suffix != ".json":
+            path_filename = path_filename.with_suffix(".json")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
         if self.physical_groups is not None:
             with open(filename, "w") as outfile:
                 json.dump(self.physical_groups, outfile, indent=4)
 
-            print("Saved physical_groups description to ", Pfilename)
+            print("Saved physical_groups description to ", path_filename)
         else:
             print(
                 "Warning: physical_groups attribute is None \
@@ -517,41 +773,46 @@ class Shape:
             filename (str): the filename of the svg file to be exported
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".svg":
-            Pfilename = Pfilename.with_suffix(".svg")
+        if path_filename.suffix != ".svg":
+            path_filename = path_filename.with_suffix(".svg")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(Pfilename, "w") as f:
+        with open(path_filename, "w") as f:
             exporters.exportShape(self.solid, "SVG", f)
-        print("Saved file as ", Pfilename)
+        print("Saved file as ", path_filename)
 
-        return str(Pfilename)
+        return str(path_filename)
 
     def export_html(self, filename):
-        """Creates a html graph representation of the points and connections for
-        the Shape object. Shapes are colored by their .color property. Shapes
-        are also labelled by their .name. If filename provided doesn't end with
-        .html then .html will be added.
+        """Creates a html graph representation of the points and connections
+        for the Shape object. Shapes are colored by their .color property.
+        Shapes are also labelled by their .name. If filename provided doesn't
+        end with .html then .html will be added.
 
         Args:
             filename (str): the filename used to save the html graph
 
         Returns:
-            plotly figure: figure object
+            plotly.Figure(): figure object
         """
 
+        if self.__class__.__name__ == "SweepCircleShape":
+            msg = 'WARNING: export_html will plot path_points for ' + \
+                'the SweepCircleShape class'
+            print(msg)
+
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".html":
-            Pfilename = Pfilename.with_suffix(".html")
+        if path_filename.suffix != ".html":
+            path_filename = path_filename.with_suffix(".html")
 
         fig = go.Figure()
         fig.update_layout(
@@ -560,9 +821,9 @@ class Shape:
 
         fig.add_trace(self._trace())
 
-        fig.write_html(str(Pfilename))
+        fig.write_html(str(path_filename))
 
-        print("Exported html graph to ", Pfilename)
+        print("Exported html graph to ", path_filename)
 
         return fig
 
@@ -631,27 +892,32 @@ class Shape:
 
         return trace
 
-    def export_2d_image(self, filename, xmin=0, xmax=900, ymin=-600, ymax=600):
+    def export_2d_image(
+            self, filename, xmin=0., xmax=900., ymin=-600., ymax=600.):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
 
         Args:
-            filename (str): the filename of the saved png image
-            xmin (float): the minimum x value of the x axis
-            xmax (float): the maximum x value of the x axis
-            ymin (float): the minimum y value of the y axis
-            ymax (float); the maximum y value of the y axis
+            filename (str): the filename of the saved png image.
+            xmin (float, optional): the minimum x value of the x axis.
+                Defaults to 0..
+            xmax (float, optional): the maximum x value of the x axis.
+                Defaults to 900..
+            ymin (float, optional): the minimum y value of the y axis.
+                Defaults to -600..
+            ymax (float, optional): the maximum y value of the y axis.
+                Defaults to 600..
 
         Returns:
-            matplotlib plot: a plt object
+            matplotlib.plt(): a plt object
         """
 
         fig, ax = plt.subplots()
 
-        p = self._create_patch()
+        patch = self._create_patch()
 
-        ax.add_collection(p)
+        ax.add_collection(patch)
 
         ax.axis("equal")
         ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax))
@@ -675,31 +941,29 @@ class Shape:
         """
 
         if self.points is None:
-            ValueError("No points defined for", self)
+            raise ValueError("No points defined for", self)
 
         patches = []
         xylist = []
 
-        for x1, z1 in zip(
-            [row[0] for row in self.points], [row[1] for row in self.points]
-        ):
-            xylist.append([x1, z1])
+        for point in self.points:
+            xylist.append([point[0], point[1]])
 
         polygon = Polygon(xylist, closed=True)
         patches.append(polygon)
 
-        p = PatchCollection(patches)
+        patch = PatchCollection(patches)
 
         if self.color is not None:
-            p.set_facecolor(self.color)
-            p.set_color(self.color)
-            p.color = self.color
-            p.edgecolor = self.color
+            patch.set_facecolor(self.color)
+            patch.set_color(self.color)
+            patch.color = self.color
+            patch.edgecolor = self.color
             # checks to see if an alpha value is provided in the color
             if len(self.color) == 4:
-                p.set_alpha = self.color[-1]
-        self.patch = p
-        return p
+                patch.set_alpha = self.color[-1]
+        self.patch = patch
+        return patch
 
     def neutronics_description(self):
         """Returns a neutronics description of the Shape object. This is needed
@@ -716,6 +980,8 @@ class Shape:
 
         if self.stp_filename is not None:
             neutronics_description["stp_filename"] = self.stp_filename
+            # this is needed as ppp looks for the filename key
+            neutronics_description["filename"] = self.stp_filename
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
@@ -725,25 +991,20 @@ class Shape:
 
         return neutronics_description
 
-    def get_hash(self):
-        hash_object = blake2b()
-        shape_dict = dict(self.__dict__)
-        # set _solid and _hash_value to None to prevent unnecessary
-        # reconstruction
-        shape_dict["_solid"] = None
-        shape_dict["_hash_value"] = None
-
-        hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
-        value = hash_object.hexdigest()
-        return value
-
-    def perform_boolean_operations(self, solid):
+    def perform_boolean_operations(self, solid, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""
 
         # If a cut solid is provided then perform a boolean cut
         if self.cut is not None:
             solid = cut_solid(solid, self.cut)
+
+        # If a wedge cut is provided then perform a boolean cut
+        # Performed independantly to avoid use of self.cut
+        # Prevents repetition of 'outdated' wedge cuts
+        if 'wedge_cut' in kwargs:
+            if kwargs['wedge_cut'] is not None:
+                solid = cut_solid(solid, kwargs['wedge_cut'])
 
         # If an intersect is provided then perform a boolean intersect
         if self.intersect is not None:
@@ -753,8 +1014,31 @@ class Shape:
         if self.union is not None:
             solid = union_solid(solid, self.union)
 
-        self.solid = solid
-
-        self.hash_value = self.get_hash()
-
         return solid
+
+    def _replace(self, filename, pattern, subst):
+        """Opens a file and replaces occurances of a particular string
+            (pattern)with a new string (subst) and overwrites the file.
+            Used internally within the paramak to ensure .STP files are
+            in units of cm not the default mm.
+        Args:
+            filename (str): the filename of the file to edit
+            pattern (str): the string that should be removed
+            subst (str): the string that should be used in the place of the
+                pattern string
+        """
+        # Create temp file
+        fh, abs_path = mkstemp()
+        with fdopen(fh, 'w') as new_file:
+            with open(filename) as old_file:
+                for line in old_file:
+                    new_file.write(line.replace(pattern, subst))
+
+        # Copy the file permissions from the old file to the new file
+        copymode(filename, abs_path)
+
+        # Remove original file
+        remove(filename)
+
+        # Move new file
+        move(abs_path, filename)

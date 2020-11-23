@@ -1,11 +1,15 @@
 """
-This example creates a ball reactor using the BallReactor parametric shape
+This example creates a ball reactor using the BallReactor parametric reactor.
+By default the script saves stp, stl, html and svg files.
 """
+
+from pathlib import Path
 
 import paramak
 
 
-def main():
+def make_ball_reactor(outputs=['stp', 'neutronics', 'svg', 'stl', 'html'],
+                      output_folder='BallReactor'):
 
     my_reactor = paramak.BallReactor(
         inner_bore_radial_thickness=10,
@@ -30,10 +34,18 @@ def main():
         outboard_tf_coil_poloidal_thickness=50
     )
 
-    my_reactor.export_stp()
-
-    my_reactor.export_neutronics_description()
+    if 'stp' in outputs:
+        my_reactor.export_stp(output_folder=output_folder)
+    if 'neutronics' in outputs:
+        my_reactor.export_neutronics_description(
+            Path(output_folder) / 'manifest.json')
+    if 'svg' in outputs:
+        my_reactor.export_svg(Path(output_folder) / 'reactor.svg')
+    if 'stl' in outputs:
+        my_reactor.export_stl(output_folder=output_folder)
+    if 'html' in outputs:
+        my_reactor.export_html(Path(output_folder) / 'reactor.html')
 
 
 if __name__ == "__main__":
-    main()
+    make_ball_reactor(['stp', 'neutronics', 'svg', 'stl', 'html'])

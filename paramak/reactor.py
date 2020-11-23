@@ -1,3 +1,4 @@
+
 import json
 from collections import Iterable
 from pathlib import Path
@@ -5,11 +6,12 @@ from pathlib import Path
 import cadquery as cq
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
-import plotly.graph_objects as go
 from paramak.shape import Shape
+from paramak.utils import get_hash
 
 
 class Reactor:
@@ -22,13 +24,12 @@ class Reactor:
         shapes_and_components (list): list of paramak.Shape
         graveyard_offset (float): the offset between the largest edge of the
             geometry and inner bounding shell created. can be overwritten by
-            specifying offset as part of the export_graveyard and make_graveyard
-            methods.
+            specifying offset as part of the export_graveyard and
+            make_graveyard methods.
     """
 
-    def __init__(self, shapes_and_components, graveyard_offset=500):
+    def __init__(self, shapes_and_components, graveyard_offset=100):
 
-        # calculated internally
         self.material_tags = []
         self.stp_filenames = []
         self.stl_filenames = []
@@ -38,12 +39,13 @@ class Reactor:
 
         self.shapes_and_components = shapes_and_components
         self.graveyard_offset = graveyard_offset
+        self.reactor_hash_value = None
 
     @property
     def stp_filenames(self):
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.stp_filename)
+        for shape_or_component in self.shapes_and_components:
+            values.append(shape_or_component.stp_filename)
         return values
 
     @stp_filenames.setter
@@ -53,8 +55,8 @@ class Reactor:
     @property
     def stl_filenames(self):
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.stl_filename)
+        for shape_or_component in self.shapes_and_components:
+            values.append(shape_or_component.stl_filename)
         return values
 
     @stl_filenames.setter
@@ -63,9 +65,16 @@ class Reactor:
 
     @property
     def material_tags(self):
+        """Returns a set of all the materials_tags used in the Reactor
+        (excluding the plasma)"""
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.material_tag)
+        for shape_or_component in self.shapes_and_components:
+            if isinstance(
+                shape_or_component,
+                (paramak.Plasma,
+                 paramak.PlasmaFromPoints,
+                 paramak.PlasmaBoundaries)) is False:
+                values.append(shape_or_component.material_tag)
         return values
 
     @material_tags.setter
@@ -89,7 +98,11 @@ class Reactor:
         to the Reactor object. This allows collective operations to be
         performed on all the shapes in the reactor. When adding a shape or
         component the stp_filename of the shape or component should be unique"""
-
+        if hasattr(self, "create_solids"):
+            ignored_keys = ["reactor_hash_value"]
+            if get_hash(self, ignored_keys) != self.reactor_hash_value:
+                self.create_solids()
+                self.reactor_hash_value = get_hash(self, ignored_keys)
         return self._shapes_and_components
 
     @shapes_and_components.setter
@@ -139,7 +152,9 @@ class Reactor:
     def solid(self, value):
         self._solid = value
 
-    def neutronics_description(self, include_plasma=False):
+    def neutronics_description(self, include_plasma=False,
+                               include_graveyard=True
+                               ):
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations which
         require linkage between volumes, materials and identification of which
@@ -158,7 +173,10 @@ class Reactor:
         for entry in self.shapes_and_components:
 
             if include_plasma is False and isinstance(
-                    entry, paramak.Plasma) is True:
+                entry,
+                (paramak.Plasma,
+                 paramak.PlasmaFromPoints,
+                 paramak.PlasmaBoundaries)) is True:
                 continue
 
             if entry.stp_filename is None:
@@ -175,53 +193,67 @@ class Reactor:
 
             neutronics_description.append(entry.neutronics_description())
 
-        # This add the neutronics description for the graveyard which is unique as
-        # it is automatically calculated instead of being added by the user.
+        # This add the neutronics description for the graveyard which is unique
+        # as it is automatically calculated instead of being added by the user.
         # Also the graveyard must have 'Graveyard' as the material name
-        if self.graveyard is None:
-            self.make_graveyard()
-        neutronics_description.append(self.graveyard.neutronics_description())
+        if include_graveyard is True:
+            if self.graveyard is None:
+                self.make_graveyard()
+            neutronics_description.append(
+                self.graveyard.neutronics_description())
 
         return neutronics_description
 
     def export_neutronics_description(
-        self, filename="manifest.json", include_plasma=False
-    ):
+            self,
+            filename="manifest.json",
+            include_plasma=False,
+            include_graveyard=True):
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
-        file contains a list of dictionaries. Each dictionary entry comprises of
-        a material and a filename and optionally a tet_mesh instruction. The
+        file contains a list of dictionaries. Each dictionary entry comprises
+        of a material and a filename and optionally a tet_mesh instruction. The
         json file can then be used with the neutronics workflows to create a
         neutronics model. Creating of the neutronics model requires linkage
         between volumes, materials and identification of which volumes to
         tet_mesh. If the filename does not end with .json then .json will be
-        added. The plasma geometry is not included by default as it is typically
-        not included in neutronics simulations. The reason for this is that the
-        low number density results in minimal interactions with neutrons.
-        However, the plasma can be added if the include_plasma argument is set
-        to True.
+        added. The plasma geometry is not included by default as it is
+        typically not included in neutronics simulations. The reason for this
+        is that the low number density results in minimal interactions with
+        neutrons. However, the plasma can be added if the include_plasma
+        argument is set to True.
 
         Args:
-            filename (str): the filename used to save the neutronics description
+            filename (str, optional): the filename used to save the neutronics
+                description
+            include_plasma (Boolean, optional): should the plasma be included.
+                Defaults to False as the plasma volume and material has very
+                little impact on the neutronics results due to the low density.
+                Including the plasma does however slow down the simulation.
+            include_graveyard (Boolean, optional): should the graveyard be
+                included. Defaults to True as this is needed for DAGMC models.
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".json":
-            Pfilename = Pfilename.with_suffix(".json")
+        if path_filename.suffix != ".json":
+            path_filename = path_filename.with_suffix(".json")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(filename, "w") as outfile:
+        with open(path_filename, "w") as outfile:
             json.dump(
-                self.neutronics_description(include_plasma=include_plasma),
+                self.neutronics_description(
+                    include_plasma=include_plasma,
+                    include_graveyard=include_graveyard,
+                ),
                 outfile,
                 indent=4,
             )
 
-        print("saved geometry description to ", Pfilename)
+        print("saved geometry description to ", path_filename)
 
-        return filename
+        return str(path_filename)
 
     def export_stp(self, output_folder=""):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
@@ -260,8 +292,6 @@ class Reactor:
         self.graveyard.export_stp(
             Path(output_folder) / Path(self.graveyard.stp_filename)
         )
-
-        print("exported stp files ", filenames)
 
         return filenames
 
@@ -341,12 +371,12 @@ class Reactor:
         except ImportError as err:
             raise err('PyMoab not found, Reactor.export_h5m method not available')
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".h5m":
-            Pfilename = Pfilename.with_suffix(".h5m")
+        if path_filename.suffix != ".h5m":
+            path_filename = path_filename.with_suffix(".h5m")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         self.export_stl(tolerance=tolerance)
         material_dict = self.neutronics_description()
@@ -427,9 +457,6 @@ class Reactor:
 
             material_name = item['material']
 
-            if skip_graveyard and "graveyard" in stl_filename.lower():
-                continue
-
             group_set = mb.create_meshset()
             mb.tag_set_data(tags['category'], group_set, "Group")
             print("mat:{}".format(material_name))
@@ -448,14 +475,14 @@ class Reactor:
 
         mb.add_entities(file_set, all_sets)
 
-        mb.write_file(filename)
+        mb.write_file(str(path_filename))
 
         return filename
 
     def export_physical_groups(self, output_folder=""):
-        """Exports several JSON files containing a look up table which is useful
-        for identifying faces and volumes. The output file names are generated
-        from .stp_filename properties.
+        """Exports several JSON files containing a look up table which is
+        useful for identifying faces and volumes. The output file names are
+        generated from .stp_filename properties.
 
         Args:
             output_folder (str, optional): directory of outputfiles.
@@ -488,53 +515,60 @@ class Reactor:
             filename (str): the filename of the svg file to be exported
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".svg":
-            Pfilename = Pfilename.with_suffix(".svg")
+        if path_filename.suffix != ".svg":
+            path_filename = path_filename.with_suffix(".svg")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(Pfilename, "w") as f:
+        with open(path_filename, "w") as f:
             exporters.exportShape(self.solid, "SVG", f)
-        print("Saved file as ", Pfilename)
+        print("Saved file as ", path_filename)
 
-    def export_graveyard(self, offset=None, filename="Graveyard.stp"):
+    def export_graveyard(
+            self,
+            graveyard_offset=None,
+            filename="Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
-        is needed for DAGMC simulations. This method also calls Reactor.make_graveyard with the offset.
+        is needed for DAGMC simulations. This method also calls
+        Reactor.make_graveyard with the offset.
 
         Args:
             filename (str): the filename for saving the stp file
-            offset (float): the offset between the largest edge of the geometry
-                and inner bounding shell created. Defaults to Reactor.graveyard_offset
+            graveyard_offset (float): the offset between the largest edge of
+                the geometry and inner bounding shell created. Defaults to
+                Reactor.graveyard_offset
 
         Returns:
             str: the stp filename created
         """
 
-        if offset is None:
-            offset = self.graveyard_offset
+        if graveyard_offset is None:
+            graveyard_offset = self.graveyard_offset
 
-        self.make_graveyard(offset=offset)
+        self.make_graveyard(graveyard_offset=graveyard_offset)
         self.graveyard.export_stp(Path(filename))
+
         return filename
 
-    def make_graveyard(self, offset=None):
+    def make_graveyard(self, graveyard_offset=None):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
 
         Args:
-            offset (float): the offset between the largest edge of the geometry
-            and inner bounding shell created. Defaults to Reactor.graveyard_offset
+            graveyard_offset (float): the offset between the largest edge of
+                the geometry and inner bounding shell created. Defaults to
+                Reactor.graveyard_offset
 
         Returns:
             CadQuery solid: a shell volume that bounds the geometry, referred to
             as a graveyard in DAGMC
         """
 
-        if offset is None:
-            offset = self.graveyard_offset
+        if graveyard_offset is None:
+            graveyard_offset = self.graveyard_offset
 
         for component in self.shapes_and_components:
             if component.solid is None:
@@ -546,33 +580,43 @@ class Reactor:
 
             if isinstance(component.solid, cq.Compound):
                 for solid in component.solid.Solids():
-                    largestDimension = max(
+                    largest_dimension = max(
                         abs(solid.BoundingBox().xmax),
                         abs(solid.BoundingBox().xmin),
                         abs(solid.BoundingBox().ymax),
                         abs(solid.BoundingBox().ymin),
                         abs(solid.BoundingBox().zmax),
-                        abs(solid.BoundingBox().zmin)
+                        abs(solid.BoundingBox().zmin),
+                        largest_dimension
                     )
-                    if largestDimension > largest_dimension:
-                        largest_dimension = largestDimension
             else:
-                if component.solid.largestDimension() > largest_dimension:
-                    largest_dimension = component.solid.largestDimension()
+                largest_dimension = max(
+                    abs(component.solid.val().BoundingBox().xmax),
+                    abs(component.solid.val().BoundingBox().xmin),
+                    abs(component.solid.val().BoundingBox().ymax),
+                    abs(component.solid.val().BoundingBox().ymin),
+                    abs(component.solid.val().BoundingBox().zmax),
+                    abs(component.solid.val().BoundingBox().zmin),
+                    largest_dimension
+                )
+
+        largest_dimension = largest_dimension * 2
+
+        graveyard_offset = graveyard_offset * 2
 
         # creates a small box that surrounds the geometry
         inner_box = cq.Workplane("front").box(
-            largest_dimension + offset,
-            largest_dimension + offset,
-            largest_dimension + offset
+            largest_dimension + graveyard_offset,
+            largest_dimension + graveyard_offset,
+            largest_dimension + graveyard_offset
         )
 
         graveyard_thickness = 10
         # creates a large box that surrounds the smaller box
         outer_box = cq.Workplane("front").box(
-            largest_dimension + offset + graveyard_thickness,
-            largest_dimension + offset + graveyard_thickness,
-            largest_dimension + offset + graveyard_thickness
+            largest_dimension + graveyard_offset + graveyard_thickness,
+            largest_dimension + graveyard_offset + graveyard_thickness,
+            largest_dimension + graveyard_offset + graveyard_thickness
         )
 
         # subtracts the two boxes to leave a hollow box
@@ -605,19 +649,19 @@ class Reactor:
             str: png filename created
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".png":
-            Pfilename = Pfilename.with_suffix(".png")
+        if path_filename.suffix != ".png":
+            path_filename = path_filename.with_suffix(".png")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         fig, ax = plt.subplots()
 
         # creates indvidual patches for each Shape which are combined together
         for entry in self.shapes_and_components:
-            p = entry._create_patch()
-            ax.add_collection(p)
+            patch = entry._create_patch()
+            ax.add_collection(patch)
 
         ax.axis("equal")
         ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax))
@@ -627,9 +671,9 @@ class Reactor:
         plt.savefig(filename, dpi=100)
         plt.close()
 
-        print("\n saved 2d image to ", str(Pfilename))
+        print("\n saved 2d image to ", str(path_filename))
 
-        return str(Pfilename)
+        return str(path_filename)
 
     def export_html(self, filename="reactor.html"):
         """Creates a html graph representation of the points for the Shape
@@ -643,12 +687,12 @@ class Reactor:
             plotly figure: figure object
         """
 
-        Pfilename = Path(filename)
+        path_filename = Path(filename)
 
-        if Pfilename.suffix != ".html":
-            Pfilename = Pfilename.with_suffix(".html")
+        if path_filename.suffix != ".html":
+            path_filename = path_filename.with_suffix(".html")
 
-        Pfilename.parents[0].mkdir(parents=True, exist_ok=True)
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         fig = go.Figure()
         fig.update_layout(
@@ -659,7 +703,7 @@ class Reactor:
         for entry in self.shapes_and_components:
             fig.add_trace(entry._trace())
 
-        fig.write_html(str(Pfilename))
-        print("Exported html graph to ", str(Pfilename))
+        fig.write_html(str(path_filename))
+        print("Exported html graph to ", str(path_filename))
 
         return fig

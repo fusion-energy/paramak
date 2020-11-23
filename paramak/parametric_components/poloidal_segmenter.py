@@ -1,9 +1,10 @@
-import math
-import cadquery as cq
 
+import math
+
+import cadquery as cq
 from paramak import RotateStraightShape
-from paramak.utils import rotate, intersect_solid, \
-    coefficients_of_line_from_points
+from paramak.utils import (coefficients_of_line_from_points, get_hash,
+                           intersect_solid, rotate)
 
 
 class PoloidalSegments(RotateStraightShape):
@@ -93,7 +94,7 @@ class PoloidalSegments(RotateStraightShape):
 
     @property
     def solid(self):
-        if self.get_hash() != self.hash_value:
+        if get_hash(self) != self.hash_value:
             self.create_solid()
         return self._solid
 
@@ -122,24 +123,23 @@ class PoloidalSegments(RotateStraightShape):
             outer_point_1 = rotate(
                 self.center_point,
                 outer_point,
-                math.radians(current_angle))
+                math.radians(current_angle)
+            )
+
             outer_point_2 = rotate(
-                self.center_point, outer_point, math.radians(
-                    current_angle + angle_per_segment))
+                self.center_point,
+                outer_point,
+                math.radians(current_angle + angle_per_segment)
+            )
 
-            if outer_point_1[0] < 0:
-                m, c = coefficients_of_line_from_points(
-                    outer_point_1, self.center_point)
-                points.append((0, c))
-            else:
-                points.append(outer_point_1)
-
-            if outer_point_2[0] < 0:
-                m, c = coefficients_of_line_from_points(
-                    outer_point_2, self.center_point)
-                points.append((0, c))
-            else:
-                points.append(outer_point_2)
+            # if the point goes beyond the zero line then set to zero
+            for new_point in [outer_point_1, outer_point_2]:
+                if new_point[0] < 0:
+                    m, c = coefficients_of_line_from_points(
+                        new_point, self.center_point)
+                    points.append((0, c))
+                else:
+                    points.append(new_point)
 
             current_angle = current_angle + angle_per_segment
 
@@ -160,7 +160,7 @@ class PoloidalSegments(RotateStraightShape):
 
             solid = (
                 cq.Workplane(self.workplane)
-                .polyline([p1, p2, p3])
+                .polyline([p1[:2], p2[:2], p3[:2]])
                 .close()
                 .revolve(self.rotation_angle)
             )
@@ -185,6 +185,6 @@ class PoloidalSegments(RotateStraightShape):
 
         self.solid = compound
 
-        self.hash_value = self.get_hash()
+        self.hash_value = get_hash(self)
 
         return compound

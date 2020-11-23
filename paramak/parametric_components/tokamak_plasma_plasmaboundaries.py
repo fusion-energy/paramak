@@ -1,7 +1,6 @@
 
-from plasmaboundaries import get_separatrix_coordinates
-
 from paramak import Plasma
+from plasmaboundaries import get_separatrix_coordinates
 
 
 class PlasmaBoundaries(Plasma):
@@ -56,48 +55,6 @@ class PlasmaBoundaries(Plasma):
 
         # properties needed for plasma shapes
         self.A = A
-        self.vertical_displacement = vertical_displacement
-
-    @property
-    def vertical_displacement(self):
-        return self._vertical_displacement
-
-    @vertical_displacement.setter
-    def vertical_displacement(self, value):
-        self._vertical_displacement = value
-
-    @property
-    def minor_radius(self):
-        return self._minor_radius
-
-    @minor_radius.setter
-    def minor_radius(self, value):
-        if value > 2000 or value < 1:
-            raise ValueError("minor_radius is out of range")
-        else:
-            self._minor_radius = value
-
-    @property
-    def major_radius(self):
-        return self._major_radius
-
-    @major_radius.setter
-    def major_radius(self, value):
-        if value > 2000 or value < 1:
-            raise ValueError("major_radius is out of range")
-        else:
-            self._major_radius = value
-
-    @property
-    def elongation(self):
-        return self._elongation
-
-    @elongation.setter
-    def elongation(self, value):
-        if value > 10 or value < 0:
-            raise ValueError("elongation is out of range")
-        else:
-            self._elongation = value
 
     def find_points(self):
         """Finds the XZ points that describe the 2D profile of the plasma."""
@@ -108,43 +65,23 @@ class PlasmaBoundaries(Plasma):
             "elongation": self.elongation,
             "triangularity": self.triangularity,
         }
-        points = get_separatrix_coordinates(params, self.configuration)
+        points = get_separatrix_coordinates(
+            params, self.configuration)
         # add vertical displacement
         points[:, 1] += self.vertical_displacement
         # rescale to cm
         points[:] *= self.major_radius
 
         # remove unnecessary points
-        lower_x_point, upper_x_point = self.compute_x_points()
         # if non-null these are the y bounds
-        lower_point_y = (
-            -self.elongation * self.minor_radius + self.vertical_displacement
-        )
-        upper_point_y = self.elongation * self.minor_radius + \
-            self.vertical_displacement
+        lower_point_y = self.low_point[1]
+        upper_point_y = self.high_point[1]
         # else use x points
         if self.configuration in ["single-null", "double-null"]:
-            lower_point_y = lower_x_point[1]
+            lower_point_y = self.lower_x_point[1]
             if self.configuration == "double-null":
-                upper_point_y = upper_x_point[1]
-        points2 = []
-        for p in points:
-            if p[1] >= lower_point_y and p[1] <= upper_point_y:
-                points2.append(p)
-        points = points2
+                upper_point_y = self.upper_x_point[1]
 
-        self.points = points
-
-        # set the points of interest
-        self.high_point = (
-            self.major_radius - self.triangularity * self.minor_radius,
-            self.elongation * self.minor_radius,
-        )
-        self.low_point = (
-            self.major_radius - self.triangularity * self.minor_radius,
-            -self.elongation * self.minor_radius,
-        )
-        self.outer_equatorial_point = (
-            self.major_radius + self.minor_radius, 0)
-        self.inner_equatorial_point = (
-            self.major_radius - self.minor_radius, 0)
+        points = points[
+            (points[:, 1] >= lower_point_y) & (points[:, 1] <= upper_point_y)]
+        self.points = points.tolist()[:-1]

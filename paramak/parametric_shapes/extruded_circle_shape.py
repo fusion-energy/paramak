@@ -1,8 +1,5 @@
 
-from collections import Iterable
-
 import cadquery as cq
-
 from paramak import Shape
 from paramak.utils import calculate_wedge_cut
 
@@ -14,8 +11,8 @@ class ExtrudeCircleShape(Shape):
         distance (float): the extrusion distance to use (cm units if used for
             neutronics)
         radius (float): radius of the shape.
-        rotation_angle (float): rotation_angle of solid created. a cut is performed
-            from rotation_angle to 360 degrees. Defaults to 360.
+        rotation_angle (float): rotation_angle of solid created. a cut is
+            performed from rotation_angle to 360 degrees. Defaults to 360.
         extrude_both (bool, optional): if set to True, the extrusion will
             occur in both directions. Defaults to True.
         stp_filename (str, optional): Defaults to "ExtrudeCircleShape.stp".
@@ -26,6 +23,7 @@ class ExtrudeCircleShape(Shape):
         self,
         distance,
         radius,
+        extrusion_start_offset=0.0,
         rotation_angle=360,
         extrude_both=True,
         stp_filename="ExtrudeCircleShape.stp",
@@ -43,6 +41,7 @@ class ExtrudeCircleShape(Shape):
         self.distance = distance
         self.rotation_angle = rotation_angle
         self.extrude_both = extrude_both
+        self.extrusion_start_offset = extrusion_start_offset
 
     @property
     def radius(self):
@@ -68,6 +67,14 @@ class ExtrudeCircleShape(Shape):
     def rotation_angle(self, value):
         self._rotation_angle = value
 
+    @property
+    def extrusion_start_offset(self):
+        return self._extrusion_start_offset
+
+    @extrusion_start_offset.setter
+    def extrusion_start_offset(self, value):
+        self._extrusion_start_offset = value
+
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with circular
         edges.
@@ -76,33 +83,26 @@ class ExtrudeCircleShape(Shape):
         :rtype: a cadquery solid
         """
 
-        # Creates a cadquery solid from points and revolves
+        # so a positive offset moves extrusion further from axis of azimuthal
+        # placement rotation
+        extrusion_offset = -self.extrusion_start_offset
+
+        if not self.extrude_both:
+            extrusion_distance = -self.distance
+        else:
+            extrusion_distance = -self.distance / 2.0
+
         solid = (
             cq.Workplane(self.workplane)
+            .workplane(offset=extrusion_offset)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
-            .extrude(distance=-self.distance / 2.0, both=self.extrude_both)
+            .extrude(distance=extrusion_distance, both=self.extrude_both)
         )
 
-        # Checks if the azimuth_placement_angle is a list of angles
-        if isinstance(self.azimuth_placement_angle, Iterable):
-            rotated_solids = []
-            # Perform seperate rotations for each angle
-            for angle in self.azimuth_placement_angle:
-                rotated_solids.append(
-                    solid.rotate(
-                        (0, 0, -1), (0, 0, 1), angle))
-            solid = cq.Workplane(self.workplane)
-
-            # Joins the seperate solids together
-            for i in rotated_solids:
-                solid = solid.union(i)
-        else:
-            # Peform rotations for a single azimuth_placement_angle angle
-            solid = solid.rotate(
-                (0, 0, -1), (0, 0, 1), self.azimuth_placement_angle)
-
-        calculate_wedge_cut(self)
-        self.perform_boolean_operations(solid)
+        solid = self.rotate_solid(solid)
+        cutting_wedge = calculate_wedge_cut(self)
+        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+        self.solid = solid
 
         return solid

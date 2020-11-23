@@ -19,6 +19,7 @@ straightforward for developers with Python knowledge.
    paramak.parametric_shapes
    paramak.parametric_components
    paramak.parametric_reactors
+   paramak.parametric_neutronics
    paramak.core_modules
    example_parametric_shapes
    example_parametric_components
@@ -54,45 +55,86 @@ A more detailed description of installing Cadquery 2.0 can be found here:
 * `Cadquery 2.0 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
 
 
-Installation
-------------
+System Installation
+-------------------
 
 The quickest way to install the Paramak is to use pip. In the terminal type...
 
-.. code-block:: python
+.. code-block:: bash
 
    pip install paramak
 
 Alternatively you can download the repository using the `download link <https://github.com/ukaea/paramak/archive/develop.zip>`_ or clone the repository using:
 
-.. code-block:: python
+.. code-block:: bash
 
    git clone https://github.com/Shimwell/paramak.git
 
 Navigate to the paramak repository and within the terminal install the paramak
 package and the dependencies using pip3.
 
-.. code-block:: python
+.. code-block:: bash
 
    pip install .
 
 Alternatively you can install the paramak with the following command.
 
-.. code-block:: python
+.. code-block:: bash
 
    python setup.py install
 
-Docker
-------
+You can also install optional dependencies that add some neutronics
+capabilities to the paramak. This will install neutronics_material_maker and
+parametric_plasma_source. In addition to this you would need DAGMC, OpenMC and
+a method of imprinting and merging.
+`More details <https://paramak.readthedocs.io/en/latest/paramak.parametric_neutronics.html>`_
 
-The paramak is availabie as a Docker image and can be downloaded using Docker
-commands.
 
 .. code-block:: bash
 
-   docker build -t openmcworkshop/paramak . 
+   pip install .[neutronics]
 
-   docker run -it openmcworkshop/paramak
+
+Docker Image Installation
+-------------------------
+
+Another option is to use the Docker image which contains all the required
+dependencies.
+
+1. Install Docker CE for `Ubuntu <https://docs.docker.com/install/linux/docker-ce/ubuntu/>`_ ,
+`Mac OS <https://store.docker.com/editions/community/docker-ce-desktop-mac>`_ or
+`Windows <https://hub.docker.com/editions/community/docker-ce-desktop-windows>`_
+including the part where you enable docker use as a non-root user.
+
+2. Pull the docker image from the store by typing the following command in a
+terminal window, or Windows users might prefer PowerShell.
+
+.. code-block:: bash
+
+   docker pull ukaea/paramak
+
+3. Now that you have the docker image you can enable graphics linking between
+your os and docker, and then run the docker container by typing the following
+commands in a terminal window.
+
+.. code-block:: bash
+
+   sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser --allow-root"
+
+4. A URL should be displayed in the terminal and can now be opened in the
+internet browser of your choice. This will load up the examples folder where
+you can view the 3D objects created.
+
+Alternatively the Docker image can be run in terminal mode .
+
+.. code-block:: bash
+
+   docker run -it ukaea/paramak
+
+You may also want to make use of the
+`--volume <https://docs.docker.com/storage/volumes/>`_
+flag when running Docker so that you can retrieve files from the Docker
+enviroment to your base system.
 
 Presentations
 -------------
@@ -105,86 +147,126 @@ Currently we just have one presentation that covers the Paramak.
 Features
 --------
 
-In general the Paramak takes points and connection information in 2D space
-(x,z) and performs operations on them to create 3D volumes. The points and
-connections can be provided by the user or when using parametric_shapes the
-points and connections are calculated by the software.
+In general the Paramak takes input arguments and creates 3D objects. This can
+be accomplished via the use of parametric Shapes, parametric Components and
+parametric Reactors with each level building upon the level below.
 
-Once points and connections between the points are provided, the user has
-options to perform CAD operations (rotate or extrude) to create a 3D volume and
-boolean operations like cut, union or intersect.
+Parametric Shapes are the simplest and accept points and connection information
+in 2D space (defaults to x,z) and performs operations on them to create 3D
+volumes. The points and connections are provided by the user when making
+parametric Shapes. Supported CAD opperations include (rotate, extrude, sweep)
+and Boolean opperations such as cut, union and intersect. Additionally the 
+CadQuery objects created can be combined and modified using CadQuery's powerful 
+filtering capabilties to furter customise the shapes by performing operations
+like edge filleting.
 
-The different families of shapes that can be made with the Paramak are shown in
-the table below. The CadQuery objects created can be combined and modified
-using CadQuery's powerful filtering capabilties to create more complex models
-(e.g. a Tokamak).
+Parametric Components build on top of this foundation and will calculate the
+points and connections for you when provided with input arguments. The inputs
+differ between components as a center column requires different inputs to a
+breeder blanket or a magnet.
+
+Parametric Reactors build upon these two lower level objects to create an
+entire reactor model from input parameters. Linkage between the componets is
+encoded in each parametric Ractor design.
+
+The different parametric reactor families are shown below.
+
+.. image:: https://user-images.githubusercontent.com/8583900/99137324-fddfa200-2621-11eb-9063-f5f7f60ddd8d.png
+   :width: 713
+   :align: center
+
+The different parametric Components are shown below.
+
+.. image:: https://user-images.githubusercontent.com/8583900/98823600-387eea00-242a-11eb-9fe3-df65aaa3dd21.png
+   :width: 713
+   :height: 245
+   :align: center
+
+The different families of parametric Shapes that can be made with the Paramak
+are shown int he table below.
+
 
 
 .. |rotatestraight| image:: https://user-images.githubusercontent.com/56687624/87055469-4f070180-c1fc-11ea-9679-a29e37a90e15.png
-                          :height: 200px
+                          :height: 120px
 
 .. |extrudestraight| image:: https://user-images.githubusercontent.com/56687624/87055493-56c6a600-c1fc-11ea-8c58-f5b62ae72e0e.png
-                          :height: 200px
+                          :height: 120px
+
+.. |sweepstraight| image:: https://user-images.githubusercontent.com/56687624/98713447-8c80c480-237f-11eb-8615-c090e93138f6.png
+                          :height: 120px
 
 .. |rotatespline| image:: https://user-images.githubusercontent.com/56687624/87055473-50382e80-c1fc-11ea-95dd-b4932b1e78d9.png
-                          :height: 200px
+                          :height: 120px
 
-.. |extrudespline| image:: https://user-images.githubusercontent.com/56687624/87055500-58906980-c1fc-11ea-879c-9f1845be3b57.png
-                          :height: 200px
+.. |extrudespline| image:: https://user-images.githubusercontent.com/56687624/98713431-87bc1080-237f-11eb-9075-01bca99b7018.png
+                          :height: 120px
 
-.. |rotatecircle| image:: https://user-images.githubusercontent.com/56687624/87055489-54fce280-c1fc-11ea-9545-a61582aea20a.png
-                          :height: 200px
+.. |sweepspline| image:: https://user-images.githubusercontent.com/56687624/98713443-8b4f9780-237f-11eb-83bb-38ca7f222073.png
+                          :height: 120px
+
+.. |rotatecircle| image:: https://user-images.githubusercontent.com/56687624/98713427-868ae380-237f-11eb-87af-cf6b5fe032b2.png
+                          :height: 120px
 
 .. |extrudecircle| image:: https://user-images.githubusercontent.com/56687624/87055517-5b8b5a00-c1fc-11ea-83ef-d4329c6815f7.png
-                          :height: 200px
+                          :height: 120px
+
+.. |sweepcircle| image:: https://user-images.githubusercontent.com/56687624/98713436-88ed3d80-237f-11eb-99cd-27dcb4f313b1.png
+                          :height: 120px
 
 .. |rotatemixed| image:: https://user-images.githubusercontent.com/56687624/87055483-53cbb580-c1fc-11ea-878d-92835684c8ff.png
-                          :height: 200px
+                          :height: 120px
 
 .. |extrudemixed| image:: https://user-images.githubusercontent.com/56687624/87055511-59c19680-c1fc-11ea-8740-8c7987745c45.png
-                          :height: 200px
+                          :height: 120px
+
+.. |sweepmixed| image:: https://user-images.githubusercontent.com/56687624/98713440-8a1e6a80-237f-11eb-9eed-12b9d7731090.png
+                          :height: 120px
 
 
 
-+-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-|                                                           | Rotate                                                    | Extrude                                                    |
-+===========================================================+===========================================================+============================================================+
-| Points connected with straight lines                      | |rotatestraight|                                          | |extrudestraight|                                          |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           | ::                                                        | ::                                                         |
-|                                                           |                                                           |                                                            |
-|                                                           |     RotateStraightShape()                                 |     ExtrudeStraightShape()                                 |
-+-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with spline curves                       | |rotatespline|                                            | |extrudespline|                                            |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           | ::                                                        | ::                                                         |
-|                                                           |                                                           |                                                            |
-|                                                           |     RotateSplineShape()                                   |     ExtrudeSplineShape()                                   |
-+-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with a circle                            | |rotatecircle|                                            | |extrudecircle|                                            |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-|                                                           | ::                                                        | ::                                                         |
-|                                                           |                                                           |                                                            |
-|                                                           |     RotateCircleShape()                                   |     ExtrudeCircleShape()                                   |
-+-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
-| Points connected with a mixture                           | |rotatemixed|                                             | |extrudemixed|                                             |
-|                                                           |                                                           |                                                            |
-| ::                                                        |                                                           |                                                            |
-|                                                           |                                                           |                                                            |
-| (splines, straights and circles)                          |                                                           |                                                            |
-|                                                           | ::                                                        | ::                                                         |
-|                                                           |                                                           |                                                            |
-|                                                           |     RotateMixedShape()                                    |     ExtrudeMixedShape()                                    |
-+-----------------------------------------------------------+-----------------------------------------------------------+------------------------------------------------------------+
+
+
+
++--------------------------------------+--------------------------------------+---------------------------------------+---------------------------------------+
+|                                      | Rotate                               | Extrude                               | Sweep                                 |
++======================================+======================================+=======================================+=======================================+
+| Points connected with straight lines | |rotatestraight|                     | |extrudestraight|                     | |sweepstraight|                       |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      | ::                                   | ::                                    | ::                                    |
+|                                      |                                      |                                       |                                       |
+|                                      |     RotateStraightShape()            |     ExtrudeStraightShape()            |     SweepStraightShape()              |
++--------------------------------------+--------------------------------------+---------------------------------------+---------------------------------------+
+| Points connected with spline curves  | |rotatespline|                       | |extrudespline|                       | |sweepspline|                         |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      | ::                                   | ::                                    | ::                                    |
+|                                      |                                      |                                       |                                       |
+|                                      |     RotateSplineShape()              |     ExtrudeSplineShape()              |     SweepSplineShape()                |
++--------------------------------------+--------------------------------------+---------------------------------------+---------------------------------------+
+| Points connected with a circle       | |rotatecircle|                       | |extrudecircle|                       | |sweepcircle|                         |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+|                                      | ::                                   | ::                                    | ::                                    |
+|                                      |                                      |                                       |                                       |
+|                                      |     RotateCircleShape()              |     ExtrudeCircleShape()              |     SweepCircleShape()                |
++--------------------------------------+--------------------------------------+---------------------------------------+---------------------------------------+
+| Points connected with a mixture      | |rotatemixed|                        | |extrudemixed|                        | |sweepmixed|                          |
+|                                      |                                      |                                       |                                       |
+| ::                                   |                                      |                                       |                                       |
+|                                      |                                      |                                       |                                       |
+| (splines, straights and circles)     |                                      |                                       |                                       |
+|                                      | ::                                   | ::                                    | ::                                    |
+|                                      |                                      |                                       |                                       |
+|                                      |     RotateMixedShape()               |     ExtrudeMixedShape()               |     SweepMixedShape()                 |
++--------------------------------------+--------------------------------------+---------------------------------------+---------------------------------------+
 
 
 Usage - Parametric Shapes

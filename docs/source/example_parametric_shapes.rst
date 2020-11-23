@@ -4,7 +4,7 @@ Examples - Parametric Shapes
 make_CAD_from_points.py
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/87046793-81f7c800-c1f1-11ea-94c1-4c447bb18ff4.gif
+.. image:: https://user-images.githubusercontent.com/56687624/88064585-641c5280-cb63-11ea-97b1-1b7dcfabc07c.gif
    :width: 450
    :height: 275
    :align: center

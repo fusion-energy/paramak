@@ -1,6 +1,5 @@
-from paramak import \
-    RotateStraightShape, ExtrudeCircleShape, \
-    ExtrudeStraightShape, PortCutterRotated
+
+from paramak import RotateStraightShape
 
 
 class VacuumVessel(RotateStraightShape):
@@ -27,17 +26,15 @@ class VacuumVessel(RotateStraightShape):
         material_tag="center_column_shield_mat",
         **kwargs
     ):
-
+        self.height = height
+        self.inner_radius = inner_radius
+        self.thickness = thickness
         super().__init__(
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             **kwargs
         )
-
-        self.height = height
-        self.inner_radius = inner_radius
-        self.thickness = thickness
 
     @property
     def height(self):

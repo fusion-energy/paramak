@@ -1,11 +1,12 @@
 """
-This python script demonstrates the parametric creation of a breeder blanket
+This python script demonstrates the parametric creation of a shape similar to
+a breeder blanket.
 """
 
 import paramak
 
 
-def main():
+def main(filename="blanket_from_parameters.stp"):
 
     height = 700
     blanket_rear = 400
@@ -13,6 +14,7 @@ def main():
     blanket_mid_point = 350
 
     blanket = paramak.RotateMixedShape(
+        rotation_angle=180,
         points=[
             (blanket_rear, height / 2.0, "straight"),
             (blanket_rear, -height / 2.0, "straight"),
@@ -22,8 +24,7 @@ def main():
         ]
     )
 
-    blanket.rotation_angle = 180
-    blanket.export_stp("blanket_from_parameters.stp")
+    blanket.export_stp(filename=filename)
 
 
 if __name__ == "__main__":

@@ -24,9 +24,15 @@ def main():
         stop_angle=90,
         start_angle=-90,
         offset_from_plasma=30,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="blanket_constant_thickness_outboard_plasma.stp",
     )
+    all_components.append(component)
+
+    component = paramak.BlanketCutterStar(
+        height=2000,
+        width=2000,
+        distance=100)
     all_components.append(component)
 
     component = paramak.BlanketFP(
@@ -35,7 +41,7 @@ def main():
         stop_angle=90,
         start_angle=250,
         offset_from_plasma=30,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="blanket_constant_thickness_inboard_plasma.stp",
     )
     all_components.append(component)
@@ -46,7 +52,7 @@ def main():
         stop_angle=250,
         start_angle=-90,
         offset_from_plasma=30,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="blanket_constant_thickness_plasma.stp",
     )
     all_components.append(component)
@@ -63,7 +69,7 @@ def main():
     component = paramak.InboardFirstwallFCCS(
         central_column_shield=CenterColumnShieldCylinder,
         thickness=50,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="firstwall_from_center_column_shield_cylinder.stp",
     )
     all_components.append(component)
@@ -81,7 +87,7 @@ def main():
     component = paramak.InboardFirstwallFCCS(
         central_column_shield=CenterColumnShieldHyperbola,
         thickness=50,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="firstwall_from_center_column_shield_hyperbola.stp",
     )
     all_components.append(component)
@@ -99,7 +105,7 @@ def main():
     component = paramak.InboardFirstwallFCCS(
         central_column_shield=CenterColumnShieldCircular,
         thickness=50,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="firstwall_from_center_column_shield_circular.stp",
     )
     all_components.append(component)
@@ -118,7 +124,7 @@ def main():
     component = paramak.InboardFirstwallFCCS(
         central_column_shield=CenterColumnShieldFlatTopHyperbola,
         thickness=50,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="firstwall_from_center_column_shield_flat_top_hyperbola.stp",
     )
     all_components.append(component)
@@ -137,7 +143,7 @@ def main():
     component = paramak.InboardFirstwallFCCS(
         central_column_shield=CenterColumnShieldFlatTopCircular,
         thickness=50,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="firstwall_from_center_column_shield_flat_top_Circular.stp",
     )
     all_components.append(component)
@@ -155,7 +161,7 @@ def main():
     component = paramak.InboardFirstwallFCCS(
         central_column_shield=CenterColumnShieldPlasmaHyperbola,
         thickness=50,
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="firstwall_from_center_column_shield_plasma_hyperbola.stp",
     )
     all_components.append(component)
@@ -186,7 +192,7 @@ def main():
         widths=[10, 10, 20, 40],
         casing_thicknesses=[5, 5, 10, 10],
         center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="pf_coil_case_set.stp"
     )
     all_components.append(pf_coil_set)
@@ -196,7 +202,7 @@ def main():
         heights=[10, 10, 20, 20],
         widths=[10, 10, 20, 40],
         center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="pf_coil_set.stp"
     )
     all_components.append(pf_coil_set)
@@ -205,7 +211,7 @@ def main():
     component = paramak.PoloidalFieldCoilCaseSetFC(
         pf_coils=pf_coil_set,
         casing_thicknesses=[5, 5, 10, 10],
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="pf_coil_cases_set.stp"
     )
     all_components.append(component)
@@ -224,7 +230,7 @@ def main():
     component = paramak.PoloidalFieldCoilCaseSetFC(
         pf_coils=[pf_coil],
         casing_thicknesses=[10],
-        rotation_angle=180,
+        rotation_angle=rot_angle,
         stp_filename="pf_coil_cases_set_fc.stp")
     all_components.append(component)
 
@@ -279,7 +285,7 @@ def main():
     component = paramak.ToroidalFieldCoilCoatHanger(
         horizontal_start_point=(200, 500),
         horizontal_length=400,
-        vertical_start_point=(700, 50),
+        vertical_mid_point=(700, 50),
         vertical_length=500,
         thickness=50,
         distance=50,
@@ -340,12 +346,37 @@ def main():
         distance=3,
         z_pos=0.25,
         radius=0.1,
-        azimuth_placement_angle=[0, 45, 90, 180]
+        # azimuth_placement_angle=[0, 45, 90, 180], # TODO: fix issue #548
+        azimuth_placement_angle=[0, 45, 90],
     )
     all_components.append(component)
 
     component = paramak.VacuumVessel(
         height=2, inner_radius=1, thickness=0.2, rotation_angle=270
+    )
+    all_components.append(component)
+
+    component = paramak.CoolantChannelRingStraight(
+        height=200,
+        channel_radius=10,
+        ring_radius=70,
+        number_of_coolant_channels=8,
+        workplane="XY",
+        rotation_axis="Z",
+        stp_filename="coolant_channel_ring_straight.stp",
+    )
+    all_components.append(component)
+
+    component = paramak.CoolantChannelRingCurved(
+        height=200,
+        channel_radius=10,
+        ring_radius=70,
+        mid_offset=-20,
+        number_of_coolant_channels=8,
+        workplane="XY",
+        path_workplane="XZ",
+        stp_filename="coolant_channel_ring_curved.stp",
+        force_cross_section=True
     )
     all_components.append(component)
 
