@@ -5,14 +5,8 @@ import paramak
 
 
 class test_SegmentedBlanketBallReactor(unittest.TestCase):
-
-    def test_gap_between_blankets_impacts_volume(
-            self):
-        """creates a SegmentedBlanketBallReactor with different
-        gap_between_blankets and checks the volume of the blankes and the
-        firstwall changes."""
-
-        reactor = paramak.SegmentedBlanketBallReactor(
+    def setUp(self):
+        self.test_reactor = paramak.SegmentedBlanketBallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
             center_column_shield_radial_thickness=60,
@@ -36,14 +30,22 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
             gap_between_blankets=30,
             number_of_blanket_segments=4,
         )
-        reactor.create_solids()
-        small_gap_blanket = reactor._blanket.volume
-        small_gap_fw = reactor._firstwall.volume
 
-        reactor.gap_between_blankets = 60
-        reactor.create_solids()
-        large_gap_blanket = reactor._blanket.volume
-        large_gap_fw = reactor._firstwall.volume
+    def test_gap_between_blankets_impacts_volume(
+            self):
+        """creates a SegmentedBlanketBallReactor with different
+        gap_between_blankets and checks the volume of the blankes and the
+        firstwall changes."""
+
+        self.test_reactor.gap_between_blankets = 30
+        self.test_reactor.create_solids()
+        small_gap_blanket = self.test_reactor._blanket.volume
+        small_gap_fw = self.test_reactor._firstwall.volume
+
+        self.test_reactor.gap_between_blankets = 60
+        self.test_reactor.create_solids()
+        large_gap_blanket = self.test_reactor._blanket.volume
+        large_gap_fw = self.test_reactor._firstwall.volume
 
         assert small_gap_blanket > large_gap_blanket
         assert small_gap_fw > large_gap_fw
@@ -53,6 +55,20 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
         number_of_blanket_segments and checks the volume of the blanket and
         firstwall changes"""
 
+        self.test_reactor.number_of_blanket_segments = 4
+        self.test_reactor.create_solids()
+        blanket_few_segments = self.test_reactor._blanket.volume
+        fw_few_segments = self.test_reactor._firstwall.volume
+
+        self.test_reactor.number_of_blanket_segments = 6
+        self.test_reactor.create_solids()
+        blanket_many_segments = self.test_reactor._blanket.volume
+        fw_many_segments = self.test_reactor._firstwall.volume
+
+        assert blanket_many_segments < blanket_few_segments
+        assert fw_many_segments > fw_few_segments
+
+    def test_inccorect_args(self):
         reactor = paramak.SegmentedBlanketBallReactor(
             inner_bore_radial_thickness=10,
             inboard_tf_leg_radial_thickness=30,
@@ -78,14 +94,13 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
             blanket_fillet_radius=0,
             number_of_blanket_segments=4,
         )
-        reactor.create_solids()
-        blanket_few_segments = reactor._blanket.volume
-        fw_few_segments = reactor._firstwall.volume
 
-        reactor.number_of_blanket_segments = 6
-        reactor.create_solids()
-        blanket_many_segments = reactor._blanket.volume
-        fw_many_segments = reactor._firstwall.volume
+        def inccorect_number_of_blanket_segments():
+            self.test_reactor.number_of_blanket_segments = 1
 
-        assert blanket_many_segments < blanket_few_segments
-        assert fw_many_segments > fw_few_segments
+        self.assertRaises(ValueError, inccorect_number_of_blanket_segments)
+
+        def inccorect_gap_between_blankets():
+            self.test_reactor.gap_between_blankets = -1
+
+        self.assertRaises(ValueError, inccorect_gap_between_blankets)
