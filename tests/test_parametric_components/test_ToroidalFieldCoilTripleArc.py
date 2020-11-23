@@ -53,7 +53,7 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         )
         assert test_shape_2.solid is not None
         assert test_shape_2.volume == pytest.approx(
-            test_volume_1 - inner_leg_volume)
+            test_volume_1 - inner_leg_volume, rel=0.01)
 
     def test_ToroidalFieldCoilTripleArc_relative_volume(self):
         """creates tf coil shapes with different numbers of tf coils and checks that
