@@ -49,7 +49,7 @@ class test_object_properties(unittest.TestCase):
         def incorrect_workplane():
             """Creates Shape object with unacceptable workplane."""
 
-            test_shape.workplane = "ZY"
+            test_shape.workplane = "AB"
 
         self.assertRaises(ValueError, incorrect_workplane)
 
