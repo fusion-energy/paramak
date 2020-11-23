@@ -16,41 +16,37 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
         CenterColumnShieldHyperbola parametric component and checks that a
         cadquery solid is created."""
 
-        test_shape = paramak.CenterColumnShieldHyperbola(
-            height=100, inner_radius=50, mid_radius=80, outer_radius=100
-        )
+        assert self.test_shape.solid is not None 
+        assert self.test_shape.volume > 1000
 
-        assert test_shape.solid is not None
-        assert test_shape.volume > 1000
+    def test_CenterColumnShieldHyperbola_invalid_parameters_errors(self):
+        """Checks that the correct errors are raised when invalid arguments are input
+        as shape parameters."""
 
-    def test_CenterColumnShieldHyperbola_error(self):
-        def incorrect_inner_radius1():
-            test_shape = paramak.CenterColumnShieldHyperbola(
-                height=100, inner_radius=81, mid_radius=80, outer_radius=100
-            )
-            test_shape.solid
+        def incorrect_inner_radius():
+            self.test_shape.inner_radius = 180
+            self.test_shape.solid
 
-        def incorrect_inner_radius2():
-            test_shape = paramak.CenterColumnShieldHyperbola(
-                height=100, inner_radius=50, mid_radius=80, outer_radius=49
-            )
-            test_shape.solid
+        def incorrect_mid_radius():
+            self.test_shape.mid_radius = 80
+            self.test_shape.solid
+        
+        def incorrect_outer_radius():
+            self.test_shape.outer_radius = 130
+            self.test_shape.solid
 
-        self.assertRaises(ValueError, incorrect_inner_radius1)
-        self.assertRaises(ValueError, incorrect_inner_radius2)
+        self.assertRaises(ValueError, incorrect_inner_radius)
+        self.assertRaises(ValueError, incorrect_mid_radius)
+        self.assertRaises(ValueError, incorrect_outer_radius)
 
     def test_CenterColumnShieldHyperbola_faces(self):
         """Creates a center column shield using the CenterColumnShieldHyperbola
         parametric component and checks that a solid with the correct number of
         faces is created"""
 
-        test_shape = paramak.CenterColumnShieldHyperbola(
-            height=100, inner_radius=50, mid_radius=80, outer_radius=100
-        )
+        assert len(self.test_shape.areas) == 4
+        assert len(set([round(i) for i in self.test_shape.areas])) == 3
 
-        assert len(test_shape.areas) == 4
-        # assert len(set(test_shape.areas)) == 3
-
-        test_shape.rotation_angle = 180
-        assert len(test_shape.areas) == 6
-        assert len(set(test_shape.areas)) == 4
+        self.test_shape.rotation_angle = 180
+        assert len(self.test_shape.areas) == 6
+        assert len(set([round(i) for i in self.test_shape.areas])) == 4
