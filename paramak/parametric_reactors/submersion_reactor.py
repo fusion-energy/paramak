@@ -551,6 +551,16 @@ class SubmersionTokamak(paramak.Reactor):
         )
 
     def _make_supports(self):
+        blanket_enveloppe = paramak.BlanketFP(
+            plasma=self._plasma,
+            start_angle=90,
+            stop_angle=-90,
+            offset_from_plasma=self.outer_plasma_gap_radial_thickness
+            + self.firstwall_radial_thickness,
+            thickness=self.outboard_blanket_radial_thickness,
+            rotation_angle=self.rotation_angle,
+            union=self._inboard_blanket,
+        )
         support_height = self._blanket_rear_wall_end_height
         support_height_top = support_height
         support_height_bottom = -support_height
@@ -572,7 +582,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="supports.stl",
             name="supports",
             material_tag="supports_mat",
-            intersect=self._blanket,
+            intersect=blanket_enveloppe,
         )
         return self._supports
 
@@ -650,9 +660,7 @@ class SubmersionTokamak(paramak.Reactor):
         list_of_components.append(self._firstwall)
 
         # cutting the supports away from the blanket
-        # TODO optimise this
-        # self._blanket.cut = self._supports
-        self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
+        self._blanket.cut = self._supports
         list_of_components.append(self._blanket)
         return list_of_components
 
