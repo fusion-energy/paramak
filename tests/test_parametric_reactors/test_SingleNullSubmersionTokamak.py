@@ -43,26 +43,6 @@
 
 #         assert len(self.test_reactor.shapes_and_components) == 11
 
-#     def test_SingleNullSubmersionTokamak_divertors_supports(self):
-#         """Checks that SingleNullSubmersionTokamaks with lower and upper supports
-#         and divertors can be created."""
-
-#         self.test_reactor.divertor_position = "lower"
-#         self.test_reactor.support_position = "lower"
-#         assert self.test_reactor.solid is not None
-
-#         self.test_reactor.divertor_position = "lower"
-#         self.test_reactor.support_position = "upper"
-#         assert self.test_reactor.solid is not None
-
-#         self.test_reactor.divertor_position = "upper"
-#         self.test_reactor.support_position = "lower"
-#         assert self.test_reactor.solid is not None
-
-#         self.test_reactor.divertor_position = "upper"
-#         self.test_reactor.support_position = "upper"
-#         assert self.test_reactor.solid is not None
-
 #     def test_SingleNullSubmersionTokamak_rotation_angle_impacts_volume(self):
 #         """Creates SingleNullSubmersionTokamaks with different rotation angles and
 #         checks that the relative volumes of the components are correct."""
@@ -76,20 +56,6 @@
 
 #         for vol_90, vol_180 in zip(comps_90_vol, comps_180_vol):
 #             assert vol_90 == pytest.approx(vol_180 * 0.5, rel=0.1)
-
-#     def test_SubmersionTokamak_error_divertor_pos(self):
-#         """Creates a SingleNullSubmersionTokamak with an invalid divertor and support
-#         position and checks that the correct ValueError is raised."""
-
-#         def invalid_divertor_position():
-#             self.test_reactor.divertor_position = "coucou"
-
-#         self.assertRaises(ValueError, invalid_divertor_position)
-
-#         def invalid_support_position():
-#             self.test_reactor.support_position = "coucou"
-
-#         self.assertRaises(ValueError, invalid_support_position)
 
 #     def test_hash_value(self):
 #         """Creates a single null submersion reactor and checks that all shapes in the reactor
