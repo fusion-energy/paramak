@@ -30,7 +30,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
         outer_radius,
         stp_filename="CenterColumnShieldCircular.stp",
         stl_filename="CenterColumnShieldCircular.stl",
-        name="center_column",
+        name="center_column_shield",
         material_tag="center_column_shield_mat",
         **kwargs
     ):
