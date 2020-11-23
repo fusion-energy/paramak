@@ -209,13 +209,14 @@ class SubmersionTokamak(paramak.Reactor):
         self._make_vertical_build()
         shapes_and_components.append(self._make_inboard_tf_coils())
         shapes_and_components.append(self._make_center_column_shield())
-        self._make_inboard_blanket_and_firstwall()
+        shapes_and_components.append(self._make_firstwall())
+        self._make_inboard_blanket()
+
         shapes_and_components.append(self._make_divertor())
-        self._make_outboard_blanket()
+        shapes_and_components.append(self._make_outboard_blanket())
         shapes_and_components.append(self._make_supports())
         shapes_and_components.append(self._make_rear_blanket_wall())
         shapes_and_components += self._make_coils()
-        shapes_and_components += self._make_component_cuts()
 
         self.shapes_and_components = shapes_and_components
 
@@ -440,7 +441,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._plasma = plasma
         return self._plasma
 
-    def _make_inboard_blanket_and_firstwall(self):
+    def _make_firstwall(self):
 
         # this is used to cut the inboard blanket and then fused / unioned with
         # the firstwall
@@ -451,21 +452,6 @@ class SubmersionTokamak(paramak.Reactor):
             stop_angle=270,
             thickness=self.firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
-        )
-
-        self._inboard_blanket = paramak.CenterColumnShieldCylinder(
-            height=self._blanket_end_height * 2,
-            inner_radius=self._inboard_blanket_start_radius,
-            outer_radius=max(self._inboard_firstwall.points)[0],
-            rotation_angle=self.rotation_angle,
-            cut=self._inboard_firstwall,
-        )
-
-        # this takes a single solid from a compound of solids by finding the
-        # solid nearest to a point
-        # TODO: find alternative
-        self._inboard_blanket.solid = self._inboard_blanket.solid.solids(
-            cq.selectors.NearestToPointSelector((0, 0, 0))
         )
 
         self._firstwall = paramak.BlanketFP(
@@ -480,6 +466,23 @@ class SubmersionTokamak(paramak.Reactor):
             name="outboard_firstwall",
             material_tag="firstwall_mat",
             union=self._inboard_firstwall,
+        )
+        return self._firstwall
+
+    def _make_inboard_blanket(self):
+        self._inboard_blanket = paramak.CenterColumnShieldCylinder(
+            height=self._blanket_end_height * 2,
+            inner_radius=self._inboard_blanket_start_radius,
+            outer_radius=max(self._inboard_firstwall.points)[0],
+            rotation_angle=self.rotation_angle,
+            cut=self._inboard_firstwall,
+        )
+
+        # this takes a single solid from a compound of solids by finding the
+        # solid nearest to a point
+        # TODO: find alternative
+        self._inboard_blanket.solid = self._inboard_blanket.solid.solids(
+            cq.selectors.NearestToPointSelector((0, 0, 0))
         )
 
     def _make_divertor(self):
@@ -529,6 +532,9 @@ class SubmersionTokamak(paramak.Reactor):
             name="divertor",
             material_tag="divertor_mat"
         )
+
+        self._firstwall.cut = self._divertor
+        self._inboard_firstwall.cut = self._divertor
         return self._divertor
 
     def _make_outboard_blanket(self):
@@ -549,6 +555,7 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="blanket_mat",
             union=self._inboard_blanket,
         )
+        return self._blanket
 
     def _make_supports(self):
         blanket_enveloppe = paramak.BlanketFP(
@@ -584,6 +591,8 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="supports_mat",
             intersect=blanket_enveloppe,
         )
+        self._blanket.cut = self._supports
+
         return self._supports
 
     def _make_rear_blanket_wall(self):
@@ -650,19 +659,6 @@ class SubmersionTokamak(paramak.Reactor):
         )
 
         return self._outboard_rear_blanket_wall
-
-    def _make_component_cuts(self):
-        list_of_components = []
-        # the divertor is cut away then the firstwall can be added to the
-        # reactor using CQ operations
-        self._firstwall.cut = self._divertor
-        self._inboard_firstwall.cut = self._divertor
-        list_of_components.append(self._firstwall)
-
-        # cutting the supports away from the blanket
-        self._blanket.cut = self._supports
-        list_of_components.append(self._blanket)
-        return list_of_components
 
     def _make_coils(self):
         list_of_components = []
