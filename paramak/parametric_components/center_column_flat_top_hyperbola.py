@@ -16,9 +16,9 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
             the center column shield.
         outer_radius (float): the outer_radius of the center column shield.
         stp_filename (str, optional): Defaults to
-            "CenterColumnFlatTopHyperbola.stp".
+            "CenterColumnShieldFlatTopHyperbola.stp".
         stl_filename (str, optional): Defaults to
-            "CenterColumnFlatTopHyperbola.stl".
+            "CenterColumnShieldFlatTopHyperbola.stl".
         name (str, optional): Defaults to "center_column".
         material_tag (str, optional): Defaults to "center_column_shield_mat".
     """
@@ -30,8 +30,8 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         inner_radius,
         mid_radius,
         outer_radius,
-        stp_filename="CenterColumnFlatTopHyperbola.stp",
-        stl_filename="CenterColumnFlatTopHyperbola.stl",
+        stp_filename="CenterColumnShieldFlatTopHyperbola.stp",
+        stl_filename="CenterColumnShieldFlatTopHyperbola.stl",
         name="center_column",
         material_tag="center_column_shield_mat",
         **kwargs
