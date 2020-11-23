@@ -207,13 +207,10 @@ class SubmersionTokamak(paramak.Reactor):
         shapes_and_components.append(self._make_plasma())
         self._make_radial_build()
         self._make_vertical_build()
-        shapes_and_components.append(self._make_inboard_tf_coils())
         shapes_and_components.append(self._make_center_column_shield())
         shapes_and_components.append(self._make_firstwall())
-        self._make_inboard_blanket()
-
+        shapes_and_components.append(self._make_blanket())
         shapes_and_components.append(self._make_divertor())
-        shapes_and_components.append(self._make_outboard_blanket())
         shapes_and_components.append(self._make_supports())
         shapes_and_components.append(self._make_rear_blanket_wall())
         shapes_and_components += self._make_coils()
@@ -399,21 +396,6 @@ class SubmersionTokamak(paramak.Reactor):
                 self.pf_coil_radial_thicknesses
             )
 
-    def _make_inboard_tf_coils(self):
-
-        # self.shapes_and_components.append(inboard_tf_coils)
-        self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
-            height=self._blanket_rear_wall_end_height * 2,
-            inner_radius=self._inboard_tf_coils_start_radius,
-            outer_radius=self._inboard_tf_coils_end_radius,
-            rotation_angle=self.rotation_angle,
-            stp_filename="inboard_tf_coils.stp",
-            stl_filename="inboard_tf_coils.stl",
-            name="inboard_tf_coils",
-            material_tag="inboard_tf_coils_mat",
-        )
-        return self._inboard_tf_coils
-
     def _make_center_column_shield(self):
 
         self._center_column_shield = paramak.CenterColumnShieldCylinder(
@@ -469,22 +451,6 @@ class SubmersionTokamak(paramak.Reactor):
         )
         return self._firstwall
 
-    def _make_inboard_blanket(self):
-        self._inboard_blanket = paramak.CenterColumnShieldCylinder(
-            height=self._blanket_end_height * 2,
-            inner_radius=self._inboard_blanket_start_radius,
-            outer_radius=max(self._inboard_firstwall.points)[0],
-            rotation_angle=self.rotation_angle,
-            cut=self._inboard_firstwall,
-        )
-
-        # this takes a single solid from a compound of solids by finding the
-        # solid nearest to a point
-        # TODO: find alternative
-        self._inboard_blanket.solid = self._inboard_blanket.solid.solids(
-            cq.selectors.NearestToPointSelector((0, 0, 0))
-        )
-
     def _make_divertor(self):
         fw_enveloppe_inboard = paramak.BlanketFP(
             plasma=self._plasma,
@@ -537,8 +503,21 @@ class SubmersionTokamak(paramak.Reactor):
         self._inboard_firstwall.cut = self._divertor
         return self._divertor
 
-    def _make_outboard_blanket(self):
+    def _make_blanket(self):
+        self._inboard_blanket = paramak.CenterColumnShieldCylinder(
+            height=self._blanket_end_height * 2,
+            inner_radius=self._inboard_blanket_start_radius,
+            outer_radius=max(self._inboard_firstwall.points)[0],
+            rotation_angle=self.rotation_angle,
+            cut=self._inboard_firstwall,
+        )
 
+        # this takes a single solid from a compound of solids by finding the
+        # solid nearest to a point
+        # TODO: find alternative
+        self._inboard_blanket.solid = self._inboard_blanket.solid.solids(
+            cq.selectors.NearestToPointSelector((0, 0, 0))
+        )
         # this is the outboard fused /unioned with the inboard blanket
 
         self._blanket = paramak.BlanketFP(
@@ -662,6 +641,18 @@ class SubmersionTokamak(paramak.Reactor):
 
     def _make_coils(self):
         list_of_components = []
+
+        self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
+            height=self._blanket_rear_wall_end_height * 2,
+            inner_radius=self._inboard_tf_coils_start_radius,
+            outer_radius=self._inboard_tf_coils_end_radius,
+            rotation_angle=self.rotation_angle,
+            stp_filename="inboard_tf_coils.stp",
+            stl_filename="inboard_tf_coils.stl",
+            name="inboard_tf_coils",
+            material_tag="inboard_tf_coils_mat",
+        )
+        list_of_components.append(self._inboard_tf_coils)
         if self._tf_info_provided:
             self._tf_coil = paramak.ToroidalFieldCoilCoatHanger(
                 with_inner_leg=False,
