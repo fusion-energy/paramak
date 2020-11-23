@@ -207,8 +207,15 @@ class test_BallReactor(unittest.TestCase):
         self.assertRaises(ValueError, invalid_position)
 
     def test_divertor_upper_lower(self):
-        """Checks that BallReactors with lower and upper divertors can
-        be created."""
+        """Checks that BallReactors with coils with lower and upper divertors
+        can be created."""
+        self.test_reactor.pf_coil_radial_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50]
+        self.test_reactor.pf_coil_to_rear_blanket_radial_gap = 50
+        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
+        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.outboard_tf_coil_radial_thickness = 50
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
         self.test_reactor.divertor_position = "lower"
         assert self.test_reactor.solid is not None
