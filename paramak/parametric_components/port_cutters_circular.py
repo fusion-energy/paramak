@@ -16,7 +16,7 @@ class PortCutterCircular(ExtrudeCircleShape):
         name (str, optional): defaults to "circular_port_cutter".
         material_tag (str, optional): defaults to "circular_port_cutter_mat".
         extrusion_start_offset (float, optional): the distance between 0 and
-            the start of the extrusion. Defaults to 1.
+            the start of the extrusion. Defaults to 1..
     """
 
     def __init__(
