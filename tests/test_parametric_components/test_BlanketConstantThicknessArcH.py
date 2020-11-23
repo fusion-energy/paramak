@@ -23,7 +23,7 @@ class test_BlanketConstantThicknessArcH(unittest.TestCase):
         assert self.test_shape.stl_filename == "BlanketConstantThicknessArcH.stl"
         assert self.test_shape.material_tag == "blanket_mat"
 
-    def test_point_calculation(self):
+    def test_points_calculation(self):
         """Checks that the points used to construct the BlanketConstantThicknessArcH component
         are calculated correctly from the parameters given."""
 
