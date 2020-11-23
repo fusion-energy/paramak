@@ -7,6 +7,38 @@ import paramak
 
 
 class test_BlanketFP(unittest.TestCase):
+    
+    def setUp(self):
+        self.plasma = paramak.Plasma(
+            major_radius=450,
+            minor_radius=150,
+            triangularity=0.55,
+            elongation=2
+        )
+
+        self.test_shape = paramak.BlanketFP(
+            # plasma=self.plasma,
+            thickness=150,
+            start_angle=-90,
+            stop_angle=240,
+            offset_from_plasma=30,
+        )
+    
+    def test_default_parameters(self):
+        """Checks that the default parameters of a BlanketFP are correct."""
+
+        assert self.test_shape.plasma == None
+        assert self.test_shape.minor_radius == 150
+        assert self.test_shape.major_radius == 450
+        assert self.test_shape.triangularity == 0.55
+        assert self.test_shape.elongation == 2
+        assert self.test_shape.vertical_displacement == 0
+        assert self.test_shape.offset_from_plasma == 0
+        assert self.test_shape.num_points == 50
+        assert self.test_shape.stp_filename == "BlanketFP.stp"
+        assert self.test_shape.stl_filename == "BlanketFP.stl"
+        assert self.test_shape.material_tag == "blanket_mat"
+        
     def test_BlanketFP_creation_plasma(self):
         """Checks that a cadquery solid can be created by passing a plasma to
         the BlanketFP parametric component."""
