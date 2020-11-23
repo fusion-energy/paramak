@@ -214,6 +214,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._make_outboard_blanket()
         shapes_and_components.append(self._make_supports())
         shapes_and_components.append(self._make_rear_blanket_wall())
+        shapes_and_components += self._make_coils()
         shapes_and_components += self._make_component_cuts()
 
         self.shapes_and_components = shapes_and_components
@@ -462,6 +463,7 @@ class SubmersionTokamak(paramak.Reactor):
 
         # this takes a single solid from a compound of solids by finding the
         # solid nearest to a point
+        # TODO: find alternative
         self._inboard_blanket.solid = self._inboard_blanket.solid.solids(
             cq.selectors.NearestToPointSelector((0, 0, 0))
         )
@@ -575,7 +577,7 @@ class SubmersionTokamak(paramak.Reactor):
         return self._supports
 
     def _make_rear_blanket_wall(self):
-        outboard_rear_blanket_wall_upper = paramak.RotateStraightShape(
+        self._outboard_rear_blanket_wall_upper = paramak.RotateStraightShape(
             points=[
                 (
                     self._center_column_shield_end_radius,
@@ -597,7 +599,7 @@ class SubmersionTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        outboard_rear_blanket_wall_lower = paramak.RotateStraightShape(
+        self._outboard_rear_blanket_wall_lower = paramak.RotateStraightShape(
             points=[
                 (
                     self._center_column_shield_end_radius,
@@ -633,8 +635,8 @@ class SubmersionTokamak(paramak.Reactor):
             name="outboard_rear_blanket_wall",
             material_tag="blanket_rear_wall_mat",
             union=[
-                outboard_rear_blanket_wall_upper,
-                outboard_rear_blanket_wall_lower],
+                self._outboard_rear_blanket_wall_upper,
+                self._outboard_rear_blanket_wall_lower],
         )
 
         return self._outboard_rear_blanket_wall
@@ -648,9 +650,14 @@ class SubmersionTokamak(paramak.Reactor):
         list_of_components.append(self._firstwall)
 
         # cutting the supports away from the blanket
+        # TODO optimise this
+        # self._blanket.cut = self._supports
         self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
         list_of_components.append(self._blanket)
+        return list_of_components
 
+    def _make_coils(self):
+        list_of_components = []
         if self._tf_info_provided:
             self._tf_coil = paramak.ToroidalFieldCoilCoatHanger(
                 with_inner_leg=False,
