@@ -17,7 +17,7 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
         assert self.test_shape.rotation_angle == 360
         assert self.test_shape.stp_filename == "CenterColumnShieldCircular.stp"
         assert self.test_shape.stl_filename == "CenterColumnShieldCircular.stl"
-        # assert self.test_shape.name == "center_column"
+        # assert self.test_shape.name == "center_column_shield"
         assert self.test_shape.material_tag == "center_column_shield_mat"
 
     def test_CenterColumnShieldCircular_creation(self):
