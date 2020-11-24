@@ -13,6 +13,16 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
             with_inner_leg=True
         )
 
+    def test_default_parameters(self):
+        """Checks that the default parameters of a ToroidalFieldCoilPrincetonD are correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.vertical_displacement == 0
+        assert self.test_shape.with_inner_leg == True 
+        assert self.test_shape.stp_filename == "ToroidalFieldCoilPrincetonD.stp"
+        assert self.test_shape.stl_filename == "ToroidalFieldCoilPrincetonD.stl"
+        assert self.test_shape.material_tag == "outer_tf_coil_mat"
+
     def test_ToroidalFieldCoilPrincetonD_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilPrincetonD
         parametric component and checks that a cadquery solid is created."""
