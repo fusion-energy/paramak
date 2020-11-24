@@ -45,5 +45,4 @@ class test_CoolantChannelRingCurved(unittest.TestCase):
         self.test_shape.force_cross_section = True
         assert test_volume < self.test_shape.volume 
     
-    # need to add check to warn/raise error when there is coolant channel overlap
-    # need to add test for this as well
+    # need to add check to warn/raise error when there is coolant channel overlap and a test
