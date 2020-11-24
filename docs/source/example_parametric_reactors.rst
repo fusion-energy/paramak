@@ -54,3 +54,13 @@ center_column_study_reactor.py
    :show-inheritance:
 
 `Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/center_column_study_reactor.py>`_
+
+htc_reactor.py
+^^^^^^^^^^^^^^
+
+|htc_reactor_stp|
+
+.. |htc_reactor_stp| image:: 
+   :width: 700
+
+`Link to script <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/htc_reactor.py>`_
