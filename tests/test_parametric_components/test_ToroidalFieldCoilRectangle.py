@@ -25,6 +25,17 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert self.test_shape.stp_filename == "ToroidalFieldCoilRectangle.stp"
         assert self.test_shape.stl_filename == "ToroidalFieldCoilRectangle.stl"
         assert self.test_shape.material_tag == "outer_tf_coil_mat"
+
+    def test_points_calculation(self):
+        """Checks that the points used to construct the ToroidalFieldCoilRectangle are
+        calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [
+            (100, 700, 'straight'), (150, 700, 'straight'), (800, 700, 'straight'), 
+            (800, -700, 'straight'), (150, -700, 'straight'), (100, -700, 'straight'), 
+            (100, -750, 'straight'), (850, -750, 'straight'), (850, 750, 'straight'), 
+            (100, 750, 'straight'), (100, 700, 'straight')
+        ]
     
     def test_ToroidalFieldCoilRectangle_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilRectangle
