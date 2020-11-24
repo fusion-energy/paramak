@@ -9,8 +9,18 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
     def setUp(self):
         self.test_shape = paramak.ToroidalFieldCoilTripleArc(
             R1=100, h=100, radii=(100, 200), coverages=(10, 60), thickness=10, 
-            distance=50, number_of_coils=1, vertical_displacement=10, with_inner_leg=True
+            distance=50, number_of_coils=1,
         )
+
+    def test_default_parameters(self):
+        """Checks that the default parameters of a ToroidalFieldCoilTripleArc are correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.with_inner_leg == True 
+        assert self.test_shape.vertical_displacement == 0
+        assert self.test_shape.stp_filename == "ToroidalFieldCoilTripleArc.stp"
+        assert self.test_shape.stl_filename == "ToroidalFieldCoilTripleArc.stl"
+        assert self.test_shape.material_tag == "outer_tf_coil_mat"
     
     def test_ToroidalFieldCoilTripleArc_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilTripleArc
