@@ -19,6 +19,15 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
             with_inner_leg=True
         )
 
+    def test_default_parameters(self):
+        """Checks that the default parameters of a ToroidalFieldCoilCoatHanger are correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.with_inner_leg == True
+        assert self.test_shape.stp_filename == "ToroidalFieldCoilCoatHanger.stp"
+        assert self.test_shape.stl_filename == "ToroidalFieldCoilCoatHanger.stl"
+        assert self.material_tag == "outer_tf_coil_mat"
+
     def test_ToroidalFieldCoilCoatHanger_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilCoatHanger
         parametric component and checks that a cadquery solid is created."""
