@@ -24,6 +24,18 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
         # assert self.test_shape.name == "pf_coil"
         assert self.test_shape.material_tag == "pf_coil_mat"
 
+    def test_points_calculation(self):
+        """Checks that the points used to construct the PoloidalFieldCoilSet are
+        calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [
+            (110.0, 105.0, 'straight'), (110.0, 95.0, 'straight'), (90.0, 95.0, 'straight'), 
+            (90.0, 105.0, 'straight'), (212.5, 207.5, 'straight'), (212.5, 192.5, 'straight'), 
+            (187.5, 192.5, 'straight'), (187.5, 207.5, 'straight'), (315.0, 302.5, 'straight'), 
+            (315.0, 297.5, 'straight'), (285.0, 297.5, 'straight'), (285.0, 302.5, 'straight'), 
+            (110.0, 105.0, 'straight')
+        ]
+
     def test_PoloidalFieldCoilSet_creation(self):
         """Creates a solid using the PoloidalFieldCoilSet parametric component
         and checks that a cadquery solid is created."""
