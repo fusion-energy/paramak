@@ -1,65 +1,66 @@
 
 """Example reactor based on the SPARC design as published in Figure 4 of
-Overview of the SPARC tokamak. Journal of Plasma Physics, 86(5), 865860502. 
+Overview of the SPARC tokamak. Journal of Plasma Physics, 86(5), 865860502.
 doi:10.1017/S0022377820001257"""
 
 import paramak
 
-def  main(rotation_angle = 180):
+
+def main(rotation_angle=180):
 
     inboard_pf_coils = paramak.PoloidalFieldCoilSet(
         center_points=[
-            (53.5,-169.58),
-            (53.5,-118.43),
-            (53.5,-46.54),
-            (53.5,46.54),
-            (53.5,118.43),
-            (53.5,169.58),
+            (53.5, -169.58),
+            (53.5, -118.43),
+            (53.5, -46.54),
+            (53.5, 46.54),
+            (53.5, 118.43),
+            (53.5, 169.58),
         ],
-        heights=[41.5,40.5,82.95,82.95,40.5,41.5,],
-        widths=[27.7,27.7,27.7,27.7,27.7,27.7],
+        heights=[41.5, 40.5, 82.95, 82.95, 40.5, 41.5, ],
+        widths=[27.7, 27.7, 27.7, 27.7, 27.7, 27.7],
         rotation_angle=rotation_angle,
         stp_filename='inboard_pf_coils.stp'
     )
 
     outboard_pf_coils = paramak.PoloidalFieldCoilSet(
         center_points=[
-            (86,230),
-            (86,-230),
+            (86, 230),
+            (86, -230),
             (164, 241),
             (164, -241),
             (263, 222),
             (263, -222),
-            (373,131),
-            (373,-131),
+            (373, 131),
+            (373, -131),
         ],
-        widths=[32,32,50,50,43,43,48,48,],
-        heights=[40,40,30,30,28,28,37,37,],
+        widths=[32, 32, 50, 50, 43, 43, 48, 48, ],
+        heights=[40, 40, 30, 30, 28, 28, 37, 37, ],
         rotation_angle=rotation_angle,
         stp_filename='outboard_pf_coils.stp'
     )
 
     div_coils = paramak.PoloidalFieldCoilSet(
         center_points=[
-            (207,144),
-            (207,125),
-            (207,-144),
-            (207,-125),
+            (207, 144),
+            (207, 125),
+            (207, -144),
+            (207, -125),
 
         ],
-        widths=[15,15,15,15],
-        heights=[15,15,15,15],
+        widths=[15, 15, 15, 15],
+        heights=[15, 15, 15, 15],
         rotation_angle=rotation_angle,
         stp_filename='div_coils.stp'
     )
 
     vs_coils = paramak.PoloidalFieldCoilSet(
         center_points=[
-            (240,70),
-            (240,-70),
+            (240, 70),
+            (240, -70),
         ],
-        widths=[10,10],
-        heights=[10,10],
+        widths=[10, 10],
+        heights=[10, 10],
         rotation_angle=rotation_angle,
         stp_filename='vs_coils.stp'
     )
@@ -68,7 +69,7 @@ def  main(rotation_angle = 180):
         points=[
             (235.56581986143186, -127.64976958525347),
             (240.1847575057737, -121.19815668202767),
-        (246.65127020785218, -125.80645161290323),
+            (246.65127020785218, -125.80645161290323),
             (242.0323325635104, -132.25806451612902),
         ],
         rotation_angle=rotation_angle,
@@ -99,7 +100,7 @@ def  main(rotation_angle = 180):
         points=[
             (235.56581986143186, 127.64976958525347),
             (240.1847575057737, 121.19815668202767),
-        (246.65127020785218, 125.80645161290323),
+            (246.65127020785218, 125.80645161290323),
             (242.0323325635104, 132.25806451612902),
         ],
         rotation_angle=rotation_angle,
@@ -139,13 +140,13 @@ def  main(rotation_angle = 180):
 
     plasma = paramak.Plasma(
         major_radius=185,
-        minor_radius=57-6, # 3 is a small ofset to avoid overlaps
+        minor_radius=57 - 6,  # 3 is a small ofset to avoid overlaps
         triangularity=0.31,
         elongation=1.97,
         rotation_angle=rotation_angle
     )
 
-    antenna=paramak.RotateMixedShape(
+    antenna = paramak.RotateMixedShape(
         points=[
             (263.2794457274827, 46.5437788018433, 'straight'),
             (263.2794457274827, -46.54377880184336, 'straight'),
@@ -206,8 +207,6 @@ def  main(rotation_angle = 180):
         stp_filename='vacvessel.stp'
     )
 
-
-
     inner_vessel = paramak.RotateStraightShape(
         points=[
             (269.7459584295612, -46.54377880184336, 'straight'),
@@ -259,15 +258,15 @@ def  main(rotation_angle = 180):
         cut=[vac_vessel, vs_coils, antenna]
     )
 
-
     sparc = paramak.Reactor([inboard_pf_coils, outboard_pf_coils,
-        plasma,antenna, vs_coils, inner_vessel, tf_coil,
-        EFCCu_coils_1, EFCCu_coils_2, EFCCu_coils_3,
-        EFCCu_coils_4, EFCCu_coils_5, EFCCu_coils_6,
-        vac_vessel, div_coils])
+                             plasma, antenna, vs_coils, inner_vessel, tf_coil,
+                             EFCCu_coils_1, EFCCu_coils_2, EFCCu_coils_3,
+                             EFCCu_coils_4, EFCCu_coils_5, EFCCu_coils_6,
+                             vac_vessel, div_coils])
 
     sparc.export_stp()
     sparc.export_svg('htc_reactor.svg')
+
 
 if __name__ == "__main__":
     main()
