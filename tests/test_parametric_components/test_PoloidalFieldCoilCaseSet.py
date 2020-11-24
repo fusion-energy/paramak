@@ -25,6 +25,27 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         # assert self.test_shape.name == "pf_coil_case_set"
         assert self.test_shape.material_tag == "pf_coil_case_mat"
 
+    def test_points_calculation(self):
+        """Checks that the points used to construct the PoloidalFieldCoilCaseSetFC are
+        calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [
+            (105.0, 105.0, 'straight'), (105.0, 95.0, 'straight'), (95.0, 95.0, 'straight'), 
+            (95.0, 105.0, 'straight'), (105.0, 105.0, 'straight'), (110.0, 110.0, 'straight'), 
+            (110.0, 90.0, 'straight'), (90.0, 90.0, 'straight'), (90.0, 110.0, 'straight'), 
+            (110.0, 110.0, 'straight'), (105.0, 155.0, 'straight'), (105.0, 145.0, 'straight'), 
+            (95.0, 145.0, 'straight'), (95.0, 155.0, 'straight'), (105.0, 155.0, 'straight'), 
+            (115.0, 165.0, 'straight'), (115.0, 135.0, 'straight'), (85.0, 135.0, 'straight'), 
+            (85.0, 165.0, 'straight'), (115.0, 165.0, 'straight'), (60.0, 210.0, 'straight'), 
+            (60.0, 190.0, 'straight'), (40.0, 190.0, 'straight'), (40.0, 210.0, 'straight'), 
+            (60.0, 210.0, 'straight'), (65.0, 215.0, 'straight'), (65.0, 185.0, 'straight'), 
+            (35.0, 185.0, 'straight'), (35.0, 215.0, 'straight'), (65.0, 215.0, 'straight'), 
+            (70.0, 60.0, 'straight'), (70.0, 40.0, 'straight'), (30.0, 40.0, 'straight'), 
+            (30.0, 60.0, 'straight'), (70.0, 60.0, 'straight'), (80.0, 70.0, 'straight'), 
+            (80.0, 30.0, 'straight'), (20.0, 30.0, 'straight'), (20.0, 70.0, 'straight'), 
+            (80.0, 70.0, 'straight'), (105.0, 105.0, 'straight')
+        ]
+
     def test_PoloidalFieldCoilCaseSet_creation(self):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
         parametric component and passing all required args, and checks
