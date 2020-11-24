@@ -26,7 +26,22 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert self.test_shape.with_inner_leg == True
         assert self.test_shape.stp_filename == "ToroidalFieldCoilCoatHanger.stp"
         assert self.test_shape.stl_filename == "ToroidalFieldCoilCoatHanger.stl"
-        assert self.material_tag == "outer_tf_coil_mat"
+        assert self.test_shape.material_tag == "outer_tf_coil_mat"
+
+    def test_points_calculation(self):
+        """Checks that the points used to construct the ToroidalFieldCoilCoatHanger are
+        calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [
+            (200, 500, 'straight'), (600, 500, 'straight'), (700, 250.0, 'straight'), 
+            (700, -250.0, 'straight'), (600, -500, 'straight'), (200, -500, 'straight'), 
+            (200, -550, 'straight'), (600, -550, 'straight'), 
+            (646.423834544263, -518.5695338177052, 'straight'), 
+            (746.423834544263, -268.5695338177052, 'straight'), (750, -250.0, 'straight'), 
+            (750, 250.0, 'straight'), (746.423834544263, 268.5695338177052, 'straight'), 
+            (646.423834544263, 518.5695338177052, 'straight'), (600, 550, 'straight'), 
+            (200, 550, 'straight'), (200, 500, 'straight')
+        ]
 
     def test_ToroidalFieldCoilCoatHanger_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilCoatHanger
