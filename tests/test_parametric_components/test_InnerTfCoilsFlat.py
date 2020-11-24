@@ -25,6 +25,18 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
         assert self.test_shape.material_tag == "inner_tf_coil_mat"
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.rotation_axis == "Z"
+
+    def test_points_calculation(self):
+        """Checks that the points used to construct the InnerTfCoilsFlat component are
+        calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [
+            (49.937460888595446, 2.5, 'straight'), 
+            (27.1320420790315, 41.99824154201773, 'straight'), 
+            (77.154447582418, 128.6358861991937, 'straight'), 
+            (149.97916521970643, 2.5, 'straight'), 
+            (49.937460888595446, 2.5, 'straight')
+        ]
     
     def test_InnerTfCoilsFlat_creation(self):
         """Creates an inner tf coil using the InnerTFCoilsFlat parametric
