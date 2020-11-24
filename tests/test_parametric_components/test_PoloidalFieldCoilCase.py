@@ -23,6 +23,18 @@ class test_PoloidalFieldCoilCase(unittest.TestCase):
         assert self.test_shape.stp_filename == "PoloidalFieldCoilCase.stp"
         assert self.test_shape.stl_filename == "PoloidalFieldCoilCase.stl"
         assert self.test_shape.material_tag == "pf_coil_case_mat"
+
+    def test_points_calculation(self):
+        """Checks that the points used to construct the InnerTfCoilsFlat component are
+        calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [(1025.0, 525.0, 'straight'), 
+            (1025.0, 475.0, 'straight'), (975.0, 475.0, 'straight'), 
+            (975.0, 525.0, 'straight'), (1025.0, 525.0, 'straight'), 
+            (1030.0, 530.0, 'straight'), (1030.0, 470.0, 'straight'), 
+            (970.0, 470.0, 'straight'), (970.0, 530.0, 'straight'), 
+            (1030.0, 530.0, 'straight'), (1025.0, 525.0, 'straight')
+        ]
     
     def test_PoloidalFieldCoilCase_creation(self):
         """Creates a pf coil case using the PoloidalFieldCoilCase parametric
