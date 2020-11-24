@@ -25,6 +25,20 @@ class test_InnerTfCoilsCircular(unittest.TestCase):
         assert self.test_shape.material_tag == "inner_tf_coil_mat"
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.rotation_axis == "Z"
+
+    def test_points_calculation(self):
+        """Checks that the points used to construct the InnerTFCoilsCircular component 
+        are calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [
+            (49.937460888595446, 2.5, 'circle'), 
+            (43.300748759659555, 25.000903120744287, 'circle'), 
+            (27.1320420790315, 41.99824154201773, 'straight'), 
+            (77.154447582418, 128.6358861991937, 'circle'), 
+            (129.90375269002172, 75.00010024693078, 'circle'), 
+            (149.97916521970643, 2.5, 'straight'), 
+            (49.937460888595446, 2.5, 'circle')
+        ]
     
     def test_InnerTfCoilsCircular_creation(self):
         """Creates an inner tf coil using the InnerTfCoilsCircular parametric
