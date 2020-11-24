@@ -17,6 +17,14 @@ class test_PoloidalFieldCoilCaseFC(unittest.TestCase):
             pf_coil=self.pf_coil, casing_thickness=5
         )
 
+    def test_default_parameters(self):
+        """Checks that the default parameters of a PoloidalFieldCoilCaseFC are correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "PoloidalFieldCoilCaseFC.stp"
+        assert self.test_shape.stl_filename == "PoloidalFieldCoilCaseFC.stl"
+        assert self.test_shape.material_tag == "pf_coil_case_mat"
+
     def test_PoloidalFieldCoilCaseFC_creation(self):
         """Creates a pf coil case using the PoloidalFieldCoilCaseFC parametric
         component and checks that a cadquery solid is created."""
