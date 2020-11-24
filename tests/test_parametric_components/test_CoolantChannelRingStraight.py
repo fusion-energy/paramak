@@ -15,6 +15,14 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
             ring_radius=70,
             number_of_coolant_channels=8
         )
+
+    def test_default_parameters(self):
+        """Checks that the default parameters of a CoolantChannelRingStraight are correct."""
+
+        # assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "CoolantChannelRingStraight.stp"
+        assert self.test_shape.stl_filename == "CoolantChannelRingStraight.stl"
+        assert self.test_shape.material_tag == "coolant_channel_mat"
     
     def test_CoolantChannelRingStraight_creation(self):
         """Creates a coolant channel ring using the CoolantChannelRingStraight parameteric shape
@@ -45,3 +53,5 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
 
         assert self.test_shape.volume == pytest.approx(
             math.pi * (10 ** 2) * 100 * 8)
+
+    # need to add check to warn/raise error when there is coolant channel overlap and a test
