@@ -14,6 +14,17 @@ class test_InnerTfCoilsCircular(unittest.TestCase):
             number_of_coils=6,
             gap_size=5
         )
+
+    def test_default_parameters(self):
+        """Checks that the default parameters of an InnerTfCoilsCircular are correct."""
+
+        assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.azimuth_start_angle == 0
+        assert self.test_shape.stp_filename == "InnerTfCoilsCircular.stp"
+        assert self.test_shape.stl_filename == "InnerTfCoilsCircular.stl"
+        assert self.test_shape.material_tag == "inner_tf_coil_mat"
+        assert self.test_shape.workplane == "XY"
+        assert self.test_shape.rotation_axis == "Z"
     
     def test_InnerTfCoilsCircular_creation(self):
         """Creates an inner tf coil using the InnerTfCoilsCircular parametric
