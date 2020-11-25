@@ -16,7 +16,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
             seperate pf_coil, one entry for each pf_coil.
         stp_filename (str, optional): defaults to "PoloidalFieldCoilCaseSetFC.stp".
         stl_filename (str, optional): defaults to "PoloidalFieldCoilCaseSetFC.stl".
-        name (str, optional): defaults to "pf_coil".
+        name (str, optional): defaults to "pf_coil_case_set_fc".
         material_tag (str, optional): defaults to "pf_coil_mat".
     """
 
