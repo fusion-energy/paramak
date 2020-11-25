@@ -18,7 +18,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
             parrallel extrusions
         height (float, optional): height (cm) of the port. Defaults to 2000.0.
         width (float, optional): width (cm) of the port. Defaults to 2000.0.
-        azimuth_placement_angle (list, optional): Defaults
+        azimuth_placement_angle (list or float, optional): Defaults
             to [0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
         stp_filename (str, optional): Defaults to "BlanketCutterParallels.stp".
         stl_filename (str, optional): Defaults to "BlanketCutterParallels.stl".
