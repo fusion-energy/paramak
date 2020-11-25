@@ -48,3 +48,14 @@ class test_BlanketCutterParallels(unittest.TestCase):
         test_shape.solid
 
         assert test_shape.solid is not None
+
+    def test_distance_is_modified(self):
+        test_shape = paramak.BlanketCutterParallels(
+            thickness=50,
+            gap_size=50,
+        )
+
+        for thickness, gap_size in zip([20, 30, 40], [10, 20, 30]):
+            test_shape.thickness = thickness
+            test_shape.gap_size = gap_size
+            assert test_shape.distance == test_shape.gap_size/2 + test_shape.thickness
