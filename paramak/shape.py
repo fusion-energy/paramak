@@ -27,6 +27,9 @@ class Shape:
     Args:
         points (list of (float, float, float), optional): the x, y, z
             coordinates of points that make up the shape. Defaults to None.
+        connection_type (str, optional): The type of connection between points.
+            Possible values are "straight", "circle", "spline", "mixed".
+            Defaults to "mixed".
         name (str, optional): the name of the shape, used in the graph legend
             by export_html. Defaults to None.
         color (RGB or RGBA, sequences of 3 or 4 floats, respectively, each in
