@@ -62,6 +62,17 @@ class PortCutterRotated(RotateStraightShape):
         self.add_fillet()
 
     @property
+    def polar_coverage_angle(self):
+        return self._polar_coverage_angle
+
+    @polar_coverage_angle.setter
+    def polar_coverage_angle(self, value):
+        if value > 180:
+            msg = "polar_coverage_angle must be greater than 180.0"
+            raise ValueError(msg)
+        self._polar_coverage_angle = value
+
+    @property
     def center_point(self):
         return self._center_point
 
