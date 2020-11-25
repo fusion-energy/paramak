@@ -75,6 +75,6 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
 
         def invalid_number_of_blanket_segments():
             self.test_reactor.number_of_blanket_segments = 1
-        
+
         self.assertRaises(ValueError, invalid_gap_between_blankets)
         self.assertRaises(ValueError, invalid_number_of_blanket_segments)
