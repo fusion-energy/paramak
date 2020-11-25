@@ -33,6 +33,16 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
+    def test_points_calculation(self):
+        """Checks that the points used to construct the CenterColumnShieldPlasmaHyperbola
+        component are calculated correctly fro the parameters given."""
+
+        assert self.test_shape.points == [
+            (100, 0, 'straight'), (100, 400.0, 'straight'), (337.5, 400.0, 'straight'), 
+            (337.5, 300.0, 'spline'), (260.0, 0.0, 'spline'), (337.5, -300.0, 'straight'), 
+            (337.5, -400.0, 'straight'), (100, -400.0, 'straight'), (100, 0, 'straight')
+        ]
+
     def test_CenterColumnShieldPlasmaHyperbola_invalid_parameters_errors(self):
         """Checks that the correct errors are raised when invalid arguments are input as
         shape parameters."""
