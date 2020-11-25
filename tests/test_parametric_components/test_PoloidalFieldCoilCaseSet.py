@@ -114,17 +114,18 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         assert self.test_shape.areas.count(
             pytest.approx(40 * math.pi * 2 * 80)) == 1
 
-    def test_PoloidalFieldCoilCaseSet_incorrect_args(self):
-        """Creates a solid using the PoloidalFieldCoilCaseSet with incorrect
-        args"""
+    def test_PoloidalFieldCoilCaseSet_invalid_args(self):
+        """Creates PoloidalFieldCoilCaseSets with invalid arguments and checks
+        that the correct errors are raised."""
 
-        def test_PoloidalFieldCoilSet_incorrect_lengths_():
-            """Checks PoloidalFieldCoilSet with the wrong number of casing
-            thicknesses (3) using a coil set object with 4 pf_coils."""
-
+        def test_invalid_casing_thicknesses_1():
             self.test_shape.casing_thicknesses = [5, 5, 10]
             self.test_shape.solid
-
-        self.assertRaises(
-            ValueError,
-            test_PoloidalFieldCoilSet_incorrect_lengths_)
+        def test_invalid_casing_thicknesses_2():
+            self.test_shape.casing_thicknesses = [5, 5, 5, 'ten']
+        def test_invalid_casing_thicknesses_3():
+            self.test_shape.casing_thicknesses = "ten"
+        
+        self.assertRaises(ValueError, test_invalid_casing_thicknesses_1)
+        self.assertRaises(ValueError, test_invalid_casing_thicknesses_2)
+        self.assertRaises(ValueError, test_invalid_casing_thicknesses_3)
