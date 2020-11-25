@@ -20,8 +20,8 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
             (cm).
         stp_filename (str, optional): defaults to "PoloidalFieldCoilCaseSet.stp".
         stl_filename (str, optional): defaults to "PoloidalFieldCoilCaseSet.stl".
-        name (str, optional): defaults to "pf_coil".
-        material_tag (str, optional): defaults to "pf_coil_mat".
+        name (str, optional): defaults to "pf_coil_case_set".
+        material_tag (str, optional): defaults to "pf_coil_case_mat".
     """
 
     def __init__(

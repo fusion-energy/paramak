@@ -19,7 +19,7 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
             "BlanketConstantThicknessArcV.stp".
         stl_filename (str, optional): Defaults to
             "BlanketConstantThicknessArcV.stl".
-        material_tag (str, optional): Defaults to "blanket_material".
+        material_tag (str, optional): Defaults to "blanket_mat".
     """
 
     def __init__(
