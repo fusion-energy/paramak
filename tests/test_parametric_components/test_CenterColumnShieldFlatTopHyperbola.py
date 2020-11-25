@@ -51,9 +51,9 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
             self.test_shape.mid_radius = 220
             self.test_shape.solid
 
-        # def incorrect_outer_radius():
-        #     self.test_shape.outer_radius = 130
-        #     self.test_shape.solid
+        def incorrect_outer_radius():
+            self.test_shape.outer_radius = 130
+            self.test_shape.solid
 
         def incorrect_arc_height():
             self.test_shape.arc_height = 700
@@ -61,7 +61,7 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_inner_radius)
         self.assertRaises(ValueError, incorrect_mid_radius)
-        # self.assertRaises(ValueError, incorrect_outer_radius)
+        self.assertRaises(ValueError, incorrect_outer_radius)
         self.assertRaises(ValueError, incorrect_arc_height)
 
     def test_CenterColumnShieldFlatTopHyperbola_faces(self):
