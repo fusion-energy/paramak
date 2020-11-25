@@ -20,6 +20,16 @@ class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
         assert self.test_shape.stl_filename == "CenterColumnShieldFlatTopCircular.stl"
         # assert self.test_shape.name == "center_column"
         assert self.test_shape.material_tag == "center_column_shield_mat"
+    
+    def test_points_calculation(self):
+        """Checks that the points used to construct the CenterColumnShieldFlatTopCircular
+        component are calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [
+            (100, 0, "straight"), (100, 300, "straight"), (200, 300, "straight"),
+            (200, 200, "circle"), (150, 0, "circle"), (200, -200, "straight"),
+            (200, -300, "straight"), (100, -300, "straight"), (100, 0, "straight")
+        ]
 
     def test_CenterColumnShieldFlatTopCircular_creation(self):
         """Creates a center column shield using the
