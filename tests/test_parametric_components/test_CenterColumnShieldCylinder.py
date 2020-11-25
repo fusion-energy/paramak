@@ -105,14 +105,19 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         """Checks that the correct errors are raised when invalid arguments are entered
         as shape parameters."""
 
-        def incorrect_radii():
+        def incorrect_inner_radius():
+            self.test_shape.inner_radius = self.test_shape.outer_radius + 1
+            self.test_shape.outer_radius = 20
+            self.test_shape.inner_radius = 40
+
+        def incorrect_outer_radius():
+            self.test_shape.outer_radius = self.test_shape.inner_radius + 1
             self.test_shape.inner_radius = 40
             self.test_shape.outer_radius = 20
-            self.test_shape.solid
 
         def incorrect_height():
             self.test_shape.height = None
-            self.test_shape.solid
 
-        self.assertRaises(ValueError, incorrect_radii)
+        self.assertRaises(ValueError, incorrect_inner_radius)
+        self.assertRaises(ValueError, incorrect_outer_radius)
         self.assertRaises(ValueError, incorrect_height)
