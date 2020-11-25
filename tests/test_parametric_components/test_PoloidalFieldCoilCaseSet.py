@@ -121,11 +121,13 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         def test_invalid_casing_thicknesses_1():
             self.test_shape.casing_thicknesses = [5, 5, 10]
             self.test_shape.solid
+
         def test_invalid_casing_thicknesses_2():
             self.test_shape.casing_thicknesses = [5, 5, 5, 'ten']
+
         def test_invalid_casing_thicknesses_3():
             self.test_shape.casing_thicknesses = "ten"
-        
+
         self.assertRaises(ValueError, test_invalid_casing_thicknesses_1)
         self.assertRaises(ValueError, test_invalid_casing_thicknesses_2)
         self.assertRaises(ValueError, test_invalid_casing_thicknesses_3)
