@@ -1,5 +1,6 @@
 
 from paramak import ExtrudeStraightShape
+from paramak.utils import cut_solid
 
 
 class BlanketCutterParallels(ExtrudeStraightShape):
@@ -59,7 +60,6 @@ class BlanketCutterParallels(ExtrudeStraightShape):
                 distance=self.gap_size / 2.0,
                 azimuth_placement_angle=self.azimuth_placement_angle,
             )
-        self.find_points()
 
     @property
     def distance(self):
@@ -69,14 +69,6 @@ class BlanketCutterParallels(ExtrudeStraightShape):
     @distance.setter
     def distance(self, value):
         self._distance = value
-
-    @property
-    def cut(self):
-        return self._cut
-
-    @cut.setter
-    def cut(self, value):
-        self._cut = value
 
     def find_points(self):
 
@@ -88,12 +80,12 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         ]
 
         self.main_cutting_shape.points = points
-        if self.cut is None:
-            self.cut = [self.main_cutting_shape]
-        elif not isinstance(self.cut, list) and \
-                self.cut != self.main_cutting_shape:
-            self.cut = [self.cut, self.main_cutting_shape]
-        elif self.main_cutting_shape not in self.cut:
-            self.cut.append(self.main_cutting_shape)
 
         self.points = points[:-1]
+
+    def create_solid(self):
+        solid = super().create_solid()
+        solid = cut_solid(solid, self.main_cutting_shape)
+        self.solid = solid
+
+        return solid
