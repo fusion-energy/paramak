@@ -36,7 +36,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         are calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (100, 300, "straight"), (200, 300, "straight"), (200, -300, "straight"),
+            (100, 300, "straight"), (200, 300, "straight"), (200, -300, "straight"), 
             (100, -300, "straight"), (100, 300, "straight")
         ]
 
@@ -65,10 +65,8 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
             100**2))) * 2) + (math.pi * (2 * 200) * 600) + (math.pi * (2 * 100) * 600))
         assert self.test_shape.areas.count(pytest.approx(
             (math.pi * (200**2)) - (math.pi * (100**2)))) == 2
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (2 * 200) * 600)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (2 * 100) * 600)) == 1
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (2 * 200) * 600)) == 1
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (2 * 100) * 600)) == 1
 
     def test_export_stp_CenterColumnShieldCylinder(self):
         """Creates a CenterColumnShieldCylinder shape and checks that a stp
@@ -76,7 +74,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
 
         os.system("rm center_column_shield.stp")
         self.test_shape.export_stp("center_column_shield.stp")
-        assert Path("center_column_shield.stp").exists()
+        assert Path("center_column_shield.stp").exists() == True
         os.system("rm center_column_shield.stp")
 
     def test_parametric_component_hash_value(self):
@@ -111,7 +109,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
             self.test_shape.solid
 
         def incorrect_height():
-            self.test_shape.height = None
+            self.test_shape.height = None 
             self.test_shape.solid
 
         self.assertRaises(ValueError, incorrect_radii)
