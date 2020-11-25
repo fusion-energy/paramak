@@ -122,19 +122,8 @@ class PortCutterRotated(RotateStraightShape):
             outer_point_rotated,
             math.radians(-0.5 * self.polar_coverage_angle))
 
-        if outer_point_1[0] < 0:
-            m, c = coefficients_of_line_from_points(
-                outer_point_1, self.center_point)
-            points.append((0, c))
-        else:
-            points.append(outer_point_1)
-
-        if outer_point_2[0] < 0:
-            m, c = coefficients_of_line_from_points(
-                outer_point_2, self.center_point)
-            points.append((0, c))
-        else:
-            points.append(outer_point_2)
+        points.append(outer_point_1)
+        points.append(outer_point_2)
 
         self.points = points
 
