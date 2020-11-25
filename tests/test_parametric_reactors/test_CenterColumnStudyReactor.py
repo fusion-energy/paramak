@@ -10,8 +10,8 @@ import pytest
 
 class test_CenterColumnStudyReactor(unittest.TestCase):
     def test_creation_with_narrow_divertor(self):
-        """creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
-        the correct number of components are created"""
+        """Creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
+        the correct number of components are created."""
 
         test_reactor = paramak.CenterColumnStudyReactor(
             inner_bore_radial_thickness=20,
@@ -34,8 +34,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
         assert len(test_reactor.shapes_and_components) == 6
 
     def test_svg_creation(self):
-        """creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
-        an svg image of the reactor can be exported"""
+        """Creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
+        an svg image of the reactor can be exported."""
 
         os.system("rm test_image.svg")
 
@@ -61,9 +61,9 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
         os.system("rm test_image.svg")
 
     def test_rotation_angle_impacts_volume(self):
-        """creates a CenterColumnStudyReactor reactor with a rotation angle of
+        """Creates a CenterColumnStudyReactor reactor with a rotation angle of
         90 and another reactor with a rotation angle of 180. Then checks the
-        volumes of all the components is double in the 180 reactor"""
+        volumes of all the components is double in the 180 reactor."""
 
         test_reactor_90 = paramak.CenterColumnStudyReactor(
             inner_bore_radial_thickness=30,
@@ -102,8 +102,8 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
 
     def test_rotation_angle_warning(self):
-        """checks that the correct warning message is printed when
-        rotation_angle = 360"""
+        """Checks that the correct warning message is printed when
+        rotation_angle = 360."""
 
         def warning_trigger():
             try:
