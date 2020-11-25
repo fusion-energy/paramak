@@ -10,7 +10,7 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
         self.test_shape = paramak.CenterColumnShieldCircular(
             height=600, inner_radius=100, mid_radius=150, outer_radius=200
         )
-        
+
     def test_default_parameters(self):
         """Checks that the default parameters of a CenterColumnShieldCircular are correct."""
 
@@ -25,8 +25,8 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
         are calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (100, 0, 'straight'), (100, 300.0, 'straight'), (200, 300.0, 'circle'), 
-            (150, 0, 'circle'), (200, -300.0, 'straight'), (100, -300.0, 'straight'), 
+            (100, 0, 'straight'), (100, 300.0, 'straight'), (200, 300.0, 'circle'),
+            (150, 0, 'circle'), (200, -300.0, 'straight'), (100, -300.0, 'straight'),
             (100, 0, 'straight')
         ]
 

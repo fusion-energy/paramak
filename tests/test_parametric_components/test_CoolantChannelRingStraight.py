@@ -23,7 +23,7 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
         assert self.test_shape.stp_filename == "CoolantChannelRingStraight.stp"
         assert self.test_shape.stl_filename == "CoolantChannelRingStraight.stl"
         assert self.test_shape.material_tag == "coolant_channel_mat"
-    
+
     def test_CoolantChannelRingStraight_creation(self):
         """Creates a coolant channel ring using the CoolantChannelRingStraight parameteric shape
         and checks that a cadquery solid is created."""
@@ -41,7 +41,8 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
         assert self.test_shape.area == pytest.approx(
             (((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * 100)) * 8)
         assert len(self.test_shape.areas) == 24
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 16
+        assert self.test_shape.areas.count(
+            pytest.approx(math.pi * (10**2))) == 16
         assert self.test_shape.areas.count(
             pytest.approx(math.pi * (10 * 2) * 100)) == 8
 
@@ -54,4 +55,5 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
         assert self.test_shape.volume == pytest.approx(
             math.pi * (10 ** 2) * 100 * 8)
 
-    # need to add check to warn/raise error when there is coolant channel overlap and a test
+    # need to add check to warn/raise error when there is coolant channel
+    # overlap and a test

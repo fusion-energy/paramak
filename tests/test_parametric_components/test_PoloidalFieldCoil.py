@@ -27,8 +27,8 @@ class test_PoloidalFieldCoil(unittest.TestCase):
         correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (1030.0, 525.0, 'straight'), (1030.0, 475.0, 'straight'), 
-            (970.0, 475.0, 'straight'), (970.0, 525.0, 'straight'), 
+            (1030.0, 525.0, 'straight'), (1030.0, 475.0, 'straight'),
+            (970.0, 475.0, 'straight'), (970.0, 525.0, 'straight'),
             (1030.0, 525.0, 'straight')
         ]
 
@@ -43,7 +43,8 @@ class test_PoloidalFieldCoil(unittest.TestCase):
         """Creates a pf coil using the PoloidalFieldCoil parametric component
         and checks that the volume is correct"""
 
-        assert self.test_shape.volume == pytest.approx(50 * 60 * math.pi * 2 * 1000)
+        assert self.test_shape.volume == pytest.approx(
+            50 * 60 * math.pi * 2 * 1000)
 
     def test_PoloidalFieldCoil_absolute_areas(self):
         """Creates a pf coil using the PoloidalFieldCoil parametric component

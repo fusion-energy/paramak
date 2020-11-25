@@ -41,7 +41,7 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
         small_gap_blanket_volume = self.test_reactor._blanket.volume
         small_gap_fw_volume = self.test_reactor._firstwall.volume
 
-        self.test_reactor.gap_between_blankets = 60 
+        self.test_reactor.gap_between_blankets = 60
         self.test_reactor.create_solids()
         large_gap_blanket_volume = self.test_reactor._blanket.volume
         large_gap_fw_volume = self.test_reactor._firstwall.volume
@@ -61,7 +61,7 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
         self.test_reactor.number_of_blanket_segments = 6
         self.test_reactor.create_solids()
         blanket_volume_many_segments = self.test_reactor._blanket.volume
-        fw_volume_many_segments = self.test_reactor._firstwall.volume 
+        fw_volume_many_segments = self.test_reactor._firstwall.volume
 
         assert blanket_volume_many_segments < blanket_volume_few_segments
         assert fw_volume_many_segments > fw_volume_few_segments

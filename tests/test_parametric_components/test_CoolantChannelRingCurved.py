@@ -6,7 +6,7 @@ import pytest
 
 
 class test_CoolantChannelRingCurved(unittest.TestCase):
-    
+
     def setUp(self):
         self.test_shape = paramak.CoolantChannelRingCurved(
             height=100,
@@ -38,11 +38,12 @@ class test_CoolantChannelRingCurved(unittest.TestCase):
         test_volume = self.test_shape.volume
         self.test_shape.number_of_coolant_channels = 4
         assert test_volume == pytest.approx(self.test_shape.volume * 2)
-        
+
         test_volume = self.test_shape.volume
         self.test_shape.mid_offset = -30
         assert test_volume > self.test_shape.volume
         self.test_shape.force_cross_section = True
-        assert test_volume < self.test_shape.volume 
-    
-    # need to add check to warn/raise error when there is coolant channel overlap and a test
+        assert test_volume < self.test_shape.volume
+
+    # need to add check to warn/raise error when there is coolant channel
+    # overlap and a test

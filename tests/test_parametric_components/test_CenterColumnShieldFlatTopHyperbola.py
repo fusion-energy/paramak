@@ -8,8 +8,7 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldFlatTopHyperbola(
-            height=600, arc_height=400, inner_radius=100, mid_radius=150, outer_radius=200
-        )
+            height=600, arc_height=400, inner_radius=100, mid_radius=150, outer_radius=200)
 
     def test_default_parameters(self):
         """Checks that the default parameters of a CenterColumnShieldFlatTopHyperbola are
@@ -30,7 +29,7 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
             (200, 200, "spline"), (150, 0, "spline"), (200, -200, "straight"),
             (200, -300, "straight"), (100, -300, "straight"), (100, 0, "straight")
         ]
-        
+
     def test_CenterColumnShieldFlatTopHyperbola_creation(self):
         """Creates a center column shield using the
         CenterColumnShieldFlatTopHyperbola parametric component and checks that

@@ -8,9 +8,8 @@ class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldFlatTopCircular(
-            height=600, arc_height=400, inner_radius=100, mid_radius=150, outer_radius=200
-        )
-    
+            height=600, arc_height=400, inner_radius=100, mid_radius=150, outer_radius=200)
+
     def test_default_parameters(self):
         """Checks that the default parameters of a CenterColumnShieldFlatTopCircular are
         correct."""
@@ -20,7 +19,7 @@ class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
         assert self.test_shape.stl_filename == "CenterColumnShieldFlatTopCircular.stl"
         # assert self.test_shape.name == "center_column"
         assert self.test_shape.material_tag == "center_column_shield_mat"
-    
+
     def test_points_calculation(self):
         """Checks that the points used to construct the CenterColumnShieldFlatTopCircular
         component are calculated correctly from the parameters given."""

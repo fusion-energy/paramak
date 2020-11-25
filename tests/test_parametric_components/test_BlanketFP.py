@@ -8,7 +8,7 @@ import paramak
 
 
 class test_BlanketFP(unittest.TestCase):
-    
+
     def setUp(self):
         self.plasma = paramak.Plasma(
             major_radius=450,
@@ -22,11 +22,11 @@ class test_BlanketFP(unittest.TestCase):
             start_angle=-90,
             stop_angle=240,
         )
-    
+
     def test_default_parameters(self):
         """Checks that the default parameters of a BlanketFP are correct."""
 
-        assert self.test_shape.plasma == None
+        assert self.test_shape.plasma is None
         assert self.test_shape.minor_radius == 150
         assert self.test_shape.major_radius == 450
         assert self.test_shape.triangularity == 0.55
@@ -37,7 +37,7 @@ class test_BlanketFP(unittest.TestCase):
         assert self.test_shape.stp_filename == "BlanketFP.stp"
         assert self.test_shape.stl_filename == "BlanketFP.stl"
         assert self.test_shape.material_tag == "blanket_mat"
-        
+
     def test_BlanketFP_creation_plasma(self):
         """Checks that a cadquery solid can be created by passing a plasma to
         the BlanketFP parametric component."""
@@ -129,7 +129,8 @@ class test_BlanketFP(unittest.TestCase):
         def test_different_lengths():
             self.test_shape.start_angle = 90
             self.test_shape.stop_angle = 270
-            self.test_shape.offset_from_plasma = [[270, 100, 90], [0, 5, 10, 15]]
+            self.test_shape.offset_from_plasma = [
+                [270, 100, 90], [0, 5, 10, 15]]
             self.test_shape.solid
 
         self.assertRaises(ValueError, test_different_lengths)
@@ -180,20 +181,20 @@ class test_BlanketFP(unittest.TestCase):
         self.test_shape.stop_angle = 360
 
         self.test_shape.export_stp("test_blanket_full_cov.stp")
-        assert Path("test_blanket_full_cov.stp").exists() == True
+        assert Path("test_blanket_full_cov.stp").exists()
         os.system("rm test_blanket_full_cov.stp")
 
     def test_full_cov_full_rotation(self):
         """Creates a blanket using the BlanketFP parametric component with full
         coverage and full rotation and checks that an stp file can be exported using
         the export_stp method."""
-        
+
         self.test_shape.rotation_angle = 360
         self.test_shape.start_angle = 0
         self.test_shape.stop_angle = 360
 
         self.test_shape.export_stp("test_blanket_full_cov_full_rot.stp")
-        assert Path("test_blanket_full_cov_full_rot.stp").exists() == True
+        assert Path("test_blanket_full_cov_full_rot.stp").exists()
         os.system("rm test_blanket_full_cov_full_rot.stp")
 
     def test_overlapping(self):
@@ -209,7 +210,7 @@ class test_BlanketFP(unittest.TestCase):
             stop_angle=360,
             start_angle=0,
         )
-        
+
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             assert test_shape.solid is not None

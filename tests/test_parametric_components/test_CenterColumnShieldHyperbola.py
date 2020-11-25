@@ -30,13 +30,13 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
             (150.0, 0.0, "spline"), (200.0, -300.0, "straight"), (100.0, -300.0, "straight"),
             (100.0, 0.0, "straight")
         ]
-    
+
     def test_CenterColumnShieldHyperbola_creation(self):
         """Creates a center column shield using the
         CenterColumnShieldHyperbola parametric component and checks that a
         cadquery solid is created."""
 
-        assert self.test_shape.solid is not None 
+        assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
     def test_CenterColumnShieldHyperbola_invalid_parameters_errors(self):
@@ -50,7 +50,7 @@ class test_CenterColumnShieldHyperbola(unittest.TestCase):
         def incorrect_mid_radius():
             self.test_shape.mid_radius = 80
             self.test_shape.solid
-        
+
         def incorrect_outer_radius():
             self.test_shape.outer_radius = 130
             self.test_shape.solid

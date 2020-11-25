@@ -23,6 +23,7 @@ class ExtrudeCircleShape(Shape):
         self,
         distance,
         radius,
+        extrusion_start_offset=0.0,
         rotation_angle=360,
         extrude_both=True,
         stp_filename="ExtrudeCircleShape.stp",
@@ -40,6 +41,7 @@ class ExtrudeCircleShape(Shape):
         self.distance = distance
         self.rotation_angle = rotation_angle
         self.extrude_both = extrude_both
+        self.extrusion_start_offset = extrusion_start_offset
 
     @property
     def radius(self):
@@ -65,6 +67,14 @@ class ExtrudeCircleShape(Shape):
     def rotation_angle(self, value):
         self._rotation_angle = value
 
+    @property
+    def extrusion_start_offset(self):
+        return self._extrusion_start_offset
+
+    @extrusion_start_offset.setter
+    def extrusion_start_offset(self, value):
+        self._extrusion_start_offset = value
+
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with circular
         edges.
@@ -73,6 +83,10 @@ class ExtrudeCircleShape(Shape):
         :rtype: a cadquery solid
         """
 
+        # so a positive offset moves extrusion further from axis of azimuthal
+        # placement rotation
+        extrusion_offset = -self.extrusion_start_offset
+
         if not self.extrude_both:
             extrusion_distance = -self.distance
         else:
@@ -80,6 +94,7 @@ class ExtrudeCircleShape(Shape):
 
         solid = (
             cq.Workplane(self.workplane)
+            .workplane(offset=extrusion_offset)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
             .extrude(distance=extrusion_distance, both=self.extrude_both)

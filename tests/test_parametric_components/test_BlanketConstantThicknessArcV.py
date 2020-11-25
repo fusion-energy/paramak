@@ -14,7 +14,7 @@ class test_BlanketConstantThicknessArcV(unittest.TestCase):
             inner_upper_point=(300, 200),
             thickness=20,
         )
-    
+
     def test_default_parameters(self):
         """Checks that the default parameters of a BlanketConstantThicknessArcV are correct."""
 
@@ -22,18 +22,18 @@ class test_BlanketConstantThicknessArcV(unittest.TestCase):
         assert self.test_shape.stp_filename == "BlanketConstantThicknessArcV.stp"
         assert self.test_shape.stl_filename == "BlanketConstantThicknessArcV.stl"
         assert self.test_shape.material_tag == "blanket_mat"
-    
+
     def test_points_calculation(self):
         """Checks that the points used to construct the BlanketConstantThicknessArcH component
         are calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (300, 200, 'circle'), 
-            (500, 0, 'circle'), 
-            (300, -200, 'straight'), 
-            (300, -220, 'circle'), 
-            (520, 0, 'circle'), 
-            (300, 220, 'straight'), 
+            (300, 200, 'circle'),
+            (500, 0, 'circle'),
+            (300, -200, 'straight'),
+            (300, -220, 'circle'),
+            (520, 0, 'circle'),
+            (300, 220, 'straight'),
             (300, 200, 'circle')
         ]
 
@@ -53,7 +53,7 @@ class test_BlanketConstantThicknessArcV(unittest.TestCase):
         assert test_volume == pytest.approx(self.test_shape.volume * 2)
 
     def test_shape_face_areas(self):
-        """Creates a blanket using the BlanketConstantThicknessArcV parametric component and 
+        """Creates a blanket using the BlanketConstantThicknessArcV parametric component and
         checks that the face areas are expected."""
 
         assert len(self.test_shape.areas) == 4

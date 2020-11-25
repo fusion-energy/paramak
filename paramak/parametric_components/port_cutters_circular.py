@@ -15,6 +15,8 @@ class PortCutterCircular(ExtrudeCircleShape):
         stl_filename (str, optional): defaults to "PortCutterCircular.stl".
         name (str, optional): defaults to "circular_port_cutter".
         material_tag (str, optional): defaults to "circular_port_cutter_mat".
+        extrusion_start_offset (float, optional): the distance between 0 and
+            the start of the extrusion. Defaults to 1..
     """
 
     def __init__(
@@ -22,6 +24,9 @@ class PortCutterCircular(ExtrudeCircleShape):
         z_pos,
         radius,
         distance,
+        workplane="ZY",
+        rotation_axis="Z",
+        extrusion_start_offset=1.,
         stp_filename="PortCutterCircular.stp",
         stl_filename="PortCutterCircular.stl",
         name="circular_port_cutter",
@@ -29,6 +34,9 @@ class PortCutterCircular(ExtrudeCircleShape):
         **kwargs
     ):
         super().__init__(
+            workplane=workplane,
+            rotation_axis=rotation_axis,
+            extrusion_start_offset=extrusion_start_offset,
             radius=radius,
             extrude_both=False,
             name=name,
