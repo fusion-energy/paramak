@@ -21,7 +21,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         """Checks that the default parameters of a ToroidalFieldCoilRectangle are correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.with_inner_leg == True
+        assert self.test_shape.with_inner_leg
         assert self.test_shape.stp_filename == "ToroidalFieldCoilRectangle.stp"
         assert self.test_shape.stl_filename == "ToroidalFieldCoilRectangle.stl"
         assert self.test_shape.material_tag == "outer_tf_coil_mat"
@@ -31,12 +31,12 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (100, 700, 'straight'), (150, 700, 'straight'), (800, 700, 'straight'), 
-            (800, -700, 'straight'), (150, -700, 'straight'), (100, -700, 'straight'), 
-            (100, -750, 'straight'), (850, -750, 'straight'), (850, 750, 'straight'), 
+            (100, 700, 'straight'), (150, 700, 'straight'), (800, 700, 'straight'),
+            (800, -700, 'straight'), (150, -700, 'straight'), (100, -700, 'straight'),
+            (100, -750, 'straight'), (850, -750, 'straight'), (850, 750, 'straight'),
             (100, 750, 'straight'), (100, 700, 'straight')
         ]
-    
+
     def test_ToroidalFieldCoilRectangle_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created."""
@@ -54,7 +54,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created."""
 
-        test_volume = self.test_shape.volume 
+        test_volume = self.test_shape.volume
 
         test_inner_leg = paramak.ExtrudeStraightShape(
             points=self.test_shape.inner_leg_connection_points, distance=30
@@ -70,7 +70,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         """Creates a tf coil using the ToroidalFieldCoilRectangle parametric
         component and checks that the volume is correct."""
 
-        self.test_shape.thickness= 150
+        self.test_shape.thickness = 150
         self.test_shape.distance = 50
 
         assert self.test_shape.volume == pytest.approx(
@@ -95,7 +95,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         """Creates tf coils using the ToroidalFieldCoilRectangle parametric
         component and checks that the areas of the faces are correct."""
 
-        self.test_shape.thickness= 150
+        self.test_shape.thickness = 150
         self.test_shape.distance = 50
 
         assert self.test_shape.area == pytest.approx((((850 * 150 * 2) + (1400 * 150)) * 2) + (

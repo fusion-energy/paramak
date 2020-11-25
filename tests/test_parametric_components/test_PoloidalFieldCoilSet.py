@@ -29,10 +29,10 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
         calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (110.0, 105.0, 'straight'), (110.0, 95.0, 'straight'), (90.0, 95.0, 'straight'), 
-            (90.0, 105.0, 'straight'), (212.5, 207.5, 'straight'), (212.5, 192.5, 'straight'), 
-            (187.5, 192.5, 'straight'), (187.5, 207.5, 'straight'), (315.0, 302.5, 'straight'), 
-            (315.0, 297.5, 'straight'), (285.0, 297.5, 'straight'), (285.0, 302.5, 'straight'), 
+            (110.0, 105.0, 'straight'), (110.0, 95.0, 'straight'), (90.0, 95.0, 'straight'),
+            (90.0, 105.0, 'straight'), (212.5, 207.5, 'straight'), (212.5, 192.5, 'straight'),
+            (187.5, 192.5, 'straight'), (187.5, 207.5, 'straight'), (315.0, 302.5, 'straight'),
+            (315.0, 297.5, 'straight'), (285.0, 297.5, 'straight'), (285.0, 302.5, 'straight'),
             (110.0, 105.0, 'straight')
         ]
 
@@ -83,8 +83,8 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
             """Checks PoloidalFieldCoilSet with height as the wrong type."""
 
             paramak.PoloidalFieldCoilSet(
-                heights=10, 
-                widths=[20, 20, 20], 
+                heights=10,
+                widths=[20, 20, 20],
                 center_points=[(100, 100), (200, 200), (300, 300)])
 
         self.assertRaises(
@@ -95,8 +95,8 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
             """Checks PoloidalFieldCoilSet with width as the wrong type."""
 
             paramak.PoloidalFieldCoilSet(
-                heights=[10, 10, 10], 
-                widths=20, 
+                heights=[10, 10, 10],
+                widths=20,
                 center_points=[(100, 100), (200, 200), (300, 300)])
 
         self.assertRaises(
@@ -119,8 +119,8 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
         def test_PoloidalFieldCoilSet_incorrect_width_length():
             """Checks PoloidalFieldCoilSet with not enough entries in width."""
             paramak.PoloidalFieldCoilSet(
-                heights=[10, 10, 10], 
-                widths=[20, 20], 
+                heights=[10, 10, 10],
+                widths=[20, 20],
                 center_points=[(100, 100), (200, 200), (300, 300)])
 
         self.assertRaises(

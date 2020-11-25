@@ -8,7 +8,7 @@ import pytest
 class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
     def setUp(self):
         self.test_shape = paramak.ToroidalFieldCoilTripleArc(
-            R1=100, h=100, radii=(100, 200), coverages=(10, 60), thickness=10, 
+            R1=100, h=100, radii=(100, 200), coverages=(10, 60), thickness=10,
             distance=50, number_of_coils=1,
         )
 
@@ -16,12 +16,12 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         """Checks that the default parameters of a ToroidalFieldCoilTripleArc are correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.with_inner_leg == True 
+        assert self.test_shape.with_inner_leg
         assert self.test_shape.vertical_displacement == 0
         assert self.test_shape.stp_filename == "ToroidalFieldCoilTripleArc.stp"
         assert self.test_shape.stl_filename == "ToroidalFieldCoilTripleArc.stl"
         assert self.test_shape.material_tag == "outer_tf_coil_mat"
-    
+
     def test_ToroidalFieldCoilTripleArc_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilTripleArc
         parametric component and checks that a cadquery solid is created."""
@@ -74,17 +74,20 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         self.test_shape.workplane = "XZ"
         test_volume = self.test_shape.volume
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 0.5, rel=0.01)
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "YZ"
         test_volume = self.test_shape.volume
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 0.5, rel=0.01)
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "XY"
         self.test_shape.rotation_axis = "Y"
         test_volume = self.test_shape.volume
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume == pytest.approx(
+            test_volume * 0.5, rel=0.01)

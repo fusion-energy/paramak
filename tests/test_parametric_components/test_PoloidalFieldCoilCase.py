@@ -28,14 +28,14 @@ class test_PoloidalFieldCoilCase(unittest.TestCase):
         """Checks that the points used to construct the InnerTfCoilsFlat component are
         calculated correctly from the parameters given."""
 
-        assert self.test_shape.points == [(1025.0, 525.0, 'straight'), 
-            (1025.0, 475.0, 'straight'), (975.0, 475.0, 'straight'), 
-            (975.0, 525.0, 'straight'), (1025.0, 525.0, 'straight'), 
-            (1030.0, 530.0, 'straight'), (1030.0, 470.0, 'straight'), 
-            (970.0, 470.0, 'straight'), (970.0, 530.0, 'straight'), 
-            (1030.0, 530.0, 'straight'), (1025.0, 525.0, 'straight')
-        ]
-    
+        assert self.test_shape.points == [(1025.0, 525.0, 'straight'),
+                                          (1025.0, 475.0, 'straight'), (975.0, 475.0, 'straight'),
+                                          (975.0, 525.0, 'straight'), (1025.0, 525.0, 'straight'),
+                                          (1030.0, 530.0, 'straight'), (1030.0, 470.0, 'straight'),
+                                          (970.0, 470.0, 'straight'), (970.0, 530.0, 'straight'),
+                                          (1030.0, 530.0, 'straight'), (1025.0, 525.0, 'straight')
+                                          ]
+
     def test_PoloidalFieldCoilCase_creation(self):
         """Creates a pf coil case using the PoloidalFieldCoilCase parametric
         component and checks that a cadquery solid is created."""

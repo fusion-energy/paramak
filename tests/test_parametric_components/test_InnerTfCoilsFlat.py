@@ -31,13 +31,13 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
         calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (49.937460888595446, 2.5, 'straight'), 
-            (27.1320420790315, 41.99824154201773, 'straight'), 
-            (77.154447582418, 128.6358861991937, 'straight'), 
-            (149.97916521970643, 2.5, 'straight'), 
+            (49.937460888595446, 2.5, 'straight'),
+            (27.1320420790315, 41.99824154201773, 'straight'),
+            (77.154447582418, 128.6358861991937, 'straight'),
+            (149.97916521970643, 2.5, 'straight'),
             (49.937460888595446, 2.5, 'straight')
         ]
-    
+
     def test_InnerTfCoilsFlat_creation(self):
         """Creates an inner tf coil using the InnerTFCoilsFlat parametric
         component and checks that a cadquery solid is created."""

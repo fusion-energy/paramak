@@ -30,19 +30,19 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (105.0, 105.0, 'straight'), (105.0, 95.0, 'straight'), (95.0, 95.0, 'straight'), 
-            (95.0, 105.0, 'straight'), (105.0, 105.0, 'straight'), (110.0, 110.0, 'straight'), 
-            (110.0, 90.0, 'straight'), (90.0, 90.0, 'straight'), (90.0, 110.0, 'straight'), 
-            (110.0, 110.0, 'straight'), (105.0, 155.0, 'straight'), (105.0, 145.0, 'straight'), 
-            (95.0, 145.0, 'straight'), (95.0, 155.0, 'straight'), (105.0, 155.0, 'straight'), 
-            (115.0, 165.0, 'straight'), (115.0, 135.0, 'straight'), (85.0, 135.0, 'straight'), 
-            (85.0, 165.0, 'straight'), (115.0, 165.0, 'straight'), (60.0, 210.0, 'straight'), 
-            (60.0, 190.0, 'straight'), (40.0, 190.0, 'straight'), (40.0, 210.0, 'straight'), 
-            (60.0, 210.0, 'straight'), (65.0, 215.0, 'straight'), (65.0, 185.0, 'straight'), 
-            (35.0, 185.0, 'straight'), (35.0, 215.0, 'straight'), (65.0, 215.0, 'straight'), 
-            (70.0, 60.0, 'straight'), (70.0, 40.0, 'straight'), (30.0, 40.0, 'straight'), 
-            (30.0, 60.0, 'straight'), (70.0, 60.0, 'straight'), (80.0, 70.0, 'straight'), 
-            (80.0, 30.0, 'straight'), (20.0, 30.0, 'straight'), (20.0, 70.0, 'straight'), 
+            (105.0, 105.0, 'straight'), (105.0, 95.0, 'straight'), (95.0, 95.0, 'straight'),
+            (95.0, 105.0, 'straight'), (105.0, 105.0, 'straight'), (110.0, 110.0, 'straight'),
+            (110.0, 90.0, 'straight'), (90.0, 90.0, 'straight'), (90.0, 110.0, 'straight'),
+            (110.0, 110.0, 'straight'), (105.0, 155.0, 'straight'), (105.0, 145.0, 'straight'),
+            (95.0, 145.0, 'straight'), (95.0, 155.0, 'straight'), (105.0, 155.0, 'straight'),
+            (115.0, 165.0, 'straight'), (115.0, 135.0, 'straight'), (85.0, 135.0, 'straight'),
+            (85.0, 165.0, 'straight'), (115.0, 165.0, 'straight'), (60.0, 210.0, 'straight'),
+            (60.0, 190.0, 'straight'), (40.0, 190.0, 'straight'), (40.0, 210.0, 'straight'),
+            (60.0, 210.0, 'straight'), (65.0, 215.0, 'straight'), (65.0, 185.0, 'straight'),
+            (35.0, 185.0, 'straight'), (35.0, 215.0, 'straight'), (65.0, 215.0, 'straight'),
+            (70.0, 60.0, 'straight'), (70.0, 40.0, 'straight'), (30.0, 40.0, 'straight'),
+            (30.0, 60.0, 'straight'), (70.0, 60.0, 'straight'), (80.0, 70.0, 'straight'),
+            (80.0, 30.0, 'straight'), (20.0, 30.0, 'straight'), (20.0, 70.0, 'straight'),
             (80.0, 70.0, 'straight'), (105.0, 105.0, 'straight')
         ]
 
@@ -70,10 +70,10 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         parametric component and checks that the volume is correct."""
 
         assert self.test_shape.volume == pytest.approx((((20 * 5 * 2) +
-                (10 * 5 * 2)) * math.pi * 2 * 100) + (((30 * 10 * 2) +
-                (10 * 10 * 2)) * math.pi * 2 * 100) + (((30 * 5 * 2) +
-                (20 * 5 * 2)) * math.pi * 2 * 50) + (((60 * 10 * 2) +
-                (20 * 10 * 2)) * math.pi * 2 * 50))
+                                                         (10 * 5 * 2)) * math.pi * 2 * 100) + (((30 * 10 * 2) +
+                                                                                                (10 * 10 * 2)) * math.pi * 2 * 100) + (((30 * 5 * 2) +
+                                                                                                                                        (20 * 5 * 2)) * math.pi * 2 * 50) + (((60 * 10 * 2) +
+                                                                                                                                                                              (20 * 10 * 2)) * math.pi * 2 * 50))
 
     def test_PoloidalFieldCoilCaseSet_absolute_areas(self):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
