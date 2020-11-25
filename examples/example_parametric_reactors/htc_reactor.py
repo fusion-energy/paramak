@@ -1,7 +1,8 @@
 
 """Example reactor based on the SPARC design as published in Figure 4 of
 Overview of the SPARC tokamak. Journal of Plasma Physics, 86(5), 865860502.
-doi:10.1017/S0022377820001257"""
+doi:10.1017/S0022377820001257. Coordinates extracted from the figure are
+not exact and therefore this model does not perfectly represent the reactor."""
 
 import paramak
 
@@ -116,17 +117,6 @@ def main(rotation_angle=180):
         rotation_angle=rotation_angle,
         stp_filename='EFCCu_coils_5.stp'
     )
-    EFCCu_coils_6 = paramak.RotateStraightShape(
-        points=[
-            (281.7551963048499, 71.42857142857144),
-            (289.1454965357968, 71.42857142857144),
-            (289.1454965357968, 78.80184331797238),
-            (281.7551963048499, 78.80184331797238),
-        ],
-        rotation_angle=rotation_angle,
-        stp_filename='EFCCu_coils_6.stp'
-    )
-
     EFCCu_coils_6 = paramak.RotateStraightShape(
         points=[
             (281.7551963048499, 71.42857142857144),
