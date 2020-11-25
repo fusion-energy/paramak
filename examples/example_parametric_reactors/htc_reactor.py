@@ -133,7 +133,8 @@ def main(rotation_angle=180):
         minor_radius=57 - 6,  # 3 is a small ofset to avoid overlaps
         triangularity=0.31,
         elongation=1.97,
-        rotation_angle=rotation_angle
+        rotation_angle=rotation_angle,
+        stp_filename='plasma.stp',
     )
 
     antenna = paramak.RotateMixedShape(
@@ -154,7 +155,8 @@ def main(rotation_angle=180):
         thickness=33,
         distance=33,
         number_of_coils=12,
-        rotation_angle=rotation_angle
+        rotation_angle=rotation_angle,
+        stp_filename='tf_coil.stp'
     )
 
     vac_vessel = paramak.RotateStraightShape(
