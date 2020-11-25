@@ -161,7 +161,7 @@ class Shape:
 
     @workplane.setter
     def workplane(self, value):
-        acceptable_values = ["XY", "YZ", "XZ"]
+        acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
         if value in acceptable_values:
             self._workplane = value
         else:
@@ -574,6 +574,10 @@ class Shape:
             else:
                 # for rotate and extrude shapes
                 solid = cq.Workplane(self.workplane)
+                # for extrude shapes
+                if hasattr(self, "extrusion_start_offset"):
+                    extrusion_offset = -self.extrusion_start_offset
+                    solid = solid.workplane(offset=extrusion_offset)
 
             for entry in instructions:
                 if list(entry.keys())[0] == "spline":

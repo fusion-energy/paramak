@@ -18,6 +18,8 @@ class PortCutterRectangular(ExtrudeStraightShape):
         name (str, optional): defaults to "rectangular_port_cutter".
         material_tag (str, optional): defaults to
             "rectangular_port_cutter_mat".
+        extrusion_start_offset (float, optional): the distance between 0 and
+            the start of the extrusion. Defaults to 1..
     """
 
     def __init__(
@@ -26,6 +28,9 @@ class PortCutterRectangular(ExtrudeStraightShape):
         height,
         width,
         distance,
+        workplane="ZY",
+        rotation_axis="Z",
+        extrusion_start_offset=1.,
         fillet_radius=None,
         stp_filename="PortCutterRectangular.stp",
         stl_filename="PortCutterRectangular.stl",
@@ -35,6 +40,9 @@ class PortCutterRectangular(ExtrudeStraightShape):
     ):
 
         super().__init__(
+            workplane=workplane,
+            rotation_axis=rotation_axis,
+            extrusion_start_offset=extrusion_start_offset,
             extrude_both=False,
             name=name,
             material_tag=material_tag,

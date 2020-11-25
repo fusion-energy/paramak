@@ -362,7 +362,11 @@ PortCutterRotated()
 PortCutterRectangular()
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/95790579-8f808a80-0cd7-11eb-83e1-872a98fe0bc8.png
+|PortCutterRectangularstp| |PortCutterRectangularsvg|
+
+.. |PortCutterRectangularstp| image:: https://user-images.githubusercontent.com/8583900/95790579-8f808a80-0cd7-11eb-83e1-872a98fe0bc8.png
+    :width: 300px
+.. |PortCutterRectangularsvg| image:: https://user-images.githubusercontent.com/8583900/99831528-1fc3b200-2b57-11eb-9b73-8efab06cf3ef.png
     :width: 300px
 
 .. automodule:: paramak.parametric_components.port_cutters_rectangular
@@ -372,7 +376,11 @@ PortCutterRectangular()
 PortCutterCircular()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/95790580-90b1b780-0cd7-11eb-944f-14fe290f8442.png
+|PortCutterCircularstp| |PortCutterCircularsvg|
+
+.. |PortCutterCircularstp| image:: https://user-images.githubusercontent.com/8583900/95790580-90b1b780-0cd7-11eb-944f-14fe290f8442.png
+    :width: 300px
+.. |PortCutterCircularsvg| image:: https://user-images.githubusercontent.com/8583900/99830949-53eaa300-2b56-11eb-886e-d5ee04c85b4a.png
     :width: 300px
 
 .. automodule:: paramak.parametric_components.port_cutters_circular
@@ -491,7 +499,7 @@ ToroidalFieldCoilTripleArc()
    :width: 240px
 .. |ToroidalFieldCoilTripleArcstp| image:: https://user-images.githubusercontent.com/8583900/94835218-51e34e00-0409-11eb-9372-0272c43a4844.png
    :width: 190px
-.. |ToroidalFieldCoilTripleArcsvg| image:: https://user-images.githubusercontent.com/8583900/94855159-fe332d80-0425-11eb-92a4-d1d43a066644.png
+.. |ToroidalFieldCoilTripleArcsvg| image:: https://user-images.githubusercontent.com/8583900/99848162-2eb75e00-2b71-11eb-80d2-6c695b56821d.png
    :width: 320px
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_triple_arc

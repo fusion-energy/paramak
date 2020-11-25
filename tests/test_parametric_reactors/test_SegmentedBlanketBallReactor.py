@@ -53,7 +53,7 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
         """Creates a SegmentedBlanketBallReactor with different
         number_of_blanket_segments and checks the volume of the blanket and
         firstwall changes."""
-
+        
         self.test_reactor.create_solids()
         blanket_volume_few_segments = self.test_reactor._blanket.volume
         fw_volume_few_segments = self.test_reactor._firstwall.volume
