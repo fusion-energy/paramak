@@ -65,3 +65,16 @@ class test_SegmentedBlanketBallReactor(unittest.TestCase):
 
         assert blanket_volume_many_segments < blanket_volume_few_segments
         assert fw_volume_many_segments > fw_volume_few_segments
+
+    def test_invalid_parameter_error_raises(self):
+        """Checks that the correct errors are raised when invalid arguments for
+        parameters are input."""
+
+        def invalid_gap_between_blankets():
+            self.test_reactor.gap_between_blankets = -1
+
+        def invalid_number_of_blanket_segments():
+            self.test_reactor.number_of_blanket_segments = 1
+        
+        self.assertRaises(ValueError, invalid_gap_between_blankets)
+        self.assertRaises(ValueError, invalid_number_of_blanket_segments)
