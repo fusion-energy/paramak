@@ -20,6 +20,16 @@ class test_CenterColumnShieldCircular(unittest.TestCase):
         # assert self.test_shape.name == "center_column_shield"
         assert self.test_shape.material_tag == "center_column_shield_mat"
 
+    def test_points_calculation(self):
+        """Checks that the points used to construct the CenterColumnShieldCircular components
+        are calculated correctly from the parameters given."""
+
+        assert self.test_shape.points == [
+            (100, 0, 'straight'), (100, 300.0, 'straight'), (200, 300.0, 'circle'), 
+            (150, 0, 'circle'), (200, -300.0, 'straight'), (100, -300.0, 'straight'), 
+            (100, 0, 'straight')
+        ]
+
     def test_CenterColumnShieldCircular_creation(self):
         """Creates a center column shield using the CenterColumnShieldCircular
         parametric component and checks that a cadquery solid is created."""
