@@ -95,19 +95,9 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         """Finds the XZ points and connection types (straight and spline) that
         describe the 2D profile of the center column shield shape."""
 
-        if self.inner_radius >= self.outer_radius:
-            raise ValueError(
-                "inner_radius ({}) is larger than outer_radius ({})".format(
-                    self.inner_radius, self.outer_radius
-                )
-            )
-
-        if self.mid_radius >= self.outer_radius:
-            raise ValueError(
-                "mid_radius ({}) is larger than outer_radius ({})".format(
-                    self.mid_radius, self.outer_radius
-                )
-            )
+        if not self.inner_radius <= self.mid_radius <= self.outer_radius:
+            raise ValueError("inner_radius must be less than mid_radius. \
+                mid_radius must be less than outer_radius.")
 
         if self.arc_height >= self.height:
             raise ValueError(
