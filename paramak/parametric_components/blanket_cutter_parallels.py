@@ -41,7 +41,11 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         material_tag="blanket_cutter_parallels_mat",
         **kwargs
     ):
-
+        self.main_cutting_shape = \
+            ExtrudeStraightShape(
+                distance=gap_size / 2.0,
+                azimuth_placement_angle=azimuth_placement_angle,
+            )
         self.gap_size = gap_size
         self.thickness = thickness
         super().__init__(
@@ -55,11 +59,6 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         )
         self.height = height
         self.width = width
-        self.main_cutting_shape = \
-            ExtrudeStraightShape(
-                distance=self.gap_size / 2.0,
-                azimuth_placement_angle=self.azimuth_placement_angle,
-            )
 
     @property
     def distance(self):
@@ -69,6 +68,24 @@ class BlanketCutterParallels(ExtrudeStraightShape):
     @distance.setter
     def distance(self, value):
         self._distance = value
+
+    @property
+    def gap_size(self):
+        return self._gap_size
+
+    @gap_size.setter
+    def gap_size(self, value):
+        self.main_cutting_shape.distance = value / 2.0
+        self._gap_size = value
+
+    @property
+    def azimuth_placement_angle(self):
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        self.main_cutting_shape.azimuth_placement_angle = value
+        self._azimuth_placement_angle = value
 
     def find_points(self):
 
