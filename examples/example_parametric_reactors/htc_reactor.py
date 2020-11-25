@@ -127,17 +127,6 @@ def main(rotation_angle=180):
         stp_filename='EFCCu_coils_6.stp'
     )
 
-    EFCCu_coils_6 = paramak.RotateStraightShape(
-        points=[
-            (281.7551963048499, 71.42857142857144),
-            (289.1454965357968, 71.42857142857144),
-            (289.1454965357968, 78.80184331797238),
-            (281.7551963048499, 78.80184331797238),
-        ],
-        rotation_angle=rotation_angle,
-        stp_filename='EFCCu_coils_6.stp'
-    )
-
     plasma = paramak.Plasma(
         major_radius=185,
         minor_radius=57 - 6,  # 3 is a small ofset to avoid overlaps

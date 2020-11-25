@@ -5,7 +5,8 @@ import unittest
 from pathlib import Path
 
 from examples.example_parametric_reactors import (
-    ball_reactor, ball_reactor_single_null, submersion_reactor_single_null)
+    ball_reactor, ball_reactor_single_null, submersion_reactor_single_null,
+    htc_reactor)
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
@@ -69,6 +70,30 @@ class test_object_properties(unittest.TestCase):
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
         submersion_reactor_single_null.make_submersion_sn(output_folder='')
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
+    def test_make_htc_reactor(self):
+        output_filenames = [
+            'inboard_pf_coils.stp',
+            'outboard_pf_coils.stp',
+            'div_coils.stp',
+            'vs_coils.stp',
+            'EFCCu_coils_1.stp',
+            'EFCCu_coils_2.stp',
+            'EFCCu_coils_3.stp',
+            'EFCCu_coils_4.stp',
+            'EFCCu_coils_5.stp',
+            'EFCCu_coils_6.stp',
+            'antenna.stp',
+            'vacvessel.stp',
+            'inner_vessel.stp',
+            'htc_reactor.svg',
+        ]
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        htc_reactor.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
