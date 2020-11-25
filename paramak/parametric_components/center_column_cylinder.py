@@ -59,9 +59,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             if value >= self.outer_radius:
                 raise ValueError(
                     "inner_radius ({}) is larger than outer_radius ({})".format(
-                        value, self.outer_radius
-                    )
-                )
+                        value, self.outer_radius))
         self._inner_radius = value
 
     @property
@@ -74,9 +72,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             if value <= self.inner_radius:
                 raise ValueError(
                     "inner_radius ({}) is larger than outer_radius ({})".format(
-                        self.inner_radius, value
-                    )
-                )
+                        self.inner_radius, value))
         self._outer_radius = value
 
     def find_points(self):
