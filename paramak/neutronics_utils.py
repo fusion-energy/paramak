@@ -16,32 +16,32 @@ def define_moab_core_and_tags():
         raise err('PyMoab not found, export_h5m method not available')
 
     # create pymoab instance
-    mb = core.Core()
+    moab_core = core.Core()
 
     tags = dict()
 
     SENSE_TAG_NAME = "GEOM_SENSE_2"
     SENSE_TAG_SIZE = 2
-    tags['surf_sense'] = mb.tag_get_handle(
+    tags['surf_sense'] = moab_core.tag_get_handle(
         SENSE_TAG_NAME,
         SENSE_TAG_SIZE,
         types.MB_TYPE_HANDLE,
         types.MB_TAG_SPARSE,
         create_if_missing=True)
 
-    tags['category'] = mb.tag_get_handle(
+    tags['category'] = moab_core.tag_get_handle(
         types.CATEGORY_TAG_NAME,
         types.CATEGORY_TAG_SIZE,
         types.MB_TYPE_OPAQUE,
         types.MB_TAG_SPARSE,
         create_if_missing=True)
-    tags['name'] = mb.tag_get_handle(
+    tags['name'] = moab_core.tag_get_handle(
         types.NAME_TAG_NAME,
         types.NAME_TAG_SIZE,
         types.MB_TYPE_OPAQUE,
         types.MB_TAG_SPARSE,
         create_if_missing=True)
-    tags['geom_dimension'] = mb.tag_get_handle(
+    tags['geom_dimension'] = moab_core.tag_get_handle(
         types.GEOM_DIMENSION_TAG_NAME,
         1,
         types.MB_TYPE_INTEGER,
@@ -49,9 +49,9 @@ def define_moab_core_and_tags():
         create_if_missing=True)
 
     # Global ID is a default tag, just need the name to retrieve
-    tags['global_id'] = mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
+    tags['global_id'] = moab_core.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
 
-    return mb, tags
+    return moab_core, tags
 
 
 def add_stl_to_moab_core(moab_core, surface_id, volume_id, material_name, tags, stl_filename):
