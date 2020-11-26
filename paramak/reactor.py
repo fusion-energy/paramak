@@ -426,8 +426,9 @@ class Reactor:
 
             if skip_graveyard and "graveyard" in stl_filename.lower():
                 continue
-            
-            mb = self.add_stl_to_moab_core(mb, surface_id, volume_id, item['material'])
+
+            mb = self.add_stl_to_moab_core(
+                mb, surface_id, volume_id, item['material'])
             volume_id += 1
             surface_id += 1
 
@@ -449,7 +450,7 @@ class Reactor:
         # recent versions of MOAB handle this automatically
         # but best to go ahead and do it manually
         mb.tag_set_data(tags['global_id'], volume_set, volume_id)
-        
+
         mb.tag_set_data(tags['global_id'], surface_set, surface_id)
 
         # set geom IDs
@@ -483,7 +484,6 @@ class Reactor:
         mb.add_entity(group_set, volume_set)
 
         return mb
-
 
     def export_physical_groups(self, output_folder=""):
         """Exports several JSON files containing a look up table which is
