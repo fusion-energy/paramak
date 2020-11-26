@@ -4,7 +4,7 @@ from paramak import RotateStraightShape
 from paramak.utils import get_hash
 
 
-class HollowCube(RotateStraightShape):
+class HollowCube(Shape):
     """A hollow cube with a constant thickness. Can be used to create a DAGMC
     Graveyard.
 
