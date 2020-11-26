@@ -1,11 +1,19 @@
 
+import numpy as np
 
 def define_moab_core_and_tags():
+    """Creates a MOAB Core instance which can be built up by adding sets of
+    triangles to the instance
+
+    Returns:
+        (pymoab Core): A pymoab.core.Core() instance 
+        (pymoab tag_handle): A pymoab.core.tag_get_handle() instance
+    """
 
     try:
         from pymoab import core, types
     except ImportError as err:
-        raise err('PyMoab not found, Reactor.export_h5m method not available')
+        raise err('PyMoab not found, export_h5m method not available')
 
     # create pymoab instance
     mb = core.Core()
@@ -46,45 +54,61 @@ def define_moab_core_and_tags():
     return mb, tags
 
 
-def add_stl_to_moab_core(mb, surface_id, volume_id, material_name, tags):
+def add_stl_to_moab_core(moab_core, surface_id, volume_id, material_name, tags, stl_filename):
+    """Computes the m and c coefficients of the equation (y=mx+c) for
+    a straight line from two points.
 
-    surface_set = mb.create_meshset()
-    volume_set = mb.create_meshset()
+    Args:
+        moab_core (pymoab.core.Core): 
+        surface_id (int): the id number to apply to the surface
+        volume_id (int): the id numbers to apply to the volumes
+        material_name (str): the material tag name to add. Will be prepended
+            with mat:
+        tags (pymoab tag_handle): the MOAB tags
+        stl_filename (str): the filename of the stl file to load into the moab
+            core
+
+    Returns:
+        (pymoab Core): An updated pymoab.core.Core() instance
+    """
+
+    surface_set = moab_core.create_meshset()
+    volume_set = moab_core.create_meshset()
 
     # recent versions of MOAB handle this automatically
     # but best to go ahead and do it manually
-    mb.tag_set_data(tags['global_id'], volume_set, volume_id)
+    moab_core.tag_set_data(tags['global_id'], volume_set, volume_id)
 
-    mb.tag_set_data(tags['global_id'], surface_set, surface_id)
+    moab_core.tag_set_data(tags['global_id'], surface_set, surface_id)
 
     # set geom IDs
-    mb.tag_set_data(tags['geom_dimension'], volume_set, 3)
-    mb.tag_set_data(tags['geom_dimension'], surface_set, 2)
+    moab_core.tag_set_data(tags['geom_dimension'], volume_set, 3)
+    moab_core.tag_set_data(tags['geom_dimension'], surface_set, 2)
 
     # set category tag values
-    mb.tag_set_data(tags['category'], volume_set, "Volume")
-    mb.tag_set_data(tags['category'], surface_set, "Surface")
+    moab_core.tag_set_data(tags['category'], volume_set, "Volume")
+    moab_core.tag_set_data(tags['category'], surface_set, "Surface")
 
     # establish parent-child relationship
-    mb.add_parent_child(volume_set, surface_set)
+    moab_core.add_parent_child(volume_set, surface_set)
 
     # set surface sense
     sense_data = [volume_set, np.uint64(0)]
-    mb.tag_set_data(tags['surf_sense'], surface_set, sense_data)
+    moab_core.tag_set_data(tags['surf_sense'], surface_set, sense_data)
 
     # load the stl triangles/vertices into the surface set
-    mb.load_file(stl_filename, surface_set)
+    moab_core.load_file(stl_filename, surface_set)
 
-    group_set = mb.create_meshset()
-    mb.tag_set_data(tags['category'], group_set, "Group")
+    group_set = moab_core.create_meshset()
+    moab_core.tag_set_data(tags['category'], group_set, "Group")
     print("mat:{}".format(material_name))
-    mb.tag_set_data(
+    moab_core.tag_set_data(
         tags['name'],
         group_set,
         "mat:{}".format(material_name))
-    mb.tag_set_data(tags['geom_dimension'], group_set, 4)
+    moab_core.tag_set_data(tags['geom_dimension'], group_set, 4)
 
     # add the volume to this group set
-    mb.add_entity(group_set, volume_set)
+    moab_core.add_entity(group_set, volume_set)
 
-    return mb
+    return moab_core
