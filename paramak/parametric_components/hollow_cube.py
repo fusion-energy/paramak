@@ -59,7 +59,7 @@ class HollowCube(RotateStraightShape):
             self.length,
             self.length
         )
-        
+
         # creates a large box that surrounds the smaller box
         outer_box = cq.Workplane("front").box(
             self.length + self.thickness,

@@ -578,14 +578,16 @@ class Reactor:
         largest_dimension = 0
         for component in self.shapes_and_components:
             print(component.stp_filename, component.largest_dimension)
-            largest_dimension = max(largest_dimension, component.largest_dimension)
+            largest_dimension = max(
+                largest_dimension,
+                component.largest_dimension)
 
         graveyard_shape = paramak.HollowCube(
-            length = largest_dimension * 2 + graveyard_offset * 2,
-            name = "Graveyard",
-            material_tag = "Graveyard",
-            stp_filename = "Graveyard.stp",
-            stl_filename = "Graveyard.stl",
+            length=largest_dimension * 2 + graveyard_offset * 2,
+            name="Graveyard",
+            material_tag="Graveyard",
+            stp_filename="Graveyard.stp",
+            stl_filename="Graveyard.stl",
         )
 
         self.graveyard = graveyard_shape
