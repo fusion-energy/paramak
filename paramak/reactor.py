@@ -389,7 +389,12 @@ class Reactor:
                 continue
 
             mb = add_stl_to_moab_core(
-                mb, surface_id, volume_id, item['material'], tags, stl_filename)
+                mb,
+                surface_id,
+                volume_id,
+                item['material'],
+                tags,
+                stl_filename)
             volume_id += 1
             surface_id += 1
 
