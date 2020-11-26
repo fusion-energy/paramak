@@ -432,7 +432,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + filepath)
 
         assert test_reactor.graveyard is not None
-        assert test_reactor.graveyard.__class__.__name__ == "Shape"
+        assert test_reactor.graveyard.__class__.__name__ == "HollowCube"
 
     def test_export_graveyard_offset(self):
         """checks that the graveyard can be exported with the correct default parameters
