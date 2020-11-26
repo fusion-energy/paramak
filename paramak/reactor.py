@@ -426,48 +426,10 @@ class Reactor:
 
             if skip_graveyard and "graveyard" in stl_filename.lower():
                 continue
-
-            surface_set = mb.create_meshset()
-            volume_set = mb.create_meshset()
-
-            # recent versions of MOAB handle this automatically
-            # but best to go ahead and do it manually
-            mb.tag_set_data(tags['global_id'], volume_set, volume_id)
+            
+            mb = add_stl_to_moab_core(mb, surface_id, volume_id, item['material'])
             volume_id += 1
-            mb.tag_set_data(tags['global_id'], surface_set, surface_id)
             surface_id += 1
-
-            # set geom IDs
-            mb.tag_set_data(tags['geom_dimension'], volume_set, 3)
-            mb.tag_set_data(tags['geom_dimension'], surface_set, 2)
-
-            # set category tag values
-            mb.tag_set_data(tags['category'], volume_set, "Volume")
-            mb.tag_set_data(tags['category'], surface_set, "Surface")
-
-            # establish parent-child relationship
-            mb.add_parent_child(volume_set, surface_set)
-
-            # set surface sense
-            sense_data = [volume_set, np.uint64(0)]
-            mb.tag_set_data(tags['surf_sense'], surface_set, sense_data)
-
-            # load the stl triangles/vertices into the surface set
-            mb.load_file(stl_filename, surface_set)
-
-            material_name = item['material']
-
-            group_set = mb.create_meshset()
-            mb.tag_set_data(tags['category'], group_set, "Group")
-            print("mat:{}".format(material_name))
-            mb.tag_set_data(
-                tags['name'],
-                group_set,
-                "mat:{}".format(material_name))
-            mb.tag_set_data(tags['geom_dimension'], group_set, 4)
-
-            # add the volume to this group set
-            mb.add_entity(group_set, volume_set)
 
         all_sets = mb.get_entities_by_handle(0)
 
@@ -478,6 +440,50 @@ class Reactor:
         mb.write_file(str(path_filename))
 
         return filename
+
+    def add_stl_to_moab_core(mb, surface_id, volume_id, material_name):
+
+        surface_set = mb.create_meshset()
+        volume_set = mb.create_meshset()
+
+        # recent versions of MOAB handle this automatically
+        # but best to go ahead and do it manually
+        mb.tag_set_data(tags['global_id'], volume_set, volume_id)
+        
+        mb.tag_set_data(tags['global_id'], surface_set, surface_id)
+
+        # set geom IDs
+        mb.tag_set_data(tags['geom_dimension'], volume_set, 3)
+        mb.tag_set_data(tags['geom_dimension'], surface_set, 2)
+
+        # set category tag values
+        mb.tag_set_data(tags['category'], volume_set, "Volume")
+        mb.tag_set_data(tags['category'], surface_set, "Surface")
+
+        # establish parent-child relationship
+        mb.add_parent_child(volume_set, surface_set)
+
+        # set surface sense
+        sense_data = [volume_set, np.uint64(0)]
+        mb.tag_set_data(tags['surf_sense'], surface_set, sense_data)
+
+        # load the stl triangles/vertices into the surface set
+        mb.load_file(stl_filename, surface_set)
+
+        group_set = mb.create_meshset()
+        mb.tag_set_data(tags['category'], group_set, "Group")
+        print("mat:{}".format(material_name))
+        mb.tag_set_data(
+            tags['name'],
+            group_set,
+            "mat:{}".format(material_name))
+        mb.tag_set_data(tags['geom_dimension'], group_set, 4)
+
+        # add the volume to this group set
+        mb.add_entity(group_set, volume_set)
+
+        return mb
+
 
     def export_physical_groups(self, output_folder=""):
         """Exports several JSON files containing a look up table which is
