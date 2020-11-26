@@ -21,8 +21,8 @@ class PortCutterRotated(RotateStraightShape):
         max_distance_from_center (float): the maximum distance from the center
             point outwards (cm). Default 3000.0.
         fillet_radius (float, optional): If not None, radius (cm) of fillets
-            added to all edges. Defaults to None.
-        rotation_angle (float, optional): defaults to 0.0.
+            added to all edges. Defaults to 0.0.
+        rotation_angle (float, optional): defaults to 10.0.
         stp_filename (str, optional): defaults to "PortCutter.stp".
         stl_filename (str, optional): defaults to "PortCutter.stl".
         name (str, optional): defaults to "port_cutter".
@@ -35,8 +35,8 @@ class PortCutterRotated(RotateStraightShape):
         polar_coverage_angle=10.0,
         polar_placement_angle=0.0,
         max_distance_from_center=3000.0,
-        fillet_radius=None,
-        rotation_angle=0.0,
+        fillet_radius=0.0,
+        rotation_angle=10.0,
         stp_filename="PortCutter.stp",
         stl_filename="PortCutter.stl",
         name="port_cutter",
@@ -60,6 +60,17 @@ class PortCutterRotated(RotateStraightShape):
         self.fillet_radius = fillet_radius
 
         self.add_fillet()
+
+    @property
+    def polar_coverage_angle(self):
+        return self._polar_coverage_angle
+
+    @polar_coverage_angle.setter
+    def polar_coverage_angle(self, value):
+        if value > 180:
+            msg = "polar_coverage_angle must be greater than 180.0"
+            raise ValueError(msg)
+        self._polar_coverage_angle = value
 
     @property
     def center_point(self):
@@ -111,23 +122,12 @@ class PortCutterRotated(RotateStraightShape):
             outer_point_rotated,
             math.radians(-0.5 * self.polar_coverage_angle))
 
-        if outer_point_1[0] < 0:
-            m, c = coefficients_of_line_from_points(
-                outer_point_1, self.center_point)
-            points.append((0, c))
-        else:
-            points.append(outer_point_1)
-
-        if outer_point_2[0] < 0:
-            m, c = coefficients_of_line_from_points(
-                outer_point_2, self.center_point)
-            points.append((0, c))
-        else:
-            points.append(outer_point_2)
+        points.append(outer_point_1)
+        points.append(outer_point_2)
 
         self.points = points
 
     def add_fillet(self):
         """adds fillets to all edges"""
-        if self.fillet_radius is not None and self.fillet_radius != 0:
+        if self.fillet_radius != 0:
             self.solid = self.solid.edges().fillet(self.fillet_radius)
