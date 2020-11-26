@@ -47,7 +47,7 @@ class test_BlanketCutterParallels(unittest.TestCase):
         cut_shape = paramak.ExtrudeCircleShape(1, 1, points=[(0, 0)])
         self.test_shape.cut = cut_shape
         assert self.test_shape.solid is not None
-        assert test_shape.solid is not None
+        assert self.test_shape.solid is not None
 
     def test_distance_is_modified(self):
         test_shape = paramak.BlanketCutterParallels(
