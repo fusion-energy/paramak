@@ -1,6 +1,5 @@
 
 
-
 def define_moab_core_and_tags():
 
     try:
@@ -45,6 +44,7 @@ def define_moab_core_and_tags():
     tags['global_id'] = mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
 
     return mb, tags
+
 
 def add_stl_to_moab_core(self, mb, surface_id, volume_id, material_name, tags):
 
