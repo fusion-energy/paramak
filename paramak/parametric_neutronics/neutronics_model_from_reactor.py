@@ -439,23 +439,20 @@ class NeutronicsModelFromReactor():
         if self.mesh_tally_2D is not None:
 
             # Create mesh which will be used for tally
-            mesh_width = self.mesh_2D_resolution[1]
-            mesh_height = self.mesh_2D_resolution[0]
-
             mesh_xz = openmc.RegularMesh()
-            mesh_xz.dimension = [mesh_width, 1, mesh_height]
-            mesh_xz.lower_left = [-1200, -1, -1200]
-            mesh_xz.upper_right = [1200, 1, 1200]
+            mesh_xz.dimension = [self.mesh_2D_resolution[1], 1, self.mesh_2D_resolution[0]]
+            mesh_xz.lower_left = [-self.reactor.largest_dimension, -1, -self.reactor.largest_dimension]
+            mesh_xz.upper_right = [self.reactor.largest_dimension, 1, self.reactor.largest_dimension]
 
             mesh_xy = openmc.RegularMesh()
-            mesh_xy.dimension = [mesh_width, mesh_height, 1]
-            mesh_xy.lower_left = [-1200, -1200, -1]
-            mesh_xy.upper_right = [1200, 1200, 1]
+            mesh_xy.dimension = [self.mesh_2D_resolution[1], self.mesh_2D_resolution[0], 1]
+            mesh_xy.lower_left = [-self.reactor.largest_dimension, -self.reactor.largest_dimension, -1]
+            mesh_xy.upper_right = [self.reactor.largest_dimension, self.reactor.largest_dimension, 1]
 
             mesh_yz = openmc.RegularMesh()
-            mesh_yz.dimension = [1, mesh_width, mesh_height]
-            mesh_yz.lower_left = [-1, -1200, -1200]
-            mesh_yz.upper_right = [1, 1200, 1200]
+            mesh_yz.dimension = [1, self.mesh_2D_resolution[1], self.mesh_2D_resolution[0]]
+            mesh_yz.lower_left = [-1, -self.reactor.largest_dimension, -self.reactor.largest_dimension]
+            mesh_yz.upper_right = [1, self.reactor.largest_dimension, self.reactor.largest_dimension]
 
             if 'tritium_production' in self.mesh_tally_2D:
                 mesh_filter = openmc.MeshFilter(mesh_xz)
