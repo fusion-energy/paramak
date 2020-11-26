@@ -577,57 +577,16 @@ class Reactor:
         # finds the largest dimenton in all the Shapes that are in the reactor
         largest_dimension = 0
         for component in self.shapes_and_components:
+            print(component.stp_filename, component.largest_dimension)
+            largest_dimension = max(largest_dimension, component.largest_dimension)
 
-            if isinstance(component.solid, cq.Compound):
-                for solid in component.solid.Solids():
-                    largest_dimension = max(
-                        abs(solid.BoundingBox().xmax),
-                        abs(solid.BoundingBox().xmin),
-                        abs(solid.BoundingBox().ymax),
-                        abs(solid.BoundingBox().ymin),
-                        abs(solid.BoundingBox().zmax),
-                        abs(solid.BoundingBox().zmin),
-                        largest_dimension
-                    )
-            else:
-                largest_dimension = max(
-                    abs(component.solid.val().BoundingBox().xmax),
-                    abs(component.solid.val().BoundingBox().xmin),
-                    abs(component.solid.val().BoundingBox().ymax),
-                    abs(component.solid.val().BoundingBox().ymin),
-                    abs(component.solid.val().BoundingBox().zmax),
-                    abs(component.solid.val().BoundingBox().zmin),
-                    largest_dimension
-                )
-
-        largest_dimension = largest_dimension * 2
-
-        graveyard_offset = graveyard_offset * 2
-
-        # creates a small box that surrounds the geometry
-        inner_box = cq.Workplane("front").box(
-            largest_dimension + graveyard_offset,
-            largest_dimension + graveyard_offset,
-            largest_dimension + graveyard_offset
+        graveyard_shape = paramak.HollowCube(
+            length = largest_dimension * 2 + graveyard_offset * 2,
+            name = "Graveyard",
+            material_tag = "Graveyard",
+            stp_filename = "Graveyard.stp",
+            stl_filename = "Graveyard.stl",
         )
-
-        graveyard_thickness = 10
-        # creates a large box that surrounds the smaller box
-        outer_box = cq.Workplane("front").box(
-            largest_dimension + graveyard_offset + graveyard_thickness,
-            largest_dimension + graveyard_offset + graveyard_thickness,
-            largest_dimension + graveyard_offset + graveyard_thickness
-        )
-
-        # subtracts the two boxes to leave a hollow box
-        graveyard_part = outer_box.cut(inner_box)
-
-        graveyard_shape = Shape()
-        graveyard_shape.name = "Graveyard"
-        graveyard_shape.material_tag = "Graveyard"
-        graveyard_shape.stp_filename = "Graveyard.stp"
-        graveyard_shape.stl_filename = "Graveyard.stl"
-        graveyard_shape.solid = graveyard_part
 
         self.graveyard = graveyard_shape
 

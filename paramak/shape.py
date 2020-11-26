@@ -159,6 +159,40 @@ class Shape:
         self._union = value
 
     @property
+    def largest_dimension(self):
+
+        """Calculates a bounding box for the Shape and returns the largest
+        absolute value of the largest dimension of the bounding box"""
+        largest_dimension = 0
+        if isinstance(self.solid, cq.Compound):
+            for solid in self.solid.Solids():
+                largest_dimension = max(
+                    abs(self.solid.BoundingBox().xmax),
+                    abs(self.solid.BoundingBox().xmin),
+                    abs(self.solid.BoundingBox().ymax),
+                    abs(self.solid.BoundingBox().ymin),
+                    abs(self.solid.BoundingBox().zmax),
+                    abs(self.solid.BoundingBox().zmin),
+                    largest_dimension
+                )
+        else:
+            largest_dimension = max(
+                abs(self.solid.val().BoundingBox().xmax),
+                abs(self.solid.val().BoundingBox().xmin),
+                abs(self.solid.val().BoundingBox().ymax),
+                abs(self.solid.val().BoundingBox().ymin),
+                abs(self.solid.val().BoundingBox().zmax),
+                abs(self.solid.val().BoundingBox().zmin),
+                largest_dimension
+            )
+        self._largest_dimension = largest_dimension
+        return largest_dimension
+
+    @largest_dimension.setter
+    def largest_dimension(self, value):
+        self._largest_dimension = value
+
+    @property
     def workplane(self):
         return self._workplane
 
@@ -788,6 +822,7 @@ class Shape:
         print("Saved file as ", path_filename)
 
         return str(path_filename)
+
 
     def export_html(self, filename):
         """Creates a html graph representation of the points and connections
