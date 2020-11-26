@@ -147,15 +147,14 @@ class test_PortCutterRotated(unittest.TestCase):
 
         assert large_ports.volume > small_ports.volume
 
-    def test_PortCutterRotated_outerpoint_negative(self):
-        """Tests that when the outerpoints x position is negative no error is
+    def test_outerpoint_negative(self):
+        """Tests that when polar_coverage_angle is greater than 180 an error is
         raised."""
-
-        shape = paramak.PortCutterRotated(
-            center_point=(1, 1),
-            polar_coverage_angle=181,
-            polar_placement_angle=0,
-            rotation_angle=10,
-
-        )
-        assert shape.solid is not None
+        def error():
+            shape = paramak.PortCutterRotated(
+                center_point=(1, 1),
+                polar_coverage_angle=181,
+                polar_placement_angle=0,
+                rotation_angle=10,
+            )
+        self.assertRaises(ValueError, error)

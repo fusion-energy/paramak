@@ -27,11 +27,14 @@ class Shape:
     Args:
         points (list of (float, float, float), optional): the x, y, z
             coordinates of points that make up the shape. Defaults to None.
+        connection_type (str, optional): The type of connection between points.
+            Possible values are "straight", "circle", "spline", "mixed".
+            Defaults to "mixed".
         name (str, optional): the name of the shape, used in the graph legend
             by export_html. Defaults to None.
-        color (RGB or RGBA, sequences of 3 or 4 floats, respectively, each in
-            the range 0-1, optional): the color to use when exporting as html
-            graphs or png images. Defaults to (0.5, 0.5, 0.5).
+        color ((float, float, float [, float]), optional): The color to use when exporting as html
+            graphs or png images. Can be in RGB or RGBA format with floats
+            between 0 and 1. Defaults to (0.5, 0.5, 0.5).
         material_tag (str, optional): the material name to use when exporting
             the neutronics description. Defaults to None.
         stp_filename (str, optional): the filename used when saving stp files.

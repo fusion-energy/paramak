@@ -101,6 +101,30 @@ class test_object_properties(unittest.TestCase):
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
+    def test_make_htc_reactor(self):
+        output_filenames = [
+            'inboard_pf_coils.stp',
+            'outboard_pf_coils.stp',
+            'div_coils.stp',
+            'vs_coils.stp',
+            'EFCCu_coils_1.stp',
+            'EFCCu_coils_2.stp',
+            'EFCCu_coils_3.stp',
+            'EFCCu_coils_4.stp',
+            'EFCCu_coils_5.stp',
+            'EFCCu_coils_6.stp',
+            'antenna.stp',
+            'vacvessel.stp',
+            'inner_vessel.stp',
+            'htc_reactor.svg',
+        ]
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        htc_reactor.main()
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
 
 if __name__ == "__main__":
     unittest.main()
