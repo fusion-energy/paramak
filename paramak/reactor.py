@@ -64,6 +64,21 @@ class Reactor:
         self._stl_filenames = value
 
     @property
+    def largest_dimension(self):
+        """Calculates a bounding box for the Reactor and returns the largest
+        absolute value of the largest dimension of the bounding box"""
+        largest_dimension = 0
+        for component in self.shapes_and_components:
+            print(component.stp_filename, component.largest_dimension)
+            largest_dimension = max(largest_dimension, component.largest_dimension)
+        self._largest_dimension = largest_dimension
+        return largest_dimension
+
+    @largest_dimension.setter
+    def largest_dimension(self, value):
+        self._largest_dimension = value
+
+    @property
     def material_tags(self):
         """Returns a set of all the materials_tags used in the Reactor
         (excluding the plasma)"""
@@ -574,14 +589,8 @@ class Reactor:
             if component.solid is None:
                 component.create_solid()
 
-        # finds the largest dimenton in all the Shapes that are in the reactor
-        largest_dimension = 0
-        for component in self.shapes_and_components:
-            print(component.stp_filename, component.largest_dimension)
-            largest_dimension = max(largest_dimension, component.largest_dimension)
-
         graveyard_shape = paramak.HollowCube(
-            length = largest_dimension * 2 + graveyard_offset * 2,
+            length = self.largest_dimension * 2 + graveyard_offset * 2,
             name = "Graveyard",
             material_tag = "Graveyard",
             stp_filename = "Graveyard.stp",
