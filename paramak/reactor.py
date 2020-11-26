@@ -376,7 +376,7 @@ class Reactor:
 
         self.export_stl(tolerance=tolerance)
 
-        mb, tags = define_moab_core_and_tags()
+        moab_core, moab_tags = define_moab_core_and_tags()
 
         surface_id = 1
         volume_id = 1
@@ -388,23 +388,23 @@ class Reactor:
             if skip_graveyard and "graveyard" in stl_filename.lower():
                 continue
 
-            mb = add_stl_to_moab_core(
-                mb,
+            moab_core = add_stl_to_moab_core(
+                moab_core,
                 surface_id,
                 volume_id,
                 item['material'],
-                tags,
+                moab_tags,
                 stl_filename)
             volume_id += 1
             surface_id += 1
 
-        all_sets = mb.get_entities_by_handle(0)
+        all_sets = moab_core.get_entities_by_handle(0)
 
-        file_set = mb.create_meshset()
+        file_set = moab_core.create_meshset()
 
-        mb.add_entities(file_set, all_sets)
+        moab_core.add_entities(file_set, all_sets)
 
-        mb.write_file(str(path_filename))
+        moab_core.write_file(str(path_filename))
 
         return filename
 
