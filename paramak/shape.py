@@ -160,7 +160,6 @@ class Shape:
 
     @property
     def largest_dimension(self):
-
         """Calculates a bounding box for the Shape and returns the largest
         absolute value of the largest dimension of the bounding box"""
         largest_dimension = 0
@@ -822,7 +821,6 @@ class Shape:
         print("Saved file as ", path_filename)
 
         return str(path_filename)
-
 
     def export_html(self, filename):
         """Creates a html graph representation of the points and connections
