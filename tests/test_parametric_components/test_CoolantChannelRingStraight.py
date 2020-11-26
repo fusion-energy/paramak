@@ -7,71 +7,53 @@ import pytest
 
 
 class test_CoolantChannelRingStraight(unittest.TestCase):
-    def test_CoolantChannelRingStraight_creation(self):
-        """creates a coolant channel ring using the CoolantChannelRingStraight parametric shape
-        and checks that a cadquery solid is created"""
 
-        test_shape = paramak.CoolantChannelRingStraight(
-            height=200,
+    def setUp(self):
+        self.test_shape = paramak.CoolantChannelRingStraight(
+            height=100,
             channel_radius=10,
             ring_radius=70,
-            number_of_coolant_channels=8,
-            workplane="XY",
-            rotation_axis="Z"
+            number_of_coolant_channels=8
         )
 
-        assert test_shape.solid is not None
-        assert test_shape.volume > 1000
+    def test_default_parameters(self):
+        """Checks that the default parameters of a CoolantChannelRingStraight are correct."""
+
+        # assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.stp_filename == "CoolantChannelRingStraight.stp"
+        assert self.test_shape.stl_filename == "CoolantChannelRingStraight.stl"
+        assert self.test_shape.material_tag == "coolant_channel_mat"
+
+    def test_CoolantChannelRingStraight_creation(self):
+        """Creates a coolant channel ring using the CoolantChannelRingStraight parameteric shape
+        and checks that a cadquery solid is created."""
+
+        assert self.test_shape.solid is not None
+        assert self.test_shape.volume > 1000
 
     def test_CoolantChannelRingStraight_faces(self):
-        """creates a CoolantChannelRingStraight shape and checks that the areas of its faces
-        are correct"""
+        """Creates a CoolantChannelRingStraight shape and checks that the areas of its faces
+        are correct."""
 
-        test_shape = paramak.CoolantChannelRingStraight(
-            height=200,
-            channel_radius=10,
-            ring_radius=70,
-            number_of_coolant_channels=1,
-            workplane="XY",
-            rotation_axis="Z"
-        )
+        self.test_shape.workplane = "XY"
+        self.test_shape.rotation_axis = "Z"
 
-        assert test_shape.area == pytest.approx(
-            ((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * 200))
-        assert len(test_shape.areas) == 3
-        assert test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
-        assert test_shape.areas.count(
-            pytest.approx(math.pi * (10 * 2) * 200)) == 1
-
-        test_shape.number_of_coolant_channels = 8
-        assert test_shape.area == pytest.approx(
-            (((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * 200)) * 8)
-        assert len(test_shape.areas) == 24
-        assert test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 16
-        assert test_shape.areas.count(
-            pytest.approx(math.pi * (10 * 2) * 200)) == 8
+        assert self.test_shape.area == pytest.approx(
+            (((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * 100)) * 8)
+        assert len(self.test_shape.areas) == 24
+        assert self.test_shape.areas.count(
+            pytest.approx(math.pi * (10**2))) == 16
+        assert self.test_shape.areas.count(
+            pytest.approx(math.pi * (10 * 2) * 100)) == 8
 
     def test_CoolantChannelRingStraight_volume(self):
-        """creates CoolantChannelRingStraight shapes and checks that the volumes are correct"""
+        """Creates CoolantChannelRingStraight shapes and checks that the volumes are correct."""
 
-        test_shape = paramak.CoolantChannelRingStraight(
-            height=200,
-            channel_radius=10,
-            ring_radius=70,
-            number_of_coolant_channels=8,
-            workplane="XY",
-            rotation_axis="Z"
-        )
-        assert test_shape.volume == pytest.approx(
-            math.pi * (10 ** 2) * 200 * 8)
+        self.test_shape.workplane = "XY"
+        self.test_shape.rotation_axis = "Z"
 
-        test_shape = paramak.CoolantChannelRingStraight(
-            height=100,
-            channel_radius=20,
-            ring_radius=70,
-            number_of_coolant_channels=5,
-            workplane="XY",
-            rotation_axis="Z"
-        )
-        assert test_shape.volume == pytest.approx(
-            math.pi * (20 ** 2) * 100 * 5)
+        assert self.test_shape.volume == pytest.approx(
+            math.pi * (10 ** 2) * 100 * 8)
+
+    # need to add check to warn/raise error when there is coolant channel
+    # overlap and a test

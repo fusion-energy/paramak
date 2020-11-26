@@ -9,11 +9,9 @@ import pytest
 
 
 class test_CenterColumnStudyReactor(unittest.TestCase):
-    def test_creation_with_narrow_divertor(self):
-        """creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
-        the correct number of components are created"""
 
-        test_reactor = paramak.CenterColumnStudyReactor(
+    def setUp(self):
+        self.test_reactor = paramak.CenterColumnStudyReactor(
             inner_bore_radial_thickness=20,
             inboard_tf_leg_radial_thickness=50,
             center_column_shield_radial_thickness_mid=50,
@@ -27,102 +25,53 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             triangularity=0.45,
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
-            rotation_angle=180)
+            rotation_angle=359
+        )
 
-        test_reactor.export_stp()
+    def test_CenterColumnStudyReactor_creation(self):
+        """Creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
+        the correct number of components are created."""
 
-        assert len(test_reactor.shapes_and_components) == 6
+        assert len(self.test_reactor.shapes_and_components) == 6
+
+    def test_CenterColumnStudyReactor_creation_with_narrow_divertor(self):
+        """Creates a ball reactor with a narrow divertor using the CenterColumnStudyReactor
+        parametric reactor and checks that the correct number of components are created."""
+
+        self.test_reactor.divertor_radial_thickness = 10
+        assert len(self.test_reactor.shapes_and_components) == 6
 
     def test_svg_creation(self):
-        """creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
-        an svg image of the reactor can be exported"""
+        """Creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
+        an svg image of the reactor can be exported."""
 
         os.system("rm test_image.svg")
-
-        test_reactor = paramak.CenterColumnStudyReactor(
-            inner_bore_radial_thickness=30,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness_mid=50,
-            center_column_shield_radial_thickness_upper=100,
-            inboard_firstwall_radial_thickness=30,
-            divertor_radial_thickness=10,
-            inner_plasma_gap_radial_thickness=80,
-            plasma_radial_thickness=200,
-            outer_plasma_gap_radial_thickness=90,
-            elongation=2.3,
-            triangularity=0.45,
-            plasma_gap_vertical_thickness=40,
-            center_column_arc_vertical_thickness=520,
-            rotation_angle=180)
-
-        test_reactor.export_svg("test_image.svg")
-
+        self.test_reactor.export_svg("test_image.svg")
         assert Path("test_image.svg").exists() is True
         os.system("rm test_image.svg")
 
     def test_rotation_angle_impacts_volume(self):
-        """creates a CenterColumnStudyReactor reactor with a rotation angle of
+        """Creates a CenterColumnStudyReactor reactor with a rotation angle of
         90 and another reactor with a rotation angle of 180. Then checks the
-        volumes of all the components is double in the 180 reactor"""
+        volumes of all the components is double in the 180 reactor."""
 
-        test_reactor_90 = paramak.CenterColumnStudyReactor(
-            inner_bore_radial_thickness=30,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness_mid=50,
-            center_column_shield_radial_thickness_upper=100,
-            inboard_firstwall_radial_thickness=30,
-            divertor_radial_thickness=10,
-            inner_plasma_gap_radial_thickness=80,
-            plasma_radial_thickness=200,
-            outer_plasma_gap_radial_thickness=90,
-            elongation=2.3,
-            triangularity=0.45,
-            plasma_gap_vertical_thickness=40,
-            center_column_arc_vertical_thickness=520,
-            rotation_angle=90)
-
-        test_reactor_180 = paramak.CenterColumnStudyReactor(
-            inner_bore_radial_thickness=30,
-            inboard_tf_leg_radial_thickness=50,
-            center_column_shield_radial_thickness_mid=50,
-            center_column_shield_radial_thickness_upper=100,
-            inboard_firstwall_radial_thickness=30,
-            divertor_radial_thickness=10,
-            inner_plasma_gap_radial_thickness=80,
-            plasma_radial_thickness=200,
-            outer_plasma_gap_radial_thickness=90,
-            elongation=2.3,
-            triangularity=0.45,
-            plasma_gap_vertical_thickness=40,
-            center_column_arc_vertical_thickness=520,
-            rotation_angle=180)
-
-        for r90, r180 in zip(test_reactor_90.shapes_and_components,
-                             test_reactor_180.shapes_and_components):
-            assert r90.volume == pytest.approx(r180.volume * 0.5, rel=0.1)
+        self.test_reactor.rotation_angle = 90
+        r90_comp_vols = [
+            comp.volume for comp in self.test_reactor.shapes_and_components]
+        self.test_reactor.rotation_angle = 180
+        r180_comp_vols = [
+            comp.volume for comp in self.test_reactor.shapes_and_components]
+        for r90_vol, r180_vol in zip(r90_comp_vols, r180_comp_vols):
+            assert r90_vol == pytest.approx(r180_vol * 0.5, rel=0.1)
 
     def test_rotation_angle_warning(self):
-        """checks that the correct warning message is printed when
-        rotation_angle = 360"""
+        """Checks that the correct warning message is printed when
+        rotation_angle = 360."""
 
         def warning_trigger():
             try:
-                reactor = paramak.CenterColumnStudyReactor(
-                    inner_bore_radial_thickness=20,
-                    inboard_tf_leg_radial_thickness=50,
-                    center_column_shield_radial_thickness_mid=50,
-                    center_column_shield_radial_thickness_upper=100,
-                    inboard_firstwall_radial_thickness=20,
-                    divertor_radial_thickness=100,
-                    inner_plasma_gap_radial_thickness=80,
-                    plasma_radial_thickness=200,
-                    outer_plasma_gap_radial_thickness=90,
-                    elongation=2.3,
-                    triangularity=0.45,
-                    plasma_gap_vertical_thickness=40,
-                    center_column_arc_vertical_thickness=520,
-                    rotation_angle=360)
-                reactor.shapes_and_components
+                self.test_reactor.rotation_angle = 360
+                self.test_reactor.shapes_and_components
             except BaseException:
                 pass
 

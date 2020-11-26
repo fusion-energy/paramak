@@ -27,9 +27,9 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         with_inner_leg (bool, optional): Include the inner TF leg. Defaults to
             True.
         stp_filename (str, optional): defaults to
-            "ToroidalFieldCoilCoatHangar.stp".
+            "ToroidalFieldCoilCoatHanger.stp".
         stl_filename (str, optional): defaults to
-            "ToroidalFieldCoilCoatHangar.stl".
+            "ToroidalFieldCoilCoatHanger.stl".
         material_tag (str, optional): defaults to "outer_tf_coil_mat".
     """
 
@@ -43,8 +43,8 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         distance,
         number_of_coils,
         with_inner_leg=True,
-        stp_filename="ToroidalFieldCoilCoatHangar.stp",
-        stl_filename="ToroidalFieldCoilCoatHangar.stl",
+        stp_filename="ToroidalFieldCoilCoatHanger.stp",
+        stl_filename="ToroidalFieldCoilCoatHanger.stl",
         material_tag="outer_tf_coil_mat",
         **kwargs
     ):

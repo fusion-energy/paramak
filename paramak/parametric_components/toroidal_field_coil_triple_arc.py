@@ -22,9 +22,9 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         with_inner_leg (bool, optional): Include the inner tf leg. Defaults to
             True.
         stp_filename (str, optional): defaults to
-            "ToroidalFieldCoilPrincetonD.stp".
+            "ToroidalFieldCoilTripleArc.stp".
         stl_filename (str, optional): defaults to
-            "ToroidalFieldCoilPrincetonD.stl".
+            "ToroidalFieldCoilTripleArc.stl".
         material_tag (str, optional): defaults to "outer_tf_coil_mat".
     """
 
@@ -39,8 +39,8 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         number_of_coils,
         vertical_displacement=0.0,
         with_inner_leg=True,
-        stp_filename="ToroidalFieldCoilPrincetonD.stp",
-        stl_filename="ToroidalFieldCoilPrincetonD.stl",
+        stp_filename="ToroidalFieldCoilTripleArc.stp",
+        stl_filename="ToroidalFieldCoilTripleArc.stl",
         material_tag="outer_tf_coil_mat",
         **kwargs
     ):
