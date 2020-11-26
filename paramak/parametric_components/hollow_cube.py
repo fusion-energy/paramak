@@ -11,7 +11,7 @@ class HollowCube(RotateStraightShape):
     Arguments:
         length (float): The length to use for the height, width, depth of the
             inner dimentions of the cube.
-        thickness (float): thickness of the vessel
+        thickness (float, optional): thickness of the vessel. Defaults to 10.0.
         stp_filename (str, optional): Defaults to "HollowCube.stp".
         stl_filename (str, optional): Defaults to "HollowCube.stl".
         material_tag (str, optional): defaults to "hollow_cube_mat".
