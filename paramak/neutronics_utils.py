@@ -1,12 +1,13 @@
 
 import numpy as np
 
+
 def define_moab_core_and_tags():
     """Creates a MOAB Core instance which can be built up by adding sets of
     triangles to the instance
 
     Returns:
-        (pymoab Core): A pymoab.core.Core() instance 
+        (pymoab Core): A pymoab.core.Core() instance
         (pymoab tag_handle): A pymoab.core.tag_get_handle() instance
     """
 
@@ -54,12 +55,18 @@ def define_moab_core_and_tags():
     return moab_core, tags
 
 
-def add_stl_to_moab_core(moab_core, surface_id, volume_id, material_name, tags, stl_filename):
+def add_stl_to_moab_core(
+        moab_core,
+        surface_id,
+        volume_id,
+        material_name,
+        tags,
+        stl_filename):
     """Computes the m and c coefficients of the equation (y=mx+c) for
     a straight line from two points.
 
     Args:
-        moab_core (pymoab.core.Core): 
+        moab_core (pymoab.core.Core):
         surface_id (int): the id number to apply to the surface
         volume_id (int): the id numbers to apply to the volumes
         material_name (str): the material tag name to add. Will be prepended
