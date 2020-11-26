@@ -379,8 +379,35 @@ class Reactor:
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         self.export_stl(tolerance=tolerance)
-        material_dict = self.neutronics_description()
 
+        mb, tags = define_moab_core_and_tags()
+
+        surface_id = 1
+        volume_id = 1
+
+        for item in self.neutronics_description():
+
+            stl_filename = item['stl_filename']
+
+            if skip_graveyard and "graveyard" in stl_filename.lower():
+                continue
+
+            mb = self.add_stl_to_moab_core(
+                mb, surface_id, volume_id, item['material'], tags)
+            volume_id += 1
+            surface_id += 1
+
+        all_sets = mb.get_entities_by_handle(0)
+
+        file_set = mb.create_meshset()
+
+        mb.add_entities(file_set, all_sets)
+
+        mb.write_file(str(path_filename))
+
+        return filename
+
+    def define_moab_core_and_tags()
         # create pymoab instance
         mb = core.Core()
 
@@ -417,32 +444,9 @@ class Reactor:
         # Global ID is a default tag, just need the name to retrieve
         tags['global_id'] = mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
 
-        surface_id = 1
-        volume_id = 1
+        return mb, tags
 
-        for item in material_dict:
-
-            stl_filename = item['stl_filename']
-
-            if skip_graveyard and "graveyard" in stl_filename.lower():
-                continue
-
-            mb = self.add_stl_to_moab_core(
-                mb, surface_id, volume_id, item['material'])
-            volume_id += 1
-            surface_id += 1
-
-        all_sets = mb.get_entities_by_handle(0)
-
-        file_set = mb.create_meshset()
-
-        mb.add_entities(file_set, all_sets)
-
-        mb.write_file(str(path_filename))
-
-        return filename
-
-    def add_stl_to_moab_core(self, mb, surface_id, volume_id, material_name):
+    def add_stl_to_moab_core(self, mb, surface_id, volume_id, material_name, tags):
 
         surface_set = mb.create_meshset()
         volume_set = mb.create_meshset()
