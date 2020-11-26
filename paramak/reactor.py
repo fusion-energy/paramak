@@ -388,7 +388,7 @@ class Reactor:
             if skip_graveyard and "graveyard" in stl_filename.lower():
                 continue
 
-            mb = self.add_stl_to_moab_core(
+            mb = add_stl_to_moab_core(
                 mb, surface_id, volume_id, item['material'], tags)
             volume_id += 1
             surface_id += 1
