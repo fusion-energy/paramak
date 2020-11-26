@@ -28,7 +28,8 @@ def make_model_and_simulate():
             inner_plasma_gap_radial_thickness=plasma_to_center_column_gap,
             plasma_radial_thickness=200,
             outer_plasma_gap_radial_thickness=90,
-            plasma_high_point=(180 + plasma_to_center_column_gap, 240),
+            elongation=2.75,
+            triangularity=0.5,  
             plasma_gap_vertical_thickness=40,
             center_column_arc_vertical_thickness=520,
             rotation_angle=360

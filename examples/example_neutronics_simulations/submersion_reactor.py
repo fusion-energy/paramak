@@ -25,7 +25,8 @@ def make_model_and_simulate(temperature):
         support_radial_thickness=50,
         inboard_blanket_radial_thickness=30,
         outboard_blanket_radial_thickness=30,
-        plasma_high_point=(200, 150)
+        elongation=2.75,
+        triangularity=0.5,
     )
 
     # this can just be set as a string as temperature is needed for this
