@@ -441,7 +441,7 @@ class Reactor:
 
         return filename
 
-    def add_stl_to_moab_core(mb, surface_id, volume_id, material_name):
+    def add_stl_to_moab_core(self, mb, surface_id, volume_id, material_name):
 
         surface_set = mb.create_meshset()
         volume_set = mb.create_meshset()
