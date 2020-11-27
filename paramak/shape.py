@@ -184,7 +184,7 @@ class Shape:
                 abs(self.solid.val().BoundingBox().zmin),
                 largest_dimension
             )
-        self._largest_dimension = largest_dimension
+        self.largest_dimension = largest_dimension
         return largest_dimension
 
     @largest_dimension.setter

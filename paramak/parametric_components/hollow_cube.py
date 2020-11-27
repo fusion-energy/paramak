@@ -1,6 +1,6 @@
 
 import cadquery as cq
-from paramak import RotateStraightShape
+from paramak import Shape
 from paramak.utils import get_hash
 
 
@@ -71,8 +71,5 @@ class HollowCube(Shape):
         new_shape = outer_box.cut(inner_box)
 
         self.solid = new_shape
-
-        # Calculate hash value for current solid
-        self.hash_value = get_hash(self)
 
         return new_shape
