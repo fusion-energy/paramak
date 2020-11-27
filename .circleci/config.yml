@@ -15,6 +15,12 @@ jobs:
           command: |
             pip install -r requirements.txt  # this includes optional packages
             python setup.py install  # this dosen't support the optional packages like pip install .[neutronics] does
+
+      - run:
+          name: run neutronics_utils tests
+          command: 
+            pytest tests/test_neutronics_utils.py -v --cov=paramak --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+
       - run:
           name: run utils tests
           command: 
