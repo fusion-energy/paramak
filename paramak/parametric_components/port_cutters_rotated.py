@@ -2,7 +2,7 @@
 import math
 
 from paramak import RotateStraightShape
-from paramak.utils import coefficients_of_line_from_points, get_hash, rotate
+from paramak.utils import coefficients_of_line_from_points, rotate
 
 
 class PortCutterRotated(RotateStraightShape):
@@ -87,16 +87,6 @@ class PortCutterRotated(RotateStraightShape):
     @max_distance_from_center.setter
     def max_distance_from_center(self, value):
         self._max_distance_from_center = value
-
-    @property
-    def solid(self):
-        if get_hash(self) != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the
