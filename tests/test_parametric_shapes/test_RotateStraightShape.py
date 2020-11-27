@@ -15,6 +15,11 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20), (20, 0)]
         )
 
+    def test_largest_dimension(self):
+        """Checks that the largest_dimension is correct."""
+
+        assert self.test_shape.largest_dimension == 20
+
     def test_default_parameters(self):
         """Checks that the default parameters of a RotateStraightShape are correct."""
 

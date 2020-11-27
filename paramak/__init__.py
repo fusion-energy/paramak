@@ -70,6 +70,7 @@ from .parametric_components.toroidal_field_coil_princeton_d import ToroidalField
 from .parametric_components.tf_coil_casing import TFCoilCasing
 
 from .parametric_components.vacuum_vessel import VacuumVessel
+from .parametric_components.hollow_cube import HollowCube
 
 from .parametric_reactors.ball_reactor import BallReactor
 from .parametric_reactors.submersion_reactor import SubmersionTokamak

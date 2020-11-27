@@ -383,7 +383,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + filepath)
 
         assert test_reactor.graveyard is not None
-        assert test_reactor.graveyard.__class__.__name__ == "Shape"
+        assert test_reactor.graveyard.__class__.__name__ == "HollowCube"
 
     def test_export_graveyard_offset(self):
         """checks that the graveyard can be exported with the correct default parameters
@@ -721,12 +721,24 @@ class test_object_properties(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape])
         assert test_reactor.tet_meshes is not None
 
+    def test_largest_dimention(self):
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape.rotation_angle = 360
+        test_reactor = paramak.Reactor([test_shape])
+        assert test_reactor.largest_dimension == 20
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (30, 20)])
+        test_shape.rotation_angle = 360
+        test_reactor = paramak.Reactor([test_shape])
+        assert test_reactor.largest_dimension == 30
+
     def test_shapes_and_components(self):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
 
         def incorrect_shapes_and_components():
-            test_reactor = paramak.Reactor(test_shape)
+            paramak.Reactor(test_shape)
         self.assertRaises(ValueError, incorrect_shapes_and_components)
 
     def test_graveyard_error(self):
