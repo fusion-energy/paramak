@@ -1,5 +1,5 @@
-pytest tests/test_neutronics_utils.py -v --cov=paramak --cov-report term --cov-report xml
-pytest tests/test_utils.py -v --cov=paramak --cov-report term --cov-report xml
+pytest tests/test_neutronics_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
+pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
 pytest tests/test_Shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
 pytest tests/test_Reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
 pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
