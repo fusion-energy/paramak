@@ -46,7 +46,7 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
             (80.0, 70.0, 'straight'), (105.0, 105.0, 'straight')
         ]
 
-    def test_PoloidalFieldCoilCaseSet_creation(self):
+    def test_creation(self):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
         parametric component and passing all required args, and checks
         that a solid with the correct number of solids is created."""
@@ -54,7 +54,7 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert len(self.test_shape.solid.Solids()) == 4
 
-    def test_PoloidalFieldCoilCaseSet_creation_with_zero_thickness(self):
+    def test_creation_with_zero_thickness(self):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
         parametric component and passing a 0 entry into the casing_thicknesses
         list, and checks that a solid with the correct number of solids is
@@ -65,7 +65,7 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert len(self.test_shape.solid.Solids()) == 3
 
-    def test_PoloidalFieldCoilCaseSet_absolute_volume(self):
+    def test_absolute_volume(self):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
         parametric component and checks that the volume is correct."""
 
@@ -75,7 +75,7 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
                                                                                                                                         (20 * 5 * 2)) * math.pi * 2 * 50) + (((60 * 10 * 2) +
                                                                                                                                                                               (20 * 10 * 2)) * math.pi * 2 * 50))
 
-    def test_PoloidalFieldCoilCaseSet_absolute_areas(self):
+    def test_absolute_areas(self):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
         parametric component and checks that the areas are correct"""
 
@@ -114,7 +114,7 @@ class test_PoloidalFieldCoilCaseSet(unittest.TestCase):
         assert self.test_shape.areas.count(
             pytest.approx(40 * math.pi * 2 * 80)) == 1
 
-    def test_PoloidalFieldCoilCaseSet_invalid_args(self):
+    def test_invalid_args(self):
         """Creates PoloidalFieldCoilCaseSets with invalid arguments and checks
         that the correct errors are raised."""
 

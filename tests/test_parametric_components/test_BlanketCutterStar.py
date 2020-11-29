@@ -31,14 +31,14 @@ class test_BlanketCutterStar(unittest.TestCase):
                                                                1000, "straight"), (2000, 1000, "straight"), (0, 1000, "straight"), (0, -
                                                                                                                                     1000, "straight")]
 
-    def test_BlanketCutterStar_creation(self):
+    def test_creation(self):
         """Creates a solid using the BlanketCutterStar parametric component
         and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_BlanketCutterStar_distance_volume_impact(self):
+    def test_distance_volume_impact(self):
         """Creates solid using the BlanketCutterStar parametric component
         with different distances and checks that the volume changes accordingly
         ."""

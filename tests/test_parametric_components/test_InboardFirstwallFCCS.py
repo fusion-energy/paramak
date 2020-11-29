@@ -6,6 +6,7 @@ import paramak
 
 
 class test_InboardFirstwallFCCS(unittest.TestCase):
+
     def test_construction_with_CenterColumnShieldCylinder(self):
         """Makes a firstwall from a CenterColumnShieldCylinder and checks
         the volume is smaller than the shield."""

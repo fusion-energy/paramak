@@ -38,14 +38,14 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
             (49.937460888595446, 2.5, 'straight')
         ]
 
-    def test_InnerTfCoilsFlat_creation(self):
+    def test_creation(self):
         """Creates an inner tf coil using the InnerTFCoilsFlat parametric
         component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_InnerTfCoilsFlat_azimuth_offset(self):
+    def test_azimuth_offset(self):
         """Creates an inner tf coil using the InnerTfCoilsFlat parametric
         component and checks that the azimuthal start angle can be changed
         correctly."""
@@ -56,7 +56,7 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
         assert self.test_shape.azimuth_placement_angle == [
             20, 80, 140, 200, 260, 320]
 
-    def test_InnerTfCoilsFlat_attributes(self):
+    def test_attributes(self):
         """Checks that changing the attributes of InnerTfCoilsFlat affects the
         cadquery solid produced."""
 
@@ -71,11 +71,11 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
         self.test_shape.outer_radius = 170
         assert test_volume < self.test_shape.volume
 
-    def test_InnerTfCoilsFlat_gap_size(self):
+    def test_gap_size(self):
         """Checks that a ValueError is raised when a too large gap_size is
         used."""
 
-        def test_InnerTfCoilsFlat_incorrect_gap_size():
+        def test_incorrect_gap_size():
             self.test_shape.inner_radius = 20
             self.test_shape.outer_radius = 40
             self.test_shape.gap_size = 50
@@ -83,5 +83,5 @@ class test_InnerTfCoilsFlat(unittest.TestCase):
 
         self.assertRaises(
             ValueError,
-            test_InnerTfCoilsFlat_incorrect_gap_size
+            test_incorrect_gap_size
         )

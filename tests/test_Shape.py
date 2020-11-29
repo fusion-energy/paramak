@@ -8,6 +8,7 @@ import pytest
 
 
 class test_object_properties(unittest.TestCase):
+
     def test_shape_default_properties(self):
         """Creates a Shape object and checks that the points attribute has
         a default of None."""

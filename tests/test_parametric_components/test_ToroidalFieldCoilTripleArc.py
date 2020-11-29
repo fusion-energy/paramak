@@ -22,7 +22,7 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         assert self.test_shape.stl_filename == "ToroidalFieldCoilTripleArc.stl"
         assert self.test_shape.material_tag == "outer_tf_coil_mat"
 
-    def test_ToroidalFieldCoilTripleArc_creation_with_inner_leg(self):
+    def test_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilTripleArc
         parametric component and checks that a cadquery solid is created."""
 
@@ -35,7 +35,7 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         )
         assert test_inner_leg.solid is not None
 
-    def test_ToroidalFieldCoilTripleArc_creation_no_inner_leg(self):
+    def test_creation_no_inner_leg(self):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created."""
 
@@ -52,7 +52,7 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         assert self.test_shape.volume == pytest.approx(
             test_volume - inner_leg_volume)
 
-    def test_ToroidalFieldCoilTripleArc_relative_volume(self):
+    def test_relative_volume(self):
         """Creates tf coil shapes with different numbers of tf coils and checks that
         their relative volumes are correct."""
 
@@ -63,7 +63,7 @@ class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
         assert self.test_shape.volume == pytest.approx(
             test_volume * 8, rel=0.01)
 
-    def test_ToroidalFieldCoilTripleArc_rotation_angle(self):
+    def test_rotation_angle(self):
         """Creates tf coils with rotation_angles < 360 in different workplanes
         and checks that the correct cuts are performed and their volumes are
         correct."""

@@ -25,7 +25,7 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
         # assert self.test_shape.name == "center_column"
         assert self.test_shape.material_tag == "center_column_shield_mat"
 
-    def test_CenterColumnShieldPlasmaHyperbola_creation(self):
+    def test_creation(self):
         """Creates a center column shield using the
         CenterColumnShieldPlasmaHyperbola parametric component and checks that
         a cadquery solid is created."""
@@ -43,7 +43,7 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
             (337.5, -400.0, 'straight'), (100, -400.0, 'straight'), (100, 0, 'straight')
         ]
 
-    def test_CenterColumnShieldPlasmaHyperbola_invalid_parameters_errors(self):
+    def test_invalid_parameters_errors(self):
         """Checks that the correct errors are raised when invalid arguments are input as
         shape parameters."""
 
@@ -58,7 +58,7 @@ class test_CenterColumnShieldPlasmaHyperbola(unittest.TestCase):
         self.assertRaises(ValueError, incorrect_inner_radius)
         self.assertRaises(ValueError, incorrect_height)
 
-    def test_CenterColumnShieldPlasmaHyperbola_faces(self):
+    def test_faces(self):
         """Creates a center column shield using the CenterColumnShieldPlasmaHyperbola
         parametric component and checks that a solid with the correct number of
         faces is created"""

@@ -24,14 +24,14 @@ class test_CoolantChannelRingCurved(unittest.TestCase):
         assert self.test_shape.stl_filename == "CoolantChannelRingCurved.stl"
         assert self.test_shape.material_tag == "coolant_channel_mat"
 
-    def test_CoolantChannelRingCurved_creation(self):
+    def test_creation(self):
         """Creates a coolant channel ring using the CoolantChannelRingCurved parametric shape
         and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_CoolantChannelRingCurved_relative_volumes(self):
+    def test_relative_volumes(self):
         """Creates coolant channel rings using the CoolantChannelRingCurved parametric shape
         and checks the relative volumes are correct."""
 

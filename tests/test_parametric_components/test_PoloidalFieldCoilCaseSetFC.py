@@ -50,7 +50,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
             (80.0, 70.0, 'straight'), (105.0, 105.0, 'straight')
         ]
 
-    def test_PoloidalFieldCoilCaseSetFC_from_pf_coil_set(self):
+    def test_from_pf_coil_set(self):
         """Checks that a set of PF coil cases can be constructed from a PF coils object
         using the PoloidalField~CoilCaseSetFC parametric shape."""
 
@@ -58,7 +58,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
         assert len(self.test_shape.solid.Solids()) == 4
         assert len(self.pf_coils_set.solid.Solids()) == 4
 
-    def test_PoloidalFieldCoilCaseSetFC_with_zero_thickness(self):
+    def test_with_zero_thickness(self):
         """Creates a set of PF coil cases from a PF coils object and sets one
         of the casing thicknesses to 0."""
 
@@ -68,14 +68,14 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
         assert len(self.test_shape.solid.Solids()) == 3
         assert len(self.pf_coils_set.solid.Solids()) == 4
 
-    def test_PoloidalFieldCoilCaseSetFC_from_pf_coil_set_absolute_volume(self):
+    def test_from_pf_coil_set_absolute_volume(self):
         """Creates a set of pf coil cases from a pf coil set object and checks
         that the volume is correct."""
 
         assert self.test_shape.volume == pytest.approx((((20 * 5 * 2) + (10 * 5 * 2)) * math.pi * 2 * 100) + (((30 * 10 * 2) + (
             10 * 10 * 2)) * math.pi * 2 * 100) + (((30 * 5 * 2) + (20 * 5 * 2)) * math.pi * 2 * 50) + (((60 * 10 * 2) + (20 * 10 * 2)) * math.pi * 2 * 50))
 
-    def test_PoloidalFieldCoilCaseSetFC_from_pf_coil_set_absolute_areas(self):
+    def test_from_pf_coil_set_absolute_areas(self):
         """Creates a set of pf coil cases from a pf coil set object and checks
         that the areas are correct"""
 
@@ -114,7 +114,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
         assert self.test_shape.areas.count(
             pytest.approx(40 * math.pi * 2 * 80)) == 1
 
-    def test_PoloidalFieldCoilCaseSetFC_incorrect_args(self):
+    def test_incorrect_args(self):
         """Creates a solid using the PoloidalFieldCoilCaseSet with incorrect
         args"""
 
@@ -155,7 +155,7 @@ class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
             ValueError,
             test_PoloidalFieldCoilSet_incorrect_pf_coil)
 
-    def test_PoloidalFieldCoilCaseSetFC_from_list(self):
+    def test_from_list(self):
         """Creates a set of PF coil cases from a list of PF coils with a list
         of thicknesses."""
 

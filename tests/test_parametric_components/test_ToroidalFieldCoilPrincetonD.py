@@ -23,7 +23,7 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         assert self.test_shape.stl_filename == "ToroidalFieldCoilPrincetonD.stl"
         assert self.test_shape.material_tag == "outer_tf_coil_mat"
 
-    def test_ToroidalFieldCoilPrincetonD_creation_with_inner_leg(self):
+    def test_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilPrincetonD
         parametric component and checks that a cadquery solid is created."""
 
@@ -36,7 +36,7 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         )
         assert test_inner_leg.solid is not None
 
-    def test_ToroidalFieldCoilPrincetonD_creation_no_inner_leg(self):
+    def test_creation_no_inner_leg(self):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilPrincetonD
         parametric component and checks that a cadquery solid is created."""
 
@@ -52,7 +52,7 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume < test_volume
 
-    def test_ToroidalFieldCoilPrincetonD_relative_volume(self):
+    def test_relative_volume(self):
         """Creates tf coil shapes with different numbers of tf coils and checks that
         their relative volumes are correct."""
 
@@ -63,7 +63,7 @@ class test_ToroidalFieldCoilPrincetonD(unittest.TestCase):
         assert test_volume == pytest.approx(
             self.test_shape.volume * 0.5, rel=0.01)
 
-    def test_ToroidalFieldCoilPrincetonD_rotation_angle(self):
+    def test_rotation_angle(self):
         """Creates a tf coil with a rotation_angle < 360 degrees and checks
         that the correct cut is performed and the volume is correct."""
 

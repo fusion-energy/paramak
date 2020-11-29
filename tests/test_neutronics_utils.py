@@ -8,6 +8,7 @@ from paramak.neutronics_utils import (add_stl_to_moab_core,
 
 
 class test_neutornics_utility_functions(unittest.TestCase):
+
     def test_moab_instance_creation(self):
         """passes three points on a circle to the function and checks that the
         radius and center of the circle is calculated correctly"""

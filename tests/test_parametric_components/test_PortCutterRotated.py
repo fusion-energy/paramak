@@ -6,7 +6,7 @@ import paramak
 
 
 class test_PortCutterRotated(unittest.TestCase):
-    def test_PortCutterRotated_shape_construction_and_volume(self):
+    def test_shape_construction_and_volume(self):
         """Cuts a vessel cylinder with several different size port cutters."""
 
         small_ports = paramak.PortCutterRotated(
@@ -51,7 +51,7 @@ class test_PortCutterRotated(unittest.TestCase):
         assert vessel_with_out_ports.volume > vessel_with_small_ports.volume
         assert vessel_with_small_ports.volume > vessel_with_large_ports.volume
 
-    def test_PortCutterRotated_polar_coverage_angle_impacts_volume(self):
+    def test_polar_coverage_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
         polar_coverage_angle and checks angle impacts the volume."""
 
@@ -75,7 +75,7 @@ class test_PortCutterRotated(unittest.TestCase):
 
         assert large_ports.volume > small_ports.volume
 
-    def test_PortCutterRotated_max_distance_from_center_impacts_volume(self):
+    def test_max_distance_from_center_impacts_volume(self):
         """Checks the volumes of two port cutters with different
         max_distance_from_center and checks distance impacts the volume."""
 
@@ -99,7 +99,7 @@ class test_PortCutterRotated(unittest.TestCase):
 
         assert large_ports.volume > small_ports.volume
 
-    def test_PortCutterRotated_azimuth_placement_angle_impacts_volume(self):
+    def test_azimuth_placement_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
         azimuth_placement_angle and checks distance impacts the volume."""
 
@@ -123,7 +123,7 @@ class test_PortCutterRotated(unittest.TestCase):
 
         assert large_ports.volume > small_ports.volume
 
-    def test_PortCutterRotated_rotation_angle_impacts_volume(self):
+    def test_rotation_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
         rotation_angle and checks distance impacts the volume."""
 

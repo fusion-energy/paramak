@@ -24,7 +24,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         # assert self.test_shape.name == "center_column_shield"
         assert self.test_shape.material_tag == "center_column_shield_mat"
 
-    def test_CenterColumnShieldCylinder_creation(self):
+    def test_creation(self):
         """Creates a center column shield using the CenterColumnShieldCylinder
         parametric component and checks that a cadquery solid is created."""
 
@@ -40,7 +40,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
             (100, -300, "straight"), (100, 300, "straight")
         ]
 
-    def test_CenterColumnShieldCylinder_relative_volume(self):
+    def test_relative_volume(self):
         """Creates CenterColumnShieldCylinder shapes and checks that their
         relative volumes are correct"""
 
@@ -48,7 +48,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
         self.test_shape.rotation_angle = 180
         assert test_volume == pytest.approx(self.test_shape.volume * 2)
 
-    def test_CenterColumnShieldCylinder_absolute_volume(self):
+    def test_absolute_volume(self):
         """Creates a CenterColumnShieldCylinder shape and checks that its
         relative volume is correct"""
 
@@ -56,7 +56,7 @@ class test_CenterColumnShieldCylinder(unittest.TestCase):
             ((math.pi * (200**2)) - (math.pi * (100**2))) * 600
         )
 
-    def test_CenterColumnShieldCylinder_absolute_area(self):
+    def test_absolute_area(self):
         """Creates a CenterColumnShieldCylinder shape and checks that the
         areas of the faces of the solid created are correct"""
 

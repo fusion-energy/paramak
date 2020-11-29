@@ -28,13 +28,13 @@ class test_CenterColumnStudyReactor(unittest.TestCase):
             rotation_angle=359
         )
 
-    def test_CenterColumnStudyReactor_creation(self):
+    def test_creation(self):
         """Creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
         the correct number of components are created."""
 
         assert len(self.test_reactor.shapes_and_components) == 6
 
-    def test_CenterColumnStudyReactor_creation_with_narrow_divertor(self):
+    def test_creation_with_narrow_divertor(self):
         """Creates a ball reactor with a narrow divertor using the CenterColumnStudyReactor
         parametric reactor and checks that the correct number of components are created."""
 

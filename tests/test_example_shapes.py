@@ -30,7 +30,7 @@ class test_object_properties(unittest.TestCase):
         assert Path(filename).exists() is True
         os.system("rm " + filename)
 
-    def test_make_CAD_from_points(self):
+    def test_make_cad_from_points(self):
         """Runs the example and checks the output files are produced"""
         output_filenames = [
             "extruded_mixed.stp",
