@@ -12,7 +12,7 @@ cwd = os.getcwd()
 "These tests require a visual front end which is not well suported on docker based CI systems"
 
 
-class test_object_properties(unittest.TestCase):
+class TestLocalExamples(unittest.TestCase):
     def test_make_collarge(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))

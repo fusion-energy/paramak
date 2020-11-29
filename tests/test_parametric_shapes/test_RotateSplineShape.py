@@ -5,7 +5,7 @@ import pytest
 from paramak import RotateSplineShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestRotateSplineShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = RotateSplineShape(

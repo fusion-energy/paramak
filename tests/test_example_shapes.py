@@ -12,7 +12,7 @@ from examples.example_parametric_shapes import (
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
-class test_object_properties(unittest.TestCase):
+class TestExampleShapes(unittest.TestCase):
 
     def test_make_blanket_from_points(self):
         """Runs the example and checks the output files are produced"""

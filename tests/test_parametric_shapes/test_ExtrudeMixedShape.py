@@ -7,7 +7,7 @@ import pytest
 from paramak import ExtrudeMixedShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestExtrudeMixedShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = ExtrudeMixedShape(

@@ -6,7 +6,7 @@ import pytest
 from paramak import ExtrudeCircleShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestExtrudeCircleShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = ExtrudeCircleShape(

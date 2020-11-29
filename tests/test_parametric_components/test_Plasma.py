@@ -6,7 +6,7 @@ from pathlib import Path
 import paramak
 
 
-class test_Plasma(unittest.TestCase):
+class TestPlasma(unittest.TestCase):
     def test_plasma_attributes(self):
         """Creates a plasma object using the Plasma parametric component and
         checks that its attributes can be set correctly."""

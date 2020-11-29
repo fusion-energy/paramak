@@ -5,7 +5,8 @@ import paramak
 import pytest
 
 
-class test_ToroidalFieldCoilTripleArc(unittest.TestCase):
+class TestToroidalFieldCoilTripleArc(unittest.TestCase):
+
     def setUp(self):
         self.test_shape = paramak.ToroidalFieldCoilTripleArc(
             R1=100, h=100, radii=(100, 200), coverages=(10, 60), thickness=10,

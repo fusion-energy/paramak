@@ -8,7 +8,7 @@ import paramak
 import pytest
 
 
-class test_CenterColumnShieldCylinder(unittest.TestCase):
+class TestCenterColumnShieldCylinder(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldCylinder(

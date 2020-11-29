@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_BlanketFP(unittest.TestCase):
+class TestBlanketFP(unittest.TestCase):
     def test_creation(self):
         blanket = paramak.BlanketFPPoloidalSegments(
             thickness=20, start_angle=0,

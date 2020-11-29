@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
+class TestCenterColumnShieldFlatTopCircular(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldFlatTopCircular(

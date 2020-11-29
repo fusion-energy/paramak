@@ -5,7 +5,7 @@ import numpy as np
 import paramak
 
 
-class test_PortCutterRotated(unittest.TestCase):
+class TestPortCutterRotated(unittest.TestCase):
     def test_shape_construction_and_volume(self):
         """Cuts a vessel cylinder with several different size port cutters."""
 

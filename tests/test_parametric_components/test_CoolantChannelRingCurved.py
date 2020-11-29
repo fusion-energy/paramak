@@ -5,7 +5,7 @@ import paramak
 import pytest
 
 
-class test_CoolantChannelRingCurved(unittest.TestCase):
+class TestCoolantChannelRingCurved(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CoolantChannelRingCurved(

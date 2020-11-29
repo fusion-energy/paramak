@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_CenterColumnShieldHyperbola(unittest.TestCase):
+class TestCenterColumnShieldHyperbola(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldHyperbola(

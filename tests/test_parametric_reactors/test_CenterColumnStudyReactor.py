@@ -8,7 +8,7 @@ import paramak
 import pytest
 
 
-class test_CenterColumnStudyReactor(unittest.TestCase):
+class TestCenterColumnStudyReactor(unittest.TestCase):
 
     def setUp(self):
         self.test_reactor = paramak.CenterColumnStudyReactor(

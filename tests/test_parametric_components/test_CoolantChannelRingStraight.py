@@ -6,7 +6,7 @@ import paramak
 import pytest
 
 
-class test_CoolantChannelRingStraight(unittest.TestCase):
+class TestCoolantChannelRingStraight(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CoolantChannelRingStraight(

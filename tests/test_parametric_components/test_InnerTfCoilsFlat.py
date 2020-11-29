@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_InnerTfCoilsFlat(unittest.TestCase):
+class TestInnerTfCoilsFlat(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.InnerTfCoilsFlat(

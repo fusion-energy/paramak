@@ -5,7 +5,7 @@ import numpy as np
 import paramak
 
 
-class test_InboardFirstwallFCCS(unittest.TestCase):
+class TestInboardFirstwallFCCS(unittest.TestCase):
 
     def test_construction_with_CenterColumnShieldCylinder(self):
         """Makes a firstwall from a CenterColumnShieldCylinder and checks

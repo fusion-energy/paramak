@@ -7,7 +7,7 @@ from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
 
 
-class test_neutornics_utility_functions(unittest.TestCase):
+class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
     def test_moab_instance_creation(self):
         """passes three points on a circle to the function and checks that the

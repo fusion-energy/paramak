@@ -5,7 +5,7 @@ import paramak
 import pytest
 
 
-class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
+class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.ToroidalFieldCoilCoatHanger(

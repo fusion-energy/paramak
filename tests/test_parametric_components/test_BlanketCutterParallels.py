@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_BlanketCutterParallels(unittest.TestCase):
+class TestBlanketCutterParallels(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.BlanketCutterParallels(

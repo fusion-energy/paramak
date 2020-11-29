@@ -7,7 +7,7 @@ from pathlib import Path
 import paramak
 
 
-class test_BlanketFP(unittest.TestCase):
+class TestBlanketFP(unittest.TestCase):
 
     def setUp(self):
         self.plasma = paramak.Plasma(

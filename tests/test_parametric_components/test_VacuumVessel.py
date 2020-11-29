@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_VacuumVessel(unittest.TestCase):
+class TestVacuumVessel(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.VacuumVessel(

@@ -6,7 +6,7 @@ import paramak
 import pytest
 
 
-class test_PoloidalFieldCoilCaseSetFC(unittest.TestCase):
+class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
 
     def setUp(self):
         self.pf_coils_set = paramak.PoloidalFieldCoilSet(

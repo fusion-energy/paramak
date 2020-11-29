@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_PoloidalSegments(unittest.TestCase):
+class TestPoloidalSegments(unittest.TestCase):
 
     def test_solid_count_with_incorect_input(self):
         """Checks the segmenter does not take a float as an input."""

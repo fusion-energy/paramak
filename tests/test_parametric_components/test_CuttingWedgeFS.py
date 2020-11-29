@@ -5,7 +5,7 @@ import numpy as np
 import paramak
 
 
-class test_CuttingWedgeFS(unittest.TestCase):
+class TestCuttingWedgeFS(unittest.TestCase):
 
     def test_shape_construction_and_volume(self):
         """Makes cutting cylinders from shapes and checks the

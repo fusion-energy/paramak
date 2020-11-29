@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_DivertorITERNoDome(unittest.TestCase):
+class TestDivertorITERNoDome(unittest.TestCase):
 
     def test_creation(self):
         """Creates an ITER-type divertor using the ITERtypeDivertorNoDome

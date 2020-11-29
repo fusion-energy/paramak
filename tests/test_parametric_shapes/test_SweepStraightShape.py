@@ -5,7 +5,7 @@ import pytest
 from paramak import RotateStraightShape, SweepStraightShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestSweepStraightShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = SweepStraightShape(

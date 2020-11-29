@@ -7,7 +7,7 @@ import paramak
 import pytest
 
 
-class test_SubmersionTokamak(unittest.TestCase):
+class TestSubmersionTokamak(unittest.TestCase):
 
     def setUp(self):
         self.test_reactor = paramak.SubmersionTokamak(

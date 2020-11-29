@@ -5,7 +5,7 @@ import paramak
 import pytest
 
 
-class test_BlanketCutterStar(unittest.TestCase):
+class TestBlanketCutterStar(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.BlanketCutterStar(distance=100)

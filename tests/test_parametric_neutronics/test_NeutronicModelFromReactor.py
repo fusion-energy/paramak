@@ -5,7 +5,7 @@ import neutronics_material_maker as nmm
 import paramak
 
 
-class test_neutronics_BallReactor(unittest.TestCase):
+class TestNeutronicsBallReactor(unittest.TestCase):
 
     # makes the 3d geometry
     my_reactor = paramak.BallReactor(
