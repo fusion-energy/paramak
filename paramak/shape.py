@@ -15,6 +15,9 @@ from cadquery import exporters
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
+import paramak
+from paramak.neutronics_utils import (add_stl_to_moab_core,
+                                      define_moab_core_and_tags)
 from paramak.utils import cut_solid, get_hash, intersect_solid, union_solid
 
 
@@ -83,7 +86,7 @@ class Shape:
         physical_groups=None,
         cut=None,
         intersect=None,
-        union=None
+        union=None,
     ):
 
         self.connection_type = connection_type
@@ -1078,3 +1081,131 @@ class Shape:
 
         # Move new file
         move(abs_path, filename)
+
+    def make_graveyard(self, graveyard_offset=100):
+        """Creates a graveyard volume (bounding box) that encapsulates all
+        volumes. This is required by DAGMC when performing neutronics
+        simulations.
+
+        Args:
+            graveyard_offset (float): the offset between the largest edge of
+                the geometry and inner bounding shell created. Defaults to
+                100
+
+        Returns:
+            CadQuery solid: a shell volume that bounds the geometry, referred
+            to as a graveyard in DAGMC
+        """
+
+        self.graveyard_offset = graveyard_offset
+
+        if self.solid is None:
+            self.create_solid()
+
+        graveyard_shape = paramak.HollowCube(
+            length=self.largest_dimension * 2 + graveyard_offset * 2,
+            name="Graveyard",
+            material_tag="Graveyard",
+            stp_filename="Graveyard.stp",
+            stl_filename="Graveyard.stl",
+        )
+
+        self.graveyard = graveyard_shape
+
+        return graveyard_shape
+
+    def export_h5m(
+            self,
+            filename='dagmc.h5m',
+            skip_graveyard=False,
+            tolerance=0.001,
+            graveyard_offset=100):
+        """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
+        DAGMC file produced has not been imprinted and merged unlike the other
+        supported method which uses Trelis to produce an imprinted and merged
+        DAGMC geometry. If the provided filename doesn't end with .h5m it will
+        be added
+
+        Args:
+            filename (str, optional): filename of h5m outputfile
+                Defaults to "dagmc.h5m".
+            skip_graveyard (boolean, optional): filename of h5m outputfile
+                Defaults to False.
+            tolerance (float, optional): the precision of the faceting
+                Defaults to 0.001.
+            graveyard_offset (float, optional): the offset between the largest
+                edge of the geometry and inner bounding shell created. Defualts
+                to 100.
+        Returns:
+            filename: output h5m filename
+        """
+
+        path_filename = Path(filename)
+
+        if path_filename.suffix != ".h5m":
+            path_filename = path_filename.with_suffix(".h5m")
+
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        self.export_stl(self.stl_filename, tolerance=tolerance)
+
+        moab_core, moab_tags = define_moab_core_and_tags()
+
+        moab_core = add_stl_to_moab_core(
+            moab_core,
+            1,
+            1,
+            self.material_tag,
+            moab_tags,
+            self.stl_filename
+        )
+
+        if skip_graveyard is False:
+            self.make_graveyard(graveyard_offset=graveyard_offset)
+            self.graveyard.export_stl(self.graveyard.stl_filename)
+            volume_id = 2
+            surface_id = 2
+            moab_core = add_stl_to_moab_core(
+                moab_core,
+                surface_id,
+                volume_id,
+                self.graveyard.material_tag,
+                moab_tags,
+                self.graveyard.stl_filename
+            )
+
+        all_sets = moab_core.get_entities_by_handle(0)
+
+        file_set = moab_core.create_meshset()
+
+        moab_core.add_entities(file_set, all_sets)
+
+        moab_core.write_file(str(path_filename))
+
+        return filename
+
+    def export_graveyard(
+            self,
+            graveyard_offset=None,
+            filename="Graveyard.stp"):
+        """Writes an stp file (CAD geometry) for the reactor graveyard. This
+        is needed for DAGMC simulations. This method also calls
+        Reactor.make_graveyard with the offset.
+
+        Args:
+            filename (str): the filename for saving the stp file
+            graveyard_offset (float): the offset between the largest edge of
+                the geometry and inner bounding shell created. Defaults to
+                Reactor.graveyard_offset
+
+        Returns:
+            str: the stp filename created
+        """
+
+        if graveyard_offset is None:
+            graveyard_offset = self.graveyard_offset
+
+        self.make_graveyard(graveyard_offset=graveyard_offset)
+        self.graveyard.export_stp(Path(filename))
+
+        return filename
