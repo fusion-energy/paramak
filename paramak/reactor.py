@@ -38,6 +38,8 @@ class Reactor:
         self.shapes_and_components = shapes_and_components
         self.reactor_hash_value = None
 
+        self.graveyard_offset = None  # set by the make_graveyard method
+
     @property
     def stp_filenames(self):
         values = []
@@ -131,9 +133,11 @@ class Reactor:
 
     @graveyard_offset.setter
     def graveyard_offset(self, value):
-        if not isinstance(value, (float, int)):
+        if value is None:
+            self._graveyard_offset = None
+        elif not isinstance(value, (float, int)):
             raise ValueError("graveyard_offset must be a number")
-        if value < 0:
+        elif value < 0:
             raise ValueError("graveyard_offset must be positive")
         self._graveyard_offset = value
 
@@ -483,7 +487,7 @@ class Reactor:
 
     def export_graveyard(
             self,
-            graveyard_offset=None,
+            graveyard_offset=100,
             filename="Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
@@ -498,9 +502,6 @@ class Reactor:
         Returns:
             str: the stp filename created
         """
-
-        if graveyard_offset is None:
-            graveyard_offset = self.graveyard_offset
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
         self.graveyard.export_stp(Path(filename))

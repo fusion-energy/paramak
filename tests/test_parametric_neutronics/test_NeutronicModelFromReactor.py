@@ -76,10 +76,13 @@ class test_neutronics_BallReactor(unittest.TestCase):
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='mat1')
+            material_tag='mat1',
+        )
         test_shape2 = paramak.RotateSplineShape(
             points=[(100, 100), (100, -100), (200, -100), (200, 100)],
-            material_tag='blanket_mat')
+            material_tag='blanket_mat',
+            rotation_angle=180
+        )
 
         test_reactor = paramak.Reactor([test_shape, test_shape2])
         test_reactor.rotation_angle = 360
@@ -101,6 +104,7 @@ class test_neutronics_BallReactor(unittest.TestCase):
 
         # starts the neutronics simulation using trelis
         neutronics_model.simulate(method='pymoab')
+
         assert pytest.approx(neutronics_model.results['TBR']['result'], abs=0.1) == 0.7
         assert pytest.approx(neutronics_model.results['blanket_mat_heating']['MeV per source particle']['result'], abs=1) == 12
         assert pytest.approx(neutronics_model.results['blanket_mat_flux']['Flux per source particle']['result'], abs=10) == 169
