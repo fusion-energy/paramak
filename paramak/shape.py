@@ -120,6 +120,8 @@ class Shape:
         self.x_max = None
         self.z_min = None
         self.z_max = None
+        self.graveyard_offset = None  # set by the make_graveyard method
+
 
     @property
     def solid(self):
