@@ -180,17 +180,22 @@ ENV OPENMC_CROSS_SECTIONS=nndc_hdf5/cross_sections.xml
 
 # Copies over the Paramak code from the local repository
 
+RUN if [ "$include_neutronics" = "true" ] ; \
+    then pip install neutronics_material_maker ; \
+    pip install parametric_plasma_source ; \
+    fi
+
 COPY requirements.txt requirements.txt
-# includes optional dependancies like neutronics_material_maker
 RUN pip install -r requirements.txt
 
+
 # Copy over the source code, examples and tests
+COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
 COPY examples examples/
 COPY setup.py setup.py
 COPY tests tests/
 COPY README.md README.md
-COPY run_tests.sh run_tests.sh
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
