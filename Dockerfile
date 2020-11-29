@@ -22,10 +22,9 @@
 # Building using the defaults (cq_version 2, no neutronics and 1 core compile)
 # docker build -t ukaea/paramak .
 #
-# Building to include neutronics dependencies and using 8 cores.
+# Building to include cadquery master, neutronics dependencies and use 8 cores.
 # Run command from within the base repository directory
-# docker build -t ukaea/paramak --build-arg include_neutronics=true --build-arg compile_cores=8 .
-
+# docker build -t ukaea/paramak --build-arg include_neutronics=true --build-arg compile_cores=8 --build-arg cq_version=master .
 
 # Once build the dockerimage can be run in a few different ways.
 #
@@ -83,6 +82,24 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     apt-get --yes install libglfw3-dev ; \
     fi
 
+# Clone and install NJOY2016
+RUN git clone https://github.com/njoy/NJOY2016 /opt/NJOY2016 && \
+    cd /opt/NJOY2016 && \
+    mkdir build && cd build && \
+    cmake -Dstatic=on .. && make 2>/dev/null && make install
+
+# Clone and install Embree
+RUN if [ "$include_neutronics" = "true" ] ; \
+    then git clone https://github.com/embree/embree ; \
+    cd embree ; \
+    mkdir build ; \
+    cd build ; \
+    cmake .. -DCMAKE_INSTALL_PREFIX=.. \
+        -DEMBREE_ISPC_SUPPORT=OFF ; \
+    make -j"$compile_cores" ; \
+    make -j"$compile_cores" install ; \
+    fi
+
 # Clone and install MOAB
 RUN if [ "$include_neutronics" = "true" ] ; \
     then pip install --upgrade numpy cython ; \
@@ -112,6 +129,56 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     python setup.py install ; \
     fi
 
+
+# Clone and install Double-Down
+RUN if [ "$include_neutronics" = "true" ] ; \
+    then git clone https://github.com/pshriwise/double-down ; \
+    cd double-down ; \
+    mkdir build ; \
+    cd build ; \
+    cmake .. -DCMAKE_INSTALL_PREFIX=.. \
+        -DMOAB_DIR=/MOAB \
+        -DEMBREE_DIR=/embree/lib/cmake/embree-3.12.1 \
+        -DEMBREE_ROOT=/embree/lib/cmake/embree-3.12.1 ; \
+    make -j"$compile_cores" ; \
+    make -j"$compile_cores" install ; \
+    fi
+
+# Clone and install DAGMC
+RUN if [ "$include_neutronics" = "true" ] ; \
+    then mkdir DAGMC ; \
+    cd DAGMC ; \
+    git clone -b develop https://github.com/svalinn/dagmc ; \
+    mkdir build ; \
+    cd build ; \
+    cmake ../dagmc -DBUILD_TALLY=ON \
+        -DCMAKE_INSTALL_PREFIX=/dagmc/ \
+        -DMOAB_DIR=/MOAB \
+        -DBUILD_STATIC_LIBS=OFF \
+        -DBUILD_STATIC_EXE=OFF ; \
+    make -j"$compile_cores" install ; \
+    rm -rf /DAGMC/dagmc /DAGMC/build ; \
+    fi
+
+# Clone and install OpenMC with DAGMC
+RUN if [ "$include_neutronics" = "true" ] ; \
+    then git clone --recurse-submodules https://github.com/openmc-dev/openmc.git /opt/openmc ; \
+    cd /opt/openmc ; \
+    mkdir build ; \
+    cd build ; \
+    cmake -Doptimize=on -Ddagmc=ON \
+        -DDAGMC_DIR=/DAGMC/ \
+        -DHDF5_PREFER_PARALLEL=on ..  ; \
+    make -j"$compile_cores" ; \
+    make -j"$compile_cores" install ; \
+    cd ..  ; \
+    pip install -e .[test] ; \
+    /opt/openmc/tools/ci/download-xs.sh ; \
+    fi
+
+ENV OPENMC_CROSS_SECTIONS=nndc_hdf5/cross_sections.xml
+
+# Copies over the Paramak code from the local repository
 
 COPY requirements.txt requirements.txt
 # includes optional dependancies like neutronics_material_maker
