@@ -4,7 +4,8 @@ import unittest
 import paramak
 
 
-class test_TFCoilCasing(unittest.TestCase):
+class TestTFCoilCasing(unittest.TestCase):
+
     def test_creation(self):
         inner_offset = 10
         outer_offset = 10

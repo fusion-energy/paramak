@@ -5,7 +5,7 @@ import paramak
 import pytest
 
 
-class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
+class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.ToroidalFieldCoilCoatHanger(
@@ -43,7 +43,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
             (200, 550, 'straight'), (200, 500, 'straight')
         ]
 
-    def test_ToroidalFieldCoilCoatHanger_creation_with_inner_leg(self):
+    def test_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilCoatHanger
         parametric component and checks that a cadquery solid is created."""
 
@@ -56,7 +56,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         )
         assert test_inner_leg.solid is not None
 
-    def test_ToroidalFieldCoilCoatHanger_creation_no_inner_leg(self):
+    def test_creation_no_inner_leg(self):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created."""
 
@@ -73,7 +73,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert self.test_shape.volume == pytest.approx(
             test_volume - inner_leg_volume)
 
-    def test_ToroidalFieldCoilCoatHanger_absolute_volume(self):
+    def test_absolute_volume(self):
         """Creates a tf coil using the ToroidalFieldCoilCoatHanger parametric
         component and checks that the volume is correc."""
 
@@ -102,7 +102,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
                                                         (((150 * 250 * 30) - (((100 * 250) / 2) * 30) -
                                                           (((100 * 250) / 2) * 30)) * 2)) * 8, rel=0.1)
 
-    def test_ToroidalFieldCoilCoatHanger_absolute_area(self):
+    def test_absolute_area(self):
         """Creates a tf coil using the ToroidalFieldCoilCoatHanger parametric
         component and checks that the areas of the faces are correct."""
 
@@ -131,7 +131,7 @@ class test_ToroidalFieldCoilCoatHanger(unittest.TestCase):
                                                      ((((50**2 + 50**2)**0.5) * 30) * 2) +
                                                      ((((100**2 + 250**2)**0.5) * 30) * 4), rel=0.1)
 
-    def test_ToroidalFieldCoilCoatHanger_rotation_angle(self):
+    def test_rotation_angle(self):
         """Creates a tf coil with a rotation_angle < 360 degrees and checks
         that the correct cut is performed and the volume is correct."""
 

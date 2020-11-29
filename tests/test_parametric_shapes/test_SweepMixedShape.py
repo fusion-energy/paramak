@@ -5,7 +5,7 @@ import pytest
 from paramak import RotateStraightShape, SweepMixedShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestSweepMixedShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = SweepMixedShape(

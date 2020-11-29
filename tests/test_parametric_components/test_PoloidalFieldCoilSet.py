@@ -6,7 +6,7 @@ import paramak
 import pytest
 
 
-class test_PoloidalFieldCoilSet(unittest.TestCase):
+class TestPoloidalFieldCoilSet(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.PoloidalFieldCoilSet(
@@ -36,21 +36,21 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
             (110.0, 105.0, 'straight')
         ]
 
-    def test_PoloidalFieldCoilSet_creation(self):
+    def test_creation(self):
         """Creates a solid using the PoloidalFieldCoilSet parametric component
         and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
         assert len(self.test_shape.solid.Solids()) == 3
 
-    def test_PoloidalFieldCoilSet_absolute_volume(self):
+    def test_absolute_volume(self):
         """Creates a set of pf coils using the PoloidalFieldCoilSet parametric
         component and checks that the volume is correct."""
 
         assert self.test_shape.volume == (pytest.approx((10 * 20 * math.pi * (2 * 100)) + (
             15 * 25 * math.pi * (2 * 200)) + (5 * 30 * math.pi * (2 * 300))))
 
-    def test_PoloidalFieldCoilSet_absolute_areas(self):
+    def test_absolute_areas(self):
         """Creates a set of pf coils using the PoloidalFieldCoilSet parametric
         component and checks that the areas of its faces are correct."""
 
@@ -75,11 +75,11 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
         assert self.test_shape.areas.count(
             pytest.approx(5 * math.pi * (2 * 315))) == 1
 
-    def test_PoloidalFieldCoilSet_incorrect_args(self):
+    def test_incorrect_args(self):
         """Creates a solid using the PoloidalFieldCoilSet parametric component
         and checks that a cadquery solid is created."""
 
-        def test_PoloidalFieldCoilSet_incorrect_height():
+        def test_incorrect_height():
             """Checks PoloidalFieldCoilSet with height as the wrong type."""
 
             paramak.PoloidalFieldCoilSet(
@@ -89,9 +89,9 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
 
         self.assertRaises(
             ValueError,
-            test_PoloidalFieldCoilSet_incorrect_height)
+            test_incorrect_height)
 
-        def test_PoloidalFieldCoilSet_incorrect_width():
+        def test_incorrect_width():
             """Checks PoloidalFieldCoilSet with width as the wrong type."""
 
             paramak.PoloidalFieldCoilSet(
@@ -101,9 +101,9 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
 
         self.assertRaises(
             ValueError,
-            test_PoloidalFieldCoilSet_incorrect_width)
+            test_incorrect_width)
 
-        def test_PoloidalFieldCoilSet_incorrect_center_points():
+        def test_incorrect_center_points():
             """Checks PoloidalFieldCoilSet with center_points as the wrong
             type."""
 
@@ -114,9 +114,9 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
 
         self.assertRaises(
             ValueError,
-            test_PoloidalFieldCoilSet_incorrect_center_points)
+            test_incorrect_center_points)
 
-        def test_PoloidalFieldCoilSet_incorrect_width_length():
+        def test_incorrect_width_length():
             """Checks PoloidalFieldCoilSet with not enough entries in width."""
             paramak.PoloidalFieldCoilSet(
                 heights=[10, 10, 10],
@@ -125,4 +125,4 @@ class test_PoloidalFieldCoilSet(unittest.TestCase):
 
         self.assertRaises(
             ValueError,
-            test_PoloidalFieldCoilSet_incorrect_width_length)
+            test_incorrect_width_length)

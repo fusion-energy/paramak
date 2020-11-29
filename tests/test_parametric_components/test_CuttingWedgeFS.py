@@ -5,8 +5,9 @@ import numpy as np
 import paramak
 
 
-class test_CuttingWedgeFS(unittest.TestCase):
-    def test_CuttingWedgeFS_shape_construction_and_volume(self):
+class TestCuttingWedgeFS(unittest.TestCase):
+
+    def test_shape_construction_and_volume(self):
         """Makes cutting cylinders from shapes and checks the
         volume of the cutter shape is larger than the shape it
         encompasses."""
@@ -23,7 +24,7 @@ class test_CuttingWedgeFS(unittest.TestCase):
 
         assert cutter.volume > hoop_shape.volume
 
-    def test_CuttingWedgeFS_error(self):
+    def test_error(self):
         """Checks that errors are raised when invalid arguments are set
         """
         shape = paramak.ExtrudeStraightShape(

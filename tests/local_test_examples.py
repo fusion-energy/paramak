@@ -12,7 +12,7 @@ cwd = os.getcwd()
 "These tests require a visual front end which is not well suported on docker based CI systems"
 
 
-class test_object_properties(unittest.TestCase):
+class TestLocalExamples(unittest.TestCase):
     def test_make_collarge(self):
         """ Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
@@ -60,7 +60,7 @@ class test_object_properties(unittest.TestCase):
             assert Path(output_filename).exists()
             os.system("rm " + output_filename)
 
-    def test_RotateStraightShape_export_3d_image(self):
+    def test_export_3d_image(self):
         """checks that export_3d_image() exports png files with the correct suffix"""
 
         test_shape = paramak.RotateStraightShape(

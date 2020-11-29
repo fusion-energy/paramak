@@ -5,7 +5,7 @@ import paramak
 import pytest
 
 
-class test_BlanketConstantThicknessArcV(unittest.TestCase):
+class TestBlanketConstantThicknessArcV(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.BlanketConstantThicknessArcV(

@@ -5,8 +5,9 @@ import paramak
 import pytest
 
 
-class test_PoloidalFieldCoilFP(unittest.TestCase):
-    def test_PoloidalFieldCoilFP_shape_construction_and_volume(self):
+class TestPoloidalFieldCoilFP(unittest.TestCase):
+
+    def test_shape_construction_and_volume(self):
         """Cuts a vessel cylinder with several different size port cutters."""
 
         test_component = paramak.PoloidalFieldCoilFP(

@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_SegmentedBlanketBallReactor(unittest.TestCase):
+class TestSegmentedBlanketBallReactor(unittest.TestCase):
 
     def setUp(self):
         self.test_reactor = paramak.SegmentedBlanketBallReactor(

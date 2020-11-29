@@ -4,7 +4,8 @@ import unittest
 import paramak
 
 
-class test_component(unittest.TestCase):
+class TestPortCutterRectangular(unittest.TestCase):
+
     def test_creation(self):
         """Checks a PortCutterRectangular creation."""
 

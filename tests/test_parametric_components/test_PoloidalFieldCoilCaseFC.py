@@ -6,7 +6,7 @@ import paramak
 import pytest
 
 
-class test_PoloidalFieldCoilCaseFC(unittest.TestCase):
+class TestPoloidalFieldCoilCaseFC(unittest.TestCase):
 
     def setUp(self):
         self.pf_coil = paramak.PoloidalFieldCoil(
@@ -25,21 +25,21 @@ class test_PoloidalFieldCoilCaseFC(unittest.TestCase):
         assert self.test_shape.stl_filename == "PoloidalFieldCoilCaseFC.stl"
         assert self.test_shape.material_tag == "pf_coil_case_mat"
 
-    def test_PoloidalFieldCoilCaseFC_creation(self):
+    def test_creation(self):
         """Creates a pf coil case using the PoloidalFieldCoilCaseFC parametric
         component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_PoloidalFieldCoilCaseFC_absolute_volume(self):
+    def test_absolute_volume(self):
         """Creates a pf coil case using the PoloidalFieldCoilCaseFC parametric
         component and checks that its volume is correct."""
 
         assert self.test_shape.volume == pytest.approx(
             (math.pi * 2 * 1000) * ((50 * 5 * 2) + (70 * 5 * 2)))
 
-    def test_PoloidalFieldCoilCaseFC_absolute_areas(self):
+    def test_absolute_areas(self):
         """Creates a pf coil case using the PoloidalFieldCoilCaseFC parametric
         component and checks that the areas of its faces are correct"""
 
