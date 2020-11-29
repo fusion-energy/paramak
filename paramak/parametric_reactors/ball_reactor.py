@@ -3,8 +3,6 @@ import warnings
 
 import paramak
 
-from paramak.utils import get_hash
-
 
 class BallReactor(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,
@@ -153,6 +151,9 @@ class BallReactor(paramak.Reactor):
             self.outer_plasma_gap_radial_thickness,
             self.plasma_gap_vertical_thickness,
             self.major_radius - self.minor_radius]
+        
+        # calcualted internally by the class
+        self._plasma = None
 
     @property
     def pf_coil_radial_thicknesses(self):
