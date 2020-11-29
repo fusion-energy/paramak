@@ -13,7 +13,7 @@ class TestDivertorITER(unittest.TestCase):
         test_shape = paramak.ITERtypeDivertor()
         assert test_shape.solid is not None
 
-    def test_STP_export(self):
+    def test_stp_export(self):
         """Creates an ITER-type divertor using the ITERtypeDivertor parametric
         component and checks that a stp file of the shape can be exported using
         the export_stp method"""
