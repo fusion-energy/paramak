@@ -96,7 +96,7 @@ class test_neutronics_BallReactor(unittest.TestCase):
             materials={
                 'mat1': 'copper',
                 'blanket_mat': 'Li4SiO4',
-                },
+            },
             cell_tallies=['TBR', 'heating', 'flux'],
             simulation_batches=5,
             simulation_particles_per_batch=1e3,
@@ -105,9 +105,15 @@ class test_neutronics_BallReactor(unittest.TestCase):
         # starts the neutronics simulation using trelis
         neutronics_model.simulate(method='pymoab')
 
-        assert pytest.approx(neutronics_model.results['TBR']['result'], abs=0.1) == 0.7
-        assert pytest.approx(neutronics_model.results['blanket_mat_heating']['MeV per source particle']['result'], abs=1) == 12
-        assert pytest.approx(neutronics_model.results['blanket_mat_flux']['Flux per source particle']['result'], abs=10) == 169
+        assert pytest.approx(
+            neutronics_model.results['TBR']['result'],
+            abs=0.1) == 0.7
+        assert pytest.approx(
+            neutronics_model.results['blanket_mat_heating']['MeV per source particle']['result'],
+            abs=1) == 12
+        assert pytest.approx(
+            neutronics_model.results['blanket_mat_flux']['Flux per source particle']['result'],
+            abs=10) == 169
 
     # def test_tbr_simulation(self):
 

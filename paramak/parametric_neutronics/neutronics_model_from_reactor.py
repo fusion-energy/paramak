@@ -322,7 +322,7 @@ class NeutronicsModelFromReactor():
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations. There are two methods available for producing the
         imprinted and merged h5m geometry (PPP or Trelis) and one method of
-        producing non imprinted and non merged geometry (PyMoab). 
+        producing non imprinted and non merged geometry (PyMoab).
         make_watertight is also used to seal the DAGMC geoemtry. If using the
         Trelis option you must have the make_faceteted_neutronics_model.py in
         the same directory as your Python script. Further details on imprinting

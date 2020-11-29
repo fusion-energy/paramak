@@ -54,7 +54,8 @@ class test_object_properties(unittest.TestCase):
         )
         test_shape.export_h5m(filename='test_shape_0001.h5m', tolerance=0.001)
         test_shape.export_h5m(filename='test_shape_001.h5m', tolerance=0.01)
-        assert Path('test_shape_0001.h5m').stat().st_size > Path('test_shape_001.h5m').stat().st_size
+        assert Path('test_shape_0001.h5m').stat().st_size > Path(
+            'test_shape_001.h5m').stat().st_size
 
     def test_skipping_graveyard_decreases_filesize(self):
         os.system('rm test_shape.h5m')
@@ -70,7 +71,8 @@ class test_object_properties(unittest.TestCase):
         )
         test_shape.export_h5m(filename='skiped.h5m', skip_graveyard=True)
         test_shape.export_h5m(filename='not_skipped.h5m', skip_graveyard=False)
-        assert Path('not_skipped.h5m').stat().st_size > Path('skiped.h5m').stat().st_size
+        assert Path('not_skipped.h5m').stat().st_size > Path(
+            'skiped.h5m').stat().st_size
 
     def test_graveyard_offset_increases_voulme(self):
         os.system('rm test_shape.h5m')
