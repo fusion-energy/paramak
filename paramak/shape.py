@@ -122,7 +122,6 @@ class Shape:
         self.z_max = None
         self.graveyard_offset = None  # set by the make_graveyard method
 
-
     @property
     def solid(self):
         """The CadQuery solid of the 3d object. Returns a CadQuery workplane
