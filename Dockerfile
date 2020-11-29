@@ -46,7 +46,11 @@ ARG cq_version=2
 ARG include_neutronics=false
 ARG compile_cores=1
 
-ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
+    PATH=/opt/openmc/bin:/opt/NJOY2016/build:$PATH \
+    LD_LIBRARY_PATH=/opt/openmc/lib:$LD_LIBRARY_PATH \
+    CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx \
+    DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y && \
     apt-get upgrade -y
@@ -75,12 +79,12 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 # install addition packages required for MOAB
 RUN if [ "$include_neutronics" = "true" ] ; \
     then echo installing with include_neutronics=true ; \
-    apt-get --yes install libeigen3-dev ; \
-    apt-get --yes install libblas-dev ; \
-    apt-get --yes install liblapack-dev ; \
-    apt-get --yes install libnetcdf-dev ; \
-    apt-get --yes install libtbb-dev ; \
-    apt-get --yes install libglfw3-dev ; \
+        apt-get --yes install libeigen3-dev ; \
+        apt-get --yes install libblas-dev ; \
+        apt-get --yes install liblapack-dev ; \
+        apt-get --yes install libnetcdf-dev ; \
+        apt-get --yes install libtbb-dev ; \
+        apt-get --yes install libglfw3-dev ; \
     fi
 
 # Clone and install NJOY2016
