@@ -202,7 +202,7 @@ def make_model_and_simulate():
         inner_plasma_gap_radial_thickness=30,
         plasma_radial_thickness=300,
         outer_plasma_gap_radial_thickness=30,
-        firstwall_radial_thickness=3,
+        firstwall_radial_thickness=firstwall_radial_thickness,
         # http://www.euro-fusionscipub.org/wp-content/uploads/WPBBCP16_15535_submitted.pdf
         blanket_radial_thickness=100,
         blanket_rear_wall_radial_thickness=3,
