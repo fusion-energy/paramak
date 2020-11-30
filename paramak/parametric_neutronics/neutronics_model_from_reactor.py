@@ -23,7 +23,20 @@ except BaseException:
 
 class NeutronicsModelFromReactor():
     """Creates a neuronics model of the provided reactor geometry with assigned
-    materials, plasma source and neutronics tallies.
+    materials, plasma source and neutronics tallies. There are two methods 
+    available for producing the imprinted and merged h5m geometry (PPP or
+    Trelis) and one method of producing non imprinted and non merged geometry
+    (PyMoab). make_watertight is also used to seal the DAGMC geoemtry. If using
+    the Trelis option you must have the make_faceteted_neutronics_model.py in
+    the same directory as your Python script. Further details on imprinting
+    and merging are available on the DAGMC homepage
+    https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+    The Parallel-PreProcessor is an open-source tool available
+    https://github.com/ukaea/parallel-preprocessor and can be used in
+    conjunction with the OCC_faceter
+    (https://github.com/makeclean/occ_faceter) to create imprinted and
+    merged geometry while Trelis (also known as Cubit) is available from
+    the CoreForm website https://www.coreform.com/
 
     Arguments:
         reactor (paramak.Reactor): The reactor object to convert to a
@@ -74,6 +87,7 @@ class NeutronicsModelFromReactor():
 
         self.reactor = reactor
         self.materials = materials
+        self.source = source
         self.cell_tallies = cell_tallies
         self.mesh_tally_2D = mesh_tally_2D
         self.simulation_batches = simulation_batches
@@ -82,7 +96,6 @@ class NeutronicsModelFromReactor():
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
         self.mesh_2D_resolution = mesh_2D_resolution
-        self.source = source
         self.model = None
         self.fusion_power = fusion_power
 
@@ -249,43 +262,28 @@ class NeutronicsModelFromReactor():
 
     def create_neutronics_geometry(self, method=None):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations. There are two methods available for producing the
-        imprinted and merged h5m geometry (PPP or Trelis) and one method of
-        producing non imprinted and non merged geometry (PyMoab).
-        make_watertight is also used to seal the DAGMC geoemtry. If using the
-        Trelis option you must have the make_faceteted_neutronics_model.py in
-        the same directory as your Python script. Further details on imprinting
-        and merging are available on the DAGMC homepage
-        https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-        The Parallel-PreProcessor is an open-source tool available
-        https://github.com/ukaea/parallel-preprocessor and can be used in
-        conjunction with the OCC_faceter
-        (https://github.com/makeclean/occ_faceter) to create imprinted and
-        merged geometry while Trelis (also known as Cubit) is available from
-        the CoreForm website https://www.coreform.com/
+        simulations.
 
         Arguments:
             method: (str): The method to use when making the imprinted and
                 merged geometry. Options are "ppp", "trelis", "pymoab".
-                Defaults to pymoab.
+                Defaults to None.
         """
 
         os.system('rm dagmc_not_watertight.h5m')
         os.system('rm dagmc.h5m')
 
-        if method is None:
-            method = self.method
-            if method not in ['ppp', 'trelis', 'pymoab']:
-                raise ValueError(
-                    "the method using in create_neutronics_geometry \
-                    should be either ppp or trelis not", method)
+        if method not in ['ppp', 'trelis', 'pymoab']:
+            raise ValueError(
+                "the method using in create_neutronics_geometry \
+                should be either ppp or trelis not", method)
 
         if method == 'ppp':
 
             self.reactor.export_stp()
             self.reactor.export_neutronics_description()
-            # as the installer connects to the system python not the conda python
-            # this full path is needed for now
+            # as the installer connects to the system python not the conda
+            # python this full path is needed for now
             if os.system(
                     '/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json') != 0:
                 raise ValueError(
@@ -340,12 +338,12 @@ class NeutronicsModelFromReactor():
     def create_neutronics_model(self, method=None):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (cell_tallies and mesh_tally_2D), simulation settings (batches,
-        particles per batch)
+        particles per batch).
 
         Arguments:
             method: (str): The method to use when making the imprinted and
                 merged geometry. Options are "ppp", "trelis", "pymoab".
-                Defaults to pymoab.
+                Defaults to None.
         """
 
         self.create_materials()
@@ -504,10 +502,10 @@ class NeutronicsModelFromReactor():
         (summary.h5) if files exists.
 
         Arguments:
-            verbose: (Boolean, optional): Print the output from OpenMC (true)
+            verbose (Boolean, optional): Print the output from OpenMC (true)
                 to the terminal and don't print the OpenMC output (false).
                 Defaults to True.
-            method: (str): The method to use when making the imprinted and
+            method (str): The method to use when making the imprinted and
                 merged geometry. Options are "ppp", "trelis", "pymoab".
                 Defaults to pymoab.
 
@@ -515,8 +513,7 @@ class NeutronicsModelFromReactor():
             dict: the simulation output filename
         """
 
-        if self.model is None:
-            self.create_neutronics_model(method=method)
+        self.create_neutronics_model(method=method)
 
         # Deletes summary.h5m if it already exists.
         # This avoids permission problems when trying to overwrite the file
