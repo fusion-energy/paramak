@@ -186,7 +186,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     /opt/openmc/tools/ci/download-xs.sh ; \
     fi
 
-ENV OPENMC_CROSS_SECTIONS=nndc_hdf5/cross_sections.xml
+ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
 
 # Copies over the Paramak code from the local repository
 
