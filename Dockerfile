@@ -95,7 +95,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd build ; \
     cmake -Dstatic=on .. ; \
     make 2>/dev/null ; \
-    make install
+    make install ; \
     fi
 
 # Clone and install Embree
