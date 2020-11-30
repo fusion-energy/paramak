@@ -4,7 +4,7 @@ import unittest
 import neutronics_material_maker as nmm
 import paramak
 import pytest
-
+import openmc
 
 class TestNeutronicsBallReactor(unittest.TestCase):
     """Tests the neutronicsModelFromReactor including neutronics simulations"""
@@ -41,6 +41,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         # makes the neutronics material
         neutronics_model = paramak.NeutronicsModelFromReactor(
             reactor=self.my_reactor,
+            source=openmc.Source(),
             materials={
                 'inboard_tf_coils_mat': 'copper',
                 'center_column_shield_mat': 'WC',
@@ -87,13 +88,18 @@ class TestNeutronicsBallReactor(unittest.TestCase):
 
         test_reactor = paramak.Reactor([test_shape, test_shape2])
         test_reactor.rotation_angle = 360
-        test_reactor.minor_radius = 5
-        test_reactor.major_radius = 12
-        test_reactor.elongation = 2
-        test_reactor.triangularity = 0.55
+
+        source = openmc.Source()
+        # sets the location of the source to x=0 y=0 z=0
+        source.space = openmc.stats.Point((0, 0, 0))
+        # sets the direction to isotropic
+        source.angle = openmc.stats.Isotropic()
+        # sets the energy distribution to 100% 14MeV neutrons
+        source.energy = openmc.stats.Discrete([14e6], [1])
 
         neutronics_model = paramak.NeutronicsModelFromReactor(
             reactor=test_reactor,
+            source=source,
             materials={
                 'mat1': 'copper',
                 'blanket_mat': 'Li4SiO4',
@@ -108,13 +114,13 @@ class TestNeutronicsBallReactor(unittest.TestCase):
 
         assert pytest.approx(
             neutronics_model.results['TBR']['result'],
-            abs=0.1) == 0.7
+            abs=0.1) == 0.2
         assert pytest.approx(
             neutronics_model.results['blanket_mat_heating']['MeV per source particle']['result'],
-            abs=1) == 12
+            abs=1) == 4
         assert pytest.approx(
             neutronics_model.results['blanket_mat_flux']['Flux per source particle']['result'],
-            abs=10) == 169
+            abs=5) == 53
 
     # def test_tbr_simulation(self):
 
