@@ -98,9 +98,6 @@ class CenterColumnStudyReactor(paramak.Reactor):
             (outer_equatorial_point + inner_equatorial_point) / 2
         self.minor_radius = self.major_radius - inner_equatorial_point
 
-        # calcualted internally by the class
-        self._plasma = None
-
     def create_solids(self):
         """Creates a 3d solids for each component.
 
