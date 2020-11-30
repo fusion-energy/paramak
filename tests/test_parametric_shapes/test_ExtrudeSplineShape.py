@@ -5,7 +5,7 @@ import pytest
 from paramak import ExtrudeSplineShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestExtrudeSplineShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = ExtrudeSplineShape(

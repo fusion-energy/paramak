@@ -5,7 +5,7 @@ import paramak
 import pytest
 
 
-class test_ToroidalFieldCoilRectangle(unittest.TestCase):
+class TestToroidalFieldCoilRectangle(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.ToroidalFieldCoilRectangle(
@@ -37,7 +37,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
             (100, 750, 'straight'), (100, 700, 'straight')
         ]
 
-    def test_ToroidalFieldCoilRectangle_creation_with_inner_leg(self):
+    def test_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created."""
 
@@ -50,7 +50,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         )
         assert test_inner_leg.solid is not None
 
-    def test_ToroidalFieldCoilRectangle_creation_no_inner_leg(self):
+    def test_creation_no_inner_leg(self):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created."""
 
@@ -66,7 +66,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert self.test_shape.volume == pytest.approx(
             test_volume - inner_leg_volume)
 
-    def test_ToroidalFieldCoilRectangle_absolute_volume(self):
+    def test_absolute_volume(self):
         """Creates a tf coil using the ToroidalFieldCoilRectangle parametric
         component and checks that the volume is correct."""
 
@@ -91,7 +91,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
             ((850 * 150 * 50 * 2) + (1400 * 150 * 50)) * 8
         )
 
-    def test_ToroidalFieldCoilRectangle_absolute_areas(self):
+    def test_absolute_areas(self):
         """Creates tf coils using the ToroidalFieldCoilRectangle parametric
         component and checks that the areas of the faces are correct."""
 
@@ -114,7 +114,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         assert self.test_shape.area == pytest.approx((((850 * 150 * 2) + (1400 * 150)) * 2) + (
             850 * 50 * 2) + (1700 * 50) + (1400 * 50) + (700 * 50 * 2) + (150 * 50 * 2))
 
-    def test_ToroidalFieldCoilRectangle_rotation_angle(self):
+    def test_rotation_angle(self):
         """Creates tf coils with rotation_angles < 360 degrees in different
         workplanes and checks that the correct cuts are performed and their
         volumes are correct."""
@@ -140,7 +140,7 @@ class test_ToroidalFieldCoilRectangle(unittest.TestCase):
         self.test_shape.rotation_angle = 180
         assert self.test_shape.volume == pytest.approx(test_volume * 0.5)
 
-    def test_ToroidalFieldCoilRectangle_error(self):
+    def test_error(self):
         """Checks errors are raised with invalid arguments."""
 
         def incorrect_horizontal_start_point():

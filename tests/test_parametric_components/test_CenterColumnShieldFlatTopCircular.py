@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
+class TestCenterColumnShieldFlatTopCircular(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldFlatTopCircular(
@@ -30,7 +30,7 @@ class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
             (200, -300, "straight"), (100, -300, "straight"), (100, 0, "straight")
         ]
 
-    def test_CenterColumnShieldFlatTopCircular_creation(self):
+    def test_creation(self):
         """Creates a center column shield using the
         CenterColumnShieldFlatTopCircular parametric component and checks that
         a cadquery solid is created."""
@@ -38,7 +38,7 @@ class test_CenterColumnShieldFlatTopCircular(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_CenterColumnShieldFlatTopCircular_faces(self):
+    def test_faces(self):
         """Creates a center column shield using the
         CenterColumnShieldFlatTopCircular parametric component and checks that
         a solid is created with the correct number of faces"""

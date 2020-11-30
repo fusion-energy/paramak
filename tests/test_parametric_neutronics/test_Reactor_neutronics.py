@@ -6,7 +6,7 @@ from pathlib import Path
 import paramak
 
 
-class test_object_properties(unittest.TestCase):
+class TestReactorNeutronics(unittest.TestCase):
 
     def test_export_h5m(self):
         """Creates a Reactor object consisting of two shapes and checks a h5m

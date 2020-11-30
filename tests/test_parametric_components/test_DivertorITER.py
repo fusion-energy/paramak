@@ -4,15 +4,16 @@ import unittest
 import paramak
 
 
-class test_DivertorITER(unittest.TestCase):
-    def test_DivertorITER_creation(self):
+class TestDivertorITER(unittest.TestCase):
+
+    def test_creation(self):
         """Creates an ITER-type divertor using the ITERtypeDivertor parametric
         component and checks that a cadquery solid is created"""
 
         test_shape = paramak.ITERtypeDivertor()
         assert test_shape.solid is not None
 
-    def test_DivertorITER_STP_export(self):
+    def test_stp_export(self):
         """Creates an ITER-type divertor using the ITERtypeDivertor parametric
         component and checks that a stp file of the shape can be exported using
         the export_stp method"""
@@ -20,7 +21,7 @@ class test_DivertorITER(unittest.TestCase):
         test_shape = paramak.ITERtypeDivertor()
         test_shape.export_stp("tests/ITER_div")
 
-    def test_DivertorITER_faces(self):
+    def test_faces(self):
         """Creates an ITER-type divertor using the ITERtypeDivertor parametric
         component and checks that a solid with the correct number of faces is
         created"""

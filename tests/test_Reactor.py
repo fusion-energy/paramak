@@ -9,7 +9,7 @@ import paramak
 import pytest
 
 
-class test_object_properties(unittest.TestCase):
+class TestReactor(unittest.TestCase):
 
     def test_adding_shape_with_material_tag_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with

@@ -6,7 +6,7 @@ import paramak
 import pytest
 
 
-class test_CoolantChannelRingStraight(unittest.TestCase):
+class TestCoolantChannelRingStraight(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CoolantChannelRingStraight(
@@ -24,14 +24,14 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
         assert self.test_shape.stl_filename == "CoolantChannelRingStraight.stl"
         assert self.test_shape.material_tag == "coolant_channel_mat"
 
-    def test_CoolantChannelRingStraight_creation(self):
+    def test_creation(self):
         """Creates a coolant channel ring using the CoolantChannelRingStraight parameteric shape
         and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_CoolantChannelRingStraight_faces(self):
+    def test_faces(self):
         """Creates a CoolantChannelRingStraight shape and checks that the areas of its faces
         are correct."""
 
@@ -46,7 +46,7 @@ class test_CoolantChannelRingStraight(unittest.TestCase):
         assert self.test_shape.areas.count(
             pytest.approx(math.pi * (10 * 2) * 100)) == 8
 
-    def test_CoolantChannelRingStraight_volume(self):
+    def test_volume(self):
         """Creates CoolantChannelRingStraight shapes and checks that the volumes are correct."""
 
         self.test_shape.workplane = "XY"

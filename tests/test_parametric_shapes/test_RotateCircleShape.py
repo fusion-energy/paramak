@@ -6,7 +6,7 @@ import pytest
 from paramak import RotateCircleShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestRotateCircleShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = RotateCircleShape(

@@ -7,7 +7,7 @@ from pathlib import Path
 import paramak
 
 
-class test_BlanketFP(unittest.TestCase):
+class TestBlanketFP(unittest.TestCase):
 
     def setUp(self):
         self.plasma = paramak.Plasma(
@@ -38,7 +38,7 @@ class test_BlanketFP(unittest.TestCase):
         assert self.test_shape.stl_filename == "BlanketFP.stl"
         assert self.test_shape.material_tag == "blanket_mat"
 
-    def test_BlanketFP_creation_plasma(self):
+    def test_creation_plasma(self):
         """Checks that a cadquery solid can be created by passing a plasma to
         the BlanketFP parametric component."""
 
@@ -48,7 +48,7 @@ class test_BlanketFP(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_BlanketFP_faces(self):
+    def test_faces(self):
         """creates a blanket using the BlanketFP parametric component and checks
         that a solid with the correct number of faces is created"""
 
@@ -62,14 +62,14 @@ class test_BlanketFP(unittest.TestCase):
         assert len(self.test_shape.areas) == 6
         assert len(set([round(i) for i in self.test_shape.areas])) == 5
 
-    def test_BlanketFP_creation_noplasma(self):
+    def test_creation_noplasma(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when no plasma is passed."""
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_BlanketFP_creation_variable_thickness_from_tuple(self):
+    def test_creation_variable_thickness_from_tuple(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when a tuple of thicknesses is passed as an
         argument."""
@@ -79,7 +79,7 @@ class test_BlanketFP(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_BlanketFP_creation_variable_thickness_from_2_lists(self):
+    def test_creation_variable_thickness_from_2_lists(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when a list of angles and a list of thicknesses
         are passed as an argument."""
@@ -88,7 +88,7 @@ class test_BlanketFP(unittest.TestCase):
 
         assert self.test_shape.solid is not None
 
-    def test_BlanketFP_creation_variable_thickness_function(self):
+    def test_creation_variable_thickness_function(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when a thickness function is passed as an
         argument."""
@@ -101,7 +101,7 @@ class test_BlanketFP(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_BlanketFP_creation_variable_offset_from_tuple(self):
+    def test_creation_variable_offset_from_tuple(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when a tuple of offsets is passed as an
         argument."""
@@ -111,7 +111,7 @@ class test_BlanketFP(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_BlanketFP_creation_variable_offset_from_2_lists(self):
+    def test_creation_variable_offset_from_2_lists(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when a list of offsets and a list of angles are
         passed as an argument."""
@@ -122,7 +122,7 @@ class test_BlanketFP(unittest.TestCase):
 
         assert self.test_shape.solid is not None
 
-    def test_BlanketFP_creation_variable_offset_error(self):
+    def test_creation_variable_offset_error(self):
         """Checks that an error is raised when two lists with different
         lengths are passed in offset_from_plasma as an argument."""
 
@@ -135,7 +135,7 @@ class test_BlanketFP(unittest.TestCase):
 
         self.assertRaises(ValueError, test_different_lengths)
 
-    def test_BlanketFP_creation_variable_offset_function(self):
+    def test_creation_variable_offset_function(self):
         """Checks that a cadquery solid can be created using the BlanketFP
         parametric component when an offset function is passed."""
 
@@ -147,7 +147,7 @@ class test_BlanketFP(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_BlanketFP_physical_groups(self):
+    def test_physical_groups(self):
         """Creates a blanket using the BlanketFP parametric component and
         checks that physical groups can be exported using the
         export_physical_groups method"""
@@ -171,7 +171,7 @@ class test_BlanketFP(unittest.TestCase):
         test_shape.export_physical_groups(outfile)
         os.system("rm " + outfile)
 
-    def test_BlanketFP_full_cov_stp_export(self):
+    def test_full_cov_stp_export(self):
         """Creates a blanket using the BlanketFP parametric component with full
         coverage and checks that an stp file can be exported using the export_stp
         method."""

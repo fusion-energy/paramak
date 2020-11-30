@@ -8,7 +8,7 @@ import pytest
 from paramak import RotateStraightShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestRotateStraightShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = RotateStraightShape(

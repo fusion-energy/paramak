@@ -12,7 +12,7 @@ from examples.example_parametric_shapes import (
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
-class test_object_properties(unittest.TestCase):
+class TestExampleShapes(unittest.TestCase):
 
     def test_make_blanket_from_points(self):
         """Runs the example and checks the output files are produced"""
@@ -30,7 +30,7 @@ class test_object_properties(unittest.TestCase):
         assert Path(filename).exists() is True
         os.system("rm " + filename)
 
-    def test_make_CAD_from_points(self):
+    def test_make_cad_from_points(self):
         """Runs the example and checks the output files are produced"""
         output_filenames = [
             "extruded_mixed.stp",

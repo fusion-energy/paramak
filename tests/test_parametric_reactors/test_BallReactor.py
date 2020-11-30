@@ -8,7 +8,7 @@ from pathlib import Path
 import paramak
 
 
-class test_BallReactor(unittest.TestCase):
+class TestBallReactor(unittest.TestCase):
 
     def setUp(self):
         self.test_reactor = paramak.BallReactor(

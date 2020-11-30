@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
+class TestCenterColumnShieldFlatTopHyperbola(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldFlatTopHyperbola(
@@ -30,7 +30,7 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
             (200, -300, "straight"), (100, -300, "straight"), (100, 0, "straight")
         ]
 
-    def test_CenterColumnShieldFlatTopHyperbola_creation(self):
+    def test_creation(self):
         """Creates a center column shield using the
         CenterColumnShieldFlatTopHyperbola parametric component and checks that
         a cadquery solid is created."""
@@ -38,7 +38,7 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_CenterColumnShieldFlatTopHyperbola_invalid_parameters_errors(
+    def test_invalid_parameters_errors(
             self):
         """Checks that the correct errors are raised when invalid arguments are input as
         shape parameters."""
@@ -64,7 +64,7 @@ class test_CenterColumnShieldFlatTopHyperbola(unittest.TestCase):
         self.assertRaises(ValueError, incorrect_outer_radius)
         self.assertRaises(ValueError, incorrect_arc_height)
 
-    def test_CenterColumnShieldFlatTopHyperbola_faces(self):
+    def test_faces(self):
         """Creates a center column shield using the
         CenterColumnShieldFlatTopHyperbola parametric component and checks
         that a solid is created with the correct number of faces."""

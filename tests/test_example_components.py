@@ -15,7 +15,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
-class test_object_properties(unittest.TestCase):
+class TestExampleComponents(unittest.TestCase):
 
     def test_make_all_parametric_components(self):
         """Runs the example and checks the output files are produced"""

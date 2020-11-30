@@ -7,7 +7,7 @@ import pytest
 from paramak import RotateMixedShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestRotateMixedShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = RotateMixedShape(

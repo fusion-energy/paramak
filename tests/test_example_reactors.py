@@ -11,7 +11,7 @@ from examples.example_parametric_reactors import (
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
-class test_object_properties(unittest.TestCase):
+class TestExampleReactors(unittest.TestCase):
     def test_make_parametric_htc_rector(self):
         """Runs the example to check the output files are produced"""
         output_filenames = [

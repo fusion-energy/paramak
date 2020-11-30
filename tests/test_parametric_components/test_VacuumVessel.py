@@ -4,20 +4,20 @@ import unittest
 import paramak
 
 
-class test_VacuumVessel(unittest.TestCase):
+class TestVacuumVessel(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.VacuumVessel(
             height=2, inner_radius=1, thickness=0.2
         )
 
-    def test_VacuumVessel_creation(self):
+    def test_creation(self):
         """Creates a shape using the VacuumVessel parametric component and
         checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
 
-    def test_VacuumVessel_ports(self):
+    def test_ports(self):
         """Creates a vacuum vessel with ports holes in it and checks that a
         caquery solid is created."""
 

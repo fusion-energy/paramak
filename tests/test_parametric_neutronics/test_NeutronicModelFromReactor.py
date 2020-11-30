@@ -6,7 +6,7 @@ import paramak
 import pytest
 
 
-class test_neutronics_model_from_reactor(unittest.TestCase):
+class TestNeutronicsBallReactor(unittest.TestCase):
     """Tests the neutronicsModelFromReactor including neutronics simulations"""
 
     # makes the 3d geometry

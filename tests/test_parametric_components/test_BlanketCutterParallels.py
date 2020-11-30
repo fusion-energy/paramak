@@ -4,7 +4,7 @@ import unittest
 import paramak
 
 
-class test_BlanketCutterParallels(unittest.TestCase):
+class TestBlanketCutterParallels(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.BlanketCutterParallels(
@@ -24,7 +24,7 @@ class test_BlanketCutterParallels(unittest.TestCase):
         # assert self.test_shape.name == "blanket_cutter_parallels"
         assert self.test_shape.material_tag == "blanket_cutter_parallels_mat"
 
-    def test_BlanketCutterParallels_creation(self):
+    def test_creation(self):
         """Creates solid using the BlanketCutterParallels parametric component
         and checks that a cadquery solid is created."""
 
@@ -40,7 +40,7 @@ class test_BlanketCutterParallels(unittest.TestCase):
     #     self.test_shape.thickness=100
     #     assert test_volume < self.test_shape.volume
 
-    def test_BlanketCutterParallels_cut_modification(self):
+    def test_cut_modification(self):
         """Creates a BlanketCutterParallels parametric component and with another
         shape cut out and checks that a solid can be produced."""
 

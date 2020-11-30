@@ -7,7 +7,8 @@ from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
                            find_center_point_of_circle)
 
 
-class test_utility_functions(unittest.TestCase):
+class TestUtilityFunctions(unittest.TestCase):
+
     def test_find_center_point_of_circle(self):
         """passes three points on a circle to the function and checks that the
         radius and center of the circle is calculated correctly"""

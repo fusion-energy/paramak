@@ -4,9 +4,9 @@ import unittest
 import paramak
 
 
-class test_PoloidalSegments(unittest.TestCase):
+class TestPoloidalSegments(unittest.TestCase):
 
-    def test_PoloidalSegments_solid_count_with_incorect_input(self):
+    def test_solid_count_with_incorect_input(self):
         """Checks the segmenter does not take a float as an input."""
 
         def create_shape():
@@ -25,7 +25,7 @@ class test_PoloidalSegments(unittest.TestCase):
         self.assertRaises(
             ValueError, create_shape)
 
-    def test_PoloidalSegments_solid_count_with_incorect_inputs2(self):
+    def test_solid_count_with_incorect_inputs2(self):
         """Checks the segmenter does not take a negative int as an input."""
 
         def create_shape():
@@ -44,7 +44,7 @@ class test_PoloidalSegments(unittest.TestCase):
         self.assertRaises(
             ValueError, create_shape)
 
-    def test_PoloidalSegments_solid_count(self):
+    def test_solid_count(self):
         """Creates a rotated hollow ring and segments it into poloidal
         sections."""
 
@@ -68,7 +68,7 @@ class test_PoloidalSegments(unittest.TestCase):
         assert test_shape.solid is not None
         assert len(test_shape.solid.Solids()) == 22
 
-    def test_PoloidalSegments_solid_count2(self):
+    def test_solid_count2(self):
         """Creates a rotated ring and segments it into poloidal sections."""
 
         test_shape_to_segment = paramak.PoloidalFieldCoil(
@@ -86,7 +86,7 @@ class test_PoloidalSegments(unittest.TestCase):
         assert test_shape.solid is not None
         assert len(test_shape.solid.Solids()) == 22
 
-    def test_PoloidalSegments_without_shape_to_segment(self):
+    def test_without_shape_to_segment(self):
         """Checks a solid can be created if no shape is given
         """
         test_shape = paramak.PoloidalSegments(

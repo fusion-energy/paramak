@@ -5,7 +5,7 @@ import pytest
 from paramak import ExtrudeStraightShape
 
 
-class test_object_properties(unittest.TestCase):
+class TestExtrudeStraightShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = ExtrudeStraightShape(
