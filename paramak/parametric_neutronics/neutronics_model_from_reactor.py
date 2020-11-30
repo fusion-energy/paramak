@@ -23,7 +23,7 @@ except BaseException:
 
 class NeutronicsModelFromReactor():
     """Creates a neuronics model of the provided reactor geometry with assigned
-    materials, plasma source and neutronics tallies. There are two methods 
+    materials, plasma source and neutronics tallies. There are two methods
     available for producing the imprinted and merged h5m geometry (PPP or
     Trelis) and one method of producing non imprinted and non merged geometry
     (PyMoab). make_watertight is also used to seal the DAGMC geoemtry. If using
