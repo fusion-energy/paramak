@@ -5,14 +5,13 @@ from pathlib import Path
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-import numpy as np
 import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
-from paramak.shape import Shape
+from paramak.neutronics_utils import (add_stl_to_moab_core,
+                                      define_moab_core_and_tags)
 from paramak.utils import get_hash
-from paramak.neutronics_utils import define_moab_core_and_tags, add_stl_to_moab_core
 
 
 class Reactor:
@@ -468,8 +467,8 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as f:
-            exporters.exportShape(self.solid, "SVG", f)
+        with open(path_filename, "w") as out_file:
+            exporters.exportShape(self.solid, "SVG", out_file)
         print("Saved file as ", path_filename)
 
     def export_graveyard(

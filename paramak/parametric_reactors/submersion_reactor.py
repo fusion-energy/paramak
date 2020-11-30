@@ -2,10 +2,7 @@
 import warnings
 
 import cadquery as cq
-
 import paramak
-
-from paramak.utils import get_hash
 
 
 class SubmersionTokamak(paramak.Reactor):
