@@ -3,8 +3,6 @@ import warnings
 
 import paramak
 
-from paramak.utils import get_hash
-
 
 class BallReactor(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,

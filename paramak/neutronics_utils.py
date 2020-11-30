@@ -21,11 +21,11 @@ def define_moab_core_and_tags():
 
     tags = dict()
 
-    SENSE_TAG_NAME = "GEOM_SENSE_2"
-    SENSE_TAG_SIZE = 2
+    sense_tag_name = "GEOM_SENSE_2"
+    sense_tag_size = 2
     tags['surf_sense'] = moab_core.tag_get_handle(
-        SENSE_TAG_NAME,
-        SENSE_TAG_SIZE,
+        sense_tag_name,
+        sense_tag_size,
         types.MB_TYPE_HANDLE,
         types.MB_TAG_SPARSE,
         create_if_missing=True)

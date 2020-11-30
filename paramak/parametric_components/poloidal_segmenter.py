@@ -92,16 +92,6 @@ class PoloidalSegments(RotateStraightShape):
     def max_distance_from_center(self, value):
         self._max_distance_from_center = value
 
-    @property
-    def solid(self):
-        if get_hash(self) != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
-
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the poloidal segmentation shape."""
@@ -184,7 +174,5 @@ class PoloidalSegments(RotateStraightShape):
             )
 
         self.solid = compound
-
-        self.hash_value = get_hash(self)
 
         return compound

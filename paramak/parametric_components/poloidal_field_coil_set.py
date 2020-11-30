@@ -1,7 +1,6 @@
 
 import cadquery as cq
 from paramak import RotateStraightShape
-from paramak.utils import get_hash
 
 
 class PoloidalFieldCoilSet(RotateStraightShape):
@@ -51,18 +50,6 @@ class PoloidalFieldCoilSet(RotateStraightShape):
                 self.center_points):
             raise ValueError("The length of widthts, height and center_points \
                 must be the same when making a PoloidalFieldCoilSet")
-
-    @property
-    def solid(self):
-        """Returns a CadQuery compound object consisting of 1 or more 3d
-        volumes"""
-        if get_hash(self) != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
 
     @property
     def center_points(self):
@@ -153,8 +140,5 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         )
 
         self.solid = compound
-
-        # Calculate hash value for current solid
-        self.hash_value = get_hash(self)
 
         return compound
