@@ -7,7 +7,7 @@ jobs:
   # test:
   build:
     docker:
-      - image: openmcworkshop/paramak:dependencies_cq_master
+      - image: openmcworkshop/paramak:dependences_with_neutronics
     steps:
       - checkout
       - run:
