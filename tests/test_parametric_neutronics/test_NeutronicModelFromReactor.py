@@ -111,7 +111,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         )
 
         # starts the neutronics simulation using trelis
-        neutronics_model.simulate(method='pymoab')
+        neutronics_model.simulate(verbose=False, method='pymoab')
 
         assert pytest.approx(
             neutronics_model.results['TBR']['result'],
