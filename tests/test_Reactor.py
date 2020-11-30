@@ -6,6 +6,7 @@ from pathlib import Path
 
 import cadquery as cq
 import paramak
+import pytest
 
 
 class TestReactor(unittest.TestCase):
@@ -393,8 +394,8 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         os.system("rm Graveyard.stp")
         test_reactor = paramak.Reactor([test_shape])
-        assert test_reactor.graveyard_offset == 100
         test_reactor.export_graveyard()
+        assert test_reactor.graveyard_offset == 100
         graveyard_volume_1 = test_reactor.graveyard.volume
 
         test_reactor.export_graveyard(graveyard_offset=50)
@@ -726,12 +727,12 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
-        assert test_reactor.largest_dimension == 20
+        assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 20)
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (30, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
-        assert test_reactor.largest_dimension == 30
+        assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 30)
 
     def test_shapes_and_components(self):
         test_shape = paramak.RotateStraightShape(
