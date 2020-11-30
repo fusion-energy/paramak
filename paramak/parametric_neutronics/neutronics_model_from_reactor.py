@@ -8,12 +8,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 try:
-    from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
-except BaseException:
-    warnings.warn('parametric_plasma_source not found distributed plasma \
-            sources are not avaialbe in Neutronics simulations', UserWarning)
-
-try:
     import openmc
 except BaseException:
     warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
@@ -32,39 +26,29 @@ class NeutronicsModelFromReactor():
     materials, plasma source and neutronics tallies.
 
     Arguments:
-        reactor: (paramak.Reactor): The reactor object to convert to a
+        reactor (paramak.Reactor): The reactor object to convert to a
             neutronics model. e.g. reactor=paramak.BallReactor() or
             reactor=paramak.SubmersionReactor() .
-        materials: (dict): Where the dictionary keys are the material tag
+        materials (dict): Where the dictionary keys are the material tag
             and the dictionary values are either a string, openmc.Material,
             neutronics-material-maker.Material or
             neutronics-material-maker.MultiMaterial. All components within the
             Reactor() object must be accounted for. Material tags required
             for the reactor can be obtained with Reactor().material_tags.
-        cell_tallies: (list of strings): the cell based tallies to calculate,
+        cell_tallies (list of strings): the cell based tallies to calculate,
             options include TBR, heating and flux
-        mesh_tally_2D: (list of strings): the mesh based tallies to calculate,
+        mesh_tally_2D (list of strings): the mesh based tallies to calculate,
             options include tritium_production, heating and flux
-        fusion_power: (float): the power in watts emitted by the fusion
+        fusion_power (float): the power in watts emitted by the fusion
             reaction recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
-        simulation_batches: (int): the number of batch to simulate.
+        simulation_batches (int): the number of batch to simulate.
         simulation_particles_per_batch: (int): particles per batch.
-        ion_density_origin: (float): 1.09e20,
-        ion_density_peaking_factor: (float): 1,
-        ion_density_pedestal: (float): 1.09e20,
-        ion_density_separatrix: (float): 3e19,
-        ion_temperature_origin: (float): 45.9,
-        ion_temperature_peaking_factor: (float): 8.06,
-        ion_temperature_pedestal: (float): 6.09,
-        ion_temperature_separatrix: (float): 0.1,
-        pedestal_radius: (float): 0.8 * 2.92258,
-        shafranov_shift: (float): 0.44789,
-        triangularity: (float): 0.270,
-        ion_temperature_beta: (float): 6,
-        merge_tolerance(float): the tolerance to use when merging surfaces.
+        source (openmc.Source()): the particle source to use during the
+            OpenMC simulation. 
+        merge_tolerance (float): the tolerance to use when merging surfaces.
             Defaults to 1e-4.
-        faceting_tolerance(float): the tolerance to use when faceting surfaces.
+        faceting_tolerance (float): the tolerance to use when faceting surfaces.
             Defaults to 1e-1.
         mesh_2D_resolution (tuple of ints): The mesh resolution in the height
             and width directions. The larger the resolution the finer the mesh
@@ -76,22 +60,12 @@ class NeutronicsModelFromReactor():
         self,
         reactor,
         materials,
+        source,
         cell_tallies=None,
         mesh_tally_2D=None,
         fusion_power=1e9,
         simulation_batches=100,
         simulation_particles_per_batch=10000,
-        ion_density_peaking_factor=1,
-        ion_density_origin=1.09e20,
-        ion_density_pedestal=1.09e20,
-        ion_density_separatrix=3e19,
-        ion_temperature_origin=45.9,
-        ion_temperature_peaking_factor=8.06,
-        ion_temperature_pedestal=6.09,
-        ion_temperature_separatrix=0.1,
-        pedestal_radius_factor=0.8,
-        shafranov_shift=0.44789,
-        ion_temperature_beta=6,
         max_lost_particles=10,
         faceting_tolerance=1e-1,
         merge_tolerance=1e-4,
@@ -102,24 +76,13 @@ class NeutronicsModelFromReactor():
         self.materials = materials
         self.cell_tallies = cell_tallies
         self.mesh_tally_2D = mesh_tally_2D
-        self.ion_density_origin = ion_density_origin
-        self.ion_density_peaking_factor = ion_density_peaking_factor
-        self.ion_density_pedestal = ion_density_pedestal
-        self.ion_density_separatrix = ion_density_separatrix
-        self.ion_temperature_origin = ion_temperature_origin
-        self.ion_temperature_peaking_factor = ion_temperature_peaking_factor
-        self.ion_temperature_pedestal = ion_temperature_pedestal
-        self.ion_temperature_separatrix = ion_temperature_separatrix
-        self.pedestal_radius_factor = pedestal_radius_factor
-        self.shafranov_shift = shafranov_shift
-        self.ion_temperature_beta = ion_temperature_beta
         self.simulation_batches = simulation_batches
         self.simulation_particles_per_batch = simulation_particles_per_batch
         self.max_lost_particles = max_lost_particles
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
         self.mesh_2D_resolution = mesh_2D_resolution
-
+        self.source = source
         self.model = None
         self.fusion_power = fusion_power
 
@@ -284,40 +247,6 @@ class NeutronicsModelFromReactor():
 
         return self.mats
 
-    def create_plasma_source(self):
-        """Uses the parametric-plasma-source to create a ditributed neutron
-        source for use in the simulation"""
-
-        self.pedestal_radius = self.pedestal_radius_factor * \
-            (self.reactor.minor_radius / 100)
-
-        my_plasma = PlasmaSource(
-            elongation=self.reactor.elongation,
-            ion_density_origin=self.ion_density_origin,
-            ion_density_peaking_factor=self.ion_density_peaking_factor,
-            ion_density_pedestal=self.ion_density_pedestal,
-            ion_density_separatrix=self.ion_density_separatrix,
-            ion_temperature_origin=self.ion_temperature_origin,
-            ion_temperature_peaking_factor=self.ion_temperature_peaking_factor,
-            ion_temperature_pedestal=self.ion_temperature_pedestal,
-            ion_temperature_separatrix=self.ion_temperature_separatrix,
-            major_radius=self.reactor.major_radius / 100,
-            minor_radius=self.reactor.minor_radius / 100,
-            pedestal_radius=self.pedestal_radius,
-            plasma_id=1,
-            shafranov_shift=self.shafranov_shift,
-            triangularity=self.reactor.triangularity,
-            ion_temperature_beta=self.ion_temperature_beta,
-        )
-
-        source = openmc.Source()
-        source.library = SOURCE_SAMPLING_PATH
-        source.parameters = str(my_plasma)
-
-        self.source = source
-
-        return source
-
     def create_neutronics_geometry(self, method=None):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations. There are two methods available for producing the
@@ -420,7 +349,7 @@ class NeutronicsModelFromReactor():
         """
 
         self.create_materials()
-        self.create_plasma_source()
+
         self.create_neutronics_geometry(method=method)
 
         # this is the underlying geometry container that is filled with the
