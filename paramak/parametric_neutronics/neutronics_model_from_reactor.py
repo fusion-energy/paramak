@@ -45,7 +45,7 @@ class NeutronicsModelFromReactor():
         simulation_batches (int): the number of batch to simulate.
         simulation_particles_per_batch: (int): particles per batch.
         source (openmc.Source()): the particle source to use during the
-            OpenMC simulation. 
+            OpenMC simulation.
         merge_tolerance (float): the tolerance to use when merging surfaces.
             Defaults to 1e-4.
         faceting_tolerance (float): the tolerance to use when faceting surfaces.

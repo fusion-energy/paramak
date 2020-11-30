@@ -6,6 +6,7 @@ import paramak
 import pytest
 import openmc
 
+
 class TestNeutronicsBallReactor(unittest.TestCase):
     """Tests the neutronicsModelFromReactor including neutronics simulations"""
 
