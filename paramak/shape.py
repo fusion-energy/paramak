@@ -123,7 +123,6 @@ class Shape:
         self.graveyard_offset = None  # set by the make_graveyard method
         self.patch = None
 
-
     @property
     def solid(self):
         """The CadQuery solid of the 3d object. Returns a CadQuery workplane
