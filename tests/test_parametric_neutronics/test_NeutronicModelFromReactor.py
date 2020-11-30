@@ -103,7 +103,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
             source=source,
             materials={
                 'mat1': 'copper',
-                'blanket_mat': 'Li4SiO4',
+                'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
             },
             cell_tallies=['TBR', 'heating', 'flux'],
             simulation_batches=5,
@@ -115,13 +115,13 @@ class TestNeutronicsBallReactor(unittest.TestCase):
 
         assert pytest.approx(
             neutronics_model.results['TBR']['result'],
-            abs=0.1) == 0.2
+            abs=0.1) == 0.12
         assert pytest.approx(
             neutronics_model.results['blanket_mat_heating']['MeV per source particle']['result'],
             abs=1) == 4
         assert pytest.approx(
             neutronics_model.results['blanket_mat_flux']['Flux per source particle']['result'],
-            abs=5) == 53
+            abs=5) == 82
 
     # def test_tbr_simulation(self):
 
