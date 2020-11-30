@@ -79,19 +79,24 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 # install addition packages required for MOAB
 RUN if [ "$include_neutronics" = "true" ] ; \
     then echo installing with include_neutronics=true ; \
-        apt-get --yes install libeigen3-dev ; \
-        apt-get --yes install libblas-dev ; \
-        apt-get --yes install liblapack-dev ; \
-        apt-get --yes install libnetcdf-dev ; \
-        apt-get --yes install libtbb-dev ; \
-        apt-get --yes install libglfw3-dev ; \
+    apt-get --yes install libeigen3-dev ; \
+    apt-get --yes install libblas-dev ; \
+    apt-get --yes install liblapack-dev ; \
+    apt-get --yes install libnetcdf-dev ; \
+    apt-get --yes install libtbb-dev ; \
+    apt-get --yes install libglfw3-dev ; \
     fi
 
 # Clone and install NJOY2016
-RUN git clone https://github.com/njoy/NJOY2016 /opt/NJOY2016 && \
-    cd /opt/NJOY2016 && \
-    mkdir build && cd build && \
-    cmake -Dstatic=on .. && make 2>/dev/null && make install
+RUN if [ "$include_neutronics" = "true" ] ; \
+    then git clone https://github.com/njoy/NJOY2016 /opt/NJOY2016 ; \
+    cd /opt/NJOY2016 ; \
+    mkdir build ; \
+    cd build ; \
+    cmake -Dstatic=on .. ; \
+    make 2>/dev/null ; \
+    make install
+    fi
 
 # Clone and install Embree
 RUN if [ "$include_neutronics" = "true" ] ; \

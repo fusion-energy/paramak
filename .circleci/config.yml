@@ -13,7 +13,6 @@ jobs:
       - run:
           name: install
           command: |
-            pip install -r requirements.txt
             pip install neutronics_material_maker
             pip install parametric_plasma_source
             python setup.py install  # this dosen't support the optional packages like pip install .[neutronics] does
