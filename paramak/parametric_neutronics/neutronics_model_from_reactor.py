@@ -8,12 +8,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 try:
-    from parametric_plasma_source import PlasmaSource, SOURCE_SAMPLING_PATH
-except BaseException:
-    warnings.warn('parametric_plasma_source not found distributed plasma \
-            sources are not avaialbe in Neutronics simulations', UserWarning)
-
-try:
     import openmc
 except BaseException:
     warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
