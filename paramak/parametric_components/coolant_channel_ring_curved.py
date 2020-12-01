@@ -14,6 +14,8 @@ class CoolantChannelRingCurved(SweepCircleShape):
         ring_radius (float): radius of coolant channel ring.
         workplane (str, optional): plane in which the cross-sections of the
             coolant channels lie. Defaults to "XY".
+        start_angle (float, optional): angle at which the first channel in the
+            ring is placed. Defaults to 0.
         path_workplane (str, optional): plane in which the cross-sections of
             the coolant channels are swept. Defaults to "XZ".
         rotation_axis (str, optional): azimuthal axis around which the separate
@@ -35,6 +37,7 @@ class CoolantChannelRingCurved(SweepCircleShape):
         number_of_coolant_channels,
         ring_radius,
         mid_offset,
+        start_angle=0,
         stp_filename="CoolantChannelRingCurved.stp",
         stl_filename="CoolantChannelRingCurved.stl",
         material_tag="coolant_channel_mat",
@@ -44,6 +47,7 @@ class CoolantChannelRingCurved(SweepCircleShape):
         self.ring_radius = ring_radius
         self.mid_offset = mid_offset
         self.height = height
+        self.start_angle = start_angle
 
         super().__init__(
             path_points=self.path_points,
@@ -77,12 +81,12 @@ class CoolantChannelRingCurved(SweepCircleShape):
 
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of
-        coolant channels"""
+        coolant channels."""
 
         angles = list(
             np.linspace(
-                0,
-                360,
+                0 + self.start_angle,
+                360 + self.start_angle,
                 self.number_of_coolant_channels,
                 endpoint=False))
 
