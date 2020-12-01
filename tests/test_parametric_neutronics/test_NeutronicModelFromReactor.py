@@ -159,8 +159,6 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         assert Path("flux_on_2D_mesh_xz.png").exists() is True
         assert Path("flux_on_2D_mesh_xy.png").exists() is True
         assert Path("flux_on_2D_mesh_yz.png").exists() is True
-        
-
 
     def test_incorrect_settings(self):
         """Creates NeutronicsModelFromReactor objects and checks errors are
