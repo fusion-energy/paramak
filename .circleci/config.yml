@@ -76,6 +76,7 @@ jobs:
           path: test-reports
 
       - run: bash <(curl -s https://codecov.io/bash)
+  # @pullrequest we can't find a way of getting this next part to work, any hints appreciated
   # the following jobs fail on the publish to Dockerhub step. This may be due to a bad authentification
   # build-deploy-master:
   #   environment:
