@@ -3,9 +3,12 @@ import unittest
 
 import neutronics_material_maker as nmm
 import paramak
+import pytest
+import openmc
 
 
 class TestNeutronicsBallReactor(unittest.TestCase):
+    """Tests the neutronicsModelFromReactor including neutronics simulations"""
 
     # makes the 3d geometry
     my_reactor = paramak.BallReactor(
@@ -33,12 +36,21 @@ class TestNeutronicsBallReactor(unittest.TestCase):
             nmm.Material('eurofer')
         ])
 
+    source = openmc.Source()
+    # sets the location of the source to x=0 y=0 z=0
+    source.space = openmc.stats.Point((0, 0, 0))
+    # sets the direction to isotropic
+    source.angle = openmc.stats.Isotropic()
+    # sets the energy distribution to 100% 14MeV neutrons
+    source.energy = openmc.stats.Discrete([14e6], [1])
+
     def test_neutronics_model_attributes(self):
         """Makes a BallReactor neutronics model and simulates the TBR"""
 
         # makes the neutronics material
         neutronics_model = paramak.NeutronicsModelFromReactor(
             reactor=self.my_reactor,
+            source=openmc.Source(),
             materials={
                 'inboard_tf_coils_mat': 'copper',
                 'center_column_shield_mat': 'WC',
@@ -68,6 +80,77 @@ class TestNeutronicsBallReactor(unittest.TestCase):
 
         assert neutronics_model.simulation_particles_per_batch == 84
         assert isinstance(neutronics_model.simulation_particles_per_batch, int)
+
+    def test_reactor_from_shapes(self):
+        """Makes a reactor from two shapes, then mades a neutronics model
+        and tests the TBR simulation value"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat1',
+        )
+        test_shape2 = paramak.RotateSplineShape(
+            points=[(100, 100), (100, -100), (200, -100), (200, 100)],
+            material_tag='blanket_mat',
+            rotation_angle=180
+        )
+
+        test_reactor = paramak.Reactor([test_shape, test_shape2])
+        test_reactor.rotation_angle = 360
+
+        neutronics_model = paramak.NeutronicsModelFromReactor(
+            reactor=test_reactor,
+            source=self.source,
+            materials={
+                'mat1': 'copper',
+                'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
+            },
+            cell_tallies=['TBR', 'heating', 'flux'],
+            simulation_batches=5,
+            simulation_particles_per_batch=1e3,
+        )
+
+        # starts the neutronics simulation using trelis
+        neutronics_model.simulate(verbose=False, method='pymoab')
+
+        assert pytest.approx(
+            neutronics_model.results['TBR']['result'],
+            abs=0.1) == 0.12
+        assert pytest.approx(
+            neutronics_model.results['blanket_mat_heating']['MeV per source particle']['result'],
+            abs=1) == 4
+        assert pytest.approx(
+            neutronics_model.results['blanket_mat_flux']['Flux per source particle']['result'],
+            abs=5) == 82
+
+    def test_incorrect_settings(self):
+        """Creates NeutronicsModelFromReactor objects and checks errors are
+        raised correctly when arguments are incorrect."""
+
+        def test_incorrect_method():
+            """Makes a BallReactor neutronics model and simulates the TBR"""
+
+            # makes the neutronics material
+            neutronics_model = paramak.NeutronicsModelFromReactor(
+                reactor=self.my_reactor,
+                source=self.source,
+                materials={
+                    'inboard_tf_coils_mat': 'copper',
+                    'center_column_shield_mat': 'WC',
+                    'divertor_mat': 'eurofer',
+                    'firstwall_mat': 'eurofer',
+                    'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
+                    'blanket_rear_wall_mat': 'eurofer'},
+                cell_tallies=['TBR', 'flux', 'heating'],
+                simulation_batches=42,
+                simulation_particles_per_batch=84,
+            )
+
+            neutronics_model.create_neutronics_geometry(method='incorrect')
+
+        self.assertRaises(ValueError, test_incorrect_method)
+
+    # def test_tbr_simulation(self):
 
     # def test_tbr_simulation(self):
     #     """Makes a BallReactor neutronics model and simulates the TBR"""

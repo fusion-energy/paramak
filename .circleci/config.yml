@@ -7,13 +7,14 @@ jobs:
   # test:
   build:
     docker:
-      - image: openmcworkshop/paramak:dependencies_cq_master
+      - image: openmcworkshop/paramak:dependences_with_neutronics
     steps:
       - checkout
       - run:
           name: install
           command: |
-            pip install -r requirements.txt  # this includes optional packages
+            pip install neutronics_material_maker
+            pip install parametric_plasma_source
             python setup.py install  # this dosen't support the optional packages like pip install .[neutronics] does
 
       - run:

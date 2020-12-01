@@ -1,10 +1,17 @@
 scipy
 sympy
-# cadquery not installed via pip to avoid installing cadquery version 1
 plotly
 pytest
+pytest-cov
 numpy
 plasmaboundaries
 matplotlib
 pillow
-neutronics_material_maker
+
+# Note, cadquery not installed via pip to avoid installing cadquery version 1
+
+# cython  # needed for export_h5m with pymoab
+
+# Additional packages needed for neutronics simulations
+# neutronics_material_maker
+# parametric_plasma_source

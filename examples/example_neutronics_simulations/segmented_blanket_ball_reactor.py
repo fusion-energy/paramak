@@ -202,7 +202,7 @@ def make_model_and_simulate():
         inner_plasma_gap_radial_thickness=30,
         plasma_radial_thickness=300,
         outer_plasma_gap_radial_thickness=30,
-        firstwall_radial_thickness=3,
+        firstwall_radial_thickness=firstwall_radial_thickness,
         # http://www.euro-fusionscipub.org/wp-content/uploads/WPBBCP16_15535_submitted.pdf
         blanket_radial_thickness=100,
         blanket_rear_wall_radial_thickness=3,
@@ -212,9 +212,18 @@ def make_model_and_simulate():
         rotation_angle=360,
     )
 
+    source = openmc.Source()
+    # sets the location of the source to x=0 y=0 z=0
+    source.space = openmc.stats.Point((my_reactor.major_radius, 0, 0))
+    # sets the direction to isotropic
+    source.angle = openmc.stats.Isotropic()
+    # sets the energy distribution to 100% 14MeV neutrons
+    source.energy = openmc.stats.Discrete([14e6], [1])
+
     # makes the neutronics material
     neutronics_model = paramak.NeutronicsModelFromReactor(
         reactor=my_reactor,
+        source=source,
         materials={
             'inboard_tf_coils_mat': inboard_tf_coils_material,
             'center_column_shield_mat': center_column_shield_material,
