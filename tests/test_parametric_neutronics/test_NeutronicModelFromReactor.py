@@ -35,7 +35,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
             nmm.Material('SiC'),
             nmm.Material('eurofer')
         ])
-    
+
     source = openmc.Source()
     # sets the location of the source to x=0 y=0 z=0
     source.space = openmc.stats.Point((0, 0, 0))
