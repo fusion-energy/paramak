@@ -121,6 +121,7 @@ class Shape:
         self.z_min = None
         self.z_max = None
         self.graveyard_offset = None  # set by the make_graveyard method
+        self.patch = None
 
     @property
     def solid(self):
@@ -263,16 +264,16 @@ class Shape:
             for solid in self.solid.Solids():
                 all_volumes.append(solid.Volume())
             return all_volumes
-        else:
-            return [self.solid.val().Volume()]
+
+        return [self.solid.val().Volume()]
 
     @property
     def area(self):
         """Get the total surface area of the Shape. Returns a float"""
         if isinstance(self.solid, cq.Compound):
             return self.solid.Area()
-        else:
-            return self.solid.val().Area()
+
+        return self.solid.val().Area()
 
     @property
     def areas(self):
@@ -283,10 +284,10 @@ class Shape:
             for face in self.solid.Faces():
                 all_areas.append(face.Area())
             return all_areas
-        else:
-            for face in self.solid.val().Faces():
-                all_areas.append(face.Area())
-            return all_areas
+
+        for face in self.solid.val().Faces():
+            all_areas.append(face.Area())
+        return all_areas
 
     @property
     def hash_value(self):
@@ -538,14 +539,14 @@ class Shape:
             current_points_list = []
             instructions = []
             # groups together common connection types
-            for i, c in enumerate(connections):
-                if c == current_linetype:
+            for i, connection in enumerate(connections):
+                if connection == current_linetype:
                     current_points_list.append(XZ_points[i])
                 else:
                     current_points_list.append(XZ_points[i])
                     instructions.append(
                         {current_linetype: current_points_list})
-                    current_linetype = c
+                    current_linetype = connection
                     current_points_list = [XZ_points[i]]
             instructions.append({current_linetype: current_points_list})
 
@@ -732,8 +733,8 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as f:
-            exporters.exportShape(self.solid, "STL", f, tolerance)
+        with open(path_filename, "w") as out_file:
+            exporters.exportShape(self.solid, "STL", out_file, tolerance)
         print("Saved file as ", path_filename)
 
         return str(path_filename)
@@ -762,8 +763,8 @@ class Shape:
         elif self.stp_filename is not None:
             path_filename = Path(self.stp_filename)
 
-        with open(path_filename, "w") as f:
-            exporters.exportShape(self.solid, "STEP", f)
+        with open(path_filename, "w") as out_file:
+            exporters.exportShape(self.solid, "STEP", out_file)
 
         if units == 'cm':
             self._replace(
@@ -820,8 +821,8 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as f:
-            exporters.exportShape(self.solid, "SVG", f)
+        with open(path_filename, "w") as out_file:
+            exporters.exportShape(self.solid, "SVG", out_file)
         print("Saved file as ", path_filename)
 
         return str(path_filename)
@@ -889,20 +890,20 @@ class Shape:
 
         text_values = []
 
-        for i, p in enumerate(self.points[:-1]):
-            if len(p) == 3:
+        for i, point in enumerate(self.points[:-1]):
+            if len(point) == 3:
                 text_values.append(
                     "point number="
                     + str(i)
                     + "<br>"
                     + "connection to next point="
-                    + str(p[2])
+                    + str(point[2])
                     + "<br>"
                     + "x="
-                    + str(p[0])
+                    + str(point[0])
                     + "<br>"
                     + "z="
-                    + str(p[1])
+                    + str(point[1])
                     + "<br>"
                 )
             else:
@@ -911,10 +912,10 @@ class Shape:
                     + str(i)
                     + "<br>"
                     + "x="
-                    + str(p[0])
+                    + str(point[0])
                     + "<br>"
                     + "z="
-                    + str(p[1])
+                    + str(point[1])
                     + "<br>"
                 )
 
@@ -1068,8 +1069,8 @@ class Shape:
                 pattern string
         """
         # Create temp file
-        fh, abs_path = mkstemp()
-        with fdopen(fh, 'w') as new_file:
+        file_handle, abs_path = mkstemp()
+        with fdopen(file_handle, 'w') as new_file:
             with open(filename) as old_file:
                 for line in old_file:
                     new_file.write(line.replace(pattern, subst))

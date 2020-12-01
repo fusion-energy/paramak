@@ -108,8 +108,8 @@ class BlanketFPPoloidalSegments(BlanketFP):
         points = super().find_points(angles=self.get_angles())
 
         # every points straight connections
-        for p in points:
-            p[-1] = 'straight'
+        for point in points:
+            point[-1] = 'straight'
         self.points = points[:-1]
 
     def create_solid(self):
@@ -307,5 +307,5 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
     if returned_angles == []:
         msg = "Couldn't find optimum configuration for Blanket segments"
         raise ValueError(msg)
-    else:
-        return returned_angles
+
+    return returned_angles
