@@ -51,7 +51,7 @@ def make_model_and_simulate():
     # makes the neutronics material
     neutronics_model = paramak.NeutronicsModelFromReactor(
         reactor=my_reactor,
-        source 
+        source
         materials={
             'inboard_tf_coils_mat': 'copper',
             'center_column_shield_mat': 'WC',
