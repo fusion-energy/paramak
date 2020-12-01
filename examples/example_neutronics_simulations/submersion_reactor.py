@@ -33,9 +33,18 @@ def make_model_and_simulate(temperature):
     # material
     flibe = nmm.Material('FLiBe', temperature_in_C=temperature)
 
+    source = openmc.Source()
+    # sets the location of the source to x=0 y=0 z=0
+    source.space = openmc.stats.Point((my_reactor.major_radius, 0, 0))
+    # sets the direction to isotropic
+    source.angle = openmc.stats.Isotropic()
+    # sets the energy distribution to 100% 14MeV neutrons
+    source.energy = openmc.stats.Discrete([14e6], [1])
+
     # makes the neutronics model from the geometry and material allocations
     neutronics_model = paramak.NeutronicsModelFromReactor(
         reactor=my_reactor,
+        source=source,
         materials={
             'inboard_tf_coils_mat': 'eurofer',
             'center_column_shield_mat': 'eurofer',
