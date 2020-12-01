@@ -1,10 +1,11 @@
 
+import os
 import unittest
 
 import neutronics_material_maker as nmm
+import openmc
 import paramak
 import pytest
-import openmc
 
 
 class TestNeutronicsBallReactor(unittest.TestCase):
@@ -81,7 +82,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         assert neutronics_model.simulation_particles_per_batch == 84
         assert isinstance(neutronics_model.simulation_particles_per_batch, int)
 
-    def test_reactor_from_shapes(self):
+    def test_reactor_from_shapes_cell_tallies(self):
         """Makes a reactor from two shapes, then mades a neutronics model
         and tests the TBR simulation value"""
 
@@ -113,15 +114,50 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         # starts the neutronics simulation using trelis
         neutronics_model.simulate(verbose=False, method='pymoab')
 
-        assert pytest.approx(
-            neutronics_model.results['TBR']['result'],
-            abs=0.1) == 0.12
-        assert pytest.approx(
-            neutronics_model.results['blanket_mat_heating']['MeV per source particle']['result'],
-            abs=1) == 4
-        assert pytest.approx(
-            neutronics_model.results['blanket_mat_flux']['Flux per source particle']['result'],
-            abs=5) == 82
+    def test_reactor_from_shapes_2d_mesh_tallies(self):
+        """Makes a reactor from two shapes, then mades a neutronics model
+        and tests the TBR simulation value"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat1',
+        )
+        test_shape2 = paramak.RotateSplineShape(
+            points=[(100, 100), (100, -100), (200, -100), (200, 100)],
+            material_tag='blanket_mat',
+            rotation_angle=180
+        )
+
+        test_reactor = paramak.Reactor([test_shape, test_shape2])
+        test_reactor.rotation_angle = 360
+
+        neutronics_model = paramak.NeutronicsModelFromReactor(
+            reactor=test_reactor,
+            source=self.source,
+            materials={
+                'mat1': 'copper',
+                'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
+            },
+            mesh_tally_2D=['tritium_production', 'heating', 'flux'],
+            simulation_batches=5,
+            simulation_particles_per_batch=1e3,
+        )
+
+        # starts the neutronics simulation using trelis
+        neutronics_model.simulate(verbose=False, method='pymoab')
+        neutronics_model.get_results()
+        
+        assert Path("tritium_production_on_2D_mesh_xz.png").exists() is True
+        assert Path("tritium_production_on_2D_mesh_xy.png").exists() is True
+        assert Path("tritium_production_on_2D_mesh_yz.png").exists() is True
+        assert Path("heating_on_2D_mesh_xz.png").exists() is True
+        assert Path("heating_on_2D_mesh_xy.png").exists() is True
+        assert Path("heating_on_2D_mesh_yz.png").exists() is True
+        assert Path("flux_on_2D_mesh_xz.png").exists() is True
+        assert Path("flux_on_2D_mesh_xy.png").exists() is True
+        assert Path("flux_on_2D_mesh_yz.png").exists() is True
+        
+
 
     def test_incorrect_settings(self):
         """Creates NeutronicsModelFromReactor objects and checks errors are
