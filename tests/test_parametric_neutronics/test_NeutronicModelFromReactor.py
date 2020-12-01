@@ -1,6 +1,7 @@
 
 import os
 import unittest
+from pathlib import Path
 
 import neutronics_material_maker as nmm
 import openmc
@@ -118,6 +119,8 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         """Makes a reactor from two shapes, then mades a neutronics model
         and tests the TBR simulation value"""
 
+        os.system('rm *.png')
+
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
             material_tag='mat1',
@@ -139,14 +142,14 @@ class TestNeutronicsBallReactor(unittest.TestCase):
                 'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
             },
             mesh_tally_2D=['tritium_production', 'heating', 'flux'],
-            simulation_batches=5,
-            simulation_particles_per_batch=1e3,
+            simulation_batches=2,
+            simulation_particles_per_batch=10,
         )
 
         # starts the neutronics simulation using trelis
         neutronics_model.simulate(verbose=False, method='pymoab')
         neutronics_model.get_results()
-        
+
         assert Path("tritium_production_on_2D_mesh_xz.png").exists() is True
         assert Path("tritium_production_on_2D_mesh_xy.png").exists() is True
         assert Path("tritium_production_on_2D_mesh_yz.png").exists() is True
