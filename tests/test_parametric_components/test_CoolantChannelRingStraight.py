@@ -20,6 +20,7 @@ class TestCoolantChannelRingStraight(unittest.TestCase):
         """Checks that the default parameters of a CoolantChannelRingStraight are correct."""
 
         # assert self.test_shape.rotation_angle == 360
+        assert self.test_shape.start_angle == 0
         assert self.test_shape.stp_filename == "CoolantChannelRingStraight.stp"
         assert self.test_shape.stl_filename == "CoolantChannelRingStraight.stl"
         assert self.test_shape.material_tag == "coolant_channel_mat"
@@ -55,5 +56,14 @@ class TestCoolantChannelRingStraight(unittest.TestCase):
         assert self.test_shape.volume == pytest.approx(
             math.pi * (10 ** 2) * 100 * 8)
 
-    # need to add check to warn/raise error when there is coolant channel
-    # overlap and a test
+    def test_start_angle(self):
+        """Checks that the coolant channels are placed at the correct azimuthal placement
+        angles for a given start angle."""
+
+        assert self.test_shape.azimuth_placement_angle == [
+            0, 45, 90, 135, 180, 225, 270, 315
+        ]
+        self.test_shape.start_angle = 10
+        assert self.test_shape.azimuth_placement_angle == [
+            10, 55, 100, 145, 190, 235, 280, 325
+        ]
