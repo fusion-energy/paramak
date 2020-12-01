@@ -1188,7 +1188,7 @@ class Shape:
 
     def export_graveyard(
             self,
-            graveyard_offset=None,
+            graveyard_offset=100,
             filename="Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
@@ -1203,9 +1203,6 @@ class Shape:
         Returns:
             str: the stp filename created
         """
-
-        if graveyard_offset is None:
-            graveyard_offset = self.graveyard_offset
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
         self.graveyard.export_stp(Path(filename))
