@@ -35,6 +35,14 @@ class TestNeutronicsBallReactor(unittest.TestCase):
             nmm.Material('SiC'),
             nmm.Material('eurofer')
         ])
+    
+    source = openmc.Source()
+    # sets the location of the source to x=0 y=0 z=0
+    source.space = openmc.stats.Point((0, 0, 0))
+    # sets the direction to isotropic
+    source.angle = openmc.stats.Isotropic()
+    # sets the energy distribution to 100% 14MeV neutrons
+    source.energy = openmc.stats.Discrete([14e6], [1])
 
     def test_neutronics_model_attributes(self):
         """Makes a BallReactor neutronics model and simulates the TBR"""
@@ -90,17 +98,9 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape, test_shape2])
         test_reactor.rotation_angle = 360
 
-        source = openmc.Source()
-        # sets the location of the source to x=0 y=0 z=0
-        source.space = openmc.stats.Point((0, 0, 0))
-        # sets the direction to isotropic
-        source.angle = openmc.stats.Isotropic()
-        # sets the energy distribution to 100% 14MeV neutrons
-        source.energy = openmc.stats.Discrete([14e6], [1])
-
         neutronics_model = paramak.NeutronicsModelFromReactor(
             reactor=test_reactor,
-            source=source,
+            source=self.source,
             materials={
                 'mat1': 'copper',
                 'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
@@ -122,6 +122,33 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         assert pytest.approx(
             neutronics_model.results['blanket_mat_flux']['Flux per source particle']['result'],
             abs=5) == 82
+
+    def test_incorrect_settings(self):
+        """Creates NeutronicsModelFromReactor objects and checks errors are
+        raised correctly when arguments are incorrect."""
+
+        def test_incorrect_method():
+            """Makes a BallReactor neutronics model and simulates the TBR"""
+
+            # makes the neutronics material
+            neutronics_model = paramak.NeutronicsModelFromReactor(
+                reactor=self.my_reactor,
+                source=self.source,
+                materials={
+                    'inboard_tf_coils_mat': 'copper',
+                    'center_column_shield_mat': 'WC',
+                    'divertor_mat': 'eurofer',
+                    'firstwall_mat': 'eurofer',
+                    'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
+                    'blanket_rear_wall_mat': 'eurofer'},
+                cell_tallies=['TBR', 'flux', 'heating'],
+                simulation_batches=42,
+                simulation_particles_per_batch=84,
+            )
+
+            neutronics_model.create_neutronics_geometry(method='incorrect')
+
+        self.assertRaises(ValueError, test_incorrect_method)
 
     # def test_tbr_simulation(self):
 
