@@ -98,7 +98,6 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         )
 
         test_reactor = paramak.Reactor([test_shape, test_shape2])
-        test_reactor.rotation_angle = 360
 
         neutronics_model = paramak.NeutronicsModelFromReactor(
             reactor=test_reactor,
@@ -132,7 +131,6 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         )
 
         test_reactor = paramak.Reactor([test_shape, test_shape2])
-        test_reactor.rotation_angle = 360
 
         neutronics_model = paramak.NeutronicsModelFromReactor(
             reactor=test_reactor,
