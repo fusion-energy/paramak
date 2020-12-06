@@ -104,7 +104,6 @@ class NeutronicsModelFromReactor():
         if hasattr(reactor, 'rotation_angle'):
             if reactor.rotation_angle != 360:
                 reactor.rotation_angle = 360
-                # TODO make use of reactor.create_solids() here
 
     @property
     def faceting_tolerance(self):
