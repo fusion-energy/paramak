@@ -104,8 +104,6 @@ class NeutronicsModelFromReactor():
         if hasattr(reactor, 'rotation_angle'):
             if reactor.rotation_angle != 360:
                 reactor.rotation_angle = 360
-                print('remaking reactor as it was not set to 360 degrees')
-                reactor.solid
                 # TODO make use of reactor.create_solids() here
 
     @property
