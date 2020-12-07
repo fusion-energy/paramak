@@ -102,8 +102,7 @@ class NeutronicsModelFromReactor():
         # Only 360 degree models are supported for now as reflecting surfaces
         # are needed for sector models and they are not currently supported
         if hasattr(reactor, 'rotation_angle'):
-            if reactor.rotation_angle != 360:
-                reactor.rotation_angle = 360
+            reactor.rotation_angle = 360
 
     @property
     def faceting_tolerance(self):
