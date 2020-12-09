@@ -270,7 +270,8 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_stp(self, output_folder="", graveyard_offset=100):
+    def export_stp(self, output_folder="", graveyard_offset=100,
+        solid_or_wire='solid'):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 
@@ -279,6 +280,9 @@ class Reactor:
             graveyard_offset (float, optional): the offset between the largest
                 edge of the geometry and inner bounding shell created. Defaults
                 to 100.
+            solid_or_wire (str, optional): the object to export can be either
+                'solid' which exports 3D solid shapes or the 'wire' which
+                exports the wire edges of the shape. Defaults to 'solid'.
         Returns:
             list: a list of stp filenames created
         """
@@ -299,7 +303,10 @@ class Reactor:
                 )
             filenames.append(
                 str(Path(output_folder) / Path(entry.stp_filename)))
-            entry.export_stp(Path(output_folder) / Path(entry.stp_filename))
+            entry.export_stp(
+                filename=Path(output_folder) / Path(entry.stp_filename),
+                solid_or_wire=solid_or_wire
+            )
 
         # creates a graveyard (bounding shell volume) which is needed for
         # nuetronics simulations

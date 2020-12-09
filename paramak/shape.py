@@ -112,6 +112,7 @@ class Shape:
 
         # properties calculated internally by the class
         self.solid = None
+        self.wire = None
         self.render_mesh = None
         # self.volume = None
         self.hash_value = None
@@ -138,6 +139,22 @@ class Shape:
     @solid.setter
     def solid(self, value):
         self._solid = value
+
+    @property
+    def wire(self):
+        """The CadQuery wire of the 3d object. Returns a CadQuery workplane
+        or CadQuery Compound"""
+
+        ignored_keys = ["_wire", "_solid", "_hash_value"]
+        if get_hash(self, ignored_keys) != self.hash_value:
+            self.create_solid()
+            self.hash_value = get_hash(self, ignored_keys)
+
+        return self._wire
+
+    @wire.setter
+    def wire(self, value):
+        self._wire = value
 
     @property
     def cut(self):
@@ -739,7 +756,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_stp(self, filename=None, units='mm'):
+    def export_stp(self, filename=None, units='mm', solid_or_wire='solid'):
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -749,6 +766,9 @@ class Shape:
             filename (str): the filename of the stp
             units (str): the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
+            solid_or_wire (str, optional): the object to export can be either
+                'solid' which exports 3D solid shapes or the 'wire' which
+                exports the wire edges of the shape. Defaults to 'solid'.
         """
 
         if filename is not None:
@@ -764,7 +784,13 @@ class Shape:
             path_filename = Path(self.stp_filename)
 
         with open(path_filename, "w") as out_file:
-            exporters.exportShape(self.solid, "STEP", out_file)
+            if solid_or_wire == 'solid':
+                exporters.exportShape(self.solid, "STEP", out_file)
+            elif solid_or_wire == 'wire':
+                exporters.exportShape(self.wire, "STEP", out_file)
+            else:
+                raise ValueError("The solid_or_wire argument for export_stp \
+                    only accepts 'solid' or 'wire'", self)
 
         if units == 'cm':
             self._replace(
