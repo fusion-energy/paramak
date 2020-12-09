@@ -49,6 +49,4 @@ class TestTFCoilCasing(unittest.TestCase):
         assert Path("test_wire.stp").stat().st_size < \
             Path("test_solid2.stp").stat().st_size
 
-        os.system("rm test_solid.stp")
-        os.system("rm test_solid2.stp")
-        os.system("rm test_wire.stp")
+        os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
