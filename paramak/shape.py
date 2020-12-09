@@ -756,7 +756,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_stp(self, filename=None, units='mm', solid_or_wire='solid'):
+    def export_stp(self, filename=None, units='mm', mode='solid'):
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is

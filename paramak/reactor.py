@@ -271,7 +271,7 @@ class Reactor:
         return str(path_filename)
 
     def export_stp(self, output_folder="", graveyard_offset=100,
-                   solid_or_wire='solid'):
+                   mode='solid'):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 

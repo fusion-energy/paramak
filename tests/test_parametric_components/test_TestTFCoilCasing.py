@@ -34,9 +34,7 @@ class TestTFCoilCasing(unittest.TestCase):
         """Exports and stp file with solid_or_wire = solid and wire and checks
         that the outputs exist and relative file sizes are correct."""
 
-        os.system("rm test_solid.stp")
-        os.system("rm test_solid2.stp")
-        os.system("rm test_wire.stp")
+        os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
         self.test_shape.export_stp('test_solid.stp', solid_or_wire='solid')
         self.test_shape.export_stp('test_solid2.stp')
