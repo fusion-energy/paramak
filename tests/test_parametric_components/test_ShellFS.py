@@ -12,12 +12,13 @@ class TestShellFS(unittest.TestCase):
             height=50,
             width=50,
             rotation_angle=90,
-            center_point=(100,100)
+            center_point=(100, 100)
         )
 
     def test_creation_with_different_kinds(self):
 
-        casing_int = paramak.ShellFS(shape=self.test_shape, kind='intersection')
+        casing_int = paramak.ShellFS(
+            shape=self.test_shape, kind='intersection')
         casing_int.export_stp('int.stp')
         casing_arc = paramak.ShellFS(shape=self.test_shape, kind='arc')
         casing_arc.export_stp('arc.stp')

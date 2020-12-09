@@ -72,9 +72,9 @@ class ShellFS(Shape):
         if self.shape.rotation_angle < 360:
             # rotation angle is set by the self.shapes rotation angle
             cutting_wedge = CuttingWedgeFS(self.shape)
-            # this trims the sold so that it does not exceed the rotation angle 
+            # this trims the sold so that it does not exceed the rotation angle
             solid = solid.cut(cutting_wedge.solid)
 
         self.solid = solid
 
-        return solid     
+        return solid
