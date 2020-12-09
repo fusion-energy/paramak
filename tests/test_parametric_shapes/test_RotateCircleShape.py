@@ -1,6 +1,8 @@
 
 import math
+import os
 import unittest
+from pathlib import Path
 
 import pytest
 from paramak import RotateCircleShape
@@ -80,6 +82,32 @@ class TestRotateCircleShape(unittest.TestCase):
         assert outer_shape.volume == pytest.approx(
             outer_shape_volume - self.test_shape.volume
         )
+
+    def test_export_stp(self):
+        """Exports and stp file with solid_or_wire = solid and wire and checks
+        that the outputs exist and relative file sizes are correct."""
+
+        os.system("rm test_solid.stp")
+        os.system("rm test_solid2.stp")
+        os.system("rm test_wire.stp")
+
+        self.test_shape.export_stp('test_solid.stp',solid_or_wire='solid')
+        self.test_shape.export_stp('test_solid2.stp')
+        self.test_shape.export_stp('test_wire.stp',solid_or_wire='wire')
+        
+        assert Path("test_solid.stp").exists() is True
+        assert Path("test_solid2.stp").exists() is True
+        assert Path("test_wire.stp").exists() is True
+
+        assert Path("test_solid.stp").stat().st_size == \
+            Path("test_solid2.stp").stat().st_size
+        # the circle wire file is actually larger than the circle solid file
+        # assert Path("test_wire.stp").stat().st_size < \
+        #     Path("test_solid2.stp").stat().st_size
+
+        os.system("rm test_solid.stp")
+        os.system("rm test_solid2.stp")
+        os.system("rm test_wire.stp")
 
 
 if __name__ == "__main__":
