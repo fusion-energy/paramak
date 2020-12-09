@@ -244,7 +244,7 @@ class TestRotateStraightShape(unittest.TestCase):
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
     def test_export_stp_with_incorrect_args(self):
-        """Checks errors are raised when incorrect arguments are used 
+        """Checks errors are raised when incorrect arguments are used
         """
 
         def export_mode_incorrect():
