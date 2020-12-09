@@ -155,7 +155,7 @@ class TestRotateMixedShape(unittest.TestCase):
         )
         assert test_shape.volume > 10 * 10
 
-    def test_export_stp(self):
+    def test_export_stp_extension(self):
         """Creates a RotateMixedShape and checks that a stp file of the shape
         can be exported with the correct suffix using the export_stp method."""
 

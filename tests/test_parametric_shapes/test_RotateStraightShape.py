@@ -7,8 +7,7 @@ from pathlib import Path
 import pytest
 from paramak import RotateStraightShape
 
-import os
-from pathlib import Path
+
 class TestRotateStraightShape(unittest.TestCase):
 
     def setUp(self):
@@ -119,7 +118,7 @@ class TestRotateStraightShape(unittest.TestCase):
         assert test_shape.areas.count(
             pytest.approx(math.pi * (70 * 2) * 50 / 2)) == 1
 
-    def test_export_stp(self):
+    def test_export_stp_extension(self):
         """Creates a RotateStraightShape and checks that a stp file of the
         shape can be exported with the correct suffix using the export_stp
         method."""

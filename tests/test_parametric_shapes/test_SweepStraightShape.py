@@ -109,7 +109,7 @@ class TestSweepStraightShape(unittest.TestCase):
         os.system("rm test_solid2.stp")
         os.system("rm test_wire.stp")
 
-    def test_export_stp(self):
+    def test_export_stp_extension(self):
         """Exports and stp file with solid_or_wire = solid and wire and checks
         that the outputs exist and relative file sizes are correct."""
 

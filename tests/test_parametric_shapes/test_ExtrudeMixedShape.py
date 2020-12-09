@@ -85,7 +85,7 @@ class TestExtrudeMixedShape(unittest.TestCase):
         assert outer_shape.volume == pytest.approx(3462, abs=2)
         assert outer_shape_with_cut.volume == pytest.approx(3462 - 1068, abs=2)
 
-    def test_export_stp(self):
+    def test_export_stp_extension(self):
         """Creates an ExtrudeMixedShape and checks that a stp file of the shape
         can be exported with the correct suffix using the export_stp method."""
 
