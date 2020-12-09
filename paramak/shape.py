@@ -756,7 +756,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_stp(self, filename=None, units='mm', solid_or_wire='solid'):
+    def export_stp(self, filename=None, units='mm', mode='solid'):
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -766,7 +766,7 @@ class Shape:
             filename (str): the filename of the stp
             units (str): the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
-            solid_or_wire (str, optional): the object to export can be either
+            mode (str, optional): the object to export can be either
                 'solid' which exports 3D solid shapes or the 'wire' which
                 exports the wire edges of the shape. Defaults to 'solid'.
         """
@@ -784,12 +784,12 @@ class Shape:
             path_filename = Path(self.stp_filename)
 
         with open(path_filename, "w") as out_file:
-            if solid_or_wire == 'solid':
+            if mode == 'solid':
                 exporters.exportShape(self.solid, "STEP", out_file)
-            elif solid_or_wire == 'wire':
+            elif mode == 'wire':
                 exporters.exportShape(self.wire, "STEP", out_file)
             else:
-                raise ValueError("The solid_or_wire argument for export_stp \
+                raise ValueError("The mode argument for export_stp \
                     only accepts 'solid' or 'wire'", self)
 
         if units == 'cm':

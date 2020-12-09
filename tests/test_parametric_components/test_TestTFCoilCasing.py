@@ -31,17 +31,15 @@ class TestTFCoilCasing(unittest.TestCase):
         assert self.test_shape.solid is not None
 
     def test_export_stp(self):
-        """Exports and stp file with solid_or_wire = solid and wire and checks
+        """Exports and stp file with mode = solid and wire and checks
         that the outputs exist and relative file sizes are correct."""
 
-        os.system("rm test_solid.stp")
-        os.system("rm test_solid2.stp")
-        os.system("rm test_wire.stp")
+        os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp',solid_or_wire='solid')
+        self.test_shape.export_stp('test_solid.stp', mode='solid')
         self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp',solid_or_wire='wire')
-        
+        self.test_shape.export_stp('test_wire.stp', mode='wire')
+
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True

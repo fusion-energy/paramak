@@ -101,7 +101,9 @@ class ExtrudeCircleShape(Shape):
 
         self.wire = wire
 
-        solid = wire.extrude(distance=extrusion_distance, both=self.extrude_both)
+        solid = wire.extrude(
+            distance=extrusion_distance,
+            both=self.extrude_both)
 
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)
