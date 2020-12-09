@@ -125,7 +125,8 @@ class TestBallReactor(unittest.TestCase):
     #     reconstructed and the previously constructed shapes are returned. Checks that when
     #     .shapes_and_components is called again with changes to the reactor, the shapes
     #     in the reactor are reconstructed and these new shapes are returned. Checks that
-    #     the reactor_hash_value is only updated when the reactor is reconstructed."""
+    # the reactor_hash_value is only updated when the reactor is
+    # reconstructed."""
 
     #     self.test_reactor.pf_coil_radial_thicknesses = [50, 50, 50, 50]
     #     self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50]
@@ -242,7 +243,7 @@ class TestBallReactor(unittest.TestCase):
             output_folder='reactor_wires',
             solid_or_wire='wire'
         )
-        
+
         # assert Path("test_solid.stp").exists() is True
         # assert Path("test_solid2.stp").exists() is True
         # assert Path("test_wire.stp").exists() is True

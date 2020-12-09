@@ -9,6 +9,8 @@ from paramak import RotateStraightShape
 
 import os
 from pathlib import Path
+
+
 class TestRotateStraightShape(unittest.TestCase):
 
     def setUp(self):
@@ -231,10 +233,10 @@ class TestRotateStraightShape(unittest.TestCase):
         os.system("rm test_solid2.stp")
         os.system("rm test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp',solid_or_wire='solid')
+        self.test_shape.export_stp('test_solid.stp', solid_or_wire='solid')
         self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp',solid_or_wire='wire')
-        
+        self.test_shape.export_stp('test_wire.stp', solid_or_wire='wire')
+
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
