@@ -14,16 +14,14 @@ class TruncatedTriangle(unittest.TestCase):
             l2=20,
             l3=30,
             pivot_angle=0,
-            pivot_point=(100,50),
+            pivot_point=(100, 50),
             rotation_angle=45,
         )
-
 
     def test_component_creation(self):
         """Creates a TruncatedTriangle object and checks that the .solid is not None."""
 
         assert self.test_shape.solid is not None
-
 
     def test_check_number_of_surfaces(self):
         """Counts the surfaces in a fully rotated and partly rotated TruncatedTriangle."""
@@ -34,7 +32,6 @@ class TruncatedTriangle(unittest.TestCase):
 
         assert len(self.test_shape.areas) == 4
 
- 
     def test_args_do_not_impact_volume(self):
         """Changes args that should not impact the volume and checks that they don't"""
 
@@ -42,35 +39,38 @@ class TruncatedTriangle(unittest.TestCase):
 
         self.test_shape.pivot_angle = 180
 
-        assert pytest.approx(self.test_shape.volume, rel=0.01) == test_shape_vol
+        assert pytest.approx(
+            self.test_shape.volume,
+            rel=0.01) == test_shape_vol
 
         self.test_shape.pivot_point = (100, 300)
 
-        assert pytest.approx(self.test_shape.volume, rel=0.01) == test_shape_vol
-
+        assert pytest.approx(
+            self.test_shape.volume,
+            rel=0.01) == test_shape_vol
 
     def test_args_impact_volume(self):
         """Changes args that should impact the volume and checks that they do"""
 
         test_shape_vol = self.test_shape.volume
-        
-        self.test_shape.pivot_angle=45
-        
-        assert self.test_shape.volume > test_shape_vol
-        
-        self.test_shape.pivot_angle=0
 
-        self.test_shape.l1=42
+        self.test_shape.pivot_angle = 45
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.l1=10
-        self.test_shape.l2=42
+        self.test_shape.pivot_angle = 0
+
+        self.test_shape.l1 = 42
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.l1=10
-        self.test_shape.l2=20
-        self.test_shape.l3=42
+        self.test_shape.l1 = 10
+        self.test_shape.l2 = 42
+
+        assert self.test_shape.volume > test_shape_vol
+
+        self.test_shape.l1 = 10
+        self.test_shape.l2 = 20
+        self.test_shape.l3 = 42
 
         assert self.test_shape.volume > test_shape_vol
