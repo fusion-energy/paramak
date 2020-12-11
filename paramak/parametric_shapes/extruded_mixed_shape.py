@@ -80,7 +80,11 @@ class ExtrudeMixedShape(Shape):
         else:
             extrusion_distance = -self.distance / 2.0
 
-        solid = solid.close().extrude(
+        wire = solid.close()
+
+        self.wire = wire
+
+        solid = wire.extrude(
             distance=extrusion_distance,
             both=self.extrude_both)
 

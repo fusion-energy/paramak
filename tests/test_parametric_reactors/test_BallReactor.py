@@ -125,7 +125,8 @@ class TestBallReactor(unittest.TestCase):
         reconstructed and the previously constructed shapes are returned. Checks that when
         .shapes_and_components is called again with changes to the reactor, the shapes
         in the reactor are reconstructed and these new shapes are returned. Checks that
-        the reactor_hash_value is only updated when the reactor is reconstructed."""
+    the reactor_hash_value is only updated when the reactor is
+    reconstructed."""
 
         self.test_reactor.pf_coil_radial_thicknesses = [50, 50, 50, 50]
         self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50]
@@ -224,3 +225,23 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.divertor_position = "upper"
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 10
+
+    def test_export_stp(self):
+        """Exports and stp file with mode = solid and wire and checks
+        that the outputs folders exist."""
+
+        os.system("rm -rf reactor_solids")
+        os.system("rm -rf reactor_wires")
+
+        self.test_reactor.export_stp(
+            output_folder='reactor_solids',
+            mode='solid'
+        )
+
+        self.test_reactor.export_stp(
+            output_folder='reactor_wires',
+            mode='wire'
+        )
+
+        assert Path("reactor_wires").exists() is True
+        assert Path("reactor_solids").exists() is True

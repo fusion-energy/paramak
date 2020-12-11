@@ -96,19 +96,22 @@ class SweepCircleShape(Shape):
             factor *= -1
 
         if self.force_cross_section:
-            solid = cq.Workplane(self.workplane).moveTo(0, 0)
+            wire = cq.Workplane(self.workplane).moveTo(0, 0)
             for point in self.path_points[:-1]:
-                solid = solid.workplane(offset=point[1] * factor).\
+                wire = wire.workplane(offset=point[1] * factor).\
                     moveTo(point[0], 0).\
                     circle(self.radius).\
                     moveTo(0, 0).\
                     workplane(offset=-point[1] * factor)
-            solid = solid.workplane(offset=self.path_points[-1][1] * factor).moveTo(
+
+            self.wire = wire
+
+            solid = wire.workplane(offset=self.path_points[-1][1] * factor).moveTo(
                 self.path_points[-1][0], 0).circle(self.radius).sweep(path, multisection=True)
 
         if not self.force_cross_section:
 
-            solid = (
+            wire = (
                 cq.Workplane(self.workplane)
                 .workplane(offset=self.path_points[0][1] * factor)
                 .moveTo(self.path_points[0][0], 0)
@@ -120,8 +123,11 @@ class SweepCircleShape(Shape):
                 .moveTo(self.path_points[-1][0], 0)
                 .workplane()
                 .circle(self.radius)
-                .sweep(path, multisection=True)
             )
+
+            self.wire = wire
+
+            solid = wire.sweep(path, multisection=True)
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)

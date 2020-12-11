@@ -46,7 +46,11 @@ class RotateMixedShape(Shape):
 
         solid = super().create_solid()
 
-        solid = solid.close().revolve(self.rotation_angle)
+        wire = solid.close()
+
+        self.wire = wire
+
+        solid = wire.revolve(self.rotation_angle)
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)

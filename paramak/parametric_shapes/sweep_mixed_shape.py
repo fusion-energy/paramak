@@ -79,7 +79,12 @@ class SweepMixedShape(Shape):
 
         solid = super().create_solid()
         path = cq.Workplane(self.path_workplane).spline(self.path_points)
-        solid = solid.close().sweep(path, multisection=True)
+
+        wire = solid.close()
+
+        self.wire = wire
+
+        solid = wire.sweep(path, multisection=True)
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)

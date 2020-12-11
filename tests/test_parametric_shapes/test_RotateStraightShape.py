@@ -118,7 +118,7 @@ class TestRotateStraightShape(unittest.TestCase):
         assert test_shape.areas.count(
             pytest.approx(math.pi * (70 * 2) * 50 / 2)) == 1
 
-    def test_export_stp(self):
+    def test_export_stp_extension(self):
         """Creates a RotateStraightShape and checks that a stp file of the
         shape can be exported with the correct suffix using the export_stp
         method."""
@@ -221,6 +221,39 @@ class TestRotateStraightShape(unittest.TestCase):
         assert initial_hash_value == self.test_shape.hash_value
         assert self.test_shape.solid is not None
         assert initial_hash_value != self.test_shape.hash_value
+
+    def test_export_stp(self):
+        """Exports and stp file with mode = solid and wire and checks
+        that the outputs exist and relative file sizes are correct."""
+
+        os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
+
+        self.test_shape.export_stp('test_solid.stp', mode='solid')
+        self.test_shape.export_stp('test_solid2.stp')
+        self.test_shape.export_stp('test_wire.stp', mode='wire')
+
+        assert Path("test_solid.stp").exists() is True
+        assert Path("test_solid2.stp").exists() is True
+        assert Path("test_wire.stp").exists() is True
+
+        assert Path("test_solid.stp").stat().st_size == \
+            Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < \
+            Path("test_solid2.stp").stat().st_size
+
+        os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
+
+    def test_export_stp_with_incorrect_args(self):
+        """Checks errors are raised when incorrect arguments are used
+        """
+
+        def export_mode_incorrect():
+            self.test_shape.export_stp(
+                'test_solid.stp',
+                mode='coucou'
+            )
+
+        self.assertRaises(ValueError, export_mode_incorrect)
 
 
 if __name__ == "__main__":
