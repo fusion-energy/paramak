@@ -64,10 +64,15 @@ class ShellFS(Shape):
     def create_solid(self):
         """Creates a 3D solid by creating a shell around a Shape"""
 
+        temp_angle = self.shape.rotation_angle
+        self.shape.rotation_angle = 360
+
         solid = self.shape.solid.shell(
             thickness=self.thickness,
             kind=self.kind,
         )
+
+        self.shape.rotation_angle = temp_angle
 
         if self.shape.rotation_angle < 360:
             # rotation angle is set by the self.shapes rotation angle
