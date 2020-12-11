@@ -11,22 +11,22 @@ class ShellFS(Shape):
     Args:
         shape (paramak.Shape): the shape to create a shell / 3D offset around
         thickness (float): the thickness of the shell casing around the shape
-            (cm). Passed directly to CadQuery.shell(). Defaults to 10.
+            (cm). Passed directly to CadQuery.shell(). Defaults to 10.0.
         kind (str, optional) : the method used to connect gaps in the resulting
             shelled shape. Options include 'arc' or 'intersection'. Use 'arc'
             for rounded edges 'intersection' for sharp edges. Passed directly
             to CadQuery.shell(). Defaults to intersection.
-        stp_filename (str, optional): defaults to
+        stp_filename (str, optional): Defaults to
             "ShellFS.stp".
-        stl_filename (str, optional): defaults to
+        stl_filename (str, optional): Defaults to
             "ShellFS.stl".
-        material_tag (str, optional): defaults to "pf_coil_case_mat".
+        material_tag (str, optional): Defaults to "pf_coil_case_mat".
     """
 
     def __init__(
         self,
         shape,
-        thickness=10,
+        thickness=10.0,
         kind='intersection',
         stp_filename="ShellFS.stp",
         stl_filename="ShellFS.stl",
