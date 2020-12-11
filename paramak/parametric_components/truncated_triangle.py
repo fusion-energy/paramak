@@ -76,28 +76,24 @@ class TruncatedTriangle(RotateStraightShape):
 
         points = [
             (
-                self.pivot_point
-            )
+                self.pivot_point[0] + self.l1 / 2.0,
+                self.pivot_point[1]
+            ),
+            (
+                self.pivot_point[0] - self.l1 / 2.0,
+                self.pivot_point[1]
+            ),
+            (
+                self.pivot_point[0] - self.l2 / 2.0,
+                self.pivot_point[1] - self.l3
+            ),
+            (
+                self.pivot_point[0] + self.l2 / 2.0,
+                self.pivot_point[1] - self.l3
+            ),
         ]
-        points = [
-            (
-                self.center_point[0] + self.width / 2.0,
-                self.center_point[1] + self.height / 2.0,
-            ),  # upper right
-            (
-                self.center_point[0] + self.width / 2.0,
-                self.center_point[1] - self.height / 2.0,
-            ),  # lower right
-            (
-                self.center_point[0] - self.width / 2.0,
-                self.center_point[1] - self.height / 2.0,
-            ),  # lower left
-            (
-                self.center_point[0] - self.width / 2.0,
-                self.center_point[1] + self.height / 2.0,
-            )
-        ]
-
-        rotate
+       
+        for point in points:
+            point = rotate(origin=pivot_point, point=point, angle=self.pivot_angle)
 
         self.points = points
