@@ -6,10 +6,10 @@ import paramak
 import pytest
 
 
-class TruncatedTriangle(unittest.TestCase):
+class RotatedTrapezoid(unittest.TestCase):
 
     def setUp(self):
-        self.test_shape = paramak.TruncatedTriangle(
+        self.test_shape = paramak.RotatedTrapezoid(
             length_1=10,
             length_2=20,
             length_3=30,
@@ -19,12 +19,14 @@ class TruncatedTriangle(unittest.TestCase):
         )
 
     def test_component_creation(self):
-        """Creates a TruncatedTriangle object and checks that the .solid is not None."""
+        """Creates a RotatedTrapezoid object and checks that the .solid is not
+        None."""
 
         assert self.test_shape.solid is not None
 
     def test_check_number_of_surfaces(self):
-        """Counts the surfaces in a fully rotated and partly rotated TruncatedTriangle."""
+        """Counts the surfaces in a fully rotated and partly rotated
+        RotatedTrapezoid."""
 
         assert len(self.test_shape.areas) == 6
 
@@ -33,7 +35,8 @@ class TruncatedTriangle(unittest.TestCase):
         assert len(self.test_shape.areas) == 4
 
     def test_args_do_not_impact_volume(self):
-        """Changes args that should not impact the volume and checks that they don't"""
+        """Changes args that should not impact the volume and checks that they
+        do not impact the volume"""
 
         test_shape_vol = self.test_shape.volume
 
@@ -50,7 +53,8 @@ class TruncatedTriangle(unittest.TestCase):
             rel=0.01) == test_shape_vol
 
     def test_args_impact_volume(self):
-        """Changes args that should impact the volume and checks that they do"""
+        """Changes args that should impact the volume and checks that the
+        volume changes as a result of the argument changes"""
 
         test_shape_vol = self.test_shape.volume
 

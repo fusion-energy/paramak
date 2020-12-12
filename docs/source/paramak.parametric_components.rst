@@ -538,17 +538,17 @@ ToroidalFieldCoilTripleArc()
    :members:
    :show-inheritance:
 
-TruncatedTriangle()
-^^^^^^^^^^^^^^^^^^^
+RotatedTrapezoid()
+^^^^^^^^^^^^^^^^^^
 
-|TruncatedTrianglestp| |TruncatedTrianglesvg|
+|RotatedTrapezoid| |RotatedTrapezoid|
 
-.. |TruncatedTrianglestp| image:: https://user-images.githubusercontent.com/8583900/101964551-b42aad00-3c09-11eb-8ff2-fc0e52ba33cc.png
+.. |RotatedTrapezoid| image:: https://user-images.githubusercontent.com/8583900/101964551-b42aad00-3c09-11eb-8ff2-fc0e52ba33cc.png
    :width: 240px
-.. |TruncatedTrianglesvg| image:: https://user-images.githubusercontent.com/8583900/101966787-06230100-3c11-11eb-8d70-587b50aaf987.png
+.. |RotatedTrapezoid| image:: https://user-images.githubusercontent.com/8583900/101966787-06230100-3c11-11eb-8d70-587b50aaf987.png
    :width: 510px
 
-.. automodule:: paramak.parametric_components.truncated_triangle
+.. automodule:: paramak.parametric_components.rotated_trapezoid
    :members:
    :show-inheritance:
 

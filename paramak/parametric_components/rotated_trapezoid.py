@@ -5,21 +5,25 @@ from paramak import RotateStraightShape
 from paramak.utils import rotate
 
 
-class TruncatedTriangle(RotateStraightShape):
-    """Creates a rectangular poloidal field coil.
+class RotatedTrapezoid(RotateStraightShape):
+    """Creates a rotated trapezoid (truncated triangle) shape.
 
     Args:
-        length_1 (float): the (cm).
-        length_2 (float): the horizontal (x axis) width of the coil (cm).
-        length_3 (float): the center of the coil (x,z) values
+        length_1 (float): the length of the top parrallel edge of the trapezoid
+            (cm).
+        length_2 (float): the length of the base parrallel edge of the
+            trapezoid (cm).
+        length_3 (float): the height of the trapezoid, the distances from top
+            to base (cm).
         pivot_point ((float, float)): the coordinates of the center of
-            rotation (x,z) (cm).
+            rotation (x,z). The piviot point is located in the center of the
+            length_1 edge (cm).
         pivot_angle (float, optional): the angle (in degrees) to pivot (rotate)
-            the shape by on the XY plane. Defaults to 0.
-        stp_filename (str, optional): defaults to "TruncatedTriangle.stp".
-        stl_filename (str, optional): defaults to "TruncatedTriangle.stl".
-        name (str, optional): defaults to "truncated_tri".
-        material_tag (str, optional): defaults to "truncated_tri_mat".
+            the shape by around the pivot point. Defaults to 0.
+        stp_filename (str, optional): defaults to "RotatedTrapezoid.stp".
+        stl_filename (str, optional): defaults to "RotatedTrapezoid.stl".
+        name (str, optional): defaults to "rotated_trapezoid".
+        material_tag (str, optional): defaults to "rotated_trapezoid_mat".
     """
 
     def __init__(
@@ -29,10 +33,10 @@ class TruncatedTriangle(RotateStraightShape):
         length_3,
         pivot_point,
         pivot_angle=0.,
-        stp_filename="TruncatedTriangle.stp",
-        stl_filename="TruncatedTriangle.stl",
-        name="truncated_tri",
-        material_tag="truncated_tri_mat",
+        stp_filename="RotatedTrapezoid.stp",
+        stl_filename="RotatedTrapezoid.stl",
+        name="rotated_trapezoid",
+        material_tag="rotated_trapezoid_mat",
         **kwargs
     ):
 

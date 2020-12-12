@@ -55,7 +55,7 @@ from .parametric_components.poloidal_segmenter import PoloidalSegments
 from .parametric_components.port_cutters_rotated import PortCutterRotated
 from .parametric_components.port_cutters_rectangular import PortCutterRectangular
 from .parametric_components.port_cutters_circular import PortCutterCircular
-from .parametric_components.truncated_triangle import TruncatedTriangle
+from .parametric_components.rotated_trapezoid import RotatedTrapezoid
 from .parametric_components.cutting_wedge import CuttingWedge
 from .parametric_components.cutting_wedge_fs import CuttingWedgeFS
 from .parametric_components.blanket_cutter_parallels import BlanketCutterParallels
