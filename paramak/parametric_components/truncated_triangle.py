@@ -12,7 +12,7 @@ class TruncatedTriangle(RotateStraightShape):
         length_1 (float): the (cm).
         length_2 (float): the horizontal (x axis) width of the coil (cm).
         length_3 (float): the center of the coil (x,z) values
-        pivot_point (tuple of floats): the coordinates of the center of
+        pivot_point ((float, float)): the coordinates of the center of
             rotation (x,z) (cm).
         pivot_angle (float, optional): the angle (in degrees) to pivot (rotate)
             the shape by on the XY plane. Defaults to 0.
