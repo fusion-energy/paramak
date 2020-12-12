@@ -3,6 +3,7 @@ simulation. A selection of materials are used from refrenced sources to
 complete the neutronics model."""
 
 import neutronics_material_maker as nmm
+import openmc
 import paramak
 
 
