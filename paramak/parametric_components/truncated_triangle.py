@@ -9,9 +9,9 @@ class TruncatedTriangle(RotateStraightShape):
     """Creates a rectangular poloidal field coil.
 
     Args:
-        l1 (float): the (cm).
-        l2 (float): the horizontal (x axis) width of the coil (cm).
-        l3 (float): the center of the coil (x,z) values
+        length_1 (float): the (cm).
+        length_2 (float): the horizontal (x axis) width of the coil (cm).
+        length_3 (float): the center of the coil (x,z) values
         pivot_point (tuple of floats): the coordinates of the center of
             rotation (x,z) (cm).
         pivot_angle (float, optional): the angle (in degrees) to pivot (rotate) 
@@ -24,9 +24,9 @@ class TruncatedTriangle(RotateStraightShape):
 
     def __init__(
         self,
-        l1,
-        l2,
-        l3,
+        length_1,
+        length_2,
+        length_3,
         pivot_point,
         pivot_angle=0.,
         stp_filename="TruncatedTriangle.stp",
@@ -44,9 +44,9 @@ class TruncatedTriangle(RotateStraightShape):
             **kwargs
         )
 
-        self.l1 = l1
-        self.l2 = l2
-        self.l3 = l3
+        self.length_1 = length_1
+        self.length_2 = length_2
+        self.length_3 = length_3
         self.pivot_point = pivot_point
         self.pivot_angle = pivot_angle
 
@@ -80,20 +80,20 @@ class TruncatedTriangle(RotateStraightShape):
 
         non_rotated_points = [
             (
-                self.pivot_point[0] + self.l1 / 2.0,
+                self.pivot_point[0] + self.length_1 / 2.0,
                 self.pivot_point[1]
             ),
             (
-                self.pivot_point[0] - self.l1 / 2.0,
+                self.pivot_point[0] - self.length_1 / 2.0,
                 self.pivot_point[1]
             ),
             (
-                self.pivot_point[0] - self.l2 / 2.0,
-                self.pivot_point[1] - self.l3
+                self.pivot_point[0] - self.length_2 / 2.0,
+                self.pivot_point[1] - self.length_3
             ),
             (
-                self.pivot_point[0] + self.l2 / 2.0,
-                self.pivot_point[1] - self.l3
+                self.pivot_point[0] + self.length_2 / 2.0,
+                self.pivot_point[1] - self.length_3
             ),
         ]
 

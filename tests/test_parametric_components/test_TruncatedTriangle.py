@@ -10,9 +10,9 @@ class TruncatedTriangle(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.TruncatedTriangle(
-            l1=10,
-            l2=20,
-            l3=30,
+            length_1=10,
+            length_2=20,
+            length_3=30,
             pivot_angle=0,
             pivot_point=(100,50),
             rotation_angle=45,
@@ -60,17 +60,17 @@ class TruncatedTriangle(unittest.TestCase):
         
         self.test_shape.pivot_angle=0
 
-        self.test_shape.l1=42
+        self.test_shape.length_1=42
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.l1=10
-        self.test_shape.l2=42
+        self.test_shape.length_1=10
+        self.test_shape.length_2=42
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.l1=10
-        self.test_shape.l2=20
-        self.test_shape.l3=42
+        self.test_shape.length_1=10
+        self.test_shape.length_2=20
+        self.test_shape.length_3=42
 
         assert self.test_shape.volume > test_shape_vol
