@@ -58,17 +58,17 @@ class TruncatedTriangle(unittest.TestCase):
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.length_1=42
+        self.test_shape.length_1 = 42
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.length_1=10
-        self.test_shape.length_2=42
+        self.test_shape.length_1 = 10
+        self.test_shape.length_2 = 42
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.length_1=10
-        self.test_shape.length_2=20
-        self.test_shape.length_3=42
+        self.test_shape.length_1 = 10
+        self.test_shape.length_2 = 20
+        self.test_shape.length_3 = 42
 
         assert self.test_shape.volume > test_shape_vol
