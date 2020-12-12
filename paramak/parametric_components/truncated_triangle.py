@@ -14,7 +14,7 @@ class TruncatedTriangle(RotateStraightShape):
         length_3 (float): the center of the coil (x,z) values
         pivot_point (tuple of floats): the coordinates of the center of
             rotation (x,z) (cm).
-        pivot_angle (float, optional): the angle (in degrees) to pivot (rotate) 
+        pivot_angle (float, optional): the angle (in degrees) to pivot (rotate)
             the shape by on the XY plane. Defaults to 0.
         stp_filename (str, optional): defaults to "TruncatedTriangle.stp".
         stl_filename (str, optional): defaults to "TruncatedTriangle.stl".
@@ -98,7 +98,7 @@ class TruncatedTriangle(RotateStraightShape):
         ]
 
         points = []
-       
+
         for point in non_rotated_points:
             x, y = rotate(
                 origin=self.pivot_point,
