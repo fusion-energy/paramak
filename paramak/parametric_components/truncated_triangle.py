@@ -90,7 +90,6 @@ class TruncatedTriangle(RotateStraightShape):
     def pivot_angle(self, pivot_angle):
         self._pivot_angle = pivot_angle
 
-
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the poloidal field coil shape."""
