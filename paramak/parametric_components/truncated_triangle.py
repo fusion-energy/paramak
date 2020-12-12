@@ -51,28 +51,45 @@ class TruncatedTriangle(RotateStraightShape):
         self.pivot_angle = pivot_angle
 
     @property
-    def center_point(self):
-        return self._center_point
+    def pivot_point(self):
+        return self._pivot_point
 
-    @center_point.setter
-    def center_point(self, center_point):
-        self._center_point = center_point
-
-    @property
-    def height(self):
-        return self._height
-
-    @height.setter
-    def height(self, height):
-        self._height = height
+    @pivot_point.setter
+    def pivot_point(self, pivot_point):
+        self._pivot_point = pivot_point
 
     @property
-    def width(self):
-        return self._width
+    def length_1(self):
+        return self._length_1
 
-    @width.setter
-    def width(self, width):
-        self._width = width
+    @length_1.setter
+    def length_1(self, length_1):
+        self._length_1 = length_1
+
+    @property
+    def length_2(self):
+        return self._length_2
+
+    @length_2.setter
+    def length_2(self, length_2):
+        self._length_2 = length_2
+
+    @property
+    def length_3(self):
+        return self._length_3
+
+    @length_3.setter
+    def length_3(self, length_3):
+        self._length_3 = length_3
+
+    @property
+    def pivot_angle(self):
+        return self._pivot_angle
+
+    @pivot_angle.setter
+    def pivot_angle(self, pivot_angle):
+        self._pivot_angle = pivot_angle
+
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
