@@ -6,7 +6,7 @@ import paramak
 import pytest
 
 
-class RotatedTrapezoid(unittest.TestCase):
+class TestRotatedTrapezoid(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.RotatedTrapezoid(
