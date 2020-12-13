@@ -81,7 +81,7 @@ class RotatedIsoscelesTriangle(RotateStraightShape):
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
-        the 2D profile of the poloidal field coil shape."""
+        the 2D profile of the triangle shape."""
 
         non_rotated_points = [
             self.pivot_point,
