@@ -541,14 +541,28 @@ ToroidalFieldCoilTripleArc()
 RotatedTrapezoid()
 ^^^^^^^^^^^^^^^^^^
 
-|RotatedTrapezoid| |RotatedTrapezoid|
+|RotatedTrapezoidstp| |RotatedTrapezoidsvg|
 
-.. |RotatedTrapezoid| image:: https://user-images.githubusercontent.com/8583900/101964551-b42aad00-3c09-11eb-8ff2-fc0e52ba33cc.png
+.. |RotatedTrapezoidstp| image:: https://user-images.githubusercontent.com/8583900/101964551-b42aad00-3c09-11eb-8ff2-fc0e52ba33cc.png
    :width: 240px
-.. |RotatedTrapezoid| image:: https://user-images.githubusercontent.com/8583900/101966787-06230100-3c11-11eb-8d70-587b50aaf987.png
+.. |RotatedTrapezoidsvg| image:: https://user-images.githubusercontent.com/8583900/101966787-06230100-3c11-11eb-8d70-587b50aaf987.png
    :width: 510px
 
 .. automodule:: paramak.parametric_components.rotated_trapezoid
+   :members:
+   :show-inheritance:
+
+RotatedIsoscelesTriangle
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+|RotatedIsoscelesTrianglestp| |RotatedIsoscelesTrianglesvg|
+
+.. |RotatedIsoscelesTrianglestp| image:: https://user-images.githubusercontent.com/8583900/102000883-e0b2f780-3ce3-11eb-94aa-4cd69d2647e2.png
+   :width: 240px
+.. |RotatedIsoscelesTrianglesvg| image:: https://user-images.githubusercontent.com/8583900/102001079-c37f2880-3ce5-11eb-967e-f9263a231257.png
+   :width: 510px
+
+.. automodule:: paramak.parametric_components.rotated_isosceles_triangle
    :members:
    :show-inheritance:
 
