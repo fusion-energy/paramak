@@ -21,7 +21,8 @@ class TestShape(unittest.TestCase):
             material_tag='center_column_shield_mat'
         )
 
-        # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic diections
+        # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
+        # diections
         self.source = openmc.Source()
         self.source.space = openmc.stats.Point((0, 0, 0))
         self.source.angle = openmc.stats.Isotropic()
@@ -33,7 +34,7 @@ class TestShape(unittest.TestCase):
         my_model = paramak.NeutronicsModel(
             geometry=self.my_shape,
             source=self.source,
-            materials={'center_column_shield_mat':'eurofer'},
+            materials={'center_column_shield_mat': 'eurofer'},
             cell_tallies=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=10
@@ -56,7 +57,7 @@ class TestShape(unittest.TestCase):
         my_model = paramak.NeutronicsModel(
             geometry=self.my_shape,
             source=self.source,
-            materials={'center_column_shield_mat':'eurofer'},
+            materials={'center_column_shield_mat': 'eurofer'},
             mesh_tally_2D=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=10
