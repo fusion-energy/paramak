@@ -4,6 +4,7 @@ tolerance when creating the dagmc model"""
 
 import matplotlib.pyplot as plt
 import neutronics_material_maker as nmm
+import openmc
 import paramak
 
 
@@ -42,8 +43,8 @@ def make_model_and_simulate(temperature):
     source.energy = openmc.stats.Discrete([14e6], [1])
 
     # makes the neutronics model from the geometry and material allocations
-    neutronics_model = paramak.NeutronicsModelFromReactor(
-        reactor=my_reactor,
+    neutronics_model = paramak.NeutronicsMode(
+        geometry=my_reactor,
         source=source,
         materials={
             'inboard_tf_coils_mat': 'eurofer',
