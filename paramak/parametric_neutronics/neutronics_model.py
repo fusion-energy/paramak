@@ -172,15 +172,15 @@ class NeutronicsModel():
         self._mesh_tally_2D = value
 
     @property
-    def material(self):
-        return self._material
+    def materials(self):
+        return self._materials
 
-    @material.setter
-    def material(self, value):
+    @materials.setter
+    def materials(self, value):
         if not isinstance(value, dict):
-            raise ValueError("NeutronicsModelFromReactor.material should be a\
+            raise ValueError("NeutronicsModelFromReactor.materials should be a\
                 dictionary")
-        self._material = value
+        self._materials = value
 
     @property
     def simulation_batches(self):
@@ -188,11 +188,13 @@ class NeutronicsModel():
 
     @simulation_batches.setter
     def simulation_batches(self, value):
-        if isinstance(value, float):
-            value = int(value)
         if not isinstance(value, int):
             raise ValueError(
                 "NeutronicsModelFromReactor.simulation_batches should be an int")
+        if value < 2:
+            raise ValueError(
+                "The minimum of setting for simulation_batches is 2"
+        )
         self._simulation_batches = value
 
     @property
@@ -201,8 +203,6 @@ class NeutronicsModel():
 
     @simulation_particles_per_batch.setter
     def simulation_particles_per_batch(self, value):
-        if isinstance(value, float):
-            value = int(value)
         if not isinstance(value, int):
             raise ValueError(
                 "NeutronicsModelFromReactor.simulation_particles_per_batch\

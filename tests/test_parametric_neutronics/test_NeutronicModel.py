@@ -27,6 +27,188 @@ class TestShape(unittest.TestCase):
         self.source.space = openmc.stats.Point((0, 0, 0))
         self.source.angle = openmc.stats.Isotropic()
 
+    def test_neutronics_component_simulation_with_openmc_mat(self):
+        """Makes a neutronics model and simulates with a cell tally"""
+
+        test_mat = openmc.Material()
+        test_mat.add_element('Fe', 1.0)
+        test_mat.set_density(units='g/cm3', density=4.2)
+
+        # converts the geometry into a neutronics geometry
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': test_mat},
+            cell_tallies=['heating'],
+            simulation_batches=2,
+            simulation_particles_per_batch=2
+        )
+
+        # performs an openmc simulation on the model
+        my_model.simulate(method='pymoab')
+
+        # extracts the heat from the results dictionary
+        heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
+
+        assert heat > 0
+
+    def test_neutronics_component_simulation_with_nmm(self):
+        """Makes a neutronics model and simulates with a cell tally"""
+
+        test_mat = nmm.Material('Li4SiO4')
+
+        # converts the geometry into a neutronics geometry
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': test_mat},
+            cell_tallies=['heating'],
+            simulation_batches=2,
+            simulation_particles_per_batch=2
+        )
+
+        # performs an openmc simulation on the model
+        my_model.simulate(method='pymoab')
+
+        # extracts the heat from the results dictionary
+        heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
+
+        assert heat > 0
+
+    def test_incorrect_args(self):
+        """Checks that an error is raised when the shape is
+        defined as ."""
+
+        def incorrect_faceting_tolerance():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                faceting_tolerance='coucou'
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_faceting_tolerance
+        )
+
+        def incorrect_faceting_tolerance_too_small():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                faceting_tolerance=-3
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_faceting_tolerance_too_small
+        )
+
+        def incorrect_merge_tolerance():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                merge_tolerance='coucou'
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_merge_tolerance
+        )
+
+        def incorrect_merge_tolerance_too_small():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                merge_tolerance=-3
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_merge_tolerance_too_small
+        )
+
+        def incorrect_cell_tallies():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                cell_tallies=['coucou'],
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_cell_tallies
+        )
+
+        def incorrect_mesh_tally_2D():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                mesh_tally_2D=['coucou'],
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_mesh_tally_2D
+        )
+
+        def incorrect_materials():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials='coucou',
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_materials
+        )
+
+        def incorrect_simulation_batches_to_small():
+            """The simulation batch must be above 2"""
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                simulation_batches=1
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_simulation_batches_to_small
+        )
+
+        def incorrect_simulation_batches():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                simulation_batches=4.2
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_simulation_batches
+        )
+
+        def incorrect_simulation_particles_per_batch():
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                simulation_particles_per_batch=1.2
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_simulation_particles_per_batch
+        )
+
     def test_neutronics_component_cell_simulation(self):
         """Makes a neutronics model and simulates with a cell tally"""
 
@@ -37,7 +219,7 @@ class TestShape(unittest.TestCase):
             materials={'center_column_shield_mat': 'eurofer'},
             cell_tallies=['heating'],
             simulation_batches=2,
-            simulation_particles_per_batch=10
+            simulation_particles_per_batch=2
         )
 
         # performs an openmc simulation on the model
@@ -60,7 +242,7 @@ class TestShape(unittest.TestCase):
             materials={'center_column_shield_mat': 'eurofer'},
             mesh_tally_2D=['heating'],
             simulation_batches=2,
-            simulation_particles_per_batch=10
+            simulation_particles_per_batch=2
         )
 
         # performs an openmc simulation on the model
@@ -171,8 +353,8 @@ class TestNeutronicsBallReactor(unittest.TestCase):
                 'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
             },
             cell_tallies=['TBR', 'heating', 'flux'],
-            simulation_batches=5,
-            simulation_particles_per_batch=1e3,
+            simulation_batches=2,
+            simulation_particles_per_batch=10,
         )
 
         # starts the neutronics simulation using trelis
