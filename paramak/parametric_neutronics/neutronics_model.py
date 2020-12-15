@@ -371,34 +371,34 @@ class NeutronicsModel():
                 self.mesh_2D_resolution[1],
                 1,
                 self.mesh_2D_resolution[0]]
-            mesh_xz.lower_left = [-self.reactor.largest_dimension, -
-                                  1, -self.reactor.largest_dimension]
+            mesh_xz.lower_left = [-self.geometry.largest_dimension, -
+                                  1, -self.geometry.largest_dimension]
             mesh_xz.upper_right = [
-                self.reactor.largest_dimension,
+                self.geometry.largest_dimension,
                 1,
-                self.reactor.largest_dimension]
+                self.geometry.largest_dimension]
 
             mesh_xy = openmc.RegularMesh()
             mesh_xy.dimension = [
                 self.mesh_2D_resolution[1],
                 self.mesh_2D_resolution[0],
                 1]
-            mesh_xy.lower_left = [-self.reactor.largest_dimension, -
-                                  self.reactor.largest_dimension, -1]
+            mesh_xy.lower_left = [-self.geometry.largest_dimension, -
+                                  self.geometry.largest_dimension, -1]
             mesh_xy.upper_right = [
-                self.reactor.largest_dimension,
-                self.reactor.largest_dimension,
+                self.geometry.largest_dimension,
+                self.geometry.largest_dimension,
                 1]
 
             mesh_yz = openmc.RegularMesh()
             mesh_yz.dimension = [1,
                                  self.mesh_2D_resolution[1],
                                  self.mesh_2D_resolution[0]]
-            mesh_yz.lower_left = [-1, -self.reactor.largest_dimension, -
-                                  self.reactor.largest_dimension]
+            mesh_yz.lower_left = [-1, -self.geometry.largest_dimension, -
+                                  self.geometry.largest_dimension]
             mesh_yz.upper_right = [1,
-                                   self.reactor.largest_dimension,
-                                   self.reactor.largest_dimension]
+                                   self.geometry.largest_dimension,
+                                   self.geometry.largest_dimension]
 
             if 'tritium_production' in self.mesh_tally_2D:
                 mesh_filter = openmc.MeshFilter(mesh_xz)
