@@ -6,13 +6,12 @@ import paramak
 import pytest
 
 
-class TestRotatedTrapezoid(unittest.TestCase):
+class TestRotatedIsoscelesTriangle(unittest.TestCase):
 
     def setUp(self):
-        self.test_shape = paramak.RotatedTrapezoid(
-            length_1=10,
-            length_2=20,
-            length_3=30,
+        self.test_shape = paramak.RotatedIsoscelesTriangle(
+            height=10,
+            base_length=20,
             pivot_angle=0,
             pivot_point=(100, 50),
             rotation_angle=45,
@@ -28,11 +27,11 @@ class TestRotatedTrapezoid(unittest.TestCase):
         """Counts the surfaces in a fully rotated and partly rotated
         RotatedTrapezoid."""
 
-        assert len(self.test_shape.areas) == 6
+        assert len(self.test_shape.areas) == 5
 
         self.test_shape.rotation_angle = 360
 
-        assert len(self.test_shape.areas) == 4
+        assert len(self.test_shape.areas) == 3
 
     def test_args_do_not_impact_volume(self):
         """Changes args that should not impact the volume and checks that they
@@ -62,17 +61,17 @@ class TestRotatedTrapezoid(unittest.TestCase):
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.length_1 = 42
+        self.test_shape.height = 42
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.length_1 = 10
+        self.test_shape.height = 10
         self.test_shape.length_2 = 42
 
         assert self.test_shape.volume > test_shape_vol
 
-        self.test_shape.length_1 = 10
-        self.test_shape.length_2 = 20
+        self.test_shape.height = 10
+        self.test_shape.base_length = 20
         self.test_shape.length_3 = 42
 
         assert self.test_shape.volume > test_shape_vol
