@@ -194,7 +194,7 @@ class NeutronicsModel():
         if value < 2:
             raise ValueError(
                 "The minimum of setting for simulation_batches is 2"
-        )
+            )
         self._simulation_batches = value
 
     @property
