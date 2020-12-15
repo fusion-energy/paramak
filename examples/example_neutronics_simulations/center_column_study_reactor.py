@@ -46,7 +46,7 @@ def make_model_and_simulate():
 
         # makes the neutronics model and assigns basic materials to each
         # component
-        neutronics_model = paramak.NeutronicsMode(
+        neutronics_model = paramak.NeutronicsModel(
             geometry=my_reactor,
             source=source,
             materials={

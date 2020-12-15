@@ -43,7 +43,7 @@ def make_model_and_simulate(temperature):
     source.energy = openmc.stats.Discrete([14e6], [1])
 
     # makes the neutronics model from the geometry and material allocations
-    neutronics_model = paramak.NeutronicsMode(
+    neutronics_model = paramak.NeutronicsModel(
         geometry=my_reactor,
         source=source,
         materials={
