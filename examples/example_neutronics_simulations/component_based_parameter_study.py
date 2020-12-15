@@ -20,9 +20,10 @@ def make_model_and_simulate():
             material_tag='center_column_shield_mat'
         )
 
-        my_shape.export_stp('my_shape'+str(mid_radius)+'.stp')
+        my_shape.export_stp('my_shape' + str(mid_radius) + '.stp')
 
-        # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic diections
+        # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
+        # diections
         source = openmc.Source()
         source.space = openmc.stats.Point((0, 0, 0))
         source.angle = openmc.stats.Isotropic()
@@ -31,7 +32,7 @@ def make_model_and_simulate():
         my_model = paramak.NeutronicsModel(
             geometry=my_shape,
             source=source,
-            materials={'center_column_shield_mat':'eurofer'},
+            materials={'center_column_shield_mat': 'eurofer'},
             cell_tallies=['heating'],
             simulation_batches=10,  # should be increased for more accurate result
             simulation_particles_per_batch=10  # settings are low to reduce time required

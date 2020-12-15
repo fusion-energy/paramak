@@ -245,7 +245,8 @@ class NeutronicsModel():
 
         openmc_materials = {}
         for material_tag, material_entry in self.materials.items():
-            openmc_material = self.create_material(material_tag, material_entry)
+            openmc_material = self.create_material(
+                material_tag, material_entry)
             openmc_materials[material_tag] = openmc_material
 
         self.openmc_materials = openmc_materials
