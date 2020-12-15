@@ -82,4 +82,4 @@ from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
 from .parametric_reactors.segmented_blanket_ball_reactor import SegmentedBlanketBallReactor
 from .parametric_reactors.center_column_study_reactor import CenterColumnStudyReactor
 
-from .parametric_neutronics.neutronics_model_from_reactor import NeutronicsModelFromReactor
+from .parametric_neutronics.neutronics_model import NeutronicsModel
