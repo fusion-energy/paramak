@@ -1,12 +1,14 @@
 
+import cadquery as cq
 from paramak import CuttingWedgeFS, Shape
 
 
 class ShellFS(Shape):
     """Shell From Shape. Creates a shell casing for the provided shape object.
-    Warning some shapes are too complex to shell. The Shell is cut / trimmed
-    with a paramak.CuttingWedgeFS based on the shape passed. This ensures that
-    the shell does does not exceed the rotation angle of the passed shape.
+    Warning some shapes are too complex to shell. If using a rotated shape then
+    setting the rotation angle to 360 can simplify the shell. Then intersecting
+    the resulting shell with the WedgeCutterFs can reduce the shell back down
+    to the original rotation angle of the shape.
 
     Args:
         shape (paramak.Shape): the shape to create a shell / 3D offset around
@@ -64,21 +66,16 @@ class ShellFS(Shape):
     def create_solid(self):
         """Creates a 3D solid by creating a shell around a Shape"""
 
-        temp_angle = self.shape.rotation_angle
-        self.shape.rotation_angle = 360
-
-        solid = self.shape.solid.shell(
-            thickness=self.thickness,
-            kind=self.kind,
-        )
-
-        self.shape.rotation_angle = temp_angle
-
-        if self.shape.rotation_angle < 360:
-            # rotation angle is set by the self.shapes rotation angle
-            cutting_wedge = CuttingWedgeFS(self.shape)
-            # this trims the sold so that it does not exceed the rotation angle
-            solid = solid.cut(cutting_wedge.solid)
+        if isinstance(self.shape, cq.Workplane):
+            solid = self.shape.shell(
+                thickness=self.thickness,
+                kind=self.kind,
+            )
+        else:
+            solid = self.shape.solid.shell(
+                thickness=self.thickness,
+                kind=self.kind,
+            )
 
         self.solid = solid
 
