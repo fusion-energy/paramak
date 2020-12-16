@@ -198,7 +198,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-
+# @pullrequest reviewer, we would like to make the copy optional but don't know
+# how. Then we can build a dependency image for use in circle ci.
 # Copy over the source code, examples and tests
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
