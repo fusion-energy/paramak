@@ -31,7 +31,9 @@ due to two contributors in particular (John Billingsley and
 Remi Delaporte-Mathurin) and others have also helped, you can see all those who
 have helped the development in the 
 [Authors.md](https://github.com/ukaea/paramak/blob/main/AUTHORS.md) and in the 
-[github contributions](https://github.com/ukaea/paramak/graphs/contributors). 
+[github contributions](https://github.com/ukaea/paramak/graphs/contributors).
+The code has been professionally reviewed by [PullRequest.com](https://www.pullrequest.com/) who
+produced a [report](https://github.com/ukaea/paramak/files/5704872/PULLREQUEST.Paramak.Project.Review.pdf) and inline [suggestions](https://github.com/ukaea/paramak/pull/639).
 
 
 ## System Installation
