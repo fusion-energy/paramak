@@ -5,6 +5,7 @@ varried while simulating the impact on the heat depositied in the center
 column."""
 
 import matplotlib.pyplot as plt
+import openmc
 import paramak
 
 
@@ -45,8 +46,8 @@ def make_model_and_simulate():
 
         # makes the neutronics model and assigns basic materials to each
         # component
-        neutronics_model = paramak.NeutronicsModelFromReactor(
-            reactor=my_reactor,
+        neutronics_model = paramak.NeutronicsModel(
+            geometry=my_reactor,
             source=source,
             materials={
                 'DT_plasma': 'DT_plasma',

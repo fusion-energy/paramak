@@ -1,6 +1,7 @@
 """This is a minimal example that obtains the center column heating for a
 parametric reactor."""
 
+import openmc
 import paramak
 
 
@@ -34,8 +35,8 @@ def make_model_and_simulate():
     source.energy = openmc.stats.Discrete([14e6], [1])
 
     # creates a neutronics model from the geometry and assigned materials
-    neutronics_model = paramak.NeutronicsModelFromReactor(
-        reactor=my_reactor,
+    neutronics_model = paramak.NeutronicsModel(
+        geometry=my_reactor,
         source=source,
         materials={
             'inboard_tf_coils_mat': 'eurofer',

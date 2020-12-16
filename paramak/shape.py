@@ -1180,12 +1180,12 @@ class Shape:
         moab_core, moab_tags = define_moab_core_and_tags()
 
         moab_core = add_stl_to_moab_core(
-            moab_core,
-            1,
-            1,
-            self.material_tag,
-            moab_tags,
-            self.stl_filename
+            moab_core=moab_core,
+            surface_id=1,
+            volume_id=1,
+            material_name=self.material_tag,
+            tags=moab_tags,
+            stl_filename=self.stl_filename
         )
 
         if skip_graveyard is False:
@@ -1194,12 +1194,12 @@ class Shape:
             volume_id = 2
             surface_id = 2
             moab_core = add_stl_to_moab_core(
-                moab_core,
-                surface_id,
-                volume_id,
-                self.graveyard.material_tag,
-                moab_tags,
-                self.graveyard.stl_filename
+                moab_core=moab_core,
+                surface_id=surface_id,
+                volume_id=volume_id,
+                material_name=self.graveyard.material_tag,
+                tags=moab_tags,
+                stl_filename=self.graveyard.stl_filename
             )
 
         all_sets = moab_core.get_entities_by_handle(0)
