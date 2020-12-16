@@ -15,9 +15,9 @@ straightforward for developers with Python knowledge.
 
 .. raw:: html
 
-    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto;"> 
+    <span style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto;"> 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/XnuS9Ic1aWI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
+    </span>
 
 .. toctree::
    :maxdepth: 1
@@ -32,6 +32,25 @@ straightforward for developers with Python knowledge.
    example_parametric_reactors
    example_neutronics_simulations
    tests
+
+History
+-------
+
+The package was originally conceived by Jonathan Shimwell and based on the
+`FreeCAD Python API <https://wiki.freecadweb.org/FreeCAD_API>`_  When 
+`CadQuery 2 <https://github.com/CadQuery/cadquery>`_ was released the project
+started to migrate the code base. Shortly after this migration the project
+became open-source and has flourished ever since. The project has grown largely
+due to two contributors in particular (John Billingsley and Remi
+Delaporte-Mathurin) and others have also helped, you can see all those who
+have helped the development in the 
+`Authors.md <https://github.com/ukaea/paramak/blob/main/AUTHORS.md>`_ and in the 
+`GitHub contributions <https://github.com/ukaea/paramak/graphs/contributors>`_.
+The code has been professionally reviewed by
+`PullRequest.com <https://www.pullrequest.com/>`_ who produced a
+`report <https://github.com/ukaea/paramak/files/5704872/PULLREQUEST.Paramak.Project.Review.pdf>`_
+and inline `suggestions <https://github.com/ukaea/paramak/pull/639>`_.
+
 
 Prerequisites
 -------------
