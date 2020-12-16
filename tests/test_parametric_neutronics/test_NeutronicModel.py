@@ -55,7 +55,7 @@ class TestShape(unittest.TestCase):
     def test_neutronics_component_simulation_with_nmm(self):
         """Makes a neutronics model and simulates with a cell tally"""
 
-        test_mat = nmm.Material('Li4SiO4')
+        test_mat = nmm.Material('Be')
 
         # converts the geometry into a neutronics geometry
         my_model = paramak.NeutronicsModel(
@@ -216,7 +216,7 @@ class TestShape(unittest.TestCase):
         my_model = paramak.NeutronicsModel(
             geometry=self.my_shape,
             source=self.source,
-            materials={'center_column_shield_mat': 'eurofer'},
+            materials={'center_column_shield_mat': 'Be'},
             cell_tallies=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2
@@ -239,7 +239,7 @@ class TestShape(unittest.TestCase):
         my_model = paramak.NeutronicsModel(
             geometry=self.my_shape,
             source=self.source,
-            materials={'center_column_shield_mat': 'eurofer'},
+            materials={'center_column_shield_mat': 'Be'},
             mesh_tally_2D=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2
