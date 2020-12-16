@@ -155,7 +155,7 @@ class TestRotateMixedShape(unittest.TestCase):
         )
         assert test_shape.volume > 10 * 10
 
-    def test_export_stp(self):
+    def test_export_stp_extension(self):
         """Creates a RotateMixedShape and checks that a stp file of the shape
         can be exported with the correct suffix using the export_stp method."""
 
@@ -180,6 +180,27 @@ class TestRotateMixedShape(unittest.TestCase):
         self.test_shape.export_stl("filename")
         assert Path("filename.stl").exists() is True
         os.system("rm filename.stl")
+
+    def test_export_stp(self):
+        """Exports and stp file with mode = solid and wire and checks
+        that the outputs exist and relative file sizes are correct."""
+
+        os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
+
+        self.test_shape.export_stp('test_solid.stp', mode='solid')
+        self.test_shape.export_stp('test_solid2.stp')
+        self.test_shape.export_stp('test_wire.stp', mode='wire')
+
+        assert Path("test_solid.stp").exists() is True
+        assert Path("test_solid2.stp").exists() is True
+        assert Path("test_wire.stp").exists() is True
+
+        assert Path("test_solid.stp").stat().st_size == \
+            Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < \
+            Path("test_solid2.stp").stat().st_size
+
+        os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
 
 if __name__ == "__main__":

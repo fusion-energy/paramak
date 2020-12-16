@@ -4,6 +4,7 @@ material for this simulation in order to demonstrate the use of more complex
 materials."""
 
 import neutronics_material_maker as nmm
+import openmc
 import paramak
 
 
@@ -49,8 +50,8 @@ def make_model_and_simulate():
     source.energy = openmc.stats.Discrete([14e6], [1])
 
     # makes the neutronics material
-    neutronics_model = paramak.NeutronicsModelFromReactor(
-        reactor=my_reactor,
+    neutronics_model = paramak.NeutronicsModel(
+        geometry=my_reactor,
         source=source,
         materials={
             'inboard_tf_coils_mat': 'copper',

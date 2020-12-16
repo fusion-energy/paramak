@@ -54,13 +54,15 @@ class RotateCircleShape(Shape):
               A CadQuery solid: A 3D solid volume
         """
 
-        solid = (
+        wire = (
             cq.Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
-            # .close()
-            .revolve(self.rotation_angle)
         )
+
+        self.wire = wire
+
+        solid = wire.revolve(self.rotation_angle)
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)

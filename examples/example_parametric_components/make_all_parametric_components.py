@@ -380,6 +380,28 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.RotatedIsoscelesTriangle(
+        height=20,
+        base_length=15,
+        pivot_angle=0,
+        pivot_point=(100, 50),
+        rotation_angle=70,
+        workplane='XY',
+        stp_filename='rotated_isosceles_triangle.stp'
+    )
+    all_components.append(component)
+
+    component = paramak.RotatedTrapezoid(
+        length_1=10,
+        length_2=20,
+        length_3=30,
+        pivot_angle=0,
+        pivot_point=(100, 50),
+        rotation_angle=45,
+        stp_filename='rotated_trapezoid.stp'
+    )
+    all_components.append(component)
+
     return all_components
 
 

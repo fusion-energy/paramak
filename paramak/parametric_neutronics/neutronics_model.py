@@ -21,15 +21,16 @@ except BaseException:
             neutronics_material_maker objects", UserWarning)
 
 
-class NeutronicsModelFromReactor():
-    """Creates a neuronics model of the provided reactor geometry with assigned
-    materials, plasma source and neutronics tallies. There are two methods
-    available for producing the imprinted and merged h5m geometry (PPP or
-    Trelis) and one method of producing non imprinted and non merged geometry
-    (PyMoab). make_watertight is also used to seal the DAGMC geoemtry. If using
-    the Trelis option you must have the make_faceteted_neutronics_model.py in
-    the same directory as your Python script. Further details on imprinting
-    and merging are available on the DAGMC homepage
+class NeutronicsModel():
+    """Creates a neuronics model of the provided shape geometry with assigned
+    materials, source and neutronics tallies. There are three methods
+    available for producing the imprinted and merged h5m geometry (PyMoab, PPP
+    or Trelis) and one method of producing non imprinted and non merged
+    geometry (PyMoab). make_watertight is also used to seal the DAGMC geoemtry.
+    If using the Trelis option you must have the
+    make_faceteted_neutronics_model.py in the same directory as your Python
+    script. Further details on imprinting and merging are available on the
+    DAGMC homepage
     https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
     The Parallel-PreProcessor is an open-source tool available
     https://github.com/ukaea/parallel-preprocessor and can be used in
@@ -39,17 +40,13 @@ class NeutronicsModelFromReactor():
     the CoreForm website https://www.coreform.com/
 
     Arguments:
-        reactor (paramak.Reactor): The reactor object to convert to a
-            neutronics model. e.g. reactor=paramak.BallReactor() or
-            reactor=paramak.SubmersionReactor() .
-        materials (dict): Where the dictionary keys are the material tag
-            and the dictionary values are either a string, openmc.Material,
-            neutronics-material-maker.Material or
-            neutronics-material-maker.MultiMaterial. All components within the
-            Reactor() object must be accounted for. Material tags required
-            for the reactor can be obtained with Reactor().material_tags.
+        geometry (paramak.Shape, paramak.Rector): The geometry to convert to a
+            neutronics model. e.g. geometry=paramak.RotateMixedShape() or
+            reactor=paramak.BallReactor() .
         cell_tallies (list of strings): the cell based tallies to calculate,
             options include TBR, heating and flux
+        materials (str, openmc.Material, neutronics_material_maker.MultiMaterial):
+            The neutronics material to assign to the Shape.
         mesh_tally_2D (list of strings): the mesh based tallies to calculate,
             options include tritium_production, heating and flux
         fusion_power (float): the power in watts emitted by the fusion
@@ -71,22 +68,22 @@ class NeutronicsModelFromReactor():
 
     def __init__(
         self,
-        reactor,
-        materials,
+        geometry,
         source,
+        materials,
         cell_tallies=None,
         mesh_tally_2D=None,
-        fusion_power=1e9,
         simulation_batches=100,
         simulation_particles_per_batch=10000,
         max_lost_particles=10,
         faceting_tolerance=1e-1,
         merge_tolerance=1e-4,
-        mesh_2D_resolution=(400, 400)
+        mesh_2D_resolution=(400, 400),
+        fusion_power=1e9  # convert from watts to activity source_activity
     ):
 
-        self.reactor = reactor
         self.materials = materials
+        self.geometry = geometry
         self.source = source
         self.cell_tallies = cell_tallies
         self.mesh_tally_2D = mesh_tally_2D
@@ -98,14 +95,6 @@ class NeutronicsModelFromReactor():
         self.mesh_2D_resolution = mesh_2D_resolution
         self.model = None
         self.fusion_power = fusion_power
-
-        # Only 360 degree models are supported for now as reflecting surfaces
-        # are needed for sector models and they are not currently supported
-        if reactor.rotation_angle != 360:
-            reactor.rotation_angle = 360
-            print('remaking reactor as it was not set to 360 degrees')
-            reactor.solid
-            # TODO make use of reactor.create_solids() here
 
     @property
     def faceting_tolerance(self):
@@ -199,11 +188,13 @@ class NeutronicsModelFromReactor():
 
     @simulation_batches.setter
     def simulation_batches(self, value):
-        if isinstance(value, float):
-            value = int(value)
         if not isinstance(value, int):
             raise ValueError(
                 "NeutronicsModelFromReactor.simulation_batches should be an int")
+        if value < 2:
+            raise ValueError(
+                "The minimum of setting for simulation_batches is 2"
+            )
         self._simulation_batches = value
 
     @property
@@ -212,47 +203,51 @@ class NeutronicsModelFromReactor():
 
     @simulation_particles_per_batch.setter
     def simulation_particles_per_batch(self, value):
-        if isinstance(value, float):
-            value = int(value)
         if not isinstance(value, int):
             raise ValueError(
                 "NeutronicsModelFromReactor.simulation_particles_per_batch\
                     should be an int")
         self._simulation_particles_per_batch = value
 
-    def create_materials(self):
-        # checks all the required materials are present
-        for reactor_material in self.reactor.material_tags:
-            if reactor_material not in self.materials.keys():
-                raise ValueError(
-                    "material included by the reactor model has not \
-                    been added", reactor_material)
+    def create_material(self, material_tag, material_entry):
+        if isinstance(material_entry, str):
+            openmc_material = nmm.Material(
+                material_entry,
+                material_tag=material_tag).openmc_material
+        elif isinstance(material_entry, openmc.Material):
+            # sets the material name in the event that it had not been set
+            material_entry.name = material_tag
+            openmc_material = material_entry
+        elif isinstance(material_entry, (nmm.Material, nmm.MultiMaterial)):
+            # sets the material tag in the event that it had not been set
+            material_entry.material_tag = material_tag
+            openmc_material = material_entry.openmc_material
+        else:
+            raise ValueError("materials must be either a str, \
+                openmc.Material, nmm.MultiMaterial or nmm.Material object \
+                not a ", type(material_entry), material_entry)
+        return openmc_material
 
-        # checks that no extra materials we added
-        for reactor_material in self.materials.keys():
-            if reactor_material not in self.reactor.material_tags:
-                raise ValueError(
-                    "material has been added that is not needed for this \
-                    reactor model", reactor_material)
+    def create_materials(self):
+        # # checks all the required materials are present
+        # for reactor_material in self.geometry.material_tags:
+        #     if reactor_material not in self.materials.keys():
+        #         raise ValueError(
+        #             "material included by the reactor model has not \
+        #             been added", reactor_material)
+
+        # # checks that no extra materials we added
+        # for reactor_material in self.materials.keys():
+        #     if reactor_material not in self.geometry.material_tags:
+        #         raise ValueError(
+        #             "material has been added that is not needed for this \
+        #             reactor model", reactor_material)
 
         openmc_materials = {}
         for material_tag, material_entry in self.materials.items():
-            if isinstance(material_entry, str):
-                material = nmm.Material(
-                    material_entry, material_tag=material_tag)
-                openmc_materials[material_tag] = material.openmc_material
-            elif isinstance(material_entry, openmc.Material):
-                # sets the material name in the event that it had not been set
-                material_entry.name = material_tag
-                openmc_materials[material_tag] = material_entry
-            elif isinstance(material_entry, (nmm.Material, nmm.MultiMaterial)):
-                # sets the material tag in the event that it had not been set
-                material_entry.material_tag = material_tag
-                openmc_materials[material_tag] = material_entry.openmc_material
-            else:
-                raise ValueError("materials must be either a str, \
-                    openmc.Material, nmm.MultiMaterial or nmm.Material object \
-                    not a ", type(material_entry), material_entry)
+            openmc_material = self.create_material(
+                material_tag, material_entry)
+            openmc_materials[material_tag] = openmc_material
 
         self.openmc_materials = openmc_materials
 
@@ -280,8 +275,8 @@ class NeutronicsModelFromReactor():
 
         if method == 'ppp':
 
-            self.reactor.export_stp()
-            self.reactor.export_neutronics_description()
+            self.geometry.export_stp()
+            self.geometry.export_neutronics_description()
             # as the installer connects to the system python not the conda
             # python this full path is needed for now
             if os.system(
@@ -298,8 +293,8 @@ class NeutronicsModelFromReactor():
             self._make_watertight()
 
         elif method == 'trelis':
-            self.reactor.export_stp()
-            self.reactor.export_neutronics_description()
+            self.geometry.export_stp()
+            self.geometry.export_neutronics_description()
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
                 raise ValueError("The make_faceteted_neutronics_model.py was \
@@ -314,7 +309,7 @@ class NeutronicsModelFromReactor():
 
         elif method == 'pymoab':
 
-            self.reactor.export_h5m(
+            self.geometry.export_h5m(
                 filename='dagmc.h5m',
                 tolerance=self.faceting_tolerance
             )
@@ -377,34 +372,34 @@ class NeutronicsModelFromReactor():
                 self.mesh_2D_resolution[1],
                 1,
                 self.mesh_2D_resolution[0]]
-            mesh_xz.lower_left = [-self.reactor.largest_dimension, -
-                                  1, -self.reactor.largest_dimension]
+            mesh_xz.lower_left = [-self.geometry.largest_dimension, -
+                                  1, -self.geometry.largest_dimension]
             mesh_xz.upper_right = [
-                self.reactor.largest_dimension,
+                self.geometry.largest_dimension,
                 1,
-                self.reactor.largest_dimension]
+                self.geometry.largest_dimension]
 
             mesh_xy = openmc.RegularMesh()
             mesh_xy.dimension = [
                 self.mesh_2D_resolution[1],
                 self.mesh_2D_resolution[0],
                 1]
-            mesh_xy.lower_left = [-self.reactor.largest_dimension, -
-                                  self.reactor.largest_dimension, -1]
+            mesh_xy.lower_left = [-self.geometry.largest_dimension, -
+                                  self.geometry.largest_dimension, -1]
             mesh_xy.upper_right = [
-                self.reactor.largest_dimension,
-                self.reactor.largest_dimension,
+                self.geometry.largest_dimension,
+                self.geometry.largest_dimension,
                 1]
 
             mesh_yz = openmc.RegularMesh()
             mesh_yz.dimension = [1,
                                  self.mesh_2D_resolution[1],
                                  self.mesh_2D_resolution[0]]
-            mesh_yz.lower_left = [-1, -self.reactor.largest_dimension, -
-                                  self.reactor.largest_dimension]
+            mesh_yz.lower_left = [-1, -self.geometry.largest_dimension, -
+                                  self.geometry.largest_dimension]
             mesh_yz.upper_right = [1,
-                                   self.reactor.largest_dimension,
-                                   self.reactor.largest_dimension]
+                                   self.geometry.largest_dimension,
+                                   self.geometry.largest_dimension]
 
             if 'tritium_production' in self.mesh_tally_2D:
                 mesh_filter = openmc.MeshFilter(mesh_xz)
