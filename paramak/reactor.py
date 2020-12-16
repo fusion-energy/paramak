@@ -66,7 +66,6 @@ class Reactor:
         absolute value of the largest dimension of the bounding box"""
         largest_dimension = 0
         for component in self.shapes_and_components:
-            print(component.stp_filename, component.largest_dimension)
             largest_dimension = max(
                 largest_dimension,
                 component.largest_dimension)
