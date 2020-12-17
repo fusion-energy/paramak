@@ -18,7 +18,7 @@ finite element analysis codes.
 
 :point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
 
-:point_right: [Video presentation](https://www.youtube.com/embed/XnuS9Ic1aWI)
+:point_right: [Video presentation](https://www.youtube.com/embed/fXboew3U7rw)
 
 # History
 

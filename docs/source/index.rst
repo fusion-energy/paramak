@@ -16,7 +16,7 @@ straightforward for developers with Python knowledge.
 .. raw:: html
 
     <span style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto;"> 
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/XnuS9Ic1aWI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/fXboew3U7rw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </span>
 
 .. toctree::
