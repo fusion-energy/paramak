@@ -1,7 +1,6 @@
 
 import cadquery as cq
 from paramak import RotateStraightShape
-from paramak.utils import get_hash
 
 
 class PoloidalFieldCoilCaseSet(RotateStraightShape):
@@ -18,10 +17,10 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
             seperate pf_coil, one entry for each pf_coil.
         center_points (tuple of floats): the center of the coil (x,z) values
             (cm).
-        stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
-        stl_filename (str, optional): defaults to "PoloidalFieldCoil.stl".
-        name (str, optional): defaults to "pf_coil".
-        material_tag (str, optional): defaults to "pf_coil_mat".
+        stp_filename (str, optional): defaults to "PoloidalFieldCoilCaseSet.stp".
+        stl_filename (str, optional): defaults to "PoloidalFieldCoilCaseSet.stl".
+        name (str, optional): defaults to "pf_coil_case_set".
+        material_tag (str, optional): defaults to "pf_coil_case_mat".
     """
 
     def __init__(
@@ -30,10 +29,10 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         widths,
         casing_thicknesses,
         center_points,
-        stp_filename="PoloidalFieldCoil.stp",
-        stl_filename="PoloidalFieldCoil.stl",
-        name="pf_coil",
-        material_tag="pf_coil_mat",
+        stp_filename="PoloidalFieldCoilCaseSet.stp",
+        stl_filename="PoloidalFieldCoilCaseSet.stl",
+        name="pf_coil_case_set",
+        material_tag="pf_coil_case_mat",
         **kwargs
     ):
 
@@ -49,16 +48,6 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         self.heights = heights
         self.widths = widths
         self.casing_thicknesses = casing_thicknesses
-
-    @property
-    def solid(self):
-        if get_hash(self) != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
 
     @property
     def center_points(self):
@@ -201,8 +190,5 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         )
 
         self.solid = compound
-
-        # Calculate hash value for current solid
-        self.hash_value = get_hash(self)
 
         return compound

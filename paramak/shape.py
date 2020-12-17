@@ -15,6 +15,9 @@ from cadquery import exporters
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
+import paramak
+from paramak.neutronics_utils import (add_stl_to_moab_core,
+                                      define_moab_core_and_tags)
 from paramak.utils import cut_solid, get_hash, intersect_solid, union_solid
 
 
@@ -27,11 +30,14 @@ class Shape:
     Args:
         points (list of (float, float, float), optional): the x, y, z
             coordinates of points that make up the shape. Defaults to None.
+        connection_type (str, optional): The type of connection between points.
+            Possible values are "straight", "circle", "spline", "mixed".
+            Defaults to "mixed".
         name (str, optional): the name of the shape, used in the graph legend
             by export_html. Defaults to None.
-        color (RGB or RGBA, sequences of 3 or 4 floats, respectively, each in
-            the range 0-1, optional): the color to use when exporting as html
-            graphs or png images. Defaults to (0.5, 0.5, 0.5).
+        color ((float, float, float [, float]), optional): The color to use when exporting as html
+            graphs or png images. Can be in RGB or RGBA format with floats
+            between 0 and 1. Defaults to (0.5, 0.5, 0.5).
         material_tag (str, optional): the material name to use when exporting
             the neutronics description. Defaults to None.
         stp_filename (str, optional): the filename used when saving stp files.
@@ -80,7 +86,7 @@ class Shape:
         physical_groups=None,
         cut=None,
         intersect=None,
-        union=None
+        union=None,
     ):
 
         self.connection_type = connection_type
@@ -106,6 +112,7 @@ class Shape:
 
         # properties calculated internally by the class
         self.solid = None
+        self.wire = None
         self.render_mesh = None
         # self.volume = None
         self.hash_value = None
@@ -114,6 +121,8 @@ class Shape:
         self.x_max = None
         self.z_min = None
         self.z_max = None
+        self.graveyard_offset = None  # set by the make_graveyard method
+        self.patch = None
 
     @property
     def solid(self):
@@ -130,6 +139,22 @@ class Shape:
     @solid.setter
     def solid(self, value):
         self._solid = value
+
+    @property
+    def wire(self):
+        """The CadQuery wire of the 3d object. Returns a CadQuery workplane
+        or CadQuery Compound"""
+
+        ignored_keys = ["_wire", "_solid", "_hash_value"]
+        if get_hash(self, ignored_keys) != self.hash_value:
+            self.create_solid()
+            self.hash_value = get_hash(self, ignored_keys)
+
+        return self._wire
+
+    @wire.setter
+    def wire(self, value):
+        self._wire = value
 
     @property
     def cut(self):
@@ -154,6 +179,39 @@ class Shape:
     @union.setter
     def union(self, value):
         self._union = value
+
+    @property
+    def largest_dimension(self):
+        """Calculates a bounding box for the Shape and returns the largest
+        absolute value of the largest dimension of the bounding box"""
+        largest_dimension = 0
+        if isinstance(self.solid, cq.Compound):
+            for solid in self.solid.Solids():
+                largest_dimension = max(
+                    abs(self.solid.BoundingBox().xmax),
+                    abs(self.solid.BoundingBox().xmin),
+                    abs(self.solid.BoundingBox().ymax),
+                    abs(self.solid.BoundingBox().ymin),
+                    abs(self.solid.BoundingBox().zmax),
+                    abs(self.solid.BoundingBox().zmin),
+                    largest_dimension
+                )
+        else:
+            largest_dimension = max(
+                abs(self.solid.val().BoundingBox().xmax),
+                abs(self.solid.val().BoundingBox().xmin),
+                abs(self.solid.val().BoundingBox().ymax),
+                abs(self.solid.val().BoundingBox().ymin),
+                abs(self.solid.val().BoundingBox().zmax),
+                abs(self.solid.val().BoundingBox().zmin),
+                largest_dimension
+            )
+        self.largest_dimension = largest_dimension
+        return largest_dimension
+
+    @largest_dimension.setter
+    def largest_dimension(self, value):
+        self._largest_dimension = value
 
     @property
     def workplane(self):
@@ -223,16 +281,16 @@ class Shape:
             for solid in self.solid.Solids():
                 all_volumes.append(solid.Volume())
             return all_volumes
-        else:
-            return [self.solid.val().Volume()]
+
+        return [self.solid.val().Volume()]
 
     @property
     def area(self):
         """Get the total surface area of the Shape. Returns a float"""
         if isinstance(self.solid, cq.Compound):
             return self.solid.Area()
-        else:
-            return self.solid.val().Area()
+
+        return self.solid.val().Area()
 
     @property
     def areas(self):
@@ -243,10 +301,10 @@ class Shape:
             for face in self.solid.Faces():
                 all_areas.append(face.Area())
             return all_areas
-        else:
-            for face in self.solid.val().Faces():
-                all_areas.append(face.Area())
-            return all_areas
+
+        for face in self.solid.val().Faces():
+            all_areas.append(face.Area())
+        return all_areas
 
     @property
     def hash_value(self):
@@ -498,14 +556,14 @@ class Shape:
             current_points_list = []
             instructions = []
             # groups together common connection types
-            for i, c in enumerate(connections):
-                if c == current_linetype:
+            for i, connection in enumerate(connections):
+                if connection == current_linetype:
                     current_points_list.append(XZ_points[i])
                 else:
                     current_points_list.append(XZ_points[i])
                     instructions.append(
                         {current_linetype: current_points_list})
-                    current_linetype = c
+                    current_linetype = connection
                     current_points_list = [XZ_points[i]]
             instructions.append({current_linetype: current_points_list})
 
@@ -692,13 +750,13 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as f:
-            exporters.exportShape(self.solid, "STL", f, tolerance)
+        with open(path_filename, "w") as out_file:
+            exporters.exportShape(self.solid, "STL", out_file, tolerance)
         print("Saved file as ", path_filename)
 
         return str(path_filename)
 
-    def export_stp(self, filename=None, units='mm'):
+    def export_stp(self, filename=None, units='mm', mode='solid'):
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -708,6 +766,9 @@ class Shape:
             filename (str): the filename of the stp
             units (str): the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
+            mode (str, optional): the object to export can be either
+                'solid' which exports 3D solid shapes or the 'wire' which
+                exports the wire edges of the shape. Defaults to 'solid'.
         """
 
         if filename is not None:
@@ -722,8 +783,14 @@ class Shape:
         elif self.stp_filename is not None:
             path_filename = Path(self.stp_filename)
 
-        with open(path_filename, "w") as f:
-            exporters.exportShape(self.solid, "STEP", f)
+        with open(path_filename, "w") as out_file:
+            if mode == 'solid':
+                exporters.exportShape(self.solid, "STEP", out_file)
+            elif mode == 'wire':
+                exporters.exportShape(self.wire, "STEP", out_file)
+            else:
+                raise ValueError("The mode argument for export_stp \
+                    only accepts 'solid' or 'wire'", self)
 
         if units == 'cm':
             self._replace(
@@ -780,8 +847,8 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as f:
-            exporters.exportShape(self.solid, "SVG", f)
+        with open(path_filename, "w") as out_file:
+            exporters.exportShape(self.solid, "SVG", out_file)
         print("Saved file as ", path_filename)
 
         return str(path_filename)
@@ -849,20 +916,20 @@ class Shape:
 
         text_values = []
 
-        for i, p in enumerate(self.points[:-1]):
-            if len(p) == 3:
+        for i, point in enumerate(self.points[:-1]):
+            if len(point) == 3:
                 text_values.append(
                     "point number="
                     + str(i)
                     + "<br>"
                     + "connection to next point="
-                    + str(p[2])
+                    + str(point[2])
                     + "<br>"
                     + "x="
-                    + str(p[0])
+                    + str(point[0])
                     + "<br>"
                     + "z="
-                    + str(p[1])
+                    + str(point[1])
                     + "<br>"
                 )
             else:
@@ -871,10 +938,10 @@ class Shape:
                     + str(i)
                     + "<br>"
                     + "x="
-                    + str(p[0])
+                    + str(point[0])
                     + "<br>"
                     + "z="
-                    + str(p[1])
+                    + str(point[1])
                     + "<br>"
                 )
 
@@ -1028,8 +1095,8 @@ class Shape:
                 pattern string
         """
         # Create temp file
-        fh, abs_path = mkstemp()
-        with fdopen(fh, 'w') as new_file:
+        file_handle, abs_path = mkstemp()
+        with fdopen(file_handle, 'w') as new_file:
             with open(filename) as old_file:
                 for line in old_file:
                     new_file.write(line.replace(pattern, subst))
@@ -1042,3 +1109,128 @@ class Shape:
 
         # Move new file
         move(abs_path, filename)
+
+    def make_graveyard(self, graveyard_offset=100):
+        """Creates a graveyard volume (bounding box) that encapsulates all
+        volumes. This is required by DAGMC when performing neutronics
+        simulations.
+
+        Args:
+            graveyard_offset (float): the offset between the largest edge of
+                the geometry and inner bounding shell created. Defaults to
+                100
+
+        Returns:
+            CadQuery solid: a shell volume that bounds the geometry, referred
+            to as a graveyard in DAGMC
+        """
+
+        self.graveyard_offset = graveyard_offset
+
+        if self.solid is None:
+            self.create_solid()
+
+        graveyard_shape = paramak.HollowCube(
+            length=self.largest_dimension * 2 + graveyard_offset * 2,
+            name="Graveyard",
+            material_tag="Graveyard",
+            stp_filename="Graveyard.stp",
+            stl_filename="Graveyard.stl",
+        )
+
+        self.graveyard = graveyard_shape
+
+        return graveyard_shape
+
+    def export_h5m(
+            self,
+            filename='dagmc.h5m',
+            skip_graveyard=False,
+            tolerance=0.001,
+            graveyard_offset=100):
+        """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
+        DAGMC file produced has not been imprinted and merged unlike the other
+        supported method which uses Trelis to produce an imprinted and merged
+        DAGMC geometry. If the provided filename doesn't end with .h5m it will
+        be added
+
+        Args:
+            filename (str, optional): filename of h5m outputfile
+                Defaults to "dagmc.h5m".
+            skip_graveyard (boolean, optional): filename of h5m outputfile
+                Defaults to False.
+            tolerance (float, optional): the precision of the faceting
+                Defaults to 0.001.
+            graveyard_offset (float, optional): the offset between the largest
+                edge of the geometry and inner bounding shell created. Defualts
+                to 100.
+        Returns:
+            filename: output h5m filename
+        """
+
+        path_filename = Path(filename)
+
+        if path_filename.suffix != ".h5m":
+            path_filename = path_filename.with_suffix(".h5m")
+
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        self.export_stl(self.stl_filename, tolerance=tolerance)
+
+        moab_core, moab_tags = define_moab_core_and_tags()
+
+        moab_core = add_stl_to_moab_core(
+            moab_core=moab_core,
+            surface_id=1,
+            volume_id=1,
+            material_name=self.material_tag,
+            tags=moab_tags,
+            stl_filename=self.stl_filename
+        )
+
+        if skip_graveyard is False:
+            self.make_graveyard(graveyard_offset=graveyard_offset)
+            self.graveyard.export_stl(self.graveyard.stl_filename)
+            volume_id = 2
+            surface_id = 2
+            moab_core = add_stl_to_moab_core(
+                moab_core=moab_core,
+                surface_id=surface_id,
+                volume_id=volume_id,
+                material_name=self.graveyard.material_tag,
+                tags=moab_tags,
+                stl_filename=self.graveyard.stl_filename
+            )
+
+        all_sets = moab_core.get_entities_by_handle(0)
+
+        file_set = moab_core.create_meshset()
+
+        moab_core.add_entities(file_set, all_sets)
+
+        moab_core.write_file(str(path_filename))
+
+        return filename
+
+    def export_graveyard(
+            self,
+            graveyard_offset=100,
+            filename="Graveyard.stp"):
+        """Writes an stp file (CAD geometry) for the reactor graveyard. This
+        is needed for DAGMC simulations. This method also calls
+        Reactor.make_graveyard with the offset.
+
+        Args:
+            filename (str): the filename for saving the stp file
+            graveyard_offset (float): the offset between the largest edge of
+                the geometry and inner bounding shell created. Defaults to
+                Reactor.graveyard_offset
+
+        Returns:
+            str: the stp filename created
+        """
+
+        self.make_graveyard(graveyard_offset=graveyard_offset)
+        self.graveyard.export_stp(Path(filename))
+
+        return filename

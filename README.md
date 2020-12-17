@@ -18,6 +18,7 @@ finite element analysis codes.
 
 :point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
 
+:point_right: [Video presentation](https://www.youtube.com/embed/fXboew3U7rw)
 
 # History
 
@@ -30,7 +31,9 @@ due to two contributors in particular (John Billingsley and
 Remi Delaporte-Mathurin) and others have also helped, you can see all those who
 have helped the development in the 
 [Authors.md](https://github.com/ukaea/paramak/blob/main/AUTHORS.md) and in the 
-[github contributions](https://github.com/ukaea/paramak/graphs/contributors). 
+[GitHub contributions](https://github.com/ukaea/paramak/graphs/contributors).
+The code has been professionally reviewed by [PullRequest.com](https://www.pullrequest.com/) who
+produced a [report](https://github.com/ukaea/paramak/files/5704872/PULLREQUEST.Paramak.Project.Review.pdf) and inline [suggestions](https://github.com/ukaea/paramak/pull/639).
 
 
 ## System Installation
@@ -277,7 +280,6 @@ installed [DAGMC plugin](https://github.com/svalinn/Trelis-plugin).
 Further information on DAGMC neutronics can be found
 [here](https://svalinn.github.io/DAGMC/) and information on OpenMC can be found
 [here](https://openmc.readthedocs.io/). The two codes can be used together to
-simulate neutron transport on the h5m file created. The UKAEA openmc workshop
-also has two tasks that might be of interest 
-[task 10](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10)
-and [task 12](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12).
+simulate neutron transport on the h5m file created. The
+[UKAEA openmc workshop](https://github.com/ukaea/openmc_workshop) also has some
+Paramak with DAGMC and OpenMC based tasks that might be of interest.

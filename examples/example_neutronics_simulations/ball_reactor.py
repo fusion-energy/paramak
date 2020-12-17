@@ -4,6 +4,7 @@ material for this simulation in order to demonstrate the use of more complex
 materials."""
 
 import neutronics_material_maker as nmm
+import openmc
 import paramak
 
 
@@ -40,9 +41,18 @@ def make_model_and_simulate():
             nmm.Material('eurofer')
         ])
 
+    source = openmc.Source()
+    # sets the location of the source to x=0 y=0 z=0
+    source.space = openmc.stats.Point((my_reactor.major_radius, 0, 0))
+    # sets the direction to isotropic
+    source.angle = openmc.stats.Isotropic()
+    # sets the energy distribution to 100% 14MeV neutrons
+    source.energy = openmc.stats.Discrete([14e6], [1])
+
     # makes the neutronics material
-    neutronics_model = paramak.NeutronicsModelFromReactor(
-        reactor=my_reactor,
+    neutronics_model = paramak.NeutronicsModel(
+        geometry=my_reactor,
+        source=source,
         materials={
             'inboard_tf_coils_mat': 'copper',
             'center_column_shield_mat': 'WC',

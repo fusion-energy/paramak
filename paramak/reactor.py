@@ -5,12 +5,12 @@ from pathlib import Path
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-import numpy as np
 import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
-from paramak.shape import Shape
+from paramak.neutronics_utils import (add_stl_to_moab_core,
+                                      define_moab_core_and_tags)
 from paramak.utils import get_hash
 
 
@@ -22,13 +22,9 @@ class Reactor:
 
     Args:
         shapes_and_components (list): list of paramak.Shape
-        graveyard_offset (float): the offset between the largest edge of the
-            geometry and inner bounding shell created. can be overwritten by
-            specifying offset as part of the export_graveyard and
-            make_graveyard methods.
     """
 
-    def __init__(self, shapes_and_components, graveyard_offset=100):
+    def __init__(self, shapes_and_components):
 
         self.material_tags = []
         self.stp_filenames = []
@@ -38,8 +34,9 @@ class Reactor:
         self.solid = None
 
         self.shapes_and_components = shapes_and_components
-        self.graveyard_offset = graveyard_offset
         self.reactor_hash_value = None
+
+        self.graveyard_offset = None  # set by the make_graveyard method
 
     @property
     def stp_filenames(self):
@@ -62,6 +59,22 @@ class Reactor:
     @stl_filenames.setter
     def stl_filenames(self, value):
         self._stl_filenames = value
+
+    @property
+    def largest_dimension(self):
+        """Calculates a bounding box for the Reactor and returns the largest
+        absolute value of the largest dimension of the bounding box"""
+        largest_dimension = 0
+        for component in self.shapes_and_components:
+            largest_dimension = max(
+                largest_dimension,
+                component.largest_dimension)
+        self._largest_dimension = largest_dimension
+        return largest_dimension
+
+    @largest_dimension.setter
+    def largest_dimension(self, value):
+        self._largest_dimension = value
 
     @property
     def material_tags(self):
@@ -117,9 +130,11 @@ class Reactor:
 
     @graveyard_offset.setter
     def graveyard_offset(self, value):
-        if not isinstance(value, (float, int)):
+        if value is None:
+            self._graveyard_offset = None
+        elif not isinstance(value, (float, int)):
             raise ValueError("graveyard_offset must be a number")
-        if value < 0:
+        elif value < 0:
             raise ValueError("graveyard_offset must be positive")
         self._graveyard_offset = value
 
@@ -197,8 +212,7 @@ class Reactor:
         # as it is automatically calculated instead of being added by the user.
         # Also the graveyard must have 'Graveyard' as the material name
         if include_graveyard is True:
-            if self.graveyard is None:
-                self.make_graveyard()
+            self.make_graveyard()
             neutronics_description.append(
                 self.graveyard.neutronics_description())
 
@@ -255,13 +269,19 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_stp(self, output_folder=""):
+    def export_stp(self, output_folder="", graveyard_offset=100,
+                   mode='solid'):
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 
         Args:
             output_folder (str): the folder for saving the stp files to
-
+            graveyard_offset (float, optional): the offset between the largest
+                edge of the geometry and inner bounding shell created. Defaults
+                to 100.
+            mode (str, optional): the object to export can be either
+                'solid' which exports 3D solid shapes or the 'wire' which
+                exports the wire edges of the shape. Defaults to 'solid'.
         Returns:
             list: a list of stp filenames created
         """
@@ -282,11 +302,14 @@ class Reactor:
                 )
             filenames.append(
                 str(Path(output_folder) / Path(entry.stp_filename)))
-            entry.export_stp(Path(output_folder) / Path(entry.stp_filename))
+            entry.export_stp(
+                filename=Path(output_folder) / Path(entry.stp_filename),
+                mode=mode
+            )
 
         # creates a graveyard (bounding shell volume) which is needed for
         # nuetronics simulations
-        self.make_graveyard()
+        self.make_graveyard(graveyard_offset=graveyard_offset)
         filenames.append(
             str(Path(output_folder) / Path(self.graveyard.stp_filename)))
         self.graveyard.export_stp(
@@ -348,7 +371,8 @@ class Reactor:
             self,
             filename='dagmc.h5m',
             skip_graveyard=False,
-            tolerance=0.001):
+            tolerance=0.001,
+            graveyard_offset=100):
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -362,14 +386,12 @@ class Reactor:
                 Defaults to False.
             tolerance (float, optional): the precision of the faceting
                 Defaults to 0.001.
+            graveyard_offset (float, optional): the offset between the largest
+                edge of the geometry and inner bounding shell created. Defaults
+                to 100.
         Returns:
             filename: output h5m filename
         """
-
-        try:
-            from pymoab import core, types
-        except ImportError as err:
-            raise err('PyMoab not found, Reactor.export_h5m method not available')
 
         path_filename = Path(filename)
 
@@ -378,104 +400,45 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        self.export_stl(tolerance=tolerance)
-        material_dict = self.neutronics_description()
-
-        # create pymoab instance
-        mb = core.Core()
-
-        tags = dict()
-
-        SENSE_TAG_NAME = "GEOM_SENSE_2"
-        SENSE_TAG_SIZE = 2
-        tags['surf_sense'] = mb.tag_get_handle(
-            SENSE_TAG_NAME,
-            SENSE_TAG_SIZE,
-            types.MB_TYPE_HANDLE,
-            types.MB_TAG_SPARSE,
-            create_if_missing=True)
-
-        tags['category'] = mb.tag_get_handle(
-            types.CATEGORY_TAG_NAME,
-            types.CATEGORY_TAG_SIZE,
-            types.MB_TYPE_OPAQUE,
-            types.MB_TAG_SPARSE,
-            create_if_missing=True)
-        tags['name'] = mb.tag_get_handle(
-            types.NAME_TAG_NAME,
-            types.NAME_TAG_SIZE,
-            types.MB_TYPE_OPAQUE,
-            types.MB_TAG_SPARSE,
-            create_if_missing=True)
-        tags['geom_dimension'] = mb.tag_get_handle(
-            types.GEOM_DIMENSION_TAG_NAME,
-            1,
-            types.MB_TYPE_INTEGER,
-            types.MB_TAG_DENSE,
-            create_if_missing=True)
-
-        # Global ID is a default tag, just need the name to retrieve
-        tags['global_id'] = mb.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
+        moab_core, moab_tags = define_moab_core_and_tags()
 
         surface_id = 1
         volume_id = 1
 
-        for item in material_dict:
+        for item in self.shapes_and_components:
 
-            stl_filename = item['stl_filename']
-
-            if skip_graveyard and "graveyard" in stl_filename.lower():
-                continue
-
-            surface_set = mb.create_meshset()
-            volume_set = mb.create_meshset()
-
-            # recent versions of MOAB handle this automatically
-            # but best to go ahead and do it manually
-            mb.tag_set_data(tags['global_id'], volume_set, volume_id)
+            item.export_stl(item.stl_filename, tolerance=tolerance)
+            moab_core = add_stl_to_moab_core(
+                moab_core,
+                surface_id,
+                volume_id,
+                item.material_tag,
+                moab_tags,
+                item.stl_filename)
             volume_id += 1
-            mb.tag_set_data(tags['global_id'], surface_set, surface_id)
             surface_id += 1
 
-            # set geom IDs
-            mb.tag_set_data(tags['geom_dimension'], volume_set, 3)
-            mb.tag_set_data(tags['geom_dimension'], surface_set, 2)
+        if skip_graveyard is False:
+            self.make_graveyard(graveyard_offset=graveyard_offset)
+            self.graveyard.export_stl(self.graveyard.stl_filename)
+            volume_id = 2
+            surface_id = 2
+            moab_core = add_stl_to_moab_core(
+                moab_core,
+                surface_id,
+                volume_id,
+                self.graveyard.material_tag,
+                moab_tags,
+                self.graveyard.stl_filename
+            )
 
-            # set category tag values
-            mb.tag_set_data(tags['category'], volume_set, "Volume")
-            mb.tag_set_data(tags['category'], surface_set, "Surface")
+        all_sets = moab_core.get_entities_by_handle(0)
 
-            # establish parent-child relationship
-            mb.add_parent_child(volume_set, surface_set)
+        file_set = moab_core.create_meshset()
 
-            # set surface sense
-            sense_data = [volume_set, np.uint64(0)]
-            mb.tag_set_data(tags['surf_sense'], surface_set, sense_data)
+        moab_core.add_entities(file_set, all_sets)
 
-            # load the stl triangles/vertices into the surface set
-            mb.load_file(stl_filename, surface_set)
-
-            material_name = item['material']
-
-            group_set = mb.create_meshset()
-            mb.tag_set_data(tags['category'], group_set, "Group")
-            print("mat:{}".format(material_name))
-            mb.tag_set_data(
-                tags['name'],
-                group_set,
-                "mat:{}".format(material_name))
-            mb.tag_set_data(tags['geom_dimension'], group_set, 4)
-
-            # add the volume to this group set
-            mb.add_entity(group_set, volume_set)
-
-        all_sets = mb.get_entities_by_handle(0)
-
-        file_set = mb.create_meshset()
-
-        mb.add_entities(file_set, all_sets)
-
-        mb.write_file(str(path_filename))
+        moab_core.write_file(str(path_filename))
 
         return filename
 
@@ -522,13 +485,13 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as f:
-            exporters.exportShape(self.solid, "SVG", f)
+        with open(path_filename, "w") as out_file:
+            exporters.exportShape(self.solid, "SVG", out_file)
         print("Saved file as ", path_filename)
 
     def export_graveyard(
             self,
-            graveyard_offset=None,
+            graveyard_offset=100,
             filename="Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
@@ -544,15 +507,12 @@ class Reactor:
             str: the stp filename created
         """
 
-        if graveyard_offset is None:
-            graveyard_offset = self.graveyard_offset
-
         self.make_graveyard(graveyard_offset=graveyard_offset)
         self.graveyard.export_stp(Path(filename))
 
         return filename
 
-    def make_graveyard(self, graveyard_offset=None):
+    def make_graveyard(self, graveyard_offset=100):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -563,71 +523,23 @@ class Reactor:
                 Reactor.graveyard_offset
 
         Returns:
-            CadQuery solid: a shell volume that bounds the geometry, referred to
-            as a graveyard in DAGMC
+            CadQuery solid: a shell volume that bounds the geometry, referred
+            to as a graveyard in DAGMC
         """
 
-        if graveyard_offset is None:
-            graveyard_offset = self.graveyard_offset
+        self.graveyard_offset = graveyard_offset
 
         for component in self.shapes_and_components:
             if component.solid is None:
                 component.create_solid()
 
-        # finds the largest dimenton in all the Shapes that are in the reactor
-        largest_dimension = 0
-        for component in self.shapes_and_components:
-
-            if isinstance(component.solid, cq.Compound):
-                for solid in component.solid.Solids():
-                    largest_dimension = max(
-                        abs(solid.BoundingBox().xmax),
-                        abs(solid.BoundingBox().xmin),
-                        abs(solid.BoundingBox().ymax),
-                        abs(solid.BoundingBox().ymin),
-                        abs(solid.BoundingBox().zmax),
-                        abs(solid.BoundingBox().zmin),
-                        largest_dimension
-                    )
-            else:
-                largest_dimension = max(
-                    abs(component.solid.val().BoundingBox().xmax),
-                    abs(component.solid.val().BoundingBox().xmin),
-                    abs(component.solid.val().BoundingBox().ymax),
-                    abs(component.solid.val().BoundingBox().ymin),
-                    abs(component.solid.val().BoundingBox().zmax),
-                    abs(component.solid.val().BoundingBox().zmin),
-                    largest_dimension
-                )
-
-        largest_dimension = largest_dimension * 2
-
-        graveyard_offset = graveyard_offset * 2
-
-        # creates a small box that surrounds the geometry
-        inner_box = cq.Workplane("front").box(
-            largest_dimension + graveyard_offset,
-            largest_dimension + graveyard_offset,
-            largest_dimension + graveyard_offset
+        graveyard_shape = paramak.HollowCube(
+            length=self.largest_dimension * 2 + graveyard_offset * 2,
+            name="Graveyard",
+            material_tag="Graveyard",
+            stp_filename="Graveyard.stp",
+            stl_filename="Graveyard.stl",
         )
-
-        graveyard_thickness = 10
-        # creates a large box that surrounds the smaller box
-        outer_box = cq.Workplane("front").box(
-            largest_dimension + graveyard_offset + graveyard_thickness,
-            largest_dimension + graveyard_offset + graveyard_thickness,
-            largest_dimension + graveyard_offset + graveyard_thickness
-        )
-
-        # subtracts the two boxes to leave a hollow box
-        graveyard_part = outer_box.cut(inner_box)
-
-        graveyard_shape = Shape()
-        graveyard_shape.name = "Graveyard"
-        graveyard_shape.material_tag = "Graveyard"
-        graveyard_shape.stp_filename = "Graveyard.stp"
-        graveyard_shape.stl_filename = "Graveyard.stl"
-        graveyard_shape.solid = graveyard_part
 
         self.graveyard = graveyard_shape
 

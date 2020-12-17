@@ -1,5 +1,6 @@
 
 from paramak import ExtrudeStraightShape
+from paramak.utils import cut_solid
 
 
 class BlanketCutterParallels(ExtrudeStraightShape):
@@ -10,21 +11,19 @@ class BlanketCutterParallels(ExtrudeStraightShape):
     sections with a fixed distance between each section.
 
     Args:
-        distance (float): extruded distance (cm) of the cutter which translates
-            to being the gap size between blankets when the cutter is used to
-            segment blankets.
+        thickness (float): extruded distance (cm) of the cutter which
+            translates to being the gap size between blankets when the cutter
+            is used to segment blankets.
         gap_size (float): the distance between the inner edges of the two
             parrallel extrusions
-        azimuth_placement_angle (iterable of floats or float, optional): the
-            azimuth angle(s) used when positioning the shape. If an iterable of
-            angles is provided, the shape is duplicated at all angles. Defaults
+        height (float, optional): height (cm) of the port. Defaults to 2000.0.
+        width (float, optional): width (cm) of the port. Defaults to 2000.0.
+        azimuth_placement_angle (list or float, optional): Defaults
             to [0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
-        height (float, optional): height (cm) of the port. Defaults to 2000
-        width (float, optional): width (cm) of the port. Defaults to 2000
-        stp_filename (str, optional): defaults to "BlanketCutterParallels.stp".
-        stl_filename (str, optional): defaults to "BlanketCutterParallels.stl".
-        name (str, optional): defaults to "blanket_cutter_Parallels".
-        material_tag (str, optional): defaults to
+        stp_filename (str, optional): Defaults to "BlanketCutterParallels.stp".
+        stl_filename (str, optional): Defaults to "BlanketCutterParallels.stl".
+        name (str, optional): Defaults to "blanket_cutter_Parallels".
+        material_tag (str, optional): Defaults to
             "blanket_cutter_parallels_mat".
     """
 
@@ -32,35 +31,61 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         self,
         thickness,
         gap_size,
+        height=2000.,
+        width=2000.,
         azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216., 252.,
                                  288., 324.],
-        height=2000,
-        width=2000,
         stp_filename="BlanketCutterParallels.stp",
         stl_filename="BlanketCutterParallels.stl",
         name="blanket_cutter_parallels",
         material_tag="blanket_cutter_parallels_mat",
         **kwargs
     ):
-
+        self.main_cutting_shape = \
+            ExtrudeStraightShape(
+                distance=gap_size / 2.0,
+                azimuth_placement_angle=azimuth_placement_angle,
+            )
+        self.gap_size = gap_size
+        self.thickness = thickness
         super().__init__(
-            distance=gap_size / 2.0 + thickness,
+            distance=self.distance,
             azimuth_placement_angle=azimuth_placement_angle,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            name=name,
             material_tag=material_tag,
             **kwargs
         )
-        self.thickness = thickness
         self.height = height
         self.width = width
-        self.gap_size = gap_size
-        self.main_cutting_shape = \
-            ExtrudeStraightShape(
-                distance=self.gap_size / 2.0,
-                azimuth_placement_angle=self.azimuth_placement_angle,
-            )
-        self.find_points()
+
+    @property
+    def distance(self):
+        self.distance = self.gap_size / 2.0 + self.thickness
+        return self._distance
+
+    @distance.setter
+    def distance(self, value):
+        self._distance = value
+
+    @property
+    def gap_size(self):
+        return self._gap_size
+
+    @gap_size.setter
+    def gap_size(self, value):
+        self.main_cutting_shape.distance = value / 2.0
+        self._gap_size = value
+
+    @property
+    def azimuth_placement_angle(self):
+        return self._azimuth_placement_angle
+
+    @azimuth_placement_angle.setter
+    def azimuth_placement_angle(self, value):
+        self.main_cutting_shape.azimuth_placement_angle = value
+        self._azimuth_placement_angle = value
 
     def find_points(self):
 
@@ -72,12 +97,12 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         ]
 
         self.main_cutting_shape.points = points
-        if self.cut is None:
-            self.cut = [self.main_cutting_shape]
-        elif not isinstance(self.cut, list) and \
-                self.cut != self.main_cutting_shape:
-            self.cut = [self.cut, self.main_cutting_shape]
-        elif self.main_cutting_shape not in self.cut:
-            self.cut.append(self.main_cutting_shape)
 
         self.points = points[:-1]
+
+    def create_solid(self):
+        solid = super().create_solid()
+        solid = cut_solid(solid, self.main_cutting_shape)
+        self.solid = solid
+
+        return solid

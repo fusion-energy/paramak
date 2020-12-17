@@ -2,6 +2,7 @@ from .shape import Shape
 from .reactor import Reactor
 from .utils import rotate, extend, distance_between_two_points, diff_between_angles
 from .utils import EdgeLengthSelector, FaceAreaSelector
+from .neutronics_utils import define_moab_core_and_tags, add_stl_to_moab_core
 
 from .parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from .parametric_shapes.extruded_spline_shape import ExtrudeSplineShape
@@ -54,6 +55,8 @@ from .parametric_components.poloidal_segmenter import PoloidalSegments
 from .parametric_components.port_cutters_rotated import PortCutterRotated
 from .parametric_components.port_cutters_rectangular import PortCutterRectangular
 from .parametric_components.port_cutters_circular import PortCutterCircular
+from .parametric_components.rotated_trapezoid import RotatedTrapezoid
+from .parametric_components.rotated_isosceles_triangle import RotatedIsoscelesTriangle
 from .parametric_components.cutting_wedge import CuttingWedge
 from .parametric_components.cutting_wedge_fs import CuttingWedgeFS
 from .parametric_components.blanket_cutter_parallels import BlanketCutterParallels
@@ -69,6 +72,8 @@ from .parametric_components.toroidal_field_coil_princeton_d import ToroidalField
 from .parametric_components.tf_coil_casing import TFCoilCasing
 
 from .parametric_components.vacuum_vessel import VacuumVessel
+from .parametric_components.hollow_cube import HollowCube
+from .parametric_components.shell_fs import ShellFS
 
 from .parametric_reactors.ball_reactor import BallReactor
 from .parametric_reactors.submersion_reactor import SubmersionTokamak
@@ -77,4 +82,4 @@ from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
 from .parametric_reactors.segmented_blanket_ball_reactor import SegmentedBlanketBallReactor
 from .parametric_reactors.center_column_study_reactor import CenterColumnStudyReactor
 
-from .parametric_neutronics.neutronics_model_from_reactor import NeutronicsModelFromReactor
+from .parametric_neutronics.neutronics_model import NeutronicsModel

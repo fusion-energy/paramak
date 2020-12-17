@@ -1,7 +1,6 @@
 
 import cadquery as cq
 from paramak import RotateStraightShape
-from paramak.utils import get_hash
 
 
 class PoloidalFieldCoilSet(RotateStraightShape):
@@ -14,8 +13,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
             (cm).
         center_points (list of tuple of floats): the center of the coil (x,z)
             values e.g. [(100,100), (100,200)] (cm).
-        stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
-        stl_filename (str, optional): defaults to "PoloidalFieldCoil.stl".
+        stp_filename (str, optional): defaults to "PoloidalFieldCoilSet.stp".
+        stl_filename (str, optional): defaults to "PoloidalFieldCoilSet.stl".
         name (str, optional): defaults to "pf_coil".
         material_tag (str, optional): defaults to "pf_coil_mat".
     """
@@ -25,8 +24,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         heights,
         widths,
         center_points,
-        stp_filename="PoloidalFieldCoil.stp",
-        stl_filename="PoloidalFieldCoil.stl",
+        stp_filename="PoloidalFieldCoilSet.stp",
+        stl_filename="PoloidalFieldCoilSet.stl",
         name="pf_coil",
         material_tag="pf_coil_mat",
         **kwargs
@@ -51,18 +50,6 @@ class PoloidalFieldCoilSet(RotateStraightShape):
                 self.center_points):
             raise ValueError("The length of widthts, height and center_points \
                 must be the same when making a PoloidalFieldCoilSet")
-
-    @property
-    def solid(self):
-        """Returns a CadQuery compound object consisting of 1 or more 3d
-        volumes"""
-        if get_hash(self) != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
 
     @property
     def center_points(self):
@@ -153,8 +140,5 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         )
 
         self.solid = compound
-
-        # Calculate hash value for current solid
-        self.hash_value = get_hash(self)
 
         return compound

@@ -92,13 +92,18 @@ class ExtrudeCircleShape(Shape):
         else:
             extrusion_distance = -self.distance / 2.0
 
-        solid = (
+        wire = (
             cq.Workplane(self.workplane)
             .workplane(offset=extrusion_offset)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
-            .extrude(distance=extrusion_distance, both=self.extrude_both)
         )
+
+        self.wire = wire
+
+        solid = wire.extrude(
+            distance=extrusion_distance,
+            both=self.extrude_both)
 
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)

@@ -16,9 +16,9 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
             the center column shield.
         outer_radius (float): the outer_radius of the center column shield.
         stp_filename (str, optional): Defaults to
-            "CenterColumnFlatTopHyperbola.stp".
+            "CenterColumnShieldFlatTopHyperbola.stp".
         stl_filename (str, optional): Defaults to
-            "CenterColumnFlatTopHyperbola.stl".
+            "CenterColumnShieldFlatTopHyperbola.stl".
         name (str, optional): Defaults to "center_column".
         material_tag (str, optional): Defaults to "center_column_shield_mat".
     """
@@ -30,8 +30,8 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         inner_radius,
         mid_radius,
         outer_radius,
-        stp_filename="CenterColumnFlatTopHyperbola.stp",
-        stl_filename="CenterColumnFlatTopHyperbola.stl",
+        stp_filename="CenterColumnShieldFlatTopHyperbola.stp",
+        stl_filename="CenterColumnShieldFlatTopHyperbola.stl",
         name="center_column",
         material_tag="center_column_shield_mat",
         **kwargs
@@ -95,19 +95,9 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         """Finds the XZ points and connection types (straight and spline) that
         describe the 2D profile of the center column shield shape."""
 
-        if self.inner_radius >= self.outer_radius:
-            raise ValueError(
-                "inner_radius ({}) is larger than outer_radius ({})".format(
-                    self.inner_radius, self.outer_radius
-                )
-            )
-
-        if self.mid_radius >= self.outer_radius:
-            raise ValueError(
-                "mid_radius ({}) is larger than outer_radius ({})".format(
-                    self.mid_radius, self.outer_radius
-                )
-            )
+        if not self.inner_radius <= self.mid_radius <= self.outer_radius:
+            raise ValueError("inner_radius must be less than mid_radius. \
+                mid_radius must be less than outer_radius.")
 
         if self.arc_height >= self.height:
             raise ValueError(

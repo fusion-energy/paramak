@@ -7,10 +7,10 @@ import paramak
 import pytest
 
 
-class test_CuttingWedge(unittest.TestCase):
+class TestCuttingWedge(unittest.TestCase):
     """Creates a random sized cutting wedge and changes the volume"""
 
-    def test_volume_of_CuttingWedge_for_5_random_dimentions(self):
+    def test_volume_of_for_5_random_dimentions(self):
         for test_number in range(5):
             height = random.uniform(1., 2000.)
             radius = random.uniform(1., 1000)

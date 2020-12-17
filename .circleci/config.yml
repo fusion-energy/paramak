@@ -7,18 +7,25 @@ jobs:
   # test:
   build:
     docker:
-      - image: openmcworkshop/paramak:dependencies_cq_master
+      - image: openmcworkshop/paramak:dependences_with_neutronics
     steps:
       - checkout
       - run:
           name: install
           command: |
-            pip install -r requirements.txt  # this includes optional packages
+            pip install neutronics_material_maker
+            pip install parametric_plasma_source
             python setup.py install  # this dosen't support the optional packages like pip install .[neutronics] does
+
+      - run:
+          name: run neutronics_utils tests
+          command: 
+            pytest tests/test_neutronics_utils.py -v --cov=paramak --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+
       - run:
           name: run utils tests
           command: 
-            pytest tests/test_utils.py -v --cov=paramak --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run shape tests
@@ -69,6 +76,7 @@ jobs:
           path: test-reports
 
       - run: bash <(curl -s https://codecov.io/bash)
+  # @pullrequest we can't find a way of getting this next part to work, any hints appreciated
   # the following jobs fail on the publish to Dockerhub step. This may be due to a bad authentification
   # build-deploy-master:
   #   environment:

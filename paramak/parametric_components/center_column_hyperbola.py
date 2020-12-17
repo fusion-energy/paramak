@@ -12,10 +12,10 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         mid_radius (float): the inner radius of the outer hyperbolic profile of
             the center column shield.
         outer_radius (float): the outer radius of the center column shield.
-        stp_filename (str, optional): Defaults to "center_column.stp".
-        stl_filename (str, optional): Defaults to "center_column.stl".
+        stp_filename (str, optional): Defaults to "CenterColumnShieldHyperbola.stp".
+        stl_filename (str, optional): Defaults to "CenterColumnShieldHyperbola.stl".
         name (str, optional): Defaults to "center_column".
-        material_tag (str, optional): Defaults to "center_column_material".
+        material_tag (str, optional): Defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -24,10 +24,10 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         inner_radius,
         mid_radius,
         outer_radius,
-        stp_filename="center_column.stp",
-        stl_filename="center_column.stl",
+        stp_filename="CenterColumnShieldHyperbola.stp",
+        stl_filename="CenterColumnShieldHyperbola.stl",
         name="center_column",
-        material_tag="center_column_material",
+        material_tag="center_column_shield_mat",
         **kwargs
     ):
 
@@ -80,19 +80,9 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         """Finds the XZ points and connection types (straight and spline) that
         describe the 2D profile of the center column shield shape."""
 
-        if self.inner_radius >= self.outer_radius:
-            raise ValueError(
-                "inner_radius ({}) is larger than outer_radius ({})".format(
-                    self.inner_radius, self.outer_radius
-                )
-            )
-
-        if self.inner_radius >= self.mid_radius:
-            raise ValueError(
-                "inner_radius ({}) is larger than mid_radius ({})".format(
-                    self.inner_radius, self.mid_radius
-                )
-            )
+        if not self.inner_radius <= self.mid_radius <= self.outer_radius:
+            raise ValueError("inner_radius must be less than mid radius. \
+                mid_radius must be less than outer_radius.")
 
         points = [
             (self.inner_radius, 0, "straight"),

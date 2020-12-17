@@ -4,6 +4,7 @@ tolerance when creating the dagmc model"""
 
 import matplotlib.pyplot as plt
 import neutronics_material_maker as nmm
+import openmc
 import paramak
 
 
@@ -25,16 +26,26 @@ def make_model_and_simulate(temperature):
         support_radial_thickness=50,
         inboard_blanket_radial_thickness=30,
         outboard_blanket_radial_thickness=30,
-        plasma_high_point=(200, 150)
+        elongation=2.75,
+        triangularity=0.5,
     )
 
     # this can just be set as a string as temperature is needed for this
     # material
     flibe = nmm.Material('FLiBe', temperature_in_C=temperature)
 
+    source = openmc.Source()
+    # sets the location of the source to x=0 y=0 z=0
+    source.space = openmc.stats.Point((my_reactor.major_radius, 0, 0))
+    # sets the direction to isotropic
+    source.angle = openmc.stats.Isotropic()
+    # sets the energy distribution to 100% 14MeV neutrons
+    source.energy = openmc.stats.Discrete([14e6], [1])
+
     # makes the neutronics model from the geometry and material allocations
-    neutronics_model = paramak.NeutronicsModelFromReactor(
-        reactor=my_reactor,
+    neutronics_model = paramak.NeutronicsModel(
+        geometry=my_reactor,
+        source=source,
         materials={
             'inboard_tf_coils_mat': 'eurofer',
             'center_column_shield_mat': 'eurofer',

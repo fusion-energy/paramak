@@ -43,39 +43,41 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         return self._height
 
     @height.setter
-    def height(self, height):
-        self._height = height
+    def height(self, value):
+        if value is None:
+            raise ValueError(
+                "height of the CenterColumnShieldBlock cannot be None")
+        self._height = value
 
     @property
     def inner_radius(self):
         return self._inner_radius
 
     @inner_radius.setter
-    def inner_radius(self, inner_radius):
-        self._inner_radius = inner_radius
+    def inner_radius(self, value):
+        if hasattr(self, "outer_radius"):
+            if value >= self.outer_radius:
+                raise ValueError(
+                    "inner_radius ({}) is larger than outer_radius ({})".format(
+                        value, self.outer_radius))
+        self._inner_radius = value
 
     @property
     def outer_radius(self):
         return self._outer_radius
 
     @outer_radius.setter
-    def outer_radius(self, outer_radius):
-        self._outer_radius = outer_radius
+    def outer_radius(self, value):
+        if hasattr(self, "inner_radius"):
+            if value <= self.inner_radius:
+                raise ValueError(
+                    "inner_radius ({}) is larger than outer_radius ({})".format(
+                        self.inner_radius, value))
+        self._outer_radius = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the
             2D profile of the center column shield shape."""
-
-        if self.inner_radius >= self.outer_radius:
-            raise ValueError(
-                "inner_radius ({}) is larger than outer_radius ({})".format(
-                    self.inner_radius, self.outer_radius
-                )
-            )
-
-        if self.height is None:
-            raise ValueError(
-                "height of the CenterColumnShieldBlock must be set")
 
         points = [
             (self.inner_radius, self.height / 2),

@@ -1,7 +1,6 @@
 
 import cadquery as cq
 from paramak import PoloidalFieldCoilSet, RotateStraightShape
-from paramak.utils import get_hash
 
 
 class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
@@ -14,9 +13,9 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
             coil casing (cm). If float then the same thickness is applied to
             all coils. If list of floats then each entry is applied to a
             seperate pf_coil, one entry for each pf_coil.
-        stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
-        stl_filename (str, optional): defaults to "PoloidalFieldCoil.stl".
-        name (str, optional): defaults to "pf_coil".
+        stp_filename (str, optional): defaults to "PoloidalFieldCoilCaseSetFC.stp".
+        stl_filename (str, optional): defaults to "PoloidalFieldCoilCaseSetFC.stl".
+        name (str, optional): defaults to "pf_coil_case_set_fc".
         material_tag (str, optional): defaults to "pf_coil_mat".
     """
 
@@ -24,9 +23,9 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         self,
         pf_coils,
         casing_thicknesses,
-        stp_filename="PoloidalFieldCoil.stp",
-        stl_filename="PoloidalFieldCoil.stl",
-        name="pf_coil",
+        stp_filename="PoloidalFieldCoilCaseSetFC.stp",
+        stl_filename="PoloidalFieldCoilCaseSetFC.stl",
+        name="pf_coil_case_set_fc",
         material_tag="pf_coil_mat",
         **kwargs
     ):
@@ -42,15 +41,10 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         self.casing_thicknesses = casing_thicknesses
         self.pf_coils = pf_coils
 
-    @property
-    def solid(self):
-        if get_hash(self) != self.hash_value:
-            self.create_solid()
-        return self._solid
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
+        # calculated internally by the class
+        self.heights = None
+        self.widths = None
+        self.center_points = None
 
     @property
     def casing_thicknesses(self):
@@ -193,8 +187,5 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         )
 
         self.solid = compound
-
-        # Calculate hash value for current solid
-        self.hash_value = get_hash(self)
 
         return compound

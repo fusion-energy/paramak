@@ -6,58 +6,10 @@ from pathlib import Path
 
 import cadquery as cq
 import paramak
+import pytest
 
 
-class test_object_properties(unittest.TestCase):
-
-    def test_export_h5m(self):
-        """Creates a Reactor object consisting of two shapes and checks a h5m
-        file of the reactor can be exported using the export_h5m method."""
-
-        os.system('rm small_dagmc.h5m')
-        os.system('rm small_dagmc_without_graveyard.h5m')
-        os.system('rm small_dagmc_with_graveyard.h5m')
-        os.system('rm large_dagmc.h5m')
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='mat1')
-        test_shape2 = paramak.RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='mat2')
-        test_shape.rotation_angle = 360
-        test_reactor = paramak.Reactor([test_shape, test_shape2])
-        test_reactor.export_h5m(filename='small_dagmc.h5m', tolerance=0.01)
-        test_reactor.export_h5m(
-            filename='small_dagmc_without_graveyard.h5m',
-            tolerance=0.01,
-            skip_graveyard=True)
-        test_reactor.export_h5m(
-            filename='small_dagmc_with_graveyard.h5m',
-            tolerance=0.01,
-            skip_graveyard=False)
-        test_reactor.export_h5m(filename='large_dagmc.h5m', tolerance=0.001)
-
-        assert Path("small_dagmc.h5m").exists() is True
-        assert Path("small_dagmc_with_graveyard.h5m").exists() is True
-        assert Path("large_dagmc.h5m").exists() is True
-        assert Path("large_dagmc.h5m").stat().st_size > Path(
-            "small_dagmc.h5m").stat().st_size
-        assert Path("small_dagmc_without_graveyard.h5m").stat(
-        ).st_size < Path("small_dagmc.h5m").stat().st_size
-
-    def test_export_h5m_without_extension(self):
-        os.system('rm out.h5m')
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='mat1')
-        test_shape2 = paramak.RotateSplineShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            material_tag='mat2')
-        test_shape.rotation_angle = 360
-        test_reactor = paramak.Reactor([test_shape, test_shape2])
-        test_reactor.export_h5m(filename='out', tolerance=0.01)
-        assert Path("out.h5m").exists() is True
-        os.system('rm out.h5m')
+class TestReactor(unittest.TestCase):
 
     def test_adding_shape_with_material_tag_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with
@@ -432,7 +384,7 @@ class test_object_properties(unittest.TestCase):
             os.system("rm " + filepath)
 
         assert test_reactor.graveyard is not None
-        assert test_reactor.graveyard.__class__.__name__ == "Shape"
+        assert test_reactor.graveyard.__class__.__name__ == "HollowCube"
 
     def test_export_graveyard_offset(self):
         """checks that the graveyard can be exported with the correct default parameters
@@ -442,8 +394,8 @@ class test_object_properties(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         os.system("rm Graveyard.stp")
         test_reactor = paramak.Reactor([test_shape])
-        assert test_reactor.graveyard_offset == 100
         test_reactor.export_graveyard()
+        assert test_reactor.graveyard_offset == 100
         graveyard_volume_1 = test_reactor.graveyard.volume
 
         test_reactor.export_graveyard(graveyard_offset=50)
@@ -770,12 +722,24 @@ class test_object_properties(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape])
         assert test_reactor.tet_meshes is not None
 
+    def test_largest_dimention(self):
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape.rotation_angle = 360
+        test_reactor = paramak.Reactor([test_shape])
+        assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 20)
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (30, 20)])
+        test_shape.rotation_angle = 360
+        test_reactor = paramak.Reactor([test_shape])
+        assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 30)
+
     def test_shapes_and_components(self):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
 
         def incorrect_shapes_and_components():
-            test_reactor = paramak.Reactor(test_shape)
+            paramak.Reactor(test_shape)
         self.assertRaises(ValueError, incorrect_shapes_and_components)
 
     def test_graveyard_error(self):

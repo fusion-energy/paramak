@@ -12,6 +12,8 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         channel_radius (float): radius of each coolant channel in ring.
         number_of_coolant_channels (float): number of coolant channels in ring.
         ring radius (float): radius of coolant channel ring.
+        start_angle (float, optional): angle at which the first channel in the
+            ring is placed. Defaults to 0.
         workplane (str, optional): plane in which the cross-sections of the
             coolant channels lie. Defaults to "XY".
         rotation_axis (str, optional): azimuthal axis around which the separate
@@ -29,6 +31,7 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         channel_radius,
         number_of_coolant_channels,
         ring_radius,
+        start_angle=0,
         stp_filename="CoolantChannelRingStraight.stp",
         stl_filename="CoolantChannelRingStraight.stl",
         material_tag="coolant_channel_mat",
@@ -48,6 +51,7 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         self.channel_radius = channel_radius
         self.number_of_coolant_channels = number_of_coolant_channels
         self.ring_radius = ring_radius
+        self.start_angle = start_angle
 
     @property
     def azimuth_placement_angle(self):
@@ -60,12 +64,12 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
 
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of
-        coolant channels"""
+        coolant channels."""
 
         angles = list(
             np.linspace(
-                0,
-                360,
+                0 + self.start_angle,
+                360 + self.start_angle,
                 self.number_of_coolant_channels,
                 endpoint=False))
 

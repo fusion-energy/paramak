@@ -4,18 +4,20 @@ import unittest
 import paramak
 
 
-class test_VacuumVessel(unittest.TestCase):
-    test_shape = paramak.VacuumVessel(
-        height=2, inner_radius=1, thickness=0.2,
-    )
+class TestVacuumVessel(unittest.TestCase):
 
-    def test_VacuumVessel_creation(self):
+    def setUp(self):
+        self.test_shape = paramak.VacuumVessel(
+            height=2, inner_radius=1, thickness=0.2
+        )
+
+    def test_creation(self):
         """Creates a shape using the VacuumVessel parametric component and
         checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
 
-    def test_VacuumVessel_ports(self):
+    def test_ports(self):
         """Creates a vacuum vessel with ports holes in it and checks that a
         caquery solid is created."""
 
@@ -26,21 +28,12 @@ class test_VacuumVessel(unittest.TestCase):
         cutter3 = paramak.PortCutterRectangular(
             distance=3, z_pos=-0.5, height=0.2, width=0.4,
             physical_groups=None)
-
         cutter4 = paramak.PortCutterCircular(
-            distance=3,
-            z_pos=0.25,
-            radius=0.1,
-            azimuth_placement_angle=45,
+            distance=3, z_pos=0.25, radius=0.1, azimuth_placement_angle=45,
             physical_groups=None)
-
         cutter5 = paramak.PortCutterRotated(
-            (0,
-             0),
-            azimuth_placement_angle=-90,
-            rotation_angle=10,
-            fillet_radius=0.01,
-            physical_groups=None)
+            (0, 0), azimuth_placement_angle=-90, rotation_angle=10,
+            fillet_radius=0.01, physical_groups=None)
 
         pre_cut_volume = self.test_shape.volume
 

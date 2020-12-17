@@ -7,7 +7,7 @@ import paramak
 import pytest
 
 
-class test_SubmersionTokamak(unittest.TestCase):
+class TestSubmersionTokamak(unittest.TestCase):
 
     def setUp(self):
         self.test_reactor = paramak.SubmersionTokamak(
@@ -29,7 +29,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             rotation_angle=359,
         )
 
-    def test_SubmersionTokamak_svg_creation(self):
+    def test_svg_creation(self):
         """Creates a SubmersionTokamak and checks that an svg file of the reactor
         can be exported using the export_svg method."""
 
@@ -39,13 +39,13 @@ class test_SubmersionTokamak(unittest.TestCase):
         assert Path("test_image.svg").exists() is True
         os.system("rm test_image.svg")
 
-    def test_minimal_SubmersionTokamak_creation(self):
+    def test_minimal_creation(self):
         """Creates a SubmersionTokamak and checks that the correct number of
         components are created."""
 
         assert len(self.test_reactor.shapes_and_components) == 8
 
-    def test_SubmersionTokamak_with_tf_coils_creation(self):
+    def test_with_tf_coils_creation(self):
         """Creates a SubmersionTokamak with tf coils and checks that the correct
         number of components are created."""
 
@@ -56,7 +56,7 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         assert len(self.test_reactor.shapes_and_components) == 9
 
-    def test_SubmersionTokamak_with_tf_and_pf_coils_creation(self):
+    def test_with_tf_and_pf_coils_creation(self):
         """Creates a SubmersionTokamak with tf and pf coils and checks that the
         correct number of components are created."""
 
@@ -71,7 +71,7 @@ class test_SubmersionTokamak(unittest.TestCase):
 
         assert len(self.test_reactor.shapes_and_components) == 11
 
-    def test_minimal_SubmersionTokamak_stp_creation(self):
+    def test_minimal_stp_creation(self):
         """Creates a SubmersionTokamak and checks that stp files of all components
         can be exported using the export_stp method."""
 
@@ -94,7 +94,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             assert Path(output_filename).exists() is True
         os.system("rm -r minimal_SubmersionTokamak")
 
-    def test_SubmersionTokamak_with_pf_coils_stp_creation(self):
+    def test_with_pf_coils_stp_creation(self):
         """Creates a SubmersionTokamak with pf coils and checks that stp files
         of all components can be exported using the export_stp method."""
 
@@ -123,7 +123,7 @@ class test_SubmersionTokamak(unittest.TestCase):
             assert Path(output_filename).exists() is True
         os.system("rm -r pf_SubmersionTokamak")
 
-    def test_SubmersionTokamak_with_tf_and_pf_coils_stp_creation(self):
+    def test_with_tf_and_pf_coils_stp_creation(self):
         """Creates a SubmersionTokamak with tf and pf coils and checks that
         stp files of all components can be exported using the export_stp method."""
 

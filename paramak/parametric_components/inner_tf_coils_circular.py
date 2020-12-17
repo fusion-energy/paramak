@@ -15,11 +15,11 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         outer_radius (float): outer radius of tf coils.
         number_of_coils (int): number of tf coils.
         gap_size (float): gap between adjacent tf coils.
-        azimuth_start_angle (float, optional): defaults to 0.0.
-        stp_filename (str, optional): defaults to "InnerTfCoilsCircular.stp".
-        stl_filename (str, optional): defaults to "InnerTfCoilsCircular.stl".
-        material_tag (str, optional): defaults to "inner_tf_coil_mat".
-        workplane (str, optional): defaults to "XY".
+        azimuth_start_angle (float, optional): Defaults to 0.0.
+        stp_filename (str, optional): Defaults to "InnerTfCoilsCircular.stp".
+        stl_filename (str, optional): Defaults to "InnerTfCoilsCircular.stl".
+        material_tag (str, optional): Defaults to "inner_tf_coil_mat".
+        workplane (str, optional): Defaults to "XY".
         rotation_axis (str, optional): Defaults to "Z".
     """
 
