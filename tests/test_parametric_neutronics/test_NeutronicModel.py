@@ -80,6 +80,7 @@ class TestShape(unittest.TestCase):
         defined as ."""
 
         def incorrect_faceting_tolerance():
+            "Tries to set faceting_tolerance as a string"
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -93,6 +94,7 @@ class TestShape(unittest.TestCase):
         )
 
         def incorrect_faceting_tolerance_too_small():
+            "Tries to set faceting_tolerance as a negative number"
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -106,6 +108,7 @@ class TestShape(unittest.TestCase):
         )
 
         def incorrect_merge_tolerance():
+            "Tries to set merge_tolerance as a string"
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -119,6 +122,7 @@ class TestShape(unittest.TestCase):
         )
 
         def incorrect_merge_tolerance_too_small():
+            "Tries to set merge_tolerance as a negative number"
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -132,6 +136,7 @@ class TestShape(unittest.TestCase):
         )
 
         def incorrect_cell_tallies():
+            "Tries to set a cell tally that is not accepted"
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -145,6 +150,7 @@ class TestShape(unittest.TestCase):
         )
 
         def incorrect_mesh_tally_2D():
+            "Tries to set a mesh_tally_2D that is not accepted"
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -158,6 +164,7 @@ class TestShape(unittest.TestCase):
         )
 
         def incorrect_materials():
+            "Tries to set a material that is not accepted"
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -181,32 +188,6 @@ class TestShape(unittest.TestCase):
         self.assertRaises(
             ValueError,
             incorrect_simulation_batches_to_small
-        )
-
-        def incorrect_simulation_batches():
-            paramak.NeutronicsModel(
-                geometry=self.my_shape,
-                source=self.source,
-                materials={'center_column_shield_mat': 'eurofer'},
-                simulation_batches=4.2
-            )
-
-        self.assertRaises(
-            ValueError,
-            incorrect_simulation_batches
-        )
-
-        def incorrect_simulation_particles_per_batch():
-            paramak.NeutronicsModel(
-                geometry=self.my_shape,
-                source=self.source,
-                materials={'center_column_shield_mat': 'eurofer'},
-                simulation_particles_per_batch=1.2
-            )
-
-        self.assertRaises(
-            ValueError,
-            incorrect_simulation_particles_per_batch
         )
 
     def test_neutronics_component_cell_simulation(self):

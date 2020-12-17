@@ -188,6 +188,8 @@ class NeutronicsModel():
 
     @simulation_batches.setter
     def simulation_batches(self, value):
+        if isinstance(value, float):
+            value = int(value)
         if not isinstance(value, int):
             raise ValueError(
                 "NeutronicsModelFromReactor.simulation_batches should be an int")
@@ -203,6 +205,8 @@ class NeutronicsModel():
 
     @simulation_particles_per_batch.setter
     def simulation_particles_per_batch(self, value):
+        if isinstance(value, float):
+            value = int(value)
         if not isinstance(value, int):
             raise ValueError(
                 "NeutronicsModelFromReactor.simulation_particles_per_batch\
