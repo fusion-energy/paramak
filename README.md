@@ -280,7 +280,6 @@ installed [DAGMC plugin](https://github.com/svalinn/Trelis-plugin).
 Further information on DAGMC neutronics can be found
 [here](https://svalinn.github.io/DAGMC/) and information on OpenMC can be found
 [here](https://openmc.readthedocs.io/). The two codes can be used together to
-simulate neutron transport on the h5m file created. The UKAEA openmc workshop
-also has two tasks that might be of interest 
-[task 10](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10)
-and [task 12](https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12).
+simulate neutron transport on the h5m file created. The
+[UKAEA openmc workshop](https://github.com/ukaea/openmc_workshop) also has some
+Paramak with DAGMC and OpenMC based tasks that might be of interest.
