@@ -45,8 +45,12 @@ class NeutronicsModel():
             reactor=paramak.BallReactor() .
         cell_tallies (list of strings): the cell based tallies to calculate,
             options include TBR, heating and flux
-        materials (str, openmc.Material, neutronics_material_maker.MultiMaterial):
-            The neutronics material to assign to the Shape.
+        materials (dict): Where the dictionary keys are the material tag
+            and the dictionary values are either a string, openmc.Material,
+            neutronics-material-maker.Material or
+            neutronics-material-maker.MultiMaterial. All components within the
+            geometry object must be accounted for. Material tags required
+            for a Reactor or Shape can be obtained with .material_tags.
         mesh_tally_2D (list of strings): the mesh based tallies to calculate,
             options include tritium_production, heating and flux
         fusion_power (float): the power in watts emitted by the fusion
