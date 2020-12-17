@@ -73,18 +73,25 @@ class test_object_properties(unittest.TestCase):
 
 class test_object_properties(unittest.TestCase):
 
-    def simulate_cylinder_cask_csg(self, material, source, height,
-        outer_radius, thickness, batches, particles):
+    def simulate_cylinder_cask_csg(
+            self,
+            material,
+            source,
+            height,
+            outer_radius,
+            thickness,
+            batches,
+            particles):
         """Makes a CSG cask geometry runs a simulation and returns the result"""
 
         mats = openmc.Materials([material])
 
         outer_cylinder = openmc.ZCylinder(r=outer_radius)
-        inner_cylinder = openmc.ZCylinder(r=outer_radius-thickness)
-        inner_top = openmc.ZPlane(z0=height*0.5)
-        inner_bottom = openmc.ZPlane(z0=-height*0.5)
-        outer_top = openmc.ZPlane(z0=(height*0.5)+thickness)
-        outer_bottom = openmc.ZPlane(z0=(-height*0.5)-thickness)
+        inner_cylinder = openmc.ZCylinder(r=outer_radius - thickness)
+        inner_top = openmc.ZPlane(z0=height * 0.5)
+        inner_bottom = openmc.ZPlane(z0=-height * 0.5)
+        outer_top = openmc.ZPlane(z0=(height * 0.5) + thickness)
+        outer_bottom = openmc.ZPlane(z0=(-height * 0.5) - thickness)
 
         sphere_1 = openmc.Sphere(r=100, boundary_type='vacuum')
 
@@ -152,18 +159,25 @@ class test_object_properties(unittest.TestCase):
 
         return df['mean'].sum()
 
-    def simulate_cylinder_cask_cad(self, material, source, height,
-        outer_radius, thickness, batches, particles):
+    def simulate_cylinder_cask_cad(
+            self,
+            material,
+            source,
+            height,
+            outer_radius,
+            thickness,
+            batches,
+            particles):
         """Makes a CAD cask geometry runs a simulation and returns the result"""
 
         top_cap_cell = paramak.RotateStraightShape(
             stp_filename='top_cap_cell.stp',
             material_tag='test_mat',
             points=[
-                (outer_radius, height*0.5),
-                (outer_radius, (height*0.5)+thickness),
-                (0, (height*0.5)+thickness),
-                (0, height*0.5),
+                (outer_radius, height * 0.5),
+                (outer_radius, (height * 0.5) + thickness),
+                (0, (height * 0.5) + thickness),
+                (0, height * 0.5),
             ],
         )
 
@@ -171,21 +185,22 @@ class test_object_properties(unittest.TestCase):
             stp_filename='bottom_cap_cell.stp',
             material_tag='test_mat',
             points=[
-                (outer_radius, -height*0.5),
-                (outer_radius, (-height*0.5)-thickness),
-                (0, (-height*0.5)-thickness),
-                (0, -height*0.5),
+                (outer_radius, -height * 0.5),
+                (outer_radius, (-height * 0.5) - thickness),
+                (0, (-height * 0.5) - thickness),
+                (0, -height * 0.5),
             ]
         )
 
         cylinder_cell = paramak.CenterColumnShieldCylinder(
             height=height,
-            inner_radius=outer_radius-thickness,
+            inner_radius=outer_radius - thickness,
             outer_radius=outer_radius,
             material_tag='test_mat',
         )
 
-        my_geometry = paramak.Reactor([cylinder_cell, bottom_cap_cell, top_cap_cell])
+        my_geometry = paramak.Reactor(
+            [cylinder_cell, bottom_cap_cell, top_cap_cell])
 
         my_model = paramak.NeutronicsModel(
             geometry=my_geometry,
@@ -199,7 +214,7 @@ class test_object_properties(unittest.TestCase):
         my_model.simulate(method='pymoab')
 
         # scaled from MeV to eV
-        return my_model.results['test_mat_heating']['MeV per source particle']['result']*1e6
+        return my_model.results['test_mat_heating']['MeV per source particle']['result'] * 1e6
 
     def test_cylinder_cask(self):
         """Runs the same source and material with CAD and CSG geoemtry"""
@@ -221,11 +236,11 @@ class test_object_properties(unittest.TestCase):
         source.angle = openmc.stats.Isotropic()
         source.energy = openmc.stats.Discrete([14e6], [1.0])
 
-        csg_result = self.simulate_cylinder_cask_csg(test_material, source,
-            height, outer_radius, thickness, batches, particles)
+        csg_result = self.simulate_cylinder_cask_csg(
+            test_material, source, height, outer_radius, thickness, batches, particles)
 
-        cad_result = self.simulate_cylinder_cask_cad(test_material, source,
-            height, outer_radius, thickness, batches, particles)
+        cad_result = self.simulate_cylinder_cask_cad(
+            test_material, source, height, outer_radius, thickness, batches, particles)
 
         assert pytest.approx(csg_result, rel=0.001) == cad_result
 
