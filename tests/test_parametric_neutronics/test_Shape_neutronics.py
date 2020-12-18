@@ -8,7 +8,8 @@ import paramak
 import pytest
 
 
-class test_object_properties(unittest.TestCase):
+class TestObjectNeutronicsArguments(unittest.TestCase):
+    """Tests Shape object arguments that involve neutronics usage"""
 
     def setUp(self):
         self.test_shape = paramak.ExtrudeMixedShape(
@@ -71,7 +72,9 @@ class test_object_properties(unittest.TestCase):
         assert small_offset < large_offset
 
 
-class test_object_properties(unittest.TestCase):
+class TestSimulationResultsVsCsg(unittest.TestCase):
+    """Makes a geometry in the paramak and in CSG geometry, simulates and
+    compares the results"""
 
     def simulate_cylinder_cask_csg(
             self,
@@ -151,13 +154,13 @@ class test_object_properties(unittest.TestCase):
         sp_filename = model.run()
 
         # open the results file
-        sp = openmc.StatePoint(sp_filename)
+        results = openmc.StatePoint(sp_filename)
 
         # access the tally using pandas dataframes
-        tally = sp.get_tally(name='csg_heating')
-        df = tally.get_pandas_dataframe()
+        tally = results.get_tally(name='csg_heating')
+        tally_df = tally.get_pandas_dataframe()
 
-        return df['mean'].sum()
+        return tally_df['mean'].sum()
 
     def simulate_cylinder_cask_cad(
             self,
