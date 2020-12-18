@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/ukaea/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
 [![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/ukaea/paramak)](https://hub.docker.com/r/ukaea/paramak)
+[![dockerhub-publish-stable](https://github.com/ukaea/paramak/workflows/dockerhub-publish-stable/badge.svg)](https://github.com/ukaea/paramak/actions?query=workflow%3Adockerhub-publish-stable)
 
 
 # Paramak
