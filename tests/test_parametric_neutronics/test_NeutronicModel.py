@@ -149,6 +149,20 @@ class TestShape(unittest.TestCase):
             incorrect_cell_tallies
         )
 
+        def incorrect_cell_tally_type():
+            "Tries to set a cell tally that is the wrong type"
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                cell_tallies=1,
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_cell_tally_type
+        )
+
         def incorrect_mesh_tally_2D():
             "Tries to set a mesh_tally_2D that is not accepted"
             paramak.NeutronicsModel(
@@ -161,6 +175,20 @@ class TestShape(unittest.TestCase):
         self.assertRaises(
             ValueError,
             incorrect_mesh_tally_2D
+        )
+
+        def incorrect_mesh_tally_2D_type():
+            "Tries to set a mesh_tally_2D that is the wrong type"
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                mesh_tally_2D=1,
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_mesh_tally_2D_type
         )
 
         def incorrect_materials():
