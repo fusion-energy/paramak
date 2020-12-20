@@ -91,12 +91,14 @@ class NeutronicsModel():
         self.source = source
         self.cell_tallies = cell_tallies
         self.mesh_tally_2D = mesh_tally_2D
+        self.mesh_tally_3D = mesh_tally_3D
         self.simulation_batches = simulation_batches
         self.simulation_particles_per_batch = simulation_particles_per_batch
         self.max_lost_particles = max_lost_particles
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
         self.mesh_2D_resolution = mesh_2D_resolution
+        self.mesh_3D_resolution = mesh_3D_resolution
         self.model = None
         self.fusion_power = fusion_power
 
@@ -174,6 +176,28 @@ class NeutronicsModel():
                         "not allowed, the following options are supported",
                         output_options)
         self._mesh_tally_2D = value
+
+    @property
+    def mesh_tally_3D(self):
+        return self._mesh_tally_3D
+
+    @mesh_tally_3D.setter
+    def mesh_tally_3D(self, value):
+        if value is not None:
+            if not isinstance(value, list):
+                raise ValueError(
+                    "NeutronicsModelFromReactor.mesh_tally_3D should be a\
+                    list")
+            output_options = ['tritium_production', 'heating', 'flux',
+                              'fast flux', 'dose']
+            for entry in value:
+                if entry not in output_options:
+                    raise ValueError(
+                        "NeutronicsModelFromReactor.mesh_tally_3D argument",
+                        entry,
+                        "not allowed, the following options are supported",
+                        output_options)
+        self._mesh_tally_3D = value
 
     @property
     def materials(self):
@@ -371,6 +395,35 @@ class NeutronicsModel():
 
         # details about what neutrons interactions to keep track of (tally)
         tallies = openmc.Tallies()
+
+        if self.mesh_tally_3D is not None:
+            mesh_xyz = openmc.RegularMesh()
+            mesh_xyz.dimension = self.mesh_3D_resolution
+            mesh_xyz.lower_left = [
+                -self.geometry.largest_dimension,
+                -self.geometry.largest_dimension,
+                -self.geometry.largest_dimension
+            ]
+
+            mesh_xyz.upper_right = [
+                self.geometry.largest_dimension,
+                self.geometry.largest_dimension,
+                self.geometry.largest_dimension
+            ]
+
+            for standard_tally in self.mesh_tally_3D:
+                if standard_tally == 'tritium_production':
+                    score = '(n,Xt)'  # where X is a wild card
+                    prefix= 'tritium_production'
+                else:
+                    score = standard_tally
+                    prefix = standard_tally
+
+                mesh_filter = openmc.MeshFilter(mesh_xyz)
+                tally = openmc.Tally(name=prefix+'_on_3D_mesh')
+                tally.filters = [mesh_filter]
+                tally.scores = [score]
+                tallies.append(tally)
 
         if self.mesh_tally_2D is not None:
 

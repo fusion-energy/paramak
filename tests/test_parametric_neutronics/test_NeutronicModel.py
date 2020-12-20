@@ -233,6 +233,27 @@ class TestShape(unittest.TestCase):
         assert Path("heating_on_2D_mesh_xy.png").exists() is True
         assert Path("heating_on_2D_mesh_yz.png").exists() is True
 
+    def test_neutronics_component_3d_mesh_simulation(self):
+        """Makes a neutronics model and simulates with a 3D mesh tally and
+        checks that the statepoint file is produced"""
+
+        os.system('rm *.h5')
+
+        # converts the geometry into a neutronics geometry
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': 'Be'},
+            mesh_tally_3D=['heating'],
+            simulation_batches=2,
+            simulation_particles_per_batch=2
+        )
+
+        # performs an openmc simulation on the model
+        output_filename = my_model.simulate(method='pymoab')
+
+        assert Path(output_filename).exists() is True
+
 
 class TestNeutronicsBallReactor(unittest.TestCase):
     """Tests the NeutronicsModel with a BallReactor as the geometry input
