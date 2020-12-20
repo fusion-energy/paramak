@@ -445,7 +445,7 @@ class NeutronicsModel():
                     mesh_filter = openmc.MeshFilter(mesh_filter)
                     tally = openmc.Tally(name=prefix+'_on_2D_mesh_'+plane)
                     tally.filters = [mesh_filter]
-                    tally.scores = [standard_tally]
+                    tally.scores = [score]
                     tallies.append(tally)
 
 
@@ -464,7 +464,7 @@ class NeutronicsModel():
                         material_filter = openmc.MaterialFilter(value)
                         tally = openmc.Tally(name=key + "_" + sufix)
                         tally.filters = [material_filter]
-                        tally.scores = [standard_tally]
+                        tally.scores = [score]
                         tallies.append(tally)
 
         # make the model from gemonetry, materials, settings and tallies
