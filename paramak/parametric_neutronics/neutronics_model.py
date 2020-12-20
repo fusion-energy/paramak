@@ -77,12 +77,14 @@ class NeutronicsModel():
         materials,
         cell_tallies=None,
         mesh_tally_2D=None,
+        mesh_tally_3D=None,
         simulation_batches=100,
         simulation_particles_per_batch=10000,
         max_lost_particles=10,
         faceting_tolerance=1e-1,
         merge_tolerance=1e-4,
         mesh_2D_resolution=(400, 400),
+        mesh_3D_resolution=(100, 100, 100),
         fusion_power=1e9  # convert from watts to activity source_activity
     ):
 
