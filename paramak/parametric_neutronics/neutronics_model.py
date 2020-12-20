@@ -376,125 +376,95 @@ class NeutronicsModel():
 
             # Create mesh which will be used for tally
             mesh_xz = openmc.RegularMesh()
+
             mesh_xz.dimension = [
                 self.mesh_2D_resolution[1],
                 1,
-                self.mesh_2D_resolution[0]]
-            mesh_xz.lower_left = [-self.geometry.largest_dimension, -
-                                  1, -self.geometry.largest_dimension]
+                self.mesh_2D_resolution[0]
+            ]
+
+            mesh_xz.lower_left = [
+                -self.geometry.largest_dimension,
+                -1,
+                -self.geometry.largest_dimension
+            ]
+
             mesh_xz.upper_right = [
                 self.geometry.largest_dimension,
                 1,
-                self.geometry.largest_dimension]
+                self.geometry.largest_dimension
+            ]
 
             mesh_xy = openmc.RegularMesh()
             mesh_xy.dimension = [
                 self.mesh_2D_resolution[1],
                 self.mesh_2D_resolution[0],
-                1]
-            mesh_xy.lower_left = [-self.geometry.largest_dimension, -
-                                  self.geometry.largest_dimension, -1]
+                1
+            ]
+
+            mesh_xy.lower_left = [
+                -self.geometry.largest_dimension,
+                -self.geometry.largest_dimension,
+                -1
+            ]
+
             mesh_xy.upper_right = [
                 self.geometry.largest_dimension,
                 self.geometry.largest_dimension,
-                1]
+                1
+            ]
 
             mesh_yz = openmc.RegularMesh()
-            mesh_yz.dimension = [1,
-                                 self.mesh_2D_resolution[1],
-                                 self.mesh_2D_resolution[0]]
-            mesh_yz.lower_left = [-1, -self.geometry.largest_dimension, -
-                                  self.geometry.largest_dimension]
-            mesh_yz.upper_right = [1,
-                                   self.geometry.largest_dimension,
-                                   self.geometry.largest_dimension]
+            mesh_yz.dimension = [
+                1,
+                self.mesh_2D_resolution[1],
+                self.mesh_2D_resolution[0]
+            ]
 
-            if 'tritium_production' in self.mesh_tally_2D:
-                mesh_filter = openmc.MeshFilter(mesh_xz)
-                mesh_tally = openmc.Tally(
-                    name='tritium_production_on_2D_mesh_xz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['(n,Xt)']
-                tallies.append(mesh_tally)
+            mesh_yz.lower_left = [
+                -1,
+                -self.geometry.largest_dimension,
+                -self.geometry.largest_dimension
+            ]
 
-                mesh_filter = openmc.MeshFilter(mesh_xy)
-                mesh_tally = openmc.Tally(
-                    name='tritium_production_on_2D_mesh_xy')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['(n,Xt)']
-                tallies.append(mesh_tally)
+            mesh_yz.upper_right = [
+                1,
+                self.geometry.largest_dimension,
+                self.geometry.largest_dimension
+            ]
 
-                mesh_filter = openmc.MeshFilter(mesh_yz)
-                mesh_tally = openmc.Tally(
-                    name='tritium_production_on_2D_mesh_yz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['(n,Xt)']
-                tallies.append(mesh_tally)
+            for standard_tally in self.mesh_tally_2D:
+                if standard_tally == 'tritium_production':
+                    score = '(n,Xt)'  # where X is a wild card
+                    prefix= 'tritium_production'
+                else:
+                    score = standard_tally
+                    prefix= standard_tally
 
-            if 'heating' in self.mesh_tally_2D:
-                mesh_filter = openmc.MeshFilter(mesh_xz)
-                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_xz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['heating']
-                tallies.append(mesh_tally)
+                for mesh_filter, plane in zip([mesh_xz, mesh_xy, mesh_yz],['xz', 'xy', 'yz']):
+                    mesh_filter = openmc.MeshFilter(mesh_filter)
+                    tally = openmc.Tally(name=prefix+'_on_2D_mesh_'+plane)
+                    tally.filters = [mesh_filter]
+                    tally.scores = [standard_tally]
+                    tallies.append(tally)
 
-                mesh_filter = openmc.MeshFilter(mesh_xy)
-                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_xy')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['heating']
-                tallies.append(mesh_tally)
-
-                mesh_filter = openmc.MeshFilter(mesh_yz)
-                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_yz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['heating']
-                tallies.append(mesh_tally)
-
-            if 'flux' in self.mesh_tally_2D:
-                mesh_filter = openmc.MeshFilter(mesh_xz)
-                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_xz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['flux']
-                tallies.append(mesh_tally)
-
-                mesh_filter = openmc.MeshFilter(mesh_xy)
-                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_xy')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['flux']
-                tallies.append(mesh_tally)
-
-                mesh_filter = openmc.MeshFilter(mesh_yz)
-                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_yz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['flux']
-                tallies.append(mesh_tally)
 
         if self.cell_tallies is not None:
 
-            if 'TBR' in self.cell_tallies:
-                blanket_mat = self.openmc_materials['blanket_mat']
-                material_filter = openmc.MaterialFilter(blanket_mat)
-                tally = openmc.Tally(name="TBR")
-                tally.filters = [material_filter]
-                tally.scores = ["(n,Xt)"]  # where X is a wild card
-                tallies.append(tally)
+            for standard_tally in self.cell_tallies:
+                if standard_tally == 'TBR':
+                    score = '(n,Xt)'  # where X is a wild card
+                    sufix= 'TBR'
+                else:
+                    score = standard_tally
+                    sufix = standard_tally
 
-            if 'heating' in self.cell_tallies:
                 for key, value in self.openmc_materials.items():
                     if key != 'DT_plasma':
                         material_filter = openmc.MaterialFilter(value)
-                        tally = openmc.Tally(name=key + "_heating")
+                        tally = openmc.Tally(name=key + "_" + sufix)
                         tally.filters = [material_filter]
-                        tally.scores = ["heating"]
-                        tallies.append(tally)
-
-            if 'flux' in self.cell_tallies:
-                for key, value in self.openmc_materials.items():
-                    if key != 'DT_plasma':
-                        material_filter = openmc.MaterialFilter(value)
-                        tally = openmc.Tally(name=key + "_flux")
-                        tally.filters = [material_filter]
-                        tally.scores = ["flux"]
+                        tally.scores = [standard_tally]
                         tallies.append(tally)
 
         # make the model from gemonetry, materials, settings and tallies
