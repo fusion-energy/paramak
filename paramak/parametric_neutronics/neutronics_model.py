@@ -489,25 +489,25 @@ class NeutronicsModel():
             for standard_tally in self.mesh_tally_2D:
                 if standard_tally == 'tritium_production':
                     score = '(n,Xt)'  # where X is a wild card
-                    prefix= 'tritium_production'
+                    prefix = 'tritium_production'
                 else:
                     score = standard_tally
-                    prefix= standard_tally
+                    prefix = standard_tally
 
-                for mesh_filter, plane in zip([mesh_xz, mesh_xy, mesh_yz],['xz', 'xy', 'yz']):
+                for mesh_filter, plane in zip(
+                        [mesh_xz, mesh_xy, mesh_yz], ['xz', 'xy', 'yz']):
                     mesh_filter = openmc.MeshFilter(mesh_filter)
-                    tally = openmc.Tally(name=prefix+'_on_2D_mesh_'+plane)
+                    tally = openmc.Tally(name=prefix + '_on_2D_mesh_' + plane)
                     tally.filters = [mesh_filter]
                     tally.scores = [score]
                     tallies.append(tally)
-
 
         if self.cell_tallies is not None:
 
             for standard_tally in self.cell_tallies:
                 if standard_tally == 'TBR':
                     score = '(n,Xt)'  # where X is a wild card
-                    sufix= 'TBR'
+                    sufix = 'TBR'
                 else:
                     score = standard_tally
                     sufix = standard_tally
