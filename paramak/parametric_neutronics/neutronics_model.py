@@ -107,7 +107,7 @@ class NeutronicsModel():
     @faceting_tolerance.setter
     def faceting_tolerance(self, value):
         if not isinstance(value, (int, float)):
-            raise ValueError(
+            raise TypeError(
                 "NeutronicsModelFromReactor.faceting_tolerance should be a\
                 number (floats or ints are accepted)")
         if value < 0:
@@ -123,7 +123,7 @@ class NeutronicsModel():
     @merge_tolerance.setter
     def merge_tolerance(self, value):
         if not isinstance(value, (int, float)):
-            raise ValueError(
+            raise TypeError(
                 "NeutronicsModelFromReactor.merge_tolerance should be a\
                 number (floats or ints are accepted)")
         if value < 0:
@@ -140,7 +140,7 @@ class NeutronicsModel():
     def cell_tallies(self, value):
         if value is not None:
             if not isinstance(value, list):
-                raise ValueError(
+                raise TypeError(
                     "NeutronicsModelFromReactor.cell_tallies should be a\
                     list")
             output_options = ['TBR', 'heating', 'flux', 'fast flux', 'dose']
@@ -161,7 +161,7 @@ class NeutronicsModel():
     def mesh_tally_2D(self, value):
         if value is not None:
             if not isinstance(value, list):
-                raise ValueError(
+                raise TypeError(
                     "NeutronicsModelFromReactor.mesh_tally_2D should be a\
                     list")
             output_options = ['tritium_production', 'heating', 'flux',
@@ -182,7 +182,7 @@ class NeutronicsModel():
     @materials.setter
     def materials(self, value):
         if not isinstance(value, dict):
-            raise ValueError("NeutronicsModelFromReactor.materials should be a\
+            raise TypeError("NeutronicsModelFromReactor.materials should be a\
                 dictionary")
         self._materials = value
 
@@ -195,7 +195,7 @@ class NeutronicsModel():
         if isinstance(value, float):
             value = int(value)
         if not isinstance(value, int):
-            raise ValueError(
+            raise TypeError(
                 "NeutronicsModelFromReactor.simulation_batches should be an int")
         if value < 2:
             raise ValueError(
@@ -212,7 +212,7 @@ class NeutronicsModel():
         if isinstance(value, float):
             value = int(value)
         if not isinstance(value, int):
-            raise ValueError(
+            raise TypeError(
                 "NeutronicsModelFromReactor.simulation_particles_per_batch\
                     should be an int")
         self._simulation_particles_per_batch = value
@@ -231,7 +231,7 @@ class NeutronicsModel():
             material_entry.material_tag = material_tag
             openmc_material = material_entry.openmc_material
         else:
-            raise ValueError("materials must be either a str, \
+            raise TypeError("materials must be either a str, \
                 openmc.Material, nmm.MultiMaterial or nmm.Material object \
                 not a ", type(material_entry), material_entry)
         return openmc_material
