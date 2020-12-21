@@ -9,13 +9,13 @@ import matplotlib.pyplot as plt
 
 try:
     import openmc
-except BaseException:
+except ImportError:
     warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
             method not available', UserWarning)
 
 try:
     import neutronics_material_maker as nmm
-except BaseException:
+except ImportError:
     warnings.warn("neutronics_material_maker not found, \
             NeutronicsModelFromReactor.materials can't accept strings or \
             neutronics_material_maker objects", UserWarning)
