@@ -305,7 +305,8 @@ class NeutronicsModel():
             self.geometry.export_neutronics_description()
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
-                raise FileNotFoundError("The make_faceteted_neutronics_model.py was \
+                raise FileNotFoundError(
+                    "The make_faceteted_neutronics_model.py was \
                     not found in the directory")
             os.system("trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
                       str(self.faceting_tolerance) + "'\" \"merge_tolerance='" + str(self.merge_tolerance) + "'\"")
