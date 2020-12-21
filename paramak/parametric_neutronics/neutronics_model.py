@@ -541,7 +541,7 @@ class NeutronicsModel():
         results = defaultdict(dict)
 
         # access the tallies
-        for key, tally in sp.tallies.items():
+        for tally in sp.tallies.values():
 
             if tally.name == 'TBR':
 
