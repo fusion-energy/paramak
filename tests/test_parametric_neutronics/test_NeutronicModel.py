@@ -272,7 +272,7 @@ class TestShape(unittest.TestCase):
             geometry=self.my_shape,
             source=self.source,
             materials={'center_column_shield_mat': 'Be'},
-            mesh_tally_3D=['heating'],
+            mesh_tally_3D=['heating', 'tritium_production'],
             simulation_batches=2,
             simulation_particles_per_batch=2
         )
