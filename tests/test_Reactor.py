@@ -109,7 +109,7 @@ class TestReactor(unittest.TestCase):
             my_reactor = paramak.Reactor([test_shape_1, test_shape_2])
             my_reactor.export_stl()
 
-        sefl.assertRaises(ValueError, test_stl_filename_duplication)
+        self.assertRaises(ValueError, test_stl_filename_duplication)
 
     def test_adding_shape_with_None_stp_filename_to_reactor(self):
         """adds shapes to a Reactor object to check errors are raised correctly"""
