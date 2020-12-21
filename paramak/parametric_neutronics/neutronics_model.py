@@ -165,7 +165,7 @@ class NeutronicsModel():
     def mesh_tally_2D(self, value):
         if value is not None:
             if not isinstance(value, list):
-                raise ValueError(
+                raise TypeError(
                     "NeutronicsModelFromReactor.mesh_tally_2D should be a\
                     list")
             output_options = ['tritium_production', 'heating', 'flux',
@@ -187,7 +187,7 @@ class NeutronicsModel():
     def mesh_tally_3D(self, value):
         if value is not None:
             if not isinstance(value, list):
-                raise ValueError(
+                raise TypeError(
                     "NeutronicsModelFromReactor.mesh_tally_3D should be a\
                     list")
             output_options = ['tritium_production', 'heating', 'flux',
