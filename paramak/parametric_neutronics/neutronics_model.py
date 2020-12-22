@@ -113,7 +113,7 @@ class NeutronicsModel():
     @faceting_tolerance.setter
     def faceting_tolerance(self, value):
         if not isinstance(value, (int, float)):
-            raise ValueError(
+            raise TypeError(
                 "NeutronicsModelFromReactor.faceting_tolerance should be a\
                 number (floats or ints are accepted)")
         if value < 0:
@@ -641,7 +641,7 @@ class NeutronicsModel():
                 fig.clear()
 
             if '_on_3D_mesh' in tally.name:
-                mesh_id = 1
+                mesh_id = 0
                 mesh = sp.meshes[mesh_id]
         
                 xs = np.linspace(
