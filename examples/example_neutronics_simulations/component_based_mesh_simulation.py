@@ -33,7 +33,7 @@ def make_model_and_simulate():
             geometry=my_shape,
             source=source,
             materials={'center_column_shield_mat': 'eurofer'},
-            cell_tallies=['heating','TBR'],
+            cell_tallies=['heating', 'TBR'],
             mesh_tally_2D=['heating'],
             mesh_tally_3D=['heating'],
             simulation_batches=10,  # should be increased for more accurate result
