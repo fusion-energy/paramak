@@ -1,11 +1,13 @@
 
 import json
+import math
 import os
 import warnings
 from collections import defaultdict
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from paramak.neutronics_utils import initiate_mesh, write_vtk
 
 try:
     import openmc
@@ -637,6 +639,37 @@ class NeutronicsModel():
                 fig.imshow(my_slice.mean).get_figure().savefig(
                     'flux_on_2D_mesh' + tally.name[-3:], dpi=300)
                 fig.clear()
+
+            if '_on_3D_mesh' in tally.name:
+                mesh_id = 1
+                mesh = openmc_statepoint.meshes[mesh_id]
+        
+                xs = np.linspace(mesh.lower_left[0],
+                                    mesh.upper_right[0],
+                                    mesh.dimension[0] + 1)
+                ys = np.linspace(mesh.lower_left[1],
+                                    mesh.upper_right[1],
+                                    mesh.dimension[1] + 1)
+                zs = np.linspace(mesh.lower_left[2],
+                                    mesh.upper_right[2],
+                                    mesh.dimension[2] + 1)
+                tally = sp.get_tally(name=tally_name)
+
+                data = tally.mean[:,0,0]
+                error = tally.std_dev[:,0,0]
+
+                data = data.tolist()
+                error = error.tolist()
+
+                for c, i in enumerate(data):
+                    if math.isnan(i):
+                        data[c] = 0.
+
+                for c, i in enumerate(error):
+                    if math.isnan(i):
+                        error[c] = 0.
+
+                tally_label = tally_name
 
         self.results = json.dumps(results, indent=4, sort_keys=True)
 
