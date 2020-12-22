@@ -89,7 +89,7 @@ class TestShape(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_faceting_tolerance
         )
 
@@ -117,7 +117,7 @@ class TestShape(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_merge_tolerance
         )
 
@@ -159,7 +159,7 @@ class TestShape(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_cell_tally_type
         )
 
@@ -187,7 +187,7 @@ class TestShape(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_mesh_tally_2D_type
         )
 
@@ -281,6 +281,8 @@ class TestShape(unittest.TestCase):
         output_filename = my_model.simulate(method='pymoab')
 
         assert Path(output_filename).exists() is True
+        assert Path('heating_on_3D_mesh.vtk').exists() is True
+        assert Path('tritium_production_on_3D_mesh.vtk').exists() is True
 
 
 class TestNeutronicsBallReactor(unittest.TestCase):

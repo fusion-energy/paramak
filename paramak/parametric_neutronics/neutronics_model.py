@@ -7,7 +7,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from paramak.neutronics_utils import initiate_mesh, write_vtk
+import numpy as np
 
 try:
     import openmc
@@ -642,18 +642,24 @@ class NeutronicsModel():
 
             if '_on_3D_mesh' in tally.name:
                 mesh_id = 1
-                mesh = openmc_statepoint.meshes[mesh_id]
+                mesh = sp.meshes[mesh_id]
         
-                xs = np.linspace(mesh.lower_left[0],
-                                    mesh.upper_right[0],
-                                    mesh.dimension[0] + 1)
-                ys = np.linspace(mesh.lower_left[1],
-                                    mesh.upper_right[1],
-                                    mesh.dimension[1] + 1)
-                zs = np.linspace(mesh.lower_left[2],
-                                    mesh.upper_right[2],
-                                    mesh.dimension[2] + 1)
-                tally = sp.get_tally(name=tally_name)
+                xs = np.linspace(
+                    mesh.lower_left[0],
+                    mesh.upper_right[0],
+                    mesh.dimension[0] + 1
+                )
+                ys = np.linspace(
+                    mesh.lower_left[1],
+                    mesh.upper_right[1],
+                    mesh.dimension[1] + 1
+                )
+                zs = np.linspace(
+                    mesh.lower_left[2],
+                    mesh.upper_right[2],
+                    mesh.dimension[2] + 1
+                )
+                tally = sp.get_tally(name=tally.name)
 
                 data = tally.mean[:,0,0]
                 error = tally.std_dev[:,0,0]
@@ -669,8 +675,66 @@ class NeutronicsModel():
                     if math.isnan(i):
                         error[c] = 0.
 
-                tally_label = tally_name
+                self.write_vtk(
+                    xs=xs,
+                    ys=ys,
+                    zs=zs,
+                    tally_label=tally.name,
+                    tally_data=data,
+                    error_data=error,
+                    outfile=tally.name+'.vtk'
+                )
 
         self.results = json.dumps(results, indent=4, sort_keys=True)
 
         return results
+
+    def write_vtk(self, xs, ys, zs, tally_label, tally_data, error_data, outfile):
+        try:
+            import vtk
+        except (ImportError, ModuleNotFoundError) as e:
+            msg = "Conversion to VTK requested," \
+                "but the Python VTK module is not installed."
+            raise ImportError(msg)
+
+        vtk_box = vtk.vtkRectilinearGrid()
+
+        vtk_box.SetDimensions(len(xs), len(ys), len(zs))
+
+        vtk_x_array = vtk.vtkDoubleArray()
+        vtk_x_array.SetName('x-coords')
+        vtk_x_array.SetArray(xs, len(xs), True)
+        vtk_box.SetXCoordinates(vtk_x_array)
+
+        vtk_y_array = vtk.vtkDoubleArray()
+        vtk_y_array.SetName('y-coords')
+        vtk_y_array.SetArray(ys, len(ys), True)
+        vtk_box.SetYCoordinates(vtk_y_array)
+
+        vtk_z_array = vtk.vtkDoubleArray()
+        vtk_z_array.SetName('z-coords')
+        vtk_z_array.SetArray(zs, len(zs), True)
+        vtk_box.SetZCoordinates(vtk_z_array)
+
+        tally = np.array(tally_data)
+        tally_data = vtk.vtkDoubleArray()
+        tally_data.SetName(tally_label)
+        tally_data.SetArray(tally, tally.size, True)
+
+        error = np.array(error_data)
+        error_data = vtk.vtkDoubleArray()
+        error_data.SetName("error_tag")
+        error_data.SetArray(error, error.size, True)
+
+        vtk_box.GetCellData().AddArray(tally_data)
+        vtk_box.GetCellData().AddArray(error_data)
+
+        writer = vtk.vtkRectilinearGridWriter()
+
+        writer.SetFileName(outfile)
+
+        writer.SetInputData(vtk_box)
+
+        print('Writing %s' % outfile)
+
+        writer.Write()
