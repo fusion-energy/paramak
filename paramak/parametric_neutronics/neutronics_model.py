@@ -643,7 +643,7 @@ class NeutronicsModel():
             if '_on_3D_mesh' in tally.name:
                 mesh_id = 0
                 mesh = sp.meshes[mesh_id]
-        
+
                 xs = np.linspace(
                     mesh.lower_left[0],
                     mesh.upper_right[0],
@@ -661,8 +661,8 @@ class NeutronicsModel():
                 )
                 tally = sp.get_tally(name=tally.name)
 
-                data = tally.mean[:,0,0]
-                error = tally.std_dev[:,0,0]
+                data = tally.mean[:, 0, 0]
+                error = tally.std_dev[:, 0, 0]
 
                 data = data.tolist()
                 error = error.tolist()
@@ -682,14 +682,22 @@ class NeutronicsModel():
                     tally_label=tally.name,
                     tally_data=data,
                     error_data=error,
-                    outfile=tally.name+'.vtk'
+                    outfile=tally.name + '.vtk'
                 )
 
         self.results = json.dumps(results, indent=4, sort_keys=True)
 
         return results
 
-    def write_vtk(self, xs, ys, zs, tally_label, tally_data, error_data, outfile):
+    def write_vtk(
+            self,
+            xs,
+            ys,
+            zs,
+            tally_label,
+            tally_data,
+            error_data,
+            outfile):
         try:
             import vtk
         except (ImportError, ModuleNotFoundError) as e:
