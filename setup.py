@@ -34,6 +34,7 @@ setuptools.setup(
     ],
     extras_require={
         "neutronics": [
+            "vtk",
             "neutronics_material_maker",
             "parametric_plasma_source",
         ]})

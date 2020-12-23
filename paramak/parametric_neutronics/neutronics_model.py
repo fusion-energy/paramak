@@ -129,7 +129,7 @@ class NeutronicsModel():
     @merge_tolerance.setter
     def merge_tolerance(self, value):
         if not isinstance(value, (int, float)):
-            raise ValueError(
+            raise TypeError(
                 "NeutronicsModelFromReactor.merge_tolerance should be a\
                 number (floats or ints are accepted)")
         if value < 0:
@@ -146,7 +146,7 @@ class NeutronicsModel():
     def cell_tallies(self, value):
         if value is not None:
             if not isinstance(value, list):
-                raise ValueError(
+                raise TypeError(
                     "NeutronicsModelFromReactor.cell_tallies should be a\
                     list")
             output_options = ['TBR', 'heating', 'flux', 'fast flux', 'dose']
@@ -401,7 +401,7 @@ class NeutronicsModel():
         tallies = openmc.Tallies()
 
         if self.mesh_tally_3D is not None:
-            mesh_xyz = openmc.RegularMesh()
+            mesh_xyz = openmc.RegularMesh(mesh_id=1, name='3d_mesh')
             mesh_xyz.dimension = self.mesh_3D_resolution
             mesh_xyz.lower_left = [
                 -self.geometry.largest_dimension,
@@ -432,7 +432,7 @@ class NeutronicsModel():
         if self.mesh_tally_2D is not None:
 
             # Create mesh which will be used for tally
-            mesh_xz = openmc.RegularMesh()
+            mesh_xz = openmc.RegularMesh(mesh_id=2, name='2d_mesh_xz')
 
             mesh_xz.dimension = [
                 self.mesh_2D_resolution[1],
@@ -452,7 +452,7 @@ class NeutronicsModel():
                 self.geometry.largest_dimension
             ]
 
-            mesh_xy = openmc.RegularMesh()
+            mesh_xy = openmc.RegularMesh(mesh_id=3, name='2d_mesh_xy')
             mesh_xy.dimension = [
                 self.mesh_2D_resolution[1],
                 self.mesh_2D_resolution[0],
@@ -471,7 +471,7 @@ class NeutronicsModel():
                 1
             ]
 
-            mesh_yz = openmc.RegularMesh()
+            mesh_yz = openmc.RegularMesh(mesh_id=4, name='2d_mesh_yz')
             mesh_yz.dimension = [
                 1,
                 self.mesh_2D_resolution[1],
@@ -641,7 +641,7 @@ class NeutronicsModel():
                 fig.clear()
 
             if '_on_3D_mesh' in tally.name:
-                mesh_id = 0
+                mesh_id = 1
                 mesh = sp.meshes[mesh_id]
 
                 xs = np.linspace(

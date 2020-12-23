@@ -191,8 +191,9 @@ ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
 # Copies over the Paramak code from the local repository
 
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then pip install neutronics_material_maker ; \
+    then pip install vtk ; \
     pip install parametric_plasma_source ; \
+    pip install neutronics_material_maker ; \
     fi
 
 COPY requirements.txt requirements.txt

@@ -45,11 +45,13 @@ class TestShape(unittest.TestCase):
         )
 
         # performs an openmc simulation on the model
-        my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate(method='pymoab')
+
+        sp = openmc.StatePoint(output_filename)
+        assert len(sp.tallies.items()) == 1
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
-
         assert heat > 0
 
     def test_neutronics_component_simulation_with_nmm(self):
@@ -68,11 +70,13 @@ class TestShape(unittest.TestCase):
         )
 
         # performs an openmc simulation on the model
-        my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate(method='pymoab')
+
+        sp = openmc.StatePoint(output_filename)
+        assert len(sp.tallies.items()) == 1
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
-
         assert heat > 0
 
     def test_incorrect_args(self):
@@ -221,6 +225,8 @@ class TestShape(unittest.TestCase):
     def test_neutronics_component_cell_simulation(self):
         """Makes a neutronics model and simulates with a cell tally"""
 
+        os.system('rm *.h5')
+
         # converts the geometry into a neutronics geometry
         my_model = paramak.NeutronicsModel(
             geometry=self.my_shape,
@@ -232,7 +238,11 @@ class TestShape(unittest.TestCase):
         )
 
         # performs an openmc simulation on the model
-        my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate(method='pymoab')
+
+        sp = openmc.StatePoint(output_filename)
+        assert len(sp.tallies.items()) == 1
+        assert len(sp.meshes) == 0
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
@@ -243,6 +253,7 @@ class TestShape(unittest.TestCase):
         """Makes a neutronics model and simulates with a 2D mesh tally"""
 
         os.system('rm *_on_2D_mesh_*.png')
+        os.system('rm *.h5')
 
         # converts the geometry into a neutronics geometry
         my_model = paramak.NeutronicsModel(
@@ -255,7 +266,11 @@ class TestShape(unittest.TestCase):
         )
 
         # performs an openmc simulation on the model
-        my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate(method='pymoab')
+
+        sp = openmc.StatePoint(output_filename)
+        assert len(sp.meshes) == 3
+        assert len(sp.tallies.items()) == 3
 
         assert Path("heating_on_2D_mesh_xz.png").exists() is True
         assert Path("heating_on_2D_mesh_xy.png").exists() is True
@@ -263,7 +278,7 @@ class TestShape(unittest.TestCase):
 
     def test_neutronics_component_3d_mesh_simulation(self):
         """Makes a neutronics model and simulates with a 3D mesh tally and
-        checks that the statepoint file is produced"""
+        checks that the vtk file is produced"""
 
         os.system('rm *.h5')
 
@@ -280,9 +295,43 @@ class TestShape(unittest.TestCase):
         # performs an openmc simulation on the model
         output_filename = my_model.simulate(method='pymoab')
 
+        sp = openmc.StatePoint(output_filename)
+        assert len(sp.meshes) == 1
+        assert len(sp.tallies.items()) == 2
+
         assert Path(output_filename).exists() is True
         assert Path('heating_on_3D_mesh.vtk').exists() is True
         assert Path('tritium_production_on_3D_mesh.vtk').exists() is True
+
+    def test_neutronics_component_3d_and_2d_mesh_simulation(self):
+        """Makes a neutronics model and simulates with a 3D and 2D mesh tally
+        and checks that the vtk and png files are produced. This checks the
+        mesh ID values don't overlap"""
+
+        os.system('rm *.h5')
+
+        # converts the geometry into a neutronics geometry
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': 'Be'},
+            mesh_tally_3D=['heating'],
+            mesh_tally_2D=['heating'],
+            simulation_batches=2,
+            simulation_particles_per_batch=2
+        )
+
+        # performs an openmc simulation on the model
+        output_filename = my_model.simulate(method='pymoab')
+        sp = openmc.StatePoint(output_filename)
+        assert len(sp.meshes) == 4  # one 3D and three 2D
+        assert len(sp.tallies.items()) == 4  # one 3D and three 2D
+
+        assert Path(output_filename).exists() is True
+        assert Path('heating_on_3D_mesh.vtk').exists() is True
+        assert Path("heating_on_2D_mesh_xz.png").exists() is True
+        assert Path("heating_on_2D_mesh_xy.png").exists() is True
+        assert Path("heating_on_2D_mesh_yz.png").exists() is True
 
 
 class TestNeutronicsBallReactor(unittest.TestCase):
