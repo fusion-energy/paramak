@@ -89,7 +89,7 @@ class TestShape(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_faceting_tolerance
         )
 
@@ -117,7 +117,7 @@ class TestShape(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_merge_tolerance
         )
 
@@ -172,7 +172,7 @@ class TestShape(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_materials
         )
 
