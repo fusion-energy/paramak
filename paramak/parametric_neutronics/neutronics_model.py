@@ -563,12 +563,12 @@ class NeutronicsModel():
         """
 
         # open the results file
-        sp = openmc.StatePoint(self.output_filename)
+        statepoint = openmc.StatePoint(self.output_filename)
 
         results = defaultdict(dict)
 
         # access the tallies
-        for key, tally in sp.tallies.items():
+        for key, tally in statepoint.tallies.items():
 
             if tally.name == 'TBR':
 
@@ -606,7 +606,7 @@ class NeutronicsModel():
 
             if tally.name.startswith('tritium_production_on_2D_mesh'):
 
-                my_tally = sp.get_tally(name=tally.name)
+                my_tally = statepoint.get_tally(name=tally.name)
                 my_slice = my_tally.get_slice(scores=['(n,Xt)'])
 
                 my_slice.mean.shape = self.mesh_2D_resolution
@@ -618,7 +618,7 @@ class NeutronicsModel():
 
             if tally.name.startswith('heating_on_2D_mesh'):
 
-                my_tally = sp.get_tally(name=tally.name)
+                my_tally = statepoint.get_tally(name=tally.name)
                 my_slice = my_tally.get_slice(scores=['heating'])
 
                 my_slice.mean.shape = self.mesh_2D_resolution
@@ -630,7 +630,7 @@ class NeutronicsModel():
 
             if tally.name.startswith('flux_on_2D_mesh'):
 
-                my_tally = sp.get_tally(name=tally.name)
+                my_tally = statepoint.get_tally(name=tally.name)
                 my_slice = my_tally.get_slice(scores=['flux'])
 
                 my_slice.mean.shape = self.mesh_2D_resolution
@@ -642,7 +642,7 @@ class NeutronicsModel():
 
             if '_on_3D_mesh' in tally.name:
                 mesh_id = 1
-                mesh = sp.meshes[mesh_id]
+                mesh = statepoint.meshes[mesh_id]
 
                 xs = np.linspace(
                     mesh.lower_left[0],
@@ -659,7 +659,7 @@ class NeutronicsModel():
                     mesh.upper_right[2],
                     mesh.dimension[2] + 1
                 )
-                tally = sp.get_tally(name=tally.name)
+                tally = statepoint.get_tally(name=tally.name)
 
                 data = tally.mean[:, 0, 0]
                 error = tally.std_dev[:, 0, 0]
@@ -667,13 +667,13 @@ class NeutronicsModel():
                 data = data.tolist()
                 error = error.tolist()
 
-                for c, i in enumerate(data):
+                for counter, i in enumerate(data):
                     if math.isnan(i):
-                        data[c] = 0.
+                        data[counter] = 0.
 
-                for c, i in enumerate(error):
+                for counter, i in enumerate(error):
                     if math.isnan(i):
-                        error[c] = 0.
+                        error[counter] = 0.
 
                 self.write_vtk(
                     xs=xs,
@@ -700,7 +700,7 @@ class NeutronicsModel():
             outfile):
         try:
             import vtk
-        except (ImportError, ModuleNotFoundError) as e:
+        except (ImportError, ModuleNotFoundError):
             msg = "Conversion to VTK requested," \
                 "but the Python VTK module is not installed."
             raise ImportError(msg)
