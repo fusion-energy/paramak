@@ -210,7 +210,7 @@ class NeutronicsModel():
     @materials.setter
     def materials(self, value):
         if not isinstance(value, dict):
-            raise ValueError("NeutronicsModelFromReactor.materials should be a\
+            raise TypeError("NeutronicsModelFromReactor.materials should be a\
                 dictionary")
         self._materials = value
 

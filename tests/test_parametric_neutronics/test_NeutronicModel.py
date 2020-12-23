@@ -204,7 +204,7 @@ class TestShape(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_materials
         )
 
