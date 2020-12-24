@@ -9,13 +9,13 @@ import matplotlib.pyplot as plt
 
 try:
     import openmc
-except BaseException:
+except ImportError:
     warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
             method not available', UserWarning)
 
 try:
     import neutronics_material_maker as nmm
-except BaseException:
+except ImportError:
     warnings.warn("neutronics_material_maker not found, \
             NeutronicsModelFromReactor.materials can't accept strings or \
             neutronics_material_maker objects", UserWarning)
@@ -305,7 +305,8 @@ class NeutronicsModel():
             self.geometry.export_neutronics_description()
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
-                raise ValueError("The make_faceteted_neutronics_model.py was \
+                raise FileNotFoundError(
+                    "The make_faceteted_neutronics_model.py was \
                     not found in the directory")
             os.system("trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
                       str(self.faceting_tolerance) + "'\" \"merge_tolerance='" + str(self.merge_tolerance) + "'\"")
@@ -541,7 +542,7 @@ class NeutronicsModel():
         results = defaultdict(dict)
 
         # access the tallies
-        for key, tally in sp.tallies.items():
+        for tally in sp.tallies.values():
 
             if tally.name == 'TBR':
 
