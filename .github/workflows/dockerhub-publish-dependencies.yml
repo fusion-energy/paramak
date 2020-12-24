@@ -6,7 +6,9 @@ name: dockerhub-publish-dependencies
 
 on:
   push:
-    branches: main
+    branches:
+    - develop  
+    - main
 
 jobs:
   main:
