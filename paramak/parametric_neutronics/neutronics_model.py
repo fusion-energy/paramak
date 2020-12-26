@@ -570,7 +570,7 @@ class NeutronicsModel():
         # access the tallies
         for key, tally in statepoint.tallies.items():
 
-            if tally.name == 'TBR':
+            if tally.name.endswith('TBR'):
 
                 df = tally.get_pandas_dataframe()
                 tally_result = df["mean"].sum()
