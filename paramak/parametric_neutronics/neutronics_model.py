@@ -510,8 +510,13 @@ class NeutronicsModel():
 
             for standard_tally in self.cell_tallies:
                 if standard_tally == 'TBR':
-                    score = '(n,Xt)'  # where X is a wild card
+                    score = '(n,Xt)' # where X is a wild card
                     sufix = 'TBR'
+
+                    tally = openmc.Tally(name='TBR')
+                    tally.scores = [score] 
+                    tallies.append(tally)
+
                 else:
                     score = standard_tally
                     sufix = standard_tally
