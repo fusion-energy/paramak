@@ -47,8 +47,8 @@ class TestShape(unittest.TestCase):
         # performs an openmc simulation on the model
         output_filename = my_model.simulate(method='pymoab')
 
-        sp = openmc.StatePoint(output_filename)
-        assert len(sp.tallies.items()) == 1
+        results = openmc.StatePoint(output_filename)
+        assert len(results.tallies.items()) == 1
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
@@ -72,8 +72,8 @@ class TestShape(unittest.TestCase):
         # performs an openmc simulation on the model
         output_filename = my_model.simulate(method='pymoab')
 
-        sp = openmc.StatePoint(output_filename)
-        assert len(sp.tallies.items()) == 1
+        results = openmc.StatePoint(output_filename)
+        assert len(results.tallies.items()) == 1
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
@@ -240,9 +240,9 @@ class TestShape(unittest.TestCase):
         # performs an openmc simulation on the model
         output_filename = my_model.simulate(method='pymoab')
 
-        sp = openmc.StatePoint(output_filename)
-        assert len(sp.tallies.items()) == 1
-        assert len(sp.meshes) == 0
+        results = openmc.StatePoint(output_filename)
+        assert len(results.tallies.items()) == 1
+        assert len(results.meshes) == 0
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
@@ -268,9 +268,9 @@ class TestShape(unittest.TestCase):
         # performs an openmc simulation on the model
         output_filename = my_model.simulate(method='pymoab')
 
-        sp = openmc.StatePoint(output_filename)
-        assert len(sp.meshes) == 3
-        assert len(sp.tallies.items()) == 3
+        results = openmc.StatePoint(output_filename)
+        assert len(results.meshes) == 3
+        assert len(results.tallies.items()) == 3
 
         assert Path("heating_on_2D_mesh_xz.png").exists() is True
         assert Path("heating_on_2D_mesh_xy.png").exists() is True
@@ -295,9 +295,9 @@ class TestShape(unittest.TestCase):
         # performs an openmc simulation on the model
         output_filename = my_model.simulate(method='pymoab')
 
-        sp = openmc.StatePoint(output_filename)
-        assert len(sp.meshes) == 1
-        assert len(sp.tallies.items()) == 2
+        results = openmc.StatePoint(output_filename)
+        assert len(results.meshes) == 1
+        assert len(results.tallies.items()) == 2
 
         assert Path(output_filename).exists() is True
         assert Path('heating_on_3D_mesh.vtk').exists() is True
@@ -323,9 +323,9 @@ class TestShape(unittest.TestCase):
 
         # performs an openmc simulation on the model
         output_filename = my_model.simulate(method='pymoab')
-        sp = openmc.StatePoint(output_filename)
-        assert len(sp.meshes) == 4  # one 3D and three 2D
-        assert len(sp.tallies.items()) == 4  # one 3D and three 2D
+        results = openmc.StatePoint(output_filename)
+        assert len(results.meshes) == 4  # one 3D and three 2D
+        assert len(results.tallies.items()) == 4  # one 3D and three 2D
 
         assert Path(output_filename).exists() is True
         assert Path('heating_on_3D_mesh.vtk').exists() is True
