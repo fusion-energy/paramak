@@ -11,13 +11,13 @@ import numpy as np
 
 try:
     import openmc
-except BaseException:
+except ImportError:
     warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
             method not available', UserWarning)
 
 try:
     import neutronics_material_maker as nmm
-except BaseException:
+except ImportError:
     warnings.warn("neutronics_material_maker not found, \
             NeutronicsModelFromReactor.materials can't accept strings or \
             neutronics_material_maker objects", UserWarning)
@@ -223,7 +223,7 @@ class NeutronicsModel():
         if isinstance(value, float):
             value = int(value)
         if not isinstance(value, int):
-            raise ValueError(
+            raise TypeError(
                 "NeutronicsModelFromReactor.simulation_batches should be an int")
         if value < 2:
             raise ValueError(
@@ -240,7 +240,7 @@ class NeutronicsModel():
         if isinstance(value, float):
             value = int(value)
         if not isinstance(value, int):
-            raise ValueError(
+            raise TypeError(
                 "NeutronicsModelFromReactor.simulation_particles_per_batch\
                     should be an int")
         self._simulation_particles_per_batch = value
@@ -259,7 +259,7 @@ class NeutronicsModel():
             material_entry.material_tag = material_tag
             openmc_material = material_entry.openmc_material
         else:
-            raise ValueError("materials must be either a str, \
+            raise TypeError("materials must be either a str, \
                 openmc.Material, nmm.MultiMaterial or nmm.Material object \
                 not a ", type(material_entry), material_entry)
         return openmc_material
@@ -333,7 +333,8 @@ class NeutronicsModel():
             self.geometry.export_neutronics_description()
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
-                raise ValueError("The make_faceteted_neutronics_model.py was \
+                raise FileNotFoundError(
+                    "The make_faceteted_neutronics_model.py was \
                     not found in the directory")
             os.system("trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
                       str(self.faceting_tolerance) + "'\" \"merge_tolerance='" + str(self.merge_tolerance) + "'\"")
@@ -573,7 +574,7 @@ class NeutronicsModel():
         results = defaultdict(dict)
 
         # access the tallies
-        for key, tally in statepoint.tallies.items():
+        for tally in sp.tallies.values():
 
             if tally.name.endswith('TBR'):
 

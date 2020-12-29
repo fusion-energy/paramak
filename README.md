@@ -5,7 +5,7 @@
 [![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
 [![dockerhub-publish-stable](https://github.com/ukaea/paramak/workflows/dockerhub-publish-stable/badge.svg)](https://github.com/ukaea/paramak/actions?query=workflow%3Adockerhub-publish-stable)
-
+[![DOI](https://zenodo.org/badge/269635577.svg)](https://zenodo.org/badge/latestdoi/269635577)
 
 # Paramak
 
