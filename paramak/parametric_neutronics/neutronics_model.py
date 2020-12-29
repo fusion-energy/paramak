@@ -574,7 +574,7 @@ class NeutronicsModel():
         results = defaultdict(dict)
 
         # access the tallies
-        for tally in sp.tallies.values():
+        for tally in statepoint.tallies.values():
 
             if tally.name.endswith('TBR'):
 
