@@ -18,14 +18,14 @@ class CenterColumnShieldCylinder(RotateStraightShape):
 
     def __init__(
         self,
-        height,
-        inner_radius,
-        outer_radius,
-        stp_filename="CenterColumnShieldCylinder.stp",
-        stl_filename="CenterColumnShieldCylinder.stl",
-        material_tag="center_column_shield_mat",
+        height: float,
+        inner_radius: float,
+        outer_radius: float,
+        stp_filename: str = "CenterColumnShieldCylinder.stp",
+        stl_filename: str = "CenterColumnShieldCylinder.stl",
+        material_tag: str = "center_column_shield_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             material_tag=material_tag,
