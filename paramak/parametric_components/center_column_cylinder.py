@@ -6,14 +6,14 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     """A cylindrical center column shield volume with constant thickness.
 
     Arguments:
-        height (float): height of the center column shield.
-        inner_radius (float): the inner radius of the center column shield.
-        outer_radius (float): the outer radius of the center column shield.
-        stp_filename (str, optional): Defaults to
+        height: height of the center column shield.
+        inner_radius: the inner radius of the center column shield.
+        outer_radius: the outer radius of the center column shield.
+        stp_filename: Defaults to
             "CenterColumnShieldCylinder.stp".
-        stl_filename (str, optional): Defaults to
+        stl_filename: Defaults to
             "CenterColumnShieldCylinder.stl".
-        material_tag (str, optional): Defaults to "center_column_shield_mat".
+        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
