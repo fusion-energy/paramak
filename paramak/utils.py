@@ -2,6 +2,7 @@
 import math
 from collections import Iterable
 from hashlib import blake2b
+from typing import Tuple
 
 import cadquery as cq
 import numpy as np
@@ -9,7 +10,8 @@ import numpy as np
 import paramak
 
 
-def coefficients_of_line_from_points(point_a, point_b):
+def coefficients_of_line_from_points(point_a: Tuple[float, float],
+                                     point_b: Tuple[float, float]):
     """Computes the m and c coefficients of the equation (y=mx+c) for
     a straight line from two points.
 
@@ -49,7 +51,7 @@ def cut_solid(solid, cutter):
     return solid
 
 
-def diff_between_angles(angle_a, angle_b):
+def diff_between_angles(angle_a: float, angle_b: float) -> float:
     """Calculates the difference between two angles angle_a and angle_b
 
     Args:
@@ -66,7 +68,8 @@ def diff_between_angles(angle_a, angle_b):
     return delta_mod
 
 
-def distance_between_two_points(point_a, point_b):
+def distance_between_two_points(point_a: Tuple[float, float],
+                                point_b: Tuple[float, float]) -> float:
     """Computes the distance between two points.
 
     Args:
@@ -83,7 +86,8 @@ def distance_between_two_points(point_a, point_b):
     return np.linalg.norm(u_vec)
 
 
-def extend(point_a, point_b, L):
+def extend(point_a: Tuple[float, float], point_b: Tuple[float, float],
+           L: float) -> Tuple[float, float]:
     """Creates a point C in (ab) direction so that \\|aC\\| = L
 
     Args:
@@ -104,7 +108,9 @@ def extend(point_a, point_b, L):
     return xc, yc
 
 
-def find_center_point_of_circle(point_a, point_b, point3):
+def find_center_point_of_circle(point_a: Tuple[float, float],
+                                point_b: Tuple[float, float],
+                                point3: Tuple[float, float]) -> Tuple[Tuple[float, float], float]:
     """
     Calculates the center and the radius of a circle
     passing through 3 points.
