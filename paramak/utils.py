@@ -10,8 +10,8 @@ import numpy as np
 import paramak
 
 
-def coefficients_of_line_from_points(point_a: Tuple[float, float],
-                                     point_b: Tuple[float, float]) -> Tuple[float, float]:
+def coefficients_of_line_from_points(
+        point_a: Tuple[float, float], point_b: Tuple[float, float]) -> Tuple[float, float]:
     """Computes the m and c coefficients of the equation (y=mx+c) for
     a straight line from two points.
 
