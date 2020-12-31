@@ -1,6 +1,8 @@
 
 import json
 import os
+import pathlib
+import shutil
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -303,6 +305,9 @@ class NeutronicsModel():
         elif method == 'trelis':
             self.geometry.export_stp()
             self.geometry.export_neutronics_description()
+
+            shutil.copy(src=pathlib.Path(__file__).parent.absolute() / 'make_faceteted_neutronics_model.py',
+                        dst=pathlib.Path().absolute())
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
                 raise FileNotFoundError(
