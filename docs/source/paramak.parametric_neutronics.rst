@@ -14,14 +14,24 @@ the material tag names. mbsize -ll dagmc.h5m | grep 'mat:'
 
 The creation of the dagmc.h5m file can be carried out via three routes.
 
-Option 1. Use of the `OCC_Faceter <https://github.com/makeclean/occ_faceter/>`_ 
-and the `PPP <https://github.com/ukaea/parallel-preprocessor>`_
+Option 1. Use of `PyMoab <https://bitbucket.org/fathomteam/moab>`_ which is
+distributed with MOAB. Thus method can not imprint or merge the surfaces of the
+geometry that touch. Therefore this method should only be used for single
+components or components that touch on flat surfaces. Curved surfaces converted
+via this method can potentially overlap and cause errors with the particle
+tracking.
 
 Option 2. Use of `Trelis <https://www.coreform.com/products/trelis/>`_ by
-Coreform
+Coreform along with the DAGMC
+`plugin <https://svalinn.github.io/DAGMC/install/plugin.html>`_ / This method
+can support imprinting and merging of shared surfaces between components and is
+therefore suitable for converting more complex CAD geometry to the PyMoab
+method.
 
-Option 3. Use of `PyMoab <https://bitbucket.org/fathomteam/moab>`_ by
-Coreform
+Option 3. Use of the `PPP <https://github.com/ukaea/parallel-preprocessor>`_
+and `OCC_Faceter <https://github.com/makeclean/occ_faceter/>`_ . This option
+has not yet been fully demonstrated but is partly included to test the
+promising new method.
 
 To create a model it is also necessary to define the source and the materials
 used. 
