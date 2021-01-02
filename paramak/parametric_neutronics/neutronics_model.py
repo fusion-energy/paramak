@@ -269,17 +269,19 @@ class NeutronicsModel():
 
         Arguments:
             method: (str): The method to use when making the imprinted and
-                merged geometry. Options are "ppp", "trelis", "pymoab".
-                Defaults to None.
+                merged geometry. Options are "ppp", "trelis", "pymoab" and
+                None.  Defaults to None.
         """
 
-        os.system('rm dagmc_not_watertight.h5m')
-        os.system('rm dagmc.h5m')
-
-        if method not in ['ppp', 'trelis', 'pymoab']:
+        if method in ['ppp', 'trelis', 'pymoab']:
+            os.system('rm dagmc_not_watertight.h5m')
+            os.system('rm dagmc.h5m')
+        elif method is None and Path.is_file('dagmc.h5m'):
+            print('Using previously made dagmc.h5m file')
+        else:
             raise ValueError(
                 "the method using in create_neutronics_geometry \
-                should be either ppp or trelis not", method)
+                should be either ppp, trelis, pymoab or None.", method)
 
         if method == 'ppp':
 
@@ -322,8 +324,7 @@ class NeutronicsModel():
                 filename='dagmc.h5m',
                 tolerance=self.faceting_tolerance
             )
-
-        print('neutronics model saved as dagmc.h5m')
+        return 'dagmc.h5m'
 
     def _make_watertight(self):
         """Runs the DAGMC make_watertight script thatt seals the facetets of
