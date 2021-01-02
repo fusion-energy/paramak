@@ -33,7 +33,7 @@ jobs:
         with:
           dockerfile: DockerfileDependances
           push: true
-          tags: ukaea/paramak:latest
+          tags: ukaea/paramak:dependances
           build-args: |
             cq_version=master
             compile_cores=2
