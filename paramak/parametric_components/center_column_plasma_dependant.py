@@ -37,7 +37,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         elongation: Optional[float] = 2.0,
         material_tag: Optional[str] = "center_column_shield_mat",
         stp_filename: Optional[str] = "CenterColumnShieldPlasmaHyperbola.stp",
-        stl_filename: Opitonal[str] = "CenterColumnShieldPlasmaHyperbola.stl",
+        stl_filename: Optional[str] = "CenterColumnShieldPlasmaHyperbola.stl",
         **kwargs
     ) -> None:
 
