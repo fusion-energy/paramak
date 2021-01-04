@@ -23,7 +23,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
 
     def __init__(
         self,
-        height: float, ,
+        height: float,
         arc_height: float,
         inner_radius: float,
         mid_radius: float,
