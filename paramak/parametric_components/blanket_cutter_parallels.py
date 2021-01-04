@@ -12,14 +12,14 @@ class BlanketCutterParallels(ExtrudeStraightShape):
     sections with a fixed distance between each section.
 
     Args:
-        thickness: extruded distance (cm) of the cutter which translates to 
-            being the gap size between blankets when the cutter is used to 
+        thickness: extruded distance (cm) of the cutter which translates to
+            being the gap size between blankets when the cutter is used to
             segment blankets.
-        gap_size: the distance between the inner edges of the two  parallel 
+        gap_size: the distance between the inner edges of the two  parallel
             extrusions
         height: height (cm) of the port. Defaults to 2000.0.
         width: width (cm) of the port. Defaults to 2000.0.
-        azimuth_placement_angle: Defaults to [0., 36., 72., 108., 144., 180., 
+        azimuth_placement_angle: Defaults to [0., 36., 72., 108., 144., 180.,
             216., 252., 288., 324.].
         stp_filename: Defaults to "BlanketCutterParallels.stp".
         stl_filename: Defaults to "BlanketCutterParallels.stl".
@@ -33,8 +33,8 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         gap_size: float,
         height: Optional[float] = 2000.,
         width: Optional[float] = 2000.,
-        azimuth_placement_angle: Optional[float], =[0., 36., 72., 108., 
-            144., 180., 216., 252., 288., 324.],
+        azimuth_placement_angle: Optional[float],=[0., 36., 72., 108.,
+                                                    144., 180., 216., 252., 288., 324.],
         stp_filename: Optional[str] = "BlanketCutterParallels.stp",
         stl_filename: Optional[str] = "BlanketCutterParallels.stl",
         name: Optional[str] = "blanket_cutter_parallels",

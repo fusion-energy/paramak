@@ -10,10 +10,10 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
 
     Args:
         height: height of the center column shield.
-        arc_height: height of the outer hyperbolic profile of the center column 
+        arc_height: height of the outer hyperbolic profile of the center column
             shield.
         inner_radius: the inner radius of the center column shield.
-        mid_radius: the inner radius of the outer hyperbolic profile of the 
+        mid_radius: the inner radius of the outer hyperbolic profile of the
             center column shield.
         outer_radius: the outer_radius of the center column shield.
         stp_filename: Defaults to "CenterColumnShieldFlatTopHyperbola.stp".

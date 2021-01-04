@@ -13,16 +13,16 @@ class CoolantChannelRingCurved(SweepCircleShape):
         channel_radius: radius of each coolant channel in ring.
         number_of_coolant_channels: number of coolant channels in ring.
         ring_radius: radius of coolant channel ring.
-        start_angle: angle at which the first channel in the ring is placed. 
+        start_angle: angle at which the first channel in the ring is placed.
             Defaults to 0.0.
         stp_filename: Defaults to "CoolantChannelRingCurved.stp".
         stl_filename: Defaults to "CoolantChannelRingCurved.stl".
         material_tag: Defaults to "coolant_channel_mat".
-        rotation_axis: azimuthal axis around which the separate coolant channels 
+        rotation_axis: azimuthal axis around which the separate coolant channels
             are placed. Default calculated by workplane and path_workplane.
         workplane (str, optional): plane in which the cross-sections of the
             coolant channels lie. Defaults to "XY".
-        path_workplane (str, optional): plane in which the cross-sections of the 
+        path_workplane (str, optional): plane in which the cross-sections of the
             coolant channels are swept. Defaults to "XZ".
         force_cross_section (bool, optional): forces coolant channels to have a
             more constant cross-section along their curve. Defaults to False.

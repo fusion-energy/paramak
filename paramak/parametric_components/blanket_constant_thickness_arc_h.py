@@ -9,11 +9,11 @@ class BlanketConstantThicknessArcH(RotateMixedShape):
     horizontally for the thickness of the blanket to back of the blanket.
 
     Arguments:
-        inner_mid_point: the x,z coordinates of the mid point on the inner 
+        inner_mid_point: the x,z coordinates of the mid point on the inner
             surface of the blanket.
-        inner_upper_point: the x,z coordinates of the upper point on the 
+        inner_upper_point: the x,z coordinates of the upper point on the
             inner surface of the blanket.
-        inner_lower_point: the x,z coordinates of the lower point on the 
+        inner_lower_point: the x,z coordinates of the lower point on the
             inner surface of the blanket.
         thickness: the radial thickness of the blanket in cm.
         stp_filename: Defaults to "BlanketConstantThicknessArcH.stp".
