@@ -12,7 +12,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
     Args:
         height: height of the center column shield.
         inner_radius: the inner radius of the center column shield.
-        mid_offset: the offset of the shield from the plasma at the plasma 
+        mid_offset: the offset of the shield from the plasma at the plasma
             center.
         edge_offset: the offset of the shield from the plasma at the plasma
             edge.

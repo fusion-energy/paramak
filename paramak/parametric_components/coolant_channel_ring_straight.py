@@ -13,7 +13,7 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         channel_radius: radius of each coolant channel in ring.
         number_of_coolant_channels: number of coolant channels in ring.
         ring radius: radius of coolant channel ring.
-        start_angle: angle at which the first channel in the ring is placed. 
+        start_angle: angle at which the first channel in the ring is placed.
             Defaults to 0.0.
         stp_filename: Defaults to "CoolantChannelRingStraight.stp".
         stl_filename: Defaults to "CoolantChannelRingStraight.stl".

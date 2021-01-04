@@ -9,10 +9,10 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
 
     Args:
         height: height of the center column shield.
-        arc_height: height of the outer circular profile of the center column 
+        arc_height: height of the outer circular profile of the center column
             shield.
         inner_radius: the inner radius of the center column shield.
-        mid_radius: the inner radius of the outer circular profile of the center 
+        mid_radius: the inner radius of the outer circular profile of the center
             column shield.
         outer_radius: the outer radius of the center column shield.
         stp_filename: Defaults to "CenterColumnShieldFlatTopCircular.stp".
@@ -23,7 +23,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
 
     def __init__(
         self,
-        height: float,,
+        height: float, ,
         arc_height: float,
         inner_radius: float,
         mid_radius: float,

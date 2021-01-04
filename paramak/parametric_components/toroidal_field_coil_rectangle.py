@@ -10,9 +10,9 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     """Creates a rectangular shaped toroidal field coil.
 
     Args:
-        horizontal_start_point: the (x,z) coordinates of the inner upper 
+        horizontal_start_point: the (x,z) coordinates of the inner upper
             point (cm).
-        vertical_mid_point: the (x,z) coordinates of the mid point of the 
+        vertical_mid_point: the (x,z) coordinates of the mid point of the
             vertical section (cm).
         thickness: the thickness of the toroidal field coil.
         distance: the extrusion distance.

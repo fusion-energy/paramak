@@ -10,12 +10,12 @@ class BlanketCutterStar(ExtrudeStraightShape):
     sections with a fixed gap between each section.
 
     Args:
-        distance: extruded distance (cm) of the cutter which translates to being 
-            the gap size between blankets when the cutter is used to segment 
+        distance: extruded distance (cm) of the cutter which translates to being
+            the gap size between blankets when the cutter is used to segment
             blankets.
         height: height (cm) of the port. Defaults to 2000.0.
         width: width (cm) of the port. Defaults to 2000.0.
-        azimuth_placement_angle (list or float, optional): Defaults to 
+        azimuth_placement_angle (list or float, optional): Defaults to
             [0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
         stp_filename: Defaults to "BlanketCutterStar.stp".
         stl_filename: Defaults to "BlanketCutterStar.stl".
@@ -24,18 +24,26 @@ class BlanketCutterStar(ExtrudeStraightShape):
     """
 
     def __init__(
-        self,
-        distance: float,
-        height: Optional[float] = 2000.,
-        width: Optional[float] = 2000.,
-        azimuth_placement_angle: Optional[float] = [0., 36., 72., 108., 144., 
-            180., 216., 252., 288., 324.],
-        stp_filename: Optional[str] = "BlanketCutterStar.stp",
-        stl_filename: Optional[str] = "BlanketCutterStar.stl",
-        name: Optional[str] = "blanket_cutter_star",
-        material_tag: Optional[str] = "blanket_cutter_star_mat",
-        **kwargs
-    ) -> None:
+            self,
+            distance: float,
+            height: Optional[float] = 2000.,
+            width: Optional[float] = 2000.,
+            azimuth_placement_angle: Optional[float] = [
+                0.,
+                36.,
+                72.,
+                108.,
+                144.,
+                180.,
+                216.,
+                252.,
+                288.,
+                324.],
+            stp_filename: Optional[str] = "BlanketCutterStar.stp",
+            stl_filename: Optional[str] = "BlanketCutterStar.stl",
+            name: Optional[str] = "blanket_cutter_star",
+            material_tag: Optional[str] = "blanket_cutter_star_mat",
+            **kwargs) -> None:
 
         super().__init__(
             extrude_both=True,

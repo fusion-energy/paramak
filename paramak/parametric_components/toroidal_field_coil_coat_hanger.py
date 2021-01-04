@@ -12,13 +12,13 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
     """Creates a coat hanger shaped toroidal field coil.
 
     Args:
-        horizontal_start_point: the (x,z) coordinates of the inner upper 
+        horizontal_start_point: the (x,z) coordinates of the inner upper
             point (cm).
-        horizontal_length: the radial length of the horizontal section of 
+        horizontal_length: the radial length of the horizontal section of
             the TF coil (cm).
-        vertical_mid_point: the (x,z) coordinates of the mid point of the 
+        vertical_mid_point: the (x,z) coordinates of the mid point of the
             outboard vertical section (cm).
-        vertical_length: the radial length of the outboard vertical section 
+        vertical_length: the radial length of the outboard vertical section
             of the TF coil (cm).
         thickness: the thickness of the toroidal field coil.
         distance: the extrusion distance.
