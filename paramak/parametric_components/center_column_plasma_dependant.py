@@ -1,5 +1,6 @@
 
 from paramak import Plasma, RotateMixedShape
+from typing import Optional
 
 
 class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
@@ -9,42 +10,36 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
     inner radius.
 
     Args:
-        height (float): height of the center column shield.
-        inner_radius (float): the inner radius of the center column shield.
-        mid_offset (float): the offset of the shield from the plasma at the
-            plasma center.
-        edge_offset (float): the offset of the shield from the plasma at the
-            plasma edge.
-        major_radius (int, optional): the major radius of the plasma. Defaults
-            to 450.0.
-        minor_radius (int, optional): the minor radius of the plasma. Defaults
-            to 150.0.
-        triangularity (float, optional): the triangularity of the plasma.
-            Defaults to 0.55.
-        elongation (float, optional): the elongation of the plasma. Defaults
-            to 2.0.
-        material_tag (str, optional): Defaults to "center_column_shield_mat".
-        stp_filename (str, optional): Defaults to
-            "CenterColumnShieldPlasmaHyperbola.stp".
-        stl_filename (str, optional): Defaults to
-            "CenterColumnShieldPlasmaHyperbola.stl".
+        height: height of the center column shield.
+        inner_radius: the inner radius of the center column shield.
+        mid_offset: the offset of the shield from the plasma at the plasma 
+            center.
+        edge_offset: the offset of the shield from the plasma at the plasma
+            edge.
+        major_radius: the major radius of the plasma. Defaults to 450.0.
+        minor_radius: the minor radius of the plasma. Defaults to 150.0.
+        triangularity: the triangularity of the plasma. Defaults to 0.55.
+        elongation: the elongation of the plasma. Defaults to 2.0.
+        material_tag: Defaults to "center_column_shield_mat".
+        stp_filename: Defaults to "CenterColumnShieldPlasmaHyperbola.stp".
+        stl_filename: Defaults to "CenterColumnShieldPlasmaHyperbola.stl".
     """
 
     def __init__(
         self,
-        height,
-        inner_radius,
-        mid_offset,
-        edge_offset,
-        major_radius=450.0,
-        minor_radius=150.0,
-        triangularity=0.55,
-        elongation=2.0,
-        material_tag="center_column_shield_mat",
-        stp_filename="CenterColumnShieldPlasmaHyperbola.stp",
-        stl_filename="CenterColumnShieldPlasmaHyperbola.stl",
+        height: float,
+        inner_radius: float,
+        mid_offset: float,
+        edge_offset: float,
+        major_radius: Optional[float] = 450.0,
+        minor_radius: Optional[float] = 150.0,
+        triangularity: Optional[float] = 0.55,
+        elongation: Optional[float] = 2.0,
+        material_tag: Optional[str] = "center_column_shield_mat",
+        stp_filename: Optional[str] = "CenterColumnShieldPlasmaHyperbola.stp",
+        stl_filename: Opitonal[str] = "CenterColumnShieldPlasmaHyperbola.stl",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             material_tag=material_tag,

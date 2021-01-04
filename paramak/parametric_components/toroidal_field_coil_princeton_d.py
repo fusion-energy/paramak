@@ -4,44 +4,41 @@ from paramak import ExtrudeMixedShape
 from paramak.utils import add_thickness
 from scipy import integrate
 from scipy.optimize import minimize
+from typing import Optional
 
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     """Toroidal field coil based on Princeton-D curve
 
     Args:
-        R1 (float): smallest radius (cm)
-        R2 (float): largest radius (cm)
-        thickness (float): magnet thickness (cm)
-        distance (float): extrusion distance (cm)
-        number_of_coils (int): the number of tf coils. This changes by the
+        R1: smallest radius (cm)
+        R2: largest radius (cm)
+        thickness: magnet thickness (cm)
+        distance: extrusion distance (cm)
+        number_of_coils: the number of tf coils. This changes by the
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
-        vertical_displacement (float, optional): vertical displacement (cm).
-            Defaults to 0.0.
-        with_inner_leg (bool, optional): Include the inner tf leg. Defaults to
-            True.
-        stp_filename (str, optional): defaults to
-            "ToroidalFieldCoilPrincetonD.stp".
-        stl_filename (str, optional): defaults to
-            "ToroidalFieldCoilPrincetonD.stl".
-        material_tag (str, optional): defaults to "outer_tf_coil_mat".
+        vertical_displacement: vertical displacement (cm). Defaults to 0.0.
+        with_inner_leg: Include the inner tf leg. Defaults to True.
+        stp_filename: Defaults to "ToroidalFieldCoilPrincetonD.stp".
+        stl_filename: Defaults to "ToroidalFieldCoilPrincetonD.stl".
+        material_tag: Defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
         self,
-        R1,
-        R2,
-        thickness,
-        distance,
-        number_of_coils,
-        vertical_displacement=0.0,
-        with_inner_leg=True,
-        stp_filename="ToroidalFieldCoilPrincetonD.stp",
-        stl_filename="ToroidalFieldCoilPrincetonD.stl",
-        material_tag="outer_tf_coil_mat",
+        R1: float,
+        R2: float,
+        thickness: float,
+        distance: float,
+        number_of_coils: int,
+        vertical_displacement: Optional[float] = 0.0,
+        with_inner_leg: Optional[bool] = True,
+        stp_filename: Optional[str] = "ToroidalFieldCoilPrincetonD.stp",
+        stl_filename: Optional[str] = "ToroidalFieldCoilPrincetonD.stl",
+        material_tag: Optional[str] = "outer_tf_coil_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             distance=distance,

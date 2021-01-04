@@ -10,34 +10,34 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
     constant gaps between each coil.
 
     Args:
-        height (float): height of tf coils.
-        inner_radius (float): inner radius of tf coils.
-        outer_radius (float): outer radius of tf coils.
-        number_of_coils (int): number of tf coils.
-        gap_size (float): gap between adjacent tf coils.
-        azimuth_start_angle (float, optional): Defaults to 0.0.
-        stp_filename (str, optional): Defaults to "InnerTfCoilsCircular.stp".
-        stl_filename (str, optional): Defaults to "InnerTfCoilsCircular.stl".
-        material_tag (str, optional): Defaults to "inner_tf_coil_mat".
-        workplane (str, optional): Defaults to "XY".
-        rotation_axis (str, optional): Defaults to "Z".
+        height: height of tf coils.
+        inner_radius: inner radius of tf coils.
+        outer_radius: outer radius of tf coils.
+        number_of_coils: number of tf coils.
+        gap_size: gap between adjacent tf coils.
+        azimuth_start_angle: Defaults to 0.0.
+        stp_filename: Defaults to "InnerTfCoilsCircular.stp".
+        stl_filename: Defaults to "InnerTfCoilsCircular.stl".
+        material_tag: Defaults to "inner_tf_coil_mat".
+        workplane: Defaults to "XY".
+        rotation_axis: Defaults to "Z".
     """
 
     def __init__(
         self,
-        height,
-        inner_radius,
-        outer_radius,
-        number_of_coils,
-        gap_size,
-        azimuth_start_angle=0.0,
-        stp_filename="InnerTfCoilsCircular.stp",
-        stl_filename="InnerTfCoilsCircular.stl",
-        material_tag="inner_tf_coil_mat",
-        workplane="XY",
-        rotation_axis="Z",
+        height: float,
+        inner_radius: float,
+        outer_radius: float,
+        number_of_coils: int,
+        gap_size: float,
+        azimuth_start_angle: Optional[float] = 0.0,
+        stp_filename: Optional[str] = "InnerTfCoilsCircular.stp",
+        stl_filename: Optional[str] = "InnerTfCoilsCircular.stl",
+        material_tag: Optional[str] = "inner_tf_coil_mat",
+        workplane: Optional[str] = "XY",
+        rotation_axis: Optional[str] = "Z",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             distance=height,
