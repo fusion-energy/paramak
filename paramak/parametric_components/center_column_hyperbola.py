@@ -30,7 +30,7 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         name: Optional[str] = "center_column",
         material_tag: Optional[str] = "center_column_shield_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             name=name,
