@@ -1,5 +1,6 @@
 
 from paramak import RotateMixedShape
+from typing import Optional
 
 
 class CenterColumnShieldFlatTopCircular(RotateMixedShape):
