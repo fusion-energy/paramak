@@ -1,4 +1,5 @@
 
+from typing import Optional
 from paramak import RotateMixedShape
 
 
@@ -8,34 +9,32 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
     cylindrical inner profile.
 
     Args:
-        height (float): height of the center column shield.
-        arc_height (float): height of the outer hyperbolic profile of the
+        height: height of the center column shield.
+        arc_height: height of the outer hyperbolic profile of the center column
+            shield.
+        inner_radius: the inner radius of the center column shield.
+        mid_radius: the inner radius of the outer hyperbolic profile of the
             center column shield.
-        inner_radius (float): the inner radius of the center column shield.
-        mid_radius (float): the inner radius of the outer hyperbolic profile of
-            the center column shield.
-        outer_radius (float): the outer_radius of the center column shield.
-        stp_filename (str, optional): Defaults to
-            "CenterColumnShieldFlatTopHyperbola.stp".
-        stl_filename (str, optional): Defaults to
-            "CenterColumnShieldFlatTopHyperbola.stl".
-        name (str, optional): Defaults to "center_column".
-        material_tag (str, optional): Defaults to "center_column_shield_mat".
+        outer_radius: the outer_radius of the center column shield.
+        stp_filename: Defaults to "CenterColumnShieldFlatTopHyperbola.stp".
+        stl_filename: Defaults to "CenterColumnShieldFlatTopHyperbola.stl".
+        name: Defaults to "center_column".
+        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
         self,
-        height,
-        arc_height,
-        inner_radius,
-        mid_radius,
-        outer_radius,
-        stp_filename="CenterColumnShieldFlatTopHyperbola.stp",
-        stl_filename="CenterColumnShieldFlatTopHyperbola.stl",
-        name="center_column",
-        material_tag="center_column_shield_mat",
+        height: float,
+        arc_height: float,
+        inner_radius: float,
+        mid_radius: float,
+        outer_radius: float,
+        stp_filename: Optional[str] = "CenterColumnShieldFlatTopHyperbola.stp",
+        stl_filename: Optional[str] = "CenterColumnShieldFlatTopHyperbola.stl",
+        name: Optional[str] = "center_column",
+        material_tag: Optional[str] = "center_column_shield_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             name=name,

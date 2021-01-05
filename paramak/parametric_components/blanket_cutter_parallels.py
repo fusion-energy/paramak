@@ -1,4 +1,5 @@
 
+from typing import Optional
 from paramak import ExtrudeStraightShape
 from paramak.utils import cut_solid
 
@@ -11,36 +12,35 @@ class BlanketCutterParallels(ExtrudeStraightShape):
     sections with a fixed distance between each section.
 
     Args:
-        thickness (float): extruded distance (cm) of the cutter which
-            translates to being the gap size between blankets when the cutter
-            is used to segment blankets.
-        gap_size (float): the distance between the inner edges of the two
-            parrallel extrusions
-        height (float, optional): height (cm) of the port. Defaults to 2000.0.
-        width (float, optional): width (cm) of the port. Defaults to 2000.0.
-        azimuth_placement_angle (list or float, optional): Defaults
-            to [0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
-        stp_filename (str, optional): Defaults to "BlanketCutterParallels.stp".
-        stl_filename (str, optional): Defaults to "BlanketCutterParallels.stl".
-        name (str, optional): Defaults to "blanket_cutter_Parallels".
-        material_tag (str, optional): Defaults to
-            "blanket_cutter_parallels_mat".
+        thickness: extruded distance (cm) of the cutter which translates to
+            being the gap size between blankets when the cutter is used to
+            segment blankets.
+        gap_size: the distance between the inner edges of the two  parallel
+            extrusions
+        height: height (cm) of the port. Defaults to 2000.0.
+        width: width (cm) of the port. Defaults to 2000.0.
+        stp_filename: Defaults to "BlanketCutterParallels.stp".
+        stl_filename: Defaults to "BlanketCutterParallels.stl".
+        name: Defaults to "blanket_cutter_Parallels".
+        material_tag: Defaults to "blanket_cutter_parallels_mat".
+        azimuth_placement_angle (float or list of floats): Defaults to [0., 36.,
+            72., 108., 144., 180., 216., 252., 288., 324.].
     """
 
     def __init__(
         self,
-        thickness,
-        gap_size,
-        height=2000.,
-        width=2000.,
-        azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216., 252.,
-                                 288., 324.],
-        stp_filename="BlanketCutterParallels.stp",
-        stl_filename="BlanketCutterParallels.stl",
-        name="blanket_cutter_parallels",
-        material_tag="blanket_cutter_parallels_mat",
+        thickness: float,
+        gap_size: float,
+        height: Optional[float] = 2000.,
+        width: Optional[float] = 2000.,
+        azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216.,
+                                 252., 288., 324.],
+        stp_filename: Optional[str] = "BlanketCutterParallels.stp",
+        stl_filename: Optional[str] = "BlanketCutterParallels.stl",
+        name: Optional[str] = "blanket_cutter_parallels",
+        material_tag: Optional[str] = "blanket_cutter_parallels_mat",
         **kwargs
-    ):
+    ) -> None:
         self.main_cutting_shape = \
             ExtrudeStraightShape(
                 distance=gap_size / 2.0,
