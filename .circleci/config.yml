@@ -7,7 +7,7 @@ jobs:
   # test:
   build:
     docker:
-      - image: ukaea/paramak:dependances
+      - image: openmcworkshop/paramak:dependences_with_neutronics
     steps:
       - checkout
       - run:
