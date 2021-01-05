@@ -1,6 +1,6 @@
 
-from paramak import RotateStraightShape
 from typing import Optional, Tuple
+from paramak import RotateStraightShape
 
 
 class PoloidalFieldCoilCase(RotateStraightShape):

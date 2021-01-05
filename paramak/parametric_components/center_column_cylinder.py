@@ -1,6 +1,6 @@
 
-from paramak import RotateStraightShape
 from typing import Optional
+from paramak import RotateStraightShape
 
 
 class CenterColumnShieldCylinder(RotateStraightShape):

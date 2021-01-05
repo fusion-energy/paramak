@@ -1,7 +1,7 @@
 
+from typing import Optional
 import numpy as np
 from paramak import ExtrudeCircleShape
-from typing import Optional
 
 
 class CoolantChannelRingStraight(ExtrudeCircleShape):

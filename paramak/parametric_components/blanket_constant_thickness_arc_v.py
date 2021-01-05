@@ -1,6 +1,6 @@
 
-from paramak import RotateMixedShape
 from typing import Optional, Tuple
+from paramak import RotateMixedShape
 
 
 class BlanketConstantThicknessArcV(RotateMixedShape):

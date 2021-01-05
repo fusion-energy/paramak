@@ -1,7 +1,7 @@
 
+from typing import Optional, Tuple
 import numpy as np
 from paramak import ExtrudeMixedShape
-from typing import Optional, Tuple
 
 
 class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):

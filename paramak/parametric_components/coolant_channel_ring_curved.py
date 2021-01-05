@@ -1,7 +1,7 @@
 
+from typing import Optional
 import numpy as np
 from paramak import SweepCircleShape
-from typing import Optional
 
 
 class CoolantChannelRingCurved(SweepCircleShape):

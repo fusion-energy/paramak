@@ -1,6 +1,6 @@
 
-from paramak import ExtrudeStraightShape
 from typing import Optional
+from paramak import ExtrudeStraightShape
 
 
 class BlanketCutterStar(ExtrudeStraightShape):
