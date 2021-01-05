@@ -2,7 +2,7 @@
 [![N|Python](https://www.python.org/static/community_logos/python-powered-w-100x40.png)](https://www.python.org)
 [![CircleCI](https://circleci.com/gh/ukaea/paramak/tree/main.svg?style=svg)](https://circleci.com/gh/ukaea/paramak/tree/main)
 [![codecov](https://codecov.io/gh/ukaea/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
-[![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
+[![PyPI](https://img.shields.io/pypi/v/paramak?color=green&label=green&logo=green&logoColor=green)](https://pypi.org/project/paramak/)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
 [![dockerhub-publish-stable](https://github.com/ukaea/paramak/workflows/dockerhub-publish-stable/badge.svg)](https://github.com/ukaea/paramak/actions?query=workflow%3Adockerhub-publish-stable)
 [![DOI](https://zenodo.org/badge/269635577.svg)](https://zenodo.org/badge/latestdoi/269635577)
