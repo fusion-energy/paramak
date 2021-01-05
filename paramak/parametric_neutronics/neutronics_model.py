@@ -304,7 +304,7 @@ class NeutronicsModel():
         if method in ['ppp', 'trelis', 'pymoab']:
             os.system('rm dagmc_not_watertight.h5m')
             os.system('rm dagmc.h5m')
-        elif method is None and Path.is_file('dagmc.h5m'):
+        elif method is None and Path('dagmc.h5m').is_file():
             print('Using previously made dagmc.h5m file')
         else:
             raise ValueError(
