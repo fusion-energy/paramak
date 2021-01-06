@@ -39,6 +39,7 @@ coverage.xml
 # images of the model
 *.svg
 *.png
+*.vtk
 
 # sphinx built documetation
 docs/build/
