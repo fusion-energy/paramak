@@ -1,4 +1,5 @@
 
+from typing import Optional, Tuple
 import numpy as np
 from paramak import ExtrudeMixedShape
 
@@ -7,43 +8,38 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
     """Toroidal field coil made of three arcs
 
     Args:
-        R1 (float): smallest radius (cm)
-        h (float): height of the straight section (cm)
-        radii ((float, float)): radii of the small and medium arcs (cm)
-        coverages ((float, float)): coverages of the small and medium arcs
-            (deg)
-        thickness (float): magnet thickness (cm)
-        distance (float): extrusion distance (cm)
-        number_of_coils (int): the number of TF coils. This changes by the
+        R1: smallest radius (cm).
+        h: height of the straight section (cm).
+        radii: radii of the small and medium arcs (cm).
+        coverages: coverages of the small and medium arcs (deg).
+        thickness: magnet thickness (cm).
+        distance: extrusion distance (cm).
+        number_of_coils: the number of TF coils. This changes by the
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
-        vertical_displacement (float, optional): vertical displacement (cm).
-            Defaults to 0.0.
-        with_inner_leg (bool, optional): Include the inner tf leg. Defaults to
-            True.
-        stp_filename (str, optional): defaults to
-            "ToroidalFieldCoilTripleArc.stp".
-        stl_filename (str, optional): defaults to
-            "ToroidalFieldCoilTripleArc.stl".
-        material_tag (str, optional): defaults to "outer_tf_coil_mat".
+        vertical_displacement: vertical displacement (cm). Defaults to 0.0.
+        with_inner_leg: Include the inner tf leg. Defaults to True.
+        stp_filename: Defaults to "ToroidalFieldCoilTripleArc.stp".
+        stl_filename: Defaults to "ToroidalFieldCoilTripleArc.stl".
+        material_tag: Defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
         self,
-        R1,
-        h,
-        radii,
-        coverages,
-        thickness,
-        distance,
-        number_of_coils,
-        vertical_displacement=0.0,
-        with_inner_leg=True,
-        stp_filename="ToroidalFieldCoilTripleArc.stp",
-        stl_filename="ToroidalFieldCoilTripleArc.stl",
-        material_tag="outer_tf_coil_mat",
+        R1: float,
+        h: float,
+        radii: Tuple[float, float],
+        coverages: Tuple[float, float],
+        thickness: float,
+        distance: float,
+        number_of_coils: int,
+        vertical_displacement: Optional[float] = 0.0,
+        with_inner_leg: Optional[bool] = True,
+        stp_filename: Optional[str] = "ToroidalFieldCoilTripleArc.stp",
+        stl_filename: Optional[str] = "ToroidalFieldCoilTripleArc.stl",
+        material_tag: Optional[str] = "outer_tf_coil_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             distance=distance,
