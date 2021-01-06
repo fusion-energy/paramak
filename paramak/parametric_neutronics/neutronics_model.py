@@ -2,6 +2,8 @@
 import json
 import math
 import os
+import pathlib
+import shutil
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -26,12 +28,14 @@ except ImportError:
 class NeutronicsModel():
     """Creates a neuronics model of the provided shape geometry with assigned
     materials, source and neutronics tallies. There are three methods
-    available for producing the imprinted and merged h5m geometry (PyMoab, PPP
-    or Trelis) and one method of producing non imprinted and non merged
-    geometry (PyMoab). make_watertight is also used to seal the DAGMC geoemtry.
-    If using the Trelis option you must have the
-    make_faceteted_neutronics_model.py in the same directory as your Python
-    script. Further details on imprinting and merging are available on the
+    available for producing the the DAGMC h5m file. The PyMoab option is able
+    to produce non imprinted and non merged geometry so is more suited to
+    individual components or reactors without touching surfaces. Trelis is
+    the only method currently able to produce imprinted and merged DAGMC h5m
+    geometry. PPP is a experimental route that has not been fully demonstrated
+    yet but is partly intergrated to test this promising new method.
+    make_watertight is also used to seal the DAGMC geoemtry produced by Trelis.
+    Further details on imprinting and merging are available on the
     DAGMC homepage
     https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
     The Parallel-PreProcessor is an open-source tool available
@@ -39,7 +43,8 @@ class NeutronicsModel():
     conjunction with the OCC_faceter
     (https://github.com/makeclean/occ_faceter) to create imprinted and
     merged geometry while Trelis (also known as Cubit) is available from
-    the CoreForm website https://www.coreform.com/
+    the CoreForm website https://www.coreform.com/ version 17.1 is the version
+    of Trelis used when testing the Paramak code.
 
     Arguments:
         geometry (paramak.Shape, paramak.Rector): The geometry to convert to a
@@ -333,6 +338,11 @@ class NeutronicsModel():
         elif method == 'trelis':
             self.geometry.export_stp()
             self.geometry.export_neutronics_description()
+
+            shutil.copy(
+                src=pathlib.Path(__file__).parent.absolute() /
+                'make_faceteted_neutronics_model.py',
+                dst=pathlib.Path().absolute())
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
                 raise FileNotFoundError(
