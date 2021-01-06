@@ -7,7 +7,7 @@ jobs:
   # test:
   build:
     docker:
-      - image: ukaea/paramak:dependances
+      - image: ukaea/paramak:dependencies
     steps:
       - checkout
       - run:
