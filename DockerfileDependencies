@@ -131,7 +131,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
                 -DENABLE_HDF5=ON \
                 -DENABLE_PYMOAB=ON \
                 -DENABLE_BLASLAPACK=OFF \
-                -DENABLE_FORTRAN=OFF \
+                -DENABLE_FORTRAN=OFF ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     fi
