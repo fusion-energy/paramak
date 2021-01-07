@@ -48,6 +48,7 @@ class TestSweepStraightShape(unittest.TestCase):
         test_volume = self.test_shape.volume
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         assert self.test_shape.volume == pytest.approx(test_volume * 4)
+        self.test_shape.export_stp('test_shape.stp')
 
     def test_force_cross_section(self):
         """Checks that a SweepStraightShape with the same cross-section at each path_point
@@ -58,7 +59,7 @@ class TestSweepStraightShape(unittest.TestCase):
         assert self.test_shape.areas.count(pytest.approx(400, rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
-            points=[(0, 50), (0, 200), (100, 200), (100, 50)],
+            points=[(0, 75), (0, 200), (100, 200), (100, 75)],
         )
         self.test_shape.cut = cutting_shape
 
