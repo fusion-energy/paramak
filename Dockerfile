@@ -105,7 +105,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     mkdir build ; \
     cd build ; \
     cmake .. -DCMAKE_INSTALL_PREFIX=.. \
-        -DEMBREE_ISPC_SUPPORT=OFF ; \
+             -DEMBREE_ISPC_SUPPORT=OFF ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     fi
