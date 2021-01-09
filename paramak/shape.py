@@ -57,6 +57,9 @@ class Shape:
             floats. Defaults to None.
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
             the neutronics description output. Defaults to None.
+        surface_reflectivity (Boolean, optional): If True, a
+            surface_reflectivity flag will be added to the neutronics
+            description output. Defaults to None.
         physical_groups (dict, optional): contains information on physical
             groups (volumes and surfaces). Defaults to None.
         cut (paramak.shape or list, optional): If set, the current solid will
@@ -83,6 +86,7 @@ class Shape:
         workplane="XZ",
         rotation_axis=None,
         tet_mesh=None,
+        surface_reflectivity=None,
         physical_groups=None,
         cut=None,
         intersect=None,
@@ -107,6 +111,7 @@ class Shape:
         # neutronics specific properties
         self.material_tag = material_tag
         self.tet_mesh = tet_mesh
+        self.surface_reflectivity = surface_reflectivity
 
         self.physical_groups = physical_groups
 
@@ -1050,6 +1055,10 @@ class Shape:
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
+
+        if self.surface_reflectivity is not None:
+            if self.surface_reflectivity is True:
+                neutronics_description["surface_reflectivity"] = self.surface_reflectivity
 
         if self.stl_filename is not None:
             neutronics_description["stl_filename"] = self.stl_filename
