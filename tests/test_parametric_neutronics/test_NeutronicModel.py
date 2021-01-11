@@ -265,7 +265,6 @@ class TestShape(unittest.TestCase):
         assert len(energy) == 709
         assert len(spectra) == 709
 
-
     def test_neutronics_component_2d_mesh_simulation(self):
         """Makes a neutronics model and simulates with a 2D mesh tally"""
 
