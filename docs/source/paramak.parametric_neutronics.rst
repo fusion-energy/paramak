@@ -44,7 +44,7 @@ Details of the Neutronics Material Maker are available from the
 and the `source code repository <https://github.com/ukaea/neutronics_material_maker>`_
 . However openmc.Materials can also be used directly.
 
-The [UKAEA openmc workshop](https://github.com/ukaea/openmc_workshop) also has
+The `OpenMC workshop <https://github.com/ukaea/openmc_workshop>`_ also has
 some Paramak with DAGMC and OpenMC based tasks that might be of interest.
 
 NeutronicsModel()
