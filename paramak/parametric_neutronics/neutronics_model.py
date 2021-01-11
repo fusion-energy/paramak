@@ -109,8 +109,9 @@ class NeutronicsModel():
         self.merge_tolerance = merge_tolerance
         self.mesh_2D_resolution = mesh_2D_resolution
         self.mesh_3D_resolution = mesh_3D_resolution
-        self.model = None
         self.fusion_power = fusion_power
+        self.model = None
+        self.tallies = None
 
     @property
     def faceting_tolerance(self):
@@ -155,8 +156,6 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.cell_tallies should be a\
                     list")
-            # TODO add standard openmc tallies such as '(n,2n)' and
-            # 'absorbtion'
             output_options = ['TBR', 'heating', 'flux', 'spectra', 'dose']
             for entry in value:
                 if entry not in output_options:
@@ -560,7 +559,7 @@ class NeutronicsModel():
             geom, self.mats, settings, self.tallies)
 
     def _add_tally_for_every_material(self, sufix: str, score: str,
-                                      additional_filters: List = []) -> None:
+                                      additional_filters: List) -> None:
         """Adds a tally to self.tallies for every material.
 
         Arguments:
@@ -568,7 +567,8 @@ class NeutronicsModel():
                 identify the tally later.
             score: the openmc.Tally().scores value that contribute to the tally
         """
-
+        if additional_filters is None:
+            additional_filters = []
         for key, value in self.openmc_materials.items():
             if key != 'DT_plasma':
                 material_filter = openmc.MaterialFilter(value)
