@@ -22,7 +22,7 @@ class TestShape(unittest.TestCase):
         )
 
         # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
-        # diections
+        # directions
         self.source = openmc.Source()
         self.source.space = openmc.stats.Point((0, 0, 0))
         self.source.angle = openmc.stats.Isotropic()
@@ -222,17 +222,20 @@ class TestShape(unittest.TestCase):
             incorrect_simulation_batches_to_small
         )
 
-    def test_neutronics_component_cell_simulation(self):
+    def test_neutronics_component_cell_simulation_heating(self):
         """Makes a neutronics model and simulates with a cell tally"""
 
         os.system('rm *.h5')
+        mat = openmc.Material()
+        mat.add_element('Li', 1)
+        mat.set_density('g/cm3', 2.1)
 
         # converts the geometry into a neutronics geometry
         my_model = paramak.NeutronicsModel(
             geometry=self.my_shape,
             source=self.source,
-            materials={'center_column_shield_mat': 'Be'},
-            cell_tallies=['heating'],
+            materials={'center_column_shield_mat': mat},
+            cell_tallies=['heating', 'flux', 'TBR', 'spectra'],
             simulation_batches=2,
             simulation_particles_per_batch=2
         )
@@ -241,13 +244,28 @@ class TestShape(unittest.TestCase):
         output_filename = my_model.simulate(method='pymoab')
 
         results = openmc.StatePoint(output_filename)
-        assert len(results.tallies.items()) == 1
+        # spectra add two tallies in this case (photons and neutrons)
+        # TBR adds two tallies global TBR and material TBR
+        assert len(results.tallies.items()) == 6
         assert len(results.meshes) == 0
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
+        flux = my_model.results['center_column_shield_mat_flux']['Flux per source particle']['result']
+        mat_tbr = my_model.results['center_column_shield_mat_TBR']['result']
+        tbr = my_model.results['TBR']['result']
+        spectra_neutrons = my_model.results['center_column_shield_mat_neutron_spectra']['Flux per source particle']['result']
+        spectra_photons = my_model.results['center_column_shield_mat_photon_spectra']['Flux per source particle']['result']
+        energy = my_model.results['center_column_shield_mat_photon_spectra']['Flux per source particle']['energy']
 
         assert heat > 0
+        assert flux > 0
+        assert tbr > 0
+        assert mat_tbr > 0
+        assert mat_tbr == tbr  # as there is just one shape
+        assert len(energy) == 709
+        assert len(spectra_neutrons) == 709
+        assert len(spectra_photons) == 709
 
     def test_neutronics_component_2d_mesh_simulation(self):
         """Makes a neutronics model and simulates with a 2D mesh tally"""

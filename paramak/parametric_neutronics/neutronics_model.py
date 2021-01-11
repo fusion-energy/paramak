@@ -7,6 +7,7 @@ import shutil
 import warnings
 from collections import defaultdict
 from pathlib import Path
+from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -108,8 +109,9 @@ class NeutronicsModel():
         self.merge_tolerance = merge_tolerance
         self.mesh_2D_resolution = mesh_2D_resolution
         self.mesh_3D_resolution = mesh_3D_resolution
-        self.model = None
         self.fusion_power = fusion_power
+        self.model = None
+        self.tallies = None
 
     @property
     def faceting_tolerance(self):
@@ -154,7 +156,7 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.cell_tallies should be a\
                     list")
-            output_options = ['TBR', 'heating', 'flux', 'fast flux', 'dose']
+            output_options = ['TBR', 'heating', 'flux', 'spectra', 'dose']
             for entry in value:
                 if entry not in output_options:
                     raise ValueError(
@@ -410,7 +412,7 @@ class NeutronicsModel():
         settings.max_lost_particles = self.max_lost_particles
 
         # details about what neutrons interactions to keep track of (tally)
-        tallies = openmc.Tallies()
+        self.tallies = openmc.Tallies()
 
         if self.mesh_tally_3D is not None:
             mesh_xyz = openmc.RegularMesh(mesh_id=1, name='3d_mesh')
@@ -439,7 +441,7 @@ class NeutronicsModel():
                 tally = openmc.Tally(name=prefix + '_on_3D_mesh')
                 tally.filters = [mesh_filter]
                 tally.scores = [score]
-                tallies.append(tally)
+                self.tallies.append(tally)
 
         if self.mesh_tally_2D is not None:
 
@@ -516,7 +518,7 @@ class NeutronicsModel():
                     tally = openmc.Tally(name=prefix + '_on_2D_mesh_' + plane)
                     tally.filters = [mesh_filter]
                     tally.scores = [score]
-                    tallies.append(tally)
+                    self.tallies.append(tally)
 
         if self.cell_tallies is not None:
 
@@ -524,25 +526,56 @@ class NeutronicsModel():
                 if standard_tally == 'TBR':
                     score = '(n,Xt)'  # where X is a wild card
                     sufix = 'TBR'
-
                     tally = openmc.Tally(name='TBR')
                     tally.scores = [score]
-                    tallies.append(tally)
+                    self.tallies.append(tally)
+                    self._add_tally_for_every_material(sufix, score)
 
+                elif standard_tally == 'spectra':
+                    neutron_particle_filter = openmc.ParticleFilter([
+                                                                    'neutron'])
+                    photon_particle_filter = openmc.ParticleFilter(['photon'])
+                    energy_bins = openmc.mgxs.GROUP_STRUCTURES['CCFE-709']
+                    energy_filter = openmc.EnergyFilter(energy_bins)
+
+                    self._add_tally_for_every_material(
+                        'neutron_spectra',
+                        'flux',
+                        [neutron_particle_filter, energy_filter]
+                    )
+
+                    self._add_tally_for_every_material(
+                        'photon_spectra',
+                        'flux',
+                        [photon_particle_filter, energy_filter]
+                    )
                 else:
                     score = standard_tally
                     sufix = standard_tally
-
-                for key, value in self.openmc_materials.items():
-                    if key != 'DT_plasma':
-                        material_filter = openmc.MaterialFilter(value)
-                        tally = openmc.Tally(name=key + "_" + sufix)
-                        tally.filters = [material_filter]
-                        tally.scores = [score]
-                        tallies.append(tally)
+                    self._add_tally_for_every_material(sufix, score)
 
         # make the model from gemonetry, materials, settings and tallies
-        self.model = openmc.model.Model(geom, self.mats, settings, tallies)
+        self.model = openmc.model.Model(
+            geom, self.mats, settings, self.tallies)
+
+    def _add_tally_for_every_material(self, sufix: str, score: str,
+                                      additional_filters: List) -> None:
+        """Adds a tally to self.tallies for every material.
+
+        Arguments:
+            sufix: the string to append to the end of the tally name to help
+                identify the tally later.
+            score: the openmc.Tally().scores value that contribute to the tally
+        """
+        if additional_filters is None:
+            additional_filters = []
+        for key, value in self.openmc_materials.items():
+            if key != 'DT_plasma':
+                material_filter = openmc.MaterialFilter(value)
+                tally = openmc.Tally(name=key + '_' + sufix)
+                tally.filters = [material_filter] + additional_filters
+                tally.scores = [score]
+                self.tallies.append(tally)
 
     def simulate(self, verbose=True, method=None):
         """Run the OpenMC simulation. Deletes exisiting simulation output
@@ -619,6 +652,16 @@ class NeutronicsModel():
                 results[tally.name]['Flux per source particle'] = {
                     'result': tally_result,
                     'std. dev.': tally_std_dev,
+                }
+
+            if tally.name.endswith('spectra'):
+                df = tally.get_pandas_dataframe()
+                tally_result = df["mean"]
+                tally_std_dev = df['std. dev.']
+                results[tally.name]['Flux per source particle'] = {
+                    'energy': openmc.mgxs.GROUP_STRUCTURES['CCFE-709'].tolist(),
+                    'result': tally_result.tolist(),
+                    'std. dev.': tally_std_dev.tolist(),
                 }
 
             if tally.name.startswith('tritium_production_on_2D_mesh'):
