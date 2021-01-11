@@ -26,3 +26,15 @@ class TestCuttingWedge(unittest.TestCase):
             angle_fraction = 360 / rotation_angle
             correct_volume = (math.pi * radius ** 2 * height) / angle_fraction
             assert test_shape.volume == pytest.approx(correct_volume)
+
+    def test_surface_reflectivity_in_neutronics_description(self):
+        test_shape = paramak.CuttingWedge(
+            height=1000,
+            radius=1000,
+            rotation_angle=270,
+            surface_reflectivity=True
+        )
+
+        json_dict = test_shape.neutronics_description()
+        assert 'surface_reflectivity' in json_dict.keys()
+        assert json_dict['surface_reflectivity'] is True
