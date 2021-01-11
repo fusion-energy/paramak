@@ -155,7 +155,8 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.cell_tallies should be a\
                     list")
-            #TODO add standard openmc tallies such as '(n,2n)' and 'absorbtion'
+            # TODO add standard openmc tallies such as '(n,2n)' and
+            # 'absorbtion'
             output_options = ['TBR', 'heating', 'flux', 'spectra', 'dose']
             for entry in value:
                 if entry not in output_options:
@@ -532,7 +533,8 @@ class NeutronicsModel():
                     self._add_tally_for_every_material(sufix, score)
 
                 elif standard_tally == 'spectra':
-                    neutron_particle_filter = openmc.ParticleFilter(['neutron'])
+                    neutron_particle_filter = openmc.ParticleFilter([
+                                                                    'neutron'])
                     photon_particle_filter = openmc.ParticleFilter(['photon'])
                     energy_bins = openmc.mgxs.GROUP_STRUCTURES['CCFE-709']
                     energy_filter = openmc.EnergyFilter(energy_bins)
@@ -553,25 +555,25 @@ class NeutronicsModel():
                     sufix = standard_tally
                     self._add_tally_for_every_material(sufix, score)
 
-
         # make the model from gemonetry, materials, settings and tallies
-        self.model = openmc.model.Model(geom, self.mats, settings, self.tallies)
+        self.model = openmc.model.Model(
+            geom, self.mats, settings, self.tallies)
 
     def _add_tally_for_every_material(self, sufix: str, score: str,
-        additional_filters: List =[]) -> None:
+                                      additional_filters: List = []) -> None:
         """Adds a tally to self.tallies for every material.
 
         Arguments:
             sufix: the string to append to the end of the tally name to help
                 identify the tally later.
-            score: the openmc.Tally().scores value that contribute to the tally 
+            score: the openmc.Tally().scores value that contribute to the tally
         """
 
         for key, value in self.openmc_materials.items():
             if key != 'DT_plasma':
                 material_filter = openmc.MaterialFilter(value)
                 tally = openmc.Tally(name=key + '_' + sufix)
-                tally.filters = [material_filter]+additional_filters
+                tally.filters = [material_filter] + additional_filters
                 tally.scores = [score]
                 self.tallies.append(tally)
 
@@ -651,7 +653,7 @@ class NeutronicsModel():
                     'result': tally_result,
                     'std. dev.': tally_std_dev,
                 }
-            
+
             if tally.name.endswith('spectra'):
                 df = tally.get_pandas_dataframe()
                 tally_result = df["mean"]
