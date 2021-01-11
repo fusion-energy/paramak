@@ -41,6 +41,8 @@ coverage.xml
 *.svg
 *.png
 *.vtk
+*.jpg
+*.xcf
 
 # sphinx built documetation
 docs/build/

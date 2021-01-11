@@ -102,19 +102,18 @@ def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
 
 
 def find_all_surfaces_of_reflecting_wedge(new_vols):
-  surfaces_in_volume = cubit.parse_cubit_list("surface", " in volume "+' '.join(new_vols))
-  print(surfaces_in_volume)
-  surface_info_dict = {}
-  for surface_id in surfaces_in_volume:
-    surface = cubit.surface(surface_id)
-    #area = surface.area()
-    vertex_in_surface = cubit.parse_cubit_list("vertex", " in surface " + str(surface_id))
-    if surface.is_planar() == True and len(vertex_in_surface) == 4:
-      surface_info_dict[surface_id] = {'reflector': True}
-    else:
-      surface_info_dict[surface_id] = {'reflector': False}
-  print('surface_info_dict', surface_info_dict)
-  return surface_info_dict
+    surfaces_in_volume = cubit.parse_cubit_list("surface", " in volume "+' '.join(new_vols))
+    surface_info_dict = {}
+    for surface_id in surfaces_in_volume:
+        surface = cubit.surface(surface_id)
+        #area = surface.area()
+        vertex_in_surface = cubit.parse_cubit_list("vertex", " in surface " + str(surface_id))
+        if surface.is_planar() == True and len(vertex_in_surface) == 4:
+        surface_info_dict[surface_id] = {'reflector': True}
+        else:
+        surface_info_dict[surface_id] = {'reflector': False}
+    print('surface_info_dict', surface_info_dict)
+    return surface_info_dict
 
 
 def byteify(input):

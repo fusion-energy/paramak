@@ -190,11 +190,7 @@ class Shape:
         """Calculates a bounding box for the Shape and returns the largest
         absolute value of the largest dimension of the bounding box"""
         largest_dimension = 0
-        if isinstance(
-                self.solid,
-                cq.Compound) or isinstance(
-                self.solid,
-                cq.occ_impl.shapes.Solid):
+        if isinstance(self.solid, (cq.Compound, cq.occ_impl.shapes.Solid))
             for solid in self.solid.Solids():
                 largest_dimension = max(
                     abs(self.solid.BoundingBox().xmax),
