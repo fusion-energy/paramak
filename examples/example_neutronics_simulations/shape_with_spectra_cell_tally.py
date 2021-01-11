@@ -40,9 +40,9 @@ fig = go.Figure()
 
 # this sets the axis titles and range
 fig.update_layout(
-        xaxis={'title': 'Energy (eV)',
-                'range': (0, 14.1e6)},
-        yaxis={'title': 'Neutrons per cm2 per source neutron'}
+    xaxis={'title': 'Energy (eV)',
+           'range': (0, 14.1e6)},
+    yaxis={'title': 'Neutrons per cm2 per source neutron'}
 )
 
 # this adds the neutron spectra line to the plot
@@ -51,7 +51,7 @@ fig.add_trace(go.Scatter(
     y=neutron_spectra[:-85],  # trims off the high energy range
     name='neutron spectra',
     line=dict(shape='hv')
-    )
+)
 )
 
 # this adds the photon spectra line to the plot
@@ -60,7 +60,7 @@ fig.add_trace(go.Scatter(
     y=photon_spectra[:-85],  # trims off the high energy range
     name='photon spectra',
     line=dict(shape='hv')
-    )
+)
 )
 
 # this adds the drop down menu fo log and linear scales
@@ -72,7 +72,7 @@ fig.update_layout(
                     args=[{
                         "xaxis.type": 'lin', "yaxis.type": 'lin',
                         'xaxis.range': (0, 14.1e6)
-                        }],
+                    }],
                     label="linear(x) , linear(y)",
                     method="relayout"
                 ),
@@ -88,8 +88,8 @@ fig.update_layout(
                 ),
                 dict(
                     args=[{"xaxis.type": 'lin', "yaxis.type": 'log',
-                        'xaxis.range': (0, 14.1e6)
-                    }],
+                           'xaxis.range': (0, 14.1e6)
+                           }],
                     label="linear(x) , log(y)",
                     method="relayout"
                 )
