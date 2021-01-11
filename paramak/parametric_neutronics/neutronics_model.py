@@ -559,7 +559,7 @@ class NeutronicsModel():
             geom, self.mats, settings, self.tallies)
 
     def _add_tally_for_every_material(self, sufix: str, score: str,
-                                      additional_filters: List) -> None:
+                                      additional_filters: List = None) -> None:
         """Adds a tally to self.tallies for every material.
 
         Arguments:
