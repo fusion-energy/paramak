@@ -22,7 +22,7 @@ class TestShape(unittest.TestCase):
         )
 
         # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
-        # diections
+        # directions
         self.source = openmc.Source()
         self.source.space = openmc.stats.Point((0, 0, 0))
         self.source.angle = openmc.stats.Isotropic()
@@ -254,8 +254,9 @@ class TestShape(unittest.TestCase):
         flux = my_model.results['center_column_shield_mat_flux']['Flux per source particle']['result']
         mat_tbr = my_model.results['center_column_shield_mat_TBR']['result']
         tbr = my_model.results['TBR']['result']
-        spectra = my_model.results['center_column_shield_mat_neutron_spectra']['Flux per source particle']['result']
-        energy = my_model.results['center_column_shield_mat_photon_spectra']['Flux per source particle']['result']
+        spectra_neutrons = my_model.results['center_column_shield_mat_neutron_spectra']['Flux per source particle']['result']
+        spectra_photons = my_model.results['center_column_shield_mat_photon_spectra']['Flux per source particle']['result']
+        energy = my_model.results['center_column_shield_mat_photon_spectra']['Flux per source particle']['energy']
 
         assert heat > 0
         assert flux > 0
@@ -263,7 +264,8 @@ class TestShape(unittest.TestCase):
         assert mat_tbr > 0
         assert mat_tbr == tbr  # as there is just one shape
         assert len(energy) == 709
-        assert len(spectra) == 709
+        assert len(spectra_neutrons) == 709
+        assert len(spectra_photons) == 709
 
 
     def test_neutronics_component_2d_mesh_simulation(self):
