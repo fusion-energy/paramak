@@ -7,6 +7,7 @@ import shutil
 import warnings
 from collections import defaultdict
 from pathlib import Path
+from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -537,13 +538,13 @@ class NeutronicsModel():
                     energy_filter = openmc.EnergyFilter(energy_bins)
 
                     self._add_tally_for_every_material(
-                        'spectra',
+                        'neutron_spectra',
                         'flux',
                         [neutron_particle_filter, energy_filter]
                     )
 
                     self._add_tally_for_every_material(
-                        'spectra',
+                        'photon_spectra',
                         'flux',
                         [photon_particle_filter, energy_filter]
                     )
@@ -557,7 +558,7 @@ class NeutronicsModel():
         self.model = openmc.model.Model(geom, self.mats, settings, self.tallies)
 
     def _add_tally_for_every_material(self, sufix: str, score: str,
-        additional_filters: list[openmc.Filter] =[]) -> None:
+        additional_filters: List =[]) -> None:
         """Adds a tally to self.tallies for every material.
 
         Arguments:
@@ -649,6 +650,16 @@ class NeutronicsModel():
                 results[tally.name]['Flux per source particle'] = {
                     'result': tally_result,
                     'std. dev.': tally_std_dev,
+                }
+            
+            if tally.name.endswith('spectra'):
+                df = tally.get_pandas_dataframe()
+                tally_result = df["mean"]
+                tally_std_dev = df['std. dev.']
+                results[tally.name]['Flux per source particle'] = {
+                    'energy': openmc.mgxs.GROUP_STRUCTURES['CCFE-709'].tolist(),
+                    'result': tally_result.tolist(),
+                    'std. dev.': tally_std_dev.tolist(),
                 }
 
             if tally.name.startswith('tritium_production_on_2D_mesh'):
