@@ -112,6 +112,7 @@ class NeutronicsModel():
         self.fusion_power = fusion_power
         self.model = None
         self.tallies = None
+        self.output_filename = None
 
     @property
     def faceting_tolerance(self):
@@ -604,7 +605,7 @@ class NeutronicsModel():
 
         return self.output_filename
 
-    def get_results(self):
+    def get_results(self, output_filename=None):
         """Reads the output file from the neutronics simulation
         and prints the TBR tally result to screen
 
@@ -613,7 +614,10 @@ class NeutronicsModel():
         """
 
         # open the results file
-        statepoint = openmc.StatePoint(self.output_filename)
+        if output_filename is None:
+            statepoint = openmc.StatePoint(self.output_filename)
+        else:
+            statepoint = openmc.StatePoint(output_filename)
 
         results = defaultdict(dict)
 
