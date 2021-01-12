@@ -63,11 +63,11 @@ def define_moab_core_and_tags():
 
 def add_stl_to_moab_core(
         moab_core,
-        surface_id,
-        volume_id,
-        material_name,
+        surface_id: int,
+        volume_id: int,
+        material_name: str,
         tags,
-        stl_filename):
+        stl_filename: str):
     """Computes the m and c coefficients of the equation (y=mx+c) for
     a straight line from two points.
 
@@ -152,9 +152,14 @@ def _save_2d_mesh_tally_as_png(score: str, filename: str, tally):
 
 def get_neutronics_results_from_statepoint_file(
         statepoint_filename: str,
-        fusion_power: float):
+        fusion_power: float = None):
     """Reads the statepoint file from the neutronics simulation
-    and prints the TBR tally result to screen
+    and extracts the tally results.
+
+    Arguments:
+        statepoint_filename (str): The name of the statepoint file
+        fusion_power (float): The fusion power of the reactor, which is used to
+            scale some tallies. Defaults to None
 
     Returns:
         dict: a dictionary of the simulation results
@@ -187,10 +192,12 @@ def get_neutronics_results_from_statepoint_file(
                 'result': tally_result / 1e6,
                 'std. dev.': tally_std_dev / 1e6,
             }
-            results[tally.name]['Watts'] = {
-                'result': tally_result * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
-                'std. dev.': tally_std_dev * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
-            }
+
+            if fusion_power is not None:
+                results[tally.name]['Watts'] = {
+                    'result': tally_result * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
+                    'std. dev.': tally_std_dev * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
+                }
 
         if tally.name.endswith('flux'):
 
@@ -288,7 +295,7 @@ def write_3d_mesh_tally_to_vtk(
         xs,
         ys,
         zs,
-        tally_label,
+        tally_label: str,
         tally_data,
         error_data,
         outfile):

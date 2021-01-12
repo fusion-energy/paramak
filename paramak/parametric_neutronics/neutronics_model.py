@@ -596,14 +596,21 @@ class NeutronicsModel():
         # Deletes summary.h5m if it already exists.
         # This avoids permission problems when trying to overwrite the file
         os.system('rm summary.h5')
+        os.system('rm satepoint.'+str(self.simulation_batches)+'.h5')
 
-        self.output_filename = self.model.run(output=verbose)
+        # this removes any old file from previous simulations
+        os.system('rm geometry.xml')
+        os.system('rm materials.xml')
+        os.system('rm settings.xml')
+        os.system('rm tallies.xml')
+
+        self.statepoint_filename = self.model.run(output=verbose)
         self.results = get_neutronics_results_from_statepoint_file(
-            output_filename=self.output_filename,
+            statepoint_filename=self.statepoint_filename,
             fusion_power=self.fusion_power
         )
 
         with open(cell_tally_results_filename, 'w') as outfile:
             json.dump(self.results, outfile, indent=4, sort_keys=True)
 
-        return self.output_filename
+        return self.statepoint_filename
