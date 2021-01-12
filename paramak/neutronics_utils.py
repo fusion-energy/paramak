@@ -1,5 +1,11 @@
 
+import json
+import math
+from collections import defaultdict
+
+import matplotlib.pyplot as plt
 import numpy as np
+import openmc
 
 
 def define_moab_core_and_tags():
@@ -119,3 +125,218 @@ def add_stl_to_moab_core(
     moab_core.add_entity(group_set, volume_set)
 
     return moab_core
+
+
+def _save_2d_mesh_tally_as_png(score: str, filename: str, tally):
+    """Extracts 2D mesh tally results from a tally and saves the result as
+    a png image.
+
+    Arguments:
+        score (str): The tally score to filter the tally with, e.g. ‘flux’,
+            ‘heating’, etc.
+        filename (str): The filename to use when saving the png output file
+        tally (opencmc.tally()): The OpenMC to extract the mesh tally
+            resutls  from.
+    """
+
+    my_slice = tally.get_slice(scores=[score])
+    tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
+    shape = tally_filter.mesh.dimension.tolist()
+    shape.remove(1)
+    my_slice.mean.shape = shape
+
+    fig = plt.subplot()
+    fig.imshow(my_slice.mean).get_figure().savefig(filename, dpi=300)
+    fig.clear()
+
+
+def get_neutronics_results_from_statepoint_file(
+        output_filename: str,
+        fusion_power: float):
+    """Reads the output file from the neutronics simulation
+    and prints the TBR tally result to screen
+
+    Returns:
+        dict: a dictionary of the simulation results
+    """
+
+    # open the results file
+    statepoint = openmc.StatePoint(output_filename)
+
+    results = defaultdict(dict)
+
+    # access the tallies
+    for tally in statepoint.tallies.values():
+
+        if tally.name.endswith('TBR'):
+
+            df = tally.get_pandas_dataframe()
+            tally_result = df["mean"].sum()
+            tally_std_dev = df['std. dev.'].sum()
+            results[tally.name] = {
+                'result': tally_result,
+                'std. dev.': tally_std_dev,
+            }
+
+        if tally.name.endswith('heating'):
+
+            df = tally.get_pandas_dataframe()
+            tally_result = df["mean"].sum()
+            tally_std_dev = df['std. dev.'].sum()
+            results[tally.name]['MeV per source particle'] = {
+                'result': tally_result / 1e6,
+                'std. dev.': tally_std_dev / 1e6,
+            }
+            results[tally.name]['Watts'] = {
+                'result': tally_result * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
+                'std. dev.': tally_std_dev * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
+            }
+
+        if tally.name.endswith('flux'):
+
+            df = tally.get_pandas_dataframe()
+            tally_result = df["mean"].sum()
+            tally_std_dev = df['std. dev.'].sum()
+            results[tally.name]['Flux per source particle'] = {
+                'result': tally_result,
+                'std. dev.': tally_std_dev,
+            }
+
+        if tally.name.endswith('spectra'):
+            df = tally.get_pandas_dataframe()
+            tally_result = df["mean"]
+            tally_std_dev = df['std. dev.']
+            results[tally.name]['Flux per source particle'] = {
+                'energy': openmc.mgxs.GROUP_STRUCTURES['CCFE-709'].tolist(),
+                'result': tally_result.tolist(),
+                'std. dev.': tally_std_dev.tolist(),
+            }
+
+        if tally.name.startswith('tritium_production_on_2D_mesh'):
+
+            _save_2d_mesh_tally_as_png(
+                score='(n,Xt)',
+                tally=tally,
+                filename='tritium_production_on_2D_mesh' + tally.name[-3:]
+            )
+
+        if tally.name.startswith('flux_on_2D_mesh'):
+
+            _save_2d_mesh_tally_as_png(
+                score='flux',
+                tally=tally,
+                filename='flux_on_2D_mesh' + tally.name[-3:]
+            )
+
+        if tally.name.startswith('heating_on_2D_mesh'):
+
+            _save_2d_mesh_tally_as_png(
+                score='heating',
+                tally=tally,
+                filename='heating_on_2D_mesh' + tally.name[-3:]
+            )
+
+        if '_on_3D_mesh' in tally.name:
+            mesh_id = 1
+            mesh = statepoint.meshes[mesh_id]
+
+            xs = np.linspace(
+                mesh.lower_left[0],
+                mesh.upper_right[0],
+                mesh.dimension[0] + 1
+            )
+            ys = np.linspace(
+                mesh.lower_left[1],
+                mesh.upper_right[1],
+                mesh.dimension[1] + 1
+            )
+            zs = np.linspace(
+                mesh.lower_left[2],
+                mesh.upper_right[2],
+                mesh.dimension[2] + 1
+            )
+            tally = statepoint.get_tally(name=tally.name)
+
+            data = tally.mean[:, 0, 0]
+            error = tally.std_dev[:, 0, 0]
+
+            data = data.tolist()
+            error = error.tolist()
+
+            for counter, i in enumerate(data):
+                if math.isnan(i):
+                    data[counter] = 0.
+
+            for counter, i in enumerate(error):
+                if math.isnan(i):
+                    error[counter] = 0.
+
+            write_3d_mesh_tally_to_vtk(
+                xs=xs,
+                ys=ys,
+                zs=zs,
+                tally_label=tally.name,
+                tally_data=data,
+                error_data=error,
+                outfile=tally.name + '.vtk'
+            )
+
+    return results
+
+
+def write_3d_mesh_tally_to_vtk(
+        xs,
+        ys,
+        zs,
+        tally_label,
+        tally_data,
+        error_data,
+        outfile):
+    try:
+        import vtk
+    except (ImportError, ModuleNotFoundError):
+        msg = "Conversion to VTK requested," \
+            "but the Python VTK module is not installed."
+        raise ImportError(msg)
+
+    vtk_box = vtk.vtkRectilinearGrid()
+
+    vtk_box.SetDimensions(len(xs), len(ys), len(zs))
+
+    vtk_x_array = vtk.vtkDoubleArray()
+    vtk_x_array.SetName('x-coords')
+    vtk_x_array.SetArray(xs, len(xs), True)
+    vtk_box.SetXCoordinates(vtk_x_array)
+
+    vtk_y_array = vtk.vtkDoubleArray()
+    vtk_y_array.SetName('y-coords')
+    vtk_y_array.SetArray(ys, len(ys), True)
+    vtk_box.SetYCoordinates(vtk_y_array)
+
+    vtk_z_array = vtk.vtkDoubleArray()
+    vtk_z_array.SetName('z-coords')
+    vtk_z_array.SetArray(zs, len(zs), True)
+    vtk_box.SetZCoordinates(vtk_z_array)
+
+    tally = np.array(tally_data)
+    tally_data = vtk.vtkDoubleArray()
+    tally_data.SetName(tally_label)
+    tally_data.SetArray(tally, tally.size, True)
+
+    error = np.array(error_data)
+    error_data = vtk.vtkDoubleArray()
+    error_data.SetName("error_tag")
+    error_data.SetArray(error, error.size, True)
+
+    vtk_box.GetCellData().AddArray(tally_data)
+    vtk_box.GetCellData().AddArray(error_data)
+
+    writer = vtk.vtkRectilinearGridWriter()
+
+    writer.SetFileName(outfile)
+
+    writer.SetInputData(vtk_box)
+
+    print('Writing %s' % outfile)
+
+    writer.Write()
