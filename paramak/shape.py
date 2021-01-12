@@ -75,18 +75,18 @@ class Shape:
 
     def __init__(
         self,
-        points=None,
+        points: list = None,
         connection_type="mixed",
         name=None,
         color=(0.5, 0.5, 0.5),
-        material_tag=None,
-        stp_filename=None,
-        stl_filename=None,
+        material_tag: str = None,
+        stp_filename: str = None,
+        stl_filename: str = None,
         azimuth_placement_angle=0.0,
-        workplane="XZ",
+        workplane: str = "XZ",
         rotation_axis=None,
-        tet_mesh=None,
-        surface_reflectivity=None,
+        tet_mesh: str = None,
+        surface_reflectivity: bool = False,
         physical_groups=None,
         cut=None,
         intersect=None,
@@ -737,7 +737,7 @@ class Shape:
 
         return self.x_min, self.x_max, self.z_min, self.z_max
 
-    def export_stl(self, filename, tolerance=0.001):
+    def export_stl(self, filename: str, tolerance: float = 0.001) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
             doesn't end with .stl it will be added
 
@@ -759,7 +759,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_stp(self, filename=None, units='mm', mode='solid'):
+    def export_stp(self, filename=None, units='mm', mode: str = 'solid') -> str:
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -805,7 +805,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_physical_groups(self, filename):
+    def export_physical_groups(self, filename: str):
         """Exports a JSON file containing a look up table which is useful for
         identifying faces and volumes. If filename provided doesn't end with
         .json then .json will be added.
@@ -835,7 +835,7 @@ class Shape:
 
         return filename
 
-    def export_svg(self, filename):
+    def export_svg(self, filename: str):
         """Exports an svg file for the Shape.solid. If the provided filename
         doesn't end with .svg it will be added.
 
@@ -856,7 +856,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_html(self, filename):
+    def export_html(self, filename: str):
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
         Shapes are also labelled by their .name. If filename provided doesn't
@@ -963,7 +963,8 @@ class Shape:
         return trace
 
     def export_2d_image(
-            self, filename, xmin=0., xmax=900., ymin=-600., ymax=600.):
+            self, filename: str, xmin: float = 0., xmax: float = 900.,
+            ymin: float = -600., ymax: float = 600.):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
@@ -1056,9 +1057,8 @@ class Shape:
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
 
-        if self.surface_reflectivity is not None:
-            if self.surface_reflectivity is True:
-                neutronics_description["surface_reflectivity"] = self.surface_reflectivity
+        if self.surface_reflectivity is True:
+            neutronics_description["surface_reflectivity"] = self.surface_reflectivity
 
         if self.stl_filename is not None:
             neutronics_description["stl_filename"] = self.stl_filename
@@ -1090,7 +1090,7 @@ class Shape:
 
         return solid
 
-    def _replace(self, filename, pattern, subst):
+    def _replace(self, filename: str, pattern, subst):
         """Opens a file and replaces occurances of a particular string
             (pattern)with a new string (subst) and overwrites the file.
             Used internally within the paramak to ensure .STP files are

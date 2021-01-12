@@ -82,14 +82,14 @@ class NeutronicsModel():
         cell_tallies=None,
         mesh_tally_2D=None,
         mesh_tally_3D=None,
-        simulation_batches=100,
-        simulation_particles_per_batch=10000,
-        max_lost_particles=10,
-        faceting_tolerance=1e-1,
-        merge_tolerance=1e-4,
-        mesh_2D_resolution=(400, 400),
-        mesh_3D_resolution=(100, 100, 100),
-        fusion_power=1e9  # convert from watts to activity source_activity
+        simulation_batches: int = 100,
+        simulation_particles_per_batch: int = 10000,
+        max_lost_particles: int = 10,
+        faceting_tolerance: float = 1e-1,
+        merge_tolerance: float = 1e-4,
+        mesh_2D_resolution: float = (400, 400),
+        mesh_3D_resolution: float = (100, 100, 100),
+        fusion_power: float = 1e9  # convert from watts to activity source_activity
     ):
 
         self.materials = materials
@@ -249,7 +249,7 @@ class NeutronicsModel():
                     should be an int")
         self._simulation_particles_per_batch = value
 
-    def create_material(self, material_tag, material_entry):
+    def create_material(self, material_tag: str, material_entry):
         if isinstance(material_entry, str):
             openmc_material = nmm.Material(
                 material_entry,
@@ -295,7 +295,7 @@ class NeutronicsModel():
 
         return self.mats
 
-    def create_neutronics_geometry(self, method=None):
+    def create_neutronics_geometry(self, method: str = None):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations.
 
@@ -377,7 +377,7 @@ class NeutronicsModel():
                 "make_watertight failed, check DAGMC is install and the \
                     DAGMC/bin folder is in the path directory")
 
-    def create_neutronics_model(self, method=None):
+    def create_neutronics_model(self, method: str = None):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (cell_tallies and mesh_tally_2D), simulation settings (batches,
         particles per batch).
@@ -574,8 +574,8 @@ class NeutronicsModel():
                 tally.scores = [score]
                 self.tallies.append(tally)
 
-    def simulate(self, verbose=True, method=None,
-            cell_tally_results_filename='results.json'):
+    def simulate(self, verbose: bool = True, method: str = None,
+            cell_tally_results_filename: str='results.json'):
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
 
