@@ -605,7 +605,7 @@ class NeutronicsModel():
 
         return self.output_filename
 
-    def get_results(self, output_filename=None):
+    def get_results(self, output_filename=None, fusion_power=None):
         """Reads the output file from the neutronics simulation
         and prints the TBR tally result to screen
 
@@ -613,11 +613,14 @@ class NeutronicsModel():
             dict: a dictionary of the simulation results
         """
 
-        # open the results file
+        # makes use of passed arguments if they are not None
         if output_filename is None:
-            statepoint = openmc.StatePoint(self.output_filename)
-        else:
-            statepoint = openmc.StatePoint(output_filename)
+            output_filename = self.output_filename
+        if fusion_power is None:
+            fusion_power = self.fusion_power
+
+        # open the results file
+        statepoint = openmc.StatePoint(output_filename)
 
         results = defaultdict(dict)
 
@@ -644,8 +647,8 @@ class NeutronicsModel():
                     'std. dev.': tally_std_dev / 1e6,
                 }
                 results[tally.name]['Watts'] = {
-                    'result': tally_result * 1.602176487e-19 * (self.fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
-                    'std. dev.': tally_std_dev * 1.602176487e-19 * (self.fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
+                    'result': tally_result * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
+                    'std. dev.': tally_std_dev * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
                 }
 
             if tally.name.endswith('flux'):
@@ -670,10 +673,12 @@ class NeutronicsModel():
 
             if tally.name.startswith('tritium_production_on_2D_mesh'):
 
-                my_tally = statepoint.get_tally(name=tally.name)
-                my_slice = my_tally.get_slice(scores=['(n,Xt)'])
+                my_slice = tally.get_slice(scores=['(n,Xt)'])
 
-                my_slice.mean.shape = self.mesh_2D_resolution
+                tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
+                shape = tally_filter.mesh.dimension.tolist()
+                shape.remove(1)
+                my_slice.mean.shape = shape
 
                 fig = plt.subplot()
                 fig.imshow(my_slice.mean).get_figure().savefig(
@@ -682,10 +687,12 @@ class NeutronicsModel():
 
             if tally.name.startswith('heating_on_2D_mesh'):
 
-                my_tally = statepoint.get_tally(name=tally.name)
-                my_slice = my_tally.get_slice(scores=['heating'])
+                my_slice = tally.get_slice(scores=['heating'])
 
-                my_slice.mean.shape = self.mesh_2D_resolution
+                tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
+                shape = tally_filter.mesh.dimension.tolist()
+                shape.remove(1)
+                my_slice.mean.shape = shape
 
                 fig = plt.subplot()
                 fig.imshow(my_slice.mean).get_figure().savefig(
@@ -694,10 +701,12 @@ class NeutronicsModel():
 
             if tally.name.startswith('flux_on_2D_mesh'):
 
-                my_tally = statepoint.get_tally(name=tally.name)
-                my_slice = my_tally.get_slice(scores=['flux'])
+                my_slice = tally.get_slice(scores=['flux'])
 
-                my_slice.mean.shape = self.mesh_2D_resolution
+                tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
+                shape = tally_filter.mesh.dimension.tolist()
+                shape.remove(1)
+                my_slice.mean.shape = shape
 
                 fig = plt.subplot()
                 fig.imshow(my_slice.mean).get_figure().savefig(
