@@ -605,6 +605,29 @@ class NeutronicsModel():
 
         return self.output_filename
 
+    def _save_2d_mesh_tally_as_png(self, score: str, filename, tally):
+        """Extracts 2D mesh tally results from a tally and saves the result as
+        a png image.
+
+        Arguments:
+            score (str): The tally score to filter the tally with, e.g. ‘flux’,
+                ‘heating’, etc.
+            filename (str): The filename to use when saving the png output file
+            tally (opencmc.tally()): The OpenMC to extract the mesh tally
+                resutls  from.
+        """
+
+        my_slice = tally.get_slice(scores=[score])
+
+        tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
+        shape = tally_filter.mesh.dimension.tolist()
+        shape.remove(1)
+        my_slice.mean.shape = shape
+
+        fig = plt.subplot()
+        fig.imshow(my_slice.mean).get_figure().savefig(filename, dpi=300)
+        fig.clear()
+
     def get_results(self, output_filename=None, fusion_power=None):
         """Reads the output file from the neutronics simulation
         and prints the TBR tally result to screen
@@ -673,45 +696,27 @@ class NeutronicsModel():
 
             if tally.name.startswith('tritium_production_on_2D_mesh'):
 
-                my_slice = tally.get_slice(scores=['(n,Xt)'])
-
-                tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
-                shape = tally_filter.mesh.dimension.tolist()
-                shape.remove(1)
-                my_slice.mean.shape = shape
-
-                fig = plt.subplot()
-                fig.imshow(my_slice.mean).get_figure().savefig(
-                    'tritium_production_on_2D_mesh' + tally.name[-3:], dpi=300)
-                fig.clear()
-
-            if tally.name.startswith('heating_on_2D_mesh'):
-
-                my_slice = tally.get_slice(scores=['heating'])
-
-                tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
-                shape = tally_filter.mesh.dimension.tolist()
-                shape.remove(1)
-                my_slice.mean.shape = shape
-
-                fig = plt.subplot()
-                fig.imshow(my_slice.mean).get_figure().savefig(
-                    'heating_on_2D_mesh' + tally.name[-3:], dpi=300)
-                fig.clear()
+                self._save_2d_mesh_tally_as_png(
+                    score='(n,Xt)',
+                    tally=tally,
+                    filename='tritium_production_on_2D_mesh' + tally.name[-3:]
+                )
 
             if tally.name.startswith('flux_on_2D_mesh'):
 
-                my_slice = tally.get_slice(scores=['flux'])
+                self._save_2d_mesh_tally_as_png(
+                    score='flux',
+                    tally=tally,
+                    filename='flux_on_2D_mesh' + tally.name[-3:]
+                )
 
-                tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
-                shape = tally_filter.mesh.dimension.tolist()
-                shape.remove(1)
-                my_slice.mean.shape = shape
+            if tally.name.startswith('flux_on_2D_mesh'):
 
-                fig = plt.subplot()
-                fig.imshow(my_slice.mean).get_figure().savefig(
-                    'flux_on_2D_mesh' + tally.name[-3:], dpi=300)
-                fig.clear()
+                self._save_2d_mesh_tally_as_png(
+                    score='heating',
+                    tally=tally,
+                    filename='heating_on_2D_mesh' + tally.name[-3:]
+                )
 
             if '_on_3D_mesh' in tally.name:
                 mesh_id = 1
