@@ -151,9 +151,9 @@ def _save_2d_mesh_tally_as_png(score: str, filename: str, tally):
 
 
 def get_neutronics_results_from_statepoint_file(
-        output_filename: str,
+        statepoint_filename: str,
         fusion_power: float):
-    """Reads the output file from the neutronics simulation
+    """Reads the statepoint file from the neutronics simulation
     and prints the TBR tally result to screen
 
     Returns:
@@ -161,7 +161,7 @@ def get_neutronics_results_from_statepoint_file(
     """
 
     # open the results file
-    statepoint = openmc.StatePoint(output_filename)
+    statepoint = openmc.StatePoint(statepoint_filename)
 
     results = defaultdict(dict)
 

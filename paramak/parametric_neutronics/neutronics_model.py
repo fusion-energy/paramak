@@ -574,7 +574,8 @@ class NeutronicsModel():
                 tally.scores = [score]
                 self.tallies.append(tally)
 
-    def simulate(self, verbose=True, method=None):
+    def simulate(self, verbose=True, method=None,
+            cell_tally_results_filename='results.json'):
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
 
@@ -597,11 +598,12 @@ class NeutronicsModel():
         os.system('rm summary.h5')
 
         self.output_filename = self.model.run(output=verbose)
-        results = self.results = get_neutronics_results_from_statepoint_file(
+        self.results = get_neutronics_results_from_statepoint_file(
             output_filename=self.output_filename,
             fusion_power=self.fusion_power
         )
 
-        self.results = json.dumps(results, indent=4, sort_keys=True)
+        with open(cell_tally_results_filename, 'w') as outfile:
+            json.dump(self.results, outfile, indent=4, sort_keys=True)
 
         return self.output_filename

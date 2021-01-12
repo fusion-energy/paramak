@@ -45,7 +45,11 @@ class TestShape(unittest.TestCase):
         )
 
         # performs an openmc simulation on the model
-        output_filename = my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate(
+            method='pymoab',
+        )
+
+        assert output_filename.name == 'statepoint.2.h5'
 
         results = openmc.StatePoint(output_filename)
         assert len(results.tallies.items()) == 1
@@ -78,6 +82,41 @@ class TestShape(unittest.TestCase):
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
         assert heat > 0
+
+    def test_cell_tally_output_file_creation(self):
+        """Performs a neutronics simulation and checks the cell tally output
+        file is created and named correctly"""
+
+        os.system('rm custom_name.json')
+        os.system('rm results.json')
+
+        test_mat = openmc.Material()
+        test_mat.add_element('Fe', 1.0)
+        test_mat.set_density(units='g/cm3', density=4.2)
+
+        # converts the geometry into a neutronics geometry
+        # this simulation has no tally to test this edge case
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': test_mat},
+            simulation_batches=2,
+            simulation_particles_per_batch=2
+        )
+
+        # performs an openmc simulation on the model
+        output_filename = my_model.simulate(
+            method='pymoab',
+            cell_tally_results_filename='custom_name.json'
+        )
+
+        assert output_filename.name == 'statepoint.2.h5'
+        assert Path('custom_name.json').exists() is True
+
+        output_filename = my_model.simulate(
+            method='pymoab',
+        )
+        assert Path('results.json').exists() is True
 
     def test_incorrect_args(self):
         """Checks that an error is raised when the shape is
@@ -263,7 +302,7 @@ class TestShape(unittest.TestCase):
         assert tbr > 0
         assert mat_tbr > 0
         assert mat_tbr == tbr  # as there is just one shape
-        assert len(energy) == 709
+        assert len(energy) == 710
         assert len(spectra_neutrons) == 709
         assert len(spectra_photons) == 709
 
@@ -491,7 +530,6 @@ class TestNeutronicsBallReactor(unittest.TestCase):
 
         # starts the neutronics simulation using trelis
         neutronics_model.simulate(verbose=False, method='pymoab')
-        neutronics_model.get_results()
 
         assert Path("tritium_production_on_2D_mesh_xz.png").exists() is True
         assert Path("tritium_production_on_2D_mesh_xy.png").exists() is True
