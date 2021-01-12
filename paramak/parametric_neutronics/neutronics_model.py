@@ -618,7 +618,6 @@ class NeutronicsModel():
         """
 
         my_slice = tally.get_slice(scores=[score])
-
         tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
         shape = tally_filter.mesh.dimension.tolist()
         shape.remove(1)
