@@ -24,7 +24,7 @@ class Reactor:
         shapes_and_components (list): list of paramak.Shape
     """
 
-    def __init__(self, shapes_and_components):
+    def __init__(self, shapes_and_components: list):
 
         self.material_tags = []
         self.stp_filenames = []
@@ -167,8 +167,8 @@ class Reactor:
     def solid(self, value):
         self._solid = value
 
-    def neutronics_description(self, include_plasma=False,
-                               include_graveyard=True
+    def neutronics_description(self, include_plasma: bool = False,
+                               include_graveyard: bool = True
                                ):
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations which
@@ -220,9 +220,9 @@ class Reactor:
 
     def export_neutronics_description(
             self,
-            filename="manifest.json",
-            include_plasma=False,
-            include_graveyard=True):
+            filename: str = "manifest.json",
+            include_plasma: bool = False,
+            include_graveyard: bool = True) -> str:
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
         file contains a list of dictionaries. Each dictionary entry comprises
@@ -269,8 +269,8 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_stp(self, output_folder="", graveyard_offset=100,
-                   mode='solid'):
+    def export_stp(self, output_folder: str = "", graveyard_offset: float = 100,
+                   mode: str = 'solid') -> list:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 
@@ -318,7 +318,7 @@ class Reactor:
 
         return filenames
 
-    def export_stl(self, output_folder="", tolerance=0.001):
+    def export_stl(self, output_folder: str = "", tolerance: float = 0.001) -> list:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         :param output_folder: the folder for saving the stp files to
@@ -369,10 +369,10 @@ class Reactor:
 
     def export_h5m(
             self,
-            filename='dagmc.h5m',
-            skip_graveyard=False,
-            tolerance=0.001,
-            graveyard_offset=100):
+            filename: str = 'dagmc.h5m',
+            skip_graveyard: bool = False,
+            tolerance: float = 0.001,
+            graveyard_offset: float = 100) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -440,9 +440,9 @@ class Reactor:
 
         moab_core.write_file(str(path_filename))
 
-        return filename
+        return str(path_filename)
 
-    def export_physical_groups(self, output_folder=""):
+    def export_physical_groups(self, output_folder: str = "") -> list:
         """Exports several JSON files containing a look up table which is
         useful for identifying faces and volumes. The output file names are
         generated from .stp_filename properties.
@@ -470,12 +470,13 @@ class Reactor:
                 Path(output_folder) / Path(entry.stp_filename))
         return filenames
 
-    def export_svg(self, filename):
+    def export_svg(self, filename: str = 'reactor.svg') -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
         Args:
-            filename (str): the filename of the svg file to be exported
+            filename (str): the filename of the svg file to be exported. 
+                Defaults to "reactor.svg".
         """
 
         path_filename = Path(filename)
@@ -489,10 +490,12 @@ class Reactor:
             exporters.exportShape(self.solid, "SVG", out_file)
         print("Saved file as ", path_filename)
 
+        return str(path_filename)
+
     def export_graveyard(
             self,
-            graveyard_offset=100,
-            filename="Graveyard.stp"):
+            graveyard_offset: float = 100,
+            filename: str = "Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -508,11 +511,11 @@ class Reactor:
         """
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
-        self.graveyard.export_stp(Path(filename))
+        new_filename = self.graveyard.export_stp(Path(filename))
 
-        return filename
+        return new_filename
 
-    def make_graveyard(self, graveyard_offset=100):
+    def make_graveyard(self, graveyard_offset: float = 100):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -548,10 +551,10 @@ class Reactor:
     def export_2d_image(
             self,
             filename="2d_slice.png",
-            xmin=0.0,
-            xmax=900.0,
-            ymin=-600.0,
-            ymax=600.0):
+            xmin: float = 0.0,
+            xmax: float = 900.0,
+            ymin: float = -600.0,
+            ymax: float = 600.0) -> str:
         """Creates a 2D slice image (png) of the reactor.
 
         Args:

@@ -3,10 +3,7 @@ import json
 import numbers
 import warnings
 from collections import Iterable
-from os import fdopen, remove
 from pathlib import Path
-from shutil import copymode, move
-from tempfile import mkstemp
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -18,7 +15,8 @@ from matplotlib.patches import Polygon
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
-from paramak.utils import cut_solid, get_hash, intersect_solid, union_solid
+from paramak.utils import (cut_solid, get_hash, intersect_solid, union_solid,
+                           _replace)
 
 
 class Shape:
@@ -796,7 +794,7 @@ class Shape:
                     only accepts 'solid' or 'wire'", self)
 
         if units == 'cm':
-            self._replace(
+            _replace(
                 path_filename,
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
@@ -805,7 +803,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_physical_groups(self, filename: str):
+    def export_physical_groups(self, filename: str) -> str:
         """Exports a JSON file containing a look up table which is useful for
         identifying faces and volumes. If filename provided doesn't end with
         .json then .json will be added.
@@ -833,9 +831,9 @@ class Shape:
                 )
             )
 
-        return filename
+        return str(path_filename)
 
-    def export_svg(self, filename: str):
+    def export_svg(self, filename: str) -> str:
         """Exports an svg file for the Shape.solid. If the provided filename
         doesn't end with .svg it will be added.
 
@@ -1036,7 +1034,7 @@ class Shape:
         self.patch = patch
         return patch
 
-    def neutronics_description(self):
+    def neutronics_description(self) -> dict:
         """Returns a neutronics description of the Shape object. This is needed
         for the use with automated neutronics model methods which require
         linkage between the stp files and materials. If tet meshing of the
@@ -1090,34 +1088,7 @@ class Shape:
 
         return solid
 
-    def _replace(self, filename: str, pattern, subst):
-        """Opens a file and replaces occurances of a particular string
-            (pattern)with a new string (subst) and overwrites the file.
-            Used internally within the paramak to ensure .STP files are
-            in units of cm not the default mm.
-        Args:
-            filename (str): the filename of the file to edit
-            pattern (str): the string that should be removed
-            subst (str): the string that should be used in the place of the
-                pattern string
-        """
-        # Create temp file
-        file_handle, abs_path = mkstemp()
-        with fdopen(file_handle, 'w') as new_file:
-            with open(filename) as old_file:
-                for line in old_file:
-                    new_file.write(line.replace(pattern, subst))
-
-        # Copy the file permissions from the old file to the new file
-        copymode(filename, abs_path)
-
-        # Remove original file
-        remove(filename)
-
-        # Move new file
-        move(abs_path, filename)
-
-    def make_graveyard(self, graveyard_offset=100):
+    def make_graveyard(self, graveyard_offset: int = 100):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -1151,10 +1122,10 @@ class Shape:
 
     def export_h5m(
             self,
-            filename='dagmc.h5m',
-            skip_graveyard=False,
-            tolerance=0.001,
-            graveyard_offset=100):
+            filename: str = 'dagmc.h5m',
+            skip_graveyard: bool = False,
+            tolerance: float = 0.001,
+            graveyard_offset: float = 100) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -1217,12 +1188,12 @@ class Shape:
 
         moab_core.write_file(str(path_filename))
 
-        return filename
+        return str(path_filename)
 
     def export_graveyard(
             self,
-            graveyard_offset=100,
-            filename="Graveyard.stp"):
+            graveyard_offset: float = 100,
+            filename: str = "Graveyard.stp") -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -1238,6 +1209,6 @@ class Shape:
         """
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
-        self.graveyard.export_stp(Path(filename))
+        new_filename = self.graveyard.export_stp(Path(filename))
 
-        return filename
+        return new_filename

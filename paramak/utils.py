@@ -2,7 +2,10 @@
 import math
 from collections import Iterable
 from hashlib import blake2b
-from typing import Tuple
+from os import fdopen, remove
+from shutil import copymode, move
+from tempfile import mkstemp
+from typing import Tuple, List
 
 import cadquery as cq
 import numpy as np
@@ -162,7 +165,8 @@ def intersect_solid(solid, intersecter):
     return solid
 
 
-def rotate(origin, point, angle):
+def rotate(origin: Tuple[float, float], point: Tuple[float, float],
+           angle: float):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
     The angle should be given in radians.
@@ -214,7 +218,8 @@ def calculate_wedge_cut(self):
     return cutting_wedge
 
 
-def add_thickness(x, y, thickness, dy_dx=None):
+def add_thickness(x: List[float], y: List[float], thickness: float,
+                  dy_dx: List[float] = None):
     """Computes outer curve points based on thickness
 
     Args:
@@ -262,7 +267,7 @@ def add_thickness(x, y, thickness, dy_dx=None):
     return x_outer, y_outer
 
 
-def get_hash(shape, ignored_keys=[]):
+def get_hash(shape, ignored_keys: List = []) -> str:
     """Computes a unique hash vaue for the shape.
 
     Args:
@@ -284,6 +289,34 @@ def get_hash(shape, ignored_keys=[]):
     hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
     value = hash_object.hexdigest()
     return value
+
+
+def _replace(filename: str, pattern: str, subst: str) -> None:
+    """Opens a file and replaces occurances of a particular string
+        (pattern)with a new string (subst) and overwrites the file.
+        Used internally within the paramak to ensure .STP files are
+        in units of cm not the default mm.
+    Args:
+        filename (str): the filename of the file to edit
+        pattern (str): the string that should be removed
+        subst (str): the string that should be used in the place of the
+            pattern string
+    """
+    # Create temp file
+    file_handle, abs_path = mkstemp()
+    with fdopen(file_handle, 'w') as new_file:
+        with open(filename) as old_file:
+            for line in old_file:
+                new_file.write(line.replace(pattern, subst))
+
+    # Copy the file permissions from the old file to the new file
+    copymode(filename, abs_path)
+
+    # Remove original file
+    remove(filename)
+
+    # Move new file
+    move(abs_path, filename)
 
 
 class FaceAreaSelector(cq.Selector):
@@ -338,7 +371,7 @@ class EdgeLengthSelector(cq.Selector):
 
     """
 
-    def __init__(self, length, tol=0.1):
+    def __init__(self, length: float, tol: float = 0.1):
         self.length = length
         self.tol = tol
 
