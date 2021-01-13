@@ -1,12 +1,13 @@
 
+import json
 import os
 import pathlib
 import shutil
 import warnings
 from pathlib import Path
 from typing import List
+
 from paramak import get_neutronics_results_from_statepoint_file
-import json
 
 try:
     import openmc
@@ -107,8 +108,10 @@ class NeutronicsModel():
         self.mesh_3D_resolution = mesh_3D_resolution
         self.fusion_power = fusion_power
         self.model = None
+        self.results = None
         self.tallies = None
         self.output_filename = None
+        self.statepoint_filename = None
 
     @property
     def faceting_tolerance(self):

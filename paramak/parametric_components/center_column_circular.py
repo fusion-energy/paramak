@@ -27,7 +27,6 @@ class CenterColumnShieldCircular(RotateMixedShape):
         outer_radius: float,
         stp_filename: Optional[str] = "CenterColumnShieldCircular.stp",
         stl_filename: Optional[str] = "CenterColumnShieldCircular.stl",
-        name: Optional[str] = "center_column_shield",
         material_tag: Optional[str] = "center_column_shield_mat",
         **kwargs
     ) -> None:

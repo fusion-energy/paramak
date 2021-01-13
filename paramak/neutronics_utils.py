@@ -175,9 +175,9 @@ def get_neutronics_results_from_statepoint_file(
 
         if tally.name.endswith('TBR'):
 
-            df = tally.get_pandas_dataframe()
-            tally_result = df["mean"].sum()
-            tally_std_dev = df['std. dev.'].sum()
+            data_frame = tally.get_pandas_dataframe()
+            tally_result = data_frame["mean"].sum()
+            tally_std_dev = data_frame['std. dev.'].sum()
             results[tally.name] = {
                 'result': tally_result,
                 'std. dev.': tally_std_dev,
@@ -185,9 +185,9 @@ def get_neutronics_results_from_statepoint_file(
 
         if tally.name.endswith('heating'):
 
-            df = tally.get_pandas_dataframe()
-            tally_result = df["mean"].sum()
-            tally_std_dev = df['std. dev.'].sum()
+            data_frame = tally.get_pandas_dataframe()
+            tally_result = data_frame["mean"].sum()
+            tally_std_dev = data_frame['std. dev.'].sum()
             results[tally.name]['MeV per source particle'] = {
                 'result': tally_result / 1e6,
                 'std. dev.': tally_std_dev / 1e6,
@@ -201,18 +201,18 @@ def get_neutronics_results_from_statepoint_file(
 
         if tally.name.endswith('flux'):
 
-            df = tally.get_pandas_dataframe()
-            tally_result = df["mean"].sum()
-            tally_std_dev = df['std. dev.'].sum()
+            data_frame = tally.get_pandas_dataframe()
+            tally_result = data_frame["mean"].sum()
+            tally_std_dev = data_frame['std. dev.'].sum()
             results[tally.name]['Flux per source particle'] = {
                 'result': tally_result,
                 'std. dev.': tally_std_dev,
             }
 
         if tally.name.endswith('spectra'):
-            df = tally.get_pandas_dataframe()
-            tally_result = df["mean"]
-            tally_std_dev = df['std. dev.']
+            data_frame = tally.get_pandas_dataframe()
+            tally_result = data_frame["mean"]
+            tally_std_dev = data_frame['std. dev.']
             results[tally.name]['Flux per source particle'] = {
                 'energy': openmc.mgxs.GROUP_STRUCTURES['CCFE-709'].tolist(),
                 'result': tally_result.tolist(),
