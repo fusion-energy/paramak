@@ -594,7 +594,7 @@ class Shape:
                                 solid = solid.polyline(list(entry.values())[0])
                             if list(entry.keys())[0] == "circle":
                                 p0, p1, p2 = list(entry.values())[0][:3]
-                                solid = solid.center(p0[0], p0[1]).\
+                                solid = solid.moveTo(p0[0], p0[1]).\
                                     threePointArc(p1, p2)
                         solid = solid.close()
                         solid = solid.center(-point[0], 0).\
@@ -616,7 +616,7 @@ class Shape:
                             p0 = list(entry.values())[0][0]
                             p1 = list(entry.values())[0][1]
                             p2 = list(entry.values())[0][2]
-                            solid = solid.center(
+                            solid = solid.moveTo(
                                 p0[0], p0[1]).threePointArc(
                                 p1, p2)
 
