@@ -596,7 +596,7 @@ class NeutronicsModel():
         # Deletes summary.h5m if it already exists.
         # This avoids permission problems when trying to overwrite the file
         os.system('rm summary.h5')
-        os.system('rm satepoint.'+str(self.simulation_batches)+'.h5')
+        os.system('rm satepoint.' + str(self.simulation_batches) + '.h5')
 
         # this removes any old file from previous simulations
         os.system('rm geometry.xml')
