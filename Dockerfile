@@ -193,6 +193,7 @@ ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
 RUN if [ "$include_neutronics" = "true" ] ; \
     then pip install neutronics_material_maker ; \
     pip install parametric_plasma_source ; \
+    pip install vtk ; \
     fi
 
 COPY requirements.txt requirements.txt
