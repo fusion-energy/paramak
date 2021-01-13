@@ -120,19 +120,24 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd build ; \
     cmake ../moab -DENABLE_HDF5=ON \
                   -DENABLE_NETCDF=ON \
-                  -DBUILD_SHARED_LIBS=OFF \
                   -DENABLE_FORTRAN=OFF \
-                  -DENABLE_BLASLAPACK=OFF ; \
+                  -DENABLE_BLASLAPACK=OFF \
+                  -DBUILD_SHARED_LIBS=OFF \
+                  -DCMAKE_INSTALL_PREFIX=/MOAB ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     rm -rf * ; \
-    cmake ../moab -DBUILD_SHARED_LIBS=ON \
-                  -DENABLE_HDF5=ON \
+    cmake ../moab -DENABLE_HDF5=ON \
                   -DENABLE_PYMOAB=ON \
                   -DENABLE_FORTRAN=OFF \
-                  -DENABLE_BLASLAPACK=OFF ; \
+                  -DBUILD_SHARED_LIBS=ON \
+                  -DENABLE_BLASLAPACK=OFF \
+                  -DCMAKE_INSTALL_PREFIX=/MOAB ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
+    cd pymoab ; \
+    bash install.sh ; \
+    python setup.py install ; \
     fi
 
 
@@ -142,8 +147,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd double-down ; \
     mkdir build ; \
     cd build ; \
-    cmake .. -DCMAKE_INSTALL_PREFIX=.. \
-             -DMOAB_DIR=/usr/local \
+    cmake .. -DMOAB_DIR=/MOAB \
+             -DCMAKE_INSTALL_PREFIX=.. \
              -DEMBREE_DIR=/embree/lib/cmake/embree-3.12.1 ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
@@ -157,10 +162,10 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     mkdir build ; \
     cd build ; \
     cmake ../dagmc -DBUILD_TALLY=ON \
-                   -DCMAKE_INSTALL_PREFIX=/dagmc/ \
-                   -DMOAB_DIR=/usr/local \
+                   -DMOAB_DIR=/MOAB \
+                   -DBUILD_STATIC_EXE=OFF \
                    -DBUILD_STATIC_LIBS=OFF \
-                   -DBUILD_STATIC_EXE=OFF ; \
+                   -DCMAKE_INSTALL_PREFIX=/dagmc/ ; \
     make -j"$compile_cores" install ; \
     rm -rf /DAGMC/dagmc /DAGMC/build ; \
     fi
