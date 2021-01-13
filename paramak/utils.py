@@ -267,7 +267,7 @@ def add_thickness(x: List[float], y: List[float], thickness: float,
     return x_outer, y_outer
 
 
-def get_hash(shape, ignored_keys: List = []) -> str:
+def get_hash(shape, ignored_keys: List) -> str:
     """Computes a unique hash vaue for the shape.
 
     Args:
@@ -282,9 +282,10 @@ def get_hash(shape, ignored_keys: List = []) -> str:
     hash_object = blake2b()
     shape_dict = dict(shape.__dict__)
 
-    for key in ignored_keys:
-        if key in shape_dict.keys():
-            shape_dict[key] = None
+    if ignored_keys is not None:
+        for key in ignored_keys:
+            if key in shape_dict.keys():
+                shape_dict[key] = None
 
     hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
     value = hash_object.hexdigest()
