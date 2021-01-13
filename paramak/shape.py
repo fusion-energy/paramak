@@ -580,15 +580,12 @@ class Shape:
                 if self.workplane in ["XZ", "YX", "ZY"]:
                     factor *= -1
 
-                solid = cq.Workplane(self.workplane).moveTo(0, 0)
+                solid = cq.Workplane(self.workplane).center(0, 0)
 
                 if self.force_cross_section:
                     for point in self.path_points[:-1]:
-                        solid = solid.workplane(
-                            offset=point[1] *
-                            factor).moveTo(
-                            point[0],
-                            0).workplane()
+                        solid = solid.workplane(offset=point[1] * factor).\
+                            center(point[0], 0).workplane()
                         for entry in instructions:
                             if list(entry.keys())[0] == "spline":
                                 solid = solid.spline(
@@ -597,16 +594,16 @@ class Shape:
                                 solid = solid.polyline(list(entry.values())[0])
                             if list(entry.keys())[0] == "circle":
                                 p0, p1, p2 = list(entry.values())[0][:3]
-                                solid = solid.moveTo(
-                                    p0[0], p0[1]).threePointArc(
-                                    p1, p2)
-                        solid = solid.close().moveTo(
-                            0, 0).moveTo(-point[0], 0).workplane(offset=-point[1] * factor)
+                                solid = solid.moveTo(p0[0], p0[1]).\
+                                    threePointArc(p1, p2)
+                        solid = solid.close()
+                        solid = solid.center(-point[0], 0).\
+                            workplane(offset=-point[1] * factor)
 
                 elif self.force_cross_section == False:
                     solid = solid.workplane(
                         offset=self.path_points[0][1] *
-                        factor).moveTo(
+                        factor).center(
                         self.path_points[0][0],
                         0).workplane()
                     for entry in instructions:
@@ -623,12 +620,12 @@ class Shape:
                                 p0[0], p0[1]).threePointArc(
                                 p1, p2)
 
-                    solid = solid.close().moveTo(0,
-                                                 0).moveTo(-self.path_points[0][0],
-                                                           0).workplane(offset=-self.path_points[0][1] * factor)
+                    solid = solid.close().center(0, 0).\
+                        center(-self.path_points[0][0], 0).\
+                        workplane(offset=-self.path_points[0][1] * factor)
 
-                solid = solid.workplane(
-                    offset=self.path_points[-1][1] * factor).moveTo(self.path_points[-1][0], 0).workplane()
+                solid = solid.workplane(offset=self.path_points[-1][1] * factor).\
+                    center(self.path_points[-1][0], 0).workplane()
 
             else:
                 # for rotate and extrude shapes
