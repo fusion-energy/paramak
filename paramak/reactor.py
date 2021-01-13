@@ -269,8 +269,11 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_stp(self, output_folder: str = "", graveyard_offset: float = 100,
-                   mode: str = 'solid') -> list:
+    def export_stp(
+            self,
+            output_folder: str = "",
+            graveyard_offset: float = 100,
+            mode: str = 'solid') -> list:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 
@@ -318,7 +321,8 @@ class Reactor:
 
         return filenames
 
-    def export_stl(self, output_folder: str = "", tolerance: float = 0.001) -> list:
+    def export_stl(self, output_folder: str = "",
+                   tolerance: float = 0.001) -> list:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         :param output_folder: the folder for saving the stp files to
@@ -475,7 +479,7 @@ class Reactor:
         doesn't end with .svg it will be added.
 
         Args:
-            filename (str): the filename of the svg file to be exported. 
+            filename (str): the filename of the svg file to be exported.
                 Defaults to "reactor.svg".
         """
 

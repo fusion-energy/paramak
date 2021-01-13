@@ -575,7 +575,7 @@ class NeutronicsModel():
                 self.tallies.append(tally)
 
     def simulate(self, verbose: bool = True, method: str = None,
-            cell_tally_results_filename: str='results.json'):
+                 cell_tally_results_filename: str = 'results.json'):
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
 
