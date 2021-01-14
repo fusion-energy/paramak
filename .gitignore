@@ -37,7 +37,7 @@ coverage.xml
 *.out
 *.vtk
 
-# images of the model
+# 2D and 3D images of the model
 *.svg
 *.png
 *.vtk
