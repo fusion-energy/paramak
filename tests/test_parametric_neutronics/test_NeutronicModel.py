@@ -27,6 +27,23 @@ class TestShape(unittest.TestCase):
         self.source.space = openmc.stats.Point((0, 0, 0))
         self.source.angle = openmc.stats.Isotropic()
 
+    def simulation_with_previous_h5m_file(self):
+        """This performs a simulation using previously created h5m file"""
+
+        os.system('rm *.h5m')
+
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': 'WC'},
+        )
+
+        my_model.create_neutronics_geometry(method='pymoab')
+
+        my_model.simulate(method=None)
+
+        my_model.results is not None
+
     def test_merge_tolerance_setting_and_getting(self):
         """Makes a neutronics model and checks the default merge_tolerance"""
 
@@ -136,6 +153,21 @@ class TestShape(unittest.TestCase):
     def test_incorrect_args(self):
         """Checks that an error is raised when the shape is
         defined as ."""
+
+        def missing_dagmc_not_watertight_file():
+            "Tries to set faceting_tolerance as a string"
+            test_model = paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+            )
+
+            test_model._make_watertight()
+
+        self.assertRaises(
+            ValueError,
+            missing_dagmc_not_watertight_file
+        )
 
         def incorrect_faceting_tolerance():
             "Tries to set faceting_tolerance as a string"
