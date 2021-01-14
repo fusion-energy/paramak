@@ -249,6 +249,34 @@ class TestShape(unittest.TestCase):
             incorrect_mesh_tally_2d_type
         )
 
+        def incorrect_mesh_tally_3d():
+            "Tries to set a mesh_tally_3D that is not accepted"
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                mesh_tally_3D=['coucou'],
+            )
+
+        self.assertRaises(
+            ValueError,
+            incorrect_mesh_tally_3d
+        )
+
+        def incorrect_mesh_tally_3d_type():
+            "Tries to set a mesh_tally_3D that is the wrong type"
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                mesh_tally_3D=1,
+            )
+
+        self.assertRaises(
+            TypeError,
+            incorrect_mesh_tally_3d_type
+        )
+
         def incorrect_materials():
             "Tries to set a material that is not accepted"
             paramak.NeutronicsModel(
@@ -289,6 +317,34 @@ class TestShape(unittest.TestCase):
         self.assertRaises(
             ValueError,
             incorrect_simulation_batches_to_small
+        )
+
+        def incorrect_simulation_batches_wrong_type():
+            """The simulation batch must be above 2"""
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                simulation_batches='one'
+            )
+
+        self.assertRaises(
+            TypeError,
+            incorrect_simulation_batches_wrong_type
+        )
+
+        def incorrect_simulation_particles_per_batch_wrong_type():
+            """The simulation batch must be above 2"""
+            paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'eurofer'},
+                simulation_particles_per_batch='one'
+            )
+
+        self.assertRaises(
+            TypeError,
+            incorrect_simulation_particles_per_batch_wrong_type
         )
 
     def test_neutronics_component_cell_simulation_heating(self):
