@@ -324,10 +324,9 @@ class NeutronicsModel():
                 "PPP + OCC Faceter / Gmesh option is under development and not \
                 ready to be implemented. Further details on the repositories \
                 https://github.com/makeclean/occ_faceter/ \
-                https://github.com/ukaea/parallel-preprocessor "
-            )
+                https://github.com/ukaea/parallel-preprocessor ")
 
-            #TODO when the development is ready to test
+            # TODO when the development is ready to test
             # self.geometry.export_stp()
             # self.geometry.export_neutronics_description()
             # # as the installer connects to the system python not the conda
