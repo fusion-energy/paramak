@@ -5,6 +5,11 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import numpy as np
 
+try:
+    import openmc
+except ImportError as err:
+    raise err('openmc not found, get_neutronics_results_from_statepoint_file method is not available')
+
 
 def define_moab_core_and_tags():
     """Creates a MOAB Core instance which can be built up by adding sets of
@@ -162,11 +167,6 @@ def get_neutronics_results_from_statepoint_file(
     Returns:
         dict: a dictionary of the simulation results
     """
-
-    try:
-        import openmc
-    except ImportError as err:
-        raise err('openmc not found, get_neutronics_results_from_statepoint_file method is not available')
 
     # open the results file
     statepoint = openmc.StatePoint(statepoint_filename)
