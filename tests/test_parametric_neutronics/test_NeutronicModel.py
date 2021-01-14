@@ -39,7 +39,7 @@ class TestShape(unittest.TestCase):
 
         assert my_model.merge_tolerance == 1e-4
 
-        my_model.merge_tolerance=1e-6
+        my_model.merge_tolerance = 1e-6
         assert my_model.merge_tolerance == 1e-6
 
     def test_neutronics_component_simulation_with_openmc_mat(self):
@@ -267,7 +267,7 @@ class TestShape(unittest.TestCase):
             test_model = paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
-                materials={'center_column_shield_mat':23},
+                materials={'center_column_shield_mat': 23},
             )
 
             test_model.create_materials()
