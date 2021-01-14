@@ -58,7 +58,7 @@ RUN apt-get update -y && \
 
 RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        freeglut3-dev libosmesa6 libosmesa6-dev \
-                       libgles2-mesa-dev && \
+                       libgles2-mesa-dev curl && \
                        apt-get clean
 
 # Installing CadQuery
