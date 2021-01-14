@@ -320,22 +320,30 @@ class NeutronicsModel():
 
         if method == 'ppp':
 
-            self.geometry.export_stp()
-            self.geometry.export_neutronics_description()
-            # as the installer connects to the system python not the conda
-            # python this full path is needed for now
-            if os.system(
-                    '/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json') != 0:
-                raise ValueError(
-                    "geomPipeline.py failed, check PPP is installed")
+            raise NotImplementedError(
+                "PPP + OCC Faceter / Gmesh option is under development and not \
+                ready to be implemented. Further details on the repositories \
+                https://github.com/makeclean/occ_faceter/ \
+                https://github.com/ukaea/parallel-preprocessor "
+            )
 
-            # TODO allow tolerance to be user controlled
-            if os.system(
-                    'occ_faceter manifest_processed/manifest_processed.brep') != 0:
-                raise ValueError(
-                    "occ_faceter failed, check occ_faceter is install and the \
-                    occ_faceter/bin folder is in the path directory")
-            self._make_watertight()
+            #TODO when the development is ready to test
+            # self.geometry.export_stp()
+            # self.geometry.export_neutronics_description()
+            # # as the installer connects to the system python not the conda
+            # # python this full path is needed for now
+            # if os.system(
+            #         '/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json') != 0:
+            #     raise ValueError(
+            #         "geomPipeline.py failed, check PPP is installed")
+
+            # # TODO allow tolerance to be user controlled
+            # if os.system(
+            #         'occ_faceter manifest_processed/manifest_processed.brep') != 0:
+            #     raise ValueError(
+            #         "occ_faceter failed, check occ_faceter is install and the \
+            #         occ_faceter/bin folder is in the path directory")
+            # self._make_watertight()
 
         elif method == 'trelis':
             self.geometry.export_stp()
