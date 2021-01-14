@@ -273,6 +273,18 @@ class TestRotateStraightShape(unittest.TestCase):
 
         self.assertRaises(ValueError, export_mode_incorrect)
 
+    def test_graveyard_filename(self):
+        """Checks the name of the stp file for the Graveyard is correct
+        """
+        output_filename = self.test_shape.export_graveyard()
+        assert 'Graveyard.stp' == output_filename
+
+        output_filename = self.test_shape.export_graveyard(filename='test.stp')
+        assert 'test.stp' == output_filename
+
+        output_filename = self.test_shape.export_graveyard(filename='test2')
+        assert 'test2.stp' == output_filename
+
 
 if __name__ == "__main__":
     unittest.main()
