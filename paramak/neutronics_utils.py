@@ -5,12 +5,6 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import numpy as np
 
-try:
-    import openmc
-except ImportError as err:
-    raise err(
-        'openmc not found, get_neutronics_results_from_statepoint_file method is not available')
-
 
 def define_moab_core_and_tags():
     """Creates a MOAB Core instance which can be built up by adding sets of
@@ -143,6 +137,13 @@ def _save_2d_mesh_tally_as_png(score: str, filename: str, tally):
             resutls  from.
     """
 
+    try:
+        import openmc
+    except ImportError as err:
+        raise err(
+            'openmc not found, _save_2d_mesh_tally_as_png method is not \
+            available')
+
     my_slice = tally.get_slice(scores=[score])
     tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
     shape = tally_filter.mesh.dimension.tolist()
@@ -168,6 +169,13 @@ def get_neutronics_results_from_statepoint_file(
     Returns:
         dict: a dictionary of the simulation results
     """
+
+    try:
+        import openmc
+    except ImportError as err:
+        raise err(
+            'openmc not found, get_neutronics_results_from_statepoint_file \
+            method is not available')
 
     # open the results file
     statepoint = openmc.StatePoint(statepoint_filename)
