@@ -4,7 +4,6 @@ from collections import defaultdict
 
 import matplotlib.pyplot as plt
 import numpy as np
-import openmc
 
 
 def define_moab_core_and_tags():
@@ -19,7 +18,7 @@ def define_moab_core_and_tags():
     try:
         from pymoab import core, types
     except ImportError as err:
-        raise err('PyMoab not found, export_h5m method not available')
+        raise err('PyMoab not found, export_h5m method is not available')
 
     # create pymoab instance
     moab_core = core.Core()
@@ -164,6 +163,11 @@ def get_neutronics_results_from_statepoint_file(
         dict: a dictionary of the simulation results
     """
 
+    try:
+        import openmc
+    except ImportError as err:
+        raise err('openmc not found, get_neutronics_results_from_statepoint_file method is not available')
+
     # open the results file
     statepoint = openmc.StatePoint(statepoint_filename)
 
@@ -269,11 +273,10 @@ def get_neutronics_results_from_statepoint_file(
             data = data.tolist()
             error = error.tolist()
 
-           for content in [data, error]:
+            for content in [data, error]:
                 for counter, i in enumerate(content):
                     if math.isnan(i):
                         content[counter] = 0.
-
 
             write_3d_mesh_tally_to_vtk(
                 xs=xs,
