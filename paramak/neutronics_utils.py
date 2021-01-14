@@ -269,13 +269,11 @@ def get_neutronics_results_from_statepoint_file(
             data = data.tolist()
             error = error.tolist()
 
-            for counter, i in enumerate(data):
-                if math.isnan(i):
-                    data[counter] = 0.
+           for content in [data, error]:
+                for counter, i in enumerate(content):
+                    if math.isnan(i):
+                        content[counter] = 0.
 
-            for counter, i in enumerate(error):
-                if math.isnan(i):
-                    error[counter] = 0.
 
             write_3d_mesh_tally_to_vtk(
                 xs=xs,
