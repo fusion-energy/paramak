@@ -27,6 +27,21 @@ class TestShape(unittest.TestCase):
         self.source.space = openmc.stats.Point((0, 0, 0))
         self.source.angle = openmc.stats.Isotropic()
 
+    def test_merge_tolerance_setting_and_getting(self):
+        """Makes a neutronics model and checks the default merge_tolerance"""
+
+        # converts the geometry into a neutronics geometry
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': 'eurofer'},
+        )
+
+        assert my_model.merge_tolerance == 1e-4
+
+        my_model.merge_tolerance=1e-6
+        assert my_model.merge_tolerance == 1e-6
+
     def test_neutronics_component_simulation_with_openmc_mat(self):
         """Makes a neutronics model and simulates with a cell tally"""
 
@@ -247,6 +262,21 @@ class TestShape(unittest.TestCase):
             incorrect_materials
         )
 
+        def incorrect_materials_type():
+            "Tries to set a material that is not accepted"
+            test_model = paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat':23},
+            )
+
+            test_model.create_materials()
+
+        self.assertRaises(
+            TypeError,
+            incorrect_materials_type
+        )
+
         def incorrect_simulation_batches_to_small():
             """The simulation batch must be above 2"""
             paramak.NeutronicsModel(
@@ -359,6 +389,27 @@ class TestShape(unittest.TestCase):
         assert Path(output_filename).exists() is True
         assert Path('heating_on_3D_mesh.vtk').exists() is True
         assert Path('tritium_production_on_3D_mesh.vtk').exists() is True
+
+    def test_batches_and_particles_convert_to_int(self):
+        """Makes a neutronics model and simulates with a 3D and 2D mesh tally
+        and checks that the vtk and png files are produced. This checks the
+        mesh ID values don't overlap"""
+
+        os.system('rm *.h5')
+
+        # converts the geometry into a neutronics geometry
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': 'Be'},
+            simulation_batches=3.1,
+            simulation_particles_per_batch=2.1
+        )
+
+        assert isinstance(my_model.simulation_batches, int)
+        assert my_model.simulation_batches == 3
+        assert isinstance(my_model.simulation_particles_per_batch, int)
+        assert my_model.simulation_particles_per_batch == 2
 
     def test_neutronics_component_3d_and_2d_mesh_simulation(self):
         """Makes a neutronics model and simulates with a 3D and 2D mesh tally
