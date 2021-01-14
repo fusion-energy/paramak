@@ -8,7 +8,8 @@ import numpy as np
 try:
     import openmc
 except ImportError as err:
-    raise err('openmc not found, get_neutronics_results_from_statepoint_file method is not available')
+    raise err(
+        'openmc not found, get_neutronics_results_from_statepoint_file method is not available')
 
 
 def define_moab_core_and_tags():
