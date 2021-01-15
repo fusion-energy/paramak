@@ -3,8 +3,8 @@ import math
 
 import cadquery as cq
 from paramak import RotateStraightShape
-from paramak.utils import (coefficients_of_line_from_points, get_hash,
-                           intersect_solid, rotate)
+from paramak.utils import (coefficients_of_line_from_points, intersect_solid,
+                           rotate)
 
 
 class PoloidalSegments(RotateStraightShape):
@@ -61,7 +61,7 @@ class PoloidalSegments(RotateStraightShape):
     @number_of_segments.setter
     def number_of_segments(self, value):
         if isinstance(value, int) is False:
-            raise ValueError(
+            raise TypeError(
                 "PoloidalSegmenter.number_of_segments must be an int.")
         if value < 1:
             raise ValueError(

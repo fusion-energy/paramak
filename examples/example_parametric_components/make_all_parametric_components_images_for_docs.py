@@ -13,7 +13,6 @@ def export_images():
     for componet in all_componets:
         componet.workplane = "XY"
         componet.export_svg(componet.stp_filename[:-3] + "svg")
-        # os.system('conver')
 
 
 if __name__ == "__main__":

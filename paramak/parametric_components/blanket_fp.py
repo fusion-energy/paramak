@@ -2,7 +2,6 @@
 import warnings
 
 import mpmath
-
 import numpy as np
 import sympy as sp
 from paramak import RotateMixedShape, diff_between_angles
