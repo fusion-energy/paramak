@@ -24,14 +24,16 @@ class TestCuttingWedgeFS(unittest.TestCase):
 
         assert cutter.volume > hoop_shape.volume
 
-    def test_error(self):
-        """Checks that errors are raised when invalid arguments are set
-        """
+    def test_invalid_parameters_errors(self):
+        """Checks that the correct errors are raised when invalid arguments are input as
+        shape parameters."""
+        
         shape = paramak.ExtrudeStraightShape(
-            1,
+            distance=1,
             points=[(0, 0), (0, 1), (1, 1)],
             rotation_angle=180
         )
+
         cutter = paramak.CuttingWedgeFS(
             shape=shape,
             azimuth_placement_angle=0,
@@ -39,16 +41,15 @@ class TestCuttingWedgeFS(unittest.TestCase):
 
         def incorrect_rotation_angle():
             shape.rotation_angle = 360
-            print(cutter.shape.rotation_angle)
             cutter.solid
 
         def incorrect_shape_points():
             shape.rotation_angle = 180
             cutter.shape.points = [(0, 0, 'straight')]
-            print(shape.points)
             cutter.solid
 
         def incorrect_shape_rotation_angle():
+            cutter.shape.points = [(0, 0), (0, 1), (1, 1)]
             shape.rotation_angle = 360
             cutter.shape = shape
 

@@ -114,20 +114,39 @@ class TestPoloidalFieldCoilCaseSet(unittest.TestCase):
         assert self.test_shape.areas.count(
             pytest.approx(40 * math.pi * 2 * 80)) == 1
 
-    def test_invalid_args(self):
-        """Creates PoloidalFieldCoilCaseSets with invalid arguments and checks
-        that the correct errors are raised."""
+    def test_PoloidalFieldCoilCaseSet_incorrect_thicknesses_1(self):
+        """Checks that an error is raised when a PoloidalFieldCoilCaseSet is made
+        with the wrong number of casing thicknesses."""
 
-        def test_invalid_casing_thicknesses_1():
+        def make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_1():
             self.test_shape.casing_thicknesses = [5, 5, 10]
             self.test_shape.solid
 
-        def test_invalid_casing_thicknesses_2():
+        self.assertRaises(
+            ValueError, 
+            make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_1
+        )
+
+    def test_PoloidalFieldCoil_incorrect_thicknesses_2(self):
+        """Checks that an error is raised when a PoloidalFieldCoilCaseSet is made
+        with invalid casing thicknesses."""
+
+        def make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_2():
             self.test_shape.casing_thicknesses = [5, 5, 5, 'ten']
 
-        def test_invalid_casing_thicknesses_3():
+        self.assertRaises(
+            ValueError,
+            make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_2
+        )
+    
+    def test_PoloidalFieldCoil_incorrect_thicknesses_3(self):
+        """Checks that an error is raised when a PoloidalFieldCoilCaseSet is made
+        with invalid casing thicknesses."""
+        
+        def make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_3():
             self.test_shape.casing_thicknesses = "ten"
 
-        self.assertRaises(ValueError, test_invalid_casing_thicknesses_1)
-        self.assertRaises(ValueError, test_invalid_casing_thicknesses_2)
-        self.assertRaises(ValueError, test_invalid_casing_thicknesses_3)
+        self.assertRaises(
+            ValueError,
+            make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_3
+        )

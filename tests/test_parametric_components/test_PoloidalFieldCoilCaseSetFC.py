@@ -114,25 +114,24 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
         assert self.test_shape.areas.count(
             pytest.approx(40 * math.pi * 2 * 80)) == 1
 
-    def test_incorrect_args(self):
-        """Creates a solid using the PoloidalFieldCoilCaseSet with incorrect
-        args"""
+    def test_PoloidalFieldCoilCaseSetFC_incorrect_lengths_FC(self):
+        """Checks that an error is raised when a PoloidalFieldCoilCaseSetFC is made
+        with the wrong number of casing thicknesses using a coil set object."""
 
-        def test_PoloidalFieldCoilSet_incorrect_lengths_FC():
-            """Checks PoloidalFieldCoilSet with the wrong number of casing
-            thicknesses (3) using a coil set object with 4 pf_coils."""
-
+        def make_PoloidalFieldCoilCaseSetFC_incorrect_lengths_FC():
             self.test_shape.casing_thicknesses = [5, 5, 10]
             self.test_shape.solid
 
         self.assertRaises(
             ValueError,
-            test_PoloidalFieldCoilSet_incorrect_lengths_FC)
+            make_PoloidalFieldCoilCaseSetFC_incorrect_lengths_FC
+        )
 
-        def test_PoloidalFieldCoilSet_incorrect_lengths():
-            """Checks PoloidalFieldCoilSet with the wrong number of casing
-            thicknesses using a list."""
+    def test_PoloidalFieldCoilCaseSetFC_incorrect_lengths(self):
+        """Checks that an error is raised when a PoloidalFieldCoilCaseSetFC is made 
+        with the wrong number of casing thicknesses using a list."""
 
+        def make_PoloidalFieldCoilCaseSetFC_incorrect_lengths():
             self.pf_coils_set.height = 10
             self.pf_coils_set.width = 10
             self.pf_coils_set.center_point = (100, 100)
@@ -142,18 +141,21 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
 
         self.assertRaises(
             ValueError,
-            test_PoloidalFieldCoilSet_incorrect_lengths)
+            make_PoloidalFieldCoilCaseSetFC_incorrect_lengths
+        )
 
-        def test_PoloidalFieldCoilSet_incorrect_pf_coil():
-            """Checks PoloidalFieldCoilSet with the pf_coils as an incorrect
-            entry."""
+    def test_PoloidalFieldCoilCaseSetFC_incorrect_pf_coil(self):
+        """Checks that an error is raised when a PoloidalFieldCoilCaseSetFC is made
+        with the pf_coils as an incorrect entry."""
 
+        def make_PoloidalFieldCoilCaseSetFC_incorrect_pf_coil():
             self.test_shape.pf_coils = 20
             self.test_shape.solid
-
+        
         self.assertRaises(
             ValueError,
-            test_PoloidalFieldCoilSet_incorrect_pf_coil)
+            make_PoloidalFieldCoilCaseSetFC_incorrect_pf_coil
+        )
 
     def test_from_list(self):
         """Creates a set of PF coil cases from a list of PF coils with a list
@@ -183,7 +185,7 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
         assert test_shape.solid is not None
         assert len(test_shape.solid.Solids()) == 4
 
-    def test_PoloidalFieldCoilCaseFC_with_number_thickness(self):
+    def test_PoloidalFieldCoilCaseSetFC_with_number_thickness(self):
         """Creates a set of PF coil cases from a list of PF coils with a
         single numerical thicknesses."""
 

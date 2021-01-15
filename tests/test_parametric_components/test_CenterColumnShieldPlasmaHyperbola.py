@@ -52,7 +52,8 @@ class TestCenterColumnShieldPlasmaHyperbola(unittest.TestCase):
             self.test_shape.solid
 
         def incorrect_height():
-            self.test_shape.height = 301
+            self.test_shape.inner_radius = 100
+            self.test_shape.height = 300
             self.test_shape.solid
 
         self.assertRaises(ValueError, incorrect_inner_radius)
