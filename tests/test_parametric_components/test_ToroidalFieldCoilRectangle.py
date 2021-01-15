@@ -150,10 +150,10 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
             self.test_shape.solid
 
         self.assertRaises(
-            ValueError, 
+            ValueError,
             make_ToroidalFieldCoilRectangle_incorrect_horizontal_start_point
         )
-    
+
     def test_ToroidalFieldCoilRectangle_incorrect_vertical_mid_point(self):
         """Checks that an error is raised when a ToroidalFieldCoilRectangle is made
         with an incorrect vertical_mid_point."""
@@ -164,6 +164,6 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
             self.test_shape.solid
 
         self.assertRaises(
-            ValueError, 
+            ValueError,
             make_ToroidalFieldCoilRectangle_incorrect_vertical_mid_point
         )

@@ -89,7 +89,7 @@ class TestPoloidalFieldCoilSet(unittest.TestCase):
             ValueError,
             make_PoloidalFieldCoilSet_incorrect_height
         )
-    
+
     def test_PoloidalFieldCoilSet_incorrect_width(self):
         """Checks that an error is raised when a PoloidalFieldCoilSet is made
         with width passed as the wrong type."""

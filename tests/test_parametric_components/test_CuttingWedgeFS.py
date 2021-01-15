@@ -27,7 +27,7 @@ class TestCuttingWedgeFS(unittest.TestCase):
     def test_invalid_parameters_errors(self):
         """Checks that the correct errors are raised when invalid arguments are input as
         shape parameters."""
-        
+
         shape = paramak.ExtrudeStraightShape(
             distance=1,
             points=[(0, 0), (0, 1), (1, 1)],

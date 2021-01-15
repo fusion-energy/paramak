@@ -128,7 +128,7 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
         )
 
     def test_PoloidalFieldCoilCaseSetFC_incorrect_lengths(self):
-        """Checks that an error is raised when a PoloidalFieldCoilCaseSetFC is made 
+        """Checks that an error is raised when a PoloidalFieldCoilCaseSetFC is made
         with the wrong number of casing thicknesses using a list."""
 
         def make_PoloidalFieldCoilCaseSetFC_incorrect_lengths():
@@ -151,7 +151,7 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
         def make_PoloidalFieldCoilCaseSetFC_incorrect_pf_coil():
             self.test_shape.pf_coils = 20
             self.test_shape.solid
-        
+
         self.assertRaises(
             ValueError,
             make_PoloidalFieldCoilCaseSetFC_incorrect_pf_coil

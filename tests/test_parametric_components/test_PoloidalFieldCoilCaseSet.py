@@ -123,7 +123,7 @@ class TestPoloidalFieldCoilCaseSet(unittest.TestCase):
             self.test_shape.solid
 
         self.assertRaises(
-            ValueError, 
+            ValueError,
             make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_1
         )
 
@@ -138,11 +138,11 @@ class TestPoloidalFieldCoilCaseSet(unittest.TestCase):
             ValueError,
             make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_2
         )
-    
+
     def test_PoloidalFieldCoil_incorrect_thicknesses_3(self):
         """Checks that an error is raised when a PoloidalFieldCoilCaseSet is made
         with invalid casing thicknesses."""
-        
+
         def make_PoloidalFieldCoilCaseSet_incorrect_thicknesses_3():
             self.test_shape.casing_thicknesses = "ten"
 
