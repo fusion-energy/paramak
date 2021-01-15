@@ -109,7 +109,7 @@ class SweepCircleShape(Shape):
             solid = wire.workplane(offset=self.path_points[-1][1] * factor).center(
                 self.path_points[-1][0], 0).circle(self.radius).sweep(path, multisection=True)
 
-        if not self.force_cross_section:
+        else:
 
             wire = (
                 cq.Workplane(self.workplane)

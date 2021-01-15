@@ -8,7 +8,7 @@ from pathlib import Path
 import paramak
 
 
-def make_ball_reactor(outputs=['stp', 'neutronics', 'svg', 'stl', 'html'],
+def make_ball_reactor(outputs=('stp', 'neutronics', 'svg', 'stl', 'html'),
                       output_folder='BallReactor'):
 
     my_reactor = paramak.BallReactor(
@@ -48,4 +48,4 @@ def make_ball_reactor(outputs=['stp', 'neutronics', 'svg', 'stl', 'html'],
 
 
 if __name__ == "__main__":
-    make_ball_reactor(['stp', 'neutronics', 'svg', 'stl', 'html'])
+    make_ball_reactor(('stp', 'neutronics', 'svg', 'stl', 'html'))

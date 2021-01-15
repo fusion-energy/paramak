@@ -332,9 +332,9 @@ class FaceAreaSelector(cq.Selector):
             (+/-) while still being selected by the custom selector.
     """
 
-    def __init__(self, area, tol=0.1):
+    def __init__(self, area, tolerance=0.1):
         self.area = area
-        self.tol = tol
+        self.tolerance = tolerance
 
     def filter(self, objectList):
         """Loops through all the faces in the object checking if the face
@@ -353,7 +353,7 @@ class FaceAreaSelector(cq.Selector):
             face_area = obj.Area()
 
             # Only return faces that meet the requirements
-            if face_area > self.area - self.tol and face_area < self.area + self.tol:
+            if face_area > self.area - self.tol and face_area < self.area + self.tolerance:
                 new_obj_list.append(obj)
 
         return new_obj_list

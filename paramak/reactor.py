@@ -133,7 +133,7 @@ class Reactor:
         if value is None:
             self._graveyard_offset = None
         elif not isinstance(value, (float, int)):
-            raise ValueError("graveyard_offset must be a number")
+            raise TypeError("graveyard_offset must be a number")
         elif value < 0:
             raise ValueError("graveyard_offset must be positive")
         self._graveyard_offset = value
@@ -211,7 +211,7 @@ class Reactor:
         # This add the neutronics description for the graveyard which is unique
         # as it is automatically calculated instead of being added by the user.
         # Also the graveyard must have 'Graveyard' as the material name
-        if include_graveyard is True:
+        if include_graveyard:
             self.make_graveyard()
             neutronics_description.append(
                 self.graveyard.neutronics_description())

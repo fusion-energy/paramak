@@ -361,7 +361,7 @@ class NeutronicsModel():
                       str(self.faceting_tolerance) + "'\" \"merge_tolerance='" + str(self.merge_tolerance) + "'\"")
 
             if not Path("dagmc_not_watertight.h5m").is_file():
-                raise ValueError("The dagmc_not_watertight.h5m was not found \
+                raise FileNotFoundError("The dagmc_not_watertight.h5m was not found \
                     in the directory, the Trelis stage has failed")
             self._make_watertight()
 
@@ -606,7 +606,7 @@ class NeutronicsModel():
         # Deletes summary.h5m if it already exists.
         # This avoids permission problems when trying to overwrite the file
         os.system('rm summary.h5')
-        os.system('rm satepoint.' + str(self.simulation_batches) + '.h5')
+        os.system('rm statepoint.' + str(self.simulation_batches) + '.h5')
 
         # this removes any old file from previous simulations
         os.system('rm geometry.xml')

@@ -24,6 +24,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
             thickness of the center column shield at the upper point (cm)
         inboard_firstwall_radial_thickness (float): the radial thickness
             of the inboard firstwall (cm)
+        divertor_radial_thickness (float): the radial thickness of the divertor
+            (cm)
         inner_plasma_gap_radial_thickness (float): the radial thickness of
             the inboard gap between the plasma and the center column shield
             (cm)
