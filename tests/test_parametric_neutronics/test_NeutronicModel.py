@@ -150,12 +150,10 @@ class TestShape(unittest.TestCase):
         )
         assert Path('results.json').exists() is True
 
-    def test_incorrect_args(self):
-        """Checks that an error is raised when the shape is
-        defined as ."""
+    def test_missing_dagmc_not_watertight_file(self):
 
         def missing_dagmc_not_watertight_file():
-            "Tries to set faceting_tolerance as a string"
+            """Sets faceting_tolerance as a string which should raise an error"""
             test_model = paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -169,8 +167,10 @@ class TestShape(unittest.TestCase):
             missing_dagmc_not_watertight_file
         )
 
+    def test_incorrect_faceting_tolerance(self):
+
         def incorrect_faceting_tolerance():
-            "Tries to set faceting_tolerance as a string"
+            """Sets faceting_tolerance as a string which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -183,8 +183,10 @@ class TestShape(unittest.TestCase):
             incorrect_faceting_tolerance
         )
 
+    def test_incorrect_faceting_tolerance_too_small(self):
+
         def incorrect_faceting_tolerance_too_small():
-            "Tries to set faceting_tolerance as a negative number"
+            """Set faceting_tolerance as a negative int which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -197,8 +199,10 @@ class TestShape(unittest.TestCase):
             incorrect_faceting_tolerance_too_small
         )
 
+    def test_incorrect_merge_tolerance(self):
+
         def incorrect_merge_tolerance():
-            "Tries to set merge_tolerance as a string"
+            """Set merge_tolerance as a string which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -211,8 +215,10 @@ class TestShape(unittest.TestCase):
             incorrect_merge_tolerance
         )
 
+    def test_incorrect_merge_tolerance_too_small(self):
+
         def incorrect_merge_tolerance_too_small():
-            "Tries to set merge_tolerance as a negative number"
+            """Set merge_tolerance as a negative number which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -225,8 +231,10 @@ class TestShape(unittest.TestCase):
             incorrect_merge_tolerance_too_small
         )
 
+    def test_incorrect_cell_tallies(self):
+
         def incorrect_cell_tallies():
-            "Tries to set a cell tally that is not accepted"
+            """Set a cell tally that is not accepted which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -239,8 +247,10 @@ class TestShape(unittest.TestCase):
             incorrect_cell_tallies
         )
 
+    def test_incorrect_cell_tally_type(self):
+
         def incorrect_cell_tally_type():
-            "Tries to set a cell tally that is the wrong type"
+            """Set a cell tally that is the wrong type which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -253,8 +263,10 @@ class TestShape(unittest.TestCase):
             incorrect_cell_tally_type
         )
 
+    def test_incorrect_mesh_tally_2d(self):
+
         def incorrect_mesh_tally_2d():
-            "Tries to set a mesh_tally_2D that is not accepted"
+            """Set a mesh_tally_2D that is not accepted which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -267,8 +279,10 @@ class TestShape(unittest.TestCase):
             incorrect_mesh_tally_2d
         )
 
+    def test_incorrect_mesh_tally_2d_type(self):
+
         def incorrect_mesh_tally_2d_type():
-            "Tries to set a mesh_tally_2D that is the wrong type"
+            """Set a mesh_tally_2D that is the wrong type which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -281,8 +295,10 @@ class TestShape(unittest.TestCase):
             incorrect_mesh_tally_2d_type
         )
 
+    def test_incorrect_mesh_tally_3d(self):
+
         def incorrect_mesh_tally_3d():
-            "Tries to set a mesh_tally_3D that is not accepted"
+            """Set a mesh_tally_3D that is not accepted which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -295,8 +311,10 @@ class TestShape(unittest.TestCase):
             incorrect_mesh_tally_3d
         )
 
+    def test_incorrect_mesh_tally_3d_type(self):
+
         def incorrect_mesh_tally_3d_type():
-            "Tries to set a mesh_tally_3D that is the wrong type"
+            """Set a mesh_tally_3D that is the wrong type which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -309,8 +327,10 @@ class TestShape(unittest.TestCase):
             incorrect_mesh_tally_3d_type
         )
 
+    def test_incorrect_materials(self):
+
         def incorrect_materials():
-            "Tries to set a material that is not accepted"
+            """Set a material as a string which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -322,8 +342,10 @@ class TestShape(unittest.TestCase):
             incorrect_materials
         )
 
+    def test_incorrect_materials_type(self):
+
         def incorrect_materials_type():
-            "Tries to set a material that is not accepted"
+            """Sets a material as an int which should raise an error"""
             test_model = paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -337,8 +359,10 @@ class TestShape(unittest.TestCase):
             incorrect_materials_type
         )
 
+    def test_incorrect_simulation_batches_to_small(self):
+
         def incorrect_simulation_batches_to_small():
-            """The simulation batch must be above 2"""
+            """Sets simulation batch below 2 which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -351,8 +375,10 @@ class TestShape(unittest.TestCase):
             incorrect_simulation_batches_to_small
         )
 
+    def test_incorrect_simulation_batches_wrong_type(self):
+
         def incorrect_simulation_batches_wrong_type():
-            """The simulation batch must be above 2"""
+            """Sets simulation_batches as a string which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
@@ -365,8 +391,10 @@ class TestShape(unittest.TestCase):
             incorrect_simulation_batches_wrong_type
         )
 
+    def test_incorrect_simulation_particles_per_batch_wrong_type(self):
+
         def incorrect_simulation_particles_per_batch_wrong_type():
-            """The simulation batch must be above 2"""
+            """Sets simulation_particles_per_batch below 2 which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
