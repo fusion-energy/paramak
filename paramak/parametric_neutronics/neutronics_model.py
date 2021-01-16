@@ -361,7 +361,8 @@ class NeutronicsModel():
                       str(self.faceting_tolerance) + "'\" \"merge_tolerance='" + str(self.merge_tolerance) + "'\"")
 
             if not Path("dagmc_not_watertight.h5m").is_file():
-                raise FileNotFoundError("The dagmc_not_watertight.h5m was not found \
+                raise FileNotFoundError(
+                    "The dagmc_not_watertight.h5m was not found \
                     in the directory, the Trelis stage has failed")
             self._make_watertight()
 
