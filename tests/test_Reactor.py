@@ -747,15 +747,15 @@ class TestReactor(unittest.TestCase):
 
         def str_graveyard_offset():
             test_reactor.graveyard_offset = 'coucou'
+        self.assertRaises(TypeError, str_graveyard_offset)
 
         def negative_graveyard_offset():
             test_reactor.graveyard_offset = -2
+        self.assertRaises(ValueError, negative_graveyard_offset)
 
         def list_graveyard_offset():
             test_reactor.graveyard_offset = [1.2]
-        self.assertRaises(ValueError, str_graveyard_offset)
-        self.assertRaises(ValueError, negative_graveyard_offset)
-        self.assertRaises(ValueError, list_graveyard_offset)
+        self.assertRaises(TypeError, list_graveyard_offset)
 
     def test_compound_in_shapes(self):
         shape1 = paramak.RotateStraightShape(
