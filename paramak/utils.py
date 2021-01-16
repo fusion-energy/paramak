@@ -372,9 +372,9 @@ class EdgeLengthSelector(cq.Selector):
 
     """
 
-    def __init__(self, length: float, tol: float = 0.1):
+    def __init__(self, length: float, tolerance: float = 0.1):
         self.length = length
-        self.tol = tol
+        self.tolerance = tolerance
 
     def filter(self, objectList):
         """Loops through all the edges in the object checking if the edge
@@ -395,7 +395,7 @@ class EdgeLengthSelector(cq.Selector):
             edge_len = obj.Length()
 
             # Only return edges that meet our requirements
-            if edge_len > self.length - self.tol and edge_len < self.length + self.tol:
+            if edge_len > self.length - self.tolerance and edge_len < self.length + self.tolerance:
 
                 new_obj_list.append(obj)
         print('length(new_obj_list)', len(new_obj_list))
