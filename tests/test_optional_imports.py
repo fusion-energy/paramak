@@ -25,7 +25,9 @@ class TestImportErrors(unittest.TestCase):
 
         def get_neutronics_results_from_statepoint_file_raises_error():
             paramak.get_neutronics_results_from_statepoint_file('no_file.h5m')
-        self.assertRaises(ImportError, get_neutronics_results_from_statepoint_file_raises_error)
+        self.assertRaises(
+            ImportError,
+            get_neutronics_results_from_statepoint_file_raises_error)
 
 
 # neutronics material make_graveyard
