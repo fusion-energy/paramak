@@ -23,7 +23,7 @@ class TestPoloidalSegments(unittest.TestCase):
             )
 
         self.assertRaises(
-            ValueError, create_shape)
+            TypeError, create_shape)
 
     def test_solid_count_with_incorect_inputs2(self):
         """Checks the segmenter does not take a negative int as an input."""
