@@ -353,7 +353,7 @@ class FaceAreaSelector(cq.Selector):
             face_area = obj.Area()
 
             # Only return faces that meet the requirements
-            if face_area > self.area - self.tol and face_area < self.area + self.tolerance:
+            if face_area > self.area - self.tolerance and face_area < self.area + self.tolerance:
                 new_obj_list.append(obj)
 
         return new_obj_list
