@@ -17,3 +17,5 @@ dependencies:
     - neutronics-material-maker
     - sympy
     - plasmaboundaries
+    - sphinx-autodoc-typehints
+    
