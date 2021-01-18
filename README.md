@@ -20,6 +20,8 @@ finite element analysis codes.
 
 :point_right: [Video presentation](https://www.youtube.com/embed/fXboew3U7rw)
 
+:point_right: [Publication](https://f1000research.com/articles/10-27/v1)
+
 # History
 
 The package was originally conceived by Jonathan Shimwell and based on the
