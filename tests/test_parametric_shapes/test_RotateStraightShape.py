@@ -136,6 +136,24 @@ class TestRotateStraightShape(unittest.TestCase):
         assert Path("RotateStraightShape.stp").exists() is True
         os.system("rm RotateStraightShape.stp")
 
+    def test_export_stp_extension_in_cm(self):
+        """Creates a RotateStraightShape and checks that a stp file of the
+        shape can be exported with the correct suffix using the export_stp
+        method."""
+
+        os.system("rm filename.stp filename.step")
+        self.test_shape.export_stp("filename.stp", units='cm')
+        self.test_shape.export_stp("filename.step", units='cm')
+        assert Path("filename.stp").exists() is True
+        assert Path("filename.step").exists() is True
+        os.system("rm filename.stp filename.step")
+        self.test_shape.export_stp("filename", units='cm')
+        assert Path("filename.stp").exists() is True
+        os.system("rm filename.stp")
+        self.test_shape.export_stp(units='cm')
+        assert Path("RotateStraightShape.stp").exists() is True
+        os.system("rm RotateStraightShape.stp")
+
     def test_export_stl(self):
         """Creates a RotateStraightShape and checks that a stl file of the
         shape can be exported with the correct suffix using the export_stl
@@ -254,6 +272,18 @@ class TestRotateStraightShape(unittest.TestCase):
             )
 
         self.assertRaises(ValueError, export_mode_incorrect)
+
+    def test_graveyard_filename(self):
+        """Checks the name of the stp file for the Graveyard is correct
+        """
+        output_filename = self.test_shape.export_graveyard()
+        assert 'Graveyard.stp' == output_filename
+
+        output_filename = self.test_shape.export_graveyard(filename='test.stp')
+        assert 'test.stp' == output_filename
+
+        output_filename = self.test_shape.export_graveyard(filename='test2')
+        assert 'test2.stp' == output_filename
 
 
 if __name__ == "__main__":

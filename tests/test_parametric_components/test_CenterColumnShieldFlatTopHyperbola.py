@@ -38,8 +38,7 @@ class TestCenterColumnShieldFlatTopHyperbola(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
-    def test_invalid_parameters_errors(
-            self):
+    def test_invalid_parameters_errors(self):
         """Checks that the correct errors are raised when invalid arguments are input as
         shape parameters."""
 
@@ -48,14 +47,17 @@ class TestCenterColumnShieldFlatTopHyperbola(unittest.TestCase):
             self.test_shape.solid
 
         def incorrect_mid_radius():
-            self.test_shape.mid_radius = 220
+            self.test_shape.inner_radius = 100
+            self.test_shape.mid_radius = 250
             self.test_shape.solid
 
         def incorrect_outer_radius():
+            self.test_shape.mid_radius = 150
             self.test_shape.outer_radius = 130
             self.test_shape.solid
 
         def incorrect_arc_height():
+            self.test_shape.outer_radius = 200
             self.test_shape.arc_height = 700
             self.test_shape.solid
 

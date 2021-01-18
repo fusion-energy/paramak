@@ -1,4 +1,5 @@
 
+from typing import Optional
 from paramak import RotateStraightShape
 
 
@@ -7,25 +8,25 @@ class CuttingWedge(RotateStraightShape):
     can be useful for cutting sector models.
 
     Args:
-        height (float): the vertical (z axis) height of the coil (cm).
-        radius (float): the horizontal (x axis) width of the coil (cm).
-        stp_filename (str, optional): Defaults to "CuttingWedge.stp".
-        stl_filename (str, optional): Defaults to "CuttingWedge.stl".
-        rotation_angle (float, optional): Defaults to 180.0.
-        material_tag (str, optional): Defaults to "cutting_slice_mat".
+        height: the vertical (z axis) height of the coil (cm).
+        radius: the horizontal (x axis) width of the coil (cm).
+        stp_filename: Defaults to "CuttingWedge.stp".
+        stl_filename: Defaults to "CuttingWedge.stl".
+        rotation_angle: Defaults to 180.0.
+        material_tag: Defaults to "cutting_slice_mat".
 
     """
 
     def __init__(
         self,
-        height,
-        radius,
-        stp_filename="CuttingWedge.stp",
-        stl_filename="CuttingWedge.stl",
-        rotation_angle=180.0,
-        material_tag="cutting_slice_mat",
+        height: float,
+        radius: float,
+        stp_filename: Optional[str] = "CuttingWedge.stp",
+        stl_filename: Optional[str] = "CuttingWedge.stl",
+        rotation_angle: Optional[float] = 180.0,
+        material_tag: Optional[str] = "cutting_slice_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             material_tag=material_tag,

@@ -1,4 +1,5 @@
 
+from typing import Optional
 from paramak import RotateMixedShape
 
 
@@ -7,33 +8,28 @@ class CenterColumnShieldCircular(RotateMixedShape):
     cylindrical inner profile.
 
     Args:
-        height (float): height of the center column shield (cm).
-        inner_radius (float): the inner radius of the center column shield
-            (cm).
-        mid_radius (float): the inner radius of the outer hyperbolic profile of
-            the center colunn shield (cm).
-        outer_radius (float): the outer radius of the center column shield.
-        stp_filename (str, optional): Defaults to
-            "CenterColumnShieldCircular.stp".
-        stl_filename (str, optional): Defaults to
-            "CenterColumnShieldCircular.stl".
-        name (str, optional): Defaults to "center_column_shield".
-        material_tag (str, optional): Defaults to
-            "center_column_shield_mat".
+        height: height of the center column shield (cm).
+        inner_radius: the inner radius of the center column shield (cm).
+        mid_radius: the inner radius of the outer hyperbolic profile of the center
+            colunn shield (cm).
+        outer_radius: the outer radius of the center column shield.
+        stp_filename: Defaults to "CenterColumnShieldCircular.stp".
+        stl_filename: Defaults to "CenterColumnShieldCircular.stl".
+        name: Defaults to "center_column_shield".
+        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
         self,
-        height,
-        inner_radius,
-        mid_radius,
-        outer_radius,
-        stp_filename="CenterColumnShieldCircular.stp",
-        stl_filename="CenterColumnShieldCircular.stl",
-        name="center_column_shield",
-        material_tag="center_column_shield_mat",
+        height: float,
+        inner_radius: float,
+        mid_radius: float,
+        outer_radius: float,
+        stp_filename: Optional[str] = "CenterColumnShieldCircular.stp",
+        stl_filename: Optional[str] = "CenterColumnShieldCircular.stl",
+        material_tag: Optional[str] = "center_column_shield_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             material_tag=material_tag,

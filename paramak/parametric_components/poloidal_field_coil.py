@@ -1,4 +1,5 @@
 
+from typing import Optional, Tuple
 from paramak import RotateStraightShape
 
 
@@ -6,27 +7,26 @@ class PoloidalFieldCoil(RotateStraightShape):
     """Creates a rectangular poloidal field coil.
 
     Args:
-        height (float): the vertical (z axis) height of the coil (cm).
-        width (float): the horizontal (x axis) width of the coil (cm).
-        center_point (tuple of floats): the center of the coil (x,z) values
-            (cm).
-        stp_filename (str, optional): defaults to "PoloidalFieldCoil.stp".
-        stl_filename (str, optional): defaults to "PoloidalFieldCoil.stl".
-        name (str, optional): defaults to "pf_coil".
-        material_tag (str, optional): defaults to "pf_coil_mat".
+        height: the vertical (z axis) height of the coil (cm).
+        width: the horizontal (x axis) width of the coil (cm).
+        center_point: the center of the coil (x,z) values (cm).
+        stp_filename: defaults to "PoloidalFieldCoil.stp".
+        stl_filename: defaults to "PoloidalFieldCoil.stl".
+        name: defaults to "pf_coil".
+        material_tag: defaults to "pf_coil_mat".
     """
 
     def __init__(
         self,
-        height,
-        width,
-        center_point,
-        stp_filename="PoloidalFieldCoil.stp",
-        stl_filename="PoloidalFieldCoil.stl",
-        name="pf_coil",
-        material_tag="pf_coil_mat",
+        height: float,
+        width: float,
+        center_point: Tuple[float, float],
+        stp_filename: Optional[str] = "PoloidalFieldCoil.stp",
+        stl_filename: Optional[str] = "PoloidalFieldCoil.stl",
+        name: Optional[str] = "pf_coil",
+        material_tag: Optional[str] = "pf_coil_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             name=name,

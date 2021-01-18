@@ -140,19 +140,30 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         self.test_shape.rotation_angle = 180
         assert self.test_shape.volume == pytest.approx(test_volume * 0.5)
 
-    def test_error(self):
-        """Checks errors are raised with invalid arguments."""
+    def test_ToroidalFieldCoilRectangle_incorrect_horizonal_start_point(self):
+        """Checks that an error is raised when a ToroidalFieldCoilRectangle is made
+        with an incorrect horizontal_start_point."""
 
-        def incorrect_horizontal_start_point():
+        def make_ToroidalFieldCoilRectangle_incorrect_horizontal_start_point():
             self.test_shape.vertical_mid_point = (800, 0)
             self.test_shape.horizontal_start_point = (801, 700)
             self.test_shape.solid
 
-        self.assertRaises(ValueError, incorrect_horizontal_start_point)
+        self.assertRaises(
+            ValueError,
+            make_ToroidalFieldCoilRectangle_incorrect_horizontal_start_point
+        )
 
-        def incorrect_vertical_mid_point():
+    def test_ToroidalFieldCoilRectangle_incorrect_vertical_mid_point(self):
+        """Checks that an error is raised when a ToroidalFieldCoilRectangle is made
+        with an incorrect vertical_mid_point."""
+
+        def make_ToroidalFieldCoilRectangle_incorrect_vertical_mid_point():
             self.test_shape.horizontal_start_point = (100, 700)
             self.test_shape.vertical_mid_point = (800, 701)
             self.test_shape.solid
 
-        self.assertRaises(ValueError, incorrect_vertical_mid_point)
+        self.assertRaises(
+            ValueError,
+            make_ToroidalFieldCoilRectangle_incorrect_vertical_mid_point
+        )

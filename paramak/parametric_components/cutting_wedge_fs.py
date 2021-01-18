@@ -4,6 +4,8 @@ from operator import itemgetter
 
 from paramak import CuttingWedge
 
+SAFETY_FACTOR = 3
+
 
 class CuttingWedgeFS(CuttingWedge):
     """Creates a wedge from a Shape that can be useful for cutting sector
@@ -130,6 +132,5 @@ class CuttingWedgeFS(CuttingWedge):
 
         else:
             raise ValueError('cutting_wedge cannot be created')
-        safety_factor = 3
-        self.radius = safety_factor * max_x
-        self.height = safety_factor * max_y
+        self.radius = SAFETY_FACTOR * max_x
+        self.height = SAFETY_FACTOR * max_y

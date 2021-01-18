@@ -48,10 +48,12 @@ class TestCenterColumnShieldHyperbola(unittest.TestCase):
             self.test_shape.solid
 
         def incorrect_mid_radius():
+            self.test_shape.inner_radius = 100
             self.test_shape.mid_radius = 80
             self.test_shape.solid
 
         def incorrect_outer_radius():
+            self.test_shape.mid_radius = 150
             self.test_shape.outer_radius = 130
             self.test_shape.solid
 

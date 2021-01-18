@@ -1,4 +1,5 @@
 
+from typing import Optional
 import numpy as np
 from paramak import SweepCircleShape
 
@@ -8,41 +9,38 @@ class CoolantChannelRingCurved(SweepCircleShape):
     constant thickness.
 
     Args:
-        height (float): height of each coolant channel in ring.
-        channel_radius (float): radius of each coolant channel in ring.
-        number_of_coolant_channels (float): number of coolant channels in ring.
-        ring_radius (float): radius of coolant channel ring.
+        height: height of each coolant channel in ring.
+        channel_radius: radius of each coolant channel in ring.
+        number_of_coolant_channels: number of coolant channels in ring.
+        ring_radius: radius of coolant channel ring.
+        start_angle: angle at which the first channel in the ring is placed.
+            Defaults to 0.0.
+        stp_filename: Defaults to "CoolantChannelRingCurved.stp".
+        stl_filename: Defaults to "CoolantChannelRingCurved.stl".
+        material_tag: Defaults to "coolant_channel_mat".
+        rotation_axis: azimuthal axis around which the separate coolant channels
+            are placed. Default calculated by workplane and path_workplane.
         workplane (str, optional): plane in which the cross-sections of the
             coolant channels lie. Defaults to "XY".
-        start_angle (float, optional): angle at which the first channel in the
-            ring is placed. Defaults to 0.
-        path_workplane (str, optional): plane in which the cross-sections of
-            the coolant channels are swept. Defaults to "XZ".
-        rotation_axis (str, optional): azimuthal axis around which the separate
-            coolant channels are placed. Default calculated by workplane and
-            path_workplane.
+        path_workplane (str, optional): plane in which the cross-sections of the
+            coolant channels are swept. Defaults to "XZ".
         force_cross_section (bool, optional): forces coolant channels to have a
             more constant cross-section along their curve. Defaults to False.
-        stp_filename (str, optional): Defaults to
-            "CoolantChannelRingCurved.stp".
-        stl_filename (str, optional): Defaults to
-            "CoolantChannelRingCurved.stl".
-        material_tag (str, optional): Defaults to "coolant_channel_mat".
     """
 
     def __init__(
         self,
-        height,
-        channel_radius,
-        number_of_coolant_channels,
-        ring_radius,
-        mid_offset,
-        start_angle=0,
-        stp_filename="CoolantChannelRingCurved.stp",
-        stl_filename="CoolantChannelRingCurved.stl",
-        material_tag="coolant_channel_mat",
+        height: float,
+        channel_radius: float,
+        number_of_coolant_channels: int,
+        ring_radius: float,
+        mid_offset: float,
+        start_angle: Optional[float] = 0.0,
+        stp_filename: Optional[str] = "CoolantChannelRingCurved.stp",
+        stl_filename: Optional[str] = "CoolantChannelRingCurved.stl",
+        material_tag: Optional[str] = "coolant_channel_mat",
         **kwargs
-    ):
+    ) -> None:
 
         self.ring_radius = ring_radius
         self.mid_offset = mid_offset

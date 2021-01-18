@@ -106,16 +106,14 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         as shape parameters."""
 
         def incorrect_inner_radius():
-            self.test_shape.inner_radius = self.test_shape.outer_radius + 1
-            self.test_shape.outer_radius = 20
-            self.test_shape.inner_radius = 40
+            self.test_shape.inner_radius = 250
 
         def incorrect_outer_radius():
-            self.test_shape.outer_radius = self.test_shape.inner_radius + 1
-            self.test_shape.inner_radius = 40
-            self.test_shape.outer_radius = 20
+            self.test_shape.inner_radius = 100
+            self.test_shape.outer_radius = 50
 
         def incorrect_height():
+            self.test_shape.outer_radius = 200
             self.test_shape.height = None
 
         self.assertRaises(ValueError, incorrect_inner_radius)

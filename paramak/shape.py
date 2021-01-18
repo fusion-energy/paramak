@@ -3,10 +3,7 @@ import json
 import numbers
 import warnings
 from collections import Iterable
-from os import fdopen, remove
 from pathlib import Path
-from shutil import copymode, move
-from tempfile import mkstemp
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -18,7 +15,8 @@ from matplotlib.patches import Polygon
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
-from paramak.utils import cut_solid, get_hash, intersect_solid, union_solid
+from paramak.utils import (cut_solid, get_hash, intersect_solid, union_solid,
+                           _replace)
 
 
 class Shape:
@@ -57,6 +55,9 @@ class Shape:
             floats. Defaults to None.
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
             the neutronics description output. Defaults to None.
+        surface_reflectivity (Boolean, optional): If True, a
+            surface_reflectivity flag will be added to the neutronics
+            description output. Defaults to None.
         physical_groups (dict, optional): contains information on physical
             groups (volumes and surfaces). Defaults to None.
         cut (paramak.shape or list, optional): If set, the current solid will
@@ -72,17 +73,18 @@ class Shape:
 
     def __init__(
         self,
-        points=None,
+        points: list = None,
         connection_type="mixed",
         name=None,
         color=(0.5, 0.5, 0.5),
-        material_tag=None,
-        stp_filename=None,
-        stl_filename=None,
+        material_tag: str = None,
+        stp_filename: str = None,
+        stl_filename: str = None,
         azimuth_placement_angle=0.0,
-        workplane="XZ",
+        workplane: str = "XZ",
         rotation_axis=None,
-        tet_mesh=None,
+        tet_mesh: str = None,
+        surface_reflectivity: bool = False,
         physical_groups=None,
         cut=None,
         intersect=None,
@@ -107,6 +109,7 @@ class Shape:
         # neutronics specific properties
         self.material_tag = material_tag
         self.tet_mesh = tet_mesh
+        self.surface_reflectivity = surface_reflectivity
 
         self.physical_groups = physical_groups
 
@@ -185,7 +188,7 @@ class Shape:
         """Calculates a bounding box for the Shape and returns the largest
         absolute value of the largest dimension of the bounding box"""
         largest_dimension = 0
-        if isinstance(self.solid, cq.Compound):
+        if isinstance(self.solid, (cq.Compound, cq.occ_impl.shapes.Solid)):
             for solid in self.solid.Solids():
                 largest_dimension = max(
                     abs(self.solid.BoundingBox().xmax),
@@ -577,15 +580,12 @@ class Shape:
                 if self.workplane in ["XZ", "YX", "ZY"]:
                     factor *= -1
 
-                solid = cq.Workplane(self.workplane).moveTo(0, 0)
+                solid = cq.Workplane(self.workplane).center(0, 0)
 
                 if self.force_cross_section:
                     for point in self.path_points[:-1]:
-                        solid = solid.workplane(
-                            offset=point[1] *
-                            factor).moveTo(
-                            point[0],
-                            0).workplane()
+                        solid = solid.workplane(offset=point[1] * factor).\
+                            center(point[0], 0).workplane()
                         for entry in instructions:
                             if list(entry.keys())[0] == "spline":
                                 solid = solid.spline(
@@ -594,16 +594,16 @@ class Shape:
                                 solid = solid.polyline(list(entry.values())[0])
                             if list(entry.keys())[0] == "circle":
                                 p0, p1, p2 = list(entry.values())[0][:3]
-                                solid = solid.moveTo(
-                                    p0[0], p0[1]).threePointArc(
-                                    p1, p2)
-                        solid = solid.close().moveTo(
-                            0, 0).moveTo(-point[0], 0).workplane(offset=-point[1] * factor)
+                                solid = solid.moveTo(p0[0], p0[1]).\
+                                    threePointArc(p1, p2)
+                        solid = solid.close()
+                        solid = solid.center(-point[0], 0).\
+                            workplane(offset=-point[1] * factor)
 
                 elif self.force_cross_section == False:
                     solid = solid.workplane(
                         offset=self.path_points[0][1] *
-                        factor).moveTo(
+                        factor).center(
                         self.path_points[0][0],
                         0).workplane()
                     for entry in instructions:
@@ -620,12 +620,12 @@ class Shape:
                                 p0[0], p0[1]).threePointArc(
                                 p1, p2)
 
-                    solid = solid.close().moveTo(0,
-                                                 0).moveTo(-self.path_points[0][0],
-                                                           0).workplane(offset=-self.path_points[0][1] * factor)
+                    solid = solid.close().center(0, 0).\
+                        center(-self.path_points[0][0], 0).\
+                        workplane(offset=-self.path_points[0][1] * factor)
 
-                solid = solid.workplane(
-                    offset=self.path_points[-1][1] * factor).moveTo(self.path_points[-1][0], 0).workplane()
+                solid = solid.workplane(offset=self.path_points[-1][1] * factor).\
+                    center(self.path_points[-1][0], 0).workplane()
 
             else:
                 # for rotate and extrude shapes
@@ -732,7 +732,7 @@ class Shape:
 
         return self.x_min, self.x_max, self.z_min, self.z_max
 
-    def export_stl(self, filename, tolerance=0.001):
+    def export_stl(self, filename: str, tolerance: float = 0.001) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
             doesn't end with .stl it will be added
 
@@ -754,7 +754,11 @@ class Shape:
 
         return str(path_filename)
 
-    def export_stp(self, filename=None, units='mm', mode='solid'):
+    def export_stp(
+            self,
+            filename=None,
+            units='mm',
+            mode: str = 'solid') -> str:
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -791,7 +795,7 @@ class Shape:
                     only accepts 'solid' or 'wire'", self)
 
         if units == 'cm':
-            self._replace(
+            _replace(
                 path_filename,
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
@@ -800,7 +804,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_physical_groups(self, filename):
+    def export_physical_groups(self, filename: str) -> str:
         """Exports a JSON file containing a look up table which is useful for
         identifying faces and volumes. If filename provided doesn't end with
         .json then .json will be added.
@@ -828,9 +832,9 @@ class Shape:
                 )
             )
 
-        return filename
+        return str(path_filename)
 
-    def export_svg(self, filename):
+    def export_svg(self, filename: str) -> str:
         """Exports an svg file for the Shape.solid. If the provided filename
         doesn't end with .svg it will be added.
 
@@ -851,7 +855,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_html(self, filename):
+    def export_html(self, filename: str):
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
         Shapes are also labelled by their .name. If filename provided doesn't
@@ -958,7 +962,8 @@ class Shape:
         return trace
 
     def export_2d_image(
-            self, filename, xmin=0., xmax=900., ymin=-600., ymax=600.):
+            self, filename: str, xmin: float = 0., xmax: float = 900.,
+            ymin: float = -600., ymax: float = 600.):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
@@ -1030,7 +1035,7 @@ class Shape:
         self.patch = patch
         return patch
 
-    def neutronics_description(self):
+    def neutronics_description(self) -> dict:
         """Returns a neutronics description of the Shape object. This is needed
         for the use with automated neutronics model methods which require
         linkage between the stp files and materials. If tet meshing of the
@@ -1050,6 +1055,9 @@ class Shape:
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
+
+        if self.surface_reflectivity is True:
+            neutronics_description["surface_reflectivity"] = self.surface_reflectivity
 
         if self.stl_filename is not None:
             neutronics_description["stl_filename"] = self.stl_filename
@@ -1081,34 +1089,7 @@ class Shape:
 
         return solid
 
-    def _replace(self, filename, pattern, subst):
-        """Opens a file and replaces occurances of a particular string
-            (pattern)with a new string (subst) and overwrites the file.
-            Used internally within the paramak to ensure .STP files are
-            in units of cm not the default mm.
-        Args:
-            filename (str): the filename of the file to edit
-            pattern (str): the string that should be removed
-            subst (str): the string that should be used in the place of the
-                pattern string
-        """
-        # Create temp file
-        file_handle, abs_path = mkstemp()
-        with fdopen(file_handle, 'w') as new_file:
-            with open(filename) as old_file:
-                for line in old_file:
-                    new_file.write(line.replace(pattern, subst))
-
-        # Copy the file permissions from the old file to the new file
-        copymode(filename, abs_path)
-
-        # Remove original file
-        remove(filename)
-
-        # Move new file
-        move(abs_path, filename)
-
-    def make_graveyard(self, graveyard_offset=100):
+    def make_graveyard(self, graveyard_offset: int = 100):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -1142,10 +1123,10 @@ class Shape:
 
     def export_h5m(
             self,
-            filename='dagmc.h5m',
-            skip_graveyard=False,
-            tolerance=0.001,
-            graveyard_offset=100):
+            filename: str = 'dagmc.h5m',
+            skip_graveyard: bool = False,
+            tolerance: float = 0.001,
+            graveyard_offset: float = 100) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -1208,12 +1189,12 @@ class Shape:
 
         moab_core.write_file(str(path_filename))
 
-        return filename
+        return str(path_filename)
 
     def export_graveyard(
             self,
-            graveyard_offset=100,
-            filename="Graveyard.stp"):
+            graveyard_offset: float = 100,
+            filename: str = "Graveyard.stp") -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -1229,6 +1210,6 @@ class Shape:
         """
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
-        self.graveyard.export_stp(Path(filename))
+        new_filename = self.graveyard.export_stp(Path(filename))
 
-        return filename
+        return new_filename

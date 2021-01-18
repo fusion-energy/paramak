@@ -1,11 +1,13 @@
 
 import json
 import os
+import pathlib
+import shutil
 import warnings
-from collections import defaultdict
 from pathlib import Path
+from typing import List
 
-import matplotlib.pyplot as plt
+from paramak import get_neutronics_results_from_statepoint_file
 
 try:
     import openmc
@@ -24,12 +26,14 @@ except ImportError:
 class NeutronicsModel():
     """Creates a neuronics model of the provided shape geometry with assigned
     materials, source and neutronics tallies. There are three methods
-    available for producing the imprinted and merged h5m geometry (PyMoab, PPP
-    or Trelis) and one method of producing non imprinted and non merged
-    geometry (PyMoab). make_watertight is also used to seal the DAGMC geoemtry.
-    If using the Trelis option you must have the
-    make_faceteted_neutronics_model.py in the same directory as your Python
-    script. Further details on imprinting and merging are available on the
+    available for producing the the DAGMC h5m file. The PyMoab option is able
+    to produce non imprinted and non merged geometry so is more suited to
+    individual components or reactors without touching surfaces. Trelis is
+    the only method currently able to produce imprinted and merged DAGMC h5m
+    geometry. PPP is a experimental route that has not been fully demonstrated
+    yet but is partly intergrated to test this promising new method.
+    make_watertight is also used to seal the DAGMC geoemtry produced by Trelis.
+    Further details on imprinting and merging are available on the
     DAGMC homepage
     https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
     The Parallel-PreProcessor is an open-source tool available
@@ -37,7 +41,8 @@ class NeutronicsModel():
     conjunction with the OCC_faceter
     (https://github.com/makeclean/occ_faceter) to create imprinted and
     merged geometry while Trelis (also known as Cubit) is available from
-    the CoreForm website https://www.coreform.com/
+    the CoreForm website https://www.coreform.com/ version 17.1 is the version
+    of Trelis used when testing the Paramak code.
 
     Arguments:
         geometry (paramak.Shape, paramak.Rector): The geometry to convert to a
@@ -77,13 +82,15 @@ class NeutronicsModel():
         materials,
         cell_tallies=None,
         mesh_tally_2D=None,
-        simulation_batches=100,
-        simulation_particles_per_batch=10000,
-        max_lost_particles=10,
-        faceting_tolerance=1e-1,
-        merge_tolerance=1e-4,
-        mesh_2D_resolution=(400, 400),
-        fusion_power=1e9  # convert from watts to activity source_activity
+        mesh_tally_3D=None,
+        simulation_batches: int = 100,
+        simulation_particles_per_batch: int = 10000,
+        max_lost_particles: int = 10,
+        faceting_tolerance: float = 1e-1,
+        merge_tolerance: float = 1e-4,
+        mesh_2D_resolution: float = (400, 400),
+        mesh_3D_resolution: float = (100, 100, 100),
+        fusion_power: float = 1e9  # convert from watts to activity source_activity
     ):
 
         self.materials = materials
@@ -91,14 +98,20 @@ class NeutronicsModel():
         self.source = source
         self.cell_tallies = cell_tallies
         self.mesh_tally_2D = mesh_tally_2D
+        self.mesh_tally_3D = mesh_tally_3D
         self.simulation_batches = simulation_batches
         self.simulation_particles_per_batch = simulation_particles_per_batch
         self.max_lost_particles = max_lost_particles
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
         self.mesh_2D_resolution = mesh_2D_resolution
-        self.model = None
+        self.mesh_3D_resolution = mesh_3D_resolution
         self.fusion_power = fusion_power
+        self.model = None
+        self.results = None
+        self.tallies = None
+        self.output_filename = None
+        self.statepoint_filename = None
 
     @property
     def faceting_tolerance(self):
@@ -143,7 +156,7 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.cell_tallies should be a\
                     list")
-            output_options = ['TBR', 'heating', 'flux', 'fast flux', 'dose']
+            output_options = ['TBR', 'heating', 'flux', 'spectra', 'dose']
             for entry in value:
                 if entry not in output_options:
                     raise ValueError(
@@ -174,6 +187,28 @@ class NeutronicsModel():
                         "not allowed, the following options are supported",
                         output_options)
         self._mesh_tally_2D = value
+
+    @property
+    def mesh_tally_3D(self):
+        return self._mesh_tally_3D
+
+    @mesh_tally_3D.setter
+    def mesh_tally_3D(self, value):
+        if value is not None:
+            if not isinstance(value, list):
+                raise TypeError(
+                    "NeutronicsModelFromReactor.mesh_tally_3D should be a\
+                    list")
+            output_options = ['tritium_production', 'heating', 'flux',
+                              'fast flux', 'dose']
+            for entry in value:
+                if entry not in output_options:
+                    raise ValueError(
+                        "NeutronicsModelFromReactor.mesh_tally_3D argument",
+                        entry,
+                        "not allowed, the following options are supported",
+                        output_options)
+        self._mesh_tally_3D = value
 
     @property
     def materials(self):
@@ -217,7 +252,7 @@ class NeutronicsModel():
                     should be an int")
         self._simulation_particles_per_batch = value
 
-    def create_material(self, material_tag, material_entry):
+    def create_material(self, material_tag: str, material_entry):
         if isinstance(material_entry, str):
             openmc_material = nmm.Material(
                 material_entry,
@@ -263,46 +298,60 @@ class NeutronicsModel():
 
         return self.mats
 
-    def create_neutronics_geometry(self, method=None):
+    def create_neutronics_geometry(self, method: str = None):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations.
 
         Arguments:
             method: (str): The method to use when making the imprinted and
-                merged geometry. Options are "ppp", "trelis", "pymoab".
-                Defaults to None.
+                merged geometry. Options are "ppp", "trelis", "pymoab" and
+                None.  Defaults to None.
         """
 
-        os.system('rm dagmc_not_watertight.h5m')
-        os.system('rm dagmc.h5m')
-
-        if method not in ['ppp', 'trelis', 'pymoab']:
+        if method in ['ppp', 'trelis', 'pymoab']:
+            os.system('rm dagmc_not_watertight.h5m')
+            os.system('rm dagmc.h5m')
+        elif method is None and Path('dagmc.h5m').is_file():
+            print('Using previously made dagmc.h5m file')
+        else:
             raise ValueError(
                 "the method using in create_neutronics_geometry \
-                should be either ppp or trelis not", method)
+                should be either ppp, trelis, pymoab or None.", method)
 
         if method == 'ppp':
 
-            self.geometry.export_stp()
-            self.geometry.export_neutronics_description()
-            # as the installer connects to the system python not the conda
-            # python this full path is needed for now
-            if os.system(
-                    '/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json') != 0:
-                raise ValueError(
-                    "geomPipeline.py failed, check PPP is installed")
+            raise NotImplementedError(
+                "PPP + OCC Faceter / Gmesh option is under development and not \
+                ready to be implemented. Further details on the repositories \
+                https://github.com/makeclean/occ_faceter/ \
+                https://github.com/ukaea/parallel-preprocessor ")
 
-            # TODO allow tolerance to be user controlled
-            if os.system(
-                    'occ_faceter manifest_processed/manifest_processed.brep') != 0:
-                raise ValueError(
-                    "occ_faceter failed, check occ_faceter is install and the \
-                    occ_faceter/bin folder is in the path directory")
-            self._make_watertight()
+            # TODO when the development is ready to test
+            # self.geometry.export_stp()
+            # self.geometry.export_neutronics_description()
+            # # as the installer connects to the system python not the conda
+            # # python this full path is needed for now
+            # if os.system(
+            #         '/usr/bin/python3 /usr/bin/geomPipeline.py manifest.json') != 0:
+            #     raise ValueError(
+            #         "geomPipeline.py failed, check PPP is installed")
+
+            # # TODO allow tolerance to be user controlled
+            # if os.system(
+            #         'occ_faceter manifest_processed/manifest_processed.brep') != 0:
+            #     raise ValueError(
+            #         "occ_faceter failed, check occ_faceter is install and the \
+            #         occ_faceter/bin folder is in the path directory")
+            # self._make_watertight()
 
         elif method == 'trelis':
             self.geometry.export_stp()
             self.geometry.export_neutronics_description()
+
+            shutil.copy(
+                src=pathlib.Path(__file__).parent.absolute() /
+                'make_faceteted_neutronics_model.py',
+                dst=pathlib.Path().absolute())
 
             if not Path("make_faceteted_neutronics_model.py").is_file():
                 raise FileNotFoundError(
@@ -312,7 +361,8 @@ class NeutronicsModel():
                       str(self.faceting_tolerance) + "'\" \"merge_tolerance='" + str(self.merge_tolerance) + "'\"")
 
             if not Path("dagmc_not_watertight.h5m").is_file():
-                raise ValueError("The dagmc_not_watertight.h5m was not found \
+                raise FileNotFoundError(
+                    "The dagmc_not_watertight.h5m was not found \
                     in the directory, the Trelis stage has failed")
             self._make_watertight()
 
@@ -322,8 +372,7 @@ class NeutronicsModel():
                 filename='dagmc.h5m',
                 tolerance=self.faceting_tolerance
             )
-
-        print('neutronics model saved as dagmc.h5m')
+        return 'dagmc.h5m'
 
     def _make_watertight(self):
         """Runs the DAGMC make_watertight script thatt seals the facetets of
@@ -339,7 +388,7 @@ class NeutronicsModel():
                 "make_watertight failed, check DAGMC is install and the \
                     DAGMC/bin folder is in the path directory")
 
-    def create_neutronics_model(self, method=None):
+    def create_neutronics_model(self, method: str = None):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (cell_tallies and mesh_tally_2D), simulation settings (batches,
         particles per batch).
@@ -371,137 +420,173 @@ class NeutronicsModel():
         settings.max_lost_particles = self.max_lost_particles
 
         # details about what neutrons interactions to keep track of (tally)
-        tallies = openmc.Tallies()
+        self.tallies = openmc.Tallies()
+
+        if self.mesh_tally_3D is not None:
+            mesh_xyz = openmc.RegularMesh(mesh_id=1, name='3d_mesh')
+            mesh_xyz.dimension = self.mesh_3D_resolution
+            mesh_xyz.lower_left = [
+                -self.geometry.largest_dimension,
+                -self.geometry.largest_dimension,
+                -self.geometry.largest_dimension
+            ]
+
+            mesh_xyz.upper_right = [
+                self.geometry.largest_dimension,
+                self.geometry.largest_dimension,
+                self.geometry.largest_dimension
+            ]
+
+            for standard_tally in self.mesh_tally_3D:
+                if standard_tally == 'tritium_production':
+                    score = '(n,Xt)'  # where X is a wild card
+                    prefix = 'tritium_production'
+                else:
+                    score = standard_tally
+                    prefix = standard_tally
+
+                mesh_filter = openmc.MeshFilter(mesh_xyz)
+                tally = openmc.Tally(name=prefix + '_on_3D_mesh')
+                tally.filters = [mesh_filter]
+                tally.scores = [score]
+                self.tallies.append(tally)
 
         if self.mesh_tally_2D is not None:
 
             # Create mesh which will be used for tally
-            mesh_xz = openmc.RegularMesh()
+            mesh_xz = openmc.RegularMesh(mesh_id=2, name='2d_mesh_xz')
+
             mesh_xz.dimension = [
                 self.mesh_2D_resolution[1],
                 1,
-                self.mesh_2D_resolution[0]]
-            mesh_xz.lower_left = [-self.geometry.largest_dimension, -
-                                  1, -self.geometry.largest_dimension]
+                self.mesh_2D_resolution[0]
+            ]
+
+            mesh_xz.lower_left = [
+                -self.geometry.largest_dimension,
+                -1,
+                -self.geometry.largest_dimension
+            ]
+
             mesh_xz.upper_right = [
                 self.geometry.largest_dimension,
                 1,
-                self.geometry.largest_dimension]
+                self.geometry.largest_dimension
+            ]
 
-            mesh_xy = openmc.RegularMesh()
+            mesh_xy = openmc.RegularMesh(mesh_id=3, name='2d_mesh_xy')
             mesh_xy.dimension = [
                 self.mesh_2D_resolution[1],
                 self.mesh_2D_resolution[0],
-                1]
-            mesh_xy.lower_left = [-self.geometry.largest_dimension, -
-                                  self.geometry.largest_dimension, -1]
+                1
+            ]
+
+            mesh_xy.lower_left = [
+                -self.geometry.largest_dimension,
+                -self.geometry.largest_dimension,
+                -1
+            ]
+
             mesh_xy.upper_right = [
                 self.geometry.largest_dimension,
                 self.geometry.largest_dimension,
-                1]
+                1
+            ]
 
-            mesh_yz = openmc.RegularMesh()
-            mesh_yz.dimension = [1,
-                                 self.mesh_2D_resolution[1],
-                                 self.mesh_2D_resolution[0]]
-            mesh_yz.lower_left = [-1, -self.geometry.largest_dimension, -
-                                  self.geometry.largest_dimension]
-            mesh_yz.upper_right = [1,
-                                   self.geometry.largest_dimension,
-                                   self.geometry.largest_dimension]
+            mesh_yz = openmc.RegularMesh(mesh_id=4, name='2d_mesh_yz')
+            mesh_yz.dimension = [
+                1,
+                self.mesh_2D_resolution[1],
+                self.mesh_2D_resolution[0]
+            ]
 
-            if 'tritium_production' in self.mesh_tally_2D:
-                mesh_filter = openmc.MeshFilter(mesh_xz)
-                mesh_tally = openmc.Tally(
-                    name='tritium_production_on_2D_mesh_xz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['(n,Xt)']
-                tallies.append(mesh_tally)
+            mesh_yz.lower_left = [
+                -1,
+                -self.geometry.largest_dimension,
+                -self.geometry.largest_dimension
+            ]
 
-                mesh_filter = openmc.MeshFilter(mesh_xy)
-                mesh_tally = openmc.Tally(
-                    name='tritium_production_on_2D_mesh_xy')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['(n,Xt)']
-                tallies.append(mesh_tally)
+            mesh_yz.upper_right = [
+                1,
+                self.geometry.largest_dimension,
+                self.geometry.largest_dimension
+            ]
 
-                mesh_filter = openmc.MeshFilter(mesh_yz)
-                mesh_tally = openmc.Tally(
-                    name='tritium_production_on_2D_mesh_yz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['(n,Xt)']
-                tallies.append(mesh_tally)
+            for standard_tally in self.mesh_tally_2D:
+                if standard_tally == 'tritium_production':
+                    score = '(n,Xt)'  # where X is a wild card
+                    prefix = 'tritium_production'
+                else:
+                    score = standard_tally
+                    prefix = standard_tally
 
-            if 'heating' in self.mesh_tally_2D:
-                mesh_filter = openmc.MeshFilter(mesh_xz)
-                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_xz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['heating']
-                tallies.append(mesh_tally)
-
-                mesh_filter = openmc.MeshFilter(mesh_xy)
-                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_xy')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['heating']
-                tallies.append(mesh_tally)
-
-                mesh_filter = openmc.MeshFilter(mesh_yz)
-                mesh_tally = openmc.Tally(name='heating_on_2D_mesh_yz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['heating']
-                tallies.append(mesh_tally)
-
-            if 'flux' in self.mesh_tally_2D:
-                mesh_filter = openmc.MeshFilter(mesh_xz)
-                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_xz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['flux']
-                tallies.append(mesh_tally)
-
-                mesh_filter = openmc.MeshFilter(mesh_xy)
-                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_xy')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['flux']
-                tallies.append(mesh_tally)
-
-                mesh_filter = openmc.MeshFilter(mesh_yz)
-                mesh_tally = openmc.Tally(name='flux_on_2D_mesh_yz')
-                mesh_tally.filters = [mesh_filter]
-                mesh_tally.scores = ['flux']
-                tallies.append(mesh_tally)
+                for mesh_filter, plane in zip(
+                        [mesh_xz, mesh_xy, mesh_yz], ['xz', 'xy', 'yz']):
+                    mesh_filter = openmc.MeshFilter(mesh_filter)
+                    tally = openmc.Tally(name=prefix + '_on_2D_mesh_' + plane)
+                    tally.filters = [mesh_filter]
+                    tally.scores = [score]
+                    self.tallies.append(tally)
 
         if self.cell_tallies is not None:
 
-            if 'TBR' in self.cell_tallies:
-                blanket_mat = self.openmc_materials['blanket_mat']
-                material_filter = openmc.MaterialFilter(blanket_mat)
-                tally = openmc.Tally(name="TBR")
-                tally.filters = [material_filter]
-                tally.scores = ["(n,Xt)"]  # where X is a wild card
-                tallies.append(tally)
+            for standard_tally in self.cell_tallies:
+                if standard_tally == 'TBR':
+                    score = '(n,Xt)'  # where X is a wild card
+                    sufix = 'TBR'
+                    tally = openmc.Tally(name='TBR')
+                    tally.scores = [score]
+                    self.tallies.append(tally)
+                    self._add_tally_for_every_material(sufix, score)
 
-            if 'heating' in self.cell_tallies:
-                for key, value in self.openmc_materials.items():
-                    if key != 'DT_plasma':
-                        material_filter = openmc.MaterialFilter(value)
-                        tally = openmc.Tally(name=key + "_heating")
-                        tally.filters = [material_filter]
-                        tally.scores = ["heating"]
-                        tallies.append(tally)
+                elif standard_tally == 'spectra':
+                    neutron_particle_filter = openmc.ParticleFilter([
+                                                                    'neutron'])
+                    photon_particle_filter = openmc.ParticleFilter(['photon'])
+                    energy_bins = openmc.mgxs.GROUP_STRUCTURES['CCFE-709']
+                    energy_filter = openmc.EnergyFilter(energy_bins)
 
-            if 'flux' in self.cell_tallies:
-                for key, value in self.openmc_materials.items():
-                    if key != 'DT_plasma':
-                        material_filter = openmc.MaterialFilter(value)
-                        tally = openmc.Tally(name=key + "_flux")
-                        tally.filters = [material_filter]
-                        tally.scores = ["flux"]
-                        tallies.append(tally)
+                    self._add_tally_for_every_material(
+                        'neutron_spectra',
+                        'flux',
+                        [neutron_particle_filter, energy_filter]
+                    )
+
+                    self._add_tally_for_every_material(
+                        'photon_spectra',
+                        'flux',
+                        [photon_particle_filter, energy_filter]
+                    )
+                else:
+                    score = standard_tally
+                    sufix = standard_tally
+                    self._add_tally_for_every_material(sufix, score)
 
         # make the model from gemonetry, materials, settings and tallies
-        self.model = openmc.model.Model(geom, self.mats, settings, tallies)
+        self.model = openmc.model.Model(
+            geom, self.mats, settings, self.tallies)
 
-    def simulate(self, verbose=True, method=None):
+    def _add_tally_for_every_material(self, sufix: str, score: str,
+                                      additional_filters: List = None) -> None:
+        """Adds a tally to self.tallies for every material.
+
+        Arguments:
+            sufix: the string to append to the end of the tally name to help
+                identify the tally later.
+            score: the openmc.Tally().scores value that contribute to the tally
+        """
+        if additional_filters is None:
+            additional_filters = []
+        for key, value in self.openmc_materials.items():
+            if key != 'DT_plasma':
+                material_filter = openmc.MaterialFilter(value)
+                tally = openmc.Tally(name=key + '_' + sufix)
+                tally.filters = [material_filter] + additional_filters
+                tally.scores = [score]
+                self.tallies.append(tally)
+
+    def simulate(self, verbose: bool = True, method: str = None,
+                 cell_tally_results_filename: str = 'results.json'):
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
 
@@ -522,98 +607,21 @@ class NeutronicsModel():
         # Deletes summary.h5m if it already exists.
         # This avoids permission problems when trying to overwrite the file
         os.system('rm summary.h5')
+        os.system('rm statepoint.' + str(self.simulation_batches) + '.h5')
 
-        self.output_filename = self.model.run(output=verbose)
-        self.results = self.get_results()
+        # this removes any old file from previous simulations
+        os.system('rm geometry.xml')
+        os.system('rm materials.xml')
+        os.system('rm settings.xml')
+        os.system('rm tallies.xml')
 
-        return self.output_filename
+        self.statepoint_filename = self.model.run(output=verbose)
+        self.results = get_neutronics_results_from_statepoint_file(
+            statepoint_filename=self.statepoint_filename,
+            fusion_power=self.fusion_power
+        )
 
-    def get_results(self):
-        """Reads the output file from the neutronics simulation
-        and prints the TBR tally result to screen
+        with open(cell_tally_results_filename, 'w') as outfile:
+            json.dump(self.results, outfile, indent=4, sort_keys=True)
 
-        Returns:
-            dict: a dictionary of the simulation results
-        """
-
-        # open the results file
-        sp = openmc.StatePoint(self.output_filename)
-
-        results = defaultdict(dict)
-
-        # access the tallies
-        for tally in sp.tallies.values():
-
-            if tally.name == 'TBR':
-
-                df = tally.get_pandas_dataframe()
-                tally_result = df["mean"].sum()
-                tally_std_dev = df['std. dev.'].sum()
-                results[tally.name] = {
-                    'result': tally_result,
-                    'std. dev.': tally_std_dev,
-                }
-
-            if tally.name.endswith('heating'):
-
-                df = tally.get_pandas_dataframe()
-                tally_result = df["mean"].sum()
-                tally_std_dev = df['std. dev.'].sum()
-                results[tally.name]['MeV per source particle'] = {
-                    'result': tally_result / 1e6,
-                    'std. dev.': tally_std_dev / 1e6,
-                }
-                results[tally.name]['Watts'] = {
-                    'result': tally_result * 1.602176487e-19 * (self.fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
-                    'std. dev.': tally_std_dev * 1.602176487e-19 * (self.fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
-                }
-
-            if tally.name.endswith('flux'):
-
-                df = tally.get_pandas_dataframe()
-                tally_result = df["mean"].sum()
-                tally_std_dev = df['std. dev.'].sum()
-                results[tally.name]['Flux per source particle'] = {
-                    'result': tally_result,
-                    'std. dev.': tally_std_dev,
-                }
-
-            if tally.name.startswith('tritium_production_on_2D_mesh'):
-
-                my_tally = sp.get_tally(name=tally.name)
-                my_slice = my_tally.get_slice(scores=['(n,Xt)'])
-
-                my_slice.mean.shape = self.mesh_2D_resolution
-
-                fig = plt.subplot()
-                fig.imshow(my_slice.mean).get_figure().savefig(
-                    'tritium_production_on_2D_mesh' + tally.name[-3:], dpi=300)
-                fig.clear()
-
-            if tally.name.startswith('heating_on_2D_mesh'):
-
-                my_tally = sp.get_tally(name=tally.name)
-                my_slice = my_tally.get_slice(scores=['heating'])
-
-                my_slice.mean.shape = self.mesh_2D_resolution
-
-                fig = plt.subplot()
-                fig.imshow(my_slice.mean).get_figure().savefig(
-                    'heating_on_2D_mesh' + tally.name[-3:], dpi=300)
-                fig.clear()
-
-            if tally.name.startswith('flux_on_2D_mesh'):
-
-                my_tally = sp.get_tally(name=tally.name)
-                my_slice = my_tally.get_slice(scores=['flux'])
-
-                my_slice.mean.shape = self.mesh_2D_resolution
-
-                fig = plt.subplot()
-                fig.imshow(my_slice.mean).get_figure().savefig(
-                    'flux_on_2D_mesh' + tally.name[-3:], dpi=300)
-                fig.clear()
-
-        self.results = json.dumps(results, indent=4, sort_keys=True)
-
-        return results
+        return self.statepoint_filename

@@ -1,4 +1,5 @@
 
+from typing import Optional
 from paramak import RotateMixedShape
 
 
@@ -8,34 +9,32 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
     cylindrical inner profile.
 
     Args:
-        height (float): height of the center column shield.
-        arc_height (float): height of the outer circular profile of the center
+        height: height of the center column shield.
+        arc_height: height of the outer circular profile of the center column
+            shield.
+        inner_radius: the inner radius of the center column shield.
+        mid_radius: the inner radius of the outer circular profile of the center
             column shield.
-        inner_radius (float): the inner radius of the center column shield.
-        mid_radius (float): the inner radius of the outer circular profile of
-            the center column shield.
-        outer_radius (float): the outer radius of the center column shield.
-        stp_filename (str, optional): Defaults to
-            "CenterColumnShieldFlatTopCircular.stp".
-        stl_filename (str, optional): Defaults to
-            "CenterColumnShieldFlatTopCircular.stl".
-        name (str, optional): Defaults to "center_column".
-        material_tag (str, optional): Defaults to "center_column_shield_mat".
+        outer_radius: the outer radius of the center column shield.
+        stp_filename: Defaults to "CenterColumnShieldFlatTopCircular.stp".
+        stl_filename: Defaults to "CenterColumnShieldFlatTopCircular.stl".
+        name: Defaults to "center_column".
+        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
         self,
-        height,
-        arc_height,
-        inner_radius,
-        mid_radius,
-        outer_radius,
-        stp_filename="CenterColumnShieldFlatTopCircular.stp",
-        stl_filename="CenterColumnShieldFlatTopCircular.stl",
-        name="center_column",
-        material_tag="center_column_shield_mat",
+        height: float,
+        arc_height: float,
+        inner_radius: float,
+        mid_radius: float,
+        outer_radius: float,
+        stp_filename: Optional[str] = "CenterColumnShieldFlatTopCircular.stp",
+        stl_filename: Optional[str] = "CenterColumnShieldFlatTopCircular.stl",
+        name: Optional[str] = "center_column",
+        material_tag: Optional[str] = "center_column_shield_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             name=name,

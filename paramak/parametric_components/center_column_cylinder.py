@@ -1,31 +1,30 @@
 
+from typing import Optional
 from paramak import RotateStraightShape
 
 
 class CenterColumnShieldCylinder(RotateStraightShape):
     """A cylindrical center column shield volume with constant thickness.
 
-    Arguments:
-        height (float): height of the center column shield.
-        inner_radius (float): the inner radius of the center column shield.
-        outer_radius (float): the outer radius of the center column shield.
-        stp_filename (str, optional): Defaults to
-            "CenterColumnShieldCylinder.stp".
-        stl_filename (str, optional): Defaults to
-            "CenterColumnShieldCylinder.stl".
-        material_tag (str, optional): Defaults to "center_column_shield_mat".
+    Args:
+        height: height of the center column shield.
+        inner_radius: the inner radius of the center column shield.
+        outer_radius: the outer radius of the center column shield.
+        stp_filename: Defaults to "CenterColumnShieldCylinder.stp".
+        stl_filename: Defaults to "CenterColumnShieldCylinder.stl".
+        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
         self,
-        height,
-        inner_radius,
-        outer_radius,
-        stp_filename="CenterColumnShieldCylinder.stp",
-        stl_filename="CenterColumnShieldCylinder.stl",
-        material_tag="center_column_shield_mat",
+        height: float,
+        inner_radius: float,
+        outer_radius: float,
+        stp_filename: Optional[str] = "CenterColumnShieldCylinder.stp",
+        stl_filename: Optional[str] = "CenterColumnShieldCylinder.stl",
+        material_tag: Optional[str] = "center_column_shield_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             material_tag=material_tag,

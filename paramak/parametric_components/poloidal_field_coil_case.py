@@ -1,4 +1,5 @@
 
+from typing import Optional, Tuple
 from paramak import RotateStraightShape
 
 
@@ -7,28 +8,26 @@ class PoloidalFieldCoilCase(RotateStraightShape):
     describe the existing coil and the thickness of the casing required.
 
     Args:
-        coil_height (float): the vertical (z axis) height of the coil (cm).
-        coil_width (float): the horizontal(x axis) width of the coil (cm).
-        center_point (tuple of floats): the center of the coil (x,z) values
-            (cm).
-        casing_thickness (tuple of floats): the thickness of the coil casing
-            (cm).
-        stp_filename (str, optional): defaults to "PoloidalFieldCoilCase.stp".
-        stl_filename (str, optional): defaults to "PoloidalFieldCoilCase.stl".
-        material_tag (str, optional): defaults to "pf_coil_case_mat".
+        coil_height: the vertical (z axis) height of the coil (cm).
+        coil_width: the horizontal (x axis) width of the coil (cm).
+        center_point: the center of the coil (x,z) values (cm).
+        casing_thickness: the thickness of the coil casing (cm).
+        stp_filename: defaults to "PoloidalFieldCoilCase.stp".
+        stl_filename: defaults to "PoloidalFieldCoilCase.stl".
+        material_tag: defaults to "pf_coil_case_mat".
     """
 
     def __init__(
         self,
-        casing_thickness,
-        coil_height,
-        coil_width,
-        center_point,
-        stp_filename="PoloidalFieldCoilCase.stp",
-        stl_filename="PoloidalFieldCoilCase.stl",
-        material_tag="pf_coil_case_mat",
+        casing_thickness: Tuple[float, float],
+        coil_height: float,
+        coil_width: float,
+        center_point: Tuple[float, float],
+        stp_filename: Optional[str] = "PoloidalFieldCoilCase.stp",
+        stl_filename: Optional[str] = "PoloidalFieldCoilCase.stl",
+        material_tag: Optional[str] = "pf_coil_case_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             material_tag=material_tag,

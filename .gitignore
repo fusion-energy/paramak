@@ -35,11 +35,14 @@ coverage.xml
 # neutronics simulation files
 *.h5
 *.out
+*.vtk
 
 # 2D and 3D images of the model
 *.svg
 *.png
 *.vtk
+*.jpg
+*.xcf
 
 # sphinx built documetation
 docs/build/

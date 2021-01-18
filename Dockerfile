@@ -105,7 +105,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     mkdir build ; \
     cd build ; \
     cmake .. -DCMAKE_INSTALL_PREFIX=.. \
-        -DEMBREE_ISPC_SUPPORT=OFF ; \
+             -DEMBREE_ISPC_SUPPORT=OFF ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     fi
@@ -119,19 +119,20 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     git clone  --single-branch --branch develop https://bitbucket.org/fathomteam/moab/ ; \
     cd build ; \
     cmake ../moab -DENABLE_HDF5=ON \
-                -DENABLE_NETCDF=ON \
-                -DBUILD_SHARED_LIBS=OFF \
-                -DENABLE_FORTRAN=OFF \
-                -DCMAKE_INSTALL_PREFIX=/MOAB ; \
+                  -DENABLE_NETCDF=ON \
+                  -DENABLE_FORTRAN=OFF \
+                  -DENABLE_BLASLAPACK=OFF \
+                  -DBUILD_SHARED_LIBS=OFF \
+                  -DCMAKE_INSTALL_PREFIX=/MOAB ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     rm -rf * ; \
-    cmake ../moab -DBUILD_SHARED_LIBS=ON \
-                -DENABLE_HDF5=ON \
-                -DENABLE_PYMOAB=ON \
-                -DENABLE_BLASLAPACK=OFF \
-                -DENABLE_FORTRAN=OFF \
-                -DCMAKE_INSTALL_PREFIX=/MOAB ; \
+    cmake ../moab -DENABLE_HDF5=ON \
+                  -DENABLE_PYMOAB=ON \
+                  -DENABLE_FORTRAN=OFF \
+                  -DBUILD_SHARED_LIBS=ON \
+                  -DENABLE_BLASLAPACK=OFF \
+                  -DCMAKE_INSTALL_PREFIX=/MOAB ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     cd pymoab ; \
@@ -146,10 +147,9 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd double-down ; \
     mkdir build ; \
     cd build ; \
-    cmake .. -DCMAKE_INSTALL_PREFIX=.. \
-        -DMOAB_DIR=/MOAB \
-        -DEMBREE_DIR=/embree/lib/cmake/embree-3.12.1 \
-        -DEMBREE_ROOT=/embree/lib/cmake/embree-3.12.1 ; \
+    cmake .. -DMOAB_DIR=/MOAB \
+             -DCMAKE_INSTALL_PREFIX=.. \
+             -DEMBREE_DIR=/embree/lib/cmake/embree-3.12.1 ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     fi
@@ -162,10 +162,10 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     mkdir build ; \
     cd build ; \
     cmake ../dagmc -DBUILD_TALLY=ON \
-        -DCMAKE_INSTALL_PREFIX=/dagmc/ \
-        -DMOAB_DIR=/MOAB \
-        -DBUILD_STATIC_LIBS=OFF \
-        -DBUILD_STATIC_EXE=OFF ; \
+                   -DMOAB_DIR=/MOAB \
+                   -DBUILD_STATIC_EXE=OFF \
+                   -DBUILD_STATIC_LIBS=OFF \
+                   -DCMAKE_INSTALL_PREFIX=/dagmc/ ; \
     make -j"$compile_cores" install ; \
     rm -rf /DAGMC/dagmc /DAGMC/build ; \
     fi
@@ -176,9 +176,10 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd /opt/openmc ; \
     mkdir build ; \
     cd build ; \
-    cmake -Doptimize=on -Ddagmc=ON \
-        -DDAGMC_DIR=/DAGMC/ \
-        -DHDF5_PREFER_PARALLEL=on ..  ; \
+    cmake -Doptimize=on \
+          -Ddagmc=ON \
+          -DDAGMC_DIR=/DAGMC/ \
+          -DHDF5_PREFER_PARALLEL=on ..  ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     cd ..  ; \
@@ -191,9 +192,9 @@ ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
 # Copies over the Paramak code from the local repository
 
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then pip install neutronics_material_maker ; \
+    then pip install vtk ; \
     pip install parametric_plasma_source ; \
-    pip install vtk ; \
+    pip install neutronics_material_maker ; \
     fi
 
 COPY requirements.txt requirements.txt
