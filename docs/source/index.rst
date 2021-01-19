@@ -39,17 +39,22 @@ The package was originally conceived by Jonathan Shimwell and based on the
 `FreeCAD Python API <https://wiki.freecadweb.org/FreeCAD_API>`_  When 
 `CadQuery 2 <https://github.com/CadQuery/cadquery>`_ was released the project
 started to migrate the code base. Shortly after this migration the project
-became open-source and has flourished ever since. The project has grown largely
-due to two contributors in particular (John Billingsley and Remi
-Delaporte-Mathurin) and others have also helped, you can see all those who
-have helped the development in the 
+became open-source and has flourished ever since.
+
+The project has grown largely due to two contributors in particular
+(John Billingsley and Remi Delaporte-Mathurin) and others have also helped,
+you can see all those who have helped the development in the 
 `Authors.md <https://github.com/ukaea/paramak/blob/main/AUTHORS.md>`_ and in the 
 `GitHub contributions <https://github.com/ukaea/paramak/graphs/contributors>`_.
+
 The code has been professionally reviewed by
 `PullRequest.com <https://www.pullrequest.com/>`_ who produced a
 `report <https://github.com/ukaea/paramak/files/5704872/PULLREQUEST.Paramak.Project.Review.pdf>`_
 and inline `suggestions <https://github.com/ukaea/paramak/pull/639>`_.
 
+The Paramak source code is distributed with a permissive open-source license
+(MIT) and is avaialbe from the GitHub repository 
+`https://github.com/ukaea/paramak <https://github.com/ukaea/paramak>`_
 
 Prerequisites
 -------------
@@ -160,12 +165,17 @@ You may also want to make use of the
 flag when running Docker so that you can retrieve files from the Docker
 enviroment to your base system.
 
-Presentations
--------------
+Publications and Presentations
+------------------------------
 
-Currently we just have one presentation that covers the Paramak.
+Published in F1000 Research.
+`https://f1000research.com/articles/10-27 <https://f1000research.com/articles/10-27>`_
 
-`Link to presentation <https://github.com/ukaea/paramak/files/5260982/UKAEA_Paramak_shimwell.pdf>`_
+Presented at the Spanish Fusion HPC Workshop and available in the 3rd video at minute 41.
+`https://hpcfusion2020.bsc.es/media <https://hpcfusion2020.bsc.es/media>`_
+
+Slides from first released presentation.
+`Link <https://github.com/ukaea/paramak/files/5260982/UKAEA_Paramak_shimwell.pdf>`_
 
 
 Features
