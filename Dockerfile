@@ -1,3 +1,4 @@
+# This Dockerfile creates an enviroment with the optional dependancies and the Paramak
 # This dockerfile can be built in a few different ways.
 # Docker build commands must be run from within the base repository directory
 #
@@ -188,8 +189,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     fi
 
 ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
-
-# Copies over the Paramak code from the local repository
 
 RUN if [ "$include_neutronics" = "true" ] ; \
     then pip install vtk ; \
