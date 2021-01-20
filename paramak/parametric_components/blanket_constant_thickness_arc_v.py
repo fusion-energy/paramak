@@ -1,4 +1,5 @@
 
+from typing import Optional, Tuple
 from paramak import RotateMixedShape
 
 
@@ -8,31 +9,29 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
     vertically for the thickness of the blanket to back of the blanket.
 
     Arguments:
-        inner_mid_point ((float, float)): the x,z coordinates of the mid
-            point on the inner surface of the blanket.
-        inner_upper_point ((float, float)): the x,z coordinates of the upper
-            point on the inner surface of the blanket.
-        inner_lower_point ((float, float)): the x,z coordinates of the lower
-            point on the inner surface of the blanket.
-        thickness (float): the radial thickness of the blanket in cm.
-        stp_filename (str, optional): Defaults to
-            "BlanketConstantThicknessArcV.stp".
-        stl_filename (str, optional): Defaults to
-            "BlanketConstantThicknessArcV.stl".
-        material_tag (str, optional): Defaults to "blanket_mat".
+        inner_mid_point: the x,z coordinates of the mid point on the inner
+            surface of the blanket.
+        inner_upper_point: the x,z coordinates of the upper point on the
+            inner surface of the blanket.
+        inner_lower_point: the x,z coordinates of the lower point on the
+            inner surface of the blanket.
+        thickness: the radial thickness of the blanket in cm.
+        stp_filename: Defaults to "BlanketConstantThicknessArcV.stp".
+        stl_filename: Defaults to "BlanketConstantThicknessArcV.stl".
+        material_tag: Defaults to "blanket_mat".
     """
 
     def __init__(
         self,
-        inner_mid_point,
-        inner_upper_point,
-        inner_lower_point,
-        thickness,
-        stp_filename="BlanketConstantThicknessArcV.stp",
-        stl_filename="BlanketConstantThicknessArcV.stl",
-        material_tag="blanket_mat",
+        inner_mid_point: Tuple[float, float],
+        inner_upper_point: Tuple[float, float],
+        inner_lower_point: Tuple[float, float],
+        thickness: float,
+        stp_filename: Optional[str] = "BlanketConstantThicknessArcV.stp",
+        stl_filename: Optional[str] = "BlanketConstantThicknessArcV.stl",
+        material_tag: Optional[str] = "blanket_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             material_tag=material_tag,

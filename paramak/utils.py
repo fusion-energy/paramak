@@ -2,6 +2,10 @@
 import math
 from collections import Iterable
 from hashlib import blake2b
+from os import fdopen, remove
+from shutil import copymode, move
+from tempfile import mkstemp
+from typing import Tuple, List
 
 import cadquery as cq
 import numpy as np
@@ -9,16 +13,17 @@ import numpy as np
 import paramak
 
 
-def coefficients_of_line_from_points(point_a, point_b):
+def coefficients_of_line_from_points(
+        point_a: Tuple[float, float], point_b: Tuple[float, float]) -> Tuple[float, float]:
     """Computes the m and c coefficients of the equation (y=mx+c) for
     a straight line from two points.
 
     Args:
-        point_a (float, float): point 1 coordinates
-        point_b (float, float): point 2 coordinates
+        point_a: point 1 coordinates
+        point_b: point 2 coordinates
 
     Returns:
-        (float, float): m coefficient and c coefficient
+        m coefficient and c coefficient
     """
 
     points = [point_a, point_b]
@@ -49,7 +54,7 @@ def cut_solid(solid, cutter):
     return solid
 
 
-def diff_between_angles(angle_a, angle_b):
+def diff_between_angles(angle_a: float, angle_b: float) -> float:
     """Calculates the difference between two angles angle_a and angle_b
 
     Args:
@@ -66,7 +71,8 @@ def diff_between_angles(angle_a, angle_b):
     return delta_mod
 
 
-def distance_between_two_points(point_a, point_b):
+def distance_between_two_points(point_a: Tuple[float, float],
+                                point_b: Tuple[float, float]) -> float:
     """Computes the distance between two points.
 
     Args:
@@ -83,7 +89,8 @@ def distance_between_two_points(point_a, point_b):
     return np.linalg.norm(u_vec)
 
 
-def extend(point_a, point_b, L):
+def extend(point_a: Tuple[float, float], point_b: Tuple[float, float],
+           L: float) -> Tuple[float, float]:
     """Creates a point C in (ab) direction so that \\|aC\\| = L
 
     Args:
@@ -104,7 +111,9 @@ def extend(point_a, point_b, L):
     return xc, yc
 
 
-def find_center_point_of_circle(point_a, point_b, point3):
+def find_center_point_of_circle(point_a: Tuple[float, float],
+                                point_b: Tuple[float, float],
+                                point3: Tuple[float, float]) -> Tuple[Tuple[float, float], float]:
     """
     Calculates the center and the radius of a circle
     passing through 3 points.
@@ -156,7 +165,8 @@ def intersect_solid(solid, intersecter):
     return solid
 
 
-def rotate(origin, point, angle):
+def rotate(origin: Tuple[float, float], point: Tuple[float, float],
+           angle: float):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
     The angle should be given in radians.
@@ -208,7 +218,8 @@ def calculate_wedge_cut(self):
     return cutting_wedge
 
 
-def add_thickness(x, y, thickness, dy_dx=None):
+def add_thickness(x: List[float], y: List[float], thickness: float,
+                  dy_dx: List[float] = None):
     """Computes outer curve points based on thickness
 
     Args:
@@ -256,7 +267,7 @@ def add_thickness(x, y, thickness, dy_dx=None):
     return x_outer, y_outer
 
 
-def get_hash(shape, ignored_keys=[]):
+def get_hash(shape, ignored_keys: List) -> str:
     """Computes a unique hash vaue for the shape.
 
     Args:
@@ -271,13 +282,42 @@ def get_hash(shape, ignored_keys=[]):
     hash_object = blake2b()
     shape_dict = dict(shape.__dict__)
 
-    for key in ignored_keys:
-        if key in shape_dict.keys():
-            shape_dict[key] = None
+    if ignored_keys is not None:
+        for key in ignored_keys:
+            if key in shape_dict.keys():
+                shape_dict[key] = None
 
     hash_object.update(str(list(shape_dict.values())).encode("utf-8"))
     value = hash_object.hexdigest()
     return value
+
+
+def _replace(filename: str, pattern: str, subst: str) -> None:
+    """Opens a file and replaces occurances of a particular string
+        (pattern)with a new string (subst) and overwrites the file.
+        Used internally within the paramak to ensure .STP files are
+        in units of cm not the default mm.
+    Args:
+        filename (str): the filename of the file to edit
+        pattern (str): the string that should be removed
+        subst (str): the string that should be used in the place of the
+            pattern string
+    """
+    # Create temp file
+    file_handle, abs_path = mkstemp()
+    with fdopen(file_handle, 'w') as new_file:
+        with open(filename) as old_file:
+            for line in old_file:
+                new_file.write(line.replace(pattern, subst))
+
+    # Copy the file permissions from the old file to the new file
+    copymode(filename, abs_path)
+
+    # Remove original file
+    remove(filename)
+
+    # Move new file
+    move(abs_path, filename)
 
 
 class FaceAreaSelector(cq.Selector):
@@ -292,9 +332,9 @@ class FaceAreaSelector(cq.Selector):
             (+/-) while still being selected by the custom selector.
     """
 
-    def __init__(self, area, tol=0.1):
+    def __init__(self, area, tolerance=0.1):
         self.area = area
-        self.tol = tol
+        self.tolerance = tolerance
 
     def filter(self, objectList):
         """Loops through all the faces in the object checking if the face
@@ -313,7 +353,7 @@ class FaceAreaSelector(cq.Selector):
             face_area = obj.Area()
 
             # Only return faces that meet the requirements
-            if face_area > self.area - self.tol and face_area < self.area + self.tol:
+            if face_area > self.area - self.tolerance and face_area < self.area + self.tolerance:
                 new_obj_list.append(obj)
 
         return new_obj_list
@@ -332,9 +372,9 @@ class EdgeLengthSelector(cq.Selector):
 
     """
 
-    def __init__(self, length, tol=0.1):
+    def __init__(self, length: float, tolerance: float = 0.1):
         self.length = length
-        self.tol = tol
+        self.tolerance = tolerance
 
     def filter(self, objectList):
         """Loops through all the edges in the object checking if the edge
@@ -355,7 +395,7 @@ class EdgeLengthSelector(cq.Selector):
             edge_len = obj.Length()
 
             # Only return edges that meet our requirements
-            if edge_len > self.length - self.tol and edge_len < self.length + self.tol:
+            if edge_len > self.length - self.tolerance and edge_len < self.length + self.tolerance:
 
                 new_obj_list.append(obj)
         print('length(new_obj_list)', len(new_obj_list))

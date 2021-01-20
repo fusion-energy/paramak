@@ -43,7 +43,8 @@ release = "1.0"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
-    "sphinx.ext.napoleon"]
+    "sphinx.ext.napoleon",
+    "sphinx_autodoc_typehints"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

@@ -13,5 +13,6 @@ pillow
 # cython  # needed for export_h5m with pymoab
 
 # Additional packages needed for neutronics simulations
+# vtk
 # neutronics_material_maker
 # parametric_plasma_source

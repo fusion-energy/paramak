@@ -1,4 +1,5 @@
 
+from typing import Optional
 import numpy as np
 from paramak import ExtrudeCircleShape
 
@@ -8,35 +9,33 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
     constant thickness.
 
     Args:
-        height (float): height of each coolant channel in ring.
-        channel_radius (float): radius of each coolant channel in ring.
-        number_of_coolant_channels (float): number of coolant channels in ring.
-        ring radius (float): radius of coolant channel ring.
-        start_angle (float, optional): angle at which the first channel in the
-            ring is placed. Defaults to 0.
-        workplane (str, optional): plane in which the cross-sections of the
-            coolant channels lie. Defaults to "XY".
+        height: height of each coolant channel in ring.
+        channel_radius: radius of each coolant channel in ring.
+        number_of_coolant_channels: number of coolant channels in ring.
+        ring radius: radius of coolant channel ring.
+        start_angle: angle at which the first channel in the ring is placed.
+            Defaults to 0.0.
+        stp_filename: Defaults to "CoolantChannelRingStraight.stp".
+        stl_filename: Defaults to "CoolantChannelRingStraight.stl".
+        material_tag: Defaults to "coolant_channel_mat".
         rotation_axis (str, optional): azimuthal axis around which the separate
             coolant channels are placed.
-        stp_filename (str, optional): Defaults to
-            "CoolantChannelRingStraight.stp".
-        stl_filename (str, optional): Defaults to
-            "CoolantChannelRingStraight.stl".
-        material_tag (str, optional): Defaults to "coolant_channel_mat".
+        workplane (str, optional): plane in which the cross-sections of the
+            coolant channels lie. Defaults to "XY".
     """
 
     def __init__(
         self,
-        height,
-        channel_radius,
-        number_of_coolant_channels,
-        ring_radius,
-        start_angle=0,
-        stp_filename="CoolantChannelRingStraight.stp",
-        stl_filename="CoolantChannelRingStraight.stl",
-        material_tag="coolant_channel_mat",
+        height: float,
+        channel_radius: float,
+        number_of_coolant_channels: int,
+        ring_radius: float,
+        start_angle: Optional[float] = 0.0,
+        stp_filename: Optional[str] = "CoolantChannelRingStraight.stp",
+        stl_filename: Optional[str] = "CoolantChannelRingStraight.stl",
+        material_tag: Optional[str] = "coolant_channel_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             distance=height,

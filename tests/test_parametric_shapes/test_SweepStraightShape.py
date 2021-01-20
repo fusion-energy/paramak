@@ -41,7 +41,7 @@ class TestSweepStraightShape(unittest.TestCase):
         self.test_shape.points = [(-20, 20), (20, 20), (20, -20), (-20, -20)]
         assert self.test_shape.volume == pytest.approx(test_volume * 4)
 
-    def test_relative_shape_volume(self):
+    def test_relative_shape_volume_again(self):
         """Creates two SweepStraightShapes and checks that their relative volumes
         are correct."""
 

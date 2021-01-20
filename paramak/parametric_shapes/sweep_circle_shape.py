@@ -96,31 +96,31 @@ class SweepCircleShape(Shape):
             factor *= -1
 
         if self.force_cross_section:
-            wire = cq.Workplane(self.workplane).moveTo(0, 0)
+            wire = cq.Workplane(self.workplane).center(0, 0)
             for point in self.path_points[:-1]:
                 wire = wire.workplane(offset=point[1] * factor).\
-                    moveTo(point[0], 0).\
+                    center(point[0], 0).\
                     circle(self.radius).\
-                    moveTo(0, 0).\
+                    center(-point[0], 0).\
                     workplane(offset=-point[1] * factor)
 
             self.wire = wire
 
-            solid = wire.workplane(offset=self.path_points[-1][1] * factor).moveTo(
+            solid = wire.workplane(offset=self.path_points[-1][1] * factor).center(
                 self.path_points[-1][0], 0).circle(self.radius).sweep(path, multisection=True)
 
-        if not self.force_cross_section:
+        else:
 
             wire = (
                 cq.Workplane(self.workplane)
                 .workplane(offset=self.path_points[0][1] * factor)
-                .moveTo(self.path_points[0][0], 0)
+                .center(self.path_points[0][0], 0)
                 .workplane()
                 .circle(self.radius)
-                .moveTo(-self.path_points[0][0], 0)
+                .center(-self.path_points[0][0], 0)
                 .workplane(offset=-self.path_points[0][1] * factor)
                 .workplane(offset=self.path_points[-1][1] * factor)
-                .moveTo(self.path_points[-1][0], 0)
+                .center(self.path_points[-1][0], 0)
                 .workplane()
                 .circle(self.radius)
             )

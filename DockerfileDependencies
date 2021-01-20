@@ -1,4 +1,4 @@
-# This Dockerfile creates an enviroment with the optional dependancies and the Paramak
+# This Dockerfile creates an enviroment with the optional dependancies
 # This dockerfile can be built in a few different ways.
 # Docker build commands must be run from within the base repository directory
 #
@@ -198,18 +198,3 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-
-# @pullrequest reviewer, we would like to make the copy optional but don't know
-# how. Then we can build a dependency image for use in circle ci.
-# Copy over the source code, examples and tests
-COPY run_tests.sh run_tests.sh
-COPY paramak paramak/
-COPY examples examples/
-COPY setup.py setup.py
-COPY tests tests/
-COPY README.md README.md
-
-# using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
-RUN python setup.py install
-
-WORKDIR examples

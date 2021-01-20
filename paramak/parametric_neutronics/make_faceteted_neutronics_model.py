@@ -18,20 +18,29 @@ import os
 # With additional arguments to overwrite the defaults
 # trelis -batch -nographics make_faceteted_neutronics_model.py "faceting_tolerance='1e-4'" "merge_tolerance='1e-4'"
 
-# An example manifest file would contain a list of dictionaries with entry having
-# stp_filename and material keywords. Here is an example manifest file with just
-# two entries.
+# An example manifest file would contain a list of dictionaries with entries
+# having stp_filename and material keywords. Here is an example manifest file
+# with just two entries.
 
 # [
 #     {
 #         "material": "m1",
-#         "stp_filename": "inboard_tf_coils.stp",
+#         "stp_filename": "inboard_tf_coils.stp"
 #     },
 #     {
 #         "material": "m2",
-#         "stp_filename": "center_column_shield.stp",
+#         "stp_filename": "center_column_shield.stp"
 #     }
 # ]
+
+# entries can also contain a "surface_reflectivity" key to indicate reflecting
+# surfaces. This will then be used to automatically tag the surfaces.
+
+#     {
+#         "material": "m3",
+#         "stp_filename": "large_cake_slice.stp",
+#         "surface_reflectivity": true
+#     }
 
 
 def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
@@ -85,8 +94,26 @@ def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
             " ".join(
                 entry["volumes"]))
         # cubit.cmd('volume in group '+str(starting_group_id)+' copy rotate 45 about z repeat 7')
+        if 'surface_reflectivity' in entry.keys():
+            entry['surface_reflectivity'] = find_all_surfaces_of_reflecting_wedge(new_vols_after_unite)
+            print("entry['surface_reflectivity']", entry['surface_reflectivity'])
     cubit.cmd("separate body all")
     return input_locations
+
+
+def find_all_surfaces_of_reflecting_wedge(new_vols):
+    surfaces_in_volume = cubit.parse_cubit_list("surface", " in volume "+' '.join(new_vols))
+    surface_info_dict = {}
+    for surface_id in surfaces_in_volume:
+        surface = cubit.surface(surface_id)
+        #area = surface.area()
+        vertex_in_surface = cubit.parse_cubit_list("vertex", " in surface " + str(surface_id))
+        if surface.is_planar() == True and len(vertex_in_surface) == 4:
+        surface_info_dict[surface_id] = {'reflector': True}
+        else:
+        surface_info_dict[surface_id] = {'reflector': False}
+    print('surface_info_dict', surface_info_dict)
+    return surface_info_dict
 
 
 def byteify(input):
@@ -99,6 +126,34 @@ def byteify(input):
         return input.encode("utf-8")
     else:
         return input
+
+
+def find_reflecting_surfaces_of_reflecting_wedge(geometry_details):
+    print('running find_reflecting_surfaces_of_reflecting_wedge')
+    wedge_volume = None
+    for entry in geometry_details:
+        print(entry)
+        print(entry.keys())
+        if 'surface_reflectivity' in entry.keys():
+            print('found surface_reflectivity')
+            surface_info_dict = entry['surface_reflectivity']
+            wedge_volume = ' '.join(entry['volumes'])
+            print('wedge_volume', wedge_volume)
+            surfaces_in_wedge_volume = cubit.parse_cubit_list("surface", " in volume "+str(wedge_volume))
+            print('surfaces_in_wedge_volume', surfaces_in_wedge_volume)
+            for surface_id in surface_info_dict.keys():
+                if surface_info_dict[surface_id]['reflector'] == True:
+                    print(surface_id, 'surface originally reflecting but does it still exist')
+                    if surface_id not in surfaces_in_wedge_volume:
+                        del surface_info_dict[surface_id]
+            for surface_id in surfaces_in_wedge_volume:
+                if surface_id not in surface_info_dict.keys():
+                    surface_info_dict[surface_id] = {'reflector': True}
+                    cubit.cmd('group "boundary:Reflecting" add surf ' + str(surface_id))
+                    cubit.cmd('surface ' + str(surface_id)+' visibility on')
+            entry['surface_reflectivity'] = surface_info_dict
+            return geometry_details, wedge_volume
+    return geometry_details, wedge_volume
 
 
 def tag_geometry_with_mats(geometry_details):
@@ -162,5 +217,7 @@ geometry_details = find_number_of_volumes_in_each_step_file( \
 tag_geometry_with_mats(geometry_details)
 
 imprint_and_merge_geometry()
+
+find_reflecting_surfaces_of_reflecting_wedge(geometry_details)
 
 save_output_files()

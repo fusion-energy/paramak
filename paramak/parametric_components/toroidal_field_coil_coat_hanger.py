@@ -1,6 +1,7 @@
 
 import math
 
+from typing import Optional, Tuple
 import cadquery as cq
 import numpy as np
 from paramak import ExtrudeStraightShape
@@ -11,43 +12,40 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
     """Creates a coat hanger shaped toroidal field coil.
 
     Args:
-        horizontal_start_point (tuple of 2 floats): the (x,z) coordinates of
-            the inner upper point (cm).
-        horizontal_length (tuple of 2 floats): the radial length of the
-            horizontal section of the TF coil (cm).
-        vertical_mid_point (tuple of 2 points): the (x,z) coordinates of the
-            mid point of the outboard vertical section (cm).
-        vertical_length (tuple of 2 floats): the radial length of the outboard
-            vertical section of the TF coil (cm).
-        thickness (float): the thickness of the toroidal field coil.
-        distance (float): the extrusion distance.
-        number_of_coils (int): the number of TF coils. This changes with
+        horizontal_start_point: the (x,z) coordinates of the inner upper
+            point (cm).
+        horizontal_length: the radial length of the horizontal section of
+            the TF coil (cm).
+        vertical_mid_point: the (x,z) coordinates of the mid point of the
+            outboard vertical section (cm).
+        vertical_length: the radial length of the outboard vertical section
+            of the TF coil (cm).
+        thickness: the thickness of the toroidal field coil.
+        distance: the extrusion distance.
+        number_of_coils: the number of TF coils. This changes with
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
-        with_inner_leg (bool, optional): Include the inner TF leg. Defaults to
-            True.
-        stp_filename (str, optional): defaults to
-            "ToroidalFieldCoilCoatHanger.stp".
-        stl_filename (str, optional): defaults to
-            "ToroidalFieldCoilCoatHanger.stl".
-        material_tag (str, optional): defaults to "outer_tf_coil_mat".
+        with_inner_leg: Include the inner TF leg. Defaults to True.
+        stp_filename: Defaults to "ToroidalFieldCoilCoatHanger.stp".
+        stl_filename: Defaults to "ToroidalFieldCoilCoatHanger.stl".
+        material_tag: Defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
         self,
-        horizontal_start_point,
-        horizontal_length,
-        vertical_mid_point,
-        vertical_length,
-        thickness,
-        distance,
-        number_of_coils,
-        with_inner_leg=True,
-        stp_filename="ToroidalFieldCoilCoatHanger.stp",
-        stl_filename="ToroidalFieldCoilCoatHanger.stl",
-        material_tag="outer_tf_coil_mat",
+        horizontal_start_point: Tuple[float, float],
+        horizontal_length: float,
+        vertical_mid_point: Tuple[float, float],
+        vertical_length: float,
+        thickness: float,
+        distance: float,
+        number_of_coils: int,
+        with_inner_leg: Optional[bool] = True,
+        stp_filename: Optional[str] = "ToroidalFieldCoilCoatHanger.stp",
+        stl_filename: Optional[str] = "ToroidalFieldCoilCoatHanger.stl",
+        material_tag: Optional[str] = "outer_tf_coil_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             distance=distance,

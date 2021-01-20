@@ -1,4 +1,5 @@
 
+from typing import Optional, Tuple
 import cadquery as cq
 import numpy as np
 from paramak import ExtrudeStraightShape
@@ -9,37 +10,34 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
     """Creates a rectangular shaped toroidal field coil.
 
     Args:
-        horizontal_start_point (tuple of 2 floats): the (x,z) coordinates of
-            the inner upper point (cm).
-        vertical_mid_point (tuple of 2 points): the (x,z) coordinates of the
-            mid point of the vertical section (cm).
-        thickness (float): the thickness of the toroidal field coil.
-        distance (float): the extrusion distance.
-        number_of_coils (int): the number of tf coils. This changes by the
+        horizontal_start_point: the (x,z) coordinates of the inner upper
+            point (cm).
+        vertical_mid_point: the (x,z) coordinates of the mid point of the
+            vertical section (cm).
+        thickness: the thickness of the toroidal field coil.
+        distance: the extrusion distance.
+        number_of_coils: the number of tf coils. This changes by the
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
-        with_inner_leg (bool, optional): include the inner tf leg. Defaults to
-            True.
-        stp_filename (str, optional): defaults to
-            "ToroidalFieldCoilRectangle.stp".
-        stl_filename (str, optional): defaults to
-            "ToroidalFieldCoilRectangle.stl".
-        material_tag (str, optional): defaults to "outer_tf_coil_mat".
+        with_inner_leg: include the inner tf leg. Defaults to True.
+        stp_filename: Defaults to "ToroidalFieldCoilRectangle.stp".
+        stl_filename: Defaults to "ToroidalFieldCoilRectangle.stl".
+        material_tag: Defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
         self,
-        horizontal_start_point,
-        vertical_mid_point,
-        thickness,
-        distance,
-        number_of_coils,
-        with_inner_leg=True,
-        stp_filename="ToroidalFieldCoilRectangle.stp",
-        stl_filename="ToroidalFieldCoilRectangle.stl",
-        material_tag="outer_tf_coil_mat",
+        horizontal_start_point: Tuple[float, float],
+        vertical_mid_point: Tuple[float, float],
+        thickness: float,
+        distance: float,
+        number_of_coils: int,
+        with_inner_leg: Optional[bool] = True,
+        stp_filename: Optional[str] = "ToroidalFieldCoilRectangle.stp",
+        stl_filename: Optional[str] = "ToroidalFieldCoilRectangle.stl",
+        material_tag: Optional[str] = "outer_tf_coil_mat",
         **kwargs
-    ):
+    ) -> None:
 
         super().__init__(
             distance=distance,

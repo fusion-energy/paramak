@@ -7,14 +7,12 @@ jobs:
   # test:
   build:
     docker:
-      - image: openmcworkshop/paramak:dependences_with_neutronics
+      - image: ukaea/paramak:dependencies
     steps:
       - checkout
       - run:
           name: install
           command: |
-            pip install neutronics_material_maker
-            pip install parametric_plasma_source
             python setup.py install  # this dosen't support the optional packages like pip install .[neutronics] does
 
       - run:

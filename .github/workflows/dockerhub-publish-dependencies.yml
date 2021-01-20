@@ -1,12 +1,14 @@
-# This yml file will trigger a Github Action on pushes to the develop branch.
+# This yml file will trigger a Github Action on pushes to the main branch.
 # This Action will build and upload a Docker image to Dockerhub
 # https://github.com/marketplace/actions/publish-docker
 
-name: dockerhub-publish-dev
+name: dockerhub-publish-dependencies
 
 on:
   push:
-    branches: develop
+    branches:
+    - develop  
+    - main
 
 jobs:
   main:
@@ -29,8 +31,9 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          file: DockerfileDependencies
           push: true
-          tags: ukaea/paramak:dev-cq-master
+          tags: ukaea/paramak:dependencies
           build-args: |
             cq_version=master
             compile_cores=2

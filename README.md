@@ -2,10 +2,10 @@
 [![N|Python](https://www.python.org/static/community_logos/python-powered-w-100x40.png)](https://www.python.org)
 [![CircleCI](https://circleci.com/gh/ukaea/paramak/tree/main.svg?style=svg)](https://circleci.com/gh/ukaea/paramak/tree/main)
 [![codecov](https://codecov.io/gh/ukaea/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/ukaea/paramak)
-[![PyPI version](https://badge.fury.io/py/paramak.svg)](https://badge.fury.io/py/paramak)
+[![PyPI](https://img.shields.io/pypi/v/paramak?color=brightgreen&label=pypi&logo=grebrightgreenen&logoColor=green)](https://pypi.org/project/paramak/)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/ukaea/paramak)](https://hub.docker.com/r/ukaea/paramak)
-
+[![dockerhub-publish-stable](https://github.com/ukaea/paramak/workflows/dockerhub-publish-stable/badge.svg)](https://github.com/ukaea/paramak/actions?query=workflow%3Adockerhub-publish-stable)
+[![DOI](https://zenodo.org/badge/269635577.svg)](https://zenodo.org/badge/latestdoi/269635577)
 
 # Paramak
 
@@ -19,6 +19,8 @@ finite element analysis codes.
 :point_right: [Documentation](https://paramak.readthedocs.io/en/main/)
 
 :point_right: [Video presentation](https://www.youtube.com/embed/fXboew3U7rw)
+
+:point_right: [Publication](https://f1000research.com/articles/10-27/v1)
 
 # History
 
@@ -89,7 +91,7 @@ flag when running Docker so that you can retrieve files from the Docker
 enviroment to your base system.
 
 Docker can also be used to run the tests using the command
-```docker run -rm ukaea/parama pytest tests```
+```docker run --rm ukaea/paramak pytest tests```
 
 ## Features
 
@@ -261,7 +263,7 @@ my_reactor.export_html('reactor.html')
 
 It is possible to convert a parametric Reactor model into a neutronics model.
 
-To install two additional python packages needed to run neutronics with a
+To install additional python packages needed to run neutronics with a
 modified pip install
 
 ```bash
