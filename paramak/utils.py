@@ -122,8 +122,8 @@ def find_center_point_of_circle(point_a: Tuple[float, float],
         point_b (float, float): point 2 coordinates
         point3 (float, float): point 3 coordinates
     Returns:
-        float, float: center of the circle coordinates or
-        None if 3 points on a line are input.
+        (float, float), float: center of the circle coordinates or
+        None if 3 points on a line are input and the radius
     """
 
     temp = point_b[0] * point_b[0] + point_b[1] * point_b[1]
