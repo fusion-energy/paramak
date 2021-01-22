@@ -37,6 +37,37 @@ have helped the development in the
 The code has been professionally reviewed by [PullRequest.com](https://www.pullrequest.com/) who
 produced a [report](https://github.com/ukaea/paramak/files/5704872/PULLREQUEST.Paramak.Project.Review.pdf) and inline [suggestions](https://github.com/ukaea/paramak/pull/639).
 
+## Citing
+
+If you use the Paramak in your research, please consider giving proper
+attribution by citing the our [Publication](https://f1000research.com/articles/10-27/v1):
+
+- J. Shimwell, J. Billingsley and R. Delaporte-Mathurin et al. The Paramak: 
+  Automated Parametric Geometry Construction for Fusion Reactor Designs.
+  F1000Research, vol. 10, Jan. 2021, p. 27. DOI.org (Crossref),
+  doi:10.12688/f1000research.28224.1.
+
+    <details>
+        <summary>BibTex</summary>
+        <pre><code class="language-html">
+    @article{paramak,
+        title = {The {Paramak}: automated parametric geometry construction for fusion reactor designs.},
+        volume = {10},
+        issn = {2046-1402},
+        shorttitle = {The {Paramak}},
+        url = {https://f1000research.com/articles/10-27/v1},
+        doi = {10.12688/f1000research.28224.1},
+        language = {en},
+        urldate = {2021-01-22},
+        journal = {F1000Research},
+        author = {Shimwell, Jonathan and Billingsley, John and Delaporte-Mathurin, Rémi and Morbey, Declan and Bluteau, Matthew and Shriwise, Patrick and Davis, Andrew},
+        month = jan,
+        year = {2021},
+        pages = {27},
+    }
+        </code></pre>
+    </details>
+
 
 ## System Installation
 
