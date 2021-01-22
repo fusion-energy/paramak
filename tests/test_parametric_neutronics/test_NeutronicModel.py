@@ -266,12 +266,12 @@ class TestShape(unittest.TestCase):
     def test_incorrect_mesh_tally_2d(self):
 
         def incorrect_mesh_tally_2d():
-            """Set a mesh_tally_2D that is not accepted which should raise an error"""
+            """Set a mesh_tally_2d that is not accepted which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
                 materials={'center_column_shield_mat': 'eurofer'},
-                mesh_tally_2D=['coucou'],
+                mesh_tally_2d=['coucou'],
             )
 
         self.assertRaises(
@@ -282,12 +282,12 @@ class TestShape(unittest.TestCase):
     def test_incorrect_mesh_tally_2d_type(self):
 
         def incorrect_mesh_tally_2d_type():
-            """Set a mesh_tally_2D that is the wrong type which should raise an error"""
+            """Set a mesh_tally_2d that is the wrong type which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
                 materials={'center_column_shield_mat': 'eurofer'},
-                mesh_tally_2D=1,
+                mesh_tally_2d=1,
             )
 
         self.assertRaises(
@@ -298,12 +298,12 @@ class TestShape(unittest.TestCase):
     def test_incorrect_mesh_tally_3d(self):
 
         def incorrect_mesh_tally_3d():
-            """Set a mesh_tally_3D that is not accepted which should raise an error"""
+            """Set a mesh_tally_3d that is not accepted which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
                 materials={'center_column_shield_mat': 'eurofer'},
-                mesh_tally_3D=['coucou'],
+                mesh_tally_3d=['coucou'],
             )
 
         self.assertRaises(
@@ -314,12 +314,12 @@ class TestShape(unittest.TestCase):
     def test_incorrect_mesh_tally_3d_type(self):
 
         def incorrect_mesh_tally_3d_type():
-            """Set a mesh_tally_3D that is the wrong type which should raise an error"""
+            """Set a mesh_tally_3d that is the wrong type which should raise an error"""
             paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
                 materials={'center_column_shield_mat': 'eurofer'},
-                mesh_tally_3D=1,
+                mesh_tally_3d=1,
             )
 
         self.assertRaises(
@@ -463,7 +463,7 @@ class TestShape(unittest.TestCase):
             geometry=self.my_shape,
             source=self.source,
             materials={'center_column_shield_mat': 'Be'},
-            mesh_tally_2D=['heating'],
+            mesh_tally_2d=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2
         )
@@ -490,7 +490,7 @@ class TestShape(unittest.TestCase):
             geometry=self.my_shape,
             source=self.source,
             materials={'center_column_shield_mat': 'Be'},
-            mesh_tally_3D=['heating', 'tritium_production'],
+            mesh_tally_3d=['heating', 'tritium_production'],
             simulation_batches=2,
             simulation_particles_per_batch=2
         )
@@ -539,8 +539,8 @@ class TestShape(unittest.TestCase):
             geometry=self.my_shape,
             source=self.source,
             materials={'center_column_shield_mat': 'Be'},
-            mesh_tally_3D=['heating'],
-            mesh_tally_2D=['heating'],
+            mesh_tally_3d=['heating'],
+            mesh_tally_2d=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2
         )
@@ -690,7 +690,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
                 'mat1': 'copper',
                 'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
             },
-            mesh_tally_2D=['tritium_production', 'heating', 'flux'],
+            mesh_tally_2d=['tritium_production', 'heating', 'flux'],
             simulation_batches=2,
             simulation_particles_per_batch=10,
         )
