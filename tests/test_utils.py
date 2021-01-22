@@ -17,7 +17,9 @@ class TestUtilityFunctions(unittest.TestCase):
         point_2 = (20, 0)
         point_3 = (0, -20)
 
-        assert find_center_point_of_circle(point_1, point_2, point_3) == ((0, 0), 20)
+        assert find_center_point_of_circle(
+            point_1, point_2, point_3) == (
+            (0, 0), 20)
 
     def test_EdgeLengthSelector_with_fillet_areas(self):
         """tests the filleting of a RotateStraightShape results in an extra
