@@ -150,7 +150,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd build ; \
     cmake .. -DMOAB_DIR=/MOAB \
              -DCMAKE_INSTALL_PREFIX=.. \
-             -DEMBREE_DIR=/embree/lib/cmake/embree-3.12.2 ; \
+             -DEMBREE_DIR=/embree ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     fi
