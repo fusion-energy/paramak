@@ -56,8 +56,10 @@ class NeutronicsModel():
             neutronics-material-maker.MultiMaterial. All components within the
             geometry object must be accounted for. Material tags required
             for a Reactor or Shape can be obtained with .material_tags.
-        mesh_tally_2D (list of strings): the mesh based tallies to calculate,
-            options include tritium_production, heating and flux
+        mesh_tally_2d (list of strings): the 2D mesh based tallies to calculate,
+            options include tritium_production, heating and flux.
+        mesh_tally_3d (list of strings): the 3D mesh based tallies to calculate,
+            options include tritium_production, heating and flux.
         fusion_power (float): the power in watts emitted by the fusion
             reaction recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
@@ -69,10 +71,14 @@ class NeutronicsModel():
             Defaults to 1e-4.
         faceting_tolerance (float): the tolerance to use when faceting surfaces.
             Defaults to 1e-1.
-        mesh_2D_resolution (tuple of ints): The mesh resolution in the height
+        mesh_2D_resolution (tuple of ints): The 3D mesh resolution in the height
             and width directions. The larger the resolution the finer the mesh
             and more computational intensity is required to converge each mesh
             element.
+        mesh_3D_resolution (tuple of ints): The 3D mesh resolution in the height,
+            width and depth directions. The larger the resolution the finer the
+            mesh and the more computational intensity is required to converge each
+            mesh element.
     """
 
     def __init__(
@@ -81,8 +87,8 @@ class NeutronicsModel():
         source,
         materials,
         cell_tallies=None,
-        mesh_tally_2D=None,
-        mesh_tally_3D=None,
+        mesh_tally_2d=None,
+        mesh_tally_3d=None,
         simulation_batches: int = 100,
         simulation_particles_per_batch: int = 10000,
         max_lost_particles: int = 10,
@@ -97,8 +103,8 @@ class NeutronicsModel():
         self.geometry = geometry
         self.source = source
         self.cell_tallies = cell_tallies
-        self.mesh_tally_2D = mesh_tally_2D
-        self.mesh_tally_3D = mesh_tally_3D
+        self.mesh_tally_2d = mesh_tally_2d
+        self.mesh_tally_3d = mesh_tally_3d
         self.simulation_batches = simulation_batches
         self.simulation_particles_per_batch = simulation_particles_per_batch
         self.max_lost_particles = max_lost_particles
@@ -167,48 +173,48 @@ class NeutronicsModel():
         self._cell_tallies = value
 
     @property
-    def mesh_tally_2D(self):
-        return self._mesh_tally_2D
+    def mesh_tally_2d(self):
+        return self._mesh_tally_2d
 
-    @mesh_tally_2D.setter
-    def mesh_tally_2D(self, value):
+    @mesh_tally_2d.setter
+    def mesh_tally_2d(self, value):
         if value is not None:
             if not isinstance(value, list):
                 raise TypeError(
-                    "NeutronicsModelFromReactor.mesh_tally_2D should be a\
+                    "NeutronicsModelFromReactor.mesh_tally_2d should be a\
                     list")
             output_options = ['tritium_production', 'heating', 'flux',
                               'fast flux', 'dose']
             for entry in value:
                 if entry not in output_options:
                     raise ValueError(
-                        "NeutronicsModelFromReactor.mesh_tally_2D argument",
+                        "NeutronicsModelFromReactor.mesh_tally_2d argument",
                         entry,
                         "not allowed, the following options are supported",
                         output_options)
-        self._mesh_tally_2D = value
+        self._mesh_tally_2d = value
 
     @property
-    def mesh_tally_3D(self):
-        return self._mesh_tally_3D
+    def mesh_tally_3d(self):
+        return self._mesh_tally_3d
 
-    @mesh_tally_3D.setter
-    def mesh_tally_3D(self, value):
+    @mesh_tally_3d.setter
+    def mesh_tally_3d(self, value):
         if value is not None:
             if not isinstance(value, list):
                 raise TypeError(
-                    "NeutronicsModelFromReactor.mesh_tally_3D should be a\
+                    "NeutronicsModelFromReactor.mesh_tally_3d should be a\
                     list")
             output_options = ['tritium_production', 'heating', 'flux',
                               'fast flux', 'dose']
             for entry in value:
                 if entry not in output_options:
                     raise ValueError(
-                        "NeutronicsModelFromReactor.mesh_tally_3D argument",
+                        "NeutronicsModelFromReactor.mesh_tally_3d argument",
                         entry,
                         "not allowed, the following options are supported",
                         output_options)
-        self._mesh_tally_3D = value
+        self._mesh_tally_3d = value
 
     @property
     def materials(self):
@@ -390,7 +396,7 @@ class NeutronicsModel():
 
     def create_neutronics_model(self, method: str = None):
         """Uses OpenMC python API to make a neutronics model, including tallies
-        (cell_tallies and mesh_tally_2D), simulation settings (batches,
+        (cell_tallies and mesh_tally_2d), simulation settings (batches,
         particles per batch).
 
         Arguments:
@@ -422,7 +428,7 @@ class NeutronicsModel():
         # details about what neutrons interactions to keep track of (tally)
         self.tallies = openmc.Tallies()
 
-        if self.mesh_tally_3D is not None:
+        if self.mesh_tally_3d is not None:
             mesh_xyz = openmc.RegularMesh(mesh_id=1, name='3d_mesh')
             mesh_xyz.dimension = self.mesh_3D_resolution
             mesh_xyz.lower_left = [
@@ -437,7 +443,7 @@ class NeutronicsModel():
                 self.geometry.largest_dimension
             ]
 
-            for standard_tally in self.mesh_tally_3D:
+            for standard_tally in self.mesh_tally_3d:
                 if standard_tally == 'tritium_production':
                     score = '(n,Xt)'  # where X is a wild card
                     prefix = 'tritium_production'
@@ -451,7 +457,7 @@ class NeutronicsModel():
                 tally.scores = [score]
                 self.tallies.append(tally)
 
-        if self.mesh_tally_2D is not None:
+        if self.mesh_tally_2d is not None:
 
             # Create mesh which will be used for tally
             mesh_xz = openmc.RegularMesh(mesh_id=2, name='2d_mesh_xz')
@@ -512,7 +518,7 @@ class NeutronicsModel():
                 self.geometry.largest_dimension
             ]
 
-            for standard_tally in self.mesh_tally_2D:
+            for standard_tally in self.mesh_tally_2d:
                 if standard_tally == 'tritium_production':
                     score = '(n,Xt)'  # where X is a wild card
                     prefix = 'tritium_production'
