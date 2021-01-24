@@ -5,12 +5,76 @@ from hashlib import blake2b
 from os import fdopen, remove
 from shutil import copymode, move
 from tempfile import mkstemp
-from typing import Tuple, List
+from typing import List, Tuple
 
 import cadquery as cq
 import numpy as np
+from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 
 import paramak
+
+
+def _transform_curve(edge, tolerance: float = 1e-3):
+    """Converts a curved edge into a series of straight lines (facetets) with
+    the provided tolerance.
+
+    Args:
+        edge (cadquery.Wire): The CadQuery wire to redraw as a series of
+            straight lines (facet)
+        tolerance: faceting toleranceto use when faceting cirles and
+            splines. Defaults to 1e-3.
+
+    Returns:
+        cadquery.Wire
+    """
+
+    curve = edge._geomAdaptor()  # adapt the edge into curve
+    start = curve.FirstParameter()
+    end = curve.LastParameter()
+
+    points = GCPnts_QuasiUniformDeflection(curve, tolerance, start, end)
+    verts = (cq.Vector(points.Value(i + 1)) for i in range(points.NbPoints()))
+
+    return cq.Wire.makePolygon(verts)
+
+
+def facet_wire(
+        wire,
+        facet_splines: bool = True,
+        facet_circles: bool = True,
+        tolerance: float = 1e-3
+        ):
+    """Converts specified curved edge types from a wire into a series of
+    straight lines (facetets) with the provided tol (tolerance). 
+
+    Args:
+        wire (cadquery.Wire): The CadQuery wire to select edge from which will
+            be redraw as a series of straight lines (facet).
+        facet_splines: If True then spline edges will be faceted. Defaults
+            to True.
+        facet_splines: If True then circle edges will be faceted.Defaults
+            to True.
+        tolerance: faceting toleranceto use when faceting cirles and
+            splines. Defaults to 1e-3.
+
+    Returns:
+        cadquery.Wire
+    """
+    edges = []
+
+    types_to_facet = []
+    if facet_splines:
+        types_to_facet.append('BSPLINE')
+    if facet_circles:
+        types_to_facet.append('CIRCLE')
+
+    for edge in wire.val().Edges():
+        if edge.geomType() in types_to_facet:
+            edges.extend(_transform_curve(edge, tolerance=tolerance).Edges())
+        else:
+            edges.append(edge)
+
+    return edges
 
 
 def coefficients_of_line_from_points(

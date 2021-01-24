@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
+from paramak.utils import facet_wire
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
 from paramak.utils import get_hash
@@ -596,14 +597,21 @@ class Reactor:
 
     def export_html(self, filename="reactor.html"):
         """Creates a html graph representation of the points for the Shape
-        objects that make up the reactor. Note, If filename provided doesn't end
-        with .html then it will be appended.
+        objects that make up the reactor. Shapes are colored by their .color
+        property. Shapes are also labelled by their .name. If filename provided
+        doesn't end with .html then .html will be added.
 
         Args:
-            filename (str): the filename to save the html graph
+            filename: the filename used to save the html graph.
+            facet_splines: If True then spline edges will be faceted. Defaults
+                to True.
+            facet_splines: If True then circle edges will be faceted.Defaults
+                to True.
+            tolerance: faceting toleranceto use when faceting cirles and
+                splines. Defaults to 1e-3.
 
         Returns:
-            plotly figure: figure object
+            plotly.Figure(): figure object
         """
 
         path_filename = Path(filename)
@@ -620,7 +628,13 @@ class Reactor:
 
         # accesses the Shape traces for each Shape and adds them to the figure
         for entry in self.shapes_and_components:
-            fig.add_trace(entry._trace())
+            edges = facet_wire(wire=entry.wire)
+            fpoints = []
+            for edge in edges:
+                for v in edge.Vertices():
+                    fpoints.append((v.X, v.Z))
+            fig.add_trace(entry._trace(points=fpoints, mode="lines"))
+            fig.add_trace(entry._trace(points=entry.points, mode="markers"))
 
         fig.write_html(str(path_filename))
         print("Exported html graph to ", str(path_filename))
