@@ -162,7 +162,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     git clone --single-branch --branch develop https://github.com/svalinn/DAGMC.git ; \
     mkdir build ; \
     cd build ; \
-    cmake ../dagmc -DBUILD_TALLY=ON \
+    cmake ../DAGMC -DBUILD_TALLY=ON \
                    -DMOAB_DIR=/MOAB \
                    -DBUILD_STATIC_EXE=OFF \
                    -DBUILD_STATIC_LIBS=OFF \
