@@ -56,9 +56,9 @@ class NeutronicsModel():
             neutronics-material-maker.MultiMaterial. All components within the
             geometry object must be accounted for. Material tags required
             for a Reactor or Shape can be obtained with .material_tags.
-        mesh_tally_2d (list of strings): the 2D mesh based tallies to calculate,
+        mesh_tally_2d (list of str): the 2D mesh based tallies to calculate,
             options include tritium_production, heating and flux.
-        mesh_tally_3d (list of strings): the 3D mesh based tallies to calculate,
+        mesh_tally_3d (list of str): the 3D mesh based tallies to calculate,
             options include tritium_production, heating and flux.
         fusion_power (float): the power in watts emitted by the fusion
             reaction recalling that each DT fusion reaction emitts 17.6 MeV or
@@ -75,7 +75,7 @@ class NeutronicsModel():
             and width directions. The larger the resolution the finer the mesh
             and more computational intensity is required to converge each mesh
             element.
-        mesh_3D_resolution (tuple of ints): The 3D mesh resolution in the height,
+        mesh_3D_resolution (tuple of int): The 3D mesh resolution in the height,
             width and depth directions. The larger the resolution the finer the
             mesh and the more computational intensity is required to converge each
             mesh element.
