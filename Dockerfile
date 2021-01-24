@@ -168,7 +168,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
                    -DBUILD_STATIC_LIBS=OFF \
                    -DCMAKE_INSTALL_PREFIX=/dagmc/ ; \
     make -j"$compile_cores" install ; \
-    rm -rf /DAGMC/dagmc /DAGMC/build ; \
+    rm -rf /DAGMC/DAGMC /DAGMC/build ; \
     fi
 
 # Clone and install OpenMC with DAGMC
