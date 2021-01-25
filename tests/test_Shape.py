@@ -413,7 +413,7 @@ class TestShape(unittest.TestCase):
             width=50,
             name="coucou"
         )
-        assert test_shape._trace() is not None
+        assert test_shape._trace(test_shape.points) is not None
 
     def test_create_patch_error(self):
         """Checks _create_patch raises a ValueError when points is None."""
