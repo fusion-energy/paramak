@@ -43,9 +43,9 @@ def facet_wire(
         facet_splines: bool = True,
         facet_circles: bool = True,
         tolerance: float = 1e-3
-        ):
+):
     """Converts specified curved edge types from a wire into a series of
-    straight lines (facetets) with the provided tol (tolerance). 
+    straight lines (facetets) with the provided tol (tolerance).
 
     Args:
         wire (cadquery.Wire): The CadQuery wire to select edge from which will

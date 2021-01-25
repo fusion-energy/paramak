@@ -862,7 +862,7 @@ class Shape:
             facet_splines: bool = True,
             facet_circles: bool = True,
             tolerance: float = 1e-3,
-            ):
+    ):
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
         Shapes are also labelled by their .name. If filename provided doesn't
@@ -903,10 +903,10 @@ class Shape:
         )
 
         edges = facet_wire(
-                    wire=self.wire,
-                    facet_splines=facet_splines,
-                    facet_circles=facet_circles,
-                    tolerance=tolerance)
+            wire=self.wire,
+            facet_splines=facet_splines,
+            facet_circles=facet_circles,
+            tolerance=tolerance)
 
         fpoints = []
         for edge in edges:
@@ -926,7 +926,7 @@ class Shape:
             self,
             points: List[Tuple[float, float]],
             mode: str = "markers+lines"
-            ):
+    ):
         """Creates a plotly trace representation of the points of the Shape
         object. This method is intended for internal use by Shape.export_html.
 
@@ -934,7 +934,7 @@ class Shape:
             points: A list of tuples containing the X, Z points of to add to
                 the trace.
             mode: The mode to use for the Plotly.Scatter graph. Options include
-                "markers", "lines" and "markers+lines". Defualts to 
+                "markers", "lines" and "markers+lines". Defualts to
                 "markers+lines"
 
         Returns:
@@ -1037,9 +1037,9 @@ class Shape:
         patches = []
 
         edges = facet_wire(
-                    wire=self.wire,
-                    facet_splines=True,
-                    facet_circles=True)
+            wire=self.wire,
+            facet_splines=True,
+            facet_circles=True)
 
         fpoints = []
         for edge in edges:
