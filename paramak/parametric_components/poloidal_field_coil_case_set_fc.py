@@ -95,10 +95,13 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
 
         if isinstance(self.casing_thicknesses, list):
             if len(self.casing_thicknesses) != num_of_coils:
-                raise ValueError("The number pf_coils is not equal to the "
-                                 "number of thichnesses provided. "
-                                 "casing_thicknesses=", self.casing_thicknesses,
-                                 "num_of_coils=", num_of_coils)
+                raise ValueError(
+                    "The number pf_coils is not equal to the "
+                    "number of thichnesses provided. "
+                    "casing_thicknesses=",
+                    self.casing_thicknesses,
+                    "num_of_coils=",
+                    num_of_coils)
             casing_thicknesses_list = self.casing_thicknesses
         else:
             casing_thicknesses_list = [self.casing_thicknesses] * num_of_coils
@@ -192,7 +195,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         compound = cq.Compound.makeCompound(
             [a.val() for a in pf_coils_set]
         )
-        
+
         self.wire = wires
 
         self.solid = compound

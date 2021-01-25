@@ -634,7 +634,10 @@ class Reactor:
                     for vertice in edge.Vertices():
                         fpoints.append((vertice.X, vertice.Z))
                 fig.add_trace(entry._trace(points=fpoints, mode="lines"))
-                fig.add_trace(entry._trace(points=entry.points, mode="markers"))
+                fig.add_trace(
+                    entry._trace(
+                        points=entry.points,
+                        mode="markers"))
 
         fig.write_html(str(path_filename))
         print("Exported html graph to ", str(path_filename))
