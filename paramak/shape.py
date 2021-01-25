@@ -1043,8 +1043,8 @@ class Shape:
 
         fpoints = []
         for edge in edges:
-            for v in edge.Vertices():
-                fpoints.append((v.X, v.Z))
+            for vertice in edge.Vertices():
+                fpoints.append((vertice.X, vertice.Z))
 
         polygon = Polygon(fpoints, closed=True)
         patches.append(polygon)

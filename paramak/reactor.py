@@ -631,8 +631,8 @@ class Reactor:
             edges = facet_wire(wire=entry.wire)
             fpoints = []
             for edge in edges:
-                for v in edge.Vertices():
-                    fpoints.append((v.X, v.Z))
+                for vertice in edge.Vertices():
+                    fpoints.append((vertice.X, vertice.Z))
             fig.add_trace(entry._trace(points=fpoints, mode="lines"))
             fig.add_trace(entry._trace(points=entry.points, mode="markers"))
 
