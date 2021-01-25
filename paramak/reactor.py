@@ -622,13 +622,19 @@ class Reactor:
 
         # accesses the Shape traces for each Shape and adds them to the figure
         for entry in self.shapes_and_components:
-            edges = facet_wire(wire=entry.wire)
-            fpoints = []
-            for edge in edges:
-                for vertice in edge.Vertices():
-                    fpoints.append((vertice.X, vertice.Z))
-            fig.add_trace(entry._trace(points=fpoints, mode="lines"))
-            fig.add_trace(entry._trace(points=entry.points, mode="markers"))
+            if not isinstance(entry.wire, list):
+                list_of_wires = [entry.wire]
+            else:
+                list_of_wires = entry.wire
+
+            for wire in list_of_wires:
+                edges = facet_wire(wire=wire)
+                fpoints = []
+                for edge in edges:
+                    for vertice in edge.Vertices():
+                        fpoints.append((vertice.X, vertice.Z))
+                fig.add_trace(entry._trace(points=fpoints, mode="lines"))
+                fig.add_trace(entry._trace(points=entry.points, mode="markers"))
 
         fig.write_html(str(path_filename))
         print("Exported html graph to ", str(path_filename))
