@@ -934,7 +934,7 @@ class Shape:
             points: A list of tuples containing the X, Z points of to add to
                 the trace.
             mode: The mode to use for the Plotly.Scatter graph. Options include
-                "markers", "lines" and "markers+lines". Defualts to
+                "markers", "lines" and "markers+lines". Defaults to
                 "markers+lines"
 
         Returns:
