@@ -140,20 +140,6 @@ class TestShape(unittest.TestCase):
             test_shape.create_limits()
         self.assertRaises(ValueError, limits)
 
-    def test_export_2d_image(self):
-        """Creates a Shape object and checks that a png file of the object with
-        the correct suffix can be exported using the export_2d_image method."""
-
-        test_shape = paramak.Shape()
-        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
-        os.system("rm filename.png")
-        test_shape.export_2d_image("filename")
-        assert Path("filename.png").exists() is True
-        os.system("rm filename.png")
-        test_shape.export_2d_image("filename.png")
-        assert Path("filename.png").exists() is True
-        os.system("rm filename.png")
-
     def test_initial_solid_construction(self):
         """Creates a shape and checks that a cadquery solid with a unique hash
         value is created when .solid is called."""
