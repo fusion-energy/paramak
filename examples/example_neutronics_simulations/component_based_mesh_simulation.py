@@ -34,8 +34,8 @@ def make_model_and_simulate():
             source=source,
             materials={'center_column_shield_mat': 'eurofer'},
             cell_tallies=['heating', 'TBR'],
-            mesh_tally_2D=['heating'],
-            mesh_tally_3D=['heating'],
+            mesh_tally_2d=['heating'],
+            mesh_tally_3d=['heating'],
             simulation_batches=10,  # should be increased for more accurate result
             simulation_particles_per_batch=10  # settings are low to reduce time required
         )
