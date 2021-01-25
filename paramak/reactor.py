@@ -603,12 +603,6 @@ class Reactor:
 
         Args:
             filename: the filename used to save the html graph.
-            facet_splines: If True then spline edges will be faceted. Defaults
-                to True.
-            facet_splines: If True then circle edges will be faceted.Defaults
-                to True.
-            tolerance: faceting toleranceto use when faceting cirles and
-                splines. Defaults to 1e-3.
 
         Returns:
             plotly.Figure(): figure object
