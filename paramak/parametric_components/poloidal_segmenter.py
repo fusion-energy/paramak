@@ -153,7 +153,7 @@ class PoloidalSegments(RotateStraightShape):
                 cq.Workplane(self.workplane)
                 .polyline([p1[:2], p2[:2], p3[:2]])
             )
-            
+
             wire = solid.close()
 
             wires.append(wire)

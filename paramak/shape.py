@@ -944,7 +944,7 @@ class Shape:
 
             fig.add_trace(self._trace(points=fpoints, mode="lines"))
 
-        #sweep shapes have .path_points but not .points attribute
+        # sweep shapes have .path_points but not .points attribute
         if self.points is not None:
             fig.add_trace(self._trace(points=self.points, mode="markers"))
         if hasattr(self, 'path_points'):
