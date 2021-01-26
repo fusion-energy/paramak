@@ -252,6 +252,16 @@ class TestShape(unittest.TestCase):
             test_shape.export_html("out.html")
         self.assertRaises(ValueError, export)
 
+    def test_export_html_with_wire_None(self):
+        """Checks that an error is raised when wire is None and export_html
+        """
+        test_shape = paramak.Shape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape.wire = None
+
+        def export():
+            test_shape.export_html("out.html")
+        self.assertRaises(ValueError, export)
+
     def test_invalid_stp_filename(self):
         """Checks ValueError is raised when invalid stp filenames are used."""
 
