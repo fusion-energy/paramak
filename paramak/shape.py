@@ -882,13 +882,13 @@ class Shape:
             plotly.Figure(): figure object
         """
 
-        if self.__class__.__name__ == "SweepCircleShape":
-            msg = 'WARNING: export_html will plot path_points for ' + \
-                'the SweepCircleShape class'
-            print(msg)
+        # if self.__class__.__name__ == "SweepCircleShape":
+        #     msg = 'WARNING: export_html will plot path_points for ' + \
+        #         'the SweepCircleShape class'
+        #     print(msg)
 
-        if self.points is None:
-            raise ValueError("No points defined for", self)
+        # if self.points is None:
+        #     raise ValueError("No points defined for", self)
 
         Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
