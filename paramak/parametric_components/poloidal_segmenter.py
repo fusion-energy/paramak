@@ -146,15 +146,23 @@ class PoloidalSegments(RotateStraightShape):
 
         iter_points = iter(self.points)
         triangle_wedges = []
+        wires = []
         for p1, p2, p3 in zip(iter_points, iter_points, iter_points):
 
             solid = (
                 cq.Workplane(self.workplane)
                 .polyline([p1[:2], p2[:2], p3[:2]])
-                .close()
-                .revolve(self.rotation_angle)
             )
+            
+            wire = solid.close()
+
+            wires.append(wire)
+
+            solid = wire.revolve(self.rotation_angle)
+
             triangle_wedges.append(solid)
+
+        self.wire = wires
 
         if self.shape_to_segment is None:
 
