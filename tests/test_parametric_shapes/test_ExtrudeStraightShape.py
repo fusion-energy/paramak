@@ -128,8 +128,8 @@ class TestExtrudeStraightShape(unittest.TestCase):
         for workplane in ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]:
             os.system("rm " + workplane + ".html")
             self.test_shape.workplane = workplane
-            fig = self.test_shape.export_html(workplane+".html")
-            assert Path(workplane+".html").exists() is True
+            fig = self.test_shape.export_html(workplane + ".html")
+            assert Path(workplane + ".html").exists() is True
             assert fig.layout.xaxis.title['text'] == workplane[0]
             assert fig.layout.yaxis.title['text'] == workplane[1]
 
