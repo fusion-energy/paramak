@@ -553,6 +553,12 @@ class Shape:
             # obtains the first two values of the points list
             XZ_points = [(p[0], p[1]) for p in self.points]
 
+            for point in self.points:
+                if len(point) != 3:
+                    msg = "The points list should contain two coordinates and \
+                        a connetion type"
+                    raise ValueError(msg)
+
             # obtains the last values of the points list
             connections = [p[2] for p in self.points[:-1]]
 
@@ -881,6 +887,13 @@ class Shape:
         Returns:
             plotly.Figure(): figure object
         """
+
+        if self.points is None:
+            if hasattr(self, 'path_points') and self.path_points is None:
+                raise ValueError("No points or point_path defined for", self)
+
+        if self.wire is None:
+            raise ValueError("No wire defined for", self)
 
         Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
