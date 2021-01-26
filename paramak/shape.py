@@ -882,14 +882,6 @@ class Shape:
             plotly.Figure(): figure object
         """
 
-        # if self.__class__.__name__ == "SweepCircleShape":
-        #     msg = 'WARNING: export_html will plot path_points for ' + \
-        #         'the SweepCircleShape class'
-        #     print(msg)
-
-        # if self.points is None:
-        #     raise ValueError("No points defined for", self)
-
         Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
         path_filename = Path(filename)
@@ -899,7 +891,13 @@ class Shape:
 
         fig = go.Figure()
         fig.update_layout(
-            {"title": "coordinates of shape", "hovermode": "closest"}
+            {
+                "title": "coordinates of " + self.__class__.__name__ +
+                " shape, viewed from the " + self.workplane + " plane",
+                "hovermode": "closest",
+                "xaxis_title": self.workplane[0],
+                "yaxis_title": self.workplane[1]
+            }
         )
 
         if not isinstance(self.wire, list):
@@ -918,10 +916,26 @@ class Shape:
             fpoints = []
             for edge in edges:
                 for vertex in edge.Vertices():
-                    fpoints.append((vertex.X, vertex.Z))
+                    if self.workplane == 'XZ':
+                        fpoints.append((vertex.X, vertex.Z))
+                    elif self.workplane == 'XY':
+                        fpoints.append((vertex.X, vertex.Y))
+                    elif self.workplane == 'YZ':
+                        fpoints.append((vertex.Y, vertex.Z))
+                    elif self.workplane == 'YX':
+                        fpoints.append((vertex.Y, vertex.X))
+                    elif self.workplane == 'ZY':
+                        fpoints.append((vertex.Z, vertex.Y))
+                    else:  # workplan must be ZX
+                        fpoints.append((vertex.Z, vertex.X))
 
-        fig.add_trace(self._trace(points=fpoints, mode="lines"))
-        fig.add_trace(self._trace(points=self.points, mode="markers"))
+            fig.add_trace(self._trace(points=fpoints, mode="lines"))
+
+        #sweep shapes have .path_points but not .points attribute
+        if self.points is not None:
+            fig.add_trace(self._trace(points=self.points, mode="markers"))
+        if hasattr(self, 'path_points'):
+            fig.add_trace(self._trace(points=self.path_points, mode="markers"))
 
         fig.write_html(str(path_filename))
 
