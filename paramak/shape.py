@@ -902,16 +902,23 @@ class Shape:
             {"title": "coordinates of shape", "hovermode": "closest"}
         )
 
-        edges = facet_wire(
-            wire=self.wire,
-            facet_splines=facet_splines,
-            facet_circles=facet_circles,
-            tolerance=tolerance)
+        if not isinstance(self.wire, list):
+            list_of_wires = [self.wire]
+        else:
+            list_of_wires = self.wire
 
-        fpoints = []
-        for edge in edges:
-            for v in edge.Vertices():
-                fpoints.append((v.X, v.Z))
+        for wire in list_of_wires:
+
+            edges = facet_wire(
+                wire=wire,
+                facet_splines=facet_splines,
+                facet_circles=facet_circles,
+                tolerance=tolerance)
+
+            fpoints = []
+            for edge in edges:
+                for vertex in edge.Vertices():
+                    fpoints.append((vertex.X, vertex.Z))
 
         fig.add_trace(self._trace(points=fpoints, mode="lines"))
         fig.add_trace(self._trace(points=self.points, mode="markers"))
