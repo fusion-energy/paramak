@@ -599,7 +599,8 @@ class Reactor:
         """Creates a html graph representation of the points for the Shape
         objects that make up the reactor. Shapes are colored by their .color
         property. Shapes are also labelled by their .name. If filename provided
-        doesn't end with .html then .html will be added.
+        doesn't end with .html then .html will be added. Viewed from the XZ
+        plane
 
         Args:
             filename: the filename used to save the html graph.
@@ -617,9 +618,14 @@ class Reactor:
 
         fig = go.Figure()
         fig.update_layout(
-            {"title": "coordinates of components", "hovermode": "closest"}
+            {
+                "title": "coordinates of the " + self.__class__.__name__ +
+                " reactor, viewed from the XZ plane",
+                "hovermode": "closest",
+                "xaxis_title": 'X',
+                "yaxis_title": 'Z'
+            }
         )
-
         # accesses the Shape traces for each Shape and adds them to the figure
         for entry in self.shapes_and_components:
             if not isinstance(entry.wire, list):
