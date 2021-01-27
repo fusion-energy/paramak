@@ -151,6 +151,5 @@ class TestExtrudeStraightShape(unittest.TestCase):
             assert fig.layout.yaxis.title['text'] == workplane[1]
 
 
-
 if __name__ == "__main__":
     unittest.main()
