@@ -416,6 +416,9 @@ class Shape:
             if not isinstance(values, list):
                 raise ValueError("points must be a list")
 
+            if self.connection_type != "mixed":
+                values = [(*p, self.connection_type) for p in values]
+
             for value in values:
                 if type(value) not in [list, tuple]:
                     msg = "individual points must be a list or a tuple." + \
@@ -464,8 +467,6 @@ class Shape:
                     raise ValueError(msg)
 
                 values.append(values[0])
-            if self.connection_type != "mixed":
-                values = [(*p, self.connection_type) for p in values]
 
         self._points = values
 

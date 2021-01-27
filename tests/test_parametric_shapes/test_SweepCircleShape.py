@@ -25,7 +25,7 @@ class TestSweepCircleShape(unittest.TestCase):
         assert self.test_shape.azimuth_placement_angle == 0
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.path_workplane == "XZ"
-        assert self.test_shape.force_cross_section == False
+        assert self.test_shape.force_cross_section is False
 
     def test_solid_construction_workplane(self):
         """Checks that SweepSplineShapes can be created in different workplanes."""

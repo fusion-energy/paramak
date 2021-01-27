@@ -285,6 +285,23 @@ class TestRotateStraightShape(unittest.TestCase):
         output_filename = self.test_shape.export_graveyard(filename='test2')
         assert 'test2.stp' == output_filename
 
+    def test_incorrect_points_input(self):
+        """Checks that an error is raised when the points are input with the
+        connection"""
+
+        def incorrect_points_definition():
+            self.test_shape.points = [
+                (10, 10, 'straight'),
+                (10, 30, 'straight'),
+                (30, 30, 'straight'),
+                (30, 10, 'straight')
+            ]
+
+        self.assertRaises(
+            ValueError,
+            incorrect_points_definition
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

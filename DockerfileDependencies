@@ -162,13 +162,13 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     git clone --single-branch --branch develop https://github.com/svalinn/DAGMC.git ; \
     mkdir build ; \
     cd build ; \
-    cmake ../dagmc -DBUILD_TALLY=ON \
+    cmake ../DAGMC -DBUILD_TALLY=ON \
                    -DMOAB_DIR=/MOAB \
                    -DBUILD_STATIC_EXE=OFF \
                    -DBUILD_STATIC_LIBS=OFF \
-                   -DCMAKE_INSTALL_PREFIX=/dagmc/ ; \
+                   -DCMAKE_INSTALL_PREFIX=/DAGMC/ ; \
     make -j"$compile_cores" install ; \
-    rm -rf /DAGMC/dagmc /DAGMC/build ; \
+    rm -rf /DAGMC/DAGMC /DAGMC/build ; \
     fi
 
 # Clone and install OpenMC with DAGMC
