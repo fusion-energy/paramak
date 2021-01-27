@@ -153,23 +153,6 @@ class TestSweepCircleShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-    def test_incorrect_points_input(self):
-        """Checks that an error is raised when the points are input with the
-        connection"""
-
-        def incorrect_points_definition():
-            self.test_shape.points = [
-                (10, 10, 'circle'),
-                (10, 30, 'circle'),
-                (30, 30, 'circle'),
-                (30, 10, 'circle')
-            ]
-
-        self.assertRaises(
-            ValueError,
-            incorrect_points_definition
-        )
-
 
 if __name__ == "__main__":
     unittest.main()
