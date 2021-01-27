@@ -132,9 +132,13 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         solid = (
             cq.Workplane(self.workplane)
             .polyline(points_without_connections)
-            .close()
-            .extrude(distance=-self.distance / 2.0, both=True)
         )
+
+        wire = solid.close()
+
+        self.wire = wire
+
+        solid = wire.extrude(distance=-self.distance / 2.0, both=True)
 
         if self.with_inner_leg is True:
             inner_leg_solid = cq.Workplane(self.workplane)

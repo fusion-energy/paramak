@@ -15,6 +15,19 @@ class TestRotateMixedShape(unittest.TestCase):
                     (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")]
         )
 
+    def test_export_2d_image(self):
+        """Creates a RotateMixedShape object and checks that a png file of the
+        object with the correct suffix can be exported using the
+        export_2d_image method."""
+
+        os.system("rm filename.png")
+        self.test_shape.export_2d_image("filename")
+        assert Path("filename.png").exists() is True
+        os.system("rm filename.png")
+        self.test_shape.export_2d_image("filename.png")
+        assert Path("filename.png").exists() is True
+        os.system("rm filename.png")
+
     def test_default_parameters(self):
         """Checks that the default parameters of a RotateMixedShape are correct."""
 

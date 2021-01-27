@@ -306,7 +306,7 @@ def main():
     )
     all_components.append(component)
 
-    component = paramak.ToroidalFieldCoilPrincetonD(
+    magnet = paramak.ToroidalFieldCoilPrincetonD(
         R1=80,
         R2=300,
         thickness=30,
@@ -314,7 +314,7 @@ def main():
         number_of_coils=1,
         stp_filename="toroidal_field_coil_princeton_d.stp"
     )
-    all_components.append(component)
+    all_components.append(magnet)
 
     component = paramak.ITERtypeDivertor(
         # default parameters
@@ -402,6 +402,21 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.PoloidalSegments(
+        number_of_segments=5,
+        center_point=(400, 50)
+    )
+    all_components.append(component)
+
+    component = paramak.TFCoilCasing(
+        magnet=magnet,
+        inner_offset=10,
+        outer_offset=15,
+        vertical_section_offset=20,
+        distance=40
+    )
+    all_components.append(component)
+
     return all_components
 
 
@@ -410,5 +425,6 @@ if __name__ == "__main__":
     filenames = []
     for components in all_components:
         components.export_stp()
+        components.export_html()
         filenames.append(components.stp_filename)
     print(filenames)

@@ -37,6 +37,8 @@ def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
         blanket_fillet_radius=15,
     )
 
+    my_reactor.solid  # triggers the construction of the reactor model
+
     # finds the correct edges to fillet
     x_coord = my_reactor.major_radius
     front_face = my_reactor._blanket.solid.faces(

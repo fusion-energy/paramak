@@ -169,6 +169,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
 
         iter_points = iter(self.points)
         pf_coils_set = []
+        wires = []
         for p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 in zip(
                 iter_points, iter_points, iter_points, iter_points,
                 iter_points, iter_points, iter_points, iter_points,
@@ -180,14 +181,21 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
                 .polyline(
                     [p1[:2], p2[:2], p3[:2], p4[:2], p5[:2], p6[:2],
                      p7[:2], p8[:2], p9[:2], p10[:2]])
-                .close()
-                .revolve(self.rotation_angle)
             )
+
+            wire = solid.close()
+
+            wires.append(wire)
+
+            solid = wire.revolve(self.rotation_angle)
+
             pf_coils_set.append(solid)
 
         compound = cq.Compound.makeCompound(
             [a.val() for a in pf_coils_set]
         )
+
+        self.wire = wires
 
         self.solid = compound
 

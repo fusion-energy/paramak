@@ -138,6 +138,19 @@ class TestExtrudeStraightShape(unittest.TestCase):
             incorrect_points_definition
         )
 
+    def test_export_html_with_different_workplanes(self):
+        """Checks that all the workplanes produce an html file when using the
+        export_html method and that the axis have the correct labels"""
+
+        for workplane in ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]:
+            os.system("rm " + workplane + ".html")
+            self.test_shape.workplane = workplane
+            fig = self.test_shape.export_html(workplane + ".html")
+            assert Path(workplane + ".html").exists() is True
+            assert fig.layout.xaxis.title['text'] == workplane[0]
+            assert fig.layout.yaxis.title['text'] == workplane[1]
+
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
+from paramak.utils import facet_wire
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
 from paramak.utils import get_hash
@@ -596,14 +597,16 @@ class Reactor:
 
     def export_html(self, filename="reactor.html"):
         """Creates a html graph representation of the points for the Shape
-        objects that make up the reactor. Note, If filename provided doesn't end
-        with .html then it will be appended.
+        objects that make up the reactor. Shapes are colored by their .color
+        property. Shapes are also labelled by their .name. If filename provided
+        doesn't end with .html then .html will be added. Viewed from the XZ
+        plane
 
         Args:
-            filename (str): the filename to save the html graph
+            filename: the filename used to save the html graph.
 
         Returns:
-            plotly figure: figure object
+            plotly.Figure(): figure object
         """
 
         path_filename = Path(filename)
@@ -615,12 +618,32 @@ class Reactor:
 
         fig = go.Figure()
         fig.update_layout(
-            {"title": "coordinates of components", "hovermode": "closest"}
+            {
+                "title": "coordinates of the " + self.__class__.__name__ +
+                " reactor, viewed from the XZ plane",
+                "hovermode": "closest",
+                "xaxis_title": 'X',
+                "yaxis_title": 'Z'
+            }
         )
-
         # accesses the Shape traces for each Shape and adds them to the figure
         for entry in self.shapes_and_components:
-            fig.add_trace(entry._trace())
+            if not isinstance(entry.wire, list):
+                list_of_wires = [entry.wire]
+            else:
+                list_of_wires = entry.wire
+
+            for wire in list_of_wires:
+                edges = facet_wire(wire=wire)
+                fpoints = []
+                for edge in edges:
+                    for vertice in edge.Vertices():
+                        fpoints.append((vertice.X, vertice.Z))
+                fig.add_trace(entry._trace(points=fpoints, mode="lines"))
+                fig.add_trace(
+                    entry._trace(
+                        points=entry.points,
+                        mode="markers"))
 
         fig.write_html(str(path_filename))
         print("Exported html graph to ", str(path_filename))

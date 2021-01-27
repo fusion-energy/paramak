@@ -4,6 +4,7 @@ import numbers
 import warnings
 from collections import Iterable
 from pathlib import Path
+from typing import List, Tuple
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -15,8 +16,8 @@ from matplotlib.patches import Polygon
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
-from paramak.utils import (cut_solid, get_hash, intersect_solid, union_solid,
-                           _replace)
+from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
+                           intersect_solid, union_solid)
 
 
 class Shape:
@@ -553,6 +554,12 @@ class Shape:
             # obtains the first two values of the points list
             XZ_points = [(p[0], p[1]) for p in self.points]
 
+            for point in self.points:
+                if len(point) != 3:
+                    msg = "The points list should contain two coordinates and \
+                        a connetion type"
+                    raise ValueError(msg)
+
             # obtains the last values of the points list
             connections = [p[2] for p in self.points[:-1]]
 
@@ -856,26 +863,38 @@ class Shape:
 
         return str(path_filename)
 
-    def export_html(self, filename: str):
+    def export_html(
+            self,
+            filename: str = "shape.html",
+            facet_splines: bool = True,
+            facet_circles: bool = True,
+            tolerance: float = 1e-3,
+    ):
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
         Shapes are also labelled by their .name. If filename provided doesn't
         end with .html then .html will be added.
 
         Args:
-            filename (str): the filename used to save the html graph
+            filename: the filename used to save the html graph. Defaults to
+                shape.html
+            facet_splines: If True then spline edges will be faceted. Defaults
+                to True.
+            facet_circles: If True then circle edges will be faceted.Defaults
+                to True.
+            tolerance: faceting toleranceto use when faceting cirles and
+                splines. Defaults to 1e-3.
 
         Returns:
             plotly.Figure(): figure object
         """
 
-        if self.__class__.__name__ == "SweepCircleShape":
-            msg = 'WARNING: export_html will plot path_points for ' + \
-                'the SweepCircleShape class'
-            print(msg)
-
         if self.points is None:
-            raise ValueError("No points defined for", self)
+            if hasattr(self, 'path_points') and self.path_points is None:
+                raise ValueError("No points or point_path defined for", self)
+
+        if self.wire is None:
+            raise ValueError("No wire defined for", self)
 
         Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
@@ -886,10 +905,51 @@ class Shape:
 
         fig = go.Figure()
         fig.update_layout(
-            {"title": "coordinates of components", "hovermode": "closest"}
+            {
+                "title": "coordinates of " + self.__class__.__name__ +
+                " shape, viewed from the " + self.workplane + " plane",
+                "hovermode": "closest",
+                "xaxis_title": self.workplane[0],
+                "yaxis_title": self.workplane[1]
+            }
         )
 
-        fig.add_trace(self._trace())
+        if not isinstance(self.wire, list):
+            list_of_wires = [self.wire]
+        else:
+            list_of_wires = self.wire
+
+        for wire in list_of_wires:
+
+            edges = facet_wire(
+                wire=wire,
+                facet_splines=facet_splines,
+                facet_circles=facet_circles,
+                tolerance=tolerance)
+
+            fpoints = []
+            for edge in edges:
+                for vertex in edge.Vertices():
+                    if self.workplane == 'XZ':
+                        fpoints.append((vertex.X, vertex.Z))
+                    elif self.workplane == 'XY':
+                        fpoints.append((vertex.X, vertex.Y))
+                    elif self.workplane == 'YZ':
+                        fpoints.append((vertex.Y, vertex.Z))
+                    elif self.workplane == 'YX':
+                        fpoints.append((vertex.Y, vertex.X))
+                    elif self.workplane == 'ZY':
+                        fpoints.append((vertex.Z, vertex.Y))
+                    else:  # workplan must be ZX
+                        fpoints.append((vertex.Z, vertex.X))
+
+            fig.add_trace(self._trace(points=fpoints, mode="lines"))
+
+        # sweep shapes have .path_points but not .points attribute
+        if self.points is not None:
+            fig.add_trace(self._trace(points=self.points, mode="markers"))
+        if hasattr(self, 'path_points'):
+            fig.add_trace(self._trace(points=self.path_points, mode="markers"))
 
         fig.write_html(str(path_filename))
 
@@ -897,9 +957,20 @@ class Shape:
 
         return fig
 
-    def _trace(self):
+    def _trace(
+            self,
+            points: List[Tuple[float, float]],
+            mode: str = "markers+lines"
+    ):
         """Creates a plotly trace representation of the points of the Shape
         object. This method is intended for internal use by Shape.export_html.
+
+        Args:
+            points: A list of tuples containing the X, Z points of to add to
+                the trace.
+            mode: The mode to use for the Plotly.Scatter graph. Options include
+                "markers", "lines" and "markers+lines". Defaults to
+                "markers+lines"
 
         Returns:
             plotly trace: trace object
@@ -919,42 +990,26 @@ class Shape:
 
         text_values = []
 
-        for i, point in enumerate(self.points[:-1]):
-            if len(point) == 3:
-                text_values.append(
-                    "point number="
-                    + str(i)
-                    + "<br>"
-                    + "connection to next point="
-                    + str(point[2])
-                    + "<br>"
-                    + "x="
-                    + str(point[0])
-                    + "<br>"
-                    + "z="
-                    + str(point[1])
-                    + "<br>"
-                )
-            else:
-                text_values.append(
-                    "point number="
-                    + str(i)
-                    + "<br>"
-                    + "x="
-                    + str(point[0])
-                    + "<br>"
-                    + "z="
-                    + str(point[1])
-                    + "<br>"
-                )
+        for i, point in enumerate(points):
+            text_values.append(
+                "point number="
+                + str(i)
+                + "<br>"
+                + "x="
+                + str(point[0])
+                + "<br>"
+                + "z="
+                + str(point[1])
+                + "<br>"
+            )
 
         trace = go.Scatter(
             {
-                "x": [row[0] for row in self.points],
-                "y": [row[1] for row in self.points],
+                "x": [row[0] for row in points],
+                "y": [row[1] for row in points],
                 "hoverinfo": "text",
                 "text": text_values,
-                "mode": "markers+lines",
+                "mode": mode,
                 "marker": {"size": 5, "color": color},
                 "name": name,
             }
@@ -963,8 +1018,8 @@ class Shape:
         return trace
 
     def export_2d_image(
-            self, filename: str, xmin: float = 0., xmax: float = 900.,
-            ymin: float = -600., ymax: float = 600.):
+            self, filename: str = 'shape.png', xmin: float = 0.,
+            xmax: float = 900., ymin: float = -600., ymax: float = 600.):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
@@ -1015,12 +1070,18 @@ class Shape:
             raise ValueError("No points defined for", self)
 
         patches = []
-        xylist = []
 
-        for point in self.points:
-            xylist.append([point[0], point[1]])
+        edges = facet_wire(
+            wire=self.wire,
+            facet_splines=True,
+            facet_circles=True)
 
-        polygon = Polygon(xylist, closed=True)
+        fpoints = []
+        for edge in edges:
+            for vertice in edge.Vertices():
+                fpoints.append((vertice.X, vertice.Z))
+
+        polygon = Polygon(fpoints, closed=True)
         patches.append(polygon)
 
         patch = PatchCollection(patches)

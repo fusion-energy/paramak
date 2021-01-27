@@ -140,20 +140,6 @@ class TestShape(unittest.TestCase):
             test_shape.create_limits()
         self.assertRaises(ValueError, limits)
 
-    def test_export_2d_image(self):
-        """Creates a Shape object and checks that a png file of the object with
-        the correct suffix can be exported using the export_2d_image method."""
-
-        test_shape = paramak.Shape()
-        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
-        os.system("rm filename.png")
-        test_shape.export_2d_image("filename")
-        assert Path("filename.png").exists() is True
-        os.system("rm filename.png")
-        test_shape.export_2d_image("filename.png")
-        assert Path("filename.png").exists() is True
-        os.system("rm filename.png")
-
     def test_initial_solid_construction(self):
         """Creates a shape and checks that a cadquery solid with a unique hash
         value is created when .solid is called."""
@@ -261,6 +247,16 @@ class TestShape(unittest.TestCase):
         """Checks that an error is raised when points is None and export_html
         """
         test_shape = paramak.Shape()
+
+        def export():
+            test_shape.export_html("out.html")
+        self.assertRaises(ValueError, export)
+
+    def test_export_html_with_wire_None(self):
+        """Checks that an error is raised when wire is None and export_html
+        """
+        test_shape = paramak.Shape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape.wire = None
 
         def export():
             test_shape.export_html("out.html")
@@ -413,7 +409,7 @@ class TestShape(unittest.TestCase):
             width=50,
             name="coucou"
         )
-        assert test_shape._trace() is not None
+        assert test_shape._trace(test_shape.points) is not None
 
     def test_create_patch_error(self):
         """Checks _create_patch raises a ValueError when points is None."""

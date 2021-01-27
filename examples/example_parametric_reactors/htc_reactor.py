@@ -258,6 +258,7 @@ def main(rotation_angle=180):
 
     sparc.export_stp()
     sparc.export_svg('htc_reactor.svg')
+    sparc.export_html('htc_reactor.html')
 
 
 if __name__ == "__main__":

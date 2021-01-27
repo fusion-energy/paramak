@@ -124,20 +124,28 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
         iter_points = iter(self.points)
         pf_coils_set = []
+        wires = []
         for p1, p2, p3, p4 in zip(
                 iter_points, iter_points, iter_points, iter_points):
 
             solid = (
                 cq.Workplane(self.workplane)
                 .polyline([p1[:2], p2[:2], p3[:2], p4[:2]])
-                .close()
-                .revolve(self.rotation_angle)
             )
+
+            wire = solid.close()
+
+            wires.append(wire)
+
+            solid = wire.revolve(self.rotation_angle)
+
             pf_coils_set.append(solid)
 
         compound = cq.Compound.makeCompound(
             [a.val() for a in pf_coils_set]
         )
+
+        self.wire = wires
 
         self.solid = compound
 
