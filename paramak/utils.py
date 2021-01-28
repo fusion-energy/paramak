@@ -395,10 +395,10 @@ def _replace(filename: str, pattern: str, subst: str) -> None:
 
 
 def plotly_trace(
-            points: List[Tuple[float, float]],
-            mode: str = "markers+lines",
-            name=None,
-            color=None):
+        points: List[Tuple[float, float]],
+        mode: str = "markers+lines",
+        name: str = None,
+        color=None):
     """Creates a plotly trace representation of the points of the Shape
     object. This method is intended for internal use by Shape.export_html.
 
@@ -455,6 +455,7 @@ def plotly_trace(
 
     return trace
 
+
 def export_html_stp_file():
 
     fig = go.Figure()
@@ -478,7 +479,10 @@ def export_html_stp_file():
                 xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
                 fpoints.append((xy, vertex.Z))
 
-        fig.add_trace(paramak.utils.plotly_trace(points=fpoints, mode="lines+markers"))
+        fig.add_trace(
+            paramak.utils.plotly_trace(
+                points=fpoints,
+                mode="lines+markers"))
     fig.write_html('FirstWall.html')
 
 
