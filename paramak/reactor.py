@@ -644,16 +644,14 @@ class Reactor:
                 fig.add_trace(plotly_trace(
                     points=fpoints,
                     mode="lines",
-                    color=self.color,
-                    name=self.name)
+                    name='reactor')
                 )
 
                 # adds the verticies as a scatter plot
                 fig.add_trace(plotly_trace(
                     points=entry.points,
                     mode="markers",
-                    color=self.color,
-                    name=self.name)
+                    name='reactor')
                 )
 
         fig.write_html(str(path_filename))
