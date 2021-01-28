@@ -3,12 +3,15 @@ import math
 from collections import Iterable
 from hashlib import blake2b
 from os import fdopen, remove
+from pathlib import Path
 from shutil import copymode, move
 from tempfile import mkstemp
 from typing import List, Tuple
 
 import cadquery as cq
 import numpy as np
+import plotly.graph_objects as go
+from cadquery import importers
 from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 
 import paramak
@@ -68,7 +71,14 @@ def facet_wire(
     if facet_circles:
         types_to_facet.append('CIRCLE')
 
-    for edge in wire.val().Edges():
+    if isinstance(wire, cq.occ_impl.shapes.Wire):
+        # this is for imported stp files
+        iterable_of_wires = wire.Edges()
+    else:
+        # this is for cadquery generated solids
+        iterable_of_wires = wire.val().Edges()
+
+    for edge in iterable_of_wires:
         if edge.geomType() in types_to_facet:
             edges.extend(_transform_curve(edge, tolerance=tolerance).Edges())
         else:
@@ -382,6 +392,94 @@ def _replace(filename: str, pattern: str, subst: str) -> None:
 
     # Move new file
     move(abs_path, filename)
+
+
+def plotly_trace(
+            points: List[Tuple[float, float]],
+            mode: str = "markers+lines",
+            name=None,
+            color=None):
+    """Creates a plotly trace representation of the points of the Shape
+    object. This method is intended for internal use by Shape.export_html.
+
+    Args:
+        points: A list of tuples containing the X, Z points of to add to
+            the trace.
+        mode: The mode to use for the Plotly.Scatter graph. Options include
+            "markers", "lines" and "markers+lines". Defaults to
+            "markers+lines"
+
+    Returns:
+        plotly trace: trace object
+    """
+
+    if color is not None:
+        color_list = [i * 255 for i in color]
+
+        if len(color_list) == 3:
+            color = "rgb(" + str(color_list).strip("[]") + ")"
+        elif len(color_list) == 4:
+            color = "rgba(" + str(color_list).strip("[]") + ")"
+
+    if name is None:
+        name = "Shape not named"
+    else:
+        name = name
+
+    text_values = []
+
+    for i, point in enumerate(points):
+        text_values.append(
+            "point number="
+            + str(i)
+            + "<br>"
+            + "x="
+            + str(point[0])
+            + "<br>"
+            + "z="
+            + str(point[1])
+            + "<br>"
+        )
+
+    trace = go.Scatter(
+        {
+            "x": [row[0] for row in points],
+            "y": [row[1] for row in points],
+            "hoverinfo": "text",
+            "text": text_values,
+            "mode": mode,
+            "marker": {"size": 5, "color": color},
+            "name": name,
+        }
+    )
+
+    return trace
+
+def export_html_stp_file():
+
+    fig = go.Figure()
+    fig.update_layout(
+        {
+            "title": "coordinates of ",
+            "hovermode": "closest",
+        }
+    )
+
+    for wire in part.Wires():
+        edges = paramak.utils.facet_wire(
+            wire=wire,
+            facet_splines=True,
+            facet_circles=True,
+            tolerance=1e-3)
+
+        fpoints = []
+        for edge in edges:
+            for vertex in edge.Vertices():
+                xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
+                fpoints.append((xy, vertex.Z))
+
+        fig.add_trace(paramak.utils.plotly_trace(points=fpoints, mode="lines+markers"))
+    fig.write_html('FirstWall.html')
 
 
 class FaceAreaSelector(cq.Selector):

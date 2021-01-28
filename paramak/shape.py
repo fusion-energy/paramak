@@ -17,7 +17,7 @@ import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
 from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
-                           intersect_solid, union_solid)
+                           intersect_solid, union_solid, plotly_trace)
 
 
 class Shape:
@@ -943,79 +943,25 @@ class Shape:
                     else:  # workplan must be ZX
                         fpoints.append((vertex.Z, vertex.X))
 
-            fig.add_trace(self._trace(points=fpoints, mode="lines"))
+            fig.add_trace(plotly_trace(
+                points=fpoints,
+                mode="lines",
+                color=self.color,
+                name=self.name
+                )
+            )
 
         # sweep shapes have .path_points but not .points attribute
         if self.points is not None:
-            fig.add_trace(self._trace(points=self.points, mode="markers"))
+            fig.add_trace(plotly_trace(points=self.points, mode="markers"))
         if hasattr(self, 'path_points'):
-            fig.add_trace(self._trace(points=self.path_points, mode="markers"))
+            fig.add_trace(plotly_trace(points=self.path_points, mode="markers"))
 
         fig.write_html(str(path_filename))
 
         print("Exported html graph to ", path_filename)
 
         return fig
-
-    def _trace(
-            self,
-            points: List[Tuple[float, float]],
-            mode: str = "markers+lines"
-    ):
-        """Creates a plotly trace representation of the points of the Shape
-        object. This method is intended for internal use by Shape.export_html.
-
-        Args:
-            points: A list of tuples containing the X, Z points of to add to
-                the trace.
-            mode: The mode to use for the Plotly.Scatter graph. Options include
-                "markers", "lines" and "markers+lines". Defaults to
-                "markers+lines"
-
-        Returns:
-            plotly trace: trace object
-        """
-
-        color_list = [i * 255 for i in self.color]
-
-        if len(color_list) == 3:
-            color = "rgb(" + str(color_list).strip("[]") + ")"
-        elif len(color_list) == 4:
-            color = "rgba(" + str(color_list).strip("[]") + ")"
-
-        if self.name is None:
-            name = "Shape not named"
-        else:
-            name = self.name
-
-        text_values = []
-
-        for i, point in enumerate(points):
-            text_values.append(
-                "point number="
-                + str(i)
-                + "<br>"
-                + "x="
-                + str(point[0])
-                + "<br>"
-                + "z="
-                + str(point[1])
-                + "<br>"
-            )
-
-        trace = go.Scatter(
-            {
-                "x": [row[0] for row in points],
-                "y": [row[1] for row in points],
-                "hoverinfo": "text",
-                "text": text_values,
-                "mode": mode,
-                "marker": {"size": 5, "color": color},
-                "name": name,
-            }
-        )
-
-        return trace
 
     def export_2d_image(
             self, filename: str = 'shape.png', xmin: float = 0.,

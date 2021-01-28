@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
-from paramak.utils import facet_wire
+from paramak.utils import facet_wire, plotly_trace
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
 from paramak.utils import get_hash
@@ -639,11 +639,22 @@ class Reactor:
                 for edge in edges:
                     for vertice in edge.Vertices():
                         fpoints.append((vertice.X, vertice.Z))
-                fig.add_trace(entry._trace(points=fpoints, mode="lines"))
-                fig.add_trace(
-                    entry._trace(
-                        points=entry.points,
-                        mode="markers"))
+
+                # adds the faceted ponts as a line plot
+                fig.add_trace(plotly_trace(
+                    points=fpoints,
+                    mode="lines",
+                    color=self.color,
+                    name=self.name)
+                )
+
+                # adds the verticies as a scatter plot
+                fig.add_trace(plotly_trace(
+                    points=entry.points,
+                    mode="markers",
+                    color=self.color,
+                    name=self.name)
+                )
 
         fig.write_html(str(path_filename))
         print("Exported html graph to ", str(path_filename))

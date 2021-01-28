@@ -164,9 +164,11 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd build ; \
     cmake ../DAGMC -DBUILD_TALLY=ON \
                    -DMOAB_DIR=/MOAB \
+                   -DDOUBLE_DOWN=ON \
                    -DBUILD_STATIC_EXE=OFF \
                    -DBUILD_STATIC_LIBS=OFF \
-                   -DCMAKE_INSTALL_PREFIX=/DAGMC/ ; \
+                   -DCMAKE_INSTALL_PREFIX=/DAGMC/ \
+                   -DDOUBLE_DOWN_DIR=/double-down  ; \
     make -j"$compile_cores" install ; \
     rm -rf /DAGMC/DAGMC /DAGMC/build ; \
     fi
