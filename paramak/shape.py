@@ -948,14 +948,17 @@ class Shape:
                 mode="lines",
                 color=self.color,
                 name=self.name
-                )
+            )
             )
 
         # sweep shapes have .path_points but not .points attribute
         if self.points is not None:
             fig.add_trace(plotly_trace(points=self.points, mode="markers"))
         if hasattr(self, 'path_points'):
-            fig.add_trace(plotly_trace(points=self.path_points, mode="markers"))
+            fig.add_trace(
+                plotly_trace(
+                    points=self.path_points,
+                    mode="markers"))
 
         fig.write_html(str(path_filename))
 
