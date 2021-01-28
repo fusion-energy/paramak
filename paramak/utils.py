@@ -397,7 +397,7 @@ def _replace(filename: str, pattern: str, subst: str) -> None:
 def plotly_trace(
             points: List[Tuple[float, float]],
             mode: str = "markers+lines",
-            name=None,
+            name: str = None,
             color=None):
     """Creates a plotly trace representation of the points of the Shape
     object. This method is intended for internal use by Shape.export_html.

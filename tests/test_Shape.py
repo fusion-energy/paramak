@@ -400,17 +400,6 @@ class TestShape(unittest.TestCase):
         assert len(test_shape.areas) == 4
         assert sum(test_shape.areas) == pytest.approx(test_shape.area)
 
-    def test_trace(self):
-        """Test trace method is populated"""
-
-        test_shape = paramak.PoloidalFieldCoil(
-            center_point=(100, 100),
-            height=50,
-            width=50,
-            name="coucou"
-        )
-        assert test_shape._trace(test_shape.points) is not None
-
     def test_create_patch_error(self):
         """Checks _create_patch raises a ValueError when points is None."""
 
