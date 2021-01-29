@@ -245,7 +245,7 @@ class TestSimulationResultsVsCsg(unittest.TestCase):
         cad_result = self.simulate_cylinder_cask_cad(
             test_material, source, height, outer_radius, thickness, batches, particles)
 
-        assert pytest.approx(csg_result, rel=0.001) == cad_result
+        assert pytest.approx(csg_result, rel=0.002) == cad_result
 
 
 if __name__ == "__main__":
