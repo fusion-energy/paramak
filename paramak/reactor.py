@@ -98,8 +98,8 @@ class Reactor:
     @property
     def tet_meshes(self):
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.tet_mesh)
+        for shape_or_component in self.shapes_and_components:
+            values.append(shape_or_component.tet_mesh)
         return values
 
     @tet_meshes.setter
