@@ -236,8 +236,13 @@ def get_neutronics_results_from_statepoint_file(
             _save_2d_mesh_tally_as_png(
                 score=score,
                 tally=tally,
-                filename=tally.name.replace('(', '').replace(')', '').replace(',', '-')
-            )
+                filename=tally.name.replace(
+                    '(',
+                    '').replace(
+                    ')',
+                    '').replace(
+                    ',',
+                    '-'))
 
         elif '_on_3D_mesh' in tally.name:
             mesh_id = 1
@@ -278,8 +283,14 @@ def get_neutronics_results_from_statepoint_file(
                 tally_label=tally.name,
                 tally_data=data,
                 error_data=error,
-                outfile=tally.name.replace('(', '').replace(')', '').replace(',', '-') + '.vtk'
-            )
+                outfile=tally.name.replace(
+                    '(',
+                    '').replace(
+                    ')',
+                    '').replace(
+                    ',',
+                    '-') +
+                '.vtk')
 
         else:
             # this must be a standard score cell tally
