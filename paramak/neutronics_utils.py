@@ -195,7 +195,7 @@ def get_neutronics_results_from_statepoint_file(
                 'std. dev.': tally_std_dev,
             }
 
-        if tally.name.endswith('heating'):
+        elif tally.name.endswith('heating'):
 
             data_frame = tally.get_pandas_dataframe()
             tally_result = data_frame["mean"].sum()
@@ -211,7 +211,7 @@ def get_neutronics_results_from_statepoint_file(
                     'std. dev.': tally_std_dev * 1.602176487e-19 * (fusion_power / ((17.58 * 1e6) / 6.2415090744e18)),
                 }
 
-        if tally.name.endswith('flux'):
+        elif tally.name.endswith('flux'):
 
             data_frame = tally.get_pandas_dataframe()
             tally_result = data_frame["mean"].sum()
@@ -221,7 +221,7 @@ def get_neutronics_results_from_statepoint_file(
                 'std. dev.': tally_std_dev,
             }
 
-        if tally.name.endswith('spectra'):
+        elif tally.name.endswith('spectra'):
             data_frame = tally.get_pandas_dataframe()
             tally_result = data_frame["mean"]
             tally_std_dev = data_frame['std. dev.']
@@ -231,31 +231,15 @@ def get_neutronics_results_from_statepoint_file(
                 'std. dev.': tally_std_dev.tolist(),
             }
 
-        if tally.name.startswith('tritium_production_on_2D_mesh'):
-
+        elif '_on_2D_mesh' in tally.name:
+            score = tally.name.split('_')[1]
             _save_2d_mesh_tally_as_png(
-                score='(n,Xt)',
+                score=score,
                 tally=tally,
-                filename='tritium_production_on_2D_mesh' + tally.name[-3:]
+                filename=score + '_on_2D_mesh'
             )
 
-        if tally.name.startswith('flux_on_2D_mesh'):
-
-            _save_2d_mesh_tally_as_png(
-                score='flux',
-                tally=tally,
-                filename='flux_on_2D_mesh' + tally.name[-3:]
-            )
-
-        if tally.name.startswith('heating_on_2D_mesh'):
-
-            _save_2d_mesh_tally_as_png(
-                score='heating',
-                tally=tally,
-                filename='heating_on_2D_mesh' + tally.name[-3:]
-            )
-
-        if '_on_3D_mesh' in tally.name:
+        elif '_on_3D_mesh' in tally.name:
             mesh_id = 1
             mesh = statepoint.meshes[mesh_id]
 
@@ -296,6 +280,16 @@ def get_neutronics_results_from_statepoint_file(
                 error_data=error,
                 outfile=tally.name + '.vtk'
             )
+
+        else:
+            # this must be a standard score cell tally
+            data_frame = tally.get_pandas_dataframe()
+            tally_result = data_frame["mean"].sum()
+            tally_std_dev = data_frame['std. dev.'].sum()
+            results[tally.name]['events per source particle'] = {
+                'result': tally_result,
+                'std. dev.': tally_std_dev,
+            }
 
     return results
 
