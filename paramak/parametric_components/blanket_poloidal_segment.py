@@ -58,11 +58,11 @@ class BlanketFPPoloidalSegments(BlanketFP):
             if self.start_angle is not None or self.stop_angle is not None:
                 msg = "start_angle and stop_angle attributes will be " + \
                     "ignored if segments_angles is not None"
-                warnings.warn(msg, UserWarning)
+                warnings.warn(msg)
             elif self.num_segments is not None:
                 msg = "num_segment attribute will be ignored if " + \
                     "segments_angles is not None"
-                warnings.warn(msg, UserWarning)
+                warnings.warn(msg)
         self._segments_angles = value
 
     @property

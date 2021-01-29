@@ -363,7 +363,7 @@ class Shape:
             if len(value) > 27:
                 msg = "Shape.material_tag > 28 characters." + \
                       "Use with DAGMC will be affected." + str(value)
-                warnings.warn(msg, UserWarning)
+                warnings.warn(msg)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
