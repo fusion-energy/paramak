@@ -83,11 +83,11 @@ class Reactor:
         (excluding the plasma)"""
         values = []
         for shape_or_component in self.shapes_and_components:
-            if isinstance(
+            if not isinstance(
                 shape_or_component,
                 (paramak.Plasma,
                  paramak.PlasmaFromPoints,
-                 paramak.PlasmaBoundaries)) is False:
+                 paramak.PlasmaBoundaries)):
                 values.append(shape_or_component.material_tag)
         return values
 
