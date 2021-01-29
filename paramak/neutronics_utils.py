@@ -236,7 +236,7 @@ def get_neutronics_results_from_statepoint_file(
             _save_2d_mesh_tally_as_png(
                 score=score,
                 tally=tally,
-                filename=score.replace('(', '').replace(')', '').replace(',', '-') + '_on_2D_mesh'
+                filename=tally.name.replace('(', '').replace(')', '').replace(',', '-')
             )
 
         elif '_on_3D_mesh' in tally.name:
