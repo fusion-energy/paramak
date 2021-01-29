@@ -232,11 +232,11 @@ def get_neutronics_results_from_statepoint_file(
             }
 
         elif '_on_2D_mesh' in tally.name:
-            score = tally.name.split('_')[1]
+            score = tally.name.split('_')[0]
             _save_2d_mesh_tally_as_png(
                 score=score,
                 tally=tally,
-                filename=score + '_on_2D_mesh'
+                filename=score.replace('(', '').replace(')', '').replace(',', '-') + '_on_2D_mesh'
             )
 
         elif '_on_3D_mesh' in tally.name:
@@ -278,7 +278,7 @@ def get_neutronics_results_from_statepoint_file(
                 tally_label=tally.name,
                 tally_data=data,
                 error_data=error,
-                outfile=tally.name + '.vtk'
+                outfile=tally.name.replace('(', '').replace(')', '').replace(',', '-') + '.vtk'
             )
 
         else:
