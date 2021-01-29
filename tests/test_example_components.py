@@ -12,9 +12,6 @@ from examples.example_parametric_components import (
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
-
-
 class TestExampleComponents(unittest.TestCase):
 
     def test_make_all_parametric_components(self):
