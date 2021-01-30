@@ -83,11 +83,11 @@ class Reactor:
         (excluding the plasma)"""
         values = []
         for shape_or_component in self.shapes_and_components:
-            if isinstance(
+            if not isinstance(
                 shape_or_component,
                 (paramak.Plasma,
                  paramak.PlasmaFromPoints,
-                 paramak.PlasmaBoundaries)) is False:
+                 paramak.PlasmaBoundaries)):
                 values.append(shape_or_component.material_tag)
         return values
 
@@ -98,8 +98,8 @@ class Reactor:
     @property
     def tet_meshes(self):
         values = []
-        for shape_or_componet in self.shapes_and_components:
-            values.append(shape_or_componet.tet_mesh)
+        for shape_or_component in self.shapes_and_components:
+            values.append(shape_or_component.tet_mesh)
         return values
 
     @tet_meshes.setter
@@ -312,7 +312,7 @@ class Reactor:
             )
 
         # creates a graveyard (bounding shell volume) which is needed for
-        # nuetronics simulations
+        # neutronics simulations
         self.make_graveyard(graveyard_offset=graveyard_offset)
         filenames.append(
             str(Path(output_folder) / Path(self.graveyard.stp_filename)))
@@ -322,17 +322,22 @@ class Reactor:
 
         return filenames
 
-    def export_stl(self, output_folder: str = "",
-                   tolerance: float = 0.001) -> list:
+    def export_stl(
+            self,
+            output_folder: str = "",
+            graveyard_offset: float = 100,
+            tolerance: float = 0.001) -> list:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
-        :param output_folder: the folder for saving the stp files to
-        :type output_folder: str
-        :param tolerance: the precision of the faceting
-        :type tolerance: float
+        Args:
+            output_folder (str): the folder for saving the stl files to
+            graveyard_offset (float, optional): the offset between the largest
+                edge of the geometry and inner bounding shell created. Defaults
+                to 100.
+            tolerance (float):  the precision of the faceting
 
-        :return: a list of stl filenames created
-        :rtype: list
+        Returns:
+            list: a list of stl filenames created
         """
 
         if len(self.stl_filenames) != len(set(self.stl_filenames)):
@@ -360,8 +365,8 @@ class Reactor:
                 tolerance)
 
         # creates a graveyard (bounding shell volume) which is needed for
-        # nuetronics simulations
-        self.make_graveyard()
+        # neutronics simulations
+        self.make_graveyard(graveyard_offset=graveyard_offset)
         filenames.append(
             str(Path(output_folder) / Path(self.graveyard.stl_filename)))
         self.graveyard.export_stl(

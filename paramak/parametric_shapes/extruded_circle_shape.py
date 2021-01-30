@@ -76,11 +76,10 @@ class ExtrudeCircleShape(Shape):
         self._extrusion_start_offset = value
 
     def create_solid(self):
-        """Creates an extruded 3d solid using points connected with circular
-        edges.
+        """Creates a extruded 3d solid using points with circular edges.
 
-        :return: a 3d solid volume
-        :rtype: a cadquery solid
+           Returns:
+              A CadQuery solid: A 3D solid volume
         """
 
         # so a positive offset moves extrusion further from axis of azimuthal

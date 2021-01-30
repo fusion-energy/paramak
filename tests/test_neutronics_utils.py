@@ -38,5 +38,5 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         new_moab_core.write_file('test_file.h5m')
 
-        assert Path('test_file.stl').exists() is True
-        assert Path('test_file.h5m').exists() is True
+        assert Path('test_file.stl').exists()
+        assert Path('test_file.h5m').exists()

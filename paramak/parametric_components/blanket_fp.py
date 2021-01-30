@@ -281,23 +281,23 @@ class BlanketFP(RotateMixedShape):
         """
 
         groups = []
-        nb_volumes = 1  # only one volume
-        nb_surfaces = 2  # inner and outer
+        number_of_volumes = 1  # only one volume
+        number_of_surfaces = 2  # inner and outer
 
         surface_names = ["inner", "outer"]
         volumes_names = ["inside"]
 
         # add two cut sections if they exist
         if self.rotation_angle != 360:
-            nb_surfaces += 2
+            number_of_surfaces += 2
             surface_names += ["left_section", "right_section"]
-            full_rot = False
+            full_rotation = False
         else:
-            full_rot = True
+            full_rotation = True
 
         # add two surfaces between blanket and div if they exist
         if diff_between_angles(self.start_angle, self.stop_angle) != 0:
-            nb_surfaces += 2
+            number_of_surfaces += 2
             surface_names += ["inner_section", "outer_section"]
             stop_equals_start = False
         else:
@@ -305,7 +305,7 @@ class BlanketFP(RotateMixedShape):
 
         # rearrange order
         new_order = [i for i in range(len(surface_names))]
-        if full_rot:
+        if full_rotation:
             if not stop_equals_start:
                 # from ["inner", "outer", "inner_section", "outer_section"]
 
@@ -327,10 +327,10 @@ class BlanketFP(RotateMixedShape):
                 new_order = [0, 4, 1, 5, 2, 3]
         surface_names = [surface_names[i] for i in new_order]
 
-        for i in range(1, nb_volumes + 1):
+        for i in range(1, number_of_volumes + 1):
             group = {"dim": 3, "id": i, "name": volumes_names[i - 1]}
             groups.append(group)
-        for i in range(1, nb_surfaces + 1):
+        for i in range(1, number_of_surfaces + 1):
             group = {"dim": 2, "id": i, "name": surface_names[i - 1]}
             groups.append(group)
         self.physical_groups = groups

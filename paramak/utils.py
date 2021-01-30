@@ -502,20 +502,20 @@ class FaceAreaSelector(cq.Selector):
         self.area = area
         self.tolerance = tolerance
 
-    def filter(self, objectList):
+    def filter(self, object_list):
         """Loops through all the faces in the object checking if the face
         meets the custom selector requirments or not.
 
         Args:
-            objectList (cadquery): The object to filter the faces from.
+            object_list (cadquery): The object to filter the faces from.
 
         Returns:
-            objectList (cadquery): The face that match the selector area within
+            object_list (cadquery): The face that match the selector area within
                 the specified tolerance.
         """
 
         new_obj_list = []
-        for obj in objectList:
+        for obj in object_list:
             face_area = obj.Area()
 
             # Only return faces that meet the requirements
@@ -542,21 +542,21 @@ class EdgeLengthSelector(cq.Selector):
         self.length = length
         self.tolerance = tolerance
 
-    def filter(self, objectList):
+    def filter(self, object_list):
         """Loops through all the edges in the object checking if the edge
         meets the custom selector requirments or not.
 
         Args:
-            objectList (cadquery): The object to filter the edges from.
+            object_list (cadquery): The object to filter the edges from.
 
         Returns:
-            objectList (cadquery): The edge that match the selector length
+            object_list (cadquery): The edge that match the selector length
                 within the specified tolerance.
         """
 
         new_obj_list = []
         print('filleting edge#')
-        for obj in objectList:
+        for obj in object_list:
 
             edge_len = obj.Length()
 

@@ -12,9 +12,6 @@ from examples.example_parametric_components import (
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
-
-
 class TestExampleComponents(unittest.TestCase):
 
     def test_make_all_parametric_components(self):
@@ -61,7 +58,7 @@ class TestExampleComponents(unittest.TestCase):
             filenames.append(components.stp_filename)
 
         for output_filename in output_filenames:
-            assert Path(output_filename).exists() is True
+            assert Path(output_filename).exists()
             os.system("rm " + output_filename)
 
     def test_make_plasma(self):
@@ -85,7 +82,7 @@ class TestExampleComponents(unittest.TestCase):
             os.system("rm " + output_filename)
         make_plasmas.main()
         for output_filename in output_filenames:
-            assert Path(output_filename).exists() is True
+            assert Path(output_filename).exists()
             os.system("rm " + output_filename)
 
     def test_make_demo_style_blanket(self):
@@ -93,7 +90,7 @@ class TestExampleComponents(unittest.TestCase):
         output_filename = "blanket.stp"
         os.system("rm " + output_filename)
         make_demo_style_blankets.main()
-        assert Path(output_filename).exists() is True
+        assert Path(output_filename).exists()
         os.system("rm " + output_filename)
 
     def test_make_segmented_firstwall(self):
@@ -101,7 +98,7 @@ class TestExampleComponents(unittest.TestCase):
         output_filename = "segmented_firstwall.stp"
         os.system("rm " + output_filename)
         make_firstwall_for_neutron_wall_loading.main()
-        assert Path(output_filename).exists() is True
+        assert Path(output_filename).exists()
         os.system("rm " + output_filename)
 
     def test_make_vacuum_vessel(self):
@@ -114,7 +111,7 @@ class TestExampleComponents(unittest.TestCase):
             os.system("rm " + output_filename)
         make_vacuum_vessel_with_ports.main()
         for output_filename in output_filenames:
-            assert Path(output_filename).exists() is True
+            assert Path(output_filename).exists()
             os.system("rm " + output_filename)
 
 
