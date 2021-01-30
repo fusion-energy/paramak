@@ -490,6 +490,18 @@ def load_stp_file(
     filename: str,
     scale_factor: float = 1.
 ):
+    """Loads a stp file and makes the 3D solid and wires avaialbe for use.
+
+    Args:
+        filename: the filename used to save the html graph.
+        scale_factor: a scaling factor to apply to the geometry that can be
+            used to increase the size or decrease the size of the geometry.
+            Useful when converting the geometry to cm for use in neutronics
+            simulations. 
+
+    Returns:
+        CadQuery.solid, CadQuery.Wires: soild and wires belonging to the object
+    """
     part = importers.importStep(filename).val()
 
     scaled_part = part.scale(scale_factor)
@@ -507,6 +519,29 @@ def export_wire_to_html(
     tolerance: float = 1e-3,
     title=None,
 ):
+    """Creates a html graph representation of the points within the wires.
+    Edges of certain types (spines and circles) can optionally be faceted. 
+    If filename provided doesn't end with .html then .html will be added.
+    Viewed from the XZ plane
+
+    Args:
+        wires (CadQuery.Wire): the wire (edge) to plot points from and to
+            optionally facet.
+        filename: the filename used to save the html graph.
+        view_plane: The axis to view the points and faceted edges from. The
+            options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ'. Defaults to
+            'RZ'
+        facet_splines: If True then spline edges will be faceted. Defaults to
+            True.
+        facet_circles: If True then circle edges will be faceted. Defaults to
+            True.
+        tolerance: faceting toleranceto use when faceting cirles and splines.
+            Defaults to 1e-3.
+        title: the title of the plotly plot.
+
+    Returns:
+        plotly.Figure(): figure object
+    """
 
     Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
 
