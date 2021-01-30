@@ -458,7 +458,7 @@ def plotly_trace(
 
 def extract_points_from_edges(
             edges,
-            view_plane='XZ',
+            view_plane: str = 'XZ',
         ):
 
     points = []
@@ -486,7 +486,10 @@ def extract_points_from_edges(
     return points
 
 
-def load_stp_file(filename, scale_factor=1.):
+def load_stp_file(
+    filename: str,
+    scale_factor: float = 1.
+):
     part = importers.importStep(filename).val()
 
     scaled_part = part.scale(scale_factor)
