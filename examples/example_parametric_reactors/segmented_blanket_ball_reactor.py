@@ -53,8 +53,6 @@ def make_ball_reactor_seg(outputs=['stp', 'neutronics', 'svg', 'stl', 'html']):
     my_reactor._blanket.solid = my_reactor._blanket.solid.cut(
         my_reactor._blanket.solid)
 
-    my_reactor._blanket.export_stp('firstwall_with_fillet.stp')
-
     if 'stp' in outputs:
         my_reactor.export_stp(output_folder='SegmentedBlanketBallReactor')
     if 'neutronics' in outputs:
