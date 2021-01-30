@@ -425,6 +425,6 @@ if __name__ == "__main__":
     filenames = []
     for components in all_components:
         components.export_stp()
-        components.export_html()
+        components.export_html(components.stp_filename[:-4] + '.html')
         filenames.append(components.stp_filename)
     print(filenames)

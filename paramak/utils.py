@@ -456,34 +456,116 @@ def plotly_trace(
     return trace
 
 
-def export_html_stp_file():
+def extract_points_from_edges(
+            edges,
+            view_plane='XZ',
+        ):
+
+    points = []
+
+    for edge in edges:
+        for vertex in edge.Vertices():
+            if view_plane == 'XZ':
+                points.append((vertex.X, vertex.Z))
+            elif view_plane == 'XY':
+                points.append((vertex.X, vertex.Y))
+            elif view_plane == 'YZ':
+                points.append((vertex.Y, vertex.Z))
+            elif view_plane == 'YX':
+                points.append((vertex.Y, vertex.X))
+            elif view_plane == 'ZY':
+                points.append((vertex.Z, vertex.Y))
+            elif view_plane == 'ZX':
+                points.append((vertex.Z, vertex.X))
+            elif view_plane == 'RZ':
+                xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
+                points.append((math.sqrt(xy), vertex.Z))
+            else:
+                raise ValueError('view_plane value of ', view_plane,
+                                 ' is not supported')
+    return points
+
+
+def load_stp_file(filename, scale_factor=1.):
+    part = importers.importStep(filename).val()
+
+    scaled_part = part.scale(scale_factor)
+    solid = scaled_part
+    wire = scaled_part.Wires()
+    return solid, wire
+
+
+def export_wire_to_html(
+    wires,
+    filename,
+    view_plane='RZ',
+    facet_splines: bool = True,
+    facet_circles: bool = True,
+    tolerance: float = 1e-3,
+    title=None,
+):
+
+    Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+
+    path_filename = Path(filename)
+
+    if path_filename.suffix != ".html":
+        path_filename = path_filename.with_suffix(".html")
 
     fig = go.Figure()
     fig.update_layout(
         {
-            "title": "coordinates of ",
+            "title": title,
             "hovermode": "closest",
+            "xaxis_title": view_plane[0],
+            "yaxis_title": view_plane[1]
         }
     )
 
-    for wire in part.Wires():
-        edges = paramak.utils.facet_wire(
-            wire=wire,
-            facet_splines=True,
-            facet_circles=True,
-            tolerance=1e-3)
+    for counter, wire in enumerate(wires):
 
-        fpoints = []
-        for edge in edges:
-            for vertex in edge.Vertices():
-                xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
-                fpoints.append((xy, vertex.Z))
+        edges = facet_wire(
+                wire=wire,
+                facet_splines=facet_splines,
+                facet_circles=facet_circles,
+                tolerance=tolerance)
 
-        fig.add_trace(
-            paramak.utils.plotly_trace(
-                points=fpoints,
-                mode="lines+markers"))
-    fig.write_html('FirstWall.html')
+        points = paramak.utils.extract_points_from_edges(
+            edges=edges,
+            view_plane=view_plane)
+
+        fig.add_trace(plotly_trace(
+            points=points,
+            mode="markers+lines",
+            name='edge ' + str(counter)
+            )
+        )
+
+    for counter, wire in enumerate(wires):
+
+        if isinstance(wire, cq.occ_impl.shapes.Wire):
+            # this is for imported stp files
+            edges = wire.Edges()
+        else:
+            # this is for cadquery generated solids
+            edges = wire.val().Edges()
+
+        points = paramak.utils.extract_points_from_edges(
+            edges=edges,
+            view_plane=view_plane)
+
+        fig.add_trace(plotly_trace(
+            points=points,
+            mode="markers",
+            name='points on wire ' + str(counter)
+            )
+        )
+
+    fig.write_html(str(path_filename))
+
+    print("Exported html graph to ", path_filename)
+
+    return fig
 
 
 class FaceAreaSelector(cq.Selector):

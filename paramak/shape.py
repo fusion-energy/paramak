@@ -1,5 +1,6 @@
 
 import json
+import math
 import numbers
 import warnings
 from collections import Iterable
@@ -17,7 +18,7 @@ import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
 from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
-                           intersect_solid, union_solid, plotly_trace)
+                           intersect_solid, plotly_trace, union_solid)
 
 
 class Shape:
@@ -896,73 +897,30 @@ class Shape:
         if self.wire is None:
             raise ValueError("No wire defined for", self)
 
-        Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
-
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".html":
-            path_filename = path_filename.with_suffix(".html")
-
-        fig = go.Figure()
-        fig.update_layout(
-            {
-                "title": "coordinates of " + self.__class__.__name__ +
-                " shape, viewed from the " + self.workplane + " plane",
-                "hovermode": "closest",
-                "xaxis_title": self.workplane[0],
-                "yaxis_title": self.workplane[1]
-            }
-        )
-
         if not isinstance(self.wire, list):
             list_of_wires = [self.wire]
         else:
             list_of_wires = self.wire
 
-        for wire in list_of_wires:
+        fig = paramak.utils.export_wire_to_html(
+            wires=list_of_wires,
+            filename=filename,
+            view_plane=self.workplane,
+            facet_splines=facet_splines,
+            facet_circles=facet_circles,
+            tolerance=1e-3,
+            title="coordinates of " + self.__class__.__name__ +
+                " shape, viewed from the " + self.workplane + " plane",
+        )
 
-            edges = facet_wire(
-                wire=wire,
-                facet_splines=facet_splines,
-                facet_circles=facet_circles,
-                tolerance=tolerance)
-
-            fpoints = []
-            for edge in edges:
-                for vertex in edge.Vertices():
-                    if self.workplane == 'XZ':
-                        fpoints.append((vertex.X, vertex.Z))
-                    elif self.workplane == 'XY':
-                        fpoints.append((vertex.X, vertex.Y))
-                    elif self.workplane == 'YZ':
-                        fpoints.append((vertex.Y, vertex.Z))
-                    elif self.workplane == 'YX':
-                        fpoints.append((vertex.Y, vertex.X))
-                    elif self.workplane == 'ZY':
-                        fpoints.append((vertex.Z, vertex.Y))
-                    else:  # workplan must be ZX
-                        fpoints.append((vertex.Z, vertex.X))
-
-            fig.add_trace(plotly_trace(
-                points=fpoints,
-                mode="lines",
-                color=self.color,
-                name=self.name
-            )
-            )
-
-        # sweep shapes have .path_points but not .points attribute
-        if self.points is not None:
-            fig.add_trace(plotly_trace(points=self.points, mode="markers"))
-        if hasattr(self, 'path_points'):
-            fig.add_trace(
-                plotly_trace(
-                    points=self.path_points,
-                    mode="markers"))
-
-        fig.write_html(str(path_filename))
-
-        print("Exported html graph to ", path_filename)
+        # # sweep shapes have .path_points but not .points attribute
+        # if self.points is not None:
+        #     fig.add_trace(plotly_trace(points=self.points, mode="markers"))
+        # if hasattr(self, 'path_points'):
+        #     fig.add_trace(
+        #         plotly_trace(
+        #             points=self.path_points,
+        #             mode="markers"))
 
         return fig
 
