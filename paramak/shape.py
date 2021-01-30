@@ -881,7 +881,7 @@ class Shape:
                 shape.html
             facet_splines: If True then spline edges will be faceted. Defaults
                 to True.
-            facet_circles: If True then circle edges will be faceted.Defaults
+            facet_circles: If True then circle edges will be faceted. Defaults
                 to True.
             tolerance: faceting toleranceto use when faceting cirles and
                 splines. Defaults to 1e-3.
