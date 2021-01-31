@@ -603,8 +603,11 @@ class Reactor:
         plane
 
         Args:
-            filename: the filename used to save the html graph.
-
+            filename: the filename used to save the html graph. Defaults to
+                reactor.html
+            view_plane: The axis to view the points and faceted edges from. The
+                options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ'. Defaults
+                to 'RZ'.
         Returns:
             plotly.Figure(): figure object
         """
