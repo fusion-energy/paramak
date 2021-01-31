@@ -612,8 +612,9 @@ class Reactor:
             plotly.Figure(): figure object
         """
 
-        # accesses the Shape wires for each Shape and builds up a list of traces
-        all_wires=[]
+        # accesses the Shape wires for each Shape and builds up a list of
+        # traces
+        all_wires = []
         for entry in self.shapes_and_components:
             if not isinstance(entry.wire, list):
                 list_of_wires = [entry.wire]
@@ -629,7 +630,7 @@ class Reactor:
             facet_circles=True,
             tolerance=1e-3,
             title="coordinates of the " + self.__class__.__name__ +
-                " reactor, viewed from the "+view_plane+" plane",
+            " reactor, viewed from the " + view_plane + " plane",
         )
 
         return fig

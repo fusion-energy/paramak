@@ -457,9 +457,9 @@ def plotly_trace(
 
 
 def extract_points_from_edges(
-            edges,
-            view_plane: str = 'XZ',
-        ):
+    edges,
+    view_plane: str = 'XZ',
+):
 
     points = []
 
@@ -497,7 +497,7 @@ def load_stp_file(
         scale_factor: a scaling factor to apply to the geometry that can be
             used to increase the size or decrease the size of the geometry.
             Useful when converting the geometry to cm for use in neutronics
-            simulations. 
+            simulations.
 
     Returns:
         CadQuery.solid, CadQuery.Wires: soild and wires belonging to the object
@@ -520,7 +520,7 @@ def export_wire_to_html(
     title=None,
 ):
     """Creates a html graph representation of the points within the wires.
-    Edges of certain types (spines and circles) can optionally be faceted. 
+    Edges of certain types (spines and circles) can optionally be faceted.
     If filename provided doesn't end with .html then .html will be added.
     Viewed from the XZ plane
 
@@ -563,10 +563,10 @@ def export_wire_to_html(
     for counter, wire in enumerate(wires):
 
         edges = facet_wire(
-                wire=wire,
-                facet_splines=facet_splines,
-                facet_circles=facet_circles,
-                tolerance=tolerance)
+            wire=wire,
+            facet_splines=facet_splines,
+            facet_circles=facet_circles,
+            tolerance=tolerance)
 
         points = paramak.utils.extract_points_from_edges(
             edges=edges,
@@ -576,7 +576,7 @@ def export_wire_to_html(
             points=points,
             mode="markers+lines",
             name='edge ' + str(counter)
-            )
+        )
         )
 
     for counter, wire in enumerate(wires):
@@ -596,7 +596,7 @@ def export_wire_to_html(
             points=points,
             mode="markers",
             name='points on wire ' + str(counter)
-            )
+        )
         )
 
     fig.write_html(str(path_filename))

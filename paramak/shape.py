@@ -910,7 +910,7 @@ class Shape:
             facet_circles=facet_circles,
             tolerance=1e-3,
             title="coordinates of " + self.__class__.__name__ +
-                " shape, viewed from the " + self.workplane + " plane",
+            " shape, viewed from the " + self.workplane + " plane",
         )
 
         # # sweep shapes have .path_points but not .points attribute
