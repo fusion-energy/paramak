@@ -595,7 +595,7 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_html(self, filename="reactor.html"):
+    def export_html(self, filename="reactor.html", view_plane='RZ'):
         """Creates a html graph representation of the points for the Shape
         objects that make up the reactor. Shapes are colored by their .color
         property. Shapes are also labelled by their .name. If filename provided
@@ -609,52 +609,24 @@ class Reactor:
             plotly.Figure(): figure object
         """
 
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".html":
-            path_filename = path_filename.with_suffix(".html")
-
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-
-        fig = go.Figure()
-        fig.update_layout(
-            {
-                "title": "coordinates of the " + self.__class__.__name__ +
-                " reactor, viewed from the XZ plane",
-                "hovermode": "closest",
-                "xaxis_title": 'X',
-                "yaxis_title": 'Z'
-            }
-        )
-        # accesses the Shape traces for each Shape and adds them to the figure
+        # accesses the Shape wires for each Shape and builds up a list of traces
+        all_wires=[]
         for entry in self.shapes_and_components:
             if not isinstance(entry.wire, list):
                 list_of_wires = [entry.wire]
             else:
                 list_of_wires = entry.wire
+            all_wires = all_wires + list_of_wires
 
-            for wire in list_of_wires:
-                edges = facet_wire(wire=wire)
-                fpoints = []
-                for edge in edges:
-                    for vertice in edge.Vertices():
-                        fpoints.append((vertice.X, vertice.Z))
-
-                # adds the faceted ponts as a line plot
-                fig.add_trace(plotly_trace(
-                    points=fpoints,
-                    mode="lines",
-                    name='reactor')
-                )
-
-                # adds the verticies as a scatter plot
-                fig.add_trace(plotly_trace(
-                    points=entry.points,
-                    mode="markers",
-                    name='reactor')
-                )
-
-        fig.write_html(str(path_filename))
-        print("Exported html graph to ", str(path_filename))
+        fig = paramak.utils.export_wire_to_html(
+            wires=all_wires,
+            filename=filename,
+            view_plane=view_plane,
+            facet_splines=True,
+            facet_circles=True,
+            tolerance=1e-3,
+            title="coordinates of the " + self.__class__.__name__ +
+                " reactor, viewed from the "+view_plane+" plane",
+        )
 
         return fig
