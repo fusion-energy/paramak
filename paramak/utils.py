@@ -502,7 +502,8 @@ def load_stp_file(
     Returns:
         CadQuery.solid, CadQuery.Wires: soild and wires belonging to the object
     """
-    part = importers.importStep(filename).val()
+
+    part = importers.importStep(str(filename)).val()
 
     scaled_part = part.scale(scale_factor)
     solid = scaled_part
@@ -525,8 +526,8 @@ def export_wire_to_html(
     Viewed from the XZ plane
 
     Args:
-        wires (CadQuery.Wire): the wire (edge) to plot points from and to
-            optionally facet.
+        wires (CadQuery.Wire): the wire (edge) or list of wires to plot points
+            from and to optionally facet.
         filename: the filename used to save the html graph.
         view_plane: The axis to view the points and faceted edges from. The
             options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ'. Defaults to
@@ -560,7 +561,12 @@ def export_wire_to_html(
         }
     )
 
-    for counter, wire in enumerate(wires):
+    if isinstance(wires, list):
+        list_of_wires = wires
+    else:
+        list_of_wires = [wires]
+
+    for counter, wire in enumerate(list_of_wires):
 
         edges = facet_wire(
             wire=wire,
@@ -579,7 +585,7 @@ def export_wire_to_html(
         )
         )
 
-    for counter, wire in enumerate(wires):
+    for counter, wire in enumerate(list_of_wires):
 
         if isinstance(wire, cq.occ_impl.shapes.Wire):
             # this is for imported stp files
