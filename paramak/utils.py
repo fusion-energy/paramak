@@ -461,9 +461,14 @@ def extract_points_from_edges(
     view_plane: str = 'XZ',
 ):
 
+    if isinstance(edges, list):
+        list_of_edges = edges
+    else:
+        list_of_edges = [edges]
+
     points = []
 
-    for edge in edges:
+    for edge in list_of_edges:
         for vertex in edge.Vertices():
             if view_plane == 'XZ':
                 points.append((vertex.X, vertex.Z))
@@ -572,17 +577,20 @@ def export_wire_to_html(
             wire=wire,
             facet_splines=facet_splines,
             facet_circles=facet_circles,
-            tolerance=tolerance)
+            tolerance=tolerance
+        )
 
         points = paramak.utils.extract_points_from_edges(
             edges=edges,
-            view_plane=view_plane)
-
-        fig.add_trace(plotly_trace(
-            points=points,
-            mode="markers+lines",
-            name='edge ' + str(counter)
+            view_plane=view_plane
         )
+
+        fig.add_trace(
+            plotly_trace(
+                points=points,
+                mode="markers+lines",
+                name='edge ' + str(counter)
+            )
         )
 
     for counter, wire in enumerate(list_of_wires):
