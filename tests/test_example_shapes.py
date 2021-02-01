@@ -7,7 +7,7 @@ from pathlib import Path
 from examples.example_parametric_shapes import (
     make_blanket_from_parameters, make_blanket_from_points,
     make_CAD_from_points, make_can_reactor_from_parameters,
-    make_can_reactor_from_points)
+    make_can_reactor_from_points, make_html_diagram_from_stp_file)
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
@@ -81,6 +81,20 @@ class TestExampleShapes(unittest.TestCase):
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
         make_can_reactor_from_points.main()
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
+    def test_make_html_diagram_from_stp_file(self):
+        """Runs the example and checks the output files are produced"""
+        output_filenames = [
+            "example_shape.stp",
+            "example_shape_from_solid.html",
+            "example_shape_from_stp.html",
+        ]
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        make_html_diagram_from_stp_file.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)

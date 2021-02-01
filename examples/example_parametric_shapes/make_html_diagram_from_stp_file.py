@@ -4,42 +4,48 @@ within the stp file."""
 
 import paramak
 
-# this creates a Shape object
-eample_shape = paramak.ExtrudeMixedShape(
-    distance=1,
-    points=[
-        (100, 0, "straight"),
-        (200, 0, "circle"),
-        (250, 50, "circle"),
-        (200, 100, "straight"),
-        (150, 100, "spline"),
-        (140, 75, "spline"),
-        (110, 45, "spline"),
-    ]
-)
-# This exports the Shape object as an stp file that will be imported later
-eample_shape.export_stp("eample_shape.stp")
 
-# this exports the shape as a html image
-fig = eample_shape.export_html()
+def main():
+    # this creates a Shape object
+    eample_shape = paramak.ExtrudeMixedShape(
+        distance=1,
+        points=[
+            (100, 0, "straight"),
+            (200, 0, "circle"),
+            (250, 50, "circle"),
+            (200, 100, "straight"),
+            (150, 100, "spline"),
+            (140, 75, "spline"),
+            (110, 45, "spline"),
+        ]
+    )
+    # This exports the Shape object as an stp file that will be imported later
+    eample_shape.export_stp("example_shape.stp")
 
-# shows the html image resulting from the solid shape directly
-fig.show()
+    # this exports the shape as a html image
+    fig = eample_shape.export_html("example_shape_from_solid.html")
 
-# loads the stp file and obtains the solid 3d shape and list of wires (edges)
-solid, wires = paramak.utils.load_stp_file(
-    filename='eample_shape.stp',
-)
+    # shows the html image resulting from the solid shape directly
+    fig.show()
 
-# produces a plot on the R (radius) Z axis and saves the html file
-fig = paramak.utils.export_wire_to_html(
-    wires=wires,
-    tolerance=0.1,
-    view_plane='XZ',
-    facet_splines=True,
-    facet_circles=True,
-    filename='firstwall.html',
-)
+    # loads the stp file and obtains the solid 3d shape and list of wires (edges)
+    solid, wires = paramak.utils.load_stp_file(
+        filename="example_shape.stp",
+    )
 
-# shows the html image resulting from the stp file load
-fig.show()
+    # produces a plot on the R (radius) Z axis and saves the html file
+    fig = paramak.utils.export_wire_to_html(
+        wires=wires,
+        tolerance=0.1,
+        view_plane="XZ",
+        facet_splines=True,
+        facet_circles=True,
+        filename="example_shape_from_stp.html",
+    )
+
+    # shows the html image resulting from the stp file load
+    fig.show()
+
+
+if __name__ == "__main__":
+    main()
