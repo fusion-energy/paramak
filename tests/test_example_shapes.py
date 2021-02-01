@@ -106,7 +106,7 @@ class TestExampleShapes(unittest.TestCase):
         """Checks than a list of wires is an acceptable input
         for export_wire_to_html wires argument.
         """
-        
+
         example_shape = paramak.ExtrudeMixedShape(
             distance=1,
             points=[
@@ -124,7 +124,7 @@ class TestExampleShapes(unittest.TestCase):
             facet_circles=True,
             filename="example_shape_from_stp.html",
         )
-        
+
         assert fig is not None
 
     def test_incorrect_view_plane(self):
