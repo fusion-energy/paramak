@@ -7,7 +7,7 @@ import paramak
 
 def main():
     # this creates a Shape object
-    eample_shape = paramak.ExtrudeMixedShape(
+    example_shape = paramak.ExtrudeMixedShape(
         distance=1,
         points=[
             (100, 0, "straight"),
@@ -20,10 +20,10 @@ def main():
         ]
     )
     # This exports the Shape object as an stp file that will be imported later
-    eample_shape.export_stp("example_shape.stp")
+    example_shape.export_stp("example_shape.stp")
 
     # this exports the shape as a html image
-    fig = eample_shape.export_html("example_shape_from_solid.html")
+    fig = example_shape.export_html("example_shape_from_solid.html")
 
     # shows the html image resulting from the solid shape directly
     fig.show()
