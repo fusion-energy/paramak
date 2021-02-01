@@ -28,7 +28,8 @@ def main():
     # shows the html image resulting from the solid shape directly
     fig.show()
 
-    # loads the stp file and obtains the solid 3d shape and list of wires (edges)
+    # loads the stp file and obtains the solid 3d shape and list of wires
+    # (edges)
     solid, wires = paramak.utils.load_stp_file(
         filename="example_shape.stp",
     )
