@@ -8,7 +8,7 @@ from examples.example_parametric_shapes import (
     make_blanket_from_parameters, make_blanket_from_points,
     make_CAD_from_points, make_can_reactor_from_parameters,
     make_can_reactor_from_points, make_html_diagram_from_stp_file,
-    )
+)
 
 import paramak
 
