@@ -102,6 +102,31 @@ class TestExampleShapes(unittest.TestCase):
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
 
+    def test_list_of_wires_can_be_exported(self):
+        """Checks than a list of wires is an acceptable input
+        for export_wire_to_html wires argument.
+        """
+        
+        example_shape = paramak.ExtrudeMixedShape(
+            distance=1,
+            points=[
+                (150, 100, "spline"),
+                (140, 75, "spline"),
+                (110, 45, "spline"),
+            ]
+        )
+
+        fig = paramak.utils.export_wire_to_html(
+            wires=[example_shape.wire],
+            tolerance=0.1,
+            view_plane="XY",
+            facet_splines=True,
+            facet_circles=True,
+            filename="example_shape_from_stp.html",
+        )
+        
+        assert fig is not None
+
     def test_incorrect_view_plane(self):
         """Checks than an error is raised when incorrect values of the
         view_plane is set
