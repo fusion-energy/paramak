@@ -19,7 +19,8 @@ def main():
         material_tag='center_column_shield_mat'
     )
 
-    # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic directions
+    # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
+    # directions
     source = openmc.Source()
     source.space = openmc.stats.Point((0, 0, 0))
     source.energy = openmc.stats.Discrete([14e6], [1])
