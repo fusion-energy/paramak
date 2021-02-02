@@ -487,7 +487,7 @@ def extract_points_from_edges(
                 points.append((math.sqrt(xy), vertex.Z))
             else:
                 raise ValueError('view_plane value of ', view_plane,
-                                ' is not supported')
+                                 ' is not supported')
     return points
 
 
