@@ -20,6 +20,8 @@ from .parametric_shapes.sweep_spline_shape import SweepSplineShape
 from .parametric_shapes.sweep_straight_shape import SweepStraightShape
 from .parametric_shapes.sweep_circle_shape import SweepCircleShape
 
+from .parametric_components.hexagon_pin import HexagonPin
+
 from .parametric_components.tokamak_plasma import Plasma
 from .parametric_components.tokamak_plasma_from_points import PlasmaFromPoints
 from .parametric_components.tokamak_plasma_plasmaboundaries import PlasmaBoundaries
