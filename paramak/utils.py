@@ -1,6 +1,6 @@
 
 import math
-from collections import Iterable
+from collections.abc import Iterable
 from hashlib import blake2b
 from os import fdopen, remove
 from pathlib import Path
@@ -456,34 +456,168 @@ def plotly_trace(
     return trace
 
 
-def export_html_stp_file():
+def extract_points_from_edges(
+    edges,
+    view_plane: str = 'XZ',
+):
+
+    if isinstance(edges, Iterable):
+        list_of_edges = edges
+    else:
+        list_of_edges = [edges]
+
+    points = []
+
+    for edge in list_of_edges:
+        for vertex in edge.Vertices():
+            if view_plane == 'XZ':
+                points.append((vertex.X, vertex.Z))
+            elif view_plane == 'XY':
+                points.append((vertex.X, vertex.Y))
+            elif view_plane == 'YZ':
+                points.append((vertex.Y, vertex.Z))
+            elif view_plane == 'YX':
+                points.append((vertex.Y, vertex.X))
+            elif view_plane == 'ZY':
+                points.append((vertex.Z, vertex.Y))
+            elif view_plane == 'ZX':
+                points.append((vertex.Z, vertex.X))
+            elif view_plane == 'RZ':
+                xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
+                points.append((math.sqrt(xy), vertex.Z))
+            else:
+                raise ValueError('view_plane value of ', view_plane,
+                                 ' is not supported')
+    return points
+
+
+def load_stp_file(
+    filename: str,
+    scale_factor: float = 1.
+):
+    """Loads a stp file and makes the 3D solid and wires avaialbe for use.
+
+    Args:
+        filename: the filename used to save the html graph.
+        scale_factor: a scaling factor to apply to the geometry that can be
+            used to increase the size or decrease the size of the geometry.
+            Useful when converting the geometry to cm for use in neutronics
+            simulations.
+
+    Returns:
+        CadQuery.solid, CadQuery.Wires: soild and wires belonging to the object
+    """
+
+    part = importers.importStep(str(filename)).val()
+
+    scaled_part = part.scale(scale_factor)
+    solid = scaled_part
+    wire = scaled_part.Wires()
+    return solid, wire
+
+
+def export_wire_to_html(
+    wires,
+    filename,
+    view_plane='RZ',
+    facet_splines: bool = True,
+    facet_circles: bool = True,
+    tolerance: float = 1e-3,
+    title=None,
+):
+    """Creates a html graph representation of the points within the wires.
+    Edges of certain types (spines and circles) can optionally be faceted.
+    If filename provided doesn't end with .html then .html will be added.
+    Viewed from the XZ plane
+
+    Args:
+        wires (CadQuery.Wire): the wire (edge) or list of wires to plot points
+            from and to optionally facet.
+        filename: the filename used to save the html graph.
+        view_plane: The axis to view the points and faceted edges from. The
+            options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ'. Defaults to
+            'RZ'
+        facet_splines: If True then spline edges will be faceted. Defaults to
+            True.
+        facet_circles: If True then circle edges will be faceted. Defaults to
+            True.
+        tolerance: faceting toleranceto use when faceting cirles and splines.
+            Defaults to 1e-3.
+        title: the title of the plotly plot.
+
+    Returns:
+        plotly.Figure(): figure object
+    """
+
+    Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+
+    path_filename = Path(filename)
+
+    if path_filename.suffix != ".html":
+        path_filename = path_filename.with_suffix(".html")
 
     fig = go.Figure()
     fig.update_layout(
         {
-            "title": "coordinates of ",
+            "title": title,
             "hovermode": "closest",
+            "xaxis_title": view_plane[0],
+            "yaxis_title": view_plane[1]
         }
     )
 
-    for wire in part.Wires():
-        edges = paramak.utils.facet_wire(
-            wire=wire,
-            facet_splines=True,
-            facet_circles=True,
-            tolerance=1e-3)
+    if isinstance(wires, list):
+        list_of_wires = wires
+    else:
+        list_of_wires = [wires]
 
-        fpoints = []
-        for edge in edges:
-            for vertex in edge.Vertices():
-                xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
-                fpoints.append((xy, vertex.Z))
+    for counter, wire in enumerate(list_of_wires):
+
+        edges = facet_wire(
+            wire=wire,
+            facet_splines=facet_splines,
+            facet_circles=facet_circles,
+            tolerance=tolerance
+        )
+
+        points = paramak.utils.extract_points_from_edges(
+            edges=edges,
+            view_plane=view_plane
+        )
 
         fig.add_trace(
-            paramak.utils.plotly_trace(
-                points=fpoints,
-                mode="lines+markers"))
-    fig.write_html('FirstWall.html')
+            plotly_trace(
+                points=points,
+                mode="markers+lines",
+                name='edge ' + str(counter)
+            )
+        )
+
+    for counter, wire in enumerate(list_of_wires):
+
+        if isinstance(wire, cq.occ_impl.shapes.Wire):
+            # this is for imported stp files
+            edges = wire.Edges()
+        else:
+            # this is for cadquery generated solids
+            edges = wire.val().Edges()
+
+        points = paramak.utils.extract_points_from_edges(
+            edges=edges,
+            view_plane=view_plane)
+
+        fig.add_trace(plotly_trace(
+            points=points,
+            mode="markers",
+            name='points on wire ' + str(counter)
+        )
+        )
+
+    fig.write_html(str(path_filename))
+
+    print("Exported html graph to ", path_filename)
+
+    return fig
 
 
 class FaceAreaSelector(cq.Selector):
