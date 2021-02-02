@@ -1,6 +1,6 @@
 
 import math
-from collections import Iterable
+from collections.abc import Iterable
 from hashlib import blake2b
 from os import fdopen, remove
 from pathlib import Path
@@ -461,7 +461,7 @@ def extract_points_from_edges(
     view_plane: str = 'XZ',
 ):
 
-    if isinstance(edges, list):
+    if isinstance(edges, Iterable):
         list_of_edges = edges
     else:
         list_of_edges = [edges]

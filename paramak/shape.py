@@ -1,15 +1,13 @@
 
 import json
-import math
 import numbers
 import warnings
-from collections import Iterable
+from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Tuple
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 from cadquery import exporters
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon

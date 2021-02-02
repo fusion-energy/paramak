@@ -1,15 +1,13 @@
 
 import json
-from collections import Iterable
+from collections.abc import Iterable
 from pathlib import Path
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 from cadquery import exporters
 
 import paramak
-from paramak.utils import facet_wire, plotly_trace
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
 from paramak.utils import get_hash

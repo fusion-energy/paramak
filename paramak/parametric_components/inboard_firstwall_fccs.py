@@ -1,5 +1,5 @@
 
-from collections import Iterable
+from collections.abc import Iterable
 
 from paramak import (CenterColumnShieldCircular, CenterColumnShieldCylinder,
                      CenterColumnShieldFlatTopCircular,
