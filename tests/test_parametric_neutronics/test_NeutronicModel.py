@@ -490,7 +490,7 @@ class TestShape(unittest.TestCase):
             geometry=self.my_shape,
             source=self.source,
             materials={'center_column_shield_mat': 'Be'},
-            mesh_tally_3d=['heating', 'tritium_production'],
+            mesh_tally_3d=['heating', '(n,Xt)'],
             simulation_batches=2,
             simulation_particles_per_batch=2
         )
@@ -504,7 +504,7 @@ class TestShape(unittest.TestCase):
 
         assert Path(output_filename).exists() is True
         assert Path('heating_on_3D_mesh.vtk').exists() is True
-        assert Path('tritium_production_on_3D_mesh.vtk').exists() is True
+        assert Path('n-Xt_on_3D_mesh.vtk').exists() is True
 
     def test_batches_and_particles_convert_to_int(self):
         """Makes a neutronics model and simulates with a 3D and 2D mesh tally
@@ -690,7 +690,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
                 'mat1': 'copper',
                 'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
             },
-            mesh_tally_2d=['tritium_production', 'heating', 'flux'],
+            mesh_tally_2d=['(n,Xt)', 'heating', 'flux'],
             simulation_batches=2,
             simulation_particles_per_batch=10,
         )
@@ -698,9 +698,9 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         # starts the neutronics simulation using trelis
         neutronics_model.simulate(verbose=False, method='pymoab')
 
-        assert Path("tritium_production_on_2D_mesh_xz.png").exists() is True
-        assert Path("tritium_production_on_2D_mesh_xy.png").exists() is True
-        assert Path("tritium_production_on_2D_mesh_yz.png").exists() is True
+        assert Path("n-Xt_on_2D_mesh_xz.png").exists() is True
+        assert Path("n-Xt_on_2D_mesh_xy.png").exists() is True
+        assert Path("n-Xt_on_2D_mesh_yz.png").exists() is True
         assert Path("heating_on_2D_mesh_xz.png").exists() is True
         assert Path("heating_on_2D_mesh_xy.png").exists() is True
         assert Path("heating_on_2D_mesh_yz.png").exists() is True
