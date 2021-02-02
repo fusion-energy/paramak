@@ -470,20 +470,24 @@ def extract_points_from_edges(
 
     for edge in list_of_edges:
         for vertex in edge.Vertices():
-            correspondance_table = {
-                "X": vertex.X,
-                "Y": vertex.Y,
-                "Z": vertex.Z,
-                "R": math.sqrt(math.pow(vertex.X, 2) + math.pow(vertex.Y, 2))
-            }
-            vertices = []
-            for edge in list_of_edges:
-                for ax in view_plane:
-                    if ax not in correspondance_table.keys():
-                        ValueError('view_plane value of ', view_plane,
-                                   ' is not supported')
-                    vertices.append(correspondance_table[ax])
-                points.append((vertices[0], vertices[1]))
+            if view_plane == 'XZ':
+                points.append((vertex.X, vertex.Z))
+            elif view_plane == 'XY':
+                points.append((vertex.X, vertex.Y))
+            elif view_plane == 'YZ':
+                points.append((vertex.Y, vertex.Z))
+            elif view_plane == 'YX':
+                points.append((vertex.Y, vertex.X))
+            elif view_plane == 'ZY':
+                points.append((vertex.Z, vertex.Y))
+            elif view_plane == 'ZX':
+                points.append((vertex.Z, vertex.X))
+            elif view_plane == 'RZ':
+                xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
+                points.append((math.sqrt(xy), vertex.Z))
+            else:
+                raise ValueError('view_plane value of ', view_plane,
+                                ' is not supported')
     return points
 
 
