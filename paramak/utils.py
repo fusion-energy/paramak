@@ -483,7 +483,7 @@ def extract_points_from_edges(
                         ValueError('view_plane value of ', view_plane,
                                    ' is not supported')
                     vertices.append(correspondance_table[ax])
-                points.append((*vertices))
+                points.append((vertices[0], vertices[1]))
     return points
 
 
