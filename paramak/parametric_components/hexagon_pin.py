@@ -75,19 +75,19 @@ class HexagonPin(ExtrudeStraightShape):
 
         point_1 = (self.length_of_side, 0)
 
-        point_2 = self.length_of_side*math.cos(math.radians(60)), \
-                    self.length_of_side * math.sin(math.radians(60))
+        point_2 = self.length_of_side * math.cos(math.radians(60)), \
+            self.length_of_side * math.sin(math.radians(60))
 
-        point_3 = self.length_of_side*math.cos(math.radians(120)), \
-                    self.length_of_side * math.sin(math.radians(120))
+        point_3 = self.length_of_side * math.cos(math.radians(120)), \
+            self.length_of_side * math.sin(math.radians(120))
 
         point_4 = (-self.length_of_side, 0)
 
-        point_5 = self.length_of_side*math.cos(math.radians(240)), \
-                    self.length_of_side * math.sin(math.radians(240))
-    
-        point_6 = self.length_of_side*math.cos(math.radians(300)), \
-                    self.length_of_side * math.sin(math.radians(300))
+        point_5 = self.length_of_side * math.cos(math.radians(240)), \
+            self.length_of_side * math.sin(math.radians(240))
+
+        point_6 = self.length_of_side * math.cos(math.radians(300)), \
+            self.length_of_side * math.sin(math.radians(300))
 
         # TODO translate points to center around the self.center_point
 
