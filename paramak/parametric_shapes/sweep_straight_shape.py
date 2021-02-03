@@ -1,4 +1,6 @@
 
+from typing import Optional, List, Tuple
+
 from paramak import SweepMixedShape
 
 
@@ -24,12 +26,12 @@ class SweepStraightShape(SweepMixedShape):
 
     def __init__(
         self,
-        path_points,
-        workplane="XY",
-        path_workplane="XZ",
-        stp_filename="SweepStraightShape.stp",
-        stl_filename="SweepStraightShape.stl",
-        force_cross_section=False,
+        path_points: List[Tuple[float, float]],
+        workplane: str = "XY",
+        path_workplane: str = "XZ",
+        stp_filename: Optional[str] = "SweepStraightShape.stp",
+        stl_filename: Optional[str] = "SweepStraightShape.stl",
+        force_cross_section: Optional[bool] = False,
         **kwargs
     ):
 

@@ -1,4 +1,6 @@
 
+from typing import List, Tuple
+
 from paramak import SweepMixedShape
 
 
@@ -8,15 +10,15 @@ class SweepSplineShape(SweepMixedShape):
     variation in the cross-section of the solid may occur.
 
     Args:
-        path_points (list of tuples each containing X (float), Z (float)): A
-            list of XY, YZ or XZ coordinates connected by spline connections
-            which define the path along which the 2D shape is swept.
-        workplane (str, optional): Workplane in which the 2D shape to be swept
-            is defined. Defaults to "XY".
-        path_workplane (str, optional): Workplane in which the spline path is
-            defined. Defaults to "XZ".
-        stp_filename (str, optional): Defaults to "SweepSplineShape.stp".
-        stl_filename (str, optional): Defaults to "SweepSplineShape.stl".
+        path_points: A list of XY, YZ or XZ coordinates connected by spline
+            connections which define the path along which the 2D shape is
+            swept.
+        workplane: Workplane in which the 2D shape to be swept is defined.
+            Defaults to "XY".
+        path_workplane: Workplane in which the spline path is defined. Defaults
+            to "XZ".
+        stp_filename: Defaults to "SweepSplineShape.stp".
+        stl_filename: Defaults to "SweepSplineShape.stl".
         force_cross_section (bool, optional): If True, cross-setion of solid
             is forced to be shape defined by points in workplane at each
             path_point. Defaults to False.
@@ -24,12 +26,12 @@ class SweepSplineShape(SweepMixedShape):
 
     def __init__(
         self,
-        path_points,
-        workplane="XY",
-        path_workplane="XZ",
-        stp_filename="SweepSplineShape.stp",
-        stl_filename="SweepSplineShape.stl",
-        force_cross_section=False,
+        path_points: List[Tuple[float, float, str]],
+        workplane: str = "XY",
+        path_workplane: str = "XZ",
+        stp_filename: str = "SweepSplineShape.stp",
+        stl_filename: str = "SweepSplineShape.stl",
+        force_cross_section: bool = False,
         **kwargs
     ):
 
