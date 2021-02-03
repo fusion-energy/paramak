@@ -14,8 +14,8 @@ class ExtrudeMixedShape(Shape):
             neutronics)
         extrude_both: If set to True, the extrusion will occur in both
             directions. Defaults to True.
-        rotation_angle: rotation angle of solid created. A cut is performed from
-            rotation_angle to 360 degrees. Defaults to 360.0.
+        rotation_angle: rotation angle of solid created. A cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.0.
         stp_filename: Defaults to "ExtrudeMixedShape.stp".
         stl_filename: Defaults to "ExtrudeMixedShape.stl".
 

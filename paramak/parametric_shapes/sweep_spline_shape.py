@@ -1,5 +1,5 @@
 
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from paramak import SweepMixedShape
 
@@ -26,12 +26,12 @@ class SweepSplineShape(SweepMixedShape):
 
     def __init__(
         self,
-        path_points: List[Tuple[float, float, str]],
-        workplane: str = "XY",
-        path_workplane: str = "XZ",
-        stp_filename: str = "SweepSplineShape.stp",
-        stl_filename: str = "SweepSplineShape.stl",
-        force_cross_section: bool = False,
+        path_points: List[Tuple[float, float]],
+        workplane: Optional[str] = "XY",
+        path_workplane: Optional[str] = "XZ",
+        stp_filename: Optional[str] = "SweepSplineShape.stp",
+        stl_filename: Optional[str] = "SweepSplineShape.stl",
+        force_cross_section: Optional[bool] = False,
         **kwargs
     ):
 

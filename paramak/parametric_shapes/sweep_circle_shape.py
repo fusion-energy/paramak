@@ -1,4 +1,6 @@
 
+from typing import Optional, List, Tuple
+
 import cadquery as cq
 from paramak import Shape
 
@@ -26,13 +28,13 @@ class SweepCircleShape(Shape):
 
     def __init__(
         self,
-        radius,
-        path_points,
-        workplane="XY",
-        path_workplane="XZ",
-        stp_filename="SweepCircleShape.stp",
-        stl_filename="SweepCircleShape.stl",
-        force_cross_section=False,
+        radius: float,
+        path_points: List[Tuple[float, float]],
+        workplane: Optional[str] = "XY",
+        path_workplane: Optional[str] = "XZ",
+        stp_filename: Optional[str] = "SweepCircleShape.stp",
+        stl_filename: Optional[str] = "SweepCircleShape.stl",
+        force_cross_section: Optional[bool] = False,
         **kwargs
     ):
 
@@ -114,8 +116,11 @@ class SweepCircleShape(Shape):
 
             self.wire = wires
 
-            solid = wire.workplane(offset=self.path_points[-1][1] * factor).center(
-                self.path_points[-1][0], 0).circle(self.radius).sweep(path, multisection=True)
+            solid = wire.workplane(
+                offset=self.path_points[-1][1] * factor) \
+                .center(self.path_points[-1][0], 0) \
+                .circle(self.radius) \
+                .sweep(path, multisection=True)
 
         else:
 

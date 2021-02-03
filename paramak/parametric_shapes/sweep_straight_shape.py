@@ -27,8 +27,8 @@ class SweepStraightShape(SweepMixedShape):
     def __init__(
         self,
         path_points: List[Tuple[float, float]],
-        workplane: str = "XY",
-        path_workplane: str = "XZ",
+        workplane: Optional[str] = "XY",
+        path_workplane: Optional[str] = "XZ",
         stp_filename: Optional[str] = "SweepStraightShape.stp",
         stl_filename: Optional[str] = "SweepStraightShape.stl",
         force_cross_section: Optional[bool] = False,
