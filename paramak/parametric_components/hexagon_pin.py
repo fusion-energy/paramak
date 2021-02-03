@@ -9,13 +9,13 @@ class HexagonPin(ExtrudeStraightShape):
     """Creates an extruded hexagon by a provided distance about a center point.
 
     Args:
-        length_of_side: the vertical (z axis) height of the coil (cm).
-        width: the horizontal (x axis) width of the coil (cm).
-        center_point: the center of the coil (x,z) values (cm).
-        stp_filename: defaults to "PoloidalFieldCoil.stp".
-        stl_filename: defaults to "PoloidalFieldCoil.stl".
-        name: defaults to "pf_coil".
-        material_tag: defaults to "pf_coil_mat".
+        length_of_side: the length of one side of the hexagon (mm).
+        distance: extruded distance along the y-direction (mm).
+        center_point: the center of the hexagon on the x-z plane (mm).
+        stp_filename: defaults to "HexagonPin.stp".
+        stl_filename: defaults to "HexagonPin.stl".
+        name: defaults to "hexagon_pin".
+        material_tag: defaults to "hexagon_pin_mat".
     """
 
     def __init__(
@@ -73,24 +73,12 @@ class HexagonPin(ExtrudeStraightShape):
         #    -          -
         #     p5 ---- p6
 
-        point_1 = (self.length_of_side, 0)
-
-        point_2 = self.length_of_side * math.cos(math.radians(60)), \
-            self.length_of_side * math.sin(math.radians(60))
-
-        point_3 = self.length_of_side * math.cos(math.radians(120)), \
-            self.length_of_side * math.sin(math.radians(120))
-
-        point_4 = (-self.length_of_side, 0)
-
-        point_5 = self.length_of_side * math.cos(math.radians(240)), \
-            self.length_of_side * math.sin(math.radians(240))
-
-        point_6 = self.length_of_side * math.cos(math.radians(300)), \
-            self.length_of_side * math.sin(math.radians(300))
-
-        # TODO translate points to center around the self.center_point
-
-        points = [point_1, point_2, point_3, point_4, point_5, point_6]
+        points=[]
+        for i in range(6):
+            point = (self.length_of_side * math.cos(math.pi/3 * i) +\
+                         self.center_point[0],
+                     self.length_of_side * math.sin(math.pi/3 * i) +\
+                         self.center_point[1])
+            points.append(point)
 
         self.points = points
