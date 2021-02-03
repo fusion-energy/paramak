@@ -10,18 +10,17 @@ class SweepStraightShape(SweepMixedShape):
     variation in the cross-section of the solid may occur.
 
     Args:
-        path_points (list of tuples each containing X (float), Z (float)): A
-            list of XY, YZ or XZ coordinates connected by spline connections
-            which define the path along which the 2D shape is swept.
-        workplane (str, optional): Workplane in which the 2D shape to be swept
-            is defined. Defaults to "XY".
-        path_workplane (str, optional): Workplane in which the spline path is
-            defined. Defaults to "XZ".
-        stp_filename (str, optional): Defaults to "SweepStraightShape.stp".
-        stl_filename (str, optional): Defaults to "SweepStraightShape.stl".
-        force_cross_section (bool, optional): If True, cross-section of solid
-            is forced to be shape defined by points in workplane at each
-            path_point. Defaults to False.
+        path_points: A list of XY, YZ or XZ coordinates connected by spline
+            connections which define the path along which the 2D shape is swept
+        workplane: Workplane in which the 2D shape to be swept is defined.
+            Defaults to "XY".
+        path_workplane: Workplane in which the spline path is defined. Defaults
+            to "XZ".
+        stp_filename: Defaults to "SweepStraightShape.stp".
+        stl_filename: Defaults to "SweepStraightShape.stl".
+        force_cross_section: If True, cross-section of solid is forced to be
+            shape defined by points in workplane at each path_point. Defaults
+            to False.
     """
 
     def __init__(

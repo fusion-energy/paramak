@@ -9,10 +9,10 @@ class RotateMixedShape(Shape):
     straight lines and splines.
 
     Args:
-        rotation_angle (float, optional): The rotation_angle to use when
-            revolving the solid (degrees). Defaults to 360.0.
-        stp_filename (str, optional):  Defaults to "RotateMixedShape.stp".
-        stl_filename (str, optional):  Defaults to "RotateMixedShape.stl".
+        rotation_angle: The rotation_angle to use when revolving the solid
+            (degrees). Defaults to 360.0.
+        stp_filename:  Defaults to "RotateMixedShape.stp".
+        stl_filename:  Defaults to "RotateMixedShape.stl".
     """
 
     def __init__(

@@ -9,10 +9,10 @@ class RotateStraightShape(RotateMixedShape):
     connections.
 
     Args:
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        stp_filename (str, optional): Defaults to "RotateStraightShape.stp".
-        stl_filename (str, optional): Defaults to "RotateStraightShape.stl".
+        rotation_angle: The rotation angle to use when revolving the solid
+            (degrees).
+        stp_filename: Defaults to "RotateStraightShape.stp".
+        stl_filename: Defaults to "RotateStraightShape.stl".
     """
 
     def __init__(
