@@ -10,9 +10,9 @@ class ExtrudeMixedShape(Shape):
     straight and spline connections.
 
     Args:
-        distance: the extrusion distance to use (cm units if used for 
+        distance: the extrusion distance to use (cm units if used for
             neutronics)
-        extrude_both: If set to True, the extrusion will occur in both 
+        extrude_both: If set to True, the extrusion will occur in both
             directions. Defaults to True.
         rotation_angle: rotation angle of solid created. A cut is performed from
             rotation_angle to 360 degrees. Defaults to 360.0.
