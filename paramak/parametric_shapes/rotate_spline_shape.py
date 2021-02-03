@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 from paramak import RotateMixedShape
 
 
@@ -14,9 +16,9 @@ class RotateSplineShape(RotateMixedShape):
 
     def __init__(
         self,
-        rotation_angle=360,
-        stp_filename="RotateSplineShape.stp",
-        stl_filename="RotateSplineShape.stl",
+        rotation_angle: Optional[float] = 360,
+        stp_filename: Optional[str] = "RotateSplineShape.stp",
+        stl_filename: Optional[str] = "RotateSplineShape.stl",
         **kwargs
     ):
 
