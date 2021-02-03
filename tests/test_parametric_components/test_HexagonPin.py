@@ -10,7 +10,7 @@ class TestPoloidalFieldCoil(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.HexagonPin(
-            length_of_side=5, distance=42., center_point=(0,0))
+            length_of_side=5, distance=42., center_point=(0, 0))
 
     def test_setting_parameters(self):
         """Checks that the default parameters and user parameters are set"""
@@ -28,7 +28,7 @@ class TestPoloidalFieldCoil(unittest.TestCase):
 
         length = self.test_shape.length_of_side
         distance = self.test_shape.distance
-        
+
         hexagon_face_area = (3 * math.sqrt(3) / 2) * math.pow(length, 2)
 
         # this needs a pytest.approx() as the volumes are not exact
@@ -40,7 +40,7 @@ class TestPoloidalFieldCoil(unittest.TestCase):
         expected volume change"""
 
         test_shape_volume = self.test_shape.volume
-        
+
         self.test_shape.distance = self.test_shape.distance * 2
 
         # this needs a multiplication factor to make them equal
@@ -54,7 +54,7 @@ class TestPoloidalFieldCoil(unittest.TestCase):
         # design a test for this check
 
         # test_shape_volume = self.test_shape.volume
-        
+
         # self.test_shape.length_of_side = self.test_shape.length_of_side * 2
 
         # this could be improved as the < is the wrong symbol
@@ -67,7 +67,7 @@ class TestPoloidalFieldCoil(unittest.TestCase):
 
         length = self.test_shape.length_of_side
         distance = self.test_shape.distance
-        
+
         hexagon_face_area = (3 * math.sqrt(3) / 2) * math.pow(length, 2)
 
         self.test_shape.length_of_side = self.test_shape.length_of_side * 2
@@ -76,4 +76,5 @@ class TestPoloidalFieldCoil(unittest.TestCase):
         assert hexagon_face_area in test_shape_areas
         assert length * distance in test_shape_areas
 
-        # add a check that makes sure only areas with these two values are present
+        # add a check that makes sure only areas with these two values are
+        # present
