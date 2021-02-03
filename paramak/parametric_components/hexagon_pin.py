@@ -73,12 +73,12 @@ class HexagonPin(ExtrudeStraightShape):
         #    -          -
         #     p5 ---- p6
 
-        points=[]
+        points = []
         for i in range(6):
-            point = (self.length_of_side * math.cos(math.pi/3 * i) +\
-                         self.center_point[0],
-                     self.length_of_side * math.sin(math.pi/3 * i) +\
-                         self.center_point[1])
+            point = (self.length_of_side * math.cos(math.pi / 3 * i) +
+                     self.center_point[0],
+                     self.length_of_side * math.sin(math.pi / 3 * i) +
+                     self.center_point[1])
             points.append(point)
 
         self.points = points
