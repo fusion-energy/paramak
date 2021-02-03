@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 import cadquery as cq
 from paramak import Shape
 from paramak.utils import calculate_wedge_cut
@@ -8,26 +10,26 @@ class ExtrudeCircleShape(Shape):
     """Extrudes a circular 3d CadQuery solid from a central point and a radius
 
     Args:
-        distance (float): the extrusion distance to use (cm units if used for
+        distance: the extrusion distance to use (cm units if used for
             neutronics)
-        radius (float): radius of the shape.
-        rotation_angle (float): rotation_angle of solid created. a cut is
-            performed from rotation_angle to 360 degrees. Defaults to 360.
-        extrude_both (bool, optional): if set to True, the extrusion will
-            occur in both directions. Defaults to True.
-        stp_filename (str, optional): Defaults to "ExtrudeCircleShape.stp".
-        stl_filename (str, optional): Defaults to "ExtrudeCircleShape.stl".
+        radius: radius of the shape.
+        rotation_angle: rotation_angle of solid created. a cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.
+        extrude_both: if set to True, the extrusion will occur in both
+            directions. Defaults to True.
+        stp_filename: Defaults to "ExtrudeCircleShape.stp".
+        stl_filename: Defaults to "ExtrudeCircleShape.stl".
     """
 
     def __init__(
         self,
-        distance,
-        radius,
-        extrusion_start_offset=0.0,
-        rotation_angle=360,
-        extrude_both=True,
-        stp_filename="ExtrudeCircleShape.stp",
-        stl_filename="ExtrudeCircleShape.stl",
+        distance: float,
+        radius: float,
+        extrusion_start_offset: Optional[float] = 0.0,
+        rotation_angle: Optional[float] = 360,
+        extrude_both: Optional[bool] = True,
+        stp_filename: Optional[str] = "ExtrudeCircleShape.stp",
+        stl_filename: Optional[str] = "ExtrudeCircleShape.stl",
         **kwargs
     ):
 
