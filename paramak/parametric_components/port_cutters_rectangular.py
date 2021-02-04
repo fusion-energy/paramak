@@ -80,4 +80,5 @@ class PortCutterRectangular(ExtrudeStraightShape):
             filleting_edge = "|Z"
 
         if self.fillet_radius is not None and self.fillet_radius != 0:
-            self.solid = self.solid.edges(filleting_edge).fillet(self.fillet_radius)
+            self.solid = self.solid.edges(
+                filleting_edge).fillet(self.fillet_radius)
