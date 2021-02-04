@@ -842,18 +842,18 @@ class Shape:
         return str(path_filename)
 
     def export_svg(
-            self,
-            filename: str = 'shape.svg',
-            projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
-            width: float = 800,
-            height: float = 800,
-            marginLeft: float = 100,
-            marginTop: float = 100,
-            strokeWidth: float = None,
-            strokeColor: Tuple[int, int, int] = (0, 0, 0),
-            hiddenColor: Tuple[int, int, int] = (100, 100, 100),
-            showHidden: bool = True,
-        ) -> str:
+        self,
+        filename: str = 'shape.svg',
+        projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+        width: float = 800,
+        height: float = 800,
+        marginLeft: float = 100,
+        marginTop: float = 100,
+        strokeWidth: float = None,
+        strokeColor: Tuple[int, int, int] = (0, 0, 0),
+        hiddenColor: Tuple[int, int, int] = (100, 100, 100),
+        showHidden: bool = True,
+    ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
@@ -872,17 +872,17 @@ class Shape:
                 and the start of the geometry.
             strokeWidth: the width of the lines used to draw the geometry.
                 Defaults to None which automatically selects an suitable width.
-            strokeColor: the color of the lines used to draw the geometry in 
+            strokeColor: the color of the lines used to draw the geometry in
                 RGB format with each value between 0 and 255. Defaults to
                 (0, 0, 0) which is black.
-            hiddenColor: the color of the lines used to draw the geometry in 
+            hiddenColor: the color of the lines used to draw the geometry in
                 RGB format with each value between 0 and 255. Defaults to
                (100, 100, 100) which is light grey.
             showHidden: If the edges obscured by geometry should be included in
                 the diagram. Defaults to True.
 
         Returns:
-            str: the svg filename created      
+            str: the svg filename created
         """
 
         path_filename = Path(filename)
@@ -913,7 +913,6 @@ class Shape:
         print("Saved file as ", path_filename)
 
         return str(path_filename)
-
 
     def export_html(
             self,
