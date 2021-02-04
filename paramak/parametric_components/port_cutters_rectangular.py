@@ -71,7 +71,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
                    self.center_point[1]) for e in points]
         self.points = points
 
-    def add_fillet(self):
+    def add_fillet(self, solid):
         if "X" not in self.workplane:
             filleting_edge = "|X"
         if "Y" not in self.workplane:
@@ -80,4 +80,5 @@ class PortCutterRectangular(ExtrudeStraightShape):
             filleting_edge = "|Z"
 
         if self.fillet_radius is not None and self.fillet_radius != 0:
-            self.solid = self.solid.edges(filleting_edge).fillet(self.fillet_radius)
+            solid = solid.edges(filleting_edge).fillet(self.fillet_radius)
+        return solid
