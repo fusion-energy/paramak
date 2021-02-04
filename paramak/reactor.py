@@ -2,6 +2,7 @@
 import json
 from collections.abc import Iterable
 from pathlib import Path
+from typing import Tuple
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -478,13 +479,48 @@ class Reactor:
                 Path(output_folder) / Path(entry.stp_filename))
         return filenames
 
-    def export_svg(self, filename: str = 'reactor.svg') -> str:
+    def export_svg(
+            self,
+            filename: str = 'reactor.svg',
+            projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+            width: float = 1000,
+            height: float = 800,
+            marginLeft: float = 120,
+            marginTop: float = 100,
+            strokeWidth: float = None,
+            strokeColor: Tuple[int, int, int] = (0, 0, 0),
+            hiddenColor: Tuple[int, int, int] = (100, 100, 100),
+            showHidden: bool = True,
+        ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
         Args:
-            filename (str): the filename of the svg file to be exported.
-                Defaults to "reactor.svg".
+            filename: the filename of the svg file to be exported. Defaults to
+                "reactor.svg".
+            projectionDir: The direction vector to view the geometry from
+                (x, y, z). Defaults to (-1.75, 1.1, 5)
+            width: the width of the svg image produced in pixels. Defaults to
+                1000
+            height: the height of the svg image produced in pixels. Defaults to
+                800
+            marginLeft: the number of pixels between the left edge of the image
+                and the start of the geometry.
+            marginTop: the number of pixels between the top edge of the image
+                and the start of the geometry.
+            strokeWidth: the width of the lines used to draw the geometry.
+                Defaults to None which automatically selects an suitable width.
+            strokeColor: the color of the lines used to draw the geometry in 
+                RGB format with each value between 0 and 255. Defaults to
+                (0, 0, 0) which is black.
+            hiddenColor: the color of the lines used to draw the geometry in 
+                RGB format with each value between 0 and 255. Defaults to
+               (100, 100, 100) which is light grey.
+            showHidden: If the edges obscured by geometry should be included in
+                the diagram. Defaults to True.
+
+        Returns:
+            str: the svg filename created      
         """
 
         path_filename = Path(filename)
@@ -494,8 +530,24 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as out_file:
-            exporters.exportShape(self.solid, "SVG", out_file)
+        opt = {
+            "width": width,
+            "height": height,
+            "marginLeft": marginLeft,
+            "marginTop": marginTop,
+            "showAxes": False,
+            "projectionDir": projectionDir,
+            "strokeColor": strokeColor,
+            "hiddenColor": hiddenColor,
+            "showHidden": showHidden
+        }
+
+        if strokeWidth is not None:
+            opt["strokeWidth"] = strokeWidth
+
+        exporters.export(self.solid, str(path_filename), exportType='SVG',
+                         opt=opt)
+
         print("Saved file as ", path_filename)
 
         return str(path_filename)
