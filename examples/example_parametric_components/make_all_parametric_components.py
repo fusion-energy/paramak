@@ -334,7 +334,7 @@ def main():
 
     component = paramak.PortCutterRectangular(
         distance=3,
-        z_pos=0,
+        center_point=(0, 0),
         height=0.2,
         width=0.4,
         fillet_radius=0.02,
@@ -344,7 +344,7 @@ def main():
 
     component = paramak.PortCutterCircular(
         distance=3,
-        z_pos=0.25,
+        center_point=(0.25, 0),
         radius=0.1,
         # azimuth_placement_angle=[0, 45, 90, 180], # TODO: fix issue #548
         azimuth_placement_angle=[0, 45, 90],

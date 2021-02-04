@@ -33,7 +33,7 @@ def main():
     # makes the lower row of ports
     rectangular_ports = paramak.PortCutterRectangular(
         distance=5,
-        center_point=(0, 0),
+        center_point=(-1, 0),
         height=0.3,
         width=0.4,
         fillet_radius=0.08,
