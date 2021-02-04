@@ -88,6 +88,11 @@ class ExtrudeMixedShape(Shape):
         solid = wire.extrude(
             distance=extrusion_distance,
             both=self.extrude_both)
+        
+        # filleting rectangular port cutter edges
+        # must be done before azimuthal placement
+        if hasattr(self, "add_fillet"):
+            solid = self.add_fillet(solid)
 
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)

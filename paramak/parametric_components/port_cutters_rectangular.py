@@ -58,7 +58,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
         self.height = height
         self.width = width
         self.fillet_radius = fillet_radius
-        self.add_fillet()
+        # self.add_fillet()
 
     def find_points(self):
         points = [
