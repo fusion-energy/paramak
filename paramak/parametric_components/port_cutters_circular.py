@@ -7,23 +7,22 @@ class PortCutterCircular(ExtrudeCircleShape):
     other components (eg. blanket, vessel,..) in order to create ports.
 
     Args:
-        z_pos (float): Z position (cm) of the port
-        height (float): height (cm) of the port
-        width (float): width (cm) of the port
-        distance (float): extruded distance (cm) of the cutter
-        stp_filename (str, optional): defaults to "PortCutterCircular.stp".
-        stl_filename (str, optional): defaults to "PortCutterCircular.stl".
-        name (str, optional): defaults to "circular_port_cutter".
-        material_tag (str, optional): defaults to "circular_port_cutter_mat".
-        extrusion_start_offset (float, optional): the distance between 0 and
+        center_point: center point of the port cutter. Defaults to (0, 0).
+        radius: radius (cm) of port cutter.
+        distance: extruded distance (cm) of the port cutter.
+        stp_filename: defaults to "PortCutterCircular.stp".
+        stl_filename: defaults to "PortCutterCircular.stl".
+        name: defaults to "circular_port_cutter".
+        material_tag: defaults to "circular_port_cutter_mat".
+        extrusion_start_offset: the distance between 0 and
             the start of the extrusion. Defaults to 1..
     """
 
     def __init__(
         self,
-        z_pos,
         radius,
         distance,
+        center_point=(0, 0),
         workplane="ZY",
         rotation_axis="Z",
         extrusion_start_offset=1.,
@@ -47,8 +46,8 @@ class PortCutterCircular(ExtrudeCircleShape):
             **kwargs
         )
 
-        self.z_pos = z_pos
+        self.center_point = center_point
         self.radius = radius
 
     def find_points(self):
-        self.points = [(0, self.z_pos)]
+        self.points = [self.center_point]
