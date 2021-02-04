@@ -1,6 +1,8 @@
 
 from paramak import ExtrudeStraightShape
 
+from typing import Optional
+
 
 class PortCutterRectangular(ExtrudeStraightShape):
     """Creates an extruded shape with a rectangular section that is used to cut
@@ -24,18 +26,18 @@ class PortCutterRectangular(ExtrudeStraightShape):
 
     def __init__(
         self,
-        height,
-        width,
-        distance,
-        center_point=(0, 0),
-        workplane="ZY",
-        rotation_axis="Z",
-        extrusion_start_offset=1.,
-        fillet_radius=None,
-        stp_filename="PortCutterRectangular.stp",
-        stl_filename="PortCutterRectangular.stl",
-        name="rectangular_port_cutter",
-        material_tag="rectangular_port_cutter_mat",
+        height: float,
+        width: float,
+        distance: float,
+        center_point: Optional[tuple] = (0, 0),
+        workplane: Optional[str] = "ZY",
+        rotation_axis: Optional[str] = "Z",
+        extrusion_start_offset: Optional[float] = 1.,
+        fillet_radius: Optional[float] = None,
+        stp_filename: Optional[str] = "PortCutterRectangular.stp",
+        stl_filename: Optional[str] = "PortCutterRectangular.stl",
+        name: Optional[str] = "rectangular_port_cutter",
+        material_tag: Optional[str] = "rectangular_port_cutter_mat",
         **kwargs
     ):
 

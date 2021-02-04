@@ -1,6 +1,8 @@
 
 from paramak import ExtrudeCircleShape
 
+from typing import Optional
+
 
 class PortCutterCircular(ExtrudeCircleShape):
     """Creates an extruded shape with a circular section that is used to cut
@@ -20,16 +22,16 @@ class PortCutterCircular(ExtrudeCircleShape):
 
     def __init__(
         self,
-        radius,
-        distance,
-        center_point=(0, 0),
-        workplane="ZY",
-        rotation_axis="Z",
-        extrusion_start_offset=1.,
-        stp_filename="PortCutterCircular.stp",
-        stl_filename="PortCutterCircular.stl",
-        name="circular_port_cutter",
-        material_tag="circular_port_cutter_mat",
+        radius: float,
+        distance: float,
+        center_point: Optional[tuple] = (0, 0),
+        workplane: Optional[str] = "ZY",
+        rotation_axis: Optional[str] = "Z",
+        extrusion_start_offset: Optional[float] = 1.,
+        stp_filename: Optional[str] = "PortCutterCircular.stp",
+        stl_filename: Optional[str] = "PortCutterCircular.stl",
+        name: Optional[str] = "circular_port_cutter",
+        material_tag: Optional[str] = "circular_port_cutter_mat",
         **kwargs
     ):
         super().__init__(
