@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 from paramak import RotateMixedShape
 
 
@@ -7,17 +9,17 @@ class RotateStraightShape(RotateMixedShape):
     connections.
 
     Args:
-        rotation_angle (float): The rotation angle to use when revolving the
-            solid (degrees).
-        stp_filename (str, optional): Defaults to "RotateStraightShape.stp".
-        stl_filename (str, optional): Defaults to "RotateStraightShape.stl".
+        rotation_angle: The rotation angle to use when revolving the solid
+            (degrees).
+        stp_filename: Defaults to "RotateStraightShape.stp".
+        stl_filename: Defaults to "RotateStraightShape.stl".
     """
 
     def __init__(
         self,
-        rotation_angle=360.0,
-        stp_filename="RotateStraightShape.stp",
-        stl_filename="RotateStraightShape.stl",
+        rotation_angle: Optional[float] = 360.0,
+        stp_filename: Optional[str] = "RotateStraightShape.stp",
+        stl_filename: Optional[str] = "RotateStraightShape.stl",
         **kwargs
     ):
 

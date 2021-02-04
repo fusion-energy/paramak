@@ -1,4 +1,6 @@
 
+from typing import Optional, List, Tuple
+
 import cadquery as cq
 from paramak import Shape
 
@@ -9,15 +11,15 @@ class SweepMixedShape(Shape):
     solid. Note, some variation in cross-section of the solid may occur.
 
     Args:
-        path_points (list of tuples each containing X (float), Z (float)): A
-            list of XY, YZ or XZ coordinates connected by spline connections
-            which define the path along which the 2D shape is swept.
-        workplane (str, optional): Workplane in which the 2D shape to be swept
-            is defined. Defaults to "XY".
-        path_workplane (str, optional): Workplane in which the spline path is
-            defined. Defaults to "XZ".
-        stp_filename (str, optional): Defaults to "SweepMixedShape.stp".
-        stl_filename (str, optional): Defaults to "SweepMixedShape.stl".
+        path_points: A list of XY, YZ or XZ coordinates connected by spline
+            connections which define the path along which the 2D shape is
+            swept.
+        workplane: Workplane in which the 2D shape to be swept is defined.
+            Defaults to "XY".
+        path_workplane: Workplane in which the spline path is defined. Defaults
+            to "XZ".
+        stp_filename: Defaults to "SweepMixedShape.stp".
+        stl_filename: Defaults to "SweepMixedShape.stl".
         force_cross_section (bool, optional): If True, cross-section of solid
             is forced to be shape defined by points in workplane at each
             path_point. Defaults to False.
@@ -25,12 +27,12 @@ class SweepMixedShape(Shape):
 
     def __init__(
         self,
-        path_points,
-        workplane="XY",
-        path_workplane="XZ",
-        stp_filename="SweepMixedShape.stp",
-        stl_filename="SweepMixedShape.stl",
-        force_cross_section=False,
+        path_points: List[Tuple[float, float]],
+        workplane: Optional[str] = "XY",
+        path_workplane: Optional[str] = "XZ",
+        stp_filename: Optional[str] = "SweepMixedShape.stp",
+        stl_filename: Optional[str] = "SweepMixedShape.stl",
+        force_cross_section: Optional[bool] = False,
         **kwargs
     ):
 

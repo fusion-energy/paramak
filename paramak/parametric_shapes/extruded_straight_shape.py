@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 from paramak import ExtrudeMixedShape
 
 
@@ -6,17 +8,17 @@ class ExtrudeStraightShape(ExtrudeMixedShape):
     """Extrudes a 3d CadQuery solid from points connected with straight lines.
 
     Args:
-        distance (float): the extrusion distance to use (cm units if used for
+        distance: the extrusion distance to use (cm units if used for
             neutronics)
-        stp_filename (str, optional): Defaults to "ExtrudeStraightShape.stp".
-        stl_filename (str, optional): Defaults to "ExtrudeStraightShape.stl".
+        stp_filename: Defaults to "ExtrudeStraightShape.stp".
+        stl_filename: Defaults to "ExtrudeStraightShape.stl".
     """
 
     def __init__(
         self,
-        distance,
-        stp_filename="ExtrudeStraightShape.stp",
-        stl_filename="ExtrudeStraightShape.stl",
+        distance: float,
+        stp_filename: Optional[str] = "ExtrudeStraightShape.stp",
+        stl_filename: Optional[str] = "ExtrudeStraightShape.stl",
         **kwargs
     ):
 
