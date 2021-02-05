@@ -2,6 +2,7 @@
 import warnings
 
 import paramak
+from paramak.utils import perform_port_cutting
 
 
 class BallReactor(paramak.Reactor):
@@ -422,6 +423,9 @@ class BallReactor(paramak.Reactor):
             stl_filename="blanket_rear_wall.stl",
             cut=[self._center_column_cutter],
         )
+
+        self._firstwall, self._blanket, self._blanket_rear_wall = perform_port_cutting(
+            self, self._firstwall, self._blanket, self._blanket_rear_wall)
 
         return [self._firstwall, self._blanket, self._blanket_rear_wall]
 

@@ -77,6 +77,7 @@ from .parametric_components.hollow_cube import HollowCube
 from .parametric_components.shell_fs import ShellFS
 
 from .parametric_reactors.ball_reactor import BallReactor
+from .parametric_reactors.ball_reactor_with_ports import BallReactorWithPorts
 from .parametric_reactors.submersion_reactor import SubmersionTokamak
 from .parametric_reactors.single_null_submersion_reactor import SingleNullSubmersionTokamak
 from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
