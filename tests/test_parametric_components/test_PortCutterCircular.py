@@ -6,7 +6,7 @@ import paramak
 import pytest
 
 
-class TestComponent(unittest.TestCase):
+class TestPortCutterCircular(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.PortCutterCircular(
