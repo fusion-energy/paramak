@@ -78,8 +78,8 @@ class PortCutterRectangular(ExtrudeStraightShape):
             (-parameter_1 / 2, -parameter_2 / 2),
         ]
         points = [(e[0] + self.center_point[0], e[1] +
-                self.center_point[1]) for e in points]
-        
+                   self.center_point[1]) for e in points]
+
         self.points = points
 
     def add_fillet(self, solid):
