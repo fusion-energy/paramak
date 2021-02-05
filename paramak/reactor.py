@@ -2,7 +2,7 @@
 import json
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Tuple
+from typing import Optional, Tuple, List
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -148,9 +148,8 @@ class Reactor:
 
         for shape_or_compound in self.shapes_and_components:
             if isinstance(
-                shape_or_compound.solid,
-                (cq.occ_impl.shapes.Shape,
-                 cq.occ_impl.shapes.Compound)):
+                    shape_or_compound.solid,
+                    (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
                 for solid in shape_or_compound.solid.Solids():
                     list_of_cq_vals.append(solid)
             else:
@@ -164,17 +163,18 @@ class Reactor:
     def solid(self, value):
         self._solid = value
 
-    def neutronics_description(self, include_plasma: bool = False,
-                               include_graveyard: bool = True
-                               ):
+    def neutronics_description(
+            self,
+            include_plasma: Optional[bool] = False,
+            include_graveyard: Optional[bool] = True) -> dict:
         """A description of the reactor containing material tags, stp filenames,
-        and tet mesh instructions. This is used for neutronics simulations which
-        require linkage between volumes, materials and identification of which
-        volumes to tet mesh. The plasma geometry is not included by default as
-        it is typically not included in neutronics simulations. The reason for
-        this is that the low number density results in minimal interaction with
-        neutrons. However, it can be added if the include_plasma argument is set
-        to True.
+        and tet mesh instructions. This is used for neutronics simulations
+        which require linkage between volumes, materials and identification of
+        which volumes to tet mesh. The plasma geometry is not included by
+        default as it is typically not included in neutronics simulations. The
+        reason for this is that the low number density results in minimal
+        interaction with neutrons. However, it can be added if the
+        include_plasma argument is set to True.
 
         Returns:
             dictionary: a dictionary of materials and filenames for the reactor
@@ -217,9 +217,9 @@ class Reactor:
 
     def export_neutronics_description(
             self,
-            filename: str = "manifest.json",
-            include_plasma: bool = False,
-            include_graveyard: bool = True) -> str:
+            filename: Optional[str] = "manifest.json",
+            include_plasma: Optional[bool] = False,
+            include_graveyard: Optional[bool] = True) -> str:
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
         file contains a list of dictionaries. Each dictionary entry comprises
@@ -268,9 +268,9 @@ class Reactor:
 
     def export_stp(
             self,
-            output_folder: str = "",
-            graveyard_offset: float = 100,
-            mode: str = 'solid') -> list:
+            output_folder: Optional[str] = "",
+            graveyard_offset: Optional[float] = 100,
+            mode: Optional[str] = 'solid') -> List[str]:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 
@@ -320,9 +320,9 @@ class Reactor:
 
     def export_stl(
             self,
-            output_folder: str = "",
-            graveyard_offset: float = 100,
-            tolerance: float = 0.001) -> list:
+            output_folder: Optional[str] = "",
+            graveyard_offset: Optional[float] = 100,
+            tolerance: Optional[float] = 0.001) -> List[str]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
@@ -375,10 +375,10 @@ class Reactor:
 
     def export_h5m(
             self,
-            filename: str = 'dagmc.h5m',
-            skip_graveyard: bool = False,
-            tolerance: float = 0.001,
-            graveyard_offset: float = 100) -> str:
+            filename: Optional[str] = 'dagmc.h5m',
+            skip_graveyard: Optional[bool] = False,
+            tolerance: Optional[float] = 0.001,
+            graveyard_offset: Optional[float] = 100) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -448,7 +448,9 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_physical_groups(self, output_folder: str = "") -> list:
+    def export_physical_groups(
+            self,
+            output_folder: Optional[str] = "") -> List[str]:
         """Exports several JSON files containing a look up table which is
         useful for identifying faces and volumes. The output file names are
         generated from .stp_filename properties.
@@ -478,17 +480,16 @@ class Reactor:
 
     def export_svg(
         self,
-        filename: str = 'reactor.svg',
+        filename: Optional[str] = 'reactor.svg',
         projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
-        width: float = 1000,
-        height: float = 800,
-        marginLeft: float = 120,
-        marginTop: float = 100,
-        strokeWidth: float = None,
-        strokeColor: Tuple[int, int, int] = (0, 0, 0),
-        hiddenColor: Tuple[int, int, int] = (100, 100, 100),
-        showHidden: bool = True,
-    ) -> str:
+        width: Optional[float] = 1000,
+        height: Optional[float] = 800,
+        marginLeft: Optional[float] = 120,
+        marginTop: Optional[float] = 100,
+        strokeWidth: Optional[float] = None,
+        strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
+        hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
+        showHidden: Optional[bool] = True) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
@@ -551,8 +552,8 @@ class Reactor:
 
     def export_graveyard(
             self,
-            graveyard_offset: float = 100,
-            filename: str = "Graveyard.stp"):
+            graveyard_offset: Optional[float] = 100,
+            filename: Optional[str] = "Graveyard.stp") -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -572,7 +573,9 @@ class Reactor:
 
         return new_filename
 
-    def make_graveyard(self, graveyard_offset: float = 100):
+    def make_graveyard(
+            self,
+            graveyard_offset: Optional[float] = 100) -> paramak.Shape:
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -607,11 +610,11 @@ class Reactor:
 
     def export_2d_image(
             self,
-            filename="2d_slice.png",
-            xmin: float = 0.0,
-            xmax: float = 900.0,
-            ymin: float = -600.0,
-            ymax: float = 600.0) -> str:
+            filename: Optional[str] = "2d_slice.png",
+            xmin: Optional[float] = 0.0,
+            xmax: Optional[float] = 900.0,
+            ymin: Optional[float] = -600.0,
+            ymax: Optional[float] = 600.0) -> str:
         """Creates a 2D slice image (png) of the reactor.
 
         Args:
@@ -647,7 +650,10 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_html(self, filename="reactor.html", view_plane='RZ'):
+    def export_html(
+            self,
+            filename: Optional[str] = "reactor.html",
+            view_plane: Optional[str] = 'RZ'):
         """Creates a html graph representation of the points for the Shape
         objects that make up the reactor. Shapes are colored by their .color
         property. Shapes are also labelled by their .name. If filename provided
