@@ -32,7 +32,7 @@ class TestHexagonPin(unittest.TestCase):
         hexagon_face_area = (3 * math.sqrt(3) / 2) * math.pow(length, 2)
         # this needs a pytest.approx() as the volumes are not exact
         assert pytest.approx(self.test_shape.volume,
-        rel=0.1) == hexagon_face_area * distance
+                             rel=0.1) == hexagon_face_area * distance
 
     def test_distance_impacts_volume(self):
         """Checks that changing the distance argument results in the
@@ -41,9 +41,9 @@ class TestHexagonPin(unittest.TestCase):
         test_shape_volume = self.test_shape.volume
 
         self.test_shape.distance = self.test_shape.distance * 2
-        
-        assert pytest.approx(test_shape_volume * 2, 
-        rel=0.1)  == self.test_shape.volume
+
+        assert pytest.approx(test_shape_volume * 2,
+                             rel=0.1) == self.test_shape.volume
 
     def test_length_of_sides_impacts_volume(self):
         """Checks that changing the length_of_sides argument results in a the
@@ -54,7 +54,7 @@ class TestHexagonPin(unittest.TestCase):
         self.test_shape.length_of_side = self.test_shape.length_of_side * 2
 
         assert pytest.approx(test_shape_volume * 4,
-        rel=0.1) == self.test_shape.volume
+                             rel=0.1) == self.test_shape.volume
 
     def test_areas_are_correct(self):
         """Tests the areas of the faces are the correct sizes"""
