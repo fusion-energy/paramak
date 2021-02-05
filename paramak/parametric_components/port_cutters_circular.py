@@ -1,7 +1,7 @@
 
-from paramak import ExtrudeCircleShape
-
 from typing import Optional
+
+from paramak import ExtrudeCircleShape
 
 
 class PortCutterCircular(ExtrudeCircleShape):
@@ -9,15 +9,15 @@ class PortCutterCircular(ExtrudeCircleShape):
     other components (eg. blanket, vessel,..) in order to create ports.
 
     Args:
-        center_point: center point of the port cutter. Defaults to (0, 0).
         radius: radius (cm) of port cutter.
         distance: extruded distance (cm) of the port cutter.
+        center_point: center point of the port cutter. Defaults to (0, 0).
+        extrusion_start_offset: the distance between 0 and
+            the start of the extrusion. Defaults to 1..
         stp_filename: defaults to "PortCutterCircular.stp".
         stl_filename: defaults to "PortCutterCircular.stl".
         name: defaults to "circular_port_cutter".
         material_tag: defaults to "circular_port_cutter_mat".
-        extrusion_start_offset: the distance between 0 and
-            the start of the extrusion. Defaults to 1..
     """
 
     def __init__(
@@ -48,8 +48,8 @@ class PortCutterCircular(ExtrudeCircleShape):
             **kwargs
         )
 
-        self.center_point = center_point
         self.radius = radius
+        self.center_point = center_point
 
     def find_points(self):
         self.points = [self.center_point]

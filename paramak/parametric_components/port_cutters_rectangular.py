@@ -1,7 +1,7 @@
 
-from paramak import ExtrudeStraightShape
-
 from typing import Optional
+
+from paramak import ExtrudeStraightShape
 
 
 class PortCutterRectangular(ExtrudeStraightShape):
@@ -9,10 +9,12 @@ class PortCutterRectangular(ExtrudeStraightShape):
     other components (eg. blanket, vessel,..) in order to create ports.
 
     Args:
-        center_point: Center point of the port cutter. Defaults to (0, 0).
         height: height (cm) of the port cutter.
         width: width (cm) of the port cutter.
         distance: extruded distance (cm) of the port cutter.
+        center_point: Center point of the port cutter. Defaults to (0, 0).
+        extrusion_start_offset (float, optional): the distance between 0 and
+            the start of the extrusion. Defaults to 1..
         fillet_radius (float, optional): If not None, radius (cm) of fillets
             added to edges orthogonal to the Z direction. Defaults to None.
         stp_filename (str, optional): defaults to "PortCutterRectangular.stp".
@@ -20,8 +22,6 @@ class PortCutterRectangular(ExtrudeStraightShape):
         name (str, optional): defaults to "rectangular_port_cutter".
         material_tag (str, optional): defaults to
             "rectangular_port_cutter_mat".
-        extrusion_start_offset (float, optional): the distance between 0 and
-            the start of the extrusion. Defaults to 1..
     """
 
     def __init__(
@@ -54,11 +54,10 @@ class PortCutterRectangular(ExtrudeStraightShape):
             **kwargs
         )
 
-        self.center_point = center_point
         self.height = height
         self.width = width
+        self.center_point = center_point
         self.fillet_radius = fillet_radius
-        # self.add_fillet()
 
     def find_points(self):
         points = [
