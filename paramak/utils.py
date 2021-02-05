@@ -619,6 +619,7 @@ def export_wire_to_html(
 
     return fig
 
+
 def perform_port_cutting(self, *args):
 
     components = []
@@ -629,7 +630,7 @@ def perform_port_cutting(self, *args):
         if len(args) == 1:
             return component
         return components
-    
+
     else:
         if self.port_type == "circular":
             if self.port_height is not None or self.port_width is not None:
@@ -644,7 +645,7 @@ def perform_port_cutting(self, *args):
                 extrusion_start_offset=self.port_start_radius,
                 azimuth_placement_angle=self.port_azimuth_placement_angle
             )
-        
+
         elif self.port_type == "rectangular":
             if self.port_radius is not None:
                 raise ValueError(
@@ -652,7 +653,7 @@ def perform_port_cutting(self, *args):
             if self.port_height is None or self.port_width is None:
                 raise ValueError(
                     'port_height and port_width must be specified')
-            
+
             port_cutter = paramak.PortCutterRectangular(
                 center_point=self.port_center_point,
                 height=self.port_height,
@@ -662,7 +663,7 @@ def perform_port_cutting(self, *args):
                 fillet_radius=self.port_fillet_radius,
                 azimuth_placement_angle=self.port_azimuth_placement_angle
             )
-        
+
         else:
             raise ValueError('invalid port type')
 
