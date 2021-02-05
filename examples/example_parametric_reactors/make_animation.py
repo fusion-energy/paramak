@@ -9,13 +9,12 @@ import paramak
 from scipy.interpolate import interp1d
 
 
-def rotate_single_reactor(number_of_images=10):
+def rotate_single_reactor(number_of_images=100):
     """Makes a single reactor and exports and svg image with different view
     angles. Combines the svg images into a gif animation."""
 
     # allows the projection angle for the svg to be found via interpolation
-    z_angle_finder = interp1d([0, number_of_images], [2, 15])
-    x_angle_finder = interp1d([0, number_of_images], [-2, -3])
+    angle_finder = interp1d([0, number_of_images], [2.4021, 6.])
 
     my_reactor = paramak.SubmersionTokamak(
         inner_bore_radial_thickness=30,
@@ -44,25 +43,29 @@ def rotate_single_reactor(number_of_images=10):
 
     for i in range(number_of_images):
 
-        # finds the z angle to use for the roation
-        z_angle = z_angle_finder(i)
-        x_angle = x_angle_finder(i)
-        print('projectionDir=', x_angle, 1.1, z_angle)
+        # uses the rotation angle (in radians) to find new x, y points
+        x, y = paramak.utils.rotate([0, 0], [1, 0], angle_finder(i))
+        projectionDir = (x, y, 0)
 
         my_reactor.export_svg(
             filename="rotation_" + str(i).zfill(4) + ".svg",
-            projectionDir=(x_angle, 1.1, z_angle),
-            showHidden=False
+            projectionDir=projectionDir,
+            showHidden=False,
+            height=200,
+            width=300,
+            marginTop=27,
+            marginLeft=35,
+            strokeWidth=3.5
         )
 
         print("made", str(i + 1), "models out of", str(number_of_images))
 
-    os.system("convert -delay 40 rotation_*.svg rotated.gif")
+    os.system("convert -delay 15 rotation_*.svg rotated.gif")
 
     print("animation file made as saved as rotated.gif")
 
 
-def make_random_reactors(number_of_images=10):
+def make_random_reactors(number_of_images=11):
     """Makes a series of random sized reactors and exports an svg image for
     each one. Combines the svg images into a gif animation."""
 
@@ -106,4 +109,4 @@ def make_random_reactors(number_of_images=10):
 
 if __name__ == "__main__":
     rotate_single_reactor()
-    make_random_reactors()
+    # make_random_reactors()
