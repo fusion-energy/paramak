@@ -5,13 +5,30 @@ import unittest
 from pathlib import Path
 
 from examples.example_parametric_reactors import (
-    ball_reactor, ball_reactor_single_null, submersion_reactor_single_null,
-    htc_reactor)
+    ball_reactor, ball_reactor_single_null, htc_reactor, make_animation,
+    submersion_reactor_single_null)
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
 class TestExampleReactors(unittest.TestCase):
+
+    def test_make_animations(self):
+        """Runs the example to check the output files are produced"""
+        output_filenames = [
+            "random_0000.svg",
+            "random_0001.svg",
+            "rotation_0000.svg",
+            "rotation_0001.svg",
+        ]
+        for output_filename in output_filenames:
+            os.system("rm " + output_filename)
+        make_animation.rotate_single_reactor(2)
+        make_animation.make_random_reactors(2)
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+            os.system("rm " + output_filename)
+
     def test_make_parametric_htc_rector(self):
         """Runs the example to check the output files are produced"""
         output_filenames = [
