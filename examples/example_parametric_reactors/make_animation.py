@@ -51,12 +51,13 @@ def rotate_single_reactor(number_of_images=10):
 
         my_reactor.export_svg(
             filename="rotation_" + str(i).zfill(4) + ".svg",
-            projectionDir=(x_angle, 1.1, z_angle)
+            projectionDir=(x_angle, 1.1, z_angle),
+            showHidden=False
         )
 
         print("made", str(i+1), "models out of", str(number_of_images))
 
-    os.system("convert -delay 40 output_for_rotated_svg/*.svg rotated.gif")
+    os.system("convert -delay 40 rotation_*.svg rotated.gif")
 
     print("animation file made as saved as rotated.gif")
 
@@ -79,13 +80,13 @@ def make_random_reactors(number_of_images=10):
             firstwall_radial_thickness=5,
             blanket_radial_thickness=np.random.uniform(10, 200),
             blanket_rear_wall_radial_thickness=10,
-            elongation=np.random.uniform(1.2, 1.7),
+            elongation=np.random.uniform(1.3, 1.7),
             triangularity=np.random.uniform(0.3, 0.55),
             number_of_tf_coils=16,
             rotation_angle=180,
             pf_coil_radial_thicknesses=[50, 50, 50, 50],
-            pf_coil_vertical_thicknesses=[50, 50, 50, 50],
-            pf_coil_to_rear_blanket_radial_gap=50,
+            pf_coil_vertical_thicknesses=[30, 30, 30, 30],
+            pf_coil_to_rear_blanket_radial_gap=20,
             pf_coil_to_tf_coil_radial_gap=50,
             outboard_tf_coil_radial_thickness=100,
             outboard_tf_coil_poloidal_thickness=50,
@@ -93,12 +94,12 @@ def make_random_reactors(number_of_images=10):
 
         my_reactor.export_svg(
             filename="random_" + str(i).zfill(4) + ".svg",
-            strokeWidth=6  # slightly thicker strokewidth than the default
+            showHidden=False
         )
 
         print("made", str(i+1), "models out of", str(number_of_images))
 
-    os.system("convert -delay 40 output_for_random_svg/*.svg randoms.gif")
+    os.system("convert -delay 40 random_*.svg randoms.gif")
 
     print("animation file made as saved as randoms.gif")
 
