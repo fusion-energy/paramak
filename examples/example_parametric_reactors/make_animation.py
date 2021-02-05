@@ -55,7 +55,7 @@ def rotate_single_reactor(number_of_images=10):
             showHidden=False
         )
 
-        print("made", str(i+1), "models out of", str(number_of_images))
+        print("made", str(i + 1), "models out of", str(number_of_images))
 
     os.system("convert -delay 40 rotation_*.svg rotated.gif")
 
@@ -97,7 +97,7 @@ def make_random_reactors(number_of_images=10):
             showHidden=False
         )
 
-        print("made", str(i+1), "models out of", str(number_of_images))
+        print("made", str(i + 1), "models out of", str(number_of_images))
 
     os.system("convert -delay 40 random_*.svg randoms.gif")
 
