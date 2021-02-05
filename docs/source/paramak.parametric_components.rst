@@ -196,7 +196,7 @@ CoolantChannelRingCurved()
 CuttingWedge()
 ^^^^^^^^^^^^^^
 
-|CuttingWedgestp| |CuttingWedgesvg|
+|HexagonPinstp| |CuttingWedgesvg|
 
 .. |CuttingWedgestp| image:: https://user-images.githubusercontent.com/8583900/94726081-a678c180-0354-11eb-93f2-98d4b4a6839e.png
     :width: 300px
@@ -214,6 +214,20 @@ CuttingWedgeFS()
     :width: 300px
 
 .. automodule:: paramak.parametric_components.cutting_wedge_fs
+   :members:
+   :show-inheritance:
+
+HexagonPin()
+^^^^^^^^^^^^
+
+|HexagonPinstp| |HexagonPinsvg|
+
+.. |HexagonPinstp| image:: https://user-images.githubusercontent.com/8583900/107092190-07307300-67fb-11eb-995c-b5622de717ee.png
+    :width: 300px
+.. |HexagonPinsvg| image:: https://user-images.githubusercontent.com/8583900/107092487-9c336c00-67fb-11eb-8eb1-755462493140.png
+    :width: 300px
+
+.. automodule:: paramak.parametric_components.hexagon_pin
    :members:
    :show-inheritance:
 
