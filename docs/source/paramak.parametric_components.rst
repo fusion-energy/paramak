@@ -196,7 +196,7 @@ CoolantChannelRingCurved()
 CuttingWedge()
 ^^^^^^^^^^^^^^
 
-|HexagonPinstp| |CuttingWedgesvg|
+|CuttingWedgestp| |CuttingWedgesvg|
 
 .. |CuttingWedgestp| image:: https://user-images.githubusercontent.com/8583900/94726081-a678c180-0354-11eb-93f2-98d4b4a6839e.png
     :width: 300px
