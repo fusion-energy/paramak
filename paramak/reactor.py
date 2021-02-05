@@ -147,23 +147,25 @@ class Reactor:
         list_of_cq_vals = []
 
         for shape_or_compound in self.shapes_and_components:
-            if isinstance(shape_or_compound.solid, (cq.occ_impl.shapes.Shape,
-                          cq.occ_impl.shapes.Compound)):
+            if isinstance(
+                shape_or_compound.solid,
+                (cq.occ_impl.shapes.Shape,
+                 cq.occ_impl.shapes.Compound)):
                 for solid in shape_or_compound.solid.Solids():
                     list_of_cq_vals.append(solid)
             else:
                 list_of_cq_vals.append(shape_or_compound.solid.val())
 
-        compound=cq.Compound.makeCompound(list_of_cq_vals)
+        compound = cq.Compound.makeCompound(list_of_cq_vals)
 
         return compound
 
     @ solid.setter
     def solid(self, value):
-        self._solid=value
+        self._solid = value
 
-    def neutronics_description(self, include_plasma: bool=False,
-                               include_graveyard: bool=True
+    def neutronics_description(self, include_plasma: bool = False,
+                               include_graveyard: bool = True
                                ):
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations which
@@ -178,7 +180,7 @@ class Reactor:
             dictionary: a dictionary of materials and filenames for the reactor
         """
 
-        neutronics_description=[]
+        neutronics_description = []
 
         for entry in self.shapes_and_components:
 
@@ -215,9 +217,9 @@ class Reactor:
 
     def export_neutronics_description(
             self,
-            filename: str="manifest.json",
-            include_plasma: bool=False,
-            include_graveyard: bool=True) -> str:
+            filename: str = "manifest.json",
+            include_plasma: bool = False,
+            include_graveyard: bool = True) -> str:
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
         file contains a list of dictionaries. Each dictionary entry comprises
@@ -243,10 +245,10 @@ class Reactor:
                 included. Defaults to True as this is needed for DAGMC models.
         """
 
-        path_filename=Path(filename)
+        path_filename = Path(filename)
 
         if path_filename.suffix != ".json":
-            path_filename=path_filename.with_suffix(".json")
+            path_filename = path_filename.with_suffix(".json")
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
@@ -266,9 +268,9 @@ class Reactor:
 
     def export_stp(
             self,
-            output_folder: str="",
-            graveyard_offset: float=100,
-            mode: str='solid') -> list:
+            output_folder: str = "",
+            graveyard_offset: float = 100,
+            mode: str = 'solid') -> list:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 
@@ -291,7 +293,7 @@ class Reactor:
                 self.stp_filenames,
             )
 
-        filenames=[]
+        filenames = []
         for entry in self.shapes_and_components:
             if entry.stp_filename is None:
                 raise ValueError(
@@ -318,9 +320,9 @@ class Reactor:
 
     def export_stl(
             self,
-            output_folder: str="",
-            graveyard_offset: float=100,
-            tolerance: float=0.001) -> list:
+            output_folder: str = "",
+            graveyard_offset: float = 100,
+            tolerance: float = 0.001) -> list:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
@@ -341,7 +343,7 @@ class Reactor:
                 self.stl_filenames,
             )
 
-        filenames=[]
+        filenames = []
         for entry in self.shapes_and_components:
             print("entry.stl_filename", entry.stl_filename)
             if entry.stl_filename is None:
@@ -373,10 +375,10 @@ class Reactor:
 
     def export_h5m(
             self,
-            filename: str='dagmc.h5m',
-            skip_graveyard: bool=False,
-            tolerance: float=0.001,
-            graveyard_offset: float=100) -> str:
+            filename: str = 'dagmc.h5m',
+            skip_graveyard: bool = False,
+            tolerance: float = 0.001,
+            graveyard_offset: float = 100) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -397,22 +399,22 @@ class Reactor:
             filename: output h5m filename
         """
 
-        path_filename=Path(filename)
+        path_filename = Path(filename)
 
         if path_filename.suffix != ".h5m":
-            path_filename=path_filename.with_suffix(".h5m")
+            path_filename = path_filename.with_suffix(".h5m")
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        moab_core, moab_tags=define_moab_core_and_tags()
+        moab_core, moab_tags = define_moab_core_and_tags()
 
-        surface_id=1
-        volume_id=1
+        surface_id = 1
+        volume_id = 1
 
         for item in self.shapes_and_components:
 
             item.export_stl(item.stl_filename, tolerance=tolerance)
-            moab_core=add_stl_to_moab_core(
+            moab_core = add_stl_to_moab_core(
                 moab_core,
                 surface_id,
                 volume_id,
@@ -425,9 +427,9 @@ class Reactor:
         if skip_graveyard is False:
             self.make_graveyard(graveyard_offset=graveyard_offset)
             self.graveyard.export_stl(self.graveyard.stl_filename)
-            volume_id=2
-            surface_id=2
-            moab_core=add_stl_to_moab_core(
+            volume_id = 2
+            surface_id = 2
+            moab_core = add_stl_to_moab_core(
                 moab_core,
                 surface_id,
                 volume_id,
@@ -436,9 +438,9 @@ class Reactor:
                 self.graveyard.stl_filename
             )
 
-        all_sets=moab_core.get_entities_by_handle(0)
+        all_sets = moab_core.get_entities_by_handle(0)
 
-        file_set=moab_core.create_meshset()
+        file_set = moab_core.create_meshset()
 
         moab_core.add_entities(file_set, all_sets)
 
@@ -446,7 +448,7 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_physical_groups(self, output_folder: str="") -> list:
+    def export_physical_groups(self, output_folder: str = "") -> list:
         """Exports several JSON files containing a look up table which is
         useful for identifying faces and volumes. The output file names are
         generated from .stp_filename properties.
@@ -461,7 +463,7 @@ class Reactor:
         Returns:
             list: list of output file names
         """
-        filenames=[]
+        filenames = []
         for entry in self.shapes_and_components:
             if entry.stp_filename is None:
                 raise ValueError(
@@ -476,16 +478,16 @@ class Reactor:
 
     def export_svg(
         self,
-        filename: str='reactor.svg',
-        projectionDir: Tuple[float, float, float]=(-1.75, 1.1, 5),
-        width: float=1000,
-        height: float=800,
-        marginLeft: float=120,
-        marginTop: float=100,
-        strokeWidth: float=None,
-        strokeColor: Tuple[int, int, int]=(0, 0, 0),
-        hiddenColor: Tuple[int, int, int]=(100, 100, 100),
-        showHidden: bool=True,
+        filename: str = 'reactor.svg',
+        projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+        width: float = 1000,
+        height: float = 800,
+        marginLeft: float = 120,
+        marginTop: float = 100,
+        strokeWidth: float = None,
+        strokeColor: Tuple[int, int, int] = (0, 0, 0),
+        hiddenColor: Tuple[int, int, int] = (100, 100, 100),
+        showHidden: bool = True,
     ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
@@ -518,14 +520,14 @@ class Reactor:
             str: the svg filename created
         """
 
-        path_filename=Path(filename)
+        path_filename = Path(filename)
 
         if path_filename.suffix != ".svg":
-            path_filename=path_filename.with_suffix(".svg")
+            path_filename = path_filename.with_suffix(".svg")
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        opt={
+        opt = {
             "width": width,
             "height": height,
             "marginLeft": marginLeft,
@@ -538,7 +540,7 @@ class Reactor:
         }
 
         if strokeWidth is not None:
-            opt["strokeWidth"]=strokeWidth
+            opt["strokeWidth"] = strokeWidth
 
         exporters.export(self.solid, str(path_filename), exportType='SVG',
                          opt=opt)
@@ -549,8 +551,8 @@ class Reactor:
 
     def export_graveyard(
             self,
-            graveyard_offset: float=100,
-            filename: str="Graveyard.stp"):
+            graveyard_offset: float = 100,
+            filename: str = "Graveyard.stp"):
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -566,11 +568,11 @@ class Reactor:
         """
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
-        new_filename=self.graveyard.export_stp(Path(filename))
+        new_filename = self.graveyard.export_stp(Path(filename))
 
         return new_filename
 
-    def make_graveyard(self, graveyard_offset: float=100):
+    def make_graveyard(self, graveyard_offset: float = 100):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -585,13 +587,13 @@ class Reactor:
             to as a graveyard in DAGMC
         """
 
-        self.graveyard_offset=graveyard_offset
+        self.graveyard_offset = graveyard_offset
 
         for component in self.shapes_and_components:
             if component.solid is None:
                 component.create_solid()
 
-        graveyard_shape=paramak.HollowCube(
+        graveyard_shape = paramak.HollowCube(
             length=self.largest_dimension * 2 + graveyard_offset * 2,
             name="Graveyard",
             material_tag="Graveyard",
@@ -599,17 +601,17 @@ class Reactor:
             stl_filename="Graveyard.stl",
         )
 
-        self.graveyard=graveyard_shape
+        self.graveyard = graveyard_shape
 
         return graveyard_shape
 
     def export_2d_image(
             self,
             filename="2d_slice.png",
-            xmin: float=0.0,
-            xmax: float=900.0,
-            ymin: float=-600.0,
-            ymax: float=600.0) -> str:
+            xmin: float = 0.0,
+            xmax: float = 900.0,
+            ymin: float = -600.0,
+            ymax: float = 600.0) -> str:
         """Creates a 2D slice image (png) of the reactor.
 
         Args:
@@ -619,18 +621,18 @@ class Reactor:
             str: png filename created
         """
 
-        path_filename=Path(filename)
+        path_filename = Path(filename)
 
         if path_filename.suffix != ".png":
-            path_filename=path_filename.with_suffix(".png")
+            path_filename = path_filename.with_suffix(".png")
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        fig, ax=plt.subplots()
+        fig, ax = plt.subplots()
 
         # creates indvidual patches for each Shape which are combined together
         for entry in self.shapes_and_components:
-            patch=entry._create_patch()
+            patch = entry._create_patch()
             ax.add_collection(patch)
 
         ax.axis("equal")
@@ -664,15 +666,15 @@ class Reactor:
 
         # accesses the Shape wires for each Shape and builds up a list of
         # traces
-        all_wires=[]
+        all_wires = []
         for entry in self.shapes_and_components:
             if not isinstance(entry.wire, list):
-                list_of_wires=[entry.wire]
+                list_of_wires = [entry.wire]
             else:
-                list_of_wires=entry.wire
-            all_wires=all_wires + list_of_wires
+                list_of_wires = entry.wire
+            all_wires = all_wires + list_of_wires
 
-        fig=paramak.utils.export_wire_to_html(
+        fig = paramak.utils.export_wire_to_html(
             wires=all_wires,
             filename=filename,
             view_plane=view_plane,
