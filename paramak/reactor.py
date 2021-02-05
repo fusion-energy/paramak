@@ -148,7 +148,7 @@ class Reactor:
 
         for shape_or_compound in self.shapes_and_components:
             if isinstance(shape_or_compound.solid, (cq.occ_impl.shapes.Shape,
-                    cq.occ_impl.shapes.Compound),
+                    cq.occ_impl.shapes.Compound):
                 for solid in shape_or_compound.solid.Solids():
                     list_of_cq_vals.append(solid)
             else:
