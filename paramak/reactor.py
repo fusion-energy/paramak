@@ -141,8 +141,7 @@ class Reactor:
     @property
     def solid(self):
         """This combines all the parametric shapes and compents in the reactor
-        object and rotates the viewing angle so that .solid operations in
-        jupyter notebook.
+        object.
         """
 
         list_of_cq_vals = []
@@ -158,9 +157,6 @@ class Reactor:
 
         compound = cq.Compound.makeCompound(list_of_cq_vals)
 
-        compound = compound.rotate(
-            startVector=(0, 1, 0), endVector=(0, 0, 1), angleDegrees=180
-        )
         return compound
 
     @solid.setter
