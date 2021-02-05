@@ -24,7 +24,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
         stp_filename (str, optional): defaults to "PortCutterRectangular.stp".
         stl_filename (str, optional): defaults to "PortCutterRectangular.stl".
         name (str, optional): defaults to "rectangular_port_cutter".
-        material_tag (str, optional): defaults to 
+        material_tag (str, optional): defaults to
             "rectangular_port_cutter_mat".
     """
 
