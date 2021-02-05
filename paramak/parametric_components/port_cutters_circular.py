@@ -16,7 +16,7 @@ class PortCutterCircular(ExtrudeCircleShape):
             to "ZY".
         rotation_axis: axis around which the port cutters are rotated and
             placed. Defaults to "Z".
-        extrusion_start_offset: the distance between 0 and the start of the 
+        extrusion_start_offset: the distance between 0 and the start of the
             extrusion. Defaults to 1..
         stp_filename: defaults to "PortCutterCircular.stp".
         stl_filename: defaults to "PortCutterCircular.stl".
