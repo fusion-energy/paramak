@@ -54,7 +54,7 @@ def rotate_single_reactor(number_of_images=10):
             projectionDir=(x_angle, 1.1, z_angle)
         )
 
-        print("made", str(i+1), "models out of", str(number_of_images))
+        print("made", str(i + 1), "models out of", str(number_of_images))
 
     os.system("convert -delay 40 output_for_rotated_svg/*.svg rotated.gif")
 
@@ -96,7 +96,7 @@ def make_random_reactors(number_of_images=10):
             strokeWidth=6  # slightly thicker strokewidth than the default
         )
 
-        print("made", str(i+1), "models out of", str(number_of_images))
+        print("made", str(i + 1), "models out of", str(number_of_images))
 
     os.system("convert -delay 40 output_for_random_svg/*.svg randoms.gif")
 
