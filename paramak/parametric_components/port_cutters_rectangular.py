@@ -64,14 +64,22 @@ class PortCutterRectangular(ExtrudeStraightShape):
         self.fillet_radius = fillet_radius
 
     def find_points(self):
+        if self.workplane[0] < self.workplane[1]:
+            parameter_1 = self.width
+            parameter_2 = self.height
+        else:
+            parameter_1 = self.height
+            parameter_2 = self.width
+
         points = [
-            (-self.width / 2, -self.height / 2),
-            (self.width / 2, -self.height / 2),
-            (self.width / 2, self.height / 2),
-            (-self.width / 2, self.height / 2),
+            (-parameter_1 / 2, parameter_2 / 2),
+            (parameter_1 / 2, parameter_2 / 2),
+            (parameter_1 / 2, -parameter_2 / 2),
+            (-parameter_1 / 2, -parameter_2 / 2),
         ]
         points = [(e[0] + self.center_point[0], e[1] +
-                   self.center_point[1]) for e in points]
+                self.center_point[1]) for e in points]
+        
         self.points = points
 
     def add_fillet(self, solid):
