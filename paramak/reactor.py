@@ -479,17 +479,17 @@ class Reactor:
         return filenames
 
     def export_svg(
-        self,
-        filename: Optional[str] = 'reactor.svg',
-        projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
-        width: Optional[float] = 1000,
-        height: Optional[float] = 800,
-        marginLeft: Optional[float] = 120,
-        marginTop: Optional[float] = 100,
-        strokeWidth: Optional[float] = None,
-        strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
-        hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
-        showHidden: Optional[bool] = True) -> str:
+            self,
+            filename: Optional[str] = 'reactor.svg',
+            projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+            width: Optional[float] = 1000,
+            height: Optional[float] = 800,
+            marginLeft: Optional[float] = 120,
+            marginTop: Optional[float] = 100,
+            strokeWidth: Optional[float] = None,
+            strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
+            hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
+            showHidden: Optional[bool] = True) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 

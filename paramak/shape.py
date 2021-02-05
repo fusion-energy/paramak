@@ -87,9 +87,9 @@ class Shape:
         surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
         # TODO defining Shape types as paramak.Shape results in circular import
-        cut = None,
-        intersect = None,
-        union = None,
+        cut=None,
+        intersect=None,
+        union=None,
     ):
 
         self.connection_type = connection_type
@@ -679,7 +679,8 @@ class Shape:
         return solid
 
     def get_rotation_axis(self):
-        # TODO add return type hinting -> Tuple[List[Tuple[int, int, int], Tuple[int, int, int]], str]
+        # TODO add return type hinting -> Tuple[List[Tuple[int, int, int],
+        # Tuple[int, int, int]], str]
         """Returns the rotation axis for a given shape. If self.rotation_axis
         is None, the rotation axis will be computed from self.workplane (or
         from self.path_workplane if applicable). If self.rotation_axis is an
@@ -849,17 +850,17 @@ class Shape:
         return str(path_filename)
 
     def export_svg(
-        self,
-        filename: Optional[str] = 'shape.svg',
-        projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
-        width: Optional[float] = 800,
-        height: Optional[float] = 800,
-        marginLeft: Optional[float] = 100,
-        marginTop: Optional[float] = 100,
-        strokeWidth: Optional[float] = None,
-        strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
-        hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
-        showHidden: Optional[bool] = True) -> str:
+            self,
+            filename: Optional[str] = 'shape.svg',
+            projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+            width: Optional[float] = 800,
+            height: Optional[float] = 800,
+            marginLeft: Optional[float] = 100,
+            marginTop: Optional[float] = 100,
+            strokeWidth: Optional[float] = None,
+            strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
+            hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
+            showHidden: Optional[bool] = True) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
