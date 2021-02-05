@@ -12,8 +12,12 @@ class PortCutterCircular(ExtrudeCircleShape):
         radius: radius (cm) of port cutter.
         distance: extruded distance (cm) of the port cutter.
         center_point: center point of the port cutter. Defaults to (0, 0).
-        extrusion_start_offset: the distance between 0 and
-            the start of the extrusion. Defaults to 1..
+        workplane: workplane in which the port cutters are created. Defaults
+            to "ZY".
+        rotation_axis: axis around which the port cutters are rotated and
+            placed. Defaults to "Z".
+        extrusion_start_offset: the distance between 0 and the start of the 
+            extrusion. Defaults to 1..
         stp_filename: defaults to "PortCutterCircular.stp".
         stl_filename: defaults to "PortCutterCircular.stl".
         name: defaults to "circular_port_cutter".

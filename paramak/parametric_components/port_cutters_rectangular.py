@@ -13,6 +13,10 @@ class PortCutterRectangular(ExtrudeStraightShape):
         width: width (cm) of the port cutter.
         distance: extruded distance (cm) of the port cutter.
         center_point: Center point of the port cutter. Defaults to (0, 0).
+        workplane: workplane in which the port cutters are created. Defaults
+            to "ZY".
+        rotation_axis: axis around which the port cutters are rotated and
+            placed. Defaults to "Z".
         extrusion_start_offset (float, optional): the distance between 0 and
             the start of the extrusion. Defaults to 1..
         fillet_radius (float, optional): If not None, radius (cm) of fillets
@@ -20,7 +24,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
         stp_filename (str, optional): defaults to "PortCutterRectangular.stp".
         stl_filename (str, optional): defaults to "PortCutterRectangular.stl".
         name (str, optional): defaults to "rectangular_port_cutter".
-        material_tag (str, optional): defaults to
+        material_tag (str, optional): defaults to 
             "rectangular_port_cutter_mat".
     """
 
