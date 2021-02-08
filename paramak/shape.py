@@ -747,13 +747,15 @@ class Shape:
     def export_stl(
             self,
             filename: str,
-            tolerance: Optional[float] = 0.001) -> str:
+            tolerance: Optional[float] = 0.001,
+            angular_tolerance: Optional[float] = 0.1) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
             doesn't end with .stl it will be added
 
         Args:
-            filename (str): the filename of the stl file to be exported
-            tolerance (float): the precision of the faceting
+            filename: the filename of the stl file to be exported
+            tolerance: the deflection tolerance of the faceting
+            angular_tolerance: the angular tolerance, in radians
         """
 
         path_filename = Path(filename)
@@ -763,8 +765,10 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as out_file:
-            exporters.exportShape(self.solid, "STL", out_file, tolerance)
+        exporters.export(self.solid, str(path_filename), exportType='STL',
+                         tolerance=tolerance,
+                         angularTolerance=angular_tolerance)
+
         print("Saved file as ", path_filename)
 
         return str(path_filename)
