@@ -800,15 +800,14 @@ class Shape:
         elif self.stp_filename is not None:
             path_filename = Path(self.stp_filename)
 
-        with open(path_filename, "w") as out_file:
-            if mode == 'solid':
-                exporters.exportShape(self.solid, "STEP", out_file)
-            elif mode == 'wire':
-                exporters.exportShape(self.wire, "STEP", out_file)
-            else:
-                raise ValueError("The mode argument for export_stp \
-                    only accepts 'solid' or 'wire'", self)
-
+        if mode == 'solid':
+            exporters.export(self.solid, str(path_filename), exportType='STEP')
+        elif mode == 'wire':
+            exporters.export(self.wire, str(path_filename), exportType='STEP')
+        else:
+            raise ValueError("The mode argument for export_stp \
+                only accepts 'solid' or 'wire'", self)
+  
         if units == 'cm':
             _replace(
                 path_filename,
