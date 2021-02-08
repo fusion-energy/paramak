@@ -67,10 +67,7 @@ class TestHexagonPin(unittest.TestCase):
         hexagon_face_area = (3 * math.sqrt(3) / 2) * math.pow(length, 2)
 
         assert len(test_shape_areas) == 8
-        assert pytest.approx(hexagon_face_area, rel=0.1) in test_shape_areas
-        assert pytest.approx(length * distance, rel=0.1) in test_shape_areas
-
-        # Make sure only areas with these two values are present
-        for area in test_shape_areas:
-            assert (pytest.approx(hexagon_face_area, rel=0.1) == area or
-                    pytest.approx(length * distance, rel=0.1) == area)
+        assert test_shape_areas.count(pytest.approx(hexagon_face_area,
+        rel=0.1)) == 2
+        assert test_shape_areas.count(pytest.approx(length * distance,
+        rel=0.1)) == 6
