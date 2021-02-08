@@ -807,7 +807,7 @@ class Shape:
         else:
             raise ValueError("The mode argument for export_stp \
                 only accepts 'solid' or 'wire'", self)
-  
+
         if units == 'cm':
             _replace(
                 path_filename,
