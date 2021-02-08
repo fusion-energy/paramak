@@ -195,7 +195,8 @@ class TestRotateStraightShape(unittest.TestCase):
         assert Path("marginTop.svg").exists() is True
         self.test_shape.export_svg("showAxes.svg", showAxes=True)
         assert Path("showAxes.svg").exists() is True
-        self.test_shape.export_svg("projectionDir.svg", projectionDir=(-1, -1, -1))
+        self.test_shape.export_svg(
+            "projectionDir.svg", projectionDir=(-1, -1, -1))
         assert Path("projectionDir.svg").exists() is True
         self.test_shape.export_svg("strokeColor.svg", strokeColor=(42, 42, 42))
         assert Path("strokeColor.svg").exists() is True

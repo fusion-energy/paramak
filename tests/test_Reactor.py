@@ -491,11 +491,16 @@ class TestReactor(unittest.TestCase):
         assert Path("r_marginTop.svg").exists() is True
         self.test_reactor.export_svg("r_showAxes.svg", showAxes=True)
         assert Path("r_showAxes.svg").exists() is True
-        self.test_reactor.export_svg("r_projectionDir.svg", projectionDir=(-1, -1, -1))
+        self.test_reactor.export_svg(
+            "r_projectionDir.svg", projectionDir=(-1, -1, -1))
         assert Path("r_projectionDir.svg").exists() is True
-        self.test_reactor.export_svg("r_strokeColor.svg", strokeColor=(42, 42, 42))
+        self.test_reactor.export_svg(
+            "r_strokeColor.svg", strokeColor=(
+                42, 42, 42))
         assert Path("r_strokeColor.svg").exists() is True
-        self.test_reactor.export_svg("r_hiddenColor.svg", hiddenColor=(42, 42, 42))
+        self.test_reactor.export_svg(
+            "r_hiddenColor.svg", hiddenColor=(
+                42, 42, 42))
         assert Path("r_hiddenColor.svg").exists() is True
         self.test_reactor.export_svg("r_showHidden.svg", showHidden=False)
         assert Path("r_showHidden.svg").exists() is True
