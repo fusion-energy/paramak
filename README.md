@@ -153,8 +153,8 @@ common reactor components.
 </p>
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/88866536-e57a8180-d202-11ea-8e3f-2662973c6f69.gif" width="600">
-<img src="https://user-images.githubusercontent.com/8583900/86237379-90136c00-bb93-11ea-80fb-54e2dab74819.gif" width="150">
+<img src="https://user-images.githubusercontent.com/8583900/107040396-155ca000-67b7-11eb-8b99-4aa9bf8a8655.gif" width="300">
+<img src="https://user-images.githubusercontent.com/8583900/107030664-e2131480-67a8-11eb-84bb-59656e9e7722.gif" width="300">
 </p>
 
 ## Selection Of Parametric Components

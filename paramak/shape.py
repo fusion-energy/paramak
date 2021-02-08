@@ -4,7 +4,7 @@ import numbers
 import warnings
 from collections.abc import Iterable
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Optional, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -33,9 +33,9 @@ class Shape:
             Defaults to "mixed".
         name (str, optional): the name of the shape, used in the graph legend
             by export_html. Defaults to None.
-        color ((float, float, float [, float]), optional): The color to use when exporting as html
-            graphs or png images. Can be in RGB or RGBA format with floats
-            between 0 and 1. Defaults to (0.5, 0.5, 0.5).
+        color ((float, float, float [, float]), optional): The color to use
+            when exporting as html graphs or png images. Can be in RGB or RGBA
+            format with floats between 0 and 1. Defaults to (0.5, 0.5, 0.5).
         material_tag (str, optional): the material name to use when exporting
             the neutronics description. Defaults to None.
         stp_filename (str, optional): the filename used when saving stp files.
@@ -74,18 +74,19 @@ class Shape:
     def __init__(
         self,
         points: list = None,
-        connection_type="mixed",
-        name=None,
-        color=(0.5, 0.5, 0.5),
-        material_tag: str = None,
-        stp_filename: str = None,
-        stl_filename: str = None,
-        azimuth_placement_angle=0.0,
-        workplane: str = "XZ",
-        rotation_axis=None,
-        tet_mesh: str = None,
-        surface_reflectivity: bool = False,
+        connection_type: Optional[str] = "mixed",
+        name: Optional[str] = None,
+        color: Optional[Tuple[float, float, float]] = (0.5, 0.5, 0.5),
+        material_tag: Optional[str] = None,
+        stp_filename: Optional[str] = None,
+        stl_filename: Optional[str] = None,
+        azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
+        workplane: Optional[str] = "XZ",
+        rotation_axis: Optional[str] = None,
+        tet_mesh: Optional[str] = None,
+        surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
+        # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
         union=None,
@@ -547,7 +548,7 @@ class Shape:
             raise ValueError(msg)
         self._azimuth_placement_angle = value
 
-    def create_solid(self):
+    def create_solid(self) -> cq.Workplane:
         solid = None
         if self.points is not None:
             # obtains the first two values of the points list
@@ -655,7 +656,9 @@ class Shape:
 
         return solid
 
-    def rotate_solid(self, solid):
+    def rotate_solid(
+            self,
+            solid: Optional[cq.Workplane]) -> cq.Workplane:
         # Checks if the azimuth_placement_angle is a list of angles
         if isinstance(self.azimuth_placement_angle, Iterable):
             azimuth_placement_angles = self.azimuth_placement_angle
@@ -676,6 +679,8 @@ class Shape:
         return solid
 
     def get_rotation_axis(self):
+        # TODO add return type hinting -> Tuple[List[Tuple[int, int, int],
+        # Tuple[int, int, int]], str]
         """Returns the rotation axis for a given shape. If self.rotation_axis
         is None, the rotation axis will be computed from self.workplane (or
         from self.path_workplane if applicable). If self.rotation_axis is an
@@ -713,7 +718,7 @@ class Shape:
                 workplane = self.workplane
             return rotation_axis[workplane[1]], workplane[1]
 
-    def create_limits(self):
+    def create_limits(self) -> Tuple[float, float, float, float]:
         """Finds the x,y,z limits (min and max) of the points that make up the
         face of the shape. Note the Shape may extend beyond this boundary if
         splines are used to connect points.
@@ -739,7 +744,10 @@ class Shape:
 
         return self.x_min, self.x_max, self.z_min, self.z_max
 
-    def export_stl(self, filename: str, tolerance: float = 0.001) -> str:
+    def export_stl(
+            self,
+            filename: str,
+            tolerance: Optional[float] = 0.001) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
             doesn't end with .stl it will be added
 
@@ -763,9 +771,9 @@ class Shape:
 
     def export_stp(
             self,
-            filename=None,
-            units='mm',
-            mode: str = 'solid') -> str:
+            filename: Optional[str] = None,
+            units: Optional[str] = 'mm',
+            mode: Optional[str] = 'solid') -> str:
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -841,12 +849,50 @@ class Shape:
 
         return str(path_filename)
 
-    def export_svg(self, filename: str) -> str:
-        """Exports an svg file for the Shape.solid. If the provided filename
+    def export_svg(
+            self,
+            filename: Optional[str] = 'shape.svg',
+            projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+            width: Optional[float] = 800,
+            height: Optional[float] = 800,
+            marginLeft: Optional[float] = 100,
+            marginTop: Optional[float] = 100,
+            strokeWidth: Optional[float] = None,
+            strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
+            hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
+            showHidden: Optional[bool] = True,
+            showAxes: Optional[bool] = False) -> str:
+        """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
         Args:
-            filename (str): the filename of the svg file to be exported
+            filename: the filename of the svg file to be exported. Defaults to
+                "reactor.svg".
+            projectionDir: The direction vector to view the geometry from
+                (x, y, z). Defaults to (-1.75, 1.1, 5)
+            width: the width of the svg image produced in pixels. Defaults to
+                1000
+            height: the height of the svg image produced in pixels. Defaults to
+                800
+            marginLeft: the number of pixels between the left edge of the image
+                and the start of the geometry.
+            marginTop: the number of pixels between the top edge of the image
+                and the start of the geometry.
+            strokeWidth: the width of the lines used to draw the geometry.
+                Defaults to None which automatically selects an suitable width.
+            strokeColor: the color of the lines used to draw the geometry in
+                RGB format with each value between 0 and 255. Defaults to
+                (0, 0, 0) which is black.
+            hiddenColor: the color of the lines used to draw the geometry in
+                RGB format with each value between 0 and 255. Defaults to
+               (100, 100, 100) which is light grey.
+            showHidden: If the edges obscured by geometry should be included in
+                the diagram. Defaults to True.
+            showAxes: If the x, y, z axis should be included in the image.
+                Defaults to False.
+
+        Returns:
+            str: the svg filename created
         """
 
         path_filename = Path(filename)
@@ -856,18 +902,34 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as out_file:
-            exporters.exportShape(self.solid, "SVG", out_file)
+        opt = {
+            "width": width,
+            "height": height,
+            "marginLeft": marginLeft,
+            "marginTop": marginTop,
+            "showAxes": showAxes,
+            "projectionDir": projectionDir,
+            "strokeColor": strokeColor,
+            "hiddenColor": hiddenColor,
+            "showHidden": showHidden
+        }
+
+        if strokeWidth is not None:
+            opt["strokeWidth"] = strokeWidth
+
+        exporters.export(self.solid, str(path_filename), exportType='SVG',
+                         opt=opt)
+
         print("Saved file as ", path_filename)
 
         return str(path_filename)
 
     def export_html(
             self,
-            filename: str = "shape.html",
-            facet_splines: bool = True,
-            facet_circles: bool = True,
-            tolerance: float = 1e-3,
+            filename: Optional[str] = "shape.html",
+            facet_splines: Optional[bool] = True,
+            facet_circles: Optional[bool] = True,
+            tolerance: Optional[float] = 1e-3,
     ):
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
@@ -933,8 +995,12 @@ class Shape:
         return fig
 
     def export_2d_image(
-            self, filename: str = 'shape.png', xmin: float = 0.,
-            xmax: float = 900., ymin: float = -600., ymax: float = 600.):
+            self,
+            filename: Optional[str] = 'shape.png',
+            xmin: Optional[float] = 0.,
+            xmax: Optional[float] = 900.,
+            ymin: Optional[float] = -600.,
+            ymax: Optional[float] = 600.):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
@@ -1041,7 +1107,7 @@ class Shape:
 
         return neutronics_description
 
-    def perform_boolean_operations(self, solid, **kwargs):
+    def perform_boolean_operations(self, solid: cq.Workplane, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""
 
@@ -1066,7 +1132,9 @@ class Shape:
 
         return solid
 
-    def make_graveyard(self, graveyard_offset: int = 100):
+    def make_graveyard(
+            self,
+            graveyard_offset: Optional[int] = 100) -> cq.Workplane:
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -1100,10 +1168,10 @@ class Shape:
 
     def export_h5m(
             self,
-            filename: str = 'dagmc.h5m',
-            skip_graveyard: bool = False,
-            tolerance: float = 0.001,
-            graveyard_offset: float = 100) -> str:
+            filename: Optional[str] = 'dagmc.h5m',
+            skip_graveyard: Optional[bool] = False,
+            tolerance: Optional[float] = 0.001,
+            graveyard_offset: Optional[float] = 100) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -1170,8 +1238,8 @@ class Shape:
 
     def export_graveyard(
             self,
-            graveyard_offset: float = 100,
-            filename: str = "Graveyard.stp") -> str:
+            graveyard_offset: Optional[float] = 100,
+            filename: Optional[str] = "Graveyard.stp") -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.

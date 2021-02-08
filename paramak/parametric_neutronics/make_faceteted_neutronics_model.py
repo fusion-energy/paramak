@@ -109,9 +109,9 @@ def find_all_surfaces_of_reflecting_wedge(new_vols):
         #area = surface.area()
         vertex_in_surface = cubit.parse_cubit_list("vertex", " in surface " + str(surface_id))
         if surface.is_planar() == True and len(vertex_in_surface) == 4:
-        surface_info_dict[surface_id] = {'reflector': True}
+            surface_info_dict[surface_id] = {'reflector': True}
         else:
-        surface_info_dict[surface_id] = {'reflector': False}
+            surface_info_dict[surface_id] = {'reflector': False}
     print('surface_info_dict', surface_info_dict)
     return surface_info_dict
 
