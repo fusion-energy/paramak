@@ -44,8 +44,8 @@ def rotate_single_reactor(number_of_images=100):
     for i in range(number_of_images):
 
         # uses the rotation angle (in radians) to find new x, y points
-        x, y = paramak.utils.rotate([0, 0], [1, 0], angle_finder(i))
-        projectionDir = (x, y, 0)
+        x_vec, y_vec = paramak.utils.rotate([0, 0], [1, 0], angle_finder(i))
+        projectionDir = (x_vec, y_vec, 0)
 
         my_reactor.export_svg(
             filename="rotation_" + str(i).zfill(4) + ".svg",
