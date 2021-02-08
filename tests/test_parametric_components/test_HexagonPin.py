@@ -68,6 +68,6 @@ class TestHexagonPin(unittest.TestCase):
 
         assert len(test_shape_areas) == 8
         assert test_shape_areas.count(pytest.approx(hexagon_face_area,
-        rel=0.1)) == 2
+                                                    rel=0.1)) == 2
         assert test_shape_areas.count(pytest.approx(length * distance,
-        rel=0.1)) == 6
+                                                    rel=0.1)) == 6
