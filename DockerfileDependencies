@@ -128,13 +128,12 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     rm -rf * ; \
-    cmake ../DAGMC -DBUILD_TALLY=ON \
-                   -DMOAB_DIR=/MOAB \
-                   -DDOUBLE_DOWN=ON \
-                   -DBUILD_STATIC_EXE=OFF \
-                   -DBUILD_STATIC_LIBS=OFF \
-                   -DCMAKE_INSTALL_PREFIX=/DAGMC/ \
-                   -DDOUBLE_DOWN_DIR=/double-down  ; \
+    cmake ../moab -DENABLE_HDF5=ON \
+                  -DENABLE_PYMOAB=ON \
+                  -DENABLE_FORTRAN=OFF \
+                  -DBUILD_SHARED_LIBS=ON \
+                  -DENABLE_BLASLAPACK=OFF \
+                  -DCMAKE_INSTALL_PREFIX=/MOAB ; \
     make -j"$compile_cores" ; \
     make -j"$compile_cores" install ; \
     cd pymoab ; \
@@ -165,9 +164,11 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd build ; \
     cmake ../DAGMC -DBUILD_TALLY=ON \
                    -DMOAB_DIR=/MOAB \
+                   -DDOUBLE_DOWN=ON \
                    -DBUILD_STATIC_EXE=OFF \
                    -DBUILD_STATIC_LIBS=OFF \
-                   -DCMAKE_INSTALL_PREFIX=/DAGMC/ ; \
+                   -DCMAKE_INSTALL_PREFIX=/DAGMC/ \
+                   -DDOUBLE_DOWN_DIR=/double-down  ; \
     make -j"$compile_cores" install ; \
     rm -rf /DAGMC/DAGMC /DAGMC/build ; \
     fi
