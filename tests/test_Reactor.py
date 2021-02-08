@@ -11,6 +11,12 @@ import pytest
 
 class TestReactor(unittest.TestCase):
 
+    def setUp(self):
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+
+        self.test_reactor = paramak.Reactor([test_shape])
+
     def test_adding_shape_with_material_tag_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with
         the correct material tag property."""
@@ -451,13 +457,9 @@ class TestReactor(unittest.TestCase):
         of the reactor can be exported to a specified location using the
         export_svg method."""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
-        test_shape.rotation_angle = 360
         os.system("rm test_svg_image.svg")
-        test_reactor = paramak.Reactor([test_shape])
 
-        test_reactor.export_svg("test_svg_image.svg")
+        self.test_reactor.export_svg("test_svg_image.svg")
 
         assert Path("test_svg_image.svg").exists() is True
         os.system("rm test_svg_image.svg")
@@ -467,16 +469,40 @@ class TestReactor(unittest.TestCase):
         of the reactor can be exported to a specified location using the export_svg
         method"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
-        test_shape.rotation_angle = 360
         os.system("rm test_svg_image.svg")
-        test_reactor = paramak.Reactor([test_shape])
 
-        test_reactor.export_svg("test_svg_image")
+        self.test_reactor.export_svg("test_svg_image")
 
         assert Path("test_svg_image.svg").exists() is True
         os.system("rm test_svg_image.svg")
+
+    def test_export_svg_options(self):
+        """Exports the test reacto to an svg image and checks that a svg file
+        can be exported with the various different export options"""
+
+        os.system("rm *.svg")
+        self.test_reactor.export_svg("r_width.svg", width=900)
+        assert Path("r_width.svg").exists() is True
+        self.test_reactor.export_svg("r_height.svg", height=900)
+        assert Path("r_height.svg").exists() is True
+        self.test_reactor.export_svg("r_marginLeft.svg", marginLeft=110)
+        assert Path("r_marginLeft.svg").exists() is True
+        self.test_reactor.export_svg("r_marginTop.svg", marginTop=110)
+        assert Path("r_marginTop.svg").exists() is True
+        self.test_reactor.export_svg("r_showAxes.svg", showAxes=True)
+        assert Path("r_showAxes.svg").exists() is True
+        self.test_reactor.export_svg("r_projectionDir.svg", projectionDir=(-1, -1, -1))
+        assert Path("r_projectionDir.svg").exists() is True
+        self.test_reactor.export_svg("r_strokeColor.svg", strokeColor=(42, 42, 42))
+        assert Path("r_strokeColor.svg").exists() is True
+        self.test_reactor.export_svg("r_hiddenColor.svg", hiddenColor=(42, 42, 42))
+        assert Path("r_hiddenColor.svg").exists() is True
+        self.test_reactor.export_svg("r_showHidden.svg", showHidden=False)
+        assert Path("r_showHidden.svg").exists() is True
+        self.test_reactor.export_svg("r_strokeWidth1.svg", strokeWidth=None)
+        assert Path("r_strokeWidth1.svg").exists() is True
+        self.test_reactor.export_svg("r_strokeWidth2.svg", strokeWidth=10)
+        assert Path("r_strokeWidth2.svg").exists() is True
 
     def test_neutronics_description(self):
         """Creates reactor objects to check errors are raised correctly when

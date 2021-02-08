@@ -180,6 +180,34 @@ class TestRotateStraightShape(unittest.TestCase):
         assert Path("filename.svg").exists() is True
         os.system("rm filename.svg")
 
+    def test_export_svg_options(self):
+        """Creates a RotateStraightShape and checks that a svg file of the
+        shape can be exported with the various different export options"""
+
+        os.system("rm *.svg")
+        self.test_shape.export_svg("width.svg", width=900)
+        assert Path("width.svg").exists() is True
+        self.test_shape.export_svg("height.svg", height=900)
+        assert Path("height.svg").exists() is True
+        self.test_shape.export_svg("marginLeft.svg", marginLeft=110)
+        assert Path("marginLeft.svg").exists() is True
+        self.test_shape.export_svg("marginTop.svg", marginTop=110)
+        assert Path("marginTop.svg").exists() is True
+        self.test_shape.export_svg("showAxes.svg", showAxes=True)
+        assert Path("showAxes.svg").exists() is True
+        self.test_shape.export_svg("projectionDir.svg", projectionDir=(-1, -1, -1))
+        assert Path("projectionDir.svg").exists() is True
+        self.test_shape.export_svg("strokeColor.svg", strokeColor=(42, 42, 42))
+        assert Path("strokeColor.svg").exists() is True
+        self.test_shape.export_svg("hiddenColor.svg", hiddenColor=(42, 42, 42))
+        assert Path("hiddenColor.svg").exists() is True
+        self.test_shape.export_svg("showHidden.svg", showHidden=False)
+        assert Path("showHidden.svg").exists() is True
+        self.test_shape.export_svg("strokeWidth1.svg", strokeWidth=None)
+        assert Path("strokeWidth1.svg").exists() is True
+        self.test_shape.export_svg("strokeWidth2.svg", strokeWidth=10)
+        assert Path("strokeWidth2.svg").exists() is True
+
     def test_cut_volume(self):
         """Creates a RotateStraightShape with another RotateStraightShape
         cut out and checks that the volume is correct."""

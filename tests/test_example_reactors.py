@@ -21,13 +21,11 @@ class TestExampleReactors(unittest.TestCase):
             "rotation_0000.svg",
             "rotation_0001.svg",
         ]
-        for output_filename in output_filenames:
-            os.system("rm " + output_filename)
+        os.system("rm *.svg")
         make_animation.rotate_single_reactor(2)
         make_animation.make_random_reactors(2)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
-            os.system("rm " + output_filename)
 
     def test_make_parametric_htc_rector(self):
         """Runs the example to check the output files are produced"""
