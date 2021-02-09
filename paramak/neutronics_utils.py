@@ -112,7 +112,7 @@ def add_stl_to_moab_core(
 
     group_set = moab_core.create_meshset()
     moab_core.tag_set_data(tags['category'], group_set, "Group")
-    print("mat:{}".format(material_name))
+
     moab_core.tag_set_data(
         tags['name'],
         group_set,
