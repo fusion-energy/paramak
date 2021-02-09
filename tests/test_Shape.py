@@ -243,6 +243,22 @@ class TestShape(unittest.TestCase):
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
 
+    def test_export_html_view_planes(self):
+        """Checks a plotly figure of the Shape is exported by the export_html
+        method with a range of different view_plane options."""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=180
+        )
+
+        for view_plane in ['XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ', 'XYZ']:
+            os.system("rm *.html")
+            test_shape.export_html(
+                filename='filename',
+                view_plane=view_plane
+            )
+            assert Path("filename.html").exists() is True
+
     def test_export_html_with_points_None(self):
         """Checks that an error is raised when points is None and export_html
         """
