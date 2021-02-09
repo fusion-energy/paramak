@@ -604,7 +604,7 @@ class NeutronicsModel():
                 merged geometry. Options are "ppp", "trelis", "pymoab".
                 Defaults to pymoab.
             threads (int, optional): Sets the number of OpenMP threads
-                used for the simulation. None takes all available threads by 
+                used for the simulation. None takes all available threads by
                 default. Defaults to None.
 
         Returns:
