@@ -591,7 +591,8 @@ class NeutronicsModel():
                 self.tallies.append(tally)
 
     def simulate(self, verbose: bool = True, method: str = None,
-                 cell_tally_results_filename: str = 'results.json'):
+                 cell_tally_results_filename: str = 'results.json',
+                 openmp_threads: int = None):
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
 
@@ -620,7 +621,9 @@ class NeutronicsModel():
         os.system('rm settings.xml')
         os.system('rm tallies.xml')
 
-        self.statepoint_filename = self.model.run(output=verbose)
+        self.statepoint_filename = self.model.run(
+            output=verbose, threads=openmp_threads
+        )
         self.results = get_neutronics_results_from_statepoint_file(
             statepoint_filename=self.statepoint_filename,
             fusion_power=self.fusion_power
