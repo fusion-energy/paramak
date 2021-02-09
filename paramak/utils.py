@@ -581,15 +581,18 @@ def export_wire_to_html(
     if view_plane == 'XYZ':
         fig.update_layout(
             title=title,
+            scene_aspectmode='data',
             scene=dict(
                 xaxis_title=view_plane[0],
                 yaxis_title=view_plane[1],
-                zaxis_title=view_plane[2]
+                zaxis_title=view_plane[2],
             ),
         )
     else:
 
         fig.update_layout(
+            yaxis=dict(scaleanchor="x",
+                       scaleratio=1),
             xaxis_title=view_plane[0],
             yaxis_title=view_plane[1]
         )
