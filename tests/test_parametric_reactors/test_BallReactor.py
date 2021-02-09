@@ -37,7 +37,7 @@ class TestBallReactor(unittest.TestCase):
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 7
 
-    def test_creation_with_narrow_divertor(self):
+    def test_creation_with_wide_divertor(self):
         """Creates a BallReactor with a wide divertor and checks that the correct
         number of components are created."""
 
