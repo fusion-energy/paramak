@@ -101,7 +101,8 @@ class TestExampleShapes(unittest.TestCase):
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        make_html_diagram_from_stp_file.main()
+        make_html_diagram_from_stp_file.make_stp_file()
+        make_html_diagram_from_stp_file.load_stp_file_and_plot()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)
