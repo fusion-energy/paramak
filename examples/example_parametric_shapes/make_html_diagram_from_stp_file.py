@@ -26,7 +26,7 @@ def make_stp_file():
     example_shape.export_html("example_shape_RZ.html")
     example_shape.export_html("example_shape_XYZ.html", view_plane='XYZ')
     example_shape.export_html("example_shape_XZ.html", view_plane='XZ')
-    
+
     # This exports the Shape object as an stp file that will be imported later
     example_shape.export_stp("example_shape.stp")
 
