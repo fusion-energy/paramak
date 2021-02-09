@@ -603,6 +603,9 @@ class NeutronicsModel():
             method (str): The method to use when making the imprinted and
                 merged geometry. Options are "ppp", "trelis", "pymoab".
                 Defaults to pymoab.
+            openmp_threads (int, optional): Sets the number of OpenMP threads
+                used for the simulation. None means all available threads are
+                used. Defaults to None.
 
         Returns:
             dict: the simulation output filename
