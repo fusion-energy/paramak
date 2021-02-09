@@ -213,5 +213,3 @@ COPY README.md README.md
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
-
-WORKDIR examples
