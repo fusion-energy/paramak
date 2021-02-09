@@ -591,7 +591,8 @@ class NeutronicsModel():
                 self.tallies.append(tally)
 
     def simulate(self, verbose: bool = True, method: str = None,
-                 cell_tally_results_filename: str = 'results.json'):
+                 cell_tally_results_filename: str = 'results.json',
+                 threads: int = None):
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
 
@@ -602,6 +603,9 @@ class NeutronicsModel():
             method (str): The method to use when making the imprinted and
                 merged geometry. Options are "ppp", "trelis", "pymoab".
                 Defaults to pymoab.
+            threads (int, optional): Sets the number of OpenMP threads
+                used for the simulation. None takes all available threads by
+                default. Defaults to None.
 
         Returns:
             dict: the simulation output filename
@@ -620,7 +624,9 @@ class NeutronicsModel():
         os.system('rm settings.xml')
         os.system('rm tallies.xml')
 
-        self.statepoint_filename = self.model.run(output=verbose)
+        self.statepoint_filename = self.model.run(
+            output=verbose, threads=threads
+        )
         self.results = get_neutronics_results_from_statepoint_file(
             statepoint_filename=self.statepoint_filename,
             fusion_power=self.fusion_power
