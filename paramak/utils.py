@@ -447,19 +447,17 @@ def plotly_trace(
 
         return trace
 
-    else:
+    trace = go.Scatter(
+        x=[row[0] for row in points],
+        y=[row[1] for row in points],
+        hoverinfo="text",
+        text=text_values,
+        mode=mode,
+        marker={"size": 5, "color": color},
+        name=name,
+    )
 
-        trace = go.Scatter(
-            x=[row[0] for row in points],
-            y=[row[1] for row in points],
-            hoverinfo="text",
-            text=text_values,
-            mode=mode,
-            marker={"size": 5, "color": color},
-            name=name,
-        )
-
-        return trace
+    return trace
 
 
 def extract_points_from_edges(
