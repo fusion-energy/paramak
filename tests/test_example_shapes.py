@@ -92,8 +92,11 @@ class TestExampleShapes(unittest.TestCase):
         """Runs the example and checks the output files are produced"""
         output_filenames = [
             "example_shape.stp",
-            "example_shape_from_solid.html",
-            "example_shape_from_stp.html",
+            "example_shape_RZ.html",
+            "example_shape_XYZ.html",
+            "example_shape_XZ.html",
+            "example_shape_from_stp_XZ.html",
+            "example_shape_from_stp_XYZ.html",
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
