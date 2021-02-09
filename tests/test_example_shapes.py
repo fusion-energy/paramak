@@ -95,6 +95,7 @@ class TestExampleShapes(unittest.TestCase):
             "example_shape_RZ.html",
             "example_shape_XYZ.html",
             "example_shape_XZ.html",
+            "example_shape_from_stp_RZ.html",
             "example_shape_from_stp_XZ.html",
             "example_shape_from_stp_XYZ.html",
         ]
