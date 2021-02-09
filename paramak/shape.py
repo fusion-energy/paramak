@@ -933,6 +933,7 @@ class Shape:
             facet_splines: Optional[bool] = True,
             facet_circles: Optional[bool] = True,
             tolerance: Optional[float] = 1e-3,
+            view_plane: Optional[str] = None,
     ):
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
@@ -948,10 +949,16 @@ class Shape:
                 to True.
             tolerance: faceting toleranceto use when faceting cirles and
                 splines. Defaults to 1e-3.
+            view_plane: The plane to project Defaults to the workplane of the
+                paramak.Shape
 
         Returns:
             plotly.Figure(): figure object
         """
+        
+        # if view plane is not set then use the shape workplane
+        if view_plane is None:
+            view_plane = self.workplane
 
         if self.points is None:
             if hasattr(self, 'path_points') and self.path_points is None:
@@ -968,12 +975,12 @@ class Shape:
         fig = paramak.utils.export_wire_to_html(
             wires=list_of_wires,
             filename=filename,
-            view_plane=self.workplane,
+            view_plane=view_plane,
             facet_splines=facet_splines,
             facet_circles=facet_circles,
-            tolerance=1e-3,
+            tolerance=tolerance,
             title="coordinates of " + self.__class__.__name__ +
-            " shape, viewed from the " + self.workplane + " plane",
+            " shape, viewed from the " + view_plane + " plane",
         )
 
         if self.points is not None:
