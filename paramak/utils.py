@@ -429,7 +429,8 @@ def plotly_trace(
     text_values = []
 
     for i, point in enumerate(points):
-        text = "point number= {} <br> x={} <br> y= {}".format(i, point[0], point[1])
+        text = "point number= {} <br> x={} <br> y= {}".format(
+            i, point[0], point[1])
         if len(point) == 3:
             text = text + "<br> z= {} <br>".format(point[2])
 
@@ -586,7 +587,7 @@ def export_wire_to_html(
                 xaxis_title=view_plane[0],
                 yaxis_title=view_plane[1],
                 zaxis_title=view_plane[2]
-                ),
+            ),
         )
     else:
 

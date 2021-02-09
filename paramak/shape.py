@@ -955,7 +955,7 @@ class Shape:
         Returns:
             plotly.Figure(): figure object
         """
-        
+
         # if view plane is not set then use the shape workplane
         if view_plane is None:
             view_plane = self.workplane
