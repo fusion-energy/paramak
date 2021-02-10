@@ -29,12 +29,11 @@ class TestExampleNeutronics(unittest.TestCase):
             "n-Xt_on_3D_mesh.vtk",
             "n-Xa_on_3D_mesh.vtk",
         ]
-        for output_filename in output_filenames:
-            os.system("rm " + output_filename)
+        os.system("rm *.png")
+        os.system("rm *.vtk")
         shape_with_gas_production.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
-            os.system("rm " + output_filename)
 
 
 if __name__ == "__main__":

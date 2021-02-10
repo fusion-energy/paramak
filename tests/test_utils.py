@@ -50,6 +50,34 @@ class TestUtilityFunctions(unittest.TestCase):
             assert isinstance(point[1], float)
             assert isinstance(point[2], float)
 
+    def test_trace_creation(self):
+        """Creates a plotly trace and checks the type returned"""
+        trace = plotly_trace(
+            points=[
+                (0, 20),
+                (20, 0),
+                (0, -20)
+            ],
+            mode='markers+lines',
+            color=(10, 10, 10, 0.5)
+        )
+
+        assert isinstance(trace, go.Scatter)
+
+    def test_trace_creation_3d(self):
+        """Creates a 3d plotly trace and checks the type returned"""
+        trace = plotly_trace(
+            points=[
+                (0, 20, 0),
+                (20, 0, 10),
+                (0, -20, -10)
+            ],
+            mode='markers+lines',
+            color=(10, 10, 10)
+        )
+
+        assert isinstance(trace, go.Scatter3d)
+
     def test_find_center_point_of_circle(self):
         """passes three points on a circle to the function and checks that the
         radius and center of the circle is calculated correctly"""

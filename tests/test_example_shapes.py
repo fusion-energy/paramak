@@ -20,18 +20,18 @@ class TestExampleShapes(unittest.TestCase):
     def test_make_blanket_from_points(self):
         """Runs the example and checks the output files are produced"""
         filename = "blanket_from_points.stp"
-        os.system("rm " + filename)
+        os.system("rm *.stp")
         make_blanket_from_points.main(filename=filename)
         assert Path(filename).exists() is True
-        os.system("rm " + filename)
+        os.system("rm *.stp")
 
     def test_make_blanket_parametrically(self):
         """Runs the example and checks the output files are produced"""
         filename = "blanket_from_parameters.stp"
-        os.system("rm " + filename)
+        os.system("rm *.stp")
         make_blanket_from_parameters.main(filename=filename)
         assert Path(filename).exists() is True
-        os.system("rm " + filename)
+        os.system("rm *.stp")
 
     def test_make_cad_from_points(self):
         """Runs the example and checks the output files are produced"""
@@ -43,12 +43,10 @@ class TestExampleShapes(unittest.TestCase):
             "rotated_spline.stp",
             "rotated_straights.stp",
         ]
-        for output_filename in output_filenames:
-            os.system("rm " + output_filename)
+        os.system("rm *.stp")
         make_CAD_from_points.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
-            os.system("rm " + output_filename)
 
     def test_make_can_reactor_from_parameters(self):
         """Runs the example and checks the output files are produced"""
@@ -62,12 +60,11 @@ class TestExampleShapes(unittest.TestCase):
             "can_reactor_from_parameters/core.stp",
             "can_reactor_from_parameters/reactor.html",
         ]
-        for output_filename in output_filenames:
-            os.system("rm " + output_filename)
+        os.system("rm *.stp")
+        os.system("rm *.html")
         make_can_reactor_from_parameters.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
-            os.system("rm " + output_filename)
 
     def test_make_can_reactor_from_points(self):
         """Runs the example and checks the output files are produced"""
@@ -81,12 +78,11 @@ class TestExampleShapes(unittest.TestCase):
             "can_reactor_from_points/core.stp",
             "can_reactor_from_points/reactor.html",
         ]
-        for output_filename in output_filenames:
-            os.system("rm " + output_filename)
+        os.system("rm *.stp")
+        os.system("rm *.html")
         make_can_reactor_from_points.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
-            os.system("rm " + output_filename)
 
     def test_make_html_diagram_from_stp_file(self):
         """Runs the example and checks the output files are produced"""
@@ -99,13 +95,12 @@ class TestExampleShapes(unittest.TestCase):
             "example_shape_from_stp_XZ.html",
             "example_shape_from_stp_XYZ.html",
         ]
-        for output_filename in output_filenames:
-            os.system("rm " + output_filename)
+        os.system("rm *.stp")
+        os.system("rm *.html")
         make_html_diagram_from_stp_file.make_stp_file()
         make_html_diagram_from_stp_file.load_stp_file_and_plot()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
-            os.system("rm " + output_filename)
 
     def test_list_of_wires_can_be_exported(self):
         """Checks than a list of wires is an acceptable input
