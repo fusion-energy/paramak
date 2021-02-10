@@ -1,13 +1,54 @@
 
 import unittest
+from cadquery.cq import Workplane
 
 import numpy as np
 import paramak
 from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
-                           find_center_point_of_circle)
+                           find_center_point_of_circle, plotly_trace,
+                           extract_points_from_edges, facet_wire)
+import plotly.graph_objects as go
 
 
 class TestUtilityFunctions(unittest.TestCase):
+
+    def test_extract_points_from_edges(self):
+        """Extracts points from edges and checks the list returned is the
+        correct len and contains the correct types"""
+
+        test_points = [(1, 1), (3, 1), (4, 2)]
+        test_shape = paramak.ExtrudeStraightShape(
+            points=test_points,
+            distance=6,
+            workplane='YZ')
+
+        edges = facet_wire(wire=test_shape.wire)
+
+        points = extract_points_from_edges(edges=edges, view_plane='YZ')
+
+        assert len(points) == 6
+
+        for point in points:
+            assert len(point) == 2
+            assert isinstance(point[0], float)
+            assert isinstance(point[1], float)
+
+        points_single_edge = extract_points_from_edges(edges=edges[0], view_plane='YZ')
+
+        assert len(points) > len(points_single_edge)
+        for point in points_single_edge:
+            assert len(point) == 2
+            assert isinstance(point[0], float)
+            assert isinstance(point[1], float)
+
+        points_single_edge = extract_points_from_edges(edges=edges[0], view_plane='XYZ')
+
+        assert len(points) > len(points_single_edge)
+        for point in points_single_edge:
+            assert len(point) == 3
+            assert isinstance(point[0], float)
+            assert isinstance(point[1], float)
+            assert isinstance(point[2], float)
 
     def test_find_center_point_of_circle(self):
         """passes three points on a circle to the function and checks that the
