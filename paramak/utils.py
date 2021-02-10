@@ -503,8 +503,8 @@ def extract_points_from_edges(
             elif view_plane == 'ZX':
                 points.append((vertex.Z, vertex.X))
             elif view_plane == 'RZ':
-                xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
-                points.append((math.sqrt(xy), vertex.Z))
+                xy_coord = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
+                points.append((math.sqrt(xy_coord), vertex.Z))
             elif view_plane == 'XYZ':
                 points.append((vertex.X, vertex.Y, vertex.Z))
             else:
