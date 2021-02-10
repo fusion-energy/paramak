@@ -417,6 +417,13 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.HexagonPin(
+        length_of_side=5,
+        distance=10,
+        center_point=(10, 20)
+    )
+    all_components.append(component)
+
     return all_components
 
 
