@@ -40,7 +40,7 @@
 # docker run --rm ukaea/paramak pytest /tests
 # docker run --rm ukaea/paramak  /bin/bash -c "cd .. && bash run_tests.sh"
 
-FROM continuumio/miniconda3
+FROM continuumio/miniconda3:4.9.2
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2

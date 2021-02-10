@@ -2,7 +2,7 @@ __doc__ = """ Creates a series of images of a ball reactor images and combines
 them into gif animations using the command line tool convert, you will need to
 have imagemagick installed to convert the svg images to a gif animation """
 
-import os
+import subprocess
 
 import numpy as np
 import paramak
@@ -60,7 +60,8 @@ def rotate_single_reactor(number_of_images=100):
 
         print("made", str(i + 1), "models out of", str(number_of_images))
 
-    os.system("convert -delay 15 rotation_*.svg rotated.gif")
+    subprocess.check_call(
+        ["convert", "-delay", "15", "rotation_*.svg", "rotated.gif"])
 
     print("animation file made as saved as rotated.gif")
 
@@ -102,7 +103,8 @@ def make_random_reactors(number_of_images=11):
 
         print("made", str(i + 1), "models out of", str(number_of_images))
 
-    os.system("convert -delay 40 random_*.svg randoms.gif")
+    subprocess.check_call(
+        ["convert", "-delay", "40", "random_*.svg", "randoms.gif"])
 
     print("animation file made as saved as randoms.gif")
 
