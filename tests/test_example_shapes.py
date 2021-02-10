@@ -92,12 +92,17 @@ class TestExampleShapes(unittest.TestCase):
         """Runs the example and checks the output files are produced"""
         output_filenames = [
             "example_shape.stp",
-            "example_shape_from_solid.html",
-            "example_shape_from_stp.html",
+            "example_shape_RZ.html",
+            "example_shape_XYZ.html",
+            "example_shape_XZ.html",
+            "example_shape_from_stp_RZ.html",
+            "example_shape_from_stp_XZ.html",
+            "example_shape_from_stp_XYZ.html",
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
-        make_html_diagram_from_stp_file.main()
+        make_html_diagram_from_stp_file.make_stp_file()
+        make_html_diagram_from_stp_file.load_stp_file_and_plot()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
             os.system("rm " + output_filename)

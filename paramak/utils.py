@@ -6,7 +6,7 @@ from os import fdopen, remove
 from pathlib import Path
 from shutil import copymode, move
 from tempfile import mkstemp
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import cadquery as cq
 import numpy as np
@@ -395,7 +395,7 @@ def _replace(filename: str, pattern: str, subst: str) -> None:
 
 
 def plotly_trace(
-        points: List[Tuple[float, float]],
+        points: Union[List[Tuple[float, float]], List[Tuple[float, float, float]]],
         mode: str = "markers+lines",
         name: str = None,
         color=None):
@@ -429,37 +429,54 @@ def plotly_trace(
     text_values = []
 
     for i, point in enumerate(points):
-        text_values.append(
-            "point number="
-            + str(i)
-            + "<br>"
-            + "x="
-            + str(point[0])
-            + "<br>"
-            + "z="
-            + str(point[1])
-            + "<br>"
+        text = "point number= {} <br> x={} <br> y= {}".format(
+            i, point[0], point[1])
+        if len(point) == 3:
+            text = text + "<br> z= {} <br>".format(point[2])
+
+        text_values.append(text)
+
+    if all(len(entry) == 3 for entry in points):
+        trace = go.Scatter3d(
+            x=[row[0] for row in points],
+            y=[row[1] for row in points],
+            z=[row[2] for row in points],
+            mode=mode,
+            marker={"size": 3, "color": color},
+            name=name
         )
 
+        return trace
+
     trace = go.Scatter(
-        {
-            "x": [row[0] for row in points],
-            "y": [row[1] for row in points],
-            "hoverinfo": "text",
-            "text": text_values,
-            "mode": mode,
-            "marker": {"size": 5, "color": color},
-            "name": name,
-        }
+        x=[row[0] for row in points],
+        y=[row[1] for row in points],
+        hoverinfo="text",
+        text=text_values,
+        mode=mode,
+        marker={"size": 5, "color": color},
+        name=name,
     )
 
     return trace
 
 
 def extract_points_from_edges(
-    edges,
+    edges: Union[List[cq.Wire], cq.Wire],
     view_plane: str = 'XZ',
 ):
+    """Extracts points (coordinates) from a CadQuery Edge, optionally projects
+    the points to a plane and returns the points.
+
+    Args:
+        edges (CadQuery.Wires): The edges to extract points (coordinates from).
+        view_plane: The axis to view the points and faceted edges from. The
+            options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'.
+            Defaults to 'RZ'.
+
+    Returns:
+        List of Tuples: A list of tuples with float entries for every point
+    """
 
     if isinstance(edges, Iterable):
         list_of_edges = edges
@@ -485,6 +502,8 @@ def extract_points_from_edges(
             elif view_plane == 'RZ':
                 xy = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
                 points.append((math.sqrt(xy), vertex.Z))
+            elif view_plane == 'XYZ':
+                points.append((vertex.X, vertex.Y, vertex.Z))
             else:
                 raise ValueError('view_plane value of ', view_plane,
                                  ' is not supported')
@@ -535,8 +554,8 @@ def export_wire_to_html(
             from and to optionally facet.
         filename: the filename used to save the html graph.
         view_plane: The axis to view the points and faceted edges from. The
-            options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ'. Defaults to
-            'RZ'
+            options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'.
+            Defaults to 'RZ'
         facet_splines: If True then spline edges will be faceted. Defaults to
             True.
         facet_circles: If True then circle edges will be faceted. Defaults to
@@ -557,14 +576,26 @@ def export_wire_to_html(
         path_filename = path_filename.with_suffix(".html")
 
     fig = go.Figure()
-    fig.update_layout(
-        {
-            "title": title,
-            "hovermode": "closest",
-            "xaxis_title": view_plane[0],
-            "yaxis_title": view_plane[1]
-        }
-    )
+    fig.update_layout(title=title, hovermode="closest")
+
+    if view_plane == 'XYZ':
+        fig.update_layout(
+            title=title,
+            scene_aspectmode='data',
+            scene=dict(
+                xaxis_title=view_plane[0],
+                yaxis_title=view_plane[1],
+                zaxis_title=view_plane[2],
+            ),
+        )
+    else:
+
+        fig.update_layout(
+            yaxis=dict(scaleanchor="x",
+                       scaleratio=1),
+            xaxis_title=view_plane[0],
+            yaxis_title=view_plane[1]
+        )
 
     if isinstance(wires, list):
         list_of_wires = wires
