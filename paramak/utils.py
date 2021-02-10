@@ -399,7 +399,7 @@ def plotly_trace(
         mode: str = "markers+lines",
         name: str = None,
         color: Union[Tuple[float, float, float], Tuple[float, float, float, float]] = None
-        ) -> Union[go.Scatter, go.Scatter3d]:
+) -> Union[go.Scatter, go.Scatter3d]:
     """Creates a plotly trace representation of the points of the Shape
     object. This method is intended for internal use by Shape.export_html.
 
