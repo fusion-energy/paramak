@@ -43,6 +43,7 @@ coverage.xml
 *.vtk
 *.jpg
 *.xcf
+*.gif
 
 # sphinx built documetation
 docs/build/

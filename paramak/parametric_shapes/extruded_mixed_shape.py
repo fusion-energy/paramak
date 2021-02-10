@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 from paramak import Shape
 from paramak.utils import calculate_wedge_cut
 
@@ -8,26 +10,25 @@ class ExtrudeMixedShape(Shape):
     straight and spline connections.
 
     Args:
-        distance (float): the extrusion distance to use (cm units if used for
+        distance: the extrusion distance to use (cm units if used for
             neutronics)
-        extrude_both (bool, optional): If set to True, the extrusion will
-            occur in both directions. Defaults to True.
-        rotation_angle (float, optional): rotation angle of solid created. A
-            cut is performed from rotation_angle to 360 degrees. Defaults to
-            360.0.
-        stp_filename (str, optional): Defaults to "ExtrudeMixedShape.stp".
-        stl_filename (str, optional): Defaults to "ExtrudeMixedShape.stl".
+        extrude_both: If set to True, the extrusion will occur in both
+            directions. Defaults to True.
+        rotation_angle: rotation angle of solid created. A cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.0.
+        stp_filename: Defaults to "ExtrudeMixedShape.stp".
+        stl_filename: Defaults to "ExtrudeMixedShape.stl".
 
     """
 
     def __init__(
         self,
-        distance,
-        extrude_both=True,
-        rotation_angle=360.0,
-        extrusion_start_offset=0.0,
-        stp_filename="ExtrudeMixedShape.stp",
-        stl_filename="ExtrudeMixedShape.stl",
+        distance: float,
+        extrude_both: Optional[bool] = True,
+        rotation_angle: Optional[float] = 360.0,
+        extrusion_start_offset: Optional[float] = 0.0,
+        stp_filename: Optional[str] = "ExtrudeMixedShape.stp",
+        stl_filename: Optional[str] = "ExtrudeMixedShape.stl",
         **kwargs
     ):
 

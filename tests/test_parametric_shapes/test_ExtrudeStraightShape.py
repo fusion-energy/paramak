@@ -121,6 +121,35 @@ class TestExtrudeStraightShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
+    def test_incorrect_points_input(self):
+        """Checks that an error is raised when the points are input with the
+        connection"""
+
+        def incorrect_points_definition():
+            self.test_shape.points = [
+                (10, 10, 'straight'),
+                (10, 30, 'straight'),
+                (30, 30, 'straight'),
+                (30, 10, 'straight')
+            ]
+
+        self.assertRaises(
+            ValueError,
+            incorrect_points_definition
+        )
+
+    def test_export_html_with_different_workplanes(self):
+        """Checks that all the workplanes produce an html file when using the
+        export_html method and that the axis have the correct labels"""
+
+        os.system("rm *.html")
+        for workplane in ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]:
+            self.test_shape.workplane = workplane
+            fig = self.test_shape.export_html(workplane + ".html")
+            assert Path(workplane + ".html").exists() is True
+            assert fig.layout.xaxis.title['text'] == workplane[0]
+            assert fig.layout.yaxis.title['text'] == workplane[1]
+
 
 if __name__ == "__main__":
     unittest.main()

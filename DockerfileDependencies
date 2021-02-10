@@ -40,7 +40,7 @@
 # docker run --rm ukaea/paramak pytest /tests
 # docker run --rm ukaea/paramak  /bin/bash -c "cd .. && bash run_tests.sh"
 
-FROM continuumio/miniconda3
+FROM continuumio/miniconda3:4.9.2
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2
@@ -164,9 +164,11 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     cd build ; \
     cmake ../DAGMC -DBUILD_TALLY=ON \
                    -DMOAB_DIR=/MOAB \
+                   -DDOUBLE_DOWN=ON \
                    -DBUILD_STATIC_EXE=OFF \
                    -DBUILD_STATIC_LIBS=OFF \
-                   -DCMAKE_INSTALL_PREFIX=/DAGMC/ ; \
+                   -DCMAKE_INSTALL_PREFIX=/DAGMC/ \
+                   -DDOUBLE_DOWN_DIR=/double-down  ; \
     make -j"$compile_cores" install ; \
     rm -rf /DAGMC/DAGMC /DAGMC/build ; \
     fi

@@ -1,16 +1,90 @@
 
 import math
-from collections import Iterable
+from collections.abc import Iterable
 from hashlib import blake2b
 from os import fdopen, remove
+from pathlib import Path
 from shutil import copymode, move
 from tempfile import mkstemp
-from typing import Tuple, List
+from typing import List, Tuple, Union
 
 import cadquery as cq
 import numpy as np
+import plotly.graph_objects as go
+from cadquery import importers
+from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 
 import paramak
+
+
+def _transform_curve(edge, tolerance: float = 1e-3):
+    """Converts a curved edge into a series of straight lines (facetets) with
+    the provided tolerance.
+
+    Args:
+        edge (cadquery.Wire): The CadQuery wire to redraw as a series of
+            straight lines (facet)
+        tolerance: faceting toleranceto use when faceting cirles and
+            splines. Defaults to 1e-3.
+
+    Returns:
+        cadquery.Wire
+    """
+
+    curve = edge._geomAdaptor()  # adapt the edge into curve
+    start = curve.FirstParameter()
+    end = curve.LastParameter()
+
+    points = GCPnts_QuasiUniformDeflection(curve, tolerance, start, end)
+    verts = (cq.Vector(points.Value(i + 1)) for i in range(points.NbPoints()))
+
+    return cq.Wire.makePolygon(verts)
+
+
+def facet_wire(
+        wire,
+        facet_splines: bool = True,
+        facet_circles: bool = True,
+        tolerance: float = 1e-3
+):
+    """Converts specified curved edge types from a wire into a series of
+    straight lines (facetets) with the provided tol (tolerance).
+
+    Args:
+        wire (cadquery.Wire): The CadQuery wire to select edge from which will
+            be redraw as a series of straight lines (facet).
+        facet_splines: If True then spline edges will be faceted. Defaults
+            to True.
+        facet_splines: If True then circle edges will be faceted.Defaults
+            to True.
+        tolerance: faceting toleranceto use when faceting cirles and
+            splines. Defaults to 1e-3.
+
+    Returns:
+        cadquery.Wire
+    """
+    edges = []
+
+    types_to_facet = []
+    if facet_splines:
+        types_to_facet.append('BSPLINE')
+    if facet_circles:
+        types_to_facet.append('CIRCLE')
+
+    if isinstance(wire, cq.occ_impl.shapes.Wire):
+        # this is for imported stp files
+        iterable_of_wires = wire.Edges()
+    else:
+        # this is for cadquery generated solids
+        iterable_of_wires = wire.val().Edges()
+
+    for edge in iterable_of_wires:
+        if edge.geomType() in types_to_facet:
+            edges.extend(_transform_curve(edge, tolerance=tolerance).Edges())
+        else:
+            edges.append(edge)
+
+    return edges
 
 
 def coefficients_of_line_from_points(
@@ -320,6 +394,266 @@ def _replace(filename: str, pattern: str, subst: str) -> None:
     move(abs_path, filename)
 
 
+def plotly_trace(
+        points: Union[List[Tuple[float, float]], List[Tuple[float, float, float]]],
+        mode: str = "markers+lines",
+        name: str = None,
+        color: Union[Tuple[float, float, float], Tuple[float, float, float, float]] = None
+) -> Union[go.Scatter, go.Scatter3d]:
+    """Creates a plotly trace representation of the points of the Shape
+    object. This method is intended for internal use by Shape.export_html.
+
+    Args:
+        points: A list of tuples containing the X, Z points of to add to
+            the trace.
+        mode: The mode to use for the Plotly.Scatter graph. Options include
+            "markers", "lines" and "markers+lines". Defaults to
+            "markers+lines"
+        name: The name to use in the graph legend
+        color
+
+    Returns:
+        plotly trace: trace object
+    """
+
+    if color is not None:
+        color_list = [i * 255 for i in color]
+
+        if len(color_list) == 3:
+            color = "rgb(" + str(color_list).strip("[]") + ")"
+        elif len(color_list) == 4:
+            color = "rgba(" + str(color_list).strip("[]") + ")"
+
+    if name is None:
+        name = "Shape not named"
+    else:
+        name = name
+
+    text_values = []
+
+    for i, point in enumerate(points):
+        text = "point number= {} <br> x={} <br> y= {}".format(
+            i, point[0], point[1])
+        if len(point) == 3:
+            text = text + "<br> z= {} <br>".format(point[2])
+
+        text_values.append(text)
+
+    if all(len(entry) == 3 for entry in points):
+        trace = go.Scatter3d(
+            x=[row[0] for row in points],
+            y=[row[1] for row in points],
+            z=[row[2] for row in points],
+            mode=mode,
+            marker={"size": 3, "color": color},
+            name=name
+        )
+
+        return trace
+
+    trace = go.Scatter(
+        x=[row[0] for row in points],
+        y=[row[1] for row in points],
+        hoverinfo="text",
+        text=text_values,
+        mode=mode,
+        marker={"size": 5, "color": color},
+        name=name,
+    )
+
+    return trace
+
+
+def extract_points_from_edges(
+    edges: Union[List[cq.Wire], cq.Wire],
+    view_plane: str = 'XZ',
+):
+    """Extracts points (coordinates) from a CadQuery Edge, optionally projects
+    the points to a plane and returns the points.
+
+    Args:
+        edges (CadQuery.Wires): The edges to extract points (coordinates from).
+        view_plane: The axis to view the points and faceted edges from. The
+            options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'.
+            Defaults to 'RZ'.
+
+    Returns:
+        List of Tuples: A list of tuples with float entries for every point
+    """
+
+    if isinstance(edges, Iterable):
+        list_of_edges = edges
+    else:
+        list_of_edges = [edges]
+
+    points = []
+
+    for edge in list_of_edges:
+        for vertex in edge.Vertices():
+            if view_plane == 'XZ':
+                points.append((vertex.X, vertex.Z))
+            elif view_plane == 'XY':
+                points.append((vertex.X, vertex.Y))
+            elif view_plane == 'YZ':
+                points.append((vertex.Y, vertex.Z))
+            elif view_plane == 'YX':
+                points.append((vertex.Y, vertex.X))
+            elif view_plane == 'ZY':
+                points.append((vertex.Z, vertex.Y))
+            elif view_plane == 'ZX':
+                points.append((vertex.Z, vertex.X))
+            elif view_plane == 'RZ':
+                xy_coord = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
+                points.append((math.sqrt(xy_coord), vertex.Z))
+            elif view_plane == 'XYZ':
+                points.append((vertex.X, vertex.Y, vertex.Z))
+            else:
+                raise ValueError('view_plane value of ', view_plane,
+                                 ' is not supported')
+    return points
+
+
+def load_stp_file(
+    filename: str,
+    scale_factor: float = 1.
+):
+    """Loads a stp file and makes the 3D solid and wires avaialbe for use.
+
+    Args:
+        filename: the filename used to save the html graph.
+        scale_factor: a scaling factor to apply to the geometry that can be
+            used to increase the size or decrease the size of the geometry.
+            Useful when converting the geometry to cm for use in neutronics
+            simulations.
+
+    Returns:
+        CadQuery.solid, CadQuery.Wires: soild and wires belonging to the object
+    """
+
+    part = importers.importStep(str(filename)).val()
+
+    scaled_part = part.scale(scale_factor)
+    solid = scaled_part
+    wire = scaled_part.Wires()
+    return solid, wire
+
+
+def export_wire_to_html(
+    wires,
+    filename,
+    view_plane='RZ',
+    facet_splines: bool = True,
+    facet_circles: bool = True,
+    tolerance: float = 1e-3,
+    title=None,
+):
+    """Creates a html graph representation of the points within the wires.
+    Edges of certain types (spines and circles) can optionally be faceted.
+    If filename provided doesn't end with .html then .html will be added.
+    Viewed from the XZ plane
+
+    Args:
+        wires (CadQuery.Wire): the wire (edge) or list of wires to plot points
+            from and to optionally facet.
+        filename: the filename used to save the html graph.
+        view_plane: The axis to view the points and faceted edges from. The
+            options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'.
+            Defaults to 'RZ'
+        facet_splines: If True then spline edges will be faceted. Defaults to
+            True.
+        facet_circles: If True then circle edges will be faceted. Defaults to
+            True.
+        tolerance: faceting toleranceto use when faceting cirles and splines.
+            Defaults to 1e-3.
+        title: the title of the plotly plot.
+
+    Returns:
+        plotly.Figure(): figure object
+    """
+
+    Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+
+    path_filename = Path(filename)
+
+    if path_filename.suffix != ".html":
+        path_filename = path_filename.with_suffix(".html")
+
+    fig = go.Figure()
+    fig.update_layout(title=title, hovermode="closest")
+
+    if view_plane == 'XYZ':
+        fig.update_layout(
+            title=title,
+            scene_aspectmode='data',
+            scene=dict(
+                xaxis_title=view_plane[0],
+                yaxis_title=view_plane[1],
+                zaxis_title=view_plane[2],
+            ),
+        )
+    else:
+
+        fig.update_layout(
+            yaxis=dict(scaleanchor="x",
+                       scaleratio=1),
+            xaxis_title=view_plane[0],
+            yaxis_title=view_plane[1]
+        )
+
+    if isinstance(wires, list):
+        list_of_wires = wires
+    else:
+        list_of_wires = [wires]
+
+    for counter, wire in enumerate(list_of_wires):
+
+        edges = facet_wire(
+            wire=wire,
+            facet_splines=facet_splines,
+            facet_circles=facet_circles,
+            tolerance=tolerance
+        )
+
+        points = paramak.utils.extract_points_from_edges(
+            edges=edges,
+            view_plane=view_plane
+        )
+
+        fig.add_trace(
+            plotly_trace(
+                points=points,
+                mode="markers+lines",
+                name='edge ' + str(counter)
+            )
+        )
+
+    for counter, wire in enumerate(list_of_wires):
+
+        if isinstance(wire, cq.occ_impl.shapes.Wire):
+            # this is for imported stp files
+            edges = wire.Edges()
+        else:
+            # this is for cadquery generated solids
+            edges = wire.val().Edges()
+
+        points = paramak.utils.extract_points_from_edges(
+            edges=edges,
+            view_plane=view_plane)
+
+        fig.add_trace(plotly_trace(
+            points=points,
+            mode="markers",
+            name='points on wire ' + str(counter)
+        )
+        )
+
+    fig.write_html(str(path_filename))
+
+    print("Exported html graph to ", path_filename)
+
+    return fig
+
+
 class FaceAreaSelector(cq.Selector):
     """A custom CadQuery selector the selects faces based on their area with a
     tolerance. The following useage example will fillet the faces of an extrude
@@ -336,20 +670,20 @@ class FaceAreaSelector(cq.Selector):
         self.area = area
         self.tolerance = tolerance
 
-    def filter(self, objectList):
+    def filter(self, object_list):
         """Loops through all the faces in the object checking if the face
         meets the custom selector requirments or not.
 
         Args:
-            objectList (cadquery): The object to filter the faces from.
+            object_list (cadquery): The object to filter the faces from.
 
         Returns:
-            objectList (cadquery): The face that match the selector area within
+            object_list (cadquery): The face that match the selector area within
                 the specified tolerance.
         """
 
         new_obj_list = []
-        for obj in objectList:
+        for obj in object_list:
             face_area = obj.Area()
 
             # Only return faces that meet the requirements
@@ -376,21 +710,21 @@ class EdgeLengthSelector(cq.Selector):
         self.length = length
         self.tolerance = tolerance
 
-    def filter(self, objectList):
+    def filter(self, object_list):
         """Loops through all the edges in the object checking if the edge
         meets the custom selector requirments or not.
 
         Args:
-            objectList (cadquery): The object to filter the edges from.
+            object_list (cadquery): The object to filter the edges from.
 
         Returns:
-            objectList (cadquery): The edge that match the selector length
+            object_list (cadquery): The edge that match the selector length
                 within the specified tolerance.
         """
 
         new_obj_list = []
         print('filleting edge#')
-        for obj in objectList:
+        for obj in object_list:
 
             edge_len = obj.Length()
 

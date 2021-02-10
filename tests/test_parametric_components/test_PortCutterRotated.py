@@ -151,7 +151,7 @@ class TestPortCutterRotated(unittest.TestCase):
         """Tests that when polar_coverage_angle is greater than 180 an error is
         raised."""
         def error():
-            shape = paramak.PortCutterRotated(
+            paramak.PortCutterRotated(
                 center_point=(1, 1),
                 polar_coverage_angle=181,
                 polar_placement_angle=0,

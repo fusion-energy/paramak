@@ -140,20 +140,6 @@ class TestShape(unittest.TestCase):
             test_shape.create_limits()
         self.assertRaises(ValueError, limits)
 
-    def test_export_2d_image(self):
-        """Creates a Shape object and checks that a png file of the object with
-        the correct suffix can be exported using the export_2d_image method."""
-
-        test_shape = paramak.Shape()
-        test_shape.points = [(0, 0), (0, 20), (20, 20), (20, 0)]
-        os.system("rm filename.png")
-        test_shape.export_2d_image("filename")
-        assert Path("filename.png").exists() is True
-        os.system("rm filename.png")
-        test_shape.export_2d_image("filename.png")
-        assert Path("filename.png").exists() is True
-        os.system("rm filename.png")
-
     def test_initial_solid_construction(self):
         """Creates a shape and checks that a cadquery solid with a unique hash
         value is created when .solid is called."""
@@ -257,10 +243,36 @@ class TestShape(unittest.TestCase):
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
 
+    def test_export_html_view_planes(self):
+        """Checks a plotly figure of the Shape is exported by the export_html
+        method with a range of different view_plane options."""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=180
+        )
+
+        for view_plane in ['XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ', 'XYZ']:
+            os.system("rm *.html")
+            test_shape.export_html(
+                filename='filename',
+                view_plane=view_plane
+            )
+            assert Path("filename.html").exists() is True
+
     def test_export_html_with_points_None(self):
         """Checks that an error is raised when points is None and export_html
         """
         test_shape = paramak.Shape()
+
+        def export():
+            test_shape.export_html("out.html")
+        self.assertRaises(ValueError, export)
+
+    def test_export_html_with_wire_None(self):
+        """Checks that an error is raised when wire is None and export_html
+        """
+        test_shape = paramak.Shape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape.wire = None
 
         def export():
             test_shape.export_html("out.html")
@@ -403,17 +415,6 @@ class TestShape(unittest.TestCase):
         assert isinstance(test_shape.areas[3], float)
         assert len(test_shape.areas) == 4
         assert sum(test_shape.areas) == pytest.approx(test_shape.area)
-
-    def test_trace(self):
-        """Test trace method is populated"""
-
-        test_shape = paramak.PoloidalFieldCoil(
-            center_point=(100, 100),
-            height=50,
-            width=50,
-            name="coucou"
-        )
-        assert test_shape._trace() is not None
 
     def test_create_patch_error(self):
         """Checks _create_patch raises a ValueError when points is None."""

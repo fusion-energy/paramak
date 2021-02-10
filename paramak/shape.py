@@ -2,12 +2,12 @@
 import json
 import numbers
 import warnings
-from collections import Iterable
+from collections.abc import Iterable
 from pathlib import Path
+from typing import List, Tuple, Optional, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 from cadquery import exporters
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
@@ -15,14 +15,14 @@ from matplotlib.patches import Polygon
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
-from paramak.utils import (cut_solid, get_hash, intersect_solid, union_solid,
-                           _replace)
+from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
+                           intersect_solid, plotly_trace, union_solid)
 
 
 class Shape:
     """A shape object that represents a 3d volume and can have materials and
     neutronics tallies assigned. Shape objects are not intended to be used
-    directly bly the user but provide basic functionality for user-facing
+    directly by the user but provide basic functionality for user-facing
     classes that inherit from Shape.
 
     Args:
@@ -33,9 +33,9 @@ class Shape:
             Defaults to "mixed".
         name (str, optional): the name of the shape, used in the graph legend
             by export_html. Defaults to None.
-        color ((float, float, float [, float]), optional): The color to use when exporting as html
-            graphs or png images. Can be in RGB or RGBA format with floats
-            between 0 and 1. Defaults to (0.5, 0.5, 0.5).
+        color ((float, float, float [, float]), optional): The color to use
+            when exporting as html graphs or png images. Can be in RGB or RGBA
+            format with floats between 0 and 1. Defaults to (0.5, 0.5, 0.5).
         material_tag (str, optional): the material name to use when exporting
             the neutronics description. Defaults to None.
         stp_filename (str, optional): the filename used when saving stp files.
@@ -74,18 +74,19 @@ class Shape:
     def __init__(
         self,
         points: list = None,
-        connection_type="mixed",
-        name=None,
-        color=(0.5, 0.5, 0.5),
-        material_tag: str = None,
-        stp_filename: str = None,
-        stl_filename: str = None,
-        azimuth_placement_angle=0.0,
-        workplane: str = "XZ",
-        rotation_axis=None,
-        tet_mesh: str = None,
-        surface_reflectivity: bool = False,
+        connection_type: Optional[str] = "mixed",
+        name: Optional[str] = None,
+        color: Optional[Tuple[float, float, float]] = (0.5, 0.5, 0.5),
+        material_tag: Optional[str] = None,
+        stp_filename: Optional[str] = None,
+        stl_filename: Optional[str] = None,
+        azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
+        workplane: Optional[str] = "XZ",
+        rotation_axis: Optional[str] = None,
+        tet_mesh: Optional[str] = None,
+        surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
+        # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
         union=None,
@@ -362,7 +363,7 @@ class Shape:
             if len(value) > 27:
                 msg = "Shape.material_tag > 28 characters." + \
                       "Use with DAGMC will be affected." + str(value)
-                warnings.warn(msg, UserWarning)
+                warnings.warn(msg)
             self._material_tag = value
         else:
             raise ValueError("Shape.material_tag must be a string", value)
@@ -415,6 +416,9 @@ class Shape:
             if not isinstance(values, list):
                 raise ValueError("points must be a list")
 
+            if self.connection_type != "mixed":
+                values = [(*p, self.connection_type) for p in values]
+
             for value in values:
                 if type(value) not in [list, tuple]:
                     msg = "individual points must be a list or a tuple." + \
@@ -463,8 +467,6 @@ class Shape:
                     raise ValueError(msg)
 
                 values.append(values[0])
-            if self.connection_type != "mixed":
-                values = [(*p, self.connection_type) for p in values]
 
         self._points = values
 
@@ -546,11 +548,17 @@ class Shape:
             raise ValueError(msg)
         self._azimuth_placement_angle = value
 
-    def create_solid(self):
+    def create_solid(self) -> cq.Workplane:
         solid = None
         if self.points is not None:
             # obtains the first two values of the points list
             XZ_points = [(p[0], p[1]) for p in self.points]
+
+            for point in self.points:
+                if len(point) != 3:
+                    msg = "The points list should contain two coordinates and \
+                        a connetion type"
+                    raise ValueError(msg)
 
             # obtains the last values of the points list
             connections = [p[2] for p in self.points[:-1]]
@@ -648,7 +656,9 @@ class Shape:
 
         return solid
 
-    def rotate_solid(self, solid):
+    def rotate_solid(
+            self,
+            solid: Optional[cq.Workplane]) -> cq.Workplane:
         # Checks if the azimuth_placement_angle is a list of angles
         if isinstance(self.azimuth_placement_angle, Iterable):
             azimuth_placement_angles = self.azimuth_placement_angle
@@ -669,6 +679,8 @@ class Shape:
         return solid
 
     def get_rotation_axis(self):
+        # TODO add return type hinting -> Tuple[List[Tuple[int, int, int],
+        # Tuple[int, int, int]], str]
         """Returns the rotation axis for a given shape. If self.rotation_axis
         is None, the rotation axis will be computed from self.workplane (or
         from self.path_workplane if applicable). If self.rotation_axis is an
@@ -706,7 +718,7 @@ class Shape:
                 workplane = self.workplane
             return rotation_axis[workplane[1]], workplane[1]
 
-    def create_limits(self):
+    def create_limits(self) -> Tuple[float, float, float, float]:
         """Finds the x,y,z limits (min and max) of the points that make up the
         face of the shape. Note the Shape may extend beyond this boundary if
         splines are used to connect points.
@@ -732,13 +744,18 @@ class Shape:
 
         return self.x_min, self.x_max, self.z_min, self.z_max
 
-    def export_stl(self, filename: str, tolerance: float = 0.001) -> str:
+    def export_stl(
+            self,
+            filename: str,
+            tolerance: Optional[float] = 0.001,
+            angular_tolerance: Optional[float] = 0.1) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
             doesn't end with .stl it will be added
 
         Args:
-            filename (str): the filename of the stl file to be exported
-            tolerance (float): the precision of the faceting
+            filename: the filename of the stl file to be exported
+            tolerance: the deflection tolerance of the faceting
+            angular_tolerance: the angular tolerance, in radians
         """
 
         path_filename = Path(filename)
@@ -748,17 +765,19 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as out_file:
-            exporters.exportShape(self.solid, "STL", out_file, tolerance)
+        exporters.export(self.solid, str(path_filename), exportType='STL',
+                         tolerance=tolerance,
+                         angularTolerance=angular_tolerance)
+
         print("Saved file as ", path_filename)
 
         return str(path_filename)
 
     def export_stp(
             self,
-            filename=None,
-            units='mm',
-            mode: str = 'solid') -> str:
+            filename: Optional[str] = None,
+            units: Optional[str] = 'mm',
+            mode: Optional[str] = 'solid') -> str:
         """Exports an stp file for the Shape.solid. If the filename provided
             doesn't end with .stp or .step then .stp will be added. If a
             filename is not provided and the shape's stp_filename property is
@@ -785,14 +804,13 @@ class Shape:
         elif self.stp_filename is not None:
             path_filename = Path(self.stp_filename)
 
-        with open(path_filename, "w") as out_file:
-            if mode == 'solid':
-                exporters.exportShape(self.solid, "STEP", out_file)
-            elif mode == 'wire':
-                exporters.exportShape(self.wire, "STEP", out_file)
-            else:
-                raise ValueError("The mode argument for export_stp \
-                    only accepts 'solid' or 'wire'", self)
+        if mode == 'solid':
+            exporters.export(self.solid, str(path_filename), exportType='STEP')
+        elif mode == 'wire':
+            exporters.export(self.wire, str(path_filename), exportType='STEP')
+        else:
+            raise ValueError("The mode argument for export_stp \
+                only accepts 'solid' or 'wire'", self)
 
         if units == 'cm':
             _replace(
@@ -834,12 +852,50 @@ class Shape:
 
         return str(path_filename)
 
-    def export_svg(self, filename: str) -> str:
-        """Exports an svg file for the Shape.solid. If the provided filename
+    def export_svg(
+            self,
+            filename: Optional[str] = 'shape.svg',
+            projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+            width: Optional[float] = 800,
+            height: Optional[float] = 800,
+            marginLeft: Optional[float] = 100,
+            marginTop: Optional[float] = 100,
+            strokeWidth: Optional[float] = None,
+            strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
+            hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
+            showHidden: Optional[bool] = True,
+            showAxes: Optional[bool] = False) -> str:
+        """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
         Args:
-            filename (str): the filename of the svg file to be exported
+            filename: the filename of the svg file to be exported. Defaults to
+                "reactor.svg".
+            projectionDir: The direction vector to view the geometry from
+                (x, y, z). Defaults to (-1.75, 1.1, 5)
+            width: the width of the svg image produced in pixels. Defaults to
+                1000
+            height: the height of the svg image produced in pixels. Defaults to
+                800
+            marginLeft: the number of pixels between the left edge of the image
+                and the start of the geometry.
+            marginTop: the number of pixels between the top edge of the image
+                and the start of the geometry.
+            strokeWidth: the width of the lines used to draw the geometry.
+                Defaults to None which automatically selects an suitable width.
+            strokeColor: the color of the lines used to draw the geometry in
+                RGB format with each value between 0 and 255. Defaults to
+                (0, 0, 0) which is black.
+            hiddenColor: the color of the lines used to draw the geometry in
+                RGB format with each value between 0 and 255. Defaults to
+               (100, 100, 100) which is light grey.
+            showHidden: If the edges obscured by geometry should be included in
+                the diagram. Defaults to True.
+            showAxes: If the x, y, z axis should be included in the image.
+                Defaults to False.
+
+        Returns:
+            str: the svg filename created
         """
 
         path_filename = Path(filename)
@@ -849,121 +905,112 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        with open(path_filename, "w") as out_file:
-            exporters.exportShape(self.solid, "SVG", out_file)
+        opt = {
+            "width": width,
+            "height": height,
+            "marginLeft": marginLeft,
+            "marginTop": marginTop,
+            "showAxes": showAxes,
+            "projectionDir": projectionDir,
+            "strokeColor": strokeColor,
+            "hiddenColor": hiddenColor,
+            "showHidden": showHidden
+        }
+
+        if strokeWidth is not None:
+            opt["strokeWidth"] = strokeWidth
+
+        exporters.export(self.solid, str(path_filename), exportType='SVG',
+                         opt=opt)
+
         print("Saved file as ", path_filename)
 
         return str(path_filename)
 
-    def export_html(self, filename: str):
+    def export_html(
+            self,
+            filename: Optional[str] = "shape.html",
+            facet_splines: Optional[bool] = True,
+            facet_circles: Optional[bool] = True,
+            tolerance: Optional[float] = 1e-3,
+            view_plane: Optional[str] = None,
+    ):
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
         Shapes are also labelled by their .name. If filename provided doesn't
         end with .html then .html will be added.
 
         Args:
-            filename (str): the filename used to save the html graph
+            filename: the filename used to save the html graph. Defaults to
+                shape.html
+            facet_splines: If True then spline edges will be faceted. Defaults
+                to True.
+            facet_circles: If True then circle edges will be faceted. Defaults
+                to True.
+            tolerance: faceting toleranceto use when faceting cirles and
+                splines. Defaults to 1e-3.
+            view_plane: The plane to project Defaults to the workplane of the
+                paramak.Shape
 
         Returns:
             plotly.Figure(): figure object
         """
 
-        if self.__class__.__name__ == "SweepCircleShape":
-            msg = 'WARNING: export_html will plot path_points for ' + \
-                'the SweepCircleShape class'
-            print(msg)
+        # if view plane is not set then use the shape workplane
+        if view_plane is None:
+            view_plane = self.workplane
 
         if self.points is None:
-            raise ValueError("No points defined for", self)
+            if hasattr(self, 'path_points') and self.path_points is None:
+                raise ValueError("No points or point_path defined for", self)
 
-        Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+        if self.wire is None:
+            raise ValueError("No wire defined for", self)
 
-        path_filename = Path(filename)
+        if not isinstance(self.wire, list):
+            list_of_wires = [self.wire]
+        else:
+            list_of_wires = self.wire
 
-        if path_filename.suffix != ".html":
-            path_filename = path_filename.with_suffix(".html")
-
-        fig = go.Figure()
-        fig.update_layout(
-            {"title": "coordinates of components", "hovermode": "closest"}
+        fig = paramak.utils.export_wire_to_html(
+            wires=list_of_wires,
+            filename=filename,
+            view_plane=view_plane,
+            facet_splines=facet_splines,
+            facet_circles=facet_circles,
+            tolerance=tolerance,
+            title="coordinates of " + self.__class__.__name__ +
+            " shape, viewed from the " + view_plane + " plane",
         )
 
-        fig.add_trace(self._trace())
+        if self.points is not None:
+            fig.add_trace(
+                plotly_trace(
+                    points=self.points,
+                    mode="markers",
+                    name='Shape.points'
+                )
+            )
 
-        fig.write_html(str(path_filename))
-
-        print("Exported html graph to ", path_filename)
+        # sweep shapes have .path_points but not .points attribute
+        if hasattr(self, 'path_points'):
+            fig.add_trace(
+                plotly_trace(
+                    points=self.path_points,
+                    mode="markers",
+                    name='Shape.path_points'
+                )
+            )
 
         return fig
 
-    def _trace(self):
-        """Creates a plotly trace representation of the points of the Shape
-        object. This method is intended for internal use by Shape.export_html.
-
-        Returns:
-            plotly trace: trace object
-        """
-
-        color_list = [i * 255 for i in self.color]
-
-        if len(color_list) == 3:
-            color = "rgb(" + str(color_list).strip("[]") + ")"
-        elif len(color_list) == 4:
-            color = "rgba(" + str(color_list).strip("[]") + ")"
-
-        if self.name is None:
-            name = "Shape not named"
-        else:
-            name = self.name
-
-        text_values = []
-
-        for i, point in enumerate(self.points[:-1]):
-            if len(point) == 3:
-                text_values.append(
-                    "point number="
-                    + str(i)
-                    + "<br>"
-                    + "connection to next point="
-                    + str(point[2])
-                    + "<br>"
-                    + "x="
-                    + str(point[0])
-                    + "<br>"
-                    + "z="
-                    + str(point[1])
-                    + "<br>"
-                )
-            else:
-                text_values.append(
-                    "point number="
-                    + str(i)
-                    + "<br>"
-                    + "x="
-                    + str(point[0])
-                    + "<br>"
-                    + "z="
-                    + str(point[1])
-                    + "<br>"
-                )
-
-        trace = go.Scatter(
-            {
-                "x": [row[0] for row in self.points],
-                "y": [row[1] for row in self.points],
-                "hoverinfo": "text",
-                "text": text_values,
-                "mode": "markers+lines",
-                "marker": {"size": 5, "color": color},
-                "name": name,
-            }
-        )
-
-        return trace
-
     def export_2d_image(
-            self, filename: str, xmin: float = 0., xmax: float = 900.,
-            ymin: float = -600., ymax: float = 600.):
+            self,
+            filename: Optional[str] = 'shape.png',
+            xmin: Optional[float] = 0.,
+            xmax: Optional[float] = 900.,
+            ymin: Optional[float] = -600.,
+            ymax: Optional[float] = 600.):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
@@ -1014,12 +1061,18 @@ class Shape:
             raise ValueError("No points defined for", self)
 
         patches = []
-        xylist = []
 
-        for point in self.points:
-            xylist.append([point[0], point[1]])
+        edges = facet_wire(
+            wire=self.wire,
+            facet_splines=True,
+            facet_circles=True)
 
-        polygon = Polygon(xylist, closed=True)
+        fpoints = []
+        for edge in edges:
+            for vertice in edge.Vertices():
+                fpoints.append((vertice.X, vertice.Z))
+
+        polygon = Polygon(fpoints, closed=True)
         patches.append(polygon)
 
         patch = PatchCollection(patches)
@@ -1064,7 +1117,7 @@ class Shape:
 
         return neutronics_description
 
-    def perform_boolean_operations(self, solid, **kwargs):
+    def perform_boolean_operations(self, solid: cq.Workplane, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""
 
@@ -1089,7 +1142,9 @@ class Shape:
 
         return solid
 
-    def make_graveyard(self, graveyard_offset: int = 100):
+    def make_graveyard(
+            self,
+            graveyard_offset: Optional[int] = 100) -> cq.Workplane:
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -1123,10 +1178,10 @@ class Shape:
 
     def export_h5m(
             self,
-            filename: str = 'dagmc.h5m',
-            skip_graveyard: bool = False,
-            tolerance: float = 0.001,
-            graveyard_offset: float = 100) -> str:
+            filename: Optional[str] = 'dagmc.h5m',
+            skip_graveyard: Optional[bool] = False,
+            tolerance: Optional[float] = 0.001,
+            graveyard_offset: Optional[float] = 100) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -1193,8 +1248,8 @@ class Shape:
 
     def export_graveyard(
             self,
-            graveyard_offset: float = 100,
-            filename: str = "Graveyard.stp") -> str:
+            graveyard_offset: Optional[float] = 100,
+            filename: Optional[str] = "Graveyard.stp") -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.

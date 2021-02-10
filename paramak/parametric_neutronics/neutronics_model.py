@@ -11,6 +11,7 @@ from paramak import get_neutronics_results_from_statepoint_file
 
 try:
     import openmc
+    from openmc.data import REACTION_NAME, REACTION_MT
 except ImportError:
     warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
             method not available', UserWarning)
@@ -48,8 +49,10 @@ class NeutronicsModel():
         geometry (paramak.Shape, paramak.Rector): The geometry to convert to a
             neutronics model. e.g. geometry=paramak.RotateMixedShape() or
             reactor=paramak.BallReactor() .
-        cell_tallies (list of strings): the cell based tallies to calculate,
-            options include TBR, heating and flux
+        cell_tallies (list of string or int): the cell based tallies to calculate,
+            options include TBR, heating, flux, MT numbers and OpenMC standard
+            scores such as (n,Xa) which is helium production are also supported
+            https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
         materials (dict): Where the dictionary keys are the material tag
             and the dictionary values are either a string, openmc.Material,
             neutronics-material-maker.Material or
@@ -57,9 +60,13 @@ class NeutronicsModel():
             geometry object must be accounted for. Material tags required
             for a Reactor or Shape can be obtained with .material_tags.
         mesh_tally_2d (list of str): the 2D mesh based tallies to calculate,
-            options include tritium_production, heating and flux.
+            options include heating and flux , MT numbers and OpenMC standard
+            scores such as (n,Xa) which is helium production are also supported
+            https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
         mesh_tally_3d (list of str): the 3D mesh based tallies to calculate,
-            options include tritium_production, heating and flux.
+            options include heating and flux , MT numbers and OpenMC standard
+            scores such as (n,Xa) which is helium production are also supported
+            https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
         fusion_power (float): the power in watts emitted by the fusion
             reaction recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
@@ -162,7 +169,8 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.cell_tallies should be a\
                     list")
-            output_options = ['TBR', 'heating', 'flux', 'spectra', 'dose']
+            output_options = ['TBR', 'heating', 'flux', 'spectra'] + \
+                list(REACTION_MT.keys()) + list(REACTION_NAME.keys())
             for entry in value:
                 if entry not in output_options:
                     raise ValueError(
@@ -183,8 +191,8 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.mesh_tally_2d should be a\
                     list")
-            output_options = ['tritium_production', 'heating', 'flux',
-                              'fast flux', 'dose']
+            output_options = ['heating', 'flux'] + \
+                list(REACTION_MT.keys()) + list(REACTION_NAME.keys())
             for entry in value:
                 if entry not in output_options:
                     raise ValueError(
@@ -205,8 +213,8 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.mesh_tally_3d should be a\
                     list")
-            output_options = ['tritium_production', 'heating', 'flux',
-                              'fast flux', 'dose']
+            output_options = ['heating', 'flux'] + \
+                list(REACTION_MT.keys()) + list(REACTION_NAME.keys())
             for entry in value:
                 if entry not in output_options:
                     raise ValueError(
@@ -444,13 +452,8 @@ class NeutronicsModel():
             ]
 
             for standard_tally in self.mesh_tally_3d:
-                if standard_tally == 'tritium_production':
-                    score = '(n,Xt)'  # where X is a wild card
-                    prefix = 'tritium_production'
-                else:
-                    score = standard_tally
-                    prefix = standard_tally
-
+                score = standard_tally
+                prefix = standard_tally
                 mesh_filter = openmc.MeshFilter(mesh_xyz)
                 tally = openmc.Tally(name=prefix + '_on_3D_mesh')
                 tally.filters = [mesh_filter]
@@ -519,12 +522,8 @@ class NeutronicsModel():
             ]
 
             for standard_tally in self.mesh_tally_2d:
-                if standard_tally == 'tritium_production':
-                    score = '(n,Xt)'  # where X is a wild card
-                    prefix = 'tritium_production'
-                else:
-                    score = standard_tally
-                    prefix = standard_tally
+                score = standard_tally
+                prefix = standard_tally
 
                 for mesh_filter, plane in zip(
                         [mesh_xz, mesh_xy, mesh_yz], ['xz', 'xy', 'yz']):
@@ -592,7 +591,8 @@ class NeutronicsModel():
                 self.tallies.append(tally)
 
     def simulate(self, verbose: bool = True, method: str = None,
-                 cell_tally_results_filename: str = 'results.json'):
+                 cell_tally_results_filename: str = 'results.json',
+                 threads: int = None):
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
 
@@ -603,6 +603,9 @@ class NeutronicsModel():
             method (str): The method to use when making the imprinted and
                 merged geometry. Options are "ppp", "trelis", "pymoab".
                 Defaults to pymoab.
+            threads (int, optional): Sets the number of OpenMP threads
+                used for the simulation. None takes all available threads by
+                default. Defaults to None.
 
         Returns:
             dict: the simulation output filename
@@ -621,7 +624,9 @@ class NeutronicsModel():
         os.system('rm settings.xml')
         os.system('rm tallies.xml')
 
-        self.statepoint_filename = self.model.run(output=verbose)
+        self.statepoint_filename = self.model.run(
+            output=verbose, threads=threads
+        )
         self.results = get_neutronics_results_from_statepoint_file(
             statepoint_filename=self.statepoint_filename,
             fusion_power=self.fusion_power

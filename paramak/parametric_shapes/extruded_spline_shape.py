@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 from paramak import ExtrudeMixedShape
 
 
@@ -7,17 +9,17 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
     connections.
 
     Args:
-        distance (float): the extrusion distance to use (cm units if used for
+        distance: the extrusion distance to use (cm units if used for
             neutronics).
-        stp_filename (str, optional): Defaults to "ExtrudeSplineShape.stp".
-        stl_filename (str, optional): Defaults to "ExtrudeSplineShape.stl".
+        stp_filename: Defaults to "ExtrudeSplineShape.stp".
+        stl_filename: Defaults to "ExtrudeSplineShape.stl".
     """
 
     def __init__(
         self,
-        distance,
-        stp_filename="ExtrudeSplineShape.stp",
-        stl_filename="ExtrudeSplineShape.stl",
+        distance: float,
+        stp_filename: Optional[str] = "ExtrudeSplineShape.stp",
+        stl_filename: Optional[str] = "ExtrudeSplineShape.stl",
         **kwargs
     ):
 

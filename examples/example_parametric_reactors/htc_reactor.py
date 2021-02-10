@@ -199,7 +199,7 @@ def main(rotation_angle=180):
         stp_filename='vacvessel.stp'
     )
 
-    inner_vessel = paramak.RotateStraightShape(
+    inner_vessel = paramak.RotateMixedShape(
         points=[
             (269.7459584295612, -46.54377880184336, 'straight'),
             (231.87066974595842, -46.5437788018433, 'spline'),
@@ -258,6 +258,7 @@ def main(rotation_angle=180):
 
     sparc.export_stp()
     sparc.export_svg('htc_reactor.svg')
+    sparc.export_html('htc_reactor.html')
 
 
 if __name__ == "__main__":

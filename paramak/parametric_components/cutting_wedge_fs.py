@@ -1,5 +1,5 @@
 
-from collections import Iterable
+from collections.abc import Iterable
 from operator import itemgetter
 
 from paramak import CuttingWedge

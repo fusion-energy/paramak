@@ -21,6 +21,11 @@ jobs:
             pytest tests/test_neutronics_utils.py -v --cov=paramak --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
+          name: run neutronics_example tests
+          command: 
+            pytest tests/test_example_neutronics_simulations.py -v --cov=paramak --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+
+      - run:
           name: run utils tests
           command: 
             pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
