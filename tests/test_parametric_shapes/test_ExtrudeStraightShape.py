@@ -142,8 +142,8 @@ class TestExtrudeStraightShape(unittest.TestCase):
         """Checks that all the workplanes produce an html file when using the
         export_html method and that the axis have the correct labels"""
 
+        os.system("rm *.html")
         for workplane in ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]:
-            os.system("rm " + workplane + ".html")
             self.test_shape.workplane = workplane
             fig = self.test_shape.export_html(workplane + ".html")
             assert Path(workplane + ".html").exists() is True
