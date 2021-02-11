@@ -33,7 +33,8 @@ class TestUtilityFunctions(unittest.TestCase):
             assert isinstance(point[0], float)
             assert isinstance(point[1], float)
 
-        points_single_edge = extract_points_from_edges(edges=edges[0], view_plane='YZ')
+        points_single_edge = extract_points_from_edges(
+            edges=edges[0], view_plane='YZ')
 
         assert len(points) > len(points_single_edge)
         for point in points_single_edge:
@@ -41,7 +42,8 @@ class TestUtilityFunctions(unittest.TestCase):
             assert isinstance(point[0], float)
             assert isinstance(point[1], float)
 
-        points_single_edge = extract_points_from_edges(edges=edges[0], view_plane='XYZ')
+        points_single_edge = extract_points_from_edges(
+            edges=edges[0], view_plane='XYZ')
 
         assert len(points) > len(points_single_edge)
         for point in points_single_edge:
