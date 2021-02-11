@@ -44,8 +44,8 @@ def make_model_and_simulate():
         elongation=2,
         triangularity=0.55,
         major_radius=2.5,  # note the source takes m arguments
-        minor_radius=1., # note the source takes m arguments
-        pedestal_radius=0.8 * 100, # note the source takes m arguments
+        minor_radius=1.,  # note the source takes m arguments
+        pedestal_radius=0.8 * 100,  # note the source takes m arguments
         plasma_id=1,
         shafranov_shift=0.44789,
         ion_temperature_beta=6
@@ -69,13 +69,14 @@ def make_model_and_simulate():
             'blanket_rear_wall_mat': 'eurofer'},
     )
 
-    # exports the geometry and source in 2d (RZ) viewplane where R stands for radius
+    # exports the geometry and source in 2d (RZ) viewplane where R stands for
+    # radius
     neutronics_model.export_html(
         filename='2d_source.html',
         view_plane='RZ'
     )
 
-    # exports the geometry and source in 3d (XYZ) viewplane 
+    # exports the geometry and source in 3d (XYZ) viewplane
     neutronics_model.export_html(
         filename='3d_source.html',
         view_plane='XYZ',

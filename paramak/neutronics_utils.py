@@ -15,6 +15,7 @@ except ImportError:
     warnings.warn('OpenMC not found, create_inital_particles \
             method not available', UserWarning)
 
+
 def define_moab_core_and_tags():
     """Creates a MOAB Core instance which can be built up by adding sets of
     triangles to the instance
@@ -374,7 +375,7 @@ def write_3d_mesh_tally_to_vtk(
 
 def create_inital_particles(source, number_of_source_particles=2000):
     """Accepts an openmc source and creates an inital_source.h5 that can be
-    used to find intial xyz, direction and energy of the partice source 
+    used to find intial xyz, direction and energy of the partice source
     """
 
     # MATERIALS
@@ -390,12 +391,12 @@ def create_inital_particles(source, number_of_source_particles=2000):
     universe = openmc.Universe(cells=[cell])
     geom = openmc.Geometry(universe)
 
-
     # SIMULATION SETTINGS
-    
+
     # Instantiate a Settings object
     sett = openmc.Settings()
-    sett.run_mode = "eigenvalue" # this will fail but it will write the inital_source.h5 file first
+    # this will fail but it will write the inital_source.h5 file first
+    sett.run_mode = "eigenvalue"
     sett.particles = number_of_source_particles
     sett.batches = 1
     sett.inactive = 0
@@ -415,20 +416,22 @@ def create_inital_particles(source, number_of_source_particles=2000):
     elem.text = "true"
     tree.write("settings.xml")
 
-    # This will crash hence the try except loop, but it writes the inital_source.h5
+    # This will crash hence the try except loop, but it writes the
+    # inital_source.h5
     try:
         openmc.run(output=False)
-    except:
+    except BaseException:
         pass
 
     return "initial_source.h5"
 
+
 def extract_points_from_initial_source(
-    input_filename='initial_source.h5',
-    view_plane='RZ'):
+        input_filename='initial_source.h5',
+        view_plane='RZ'):
     """makes a plot of the inital creation locations of the particle source"""
 
-    f = h5py.File(input_filename,'r')
+    f = h5py.File(input_filename, 'r')
     dset = f['source_bank']
 
     points = []
@@ -447,11 +450,12 @@ def extract_points_from_initial_source(
         elif view_plane == 'ZX':
             points.append((particle[0][2], particle[0][0]))
         elif view_plane == 'RZ':
-            xy_coord = math.pow(particle[0][0], 2) + math.pow(particle[0][1], 2)
+            xy_coord = math.pow(particle[0][0], 2) + \
+                math.pow(particle[0][1], 2)
             points.append((math.sqrt(xy_coord), particle[0][2]))
         elif view_plane == 'XYZ':
             points.append((particle[0][0], particle[0][1], particle[0][2]))
         else:
             raise ValueError('view_plane value of ', view_plane,
-                                ' is not supported')
+                             ' is not supported')
     return points
