@@ -40,7 +40,7 @@ produced a [report](https://github.com/ukaea/paramak/files/5704872/PULLREQUEST.P
 ## Citing
 
 If you use the Paramak in your research, please consider giving proper
-attribution by citing the our [Publication](https://f1000research.com/articles/10-27/v1):
+attribution by citing our [Publication](https://f1000research.com/articles/10-27/v1):
 
 - J. Shimwell, J. Billingsley and R. Delaporte-Mathurin et al. The Paramak: 
   Automated Parametric Geometry Construction for Fusion Reactor Designs.
