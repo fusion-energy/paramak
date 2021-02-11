@@ -5,9 +5,11 @@ import pathlib
 import shutil
 import warnings
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from paramak import get_neutronics_results_from_statepoint_file
+from paramak.neutronics_utils import create_inital_particles, extract_points_from_initial_source
+from paramak.utils import plotly_trace
 
 try:
     import openmc
@@ -636,3 +638,69 @@ class NeutronicsModel():
             json.dump(self.results, outfile, indent=4, sort_keys=True)
 
         return self.statepoint_filename
+
+    def export_html(
+            self,
+            filename: Optional[str] = "neutronics_model.html",
+            facet_splines: Optional[bool] = True,
+            facet_circles: Optional[bool] = True,
+            tolerance: Optional[float] = 1.,
+            view_plane: Optional[str] = 'RZ',
+            number_of_source_particles: Optional[int] = 1000):
+        """Creates a html graph representation of the points for the Shape
+        objects that make up the reactor and optionally the source. Shapes
+        are colored by their .color property. Shapes are also labelled by their
+        .name. If filename provided doesn't end with .html then .html will be
+        added.
+
+        Args:
+            filename: the filename used to save the html graph. Defaults to
+                neutronics_model.html
+            facet_splines: If True then spline edges will be faceted. Defaults
+                to True.
+            facet_circles: If True then circle edges will be faceted. Defaults
+                to True.
+            tolerance: faceting toleranceto use when faceting cirles and
+                splines. Defaults to 1e-3.
+            view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ', 
+                'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'. Defaults to 'RZ'. Defaults to
+                'RZ'.
+            number_of_source_particles
+        Returns:
+            plotly.Figure(): figure object
+        """
+
+        fig = self.geometry.export_html(
+            filename=None,
+            facet_splines=facet_splines,
+            facet_circles=facet_circles,
+            tolerance=tolerance,
+            view_plane=view_plane,
+        )
+
+        if number_of_source_particles != 0:
+            source_filename = create_inital_particles(self.source, number_of_source_particles)
+            points = extract_points_from_initial_source(source_filename, view_plane)
+
+            fig.add_trace(
+                            plotly_trace(
+                                points=points,
+                                mode="markers",
+                                name='source'
+                            )
+                        )
+
+        if filename is not None:
+
+            Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+
+            path_filename = Path(filename)
+
+            if path_filename.suffix != ".html":
+                path_filename = path_filename.with_suffix(".html")
+
+            fig.write_html(str(path_filename))
+
+            print("Exported html graph to ", path_filename)
+        
+        return fig
