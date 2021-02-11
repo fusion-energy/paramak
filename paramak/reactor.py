@@ -656,42 +656,41 @@ class Reactor:
     def export_html(
             self,
             filename: Optional[str] = "reactor.html",
+            facet_splines: Optional[bool] = True,
+            facet_circles: Optional[bool] = True,
+            tolerance: Optional[float] = 1.,
             view_plane: Optional[str] = 'RZ'):
         """Creates a html graph representation of the points for the Shape
         objects that make up the reactor. Shapes are colored by their .color
         property. Shapes are also labelled by their .name. If filename provided
-        doesn't end with .html then .html will be added. Viewed from the XZ
-        plane
+        doesn't end with .html then .html will be added.
 
         Args:
             filename: the filename used to save the html graph. Defaults to
                 reactor.html
-            view_plane: The axis to view the points and faceted edges from. The
-                options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ'. Defaults
-                to 'RZ'.
+            facet_splines: If True then spline edges will be faceted. Defaults
+                to True.
+            facet_circles: If True then circle edges will be faceted. Defaults
+                to True.
+            tolerance: faceting toleranceto use when faceting cirles and
+                splines. Defaults to 1e-3.
+            view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ', 
+                'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'. Defaults to 'RZ'. Defaults to
+                'RZ'.
         Returns:
             plotly.Figure(): figure object
         """
 
-        # accesses the Shape wires for each Shape and builds up a list of
-        # traces
-        all_wires = []
-        for entry in self.shapes_and_components:
-            if not isinstance(entry.wire, list):
-                list_of_wires = [entry.wire]
-            else:
-                list_of_wires = entry.wire
-            all_wires = all_wires + list_of_wires
-
         fig = paramak.utils.export_wire_to_html(
-            wires=all_wires,
+            wires=self.solid.Edges(),
             filename=filename,
             view_plane=view_plane,
-            facet_splines=True,
-            facet_circles=True,
-            tolerance=1e-3,
+            facet_splines=facet_splines,
+            facet_circles=facet_circles,
+            tolerance=tolerance,
             title="coordinates of the " + self.__class__.__name__ +
             " reactor, viewed from the " + view_plane + " plane",
+            mode="lines",
         )
 
         return fig
