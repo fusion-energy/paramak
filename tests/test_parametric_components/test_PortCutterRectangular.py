@@ -71,4 +71,4 @@ class TestPortCutterRectangular(unittest.TestCase):
         self.test_shape.workplane = "XZ"
         cutting_shape.workplane = "YZ"
 
-        assert self.test_shape.volume == pytest.approx(20 * 40 * 300)
+        assert self.test_shape.volume == pytest.approx(20 * 40 * 300 * 0.5)
