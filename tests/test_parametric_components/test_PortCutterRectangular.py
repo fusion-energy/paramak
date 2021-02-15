@@ -84,3 +84,4 @@ class TestPortCutterRectangular(unittest.TestCase):
         self.test_shape.workplane = "ZX"
         assert self.test_shape.volume < test_volume
         self.test_shape.workplane = "YX"
+        assert self.test_shape.volume < test_volume
