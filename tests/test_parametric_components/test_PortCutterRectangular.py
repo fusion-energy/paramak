@@ -78,6 +78,9 @@ class TestPortCutterRectangular(unittest.TestCase):
         that its volume is correct."""
 
         test_volume = self.test_shape.volume
-
         self.test_shape.fillet_radius = 5
+        
         assert self.test_shape.volume < test_volume
+        self.test_shape.workplane = "ZX"
+        assert self.test_shape.volume < test_volume
+        self.test_shape.workplane = "YX"
