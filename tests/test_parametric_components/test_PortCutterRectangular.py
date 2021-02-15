@@ -10,7 +10,7 @@ class TestPortCutterRectangular(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.PortCutterRectangular(
-            width=40, height=40, distance=300
+            width=20, height=40, distance=300
         )
 
     def test_default_parameters(self):
@@ -47,7 +47,7 @@ class TestPortCutterRectangular(unittest.TestCase):
     def test_absolute_volume(self):
         """Creates a PortCutterRectangular shape and checks that its volume is correct."""
 
-        assert self.test_shape.volume == pytest.approx(40 * 40 * 300)
+        assert self.test_shape.volume == pytest.approx(20 * 40 * 300)
 
         self.test_shape.extrusion_start_offset = 20
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
@@ -55,3 +55,20 @@ class TestPortCutterRectangular(unittest.TestCase):
         self.test_shape.height = 20
 
         assert self.test_shape.volume == pytest.approx(20 * 20 * 300 * 4)
+
+    def test_workplane(self):
+        """Creates PortCutterRectangular shapes in different workplanes and checks that
+        the geometries are correct."""
+
+        cutting_shape = paramak.RotateStraightShape(
+            points = [(0, 0), (0, 50), (500, 50), (500, 0)],
+            workplane = "YZ",
+        )
+        self.test_shape.cut = cutting_shape
+
+        assert self.test_shape.volume == pytest.approx(20 * 40 * 300 * 0.5)
+
+        self.test_shape.workplane = "XZ"
+        cutting_shape.workplane = "YZ"
+
+        assert self.test_shape.volume == pytest.approx(20 * 40 * 300)
