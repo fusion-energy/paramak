@@ -61,8 +61,8 @@ class TestPortCutterRectangular(unittest.TestCase):
         the geometries are correct."""
 
         cutting_shape = paramak.RotateStraightShape(
-            points = [(0, 0), (0, 50), (500, 50), (500, 0)],
-            workplane = "YZ",
+            points=[(0, 0), (0, 50), (500, 50), (500, 0)],
+            workplane="YZ",
         )
         self.test_shape.cut = cutting_shape
 
