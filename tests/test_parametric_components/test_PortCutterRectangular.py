@@ -72,3 +72,12 @@ class TestPortCutterRectangular(unittest.TestCase):
         cutting_shape.workplane = "YZ"
 
         assert self.test_shape.volume == pytest.approx(20 * 40 * 300 * 0.5)
+
+    def test_filleting(self):
+        """Creates a PortCutterRectangular shape with filleted edges and checks
+        that its volume is correct."""
+
+        test_volume = self.test_shape.volume
+
+        self.test_shape.fillet_radius = 5
+        assert self.test_shape.volume < test_volume
