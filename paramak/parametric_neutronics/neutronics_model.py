@@ -662,7 +662,7 @@ class NeutronicsModel():
                 to True.
             tolerance: faceting toleranceto use when faceting cirles and
                 splines. Defaults to 1e-3.
-            view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ', 
+            view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ',
                 'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'. Defaults to 'RZ'. Defaults to
                 'RZ'.
             number_of_source_particles
@@ -679,16 +679,18 @@ class NeutronicsModel():
         )
 
         if number_of_source_particles != 0:
-            source_filename = create_inital_particles(self.source, number_of_source_particles)
-            points = extract_points_from_initial_source(source_filename, view_plane)
+            source_filename = create_inital_particles(
+                self.source, number_of_source_particles)
+            points = extract_points_from_initial_source(
+                source_filename, view_plane)
 
             fig.add_trace(
-                            plotly_trace(
-                                points=points,
-                                mode="markers",
-                                name='source'
-                            )
-                        )
+                plotly_trace(
+                    points=points,
+                    mode="markers",
+                    name='source'
+                )
+            )
 
         if filename is not None:
 
@@ -702,5 +704,5 @@ class NeutronicsModel():
             fig.write_html(str(path_filename))
 
             print("Exported html graph to ", path_filename)
-        
+
         return fig

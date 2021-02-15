@@ -674,7 +674,7 @@ class Reactor:
                 to True.
             tolerance: faceting toleranceto use when faceting cirles and
                 splines. Defaults to 1e-3.
-            view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ', 
+            view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ',
                 'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'. Defaults to 'RZ'. Defaults to
                 'RZ'.
         Returns:
