@@ -126,3 +126,16 @@ studies can be performed quickly.
 .. automodule:: paramak.parametric_reactors.center_column_study_reactor
    :members:
    :show-inheritance:
+
+EuDemoFrom2015PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/108257452-b142c000-7156-11eb-9373-94750c935ca6.png
+   :width: 400
+   :align: center
+
+The above image is colored by component.
+
+.. automodule:: paramak.parametric_reactors.eu_demo_2015_reactor
+   :members:
+   :show-inheritance:
