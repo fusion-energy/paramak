@@ -296,4 +296,4 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             divertor,
             tf_coil,
             tf_coil_casing,
-            ]
+        ]

@@ -52,6 +52,3 @@ class TestSparc2020Reactor(unittest.TestCase):
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")
-
-
-
