@@ -211,8 +211,10 @@ def find_center_point_of_circle(point_a: Tuple[float, float],
         return (None, np.inf)
 
     # Center of circle
-    cx = (bc * (point_b[1] - point_c[1]) - cd * (point_a[1] - point_b[1])) / det
-    cy = ((point_a[0] - point_b[0]) * cd - (point_b[0] - point_c[0]) * bc) / det
+    cx = (bc * (point_b[1] - point_c[1]) -
+          cd * (point_a[1] - point_b[1])) / det
+    cy = ((point_a[0] - point_b[0]) * cd -
+          (point_b[0] - point_c[0]) * bc) / det
 
     radius = np.sqrt((cx - point_a[0]) ** 2 + (cy - point_a[1]) ** 2)
 
