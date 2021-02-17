@@ -13,21 +13,21 @@ def main(rotation_angle=180):
             (621, 811),
         ],
         widths=[
-            803-599,
+            803 - 599,
             1492 - 1351,
             1628 - 1526,
             1598 - 1503,
             1439 - 1360,
             684 - 563
-            ],
+        ],
         heights=[
-            803-599,
+            803 - 599,
             1492 - 1351,
             1628 - 1526,
             1598 - 1503,
             1439 - 1360,
             684 - 563
-            ],
+        ],
         rotation_angle=rotation_angle,
         stp_filename='outboard_pf_coils.stp'
     )
@@ -89,7 +89,12 @@ def main(rotation_angle=180):
         stl_filename='EFCCu_coils_5.stl'
     )
 
-    centre_coils = [EFCCu_coils_1, EFCCu_coils_2, EFCCu_coils_3, EFCCu_coils_4, EFCCu_coils_5]
+    centre_coils = [
+        EFCCu_coils_1,
+        EFCCu_coils_2,
+        EFCCu_coils_3,
+        EFCCu_coils_4,
+        EFCCu_coils_5]
 
     # plasma = paramak.Plasma(
     #     major_radius=185,
@@ -100,8 +105,8 @@ def main(rotation_angle=180):
     #     stp_filename='plasma.stp',
     # )
     thickness_outer_leg = 1500 - 1340
-    R1 = 511-50/2
-    R2 = 1340+50/2
+    R1 = 511 - 50 / 2
+    R2 = 1340 + 50 / 2
     coil_thickness = 25
     tf_coil = paramak.ToroidalFieldCoilPrincetonD(
         R1=R1,
@@ -112,11 +117,11 @@ def main(rotation_angle=180):
         rotation_angle=rotation_angle,
         stl_filename='tf_coil.stl'
     )
-    offset = (1500 - 1340 - coil_thickness)/2
+    offset = (1500 - 1340 - coil_thickness) / 2
     tf_coil_casing = paramak.TFCoilCasing(
         tf_coil,
         inner_offset=R2 - 1340,
-        outer_offset=1500-R2-coil_thickness,
+        outer_offset=1500 - R2 - coil_thickness,
         vertical_section_offset=25,
         distance=100,
         rotation_angle=rotation_angle,
@@ -249,8 +254,14 @@ def main(rotation_angle=180):
         stl_filename="divertor.stl"
     )
 
-
-    demo = paramak.Reactor([*centre_coils, blanket, vac_vessel, outboard_pf_coils, divertor, tf_coil, tf_coil_casing, ])
+    demo = paramak.Reactor([*centre_coils,
+                            blanket,
+                            vac_vessel,
+                            outboard_pf_coils,
+                            divertor,
+                            tf_coil,
+                            tf_coil_casing,
+                            ])
 
     demo.export_stl()
     demo.export_svg('demo.svg')
