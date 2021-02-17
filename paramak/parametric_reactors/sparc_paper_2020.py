@@ -88,7 +88,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             stp_filename='vs_coils.stp'
         )
 
-        EFCCu_coils_1 = paramak.RotateStraightShape(
+        efccu_coils_1 = paramak.RotateStraightShape(
             points=[
                 (235.56581986143186, -127.64976958525347),
                 (240.1847575057737, -121.19815668202767),
@@ -96,9 +96,9 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (242.0323325635104, -132.25806451612902),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename='EFCCu_coils_1.stp'
+            stp_filename='efccu_coils_1.stp'
         )
-        EFCCu_coils_2 = paramak.RotateStraightShape(
+        efccu_coils_2 = paramak.RotateStraightShape(
             points=[
                 (262.3556581986143, -90.78341013824888),
                 (266.97459584295615, -84.33179723502303),
@@ -106,9 +106,9 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (268.82217090069287, -94.47004608294935),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename='EFCCu_coils_2.stp'
+            stp_filename='efccu_coils_2.stp'
         )
-        EFCCu_coils_3 = paramak.RotateStraightShape(
+        efccu_coils_3 = paramak.RotateStraightShape(
             points=[
                 (281.7551963048499, -71.42857142857144),
                 (289.1454965357968, -71.42857142857144),
@@ -116,10 +116,10 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (281.7551963048499, -78.80184331797238),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename='EFCCu_coils_3.stp'
+            stp_filename='efccu_coils_3.stp'
         )
 
-        EFCCu_coils_4 = paramak.RotateStraightShape(
+        efccu_coils_4 = paramak.RotateStraightShape(
             points=[
                 (235.56581986143186, 127.64976958525347),
                 (240.1847575057737, 121.19815668202767),
@@ -127,9 +127,9 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (242.0323325635104, 132.25806451612902),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename='EFCCu_coils_4.stp'
+            stp_filename='efccu_coils_4.stp'
         )
-        EFCCu_coils_5 = paramak.RotateStraightShape(
+        efccu_coils_5 = paramak.RotateStraightShape(
             points=[
                 (262.3556581986143, 90.78341013824888),
                 (266.97459584295615, 84.33179723502303),
@@ -137,9 +137,9 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (268.82217090069287, 94.47004608294935),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename='EFCCu_coils_5.stp'
+            stp_filename='efccu_coils_5.stp'
         )
-        EFCCu_coils_6 = paramak.RotateStraightShape(
+        efccu_coils_6 = paramak.RotateStraightShape(
             points=[
                 (281.7551963048499, 71.42857142857144),
                 (289.1454965357968, 71.42857142857144),
@@ -147,7 +147,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (281.7551963048499, 78.80184331797238),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename='EFCCu_coils_6.stp'
+            stp_filename='efccu_coils_6.stp'
         )
 
         plasma = paramak.Plasma(
@@ -274,6 +274,6 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
 
         self.shapes_and_components = [
             inboard_pf_coils, outboard_pf_coils, plasma, antenna, vs_coils,
-            inner_vessel, tf_coil, EFCCu_coils_1, EFCCu_coils_2, EFCCu_coils_3,
-            EFCCu_coils_4, EFCCu_coils_5, EFCCu_coils_6, vac_vessel, div_coils
+            inner_vessel, tf_coil, efccu_coils_1, efccu_coils_2, efccu_coils_3,
+            efccu_coils_4, efccu_coils_5, efccu_coils_6, vac_vessel, div_coils
         ]
