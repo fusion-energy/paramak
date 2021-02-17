@@ -271,9 +271,9 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             stp_filename='inner_vessel.stp',
             cut=[vac_vessel, vs_coils, antenna]
         )
-        
+
         self.shapes_and_components = [
             inboard_pf_coils, outboard_pf_coils, plasma, antenna, vs_coils,
             inner_vessel, tf_coil, EFCCu_coils_1, EFCCu_coils_2, EFCCu_coils_3,
             EFCCu_coils_4, EFCCu_coils_5, EFCCu_coils_6, vac_vessel, div_coils
-            ]
+        ]
