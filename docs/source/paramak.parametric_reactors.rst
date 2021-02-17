@@ -128,7 +128,7 @@ studies can be performed quickly.
    :show-inheritance:
 
 EuDemoFrom2015PaperDiagram()
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/8583900/108257452-b142c000-7156-11eb-9373-94750c935ca6.png
    :width: 400
