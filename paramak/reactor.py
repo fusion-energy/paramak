@@ -1,8 +1,9 @@
 
+import collections
 import json
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Optional, Tuple, List
+from typing import List, Optional, Tuple
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -287,10 +288,9 @@ class Reactor:
         """
 
         if len(self.stp_filenames) != len(set(self.stp_filenames)):
+            print([item for item, count in collections.Counter(self.stp_filenames).items() if count > 1])
             raise ValueError(
-                "Set Reactor already contains a shape or component \
-                         with this stp_filename",
-                self.stp_filenames,
+                "Set Reactor already contains shapes with the same stp_filename",
             )
 
         filenames = []
