@@ -288,10 +288,10 @@ class Reactor:
         """
 
         if len(self.stp_filenames) != len(set(self.stp_filenames)):
-            print([item for item, count in collections.Counter(self.stp_filenames).items() if count > 1])
+            print([item for item, count in collections.Counter(
+                self.stp_filenames).items() if count > 1])
             raise ValueError(
-                "Set Reactor already contains shapes with the same stp_filename",
-            )
+                "Set Reactor already contains shapes with the same stp_filename", )
 
         filenames = []
         for entry in self.shapes_and_components:
