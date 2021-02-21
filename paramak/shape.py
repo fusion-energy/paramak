@@ -961,12 +961,16 @@ class Shape:
         if view_plane is None:
             view_plane = self.workplane
 
-        if self.points is None:
-            if hasattr(self, 'path_points') and self.path_points is None:
-                raise ValueError("No points or point_path defined for", self)
+        if self.solid is None:
+            raise ValueError("No solid was found for ", self)
+        
+        if isinstance(self.solid, cq.Workplane):
+            edges =  self.solid.val().Edges()
+        else:
+            edges =  self.solid.Edges()
 
         fig = paramak.utils.export_wire_to_html(
-            wires=self.solid.Edges(),
+            wires=edges,
             filename=None,
             view_plane=view_plane,
             facet_splines=facet_splines,
