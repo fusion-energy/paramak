@@ -963,11 +963,11 @@ class Shape:
 
         if self.solid is None:
             raise ValueError("No solid was found for ", self)
-        
+
         if isinstance(self.solid, cq.Workplane):
-            edges =  self.solid.val().Edges()
+            edges = self.solid.val().Edges()
         else:
-            edges =  self.solid.Edges()
+            edges = self.solid.Edges()
 
         fig = paramak.utils.export_wire_to_html(
             wires=edges,
