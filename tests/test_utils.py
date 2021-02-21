@@ -86,10 +86,10 @@ class TestUtilityFunctions(unittest.TestCase):
 
         point_1 = (0, 20)
         point_2 = (20, 0)
-        point_3 = (0, -20)
+        point3 = (0, -20)
 
         assert find_center_point_of_circle(
-            point_1, point_2, point_3) == (
+            point_1, point_2, point3) == (
             (0, 0), 20)
 
     def test_EdgeLengthSelector_with_fillet_areas(self):
@@ -124,8 +124,8 @@ class TestUtilityFunctions(unittest.TestCase):
         """
         point_1 = (0, 0)
         point_2 = (0, 0)
-        point_3 = (0, 0)
+        point3 = (0, 0)
 
         assert find_center_point_of_circle(
-            point_1, point_2, point_3) == (
+            point_1, point_2, point3) == (
             None, np.inf)
