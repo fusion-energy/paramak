@@ -23,11 +23,11 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
 
         self.rotation_angle = rotation_angle
 
-    def create_solids(self):
-        """Creates a 3d solids for each component.
+    def create_pf_coils(self):
+        """Creates a 3d solids for each pf coil.
 
-           Returns:
-              A list of CadQuery solids: A list of 3D solid volumes
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
 
         """
 
@@ -77,17 +77,6 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             stp_filename='div_coils.stp'
         )
 
-        vs_coils = paramak.PoloidalFieldCoilSet(
-            center_points=[
-                (240, 70),
-                (240, -70),
-            ],
-            widths=[10, 10],
-            heights=[10, 10],
-            rotation_angle=self.rotation_angle,
-            stp_filename='vs_coils.stp'
-        )
-
         efccu_coils_1 = paramak.RotateStraightShape(
             points=[
                 (235.56581986143186, -127.64976958525347),
@@ -98,6 +87,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='efccu_coils_1.stp'
         )
+
         efccu_coils_2 = paramak.RotateStraightShape(
             points=[
                 (262.3556581986143, -90.78341013824888),
@@ -108,6 +98,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='efccu_coils_2.stp'
         )
+
         efccu_coils_3 = paramak.RotateStraightShape(
             points=[
                 (281.7551963048499, -71.42857142857144),
@@ -129,6 +120,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='efccu_coils_4.stp'
         )
+
         efccu_coils_5 = paramak.RotateStraightShape(
             points=[
                 (262.3556581986143, 90.78341013824888),
@@ -139,6 +131,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='efccu_coils_5.stp'
         )
+
         efccu_coils_6 = paramak.RotateStraightShape(
             points=[
                 (281.7551963048499, 71.42857142857144),
@@ -150,14 +143,56 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             stp_filename='efccu_coils_6.stp'
         )
 
-        plasma = paramak.Plasma(
-            major_radius=185,
-            minor_radius=57 - 6,  # 3 is a small ofset to avoid overlaps
-            triangularity=0.31,
-            elongation=1.97,
+        # these are cut away from the vessel components
+        vs_coils = paramak.PoloidalFieldCoilSet(
+            center_points=[
+                (240, 70),
+                (240, -70),
+            ],
+            widths=[10, 10],
+            heights=[10, 10],
             rotation_angle=self.rotation_angle,
-            stp_filename='plasma.stp',
+            stp_filename='vs_coils.stp'
         )
+
+        return [
+            inboard_pf_coils, outboard_pf_coils, div_coils,
+            efccu_coils_1, efccu_coils_2, efccu_coils_3,
+            efccu_coils_4, efccu_coils_5, efccu_coils_6, vs_coils
+        ]
+    
+    def create_tf_coils(self):
+        """Creates a 3d solids for each tf coil.
+
+           Returns:
+              A list of CadQuery solids: A list of 3D solid volumes
+
+        """
+
+        tf_coil = paramak.ToroidalFieldCoilPrincetonD(
+            R1=105,
+            R2=339,
+            thickness=33,
+            distance=33,
+            number_of_coils=12,
+            rotation_angle=self.rotation_angle,
+            stp_filename='tf_coil.stp'
+        )
+
+        return [tf_coil]
+
+    def create_vessel_components(self, vs_coils):
+        """Creates a 3d solids for each vessel component.
+
+        Args:
+            vs_coils (Paramak.Shape): The vs coils that are used in a
+                Boolean cut with the inner vessel.
+        
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
+
+
+        """
 
         antenna = paramak.RotateMixedShape(
             points=[
@@ -169,16 +204,6 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             stp_filename='antenna.stp'
-        )
-
-        tf_coil = paramak.ToroidalFieldCoilPrincetonD(
-            R1=105,
-            R2=339,
-            thickness=33,
-            distance=33,
-            number_of_coils=12,
-            rotation_angle=self.rotation_angle,
-            stp_filename='tf_coil.stp'
         )
 
         vac_vessel = paramak.RotateStraightShape(
@@ -272,8 +297,47 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             cut=[vac_vessel, vs_coils, antenna]
         )
 
-        self.shapes_and_components = [
-            inboard_pf_coils, outboard_pf_coils, plasma, antenna, vs_coils,
-            inner_vessel, tf_coil, efccu_coils_1, efccu_coils_2, efccu_coils_3,
-            efccu_coils_4, efccu_coils_5, efccu_coils_6, vac_vessel, div_coils
-        ]
+        return antenna, vac_vessel, inner_vessel
+
+
+    def create_plasma(self):
+        """Creates a 3d solids for the plasma.
+
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
+
+        """
+
+        # The minor radius in the paper is specified as 57
+        # a small ofset is needed to avoid overlaps
+        minor_radius = 57 - 6
+
+        plasma = paramak.Plasma(
+            major_radius=185,
+            minor_radius=minor_radius,
+            triangularity=0.31,
+            elongation=1.97,
+            rotation_angle=self.rotation_angle,
+            stp_filename='plasma.stp',
+        )
+
+        return [plasma]
+
+    def create_solids(self):
+        """Creates a 3d solids for each component.
+
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
+
+        """
+
+        plasma = self.create_plasma()
+        pf_coils = self.create_pf_coils()
+        tf_coils = self.create_tf_coils()
+        vessel = self.create_vessel_components(pf_coils[-1])
+
+        all_shapes_and_components = plasma + pf_coils + tf_coils + vessel
+
+        self.shapes_and_components = all_shapes_and_components
+        
+        return all_shapes_and_components
