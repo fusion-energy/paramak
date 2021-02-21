@@ -84,12 +84,12 @@ class TestUtilityFunctions(unittest.TestCase):
         """passes three points on a circle to the function and checks that the
         radius and center of the circle is calculated correctly"""
 
-        point_1 = (0, 20)
-        point_2 = (20, 0)
+        point_a = (0, 20)
+        point_b = (20, 0)
         point3 = (0, -20)
 
         assert find_center_point_of_circle(
-            point_1, point_2, point3) == (
+            point_a, point_b, point3) == (
             (0, 0), 20)
 
     def test_EdgeLengthSelector_with_fillet_areas(self):
@@ -122,10 +122,10 @@ class TestUtilityFunctions(unittest.TestCase):
     def test_find_center_point_of_circle_zero_det(self):
         """Checks that None is given if det is zero
         """
-        point_1 = (0, 0)
-        point_2 = (0, 0)
+        point_a = (0, 0)
+        point_b = (0, 0)
         point3 = (0, 0)
 
         assert find_center_point_of_circle(
-            point_1, point_2, point3) == (
+            point_a, point_b, point3) == (
             None, np.inf)
