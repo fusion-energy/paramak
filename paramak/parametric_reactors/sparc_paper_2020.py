@@ -160,7 +160,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             efccu_coils_1, efccu_coils_2, efccu_coils_3,
             efccu_coils_4, efccu_coils_5, efccu_coils_6, vs_coils
         ]
-    
+
     def create_tf_coils(self):
         """Creates a 3d solids for each tf coil.
 
@@ -187,7 +187,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
         Args:
             vs_coils (Paramak.Shape): The vs coils that are used in a
                 Boolean cut with the inner vessel.
-        
+
         Returns:
             A list of CadQuery solids: A list of 3D solid volumes
 
@@ -299,7 +299,6 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
 
         return antenna, vac_vessel, inner_vessel
 
-
     def create_plasma(self):
         """Creates a 3d solids for the plasma.
 
@@ -339,5 +338,5 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
         all_shapes_and_components = plasma + pf_coils + tf_coils + vessel
 
         self.shapes_and_components = all_shapes_and_components
-        
+
         return all_shapes_and_components
