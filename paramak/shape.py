@@ -248,7 +248,7 @@ class Shape:
                     " not " + value
                 raise ValueError(msg)
         elif isinstance(value, Iterable):
-            msg = "Shape.rotation_axis must be a list of two (X, Y, Z) floats"
+            msg = "Shape.rotation_axis must be a tuple of two (X, Y, Z) floats"
             if len(value) != 2:
                 raise ValueError(msg)
             for point in value:
