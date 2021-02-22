@@ -431,8 +431,8 @@ def extract_points_from_initial_source(
         view_plane='RZ'):
     """makes a plot of the inital creation locations of the particle source"""
 
-    f = h5py.File(input_filename, 'r')
-    dset = f['source_bank']
+    h5_file = h5py.File(input_filename, 'r')
+    dset = h5_file['source_bank']
 
     points = []
 
