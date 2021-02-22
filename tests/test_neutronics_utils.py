@@ -5,7 +5,7 @@ from pathlib import Path
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
-
+import openmc
 
 class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
@@ -40,3 +40,40 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         assert Path('test_file.stl').exists()
         assert Path('test_file.h5m').exists()
+
+    def test_create_inital_source_file(self):
+        """Creates an initial_source.h5 from a point source"""
+        
+        os.system("rm *.h5")
+
+        source = openmc.Source()
+        source.space = openmc.stats.Point((0, 0, 0))
+        source.energy = openmc.stats.Discrete([14e6], [1])
+
+        paramak.neutronics_utils.create_inital_particles(source, 100)
+
+        create_inital_particles(source, 10)
+
+        assert Path("initial_source.h5").exists() is True
+    
+    def extract_points_from_initial_source(self):
+        """Creates an initial_source.h5 from a point source reads in the file
+        and checks the first point is 0, 0, 0 as exspected."""
+
+        os.system("rm *.h5")
+
+        source = openmc.Source()
+        source.space = openmc.stats.Point((0, 0, 0))
+        source.energy = openmc.stats.Discrete([14e6], [1])
+
+        paramak.neutronics_utils.create_inital_particles(source, 100)
+
+        create_inital_particles(source, 10)
+
+        for view_plane in['XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ', 'XYZ']:
+
+            points = extract_points_from_initial_source(view_plane=view_plane)
+
+            assert points[0][0] == 0
+            assert points[0][1] == 0
+            assert points[0][2] == 0
