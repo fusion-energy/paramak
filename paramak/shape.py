@@ -248,7 +248,7 @@ class Shape:
                     " not " + value
                 raise ValueError(msg)
         elif isinstance(value, Iterable):
-            msg = "Shape.rotation_axis must be a tuple of two (X, Y, Z) floats"
+            msg = "Shape.rotation_axis must be a tuple of three floats (X, Y, Z)"
             if len(value) != 2:
                 raise ValueError(msg)
             for point in value:
@@ -595,12 +595,13 @@ class Shape:
                         solid = solid.workplane(offset=point[1] * factor).\
                             center(point[0], 0).workplane()
                         for entry in instructions:
-                            if list(entry.keys())[0] == "spline":
+                            connection_type = list(entry.keys())[0]
+                            if connection_type == "spline":
                                 solid = solid.spline(
                                     listOfXYTuple=list(entry.values())[0])
-                            if list(entry.keys())[0] == "straight":
+                            elif connection_type == "straight":
                                 solid = solid.polyline(list(entry.values())[0])
-                            if list(entry.keys())[0] == "circle":
+                            elif connection_type == "circle":
                                 p0, p1, p2 = list(entry.values())[0][:3]
                                 solid = solid.moveTo(p0[0], p0[1]).\
                                     threePointArc(p1, p2)
@@ -615,12 +616,13 @@ class Shape:
                         self.path_points[0][0],
                         0).workplane()
                     for entry in instructions:
-                        if list(entry.keys())[0] == "spline":
+                        connection_type = list(entry.keys())[0]
+                        if connection_type == "spline":
                             solid = solid.spline(
                                 listOfXYTuple=list(entry.values())[0])
-                        if list(entry.keys())[0] == "straight":
+                        elif connection_type == "straight":
                             solid = solid.polyline(list(entry.values())[0])
-                        if list(entry.keys())[0] == "circle":
+                        elif connection_type == "circle":
                             p0 = list(entry.values())[0][0]
                             p1 = list(entry.values())[0][1]
                             p2 = list(entry.values())[0][2]
