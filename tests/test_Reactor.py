@@ -415,21 +415,17 @@ class TestReactor(unittest.TestCase):
         of the reactor can be exported to a specified location using the export_stp
         method"""
 
+        os.system("rm test_reactor/*.stp")
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
-        os.system("rm test_reactor/test_shape.stp")
-        os.system("rm test_reactor/Graveyard.stp")
         test_shape.stp_filename = "test_shape.stp"
         test_reactor = paramak.Reactor([test_shape])
 
         test_reactor.export_stp(output_folder="test_reactor")
 
-        for filepath in [
-            "test_reactor/test_shape.stp",
-                "test_reactor/Graveyard.stp"]:
-            assert Path(filepath).exists() is True
-            os.system("rm " + filepath)
+        assert Path("test_reactor/test_shape.stp").exists() is True
+        assert Path("test_reactor/Graveyard.stp").exists() is True
 
     def test_exported_stl_files_exist(self):
         """creates a Reactor object with one shape and checks that a stl file
