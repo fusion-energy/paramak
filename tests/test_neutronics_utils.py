@@ -7,6 +7,7 @@ from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
 import openmc
 
+
 class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
     def test_moab_instance_creation(self):
@@ -43,7 +44,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
     def test_create_inital_source_file(self):
         """Creates an initial_source.h5 from a point source"""
-        
+
         os.system("rm *.h5")
 
         source = openmc.Source()
@@ -55,7 +56,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         create_inital_particles(source, 10)
 
         assert Path("initial_source.h5").exists() is True
-    
+
     def extract_points_from_initial_source(self):
         """Creates an initial_source.h5 from a point source reads in the file
         and checks the first point is 0, 0, 0 as exspected."""
@@ -70,7 +71,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         create_inital_particles(source, 10)
 
-        for view_plane in['XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ', 'XYZ']:
+        for view_plane in ['XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ', 'XYZ']:
 
             points = extract_points_from_initial_source(view_plane=view_plane)
 
