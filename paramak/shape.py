@@ -1250,8 +1250,8 @@ class Shape:
 
     def export_graveyard(
             self,
-            graveyard_offset: Optional[float] = 100,
-            filename: Optional[str] = "Graveyard.stp") -> str:
+            filename: Optional[str] = "Graveyard.stp",
+            graveyard_offset: Optional[float] = 100) -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
