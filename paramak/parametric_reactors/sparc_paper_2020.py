@@ -297,7 +297,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             cut=[vac_vessel, vs_coils, antenna]
         )
 
-        return antenna, vac_vessel, inner_vessel
+        return [antenna, vac_vessel, inner_vessel]
 
     def create_plasma(self):
         """Creates a 3d solids for the plasma.
