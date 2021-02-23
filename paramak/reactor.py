@@ -601,10 +601,10 @@ class Reactor:
 
         graveyard_shape = paramak.HollowCube(
             length=self.largest_dimension * 2 + graveyard_offset * 2,
-            name="Graveyard",
-            material_tag="Graveyard",
-            stp_filename="Graveyard.stp",
-            stl_filename="Graveyard.stl",
+            name="graveyard",
+            material_tag="graveyard",
+            stp_filename="graveyard.stp",
+            stl_filename="graveyard.stl",
         )
 
         self.graveyard = graveyard_shape

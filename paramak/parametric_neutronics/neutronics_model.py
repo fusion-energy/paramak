@@ -49,7 +49,13 @@ class NeutronicsModel():
     Arguments:
         geometry: The geometry to convert to a neutronics model. e.g.
             geometry=paramak.RotateMixedShape() or
-            geometry=paramak.BallReactor().
+            geometry=paramak.BallReactor() or the filename of json file
+            containing the neutronics description of the geometry. The list of
+            dictionaries should each have a "material" key containing a
+            material_tag value and a stp_filename key containing the path to
+            the stp file. See the external_stp_file_simulation.py neutronics
+            example for a complete example. 
+            https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/external_stp_file_simulation.py
         source (openmc.Source()): the particle source to use during the
             OpenMC simulation.
         materials: Where the dictionary keys are the material tag
@@ -101,7 +107,7 @@ class NeutronicsModel():
 
     def __init__(
         self,
-        geometry: Union[paramak.Reactor, paramak.Shape],
+        geometry: Union[paramak.Reactor, paramak.Shape, str],
         source,
         materials: dict,
         simulation_batches: Optional[int] = 100,
@@ -187,7 +193,7 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.cell_tallies should be a\
                     list")
-            output_options = ['TBR', 'heating', 'flux', 'spectra'] + \
+            output_options = ['TBR', 'heating', 'flux', 'spectra', 'absorption'] + \
                 list(REACTION_MT.keys()) + list(REACTION_NAME.keys())
             for entry in value:
                 if entry not in output_options:
@@ -209,7 +215,7 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.mesh_tally_2d should be a\
                     list")
-            output_options = ['heating', 'flux'] + \
+            output_options = ['heating', 'flux', 'absorption'] + \
                 list(REACTION_MT.keys()) + list(REACTION_NAME.keys())
             for entry in value:
                 if entry not in output_options:
@@ -231,7 +237,7 @@ class NeutronicsModel():
                 raise TypeError(
                     "NeutronicsModelFromReactor.mesh_tally_3d should be a\
                     list")
-            output_options = ['heating', 'flux'] + \
+            output_options = ['heating', 'flux', 'absorption'] + \
                 list(REACTION_MT.keys()) + list(REACTION_NAME.keys())
             for entry in value:
                 if entry not in output_options:
@@ -682,8 +688,8 @@ class NeutronicsModel():
                     1
                 ]
             else:
-                mesh_xz.lower_left = self.mesh_2d_corners[0]
-                mesh_xz.upper_right = self.mesh_2d_corners[1]
+                mesh_xy.lower_left = self.mesh_2d_corners[0]
+                mesh_xy.upper_right = self.mesh_2d_corners[1]
 
             mesh_yz = openmc.RegularMesh(mesh_id=4, name='2d_mesh_yz')
             mesh_yz.dimension = [
@@ -705,8 +711,8 @@ class NeutronicsModel():
                     self.geometry.largest_dimension
                 ]
             else:
-                mesh_xz.lower_left = self.mesh_2d_corners[0]
-                mesh_xz.upper_right = self.mesh_2d_corners[1]
+                mesh_yz.lower_left = self.mesh_2d_corners[0]
+                mesh_yz.upper_right = self.mesh_2d_corners[1]
 
             for standard_tally in self.mesh_tally_2d:
                 score = standard_tally
