@@ -47,49 +47,56 @@ class NeutronicsModel():
     of Trelis used when testing the Paramak code.
 
     Arguments:
-        geometry (paramak.Shape, paramak.Rector): The geometry to convert to a
-            neutronics model. e.g. geometry=paramak.RotateMixedShape() or
-            reactor=paramak.BallReactor() .
-        cell_tallies (list of string or int): the cell based tallies to calculate,
-            options include TBR, heating, flux, MT numbers and OpenMC standard
-            scores such as (n,Xa) which is helium production are also supported
-            https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
-        materials (dict): Where the dictionary keys are the material tag
+        geometry: The geometry to convert to a neutronics model. e.g.
+            geometry=paramak.RotateMixedShape() or
+            geometry=paramak.BallReactor().
+        source (openmc.Source()): the particle source to use during the
+            OpenMC simulation.
+        materials: Where the dictionary keys are the material tag
             and the dictionary values are either a string, openmc.Material,
             neutronics-material-maker.Material or
             neutronics-material-maker.MultiMaterial. All components within the
             geometry object must be accounted for. Material tags required
-            for a Reactor or Shape can be obtained with .material_tags.
-        mesh_tally_2d (list of str): the 2D mesh based tallies to calculate,
+            for a Reactor or Shape can be obtained with .material_tags and
+            material_tag respectively.
+        simulation_batches: the number of batch to simulate.
+        simulation_particles_per_batch: particles per batch.
+        cell_tallies: the cell based tallies to calculate, options include
+            TBR, heating, flux, MT numbers and OpenMC standard scores such as
+            (n,Xa) which is helium production are also supported
+            https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
+        mesh_tally_2d: the 2D mesh based tallies to calculate, options include
+            heating and flux , MT numbers and OpenMC standard scores such as
+            (n,Xa) which is helium production are also supported
+            https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
+        mesh_tally_3d: the 3D mesh based tallies to calculate,
             options include heating and flux , MT numbers and OpenMC standard
             scores such as (n,Xa) which is helium production are also supported
             https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
-        mesh_tally_3d (list of str): the 3D mesh based tallies to calculate,
-            options include heating and flux , MT numbers and OpenMC standard
-            scores such as (n,Xa) which is helium production are also supported
-            https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
-        fusion_power (float): the power in watts emitted by the fusion
-            reaction recalling that each DT fusion reaction emitts 17.6 MeV or
-            2.819831e-12 Joules
-        simulation_batches (int): the number of batch to simulate.
-        simulation_particles_per_batch: (int): particles per batch.
-        source (openmc.Source()): the particle source to use during the
-            OpenMC simulation.
-        merge_tolerance (float): the tolerance to use when merging surfaces.
-            Defaults to 1e-4.
-        faceting_tolerance (float): the tolerance to use when faceting surfaces.
-            Defaults to 1e-1.
-        mesh_2d_resolution (tuple of ints): The 3D mesh resolution in the height
-            and width directions. The larger the resolution the finer the mesh
-            and more computational intensity is required to converge each mesh
+        mesh_3d_resolution: The 3D mesh resolution in the height, width and
+            depth directions. The larger the resolution the finer the mesh and
+            the more computational intensity is required to converge each mesh
             element.
-        mesh_3d_resolution (tuple of int): The 3D mesh resolution in the height,
-            width and depth directions. The larger the resolution the finer the
-            mesh and the more computational intensity is required to converge each
-            mesh element.
-        method: (str): The method to use when making the imprinted and
-            merged geometry. Options are "ppp", "trelis", "pymoab" and None
-            which looks for a pre-existing dagmc.h5m. Defaults to None.
+        mesh_2d_resolution: The 3D mesh resolution in the height and width
+            directions. The larger the resolution the finer the mesh and more
+            computational intensity is required to converge each mesh element.
+        mesh_2d_corners: The upper and lower corner locations for the 2d
+            mesh. Defaults to None which uses the
+            NeutronicsModel.geometry.largest_dimension property to set the
+            corners
+        mesh_3d_corners: The upper and lower corner locations for the 3d
+            mesh. Defaults to None which uses the
+            NeutronicsModel.geometry.largest_dimension property to set the
+            corners.
+        method: The method to use when making the imprinted and merged
+            geometry. Options are "trelis", "pymoab". Defaults to None.
+        faceting_tolerance: the tolerance to use when faceting surfaces.
+            Defaults to 1e-1.
+        merge_tolerance: the tolerance to use when merging surfaces. Defaults
+            to 1e-4.
+        fusion_power: the power in watts emitted by the fusion reaction
+            recalling that each DT fusion reaction emitts 17.6 MeV or
+            2.819831e-12 Joules
     """
 
     def __init__(
@@ -97,18 +104,20 @@ class NeutronicsModel():
         geometry: Union[paramak.Reactor, paramak.Shape],
         source,
         materials: dict,
+        simulation_batches: Optional[int] = 100,
+        simulation_particles_per_batch: Optional[int] = 10000,
         cell_tallies: Optional[List[str]] = None,
         mesh_tally_2d: Optional[List[str]] = None,
         mesh_tally_3d: Optional[List[str]] = None,
-        simulation_batches: Optional[int] = 100,
-        simulation_particles_per_batch: Optional[int] = 10000,
-        max_lost_particles: Optional[int] = 10,
-        faceting_tolerance: Optional[float] = 1e-1,
-        merge_tolerance: Optional[float] = 1e-4,
         mesh_2d_resolution: Optional[Tuple[int, int, int]] = (400, 400),
         mesh_3d_resolution: Optional[Tuple[int, int, int]] = (100, 100, 100),
-        fusion_power: Optional[float] = 1e9,  # convert from watts to activity source_activity
+        mesh_2d_corners: Optional[Tuple[Tuple[float, float, float], Tuple[float, float, float]]] = None,
+        mesh_3d_corners: Optional[Tuple[Tuple[float, float, float], Tuple[float, float, float]]] = None,
         method: Optional[str] = 'trelis',
+        faceting_tolerance: Optional[float] = 1e-1,
+        merge_tolerance: Optional[float] = 1e-4,
+        fusion_power: Optional[float] = 1e9,  # convert from watts to activity source_activity
+        max_lost_particles: Optional[int] = 10,
     ):
 
         self.materials = materials
@@ -124,6 +133,8 @@ class NeutronicsModel():
         self.merge_tolerance = merge_tolerance
         self.mesh_2d_resolution = mesh_2d_resolution
         self.mesh_3d_resolution = mesh_3d_resolution
+        self.mesh_2d_corners = mesh_2d_corners
+        self.mesh_3d_corners = mesh_3d_corners
         self.fusion_power = fusion_power
         self.method = method
 
@@ -342,7 +353,7 @@ class NeutronicsModel():
                 https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
                 for more details. Defaults to None which uses the
                 NeutronicsModel.faceting_tolerance attribute.
-        
+
         Returns:
             str: filename of the DAGMC file produced
         """
@@ -355,9 +366,15 @@ class NeutronicsModel():
         os.system('rm dagmc_not_watertight.h5m')
         os.system('rm dagmc.h5m')
 
-        self.geometry.export_stp()
-        self.geometry.export_neutronics_description()
-
+        if isinstance(self.geometry, (paramak.Shape, paramak.Reactor)):
+            self.geometry.export_stp()
+            self.geometry.export_neutronics_description()
+        elif isinstance(self.geometry, str):
+            if self.geometry != 'manifest.json':
+                shutil.copy(src=self.geometry, dst='manifest.json')
+        else:
+            raise ValueError("geometry must be a paramak.Shape, paramak.Reactor or filename")
+        
         shutil.copy(
             src=pathlib.Path(__file__).parent.absolute() /
             'make_faceteted_neutronics_model.py',
@@ -398,10 +415,13 @@ class NeutronicsModel():
             faceting_tolerance = self.faceting_tolerance
 
         os.system('rm dagmc.h5m')
-        self.geometry.export_h5m(
-            filename='dagmc.h5m',
-            tolerance=faceting_tolerance
-        )
+        if isinstance(self.geometry, (paramak.Shape, paramak.Reactor)):
+            self.geometry.export_h5m(
+                filename='dagmc.h5m',
+                tolerance=faceting_tolerance
+            )
+        else:
+            raise NotImplementedError("Reading a filename and converting to a DAGMC geometry using pymoab is not yet supported")
 
     def create_dagmc_neutronics_geometry(
             self,
@@ -479,6 +499,8 @@ class NeutronicsModel():
             cell_tallies: Optional[float] =  None,
             mesh_2d_resolution: Optional[Tuple[int, int, int]] = None,
             mesh_3d_resolution: Optional[Tuple[int, int, int]] = None,
+            mesh_2d_corners: Optional[Tuple[Tuple[float, float, float], Tuple[float, float, float]]] = None,
+            mesh_3d_corners: Optional[Tuple[Tuple[float, float, float], Tuple[float, float, float]]] = None,
             ):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (cell_tallies and mesh_tally_2d), simulation settings (batches,
@@ -513,29 +535,26 @@ class NeutronicsModel():
                 https://docs.openmc.org/en/latest/usersguide/tallies.html#scores.
                 Defaults to None which uses the NeutronicsModel.cell_tallies
                 attribute.
-            mesh_2d_resolution: . The 2D mesh resolution in the height and
+            mesh_2d_resolution: The 2D mesh resolution in the height and
                 width directions. The larger the resolution the finer the mesh
                 and more computational intensity is required to converge each
                 mesh element. Defaults to None which uses the
                 NeutronicsModel.mesh_2d_resolution attribute
-            mesh_3d_resolution: . The 3D mesh resolution in the height, width
+            mesh_3d_resolution: The 3D mesh resolution in the height, width
                 and depth directions. The larger the resolution the finer the
                 mesh and the more computational intensity is required to
                 converge each mesh element. Defaults to None which uses the
                 NeutronicsModel.mesh_3d_resolution attribute.
+            mesh_2d_corners: The upper and lower corner locations for the 2d
+                mesh. Defaults to None which uses the
+                NeutronicsModel.mesh_2d_corners
+            mesh_3d_corners: The upper and lower corner locations for the 2d
+                mesh. Defaults to None which uses the
+                NeutronicsModel.mesh_2d_corners
         
         Returns:
             openmc.model.Model(): The openmc model object created
         """
-
-        source (openmc.Source()): .
-        merge_tolerance (float): the tolerance to use when merging surfaces.
-            Defaults to 1e-4.
-        faceting_tolerance (float): the tolerance to use when faceting surfaces.
-            Defaults to 1e-1.
-        mesh_2d_resolution (tuple of ints): 
-        mesh_3d_resolution (tuple of int): 
-
 
         if simulation_batches is None:
             simulation_batches = self.simulation_batches
@@ -555,6 +574,11 @@ class NeutronicsModel():
             mesh_2d_resolution = self.mesh_2d_resolution
         if mesh_3d_resolution is None:
             mesh_3d_resolution = self.mesh_3d_resolution
+        if mesh_2d_corners is None:
+            mesh_2d_corners = self.mesh_2d_corners
+        if mesh_3d_corners is None:
+            mesh_3d_corners = self.mesh_3d_corners
+
 
         # this removes any old file from previous simulations
         os.system('rm geometry.xml')
@@ -586,17 +610,21 @@ class NeutronicsModel():
         if self.mesh_tally_3d is not None:
             mesh_xyz = openmc.RegularMesh(mesh_id=1, name='3d_mesh')
             mesh_xyz.dimension = self.mesh_3d_resolution
-            mesh_xyz.lower_left = [
-                -self.geometry.largest_dimension,
-                -self.geometry.largest_dimension,
-                -self.geometry.largest_dimension
-            ]
+            if self.mesh_3d_corners is None:
+                mesh_xyz.lower_left = [
+                    -self.geometry.largest_dimension,
+                    -self.geometry.largest_dimension,
+                    -self.geometry.largest_dimension
+                ]
 
-            mesh_xyz.upper_right = [
-                self.geometry.largest_dimension,
-                self.geometry.largest_dimension,
-                self.geometry.largest_dimension
-            ]
+                mesh_xyz.upper_right = [
+                    self.geometry.largest_dimension,
+                    self.geometry.largest_dimension,
+                    self.geometry.largest_dimension
+                ]
+            else:
+                mesh_xyz.lower_left = self.mesh_3d_corners[0]
+                mesh_xyz.upper_right = self.mesh_3d_corners[1]
 
             for standard_tally in self.mesh_tally_3d:
                 score = standard_tally
@@ -618,17 +646,21 @@ class NeutronicsModel():
                 self.mesh_2d_resolution[0]
             ]
 
-            mesh_xz.lower_left = [
-                -self.geometry.largest_dimension,
-                -1,
-                -self.geometry.largest_dimension
-            ]
+            if self.mesh_2d_corners is None:
+                mesh_xz.lower_left = [
+                    -self.geometry.largest_dimension,
+                    -1,
+                    -self.geometry.largest_dimension
+                ]
 
-            mesh_xz.upper_right = [
-                self.geometry.largest_dimension,
-                1,
-                self.geometry.largest_dimension
-            ]
+                mesh_xz.upper_right = [
+                    self.geometry.largest_dimension,
+                    1,
+                    self.geometry.largest_dimension
+                ]
+            else:
+                mesh_xz.lower_left = self.mesh_2d_corners[0]
+                mesh_xz.upper_right = self.mesh_2d_corners[1]
 
             mesh_xy = openmc.RegularMesh(mesh_id=3, name='2d_mesh_xy')
             mesh_xy.dimension = [
@@ -637,17 +669,21 @@ class NeutronicsModel():
                 1
             ]
 
-            mesh_xy.lower_left = [
-                -self.geometry.largest_dimension,
-                -self.geometry.largest_dimension,
-                -1
-            ]
+            if self.mesh_2d_corners is None:
+                mesh_xy.lower_left = [
+                    -self.geometry.largest_dimension,
+                    -self.geometry.largest_dimension,
+                    -1
+                ]
 
-            mesh_xy.upper_right = [
-                self.geometry.largest_dimension,
-                self.geometry.largest_dimension,
-                1
-            ]
+                mesh_xy.upper_right = [
+                    self.geometry.largest_dimension,
+                    self.geometry.largest_dimension,
+                    1
+                ]
+            else:
+                mesh_xz.lower_left = self.mesh_2d_corners[0]
+                mesh_xz.upper_right = self.mesh_2d_corners[1]
 
             mesh_yz = openmc.RegularMesh(mesh_id=4, name='2d_mesh_yz')
             mesh_yz.dimension = [
@@ -656,17 +692,21 @@ class NeutronicsModel():
                 self.mesh_2d_resolution[0]
             ]
 
-            mesh_yz.lower_left = [
-                -1,
-                -self.geometry.largest_dimension,
-                -self.geometry.largest_dimension
-            ]
+            if self.mesh_2d_corners is None:
+                mesh_yz.lower_left = [
+                    -1,
+                    -self.geometry.largest_dimension,
+                    -self.geometry.largest_dimension
+                ]
 
-            mesh_yz.upper_right = [
-                1,
-                self.geometry.largest_dimension,
-                self.geometry.largest_dimension
-            ]
+                mesh_yz.upper_right = [
+                    1,
+                    self.geometry.largest_dimension,
+                    self.geometry.largest_dimension
+                ]
+            else:
+                mesh_xz.lower_left = self.mesh_2d_corners[0]
+                mesh_xz.upper_right = self.mesh_2d_corners[1]
 
             for standard_tally in self.mesh_tally_2d:
                 score = standard_tally
@@ -714,11 +754,16 @@ class NeutronicsModel():
                     sufix = standard_tally
                     self._add_tally_for_every_material(sufix, score)
 
-        # make the model from gemonetry, materials, settings and tallies
-        self.model = openmc.model.Model(
+        # make the model from geometry, materials, settings and tallies
+        model = openmc.model.Model(
             geom, self.mats, settings, self.tallies)
+        
+        geom.export_to_xml()
+        settings.export_to_xml()
+        self.tallies.export_to_xml()
 
-        return self.model
+        self.model = model
+        return model
 
     def _add_tally_for_every_material(self, sufix: str, score: str,
                                       additional_filters: List = None) -> None:
@@ -745,7 +790,6 @@ class NeutronicsModel():
             cell_tally_results_filename: Optional[str] = 'results.json',
             threads: Optional[int] = None,
             create_dagmc_geometry: Optional[bool] = True,
-            create_openmc_model: Optional[bool] = True,
             ) -> str:
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
@@ -763,36 +807,31 @@ class NeutronicsModel():
                 NeutronicsModel attributes or set to False and run the
                 create_dagmc_neutronics_geometry() method yourself with more
                 direct control over the settings.
-            create_openmc_model: controls the creation of the OpenMC model
-                files (xml files). Set to True to create the OpenMC model files
-                file with the default settings as determined by the
-                NeutronicsModel attributes or set to False and run the
-                create_openmc_neutronics_model() method yourself with more
-                direct control over the settings.
 
         Returns:
             str: the h5 simulation output filename
         """
 
+        self.create_openmc_neutronics_model()
+
         if create_dagmc_geometry is True:
             self.create_dagmc_neutronics_geometry()
 
-        if create_openmc_model is True:
-            self.create_openmc_neutronics_model()
-
         # checks all the nessecary files are found
-        for required_file in ['geometry.xml', 'materials.xml', 'settings.xml', 'tallies.xml']:
+        for required_file in ['geometry.xml', 'materials.xml', 'settings.xml',
+                              'tallies.xml']:
             if Path(required_file).is_file() is False:
-                raise FileNotFoundError("{} file was not found. Please set \
-                    create_openmc_model to True or use the \
-                    the create_openmc_neutronics_model() method to \
-                    create the {} file".format(required_file, required_file))
+                msg = "{} file was not found. Please set create_openmc_model \
+                    to True or use the create_openmc_neutronics_model() \
+                    method to create the {} file".format(required_file, required_file)
+                raise FileNotFoundError(msg)
 
         if Path('dagmc.h5m').is_file() is False:
-            raise FileNotFoundError("dagmc.h5m file was not found. Please set \
-                create_dagmc_geometry to True or use the \
-                create_dagmc_neutronics_geometry() methods to create the \
-                dagmc.h5m file")
+            msg = "dagmc.h5m file was not found. Please set \
+                   create_dagmc_geometry to True or use the \
+                   create_dagmc_neutronics_geometry() methods to create the \
+                   dagmc.h5m file"
+            raise FileNotFoundError(msg)
 
         # Deletes summary.h5m if it already exists.
         # This avoids permission problems when trying to overwrite the file
