@@ -208,7 +208,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             "_pf_coil",
             "_pf_coils_casing"
         ]:
-            assert key not in self.test_reactor.__dict__.keys()
+            assert key not in self.test_reactor.__dict__
 
         assert self.test_reactor.shapes_and_components is not None
         for key in [
