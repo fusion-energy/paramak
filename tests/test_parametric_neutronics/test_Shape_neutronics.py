@@ -211,10 +211,11 @@ class TestSimulationResultsVsCsg(unittest.TestCase):
             simulation_batches=batches,
             simulation_particles_per_batch=particles,
             materials={'test_mat': material},
-            cell_tallies=['heating']
+            cell_tallies=['heating'],
+            method='pymoab'
         )
 
-        my_model.simulate(method='pymoab')
+        my_model.simulate()
 
         # scaled from MeV to eV
         return my_model.results['test_mat_heating']['MeV per source particle']['result'] * 1e6

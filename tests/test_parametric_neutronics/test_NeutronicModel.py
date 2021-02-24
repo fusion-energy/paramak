@@ -36,11 +36,12 @@ class TestShape(unittest.TestCase):
             geometry=self.my_shape,
             source=self.source,
             materials={'center_column_shield_mat': 'WC'},
+            method='pymoab'
         )
 
-        my_model.create_neutronics_geometry(method='pymoab')
+        my_model.create_neutronics_geometry()
 
-        my_model.simulate(method=None)
+        my_model.simulate(create_dagmc_geometry=False)
 
         my_model.results is not None
 
@@ -73,13 +74,12 @@ class TestShape(unittest.TestCase):
             materials={'center_column_shield_mat': test_mat},
             cell_tallies=['heating'],
             simulation_batches=2,
-            simulation_particles_per_batch=2
+            simulation_particles_per_batch=2,
+            method='pymoab',
         )
 
         # performs an openmc simulation on the model
-        output_filename = my_model.simulate(
-            method='pymoab',
-        )
+        output_filename = my_model.simulate()
 
         assert output_filename.name == 'statepoint.2.h5'
 
@@ -102,11 +102,12 @@ class TestShape(unittest.TestCase):
             materials={'center_column_shield_mat': test_mat},
             cell_tallies=['heating'],
             simulation_batches=2,
-            simulation_particles_per_batch=2
+            simulation_particles_per_batch=2,
+            method='pymoab'
         )
 
         # performs an openmc simulation on the model
-        output_filename = my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate()
 
         results = openmc.StatePoint(output_filename)
         assert len(results.tallies.items()) == 1
@@ -133,21 +134,20 @@ class TestShape(unittest.TestCase):
             source=self.source,
             materials={'center_column_shield_mat': test_mat},
             simulation_batches=2,
-            simulation_particles_per_batch=2
+            simulation_particles_per_batch=2,
+            method='pymoab',
         )
 
         # performs an openmc simulation on the model
         output_filename = my_model.simulate(
-            method='pymoab',
             cell_tally_results_filename='custom_name.json'
         )
 
         assert output_filename.name == 'statepoint.2.h5'
         assert Path('custom_name.json').exists() is True
 
-        output_filename = my_model.simulate(
-            method='pymoab',
-        )
+        assert Path('results.json').exists() is False
+        output_filename = my_model.simulate()
         assert Path('results.json').exists() is True
 
     def test_missing_dagmc_not_watertight_file(self):
@@ -422,11 +422,12 @@ class TestShape(unittest.TestCase):
             materials={'center_column_shield_mat': mat},
             cell_tallies=['heating', 'flux', 'TBR', 'spectra'],
             simulation_batches=2,
-            simulation_particles_per_batch=2
+            simulation_particles_per_batch=2,
+            method='pymoab'
         )
 
         # performs an openmc simulation on the model
-        output_filename = my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate()
 
         results = openmc.StatePoint(output_filename)
         # spectra add two tallies in this case (photons and neutrons)
@@ -465,11 +466,12 @@ class TestShape(unittest.TestCase):
             materials={'center_column_shield_mat': 'Be'},
             mesh_tally_2d=['heating'],
             simulation_batches=2,
-            simulation_particles_per_batch=2
+            simulation_particles_per_batch=2,
+            method='pymoab'
         )
 
         # performs an openmc simulation on the model
-        output_filename = my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate()
 
         results = openmc.StatePoint(output_filename)
         assert len(results.meshes) == 3
@@ -492,11 +494,12 @@ class TestShape(unittest.TestCase):
             materials={'center_column_shield_mat': 'Be'},
             mesh_tally_3d=['heating', '(n,Xt)'],
             simulation_batches=2,
-            simulation_particles_per_batch=2
+            simulation_particles_per_batch=2,
+            method='pymoab'
         )
 
         # performs an openmc simulation on the model
-        output_filename = my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate()
 
         results = openmc.StatePoint(output_filename)
         assert len(results.meshes) == 1
@@ -542,11 +545,12 @@ class TestShape(unittest.TestCase):
             mesh_tally_3d=['heating'],
             mesh_tally_2d=['heating'],
             simulation_batches=2,
-            simulation_particles_per_batch=2
+            simulation_particles_per_batch=2,
+            method='pymoab'
         )
 
         # performs an openmc simulation on the model
-        output_filename = my_model.simulate(method='pymoab')
+        output_filename = my_model.simulate()
         results = openmc.StatePoint(output_filename)
         assert len(results.meshes) == 4  # one 3D and three 2D
         assert len(results.tallies.items()) == 4  # one 3D and three 2D
