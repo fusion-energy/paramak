@@ -796,6 +796,7 @@ class NeutronicsModel():
             cell_tally_results_filename: Optional[str] = 'results.json',
             threads: Optional[int] = None,
             create_dagmc_geometry: Optional[bool] = True,
+            create_openmc_model: Optional[bool] = True,
             ) -> str:
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
@@ -813,12 +814,18 @@ class NeutronicsModel():
                 NeutronicsModel attributes or set to False and run the
                 create_dagmc_neutronics_geometry() method yourself with more
                 direct control over the settings.
+            create_openmc_model: controls the creation of the OpenMC model
+                files (xml files). Set to True to create the OpenMC files with
+                the default settings as determined by the NeutronicsModel
+                attributes or set to False and use existing xml files or run
+                the create_openmc_neutronics_model() method yourself with more
+                direct control over the settings and creation of the xml files.
 
         Returns:
             str: the h5 simulation output filename
         """
-
-        self.create_openmc_neutronics_model()
+        if create_openmc_model is True:
+            self.create_openmc_neutronics_model()
 
         if create_dagmc_geometry is True:
             self.create_dagmc_neutronics_geometry()
