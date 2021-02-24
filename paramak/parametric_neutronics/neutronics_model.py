@@ -87,13 +87,13 @@ class NeutronicsModel():
             directions. The larger the resolution the finer the mesh and more
             computational intensity is required to converge each mesh element.
         mesh_2d_corners: The upper and lower corner locations for the 2d
-            mesh. Defaults to None which uses the
-            NeutronicsModel.geometry.largest_dimension property to set the
-            corners
+            mesh. This sets the location of the mesh. Defaults to None which
+            uses the NeutronicsModel.geometry.largest_dimension property to set
+            the corners.
         mesh_3d_corners: The upper and lower corner locations for the 3d
-            mesh. Defaults to None which uses the
-            NeutronicsModel.geometry.largest_dimension property to set the
-            corners.
+            mesh. This sets the location of the mesh. Defaults to None which
+            uses the NeutronicsModel.geometry.largest_dimension property to set
+            the corners.
         method: The method to use when making the imprinted and merged
             geometry. Options are "trelis", "pymoab". Defaults to None.
         faceting_tolerance: the tolerance to use when faceting surfaces.
