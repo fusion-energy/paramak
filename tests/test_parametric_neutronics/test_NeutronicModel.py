@@ -737,7 +737,8 @@ class TestNeutronicsBallReactor(unittest.TestCase):
                 simulation_particles_per_batch=84,
             )
 
-            neutronics_model.create_dagmc_neutronics_geometry(method='incorrect')
+            neutronics_model.create_dagmc_neutronics_geometry(
+                method='incorrect')
 
         self.assertRaises(ValueError, test_incorrect_method)
 
