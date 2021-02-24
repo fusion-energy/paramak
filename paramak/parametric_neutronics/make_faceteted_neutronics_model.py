@@ -181,6 +181,7 @@ def save_output_files():
     print('using faceting_tolerance of ', faceting_tolerance)
     cubit.cmd('export dagmc "dagmc_not_watertight.h5m" faceting_tolerance '+ faceting_tolerance)
     # os.system('mbconvert -1 dagmc_not_watertight.h5m dagmc_not_watertight_edges.h5m')
+    cubit.cmd('save as "dagmc.cub" overwrite')
     cubit.cmd('save as "dagmc.trelis" overwrite')
     with open("geometry_details.json", "w") as outfile:
         json.dump(geometry_details, outfile, indent=4)
