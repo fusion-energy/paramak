@@ -1,11 +1,12 @@
 
+import os
 import unittest
 from pathlib import Path
 
+import openmc
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
-import openmc
 
 
 class TestNeutronicsUtilityFunctions(unittest.TestCase):
@@ -52,8 +53,6 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         source.energy = openmc.stats.Discrete([14e6], [1])
 
         paramak.neutronics_utils.create_inital_particles(source, 100)
-
-        create_inital_particles(source, 10)
 
         assert Path("initial_source.h5").exists() is True
 
