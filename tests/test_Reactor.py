@@ -376,7 +376,7 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm my_graveyard.stp")
-        os.system("rm Graveyard.stp")
+        os.system("rm graveyard.stp")
         test_shape.stp_filename = "test_shape.stp"
         test_reactor = paramak.Reactor([test_shape])
 
