@@ -54,7 +54,7 @@ class NeutronicsModel():
             dictionaries should each have a "material" key containing a
             material_tag value and a stp_filename key containing the path to
             the stp file. See the external_stp_file_simulation.py neutronics
-            example for a complete example. 
+            example for a complete example.
             https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/external_stp_file_simulation.py
         source (openmc.Source()): the particle source to use during the
             OpenMC simulation.
@@ -117,12 +117,15 @@ class NeutronicsModel():
         mesh_tally_3d: Optional[List[str]] = None,
         mesh_2d_resolution: Optional[Tuple[int, int, int]] = (400, 400),
         mesh_3d_resolution: Optional[Tuple[int, int, int]] = (100, 100, 100),
-        mesh_2d_corners: Optional[Tuple[Tuple[float, float, float], Tuple[float, float, float]]] = None,
-        mesh_3d_corners: Optional[Tuple[Tuple[float, float, float], Tuple[float, float, float]]] = None,
+        mesh_2d_corners: Optional[Tuple[Tuple[float, float,
+                                              float], Tuple[float, float, float]]] = None,
+        mesh_3d_corners: Optional[Tuple[Tuple[float, float,
+                                              float], Tuple[float, float, float]]] = None,
         method: Optional[str] = 'trelis',
         faceting_tolerance: Optional[float] = 1e-1,
         merge_tolerance: Optional[float] = 1e-4,
-        fusion_power: Optional[float] = 1e9,  # convert from watts to activity source_activity
+        fusion_power: Optional[float] = 1e9,
+        # convert from watts to activity source_activity
         max_lost_particles: Optional[int] = 10,
     ):
 
@@ -344,7 +347,7 @@ class NeutronicsModel():
             self,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
-            ):
+    ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations using Coreform Trelis.
 
@@ -379,8 +382,9 @@ class NeutronicsModel():
             if self.geometry != 'manifest.json':
                 shutil.copy(src=self.geometry, dst='manifest.json')
         else:
-            raise ValueError("geometry must be a paramak.Shape, paramak.Reactor or filename")
-        
+            raise ValueError(
+                "geometry must be a paramak.Shape, paramak.Reactor or filename")
+
         shutil.copy(
             src=pathlib.Path(__file__).parent.absolute() /
             'make_faceteted_neutronics_model.py',
@@ -390,19 +394,23 @@ class NeutronicsModel():
             raise FileNotFoundError(
                 "The make_faceteted_neutronics_model.py was \
                 not found in the directory")
-        os.system("trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
-                    str(faceting_tolerance) + "'\" \"merge_tolerance='" + str(merge_tolerance) + "'\"")
+        os.system(
+            "trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
+            str(faceting_tolerance) +
+            "'\" \"merge_tolerance='" +
+            str(merge_tolerance) +
+            "'\"")
 
         if not Path("dagmc_not_watertight.h5m").is_file():
             raise FileNotFoundError(
                 "The dagmc_not_watertight.h5m was not found \
                 in the directory, the Trelis stage has failed")
         self._make_watertight()
-    
+
     def create_dagmc_neutronics_geometry_with_pymoab(
-            self,
-            faceting_tolerance: Optional[float] = None
-        ):
+        self,
+        faceting_tolerance: Optional[float] = None
+    ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations using PyMoab and MOAB.
 
@@ -412,7 +420,7 @@ class NeutronicsModel():
                 https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
                 for more details. Defaults to None which uses the
                 NeutronicsModel.faceting_tolerance attribute.
-  
+
         Returns:
             str: filename of the DAGMC file produced
         """
@@ -427,14 +435,15 @@ class NeutronicsModel():
                 tolerance=faceting_tolerance
             )
         else:
-            raise NotImplementedError("Reading a filename and converting to a DAGMC geometry using pymoab is not yet supported")
+            raise NotImplementedError(
+                "Reading a filename and converting to a DAGMC geometry using pymoab is not yet supported")
 
     def create_dagmc_neutronics_geometry(
             self,
             method: Optional[str] = None,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
-            ):
+    ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations.
 
@@ -502,12 +511,12 @@ class NeutronicsModel():
             simulation_particles_per_batch: Optional[int] = None,
             mesh_tally_3d: Optional[float] = None,
             mesh_tally_2d: Optional[float] = None,
-            cell_tallies: Optional[float] =  None,
+            cell_tallies: Optional[float] = None,
             mesh_2d_resolution: Optional[Tuple[int, int, int]] = None,
             mesh_3d_resolution: Optional[Tuple[int, int, int]] = None,
             mesh_2d_corners: Optional[Tuple[Tuple[float, float, float], Tuple[float, float, float]]] = None,
             mesh_3d_corners: Optional[Tuple[Tuple[float, float, float], Tuple[float, float, float]]] = None,
-            ):
+    ):
         """Uses OpenMC python API to make a neutronics model, including tallies
         (cell_tallies and mesh_tally_2d), simulation settings (batches,
         particles per batch).
@@ -557,7 +566,7 @@ class NeutronicsModel():
             mesh_3d_corners: The upper and lower corner locations for the 2d
                 mesh. Defaults to None which uses the
                 NeutronicsModel.mesh_2d_corners
-        
+
         Returns:
             openmc.model.Model(): The openmc model object created
         """
@@ -584,7 +593,6 @@ class NeutronicsModel():
             mesh_2d_corners = self.mesh_2d_corners
         if mesh_3d_corners is None:
             mesh_3d_corners = self.mesh_3d_corners
-
 
         # this removes any old file from previous simulations
         os.system('rm geometry.xml')
@@ -763,7 +771,7 @@ class NeutronicsModel():
         # make the model from geometry, materials, settings and tallies
         model = openmc.model.Model(
             geom, self.mats, settings, self.tallies)
-        
+
         geom.export_to_xml()
         settings.export_to_xml()
         self.tallies.export_to_xml()
@@ -797,7 +805,7 @@ class NeutronicsModel():
             threads: Optional[int] = None,
             create_dagmc_geometry: Optional[bool] = True,
             create_openmc_model: Optional[bool] = True,
-            ) -> str:
+    ) -> str:
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
 
