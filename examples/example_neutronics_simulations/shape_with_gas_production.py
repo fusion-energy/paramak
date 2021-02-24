@@ -35,11 +35,12 @@ def main():
         mesh_tally_3d=['(n,Xa)', '(n,Xt)', '(n,Xp)'],
         mesh_tally_2d=['(n,Xa)', '(n,Xt)', '(n,Xp)'],
         simulation_batches=10,
-        simulation_particles_per_batch=200
+        simulation_particles_per_batch=200,
+        method='pymoab'
     )
 
     # performs an openmc simulation on the model
-    my_model.simulate(method='pymoab')
+    my_model.simulate()
 
     # this extracts the values from the results dictionary
     print(my_model.results)

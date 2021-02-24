@@ -352,7 +352,7 @@ class TestShape(unittest.TestCase):
                 materials={'center_column_shield_mat': 23},
             )
 
-            test_model.create_materials()
+            test_model.create_openmc_materials()
 
         self.assertRaises(
             TypeError,
@@ -664,10 +664,11 @@ class TestNeutronicsBallReactor(unittest.TestCase):
             cell_tallies=['TBR', 'heating', 'flux'],
             simulation_batches=2,
             simulation_particles_per_batch=10,
+            method='pymoab',
         )
 
         # starts the neutronics simulation using trelis
-        neutronics_model.simulate(verbose=False, method='pymoab')
+        neutronics_model.simulate(verbose=False)
 
     def test_reactor_from_shapes_2d_mesh_tallies(self):
         """Makes a reactor from two shapes, then mades a neutronics model
@@ -697,10 +698,11 @@ class TestNeutronicsBallReactor(unittest.TestCase):
             mesh_tally_2d=['(n,Xt)', 'heating', 'flux'],
             simulation_batches=2,
             simulation_particles_per_batch=10,
+            method='pymoab',
         )
 
         # starts the neutronics simulation using trelis
-        neutronics_model.simulate(verbose=False, method='pymoab')
+        neutronics_model.simulate(verbose=False)
 
         assert Path("n-Xt_on_2D_mesh_xz.png").exists() is True
         assert Path("n-Xt_on_2D_mesh_xy.png").exists() is True
@@ -735,7 +737,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
                 simulation_particles_per_batch=84,
             )
 
-            neutronics_model.create_neutronics_geometry(method='incorrect')
+            neutronics_model.create_dagmc_neutronics_geometry(method='incorrect')
 
         self.assertRaises(ValueError, test_incorrect_method)
 

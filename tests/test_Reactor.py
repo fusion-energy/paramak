@@ -440,7 +440,7 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_reactor/test_shape.stl")
-        os.system("rm test_reactor/Graveyard.stl")
+        os.system("rm test_reactor/graveyard.stl")
         test_shape.stl_filename = "test_shape.stl"
         test_reactor = paramak.Reactor([test_shape])
 
@@ -448,7 +448,7 @@ class TestReactor(unittest.TestCase):
 
         for filepath in [
             "test_reactor/test_shape.stl",
-                "test_reactor/Graveyard.stl"]:
+                "test_reactor/graveyard.stl"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
