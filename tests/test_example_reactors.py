@@ -45,7 +45,7 @@ class TestExampleReactors(unittest.TestCase):
             "tf_coil.stp",
             "vacvessel.stp",
             "inner_vessel.stp",
-            "Graveyard.stp",
+            "graveyard.stp",
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
@@ -64,7 +64,7 @@ class TestExampleReactors(unittest.TestCase):
             "firstwall.stp",
             "blanket.stp",
             "blanket_rear_wall.stp",
-            "Graveyard.stp",
+            "graveyard.stp",
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)
@@ -81,7 +81,7 @@ class TestExampleReactors(unittest.TestCase):
             "center_column_shield.stp",
             "divertor.stp",
             "firstwall.stp",
-            "Graveyard.stp",
+            "graveyard.stp",
             "inboard_tf_coils.stp",
             "pf_coils.stp",
             "plasma.stp",
@@ -107,7 +107,7 @@ class TestExampleReactors(unittest.TestCase):
             'outboard_rear_blanket_wall.stp',
             'outboard_tf_coil.stp',
             'pf_coils.stp',
-            'Graveyard.stp'
+            'graveyard.stp'
         ]
         for output_filename in output_filenames:
             os.system("rm " + output_filename)

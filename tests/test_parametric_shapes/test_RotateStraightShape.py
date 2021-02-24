@@ -306,7 +306,7 @@ class TestRotateStraightShape(unittest.TestCase):
         """Checks the name of the stp file for the Graveyard is correct
         """
         output_filename = self.test_shape.export_graveyard()
-        assert 'Graveyard.stp' == output_filename
+        assert 'graveyard.stp' == output_filename
 
         output_filename = self.test_shape.export_graveyard(filename='test.stp')
         assert 'test.stp' == output_filename

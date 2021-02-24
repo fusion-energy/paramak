@@ -383,7 +383,7 @@ class TestReactor(unittest.TestCase):
         test_reactor.export_graveyard()
         test_reactor.export_graveyard(filename="my_graveyard.stp")
 
-        for filepath in ["Graveyard.stp", "my_graveyard.stp"]:
+        for filepath in ["graveyard.stp", "my_graveyard.stp"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
@@ -396,7 +396,7 @@ class TestReactor(unittest.TestCase):
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
-        os.system("rm Graveyard.stp")
+        os.system("rm graveyard.stp")
         test_reactor = paramak.Reactor([test_shape])
         test_reactor.export_graveyard()
         assert test_reactor.graveyard_offset == 100
@@ -419,7 +419,7 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_reactor/test_shape.stp")
-        os.system("rm test_reactor/Graveyard.stp")
+        os.system("rm test_reactor/graveyard.stp")
         test_shape.stp_filename = "test_shape.stp"
         test_reactor = paramak.Reactor([test_shape])
 
@@ -427,7 +427,7 @@ class TestReactor(unittest.TestCase):
 
         for filepath in [
             "test_reactor/test_shape.stp",
-                "test_reactor/Graveyard.stp"]:
+                "test_reactor/graveyard.stp"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
@@ -561,8 +561,8 @@ class TestReactor(unittest.TestCase):
         assert "material" in neutronics_description[0].keys()
         assert neutronics_description[0]["material"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
-        assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
 
     def test_export_neutronics_description(self):
         """Creates a Reactor object and checks that the neutronics description
@@ -593,8 +593,8 @@ class TestReactor(unittest.TestCase):
         assert neutronics_description[0]["material"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
-        assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest_test.json")
 
     def test_export_neutronics_description_with_plasma(self):
@@ -638,8 +638,8 @@ class TestReactor(unittest.TestCase):
         assert neutronics_description[0]["tet_mesh"] == "size 60"
         assert neutronics_description[1]["material"] == "DT_plasma"
         assert neutronics_description[1]["stp_filename"] == "plasma.stp"
-        assert neutronics_description[2]["material"] == "Graveyard"
-        assert neutronics_description[2]["stp_filename"] == "Graveyard.stp"
+        assert neutronics_description[2]["material"] == "graveyard"
+        assert neutronics_description[2]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest.json")
 
     def test_export_neutronics_description_without_plasma(self):
@@ -671,8 +671,8 @@ class TestReactor(unittest.TestCase):
         assert neutronics_description[0]["material"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
-        assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest.json")
 
     def test_export_neutronics_without_extension(self):
