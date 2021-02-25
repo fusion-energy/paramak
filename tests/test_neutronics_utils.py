@@ -70,10 +70,11 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         for view_plane in ['XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ', 'XYZ']:
 
-            points = paramak.neutronics_utils.extract_points_from_initial_source(view_plane=view_plane)
+            points = paramak.neutronics_utils.extract_points_from_initial_source(
+                view_plane=view_plane)
 
             assert len(points) == 10
-            
+
             for point in points:
                 if view_plane == 'XYZ':
                     assert len(point) == 3
