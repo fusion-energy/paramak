@@ -135,30 +135,30 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
         #     stp_filename='plasma.stp',
         # )
 
-        R1 = 511 - 50 / 2
-        R2 = 1340 + 50 / 2
-        coil_thickness = 25
-        tf_coil = paramak.ToroidalFieldCoilPrincetonD(
-            R1=R1,
-            R2=R2,
-            thickness=coil_thickness,
-            distance=coil_thickness,
-            number_of_coils=6,
-            rotation_angle=self.rotation_angle,
-            stp_filename='tf_coil.stp',
-            stl_filename='tf_coil.stl',
-        )
+        # R1 = 511 - 50 / 2
+        # R2 = 1340 + 50 / 2
+        # coil_thickness = 25
+        # tf_coil = paramak.ToroidalFieldCoilPrincetonD(
+        #     R1=R1,
+        #     R2=R2,
+        #     thickness=coil_thickness,
+        #     distance=coil_thickness,
+        #     number_of_coils=6,
+        #     rotation_angle=self.rotation_angle,
+        #     stp_filename='tf_coil.stp',
+        #     stl_filename='tf_coil.stl',
+        # )
 
-        tf_coil_casing = paramak.TFCoilCasing(
-            tf_coil,
-            inner_offset=R2 - 1340,
-            outer_offset=1500 - R2 - coil_thickness,
-            vertical_section_offset=25,
-            distance=100,
-            rotation_angle=self.rotation_angle,
-            stp_filename="tf_coil_casing.stp",
-            stl_filename="tf_coil_casing.stl",
-        )
+        # tf_coil_casing = paramak.TFCoilCasing(
+        #     tf_coil,
+        #     inner_offset=R2 - 1340,
+        #     outer_offset=1500 - R2 - coil_thickness,
+        #     vertical_section_offset=25,
+        #     distance=100,
+        #     rotation_angle=self.rotation_angle,
+        #     stp_filename="tf_coil_casing.stp",
+        #     stl_filename="tf_coil_casing.stl",
+        # )
 
         vac_vessel = paramak.RotateStraightShape(
             points=[
@@ -294,6 +294,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             vac_vessel,
             outboard_pf_coils,
             divertor,
-            tf_coil,
-            tf_coil_casing,
+            # tf_coil,
+            # tf_coil_casing,
         ]
