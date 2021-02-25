@@ -1270,3 +1270,44 @@ class Shape:
         new_filename = self.graveyard.export_stp(Path(filename))
 
         return new_filename
+
+    def make_circle_edge(self, p0, p1, p2, tolerance=0.1):
+
+        solid = cq.Workplane(self.workplane).center(0, 0)
+        solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+        edge = solid.vals()[0]
+
+        new_edge = paramak.utils._transform_curve(edge, tolerance=tolerance)
+
+        points = paramak.utils.extract_points_from_edges(
+            edges=new_edge,
+            # view_plane=view_plane
+        )
+        points_with_connections = []
+        for point in points[:-1]:
+            print('         ',(point[0], point[1], 'spline'))
+            points_with_connections.append((point[0], point[1], 'spline'))
+
+        return points_with_connections
+
+    def convert_circle_edges_to_splines(self, tolerance=0.1):
+
+        new_points = []
+        counter = 0
+        while counter < len(self.points):
+
+            if self.points[counter][2] == 'circle':
+                p0 = self.points[counter][:2]
+                p1 = self.points[counter+1][:2]
+                p2 = self.points[counter+2][:2]
+
+                points = self.make_circle_edge(p0, p1, p2, tolerance=tolerance)
+
+                new_points = new_points + points
+                new_points.append(self.points[counter+2])
+                counter = counter+3
+            else:
+                new_points.append(self.points[counter])
+                counter = counter+1
+        self.points = new_points[:-1]
+        return new_points[:-1]
