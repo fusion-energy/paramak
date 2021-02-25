@@ -56,7 +56,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         assert Path("initial_source.h5").exists() is True
 
-    def extract_points_from_initial_source(self):
+    def test_extract_points_from_initial_source(self):
         """Creates an initial_source.h5 from a point source reads in the file
         and checks the first point is 0, 0, 0 as exspected."""
 
@@ -66,14 +66,33 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         source.space = openmc.stats.Point((0, 0, 0))
         source.energy = openmc.stats.Discrete([14e6], [1])
 
-        paramak.neutronics_utils.create_inital_particles(source, 100)
-
-        create_inital_particles(source, 10)
+        paramak.neutronics_utils.create_inital_particles(source, 10)
 
         for view_plane in ['XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ', 'XYZ']:
 
-            points = extract_points_from_initial_source(view_plane=view_plane)
+            points = paramak.neutronics_utils.extract_points_from_initial_source(view_plane=view_plane)
 
-            assert points[0][0] == 0
-            assert points[0][1] == 0
-            assert points[0][2] == 0
+            assert len(points) == 10
+            
+            for point in points:
+                if view_plane == 'XYZ':
+                    assert len(point) == 3
+                    assert point[0] == 0
+                    assert point[1] == 0
+                    assert point[2] == 0
+                else:
+                    assert len(point) == 2
+                    assert point[0] == 0
+                    assert point[1] == 0
+
+    def test_extract_points_from_initial_source_incorrect_view_plane(self):
+        """Tries to make extract points on to viewplane that is not accepted"""
+
+        def incorrect_viewplane():
+            """Inccorect view_plane should raise a ValueError"""
+
+            paramak.neutronics_utils.extract_points_from_initial_source(
+                view_plane='coucou'
+            )
+
+        self.assertRaises(ValueError, incorrect_viewplane)
