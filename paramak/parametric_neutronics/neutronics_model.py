@@ -5,20 +5,17 @@ import pathlib
 import shutil
 import warnings
 from pathlib import Path
+from typing import List, Optional, Tuple, Union
 
-from typing import List, Tuple, Optional, Union
-
-
-from paramak import get_neutronics_results_from_statepoint_file
-from paramak.neutronics_utils import create_inital_particles, extract_points_from_initial_source
-from paramak.utils import plotly_trace
-from paramak import get_neutronics_results_from_statepoint_file
 import paramak
-
+from paramak import get_neutronics_results_from_statepoint_file
+from paramak.neutronics_utils import (create_inital_particles,
+                                      extract_points_from_initial_source)
+from paramak.utils import plotly_trace
 
 try:
     import openmc
-    from openmc.data import REACTION_NAME, REACTION_MT
+    from openmc.data import REACTION_MT, REACTION_NAME
 except ImportError:
     warnings.warn('OpenMC not found, NeutronicsModelFromReactor.simulate \
             method not available', UserWarning)
