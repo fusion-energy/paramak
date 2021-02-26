@@ -951,8 +951,9 @@ class Shape:
                 to True.
             tolerance: faceting toleranceto use when faceting cirles and
                 splines. Defaults to 1e-3.
-            view_plane: The plane to project Defaults to the workplane of the
-                paramak.Shape
+            view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ',
+                'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'. Defaults to 'RZ'. Defaults to
+                the workplane of the paramak.Shape.
 
         Returns:
             plotly.Figure(): figure object
@@ -962,21 +963,17 @@ class Shape:
         if view_plane is None:
             view_plane = self.workplane
 
-        if self.points is None:
-            if hasattr(self, 'path_points') and self.path_points is None:
-                raise ValueError("No points or point_path defined for", self)
+        if self.solid is None:
+            raise ValueError("No solid was found for ", self)
 
-        if self.wire is None:
-            raise ValueError("No wire defined for", self)
-
-        if not isinstance(self.wire, list):
-            list_of_wires = [self.wire]
+        if isinstance(self.solid, cq.Workplane):
+            edges = self.solid.val().Edges()
         else:
-            list_of_wires = self.wire
+            edges = self.solid.Edges()
 
         fig = paramak.utils.export_wire_to_html(
-            wires=list_of_wires,
-            filename=filename,
+            wires=edges,
+            filename=None,
             view_plane=view_plane,
             facet_splines=facet_splines,
             facet_circles=facet_circles,
@@ -1003,6 +1000,17 @@ class Shape:
                     name='Shape.path_points'
                 )
             )
+
+        if filename is not None:
+
+            Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+
+            path_filename = Path(filename)
+
+            if path_filename.suffix != ".html":
+                path_filename = path_filename.with_suffix(".html")
+
+            fig.write_html(str(path_filename))
 
         return fig
 
