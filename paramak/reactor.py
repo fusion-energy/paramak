@@ -514,7 +514,7 @@ class Reactor:
                 (0, 0, 0) which is black.
             hiddenColor: the color of the lines used to draw the geometry in
                 RGB format with each value between 0 and 255. Defaults to
-               (100, 100, 100) which is light grey.
+                (100, 100, 100) which is light grey.
             showHidden: If the edges obscured by geometry should be included in
                 the diagram. Defaults to True.
             showAxes: If the x, y, z axis should be included in the image.
