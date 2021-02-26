@@ -37,6 +37,7 @@ jobs:
             cq_version=master
             compile_cores=2
             include_neutronics=true
+            target=dependencies
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
