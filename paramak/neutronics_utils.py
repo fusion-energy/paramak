@@ -1,10 +1,11 @@
 
 import math
 import os
-import xml.etree.ElementTree as ET
 from collections import defaultdict
-from typing import Optional, List
+from typing import List, Optional
+from xml.etree.ElementTree import SubElement
 
+import defusedxml.ElementTree as ET
 import h5py
 import matplotlib.pyplot as plt
 import numpy as np
@@ -455,7 +456,7 @@ def create_inital_particles(
     # this just adds write_initial_source == True to the settings.xml
     tree = ET.parse("settings.xml")
     root = tree.getroot()
-    elem = ET.SubElement(root, "write_initial_source")
+    elem = SubElement(root, "write_initial_source")
     elem.text = "true"
     tree.write("settings.xml")
 

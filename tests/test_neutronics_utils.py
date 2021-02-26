@@ -92,6 +92,12 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         def incorrect_viewplane():
             """Inccorect view_plane should raise a ValueError"""
 
+            source = openmc.Source()
+            source.space = openmc.stats.Point((0, 0, 0))
+            source.energy = openmc.stats.Discrete([14e6], [1])
+            
+            paramak.neutronics_utils.create_inital_particles(source, 10)
+
             paramak.neutronics_utils.extract_points_from_initial_source(
                 view_plane='coucou'
             )
