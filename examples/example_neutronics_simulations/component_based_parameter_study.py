@@ -35,7 +35,7 @@ def make_model_and_simulate():
             materials={'center_column_shield_mat': 'eurofer'},
             cell_tallies=['heating'],
             simulation_batches=10,  # should be increased for more accurate result
-            simulation_particles_per_batch=10  # settings are low to reduce time required
+            simulation_particles_per_batch=10,  # settings are low to reduce time required
             method='pymoab',
         )
 

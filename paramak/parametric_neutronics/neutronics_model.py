@@ -847,7 +847,7 @@ class NeutronicsModel():
             if Path(required_file).is_file() is False:
                 msg = "{} file was not found. Please set create_openmc_model \
                     to True or use the create_openmc_neutronics_model() \
-                    method to create the {} file".format(required_file, required_file)
+                    method to create the {} file".format(required_file)
                 raise FileNotFoundError(msg)
 
         if Path('dagmc.h5m').is_file() is False:

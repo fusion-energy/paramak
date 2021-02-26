@@ -39,7 +39,7 @@ class TestShape(unittest.TestCase):
             method='pymoab'
         )
 
-        my_model.create_neutronics_geometry()
+        my_model.create_dagmc_neutronics_geometry()
 
         my_model.simulate(create_dagmc_geometry=False)
 
