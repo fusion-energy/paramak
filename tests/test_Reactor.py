@@ -340,7 +340,7 @@ class TestReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape])
         assert len(test_reactor.shapes_and_components) == 1
 
-    def test_Graveyard_exists(self):
+    def test_graveyard_exists(self):
         """creates a Reactor object with one shape and checks that a graveyard
         can be produced using the make_graveyard method"""
 
@@ -353,7 +353,7 @@ class TestReactor(unittest.TestCase):
 
         assert isinstance(test_reactor.graveyard, paramak.Shape)
 
-    def test_Graveyard_exists_solid_is_None(self):
+    def test_graveyard_exists_solid_is_None(self):
         """creates a Reactor object with one shape and checks that a graveyard
         can be produced using the make_graveyard method when the solid
         attribute of the shape is None"""
@@ -429,7 +429,7 @@ class TestReactor(unittest.TestCase):
         test_reactor.export_stp(output_folder="test_reactor")
 
         assert Path("test_reactor/test_shape.stp").exists() is True
-        assert Path("test_reactor/Graveyard.stp").exists() is True
+        assert Path("test_reactor/graveyard.stp").exists() is True
 
     def test_exported_stl_files_exist(self):
         """creates a Reactor object with one shape and checks that a stl file
