@@ -32,9 +32,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: |
-            ukaea/paramak:dependencies
-            target=dependencies
+          tags: ukaea/paramak:dependencies
+          target: dependencies
           build-args: |
             cq_version=master
             compile_cores=2
