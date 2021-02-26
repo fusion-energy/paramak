@@ -1285,7 +1285,7 @@ class Shape:
         )
         points_with_connections = []
         for point in points[:-1]:
-            print('         ',(point[0], point[1], 'spline'))
+            print('         ', (point[0], point[1], 'spline'))
             points_with_connections.append((point[0], point[1], 'spline'))
 
         return points_with_connections
@@ -1298,16 +1298,16 @@ class Shape:
 
             if self.points[counter][2] == 'circle':
                 p0 = self.points[counter][:2]
-                p1 = self.points[counter+1][:2]
-                p2 = self.points[counter+2][:2]
+                p1 = self.points[counter + 1][:2]
+                p2 = self.points[counter + 2][:2]
 
                 points = self.make_circle_edge(p0, p1, p2, tolerance=tolerance)
 
                 new_points = new_points + points
-                new_points.append(self.points[counter+2])
-                counter = counter+3
+                new_points.append(self.points[counter + 2])
+                counter = counter + 3
             else:
                 new_points.append(self.points[counter])
-                counter = counter+1
+                counter = counter + 1
         self.points = new_points[:-1]
         return new_points[:-1]
