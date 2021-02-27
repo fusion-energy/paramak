@@ -663,8 +663,7 @@ def convert_circle_to_spline(
     """Converts three points on the edge of a circle into a series of points
     on the edge of the circle. This is done by creating a circle edge from the
     the points provided (p0, p1, p2), facets the circle with the provided
-    tolerance to extracts the points on the faceted edge and returns them with
-    spline connections.
+    tolerance to extracts the points on the faceted edge and returns them.
 
     Args:
         p0: coordinates of the first point
@@ -673,7 +672,7 @@ def convert_circle_to_spline(
         tolerance: the precision of the faceting.
 
     Returns:
-        The new points with spline connections
+        The new points
     """
 
     # work plane is arbitrarily selected and has no impact of function
@@ -688,8 +687,8 @@ def convert_circle_to_spline(
         view_plane='XZ'
     )
     points_with_connections = []
-    for point in points[:-1]:
-        points_with_connections.append((point[0], point[1], 'spline'))
+    for point in points:
+        points_with_connections.append((point[0], point[1]))
 
     return points_with_connections
 

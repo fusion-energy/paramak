@@ -1,13 +1,14 @@
 
 import unittest
-from cadquery.cq import Workplane
 
 import numpy as np
 import paramak
-from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
-                           find_center_point_of_circle, plotly_trace,
-                           extract_points_from_edges, facet_wire)
 import plotly.graph_objects as go
+import pytest
+from cadquery.cq import Workplane
+from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
+                           extract_points_from_edges, facet_wire,
+                           find_center_point_of_circle, plotly_trace)
 
 
 class TestUtilityFunctions(unittest.TestCase):
@@ -17,31 +18,26 @@ class TestUtilityFunctions(unittest.TestCase):
         curve."""
 
         new_points = paramak.utils.convert_circle_to_spline(
-            p0=(200, 0),
-            p1=(250, 50),
-            p2=(200, 100),
+            p0=(200., 0.),
+            p1=(250., 50.),
+            p2=(200., 100.),
             tolerance=0.2
         )
 
-        connections = [connection[2] for connection in new_points]
+        # these points can change from 200. to values like 200.00000000000009
+        assert pytest.approx(new_points[0][0], abs=0.0000000000001) == 200
+        assert pytest.approx(new_points[0][1], abs=0.0000000000001) == 0
+        assert pytest.approx(new_points[-1][0], abs=0.0000000000001) == 200
+        assert pytest.approx(new_points[-1][1], abs=0.0000000000001) == 100
 
-        assert new_points[0][0] == 200
-        assert new_points[0][1] == 0
-        assert new_points[-1][0] == 200
-        assert new_points[-1][1] == 100
-        assert len(set(connections)) == 1
-        assert connections[0] == 'spline'
-
-        new_points = paramak.utils.convert_circle_to_spline(
+        new_points_more_details = paramak.utils.convert_circle_to_spline(
             p0=(200, 0),
             p1=(250, 50),
             p2=(200, 100),
             tolerance=0.1
         )
 
-        connections_lower_tol = [connection[2] for connection in new_points]
-
-        assert len(connections_lower_tol) > len(connections)
+        assert len(new_points_more_details) > len(new_points)
 
     def test_extract_points_from_edges(self):
         """Extracts points from edges and checks the list returned is the

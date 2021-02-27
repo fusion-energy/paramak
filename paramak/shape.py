@@ -1303,7 +1303,10 @@ class Shape:
                     p0, p1, p2, tolerance=tolerance
                 )
 
-                new_points = new_points + points
+                # the last point needs to have the connection type of p2
+                for point in points[:-1]:
+                    new_points.append((point[0], point[1], 'spline'))
+
                 new_points.append(self.points[counter + 2])
                 counter = counter + 3
             else:
