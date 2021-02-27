@@ -23,7 +23,7 @@ class TestDemo2015Reactor(unittest.TestCase):
             'vacvessel.stp',
         ]
         os.system("rm *.stp")
-        my_reactor = paramak.EuDemoFrom2015PaperDiagram()
+        my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1)
         my_reactor.export_stp()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
@@ -45,7 +45,7 @@ class TestDemo2015Reactor(unittest.TestCase):
             'vacvessel.stp',
         ]
         os.system("rm *.stp")
-        my_reactor = paramak.EuDemoFrom2015PaperDiagram(rotation_angle=90)
+        my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1, rotation_angle=90)
         my_reactor.export_stp()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
