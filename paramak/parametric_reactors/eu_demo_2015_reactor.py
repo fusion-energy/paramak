@@ -2,6 +2,7 @@
 import paramak
 import numpy as np
 
+
 class EuDemoFrom2015PaperDiagram(paramak.Reactor):
     """Creates geometry of a simplified EU DEMO model based on the published
     diagram in Figure 2 of Definition of the basic DEMO tokamak geometry based
