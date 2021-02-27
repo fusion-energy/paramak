@@ -1127,6 +1127,52 @@ class Shape:
 
         return neutronics_description
 
+    def export_neutronics_description(
+            self,
+            filename: Optional[str] = "manifest.json") -> str:
+        """
+        Saves Shape.neutronics_description to a json file. The resulting json
+        file contains a list of dictionaries. Each dictionary entry comprises
+        of a material and a filename and optionally a tet_mesh instruction. The
+        json file can then be used with the neutronics workflows to create a
+        neutronics model. Creating of the neutronics model requires linkage
+        between volumes, materials and identification of which volumes to
+        tet_mesh. If the filename does not end with .json then .json will be
+        added. The plasma geometry is not included by default as it is
+        typically not included in neutronics simulations. The reason for this
+        is that the low number density results in minimal interactions with
+        neutrons. However, the plasma can be added if the include_plasma
+        argument is set to True.
+
+        Args:
+            filename (str, optional): the filename used to save the neutronics
+                description
+            include_plasma (Boolean, optional): should the plasma be included.
+                Defaults to False as the plasma volume and material has very
+                little impact on the neutronics results due to the low density.
+                Including the plasma does however slow down the simulation.
+            include_graveyard (Boolean, optional): should the graveyard be
+                included. Defaults to True as this is needed for DAGMC models.
+        """
+
+        path_filename = Path(filename)
+
+        if path_filename.suffix != ".json":
+            path_filename = path_filename.with_suffix(".json")
+
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        with open(path_filename, "w") as outfile:
+            json.dump(
+                self.neutronics_description(),
+                outfile,
+                indent=4,
+            )
+
+        print("saved geometry description to ", path_filename)
+
+        return str(path_filename)
+
     def perform_boolean_operations(self, solid: cq.Workplane, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""

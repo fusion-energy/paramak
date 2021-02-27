@@ -346,7 +346,7 @@ class NeutronicsModel():
 
         return self.mats
 
-    def create_dagmc_neutronics_geometry_with_trelis(
+    def export_h5m_with_trelis(
             self,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
@@ -395,8 +395,8 @@ class NeutronicsModel():
 
         if not Path("make_faceteted_neutronics_model.py").is_file():
             raise FileNotFoundError(
-                "The make_faceteted_neutronics_model.py was \
-                not found in the directory")
+                "The make_faceteted_neutronics_model.py was not found in the \
+                directory")
         os.system(
             "trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
             str(faceting_tolerance) +
@@ -404,18 +404,27 @@ class NeutronicsModel():
             str(merge_tolerance) +
             "'\"")
 
+        os.system('rm make_faceteted_neutronics_model.py')
+
         if not Path("dagmc_not_watertight.h5m").is_file():
             raise FileNotFoundError(
                 "The dagmc_not_watertight.h5m was not found \
                 in the directory, the Trelis stage has failed")
-        self._make_watertight()
 
-    def create_dagmc_neutronics_geometry_with_pymoab(
+        output_filename = self.make_watertight(
+            input_filename="dagmc_not_watertight.h5m",
+            output_filename="dagmc.h5m"
+        )
+
+        return output_filename
+
+    def export_h5m_with_pymoab(
         self,
         faceting_tolerance: Optional[float] = None
     ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using PyMoab and MOAB.
+        simulations using PyMoab and MOAB. Tags the volumes with their
+        material_tag attributes.
 
         Arguments:
             faceting_tolerance: the allowable distance between facetets
@@ -433,22 +442,24 @@ class NeutronicsModel():
 
         os.system('rm dagmc.h5m')
         if isinstance(self.geometry, (paramak.Shape, paramak.Reactor)):
-            self.geometry.export_h5m(
+            output_filename = self.geometry.export_h5m(
                 filename='dagmc.h5m',
                 tolerance=faceting_tolerance
             )
+            return output_filename
         else:
             raise NotImplementedError(
-                "Reading a filename and converting to a DAGMC geometry using pymoab is not yet supported")
+                "Reading a JSON filename and converting to a DAGMC geometry using pymoab is not yet supported")
+        
 
-    def create_dagmc_neutronics_geometry(
+    def export_h5m(
             self,
             method: Optional[str] = None,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
     ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations.
+        simulations. Tags the volumes with their material_tag attributes.
 
         Arguments:
             method: The method to use when making the imprinted and
@@ -481,32 +492,49 @@ class NeutronicsModel():
                 "the method using in should be either trelis, pymoab. Not", method)
 
         if method == 'trelis':
-            self.create_dagmc_neutronics_geometry_with_trelis(
+            output_filename = self.export_h5m_with_trelis(
                 merge_tolerance=merge_tolerance,
                 faceting_tolerance=faceting_tolerance,
             )
         elif method == 'pymoab':
-            self.create_dagmc_neutronics_geometry_with_pymoab(
+            output_filename = self.export_h5m_with_pymoab(
                 faceting_tolerance=faceting_tolerance
             )
 
-        return 'dagmc.h5m'
+        return output_filename
 
-    def _make_watertight(self):
-        """Runs the DAGMC make_watertight script thatt seals the facetets of
-        the geometry"""
+    def make_watertight(
+            self,
+            input_filename: str = "dagmc_not_watertight.h5m",
+            output_filename: str = "dagmc.h5m",            
+            ) -> str:
+        """Runs the DAGMC make_watertight executable that seals the facetets of
+        the geometry with specified input and output h5m files.
 
-        if not Path("dagmc_not_watertight.h5m").is_file():
-            raise ValueError(
-                "Failed to create a dagmc_not_watertight.h5m file")
+        Arguments:
+            input_filename: the non watertight h5m file to make watertight.
+            output_filename: the filename of the watertight h5m file.
+
+        Returns:
+            The filename of the h5m file created
+        """
+
+        if not Path(input_filename).is_file():
+            raise FileNotFoundError("Failed to find dagmc_not_watertight.h5m")
 
         if os.system(
-                "make_watertight dagmc_not_watertight.h5m -o dagmc.h5m") != 0:
+                "make_watertight {} -o {}".format(input_filename, output_filename)) != 0:
             raise ValueError(
                 "make_watertight failed, check DAGMC is install and the \
-                    DAGMC/bin folder is in the path directory")
+                    DAGMC/bin folder is in the path directory (Linux and Mac) \
+                    or set as an enviromental varible (Windows)")
 
-    def create_openmc_neutronics_model(
+        if not Path(output_filename).is_file():
+            raise FileNotFoundError("Failed to produce dagmc.h5m")
+
+        return output_filename
+
+    def export_xml(
             self,
             simulation_batches: Optional[int] = None,
             source=None,
@@ -806,8 +834,8 @@ class NeutronicsModel():
             verbose: Optional[bool] = True,
             cell_tally_results_filename: Optional[str] = 'results.json',
             threads: Optional[int] = None,
-            create_dagmc_geometry: Optional[bool] = True,
-            create_openmc_model: Optional[bool] = True,
+            export_h5m: Optional[bool] = True,
+            export_xml: Optional[bool] = True,
     ) -> str:
         """Run the OpenMC simulation. Deletes exisiting simulation output
         (summary.h5) if files exists.
@@ -819,42 +847,41 @@ class NeutronicsModel():
                 cell tallies to file.
             threads: Sets the number of OpenMP threads used for the simulation.
                  None takes all available threads by default.
-            create_dagmc_geometry: controls the creation of the DAGMC geometry
+            export_h5m: controls the creation of the DAGMC geometry
                 file (dagmc.h5m). Set to True to create the DAGMC geometry
                 file with the default settings as determined by the
                 NeutronicsModel attributes or set to False and run the
-                create_dagmc_neutronics_geometry() method yourself with more
+                export_h5m() method yourself with more
                 direct control over the settings.
-            create_openmc_model: controls the creation of the OpenMC model
+            export_xml: controls the creation of the OpenMC model
                 files (xml files). Set to True to create the OpenMC files with
                 the default settings as determined by the NeutronicsModel
                 attributes or set to False and use existing xml files or run
-                the create_openmc_neutronics_model() method yourself with more
+                the export_xml() method yourself with more
                 direct control over the settings and creation of the xml files.
 
         Returns:
             str: the h5 simulation output filename
         """
-        if create_openmc_model is True:
-            self.create_openmc_neutronics_model()
+        if export_xml is True:
+            self.export_xml()
 
-        if create_dagmc_geometry is True:
-            self.create_dagmc_neutronics_geometry()
+        if export_h5m is True:
+            self.export_h5m()
 
         # checks all the nessecary files are found
         for required_file in ['geometry.xml', 'materials.xml', 'settings.xml',
                               'tallies.xml']:
-            if Path(required_file).is_file() is False:
-                msg = "{} file was not found. Please set create_openmc_model \
-                    to True or use the create_openmc_neutronics_model() \
-                    method to create the {} file".format(required_file)
+            if not Path(required_file).is_file():
+                msg = "{} file was not found. Please set export_xml \
+                    to True or use the export_xml() \
+                    method to create the {} file".format(required_file, required_file)
                 raise FileNotFoundError(msg)
 
-        if Path('dagmc.h5m').is_file() is False:
-            msg = "dagmc.h5m file was not found. Please set \
-                   create_dagmc_geometry to True or use the \
-                   create_dagmc_neutronics_geometry() methods to create the \
-                   dagmc.h5m file"
+        if not Path('dagmc.h5m').is_file():
+            msg = """dagmc.h5m file was not found. Please set export_h5m to  
+                  True or use the export_h5m() methods to create the dagmc.h5m
+                  file"""
             raise FileNotFoundError(msg)
 
         # Deletes summary.h5m if it already exists.

@@ -39,9 +39,9 @@ class TestShape(unittest.TestCase):
             method='pymoab'
         )
 
-        my_model.create_dagmc_neutronics_geometry()
+        my_model.export_h5m()
 
-        my_model.simulate(create_dagmc_geometry=False)
+        my_model.simulate(export_h5m=False)
 
         my_model.results is not None
 
@@ -160,10 +160,10 @@ class TestShape(unittest.TestCase):
                 materials={'center_column_shield_mat': 'eurofer'},
             )
 
-            test_model._make_watertight()
+            test_model.make_watertight()
 
         self.assertRaises(
-            ValueError,
+            FileNotFoundError,
             missing_dagmc_not_watertight_file
         )
 
@@ -561,82 +561,40 @@ class TestShape(unittest.TestCase):
         assert Path("heating_on_2D_mesh_xy.png").exists() is True
         assert Path("heating_on_2D_mesh_yz.png").exists() is True
 
+    def test_neutronics_component_3d_and_2d_mesh_simulation_with_corner_points(self):
+        """Makes a neutronics model and simulates with a 3D and 2D mesh tally
+        and checks that the vtk and png files are produced. This checks the
+        mesh ID values don't overlap"""
 
-class TestNeutronicsBallReactor(unittest.TestCase):
-    """Tests the NeutronicsModel with a BallReactor as the geometry input
-    including neutronics simulations"""
+        os.system('rm *.h5')
 
-    def setUp(self):
-        # makes the 3d geometry
-        self.my_reactor = paramak.BallReactor(
-            inner_bore_radial_thickness=1,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=50,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=3,
-            blanket_radial_thickness=100,
-            blanket_rear_wall_radial_thickness=3,
-            elongation=2.75,
-            triangularity=0.5,
-            rotation_angle=360,
+        # converts the geometry into a neutronics geometry
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': 'Be'},
+            mesh_tally_3d=['heating'],
+            mesh_tally_2d=['heating'],
+            simulation_batches=2,
+            simulation_particles_per_batch=2,
+            method='pymoab',
+            mesh_3d_corners=[(0, 0, 0), (10, 10, 10)],
+            mesh_2d_corners=[(5, 5, 5), (15, 15, 15)],
         )
 
-        # makes a homogenised material for the blanket from lithium lead and
-        # eurofer
-        self.blanket_material = nmm.MultiMaterial(
-            fracs=[0.8, 0.2],
-            materials=[
-                nmm.Material('SiC'),
-                nmm.Material('eurofer')
-            ])
+        assert my_model.mesh_3d_corners == [(0, 0, 0), (10, 10, 10)] 
+        assert my_model.mesh_2d_corners == [(5, 5, 5), (15, 15, 15)]
+        # performs an openmc simulation on the model
+        output_filename = my_model.simulate()
+        results = openmc.StatePoint(output_filename)
+        assert len(results.meshes) == 4  # one 3D and three 2D
+        assert len(results.tallies.items()) == 4  # one 3D and three 2D
 
-        self.source = openmc.Source()
-        # sets the location of the source to x=0 y=0 z=0
-        self.source.space = openmc.stats.Point((0, 0, 0))
-        # sets the direction to isotropic
-        self.source.angle = openmc.stats.Isotropic()
-        # sets the energy distribution to 100% 14MeV neutrons
-        self.source.energy = openmc.stats.Discrete([14e6], [1])
-
-    def test_neutronics_model_attributes(self):
-        """Makes a BallReactor neutronics model and simulates the TBR"""
-
-        # makes the neutronics material
-        neutronics_model = paramak.NeutronicsModel(
-            geometry=self.my_reactor,
-            source=openmc.Source(),
-            materials={
-                'inboard_tf_coils_mat': 'copper',
-                'center_column_shield_mat': 'WC',
-                'divertor_mat': 'eurofer',
-                'firstwall_mat': 'eurofer',
-                'blanket_mat': self.blanket_material,  # use of homogenised material
-                'blanket_rear_wall_mat': 'eurofer'},
-            cell_tallies=['TBR', 'flux', 'heating'],
-            simulation_batches=42,
-            simulation_particles_per_batch=84,
-        )
-
-        assert neutronics_model.geometry == self.my_reactor
-
-        assert neutronics_model.materials == {
-            'inboard_tf_coils_mat': 'copper',
-            'center_column_shield_mat': 'WC',
-            'divertor_mat': 'eurofer',
-            'firstwall_mat': 'eurofer',
-            'blanket_mat': self.blanket_material,
-            'blanket_rear_wall_mat': 'eurofer'}
-
-        assert neutronics_model.cell_tallies == ['TBR', 'flux', 'heating']
-
-        assert neutronics_model.simulation_batches == 42
-        assert isinstance(neutronics_model.simulation_batches, int)
-
-        assert neutronics_model.simulation_particles_per_batch == 84
-        assert isinstance(neutronics_model.simulation_particles_per_batch, int)
+        assert Path(output_filename).exists() is True
+        assert Path('heating_on_3D_mesh.vtk').exists() is True
+        assert Path("heating_on_2D_mesh_xz.png").exists() is True
+        assert Path("heating_on_2D_mesh_xy.png").exists() is True
+        assert Path("heating_on_2D_mesh_yz.png").exists() is True
 
     def test_reactor_from_shapes_cell_tallies(self):
         """Makes a reactor from two shapes, then mades a neutronics model
@@ -714,7 +672,173 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         assert Path("flux_on_2D_mesh_xy.png").exists() is True
         assert Path("flux_on_2D_mesh_yz.png").exists() is True
 
-    def test_incorrect_settings(self):
+    def test_export_h5m_makes_dagmc_file(self):
+        """Makes a NeutronicsModel from a shapes, then makes the h5m file"""
+
+        my_model = paramak.NeutronicsModel(
+            geometry=self.my_shape,
+            source=self.source,
+            materials={'center_column_shield_mat': 'WC'},
+            method='pymoab'
+        )
+        # tests method using class attribute
+        os.system('rm dagmc.h5m')
+        my_model.export_h5m()
+        assert Path('dagmc.h5m').exists() is True
+
+        # tests method using method argument
+        os.system('rm dagmc.h5m')
+        my_model.export_h5m(method='pymoab')
+        assert Path('dagmc.h5m').exists() is True
+
+    def test_trelis_run_without_trelis(self):
+        """Creates NeutronicsModel objects and checks errors are
+        raised correctly when arguments are incorrect."""
+
+        # If Trelis is in the CI then this should work
+        def test_export_h5m_error_handling():
+            """Makes a reactor from two shapes, then mades a neutronics model
+            and tests the TBR simulation value"""
+
+            my_model = paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'WC'},
+                method='trelis'
+            )
+
+            my_model.export_h5m()
+
+        self.assertRaises(FileNotFoundError, test_export_h5m_error_handling)
+
+    def test_simulations_with_missing_xml_files(self):
+        """Creates NeutronicsModel objects and trys to perform simulation
+        without necessary input files to check if error handeling is working"""
+
+        def test_missing_xml_file_error_handling():
+            """Attemps to simulate without OpenMC xml files which should fail
+            with a FileNotFoundError"""
+
+            my_model = paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'WC'},
+                method='pymoab'
+            )
+
+            # creates h5m files so that the code passes the h5m file check
+            os.system('touch dagmc.h5m')
+            os.system('rm *.xml')
+
+            my_model.simulate(export_xml=False)
+
+        self.assertRaises(FileNotFoundError, test_missing_xml_file_error_handling)
+
+    def test_simulations_with_missing_h5m_files(self):
+        """Creates NeutronicsModel objects and trys to perform simulation
+        without necessary input files to check if error handeling is working"""
+
+        def test_missing_h5m_file_error_handling():
+            """Attemps to simulate without a dagmc.h5m file which should fail
+            with a FileNotFoundError"""
+
+            my_model = paramak.NeutronicsModel(
+                geometry=self.my_shape,
+                source=self.source,
+                materials={'center_column_shield_mat': 'WC'},
+                method='pymoab'
+            )
+
+            # creates xml files so that the code passes the xml file check
+            os.system('touch geometry.xml')
+            os.system('touch materials.xml')
+            os.system('touch settings.xml')
+            os.system('touch tallies.xml')
+            os.system('rm dagmc.h5m')
+
+            my_model.simulate(export_h5m=False)
+
+        self.assertRaises(FileNotFoundError, test_missing_h5m_file_error_handling)
+
+
+
+class TestNeutronicsBallReactor(unittest.TestCase):
+    """Tests the NeutronicsModel with a BallReactor as the geometry input
+    including neutronics simulations"""
+
+    def setUp(self):
+        # makes the 3d geometry
+        self.my_reactor = paramak.BallReactor(
+            inner_bore_radial_thickness=1,
+            inboard_tf_leg_radial_thickness=30,
+            center_column_shield_radial_thickness=60,
+            divertor_radial_thickness=50,
+            inner_plasma_gap_radial_thickness=30,
+            plasma_radial_thickness=300,
+            outer_plasma_gap_radial_thickness=30,
+            firstwall_radial_thickness=3,
+            blanket_radial_thickness=100,
+            blanket_rear_wall_radial_thickness=3,
+            elongation=2.75,
+            triangularity=0.5,
+            rotation_angle=360,
+        )
+
+        # makes a homogenised material for the blanket from lithium lead and
+        # eurofer
+        self.blanket_material = nmm.MultiMaterial(
+            fracs=[0.8, 0.2],
+            materials=[
+                nmm.Material('SiC'),
+                nmm.Material('eurofer')
+            ])
+
+        self.source = openmc.Source()
+        # sets the location of the source to x=0 y=0 z=0
+        self.source.space = openmc.stats.Point((0, 0, 0))
+        # sets the direction to isotropic
+        self.source.angle = openmc.stats.Isotropic()
+        # sets the energy distribution to 100% 14MeV neutrons
+        self.source.energy = openmc.stats.Discrete([14e6], [1])
+
+    def test_neutronics_model_attributes(self):
+        """Makes a BallReactor neutronics model and simulates the TBR"""
+
+        # makes the neutronics material
+        neutronics_model = paramak.NeutronicsModel(
+            geometry=self.my_reactor,
+            source=openmc.Source(),
+            materials={
+                'inboard_tf_coils_mat': 'copper',
+                'center_column_shield_mat': 'WC',
+                'divertor_mat': 'eurofer',
+                'firstwall_mat': 'eurofer',
+                'blanket_mat': self.blanket_material,  # use of homogenised material
+                'blanket_rear_wall_mat': 'eurofer'},
+            cell_tallies=['TBR', 'flux', 'heating'],
+            simulation_batches=42,
+            simulation_particles_per_batch=84,
+        )
+
+        assert neutronics_model.geometry == self.my_reactor
+
+        assert neutronics_model.materials == {
+            'inboard_tf_coils_mat': 'copper',
+            'center_column_shield_mat': 'WC',
+            'divertor_mat': 'eurofer',
+            'firstwall_mat': 'eurofer',
+            'blanket_mat': self.blanket_material,
+            'blanket_rear_wall_mat': 'eurofer'}
+
+        assert neutronics_model.cell_tallies == ['TBR', 'flux', 'heating']
+
+        assert neutronics_model.simulation_batches == 42
+        assert isinstance(neutronics_model.simulation_batches, int)
+
+        assert neutronics_model.simulation_particles_per_batch == 84
+        assert isinstance(neutronics_model.simulation_particles_per_batch, int)
+
+    def test_incorrect_methods_settings(self):
         """Creates NeutronicsModel objects and checks errors are
         raised correctly when arguments are incorrect."""
 
@@ -737,7 +861,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
                 simulation_particles_per_batch=84,
             )
 
-            neutronics_model.create_dagmc_neutronics_geometry(
+            neutronics_model.export_h5m(
                 method='incorrect')
 
         self.assertRaises(ValueError, test_incorrect_method)
