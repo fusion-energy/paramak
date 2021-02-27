@@ -13,7 +13,7 @@ class TestShape(unittest.TestCase):
     def setUp(self):
         
         self.test_rotate_mixed_shape = paramak.RotateMixedShape(
-            rotation_angle=180,
+            rotation_angle=1,
             points=[
                 (100, 0, "straight"),
                 (200, 0, "circle"),
@@ -25,7 +25,7 @@ class TestShape(unittest.TestCase):
             ]
         )
         self.test_extrude_mixed_shape = paramak.ExtrudeMixedShape(
-            distance=10,
+            distance=1,
             points=[
                 (100, 0, "straight"),
                 (200, 0, "circle"),
@@ -627,7 +627,7 @@ class TestShape(unittest.TestCase):
         self.test_rotate_mixed_shape.convert_all_circle_connections_to_splines()
         new_volume = self.test_rotate_mixed_shape.volume
 
-        assert pytest.approx(new_volume, rel=0.00001) == original_volume
+        assert pytest.approx(new_volume, rel=0.000001) == original_volume
 
     def test_convert_circles_to_splines_volume_ExtrudeMixedShape(self):
         """creates a ExtrudeMixedShape with a circular edge and converts the
@@ -638,7 +638,7 @@ class TestShape(unittest.TestCase):
         self.test_extrude_mixed_shape.convert_all_circle_connections_to_splines()
         new_volume = self.test_extrude_mixed_shape.volume
 
-        assert pytest.approx(new_volume, rel=0.00001) == original_volume
+        assert pytest.approx(new_volume, rel=0.000001) == original_volume
 
 
 if __name__ == "__main__":
