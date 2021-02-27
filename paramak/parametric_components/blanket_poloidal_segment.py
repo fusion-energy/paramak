@@ -260,8 +260,7 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
 
     # define cost function
     def cost_function(angles):
-        angles_with_extremums = [start_angle] + \
-            [angle for angle in angles] + [stop_angle]
+        angles_with_extremums = [start_angle, *angles, stop_angle]
 
         lengths = compute_lengths_from_angles(
             angles_with_extremums, distribution)

@@ -40,7 +40,7 @@ class BlanketFP(RotateMixedShape):
             and the blanket (cm). If float, constant offset. If list of floats,
             offset will vary linearly between the values. If callable, offset
             will be a function of poloidal angle (in degrees). If a list of
-            two lists (offsets and angles) then these will be used together
+            two lists (angles and offsets) then these will be used together
             with linear interpolation. Defaults to 0.0.
         num_points (int, optional): number of points that will describe the
             shape. Defaults to 50.

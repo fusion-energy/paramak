@@ -139,3 +139,14 @@ The above image is colored by component.
 .. automodule:: paramak.parametric_reactors.eu_demo_2015_reactor
    :members:
    :show-inheritance:
+
+SparcFrom2020PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/100032191-5ae01280-2def-11eb-9654-47c3869b3a2c.png
+   :width: 400
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.sparc_paper_2020
+   :members:
+   :show-inheritance:
