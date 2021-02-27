@@ -561,7 +561,8 @@ class TestShape(unittest.TestCase):
         assert Path("heating_on_2D_mesh_xy.png").exists() is True
         assert Path("heating_on_2D_mesh_yz.png").exists() is True
 
-    def test_neutronics_component_3d_and_2d_mesh_simulation_with_corner_points(self):
+    def test_neutronics_component_3d_and_2d_mesh_simulation_with_corner_points(
+            self):
         """Makes a neutronics model and simulates with a 3D and 2D mesh tally
         and checks that the vtk and png files are produced. This checks the
         mesh ID values don't overlap"""
@@ -582,7 +583,7 @@ class TestShape(unittest.TestCase):
             mesh_2d_corners=[(5, 5, 5), (15, 15, 15)],
         )
 
-        assert my_model.mesh_3d_corners == [(0, 0, 0), (10, 10, 10)] 
+        assert my_model.mesh_3d_corners == [(0, 0, 0), (10, 10, 10)]
         assert my_model.mesh_2d_corners == [(5, 5, 5), (15, 15, 15)]
         # performs an openmc simulation on the model
         output_filename = my_model.simulate()
@@ -732,7 +733,9 @@ class TestShape(unittest.TestCase):
 
             my_model.simulate(export_xml=False)
 
-        self.assertRaises(FileNotFoundError, test_missing_xml_file_error_handling)
+        self.assertRaises(
+            FileNotFoundError,
+            test_missing_xml_file_error_handling)
 
     def test_simulations_with_missing_h5m_files(self):
         """Creates NeutronicsModel objects and trys to perform simulation
@@ -758,8 +761,9 @@ class TestShape(unittest.TestCase):
 
             my_model.simulate(export_h5m=False)
 
-        self.assertRaises(FileNotFoundError, test_missing_h5m_file_error_handling)
-
+        self.assertRaises(
+            FileNotFoundError,
+            test_missing_h5m_file_error_handling)
 
 
 class TestNeutronicsBallReactor(unittest.TestCase):
