@@ -2,6 +2,7 @@
 import os
 import unittest
 from pathlib import Path
+from numpy.testing._private.utils import assert_
 
 import paramak
 import pytest
@@ -556,6 +557,66 @@ class TestShape(unittest.TestCase):
 
         for i in range(len(incorrect_values)):
             self.assertRaises(ValueError, set_value)
+
+    def test_convert_single_circle_to_spline(self):
+        """Tests the conversion of 3 points on a circle into points on a spline
+        curve."""
+
+        new_points = paramak.utils.convert_single_circle_to_spline(
+            p0=(200, 0),
+            p1=(250, 50),
+            p2=(200, 100),
+            tolerance=0.2
+        )
+
+        connections = [connection[2] for connection in new_points]
+
+        assert len(set(connections)) == 1
+        assert connections[0] == 'spline'
+
+        new_points = paramak.utils.convert_single_circle_to_spline(
+            p0=(200, 0),
+            p1=(250, 50),
+            p2=(200, 100),
+            tolerance=0.1
+        )
+
+        connections_lower_tol = [connection[2] for connection in new_points]
+
+        assert len(connections_lower_tol) > len(connections)
+
+    def test_convert_all_circle_points_to_splines(self):
+        """creates a ExtrudeMixedShape with two circular edges and converts
+        them to spline edges. Checks the new edges have been correctly
+        replaced with splines"""
+
+        rotated_mixed = paramak.RotateMixedShape(
+            rotation_angle=180,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "circle"),
+                (110, 45, "circle"),
+            ]
+        )
+        assert len(rotated_mixed.points) == 8
+        rotated_mixed.convert_all_circle_points_to_splines()
+        assert len(rotated_mixed.points) > 8
+        assert rotated_mixed.points[0][2] == 'straight'
+        assert rotated_mixed.points[1][0] == 200
+        assert rotated_mixed.points[1][1] == 0
+        assert rotated_mixed.points[1][2] == 'spline'
+        assert rotated_mixed.points[2][2] == 'spline'
+
+        # last point is the same as the first point
+        assert rotated_mixed.points[-1][2] == 'straight'
+        assert rotated_mixed.points[-1][0] == 100
+        assert rotated_mixed.points[-1][1] == 0
+        assert rotated_mixed.points[-2][2] == 'spline'
+        assert rotated_mixed.points[-3][2] == 'spline'
 
 
 if __name__ == "__main__":

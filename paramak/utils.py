@@ -6,7 +6,7 @@ from os import fdopen, remove
 from pathlib import Path
 from shutil import copymode, move
 from tempfile import mkstemp
-from typing import List, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import numpy as np
@@ -652,6 +652,44 @@ def export_wire_to_html(
     print("Exported html graph to ", path_filename)
 
     return fig
+
+
+def convert_single_circle_to_spline(
+        p0: Tuple[float, float],
+        p1: Tuple[float, float],
+        p2: Tuple[float, float],
+        tolerance: Optional[float] = 0.1
+        ) -> List[Tuple[float, float, str]]:
+    """Creates a circle edge from the the points provided (p0, p1, p2),
+    facets the circle with the provided tolerance to extracts the points
+    on the faceted edge and returns them with spline connections.
+
+    Args:
+        p0: coordinates of the first point
+        p1: coordinates of the second point
+        p2: coordinates of the third point
+        tolerance: the precision of the faceting.
+
+    Returns:
+        The new points with spline connections
+    """
+
+    # work plane is arbitrarily selected and has no impact of function
+    solid = cq.Workplane('XY').center(0, 0)
+    solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+    edge = solid.vals()[0]
+
+    new_edge = paramak.utils._transform_curve(edge, tolerance=tolerance)
+
+    points = paramak.utils.extract_points_from_edges(
+        edges=new_edge,
+        # view_plane=view_plane
+    )
+    points_with_connections = []
+    for point in points[:-1]:
+        points_with_connections.append((point[0], point[1], 'spline'))
+
+    return points_with_connections
 
 
 class FaceAreaSelector(cq.Selector):
