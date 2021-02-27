@@ -6,9 +6,9 @@ from pathlib import Path
 import paramak
 
 
-class TestSparc2020Reactor(unittest.TestCase):
+class TestDemo2015Reactor(unittest.TestCase):
 
-    def test_make_sparc_2020_reactor(self):
+    def test_make_demo_2015_reactor(self):
         output_filenames = [
             'blanket.stp',
             'divertor.stp',
@@ -20,7 +20,6 @@ class TestSparc2020Reactor(unittest.TestCase):
             'pf_coils_4.stp',
             'pf_coils_5.stp',
             'tf_coil_casing.stp',
-            'tf_coil.stp',
             'vacvessel.stp',
         ]
         os.system("rm *.stp")
@@ -30,7 +29,7 @@ class TestSparc2020Reactor(unittest.TestCase):
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")
 
-    def test_make_parametric_sparc_2020_rector(self):
+    def test_make_parametric_demo_2015_rector(self):
         """Runs the example to check the output files are produced"""
         output_filenames = [
             'blanket.stp',
@@ -43,7 +42,6 @@ class TestSparc2020Reactor(unittest.TestCase):
             'pf_coils_4.stp',
             'pf_coils_5.stp',
             'tf_coil_casing.stp',
-            'tf_coil.stp',
             'vacvessel.stp',
         ]
         os.system("rm *.stp")
