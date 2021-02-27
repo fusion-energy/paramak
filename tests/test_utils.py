@@ -25,6 +25,10 @@ class TestUtilityFunctions(unittest.TestCase):
 
         connections = [connection[2] for connection in new_points]
 
+        assert new_points[0][0] == 200
+        assert new_points[0][1] == 0
+        assert new_points[-1][0] == 200
+        assert new_points[-1][1] == 100
         assert len(set(connections)) == 1
         assert connections[0] == 'spline'
 
