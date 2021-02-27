@@ -1274,7 +1274,7 @@ class Shape:
     def convert_all_circle_points_to_splines(
             self,
             tolerance: Optional[float] = 0.1
-            ) -> List[Tuple[float, float, str]]:
+    ) -> List[Tuple[float, float, str]]:
         """Replaces circle edges in Shape.points with spline edges. The spline
         control coordinates are obtained by faceting the circle edge with the
         provided tolerance. The Shape.points will be updated to exclude the

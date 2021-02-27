@@ -659,7 +659,7 @@ def convert_single_circle_to_spline(
         p1: Tuple[float, float],
         p2: Tuple[float, float],
         tolerance: Optional[float] = 0.1
-        ) -> List[Tuple[float, float, str]]:
+) -> List[Tuple[float, float, str]]:
     """Converts three points on the edge of a circle into a series of points
     on the edge of the circle. This is done by creating a circle edge from the
     the points provided (p0, p1, p2), facets the circle with the provided
