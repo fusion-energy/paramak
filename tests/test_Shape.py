@@ -11,7 +11,7 @@ import pytest
 class TestShape(unittest.TestCase):
 
     def setUp(self):
-        
+
         self.test_rotate_mixed_shape = paramak.RotateMixedShape(
             rotation_angle=1,
             points=[
