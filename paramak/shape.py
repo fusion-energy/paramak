@@ -1271,7 +1271,7 @@ class Shape:
 
         return new_filename
 
-    def convert_all_circle_points_to_splines(
+    def convert_all_circle_connections_to_splines(
             self,
             tolerance: Optional[float] = 0.1
     ) -> List[Tuple[float, float, str]]:
@@ -1299,7 +1299,7 @@ class Shape:
                 p1 = self.points[counter + 1][:2]
                 p2 = self.points[counter + 2][:2]
 
-                points = paramak.utils.convert_single_circle_to_spline(
+                points = paramak.utils.convert_circle_to_spline(
                     p0, p1, p2, tolerance=tolerance
                 )
 

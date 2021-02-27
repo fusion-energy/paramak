@@ -12,6 +12,33 @@ import plotly.graph_objects as go
 
 class TestUtilityFunctions(unittest.TestCase):
 
+    def test_convert_circle_to_spline(self):
+        """Tests the conversion of 3 points on a circle into points on a spline
+        curve."""
+
+        new_points = paramak.utils.convert_circle_to_spline(
+            p0=(200, 0),
+            p1=(250, 50),
+            p2=(200, 100),
+            tolerance=0.2
+        )
+
+        connections = [connection[2] for connection in new_points]
+
+        assert len(set(connections)) == 1
+        assert connections[0] == 'spline'
+
+        new_points = paramak.utils.convert_circle_to_spline(
+            p0=(200, 0),
+            p1=(250, 50),
+            p2=(200, 100),
+            tolerance=0.1
+        )
+
+        connections_lower_tol = [connection[2] for connection in new_points]
+
+        assert len(connections_lower_tol) > len(connections)
+
     def test_extract_points_from_edges(self):
         """Extracts points from edges and checks the list returned is the
         correct len and contains the correct types"""

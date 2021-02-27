@@ -10,6 +10,33 @@ import pytest
 
 class TestShape(unittest.TestCase):
 
+    def setUp(self):
+        
+        self.test_rotate_mixed_shape = paramak.RotateMixedShape(
+            rotation_angle=180,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "straight"),
+                (110, 45, "straight"),
+            ]
+        )
+        self.test_extrude_mixed_shape = paramak.ExtrudeMixedShape(
+            distance=10,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "straight"),
+                (110, 45, "straight"),
+            ]
+        )
+
     def test_shape_default_properties(self):
         """Creates a Shape object and checks that the points attribute has
         a default of None."""
@@ -558,34 +585,7 @@ class TestShape(unittest.TestCase):
         for i in range(len(incorrect_values)):
             self.assertRaises(ValueError, set_value)
 
-    def test_convert_single_circle_to_spline(self):
-        """Tests the conversion of 3 points on a circle into points on a spline
-        curve."""
-
-        new_points = paramak.utils.convert_single_circle_to_spline(
-            p0=(200, 0),
-            p1=(250, 50),
-            p2=(200, 100),
-            tolerance=0.2
-        )
-
-        connections = [connection[2] for connection in new_points]
-
-        assert len(set(connections)) == 1
-        assert connections[0] == 'spline'
-
-        new_points = paramak.utils.convert_single_circle_to_spline(
-            p0=(200, 0),
-            p1=(250, 50),
-            p2=(200, 100),
-            tolerance=0.1
-        )
-
-        connections_lower_tol = [connection[2] for connection in new_points]
-
-        assert len(connections_lower_tol) > len(connections)
-
-    def test_convert_all_circle_points_to_splines(self):
+    def test_convert_all_circle_points_change_to_splines(self):
         """creates a ExtrudeMixedShape with two circular edges and converts
         them to spline edges. Checks the new edges have been correctly
         replaced with splines"""
@@ -603,7 +603,7 @@ class TestShape(unittest.TestCase):
             ]
         )
         assert len(rotated_mixed.points) == 8
-        rotated_mixed.convert_all_circle_points_to_splines()
+        rotated_mixed.convert_all_circle_connections_to_splines()
         assert len(rotated_mixed.points) > 8
         assert rotated_mixed.points[0][2] == 'straight'
         assert rotated_mixed.points[1][0] == 200
@@ -617,6 +617,28 @@ class TestShape(unittest.TestCase):
         assert rotated_mixed.points[-1][1] == 0
         assert rotated_mixed.points[-2][2] == 'spline'
         assert rotated_mixed.points[-3][2] == 'spline'
+
+    def test_convert_circles_to_splines_volume_RotateMixedShape(self):
+        """creates a RotateMixedShape with a circular edge and converts the
+        edge to a spline edges. Checks the new shape has appoximatly the same
+        volume as the orignal shape (with circles)"""
+
+        original_volume = self.test_rotate_mixed_shape.volume
+        self.test_rotate_mixed_shape.convert_all_circle_connections_to_splines()
+        new_volume = self.test_rotate_mixed_shape.volume
+
+        assert pytest.approx(new_volume, rel=0.00001) == original_volume
+
+    def test_convert_circles_to_splines_volume_ExtrudeMixedShape(self):
+        """creates a ExtrudeMixedShape with a circular edge and converts the
+        edge to a spline edges. Checks the new shape has appoximatly the same
+        volume as the orignal shape (with circles)"""
+
+        original_volume = self.test_extrude_mixed_shape.volume
+        self.test_extrude_mixed_shape.convert_all_circle_connections_to_splines()
+        new_volume = self.test_extrude_mixed_shape.volume
+
+        assert pytest.approx(new_volume, rel=0.00001) == original_volume
 
 
 if __name__ == "__main__":

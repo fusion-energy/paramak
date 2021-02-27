@@ -654,7 +654,7 @@ def export_wire_to_html(
     return fig
 
 
-def convert_single_circle_to_spline(
+def convert_circle_to_spline(
         p0: Tuple[float, float],
         p1: Tuple[float, float],
         p2: Tuple[float, float],
@@ -677,7 +677,7 @@ def convert_single_circle_to_spline(
     """
 
     # work plane is arbitrarily selected and has no impact of function
-    solid = cq.Workplane('XY').center(0, 0)
+    solid = cq.Workplane('XZ').center(0, 0)
     solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
     edge = solid.vals()[0]
 
@@ -685,7 +685,7 @@ def convert_single_circle_to_spline(
 
     points = paramak.utils.extract_points_from_edges(
         edges=new_edge,
-        # view_plane=view_plane
+        view_plane='XZ'
     )
     points_with_connections = []
     for point in points[:-1]:
