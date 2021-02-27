@@ -228,8 +228,8 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (1259.8999164545482, 119.15248445488135),
                 (1262.8978627225338, 91.48061850063345),
 
-                (1248.4670705173148, -117.9739684683608),
                 (1257.7636381996099, -69.66392221833257),
+                (1248.4670705173148, -117.9739684683608),
                 (1236.2720348509329, -162.39122749437956),
                 (1219.5038608096575, -215.31064328924913),
                 (1198.1625483934886, -267.65634357273507),
@@ -253,7 +253,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (576.2157294079991, -148.97477140159208),
                 (576.2157294079991, -95.97898538165487),
             ],
-            rotation_angle=360,
+            rotation_angle=self.rotation_angle,
         )
         vac_vessel = paramak.RotateSplineShape(
             points=[
@@ -309,13 +309,11 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (515.7486775621876, -281.637425294638),
                 (515.7486775621876, -334.6332113145754),
             ],
-            cut=vac_vessel_inner,
-            rotation_angle=360,
+            cut=vac_vessel_inner,  # hollow shape
+            rotation_angle=self.rotation_angle,
             stp_filename='vacvessel.stp',
             stl_filename='vacvessel.stl',
         )
-        vac_vessel_inner.export_stl("test.stl")
-
         # TF coils casings
 
         tf_coil_casing = paramak.ExtrudeMixedShape(
