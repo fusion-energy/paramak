@@ -71,7 +71,10 @@ def facet_wire(
     if facet_circles:
         types_to_facet.append('CIRCLE')
 
-    if isinstance(wire, cq.occ_impl.shapes.Wire):
+    if isinstance(wire, cq.occ_impl.shapes.Edge):
+        # this is for when a edge is passed
+        iterable_of_wires = [wire]
+    elif isinstance(wire, cq.occ_impl.shapes.Wire):
         # this is for imported stp files
         iterable_of_wires = wire.Edges()
     else:
@@ -187,14 +190,14 @@ def extend(point_a: Tuple[float, float], point_b: Tuple[float, float],
 
 def find_center_point_of_circle(point_a: Tuple[float, float],
                                 point_b: Tuple[float, float],
-                                point3: Tuple[float, float]) -> Tuple[Tuple[float, float], float]:
+                                point_3: Tuple[float, float]) -> Tuple[Tuple[float, float], float]:
     """
     Calculates the center and the radius of a circle
     passing through 3 points.
     Args:
         point_a (float, float): point 1 coordinates
         point_b (float, float): point 2 coordinates
-        point3 (float, float): point 3 coordinates
+        point_3 (float, float): point 3 coordinates
     Returns:
         (float, float), float: center of the circle coordinates or
         None if 3 points on a line are input and the radius
@@ -202,17 +205,19 @@ def find_center_point_of_circle(point_a: Tuple[float, float],
 
     temp = point_b[0] * point_b[0] + point_b[1] * point_b[1]
     bc = (point_a[0] * point_a[0] + point_a[1] * point_a[1] - temp) / 2
-    cd = (temp - point3[0] * point3[0] - point3[1] * point3[1]) / 2
-    det = (point_a[0] - point_b[0]) * (point_b[1] - point3[1]) - (
-        point_b[0] - point3[0]
+    cd = (temp - point_3[0] * point_3[0] - point_3[1] * point_3[1]) / 2
+    det = (point_a[0] - point_b[0]) * (point_b[1] - point_3[1]) - (
+        point_b[0] - point_3[0]
     ) * (point_a[1] - point_b[1])
 
     if abs(det) < 1.0e-6:
         return (None, np.inf)
 
     # Center of circle
-    cx = (bc * (point_b[1] - point3[1]) - cd * (point_a[1] - point_b[1])) / det
-    cy = ((point_a[0] - point_b[0]) * cd - (point_b[0] - point3[0]) * bc) / det
+    cx = (bc * (point_b[1] - point_3[1]) -
+          cd * (point_a[1] - point_b[1])) / det
+    cy = ((point_a[0] - point_b[0]) * cd -
+          (point_b[0] - point_3[0]) * bc) / det
 
     radius = np.sqrt((cx - point_a[0]) ** 2 + (cy - point_a[1]) ** 2)
 
@@ -540,12 +545,13 @@ def load_stp_file(
 
 def export_wire_to_html(
     wires,
-    filename,
+    filename=None,
     view_plane='RZ',
     facet_splines: bool = True,
     facet_circles: bool = True,
     tolerance: float = 1e-3,
     title=None,
+    mode="markers+lines",
 ):
     """Creates a html graph representation of the points within the wires.
     Edges of certain types (spines and circles) can optionally be faceted.
@@ -555,7 +561,9 @@ def export_wire_to_html(
     Args:
         wires (CadQuery.Wire): the wire (edge) or list of wires to plot points
             from and to optionally facet.
-        filename: the filename used to save the html graph.
+        filename: the filename used to save the html graph. If None then no
+            html file will saved but a ploty figure will still be returned.
+            Defaults to None.
         view_plane: The axis to view the points and faceted edges from. The
             options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'.
             Defaults to 'RZ'
@@ -566,17 +574,12 @@ def export_wire_to_html(
         tolerance: faceting toleranceto use when faceting cirles and splines.
             Defaults to 1e-3.
         title: the title of the plotly plot.
+        mode: the plotly trace mode to use when plotting the data. Options
+            include 'markers+lines', 'markers', 'lines'. Defaults to 'lines'.
 
     Returns:
         plotly.Figure(): figure object
     """
-
-    Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
-
-    path_filename = Path(filename)
-
-    if path_filename.suffix != ".html":
-        path_filename = path_filename.with_suffix(".html")
 
     fig = go.Figure()
     fig.update_layout(title=title, hovermode="closest")
@@ -622,14 +625,17 @@ def export_wire_to_html(
         fig.add_trace(
             plotly_trace(
                 points=points,
-                mode="markers+lines",
+                mode=mode,
                 name='edge ' + str(counter)
             )
         )
 
     for counter, wire in enumerate(list_of_wires):
 
-        if isinstance(wire, cq.occ_impl.shapes.Wire):
+        if isinstance(wire, cq.occ_impl.shapes.Edge):
+            # this is for when an edge is passed
+            edges = wire
+        elif isinstance(wire, cq.occ_impl.shapes.Wire):
             # this is for imported stp files
             edges = wire.Edges()
         else:
@@ -647,9 +653,18 @@ def export_wire_to_html(
         )
         )
 
-    fig.write_html(str(path_filename))
+    if filename is not None:
 
-    print("Exported html graph to ", path_filename)
+        Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+
+        path_filename = Path(filename)
+
+        if path_filename.suffix != ".html":
+            path_filename = path_filename.with_suffix(".html")
+
+        fig.write_html(str(path_filename))
+
+        print("Exported html graph to ", path_filename)
 
     return fig
 

@@ -248,7 +248,7 @@ class Shape:
                     " not " + value
                 raise ValueError(msg)
         elif isinstance(value, Iterable):
-            msg = "Shape.rotation_axis must be a list of two (X, Y, Z) floats"
+            msg = "Shape.rotation_axis must be a tuple of three floats (X, Y, Z)"
             if len(value) != 2:
                 raise ValueError(msg)
             for point in value:
@@ -595,12 +595,13 @@ class Shape:
                         solid = solid.workplane(offset=point[1] * factor).\
                             center(point[0], 0).workplane()
                         for entry in instructions:
-                            if list(entry.keys())[0] == "spline":
+                            connection_type = list(entry.keys())[0]
+                            if connection_type == "spline":
                                 solid = solid.spline(
                                     listOfXYTuple=list(entry.values())[0])
-                            if list(entry.keys())[0] == "straight":
+                            elif connection_type == "straight":
                                 solid = solid.polyline(list(entry.values())[0])
-                            if list(entry.keys())[0] == "circle":
+                            elif connection_type == "circle":
                                 p0, p1, p2 = list(entry.values())[0][:3]
                                 solid = solid.moveTo(p0[0], p0[1]).\
                                     threePointArc(p1, p2)
@@ -615,12 +616,13 @@ class Shape:
                         self.path_points[0][0],
                         0).workplane()
                     for entry in instructions:
-                        if list(entry.keys())[0] == "spline":
+                        connection_type = list(entry.keys())[0]
+                        if connection_type == "spline":
                             solid = solid.spline(
                                 listOfXYTuple=list(entry.values())[0])
-                        if list(entry.keys())[0] == "straight":
+                        elif connection_type == "straight":
                             solid = solid.polyline(list(entry.values())[0])
-                        if list(entry.keys())[0] == "circle":
+                        elif connection_type == "circle":
                             p0 = list(entry.values())[0][0]
                             p1 = list(entry.values())[0][1]
                             p2 = list(entry.values())[0][2]
@@ -888,7 +890,7 @@ class Shape:
                 (0, 0, 0) which is black.
             hiddenColor: the color of the lines used to draw the geometry in
                 RGB format with each value between 0 and 255. Defaults to
-               (100, 100, 100) which is light grey.
+                (100, 100, 100) which is light grey.
             showHidden: If the edges obscured by geometry should be included in
                 the diagram. Defaults to True.
             showAxes: If the x, y, z axis should be included in the image.
@@ -949,8 +951,9 @@ class Shape:
                 to True.
             tolerance: faceting toleranceto use when faceting cirles and
                 splines. Defaults to 1e-3.
-            view_plane: The plane to project Defaults to the workplane of the
-                paramak.Shape
+            view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ',
+                'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'. Defaults to 'RZ'. Defaults to
+                the workplane of the paramak.Shape.
 
         Returns:
             plotly.Figure(): figure object
@@ -960,21 +963,17 @@ class Shape:
         if view_plane is None:
             view_plane = self.workplane
 
-        if self.points is None:
-            if hasattr(self, 'path_points') and self.path_points is None:
-                raise ValueError("No points or point_path defined for", self)
+        if self.solid is None:
+            raise ValueError("No solid was found for ", self)
 
-        if self.wire is None:
-            raise ValueError("No wire defined for", self)
-
-        if not isinstance(self.wire, list):
-            list_of_wires = [self.wire]
+        if isinstance(self.solid, cq.Workplane):
+            edges = self.solid.val().Edges()
         else:
-            list_of_wires = self.wire
+            edges = self.solid.Edges()
 
         fig = paramak.utils.export_wire_to_html(
-            wires=list_of_wires,
-            filename=filename,
+            wires=edges,
+            filename=None,
             view_plane=view_plane,
             facet_splines=facet_splines,
             facet_circles=facet_circles,
@@ -1001,6 +1000,17 @@ class Shape:
                     name='Shape.path_points'
                 )
             )
+
+        if filename is not None:
+
+            Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+
+            path_filename = Path(filename)
+
+            if path_filename.suffix != ".html":
+                path_filename = path_filename.with_suffix(".html")
+
+            fig.write_html(str(path_filename))
 
         return fig
 
@@ -1248,8 +1258,8 @@ class Shape:
 
     def export_graveyard(
             self,
-            graveyard_offset: Optional[float] = 100,
-            filename: Optional[str] = "Graveyard.stp") -> str:
+            filename: Optional[str] = "Graveyard.stp",
+            graveyard_offset: Optional[float] = 100) -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.

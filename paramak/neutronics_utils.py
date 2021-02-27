@@ -1,9 +1,21 @@
 
 import math
+import os
 from collections import defaultdict
+from typing import List, Optional
+from xml.etree.ElementTree import SubElement
 
+import defusedxml.ElementTree as ET
+import h5py
 import matplotlib.pyplot as plt
 import numpy as np
+
+try:
+    import openmc
+    from openmc.data import REACTION_MT, REACTION_NAME
+except ImportError:
+    warnings.warn('OpenMC not found, create_inital_particles \
+            method not available', UserWarning)
 
 
 def define_moab_core_and_tags():
@@ -125,7 +137,11 @@ def add_stl_to_moab_core(
     return moab_core
 
 
-def _save_2d_mesh_tally_as_png(score: str, filename: str, tally):
+def _save_2d_mesh_tally_as_png(
+        score: str,
+        filename: str,
+        tally
+) -> str:
     """Extracts 2D mesh tally results from a tally and saves the result as
     a png image.
 
@@ -154,10 +170,13 @@ def _save_2d_mesh_tally_as_png(score: str, filename: str, tally):
     fig.imshow(my_slice.mean).get_figure().savefig(filename, dpi=300)
     fig.clear()
 
+    return filename
+
 
 def get_neutronics_results_from_statepoint_file(
         statepoint_filename: str,
-        fusion_power: float = None):
+        fusion_power: Optional[float] = None
+) -> dict:
     """Reads the statepoint file from the neutronics simulation
     and extracts the tally results.
 
@@ -306,18 +325,39 @@ def get_neutronics_results_from_statepoint_file(
 
 
 def write_3d_mesh_tally_to_vtk(
-        xs,
-        ys,
-        zs,
-        tally_label: str,
-        tally_data,
-        error_data,
-        outfile):
+        xs: np.linspace,
+        ys: np.linspace,
+        zs: np.linspace,
+        tally_data: List[float],
+        error_data: Optional[List[float]] = None,
+        outfile: Optional[str] = '3d_mesh_tally_data.vtk',
+        tally_label: Optional[str] = '3d_mesh_tally_data',
+) -> str:
+    """Converts regular 3d data into a vtk file for visualising the data.
+    Programs that can visualise vtk files include Paraview
+    https://www.paraview.org/ and VisIt
+    https://wci.llnl.gov/simulation/computer-codes/visit
+
+    Arguments:
+        xs: A numpy array containing evenly spaced numbers from the lowest x
+            coordinate value to the highest x coordinate value.
+        ys: A numpy array containing evenly spaced numbers from the lowest y
+            coordinate value to the highest y coordinate value.
+        zs: A numpy array containing evenly spaced numbers from the lowest z
+            coordinate value to the highest z coordinate value.
+        tally_data: A list of data values to assign to the vtk dataset.
+        error_data: A list of error data values to assign to the vtk dataset.
+        outfile: The filename of the output vtk file.
+        tally_label: The name to assign to the dataset in the vtk file.
+
+    Returns:
+        str: the filename of the file produced
+    """
     try:
         import vtk
     except (ImportError, ModuleNotFoundError):
         msg = "Conversion to VTK requested," \
-            "but the Python VTK module is not installed."
+            "but the Python VTK module is not installed. Try pip install pyvtk"
         raise ImportError(msg)
 
     vtk_box = vtk.vtkRectilinearGrid()
@@ -344,10 +384,11 @@ def write_3d_mesh_tally_to_vtk(
     tally_data.SetName(tally_label)
     tally_data.SetArray(tally, tally.size, True)
 
-    error = np.array(error_data)
-    error_data = vtk.vtkDoubleArray()
-    error_data.SetName("error_tag")
-    error_data.SetArray(error, error.size, True)
+    if error_data is not None:
+        error = np.array(error_data)
+        error_data = vtk.vtkDoubleArray()
+        error_data.SetName("error_tag")
+        error_data.SetArray(error, error.size, True)
 
     vtk_box.GetCellData().AddArray(tally_data)
     vtk_box.GetCellData().AddArray(error_data)
@@ -361,3 +402,117 @@ def write_3d_mesh_tally_to_vtk(
     print('Writing %s' % outfile)
 
     writer.Write()
+
+    return outfile
+
+
+def create_inital_particles(
+        source,
+        number_of_source_particles: int = 2000
+) -> str:
+    """Accepts an openmc source and creates an inital_source.h5 that can be
+    used to find intial xyz, direction and energy of the partice source.
+
+    Arguments:
+        source: (openmc.Source()): the OpenMC source to create an inital source
+            file from.
+        number_of_source_particles: The number of particle to sample.
+
+    Returns:
+        str: the filename of the h5 file produced
+    """
+
+    # MATERIALS
+
+    # no real materials are needed for finding the source
+    mats = openmc.Materials([])
+
+    # GEOMETRY
+
+    # just a minimal geometry
+    outer_surface = openmc.Sphere(r=100000, boundary_type='vacuum')
+    cell = openmc.Cell(region=-outer_surface)
+    universe = openmc.Universe(cells=[cell])
+    geom = openmc.Geometry(universe)
+
+    # SIMULATION SETTINGS
+
+    # Instantiate a Settings object
+    sett = openmc.Settings()
+    # this will fail but it will write the inital_source.h5 file first
+    sett.run_mode = "eigenvalue"
+    sett.particles = number_of_source_particles
+    sett.batches = 1
+    sett.inactive = 0
+    sett.write_initial_source = True
+
+    sett.source = source
+
+    model = openmc.model.Model(geom, mats, sett)
+
+    os.system('rm *.xml')
+    model.export_to_xml()
+
+    # this just adds write_initial_source == True to the settings.xml
+    tree = ET.parse("settings.xml")
+    root = tree.getroot()
+    elem = SubElement(root, "write_initial_source")
+    elem.text = "true"
+    tree.write("settings.xml")
+
+    # This will crash hence the try except loop, but it writes the
+    # inital_source.h5
+    try:
+        openmc.run(output=False)
+    except BaseException:
+        pass
+
+    return "initial_source.h5"
+
+
+def extract_points_from_initial_source(
+        input_filename: str = 'initial_source.h5',
+        view_plane: str = 'RZ'
+) -> list:
+    """Reads in an inital source h5 file (generated by OpenMC), extracts point
+    and projects them onto a view plane.
+
+    Arguments:
+        input_filename: the OpenMC source to create an inital source
+            file from.
+        view_plane: The plane to project. Options are 'XZ', 'XY', 'YZ',
+            'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'. Defaults to 'RZ'. Defaults to
+            'RZ'.
+
+    Returns:
+        list: list of points extracted
+    """
+
+    h5_file = h5py.File(input_filename, 'r')
+    dset = h5_file['source_bank']
+
+    points = []
+
+    for particle in dset:
+        if view_plane == 'XZ':
+            points.append((particle[0][0], particle[0][2]))
+        elif view_plane == 'XY':
+            points.append((particle[0][0], particle[0][1]))
+        elif view_plane == 'YZ':
+            points.append((particle[0][1], particle[0][2]))
+        elif view_plane == 'YX':
+            points.append((particle[0][1], particle[0][0]))
+        elif view_plane == 'ZY':
+            points.append((particle[0][2], particle[0][1]))
+        elif view_plane == 'ZX':
+            points.append((particle[0][2], particle[0][0]))
+        elif view_plane == 'RZ':
+            xy_coord = math.pow(particle[0][0], 2) + \
+                math.pow(particle[0][1], 2)
+            points.append((math.sqrt(xy_coord), particle[0][2]))
+        elif view_plane == 'XYZ':
+            points.append((particle[0][0], particle[0][1], particle[0][2]))
+        else:
+            raise ValueError('view_plane value of ', view_plane,
+                             ' is not supported')
+    return points
