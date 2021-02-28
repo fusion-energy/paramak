@@ -585,61 +585,6 @@ class TestShape(unittest.TestCase):
         for i in range(len(incorrect_values)):
             self.assertRaises(ValueError, set_value)
 
-    def test_convert_all_circle_points_change_to_splines(self):
-        """creates a ExtrudeMixedShape with two circular edges and converts
-        them to spline edges. Checks the new edges have been correctly
-        replaced with splines"""
-
-        rotated_mixed = paramak.RotateMixedShape(
-            rotation_angle=180,
-            points=[
-                (100, 0, "straight"),
-                (200, 0, "circle"),
-                (250, 50, "circle"),
-                (200, 100, "straight"),
-                (150, 100, "straight"),
-                (140, 75, "circle"),
-                (110, 45, "circle"),
-            ]
-        )
-        assert len(rotated_mixed.points) == 8
-        rotated_mixed.convert_all_circle_connections_to_splines()
-        assert len(rotated_mixed.points) > 8
-        assert rotated_mixed.points[0][2] == 'straight'
-        assert rotated_mixed.points[1][0] == 200
-        assert rotated_mixed.points[1][1] == 0
-        assert rotated_mixed.points[1][2] == 'spline'
-        assert rotated_mixed.points[2][2] == 'spline'
-
-        # last point is the same as the first point
-        assert rotated_mixed.points[-1][2] == 'straight'
-        assert rotated_mixed.points[-1][0] == 100
-        assert rotated_mixed.points[-1][1] == 0
-        assert rotated_mixed.points[-2][2] == 'spline'
-        assert rotated_mixed.points[-3][2] == 'spline'
-
-    def test_convert_circles_to_splines_volume_RotateMixedShape(self):
-        """creates a RotateMixedShape with a circular edge and converts the
-        edge to a spline edges. Checks the new shape has appoximatly the same
-        volume as the orignal shape (with circles)"""
-
-        original_volume = self.test_rotate_mixed_shape.volume
-        self.test_rotate_mixed_shape.convert_all_circle_connections_to_splines()
-        new_volume = self.test_rotate_mixed_shape.volume
-
-        assert pytest.approx(new_volume, rel=0.000001) == original_volume
-
-    def test_convert_circles_to_splines_volume_ExtrudeMixedShape(self):
-        """creates a ExtrudeMixedShape with a circular edge and converts the
-        edge to a spline edges. Checks the new shape has appoximatly the same
-        volume as the orignal shape (with circles)"""
-
-        original_volume = self.test_extrude_mixed_shape.volume
-        self.test_extrude_mixed_shape.convert_all_circle_connections_to_splines()
-        new_volume = self.test_extrude_mixed_shape.volume
-
-        assert pytest.approx(new_volume, rel=0.000001) == original_volume
-
 
 if __name__ == "__main__":
     unittest.main()

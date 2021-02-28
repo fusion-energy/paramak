@@ -686,18 +686,15 @@ def convert_circle_to_spline(
         edges=new_edge,
         view_plane='XZ'
     )
-    points_with_connections = []
-    for point in points:
-        points_with_connections.append((point[0], point[1]))
 
-    return points_with_connections
+    return points
 
 
 class FaceAreaSelector(cq.Selector):
     """A custom CadQuery selector the selects faces based on their area with a
     tolerance. The following useage example will fillet the faces of an extrude
-    shape with an area of 0.5. paramak.ExtrudeStraightShape(points=[(1,1),(2,1),
-    (2,2)], distance=5).solid.faces(FaceAreaSelector(0.5)).fillet(0.1)
+    shape with an area of 0.5. paramak.ExtrudeStraightShape(points=[(1,1),
+    (2,1), (2,2)], distance=5).solid.faces(FaceAreaSelector(0.5)).fillet(0.1)
 
     Args:
         area (float): The area of the surface to select.
