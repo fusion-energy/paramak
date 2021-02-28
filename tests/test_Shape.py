@@ -1,4 +1,5 @@
 
+import json
 import os
 import unittest
 from pathlib import Path
@@ -556,6 +557,47 @@ class TestShape(unittest.TestCase):
 
         for i in range(len(incorrect_values)):
             self.assertRaises(ValueError, set_value)
+
+    def test_export_neutronics_description_without_suffix(self):
+        """Creates a neutronics description with and without the .json file
+        extention and checks that the output file exists"""
+
+        test_shape = paramak.Shape()
+        test_shape.material_tag = 'm1'
+        test_shape.stp_filename = 'test_shape.stp'
+
+        os.system('rm test_shape.json')
+        test_shape.export_neutronics_description('test_shape')
+
+        assert Path('test_shape.json').is_file()
+        test_shape.export_neutronics_description('test_shape2.json')
+        assert Path('test_shape2.json').is_file()
+
+    def test_export_neutronics_description_contents(self):
+        """Creates a neutronics description for a shape and checks the
+        contents is a list with a dictionary entry that has specific keys and
+        values"""
+
+        test_shape = paramak.Shape()
+        test_shape.material_tag = 'm1'
+        test_shape.stp_filename = 'test_shape.stp'
+
+        os.system('rm *.json')
+        test_shape.export_neutronics_description('test_shape3.json')
+
+        with open('test_shape3.json') as json_file:
+            data = json.load(json_file)
+
+        assert isinstance(data, list)
+        assert len(data) == 1
+
+        assert 'stp_filename' in data[0].keys()
+        assert 'material' in data[0].keys()
+        assert 'filename' in data[0].keys() # TODO this can be removed in the future
+
+        assert data[0]['material'] == 'm1'
+        assert data[0]['stp_filename'] == 'test_shape.stp'
+        assert data[0]['filename'] == 'test_shape.stp'  # TODO this can be removed in the future
 
 
 if __name__ == "__main__":

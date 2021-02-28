@@ -1164,7 +1164,7 @@ class Shape:
 
         with open(path_filename, "w") as outfile:
             json.dump(
-                self.neutronics_description(),
+                [self.neutronics_description()],
                 outfile,
                 indent=4,
             )
