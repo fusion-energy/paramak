@@ -450,7 +450,6 @@ class NeutronicsModel():
         else:
             raise NotImplementedError(
                 "Reading a JSON filename and converting to a DAGMC geometry using pymoab is not yet supported")
-        
 
     def export_h5m(
             self,
@@ -506,8 +505,8 @@ class NeutronicsModel():
     def make_watertight(
             self,
             input_filename: str = "dagmc_not_watertight.h5m",
-            output_filename: str = "dagmc.h5m",            
-            ) -> str:
+            output_filename: str = "dagmc.h5m",
+    ) -> str:
         """Runs the DAGMC make_watertight executable that seals the facetets of
         the geometry with specified input and output h5m files.
 
@@ -879,7 +878,7 @@ class NeutronicsModel():
                 raise FileNotFoundError(msg)
 
         if not Path('dagmc.h5m').is_file():
-            msg = """dagmc.h5m file was not found. Please set export_h5m to  
+            msg = """dagmc.h5m file was not found. Please set export_h5m to
                   True or use the export_h5m() methods to create the dagmc.h5m
                   file"""
             raise FileNotFoundError(msg)
