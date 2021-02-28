@@ -593,11 +593,13 @@ class TestShape(unittest.TestCase):
 
         assert 'stp_filename' in data[0].keys()
         assert 'material' in data[0].keys()
-        assert 'filename' in data[0].keys() # TODO this can be removed in the future
+        # TODO this can be removed in the future
+        assert 'filename' in data[0].keys()
 
         assert data[0]['material'] == 'm1'
         assert data[0]['stp_filename'] == 'test_shape.stp'
-        assert data[0]['filename'] == 'test_shape.stp'  # TODO this can be removed in the future
+        # TODO this can be removed in the future
+        assert data[0]['filename'] == 'test_shape.stp'
 
 
 if __name__ == "__main__":
