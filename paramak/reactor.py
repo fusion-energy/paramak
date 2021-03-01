@@ -578,7 +578,8 @@ class Reactor:
 
     def make_graveyard(
             self,
-            graveyard_offset: Optional[float] = 100) -> paramak.Shape:
+            graveyard_offset: Optional[float] = 100,
+            ) -> paramak.Shape:
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.

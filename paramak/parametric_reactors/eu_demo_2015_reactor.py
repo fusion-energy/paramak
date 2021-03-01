@@ -8,8 +8,8 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
     diagram in Figure 2 of Definition of the basic DEMO tokamak geometry based
     on systems code studies. Published in Fusion Engineering and Design
     http://dx.doi.org/10.1016/j.fusengdes.2015.06.097 . Coordinates extracted
-    from the figure are not exact and therefore this model does not
-    perfectly represent the reactor.
+    from the figure are not exact and therefore this model does not perfectly
+    represent the reactor.
 
     Arguments:
         rotation_angle (float): the angle of the sector that is desired.
@@ -19,7 +19,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
     def __init__(
         self,
         rotation_angle=360.0,
-        number_of_tf_coils=11,
+        number_of_tf_coils=16,
     ):
 
         super().__init__([])
@@ -27,127 +27,79 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
         self.rotation_angle = rotation_angle
         self.number_of_tf_coils = number_of_tf_coils
 
-    def create_solids(self):
-        # PF coils
-        outboard_pf_coils = paramak.PoloidalFieldCoilSet(
-            center_points=[
-                (689, -985),
-                (1421, -689),
-                (1580, -252),
-                (1550, 293),
-                (1400, 598),
-                (621, 811),
-            ],
-            widths=[
-                803 - 599,
-                1492 - 1351,
-                1628 - 1526,
-                1598 - 1503,
-                1439 - 1360,
-                684 - 563
-            ],
-            heights=[
-                803 - 599,
-                1492 - 1351,
-                1628 - 1526,
-                1598 - 1503,
-                1439 - 1360,
-                684 - 563
-            ],
-            rotation_angle=self.rotation_angle,
-            stl_filename='outboard_pf_coils.stl',
-            stp_filename='outboard_pf_coils.stp',
-        )
+    def create_tf_coils(self, vac_vessel_inner, vac_vessel) -> list:
+        """Creates a 3d solids for each tf coil.
 
-        pf_coils_1 = paramak.RotateStraightShape(
-            points=[
-                (263.6088589363423, -881.6221003581469),
-                (263.6088589363423, -609.1721122963762),
-                (363.04586051526934, -609.1721122963762),
-                (363.04586051526934, -881.6221003581469),
-            ],
-            rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_1.stl',
-            stp_filename='pf_coils_1.stp',
-        )
-        pf_coils_2 = paramak.RotateStraightShape(
-            points=[
-                (266.2030353910733, -332.3839488581665),
-                (357.77071359802824, -332.3839488581665),
-                (357.77071359802824, -600.8478453421652),
-                (266.2030353910733, -600.8478453421652),
-            ],
-            rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_2.stl',
-            stp_filename='pf_coils_2.stp',
-        )
-        pf_coils_3 = paramak.RotateStraightShape(
-            points=[
-                (263.5606400431317, 217.1559887549579),
-                (360.3263149381907, 217.1559887549579),
-                (360.3263149381907, -316.0372010628879),
-                (263.5606400431317, -316.0372010628879),
-            ],
-            rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_3.stl',
-            stp_filename='pf_coils_3.stp',
-        )
+        Args:
+            vac_vessel (Paramak.Shape): The vac_vessel that is used in a
+                Boolean cut opperation to prevent overlaps
+            vac_vessel_inner (Paramak.Shape): The vac_vessel_inner that is
+                used in a Boolean cut opperation to prevent overlaps
 
-        pf_coils_4 = paramak.RotateStraightShape(
-            points=[
-                (262.2297985905187, 493.9315777717868),
-                (357.70320714753336, 493.9315777717868),
-                (357.70320714753336, 229.49149612970268),
-                (262.2297985905187, 229.49149612970268),
-            ],
-            rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_4.stl',
-            stp_filename='pf_coils_4.stp',
-        )
-        pf_coils_5 = paramak.RotateStraightShape(
-            points=[
-                (261.01468248161126, 746.6397242654133),
-                (356.35307813763615, 746.6397242654133),
-                (356.35307813763615, 510.27832556706545),
-                (261.01468248161126, 510.27832556706545),
-            ],
-            rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_5.stl',
-            stp_filename='pf_coils_5.stp',
-        )
-
-        centre_coils = [
-            pf_coils_1,
-            pf_coils_2,
-            pf_coils_3,
-            pf_coils_4,
-            pf_coils_5]
-
-        # Plasma
-        plasma = paramak.PlasmaFromPoints(
-            outer_equatorial_x_point=1118,
-            inner_equatorial_x_point=677,
-            high_point=(853, 368),
-            configuration="single-null",
-            rotation_angle=self.rotation_angle,
-            stp_filename='plasma.stp',
-        )
-
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
+        """
+        # coil could be approximated with a ToroidalFieldCoilPrincetonD but is
+        # not included in the paper diagram
         # R1 = 511 - 50 / 2
         # R2 = 1340 + 50 / 2
         # coil_thickness = 25
-        # tf_coil = paramak.ToroidalFieldCoilPrincetonD(
-        #     R1=R1,
-        #     R2=R2,
-        #     thickness=coil_thickness,
-        #     distance=coil_thickness,
-        #     number_of_coils=6,
-        #     rotation_angle=self.rotation_angle,
-        #     stp_filename='tf_coil.stp',
-        #     stl_filename='tf_coil.stl',
-        # )
 
-        # Blanket
+        tf_coil_casing = paramak.ExtrudeMixedShape(
+            points=[
+                (956.8024674963419, 744.1181924666533, "spline"),
+                (1019.8101517726496, 731.2212103849513, "spline"),
+                (1082.8178360489574, 710.3882685687647, "spline"),
+                (1145.8255203252652, 680.4042517472378, "spline"),
+                (1208.833204601573, 642.5177956124913, "spline"),
+                (1271.8408888778808, 593.9467051995316, "spline"),
+                (1332.8160672097915, 533.1872171654991, "spline"),
+                (1382.6124628475186, 468.4187133516837, "spline"),
+                (1420.2138228188637, 405.19488907747836, "spline"),
+                (1450.1932854987194, 339.5005122098444, "spline"),
+                (1472.0427244009875, 273.43725790865426, "spline"),
+                (1486.7783924978662, 209.78591729219943, "spline"),
+                (1498.1749436860923, 130.9324032157914, "spline"),
+
+                (1506.997123663055, -64.35717673922625, "spline"),
+                (1499.4815546503473, -158.26084228529953, "spline"),
+                (1489.8271514144617, -227.50802018403465, "spline"),
+                (1473.5671038592855, -301.2681259821559, "spline"),
+                (1453.7501709014145, -371.5510611717634, "spline"),
+                (1429.3600995686502, -437.8837368553043, "spline"),
+                (1402.4293958053895, -500.68420005071425, "spline"),
+                (1367.3686682645407, -566.760952419447, "spline"),
+                (1327.1758632140895, -630.9951968657044, "spline"),
+                (1276.5156525499938, -694.4364968444456, "spline"),
+                (1214.930722434764, -753.1636044922695, "spline"),
+                (1151.9230381584562, -796.9412746643368, "spline"),
+                (1088.9153538821483, -828.8191952873351, "spline"),
+                (1025.9076696058407, -851.7220231166343, "spline"),
+                (962.899985329533, -866.3620671041153, "spline"),
+
+                (805.5787769784172, -875., "straight"),
+                (377.70287769784176, -875., "straight"),
+                (375.4508992805756, 755, "straight"),
+                (805.5787769784172, 755, "spline"),
+            ],
+            distance=200,
+            cut=[vac_vessel_inner, vac_vessel],
+            azimuth_placement_angle=np.linspace(
+                0, 360, self.number_of_tf_coils),
+            rotation_angle=self.rotation_angle,
+            stp_filename="tf_coil_casing.stp",
+            stl_filename="tf_coil_casing.stl",
+        )
+
+        return [tf_coil_casing]
+
+    def create_vessel_components(self) -> list:
+        """Creates a 3d solids for each vessel component.
+
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
+        """
+
         blanket = paramak.RotateMixedShape(
             points=[
                 (1028.5051619363035, -506.43908961374075, "spline"),
@@ -175,7 +127,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (1128.4147086686944, -60.864467978588436, "spline"),
                 (1082.0859960719372, -221.46497785651047, "spline"),
                 (945.6554596218276, -418.4558632109989, "straight"),
-
             ],
             rotation_angle=self.rotation_angle,
             stp_filename="blanket.stp",
@@ -330,61 +281,140 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             stp_filename='vacvessel.stp',
             stl_filename='vacvessel.stl',
         )
-        # TF coils casings
 
-        tf_coil_casing = paramak.ExtrudeMixedShape(
-            points=[
-                (956.8024674963419, 744.1181924666533, "spline"),
-                (1019.8101517726496, 731.2212103849513, "spline"),
-                (1082.8178360489574, 710.3882685687647, "spline"),
-                (1145.8255203252652, 680.4042517472378, "spline"),
-                (1208.833204601573, 642.5177956124913, "spline"),
-                (1271.8408888778808, 593.9467051995316, "spline"),
-                (1332.8160672097915, 533.1872171654991, "spline"),
-                (1382.6124628475186, 468.4187133516837, "spline"),
-                (1420.2138228188637, 405.19488907747836, "spline"),
-                (1450.1932854987194, 339.5005122098444, "spline"),
-                (1472.0427244009875, 273.43725790865426, "spline"),
-                (1486.7783924978662, 209.78591729219943, "spline"),
-                (1498.1749436860923, 130.9324032157914, "spline"),
+        return [divertor, blanket, vac_vessel, vac_vessel_inner]
 
-                (1506.997123663055, -64.35717673922625, "spline"),
-                (1499.4815546503473, -158.26084228529953, "spline"),
-                (1489.8271514144617, -227.50802018403465, "spline"),
-                (1473.5671038592855, -301.2681259821559, "spline"),
-                (1453.7501709014145, -371.5510611717634, "spline"),
-                (1429.3600995686502, -437.8837368553043, "spline"),
-                (1402.4293958053895, -500.68420005071425, "spline"),
-                (1367.3686682645407, -566.760952419447, "spline"),
-                (1327.1758632140895, -630.9951968657044, "spline"),
-                (1276.5156525499938, -694.4364968444456, "spline"),
-                (1214.930722434764, -753.1636044922695, "spline"),
-                (1151.9230381584562, -796.9412746643368, "spline"),
-                (1088.9153538821483, -828.8191952873351, "spline"),
-                (1025.9076696058407, -851.7220231166343, "spline"),
-                (962.899985329533, -866.3620671041153, "spline"),
+    def create_plasma(self) -> list:
+        """Creates a 3d solids for the plasma.
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
+        """
 
-                (805.5787769784172, -875., "straight"),
-                (377.70287769784176, -875., "straight"),
-                (375.4508992805756, 755, "straight"),
-                (805.5787769784172, 755, "spline"),
-            ],
-            distance=200,
-            cut=[vac_vessel_inner, vac_vessel],
-            azimuth_placement_angle=np.linspace(
-                0, 360, self.number_of_tf_coils),
+        plasma = paramak.PlasmaFromPoints(
+            outer_equatorial_x_point=1118,
+            inner_equatorial_x_point=677,
+            high_point=(853, 368),
+            configuration="single-null",
             rotation_angle=self.rotation_angle,
-            stp_filename="tf_coil_casing.stp",
-            stl_filename="tf_coil_casing.stl",
+            stp_filename='plasma.stp',
         )
 
-        self.shapes_and_components = [
-            plasma,
-            *centre_coils,
-            outboard_pf_coils,
-            blanket,
-            vac_vessel,
-            divertor,
-            # tf_coil,
-            tf_coil_casing,
-        ]
+        return [plasma]
+
+    def create_pf_coils(self) -> list:
+        """Creates a 3d solids for each pf coil.
+
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
+        """
+
+        outboard_pf_coils = paramak.PoloidalFieldCoilSet(
+            center_points=[
+                (689, -985),
+                (1421, -689),
+                (1580, -252),
+                (1550, 293),
+                (1400, 598),
+                (621, 811),
+            ],
+            widths=[
+                803 - 599,
+                1492 - 1351,
+                1628 - 1526,
+                1598 - 1503,
+                1439 - 1360,
+                684 - 563
+            ],
+            heights=[
+                803 - 599,
+                1492 - 1351,
+                1628 - 1526,
+                1598 - 1503,
+                1439 - 1360,
+                684 - 563
+            ],
+            rotation_angle=self.rotation_angle,
+            stl_filename='outboard_pf_coils.stl',
+            stp_filename='outboard_pf_coils.stp',
+        )
+
+        pf_coils_1 = paramak.RotateStraightShape(
+            points=[
+                (263.6088589363423, -881.6221003581469),
+                (263.6088589363423, -609.1721122963762),
+                (363.04586051526934, -609.1721122963762),
+                (363.04586051526934, -881.6221003581469),
+            ],
+            rotation_angle=self.rotation_angle,
+            stl_filename='pf_coils_1.stl',
+            stp_filename='pf_coils_1.stp',
+        )
+
+        pf_coils_2 = paramak.RotateStraightShape(
+            points=[
+                (266.2030353910733, -332.3839488581665),
+                (357.77071359802824, -332.3839488581665),
+                (357.77071359802824, -600.8478453421652),
+                (266.2030353910733, -600.8478453421652),
+            ],
+            rotation_angle=self.rotation_angle,
+            stl_filename='pf_coils_2.stl',
+            stp_filename='pf_coils_2.stp',
+        )
+
+        pf_coils_3 = paramak.RotateStraightShape(
+            points=[
+                (263.5606400431317, 217.1559887549579),
+                (360.3263149381907, 217.1559887549579),
+                (360.3263149381907, -316.0372010628879),
+                (263.5606400431317, -316.0372010628879),
+            ],
+            rotation_angle=self.rotation_angle,
+            stl_filename='pf_coils_3.stl',
+            stp_filename='pf_coils_3.stp',
+        )
+
+        pf_coils_4 = paramak.RotateStraightShape(
+            points=[
+                (262.2297985905187, 493.9315777717868),
+                (357.70320714753336, 493.9315777717868),
+                (357.70320714753336, 229.49149612970268),
+                (262.2297985905187, 229.49149612970268),
+            ],
+            rotation_angle=self.rotation_angle,
+            stl_filename='pf_coils_4.stl',
+            stp_filename='pf_coils_4.stp',
+        )
+
+        pf_coils_5 = paramak.RotateStraightShape(
+            points=[
+                (261.01468248161126, 746.6397242654133),
+                (356.35307813763615, 746.6397242654133),
+                (356.35307813763615, 510.27832556706545),
+                (261.01468248161126, 510.27832556706545),
+            ],
+            rotation_angle=self.rotation_angle,
+            stl_filename='pf_coils_5.stl',
+            stp_filename='pf_coils_5.stp',
+        )
+
+        return [outboard_pf_coils, pf_coils_1, pf_coils_2, pf_coils_3,
+                pf_coils_4, pf_coils_5]
+
+    def create_solids(self):
+        """Creates a 3d solids for each component.
+
+        Returns:
+            A list of CadQuery solids: A list of 3D solid volumes
+        """
+
+        plasma = self.create_plasma()
+        pf_coils = self.create_pf_coils()
+        vessel = self.create_vessel_components()
+        tf_coil_casing = self.create_tf_coils(vessel[-2], vessel[-1])
+
+        shapes_and_components = plasma + pf_coils + vessel[:-1] + tf_coil_casing
+
+        self.shapes_and_components = shapes_and_components
+
+        return shapes_and_components
