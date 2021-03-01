@@ -1295,12 +1295,12 @@ class Shape:
         while counter < len(self.points):
 
             if self.points[counter][2] == 'circle':
-                p0 = self.points[counter][:2]
-                p1 = self.points[counter + 1][:2]
-                p2 = self.points[counter + 2][:2]
+                p_0 = self.points[counter][:2]
+                p_1 = self.points[counter + 1][:2]
+                p_2 = self.points[counter + 2][:2]
 
                 points = paramak.utils.convert_circle_to_spline(
-                    p0, p1, p2, tolerance=tolerance
+                    p_0, p_1, p_2, tolerance=tolerance
                 )
 
                 # the last point needs to have the connection type of p2

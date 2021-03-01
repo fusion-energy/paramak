@@ -18,9 +18,9 @@ class TestUtilityFunctions(unittest.TestCase):
         curve."""
 
         new_points = paramak.utils.convert_circle_to_spline(
-            p0=(200., 0.),
-            p1=(250., 50.),
-            p2=(200., 100.),
+            p_0=(200., 0.),
+            p_1=(250., 50.),
+            p_2=(200., 100.),
             tolerance=0.2
         )
 
@@ -31,9 +31,9 @@ class TestUtilityFunctions(unittest.TestCase):
         assert pytest.approx(new_points[-1][1], abs=0.0000000000001) == 100
 
         new_points_more_details = paramak.utils.convert_circle_to_spline(
-            p0=(200, 0),
-            p1=(250, 50),
-            p2=(200, 100),
+            p_0=(200, 0),
+            p_1=(250, 50),
+            p_2=(200, 100),
             tolerance=0.1
         )
 

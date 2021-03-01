@@ -17,7 +17,7 @@ from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 import paramak
 
 
-def _transform_curve(edge, tolerance: float = 1e-3):
+def transform_curve(edge, tolerance: float = 1e-3):
     """Converts a curved edge into a series of straight lines (facetets) with
     the provided tolerance.
 
@@ -80,7 +80,7 @@ def facet_wire(
 
     for edge in iterable_of_wires:
         if edge.geomType() in types_to_facet:
-            edges.extend(_transform_curve(edge, tolerance=tolerance).Edges())
+            edges.extend(transform_curve(edge, tolerance=tolerance).Edges())
         else:
             edges.append(edge)
 
@@ -655,20 +655,20 @@ def export_wire_to_html(
 
 
 def convert_circle_to_spline(
-        p0: Tuple[float, float],
-        p1: Tuple[float, float],
-        p2: Tuple[float, float],
+        p_0: Tuple[float, float],
+        p_1: Tuple[float, float],
+        p_2: Tuple[float, float],
         tolerance: Optional[float] = 0.1
 ) -> List[Tuple[float, float, str]]:
     """Converts three points on the edge of a circle into a series of points
     on the edge of the circle. This is done by creating a circle edge from the
-    the points provided (p0, p1, p2), facets the circle with the provided
+    the points provided (p_0, p_1, p_2), facets the circle with the provided
     tolerance to extracts the points on the faceted edge and returns them.
 
     Args:
-        p0: coordinates of the first point
-        p1: coordinates of the second point
-        p2: coordinates of the third point
+        p_0: coordinates of the first point
+        p_1: coordinates of the second point
+        p_2: coordinates of the third point
         tolerance: the precision of the faceting.
 
     Returns:
@@ -677,10 +677,10 @@ def convert_circle_to_spline(
 
     # work plane is arbitrarily selected and has no impact of function
     solid = cq.Workplane('XZ').center(0, 0)
-    solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+    solid = solid.moveTo(p_0[0], p_0[1]).threePointArc(p_1, p_2)
     edge = solid.vals()[0]
 
-    new_edge = paramak.utils._transform_curve(edge, tolerance=tolerance)
+    new_edge = paramak.utils.transform_curve(edge, tolerance=tolerance)
 
     points = paramak.utils.extract_points_from_edges(
         edges=new_edge,
