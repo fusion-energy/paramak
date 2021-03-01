@@ -413,7 +413,8 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
         vessel = self.create_vessel_components()
         tf_coil_casing = self.create_tf_coils(vessel[-2], vessel[-1])
 
-        shapes_and_components = plasma + pf_coils + vessel[:-1] + tf_coil_casing
+        shapes_and_components = plasma + \
+            pf_coils + vessel[:-1] + tf_coil_casing
 
         self.shapes_and_components = shapes_and_components
 
