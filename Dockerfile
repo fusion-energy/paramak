@@ -40,7 +40,7 @@
 # docker run --rm ukaea/paramak pytest /tests
 # docker run --rm ukaea/paramak  /bin/bash -c "cd .. && bash run_tests.sh"
 
-FROM continuumio/miniconda3:4.9.2
+FROM continuumio/miniconda3:4.9.2 as dependencies
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2
@@ -201,9 +201,8 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# @pullrequest reviewer, we would like to make the copy optional but don't know
-# how. Then we can build a dependency image for use in circle ci.
-# Copy over the source code, examples and tests
+FROM dependencies as final
+
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
 COPY examples examples/

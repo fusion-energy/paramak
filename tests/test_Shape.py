@@ -3,6 +3,7 @@ import json
 import os
 import unittest
 from pathlib import Path
+from numpy.testing._private.utils import assert_
 
 import paramak
 import pytest
@@ -11,6 +12,7 @@ import pytest
 class TestShape(unittest.TestCase):
 
     def setUp(self):
+
         self.my_shape = paramak.CenterColumnShieldHyperbola(
             height=500,
             inner_radius=50,
@@ -18,6 +20,31 @@ class TestShape(unittest.TestCase):
             outer_radius=100,
             material_tag='center_column_shield_mat',
             method='pymoab'
+        )
+
+        self.test_rotate_mixed_shape = paramak.RotateMixedShape(
+            rotation_angle=1,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "straight"),
+                (110, 45, "straight"),
+            ]
+        )
+        self.test_extrude_mixed_shape = paramak.ExtrudeMixedShape(
+            distance=1,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "straight"),
+                (110, 45, "straight"),
+            ]
         )
 
     def test_export_h5m_makes_dagmc_file(self):

@@ -1448,3 +1448,47 @@ class Shape:
         new_filename = self.graveyard.export_stp(Path(filename))
 
         return new_filename
+
+    def convert_all_circle_connections_to_splines(
+            self,
+            tolerance: Optional[float] = 0.1
+    ) -> List[Tuple[float, float, str]]:
+        """Replaces circle edges in Shape.points with spline edges. The spline
+        control coordinates are obtained by faceting the circle edge with the
+        provided tolerance. The Shape.points will be updated to exclude the
+        circle points and include the new spline points. This method works best
+        when the connection before and after the circle is s straight
+        connection type. This method is useful when converting the stp file
+        into other formats due to errors in the conversion of circle edges.
+
+        Args:
+            tolerance: the precision of the faceting.
+
+        Returns:
+            The new points with spline connections
+        """
+
+        new_points = []
+        counter = 0
+        while counter < len(self.points):
+
+            if self.points[counter][2] == 'circle':
+                p_0 = self.points[counter][:2]
+                p_1 = self.points[counter + 1][:2]
+                p_2 = self.points[counter + 2][:2]
+
+                points = paramak.utils.convert_circle_to_spline(
+                    p_0, p_1, p_2, tolerance=tolerance
+                )
+
+                # the last point needs to have the connection type of p2
+                for point in points[:-1]:
+                    new_points.append((point[0], point[1], 'spline'))
+
+                new_points.append(self.points[counter + 2])
+                counter = counter + 3
+            else:
+                new_points.append(self.points[counter])
+                counter = counter + 1
+        self.points = new_points[:-1]
+        return new_points[:-1]
