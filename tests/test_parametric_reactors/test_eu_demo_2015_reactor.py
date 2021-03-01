@@ -14,7 +14,7 @@ class TestDemo2015Reactor(unittest.TestCase):
 
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1)
         plasma = my_reactor.create_plasma()
-        assert plasma.volume > 0
+        assert plasma[0].volume > 0
 
     def test_pf_coil_construction(self):
         """Creates the pf coil part of the EuDemoFrom2015PaperDiagram and

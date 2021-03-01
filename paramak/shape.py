@@ -210,7 +210,6 @@ class Shape:
                 abs(bound_box.ymin),
                 abs(bound_box.zmax),
                 abs(bound_box.zmin),
-                largest_dimension
             )
         self.largest_dimension = largest_dimension
         return largest_dimension
