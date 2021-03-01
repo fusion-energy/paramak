@@ -17,6 +17,51 @@ class TestReactor(unittest.TestCase):
 
         self.test_reactor = paramak.Reactor([test_shape])
 
+    def test_incorrect_merge_tolerance_too_small(self):
+
+        def incorrect_merge_tolerance_too_small():
+            """Set merge_tolerance as a negative number which should raise an error"""
+
+            self.test_reactor.merge_tolerance = -3
+
+        self.assertRaises(
+            ValueError,
+            incorrect_merge_tolerance_too_small
+        )
+
+    def test_incorrect_faceting_tolerance_too_small(self):
+
+        def incorrect_faceting_tolerance_too_small():
+            """Set faceting_tolerance as a negative int which should raise an error"""
+
+            self.test_reactor.faceting_tolerance = -3
+
+        self.assertRaises(
+            ValueError,
+            incorrect_faceting_tolerance_too_small
+        )
+
+    def test_merge_tolerance_setting_and_getting(self):
+        """Makes a neutronics model and checks the default merge_tolerance"""
+
+        assert self.test_reactor.merge_tolerance == 1e-4
+
+        self.test_reactor.merge_tolerance = 1e-6
+        assert self.test_reactor.merge_tolerance == 1e-6
+
+    def test_incorrect_methods_settings(self):
+        """Creates NeutronicsModel objects and checks errors are
+        raised correctly when arguments are incorrect."""
+
+        def test_incorrect_method():
+            """Tries to make a h5m with an inccorect method which should return
+            a ValueError"""
+
+            self.test_reactor.export_h5m(
+                method='incorrect')
+
+        self.assertRaises(ValueError, test_incorrect_method)
+
     def test_adding_shape_with_material_tag_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with
         the correct material tag property."""
@@ -340,7 +385,7 @@ class TestReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape])
         assert len(test_reactor.shapes_and_components) == 1
 
-    def test_Graveyard_exists(self):
+    def test_graveyard_exists(self):
         """creates a Reactor object with one shape and checks that a graveyard
         can be produced using the make_graveyard method"""
 
@@ -353,7 +398,7 @@ class TestReactor(unittest.TestCase):
 
         assert isinstance(test_reactor.graveyard, paramak.Shape)
 
-    def test_Graveyard_exists_solid_is_None(self):
+    def test_graveyard_exists_solid_is_None(self):
         """creates a Reactor object with one shape and checks that a graveyard
         can be produced using the make_graveyard method when the solid
         attribute of the shape is None"""
@@ -376,14 +421,14 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm my_graveyard.stp")
-        os.system("rm Graveyard.stp")
+        os.system("rm graveyard.stp")
         test_shape.stp_filename = "test_shape.stp"
         test_reactor = paramak.Reactor([test_shape])
 
         test_reactor.export_graveyard()
         test_reactor.export_graveyard(filename="my_graveyard.stp")
 
-        for filepath in ["Graveyard.stp", "my_graveyard.stp"]:
+        for filepath in ["graveyard.stp", "my_graveyard.stp"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
@@ -396,7 +441,7 @@ class TestReactor(unittest.TestCase):
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
-        os.system("rm Graveyard.stp")
+        os.system("rm graveyard.stp")
         test_reactor = paramak.Reactor([test_shape])
         test_reactor.export_graveyard()
         assert test_reactor.graveyard_offset == 100
@@ -419,13 +464,17 @@ class TestReactor(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
+
+        os.system("rm test_reactor/test_shape.stp")
+        os.system("rm test_reactor/graveyard.stp")
+
         test_shape.stp_filename = "test_shape.stp"
         test_reactor = paramak.Reactor([test_shape])
 
         test_reactor.export_stp(output_folder="test_reactor")
 
         assert Path("test_reactor/test_shape.stp").exists() is True
-        assert Path("test_reactor/Graveyard.stp").exists() is True
+        assert Path("test_reactor/graveyard.stp").exists() is True
 
     def test_exported_stl_files_exist(self):
         """creates a Reactor object with one shape and checks that a stl file
@@ -436,7 +485,7 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_reactor/test_shape.stl")
-        os.system("rm test_reactor/Graveyard.stl")
+        os.system("rm test_reactor/graveyard.stl")
         test_shape.stl_filename = "test_shape.stl"
         test_reactor = paramak.Reactor([test_shape])
 
@@ -444,7 +493,7 @@ class TestReactor(unittest.TestCase):
 
         for filepath in [
             "test_reactor/test_shape.stl",
-                "test_reactor/Graveyard.stl"]:
+                "test_reactor/graveyard.stl"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
@@ -557,8 +606,8 @@ class TestReactor(unittest.TestCase):
         assert "material" in neutronics_description[0].keys()
         assert neutronics_description[0]["material"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
-        assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
 
     def test_export_neutronics_description(self):
         """Creates a Reactor object and checks that the neutronics description
@@ -589,8 +638,8 @@ class TestReactor(unittest.TestCase):
         assert neutronics_description[0]["material"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
-        assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest_test.json")
 
     def test_export_neutronics_description_with_plasma(self):
@@ -634,8 +683,8 @@ class TestReactor(unittest.TestCase):
         assert neutronics_description[0]["tet_mesh"] == "size 60"
         assert neutronics_description[1]["material"] == "DT_plasma"
         assert neutronics_description[1]["stp_filename"] == "plasma.stp"
-        assert neutronics_description[2]["material"] == "Graveyard"
-        assert neutronics_description[2]["stp_filename"] == "Graveyard.stp"
+        assert neutronics_description[2]["material"] == "graveyard"
+        assert neutronics_description[2]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest.json")
 
     def test_export_neutronics_description_without_plasma(self):
@@ -667,8 +716,8 @@ class TestReactor(unittest.TestCase):
         assert neutronics_description[0]["material"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
-        assert neutronics_description[1]["material"] == "Graveyard"
-        assert neutronics_description[1]["stp_filename"] == "Graveyard.stp"
+        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest.json")
 
     def test_export_neutronics_without_extension(self):

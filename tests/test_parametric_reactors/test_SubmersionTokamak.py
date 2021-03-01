@@ -87,7 +87,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             "minimal_SubmersionTokamak/supports.stp",
             "minimal_SubmersionTokamak/blanket.stp",
             "minimal_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "minimal_SubmersionTokamak/Graveyard.stp",
+            "minimal_SubmersionTokamak/graveyard.stp",
         ]
 
         for output_filename in output_filenames:
@@ -116,7 +116,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             "pf_SubmersionTokamak/supports.stp",
             "pf_SubmersionTokamak/blanket.stp",
             "pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "pf_SubmersionTokamak/Graveyard.stp",
+            "pf_SubmersionTokamak/graveyard.stp",
         ]
 
         for output_filename in output_filenames:
@@ -149,7 +149,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             "tf_pf_SubmersionTokamak/supports.stp",
             "tf_pf_SubmersionTokamak/blanket.stp",
             "tf_pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "tf_pf_SubmersionTokamak/Graveyard.stp",
+            "tf_pf_SubmersionTokamak/graveyard.stp",
             "tf_pf_SubmersionTokamak/pf_coil_cases.stp"
         ]
 

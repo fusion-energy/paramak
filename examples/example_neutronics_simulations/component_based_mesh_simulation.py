@@ -37,11 +37,12 @@ def make_model_and_simulate():
             mesh_tally_2d=['heating'],
             mesh_tally_3d=['heating'],
             simulation_batches=10,  # should be increased for more accurate result
-            simulation_particles_per_batch=10  # settings are low to reduce time required
+            simulation_particles_per_batch=10,  # settings are low to reduce time required
+            method='pymoab',
         )
 
         # performs an openmc simulation on the model
-        my_model.simulate(method='pymoab')
+        my_model.simulate()
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']

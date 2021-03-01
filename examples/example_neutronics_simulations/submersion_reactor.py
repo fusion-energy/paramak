@@ -58,11 +58,12 @@ def make_model_and_simulate(temperature):
         simulation_batches=5,
         simulation_particles_per_batch=1e4,
         faceting_tolerance=1e-4,
-        merge_tolerance=1e-4
+        merge_tolerance=1e-4,
+        method='trelis'
     )
 
     # simulate the neutronics model
-    neutronics_model.simulate(method='trelis')
+    neutronics_model.simulate()
     return neutronics_model.results['TBR']
 
 

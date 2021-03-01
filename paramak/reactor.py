@@ -1,9 +1,12 @@
 
 import collections
 import json
+import os
+import pathlib
+import shutil
 from collections.abc import Iterable
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -19,13 +22,53 @@ class Reactor:
     """The Reactor object allows shapes and components to be added and then
     collective operations to be performed on them. Combining all the shapes is
     required for creating images of the whole reactor and creating a Graveyard
-    (bounding box) that is needed for neutronics simulations.
+    (bounding box) that is needed for neutronics simulations. There are two
+    methods available for producing the the DAGMC h5m file. The PyMoab option
+    is able to produce non imprinted and non merged geometry so is more suited
+    to individual components or reactors without touching surfaces. Trelis is
+    the able to produce imprinted and merged DAGMC h5m geometry. Further
+    details on imprinting and merging are available on the DAGMC homepage
+    https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html . Trelis
+    (also known as Cubit) is available from the CoreForm website
+    https://www.coreform.com/ version 17.1 is the version of Trelis used when
+    testing the Paramak code.
 
     Args:
-        shapes_and_components (list): list of paramak.Shape
+        shapes_and_components (list): list of paramak.Shape objects or the
+            filename of json file that contains the neutronics description of
+            the geometry. The list of dictionaries should each have a
+            "material" key containing a material_tag value and a "stp_filename"
+            key containing the path to the stp file. See the
+            external_stp_file_simulation.py neutronics for a complete example.
+            https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/external_stp_file_simulation.py
+        faceting_tolerance: the tolerance to use when faceting surfaces.
+        merge_tolerance: the tolerance to use when merging surfaces.
+        method: The method to use when making the h5m geometry. Options are
+            "trelis" or "pymoab".
+        largest_shapes: Identifying the shape(s) with the largest size in each
+            dimention (x,y,z) can speed up the production of the graveyard.
+            Defaults to None which finds the largest shapes by looping through
+            all the shapes and creating bounding boxes. This can be slow and
+            that is why the user is able to provide a subsection of shapes to
+            use when calculating the graveyard dimentions.
     """
 
-    def __init__(self, shapes_and_components: list):
+    def __init__(
+            self,
+            shapes_and_components: Union[List[paramak.Shape], str],
+            graveyard_offset: Optional[float] = 100,
+            largest_shapes: Optional[List[paramak.Shape]] = None,
+            method: str = 'pymoab',
+            faceting_tolerance: Optional[float] = 1e-1,
+            merge_tolerance: Optional[float] = 1e-4,
+    ):
+
+        self.shapes_and_components = shapes_and_components
+        self.graveyard_offset = graveyard_offset
+        self.largest_shapes = largest_shapes
+        self.faceting_tolerance = faceting_tolerance
+        self.merge_tolerance = merge_tolerance
+        self.method = method
 
         self.material_tags = []
         self.stp_filenames = []
@@ -34,10 +77,64 @@ class Reactor:
         self.graveyard = None
         self.solid = None
 
-        self.shapes_and_components = shapes_and_components
         self.reactor_hash_value = None
 
-        self.graveyard_offset = None  # set by the make_graveyard method
+    @property
+    def method(self):
+        return self._method
+
+    @method.setter
+    def method(self, value):
+        if value not in ['trelis', 'pymoab']:
+            raise ValueError("the method using in should be either trelis, \
+                pymoab. {} is not an option".format(value))
+        self._method = value
+
+    @property
+    def graveyard_offset(self):
+        return self._graveyard_offset
+
+    @graveyard_offset.setter
+    def graveyard_offset(self, value):
+        if value is None:
+            self._graveyard_offset = None
+        elif not isinstance(value, (float, int)):
+            raise TypeError("graveyard_offset must be a number")
+        elif value < 0:
+            raise ValueError("graveyard_offset must be positive")
+        self._graveyard_offset = value
+
+    @property
+    def faceting_tolerance(self):
+        return self._faceting_tolerance
+
+    @faceting_tolerance.setter
+    def faceting_tolerance(self, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError(
+                "Reactor.faceting_tolerance should be a\
+                number (floats or ints are accepted)")
+        if value < 0:
+            raise ValueError(
+                "Reactor.faceting_tolerance should be a\
+                positive number")
+        self._faceting_tolerance = value
+
+    @property
+    def merge_tolerance(self):
+        return self._merge_tolerance
+
+    @merge_tolerance.setter
+    def merge_tolerance(self, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError(
+                "Reactor.merge_tolerance should be a\
+                number (floats or ints are accepted)")
+        if value < 0:
+            raise ValueError(
+                "Reactor.merge_tolerance should be a\
+                positive number")
+        self._merge_tolerance = value
 
     @property
     def stp_filenames(self):
@@ -121,23 +218,9 @@ class Reactor:
 
     @shapes_and_components.setter
     def shapes_and_components(self, value):
-        if not isinstance(value, Iterable):
+        if not isinstance(value, (Iterable, str)):
             raise ValueError("shapes_and_components must be a list")
         self._shapes_and_components = value
-
-    @property
-    def graveyard_offset(self):
-        return self._graveyard_offset
-
-    @graveyard_offset.setter
-    def graveyard_offset(self, value):
-        if value is None:
-            self._graveyard_offset = None
-        elif not isinstance(value, (float, int)):
-            raise TypeError("graveyard_offset must be a number")
-        elif value < 0:
-            raise ValueError("graveyard_offset must be positive")
-        self._graveyard_offset = value
 
     @property
     def solid(self):
@@ -167,7 +250,8 @@ class Reactor:
     def neutronics_description(
             self,
             include_plasma: Optional[bool] = False,
-            include_graveyard: Optional[bool] = True) -> dict:
+            include_graveyard: Optional[bool] = True,
+    ) -> dict:
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations
         which require linkage between volumes, materials and identification of
@@ -220,7 +304,8 @@ class Reactor:
             self,
             filename: Optional[str] = "manifest.json",
             include_plasma: Optional[bool] = False,
-            include_graveyard: Optional[bool] = True) -> str:
+            include_graveyard: Optional[bool] = True,
+    ) -> str:
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
         file contains a list of dictionaries. Each dictionary entry comprises
@@ -238,12 +323,15 @@ class Reactor:
         Args:
             filename (str, optional): the filename used to save the neutronics
                 description
-            include_plasma (Boolean, optional): should the plasma be included.
-                Defaults to False as the plasma volume and material has very
-                little impact on the neutronics results due to the low density.
-                Including the plasma does however slow down the simulation.
-            include_graveyard (Boolean, optional): should the graveyard be
-                included. Defaults to True as this is needed for DAGMC models.
+            include_plasma: should the plasma be included. Defaults to False
+                as the plasma volume and material has very little impact on
+                the neutronics results due to the low density. Including the
+                plasma does however slow down the simulation.
+            include_graveyard: should the graveyard be included. Defaults to
+                True as this is needed for DAGMC models.
+
+        Returns:
+            filename of the neutronics description file saved
         """
 
         path_filename = Path(filename)
@@ -270,19 +358,20 @@ class Reactor:
     def export_stp(
             self,
             output_folder: Optional[str] = "",
-            graveyard_offset: Optional[float] = 100,
-            mode: Optional[str] = 'solid') -> List[str]:
+            mode: Optional[str] = 'solid',
+            graveyard_offset: Optional[float] = None,
+    ) -> List[str]:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 
         Args:
             output_folder (str): the folder for saving the stp files to
-            graveyard_offset (float, optional): the offset between the largest
-                edge of the geometry and inner bounding shell created. Defaults
-                to 100.
             mode (str, optional): the object to export can be either
                 'solid' which exports 3D solid shapes or the 'wire' which
                 exports the wire edges of the shape. Defaults to 'solid'.
+            graveyard_offset (float, optional): the offset between the largest
+                edge of the geometry and inner bounding shell created. Defaults
+                to None which uses the Reactor.graveyard_offset attribute.
         Returns:
             list: a list of stp filenames created
         """
@@ -290,8 +379,8 @@ class Reactor:
         if len(self.stp_filenames) != len(set(self.stp_filenames)):
             print([item for item, count in collections.Counter(
                 self.stp_filenames).items() if count > 1])
-            raise ValueError(
-                "Set Reactor already contains shapes with the same stp_filename", )
+            raise ValueError("Set Reactor already contains shapes with the \
+                same stp_filename", )
 
         filenames = []
         for entry in self.shapes_and_components:
@@ -309,6 +398,8 @@ class Reactor:
 
         # creates a graveyard (bounding shell volume) which is needed for
         # neutronics simulations
+        if graveyard_offset is None:
+            graveyard_offset = self.graveyard_offset
         self.make_graveyard(graveyard_offset=graveyard_offset)
         filenames.append(
             str(Path(output_folder) / Path(self.graveyard.stp_filename)))
@@ -321,16 +412,17 @@ class Reactor:
     def export_stl(
             self,
             output_folder: Optional[str] = "",
-            graveyard_offset: Optional[float] = 100,
-            tolerance: Optional[float] = 0.001) -> List[str]:
+            tolerance: Optional[float] = 0.001,
+            graveyard_offset: Optional[float] = None,
+    ) -> List[str]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
             output_folder (str): the folder for saving the stl files to
+            tolerance (float):  the precision of the faceting
             graveyard_offset (float, optional): the offset between the largest
                 edge of the geometry and inner bounding shell created. Defaults
                 to 100.
-            tolerance (float):  the precision of the faceting
 
         Returns:
             list: a list of stl filenames created
@@ -362,6 +454,8 @@ class Reactor:
 
         # creates a graveyard (bounding shell volume) which is needed for
         # neutronics simulations
+        if graveyard_offset is None:
+            graveyard_offset = self.graveyard_offset
         self.make_graveyard(graveyard_offset=graveyard_offset)
         filenames.append(
             str(Path(output_folder) / Path(self.graveyard.stl_filename)))
@@ -377,27 +471,145 @@ class Reactor:
             self,
             filename: Optional[str] = 'dagmc.h5m',
             skip_graveyard: Optional[bool] = False,
-            tolerance: Optional[float] = 0.001,
-            graveyard_offset: Optional[float] = 100) -> str:
+            method: Optional[str] = None,
+            merge_tolerance: Optional[float] = None,
+            faceting_tolerance: Optional[float] = None,
+    ) -> str:
+        """Produces a dagmc.h5m neutronics file compatable with DAGMC
+        simulations. Tags the volumes with their material_tag attributes.
+
+        Arguments:
+            filename: filename of h5m outputfile.
+            skip_graveyard: Optionally skip the graveyard production (True) or
+                include the graveyard production (False).
+            method: The method to use when making the imprinted and
+                merged geometry. Options are "trelis" and "pymoab" Defaults to
+                None which uses the Reactor.method attribute.
+            merge_tolerance: the allowable distance between edges and surfaces
+                before merging these CAD objects into a single CAD object. See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Reactor.merge_tolerance attribute.
+            faceting_tolerance: the allowable distance between facetets
+                before merging these CAD objects into a single CAD object See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Reactor.faceting_tolerance attribute.
+
+        Returns:
+            The filename of the DAGMC file created
+        """
+
+        if merge_tolerance is None:
+            merge_tolerance = self.merge_tolerance
+
+        if faceting_tolerance is None:
+            faceting_tolerance = self.faceting_tolerance
+
+        if method is None:
+            method = self.method
+
+        if method == 'trelis':
+            output_filename = self.export_h5m_with_trelis(
+                filename=filename,
+                merge_tolerance=merge_tolerance,
+                faceting_tolerance=faceting_tolerance,
+            )
+        elif method == 'pymoab':
+            output_filename = self.export_h5m_with_pymoab(
+                skip_graveyard=skip_graveyard,
+                filename=filename,
+                faceting_tolerance=faceting_tolerance
+            )
+
+        else:
+            raise ValueError("the method using in should be either trelis, \
+                pymoab. {} is not an option".format(method))
+
+        return output_filename
+
+    def export_h5m_with_trelis(
+            self,
+            filename: Optional[str] = 'dagmc.h5m',
+            merge_tolerance: Optional[float] = None,
+            faceting_tolerance: Optional[float] = None,
+    ):
+        """Produces a dagmc.h5m neutronics file compatable with DAGMC
+        simulations using Coreform Trelis.
+
+        Arguments:
+            filename: filename of h5m outputfile.
+            merge_tolerance: the allowable distance between edges and surfaces
+                before merging these CAD objects into a single CAD object. See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Reactor.merge_tolerance attribute.
+            faceting_tolerance: the allowable distance between facetets
+                before merging these CAD objects into a single CAD object See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Reactor.faceting_tolerance attribute.
+
+        Returns:
+            str: filename of the DAGMC file produced
+        """
+
+        if merge_tolerance is None:
+            merge_tolerance = self.merge_tolerance
+        if faceting_tolerance is None:
+            faceting_tolerance = self.faceting_tolerance
+
+        if isinstance(self.shapes_and_components, list):
+            self.export_stp()
+            self.export_neutronics_description()
+        elif isinstance(self.shapes_and_components, str):
+            if not Path(self.shapes_and_components).is_file():
+                raise FileNotFoundError("The filename entered as the geometry \
+                    argument {} does not exist".format(self.shapes_and_components))
+            if self.shapes_and_components != 'manifest.json':
+                shutil.copy(
+                    src=self.shapes_and_components,
+                    dst='manifest.json')
+        else:
+            raise ValueError(
+                "shapes_and_components must be a list of paramak.Shape or a filename")
+
+        not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
+            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
+        water_tight_h5m = paramak.neutronics_utils.make_watertight(
+            input_filename=not_watertight_file,
+            output_filename=filename
+        )
+
+        return water_tight_h5m
+
+    def export_h5m_with_pymoab(
+            self,
+            filename: Optional[str] = 'dagmc.h5m',
+            skip_graveyard: Optional[bool] = False,
+            graveyard_offset: Optional[float] = 100,
+            faceting_tolerance: Optional[float] = None
+    ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
         DAGMC geometry. If the provided filename doesn't end with .h5m it will
         be added
 
-        Args:
-            filename (str, optional): filename of h5m outputfile
-                Defaults to "dagmc.h5m".
-            skip_graveyard (boolean, optional): filename of h5m outputfile
-                Defaults to False.
-            tolerance (float, optional): the precision of the faceting
-                Defaults to 0.001.
-            graveyard_offset (float, optional): the offset between the largest
+        Arguments:
+            filename: filename of h5m outputfile.
+            skip_graveyard: Optionally skip the graveyard production (True) or
+                include the graveyard production (False).
+            faceting_tolerance: the precision of the faceting.
+            graveyard_offset: the offset between the largest
                 edge of the geometry and inner bounding shell created. Defaults
                 to 100.
+
         Returns:
-            filename: output h5m filename
+            The filename of the DAGMC file created
         """
+        if faceting_tolerance is None:
+            faceting_tolerance = self.faceting_tolerance
 
         path_filename = Path(filename)
 
@@ -411,18 +623,24 @@ class Reactor:
         surface_id = 1
         volume_id = 1
 
-        for item in self.shapes_and_components:
+        if isinstance(self.shapes_and_components, list):
+            for item in self.shapes_and_components:
 
-            item.export_stl(item.stl_filename, tolerance=tolerance)
-            moab_core = add_stl_to_moab_core(
-                moab_core,
-                surface_id,
-                volume_id,
-                item.material_tag,
-                moab_tags,
-                item.stl_filename)
-            volume_id += 1
-            surface_id += 1
+                item.export_stl(
+                    item.stl_filename,
+                    tolerance=faceting_tolerance)
+                moab_core = add_stl_to_moab_core(
+                    moab_core,
+                    surface_id,
+                    volume_id,
+                    item.material_tag,
+                    moab_tags,
+                    item.stl_filename)
+                volume_id += 1
+                surface_id += 1
+        else:
+            raise NotImplementedError(
+                "Reading a JSON filename and converting to a DAGMC geometry using pymoab is not yet supported")
 
         if skip_graveyard is False:
             self.make_graveyard(graveyard_offset=graveyard_offset)
@@ -450,7 +668,8 @@ class Reactor:
 
     def export_physical_groups(
             self,
-            output_folder: Optional[str] = "") -> List[str]:
+            output_folder: Optional[str] = "",
+    ) -> List[str]:
         """Exports several JSON files containing a look up table which is
         useful for identifying faces and volumes. The output file names are
         generated from .stp_filename properties.
@@ -490,7 +709,8 @@ class Reactor:
             strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
             hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
             showHidden: Optional[bool] = True,
-            showAxes: Optional[bool] = False) -> str:
+            showAxes: Optional[bool] = False,
+    ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
@@ -556,7 +776,8 @@ class Reactor:
     def export_graveyard(
             self,
             graveyard_offset: Optional[float] = 100,
-            filename: Optional[str] = "Graveyard.stp") -> str:
+            filename: Optional[str] = "graveyard.stp",
+    ) -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -578,7 +799,8 @@ class Reactor:
 
     def make_graveyard(
             self,
-            graveyard_offset: Optional[float] = 100) -> paramak.Shape:
+            graveyard_offset: Optional[float] = None,
+    ) -> paramak.Shape:
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -592,19 +814,21 @@ class Reactor:
             CadQuery solid: a shell volume that bounds the geometry, referred
             to as a graveyard in DAGMC
         """
-
-        self.graveyard_offset = graveyard_offset
+        if graveyard_offset is None:
+            graveyard_offset = self.graveyard_offset
 
         for component in self.shapes_and_components:
             if component.solid is None:
                 component.create_solid()
 
+        graveyard_size = self.largest_dimension * 2 + graveyard_offset * 2
+
         graveyard_shape = paramak.HollowCube(
-            length=self.largest_dimension * 2 + graveyard_offset * 2,
-            name="Graveyard",
-            material_tag="Graveyard",
-            stp_filename="Graveyard.stp",
-            stl_filename="Graveyard.stl",
+            length=graveyard_size,
+            name="graveyard",
+            material_tag="graveyard",
+            stp_filename="graveyard.stp",
+            stl_filename="graveyard.stl",
         )
 
         self.graveyard = graveyard_shape
@@ -617,7 +841,8 @@ class Reactor:
             xmin: Optional[float] = 0.0,
             xmax: Optional[float] = 900.0,
             ymin: Optional[float] = -600.0,
-            ymax: Optional[float] = 600.0) -> str:
+            ymax: Optional[float] = 600.0,
+    ) -> str:
         """Creates a 2D slice image (png) of the reactor.
 
         Args:

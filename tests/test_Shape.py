@@ -1,4 +1,5 @@
 
+import json
 import os
 import unittest
 from pathlib import Path
@@ -11,6 +12,15 @@ import pytest
 class TestShape(unittest.TestCase):
 
     def setUp(self):
+
+        self.my_shape = paramak.CenterColumnShieldHyperbola(
+            height=500,
+            inner_radius=50,
+            mid_radius=60,
+            outer_radius=100,
+            material_tag='center_column_shield_mat',
+            method='pymoab'
+        )
 
         self.test_rotate_mixed_shape = paramak.RotateMixedShape(
             rotation_angle=1,
@@ -36,6 +46,19 @@ class TestShape(unittest.TestCase):
                 (110, 45, "straight"),
             ]
         )
+
+    def test_export_h5m_makes_dagmc_file(self):
+        """Makes a NeutronicsModel from a shapes, then makes the h5m file"""
+
+        # tests method using class attribute
+        os.system('rm dagmc.h5m')
+        self.my_shape.export_h5m()
+        assert Path('dagmc.h5m').exists() is True
+
+        # tests method using method argument
+        os.system('rm dagmc.h5m')
+        self.my_shape.export_h5m(method='pymoab')
+        assert Path('dagmc.h5m').exists() is True
 
     def test_shape_default_properties(self):
         """Creates a Shape object and checks that the points attribute has
@@ -584,6 +607,49 @@ class TestShape(unittest.TestCase):
 
         for i in range(len(incorrect_values)):
             self.assertRaises(ValueError, set_value)
+
+    def test_export_neutronics_description_without_suffix(self):
+        """Creates a neutronics description with and without the .json file
+        extention and checks that the output file exists"""
+
+        test_shape = paramak.Shape()
+        test_shape.material_tag = 'm1'
+        test_shape.stp_filename = 'test_shape.stp'
+
+        os.system('rm test_shape.json')
+        test_shape.export_neutronics_description('test_shape')
+
+        assert Path('test_shape.json').is_file()
+        test_shape.export_neutronics_description('test_shape2.json')
+        assert Path('test_shape2.json').is_file()
+
+    def test_export_neutronics_description_contents(self):
+        """Creates a neutronics description for a shape and checks the
+        contents is a list with a dictionary entry that has specific keys and
+        values"""
+
+        test_shape = paramak.Shape()
+        test_shape.material_tag = 'm1'
+        test_shape.stp_filename = 'test_shape.stp'
+
+        os.system('rm *.json')
+        test_shape.export_neutronics_description('test_shape3.json')
+
+        with open('test_shape3.json') as json_file:
+            data = json.load(json_file)
+
+        assert isinstance(data, list)
+        assert len(data) == 1
+
+        assert 'stp_filename' in data[0].keys()
+        assert 'material' in data[0].keys()
+        # TODO this can be removed in the future
+        assert 'filename' in data[0].keys()
+
+        assert data[0]['material'] == 'm1'
+        assert data[0]['stp_filename'] == 'test_shape.stp'
+        # TODO this can be removed in the future
+        assert data[0]['filename'] == 'test_shape.stp'
 
 
 if __name__ == "__main__":

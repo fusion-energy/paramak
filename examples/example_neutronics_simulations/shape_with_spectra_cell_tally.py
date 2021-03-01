@@ -25,11 +25,12 @@ my_model = paramak.NeutronicsModel(
     materials={'center_column_shield_mat': 'Be'},
     cell_tallies=['heating', 'flux', 'TBR', 'spectra'],
     simulation_batches=10,
-    simulation_particles_per_batch=200
+    simulation_particles_per_batch=200,
+    method='pymoab'
 )
 
 # performs an openmc simulation on the model
-output_filename = my_model.simulate(method='pymoab')
+output_filename = my_model.simulate()
 
 # this extracts the values from the results dictionary
 energy_bins = my_model.results['center_column_shield_mat_photon_spectra']['Flux per source particle']['energy']
