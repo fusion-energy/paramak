@@ -18,7 +18,8 @@ class TestShape(unittest.TestCase):
             inner_radius=50,
             mid_radius=60,
             outer_radius=100,
-            material_tag='center_column_shield_mat'
+            material_tag='center_column_shield_mat',
+            method='pymoab'
         )
 
         # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
@@ -36,29 +37,13 @@ class TestShape(unittest.TestCase):
             geometry=self.my_shape,
             source=self.source,
             materials={'center_column_shield_mat': 'WC'},
-            method='pymoab'
         )
 
-        my_model.export_h5m()
+        self.my_shape.export_h5m()
 
         my_model.simulate(export_h5m=False)
 
         my_model.results is not None
-
-    def test_merge_tolerance_setting_and_getting(self):
-        """Makes a neutronics model and checks the default merge_tolerance"""
-
-        # converts the geometry into a neutronics geometry
-        my_model = paramak.NeutronicsModel(
-            geometry=self.my_shape,
-            source=self.source,
-            materials={'center_column_shield_mat': 'eurofer'},
-        )
-
-        assert my_model.merge_tolerance == 1e-4
-
-        my_model.merge_tolerance = 1e-6
-        assert my_model.merge_tolerance == 1e-6
 
     def test_neutronics_component_simulation_with_openmc_mat(self):
         """Makes a neutronics model and simulates with a cell tally"""
@@ -75,7 +60,6 @@ class TestShape(unittest.TestCase):
             cell_tallies=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2,
-            method='pymoab',
         )
 
         # performs an openmc simulation on the model
@@ -103,7 +87,6 @@ class TestShape(unittest.TestCase):
             cell_tallies=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2,
-            method='pymoab'
         )
 
         # performs an openmc simulation on the model
@@ -135,7 +118,6 @@ class TestShape(unittest.TestCase):
             materials={'center_column_shield_mat': test_mat},
             simulation_batches=2,
             simulation_particles_per_batch=2,
-            method='pymoab',
         )
 
         # performs an openmc simulation on the model
@@ -149,23 +131,6 @@ class TestShape(unittest.TestCase):
         assert Path('results.json').exists() is False
         output_filename = my_model.simulate()
         assert Path('results.json').exists() is True
-
-    def test_missing_dagmc_not_watertight_file(self):
-
-        def missing_dagmc_not_watertight_file():
-            """Sets faceting_tolerance as a string which should raise an error"""
-            test_model = paramak.NeutronicsModel(
-                geometry=self.my_shape,
-                source=self.source,
-                materials={'center_column_shield_mat': 'eurofer'},
-            )
-
-            test_model.make_watertight()
-
-        self.assertRaises(
-            FileNotFoundError,
-            missing_dagmc_not_watertight_file
-        )
 
     def test_incorrect_faceting_tolerance(self):
 
@@ -183,22 +148,6 @@ class TestShape(unittest.TestCase):
             incorrect_faceting_tolerance
         )
 
-    def test_incorrect_faceting_tolerance_too_small(self):
-
-        def incorrect_faceting_tolerance_too_small():
-            """Set faceting_tolerance as a negative int which should raise an error"""
-            paramak.NeutronicsModel(
-                geometry=self.my_shape,
-                source=self.source,
-                materials={'center_column_shield_mat': 'eurofer'},
-                faceting_tolerance=-3
-            )
-
-        self.assertRaises(
-            ValueError,
-            incorrect_faceting_tolerance_too_small
-        )
-
     def test_incorrect_merge_tolerance(self):
 
         def incorrect_merge_tolerance():
@@ -213,22 +162,6 @@ class TestShape(unittest.TestCase):
         self.assertRaises(
             TypeError,
             incorrect_merge_tolerance
-        )
-
-    def test_incorrect_merge_tolerance_too_small(self):
-
-        def incorrect_merge_tolerance_too_small():
-            """Set merge_tolerance as a negative number which should raise an error"""
-            paramak.NeutronicsModel(
-                geometry=self.my_shape,
-                source=self.source,
-                materials={'center_column_shield_mat': 'eurofer'},
-                merge_tolerance=-3
-            )
-
-        self.assertRaises(
-            ValueError,
-            incorrect_merge_tolerance_too_small
         )
 
     def test_incorrect_cell_tallies(self):
@@ -423,7 +356,6 @@ class TestShape(unittest.TestCase):
             cell_tallies=['heating', 'flux', 'TBR', 'spectra'],
             simulation_batches=2,
             simulation_particles_per_batch=2,
-            method='pymoab'
         )
 
         # performs an openmc simulation on the model
@@ -467,7 +399,6 @@ class TestShape(unittest.TestCase):
             mesh_tally_2d=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2,
-            method='pymoab'
         )
 
         # performs an openmc simulation on the model
@@ -495,7 +426,6 @@ class TestShape(unittest.TestCase):
             mesh_tally_3d=['heating', '(n,Xt)'],
             simulation_batches=2,
             simulation_particles_per_batch=2,
-            method='pymoab'
         )
 
         # performs an openmc simulation on the model
@@ -546,7 +476,6 @@ class TestShape(unittest.TestCase):
             mesh_tally_2d=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2,
-            method='pymoab'
         )
 
         # performs an openmc simulation on the model
@@ -578,7 +507,6 @@ class TestShape(unittest.TestCase):
             mesh_tally_2d=['heating'],
             simulation_batches=2,
             simulation_particles_per_batch=2,
-            method='pymoab',
             mesh_3d_corners=[(0, 0, 0), (10, 10, 10)],
             mesh_2d_corners=[(5, 5, 5), (15, 15, 15)],
         )
@@ -623,7 +551,6 @@ class TestShape(unittest.TestCase):
             cell_tallies=['TBR', 'heating', 'flux'],
             simulation_batches=2,
             simulation_particles_per_batch=10,
-            method='pymoab',
         )
 
         # starts the neutronics simulation using trelis
@@ -657,7 +584,6 @@ class TestShape(unittest.TestCase):
             mesh_tally_2d=['(n,Xt)', 'heating', 'flux'],
             simulation_batches=2,
             simulation_particles_per_batch=10,
-            method='pymoab',
         )
 
         # starts the neutronics simulation using trelis
@@ -673,25 +599,6 @@ class TestShape(unittest.TestCase):
         assert Path("flux_on_2D_mesh_xy.png").exists() is True
         assert Path("flux_on_2D_mesh_yz.png").exists() is True
 
-    def test_export_h5m_makes_dagmc_file(self):
-        """Makes a NeutronicsModel from a shapes, then makes the h5m file"""
-
-        my_model = paramak.NeutronicsModel(
-            geometry=self.my_shape,
-            source=self.source,
-            materials={'center_column_shield_mat': 'WC'},
-            method='pymoab'
-        )
-        # tests method using class attribute
-        os.system('rm dagmc.h5m')
-        my_model.export_h5m()
-        assert Path('dagmc.h5m').exists() is True
-
-        # tests method using method argument
-        os.system('rm dagmc.h5m')
-        my_model.export_h5m(method='pymoab')
-        assert Path('dagmc.h5m').exists() is True
-
     def test_trelis_run_without_trelis(self):
         """Creates NeutronicsModel objects and checks errors are
         raised correctly when arguments are incorrect."""
@@ -700,15 +607,14 @@ class TestShape(unittest.TestCase):
         def test_export_h5m_error_handling():
             """Makes a reactor from two shapes, then mades a neutronics model
             and tests the TBR simulation value"""
-
+            self.my_shape.method = 'trelis'
             my_model = paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
                 materials={'center_column_shield_mat': 'WC'},
-                method='trelis'
             )
 
-            my_model.export_h5m()
+            self.my_shape.export_h5m()
 
         self.assertRaises(FileNotFoundError, test_export_h5m_error_handling)
 
@@ -724,7 +630,6 @@ class TestShape(unittest.TestCase):
                 geometry=self.my_shape,
                 source=self.source,
                 materials={'center_column_shield_mat': 'WC'},
-                method='pymoab'
             )
 
             # creates h5m files so that the code passes the h5m file check
@@ -749,7 +654,6 @@ class TestShape(unittest.TestCase):
                 geometry=self.my_shape,
                 source=self.source,
                 materials={'center_column_shield_mat': 'WC'},
-                method='pymoab'
             )
 
             # creates xml files so that the code passes the xml file check
@@ -821,7 +725,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
                 'blanket_rear_wall_mat': 'eurofer'},
             cell_tallies=['TBR', 'flux', 'heating'],
             simulation_batches=42,
-            simulation_particles_per_batch=84,
+            simulation_particles_per_batch=12,
         )
 
         assert neutronics_model.geometry == self.my_reactor
@@ -839,36 +743,8 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         assert neutronics_model.simulation_batches == 42
         assert isinstance(neutronics_model.simulation_batches, int)
 
-        assert neutronics_model.simulation_particles_per_batch == 84
+        assert neutronics_model.simulation_particles_per_batch == 12
         assert isinstance(neutronics_model.simulation_particles_per_batch, int)
-
-    def test_incorrect_methods_settings(self):
-        """Creates NeutronicsModel objects and checks errors are
-        raised correctly when arguments are incorrect."""
-
-        def test_incorrect_method():
-            """Makes a BallReactor neutronics model and simulates the TBR"""
-
-            # makes the neutronics material
-            neutronics_model = paramak.NeutronicsModel(
-                geometry=self.my_reactor,
-                source=self.source,
-                materials={
-                    'inboard_tf_coils_mat': 'copper',
-                    'center_column_shield_mat': 'WC',
-                    'divertor_mat': 'eurofer',
-                    'firstwall_mat': 'eurofer',
-                    'blanket_mat': 'FLiNaK',  # used as O18 is not in nndc nuc data
-                    'blanket_rear_wall_mat': 'eurofer'},
-                cell_tallies=['TBR', 'flux', 'heating'],
-                simulation_batches=42,
-                simulation_particles_per_batch=84,
-            )
-
-            neutronics_model.export_h5m(
-                method='incorrect')
-
-        self.assertRaises(ValueError, test_incorrect_method)
 
 
 if __name__ == "__main__":

@@ -17,6 +17,51 @@ class TestReactor(unittest.TestCase):
 
         self.test_reactor = paramak.Reactor([test_shape])
 
+    def test_incorrect_merge_tolerance_too_small(self):
+
+        def incorrect_merge_tolerance_too_small():
+            """Set merge_tolerance as a negative number which should raise an error"""
+
+            self.test_reactor.merge_tolerance = -3
+
+        self.assertRaises(
+            ValueError,
+            incorrect_merge_tolerance_too_small
+        )
+
+    def test_incorrect_faceting_tolerance_too_small(self):
+
+        def incorrect_faceting_tolerance_too_small():
+            """Set faceting_tolerance as a negative int which should raise an error"""
+
+            self.test_reactor.faceting_tolerance = -3
+
+        self.assertRaises(
+            ValueError,
+            incorrect_faceting_tolerance_too_small
+        )
+
+    def test_merge_tolerance_setting_and_getting(self):
+        """Makes a neutronics model and checks the default merge_tolerance"""
+
+        assert self.test_reactor.merge_tolerance == 1e-4
+
+        self.test_reactor.merge_tolerance = 1e-6
+        assert self.test_reactor.merge_tolerance == 1e-6
+
+    def test_incorrect_methods_settings(self):
+        """Creates NeutronicsModel objects and checks errors are
+        raised correctly when arguments are incorrect."""
+
+        def test_incorrect_method():
+            """Tries to make a h5m with an inccorect method which should return
+            a ValueError"""
+
+            self.test_reactor.export_h5m(
+                method='incorrect')
+
+        self.assertRaises(ValueError, test_incorrect_method)
+
     def test_adding_shape_with_material_tag_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with
         the correct material tag property."""

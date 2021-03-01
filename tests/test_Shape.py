@@ -10,6 +10,29 @@ import pytest
 
 class TestShape(unittest.TestCase):
 
+    def setUp(self):
+        self.my_shape = paramak.CenterColumnShieldHyperbola(
+            height=500,
+            inner_radius=50,
+            mid_radius=60,
+            outer_radius=100,
+            material_tag='center_column_shield_mat',
+            method='pymoab'
+        )
+
+    def test_export_h5m_makes_dagmc_file(self):
+        """Makes a NeutronicsModel from a shapes, then makes the h5m file"""
+
+        # tests method using class attribute
+        os.system('rm dagmc.h5m')
+        self.my_shape.export_h5m()
+        assert Path('dagmc.h5m').exists() is True
+
+        # tests method using method argument
+        os.system('rm dagmc.h5m')
+        self.my_shape.export_h5m(method='pymoab')
+        assert Path('dagmc.h5m').exists() is True
+
     def test_shape_default_properties(self):
         """Creates a Shape object and checks that the points attribute has
         a default of None."""

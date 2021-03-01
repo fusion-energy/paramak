@@ -1,7 +1,9 @@
 
 import math
 import os
+import shutil
 from collections import defaultdict
+from pathlib import Path
 from typing import List, Optional
 from xml.etree.ElementTree import SubElement
 
@@ -17,6 +19,82 @@ except ImportError:
     warnings.warn('OpenMC not found, create_inital_particles \
             method not available', UserWarning)
 
+
+def trelis_command_to_create_dagmc_h5m(
+        faceting_tolerance: float,
+        merge_tolerance: float,
+        ) -> str:
+    """Runs the Trelis executable command with the 
+    make_faceteted_neutronics_model.py script which produces a non water tight
+    DAGMC h5m file.
+
+    Arguments:
+        faceting_tolerance: the tolerance to use when faceting surfaces.
+        merge_tolerance: the tolerance to use when merging surfaces.
+
+    Returns:
+        The filename of the h5m file created
+    """
+    shutil.copy(
+        src=Path(__file__).parent.absolute() / Path('parametric_neutronics') /
+        'make_faceteted_neutronics_model.py',
+        dst=Path().absolute()
+    )
+
+    if not Path("make_faceteted_neutronics_model.py").is_file():
+        raise FileNotFoundError(
+            "The make_faceteted_neutronics_model.py was not found in the \
+            directory")
+
+    os.system('rm dagmc_not_watertight.h5m')
+
+    os.system(
+        "trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
+        str(faceting_tolerance) +
+        "'\" \"merge_tolerance='" +
+        str(merge_tolerance) +
+        "'\"")
+
+    os.system('rm make_faceteted_neutronics_model.py')
+
+    if not Path("dagmc_not_watertight.h5m").is_file():
+        raise FileNotFoundError(
+            "The dagmc_not_watertight.h5m was not found \
+            in the directory, the Trelis stage has failed")
+
+    return "dagmc_not_watertight.h5m"
+
+def make_watertight(
+        input_filename: str = "dagmc_not_watertight.h5m",
+        output_filename: str = "dagmc.h5m",
+        ) -> str:
+    """Runs the DAGMC make_watertight executable that seals the facetets of
+    the geometry with specified input and output h5m files.
+
+    Arguments:
+        input_filename: the non watertight h5m file to make watertight.
+        output_filename: the filename of the watertight h5m file.
+
+    Returns:
+        The filename of the h5m file created
+    """
+
+    if not Path(input_filename).is_file():
+        raise FileNotFoundError("Failed to find {}".format(input_filename))
+
+    os.system('rm {}'.format(output_filename))
+
+    if os.system(
+            "make_watertight {} -o {}".format(input_filename, output_filename)) != 0:
+        raise ValueError(
+            "make_watertight failed, check DAGMC is install and the \
+                DAGMC/bin folder is in the path directory (Linux and Mac) \
+                or set as an enviromental varible (Windows)")
+
+    if not Path(output_filename).is_file():
+        raise FileNotFoundError("Failed to produce dagmc.h5m")
+
+    return output_filename
 
 def define_moab_core_and_tags():
     """Creates a MOAB Core instance which can be built up by adding sets of

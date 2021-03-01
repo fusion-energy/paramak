@@ -29,36 +29,13 @@ except ImportError:
 
 
 class NeutronicsModel():
-    """Creates a neuronics model of the provided shape geometry with assigned
-    materials, source and neutronics tallies. There are three methods
-    available for producing the the DAGMC h5m file. The PyMoab option is able
-    to produce non imprinted and non merged geometry so is more suited to
-    individual components or reactors without touching surfaces. Trelis is
-    the only method currently able to produce imprinted and merged DAGMC h5m
-    geometry. PPP is a experimental route that has not been fully demonstrated
-    yet but is partly intergrated to test this promising new method.
-    make_watertight is also used to seal the DAGMC geoemtry produced by Trelis.
-    Further details on imprinting and merging are available on the
-    DAGMC homepage
-    https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-    The Parallel-PreProcessor is an open-source tool available
-    https://github.com/ukaea/parallel-preprocessor and can be used in
-    conjunction with the OCC_faceter
-    (https://github.com/makeclean/occ_faceter) to create imprinted and
-    merged geometry while Trelis (also known as Cubit) is available from
-    the CoreForm website https://www.coreform.com/ version 17.1 is the version
-    of Trelis used when testing the Paramak code.
+    """Creates a neutronics model of the provided shape geometry with assigned
+    materials, source and neutronics tallies.
 
     Arguments:
         geometry: The geometry to convert to a neutronics model. e.g.
             geometry=paramak.RotateMixedShape() or
-            geometry=paramak.BallReactor() or the filename of json file
-            containing the neutronics description of the geometry. The list of
-            dictionaries should each have a "material" key containing a
-            material_tag value and a stp_filename key containing the path to
-            the stp file. See the external_stp_file_simulation.py neutronics
-            example for a complete example.
-            https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/external_stp_file_simulation.py
+            geometry=paramak.BallReactor().
         source (openmc.Source()): the particle source to use during the
             OpenMC simulation.
         materials: Where the dictionary keys are the material tag
@@ -97,12 +74,6 @@ class NeutronicsModel():
             mesh. This sets the location of the mesh. Defaults to None which
             uses the NeutronicsModel.geometry.largest_dimension property to set
             the corners.
-        method: The method to use when making the imprinted and merged
-            geometry. Options are "trelis", "pymoab". Defaults to None.
-        faceting_tolerance: the tolerance to use when faceting surfaces.
-            Defaults to 1e-1.
-        merge_tolerance: the tolerance to use when merging surfaces. Defaults
-            to 1e-4.
         fusion_power: the power in watts emitted by the fusion reaction
             recalling that each DT fusion reaction emitts 17.6 MeV or
             2.819831e-12 Joules
@@ -110,7 +81,7 @@ class NeutronicsModel():
 
     def __init__(
         self,
-        geometry: Union[paramak.Reactor, paramak.Shape, str],
+        geometry: Union[paramak.Reactor, paramak.Shape],
         source,
         materials: dict,
         simulation_batches: Optional[int] = 100,
@@ -124,9 +95,6 @@ class NeutronicsModel():
                                               float], Tuple[float, float, float]]] = None,
         mesh_3d_corners: Optional[Tuple[Tuple[float, float,
                                               float], Tuple[float, float, float]]] = None,
-        method: Optional[str] = 'trelis',
-        faceting_tolerance: Optional[float] = 1e-1,
-        merge_tolerance: Optional[float] = 1e-4,
         fusion_power: Optional[float] = 1e9,
         # convert from watts to activity source_activity
         max_lost_particles: Optional[int] = 10,
@@ -141,14 +109,12 @@ class NeutronicsModel():
         self.simulation_batches = simulation_batches
         self.simulation_particles_per_batch = simulation_particles_per_batch
         self.max_lost_particles = max_lost_particles
-        self.faceting_tolerance = faceting_tolerance
-        self.merge_tolerance = merge_tolerance
+
         self.mesh_2d_resolution = mesh_2d_resolution
         self.mesh_3d_resolution = mesh_3d_resolution
         self.mesh_2d_corners = mesh_2d_corners
         self.mesh_3d_corners = mesh_3d_corners
         self.fusion_power = fusion_power
-        self.method = method
 
         self.model = None
         self.results = None
@@ -157,36 +123,31 @@ class NeutronicsModel():
         self.statepoint_filename = None
 
     @property
-    def faceting_tolerance(self):
-        return self._faceting_tolerance
+    def geometry(self):
+        return self._geometry
 
-    @faceting_tolerance.setter
-    def faceting_tolerance(self, value):
-        if not isinstance(value, (int, float)):
+    @geometry.setter
+    def geometry(self, value):
+        if not isinstance(value, (paramak.Shape, paramak.Reactor, None)):
             raise TypeError(
-                "NeutronicsModelFromReactor.faceting_tolerance should be a\
-                number (floats or ints are accepted)")
-        if value < 0:
-            raise ValueError(
-                "NeutronicsModelFromReactor.faceting_tolerance should be a\
-                positive number")
-        self._faceting_tolerance = value
+                "NeutronicsModelFromReactor.geometry should be a paramak.Shape\
+                or paramak.Reactor")
+        else:
+            self._geometry = value
 
     @property
-    def merge_tolerance(self):
-        return self._merge_tolerance
+    def source(self):
+        return self._source
 
-    @merge_tolerance.setter
-    def merge_tolerance(self, value):
-        if not isinstance(value, (int, float)):
+    @source.setter
+    def source(self, value):
+        if not isinstance(value, (openmc.Source, None)):
             raise TypeError(
-                "NeutronicsModelFromReactor.merge_tolerance should be a\
-                number (floats or ints are accepted)")
-        if value < 0:
-            raise ValueError(
-                "NeutronicsModelFromReactor.merge_tolerance should be a\
-                positive number")
-        self._merge_tolerance = value
+                "NeutronicsModelFromReactor.source should be an \
+                openmc.Source() object")
+        else:
+            self._source = value
+
 
     @property
     def cell_tallies(self):
@@ -345,193 +306,6 @@ class NeutronicsModel():
         self.mats.export_to_xml()
 
         return self.mats
-
-    def export_h5m_with_trelis(
-            self,
-            merge_tolerance: Optional[float] = None,
-            faceting_tolerance: Optional[float] = None,
-    ):
-        """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using Coreform Trelis.
-
-        Arguments:
-            merge_tolerance: the allowable distance between edges and surfaces
-                before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-                for more details. Defaults to None which uses the
-                NeutronicsModel.merge_tolerance attribute.
-            faceting_tolerance: the allowable distance between facetets
-                before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-                for more details. Defaults to None which uses the
-                NeutronicsModel.faceting_tolerance attribute.
-
-        Returns:
-            str: filename of the DAGMC file produced
-        """
-
-        if merge_tolerance is None:
-            merge_tolerance = self.merge_tolerance
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        os.system('rm dagmc_not_watertight.h5m')
-        os.system('rm dagmc.h5m')
-
-        if isinstance(self.geometry, (paramak.Shape, paramak.Reactor)):
-            self.geometry.export_stp()
-            self.geometry.export_neutronics_description()
-        elif isinstance(self.geometry, str):
-            if self.geometry != 'manifest.json':
-                shutil.copy(src=self.geometry, dst='manifest.json')
-        else:
-            raise ValueError(
-                "geometry must be a paramak.Shape, paramak.Reactor or filename")
-
-        shutil.copy(
-            src=pathlib.Path(__file__).parent.absolute() /
-            'make_faceteted_neutronics_model.py',
-            dst=pathlib.Path().absolute())
-
-        if not Path("make_faceteted_neutronics_model.py").is_file():
-            raise FileNotFoundError(
-                "The make_faceteted_neutronics_model.py was not found in the \
-                directory")
-        os.system(
-            "trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
-            str(faceting_tolerance) +
-            "'\" \"merge_tolerance='" +
-            str(merge_tolerance) +
-            "'\"")
-
-        os.system('rm make_faceteted_neutronics_model.py')
-
-        if not Path("dagmc_not_watertight.h5m").is_file():
-            raise FileNotFoundError(
-                "The dagmc_not_watertight.h5m was not found \
-                in the directory, the Trelis stage has failed")
-
-        output_filename = self.make_watertight(
-            input_filename="dagmc_not_watertight.h5m",
-            output_filename="dagmc.h5m"
-        )
-
-        return output_filename
-
-    def export_h5m_with_pymoab(
-        self,
-        faceting_tolerance: Optional[float] = None
-    ):
-        """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using PyMoab and MOAB. Tags the volumes with their
-        material_tag attributes.
-
-        Arguments:
-            faceting_tolerance: the allowable distance between facetets
-                before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-                for more details. Defaults to None which uses the
-                NeutronicsModel.faceting_tolerance attribute.
-
-        Returns:
-            str: filename of the DAGMC file produced
-        """
-
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        os.system('rm dagmc.h5m')
-        if isinstance(self.geometry, (paramak.Shape, paramak.Reactor)):
-            output_filename = self.geometry.export_h5m(
-                filename='dagmc.h5m',
-                tolerance=faceting_tolerance
-            )
-            return output_filename
-        else:
-            raise NotImplementedError(
-                "Reading a JSON filename and converting to a DAGMC geometry using pymoab is not yet supported")
-
-    def export_h5m(
-            self,
-            method: Optional[str] = None,
-            merge_tolerance: Optional[float] = None,
-            faceting_tolerance: Optional[float] = None,
-    ):
-        """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations. Tags the volumes with their material_tag attributes.
-
-        Arguments:
-            method: The method to use when making the imprinted and
-                merged geometry. Options are "trelis" and "pymoab" Defaults to
-                None which uses the NeutronicsModel.method attribute.
-            merge_tolerance: the allowable distance between edges and surfaces
-                before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-                for more details. Defaults to None which uses the
-                NeutronicsModel.merge_tolerance attribute.
-            faceting_tolerance: the allowable distance between facetets
-                before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
-                for more details. Defaults to None which uses the
-                NeutronicsModel.faceting_tolerance attribute.
-
-        Returns:
-            str: filename of the DAGMC file produced
-        """
-
-        if method is None:
-            method = self.method
-        if merge_tolerance is None:
-            merge_tolerance = self.merge_tolerance
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        if method not in ['trelis', 'pymoab']:
-            raise ValueError(
-                "the method using in should be either trelis, pymoab. Not", method)
-
-        if method == 'trelis':
-            output_filename = self.export_h5m_with_trelis(
-                merge_tolerance=merge_tolerance,
-                faceting_tolerance=faceting_tolerance,
-            )
-        elif method == 'pymoab':
-            output_filename = self.export_h5m_with_pymoab(
-                faceting_tolerance=faceting_tolerance
-            )
-
-        return output_filename
-
-    def make_watertight(
-            self,
-            input_filename: str = "dagmc_not_watertight.h5m",
-            output_filename: str = "dagmc.h5m",
-    ) -> str:
-        """Runs the DAGMC make_watertight executable that seals the facetets of
-        the geometry with specified input and output h5m files.
-
-        Arguments:
-            input_filename: the non watertight h5m file to make watertight.
-            output_filename: the filename of the watertight h5m file.
-
-        Returns:
-            The filename of the h5m file created
-        """
-
-        if not Path(input_filename).is_file():
-            raise FileNotFoundError("Failed to find dagmc_not_watertight.h5m")
-
-        if os.system(
-                "make_watertight {} -o {}".format(input_filename, output_filename)) != 0:
-            raise ValueError(
-                "make_watertight failed, check DAGMC is install and the \
-                    DAGMC/bin folder is in the path directory (Linux and Mac) \
-                    or set as an enviromental varible (Windows)")
-
-        if not Path(output_filename).is_file():
-            raise FileNotFoundError("Failed to produce dagmc.h5m")
-
-        return output_filename
 
     def export_xml(
             self,
@@ -836,7 +610,7 @@ class NeutronicsModel():
             export_h5m: Optional[bool] = True,
             export_xml: Optional[bool] = True,
     ) -> str:
-        """Run the OpenMC simulation. Deletes exisiting simulation output
+        """Run the OpenMC simulation. Deletes existing simulation output
         (summary.h5) if files exists.
 
         Arguments:
@@ -849,8 +623,8 @@ class NeutronicsModel():
             export_h5m: controls the creation of the DAGMC geometry
                 file (dagmc.h5m). Set to True to create the DAGMC geometry
                 file with the default settings as determined by the
-                NeutronicsModel attributes or set to False and run the
-                export_h5m() method yourself with more
+                NeutronicsModel.geometry.method attributes or set to False and
+                run the export_h5m() method yourself with more
                 direct control over the settings.
             export_xml: controls the creation of the OpenMC model
                 files (xml files). Set to True to create the OpenMC files with
@@ -860,13 +634,13 @@ class NeutronicsModel():
                 direct control over the settings and creation of the xml files.
 
         Returns:
-            str: the h5 simulation output filename
+            The h5 simulation output filename
         """
         if export_xml is True:
             self.export_xml()
 
         if export_h5m is True:
-            self.export_h5m()
+            self.geometry.export_h5m()
 
         # checks all the nessecary files are found
         for required_file in ['geometry.xml', 'materials.xml', 'settings.xml',
@@ -874,7 +648,7 @@ class NeutronicsModel():
             if not Path(required_file).is_file():
                 msg = "{} file was not found. Please set export_xml \
                     to True or use the export_xml() \
-                    method to create the {} file".format(required_file, required_file)
+                    method to create the xml files".format(required_file)
                 raise FileNotFoundError(msg)
 
         if not Path('dagmc.h5m').is_file():

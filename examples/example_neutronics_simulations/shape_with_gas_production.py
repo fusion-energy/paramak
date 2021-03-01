@@ -16,7 +16,8 @@ def main():
         inner_radius=50,
         mid_radius=60,
         outer_radius=100,
-        material_tag='center_column_shield_mat'
+        material_tag='center_column_shield_mat',
+        method='pymoab'
     )
 
     # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
@@ -34,9 +35,8 @@ def main():
         cell_tallies=['(n,Xa)', '(n,Xt)', '(n,Xp)'],
         mesh_tally_3d=['(n,Xa)', '(n,Xt)', '(n,Xp)'],
         mesh_tally_2d=['(n,Xa)', '(n,Xt)', '(n,Xp)'],
-        simulation_batches=10,
-        simulation_particles_per_batch=200,
-        method='pymoab'
+        simulation_batches=2,
+        simulation_particles_per_batch=10,
     )
 
     # performs an openmc simulation on the model

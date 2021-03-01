@@ -11,6 +11,22 @@ from paramak.neutronics_utils import (add_stl_to_moab_core,
 
 class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
+    def test_missing_dagmc_not_watertight_file(self):
+
+        def missing_dagmc_not_watertight_file():
+            """Trys to make a watertight dagmc.h5m file without a
+            dagmc_not_watertight.h5m input file"""
+
+            paramak.neutronics_utils.make_watertight(
+                input_filename="dagmc_not_watertight.h5m",
+                output_filename="dagmc.h5m",
+            )
+
+        self.assertRaises(
+            FileNotFoundError,
+            missing_dagmc_not_watertight_file
+        )
+
     def test_moab_instance_creation(self):
         """passes three points on a circle to the function and checks that the
         radius and center of the circle is calculated correctly"""

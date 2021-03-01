@@ -36,9 +36,9 @@ class TestObjectNeutronicsArguments(unittest.TestCase):
         self.test_shape.export_h5m(filename='test_shape')
         assert Path("test_shape.h5m").exists() is True
 
-    def test_offset_from_graveyard_sets_attribute(self):
+    def test_export_h5m_with_pymoab_accepts_graveyard_offset(self):
         os.system('rm test_shape.h5m')
-        self.test_shape.export_h5m(
+        self.test_shape.export_h5m_with_pymoab(
             filename='test_shape.h5m',
             graveyard_offset=101)
         assert self.test_shape.graveyard_offset == 101
@@ -47,17 +47,17 @@ class TestObjectNeutronicsArguments(unittest.TestCase):
         os.system('rm test_shape.h5m')
         self.test_shape.export_h5m(
             filename='test_shape_0001.h5m',
-            tolerance=0.001)
+            faceting_tolerance=0.001)
         self.test_shape.export_h5m(
             filename='test_shape_001.h5m',
-            tolerance=0.01)
+            faceting_tolerance=0.01)
         assert Path('test_shape_0001.h5m').stat().st_size > Path(
             'test_shape_001.h5m').stat().st_size
 
     def test_skipping_graveyard_decreases_filesize(self):
         os.system('rm test_shape.h5m')
-        self.test_shape.export_h5m(filename='skiped.h5m', skip_graveyard=True)
-        self.test_shape.export_h5m(
+        self.test_shape.export_h5m_with_pymoab(filename='skiped.h5m', skip_graveyard=True)
+        self.test_shape.export_h5m_with_pymoab(
             filename='not_skipped.h5m',
             skip_graveyard=False)
         assert Path('not_skipped.h5m').stat().st_size > Path(
@@ -203,7 +203,12 @@ class TestSimulationResultsVsCsg(unittest.TestCase):
         )
 
         my_geometry = paramak.Reactor(
-            [cylinder_cell, bottom_cap_cell, top_cap_cell])
+            shapes_and_components=[
+                cylinder_cell,
+                bottom_cap_cell, top_cap_cell
+            ],
+            method='pymoab'
+        )
 
         my_model = paramak.NeutronicsModel(
             geometry=my_geometry,
@@ -212,7 +217,6 @@ class TestSimulationResultsVsCsg(unittest.TestCase):
             simulation_particles_per_batch=particles,
             materials={'test_mat': material},
             cell_tallies=['heating'],
-            method='pymoab'
         )
 
         my_model.simulate()

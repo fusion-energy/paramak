@@ -1,10 +1,13 @@
 
 import json
 import numbers
+import os
+import pathlib
+import shutil
 import warnings
 from collections.abc import Iterable
 from pathlib import Path
-from typing import List, Tuple, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -69,6 +72,8 @@ class Shape:
         union (paramak.shape or list, optional): If set, the current solid
             will be united with the provided solid or iterable of solids.
             Defaults to None.
+        method: The method to use when making the h5m geometry. Options are
+            "trelis" or "pymoab".
     """
 
     def __init__(
@@ -86,6 +91,9 @@ class Shape:
         tet_mesh: Optional[str] = None,
         surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
+        method: str = 'pymoab',
+        faceting_tolerance: Optional[float] = 1e-1,
+        merge_tolerance: Optional[float] = 1e-4,
         # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
@@ -108,9 +116,12 @@ class Shape:
         self.rotation_axis = rotation_axis
 
         # neutronics specific properties
+        self.method = method
         self.material_tag = material_tag
         self.tet_mesh = tet_mesh
         self.surface_reflectivity = surface_reflectivity
+        self.faceting_tolerance = faceting_tolerance
+        self.merge_tolerance = merge_tolerance
 
         self.physical_groups = physical_groups
 
@@ -127,6 +138,18 @@ class Shape:
         self.z_max = None
         self.graveyard_offset = None  # set by the make_graveyard method
         self.patch = None
+
+
+    @property
+    def method(self):
+        return self._method
+
+    @method.setter
+    def method(self, value):
+        if value not in ['trelis', 'pymoab']:
+            raise ValueError("the method using in should be either trelis, \
+                pymoab. {} is not an option".format(value))
+        self._method = value
 
     @property
     def solid(self):
@@ -1234,10 +1257,111 @@ class Shape:
 
     def export_h5m(
             self,
+            filename: str = 'dagmc.h5m',
+            method: Optional[str] = None,
+            merge_tolerance: Optional[float] = None,
+            faceting_tolerance: Optional[float] = None,
+            ) -> str:
+        """Produces a dagmc.h5m neutronics file compatable with DAGMC
+        simulations. Tags the volumes with their material_tag attributes.
+
+        Arguments:
+            method: The method to use when making the imprinted and
+                merged geometry. Options are "trelis" and "pymoab" Defaults to
+                None which uses the Shape.method attribute.
+            merge_tolerance: the allowable distance between edges and surfaces
+                before merging these CAD objects into a single CAD object. See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Shape.merge_tolerance attribute.
+            faceting_tolerance: the allowable distance between facetets
+                before merging these CAD objects into a single CAD object See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Shape.faceting_tolerance attribute.
+
+        Returns:
+            The filename of the DAGMC file created
+        """
+
+        if merge_tolerance is None:
+            merge_tolerance = self.merge_tolerance
+
+        if faceting_tolerance is None:
+            faceting_tolerance = self.faceting_tolerance
+
+        if method is None:
+            method = self.method
+
+        if method == 'trelis':
+            output_filename = self.export_h5m_with_trelis(
+                merge_tolerance=merge_tolerance,
+                faceting_tolerance=faceting_tolerance,
+            )
+
+        elif method == 'pymoab':
+            output_filename = self.export_h5m_with_pymoab(
+                filename=filename,
+                faceting_tolerance=faceting_tolerance,
+            )
+
+        else:
+            raise ValueError("the method using in should be either trelis, \
+                pymoab. {} is not an option".format(method))
+
+        return output_filename
+
+    def export_h5m_with_trelis(
+            self,
+            merge_tolerance: Optional[float] = None,
+            faceting_tolerance: Optional[float] = None,
+            ):
+        """Produces a dagmc.h5m neutronics file compatable with DAGMC
+        simulations using Coreform Trelis.
+
+        Arguments:
+            merge_tolerance: the allowable distance between edges and surfaces
+                before merging these CAD objects into a single CAD object. See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Shape.merge_tolerance attribute.
+            faceting_tolerance: the allowable distance between facetets
+                before merging these CAD objects into a single CAD object See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Shape.faceting_tolerance attribute.
+
+        Returns:
+            str: filename of the DAGMC file produced
+        """
+
+        if merge_tolerance is None:
+            merge_tolerance = self.merge_tolerance
+        if faceting_tolerance is None:
+            faceting_tolerance = self.faceting_tolerance
+
+        self.export_stp()
+        self.export_neutronics_description()
+
+        not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
+            faceting_tolerance=faceting_tolerance,
+            merge_tolerance=merge_tolerance
+        )
+
+        water_tight_h5m = paramak.neutronics_utils.make_watertight(
+            input_filename=not_watertight_file,
+            output_filename="dagmc.h5m"
+        )
+
+        return water_tight_h5m
+
+    def export_h5m_with_pymoab(
+            self,
             filename: Optional[str] = 'dagmc.h5m',
             skip_graveyard: Optional[bool] = False,
-            tolerance: Optional[float] = 0.001,
-            graveyard_offset: Optional[float] = 100) -> str:
+            faceting_tolerance: Optional[float] = 0.001,
+            graveyard_offset: Optional[float] = 100,
+            ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -1245,13 +1369,13 @@ class Shape:
         be added
 
         Args:
-            filename (str, optional): filename of h5m outputfile
+            filename: filename of h5m outputfile
                 Defaults to "dagmc.h5m".
-            skip_graveyard (boolean, optional): filename of h5m outputfile
+            skip_graveyard: filename of h5m outputfile
                 Defaults to False.
-            tolerance (float, optional): the precision of the faceting
+            faceting_tolerance: the precision of the faceting
                 Defaults to 0.001.
-            graveyard_offset (float, optional): the offset between the largest
+            graveyard_offset: the offset between the largest
                 edge of the geometry and inner bounding shell created. Defualts
                 to 100.
         Returns:
@@ -1265,7 +1389,7 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        self.export_stl(self.stl_filename, tolerance=tolerance)
+        self.export_stl(self.stl_filename, tolerance=faceting_tolerance)
 
         moab_core, moab_tags = define_moab_core_and_tags()
 
