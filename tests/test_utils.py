@@ -1,16 +1,43 @@
 
 import unittest
-from cadquery.cq import Workplane
 
 import numpy as np
 import paramak
-from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
-                           find_center_point_of_circle, plotly_trace,
-                           extract_points_from_edges, facet_wire)
 import plotly.graph_objects as go
+import pytest
+from cadquery.cq import Workplane
+from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
+                           extract_points_from_edges, facet_wire,
+                           find_center_point_of_circle, plotly_trace)
 
 
 class TestUtilityFunctions(unittest.TestCase):
+
+    def test_convert_circle_to_spline(self):
+        """Tests the conversion of 3 points on a circle into points on a spline
+        curve."""
+
+        new_points = paramak.utils.convert_circle_to_spline(
+            p_0=(200., 0.),
+            p_1=(250., 50.),
+            p_2=(200., 100.),
+            tolerance=0.2
+        )
+
+        # these points can change from 200. to values like 200.00000000000009
+        assert pytest.approx(new_points[0][0], abs=0.0000000000001) == 200
+        assert pytest.approx(new_points[0][1], abs=0.0000000000001) == 0
+        assert pytest.approx(new_points[-1][0], abs=0.0000000000001) == 200
+        assert pytest.approx(new_points[-1][1], abs=0.0000000000001) == 100
+
+        new_points_more_details = paramak.utils.convert_circle_to_spline(
+            p_0=(200, 0),
+            p_1=(250, 50),
+            p_2=(200, 100),
+            tolerance=0.1
+        )
+
+        assert len(new_points_more_details) > len(new_points)
 
     def test_extract_points_from_edges(self):
         """Extracts points from edges and checks the list returned is the
