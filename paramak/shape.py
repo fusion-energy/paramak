@@ -139,7 +139,6 @@ class Shape:
         self.graveyard_offset = None  # set by the make_graveyard method
         self.patch = None
 
-
     @property
     def method(self):
         return self._method
@@ -1261,7 +1260,7 @@ class Shape:
             method: Optional[str] = None,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
-            ) -> str:
+    ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations. Tags the volumes with their material_tag attributes.
 
@@ -1315,7 +1314,7 @@ class Shape:
             self,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
-            ):
+    ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations using Coreform Trelis.
 
@@ -1344,9 +1343,7 @@ class Shape:
         self.export_neutronics_description()
 
         not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
-            faceting_tolerance=faceting_tolerance,
-            merge_tolerance=merge_tolerance
-        )
+            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
         water_tight_h5m = paramak.neutronics_utils.make_watertight(
             input_filename=not_watertight_file,
@@ -1361,7 +1358,7 @@ class Shape:
             skip_graveyard: Optional[bool] = False,
             faceting_tolerance: Optional[float] = 0.001,
             graveyard_offset: Optional[float] = 100,
-            ) -> str:
+    ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged

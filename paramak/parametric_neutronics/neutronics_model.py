@@ -148,7 +148,6 @@ class NeutronicsModel():
         else:
             self._source = value
 
-
     @property
     def cell_tallies(self):
         return self._cell_tallies

@@ -29,14 +29,14 @@ class Reactor:
     the able to produce imprinted and merged DAGMC h5m geometry. Further
     details on imprinting and merging are available on the DAGMC homepage
     https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html . Trelis
-    (also known as Cubit) is available from the CoreForm website 
+    (also known as Cubit) is available from the CoreForm website
     https://www.coreform.com/ version 17.1 is the version of Trelis used when
     testing the Paramak code.
 
     Args:
         shapes_and_components (list): list of paramak.Shape objects or the
             filename of json file that contains the neutronics description of
-            the geometry. The list of dictionaries should each have a 
+            the geometry. The list of dictionaries should each have a
             "material" key containing a material_tag value and a "stp_filename"
             key containing the path to the stp file. See the
             external_stp_file_simulation.py neutronics for a complete example.
@@ -61,7 +61,7 @@ class Reactor:
             method: str = 'pymoab',
             faceting_tolerance: Optional[float] = 1e-1,
             merge_tolerance: Optional[float] = 1e-4,
-            ):
+    ):
 
         self.shapes_and_components = shapes_and_components
         self.graveyard_offset = graveyard_offset
@@ -78,8 +78,6 @@ class Reactor:
         self.solid = None
 
         self.reactor_hash_value = None
-
-
 
     @property
     def method(self):
@@ -253,7 +251,7 @@ class Reactor:
             self,
             include_plasma: Optional[bool] = False,
             include_graveyard: Optional[bool] = True,
-            ) -> dict:
+    ) -> dict:
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations
         which require linkage between volumes, materials and identification of
@@ -307,7 +305,7 @@ class Reactor:
             filename: Optional[str] = "manifest.json",
             include_plasma: Optional[bool] = False,
             include_graveyard: Optional[bool] = True,
-            ) -> str:
+    ) -> str:
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
         file contains a list of dictionaries. Each dictionary entry comprises
@@ -362,7 +360,7 @@ class Reactor:
             output_folder: Optional[str] = "",
             mode: Optional[str] = 'solid',
             graveyard_offset: Optional[float] = None,
-            ) -> List[str]:
+    ) -> List[str]:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
 
@@ -416,7 +414,7 @@ class Reactor:
             output_folder: Optional[str] = "",
             tolerance: Optional[float] = 0.001,
             graveyard_offset: Optional[float] = None,
-            ) -> List[str]:
+    ) -> List[str]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
@@ -476,7 +474,7 @@ class Reactor:
             method: Optional[str] = None,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
-            ) -> str:
+    ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations. Tags the volumes with their material_tag attributes.
 
@@ -523,7 +521,7 @@ class Reactor:
                 filename=filename,
                 faceting_tolerance=faceting_tolerance
             )
-        
+
         else:
             raise ValueError("the method using in should be either trelis, \
                 pymoab. {} is not an option".format(method))
@@ -569,15 +567,15 @@ class Reactor:
                 raise FileNotFoundError("The filename entered as the geometry \
                     argument {} does not exist".format(self.geometry))
             if self.shapes_and_components != 'manifest.json':
-                shutil.copy(src=self.shapes_and_components, dst='manifest.json')
+                shutil.copy(
+                    src=self.shapes_and_components,
+                    dst='manifest.json')
         else:
             raise ValueError(
                 "shapes_and_components must be a list of paramak.Shape or a filename")
 
         not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
-            faceting_tolerance=faceting_tolerance,
-            merge_tolerance=merge_tolerance
-        )
+            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
         water_tight_h5m = paramak.neutronics_utils.make_watertight(
             input_filename=not_watertight_file,
             output_filename=filename
@@ -591,7 +589,7 @@ class Reactor:
             skip_graveyard: Optional[bool] = False,
             graveyard_offset: Optional[float] = 100,
             faceting_tolerance: Optional[float] = None
-            ) -> str:
+    ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -628,7 +626,9 @@ class Reactor:
         if isinstance(self.shapes_and_components, list):
             for item in self.shapes_and_components:
 
-                item.export_stl(item.stl_filename, tolerance=faceting_tolerance)
+                item.export_stl(
+                    item.stl_filename,
+                    tolerance=faceting_tolerance)
                 moab_core = add_stl_to_moab_core(
                     moab_core,
                     surface_id,
@@ -669,7 +669,7 @@ class Reactor:
     def export_physical_groups(
             self,
             output_folder: Optional[str] = "",
-            ) -> List[str]:
+    ) -> List[str]:
         """Exports several JSON files containing a look up table which is
         useful for identifying faces and volumes. The output file names are
         generated from .stp_filename properties.
@@ -710,7 +710,7 @@ class Reactor:
             hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
             showHidden: Optional[bool] = True,
             showAxes: Optional[bool] = False,
-            ) -> str:
+    ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
@@ -777,7 +777,7 @@ class Reactor:
             self,
             graveyard_offset: Optional[float] = 100,
             filename: Optional[str] = "graveyard.stp",
-            ) -> str:
+    ) -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -800,7 +800,7 @@ class Reactor:
     def make_graveyard(
             self,
             graveyard_offset: Optional[float] = None,
-            ) -> paramak.Shape:
+    ) -> paramak.Shape:
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations.
@@ -842,7 +842,7 @@ class Reactor:
             xmax: Optional[float] = 900.0,
             ymin: Optional[float] = -600.0,
             ymax: Optional[float] = 600.0,
-            ) -> str:
+    ) -> str:
         """Creates a 2D slice image (png) of the reactor.
 
         Args:

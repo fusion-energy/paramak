@@ -56,7 +56,8 @@ class TestObjectNeutronicsArguments(unittest.TestCase):
 
     def test_skipping_graveyard_decreases_filesize(self):
         os.system('rm test_shape.h5m')
-        self.test_shape.export_h5m_with_pymoab(filename='skiped.h5m', skip_graveyard=True)
+        self.test_shape.export_h5m_with_pymoab(
+            filename='skiped.h5m', skip_graveyard=True)
         self.test_shape.export_h5m_with_pymoab(
             filename='not_skipped.h5m',
             skip_graveyard=False)

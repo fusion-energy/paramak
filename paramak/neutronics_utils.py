@@ -23,8 +23,8 @@ except ImportError:
 def trelis_command_to_create_dagmc_h5m(
         faceting_tolerance: float,
         merge_tolerance: float,
-        ) -> str:
-    """Runs the Trelis executable command with the 
+) -> str:
+    """Runs the Trelis executable command with the
     make_faceteted_neutronics_model.py script which produces a non water tight
     DAGMC h5m file.
 
@@ -64,10 +64,11 @@ def trelis_command_to_create_dagmc_h5m(
 
     return "dagmc_not_watertight.h5m"
 
+
 def make_watertight(
         input_filename: str = "dagmc_not_watertight.h5m",
         output_filename: str = "dagmc.h5m",
-        ) -> str:
+) -> str:
     """Runs the DAGMC make_watertight executable that seals the facetets of
     the geometry with specified input and output h5m files.
 
@@ -84,8 +85,8 @@ def make_watertight(
 
     os.system('rm {}'.format(output_filename))
 
-    if os.system(
-            "make_watertight {} -o {}".format(input_filename, output_filename)) != 0:
+    if os.system("make_watertight {} -o {}".format(input_filename,
+                                                   output_filename)) != 0:
         raise ValueError(
             "make_watertight failed, check DAGMC is install and the \
                 DAGMC/bin folder is in the path directory (Linux and Mac) \
@@ -95,6 +96,7 @@ def make_watertight(
         raise FileNotFoundError("Failed to produce dagmc.h5m")
 
     return output_filename
+
 
 def define_moab_core_and_tags():
     """Creates a MOAB Core instance which can be built up by adding sets of
