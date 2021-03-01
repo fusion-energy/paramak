@@ -565,7 +565,7 @@ class Reactor:
         elif isinstance(self.shapes_and_components, str):
             if not Path(self.shapes_and_components).is_file():
                 raise FileNotFoundError("The filename entered as the geometry \
-                    argument {} does not exist".format(self.geometry))
+                    argument {} does not exist".format(self.shapes_and_components))
             if self.shapes_and_components != 'manifest.json':
                 shutil.copy(
                     src=self.shapes_and_components,
