@@ -770,19 +770,27 @@ class Shape:
 
     def export_stl(
             self,
-            filename: str,
+            filename: Optional[str] = None,
             tolerance: Optional[float] = 0.001,
             angular_tolerance: Optional[float] = 0.1) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
-            doesn't end with .stl it will be added
+        doesn't end with .stl it will be added.
 
         Args:
-            filename: the filename of the stl file to be exported
+            filename: the filename of exported the stl file. Defaults to None
+                which will attempt to use the Shape.stl_filename. If both are
+                None then a valueError will be raised.
             tolerance: the deflection tolerance of the faceting
             angular_tolerance: the angular tolerance, in radians
         """
 
-        path_filename = Path(filename)
+        if filename is not None:
+            path_filename = Path(filename)
+        elif self.stl_filename is not None:
+            path_filename = Path(self.stl_filename)
+        else:
+            raise ValueError("The filename must be specified either the \
+                filename argument or the Shape.stl_filename must be set")
 
         if path_filename.suffix != ".stl":
             path_filename = path_filename.with_suffix(".stl")
@@ -803,30 +811,33 @@ class Shape:
             units: Optional[str] = 'mm',
             mode: Optional[str] = 'solid') -> str:
         """Exports an stp file for the Shape.solid. If the filename provided
-            doesn't end with .stp or .step then .stp will be added. If a
-            filename is not provided and the shape's stp_filename property is
-            not None the stp_filename will be used as the export filename.
+        doesn't end with .stp or .step then .stp will be added.
 
         Args:
-            filename (str): the filename of the stp
-            units (str): the units of the stp file, options are 'cm' or 'mm'.
+            filename: the filename of exported the stp file. Defaults to None
+                which will attempt to use the Shape.stp_filename. If both are
+                None then a valueError will be raised.
+            units: the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
-            mode (str, optional): the object to export can be either
+            mode: the object to export can be either
                 'solid' which exports 3D solid shapes or the 'wire' which
                 exports the wire edges of the shape. Defaults to 'solid'.
         """
 
         if filename is not None:
             path_filename = Path(filename)
-
-            if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
-                pass
-            else:
-                path_filename = path_filename.with_suffix(".stp")
-
-            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
         elif self.stp_filename is not None:
             path_filename = Path(self.stp_filename)
+        else:
+            raise ValueError("The filename must be specified either the \
+                filename argument or the Shape.stp_filename must be set")
+
+        if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
+            pass
+        else:
+            path_filename = path_filename.with_suffix(".stp")
+
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         if mode == 'solid':
             exporters.export(self.solid, str(path_filename), exportType='STEP')

@@ -58,7 +58,7 @@ class Reactor:
             graveyard_size: Optional[float] = 40_000,
             largest_shapes: Optional[List[paramak.Shape]] = None,
             method: str = 'pymoab',
-            faceting_tolerance: Optional[float] = 1e-1,
+            faceting_tolerance: Optional[float] = 1e-2,
             merge_tolerance: Optional[float] = 1e-4,
     ):
 
@@ -450,8 +450,8 @@ class Reactor:
         # creates a graveyard (bounding shell volume) which is needed for
         # neutronics simulations with default Reactor attributes.
         if include_graveyard:
-            self.make_graveyard()
-            filename = self.graveyard.export_stp()
+            graveyard = self.make_graveyard()
+            filename = self.graveyard.export_stp(str(Path(output_folder) / graveyard.stp_filename))
             filenames.append(filename)
 
         return filenames
@@ -488,23 +488,17 @@ class Reactor:
             print("entry.stl_filename", entry.stl_filename)
             if entry.stl_filename is None:
                 raise ValueError(
-                    "set .stl_filename property for \
-                                 Shapes before using the export_stl method"
+                    "set .stl_filename attribute for Shapes before using the Reactor.export_stl method"
                 )
 
-            filenames.append(
-                str(Path(output_folder) / Path(entry.stl_filename)))
-            entry.export_stl(
-                Path(output_folder) /
-                Path(
-                    entry.stl_filename),
-                tolerance)
+            filename = entry.export_stl(Path(output_folder) / entry.stl_filename, tolerance)
+            filenames.append(filename)
 
         # creates a graveyard (bounding shell volume) which is needed for
         # neutronics simulations with default Reactor attributes.
         if include_graveyard:
-            self.make_graveyard()
-            filename = self.graveyard.export_stl()
+            graveyard = self.make_graveyard()
+            filename = self.graveyard.export_stl(Path(output_folder) / graveyard.stl_filename)
             filenames.append(filename)
 
         return filenames
@@ -888,7 +882,7 @@ class Reactor:
 
         if graveyard_size is not None:
             graveyard_size_to_use = graveyard_size
-        
+
         elif self.graveyard_size is not None:
             graveyard_size_to_use = self.graveyard_size
 

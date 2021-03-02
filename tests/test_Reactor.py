@@ -72,8 +72,8 @@ class TestReactor(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
-        assert len(test_reactor.material_tags) == 1
-        assert test_reactor.material_tags[0] == "mat1"
+        assert len(test_reactor.material_tags()) == 1
+        assert test_reactor.material_tags()[0] == "mat1"
 
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
         """Checks that multiple shape objects can be added to a Reactor object
@@ -88,9 +88,9 @@ class TestReactor(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape, test_shape2])
-        assert len(test_reactor.material_tags) == 2
-        assert "mat1" in test_reactor.material_tags
-        assert "mat2" in test_reactor.material_tags
+        assert len(test_reactor.material_tags()) == 2
+        assert "mat1" in test_reactor.material_tags()
+        assert "mat2" in test_reactor.material_tags()
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with the
@@ -425,8 +425,8 @@ class TestReactor(unittest.TestCase):
         test_shape.stp_filename = "test_shape.stp"
         test_reactor = paramak.Reactor([test_shape])
 
-        test_reactor.export_graveyard()
-        test_reactor.export_graveyard(filename="my_graveyard.stp")
+        test_reactor.export_stp_graveyard()
+        test_reactor.export_stp_graveyard(filename="my_graveyard.stp")
 
         for filepath in ["graveyard.stp", "my_graveyard.stp"]:
             assert Path(filepath).exists() is True
@@ -435,23 +435,23 @@ class TestReactor(unittest.TestCase):
         assert test_reactor.graveyard is not None
         assert test_reactor.graveyard.__class__.__name__ == "HollowCube"
 
-    def test_export_graveyard_offset(self):
+    def test_make_graveyard_offset(self):
         """checks that the graveyard can be exported with the correct default parameters
         and that these parameters can be changed"""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
         os.system("rm graveyard.stp")
-        test_reactor = paramak.Reactor([test_shape])
-        test_reactor.export_graveyard()
-        assert test_reactor.graveyard_offset == 100
+        test_reactor = paramak.Reactor([test_shape], graveyard_size=None, graveyard_offset=100)
+        test_reactor.make_graveyard()
+        # assert test_reactor.graveyard_offset == 100
         graveyard_volume_1 = test_reactor.graveyard.volume
 
-        test_reactor.export_graveyard(graveyard_offset=50)
+        test_reactor.make_graveyard(graveyard_offset=50)
         assert test_reactor.graveyard.volume < graveyard_volume_1
         graveyard_volume_2 = test_reactor.graveyard.volume
 
-        test_reactor.export_graveyard(graveyard_offset=200)
+        test_reactor.make_graveyard(graveyard_offset=200)
         assert test_reactor.graveyard.volume > graveyard_volume_1
         assert test_reactor.graveyard.volume > graveyard_volume_2
 
