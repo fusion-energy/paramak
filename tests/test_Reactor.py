@@ -442,7 +442,10 @@ class TestReactor(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
         os.system("rm graveyard.stp")
-        test_reactor = paramak.Reactor([test_shape], graveyard_size=None, graveyard_offset=100)
+        test_reactor = paramak.Reactor(
+            [test_shape],
+            graveyard_size=None,
+            graveyard_offset=100)
         test_reactor.make_graveyard()
         # assert test_reactor.graveyard_offset == 100
         graveyard_volume_1 = test_reactor.graveyard.volume

@@ -32,7 +32,7 @@ def trelis_command_to_create_dagmc_h5m(
     Arguments:
         faceting_tolerance: the tolerance to use when faceting surfaces.
         merge_tolerance: the tolerance to use when merging surfaces.
-        batch: 
+        batch:
 
     Returns:
         The filename of the h5m file created

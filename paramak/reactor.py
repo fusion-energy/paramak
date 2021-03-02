@@ -159,7 +159,8 @@ class Reactor:
                 if 'stp_filename' in entry.keys():
                     values.append(entry['stp_filename'])
                 else:
-                    raise ValueError('Entry is missing stp_filename key', entry)
+                    raise ValueError(
+                        'Entry is missing stp_filename key', entry)
         else:
             for shape_or_component in self.shapes_and_components:
                 values.append(shape_or_component.stp_filename)
@@ -180,7 +181,8 @@ class Reactor:
                 if 'stl_filename' in entry.keys():
                     values.append(entry['stl_filename'])
                 else:
-                    raise ValueError('Entry is missing stl_filename key', entry)
+                    raise ValueError(
+                        'Entry is missing stl_filename key', entry)
         else:
             for shape_or_component in self.shapes_and_components:
                 values.append(shape_or_component.stl_filename)
@@ -451,7 +453,8 @@ class Reactor:
         # neutronics simulations with default Reactor attributes.
         if include_graveyard:
             graveyard = self.make_graveyard()
-            filename = self.graveyard.export_stp(str(Path(output_folder) / graveyard.stp_filename))
+            filename = self.graveyard.export_stp(
+                str(Path(output_folder) / graveyard.stp_filename))
             filenames.append(filename)
 
         return filenames
@@ -491,14 +494,16 @@ class Reactor:
                     "set .stl_filename attribute for Shapes before using the Reactor.export_stl method"
                 )
 
-            filename = entry.export_stl(Path(output_folder) / entry.stl_filename, tolerance)
+            filename = entry.export_stl(
+                Path(output_folder) / entry.stl_filename, tolerance)
             filenames.append(filename)
 
         # creates a graveyard (bounding shell volume) which is needed for
         # neutronics simulations with default Reactor attributes.
         if include_graveyard:
             graveyard = self.make_graveyard()
-            filename = self.graveyard.export_stl(Path(output_folder) / graveyard.stl_filename)
+            filename = self.graveyard.export_stl(
+                Path(output_folder) / graveyard.stl_filename)
             filenames.append(filename)
 
         return filenames
@@ -550,7 +555,8 @@ class Reactor:
         if method == 'trelis':
             output_filename = self.export_h5m_with_trelis(
                 filename=filename,
-                # include_graveyard=include_graveyard, TODO add this option to method
+                # include_graveyard=include_graveyard, TODO add this option to
+                # method
                 merge_tolerance=merge_tolerance,
                 faceting_tolerance=faceting_tolerance,
             )
@@ -614,10 +620,8 @@ class Reactor:
                 "shapes_and_components must be a list of paramak.Shape or a filename")
 
         not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
-            faceting_tolerance=faceting_tolerance,
-            merge_tolerance=merge_tolerance
-        )
-            
+            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
+
         water_tight_h5m = paramak.neutronics_utils.make_watertight(
             input_filename=not_watertight_file,
             output_filename=filename
