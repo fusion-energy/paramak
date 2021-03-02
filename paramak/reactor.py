@@ -886,26 +886,27 @@ class Reactor:
             to as a graveyard in DAGMC
         """
 
-        if graveyard_size is None:
-            graveyard_size = self.graveyard_size
+        if graveyard_size is not None:
+            graveyard_size_to_use = graveyard_size
+        
+        elif self.graveyard_size is not None:
+            graveyard_size_to_use = self.graveyard_size
 
-            if graveyard_offset is None:
-                graveyard_offset = self.graveyard_offset
+        elif graveyard_offset is not None:
+            self.solid
+            graveyard_size_to_use = self.largest_dimension * 2 + graveyard_offset * 2
 
-                if graveyard_offset is None:
-                    raise ValueError("the graveyard_size, \
-                        Reactor.graveyard_size, graveyard_offset and \
-                        Reactor.graveyard_offset are all None. Please specify \
-                        at least one of these attributes or agruments")
+        elif self.graveyard_offset is not None:
+            self.solid
+            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
 
-                graveyard_size = self.largest_dimension * 2 + graveyard_offset * 2
-
-        for component in self.shapes_and_components:
-            if component.solid is None:
-                component.create_solid()
+        else:
+            raise ValueError("the graveyard_size, Reactor.graveyard_size, \
+                graveyard_offset and Reactor.graveyard_offset are all None. \
+                Please specify at least one of these attributes or agruments")
 
         graveyard_shape = paramak.HollowCube(
-            length=graveyard_size,
+            length=graveyard_size_to_use,
             name="graveyard",
             material_tag="graveyard",
             stp_filename="graveyard.stp",
