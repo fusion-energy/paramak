@@ -608,7 +608,7 @@ class TestShape(unittest.TestCase):
             """Makes a reactor from two shapes, then mades a neutronics model
             and tests the TBR simulation value"""
             self.my_shape.method = 'trelis'
-            my_model = paramak.NeutronicsModel(
+            paramak.NeutronicsModel(
                 geometry=self.my_shape,
                 source=self.source,
                 materials={'center_column_shield_mat': 'WC'},

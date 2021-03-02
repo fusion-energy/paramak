@@ -31,12 +31,12 @@ class TestReactorNeutronics(unittest.TestCase):
         test_reactor.export_h5m(
             filename='small_dagmc_without_graveyard.h5m',
             faceting_tolerance=0.01,
-            skip_graveyard=True
+            include_graveyard=False
         )
         test_reactor.export_h5m(
             filename='small_dagmc_with_graveyard.h5m',
             faceting_tolerance=0.01,
-            skip_graveyard=False
+            include_graveyard=True
         )
         test_reactor.export_h5m(
             filename='large_dagmc.h5m',
