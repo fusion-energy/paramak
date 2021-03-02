@@ -1,8 +1,6 @@
 
 import json
 import os
-import pathlib
-import shutil
 import warnings
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -43,7 +41,7 @@ class NeutronicsModel():
             neutronics-material-maker.Material or
             neutronics-material-maker.MultiMaterial. All components within the
             geometry object must be accounted for. Material tags required
-            for a Reactor or Shape can be obtained with .material_tags and
+            for a Reactor or Shape can be obtained with .material_tags() and
             material_tag respectively.
         simulation_batches: the number of batch to simulate.
         simulation_particles_per_batch: particles per batch.
@@ -128,12 +126,12 @@ class NeutronicsModel():
 
     @geometry.setter
     def geometry(self, value):
-        if not isinstance(value, (paramak.Shape, paramak.Reactor, None)):
-            raise TypeError(
-                "NeutronicsModelFromReactor.geometry should be a paramak.Shape\
-                or paramak.Reactor")
-        else:
+        if isinstance(value, (paramak.Shape, paramak.Reactor, None)):
             self._geometry = value
+        else:
+            raise TypeError(
+                "NeutronicsModelFromReactor.geometry should be a \
+                paramak.Shape() or paramak.Reactor()")
 
     @property
     def source(self):
