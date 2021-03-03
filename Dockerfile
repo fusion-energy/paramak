@@ -64,9 +64,13 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 # Installing CadQuery
 # jupyter is installed before cadquery to avoid a conflict
 RUN echo installing CadQuery version $cq_version && \
-    conda install jupyter -y --quiet && \
-    conda install -c cadquery -c conda-forge cadquery="$cq_version" && \
+    # conda install jupyter -y --quiet && \
+
+    conda install -c cadquery -c conda-forge python=3.8 cadquery="$cq_version" && \
+    # conda install -c cadquery -c conda-forge cadquery="$cq_version" && \
     conda clean -afy
+RUN pip install jupyter-cadquery==2.0.0-rc1
+
 
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
@@ -201,6 +205,14 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
+# RUN adduser --disabled-password --gecos "Default user" --uid 1000 paramak
+# VOLUME /home/paramak/
+RUN mkdir /home/paramak
+EXPOSE 8888
+WORKDIR /home/paramak
+# ADD --chown=cq:cq examples /home/paramak
+# USER paramak
+
 FROM dependencies as final
 
 COPY run_tests.sh run_tests.sh
@@ -212,3 +224,5 @@ COPY README.md README.md
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
+
+CMD ["jupyter", "lab", "--notebook-dir=/home/paramak", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
