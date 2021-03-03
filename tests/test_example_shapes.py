@@ -28,18 +28,21 @@ def _notebook_run(path):
     with open(path) as file:
         note_book = nbformat.read(file, as_version=4)
         note_book.metadata.get('kernelspec', {})['name'] = kernel_name
-        ep = ExecutePreprocessor(kernel_name=kernel_name, timeout=300) #, allow_errors=True
+        ep = ExecutePreprocessor(
+            kernel_name=kernel_name,
+            timeout=300)
 
         try:
             ep.preprocess(note_book, {'metadata': {'path': this_file_directory}})
 
-        except CellExecutionError as e: 
+        except CellExecutionError as e:
             if "SKIP" in e.traceback:
                 print(str(e.traceback).split("\n")[-2])
             else:
                 raise e
 
     return note_book, errors
+
 
 
 class TestExampleShapes(unittest.TestCase):
