@@ -33,7 +33,10 @@ def _notebook_run(path):
             timeout=300)
 
         try:
-            ep.preprocess(note_book, {'metadata': {'path': this_file_directory}})
+            ep.preprocess(
+                note_book, {
+                    'metadata': {
+                        'path': this_file_directory}})
 
         except CellExecutionError as e:
             if "SKIP" in e.traceback:
@@ -42,7 +45,6 @@ def _notebook_run(path):
                 raise e
 
     return note_book, errors
-
 
 
 class TestExampleShapes(unittest.TestCase):
