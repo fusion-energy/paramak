@@ -15,6 +15,7 @@ from nbconvert.preprocessors.execute import CellExecutionError
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
+
 def _notebook_run(path):
     """
     Execute a notebook via nbconvert and collect output.
@@ -27,18 +28,21 @@ def _notebook_run(path):
     with open(path) as f:
         nb = nbformat.read(f, as_version=4)
         nb.metadata.get('kernelspec', {})['name'] = kernel_name
-        ep = ExecutePreprocessor(kernel_name=kernel_name, timeout=300) #, allow_errors=True
+        ep = ExecutePreprocessor(
+            kernel_name=kernel_name,
+            timeout=300)  # , allow_errors=True
 
         try:
             ep.preprocess(nb, {'metadata': {'path': this_file_directory}})
 
-        except CellExecutionError as e: 
+        except CellExecutionError as e:
             if "SKIP" in e.traceback:
                 print(str(e.traceback).split("\n")[-2])
             else:
                 raise e
 
     return nb, errors
+
 
 class TestExampleShapes(unittest.TestCase):
 
