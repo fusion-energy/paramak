@@ -47,6 +47,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
 
         tf_coil_casing = paramak.ExtrudeMixedShape(
             points=[
+                (805.5787769784172, 755, "spline"),
                 (956.8024674963419, 744.1181924666533, "spline"),
                 (1019.8101517726496, 731.2212103849513, "spline"),
                 (1082.8178360489574, 710.3882685687647, "spline"),
@@ -80,7 +81,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (805.5787769784172, -875., "straight"),
                 (377.70287769784176, -875., "straight"),
                 (375.4508992805756, 755, "straight"),
-                (805.5787769784172, 755, "spline"),
             ],
             distance=200,
             cut=[vac_vessel_inner, vac_vessel],
