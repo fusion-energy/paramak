@@ -19,25 +19,56 @@ import os
 # trelis -batch -nographics make_faceteted_neutronics_model.py "faceting_tolerance='1e-4'" "merge_tolerance='1e-4'"
 
 # An example manifest file would contain a list of dictionaries with entries
-# having stp_filename and material keywords. Here is an example manifest file
-# with just two entries.
+# having stp_filename and material_tag keywords. Here is an example manifest
+# file with just two entries. 
+ 
+# trelis -batch -nographics make_faceteted_neutronics_model.py
 
 # [
 #     {
-#         "material": "m1",
+#         "material_tag": "copper",
 #         "stp_filename": "inboard_tf_coils.stp"
 #     },
 #     {
-#         "material": "m2",
+#         "material_tag": "tungsten_carbide",
 #         "stp_filename": "center_column_shield.stp"
 #     }
 # ]
+ 
+# The specific name of dictionary key to use for material group names defaults
+# to material_tag but can be specified by the user, in this example another
+# dictionary key is used (called material_id) which could contain integers and
+# therefore make the manifest.json file can contain strings for use with OpenMC
+# and integer values to make Cubit group names are compatable with MCNP and
+# Shift.
+
+# trelis -batch -nographics make_faceteted_neutronics_model.py "material_key_name='material_id'"
+
+# [
+#     {
+#         "material_id": "1",
+#         "material_tag": "copper",
+#         "stp_filename": "inboard_tf_coils.stp"
+#     },
+#     {
+#         "material_id": "2",
+#         "material_tag": "tungsten_carbide",
+#         "stp_filename": "center_column_shield.stp"
+#     }
+# ]
+
+# You can also change the default dictionary key used for the geometry file.
+# By default the code looks for "stp_filename" however the dictionary key can
+# be changed using the geometry_key_name argument. For example you could have
+# a key name for sat files.
+
+# trelis -batch -nographics make_faceteted_neutronics_model.py "geometry_key_name='sat_filename'"
 
 # entries can also contain a "surface_reflectivity" key to indicate reflecting
 # surfaces. This will then be used to automatically tag the surfaces.
 
 #     {
-#         "material": "m3",
+#         "material_tag": "m3",
 #         "stp_filename": "large_cake_slice.stp",
 #         "surface_reflectivity": true
 #     }
@@ -51,20 +82,20 @@ def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
     for entry in input_locations:
         # starting_group_id = starting_group_id +1
         current_vols = cubit.parse_cubit_list("volume", "all")
-        print(os.path.join(basefolder, entry["stp_filename"]))
-        if entry["stp_filename"].endswith(".sat"):
+        print(os.path.join(basefolder, entry[geometry_key_name]))
+        if entry[geometry_key_name].endswith(".sat"):
             import_type = "acis"
-        if entry["stp_filename"].endswith(
-                ".stp") or entry["stp_filename"].endswith(".step"):
+        if entry[geometry_key_name].endswith(
+                ".stp") or entry[geometry_key_name].endswith(".step"):
             import_type = "step"
-        short_file_name = os.path.split(entry["stp_filename"])[-1]
+        short_file_name = os.path.split(entry[geometry_key_name])[-1]
         # print('short_file_name',short_file_name)
         # cubit.cmd('import '+import_type+' "' + entry['stp_filename'] + '" separate_bodies no_surfaces no_curves no_vertices group "'+str(short_file_name)+'"')
         cubit.cmd(
             "import "
             + import_type
             + ' "'
-            + os.path.join(basefolder, entry["stp_filename"])
+            + os.path.join(basefolder, entry[geometry_key_name])
             + '" separate_bodies no_surfaces no_curves no_vertices '
         )
         all_vols = cubit.parse_cubit_list("volume", "all")
@@ -160,7 +191,7 @@ def tag_geometry_with_mats(geometry_details):
     for entry in geometry_details:
         cubit.cmd(
             'group "mat:'
-            + entry["material"]
+            + str(entry[material_key_name])
             + '" add volume '
             + " ".join(entry["volumes"])
         )
@@ -203,6 +234,16 @@ if "merge_tolerance" in aprepro_vars:
     merge_tolerance = str(cubit.get_aprepro_value_as_string("merge_tolerance"))
 else:
     merge_tolerance = str(1e-4)
+
+if "material_key_name" in aprepro_vars:
+    material_key_name = str(cubit.get_aprepro_value_as_string("material_key_name"))
+else:
+    material_key_name = "material_tag"
+
+if "geometry_key_name" in aprepro_vars:
+    geometry_key_name = str(cubit.get_aprepro_value_as_string("geometry_key_name"))
+else:
+    geometry_key_name = "stp_filename"
 
 if "manifest" in aprepro_vars:
     manifest_filename = str(cubit.get_aprepro_value_as_string("manifest"))
