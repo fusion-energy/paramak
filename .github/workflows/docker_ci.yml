@@ -8,10 +8,19 @@ on:
 jobs:  
   build:     
    runs-on: ubuntu-latest
+   strategy:
+    matrix:
+      include:
+        - cadquery-version: 2.1
+        - cadquery-version: master
+    
+    # name: 'Cadquery Version ${{ matrix.cadquery-version }}'
 
    steps:    
    - uses: actions/checkout@v1
-   - name: Build and test with Docker
+   - name: Build and test with Docker - Cadquery Version ${{ matrix.cadquery-version }}
+  #  - with:
+      # python-version: 3.8.5
      run: |
-       docker build -t paramak --build-arg include_neutronics=true --build-arg cq_version=2.1 --build-arg compile_cores=2 .
+       docker build -t paramak --build-arg include_neutronics=true --build-arg cq_version=${{ matrix.cadquery-version}} --build-arg compile_cores=2 .
        docker run --rm paramak  /bin/bash -c "bash run_tests.sh && curl -s https://codecov.io/bash | bash"
