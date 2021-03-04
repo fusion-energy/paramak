@@ -71,14 +71,28 @@ attribution by citing our [Publication](https://f1000research.com/articles/10-27
 
 ## System Installation
 
-To install the Paramak you need to have 
-[Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), 
-[Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and 
-[Pip](https://anaconda.org/anaconda/pip). If you have these three dependencies 
-already then you can install the Paramak using Pip:
+To install the Paramak you need to have Conda installed,
+[instructions here.](https://docs.conda.io/projects/conda/en/latest/user-guide/install/)
 
+Once you have Conda installed this command will create a new conda enviroment,
+with cadquery installed and activate the enviroment
+
+```bash
+conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery
+conda activate paramak_env
 ```
+
+Then install the paramak with this pip command (pip is included in Conda).
+
+```bash
 pip install paramak
+```
+
+Optionally you could consider installing [jupyter-cadquery](https://github.com/bernhard-42/jupyter-cadquery) which adds really nice 3D viewing in Jupyter lab as shown in
+the example notebooks.
+
+```bash
+pip install jupyter-cadquery
 ```
 
 Detailed installation 
