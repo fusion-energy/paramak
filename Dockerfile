@@ -205,13 +205,10 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# RUN adduser --disabled-password --gecos "Default user" --uid 1000 paramak
-# VOLUME /home/paramak/
 RUN mkdir /home/paramak
 EXPOSE 8888
 WORKDIR /home/paramak
-# ADD --chown=cq:cq examples /home/paramak
-# USER paramak
+
 
 FROM dependencies as final
 
