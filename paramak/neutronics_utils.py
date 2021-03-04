@@ -28,7 +28,7 @@ def find_material_groups_in_h5m(
     material groups in the file
 
     Arguments:
-        filename: 
+        filename:
 
     Returns:
         The filename of the h5m file created
@@ -63,7 +63,7 @@ def trelis_command_to_create_dagmc_h5m(
     Arguments:
         faceting_tolerance: the tolerance to use when faceting surfaces.
         merge_tolerance: the tolerance to use when merging surfaces.
-        material_key_name: 
+        material_key_name:
         geometry_key_name:
         batch:
 
@@ -93,8 +93,7 @@ def trelis_command_to_create_dagmc_h5m(
             str(material_key_name) +
             "'\" \"geometry_key_name='" +
             str(geometry_key_name) +
-            "'\""
-            )
+            "'\"")
     else:
         os.system(
             "trelis make_faceteted_neutronics_model.py \"faceting_tolerance='" +

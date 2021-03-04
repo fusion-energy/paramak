@@ -33,7 +33,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
     def test_moab_instance_creation(self):
         """passes three points on a circle to the function and checks that the
         radius and center of the circle is calculated correctly"""
-        
+
         os.system('rm *.stl *.h5m')
 
         moab_core, moab_tags = define_moab_core_and_tags()
