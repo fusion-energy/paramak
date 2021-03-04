@@ -21,6 +21,32 @@ except ImportError:
             method not available', UserWarning)
 
 
+def find_material_groups_in_h5m(
+        filename: Optional[str] = 'dagmc.h5m'
+) -> List[str]:
+    """Reads in a DAGMC h5m file and uses mbsize to find the names of the
+    material groups in the file
+
+    Arguments:
+        filename: 
+
+    Returns:
+        The filename of the h5m file created
+    """
+
+    terminal_output = subprocess.check_output(
+        "mbsize -ll {} | grep 'mat:'".format(filename),
+        shell=True,
+        universal_newlines=True,
+    )
+
+    list_of_mats = terminal_output.split()
+    list_of_mats = list(filter(lambda a: a != '=', list_of_mats))
+    list_of_mats = list(filter(lambda a: a != 'NAME', list_of_mats))
+    list_of_mats = list(filter(lambda a: a != 'EXTRA_NAME0', list_of_mats))
+    list_of_mats = list(set(list_of_mats))
+
+    return list_of_mats
 
 
 def trelis_command_to_create_dagmc_h5m(
