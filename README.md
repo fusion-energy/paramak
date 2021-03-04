@@ -71,7 +71,7 @@ attribution by citing our [Publication](https://f1000research.com/articles/10-27
 
 ## System Installation
 
-To install the Paramak you need to have Conda or MinConda installed,
+To install the Paramak you need to have Conda or MiniConda installed,
 [Conda instructions here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/),
  [Miniconda instructions here.](https://docs.conda.io/en/latest/miniconda.html)
 
