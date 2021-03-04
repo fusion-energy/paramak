@@ -59,29 +59,38 @@ The Paramak source code is distributed with a permissive open-source license
 Prerequisites
 -------------
 
-To use the paramak tool you will need Python 3 and Cadquery 2.0 or newer
-installed.
+To use the paramak tool you will need Python 3 and Cadquery 2 installed.
 
 * `Python 3 <https://www.python.org/downloads/>`_
 
-* `CadQuery 2.0 <https://github.com/CadQuery/cadquery>`_
+* `CadQuery 2 <https://github.com/CadQuery/cadquery>`_
 
-Cadquery 2.0 must be installed in a conda environment via conda-forge.
-Conda environments are activated using Anaconda or Miniconda. 
+Python 3 and CadQuery can be installed using Conda or Miniconda
 
 * `Anaconda <https://www.anaconda.com/>`_
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
+  
+Once you have Conda or MiniConda installed then CadQuery can be installed
+into a new enviroment and that environment can be activated using Anaconda or Miniconda. 
 
-Once you have activated a conda environment, Cadquery 2.0 can be installed
+Cadquery 2 can be installed in a Conda environment via conda-forge.
+
+.. code-block:: python
+
+   conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2
+
+
+Once you have activated a conda environment, Cadquery 2 can be installed
 using the command:
 
 .. code-block:: python
 
-   conda install -c conda-forge -c cadquery cadquery=2
+   conda activate paramak_env
 
-A more detailed description of installing Cadquery 2.0 can be found here:
 
-* `Cadquery 2.0 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
+A more detailed description of installing Cadquery 2 can be found here:
+
+* `Cadquery 2 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
 
 
 System Installation
@@ -114,14 +123,22 @@ Alternatively you can install the paramak with the following command.
 
 You can also install optional dependencies that add some neutronics
 capabilities to the paramak. This will install neutronics_material_maker and
-parametric_plasma_source. In addition to this you would need DAGMC, OpenMC and
-a method of imprinting and merging.
+parametric_plasma_source. In addition to this you would need DAGMC, OpenMC,
+MOAB and Trelis / Cubit.
 `More details <https://paramak.readthedocs.io/en/latest/paramak.parametric_neutronics.html>`_
-
 
 .. code-block:: bash
 
    pip install .[neutronics]
+
+You could consider installing
+[jupyter-cadquery](https://github.com/bernhard-42/jupyter-cadquery) which adds
+3D viewing in Jupyter lab as shown in the example notebooks.
+
+.. code-block:: bash
+
+   pip install jupyter-cadquery
+
 
 
 Docker Image Installation
