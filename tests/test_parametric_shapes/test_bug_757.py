@@ -15,7 +15,7 @@ class TestBug(unittest.TestCase):
                 (1.1 + 0.5, 0.5),
                 (1.1 + 0, 0.5),
             ],
-            rotation_angle=360
+            rotation_angle=359
         )
 
         shape2 = ExtrudeSplineShape(
