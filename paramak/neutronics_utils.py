@@ -2,6 +2,7 @@
 import math
 import os
 import shutil
+import subprocess
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -20,10 +21,14 @@ except ImportError:
             method not available', UserWarning)
 
 
+
+
 def trelis_command_to_create_dagmc_h5m(
         faceting_tolerance: float,
         merge_tolerance: float,
-        batch: bool = True,
+        material_key_name: Optional[str] = 'material_tag',
+        geometry_key_name: Optional[str] = 'stp_filename',
+        batch: Optional[bool] = True,
 ) -> str:
     """Runs the Trelis executable command with the
     make_faceteted_neutronics_model.py script which produces a non water tight
@@ -32,6 +37,8 @@ def trelis_command_to_create_dagmc_h5m(
     Arguments:
         faceting_tolerance: the tolerance to use when faceting surfaces.
         merge_tolerance: the tolerance to use when merging surfaces.
+        material_key_name: 
+        geometry_key_name:
         batch:
 
     Returns:
@@ -56,13 +63,22 @@ def trelis_command_to_create_dagmc_h5m(
             str(faceting_tolerance) +
             "'\" \"merge_tolerance='" +
             str(merge_tolerance) +
-            "'\"")
+            "'\" \"material_key_name='" +
+            str(material_key_name) +
+            "'\" \"geometry_key_name='" +
+            str(geometry_key_name) +
+            "'\""
+            )
     else:
         os.system(
             "trelis make_faceteted_neutronics_model.py \"faceting_tolerance='" +
             str(faceting_tolerance) +
             "'\" \"merge_tolerance='" +
             str(merge_tolerance) +
+            "'\" \"material_key_name='" +
+            str(material_key_name) +
+            "'\" \"geometry_key_name='" +
+            str(geometry_key_name) +
             "'\"")
 
     os.system('rm make_faceteted_neutronics_model.py')
