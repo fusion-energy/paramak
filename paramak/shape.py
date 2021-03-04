@@ -1142,12 +1142,10 @@ class Shape:
             dictionary: a dictionary of the step filename and material name
         """
 
-        neutronics_description = {"material": self.material_tag}
+        neutronics_description = {"material_tag": self.material_tag}
 
         if self.stp_filename is not None:
             neutronics_description["stp_filename"] = self.stp_filename
-            # this is needed as ppp looks for the filename key
-            neutronics_description["filename"] = self.stp_filename
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
