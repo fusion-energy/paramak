@@ -11,8 +11,7 @@ jobs:
    strategy:
     matrix:
       include:
-        - cadquery-version: 2.1
-        - cadquery-version: master
+        - cadquery-version: [2.1, master]
     
     # name: 'Cadquery Version ${{ matrix.cadquery-version }}'
 
