@@ -32,5 +32,6 @@ class TestBug(unittest.TestCase):
 
         shape2.solid
 
+
 if __name__ == "__main__":
     unittest.main()
