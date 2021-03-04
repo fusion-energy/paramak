@@ -19,7 +19,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
     def __init__(
         self,
         rotation_angle=360.0,
-        number_of_tf_coils=16,
+        number_of_tf_coils=11,
     ):
 
         super().__init__([])
@@ -84,8 +84,10 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             ],
             distance=200,
             cut=[vac_vessel_inner, vac_vessel],
+            # azimuth placement angle can't start at
+            # zero nor end at 360 until #757 is solved
             azimuth_placement_angle=np.linspace(
-                0, 360, self.number_of_tf_coils),
+                0 + 20, 360 + 20, self.number_of_tf_coils),
             rotation_angle=self.rotation_angle,
             stp_filename="tf_coil_casing.stp",
             stl_filename="tf_coil_casing.stl",
@@ -222,7 +224,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
         )
         vac_vessel = paramak.RotateSplineShape(
             points=[
-                (512.4324836529082, 96.83488831627005),
+                (515.494614319138, 96.83488831627005),
                 (515.494614319138, 142.76183497286695),
                 (515.8212670602018, 194.68137603861783),
                 (518.0121500911752, 287.54134932536317),
@@ -268,12 +270,11 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (546.7443932142421, -511.7869024735646),
                 (524.9457669605843, -451.3051510254827),
                 (516.7486775621876, -393.5263922426077),
-                (516.7486775621876, -228.64163927470076),
-                (516.7486775621876, -281.637425294638),
                 (516.7486775621876, -334.6332113145754),
+                (516.7486775621876, -281.637425294638),
+                (516.7486775621876, -228.64163927470076),
                 (516.7486775621876, -175.64585325476332),
                 (516.7486775621876, -107.40944903301386),
-
             ],
             cut=vac_vessel_inner,  # hollow shape
             rotation_angle=self.rotation_angle,
@@ -410,11 +411,11 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
         plasma = self.create_plasma()
         pf_coils = self.create_pf_coils()
         vessel = self.create_vessel_components()
-        tf_coil_casing = self.create_tf_coils(vessel[-2], vessel[-1])
+        tf_coil_casing = self.create_tf_coils(vessel[-1], vessel[-2])
 
         shapes_and_components = plasma + \
             pf_coils + vessel[:-1] + tf_coil_casing
-
+        # shapes_and_components = tf_coil_casing
         self.shapes_and_components = shapes_and_components
 
         return shapes_and_components
