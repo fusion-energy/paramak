@@ -33,7 +33,10 @@ def _notebook_run(path):
             timeout=300)
 
         try:
-            ep.preprocess(note_book, {'metadata': {'path': this_file_directory}})
+            ep.preprocess(
+                note_book, {
+                    'metadata': {
+                        'path': this_file_directory}})
 
         except CellExecutionError as e:
             if "SKIP" in e.traceback:
@@ -44,10 +47,9 @@ def _notebook_run(path):
     return note_book, errors
 
 
-
 class TestExampleShapes(unittest.TestCase):
 
-    def test_task_1(self):
+    def cadquery_jupyter_test_task_1(self):
         for notebook in Path().rglob("examples/example_parametric_shapes/*.ipynb"):
             print(notebook)
             nb, errors = _notebook_run(notebook)
