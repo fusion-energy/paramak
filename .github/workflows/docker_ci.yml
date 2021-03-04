@@ -10,7 +10,7 @@ jobs:
    runs-on: ubuntu-latest
    strategy:
     matrix:
-      - cadquery-version: [2.1, master]
+      cadquery-version: [2.1, master]
     
    steps:    
    - uses: actions/checkout@v1
