@@ -15,12 +15,12 @@ jobs:
       # test-script: [all_tests.sh]
 
       include:
-        - include-neutronics: true
+        # - include-neutronics: true
+          # cadquery-version: master
+          # test-script: all_tests.sh
+        - include-neutronics: false
           cadquery-version: master
-          test-script: all_tests.sh
-        # - include-neutronics: false
-        #   cadquery-version: master
-        #   test-script: selected_tests.sh
+          test-script: selected_tests.sh
 
    steps:    
    - uses: actions/checkout@v1
