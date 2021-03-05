@@ -10,14 +10,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # cadquery-version: [2.1]
-        # include-neutronics: [true, false]
-
-        include:
-          - include-neutronics: true
-            cadquery-version: 2.1
-          - include-neutronics: false
-            cadquery-version: 2.1
+        cadquery-version: [2.1]
+        include-neutronics: [true]
 
     steps:    
     - uses: actions/checkout@v1
