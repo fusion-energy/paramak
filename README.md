@@ -79,7 +79,7 @@ Once you have Conda or MiniConda installed you can use this command to create a
 new conda enviroment, install CadQuery and activate the enviroment.
 
 ```bash
-conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2
+conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2.1
 conda activate paramak_env
 ```
 
