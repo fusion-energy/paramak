@@ -77,7 +77,7 @@ Cadquery 2 can be installed in a Conda environment via conda-forge.
 
 .. code-block:: python
 
-   conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2
+   conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2.1
 
 
 Once you have activated a conda environment, Cadquery 2 can be installed
