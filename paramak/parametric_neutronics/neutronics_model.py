@@ -143,8 +143,7 @@ class NeutronicsModel():
             raise TypeError(
                 "NeutronicsModelFromReactor.source should be an \
                 openmc.Source() object")
-        else:
-            self._source = value
+        self._source = value
 
     @property
     def cell_tallies(self):
