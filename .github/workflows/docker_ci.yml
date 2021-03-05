@@ -12,7 +12,6 @@ jobs:
     matrix:
       # cadquery-version: [2.1, master]
       # include-neutronics: [true]
-      # test-script: [all_tests.sh]
 
       include:
         # - include-neutronics: true
@@ -20,11 +19,10 @@ jobs:
           # test-script: all_tests.sh
         - include-neutronics: false
           cadquery-version: master
-          test-script: selected_tests.sh
 
    steps:    
    - uses: actions/checkout@v1
    - name: Build and test with Docker - Cadquery Version ${{ matrix.cadquery-version }}
      run: |
        docker build -t paramak --build-arg include_neutronics=${{ matrix.include-neutronics }} --build-arg cq_version=${{ matrix.cadquery-version}} --build-arg compile_cores=2 .
-       docker run --rm paramak  /bin/bash -c "bash run_tests.sh && curl -s https://codecov.io/bash | bash"
+       docker run --rm paramak  /bin/bash -c "bash run_tests.sh include_neutronics=${{ matrix.include-neutronics }} && curl -s https://codecov.io/bash | bash"
