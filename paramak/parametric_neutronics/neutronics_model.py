@@ -126,7 +126,7 @@ class NeutronicsModel():
 
     @geometry.setter
     def geometry(self, value):
-        if isinstance(value, (paramak.Shape, paramak.Reactor, None)):
+        if isinstance(value, (paramak.Shape, paramak.Reactor, type(None))):
             self._geometry = value
         else:
             raise TypeError(
@@ -139,7 +139,7 @@ class NeutronicsModel():
 
     @source.setter
     def source(self, value):
-        if not isinstance(value, (openmc.Source, None)):
+        if not isinstance(value, (openmc.Source, type(None))):
             raise TypeError(
                 "NeutronicsModelFromReactor.source should be an \
                 openmc.Source() object")

@@ -20,8 +20,8 @@ import os
 
 # An example manifest file would contain a list of dictionaries with entries
 # having stp_filename and material_tag keywords. Here is an example manifest
-# file with just two entries. 
- 
+# file with just two entries.
+
 # trelis -batch -nographics make_faceteted_neutronics_model.py
 
 # [
@@ -34,7 +34,7 @@ import os
 #         "stp_filename": "center_column_shield.stp"
 #     }
 # ]
- 
+
 # The specific name of dictionary key to use for material group names defaults
 # to material_tag but can be specified by the user, in this example another
 # dictionary key is used (called material_id) which could contain integers and

@@ -24,8 +24,8 @@ my_model = paramak.NeutronicsModel(
     source=source,
     materials={'center_column_shield_mat': 'Be'},
     cell_tallies=['heating', 'flux', 'TBR', 'spectra'],
-    simulation_batches=10,
-    simulation_particles_per_batch=200,
+    simulation_batches=2,
+    simulation_particles_per_batch=20,
     method='pymoab'
 )
 
