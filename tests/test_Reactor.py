@@ -606,10 +606,10 @@ class TestReactor(unittest.TestCase):
 
         assert len(neutronics_description) == 2
         assert "stp_filename" in neutronics_description[0].keys()
-        assert "material" in neutronics_description[0].keys()
-        assert neutronics_description[0]["material"] == "test_material"
+        assert "material_tag" in neutronics_description[0].keys()
+        assert neutronics_description[0]["material_tag"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
-        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["material_tag"] == "graveyard"
         assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
 
     def test_export_neutronics_description(self):
@@ -636,12 +636,12 @@ class TestReactor(unittest.TestCase):
         assert Path("manifest_test.json").exists() is True
         assert len(neutronics_description) == 2
         assert "stp_filename" in neutronics_description[0].keys()
-        assert "material" in neutronics_description[0].keys()
+        assert "material_tag" in neutronics_description[0].keys()
         assert "tet_mesh" in neutronics_description[0].keys()
-        assert neutronics_description[0]["material"] == "test_material"
+        assert neutronics_description[0]["material_tag"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
-        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["material_tag"] == "graveyard"
         assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest_test.json")
 
@@ -676,17 +676,17 @@ class TestReactor(unittest.TestCase):
         assert Path("manifest.json").exists() is True
         assert len(neutronics_description) == 3
         assert "stp_filename" in neutronics_description[0].keys()
-        assert "material" in neutronics_description[0].keys()
+        assert "material_tag" in neutronics_description[0].keys()
         assert "tet_mesh" in neutronics_description[0].keys()
         assert "stp_filename" in neutronics_description[1].keys()
-        assert "material" in neutronics_description[1].keys()
+        assert "material_tag" in neutronics_description[1].keys()
         assert "tet_mesh" not in neutronics_description[1].keys()
-        assert neutronics_description[0]["material"] == "test_material"
+        assert neutronics_description[0]["material_tag"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
-        assert neutronics_description[1]["material"] == "DT_plasma"
+        assert neutronics_description[1]["material_tag"] == "DT_plasma"
         assert neutronics_description[1]["stp_filename"] == "plasma.stp"
-        assert neutronics_description[2]["material"] == "graveyard"
+        assert neutronics_description[2]["material_tag"] == "graveyard"
         assert neutronics_description[2]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest.json")
 
@@ -714,12 +714,12 @@ class TestReactor(unittest.TestCase):
         assert Path("manifest.json").exists() is True
         assert len(neutronics_description) == 2
         assert "stp_filename" in neutronics_description[0].keys()
-        assert "material" in neutronics_description[0].keys()
+        assert "material_tag" in neutronics_description[0].keys()
         assert "tet_mesh" in neutronics_description[0].keys()
-        assert neutronics_description[0]["material"] == "test_material"
+        assert neutronics_description[0]["material_tag"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
         assert neutronics_description[0]["tet_mesh"] == "size 60"
-        assert neutronics_description[1]["material"] == "graveyard"
+        assert neutronics_description[1]["material_tag"] == "graveyard"
         assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest.json")
 
