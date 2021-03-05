@@ -27,4 +27,4 @@ jobs:
    - name: Build and test with Docker - Cadquery Version ${{ matrix.cadquery-version }}
      run: |
        docker build -t paramak --build-arg include_neutronics=${{ matrix.include-neutronics }} --build-arg cq_version=${{ matrix.cadquery-version}} --build-arg compile_cores=2 .
-       docker run --rm paramak  /bin/bash -c "bash ${{ matrix.test-script }} && curl -s https://codecov.io/bash | bash"
+       docker run --rm paramak  /bin/bash -c "bash selected_tests.sh && curl -s https://codecov.io/bash | bash"
