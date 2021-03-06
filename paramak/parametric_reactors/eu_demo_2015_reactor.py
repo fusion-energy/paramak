@@ -18,8 +18,8 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
 
     def __init__(
         self,
-        rotation_angle=360.0,
-        number_of_tf_coils=11,
+        rotation_angle: float = 360.,
+        number_of_tf_coils: int = 16,
     ):
 
         super().__init__([])
