@@ -286,6 +286,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
 
     def create_plasma(self) -> list:
         """Creates a 3d solids for the plasma.
+
         Returns:
             A list of CadQuery solids: A list of 3D solid volumes
         """
