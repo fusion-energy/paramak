@@ -13,7 +13,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
 
     Arguments:
         rotation_angle: the angle of the sector that is desired.
-            Defaults to 360.0.
+        number_of_tf_coils: the number of tf coils to include in the model
     """
 
     def __init__(
