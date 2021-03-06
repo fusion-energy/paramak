@@ -64,7 +64,7 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 # Installing CadQuery
 RUN echo installing CadQuery version $cq_version && \
     conda install -c cadquery -c conda-forge python=3.8 cadquery="$cq_version" && \
-    pip install jupyter-cadquery==2.0.0-rc1 && \
+    pip install jupyter-cadquery==2.0.0 && \
     conda clean -afy
 
 
@@ -209,8 +209,8 @@ WORKDIR /home/paramak
 FROM dependencies as final
 
 COPY run_tests.sh run_tests.sh
-COPY paramak paramak/
 COPY examples examples/
+COPY paramak paramak/
 COPY setup.py setup.py
 COPY tests tests/
 COPY README.md README.md
@@ -218,4 +218,6 @@ COPY README.md README.md
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
 
-CMD ["jupyter", "lab", "--notebook-dir=/home/paramak", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
+# this helps prevent the kernal failing
+RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> /home/paramak/docker-cmd.sh
+CMD bash /home/paramak/docker-cmd.sh

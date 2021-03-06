@@ -1,12 +1,12 @@
 
 import math
 import os
+import warnings
 from collections import defaultdict
 from typing import List, Optional
 from xml.etree.ElementTree import SubElement
 
 import defusedxml.ElementTree as ET
-import h5py
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -487,7 +487,7 @@ def extract_points_from_initial_source(
     Returns:
         list: list of points extracted
     """
-
+    import h5py
     h5_file = h5py.File(input_filename, 'r')
     dset = h5_file['source_bank']
 
