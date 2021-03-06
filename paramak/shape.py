@@ -23,7 +23,8 @@ class Shape:
     """A shape object that represents a 3d volume and can have materials and
     neutronics tallies assigned. Shape objects are not intended to be used
     directly by the user but provide basic functionality for user-facing
-    classes that inherit from Shape.
+    classes that inherit from Shape. Provides a .show attribute for rendering
+    in Jupyter Lab
 
     Args:
         points (list of (float, float, float), optional): the x, y, z
