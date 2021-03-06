@@ -209,8 +209,8 @@ WORKDIR /home/paramak
 FROM dependencies as final
 
 COPY run_tests.sh run_tests.sh
-COPY examples examples/
 COPY paramak paramak/
+COPY examples examples/
 COPY setup.py setup.py
 COPY tests tests/
 COPY README.md README.md

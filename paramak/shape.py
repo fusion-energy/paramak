@@ -129,6 +129,19 @@ class Shape:
         self.patch = None
 
     @property
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
+
+        from jupyter_cadquery.cadquery import show
+        self.solid
+        return show(self.solid)
+
+    @show.setter
+    def show(self, value):
+        self._show = value   
+
+    @property
     def solid(self):
         """The CadQuery solid of the 3d object. Returns a CadQuery workplane
         or CadQuery Compound"""
