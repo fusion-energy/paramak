@@ -151,7 +151,7 @@ class Reactor:
 
     @show.setter
     def show(self, value):
-        self._show = value  
+        self._show = value
 
     @property
     def solid(self):
