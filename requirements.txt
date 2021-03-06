@@ -10,6 +10,8 @@ pillow
 
 # Note, cadquery not installed via pip to avoid installing cadquery version 1
 
+# pip install jupyter-cadquery==2.0.0 should be added but requires cadquery which is not available via pip
+
 # cython  # needed for export_h5m with pymoab
 
 # Additional packages needed for neutronics simulations
