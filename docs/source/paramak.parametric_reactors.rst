@@ -130,7 +130,7 @@ studies can be performed quickly.
 EuDemoFrom2015PaperDiagram()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/108257452-b142c000-7156-11eb-9373-94750c935ca6.png
+.. image:: https://user-images.githubusercontent.com/8583900/110224418-4f62b400-7ed3-11eb-85f1-e40dc74f5671.png
    :width: 400
    :align: center
 
