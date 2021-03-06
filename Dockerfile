@@ -64,7 +64,7 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 # Installing CadQuery
 RUN echo installing CadQuery version $cq_version && \
     conda install -c cadquery -c conda-forge python=3.8 cadquery="$cq_version" && \
-    pip install jupyter-cadquery==2.0.0-rc1 && \
+    pip install jupyter-cadquery==2.0.0 && \
     conda clean -afy
 
 
