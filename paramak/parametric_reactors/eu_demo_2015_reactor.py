@@ -12,7 +12,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
     represent the reactor.
 
     Arguments:
-        rotation_angle (float): the angle of the sector that is desired.
+        rotation_angle: the angle of the sector that is desired.
             Defaults to 360.0.
     """
 
