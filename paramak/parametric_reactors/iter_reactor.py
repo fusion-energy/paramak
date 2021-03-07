@@ -232,7 +232,7 @@ class ITERTokamak(paramak.Reactor):
         ])
 
         outboard_pf_coils = paramak.PoloidalFieldCoilSet(
-            center_points=((bot_lefts + top_rights)/2).tolist(),
+            center_points=((bot_lefts + top_rights) / 2).tolist(),
             widths=(top_rights[:, 0] - bot_lefts[:, 0]).tolist(),
             heights=(top_rights[:, 1] - bot_lefts[:, 1]).tolist(),
             rotation_angle=self.rotation_angle,
