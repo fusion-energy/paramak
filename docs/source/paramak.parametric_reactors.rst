@@ -140,6 +140,20 @@ The above image is colored by component.
    :members:
    :show-inheritance:
 
+ITERTokamak()
+^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/40028739/110247750-11ff3480-7f6e-11eb-84c3-39c1b7007bae.png
+   :width: 400
+   :align: center
+
+The above image is colored by component.
+
+.. automodule:: paramak.parametric_reactors.iter_reactor
+   :members:
+   :show-inheritance:
+
+
 SparcFrom2020PaperDiagram()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
