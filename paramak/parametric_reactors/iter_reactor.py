@@ -18,7 +18,7 @@ class ITERTokamak(paramak.Reactor):
     def __init__(
         self,
         rotation_angle: float = 360.,
-        number_of_tf_coils: int = 11,
+        number_of_tf_coils: int = 18,
     ):
 
         super().__init__([])
