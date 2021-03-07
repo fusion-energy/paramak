@@ -78,6 +78,7 @@ from .parametric_components.vacuum_vessel import VacuumVessel
 from .parametric_components.hollow_cube import HollowCube
 from .parametric_components.shell_fs import ShellFS
 
+from .parametric_reactors.eu_demo_2015_reactor import EuDemoFrom2015PaperDiagram
 from .parametric_reactors.ball_reactor import BallReactor
 from .parametric_reactors.submersion_reactor import SubmersionTokamak
 from .parametric_reactors.single_null_submersion_reactor import SingleNullSubmersionTokamak

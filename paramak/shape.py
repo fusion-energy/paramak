@@ -191,24 +191,25 @@ class Shape:
         largest_dimension = 0
         if isinstance(self.solid, (cq.Compound, cq.occ_impl.shapes.Solid)):
             for solid in self.solid.Solids():
+                bound_box = solid.BoundingBox()
                 largest_dimension = max(
-                    abs(self.solid.BoundingBox().xmax),
-                    abs(self.solid.BoundingBox().xmin),
-                    abs(self.solid.BoundingBox().ymax),
-                    abs(self.solid.BoundingBox().ymin),
-                    abs(self.solid.BoundingBox().zmax),
-                    abs(self.solid.BoundingBox().zmin),
+                    abs(bound_box.xmax),
+                    abs(bound_box.xmin),
+                    abs(bound_box.ymax),
+                    abs(bound_box.ymin),
+                    abs(bound_box.zmax),
+                    abs(bound_box.zmin),
                     largest_dimension
                 )
         else:
+            bound_box = self.solid.val().BoundingBox()
             largest_dimension = max(
-                abs(self.solid.val().BoundingBox().xmax),
-                abs(self.solid.val().BoundingBox().xmin),
-                abs(self.solid.val().BoundingBox().ymax),
-                abs(self.solid.val().BoundingBox().ymin),
-                abs(self.solid.val().BoundingBox().zmax),
-                abs(self.solid.val().BoundingBox().zmin),
-                largest_dimension
+                abs(bound_box.xmax),
+                abs(bound_box.xmin),
+                abs(bound_box.ymax),
+                abs(bound_box.ymin),
+                abs(bound_box.zmax),
+                abs(bound_box.zmin),
             )
         self.largest_dimension = largest_dimension
         return largest_dimension
