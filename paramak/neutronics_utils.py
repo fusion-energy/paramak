@@ -55,6 +55,11 @@ def trelis_command_to_create_dagmc_h5m(
         material_key_name: Optional[str] = 'material_tag',
         geometry_key_name: Optional[str] = 'stp_filename',
         batch: Optional[bool] = True,
+        h5m_filename: str = 'dagmc_not_watertight.h5m',
+        manifest: str = 'manifest.json',
+        cubit_filename: str = 'dagmc.cub',
+        trelis_filename: str = 'dagmc.trelis',
+        geometry_details_filename: str = 'geometry_details.json',
 ) -> str:
     """Runs the Trelis executable command with the
     make_faceteted_neutronics_model.py script which produces a non water tight
@@ -63,13 +68,46 @@ def trelis_command_to_create_dagmc_h5m(
     Arguments:
         faceting_tolerance: the tolerance to use when faceting surfaces.
         merge_tolerance: the tolerance to use when merging surfaces.
-        material_key_name:
-        geometry_key_name:
-        batch:
+        material_key_name: the dictionary key containing the str or int to use
+            as the material identifier.
+        geometry_key_name: the dictionary key containing the str to uses as the
+            CAD file identifier.
+        batch: Run the Trelis command in batch model with no GUI (True) or with
+            the GUI enabled (False).
+        h5m_filename: the filename of the DAGMC h5m file produced. This is not
+            water tight at this stage.
+        manifest: The filename of the json file containing a list of 
+            material_keys and geometry_keys.
+        cubit_filename: The output filename of the file. If None then no cubit
+            file will be exported.
+        trelis_filename: The output filename of the file. If None then no
+            trelis file will be exported.
+        geometry_details_filename: The output filename of the JSON file
+            containing details of the DAGMC geometry. This includes the
+            resulting volume numbers of the input CAD files, which can be
+            useful for specifying tallies. If None then no JSON fie will be
+            exported.
 
     Returns:
         The filename of the h5m file created
     """
+    output_filenames = [h5m_filename, trelis_filename, cubit_filename, geometry_details_filename]
+    filenames_extensions = ['.h5m', '.trelis', '.cub', '.json']
+
+    path_output_filenames = []
+
+    for output_file, extension in zip(output_filenames, filenames_extensions):
+
+        if output_file is not None:
+            path_filename = Path(output_file)
+
+            if path_filename.suffix != extension:
+                path_filename = path_filename.with_suffix(extension)
+
+            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+            path_output_filenames.append(str(path_filename))
+
     shutil.copy(
         src=Path(__file__).parent.absolute() / Path('parametric_neutronics') /
         'make_faceteted_neutronics_model.py',
@@ -84,36 +122,39 @@ def trelis_command_to_create_dagmc_h5m(
     os.system('rm dagmc_not_watertight.h5m')
 
     if batch:
-        os.system(
-            "trelis -batch -nographics make_faceteted_neutronics_model.py \"faceting_tolerance='" +
-            str(faceting_tolerance) +
-            "'\" \"merge_tolerance='" +
-            str(merge_tolerance) +
-            "'\" \"material_key_name='" +
-            str(material_key_name) +
-            "'\" \"geometry_key_name='" +
-            str(geometry_key_name) +
-            "'\"")
+        trelis_cmd = 'trelis -batch -nographics'
     else:
-        os.system(
-            "trelis make_faceteted_neutronics_model.py \"faceting_tolerance='" +
-            str(faceting_tolerance) +
-            "'\" \"merge_tolerance='" +
-            str(merge_tolerance) +
-            "'\" \"material_key_name='" +
-            str(material_key_name) +
-            "'\" \"geometry_key_name='" +
-            str(geometry_key_name) +
-            "'\"")
+        trelis_cmd = 'trelis'
+
+    os.system(
+        trelis_cmd + " make_faceteted_neutronics_model.py \"faceting_tolerance='" +
+        str(faceting_tolerance) +
+        "'\" \"merge_tolerance='" +
+        str(merge_tolerance) +
+        "'\" \"material_key_name='" +
+        str(material_key_name) +
+        "'\" \"geometry_key_name='" +
+        str(geometry_key_name) +
+        "'\" \"h5m_filename='" +
+        str(h5m_filename) +
+        "'\" \"manifest='" +
+        str(manifest) +
+        "'\" \"cubit_filename='" +
+        str(cubit_filename) +
+        "'\" \"trelis_filename='" +
+        str(trelis_filename) +
+        "'\" \"geometry_details_filename='" +
+        str(geometry_details_filename) +
+        "'\"")
 
     os.system('rm make_faceteted_neutronics_model.py')
 
-    if not Path("dagmc_not_watertight.h5m").is_file():
+    if not Path(h5m_filename).is_file():
         raise FileNotFoundError(
-            "The dagmc_not_watertight.h5m was not found \
+            "The h5m file "+h5m_filename+" was not found \
             in the directory, the Trelis stage has failed")
 
-    return "dagmc_not_watertight.h5m"
+    return path_output_filenames
 
 
 def make_watertight(
