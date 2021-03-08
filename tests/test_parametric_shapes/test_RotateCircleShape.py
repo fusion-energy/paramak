@@ -78,7 +78,7 @@ class TestRotateCircleShape(unittest.TestCase):
             points=[(60, 0)], radius=15
         )
         outer_shape_volume = outer_shape.volume
-        outer_shape.cut = self.test_shape
+        outer_shape.boolean_operations = {"cut": self.test_shape}
         assert outer_shape.volume == pytest.approx(
             outer_shape_volume - self.test_shape.volume
         )

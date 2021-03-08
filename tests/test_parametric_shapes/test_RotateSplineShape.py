@@ -50,7 +50,7 @@ class TestRotateSplineShape(unittest.TestCase):
 
         outer_shape_with_cut = RotateSplineShape(
             points=[(3, 3), (3, 12), (12, 12), (12, 3)],
-            cut=inner_shape,
+            boolean_operations={"cut": inner_shape},
             rotation_angle=180,
         )
 

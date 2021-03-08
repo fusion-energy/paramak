@@ -63,7 +63,7 @@ class TestRotateStraightShape(unittest.TestCase):
 
         outer_box_and_inner_box = RotateStraightShape(
             points=[(200, 100), (200, 200), (500, 200), (500, 100)],
-            union=inner_box,
+            boolean_operations={"union": inner_box}
         )
 
         assert inner_box.volume + outer_box.volume == pytest.approx(
@@ -215,7 +215,7 @@ class TestRotateStraightShape(unittest.TestCase):
 
         shape_with_cut = RotateStraightShape(
             points=[(0, -5), (0, 25), (25, 25), (25, -5)],
-            cut=self.test_shape
+            boolean_operations={"cut": self.test_shape}
         )
 
         assert shape_with_cut.volume == pytest.approx(
@@ -240,7 +240,7 @@ class TestRotateStraightShape(unittest.TestCase):
 
         main_shape_with_cuts = RotateStraightShape(
             points=[(0, 0), (0, 200), (200, 200), (200, 0)],
-            cut=[shape_to_cut_1, shape_to_cut_2]
+            boolean_operations={"cut": [shape_to_cut_1, shape_to_cut_2]}
         )
 
         assert main_shape_with_cuts.volume == pytest.approx(

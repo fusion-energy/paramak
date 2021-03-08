@@ -121,7 +121,7 @@ class TestRotateMixedShape(unittest.TestCase):
                 (500, 200, "straight"),
                 (500, 100, "straight"),
             ],
-            union=inner_box,
+            boolean_operations={"union": inner_box}
         )
 
         assert inner_box.volume + outer_box.volume == pytest.approx(
@@ -173,7 +173,7 @@ class TestRotateMixedShape(unittest.TestCase):
             ]
         )
         outer_shape_volume = outer_shape.volume
-        outer_shape.cut = self.test_shape
+        outer_shape.boolean_operations = {"cut": self.test_shape}
         assert outer_shape.volume == pytest.approx(
             outer_shape_volume - self.test_shape.volume
         )

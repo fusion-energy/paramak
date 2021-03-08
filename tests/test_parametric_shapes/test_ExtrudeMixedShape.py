@@ -103,7 +103,7 @@ class TestExtrudeMixedShape(unittest.TestCase):
                 (12, 12, "spline"),
                 (12, 3, "spline"),
             ],
-            cut=inner_shape,
+            boolean_operations={"cut": inner_shape},
             distance=30,
         )
 

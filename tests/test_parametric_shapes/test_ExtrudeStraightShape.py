@@ -53,7 +53,7 @@ class TestExtrudeStraightShape(unittest.TestCase):
 
         shape_with_cut = ExtrudeStraightShape(
             points=[(0, 0), (0, 40), (40, 40), (40, 0)], distance=40,
-            cut=self.test_shape
+            boolean_operations={"cut": self.test_shape}
         )
 
         assert shape_with_cut.volume == pytest.approx(
@@ -66,7 +66,7 @@ class TestExtrudeStraightShape(unittest.TestCase):
 
         unioned_shape = ExtrudeStraightShape(
             points=[(0, 10), (0, 30), (20, 30), (20, 10)], distance=30,
-            union=self.test_shape
+            boolean_operations={"union": self.test_shape}
         )
         assert unioned_shape.volume == pytest.approx(30 * 20 * 30)
 
@@ -76,7 +76,7 @@ class TestExtrudeStraightShape(unittest.TestCase):
 
         intersected_shape = ExtrudeStraightShape(
             points=[(0, 10), (0, 30), (20, 30), (20, 10)], distance=30,
-            intersect=self.test_shape
+            boolean_operations={"intersect": self.test_shape}
         )
         assert intersected_shape.volume == pytest.approx(10 * 20 * 30)
 
