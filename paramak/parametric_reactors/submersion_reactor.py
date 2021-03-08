@@ -444,7 +444,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="outboard_firstwall.stl",
             name="outboard_firstwall",
             material_tag="firstwall_mat",
-            union=self._inboard_firstwall,
+            boolean_operations={"union": self._inboard_firstwall}
         )
         return self._firstwall
 
@@ -469,7 +469,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="outboard_firstwall.stl",
             name="outboard_firstwall",
             material_tag="firstwall_mat",
-            union=fw_enveloppe_inboard,
+            boolean_operations={"union": fw_enveloppe_inboard}
         )
         divertor_height = self._blanket_rear_wall_end_height
 
@@ -488,7 +488,7 @@ class SubmersionTokamak(paramak.Reactor):
                 (self._divertor_end_radius, divertor_height_top),
                 (self._divertor_start_radius, divertor_height_top)
             ],
-            intersect=fw_enveloppe,
+            boolean_operations={"intersect": fw_enveloppe},
             rotation_angle=self.rotation_angle,
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
@@ -496,8 +496,9 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="divertor_mat"
         )
 
-        self._firstwall.cut = self._divertor
-        self._inboard_firstwall.cut = self._divertor
+        self._firstwall.boolean_operations = {"union": self._inboard_firstwall,
+                                              "cut": self._divertor}
+        self._inboard_firstwall.boolean_operations = {"cut": self._divertor}
         return self._divertor
 
     def _make_blanket(self):
@@ -506,7 +507,7 @@ class SubmersionTokamak(paramak.Reactor):
             inner_radius=self._inboard_blanket_start_radius,
             outer_radius=max(self._inboard_firstwall.points)[0],
             rotation_angle=self.rotation_angle,
-            cut=self._inboard_firstwall,
+            boolean_operations={"cut": self._inboard_firstwall}
         )
 
         # this takes a single solid from a compound of solids by finding the
@@ -529,7 +530,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="blanket.stl",
             name="blanket",
             material_tag="blanket_mat",
-            union=self._inboard_blanket,
+            boolean_operations={"union": self._inboard_blanket}
         )
         return self._blanket
 
@@ -542,7 +543,7 @@ class SubmersionTokamak(paramak.Reactor):
             + self.firstwall_radial_thickness,
             thickness=self.outboard_blanket_radial_thickness,
             rotation_angle=self.rotation_angle,
-            union=self._inboard_blanket,
+            boolean_operations={"union": self._inboard_blanket}
         )
         support_height = self._blanket_rear_wall_end_height
         support_height_top = support_height
@@ -565,9 +566,10 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="supports.stl",
             name="supports",
             material_tag="supports_mat",
-            intersect=blanket_enveloppe,
+            boolean_operations={"intersect": blanket_enveloppe}
         )
-        self._blanket.cut = self._supports
+        self._blanket.boolean_operations={"union": self._inboard_blanket,
+                                          "cut": self._supports}
 
         return self._supports
 
@@ -629,9 +631,10 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="outboard_rear_blanket_wall.stl",
             name="outboard_rear_blanket_wall",
             material_tag="blanket_rear_wall_mat",
-            union=[
-                self._outboard_rear_blanket_wall_upper,
-                self._outboard_rear_blanket_wall_lower],
+            boolean_operations={"union": [
+                self._outboard_rear_blanket_wall_upper, 
+                self._outboard_rear_blanket_wall_lower
+            ]},
         )
 
         return self._outboard_rear_blanket_wall

@@ -268,12 +268,12 @@ class CenterColumnStudyReactor(paramak.Reactor):
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            cut=[self._center_column_cutter]
+            boolean_operations={"cut": [self._center_column_cutter]}
         )
         return self._blanket
 
     def _make_divertor(self):
-        self._blanket_enveloppe = paramak.BlanketFP(
+        self._blanket_envelope = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=100.,
             offset_from_plasma=[
@@ -285,7 +285,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            cut=[self._center_column_cutter]
+            boolean_operations={"cut": [self._center_column_cutter]}
         )
 
         self._divertor = paramak.CenterColumnShieldCylinder(
@@ -298,7 +298,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             stl_filename="divertor.stl",
             name="divertor",
             material_tag="divertor_mat",
-            intersect=self._blanket_enveloppe,
+            boolean_operations={"intersect": self._blanket_envelope}
         )
-        self._blanket.cut.append(self._divertor)
+        self._blanket.boolean_operations["cut"].append(self._divertor)
         return self._divertor

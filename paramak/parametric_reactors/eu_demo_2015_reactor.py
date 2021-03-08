@@ -83,7 +83,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (375.4508992805756, 755, "straight"),
             ],
             distance=200,
-            cut=[vac_vessel_inner, vac_vessel],
+            boolean_operations={"cut": [vac_vessel_inner, vac_vessel]},
             # azimuth placement angle can't start at
             # zero nor end at 360 until #757 is solved
             azimuth_placement_angle=np.linspace(
@@ -220,7 +220,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             # avoid overlap between VV and blanket divertor
-            union=[blanket, divertor]
+            boolean_operations={"union": [blanket, divertor]}
         )
         vac_vessel = paramak.RotateSplineShape(
             points=[
@@ -276,7 +276,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (516.7486775621876, -175.64585325476332),
                 (516.7486775621876, -107.40944903301386),
             ],
-            cut=vac_vessel_inner,  # hollow shape
+            boolean_operations={"cut": vac_vessel_inner},
             rotation_angle=self.rotation_angle,
             stp_filename='vacvessel.stp',
             stl_filename='vacvessel.stl',

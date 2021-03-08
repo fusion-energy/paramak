@@ -294,7 +294,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             stp_filename='inner_vessel.stp',
-            cut=[vac_vessel, vs_coils, antenna]
+            boolean_operations={"cut": [vac_vessel, vs_coils, antenna]}
         )
 
         return [antenna, vac_vessel, inner_vessel]
