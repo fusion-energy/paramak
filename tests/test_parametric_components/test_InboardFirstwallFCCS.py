@@ -146,7 +146,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             thickness=20,
             rotation_angle=180,
             azimuth_placement_angle=180,
-            union=b)
+            boolean_operations={"union": b})
         assert np.isclose(c.volume, 2 * b.volume)
 
     def test_azimuth_placement_angle(self):
@@ -171,7 +171,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             thickness=20,
             rotation_angle=180,
             azimuth_placement_angle=90,
-            cut=b)
+            boolean_operations={"cut": b})
         assert np.isclose(c.volume, 0.5 * b.volume)
 
     def test_cut_attribute(self):

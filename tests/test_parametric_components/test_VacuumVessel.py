@@ -44,6 +44,6 @@ class TestVacuumVessel(unittest.TestCase):
 
         pre_cut_volume = self.test_shape.volume
 
-        self.test_shape.cut = [cutter1, cutter2, cutter3, cutter4, cutter5]
+        self.test_shape.boolean_operations = {"cut": [cutter1, cutter2, cutter3, cutter4, cutter5]}
         assert self.test_shape.solid is not None
         assert self.test_shape.volume < pre_cut_volume

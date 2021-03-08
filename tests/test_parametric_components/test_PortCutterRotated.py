@@ -37,14 +37,14 @@ class TestPortCutterRotated(unittest.TestCase):
             height=500,
             inner_radius=200,
             outer_radius=300,
-            cut=small_ports
+            boolean_operations={"cut": small_ports}
         )
 
         vessel_with_large_ports = paramak.CenterColumnShieldCylinder(
             height=500,
             inner_radius=200,
             outer_radius=300,
-            cut=large_ports
+            boolean_operations={"cut": large_ports}
         )
 
         assert large_ports.volume > small_ports.volume
