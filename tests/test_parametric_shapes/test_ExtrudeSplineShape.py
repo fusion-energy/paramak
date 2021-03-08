@@ -59,7 +59,7 @@ class TestExtrudeSplineShape(unittest.TestCase):
         )
 
         outer_shape_with_cut = ExtrudeSplineShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3)], 
+            points=[(3, 3), (3, 12), (12, 12), (12, 3)],
             boolean_operations={"cut": inner_shape},
             distance=30,
         )
