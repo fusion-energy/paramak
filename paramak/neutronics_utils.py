@@ -76,7 +76,7 @@ def trelis_command_to_create_dagmc_h5m(
             the GUI enabled (False).
         h5m_filename: the filename of the DAGMC h5m file produced. This is not
             water tight at this stage.
-        manifest: The filename of the json file containing a list of 
+        manifest: The filename of the json file containing a list of
             material_keys and geometry_keys.
         cubit_filename: The output filename of the file. If None then no cubit
             file will be exported.
@@ -91,7 +91,11 @@ def trelis_command_to_create_dagmc_h5m(
     Returns:
         The filename of the h5m file created
     """
-    output_filenames = [h5m_filename, trelis_filename, cubit_filename, geometry_details_filename]
+    output_filenames = [
+        h5m_filename,
+        trelis_filename,
+        cubit_filename,
+        geometry_details_filename]
     filenames_extensions = ['.h5m', '.trelis', '.cub', '.json']
 
     path_output_filenames = []
@@ -127,7 +131,8 @@ def trelis_command_to_create_dagmc_h5m(
         trelis_cmd = 'trelis'
 
     os.system(
-        trelis_cmd + " make_faceteted_neutronics_model.py \"faceting_tolerance='" +
+        trelis_cmd +
+        " make_faceteted_neutronics_model.py \"faceting_tolerance='" +
         str(faceting_tolerance) +
         "'\" \"merge_tolerance='" +
         str(merge_tolerance) +
@@ -151,7 +156,7 @@ def trelis_command_to_create_dagmc_h5m(
 
     if not Path(h5m_filename).is_file():
         raise FileNotFoundError(
-            "The h5m file "+h5m_filename+" was not found \
+            "The h5m file " + h5m_filename + " was not found \
             in the directory, the Trelis stage has failed")
 
     return path_output_filenames
