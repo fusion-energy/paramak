@@ -76,7 +76,8 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
             2 * self.firstwall_radial_thickness,
             azimuth_placement_angle=azimuth_placement_angles)
 
-        self._blanket.boolean_operations = {"cut": [self._center_column_cutter, thick_cutter]}
+        self._blanket.boolean_operations = {
+            "cut": [self._center_column_cutter, thick_cutter]}
 
         if self.blanket_fillet_radius != 0:
             # tried firstwall start radius here already

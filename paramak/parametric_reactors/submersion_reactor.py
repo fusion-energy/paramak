@@ -568,8 +568,8 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="supports_mat",
             boolean_operations={"intersect": blanket_enveloppe}
         )
-        self._blanket.boolean_operations={"union": self._inboard_blanket,
-                                          "cut": self._supports}
+        self._blanket.boolean_operations = {"union": self._inboard_blanket,
+                                            "cut": self._supports}
 
         return self._supports
 
@@ -632,7 +632,7 @@ class SubmersionTokamak(paramak.Reactor):
             name="outboard_rear_blanket_wall",
             material_tag="blanket_rear_wall_mat",
             boolean_operations={"union": [
-                self._outboard_rear_blanket_wall_upper, 
+                self._outboard_rear_blanket_wall_upper,
                 self._outboard_rear_blanket_wall_lower
             ]},
         )
