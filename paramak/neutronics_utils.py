@@ -56,7 +56,7 @@ def trelis_command_to_create_dagmc_h5m(
         geometry_key_name: Optional[str] = 'stp_filename',
         batch: Optional[bool] = True,
         h5m_filename: str = 'dagmc_not_watertight.h5m',
-        manifest: str = 'manifest.json',
+        manifest_filename: str = 'manifest.json',
         cubit_filename: str = 'dagmc.cub',
         trelis_filename: str = 'dagmc.trelis',
         geometry_details_filename: str = 'geometry_details.json',
@@ -76,7 +76,7 @@ def trelis_command_to_create_dagmc_h5m(
             the GUI enabled (False).
         h5m_filename: the filename of the DAGMC h5m file produced. This is not
             water tight at this stage.
-        manifest: The filename of the json file containing a list of 
+        manifest_filename: The filename of the json file containing a list of 
             material_keys and geometry_keys.
         cubit_filename: The output filename of the file. If None then no cubit
             file will be exported.
@@ -137,8 +137,8 @@ def trelis_command_to_create_dagmc_h5m(
         str(geometry_key_name) +
         "'\" \"h5m_filename='" +
         str(h5m_filename) +
-        "'\" \"manifest='" +
-        str(manifest) +
+        "'\" \"manifest_filename='" +
+        str(manifest_filename) +
         "'\" \"cubit_filename='" +
         str(cubit_filename) +
         "'\" \"trelis_filename='" +

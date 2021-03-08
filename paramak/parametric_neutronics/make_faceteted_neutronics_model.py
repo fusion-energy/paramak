@@ -225,8 +225,8 @@ aprepro_vars = cubit.get_aprepro_vars()
 print("Found the following aprepro variables:")
 print(aprepro_vars)
 for var_name in aprepro_vars:
-  val = cubit.get_aprepro_value_as_string(var_name)
-  print("{0} = {1}".format(var_name, val))
+    val = cubit.get_aprepro_value_as_string(var_name)
+    print("{0} = {1}".format(var_name, val))
 
 if "faceting_tolerance" in aprepro_vars:
     faceting_tolerance = str(cubit.get_aprepro_value_as_string("faceting_tolerance"))
@@ -253,8 +253,8 @@ if "h5m_filename" in aprepro_vars:
 else:
     h5m_filename = "dagmc_not_watertight.h5m"
 
-if "manifest" in aprepro_vars:
-    manifest_filename = str(cubit.get_aprepro_value_as_string("manifest"))
+if "manifest_filename" in aprepro_vars:
+    manifest_filename = str(cubit.get_aprepro_value_as_string("manifest_filename"))
 else:
     manifest_filename = "manifest.json"
 
@@ -285,4 +285,4 @@ imprint_and_merge_geometry()
 
 find_reflecting_surfaces_of_reflecting_wedge(geometry_details)
 
-save_output_files(h5m_filename, trelis_filename, cubit_filename, geometry_details)
+save_output_files(h5m_filename, trelis_filename, cubit_filename, geometry_details_filename)
