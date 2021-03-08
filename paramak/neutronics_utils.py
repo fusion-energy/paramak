@@ -60,7 +60,7 @@ def trelis_command_to_create_dagmc_h5m(
         cubit_filename: str = 'dagmc.cub',
         trelis_filename: str = 'dagmc.trelis',
         geometry_details_filename: str = 'geometry_details.json',
-) -> str:
+) -> List[str]:
     """Runs the Trelis executable command with the
     make_faceteted_neutronics_model.py script which produces a non water tight
     DAGMC h5m file.

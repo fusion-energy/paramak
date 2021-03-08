@@ -620,10 +620,12 @@ class Reactor:
                 "shapes_and_components must be a list of paramak.Shape or a filename")
 
         not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
-            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
+            faceting_tolerance=faceting_tolerance,
+            merge_tolerance=merge_tolerance
+        )
 
         water_tight_h5m = paramak.neutronics_utils.make_watertight(
-            input_filename=not_watertight_file,
+            input_filename=not_watertight_file[0],
             output_filename=filename
         )
 
