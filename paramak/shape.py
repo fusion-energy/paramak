@@ -1135,7 +1135,7 @@ class Shape:
         if 'wedge_cut' in kwargs:
             if kwargs['wedge_cut'] is not None:
                 solid = cut_solid(solid, kwargs['wedge_cut'])
-        
+
         return solid
 
     def make_graveyard(
