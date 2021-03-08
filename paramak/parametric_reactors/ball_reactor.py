@@ -407,6 +407,7 @@ class BallReactor(paramak.Reactor):
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
             boolean_operations={"cut": [self_center_column_cutter]}
+        )
 
         self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
