@@ -70,9 +70,10 @@ class TestExtrudeCircleShape(unittest.TestCase):
             points=[(30, 0)], radius=5, distance=50)
 
         intersected_shape = ExtrudeCircleShape(
-            points=[(30, 0)], radius=10, distance=50,
-            boolean_operations={"intersect": [self.test_shape, intersect_shape]}
-        )
+            points=[
+                (30, 0)], radius=10, distance=50, boolean_operations={
+                "intersect": [
+                    self.test_shape, intersect_shape]})
 
         assert intersected_shape.volume == pytest.approx(math.pi * 5**2 * 30)
 
