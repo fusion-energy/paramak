@@ -205,17 +205,20 @@ def imprint_and_merge_geometry():
     cubit.cmd("graphics tol angle 3")
 
 
-def save_output_files():
+def save_output_files(h5m_filename, trelis_filename, cubit_filename, geometry_details_filename):
     """This saves the output files"""
     cubit.cmd("set attribute on")
     # use a faceting_tolerance 1.0e-4 or smaller for accurate simulations
     print('using faceting_tolerance of ', faceting_tolerance)
-    cubit.cmd('export dagmc "dagmc_not_watertight.h5m" faceting_tolerance '+ faceting_tolerance)
-    # os.system('mbconvert -1 dagmc_not_watertight.h5m dagmc_not_watertight_edges.h5m')
-    cubit.cmd('save as "dagmc.cub" overwrite')
-    cubit.cmd('save as "dagmc.trelis" overwrite')
-    with open("geometry_details.json", "w") as outfile:
-        json.dump(geometry_details, outfile, indent=4)
+    cubit.cmd('export dagmc "'+h5m_filename+'" faceting_tolerance '+ faceting_tolerance)
+    # os.system('mbconvert -1 '+h5m_filename+' dagmc_not_watertight_edges.h5m')
+    if cubit_filename is not None:
+        cubit.cmd('save as "'+cubit_filename+'" overwrite')
+    if trelis_filename is not None:
+        cubit.cmd('save as "'+trelis_filename+'" overwrite')
+    if geometry_details_filename is not None:
+        with open(geometry_details_filename, "w") as outfile:
+            json.dump(geometry_details, outfile, indent=4)
 
 aprepro_vars = cubit.get_aprepro_vars()
 
@@ -245,14 +248,33 @@ if "geometry_key_name" in aprepro_vars:
 else:
     geometry_key_name = "stp_filename"
 
+if "h5m_filename" in aprepro_vars:
+    h5m_filename = str(cubit.get_aprepro_value_as_string("h5m_filename"))
+else:
+    h5m_filename = "dagmc_not_watertight.h5m"
+
 if "manifest" in aprepro_vars:
     manifest_filename = str(cubit.get_aprepro_value_as_string("manifest"))
 else:
     manifest_filename = "manifest.json"
 
+if "trelis_filename" in aprepro_vars:
+    trelis_filename = str(cubit.get_aprepro_value_as_string("trelis_filename"))
+else:
+    trelis_filename = None
+
+if "cubit_filename" in aprepro_vars:
+    cubit_filename = str(cubit.get_aprepro_value_as_string("cubit_filename"))
+else:
+    cubit_filename = None
+
+if "geometry_details_filename" in aprepro_vars:
+    geometry_details_filename = str(cubit.get_aprepro_value_as_string("geometry_details_filename"))
+else:
+    geometry_details_filename = None
+
 with open(manifest_filename) as f:
     geometry_details = byteify(json.load(f))
-
 
 geometry_details = find_number_of_volumes_in_each_step_file( \
     geometry_details, os.path.abspath("."))
@@ -263,4 +285,4 @@ imprint_and_merge_geometry()
 
 find_reflecting_surfaces_of_reflecting_wedge(geometry_details)
 
-save_output_files()
+save_output_files(h5m_filename, trelis_filename, cubit_filename, geometry_details)
