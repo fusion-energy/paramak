@@ -553,7 +553,7 @@ class TestShape(unittest.TestCase):
             simulation_particles_per_batch=10,
         )
 
-        # starts the neutronics simulation using trelis
+        # starts the neutronics simulation
         neutronics_model.simulate(verbose=False)
 
     def test_reactor_from_shapes_2d_mesh_tallies(self):
@@ -586,7 +586,7 @@ class TestShape(unittest.TestCase):
             simulation_particles_per_batch=10,
         )
 
-        # starts the neutronics simulation using trelis
+        # starts the neutronics simulation
         neutronics_model.simulate(verbose=False)
 
         assert Path("n-Xt_on_2D_mesh_xz.png").exists() is True

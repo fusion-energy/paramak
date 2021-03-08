@@ -62,10 +62,9 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        apt-get clean
 
 # Installing CadQuery
-# jupyter is installed before cadquery to avoid a conflict
 RUN echo installing CadQuery version $cq_version && \
-    conda install jupyter -y --quiet && \
-    conda install -c cadquery -c conda-forge cadquery="$cq_version" && \
+    conda install -c cadquery -c conda-forge python=3.8 cadquery="$cq_version" && \
+    pip install jupyter-cadquery==2.0.0 && \
     conda clean -afy
 
 # Install neutronics dependencies from Debian package manager
