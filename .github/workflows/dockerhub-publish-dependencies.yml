@@ -35,7 +35,7 @@ jobs:
           tags: ukaea/paramak:dependencies
           target: dependencies
           build-args: |
-            cq_version=master
+            cq_version=2.1
             compile_cores=2
             include_neutronics=true
       -
