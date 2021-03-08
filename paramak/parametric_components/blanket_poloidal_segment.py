@@ -129,7 +129,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
             cutting_shape = RotateStraightShape(
                 rotation_angle=self.rotation_angle,
                 azimuth_placement_angle=self.azimuth_placement_angle,
-                boolean_operations={"union"=[]})
+                boolean_operations={"union": []})
             # add points to the shape to avoid void solid
             cutting_shape.points = [
                 (self.major_radius,
