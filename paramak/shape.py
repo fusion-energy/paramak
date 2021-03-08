@@ -60,15 +60,9 @@ class Shape:
             description output. Defaults to None.
         physical_groups (dict, optional): contains information on physical
             groups (volumes and surfaces). Defaults to None.
-        cut (paramak.shape or list, optional): If set, the current solid will
-            be cut with the provided solid or iterable in cut. Defaults to
-            None.
-        intersect (paramak.shape or list, optional): If set, the current solid
-            will be interested with the provided solid or iterable of solids.
-            Defaults to None.
-        union (paramak.shape or list, optional): If set, the current solid
-            will be united with the provided solid or iterable of solids.
-            Defaults to None.
+        boolean_operations (dict, optional): dictionary of boolean operations
+            (cut, union, intersect) and the associated shapes with which the
+            operations will be performed with. Defaults to None.
     """
 
     def __init__(
@@ -87,9 +81,7 @@ class Shape:
         surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
         # TODO defining Shape types as paramak.Shape results in circular import
-        cut=None,
-        intersect=None,
-        union=None,
+        boolean_operations: Optional[dict] = None
     ):
 
         self.connection_type = connection_type
@@ -99,9 +91,7 @@ class Shape:
         self.color = color
         self.name = name
 
-        self.cut = cut
-        self.intersect = intersect
-        self.union = union
+        self.boolean_operations = boolean_operations
 
         self.azimuth_placement_angle = azimuth_placement_angle
         self.workplane = workplane
@@ -1129,28 +1119,23 @@ class Shape:
         return neutronics_description
 
     def perform_boolean_operations(self, solid: cq.Workplane, **kwargs):
-        """Performs boolean cut, intersect and union operations if shapes are
-        provided"""
 
-        # If a cut solid is provided then perform a boolean cut
-        if self.cut is not None:
-            solid = cut_solid(solid, self.cut)
+        if self.boolean_operations is not None:
+            for operation, shapes in self.boolean_operations.items():
+                if shapes is not None:
+                    if operation == 'cut':
+                        solid = cut_solid(solid, shapes)
 
-        # If a wedge cut is provided then perform a boolean cut
-        # Performed independantly to avoid use of self.cut
-        # Prevents repetition of 'outdated' wedge cuts
+                    if operation == 'union':
+                        solid = union_solid(solid, shapes)
+
+                    if operation == 'intersect':
+                        solid = intersect_solid(solid, shapes)
+
         if 'wedge_cut' in kwargs:
             if kwargs['wedge_cut'] is not None:
                 solid = cut_solid(solid, kwargs['wedge_cut'])
-
-        # If an intersect is provided then perform a boolean intersect
-        if self.intersect is not None:
-            solid = intersect_solid(solid, self.intersect)
-
-        # If an intersect is provided then perform a boolean intersect
-        if self.union is not None:
-            solid = union_solid(solid, self.union)
-
+        
         return solid
 
     def make_graveyard(
