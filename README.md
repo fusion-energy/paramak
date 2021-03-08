@@ -71,19 +71,27 @@ attribution by citing our [Publication](https://f1000research.com/articles/10-27
 
 ## System Installation
 
-To install the Paramak you need to have 
-[Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), 
-[Cadquery 2](https://cadquery.readthedocs.io/en/latest/installation.html) and 
-[Pip](https://anaconda.org/anaconda/pip). If you have these three dependencies 
-already then you can install the Paramak using Pip:
+To install the Paramak you need to have Conda or MiniConda installed,
+[Conda instructions here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/),
+ [Miniconda instructions here.](https://docs.conda.io/en/latest/miniconda.html)
 
+Once you have Conda or MiniConda installed you can use this command to create a
+new conda enviroment, install CadQuery and activate the enviroment.
+
+```bash
+conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2.1
+conda activate paramak_env
 ```
+
+Then install the paramak with this pip command (pip is included in Conda).
+
+```bash
 pip install paramak
 ```
 
-Detailed installation 
-[instructions](https://paramak.readthedocs.io/en/main/#prerequisites)
-can be found in the User's Guide.
+Detailed installation including installing the optional **neutronics** tools
+and **Jupyter lab** additions that **render** the notebooks can be found in the
+[documentation](https://paramak.readthedocs.io/en/main/#prerequisites).
 
 
 ## Docker Image Installation
