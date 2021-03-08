@@ -409,7 +409,7 @@ class BallReactor(paramak.Reactor):
             boolean_operations={"cut": [self_center_column_cutter]}
         )
 
-        self._blanket_rear_wall=paramak.BlanketFP(
+        self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_rear_wall_radial_thickness,
             offset_from_plasma=[e + self.firstwall_radial_thickness
@@ -428,7 +428,7 @@ class BallReactor(paramak.Reactor):
 
     def _make_divertor(self):
         # # used as an intersect when making the divertor
-        self._blanket_fw_rear_wall_envelope=paramak.BlanketFP(
+        self._blanket_fw_rear_wall_envelope = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.firstwall_radial_thickness +
             self.blanket_radial_thickness +
@@ -439,16 +439,16 @@ class BallReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        divertor_height=self._blanket_rear_wall_end_height * 2
+        divertor_height = self._blanket_rear_wall_end_height * 2
 
-        divertor_height_top=divertor_height
-        divertor_height_bottom=-divertor_height
+        divertor_height_top = divertor_height
+        divertor_height_bottom = -divertor_height
 
         if self.divertor_position == "lower":
-            divertor_height_top=0
+            divertor_height_top = 0
         elif self.divertor_position == "upper":
-            divertor_height_bottom=0
-        self._divertor=paramak.RotateStraightShape(
+            divertor_height_bottom = 0
+        self._divertor = paramak.RotateStraightShape(
             points=[
                 (self._divertor_start_radius, divertor_height_bottom),
                 (self._divertor_end_radius, divertor_height_bottom),
@@ -472,12 +472,12 @@ class BallReactor(paramak.Reactor):
         return self._divertor
 
     def _make_pf_coils(self):
-        list_of_components=[]
+        list_of_components = []
         if (self.pf_coil_vertical_thicknesses,
                 self.pf_coil_radial_thicknesses,
                 self.pf_coil_to_rear_blanket_radial_gap) != (None, None, None):
 
-            self._pf_coil=paramak.PoloidalFieldCoilSet(
+            self._pf_coil = paramak.PoloidalFieldCoilSet(
                 heights=self.pf_coil_vertical_thicknesses,
                 widths=self.pf_coil_radial_thicknesses,
                 center_points=self._pf_coils_xy_values,
@@ -488,7 +488,7 @@ class BallReactor(paramak.Reactor):
                 material_tag="pf_coil_mat",
             )
 
-            self._pf_coils_casing=paramak.PoloidalFieldCoilCaseSetFC(
+            self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
                 pf_coils=self._pf_coil,
                 casing_thicknesses=self.pf_coil_case_thickness,
                 rotation_angle=self.rotation_angle,
@@ -498,15 +498,15 @@ class BallReactor(paramak.Reactor):
                 material_tag="pf_coil_case_mat",
             )
 
-            list_of_components=[self._pf_coils_casing, self._pf_coil]
+            list_of_components = [self._pf_coils_casing, self._pf_coil]
         return list_of_components
 
     def _make_tf_coils(self):
-        comp=[]
+        comp = []
         if (self.pf_coil_to_tf_coil_radial_gap,
                 self.outboard_tf_coil_radial_thickness) != (None, None):
 
-            self._tf_coil=paramak.ToroidalFieldCoilRectangle(
+            self._tf_coil = paramak.ToroidalFieldCoilRectangle(
                 with_inner_leg=False,
                 horizontal_start_point=(
                     self._inboard_tf_coils_start_radius,
@@ -522,5 +522,5 @@ class BallReactor(paramak.Reactor):
                 stl_filename="tf_coil.stl",
                 rotation_angle=self.rotation_angle
             )
-            comp=[self._tf_coil]
+            comp = [self._tf_coil]
         return comp
