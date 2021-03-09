@@ -127,6 +127,19 @@ studies can be performed quickly.
    :members:
    :show-inheritance:
 
+EuDemoFrom2015PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/110224418-4f62b400-7ed3-11eb-85f1-e40dc74f5671.png
+   :width: 400
+   :align: center
+
+The above image is colored by component.
+
+.. automodule:: paramak.parametric_reactors.eu_demo_2015_reactor
+   :members:
+   :show-inheritance:
+
 SparcFrom2020PaperDiagram()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
