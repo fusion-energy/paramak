@@ -49,11 +49,11 @@ def _notebook_run(path):
 
 class TestExampleShapes(unittest.TestCase):
 
-    #    def cadquery_jupyter_test_task_1(self):
- #       for notebook in Path().rglob("examples/example_parametric_shapes/*.ipynb"):
-    #            print(notebook)
-    #            nb, errors = _notebook_run(notebook)
-  #          assert errors == []
+    def test_jupyter_notebooks_example_parametric_shapes(self):
+        for notebook in Path().rglob("examples/example_parametric_shapes/*.ipynb"):
+            print(notebook)
+            nb, errors = _notebook_run(notebook)
+            assert errors == []
 
     def test_make_blanket_from_points(self):
         """Runs the example and checks the output files are produced"""
