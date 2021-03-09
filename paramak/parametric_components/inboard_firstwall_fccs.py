@@ -152,10 +152,22 @@ class InboardFirstwallFCCS(RotateMixedShape):
         points = firstwall.points[:-1]  # remove last point
         self.points = points
 
-        # add to cut attribute
-        if self.cut is None:
-            self.cut = self.central_column_shield
-        elif isinstance(self.cut, Iterable):
-            self.cut = [*self.cut, self.central_column_shield]
+        if self.boolean_operations is None:
+            self.boolean_operations = {"cut": self.central_column_shield}
         else:
-            self.cut = [*[self.cut], self.central_column_shield]
+            if "cut" not in self.boolean_operations:
+                self.boolean_operations["cut"] = self.central_column_shield
+            else:
+                if isinstance(self.boolean_operations["cut"], Iterable):
+                    self.boolean_operations["cut"] = [*self.boolean_operations["cut"], self.central_column_shield]
+                else:
+                    self.boolean_operations["cut"] [*[self.boolean_operations["cut"]], self.central_column_shield]
+            
+
+        # add to cut attribute
+        # if self.cut is None:
+        #     self.cut = self.central_column_shield
+        # elif isinstance(self.cut, Iterable):
+        #     self.cut = [*self.cut, self.central_column_shield]
+        # else:
+        #     self.cut = [*[self.cut], self.central_column_shield]
