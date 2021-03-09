@@ -73,6 +73,9 @@ import os
 #         "surface_reflectivity": true
 #     }
 
+# The tag name to use as the reflective boundary identifier can also be
+# specified using the surface_reflectivity_name argument.
+# Shift uses "spec.reflect" and MCNP code uses "boundary:Reflecting"
 
 def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
     body_ids = ""
@@ -272,6 +275,12 @@ if "geometry_details_filename" in aprepro_vars:
     geometry_details_filename = str(cubit.get_aprepro_value_as_string("geometry_details_filename"))
 else:
     geometry_details_filename = None
+
+if "surface_reflectivity_name" in aprepro_vars:
+    surface_reflectivity_name = str(cubit.get_aprepro_value_as_string("surface_reflectivity_name"))
+else:
+    surface_reflectivity_name = 'reflective'
+
 
 with open(manifest_filename) as f:
     geometry_details = byteify(json.load(f))

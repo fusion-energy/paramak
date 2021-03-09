@@ -60,6 +60,7 @@ def trelis_command_to_create_dagmc_h5m(
         cubit_filename: str = 'dagmc.cub',
         trelis_filename: str = 'dagmc.trelis',
         geometry_details_filename: str = 'geometry_details.json',
+        surface_reflectivity_name: str = 'reflective',
 ) -> List[str]:
     """Runs the Trelis executable command with the
     make_faceteted_neutronics_model.py script which produces a non water tight
@@ -87,6 +88,9 @@ def trelis_command_to_create_dagmc_h5m(
             resulting volume numbers of the input CAD files, which can be
             useful for specifying tallies. If None then no JSON fie will be
             exported.
+        surface_reflectivity_name: The tag to assign to the reflective boundary
+            in the resulting DAGMC geometry Shift requires "spec.reflect" and
+            MCNP requires "boundary:Reflecting".
 
     Returns:
         The filename of the h5m file created
@@ -150,6 +154,8 @@ def trelis_command_to_create_dagmc_h5m(
         str(trelis_filename) +
         "'\" \"geometry_details_filename='" +
         str(geometry_details_filename) +
+        "'\" \"surface_reflectivity_name='" +
+        str(surface_reflectivity_name) +
         "'\"")
 
     os.system('rm make_faceteted_neutronics_model.py')
