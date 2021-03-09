@@ -77,7 +77,7 @@ def trelis_command_to_create_dagmc_h5m(
             the GUI enabled (False).
         h5m_filename: the filename of the DAGMC h5m file produced. This is not
             water tight at this stage.
-        manifest_filename: The filename of the json file containing a list of 
+        manifest_filename: The filename of the json file containing a list of
             material_keys and geometry_keys.
         cubit_filename: The output filename of the file. If None then no cubit
             file will be exported.
