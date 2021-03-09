@@ -2,7 +2,7 @@
 # Read the Docs configuration file
 
 # Required
-version: 1
+version: 2
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
@@ -20,4 +20,4 @@ sphinx:
 
 # specify conda environment needed for build
 conda:
-  file: environment.yml
+  environment: environment.yml

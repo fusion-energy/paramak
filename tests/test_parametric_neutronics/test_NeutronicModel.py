@@ -663,7 +663,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         )
 
         # starts the neutronics simulation using trelis
-        neutronics_model.simulate(verbose=False, method='pymoab')
+        neutronics_model.simulate(verbose=True, method='pymoab')
 
     def test_reactor_from_shapes_2d_mesh_tallies(self):
         """Makes a reactor from two shapes, then mades a neutronics model
@@ -696,7 +696,7 @@ class TestNeutronicsBallReactor(unittest.TestCase):
         )
 
         # starts the neutronics simulation using trelis
-        neutronics_model.simulate(verbose=False, method='pymoab')
+        neutronics_model.simulate(verbose=True, method='pymoab')
 
         assert Path("n-Xt_on_2D_mesh_xz.png").exists() is True
         assert Path("n-Xt_on_2D_mesh_xy.png").exists() is True
