@@ -16,6 +16,12 @@ jobs:
     using: 'docker'
     image: 'Dockerfile'
 
+    steps:
+    - uses: actions/checkout@v1
+    - name: test
+      run:  |
+        echo "hello"
+
 # runs:
   # using: 'docker'
   # image: 'Dockerfile'
