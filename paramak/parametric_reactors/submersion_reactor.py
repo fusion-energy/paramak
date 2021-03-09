@@ -496,8 +496,7 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="divertor_mat"
         )
 
-        self._firstwall.boolean_operations = {"union": self._inboard_firstwall,
-                                              "cut": self._divertor}
+        self._firstwall.boolean_operations["cut"] = self._divertor
         self._inboard_firstwall.boolean_operations = {"cut": self._divertor}
         return self._divertor
 
@@ -568,8 +567,7 @@ class SubmersionTokamak(paramak.Reactor):
             material_tag="supports_mat",
             boolean_operations={"intersect": blanket_enveloppe}
         )
-        self._blanket.boolean_operations = {"union": self._inboard_blanket,
-                                            "cut": self._supports}
+        self._blanket.boolean_operations["cut"] = self._supports
 
         return self._supports
 
