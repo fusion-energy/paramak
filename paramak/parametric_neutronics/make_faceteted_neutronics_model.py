@@ -74,8 +74,8 @@ import os
 #     }
 
 # The tag name to use as the reflective boundary identifier can also be
-# specified using the surface_reflectivity_name argument.
-# Shift uses "spec.reflect" and MCNP code uses "boundary:Reflecting"
+# specified using the surface_reflectivity_name argument. Defaults to
+# "reflective" Shift uses "spec.reflect" and MCNP code uses "boundary:Reflecting"
 
 def find_number_of_volumes_in_each_step_file(input_locations, basefolder):
     body_ids = ""
