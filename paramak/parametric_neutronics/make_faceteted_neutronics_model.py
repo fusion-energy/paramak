@@ -162,7 +162,7 @@ def byteify(input):
         return input
 
 
-def find_reflecting_surfaces_of_reflecting_wedge(geometry_details):
+def find_reflecting_surfaces_of_reflecting_wedge(geometry_details, surface_reflectivity_name):
     print('running find_reflecting_surfaces_of_reflecting_wedge')
     wedge_volume = None
     for entry in geometry_details:
@@ -183,7 +183,7 @@ def find_reflecting_surfaces_of_reflecting_wedge(geometry_details):
             for surface_id in surfaces_in_wedge_volume:
                 if surface_id not in surface_info_dict.keys():
                     surface_info_dict[surface_id] = {'reflector': True}
-                    cubit.cmd('group "boundary:Reflecting" add surf ' + str(surface_id))
+                    cubit.cmd('group "' + surface_reflectivity_name + '" add surf ' + str(surface_id))
                     cubit.cmd('surface ' + str(surface_id)+' visibility on')
             entry['surface_reflectivity'] = surface_info_dict
             return geometry_details, wedge_volume
@@ -292,6 +292,6 @@ tag_geometry_with_mats(geometry_details)
 
 imprint_and_merge_geometry()
 
-find_reflecting_surfaces_of_reflecting_wedge(geometry_details)
+find_reflecting_surfaces_of_reflecting_wedge(geometry_details, surface_reflectivity_name)
 
 save_output_files(h5m_filename, trelis_filename, cubit_filename, geometry_details_filename)
