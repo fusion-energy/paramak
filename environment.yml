@@ -11,11 +11,12 @@ dependencies:
   - numpy
   - matplotlib
   - Pillow
-  - cadquery=2
+  - cadquery=2.1
   - openmc
   - pip:
     - neutronics-material-maker
     - sympy
     - plasmaboundaries
     - sphinx-autodoc-typehints
+    - defusedxml
     
