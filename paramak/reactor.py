@@ -43,6 +43,11 @@ class Reactor:
         merge_tolerance: the tolerance to use when merging surfaces.
         method: The method to use when making the h5m geometry. Options are
             "trelis" or "pymoab".
+        graveyard_size: The dimention of cube shaped the graveyard region used
+            by DAGMC. This attribtute is used preferentially over
+            graveyard_offset.
+        graveyard_offset: The distance between the graveyard and the largest
+            shape. If graveyard_size is set the this is ignored.
         largest_shapes: Identifying the shape(s) with the largest size in each
             dimention (x,y,z) can speed up the production of the graveyard.
             Defaults to None which finds the largest shapes by looping through
@@ -54,12 +59,12 @@ class Reactor:
     def __init__(
             self,
             shapes_and_components: Union[List[paramak.Shape], str],
-            graveyard_offset: Optional[float] = None,
-            graveyard_size: Optional[float] = 40_000,
-            largest_shapes: Optional[List[paramak.Shape]] = None,
             method: str = 'pymoab',
             faceting_tolerance: Optional[float] = 1e-2,
             merge_tolerance: Optional[float] = 1e-4,
+            graveyard_size: Optional[float] = 20_000,
+            graveyard_offset: Optional[float] = None,
+            largest_shapes: Optional[List[paramak.Shape]] = None,
     ):
 
         self.shapes_and_components = shapes_and_components

@@ -74,6 +74,11 @@ class Shape:
             Defaults to None.
         method: The method to use when making the h5m geometry. Options are
             "trelis" or "pymoab".
+        graveyard_size: The dimention of cube shaped the graveyard region used
+            by DAGMC. This attribtute is used preferentially over
+            graveyard_offset.
+        graveyard_offset: The distance between the graveyard and the largest
+            shape. If graveyard_size is set the this is ignored.
     """
 
     def __init__(
@@ -98,6 +103,8 @@ class Shape:
         cut=None,
         intersect=None,
         union=None,
+        graveyard_size: Optional[float] = 20_000,
+        graveyard_offset: Optional[float] = None,
     ):
 
         self.connection_type = connection_type
@@ -122,6 +129,8 @@ class Shape:
         self.surface_reflectivity = surface_reflectivity
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
+        self.graveyard_offset = graveyard_offset
+        self.graveyard_size = graveyard_size
 
         self.physical_groups = physical_groups
 
@@ -138,6 +147,34 @@ class Shape:
         self.z_max = None
         self.graveyard_offset = None  # set by the make_graveyard method
         self.patch = None
+
+    @property
+    def graveyard_size(self):
+        return self._graveyard_size
+
+    @graveyard_size.setter
+    def graveyard_size(self, value):
+        if value is None:
+            self._graveyard_size = None
+        elif not isinstance(value, (float, int)):
+            raise TypeError("graveyard_size must be a number")
+        elif value < 0:
+            raise ValueError("graveyard_size must be positive")
+        self._graveyard_size = value
+
+    @property
+    def graveyard_offset(self):
+        return self._graveyard_offset
+
+    @graveyard_offset.setter
+    def graveyard_offset(self, value):
+        if value is None:
+            self._graveyard_offset = None
+        elif not isinstance(value, (float, int)):
+            raise TypeError("graveyard_offset must be a number")
+        elif value < 0:
+            raise ValueError("graveyard_offset must be positive")
+        self._graveyard_offset = value
 
     @property
     def method(self):
@@ -1232,28 +1269,51 @@ class Shape:
 
     def make_graveyard(
             self,
-            graveyard_offset: Optional[int] = 100) -> cq.Workplane:
+            graveyard_size: Optional[float] = None,
+            graveyard_offset: Optional[float] = None,
+    ):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
-        simulations.
+        simulations. The graveyard size can be ascertained in two ways. Either
+        the size can be set directly using the graveyard_size which is the
+        quickest method. Alternativley the graveyard can be automatically sized
+        to the geometry by setting a graveyard_offset value. If both options
+        are set then the method will default to using the graveyard_size
+        preferentially.
 
         Args:
-            graveyard_offset (float): the offset between the largest edge of
-                the geometry and inner bounding shell created. Defaults to
-                100
+            graveyard_size: directly sets the size of the graveyard. Defaults
+                to None which then uses the Reactor.graveyard_size attribute.
+            graveyard_offset: the offset between the largest edge of the
+                geometry and inner bounding shell created. Defaults to None
+                which then uses Reactor.graveyard_offset attribute.
 
         Returns:
-            CadQuery solid: a shell volume that bounds the geometry, referred
-            to as a graveyard in DAGMC
+            paramak.HollowCube: a shell volume that bounds the geometry,
+                referred to as a graveyard in DAGMC.
         """
 
-        self.graveyard_offset = graveyard_offset
+        if graveyard_size is not None:
+            graveyard_size_to_use = graveyard_size
 
-        if self.solid is None:
-            self.create_solid()
+        elif self.graveyard_size is not None:
+            graveyard_size_to_use = self.graveyard_size
+
+        elif graveyard_offset is not None:
+            self.solid
+            graveyard_size_to_use = self.largest_dimension * 2 + graveyard_offset * 2
+
+        elif self.graveyard_offset is not None:
+            self.solid
+            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
+
+        else:
+            raise ValueError("the graveyard_size, Reactor.graveyard_size, \
+                graveyard_offset and Reactor.graveyard_offset are all None. \
+                Please specify at least one of these attributes or agruments")
 
         graveyard_shape = paramak.HollowCube(
-            length=self.largest_dimension * 2 + graveyard_offset * 2,
+            length=graveyard_size_to_use,
             name="graveyard",
             material_tag="graveyard",
             stp_filename="graveyard.stp",
@@ -1365,9 +1425,8 @@ class Shape:
     def export_h5m_with_pymoab(
             self,
             filename: Optional[str] = 'dagmc.h5m',
-            skip_graveyard: Optional[bool] = False,
+            include_graveyard: Optional[bool] = False,
             faceting_tolerance: Optional[float] = 0.001,
-            graveyard_offset: Optional[float] = 100,
     ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
@@ -1376,17 +1435,15 @@ class Shape:
         be added
 
         Args:
-            filename: filename of h5m outputfile
-                Defaults to "dagmc.h5m".
-            skip_graveyard: filename of h5m outputfile
-                Defaults to False.
-            faceting_tolerance: the precision of the faceting
-                Defaults to 0.001.
-            graveyard_offset: the offset between the largest
-                edge of the geometry and inner bounding shell created. Defualts
-                to 100.
+            filename: filename of h5m outputfile.
+            include_graveyard: specifiy if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
+            faceting_tolerance: the precision of the faceting.
+
         Returns:
-            filename: output h5m filename
+            The filename of the DAGMC file created
         """
 
         path_filename = Path(filename)
@@ -1409,8 +1466,8 @@ class Shape:
             stl_filename=self.stl_filename
         )
 
-        if skip_graveyard is False:
-            self.make_graveyard(graveyard_offset=graveyard_offset)
+        if include_graveyard:
+            self.make_graveyard()
             self.graveyard.export_stl(self.graveyard.stl_filename)
             volume_id = 2
             surface_id = 2
