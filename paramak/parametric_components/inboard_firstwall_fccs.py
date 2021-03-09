@@ -159,10 +159,10 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 self.boolean_operations["cut"] = self.central_column_shield
             else:
                 if isinstance(self.boolean_operations["cut"], Iterable):
-                    self.boolean_operations["cut"] = [*self.boolean_operations["cut"], self.central_column_shield]
+                    self.boolean_operations["cut"] = [
+                        *self.boolean_operations["cut"], self.central_column_shield]
                 else:
-                    self.boolean_operations["cut"] [*[self.boolean_operations["cut"]], self.central_column_shield]
-            
+                    self.boolean_operations["cut"][*[self.boolean_operations["cut"]], self.central_column_shield]
 
         # add to cut attribute
         # if self.cut is None:
