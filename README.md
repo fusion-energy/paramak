@@ -114,7 +114,7 @@ terminal window, or Windows users might prefer PowerShell.
 your os and docker, and then run the docker container by typing the following
 commands in a terminal window.
 
-    ```sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser" --allow-root```
+    ```sudo docker run -p 8888:8888 ukaea/paramak```
 
 4. A URL should be displayed in the terminal and can now be opened in the
 internet browser of your choice. This will load up the examples folder where
@@ -157,7 +157,6 @@ common reactor components.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/8583900/99137324-fddfa200-2621-11eb-9063-f5f7f60ddd8d.png" width="713">
-
 </p>
 
 <p align="center">

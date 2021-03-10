@@ -165,7 +165,7 @@ commands in a terminal window.
 
 .. code-block:: bash
 
-   sudo docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser --allow-root"
+   sudo docker run -p 8888:8888 ukaea/paramak
 
 4. A URL should be displayed in the terminal and can now be opened in the
 internet browser of your choice. This will load up the examples folder where
