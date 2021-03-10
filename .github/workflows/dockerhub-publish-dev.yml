@@ -2,11 +2,11 @@
 # This Action will build and upload a Docker image to Dockerhub
 # https://github.com/marketplace/actions/publish-docker
 
-name: dockerhub-publish-stable
+name: dockerhub-publish-dev
 
 on:
   push:
-    branches: main
+    branches: develop
 
 jobs:
   main:
@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ukaea/paramak:stable
+          tags: ukaea/paramak:dev
           build-args: |
             cq_version=2.1
             compile_cores=2
