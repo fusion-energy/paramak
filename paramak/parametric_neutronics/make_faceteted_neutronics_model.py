@@ -192,12 +192,15 @@ def find_reflecting_surfaces_of_reflecting_wedge(geometry_details, surface_refle
 
 def tag_geometry_with_mats(geometry_details):
     for entry in geometry_details:
-        cubit.cmd(
-            'group "mat:'
-            + str(entry[material_key_name])
-            + '" add volume '
-            + " ".join(entry["volumes"])
-        )
+        if material_key_name in entry.keys():
+            cubit.cmd(
+                'group "mat:'
+                + str(entry[material_key_name])
+                + '" add volume '
+                + " ".join(entry["volumes"])
+            )
+        else:
+            print('material_key_name', material_key_name, 'not found for', entry)
 
 
 def imprint_and_merge_geometry():

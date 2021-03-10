@@ -655,9 +655,6 @@ class Reactor:
                 using Reactor.graveyard_size and Reactor.graveyard_offset
                 attribute values.
             faceting_tolerance: the precision of the faceting.
-            graveyard_offset: the offset between the largest
-                edge of the geometry and inner bounding shell created. Defaults
-                to 100.
 
         Returns:
             The filename of the DAGMC file created
