@@ -6,7 +6,7 @@ name: dockerhub-publish-geometry-dependencies
 
 on:
   push:
-    branches: 
+    branches:
     - develop
     - main
 
