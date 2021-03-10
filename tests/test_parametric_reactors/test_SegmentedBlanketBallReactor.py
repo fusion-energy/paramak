@@ -39,15 +39,15 @@ class TestSegmentedBlanketBallReactor(unittest.TestCase):
 
         self.test_reactor.create_solids()
         small_gap_blanket_volume = self.test_reactor._blanket.volume
-        small_gap_fw_volume = self.test_reactor._firstwall.volume
+        small_gap_firstwall_volume = self.test_reactor._firstwall.volume
 
         self.test_reactor.gap_between_blankets = 60
         self.test_reactor.create_solids()
         large_gap_blanket_volume = self.test_reactor._blanket.volume
-        large_gap_fw_volume = self.test_reactor._firstwall.volume
+        large_gap_firstwall_volume = self.test_reactor._firstwall.volume
 
         assert small_gap_blanket_volume > large_gap_blanket_volume
-        assert small_gap_fw_volume > large_gap_fw_volume
+        assert small_gap_firstwall_volume > large_gap_firstwall_volume
 
     def test_number_of_blanket_segments_impacts_volume(self):
         """Creates a SegmentedBlanketBallReactor with different
@@ -56,15 +56,15 @@ class TestSegmentedBlanketBallReactor(unittest.TestCase):
 
         self.test_reactor.create_solids()
         blanket_volume_few_segments = self.test_reactor._blanket.volume
-        fw_volume_few_segments = self.test_reactor._firstwall.volume
+        firstwall_volume_few_segments = self.test_reactor._firstwall.volume
 
         self.test_reactor.number_of_blanket_segments = 6
         self.test_reactor.create_solids()
         blanket_volume_many_segments = self.test_reactor._blanket.volume
-        fw_volume_many_segments = self.test_reactor._firstwall.volume
+        firstwall_volume_many_segments = self.test_reactor._firstwall.volume
 
         assert blanket_volume_many_segments < blanket_volume_few_segments
-        assert fw_volume_many_segments > fw_volume_few_segments
+        assert firstwall_volume_many_segments > firstwall_volume_few_segments
 
     def test_invalid_parameter_error_raises(self):
         """Checks that the correct errors are raised when invalid arguments for
