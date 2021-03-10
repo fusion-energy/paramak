@@ -4,18 +4,56 @@ import sys
 import unittest
 from pathlib import Path
 
+import nbformat
+import paramak
 from examples.example_parametric_shapes import (
     make_blanket_from_parameters, make_blanket_from_points,
     make_CAD_from_points, make_can_reactor_from_parameters,
-    make_can_reactor_from_points, make_html_diagram_from_stp_file,
-)
-
-import paramak
+    make_can_reactor_from_points, make_html_diagram_from_stp_file)
+from nbconvert.preprocessors import ExecutePreprocessor
+from nbconvert.preprocessors.execute import CellExecutionError
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
+def _notebook_run(path):
+    """
+    Execute a notebook via nbconvert and collect output.
+    :returns (parsed nb object, execution errors)
+    """
+    kernel_name = 'python%d' % sys.version_info[0]
+    this_file_directory = os.path.dirname(__file__)
+    errors = []
+
+    with open(path) as file:
+        note_book = nbformat.read(file, as_version=4)
+        note_book.metadata.get('kernelspec', {})['name'] = kernel_name
+        ep = ExecutePreprocessor(
+            kernel_name=kernel_name,
+            timeout=300)
+
+        try:
+            ep.preprocess(
+                note_book, {
+                    'metadata': {
+                        'path': this_file_directory}})
+
+        except CellExecutionError as e:
+            if "SKIP" in e.traceback:
+                print(str(e.traceback).split("\n")[-2])
+            else:
+                raise e
+
+    return note_book, errors
+
+
 class TestExampleShapes(unittest.TestCase):
+
+    def test_jupyter_notebooks_example_parametric_shapes(self):
+        for notebook in Path().rglob("examples/example_parametric_shapes/*.ipynb"):
+            print(notebook)
+            nb, errors = _notebook_run(notebook)
+            assert errors == []
 
     def test_make_blanket_from_points(self):
         """Runs the example and checks the output files are produced"""

@@ -43,7 +43,7 @@
 FROM continuumio/miniconda3:4.9.2 as dependencies
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
-ARG cq_version=2
+ARG cq_version=2.1
 ARG include_neutronics=false
 ARG compile_cores=1
 
@@ -63,9 +63,11 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 
 # Installing CadQuery
 RUN echo installing CadQuery version $cq_version && \
-    conda install -c cadquery -c conda-forge python=3.8 cadquery="$cq_version" && \
+    conda install -c conda-forge -c python python=3.8 && \
+    conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
     pip install jupyter-cadquery==2.0.0 && \
     conda clean -afy
+
 
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
@@ -200,6 +202,11 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
+RUN mkdir /home/paramak
+EXPOSE 8888
+WORKDIR /home/paramak
+
+
 FROM dependencies as final
 
 COPY run_tests.sh run_tests.sh
@@ -211,3 +218,7 @@ COPY README.md README.md
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
+
+# this helps prevent the kernal failing
+RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> /home/paramak/docker-cmd.sh
+CMD bash /home/paramak/docker-cmd.sh

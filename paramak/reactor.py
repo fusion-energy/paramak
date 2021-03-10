@@ -251,6 +251,33 @@ class Reactor:
         self._shapes_and_components = value
 
     @property
+    def graveyard_offset(self):
+        return self._graveyard_offset
+
+    @graveyard_offset.setter
+    def graveyard_offset(self, value):
+        if value is None:
+            self._graveyard_offset = None
+        elif not isinstance(value, (float, int)):
+            raise TypeError("graveyard_offset must be a number")
+        elif value < 0:
+            raise ValueError("graveyard_offset must be positive")
+        self._graveyard_offset = value
+
+    @property
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
+
+        from jupyter_cadquery.cadquery import show
+        self.solid
+        return show(self.solid)
+
+    @show.setter
+    def show(self, value):
+        self._show = value
+
+    @property
     def solid(self):
         """This combines all the parametric shapes and compents in the reactor
         object.
@@ -625,9 +652,7 @@ class Reactor:
                 "shapes_and_components must be a list of paramak.Shape or a filename")
 
         not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
-            faceting_tolerance=faceting_tolerance,
-            merge_tolerance=merge_tolerance
-        )
+            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
         water_tight_h5m = paramak.neutronics_utils.make_watertight(
             input_filename=not_watertight_file[0],
