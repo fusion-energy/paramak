@@ -68,6 +68,7 @@ RUN echo installing CadQuery version $cq_version && \
     pip install jupyter-cadquery==2.0.0 && \
     conda clean -afy
 
+
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
     then echo installing with include_neutronics=true ; \
@@ -201,6 +202,11 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
+RUN mkdir /home/paramak
+EXPOSE 8888
+WORKDIR /home/paramak
+
+
 FROM dependencies as final
 
 COPY run_tests.sh run_tests.sh
@@ -212,3 +218,7 @@ COPY README.md README.md
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
+
+# this helps prevent the kernal failing
+RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> /home/paramak/docker-cmd.sh
+CMD bash /home/paramak/docker-cmd.sh

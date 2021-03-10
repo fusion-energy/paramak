@@ -23,7 +23,8 @@ class Shape:
     """A shape object that represents a 3d volume and can have materials and
     neutronics tallies assigned. Shape objects are not intended to be used
     directly by the user but provide basic functionality for user-facing
-    classes that inherit from Shape.
+    classes that inherit from Shape. Provides a .show attribute for rendering
+    in Jupyter Lab
 
     Args:
         points (list of (float, float, float), optional): the x, y, z
@@ -127,6 +128,19 @@ class Shape:
         self.z_max = None
         self.graveyard_offset = None  # set by the make_graveyard method
         self.patch = None
+
+    @property
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
+
+        from jupyter_cadquery.cadquery import show
+        self.solid
+        return show(self.solid)
+
+    @show.setter
+    def show(self, value):
+        self._show = value
 
     @property
     def solid(self):

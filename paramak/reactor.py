@@ -19,7 +19,8 @@ class Reactor:
     """The Reactor object allows shapes and components to be added and then
     collective operations to be performed on them. Combining all the shapes is
     required for creating images of the whole reactor and creating a Graveyard
-    (bounding box) that is needed for neutronics simulations.
+    (bounding box) that is needed for neutronics simulations. Provides a .show
+    attribute for rendering in Jupyter Lab
 
     Args:
         shapes_and_components (list): list of paramak.Shape
@@ -138,6 +139,19 @@ class Reactor:
         elif value < 0:
             raise ValueError("graveyard_offset must be positive")
         self._graveyard_offset = value
+
+    @property
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
+
+        from jupyter_cadquery.cadquery import show
+        self.solid
+        return show(self.solid)
+
+    @show.setter
+    def show(self, value):
+        self._show = value
 
     @property
     def solid(self):
