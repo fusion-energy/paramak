@@ -20,7 +20,7 @@
 #   Options: [1, 2, 3, 4, 5, 6...]
 #
 # Example builds:
-# Building using the defaults (cq_version 2, no neutronics and 1 core compile)
+# Building using the defaults (cq_version 2.1, no neutronics and 1 core compile)
 # docker build -t ukaea/paramak .
 #
 # Building to include cadquery master, neutronics dependencies and use 8 cores.
