@@ -140,6 +140,8 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
 
         solid = wire.extrude(distance=-self.distance / 2.0, both=True)
 
+        solid = self.rotate_solid(solid)
+
         if self.with_inner_leg is True:
             inner_leg_solid = cq.Workplane(self.workplane)
             inner_leg_solid = inner_leg_solid.polyline(
@@ -147,11 +149,12 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             inner_leg_solid = inner_leg_solid.close().extrude(
                 distance=-self.distance / 2.0, both=True)
 
+            inner_leg_solid = self.rotate_solid(inner_leg_solid)
+
             solid = cq.Compound.makeCompound(
                 [a.val() for a in [inner_leg_solid, solid]]
             )
 
-        solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)
         solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
         self.solid = solid   # not necessarily required as set in boolean_operations
