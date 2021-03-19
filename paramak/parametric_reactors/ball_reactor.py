@@ -92,6 +92,8 @@ class BallReactor(paramak.Reactor):
 
         super().__init__([])
 
+        self.method = 'trelis'
+
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
         self.center_column_shield_radial_thickness = \
