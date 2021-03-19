@@ -36,12 +36,14 @@ class TestObjectNeutronicsArguments(unittest.TestCase):
         self.test_shape.export_h5m(filename='test_shape')
         assert Path("test_shape.h5m").exists() is True
 
-    def test_export_h5m_with_pymoab_accepts_graveyard_offset(self):
+    def test_export_h5m_with_pymoab_accepts_include_graveyard(self):
         os.system('rm test_shape.h5m')
         self.test_shape.export_h5m_with_pymoab(
             filename='test_shape.h5m',
-            graveyard_offset=101)
-        assert self.test_shape.graveyard_offset == 101
+            include_graveyard=True)
+        assert Path('test_shape.h5m').is_file
+        assert Path(self.test_shape.stl_filename).is_file
+        assert Path('graveyard.stl').is_file
 
     def test_tolerance_increases_filesize(self):
         os.system('rm test_shape.h5m')
@@ -57,15 +59,16 @@ class TestObjectNeutronicsArguments(unittest.TestCase):
     def test_skipping_graveyard_decreases_filesize(self):
         os.system('rm test_shape.h5m')
         self.test_shape.export_h5m_with_pymoab(
-            filename='skiped.h5m', skip_graveyard=True)
+            filename='skiped.h5m', include_graveyard=False)
         self.test_shape.export_h5m_with_pymoab(
             filename='not_skipped.h5m',
-            skip_graveyard=False)
+            include_graveyard=True)
         assert Path('not_skipped.h5m').stat().st_size > Path(
             'skiped.h5m').stat().st_size
 
     def test_graveyard_offset_increases_voulme(self):
         os.system('rm test_shape.h5m')
+        self.test_shape.graveyard_size = None
         self.test_shape.make_graveyard(graveyard_offset=100)
         small_offset = self.test_shape.graveyard.volume
         self.test_shape.make_graveyard(graveyard_offset=1000)

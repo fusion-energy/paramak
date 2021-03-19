@@ -1439,7 +1439,7 @@ class Shape:
     def export_h5m_with_pymoab(
             self,
             filename: Optional[str] = 'dagmc.h5m',
-            include_graveyard: Optional[bool] = False,
+            include_graveyard: Optional[bool] = True,
             faceting_tolerance: Optional[float] = 0.001,
     ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
