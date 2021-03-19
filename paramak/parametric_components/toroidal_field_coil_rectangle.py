@@ -153,7 +153,8 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
                 distance=-self.distance / 2.0, both=True)
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
-            inner_leg_solid = self.perform_boolean_operations(inner_leg_solid, wedge_cut=cutting_wedge)
+            inner_leg_solid = self.perform_boolean_operations(
+                inner_leg_solid, wedge_cut=cutting_wedge)
 
             solid = cq.Compound.makeCompound(
                 [a.val() for a in [inner_leg_solid, solid]]
