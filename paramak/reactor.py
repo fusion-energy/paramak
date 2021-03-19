@@ -1,6 +1,7 @@
 
 import collections
 import json
+import os
 import shutil
 from collections.abc import Iterable
 from pathlib import Path
@@ -583,6 +584,8 @@ class Reactor:
 
         if method is None:
             method = self.method
+
+        os.system('rm ' + filename)
 
         if method == 'trelis':
             output_filename = self.export_h5m_with_trelis(
