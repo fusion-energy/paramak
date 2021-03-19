@@ -51,7 +51,7 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         assert test_inner_leg.solid is not None
 
     def test_creation_with_inner_leg_with_overlap(self):
-        """Creates tf coils with overlappting inner legs using the ToroidalFieldCoilRectangle
+        """Creates tf coils with overlapping inner legs using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created correctly."""
 
         self.test_shape.horizontal_start_point = (0, 700)
