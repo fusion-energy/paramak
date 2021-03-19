@@ -709,7 +709,7 @@ class Reactor:
             filename: Optional[str] = 'dagmc.h5m',
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
-    ):
+    ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations using Coreform Trelis.
 
@@ -727,7 +727,7 @@ class Reactor:
                 Reactor.faceting_tolerance attribute.
 
         Returns:
-            str: filename of the DAGMC file produced
+            filename of the DAGMC file produced
         """
 
         if merge_tolerance is None:
@@ -759,12 +759,12 @@ class Reactor:
         not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
             faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
-        water_tight_h5m = paramak.neutronics_utils.make_watertight(
+        water_tight_h5m_filename = paramak.neutronics_utils.make_watertight(
             input_filename=not_watertight_file[0],
             output_filename=filename
         )
 
-        return water_tight_h5m
+        return water_tight_h5m_filename
 
     def export_h5m_with_pymoab(
             self,
