@@ -210,6 +210,8 @@ class BallReactor(paramak.Reactor):
             msg = "360 degree rotation may result " + \
                 "in a Standard_ConstructionError or AttributeError"
             warnings.warn(msg, UserWarning)
+        elif self.rotation_angle > 360:
+            raise ValueError('rotation_angle can not be larger than 360')
 
     def _make_plasma(self):
 

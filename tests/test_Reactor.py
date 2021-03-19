@@ -645,6 +645,81 @@ class TestReactor(unittest.TestCase):
         assert neutronics_description[1]["stp_filename"] == "graveyard.stp"
         os.system("rm manifest_test.json")
 
+    def test_export_neutronics_description_with_sector_wedge(self):
+        """Creates a Reactor object and checks that the neutronics description
+        is exported to a json file with the correct entries, including the
+        optional plasma."""
+
+        os.system("rm manifest_test.json")
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            rotation_angle=360,
+            material_tag="test_material",
+            stp_filename="test.stp",
+        )
+
+        test_plasma = paramak.Plasma(
+            major_radius=500,
+            minor_radius=100,
+            stp_filename="plasma.stp",
+            material_tag="DT_plasma",
+        )
+        test_reactor = paramak.Reactor([test_shape, test_plasma])
+
+        test_reactor.rotation_angle = 270
+
+        returned_filename = test_reactor.export_neutronics_description(
+            include_plasma=False, include_sector_wedge=True, include_graveyard=False
+        )
+        with open("manifest.json") as json_file:
+            neutronics_description = json.load(json_file)
+        print(neutronics_description)
+        assert returned_filename == "manifest.json"
+        assert Path("manifest.json").exists() is True
+        assert len(neutronics_description) == 2
+
+        assert neutronics_description[0]["material_tag"] == "test_material"
+        assert neutronics_description[0]["stp_filename"] == "test.stp"
+        assert neutronics_description[1]["material_tag"] == "cutting_slice_mat"
+        assert neutronics_description[1]["stp_filename"] == "sector_wedge.stp"
+        assert neutronics_description[1]["surface_reflectivity"] is True
+        assert neutronics_description[1]["stl_filename"] == "sector_wedge.stl"
+
+        os.system("rm manifest.json")
+
+    def test_export_neutronics_description_without_sector_wedge(self):
+        """Creates a Reactor object and checks that the neutronics description is
+        exported to a json file with the correct entires, exluding the optional
+        plasma."""
+
+        os.system("rm manifest_test.json")
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            rotation_angle=360,
+            material_tag="test_material",
+            stp_filename="test.stp",
+        )
+
+        test_plasma = paramak.Plasma(major_radius=500, minor_radius=100)
+        test_reactor = paramak.Reactor([test_shape, test_plasma])
+
+        returned_filename = test_reactor.export_neutronics_description(
+            include_plasma=False, include_sector_wedge=False, include_graveyard=False
+        )
+        with open("manifest.json") as json_file:
+            neutronics_description = json.load(json_file)
+
+        assert returned_filename == "manifest.json"
+        assert Path("manifest.json").exists() is True
+        assert len(neutronics_description) == 1
+
+        assert neutronics_description[0]["material_tag"] == "test_material"
+        assert neutronics_description[0]["stp_filename"] == "test.stp"
+
+        os.system("rm manifest.json")
+
     def test_export_neutronics_description_with_plasma(self):
         """Creates a Reactor object and checks that the neutronics description
         is exported to a json file with the correct entries, including the
@@ -667,7 +742,7 @@ class TestReactor(unittest.TestCase):
         )
         test_reactor = paramak.Reactor([test_shape, test_plasma])
         returned_filename = test_reactor.export_neutronics_description(
-            include_plasma=True
+            include_plasma=True, include_graveyard=True, include_sector_wedge=False
         )
         with open("manifest.json") as json_file:
             neutronics_description = json.load(json_file)

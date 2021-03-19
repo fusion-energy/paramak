@@ -10,6 +10,7 @@ from typing import List, Optional, Tuple, Union
 import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import exporters
+from openmc import geometry
 
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
@@ -55,6 +56,8 @@ class Reactor:
             all the shapes and creating bounding boxes. This can be slow and
             that is why the user is able to provide a subsection of shapes to
             use when calculating the graveyard dimentions.
+        include_graveyard
+        include_sector_wedge
     """
 
     def __init__(
@@ -307,6 +310,7 @@ class Reactor:
             self,
             include_plasma: Optional[bool] = False,
             include_graveyard: Optional[bool] = True,
+            include_sector_wedge: Optional[bool] = True,
     ) -> dict:
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations
@@ -346,14 +350,26 @@ class Reactor:
 
             neutronics_description.append(entry.neutronics_description())
 
-        # This add the neutronics description for the graveyard which is unique
-        # as it is automatically calculated instead of being added by the user.
-        # Also the graveyard must have 'graveyard' as the material name
+        # This add the neutronics description for the graveyard which is
+        # special as it is automatically calculated instead of being added by
+        # the user. Also the graveyard must have 'graveyard' as the material
+        # name for using in DAGMC with OpenMC
         if include_graveyard:
             # this only takes the json values so the actual size doesn't matter
             self.make_graveyard(graveyard_size=1)
             neutronics_description.append(
                 self.graveyard.neutronics_description())
+
+        # This add the neutronics description for the sector which is
+        # special as it is automatically calculated instead of being added by
+        # the user. Also the graveyard must have 'Vaccum' as the material
+        # name for using in DAGMC with OpenMC
+        if include_sector_wedge:
+            # this only takes the json values so the actual size doesn't matter
+            sector_wedge = self.make_sector_wedge(height=1, radius=1)
+            if sector_wedge is not None:
+                neutronics_description.append(
+                    sector_wedge.neutronics_description())
 
         return neutronics_description
 
@@ -390,6 +406,7 @@ class Reactor:
             filename: Optional[str] = "manifest.json",
             include_plasma: Optional[bool] = False,
             include_graveyard: Optional[bool] = True,
+            include_sector_wedge: Optional[bool] = False,
     ) -> str:
         """
         Saves Reactor.neutronics_description to a json file. The resulting json
@@ -414,6 +431,9 @@ class Reactor:
                 plasma does however slow down the simulation.
             include_graveyard: should the graveyard be included. Defaults to
                 True as this is needed for DAGMC models.
+            include_sector_wedge: should the sector wedge be included. 
+                Defaults to False as this is only needed for DAGMC sector
+                models.
 
         Returns:
             filename of the neutronics description file saved
@@ -431,6 +451,7 @@ class Reactor:
                 self.neutronics_description(
                     include_plasma=include_plasma,
                     include_graveyard=include_graveyard,
+                    include_sector_wedge=include_sector_wedge,
                 ),
                 outfile,
                 indent=4,
@@ -445,6 +466,7 @@ class Reactor:
             output_folder: Optional[str] = "",
             mode: Optional[str] = 'solid',
             include_graveyard: Optional[bool] = True,
+            include_sector_wedge: Optional[bool] = True,
     ) -> List[str]:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
@@ -458,6 +480,10 @@ class Reactor:
                 not. If True the the Reactor.make_graveyard will be called
                 using Reactor.graveyard_size and Reactor.graveyard_offset
                 attribute values.
+            include_sector_wedge: specifies if a sector_wedge will be exported.
+                This wedge is useful when constructing reflectin surfaces in
+                DAGMC geometry. If set to True the the self.rotation_agle must
+                also be set.
         Returns:
             list: a list of stp filenames created
         """
@@ -482,12 +508,22 @@ class Reactor:
                 mode=mode
             )
 
+        if include_sector_wedge:
+            sector_wedge = self.make_sector_wedge()
+            # if the self.rotation_angle is 360 then None is returned
+            if sector_wedge is not None:
+                filename = sector_wedge.export_stp(
+                    filename=str(Path(output_folder) / sector_wedge.stp_filename)
+                )
+                filenames.append(filename)
+
         # creates a graveyard (bounding shell volume) which is needed for
         # neutronics simulations with default Reactor attributes.
         if include_graveyard:
             graveyard = self.make_graveyard()
             filename = self.graveyard.export_stp(
-                str(Path(output_folder) / graveyard.stp_filename))
+                filename = str(Path(output_folder) / graveyard.stp_filename)
+            )
             filenames.append(filename)
 
         return filenames
@@ -590,8 +626,6 @@ class Reactor:
         if method == 'trelis':
             output_filename = self.export_h5m_with_trelis(
                 filename=filename,
-                # include_graveyard=include_graveyard, TODO add this option to
-                # method
                 merge_tolerance=merge_tolerance,
                 faceting_tolerance=faceting_tolerance,
             )
@@ -607,6 +641,68 @@ class Reactor:
                 pymoab. {} is not an option".format(method))
 
         return output_filename
+
+    def make_sector_wedge(
+            self,
+            height: Optional[float] = None,
+            radius: Optional[float] = None,
+            rotation_angle: Optional[float] = None,
+            stp_filename: Optional[str] = 'sector_wedge.stp',
+            stl_filename: Optional[str] = 'sector_wedge.stl'
+    ) -> Union[paramak.Shape, None]:
+        """Creates a rotated wedge shaped object that is useful for creating
+        sector models in DAGMC where reflecting surfaces are needed. If the
+        rotation 
+
+        Args:
+            height: The height of the rotated wedge. If None then the
+                largest_dimention of the model will be used.
+            radius: The radius of the rotated wedge. If None then the
+                largest_dimention of the model will be used
+            rotation_angle: The rotation angle of the wedge will be the
+                inverse of the sector
+            stp_filename:
+
+        Returns:
+            the paramak.Shape object created
+        """
+
+        if rotation_angle is None:
+            if hasattr(self, 'rotation_angle'):
+                rotation_angle = self.rotation_angle
+            if rotation_angle is None:
+                Warning('No sector_wedge can be made as rotation_angle'
+                        ' or Reactor.rotation_angle have not been set')
+                return None
+
+        if rotation_angle > 360:
+            Warning(
+                'No wedge can be made for a rotation angle of 360 or above')
+            return None
+
+        if rotation_angle == 360:
+            print('No sector wedge made as rotation angle is 360')
+            return None
+
+        if height is None:
+            height = self.largest_dimension * 2
+
+        if radius is None:
+            radius = self.largest_dimension * 2
+
+        sector_cutting_wedge = paramak.CuttingWedge(
+            height=height,
+            radius=radius,
+            rotation_angle=360-rotation_angle,
+            surface_reflectivity=True,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            azimuth_placement_angle=rotation_angle
+        )
+
+        self.sector_wedge = sector_cutting_wedge
+
+        return sector_cutting_wedge
 
     def export_h5m_with_trelis(
             self,
@@ -640,8 +736,14 @@ class Reactor:
             faceting_tolerance = self.faceting_tolerance
 
         if isinstance(self.shapes_and_components, list):
-            self.export_stp()
-            self.export_neutronics_description()
+            self.export_stp(
+                include_graveyard=True,
+                include_sector_wedge=True
+            )
+            self.export_neutronics_description(
+                include_graveyard=True,
+                include_sector_wedge=True
+            )
         elif isinstance(self.shapes_and_components, str):
             if not Path(self.shapes_and_components).is_file():
                 raise FileNotFoundError("The filename entered as the geometry \
@@ -886,7 +988,7 @@ class Reactor:
         if path_filename.suffix != ".stp":
             path_filename = path_filename.with_suffix(".stp")
 
-        graveyard.export_stp(str(path_filename))
+        graveyard.export_stp(filename=str(path_filename))
 
         return str(path_filename)
 
