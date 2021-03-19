@@ -431,7 +431,7 @@ class Reactor:
                 plasma does however slow down the simulation.
             include_graveyard: should the graveyard be included. Defaults to
                 True as this is needed for DAGMC models.
-            include_sector_wedge: should the sector wedge be included. 
+            include_sector_wedge: should the sector wedge be included.
                 Defaults to False as this is only needed for DAGMC sector
                 models.
 
@@ -512,9 +512,8 @@ class Reactor:
             sector_wedge = self.make_sector_wedge()
             # if the self.rotation_angle is 360 then None is returned
             if sector_wedge is not None:
-                filename = sector_wedge.export_stp(
-                    filename=str(Path(output_folder) / sector_wedge.stp_filename)
-                )
+                filename = sector_wedge.export_stp(filename=str(
+                    Path(output_folder) / sector_wedge.stp_filename))
                 filenames.append(filename)
 
         # creates a graveyard (bounding shell volume) which is needed for
@@ -522,7 +521,7 @@ class Reactor:
         if include_graveyard:
             graveyard = self.make_graveyard()
             filename = self.graveyard.export_stp(
-                filename = str(Path(output_folder) / graveyard.stp_filename)
+                filename=str(Path(output_folder) / graveyard.stp_filename)
             )
             filenames.append(filename)
 
@@ -652,7 +651,7 @@ class Reactor:
     ) -> Union[paramak.Shape, None]:
         """Creates a rotated wedge shaped object that is useful for creating
         sector models in DAGMC where reflecting surfaces are needed. If the
-        rotation 
+        rotation
 
         Args:
             height: The height of the rotated wedge. If None then the
@@ -693,7 +692,7 @@ class Reactor:
         sector_cutting_wedge = paramak.CuttingWedge(
             height=height,
             radius=radius,
-            rotation_angle=360-rotation_angle,
+            rotation_angle=360 - rotation_angle,
             surface_reflectivity=True,
             stp_filename=stp_filename,
             stl_filename=stl_filename,

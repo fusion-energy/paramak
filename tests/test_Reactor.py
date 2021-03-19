@@ -670,8 +670,7 @@ class TestReactor(unittest.TestCase):
         test_reactor.rotation_angle = 270
 
         returned_filename = test_reactor.export_neutronics_description(
-            include_plasma=False, include_sector_wedge=True, include_graveyard=False
-        )
+            include_plasma=False, include_sector_wedge=True, include_graveyard=False)
         with open("manifest.json") as json_file:
             neutronics_description = json.load(json_file)
         print(neutronics_description)
@@ -706,8 +705,7 @@ class TestReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape, test_plasma])
 
         returned_filename = test_reactor.export_neutronics_description(
-            include_plasma=False, include_sector_wedge=False, include_graveyard=False
-        )
+            include_plasma=False, include_sector_wedge=False, include_graveyard=False)
         with open("manifest.json") as json_file:
             neutronics_description = json.load(json_file)
 
@@ -742,8 +740,7 @@ class TestReactor(unittest.TestCase):
         )
         test_reactor = paramak.Reactor([test_shape, test_plasma])
         returned_filename = test_reactor.export_neutronics_description(
-            include_plasma=True, include_graveyard=True, include_sector_wedge=False
-        )
+            include_plasma=True, include_graveyard=True, include_sector_wedge=False)
         with open("manifest.json") as json_file:
             neutronics_description = json.load(json_file)
 
