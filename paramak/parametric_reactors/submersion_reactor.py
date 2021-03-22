@@ -451,7 +451,7 @@ class SubmersionTokamak(paramak.Reactor):
         return self._firstwall
 
     def _make_divertor(self):
-        fw_enveloppe_inboard = paramak.BlanketFP(
+        fw_envelope_inboard = paramak.BlanketFP(
             plasma=self._plasma,
             offset_from_plasma=self.inner_plasma_gap_radial_thickness,
             start_angle=90,
@@ -460,7 +460,7 @@ class SubmersionTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        fw_enveloppe = paramak.BlanketFP(
+        fw_envelope = paramak.BlanketFP(
             plasma=self._plasma,
             offset_from_plasma=self.outer_plasma_gap_radial_thickness,
             start_angle=90,
@@ -471,7 +471,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="outboard_firstwall.stl",
             name="outboard_firstwall",
             material_tag="firstwall_mat",
-            union=fw_enveloppe_inboard,
+            union=fw_envelope_inboard,
         )
         divertor_height = self._blanket_rear_wall_end_height
 
@@ -490,7 +490,7 @@ class SubmersionTokamak(paramak.Reactor):
                 (self._divertor_end_radius, divertor_height_top),
                 (self._divertor_start_radius, divertor_height_top)
             ],
-            intersect=fw_enveloppe,
+            intersect=fw_envelope,
             rotation_angle=self.rotation_angle,
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
@@ -517,6 +517,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._inboard_blanket.solid = self._inboard_blanket.solid.solids(
             cq.selectors.NearestToPointSelector((0, 0, 0))
         )
+
         # this is the outboard fused /unioned with the inboard blanket
 
         self._blanket = paramak.BlanketFP(
@@ -536,7 +537,7 @@ class SubmersionTokamak(paramak.Reactor):
         return self._blanket
 
     def _make_supports(self):
-        blanket_enveloppe = paramak.BlanketFP(
+        blanket_envelope = paramak.BlanketFP(
             plasma=self._plasma,
             start_angle=90,
             stop_angle=-90,
@@ -567,9 +568,10 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="supports.stl",
             name="supports",
             material_tag="supports_mat",
-            intersect=blanket_enveloppe,
+            intersect=blanket_envelope,
         )
-        self._blanket.cut = self._supports
+
+        self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
 
         return self._supports
 

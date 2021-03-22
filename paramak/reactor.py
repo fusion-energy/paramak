@@ -646,6 +646,7 @@ class Reactor:
             height: Optional[float] = None,
             radius: Optional[float] = None,
             rotation_angle: Optional[float] = None,
+            material_tag='Vacuum',
             stp_filename: Optional[str] = 'sector_wedge.stp',
             stl_filename: Optional[str] = 'sector_wedge.stl'
     ) -> Union[paramak.Shape, None]:
@@ -696,7 +697,8 @@ class Reactor:
             surface_reflectivity=True,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
-            azimuth_placement_angle=rotation_angle
+            azimuth_placement_angle=rotation_angle,
+            material_tag=material_tag,
         )
 
         self.sector_wedge = sector_cutting_wedge
