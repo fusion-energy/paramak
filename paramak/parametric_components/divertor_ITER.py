@@ -238,7 +238,7 @@ class ITERtypeDivertor(RotateMixedShape):
             )
 
         # casing points
-        casing_points = self._create_casing_points(
+        self.casing_points = self._create_casing_points(
             anchors=(self.IVT_anchor, self.OVT_anchor),
             C=IVT_points[-1][:2],
             F=OVT_points[0][:2],
@@ -246,5 +246,5 @@ class ITERtypeDivertor(RotateMixedShape):
         )
 
         # append all points
-        points = IVT_points + dome_points + OVT_points + casing_points
+        points = IVT_points + dome_points + OVT_points + self.casing_points
         self.points = points
