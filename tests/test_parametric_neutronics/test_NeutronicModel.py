@@ -23,10 +23,12 @@ class TestShape(unittest.TestCase):
         )
 
         # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
-        # directions
-        self.source = openmc.Source()
-        self.source.space = openmc.stats.Point((0, 0, 0))
-        self.source.angle = openmc.stats.Isotropic()
+        # directions and 14MeV neutrons
+        source = openmc.Source()
+        source.space = openmc.stats.Point((0, 0, 0))
+        source.angle = openmc.stats.Isotropic()
+        source.energy = openmc.stats.Discrete([14e6], [1])
+        self.source = source
 
     def simulation_with_previous_h5m_file(self):
         """This performs a simulation using previously created h5m file"""
@@ -530,7 +532,7 @@ class TestShape(unittest.TestCase):
         and tests the TBR simulation value"""
 
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
+            points=[(0, 10), (0, 20), (20, 20)],
             material_tag='mat1',
         )
         test_shape2 = paramak.RotateSplineShape(
@@ -563,7 +565,7 @@ class TestShape(unittest.TestCase):
         os.system('rm *_on_2D_mesh_*.png')
 
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
+            points=[(0, 10), (0, 20), (20, 20)],
             material_tag='mat1',
         )
         test_shape2 = paramak.RotateSplineShape(
