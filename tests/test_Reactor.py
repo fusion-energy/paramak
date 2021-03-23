@@ -1035,7 +1035,7 @@ class TestReactor(unittest.TestCase):
 
     def test_sector_wedge_with_360_returns_None(self):
         """Trys to make a sector wedge with full 360 degree rotation and checks
-        that None is returned""" 
+        that None is returned"""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)]
@@ -1064,7 +1064,7 @@ class TestReactor(unittest.TestCase):
             )
             test_shape.export_neutronics_description('manifest.json')
             my_reactor = paramak.Reactor('manifest.json')
-            my_reactor.export_h5m_with_pymoab()  
+            my_reactor.export_h5m_with_pymoab()
             assert Path('dagmc.h5m').is_file
 
         self.assertRaises(NotImplementedError, check_correct_error_is_rasied)
