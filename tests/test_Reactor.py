@@ -680,7 +680,7 @@ class TestReactor(unittest.TestCase):
 
         assert neutronics_description[0]["material_tag"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
-        assert neutronics_description[1]["material_tag"] == "cutting_slice_mat"
+        assert neutronics_description[1]["material_tag"] == "Vacuum"
         assert neutronics_description[1]["stp_filename"] == "sector_wedge.stp"
         assert neutronics_description[1]["surface_reflectivity"] is True
         assert neutronics_description[1]["stl_filename"] == "sector_wedge.stl"
@@ -884,12 +884,84 @@ class TestReactor(unittest.TestCase):
         assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 30)
 
     def test_shapes_and_components(self):
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        """Attempts to make a reactor with a single shape instead of a list of
+        shapes which should raise a ValueError"""
 
         def incorrect_shapes_and_components():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
             paramak.Reactor(test_shape)
         self.assertRaises(ValueError, incorrect_shapes_and_components)
+
+    def test_method_setting(self):
+        """Attempts to make a reactor with a method that is not pymoab or
+        trelis which should raise a ValueError"""
+
+        def incorrect_method_string():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], method='coucou')
+        self.assertRaises(ValueError, incorrect_method_string)
+
+    def test_graveyard_size_setting_type_checking(self):
+        """Attempts to make a reactor with a graveyard_size that is an float
+        which should raise a ValueError"""
+
+        def incorrect_graveyard_size_type():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], graveyard_size='coucou')
+        self.assertRaises(TypeError, incorrect_graveyard_size_type)
+
+    def test_graveyard_size_setting_magnitude_checking(self):
+        """Attempts to make a reactor with a graveyard_size that is an int
+        which should raise a ValueError"""
+
+        def incorrect_graveyard_size_size():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], graveyard_size=-10)
+        self.assertRaises(ValueError, incorrect_graveyard_size_size)
+
+    def test_graveyard_offset_setting_type_checking(self):
+        """Attempts to make a reactor with a graveyard_offset that is an float
+        which should raise a ValueError"""
+
+        def incorrect_graveyard_offset_type():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], graveyard_offset='coucou')
+        self.assertRaises(TypeError, incorrect_graveyard_offset_type)
+
+    def test_graveyard_offset_setting_magnitude_checking(self):
+        """Attempts to make a reactor with a graveyard_offset that is an int
+        which should raise a ValueError"""
+
+        def incorrect_graveyard_offset_size():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], graveyard_offset=-10)
+        self.assertRaises(ValueError, incorrect_graveyard_offset_size)
+
+    def test_faceting_tolerance_setting_type_checking(self):
+        """Attempts to make a reactor with a faceting_tolerance that is an float
+        which should raise a ValueError"""
+
+        def incorrect_faceting_tolerance_type():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], faceting_tolerance='coucou')
+        self.assertRaises(TypeError, incorrect_faceting_tolerance_type)
+
+    def test_faceting_tolerance_setting_magnitude_checking(self):
+        """Attempts to make a reactor with a faceting_tolerance that is an int
+        which should raise a ValueError"""
+
+        def incorrect_faceting_tolerance_size():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], faceting_tolerance=-10)
+        self.assertRaises(ValueError, incorrect_faceting_tolerance_size)
 
     def test_graveyard_error(self):
         test_shape = paramak.RotateStraightShape(
@@ -939,6 +1011,27 @@ class TestReactor(unittest.TestCase):
             my_reactor.export_physical_groups()
 
         self.assertRaises(ValueError, test_stp_filename_None)
+
+    def test_setting_stl_filenames_from_json_file(self):
+        """shapes_and_components"""
+
+        manifest_file = [
+            {
+                'material_tag': 'mat1',
+                'stp_filename': 'filename1.stp',
+                'stl_filename': 'filename1.stl',
+            },
+            {
+                'material_tag': 'mat2',
+                'stp_filename': 'filename2.stp',
+                'stl_filename': 'filename2.stl',
+            },
+        ]
+        with open('manifest.json', 'w') as outfile:
+            json.dump(manifest_file, outfile)
+        my_reactor = paramak.Reactor('manifest.json')
+        assert my_reactor.stp_filenames == ['filename1.stp', 'filename2.stp']
+        assert my_reactor.stl_filenames == ['filename1.stl', 'filename2.stl']
 
 
 if __name__ == "__main__":
