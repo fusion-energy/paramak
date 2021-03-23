@@ -3,22 +3,28 @@ import math
 import openmc
 import paramak as p 
 
-my_reactor = p.BallReactorLayeredBlanket(
+my_reactor = paramak.BallReactorLayeredBlanket(
     inner_bore_radial_thickness=10,
-    inboard_tf_leg_radial_thickness=20,
-    center_column_shield_radial_thickness=10,
-    divertor_radial_thickness=130,
-    inner_plasma_gap_radial_thickness=20,
-    plasma_radial_thickness=250,
-    outer_plasma_gap_radial_thickness=20,
-    firstwall_radial_thickness=20,
+    inboard_tf_leg_radial_thickness=30,
+    center_column_shield_radial_thickness=60,
+    divertor_radial_thickness=150,
+    inner_plasma_gap_radial_thickness=30,
+    plasma_radial_thickness=300,
+    outer_plasma_gap_radial_thickness=30,
+    firstwall_radial_thickness=30,
     blanket_radial_thickness=50,
-    blanket_rear_wall_radial_thickness=30,
     number_of_blanket_layers=4,
+    blanket_rear_wall_radial_thickness=30,
     elongation=2,
-    triangularity=0.5,
-    plasma_gap_vertical_thickness=20,
-    rotation_angle=360
+    triangularity=0.55,
+    number_of_tf_coils=16,
+    rotation_angle=180,
+    pf_coil_radial_thicknesses=[50, 50, 50, 50],
+    pf_coil_vertical_thicknesses=[50, 50, 50, 50],
+    pf_coil_to_rear_blanket_radial_gap=50,
+    pf_coil_to_tf_coil_radial_gap=50,
+    outboard_tf_coil_radial_thickness=100,
+    outboard_tf_coil_poloidal_thickness=50
 )
 
 # Ring source at plasma major radius (requires updated OpenMC)
@@ -36,14 +42,17 @@ my_model = p.NeutronicsModel(
     source=source,
     materials={
         "inboard_tf_coils_mat": "copper",
-        "center_column_shield_mat": "copper",
-        "divertor_mat": "copper",
-        "firstwall_mat": "copper",
-        "blanket_layer_1_mat": "copper",    # insert materials for all blanket layers in same form
-        "blanket_layer_2_mat": "copper",
-        "blanket_layer_3_mat": "copper",
-        "blanket_layer_4_mat": "copper",
-        "blanket_rear_wall_mat": "copper"
+        "center_column_shield_mat": "WC",
+        "divertor_mat": "tunsten",
+        "firstwall_mat": "eurofer",
+        "blanket_layer_1_mat": "Li4SiO4",    # insert materials for all blanket layers in same form
+        "blanket_layer_2_mat": "Li4SiO4",
+        "blanket_layer_3_mat": "Li4SiO4",
+        "blanket_layer_4_mat": "Li4SiO4",
+        "blanket_rear_wall_mat": "eurofer",
+        "pf_coil_mat": "copper",
+        "pf_coil_cases_mat": "copper",
+        "tf_coil_mat": "copper"
     },
     cell_tallies=["TBR"],
     simulation_batches=10,
