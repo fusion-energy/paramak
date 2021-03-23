@@ -1033,6 +1033,42 @@ class TestReactor(unittest.TestCase):
         assert my_reactor.stp_filenames == ['filename1.stp', 'filename2.stp']
         assert my_reactor.stl_filenames == ['filename1.stl', 'filename2.stl']
 
+    def test_sector_wedge_with_360_returns_None(self):
+        """Trys to make a sector wedge with full 360 degree rotation and checks
+        that None is returned""" 
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)]
+        )
+        my_reactor = paramak.Reactor([test_shape])
+        assert my_reactor.make_sector_wedge(rotation_angle=360) is None
+
+    def test_export_h5m_with_pymoab_without_faceting_tolerance(self):
+        """exports a h5m file with faceting_tolerance set to None which uses
+        the the self.faceting_tolerance is used"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)]
+        )
+        my_reactor = paramak.Reactor([test_shape])
+        my_reactor.faceting_tolerance = 1e-2
+        my_reactor.export_h5m_with_pymoab(faceting_tolerance=None)
+
+    def test_export_h5m_with_pymoab_from_manifest_file(self):
+        """exports a h5m file when shapes_and_components is set to a string"""
+
+        def check_correct_error_is_rasied():
+            os.system('rm dagmc.h5m')
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)]
+            )
+            test_shape.export_neutronics_description('manifest.json')
+            my_reactor = paramak.Reactor('manifest.json')
+            my_reactor.export_h5m_with_pymoab()  
+            assert Path('dagmc.h5m').is_file
+
+        self.assertRaises(NotImplementedError, check_correct_error_is_rasied)
+
 
 if __name__ == "__main__":
     unittest.main()
