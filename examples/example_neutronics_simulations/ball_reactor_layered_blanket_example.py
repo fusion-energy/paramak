@@ -3,7 +3,7 @@ import math
 import openmc
 import paramak as p 
 
-my_reactor = paramak.BallReactorLayeredBlanket(
+my_reactor = p.BallReactorLayeredBlanket(
     inner_bore_radial_thickness=10,
     inboard_tf_leg_radial_thickness=30,
     center_column_shield_radial_thickness=60,
@@ -18,7 +18,7 @@ my_reactor = paramak.BallReactorLayeredBlanket(
     elongation=2,
     triangularity=0.55,
     number_of_tf_coils=16,
-    rotation_angle=180,
+    rotation_angle=360,
     pf_coil_radial_thicknesses=[50, 50, 50, 50],
     pf_coil_vertical_thicknesses=[50, 50, 50, 50],
     pf_coil_to_rear_blanket_radial_gap=50,
@@ -43,7 +43,7 @@ my_model = p.NeutronicsModel(
     materials={
         "inboard_tf_coils_mat": "copper",
         "center_column_shield_mat": "WC",
-        "divertor_mat": "tunsten",
+        "divertor_mat": "tungsten",
         "firstwall_mat": "eurofer",
         "blanket_layer_1_mat": "Li4SiO4",    # insert materials for all blanket layers in same form
         "blanket_layer_2_mat": "Li4SiO4",
@@ -51,7 +51,7 @@ my_model = p.NeutronicsModel(
         "blanket_layer_4_mat": "Li4SiO4",
         "blanket_rear_wall_mat": "eurofer",
         "pf_coil_mat": "copper",
-        "pf_coil_cases_mat": "copper",
+        "pf_coil_case_mat": "copper",
         "tf_coil_mat": "copper"
     },
     cell_tallies=["TBR"],
