@@ -3,7 +3,7 @@ import math
 import openmc
 import paramak as p 
 
-my_reactor = p.BallReactorGradedBlanket(
+my_reactor = p.BallReactorLayeredBlanket(
     inner_bore_radial_thickness=10,
     inboard_tf_leg_radial_thickness=20,
     center_column_shield_radial_thickness=10,

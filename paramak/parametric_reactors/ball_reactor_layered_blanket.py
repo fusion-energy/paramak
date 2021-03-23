@@ -4,7 +4,7 @@ import warnings
 import paramak
 
 
-class BallReactorGradedBlanket(paramak.Reactor):
+class BallReactorLayeredBlanket(paramak.Reactor):
     """Creates geometry for a simple ball reactor including a plasma,
     cylindrical center column shielding, square toroidal field coils.
     There is no inboard breeder blanket on this ball reactor like
