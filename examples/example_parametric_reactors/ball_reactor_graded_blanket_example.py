@@ -21,7 +21,7 @@ my_reactor = p.BallReactorGradedBlanket(
     rotation_angle=360
 )
 
-# Ring source at plasma major radius
+# Ring source at plasma major radius (requires updated OpenMC)
 source = openmc.Source()
 radius = openmc.stats.Discrete([my_reactor.major_radius], [1])
 z_values = openmc.stats.Discrete([0], [1])
