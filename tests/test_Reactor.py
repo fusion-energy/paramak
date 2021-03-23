@@ -1033,7 +1033,7 @@ class TestReactor(unittest.TestCase):
         assert my_reactor.stp_filenames == ['filename1.stp', 'filename2.stp']
         assert my_reactor.stl_filenames == ['filename1.stl', 'filename2.stl']
 
-    def test_sector_wedge_with_360_returns_None(self):
+    def test_sector_wedge_with_360_returns_none(self):
         """Trys to make a sector wedge with full 360 degree rotation and checks
         that None is returned""" 
 
@@ -1064,7 +1064,7 @@ class TestReactor(unittest.TestCase):
             )
             test_shape.export_neutronics_description('manifest.json')
             my_reactor = paramak.Reactor('manifest.json')
-            my_reactor.export_h5m_with_pymoab()  
+            my_reactor.export_h5m_with_pymoab()
             assert Path('dagmc.h5m').is_file
 
         self.assertRaises(NotImplementedError, check_correct_error_is_rasied)
