@@ -405,9 +405,6 @@ class BallReactorGradedBlanket(paramak.Reactor):
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            material_tag="blanket_mat",
-            stp_filename="blanket.stp",
-            stl_filename="blanket.stl",
             cut=[self._center_column_cutter])
 
         self._blanket_layers = []
