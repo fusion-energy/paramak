@@ -67,6 +67,13 @@ class TestBallReactor(unittest.TestCase):
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 9
 
+    def test_rotation_angle_error(self):
+        """Checks that an error is raised when an angle is over 360."""
+
+        def invalid_rotation_angle():
+            self.test_reactor.rotation_angle = 361
+        self.assertRaises(ValueError, invalid_rotation_angle)
+
     def test_pf_coil_thicknesses_error(self):
         """Checks that an error is raised when invalid pf_coil_radial_thicknesses and
         pf_coil_vertical_thicknesses are specified."""
