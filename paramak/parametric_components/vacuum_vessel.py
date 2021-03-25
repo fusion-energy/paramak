@@ -41,9 +41,11 @@ class VacuumVessel(RotateStraightShape):
     @height.setter
     def height(self, value):
         if not isinstance(value, (float, int)):
-            raise ValueError('VacuumVessel.height must be a number. Not', value)
+            raise ValueError(
+                'VacuumVessel.height must be a number. Not', value)
         if value <= 0:
-            raise ValueError('VacuumVessel.height must be a positive number above 0. Not', value)
+            raise ValueError(
+                'VacuumVessel.height must be a positive number above 0. Not', value)
         self._height = value
 
     @property

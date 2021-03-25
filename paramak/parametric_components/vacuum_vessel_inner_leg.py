@@ -47,9 +47,11 @@ class VacuumVesselInnerLeg(RotateStraightShape):
     @inner_height.setter
     def inner_height(self, value):
         if not isinstance(value, (float, int)):
-            raise ValueError('VacuumVessel.inner_height must be a number. Not', value)
+            raise ValueError(
+                'VacuumVessel.inner_height must be a number. Not', value)
         if value <= 0:
-            raise ValueError('VacuumVessel.inner_height must be a positive number above 0. Not', value)
+            raise ValueError(
+                'VacuumVessel.inner_height must be a positive number above 0. Not', value)
         self._inner_height = value
 
     @property
@@ -69,18 +71,26 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         inner_height = self.inner_height
         inner_leg_radius = self.inner_leg_radius
 
-        point_1 = (inner_leg_radius + 2 * thickness + inner_radius, thickness + (inner_height / 2.))
+        point_1 = (inner_leg_radius + 2 * thickness +
+                   inner_radius, thickness + (inner_height / 2.))
         point_2 = (0, thickness + (inner_height / 2.))
         point_3 = (0, -(thickness + (inner_height / 2.)))
-        point_4 = (inner_leg_radius + 2 * thickness + inner_radius, -(thickness + (inner_height/2)))
+        point_4 = (inner_leg_radius + 2 * thickness +
+                   inner_radius, -(thickness + (inner_height / 2)))
 
-        point_5 = (inner_leg_radius + thickness + inner_radius, inner_height/2)
-        point_6 = (inner_leg_radius + thickness, inner_height/2)
-        point_7 = (inner_leg_radius + thickness, -inner_height/2)
-        point_8 = (inner_leg_radius + thickness + inner_radius, -inner_height / 2)
+        point_5 = (
+            inner_leg_radius +
+            thickness +
+            inner_radius,
+            inner_height /
+            2)
+        point_6 = (inner_leg_radius + thickness, inner_height / 2)
+        point_7 = (inner_leg_radius + thickness, -inner_height / 2)
+        point_8 = (inner_leg_radius + thickness +
+                   inner_radius, -inner_height / 2)
 
         points_9 = (inner_leg_radius, thickness + inner_height / 2)
-        points_10 = (inner_leg_radius, -(thickness + inner_height/2))
+        points_10 = (inner_leg_radius, -(thickness + inner_height / 2))
 
         self.points = [
             point_1, point_2, point_3, point_4, point_5, point_6, point_7,
@@ -119,7 +129,7 @@ class VacuumVesselInnerLeg(RotateStraightShape):
                     local_points[9],
                     local_points[8]
                 ]
-                )
+            )
         ).close()
 
         inner_solid = inner_wire.revolve(self.rotation_angle)
