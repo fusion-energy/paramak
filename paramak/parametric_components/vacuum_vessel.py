@@ -41,16 +41,21 @@ class VacuumVessel(RotateStraightShape):
         return self._height
 
     @height.setter
-    def height(self, height):
-        self._height = height
+    def height(self, value):
+        if not isinstance(value, (float, int)):
+            raise ValueError('VacuumVessel.height must be a number. Not', value)
+        if value <= 0:
+            raise ValueError('VacuumVessel.height must be a positive number above 0. Not', value)
+        self._height = value
 
     @property
     def inner_radius(self):
         return self._inner_radius
 
     @inner_radius.setter
-    def inner_radius(self, inner_radius):
-        self._inner_radius = inner_radius
+    def inner_radius(self, value):
+        # todo check it is a positve number
+        self._inner_radius = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the
