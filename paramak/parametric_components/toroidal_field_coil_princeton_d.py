@@ -130,7 +130,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         """Finds the XZ points joined by connections that describe the 2D
         profile of the toroidal field coil shape."""
         # compute inner points
-        R_inner, Z_inner = self._compute_inner_points(self.R1, self.R2)
+        R_inner, Z_inner = self._compute_inner_points(self.R1 + self.thickness, self.R2)
 
         # compute outer points
         dz_dr = np.diff(Z_inner) / np.diff(R_inner)
