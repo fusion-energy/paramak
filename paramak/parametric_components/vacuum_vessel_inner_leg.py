@@ -99,7 +99,6 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         local_points = []
         for point in self.points:
             local_points.append((point[0], point[1]))
-            print((point[0], point[1]))
 
         big_wire = (
             cq.Workplane(self.workplane)
