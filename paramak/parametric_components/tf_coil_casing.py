@@ -66,7 +66,7 @@ class TFCoilCasing(ExtrudeMixedShape):
             min(outer_points[0], key=lambda x:abs(x - min(inner_points[0]))))]
         self.leg_points = [
             (
-                min(outer_points[0]) - self.vertical_section_offset,
+                min(outer_points[0]) - self.vertical_section_offset + self.outer_offset,
                 min(outer_points[1])),
             (
                 outer_points[0][outer_points[1].index(min(outer_points[1]))],
@@ -87,7 +87,7 @@ class TFCoilCasing(ExtrudeMixedShape):
                 outer_points[0][outer_points[1].index(min(outer_points[1]))],
                 max(outer_points[1])),
             (
-                min(outer_points[0]) - self.vertical_section_offset,
+                min(outer_points[0]) - self.vertical_section_offset + self.outer_offset,
                 max(outer_points[1])),
         ]
 
