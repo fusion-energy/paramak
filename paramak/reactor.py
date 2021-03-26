@@ -288,17 +288,20 @@ class Reactor:
         """
 
         if isinstance(self.shapes_and_components, str):
-            raise NotImplementedError('A solid from shapes_and_components that'
+            raise NotImplementedError(
+                'A solid from shapes_and_components that'
                 ' is a string is not currently implemented')
-            # TODO paramak.utils.load_stp_file can be used to load the stp files
+            # TODO paramak.utils.load_stp_file can be used to load the stp
+            # files
 
         else:
 
             list_of_cq_vals = []
             for shape_or_compound in self.shapes_and_components:
                 if isinstance(
-                        shape_or_compound.solid,
-                        (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+                    shape_or_compound.solid,
+                    (cq.occ_impl.shapes.Shape,
+                     cq.occ_impl.shapes.Compound)):
                     for solid in shape_or_compound.solid.Solids():
                         list_of_cq_vals.append(solid)
                 else:
@@ -498,7 +501,7 @@ class Reactor:
             print([item for item, count in collections.Counter(
                 self.stp_filenames).items() if count > 1])
             raise ValueError("Set Reactor already contains shapes with the "
-                "same stp_filename")
+                             "same stp_filename")
 
         filenames = []
         for entry in self.shapes_and_components:
