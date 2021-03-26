@@ -115,12 +115,12 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
 
         # create inner coordinates
         R_inner, Z_inner = self._compute_curve(
-            self.R1, self.h * 0.5, radii=(small_radius, mid_radius),
+            self.R1 + thickness, self.h * 0.5, radii=(small_radius, mid_radius),
             coverages=(small_coverage, mid_coverage))
 
         # create outer coordinates
         R_outer, Z_outer = self._compute_curve(
-            self.R1 - thickness, self.h * 0.5,
+            self.R1, self.h * 0.5,
             radii=(small_radius + thickness, mid_radius + thickness),
             coverages=(small_coverage, mid_coverage))
         R_outer, Z_outer = np.flip(R_outer), np.flip(Z_outer)
