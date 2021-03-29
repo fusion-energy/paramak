@@ -32,14 +32,13 @@ class TFCoilCasing(ExtrudeMixedShape):
         **kwargs
     ) -> None:
 
-    
         super().__init__(
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             **kwargs
         )
-    
+
         self.magnet = magnet
         self.inner_offset = inner_offset
         self.outer_offset = outer_offset
