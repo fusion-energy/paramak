@@ -36,9 +36,9 @@ class ITERTokamak(paramak.Reactor):
             A list of CadQuery solids: A list of 3D solid volumes
         """
 
-        R1 = 308
+        R1 = 219
         R2 = 1.026e3 + 30
-        coil_thickness = R1 - 219
+        coil_thickness = R1 - 130
 
         tf_coil = paramak.ToroidalFieldCoilPrincetonD(
             R1=R1,
