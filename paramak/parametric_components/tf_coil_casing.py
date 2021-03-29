@@ -47,6 +47,7 @@ class TFCoilCasing(ExtrudeMixedShape):
         self.leg_shape = ExtrudeStraightShape(
             distance=self.distance,
             azimuth_placement_angle=self.azimuth_placement_angle)
+        self.inner_bore_cutting_points = None
 
     @property
     def azimuth_placement_angle(self):
