@@ -1,5 +1,6 @@
 
 import warnings
+from typing import Optional
 
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import add_thickness, cut_solid, union_solid
@@ -22,11 +23,14 @@ class TFCoilCasing(ExtrudeMixedShape):
     def __init__(
         self, 
         magnet, 
-        inner_offset, 
-        outer_offset,
-        vertical_section_offset, 
+        inner_offset: float, 
+        outer_offset: float,
+        vertical_section_offset: float,
+        stp_filename: Optional[str] = "TFCoilCasing.stp",
+        stl_filename: Optional[str] = "TFCoilCasing.stl",
+        material_tag: Optional[str] = "TF_coil_casing_mat",
         **kwargs
-    ):
+    ) -> None:
 
         self.magnet = magnet
     
