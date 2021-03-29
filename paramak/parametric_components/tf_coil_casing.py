@@ -11,9 +11,9 @@ class TFCoilCasing(ExtrudeMixedShape):
 
     Args:
         magnet: TF coil shape
-        inner_offset: radial distance between inner coil surface and inner 
+        inner_offset: radial distance between inner coil surface and inner
             casing surface (cm)
-        outer_offset: radial distance between outer coil surface and outer 
+        outer_offset: radial distance between outer coil surface and outer
             casing surface (cm)
         vertical_section_offset: radial distance between outer coil surface and
             outer vertical section surface (cm)
@@ -21,9 +21,9 @@ class TFCoilCasing(ExtrudeMixedShape):
     """
 
     def __init__(
-        self, 
-        magnet, 
-        inner_offset: float, 
+        self,
+        magnet,
+        inner_offset: float,
         outer_offset: float,
         vertical_section_offset: float,
         stp_filename: Optional[str] = "TFCoilCasing.stp",
