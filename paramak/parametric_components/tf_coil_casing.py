@@ -6,10 +6,32 @@ from paramak.utils import add_thickness, cut_solid, union_solid
 
 
 class TFCoilCasing(ExtrudeMixedShape):
-    def __init__(self, magnet, inner_offset, outer_offset,
-                 vertical_section_offset, **kwargs):
+    """Casing component for TF coils
+
+    Args:
+        magnet: TF coil shape
+        inner_offset: radial distance between inner coil surface and inner 
+            casing surface (cm)
+        outer_offset: radial distance between outer coil surface and outer 
+            casing surface (cm)
+        vertical_section_offset: radial distance between outer coil surface and
+            outer vertical section surface (cm)
+        distance: extrusion distance (cm)
+    """
+
+    def __init__(
+        self, 
+        magnet, 
+        inner_offset, 
+        outer_offset,
+        vertical_section_offset, 
+        **kwargs
+    ):
+
         self.magnet = magnet
+    
         super().__init__(**kwargs)
+    
         self.inner_offset = inner_offset
         self.outer_offset = outer_offset
         self.vertical_section_offset = vertical_section_offset
