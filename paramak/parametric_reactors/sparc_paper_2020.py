@@ -170,7 +170,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
         """
 
         tf_coil = paramak.ToroidalFieldCoilPrincetonD(
-            R1=105,
+            R1=72,
             R2=339,
             thickness=33,
             distance=33,
