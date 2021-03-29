@@ -31,6 +31,8 @@ class TFCoilCasing(ExtrudeMixedShape):
         material_tag: Optional[str] = "TF_coil_casing_mat",
         **kwargs
     ) -> None:
+    
+        self.magnet = magnet
 
         super().__init__(
             material_tag=material_tag,
@@ -39,7 +41,6 @@ class TFCoilCasing(ExtrudeMixedShape):
             **kwargs
         )
 
-        self.magnet = magnet
         self.inner_offset = inner_offset
         self.outer_offset = outer_offset
         self.vertical_section_offset = vertical_section_offset
