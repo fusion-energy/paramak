@@ -63,7 +63,6 @@ def make_model_and_simulate():
         cell_tallies=['TBR'],
         simulation_batches=5,
         simulation_particles_per_batch=1e4,
-        method='trelis',
     )
 
     # starts the neutronics simulation
