@@ -119,7 +119,7 @@ class TFCoilCasing(ExtrudeMixedShape):
                 max(outer_points[1])),
         ]
 
-        self._inner_bore_cutting_points = [
+        self.inner_bore_cutting_points = [
             (0, self.leg_points[0][1]),
             self.leg_points[0],
             self.leg_points[-1],
@@ -137,7 +137,7 @@ class TFCoilCasing(ExtrudeMixedShape):
         solid = cut_solid(solid, self.magnet)
 
         inner_bore_cutting_shape = ExtrudeStraightShape(
-            points=self._inner_bore_cutting_points,
+            points=self.inner_bore_cutting_points,
             distance=self.distance,
             azimuth_placement_angle=self.azimuth_placement_angle
         )
