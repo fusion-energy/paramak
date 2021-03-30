@@ -476,6 +476,7 @@ class Reactor:
             mode: Optional[str] = 'solid',
             include_graveyard: Optional[bool] = True,
             include_sector_wedge: Optional[bool] = True,
+            units: Optional[str] = 'mm',
     ) -> List[str]:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
@@ -493,6 +494,8 @@ class Reactor:
                 This wedge is useful when constructing reflectin surfaces in
                 DAGMC geometry. If set to True the the self.rotation_agle must
                 also be set.
+            units: the units of the stp file, options are 'cm' or 'mm'.
+                Default is mm.
         Returns:
             list: a list of stp filenames created
         """
@@ -514,7 +517,7 @@ class Reactor:
                 str(Path(output_folder) / Path(entry.stp_filename)))
             entry.export_stp(
                 filename=Path(output_folder) / Path(entry.stp_filename),
-                mode=mode
+                mode=mode, units=units
             )
 
         if include_sector_wedge:
