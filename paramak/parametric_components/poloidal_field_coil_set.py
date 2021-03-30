@@ -24,6 +24,7 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         heights,
         widths,
         center_points,
+        split=False,
         stp_filename="PoloidalFieldCoilSet.stp",
         stl_filename="PoloidalFieldCoilSet.stl",
         name="pf_coil",
@@ -42,6 +43,7 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         self.center_points = center_points
         self.heights = heights
         self.widths = widths
+        self.split = split
 
         if len(
             self.widths) != len(
@@ -91,24 +93,68 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         for height, width, center_point in zip(
                 self.heights, self.widths, self.center_points):
 
-            all_points = all_points + [
-                (
-                    center_point[0] + width / 2.0,
-                    center_point[1] + height / 2.0,
-                ),  # upper right
-                (
-                    center_point[0] + width / 2.0,
-                    center_point[1] - height / 2.0,
-                ),  # lower right
-                (
-                    center_point[0] - width / 2.0,
-                    center_point[1] - height / 2.0,
-                ),  # lower left
-                (
-                    center_point[0] - width / 2.0,
-                    center_point[1] + height / 2.0,
-                ),  # upper left
-            ]
+            if self.split == False:
+
+                all_points = all_points + [
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] + height / 2.0,
+                    ),  # upper right
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] - height / 2.0,
+                    ),  # lower right
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1] - height / 2.0,
+                    ),  # lower left
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1] + height / 2.0,
+                    ),  # upper left
+                ]
+            
+            else:
+
+                # top half
+                all_points = all_points + [
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] + height / 2.0
+                    ),  # upper right
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1]
+                    ),  # lower right
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1]
+                    ),  # lower left
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1] + height / 2.0
+                    )   # upper left
+                ]
+
+                # bottom half
+                all_points = all_points + [
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1]
+                    ),  # upper right
+                    (
+                        center_point[0] + width / 2.0,
+                        center_point[1] - height / 2.0
+                    ),  # lower right
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1] - height / 2.0
+                    ),  # lower left
+                    (
+                        center_point[0] - width / 2.0,
+                        center_point[1]
+                    )   # upper left
+                ]
 
         self.points = all_points
 
