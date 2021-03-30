@@ -142,6 +142,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     python setup.py install ; \
     fi
 
+ENV PATH="/MOAB/build/bin:${PATH}"
 
 # Clone and install Double-Down
 RUN if [ "$include_neutronics" = "true" ] ; \
