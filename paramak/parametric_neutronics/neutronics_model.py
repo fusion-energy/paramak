@@ -126,12 +126,12 @@ class NeutronicsModel():
 
     @geometry.setter
     def geometry(self, value):
-        if isinstance(value, (paramak.Shape, paramak.Reactor, str, type(None))):
+        if isinstance(value, (paramak.Shape, paramak.Reactor, type(None))):
             self._geometry = value
         else:
             raise TypeError(
                 "NeutronicsModelFromReactor.geometry should be a \
-                paramak.Shape(), paramak.Reactor() or filename (string)")
+                paramak.Shape(), paramak.Reactor()")
 
     @property
     def source(self):
