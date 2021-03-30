@@ -129,7 +129,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
     # def test_find_materials_in_h5_file(self):
     #     """exports a h5m with specific material tags and checks they are
     #     found using the find_material_groups_in_h5m utility function"""
-    
+
     #     os.system('rm *.stl *.h5m')
 
     #     pf_coil = paramak.PoloidalFieldCoil(
@@ -178,12 +178,12 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         assert len(points) == 10
         for point in points:
-            assert point == (1,2,3)
+            assert point == (1, 2, 3)
 
     def test_make_watertight_cmd(self):
         """exports a h5m and makes it watertight, checks the the watertight
         file is produced."""
-    
+
         os.system('rm *.stl *.h5m')
 
         pf_coil = paramak.PoloidalFieldCoil(
@@ -208,13 +208,11 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         assert output_filename == "watertight_dagmc.h5m"
         assert Path("watertight_dagmc.h5").exists() is True
 
-
     # these tests only work if trelis is avaialbe
     # def test_trelis_command_to_create_dagmc_h5m_with_default_mat_name(self):
     #     """Creats a h5m file with trelis and forms groups using the material_tag
     #     key in the manifest.json file. Then checks the groups in the resulting
     #     h5 file match those in the original dictionary"""
-
 
     #     pf_coil = paramak.PoloidalFieldCoil(
     #         height=10,
