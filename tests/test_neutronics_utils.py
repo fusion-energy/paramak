@@ -128,7 +128,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
     def test_find_materials_in_h5_file(self):
         """exports a h5m wilth specific material tags and checks they are
         found using the find_material_groups_in_h5m utility function"""
-    
+
         pf_coil = paramak.PoloidalFieldCoil(
             height=10,
             width=10,
