@@ -142,6 +142,7 @@ class TFCoilCasing(ExtrudeMixedShape):
         solid = union_solid(solid, self.leg_shape)
         solid = cut_solid(solid, self.magnet)
 
+        # cut away excess casing outlined in #789
         inner_bore_cutting_shape = ExtrudeStraightShape(
             points=self.inner_bore_cutting_points,
             distance=self.distance,
