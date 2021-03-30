@@ -125,6 +125,31 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_viewplane)
 
+    def test_find_materials_in_h5_file(self):
+        """exports a h5m wilth specific material tags and checks they are
+        found using the find_material_groups_in_h5m utility function"""
+    
+        pf_coil = paramak.PoloidalFieldCoil(
+            height=10,
+            width=10,
+            center_point=(100, 0),
+            rotation_angle=180,
+            material_tag='copper'
+        )
+
+        pf_coil.export_h5m_with_pymoab(
+            filename='dagmc.h5',
+            include_graveyard=True,
+        )
+
+        list_of_mats = paramak.neutronics_utils.find_material_groups_in_h5m(
+            filename="dagmc.h5m"
+        )
+
+        assert len(list_of_mats) == 2
+        assert 'mat:copper' in list_of_mats
+        assert 'mat:graveyard' in list_of_mats
+
     # these tests only work if trelis is avaialbe
     # def test_trelis_command_to_create_dagmc_h5m_with_default_mat_name(self):
     #     """Creats a h5m file with trelis and forms groups using the material_tag
