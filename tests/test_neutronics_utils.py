@@ -126,9 +126,11 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         self.assertRaises(ValueError, incorrect_viewplane)
 
     def test_find_materials_in_h5_file(self):
-        """exports a h5m wilth specific material tags and checks they are
+        """exports a h5m with specific material tags and checks they are
         found using the find_material_groups_in_h5m utility function"""
     
+        os.system('rm *.stl *.h5m')
+
         pf_coil = paramak.PoloidalFieldCoil(
             height=10,
             width=10,
@@ -150,13 +152,68 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         assert 'mat:copper' in list_of_mats
         assert 'mat:graveyard' in list_of_mats
 
+    def test_create_inital_particles(self):
+        """Creates an initial source file using create_inital_particles utility
+        and checks the file exists and that the points are correct"""
+
+        os.system('rm *.h5')
+
+        source = openmc.Source()
+        source.space = openmc.stats.Point((1, 2, 3))
+        source.energy = openmc.stats.Discrete([14e6], [1])
+        source.angle = openmc.stats.Isotropic()
+
+        source_file = paramak.neutronics_utils.create_inital_particles(
+            source=source,
+            number_of_source_particles=10
+        )
+
+        assert "initial_source.h5" == source_file
+        assert Path(source_file).exists() is True
+
+        points = paramak.neutronics_utils.extract_points_from_initial_source(
+            view_plane='XYZ', input_filename=source_file
+        )
+
+        assert len(points) == 10
+        for point in points:
+            assert point == (1,2,3)
+
+    def test_make_watertight_cmd(self):
+        """exports a h5m and makes it watertight, checks the the watertight
+        file is produced."""
+    
+        os.system('rm *.stl *.h5m')
+
+        pf_coil = paramak.PoloidalFieldCoil(
+            height=10,
+            width=10,
+            center_point=(100, 0),
+            rotation_angle=180,
+            material_tag='copper'
+        )
+
+        pf_coil.export_h5m_with_pymoab(
+            filename='not_watertight_dagmc.h5',
+            include_graveyard=True,
+        )
+
+        output_filename = paramak.neutronics_utils.make_watertight(
+            input_filename="not_watertight_dagmc.h5m",
+            output_filename="watertight_dagmc.h5m"
+        )
+
+        assert Path("not_watertight_dagmc.h5").exists() is True
+        assert output_filename == "watertight_dagmc.h5m"
+        assert Path("watertight_dagmc.h5").exists() is True
+
+
     # these tests only work if trelis is avaialbe
     # def test_trelis_command_to_create_dagmc_h5m_with_default_mat_name(self):
     #     """Creats a h5m file with trelis and forms groups using the material_tag
     #     key in the manifest.json file. Then checks the groups in the resulting
     #     h5 file match those in the original dictionary"""
 
-    #     os.system('rm *.stp *.h5m *.json')
 
     #     pf_coil = paramak.PoloidalFieldCoil(
     #         height=10,
