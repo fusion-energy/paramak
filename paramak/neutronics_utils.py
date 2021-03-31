@@ -34,11 +34,17 @@ def find_material_groups_in_h5m(
         The filename of the h5m file created
     """
 
-    terminal_output = subprocess.check_output(
-        "mbsize -ll {} | grep 'mat:'".format(filename),
-        shell=True,
-        universal_newlines=True,
-    )
+    try:
+        terminal_output = subprocess.check_output(
+            "mbsize -ll {} | grep 'mat:'".format(filename),
+            shell=True,
+            universal_newlines=True,
+        )
+    except:
+        raise ValueError(
+            "mbsize failed, check MOAB is install and the MOAB/build/bin "
+            "folder is in the path directory (Linux and Mac) or set as an "
+            "enviromental varible (Windows)")
 
     list_of_mats = terminal_output.split()
     list_of_mats = list(filter(lambda a: a != '=', list_of_mats))
@@ -191,9 +197,9 @@ def make_watertight(
     if os.system("make_watertight {} -o {}".format(input_filename,
                                                    output_filename)) != 0:
         raise ValueError(
-            "make_watertight failed, check DAGMC is install and the \
-                DAGMC/bin folder is in the path directory (Linux and Mac) \
-                or set as an enviromental varible (Windows)")
+            "make_watertight failed, check DAGMC is install and the DAGMC/bin "
+            "folder is in the path directory (Linux and Mac) or set as an "
+            "enviromental varible (Windows)")
 
     if not Path(output_filename).is_file():
         raise FileNotFoundError("Failed to produce dagmc.h5m")
