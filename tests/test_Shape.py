@@ -53,7 +53,7 @@ class TestShape(unittest.TestCase):
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
-            graveyard_size=10)
+            graveyard_size=None)
         os.system("rm graveyard.stp")
 
         test_shape.make_graveyard(graveyard_offset=50)
