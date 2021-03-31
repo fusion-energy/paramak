@@ -55,17 +55,14 @@ class TestShape(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)],
             graveyard_size=10)
         os.system("rm graveyard.stp")
-        test_shape.make_graveyard()
-
-        graveyard_volume_1 = test_shape.graveyard.volume
 
         test_shape.make_graveyard(graveyard_offset=50)
-        assert test_shape.graveyard.volume < graveyard_volume_1
-        graveyard_volume_2 = test_shape.graveyard.volume
+        graveyard_volume_1 = test_shape.graveyard.volume
 
         test_shape.make_graveyard(graveyard_offset=200)
-        assert test_shape.graveyard.volume > graveyard_volume_1
-        assert test_shape.graveyard.volume > graveyard_volume_2
+        graveyard_volume_2 = test_shape.graveyard.volume
+
+        assert graveyard_volume_2 > graveyard_volume_1
 
     def test_export_h5m_makes_dagmc_file(self):
         """Makes a NeutronicsModel from a shapes, then makes the h5m file"""
