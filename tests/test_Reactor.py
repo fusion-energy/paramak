@@ -85,13 +85,13 @@ class TestReactor(unittest.TestCase):
         self.test_reactor.merge_tolerance = 1e-6
         assert self.test_reactor.merge_tolerance == 1e-6
 
-    def test_largest_dimention_setting_and_getting(self):
-        """Makes a neutronics model and checks the default largest_dimention"""
+    def test_largest_dimension_setting_and_getting(self):
+        """Makes a neutronics model and checks the default largest_dimension"""
 
-        assert self.test_reactor.largest_dimention is None
+        assert self.test_reactor.largest_dimension is None
 
-        self.test_reactor.largest_dimention = 400
-        assert self.test_reactor.largest_dimention == 400
+        self.test_reactor.largest_dimension = 400
+        assert self.test_reactor.largest_dimension == 400
 
     def test_incorrect_methods_settings(self):
         """Creates NeutronicsModel objects and checks errors are
@@ -942,7 +942,7 @@ class TestReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape])
         assert test_reactor.tet_meshes is not None
 
-    def test_largest_dimention(self):
+    def test_largest_dimension(self):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
