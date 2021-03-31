@@ -196,7 +196,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         assert Path("not_watertight_dagmc.h5m").exists() is True
         assert output_filename == "watertight_dagmc.h5m"
-        assert Path("watertight_dagmc.h5").exists() is True
+        assert Path("watertight_dagmc.h5m").exists() is True
 
     # these tests only work if trelis is avaialbe
     # def test_make_watertight_cmd(self):
