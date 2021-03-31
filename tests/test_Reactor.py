@@ -515,7 +515,7 @@ class TestReactor(unittest.TestCase):
             graveyard_size=None,
             graveyard_offset=100)
         test_reactor.make_graveyard()
-        # assert test_reactor.graveyard_offset == 100
+
         graveyard_volume_1 = test_reactor.graveyard.volume
 
         test_reactor.make_graveyard(graveyard_offset=50)

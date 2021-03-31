@@ -47,6 +47,25 @@ class TestShape(unittest.TestCase):
             ]
         )
 
+    def test_make_graveyard_offset(self):
+        """checks that the graveyard can be exported with the correct default parameters
+        and that these parameters can be changed"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        os.system("rm graveyard.stp")
+        test_shape.make_graveyard()
+
+        graveyard_volume_1 = test_shape.graveyard.volume
+
+        test_shape.make_graveyard(graveyard_offset=50)
+        assert test_shape.graveyard.volume < graveyard_volume_1
+        graveyard_volume_2 = test_shape.graveyard.volume
+
+        test_shape.make_graveyard(graveyard_offset=200)
+        assert test_shape.graveyard.volume > graveyard_volume_1
+        assert test_shape.graveyard.volume > graveyard_volume_2
+
     def test_export_h5m_makes_dagmc_file(self):
         """Makes a NeutronicsModel from a shapes, then makes the h5m file"""
 
@@ -80,6 +99,52 @@ class TestShape(unittest.TestCase):
         test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         assert test_shape.azimuth_placement_angle == [0, 90, 180, 270]
 
+    def test_incorrect_graveyard_offset_too_small(self):
+
+        def incorrect_graveyard_offset_too_small():
+            """Set graveyard_offset as a negative number which should raise an error"""
+
+            self.my_shape.graveyard_offset = -3
+
+        self.assertRaises(
+            ValueError,
+            incorrect_graveyard_offset_too_small
+        )
+
+    def test_incorrect_graveyard_offset_wrong_type(self):
+
+        def incorrect_graveyard_offset_wrong_type():
+            """Set graveyard_offset as a string which should raise an error"""
+
+            self.my_shape.graveyard_offset = 'coucou'
+
+        self.assertRaises(
+            TypeError,
+            incorrect_graveyard_offset_wrong_type
+        )
+
+    def test_missing_filename_arg_in_export_stp(self):
+        """Checks that an error is raised when a stp export is requested without a filename."""
+
+        def incorrect_args():
+            self.my_shape.export_stp()
+
+        self.assertRaises(
+            ValueError,
+            incorrect_args
+        )
+
+    def test_missing_filename_arg_in_export_stl(self):
+        """Checks that an error is raised when a stl export is requested without a filename."""
+
+        def incorrect_args():
+            self.my_shape.export_stl()
+
+        self.assertRaises(
+            ValueError,
+            incorrect_args
+        )
+
     def test_incorrect_color_values(self):
         """Checks that an error is raised when the color of a shape is
         defined as an invalid string."""
@@ -90,6 +155,30 @@ class TestShape(unittest.TestCase):
         self.assertRaises(
             ValueError,
             incorrect_color_string
+        )
+
+    def test_incorrect_method(self):
+        """Checks that an error is raised when the method of a shape is
+        defined as an invalid string."""
+
+        def incorrect_method_string():
+            self.my_shape.method = 'coucou'
+
+        self.assertRaises(
+            ValueError,
+            incorrect_method_string
+        )
+
+    def test_incorrect_method_in_export_h5m(self):
+        """Checks that an error is raised when the export_h5m is used with an
+        incorrect method string."""
+
+        def incorrect_method_string():
+            self.my_shape.export_h5m(method='coucou')
+
+        self.assertRaises(
+            ValueError,
+            incorrect_method_string
         )
 
     def test_incorrect_workplane(self):
