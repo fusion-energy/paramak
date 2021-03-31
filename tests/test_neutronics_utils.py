@@ -1,9 +1,10 @@
 
-import os
-import subprocess
-import unittest
-from pathlib import Path
 import json
+import os
+import unittest
+import urllib.request
+from pathlib import Path
+
 import openmc
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
@@ -179,24 +180,14 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         for point in points:
             assert point == (1, 2, 3)
 
-    def test_make_watertight_cmd(self):
-        """exports a h5m and makes it watertight, checks the the watertight
+    def test_make_watertight_cmd_with_example_dagmc_file(self):
+        """downloads a h5m and makes it watertight, checks the the watertight
         file is produced."""
 
-        os.system('rm *.stl *.h5m')
+        os.system('rm *.h5m')
 
-        pf_coil = paramak.PoloidalFieldCoil(
-            height=10,
-            width=10,
-            center_point=(100, 0),
-            rotation_angle=180,
-            material_tag='copper'
-        )
-
-        pf_coil.export_h5m_with_pymoab(
-            filename='not_watertight_dagmc.h5',
-            include_graveyard=True,
-        )
+        url = 'https://github.com/Shimwell/fusion_example_for_openmc_using_paramak/raw/main/dagmc.h5m'
+        urllib.request.urlretrieve(url, 'not_watertight_dagmc.h5m')
 
         output_filename = paramak.neutronics_utils.make_watertight(
             input_filename="not_watertight_dagmc.h5m",
@@ -208,6 +199,39 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         assert Path("watertight_dagmc.h5").exists() is True
 
     # these tests only work if trelis is avaialbe
+    # def test_make_watertight_cmd(self):
+    #     """exports a h5m and makes it watertight, checks the the watertight
+    #     file is produced."""
+
+    #     os.system('rm *.stl *.h5m')
+
+    #     https://github.com/Shimwell/fusion_example_for_openmc_using_paramak/raw/main/dagmc.h5m
+
+    #     pf_coil = paramak.PoloidalFieldCoil(
+    #         height=10,
+    #         width=10,
+    #         center_point=(100, 0),
+    #         rotation_angle=180,
+    #         material_tag='copper',
+    #         method='trelis'
+    #     )
+
+    #     pf_coil.export_h5m_with_trelis(
+    #         filename='not_watertight_dagmc.h5m',
+    #         include_graveyard=True,
+    #     )
+
+    #     assert Path('not_watertight_dagmc.h5m').is_file
+
+    #     output_filename = paramak.neutronics_utils.make_watertight(
+    #         input_filename="not_watertight_dagmc.h5m",
+    #         output_filename="watertight_dagmc.h5m"
+    #     )
+
+    #     assert Path("not_watertight_dagmc.h5").exists() is True
+    #     assert output_filename == "watertight_dagmc.h5m"
+    #     assert Path("watertight_dagmc.h5").exists() is True
+
     # def test_trelis_command_to_create_dagmc_h5m_with_default_mat_name(self):
     #     """Creats a h5m file with trelis and forms groups using the material_tag
     #     key in the manifest.json file. Then checks the groups in the resulting

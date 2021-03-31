@@ -179,7 +179,8 @@ def make_watertight(
         output_filename: str = "dagmc.h5m",
 ) -> str:
     """Runs the DAGMC make_watertight executable that seals the facetets of
-    the geometry with specified input and output h5m files.
+    the geometry with specified input and output h5m files. Not needed for
+    h5m file produced with pymoab method.
 
     Arguments:
         input_filename: the non watertight h5m file to make watertight.
@@ -194,8 +195,13 @@ def make_watertight(
 
     os.system('rm {}'.format(output_filename))
 
-    if os.system("make_watertight {} -o {}".format(input_filename,
-                                                   output_filename)) != 0:
+    try:
+        subprocess.check_output(
+            "make_watertight {} -o {}".format(input_filename, output_filename),
+            shell=True,
+            universal_newlines=True,
+        )
+    except:
         raise ValueError(
             "make_watertight failed, check DAGMC is install and the DAGMC/bin "
             "folder is in the path directory (Linux and Mac) or set as an "
