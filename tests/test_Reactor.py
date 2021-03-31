@@ -53,6 +53,18 @@ class TestReactor(unittest.TestCase):
             incorrect_merge_tolerance_too_small
         )
 
+    def test_incorrect_merge_tolerance_wrong_type(self):
+
+        def incorrect_merge_tolerance_wrong_type():
+            """Set merge_tolerance as a string which should raise an error"""
+
+            self.test_reactor.merge_tolerance = 'coucou'
+
+        self.assertRaises(
+            TypeError,
+            incorrect_merge_tolerance_wrong_type
+        )
+
     def test_incorrect_faceting_tolerance_too_small(self):
 
         def incorrect_faceting_tolerance_too_small():
@@ -72,6 +84,14 @@ class TestReactor(unittest.TestCase):
 
         self.test_reactor.merge_tolerance = 1e-6
         assert self.test_reactor.merge_tolerance == 1e-6
+
+    def test_largest_dimention_setting_and_getting(self):
+        """Makes a neutronics model and checks the default largest_dimention"""
+
+        assert self.test_reactor.largest_dimention == None
+
+        self.test_reactor.largest_dimention = 400
+        assert self.test_reactor.largest_dimention == 400
 
     def test_incorrect_methods_settings(self):
         """Creates NeutronicsModel objects and checks errors are
@@ -115,6 +135,29 @@ class TestReactor(unittest.TestCase):
         assert len(test_reactor.material_tags()) == 2
         assert "mat1" in test_reactor.material_tags()
         assert "mat2" in test_reactor.material_tags()
+
+    def test_material_tags_without_plasma(self):
+        """Checks that the material tags don't contain the plasma when it is filtered out"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)], material_tag="mat1"
+        )
+        test_shape2 = paramak.Plasma(material_tag='plasma')
+
+        test_reactor = paramak.Reactor([test_shape, test_shape2])
+
+        assert len(test_reactor.material_tags(include_plasma=False)) == 1
+        assert "mat1" in test_reactor.material_tags()
+        assert "plasma" not in test_reactor.material_tags()
+
+    def test_make_sector_wedge(self):
+        """Checks that the wedge is not made when rotation angle is 360"""
+        sector_wedge = self.test_reactor.make_sector_wedge(
+            height=100,
+            radius=100,
+            rotation_angle=360
+        )
+        assert sector wedge == None
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with the
@@ -451,8 +494,9 @@ class TestReactor(unittest.TestCase):
 
         test_reactor.export_stp_graveyard()
         test_reactor.export_stp_graveyard(filename="my_graveyard.stp")
+        test_reactor.export_stp_graveyard(filename="my_graveyard_without_ext")
 
-        for filepath in ["graveyard.stp", "my_graveyard.stp"]:
+        for filepath in ["graveyard.stp", "my_graveyard.stp", "my_graveyard_without_ext.stp"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
