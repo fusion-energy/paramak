@@ -40,7 +40,7 @@ def find_material_groups_in_h5m(
             shell=True,
             universal_newlines=True,
         )
-    except:
+    except BaseException:
         raise ValueError(
             "mbsize failed, check MOAB is install and the MOAB/build/bin "
             "folder is in the path directory (Linux and Mac) or set as an "
@@ -201,7 +201,7 @@ def make_watertight(
             shell=True,
             universal_newlines=True,
         )
-    except:
+    except BaseException:
         raise ValueError(
             "make_watertight failed, check DAGMC is install and the DAGMC/bin "
             "folder is in the path directory (Linux and Mac) or set as an "
