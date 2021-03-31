@@ -17,6 +17,30 @@ class TestReactor(unittest.TestCase):
 
         self.test_reactor = paramak.Reactor([test_shape])
 
+    def test_incorrect_graveyard_offset_too_small(self):
+
+        def incorrect_graveyard_offset_too_small():
+            """Set graveyard_offset as a negative number which should raise an error"""
+
+            self.test_reactor.graveyard_offset = -3
+
+        self.assertRaises(
+            ValueError,
+            incorrect_graveyard_offset_too_small
+        )
+
+    def test_incorrect_graveyard_offset_wrong_type(self):
+
+        def incorrect_graveyard_offset_wrong_type():
+            """Set graveyard_offset as a string which should raise an error"""
+
+            self.test_reactor.graveyard_offset = 'coucou'
+
+        self.assertRaises(
+            TypeError,
+            incorrect_graveyard_offset_wrong_type
+        )
+
     def test_incorrect_merge_tolerance_too_small(self):
 
         def incorrect_merge_tolerance_too_small():
