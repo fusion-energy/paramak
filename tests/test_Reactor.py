@@ -88,7 +88,7 @@ class TestReactor(unittest.TestCase):
     def test_largest_dimention_setting_and_getting(self):
         """Makes a neutronics model and checks the default largest_dimention"""
 
-        assert self.test_reactor.largest_dimention == None
+        assert self.test_reactor.largest_dimention is None
 
         self.test_reactor.largest_dimention = 400
         assert self.test_reactor.largest_dimention == 400
@@ -157,7 +157,7 @@ class TestReactor(unittest.TestCase):
             radius=100,
             rotation_angle=360
         )
-        assert sector wedge == None
+        assert sector wedge is None
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with the
@@ -496,7 +496,10 @@ class TestReactor(unittest.TestCase):
         test_reactor.export_stp_graveyard(filename="my_graveyard.stp")
         test_reactor.export_stp_graveyard(filename="my_graveyard_without_ext")
 
-        for filepath in ["graveyard.stp", "my_graveyard.stp", "my_graveyard_without_ext.stp"]:
+        for filepath in [
+            "graveyard.stp",
+            "my_graveyard.stp",
+                "my_graveyard_without_ext.stp"]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
