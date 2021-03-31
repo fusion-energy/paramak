@@ -157,7 +157,7 @@ class TestReactor(unittest.TestCase):
             radius=100,
             rotation_angle=360
         )
-        assert sector wedge == None
+        assert sector_wedge == None
 
     def test_adding_shape_with_stp_filename_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with the
