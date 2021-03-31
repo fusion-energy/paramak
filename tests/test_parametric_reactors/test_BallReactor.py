@@ -115,7 +115,6 @@ class TestBallReactor(unittest.TestCase):
 
         def warning_trigger():
             self.test_reactor.rotation_angle = 360
-            self.test_reactor._rotation_angle_check()
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
