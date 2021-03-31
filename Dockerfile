@@ -20,7 +20,7 @@
 #   Options: [1, 2, 3, 4, 5, 6...]
 #
 # Example builds:
-# Building using the defaults (cq_version 2, no neutronics and 1 core compile)
+# Building using the defaults (cq_version 2.1, no neutronics and 1 core compile)
 # docker build -t ukaea/paramak .
 #
 # Building to include cadquery master, neutronics dependencies and use 8 cores.
@@ -89,17 +89,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     apt-get --yes install libglfw3-dev ; \
     fi
 
-# Clone and install NJOY2016
-RUN if [ "$include_neutronics" = "true" ] ; \
-    then git clone --single-branch --branch master https://github.com/njoy/NJOY2016.git /opt/NJOY2016 ; \
-    cd /opt/NJOY2016 ; \
-    mkdir build ; \
-    cd build ; \
-    cmake -Dstatic=on .. ; \
-    make 2>/dev/null ; \
-    make install ; \
-    fi
-
 # Clone and install Embree
 RUN if [ "$include_neutronics" = "true" ] ; \
     then git clone --single-branch --branch v3.12.2 --depth 1 https://github.com/embree/embree.git ; \
@@ -141,8 +130,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     bash install.sh ; \
     python setup.py install ; \
     fi
-
-ENV PATH="/MOAB/build/bin:${PATH}"
 
 # Clone and install Double-Down
 RUN if [ "$include_neutronics" = "true" ] ; \
@@ -192,16 +179,19 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     /opt/openmc/tools/ci/download-xs.sh ; \
     fi
 
-ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
-
 RUN if [ "$include_neutronics" = "true" ] ; \
     then pip install vtk ; \
     pip install parametric_plasma_source ; \
     pip install neutronics_material_maker ; \
+    pip install openmc_data_downloader ; \
     fi
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
+ENV PATH="/MOAB/build/bin:${PATH}"
+ENV PATH="/DAGMC/bin:${PATH}"
 
 RUN mkdir /home/paramak
 EXPOSE 8888
