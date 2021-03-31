@@ -89,17 +89,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     apt-get --yes install libglfw3-dev ; \
     fi
 
-# Clone and install NJOY2016
-RUN if [ "$include_neutronics" = "true" ] ; \
-    then git clone --single-branch --branch master https://github.com/njoy/NJOY2016.git /opt/NJOY2016 ; \
-    cd /opt/NJOY2016 ; \
-    mkdir build ; \
-    cd build ; \
-    cmake -Dstatic=on .. ; \
-    make 2>/dev/null ; \
-    make install ; \
-    fi
-
 # Clone and install Embree
 RUN if [ "$include_neutronics" = "true" ] ; \
     then git clone --single-branch --branch master https://github.com/embree/embree.git ; \
@@ -141,7 +130,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     bash install.sh ; \
     python setup.py install ; \
     fi
-
 
 # Clone and install Double-Down
 RUN if [ "$include_neutronics" = "true" ] ; \
@@ -191,16 +179,18 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     /opt/openmc/tools/ci/download-xs.sh ; \
     fi
 
-ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
-
 RUN if [ "$include_neutronics" = "true" ] ; \
     then pip install vtk ; \
     pip install parametric_plasma_source ; \
     pip install neutronics_material_maker ; \
+    pip install openmc_data_downloader ; \
     fi
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
+ENV PATH="/MOAB/build/bin:${PATH}"
 
 RUN mkdir /home/paramak
 EXPOSE 8888
