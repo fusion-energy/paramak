@@ -52,7 +52,8 @@ class TestShape(unittest.TestCase):
         and that these parameters can be changed"""
 
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+            points=[(0, 0), (0, 20), (20, 20)],
+            graveyard_size=10)
         os.system("rm graveyard.stp")
         test_shape.make_graveyard()
 
@@ -127,6 +128,7 @@ class TestShape(unittest.TestCase):
         """Checks that an error is raised when a stp export is requested without a filename."""
 
         def incorrect_args():
+            self.my_shape.stp_filename = None
             self.my_shape.export_stp()
 
         self.assertRaises(
@@ -138,6 +140,7 @@ class TestShape(unittest.TestCase):
         """Checks that an error is raised when a stl export is requested without a filename."""
 
         def incorrect_args():
+            self.my_shape.stl_filename = None
             self.my_shape.export_stl()
 
         self.assertRaises(
