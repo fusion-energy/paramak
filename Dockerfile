@@ -191,6 +191,7 @@ RUN pip install -r requirements.txt
 
 ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
 ENV PATH="/MOAB/build/bin:${PATH}"
+ENV PATH="/DAGMC/bin:${PATH}"
 
 RUN mkdir /home/paramak
 EXPOSE 8888
