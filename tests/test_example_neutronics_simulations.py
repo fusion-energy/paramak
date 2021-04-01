@@ -34,6 +34,7 @@ class TestExampleNeutronics(unittest.TestCase):
             "n-Xa_on_3D_mesh.vtk",
             "summary.h5",
         ]
+
         shape_with_gas_production.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
@@ -51,15 +52,14 @@ class TestExampleNeutronics(unittest.TestCase):
             "heating_on_2D_mesh_xz.png",
             "heating_on_3D_mesh.vtk",
         ]
-        os.system("rm *.png")
-        os.system("rm *.vtk")
+
         component_based_mesh_simulation.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
 
     def test_component_based_parameter_study(self):
         """Runs the example and checks the output files are produced"""
-        os.system("rm *.png *.vtk *.json *.h5")
+        os.system("rm *.png *.vtk *.json *.h5 *.stp")
         output_filenames = [
             "my_shape60.stp",
             "my_shape70.stp",
@@ -69,8 +69,7 @@ class TestExampleNeutronics(unittest.TestCase):
             "statepoint.10.h5",
             "summary.h5",
         ]
-        os.system("rm *.png")
-        os.system("rm *.vtk")
+
         component_based_parameter_study.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
@@ -80,11 +79,10 @@ class TestExampleNeutronics(unittest.TestCase):
         os.system("rm *.png *.vtk *.json *.h5")
         output_filenames = [
             "results.json",
-            "statepoint.100.h5",
+            "statepoint.2.h5",
             "summary.h5",
         ]
-        os.system("rm *.png")
-        os.system("rm *.vtk")
+
         shape_with_spectra_cell_tally.main()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
