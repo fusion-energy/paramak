@@ -3,6 +3,7 @@ import openmc
 import paramak
 import plotly.graph_objects as go
 
+
 def main():
     my_shape = paramak.CenterColumnShieldHyperbola(
         height=500,
@@ -13,12 +14,12 @@ def main():
         method='pymoab'
     )
 
-    # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic directions
+    # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
+    # directions
     source = openmc.Source()
     source.space = openmc.stats.Point((0, 0, 0))
     source.energy = openmc.stats.Discrete([14e6], [1])
     source.angle = openmc.stats.Isotropic()
-
 
     # converts the geometry into a neutronics geometry
     my_model = paramak.NeutronicsModel(
@@ -43,7 +44,7 @@ def main():
     # this sets the axis titles and range
     fig.update_layout(
         xaxis={'title': 'Energy (eV)',
-            'range': (0, 14.1e6)},
+               'range': (0, 14.1e6)},
         yaxis={'title': 'Neutrons per cm2 per source neutron'}
     )
 
@@ -90,8 +91,8 @@ def main():
                     ),
                     dict(
                         args=[{"xaxis.type": 'lin', "yaxis.type": 'log',
-                            'xaxis.range': (0, 14.1e6)
-                            }],
+                               'xaxis.range': (0, 14.1e6)
+                               }],
                         label="linear(x) , log(y)",
                         method="relayout"
                     )
