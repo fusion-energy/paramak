@@ -55,10 +55,11 @@ def make_model_and_simulate():
         cell_tallies=['flux'],
         simulation_batches=5,
         simulation_particles_per_batch=1e4,
+        method='trelis',
     )
 
     # simulate the neutronics model
-    neutronics_model.simulate(method='trelis')
+    neutronics_model.simulate()
     print(neutronics_model.results)
 
 

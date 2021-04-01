@@ -2,8 +2,11 @@
 import warnings
 import math
 import os
+import shutil
+import subprocess
 import warnings
 from collections import defaultdict
+from pathlib import Path
 from typing import List, Optional
 from xml.etree.ElementTree import SubElement
 
@@ -13,10 +16,201 @@ import numpy as np
 
 try:
     import openmc
-    from openmc.data import REACTION_MT, REACTION_NAME
 except ImportError:
     warnings.warn('OpenMC not found, create_inital_particles \
             method not available', UserWarning)
+
+
+def find_material_groups_in_h5m(
+        filename: Optional[str] = 'dagmc.h5m'
+) -> List[str]:
+    """Reads in a DAGMC h5m file and uses mbsize to find the names of the
+    material groups in the file
+
+    Arguments:
+        filename:
+
+    Returns:
+        The filename of the h5m file created
+    """
+
+    try:
+        terminal_output = subprocess.check_output(
+            "mbsize -ll {} | grep 'mat:'".format(filename),
+            shell=True,
+            universal_newlines=True,
+        )
+    except BaseException:
+        raise ValueError(
+            "mbsize failed, check MOAB is install and the MOAB/build/bin "
+            "folder is in the path directory (Linux and Mac) or set as an "
+            "enviromental varible (Windows)")
+
+    list_of_mats = terminal_output.split()
+    list_of_mats = list(filter(lambda a: a != '=', list_of_mats))
+    list_of_mats = list(filter(lambda a: a != 'NAME', list_of_mats))
+    list_of_mats = list(filter(lambda a: a != 'EXTRA_NAME0', list_of_mats))
+    list_of_mats = list(set(list_of_mats))
+
+    return list_of_mats
+
+
+def trelis_command_to_create_dagmc_h5m(
+        faceting_tolerance: float,
+        merge_tolerance: float,
+        material_key_name: Optional[str] = 'material_tag',
+        geometry_key_name: Optional[str] = 'stp_filename',
+        batch: Optional[bool] = True,
+        h5m_filename: str = 'dagmc_not_watertight.h5m',
+        manifest_filename: str = 'manifest.json',
+        cubit_filename: str = 'dagmc.cub',
+        trelis_filename: str = 'dagmc.trelis',
+        geometry_details_filename: str = 'geometry_details.json',
+        surface_reflectivity_name: str = 'reflective',
+) -> List[str]:
+    """Runs the Trelis executable command with the
+    make_faceteted_neutronics_model.py script which produces a non water tight
+    DAGMC h5m file.
+
+    Arguments:
+        faceting_tolerance: the tolerance to use when faceting surfaces.
+        merge_tolerance: the tolerance to use when merging surfaces.
+        material_key_name: the dictionary key containing the str or int to use
+            as the material identifier.
+        geometry_key_name: the dictionary key containing the str to uses as the
+            CAD file identifier.
+        batch: Run the Trelis command in batch model with no GUI (True) or with
+            the GUI enabled (False).
+        h5m_filename: the filename of the DAGMC h5m file produced. This is not
+            water tight at this stage.
+        manifest_filename: The filename of the json file containing a list of
+            material_keys and geometry_keys.
+        cubit_filename: The output filename of the file. If None then no cubit
+            file will be exported.
+        trelis_filename: The output filename of the file. If None then no
+            trelis file will be exported.
+        geometry_details_filename: The output filename of the JSON file
+            containing details of the DAGMC geometry. This includes the
+            resulting volume numbers of the input CAD files, which can be
+            useful for specifying tallies. If None then no JSON fie will be
+            exported.
+        surface_reflectivity_name: The tag to assign to the reflective boundary
+            in the resulting DAGMC geometry Shift requires "spec.reflect" and
+            MCNP requires "boundary:Reflecting".
+
+    Returns:
+        The filename of the h5m file created
+    """
+    output_filenames = [
+        h5m_filename,
+        trelis_filename,
+        cubit_filename,
+        geometry_details_filename]
+    filenames_extensions = ['.h5m', '.trelis', '.cub', '.json']
+
+    path_output_filenames = []
+
+    for output_file, extension in zip(output_filenames, filenames_extensions):
+
+        if output_file is not None:
+            path_filename = Path(output_file)
+
+            if path_filename.suffix != extension:
+                path_filename = path_filename.with_suffix(extension)
+
+            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+            path_output_filenames.append(str(path_filename))
+
+    shutil.copy(
+        src=Path(__file__).parent.absolute() / Path('parametric_neutronics') /
+        'make_faceteted_neutronics_model.py',
+        dst=Path().absolute()
+    )
+
+    if not Path("make_faceteted_neutronics_model.py").is_file():
+        raise FileNotFoundError(
+            "The make_faceteted_neutronics_model.py was not found in the \
+            directory")
+
+    os.system('rm dagmc_not_watertight.h5m')
+
+    if batch:
+        trelis_cmd = 'trelis -batch -nographics'
+    else:
+        trelis_cmd = 'trelis'
+
+    os.system(
+        trelis_cmd +
+        " make_faceteted_neutronics_model.py \"faceting_tolerance='" +
+        str(faceting_tolerance) +
+        "'\" \"merge_tolerance='" +
+        str(merge_tolerance) +
+        "'\" \"material_key_name='" +
+        str(material_key_name) +
+        "'\" \"geometry_key_name='" +
+        str(geometry_key_name) +
+        "'\" \"h5m_filename='" +
+        str(h5m_filename) +
+        "'\" \"manifest_filename='" +
+        str(manifest_filename) +
+        "'\" \"cubit_filename='" +
+        str(cubit_filename) +
+        "'\" \"trelis_filename='" +
+        str(trelis_filename) +
+        "'\" \"geometry_details_filename='" +
+        str(geometry_details_filename) +
+        "'\" \"surface_reflectivity_name='" +
+        str(surface_reflectivity_name) +
+        "'\"")
+
+    os.system('rm make_faceteted_neutronics_model.py')
+
+    if not Path(h5m_filename).is_file():
+        raise FileNotFoundError(
+            "The h5m file " + h5m_filename + " was not found \
+            in the directory, the Trelis stage has failed")
+
+    return path_output_filenames
+
+
+def make_watertight(
+        input_filename: str = "dagmc_not_watertight.h5m",
+        output_filename: str = "dagmc.h5m",
+) -> str:
+    """Runs the DAGMC make_watertight executable that seals the facetets of
+    the geometry with specified input and output h5m files. Not needed for
+    h5m file produced with pymoab method.
+
+    Arguments:
+        input_filename: the non watertight h5m file to make watertight.
+        output_filename: the filename of the watertight h5m file.
+
+    Returns:
+        The filename of the h5m file created
+    """
+
+    if not Path(input_filename).is_file():
+        raise FileNotFoundError("Failed to find {}".format(input_filename))
+
+    os.system('rm {}'.format(output_filename))
+
+    try:
+        subprocess.check_output(
+            "make_watertight {} -o {}".format(input_filename, output_filename),
+            shell=True,
+            universal_newlines=True,
+        )
+    except BaseException:
+        raise ValueError(
+            "make_watertight failed, check DAGMC is install and the DAGMC/bin "
+            "folder is in the path directory (Linux and Mac) or set as an "
+            "enviromental varible (Windows)")
+
+    if not Path(output_filename).is_file():
+        raise FileNotFoundError("Failed to produce dagmc.h5m")
+
+    return output_filename
 
 
 def define_moab_core_and_tags():

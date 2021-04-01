@@ -92,6 +92,8 @@ class BallReactor(paramak.Reactor):
 
         super().__init__([])
 
+        self.method = 'trelis'
+
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
         self.center_column_shield_radial_thickness = \
@@ -117,6 +119,7 @@ class BallReactor(paramak.Reactor):
         self.outboard_tf_coil_poloidal_thickness = \
             outboard_tf_coil_poloidal_thickness
         self.divertor_position = divertor_position
+        self.rotation_angle = rotation_angle
 
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
         if self.plasma_gap_vertical_thickness is None:
@@ -151,6 +154,22 @@ class BallReactor(paramak.Reactor):
             self.outer_plasma_gap_radial_thickness,
             self.plasma_gap_vertical_thickness,
             self.major_radius - self.minor_radius]
+
+    @property
+    def rotation_angle(self):
+        return self._rotation_angle
+
+    @rotation_angle.setter
+    def rotation_angle(self, value):
+        if value == 360:
+            msg = (
+                "360 degree rotation may result in a "
+                "Standard_ConstructionError or AttributeError"
+            )
+            warnings.warn(msg, UserWarning)
+        elif value > 360:
+            raise ValueError('rotation_angle can not be larger than 360')
+        self._rotation_angle = value
 
     @property
     def pf_coil_radial_thicknesses(self):
@@ -191,7 +210,6 @@ class BallReactor(paramak.Reactor):
         """
         shapes_and_components = []
 
-        self._rotation_angle_check()
         shapes_and_components.append(self._make_plasma())
         self._make_radial_build()
         self._make_vertical_build()
@@ -203,13 +221,6 @@ class BallReactor(paramak.Reactor):
         shapes_and_components += self._make_tf_coils()
 
         self.shapes_and_components = shapes_and_components
-
-    def _rotation_angle_check(self):
-
-        if self.rotation_angle == 360:
-            msg = "360 degree rotation may result " + \
-                "in a Standard_ConstructionError or AttributeError"
-            warnings.warn(msg, UserWarning)
 
     def _make_plasma(self):
 

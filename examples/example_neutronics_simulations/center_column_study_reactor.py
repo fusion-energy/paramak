@@ -59,10 +59,11 @@ def make_model_and_simulate():
             cell_tallies=['heating'],
             simulation_batches=5,
             simulation_particles_per_batch=1e4,
+            method='trelis',
         )
 
         # starts the neutronics simulation
-        neutronics_model.simulate(method='trelis')
+        neutronics_model.simulate()
 
         # converts the results to mega watts
         total_heat_in_MW = neutronics_model.results['firstwall_mat_heating']['Watts']['result'] / 1e6
