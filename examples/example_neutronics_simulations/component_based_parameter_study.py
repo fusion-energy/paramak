@@ -33,7 +33,9 @@ def main():
         my_model = paramak.NeutronicsModel(
             geometry=my_shape,
             source=source,
-            materials={'center_column_shield_mat': 'WB'},  # WB is tungsten boride
+            materials={
+                'center_column_shield_mat': 'WB'},
+            # WB is tungsten boride
             cell_tallies=['heating'],
             simulation_batches=10,  # should be increased for more accurate result
             simulation_particles_per_batch=10,  # settings are low to reduce time required
