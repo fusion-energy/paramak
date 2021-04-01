@@ -47,9 +47,37 @@ class TestShape(unittest.TestCase):
             ]
         )
 
+    def test_graveyard_size_setting_type_checking(self):
+        """Attempts to make a shape with a graveyard_size that is an float
+        which should raise a ValueError"""
+
+        def incorrect_graveyard_size_type():
+            self.my_shape.graveyard_size = 'coucou'
+        self.assertRaises(TypeError, incorrect_graveyard_size_type)
+
+    def test_graveyard_size_setting_magnitude_checking(self):
+        """Attempts to make a shape with a graveyard_size that is an int
+        which should raise a ValueError"""
+
+        def incorrect_graveyard_size_size():
+            self.my_shape.graveyard_size = -10
+        self.assertRaises(ValueError, incorrect_graveyard_size_size)
+
+    def test_graveyard_error_when_no_offset_or_size(self):
+        """Attempts to make a shape with a graveyard_size that is an int
+        which should raise a ValueError"""
+
+        def incorrect_graveyard():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                graveyard_size=None, graveyard_offset=None)
+            test_shape.make_graveyard()
+
+        self.assertRaises(ValueError, incorrect_graveyard)
+
     def test_make_graveyard_offset(self):
-        """checks that the graveyard can be exported with the correct default parameters
-        and that these parameters can be changed"""
+        """checks that the graveyard can be exported with the correct default
+        parameters and that these parameters can be changed"""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
