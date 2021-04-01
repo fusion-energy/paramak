@@ -85,13 +85,34 @@ class TestReactor(unittest.TestCase):
         self.test_reactor.merge_tolerance = 1e-6
         assert self.test_reactor.merge_tolerance == 1e-6
 
-    def test_largest_dimension_setting_and_getting(self):
-        """Makes a neutronics model and checks the default largest_dimension"""
+    def test_largest_dimension_setting_and_getting_using_largest_shapes(self):
+        """Makes a neutronics model and checks the default largest_dimension
+        and that largest_dimension changes with largest_shapes"""
 
         assert self.test_reactor.largest_dimension == 20.
 
-        self.test_reactor.largest_dimension = 400
-        assert self.test_reactor.largest_dimension == 400
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape2 = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 40), (40, 40)])
+
+        test_reactor = paramak.Reactor([test_shape, test_shape2])
+        assert test_reactor.largest_dimension == 40
+
+        test_reactor.largest_shapes = [test_shape]
+        assert test_reactor.largest_dimension == 20
+
+    def test_incorrect_largest_shapes_settings(self):
+        """Creates NeutronicsModel objects and checks errors are
+        raised correctly when arguments are incorrect."""
+
+        def test_incorrect_largest_shapes():
+            """Tries to make a h5m with an inccorect largest_shapes which should return
+            a ValueError"""
+
+            self.test_reactor.largest_shapes = 'coucou'
+
+        self.assertRaises(ValueError, test_incorrect_largest_shapes)
 
     def test_incorrect_methods_settings(self):
         """Creates NeutronicsModel objects and checks errors are

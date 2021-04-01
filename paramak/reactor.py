@@ -217,7 +217,7 @@ class Reactor:
             largest_dimension = max(
                 largest_dimension,
                 component.largest_dimension)
-        self._largest_dimension = largest_dimension
+        # self._largest_dimension = largest_dimension
         return largest_dimension
 
     @largest_dimension.setter
@@ -234,6 +234,17 @@ class Reactor:
     @tet_meshes.setter
     def tet_meshes(self, value):
         self._tet_meshes = value
+
+    @property
+    def largest_shapes(self):
+        return self._largest_shapes
+
+    @largest_shapes.setter
+    def largest_shapes(self, value):
+        if not isinstance(value, (list, tuple, type(None))):
+            raise ValueError('paramak.Reactor.largest_shapes should be a '
+                             'list of paramak.Shapes')
+        self._largest_shapes = value
 
     @property
     def shapes_and_components(self):
