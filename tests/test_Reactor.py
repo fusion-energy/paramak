@@ -88,7 +88,7 @@ class TestReactor(unittest.TestCase):
     def test_largest_dimension_setting_and_getting(self):
         """Makes a neutronics model and checks the default largest_dimension"""
 
-        assert self.test_reactor.largest_dimension is 20
+        assert self.test_reactor.largest_dimension == 20.
 
         self.test_reactor.largest_dimension = 400
         assert self.test_reactor.largest_dimension == 400
