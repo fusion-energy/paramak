@@ -1322,7 +1322,8 @@ class Shape:
             graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
 
         else:
-            raise ValueError("the graveyard_size, Shape.graveyard_size, "
+            raise ValueError(
+                "the graveyard_size, Shape.graveyard_size, "
                 "graveyard_offset and Shape.graveyard_offset are all None. "
                 "Please specify at least one of these attributes or agruments")
 
