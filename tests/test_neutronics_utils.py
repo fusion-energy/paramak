@@ -169,7 +169,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
             number_of_source_particles=10
         )
 
-        assert "initial_source.h5" == source_file
+        assert source_file == "initial_source.h5"
         assert Path(source_file).exists() is True
 
         points = paramak.neutronics_utils.extract_points_from_initial_source(
