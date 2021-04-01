@@ -80,7 +80,7 @@ class TestExampleNeutronics(unittest.TestCase):
         os.system("rm *.png *.vtk *.json *.h5")
         output_filenames = [
             "results.json",
-            "statepoint.10.h5",
+            "statepoint.100.h5",
             "summary.h5",
         ]
         os.system("rm *.png")

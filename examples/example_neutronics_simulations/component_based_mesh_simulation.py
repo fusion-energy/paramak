@@ -31,7 +31,7 @@ def main():
     my_model = paramak.NeutronicsModel(
         geometry=my_shape,
         source=source,
-        materials={'center_column_shield_mat': 'eurofer'},
+        materials={'center_column_shield_mat': 'WC'},  # WC is tungsten carbide
         cell_tallies=['heating', 'TBR'],
         mesh_tally_2d=['heating'],
         mesh_tally_3d=['heating'],
