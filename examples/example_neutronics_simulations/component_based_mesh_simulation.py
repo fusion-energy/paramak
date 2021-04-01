@@ -19,7 +19,7 @@ def main():
         method='pymoab',
     )
 
-    my_shape.export_stp('my_shape' + str(mid_radius) + '.stp')
+    my_shape.export_stp('my_shape.stp')
 
     # makes the openmc neutron source at x,y,z 0, 0, 0 with isotropic
     # diections
@@ -41,12 +41,6 @@ def main():
 
     # performs an openmc simulation on the model
     my_model.simulate()
-
-    # extracts the heat from the results dictionary
-    heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
-
-    # adds the heat and the mid radius value to a list
-    simulation_values.append((mid_radius, heat))
 
 
 if __name__ == "__main__":

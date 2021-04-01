@@ -40,11 +40,12 @@ class TestExampleNeutronics(unittest.TestCase):
 
     def test_component_based_mesh_simulation(self):
         """Runs the example and checks the output files are produced"""
-        os.system("rm *.png *.vtk *.json *.h5")
+        os.system("rm *.png *.vtk *.json *.h5 *.stp")
         output_filenames = [
             "results.json",
             "statepoint.10.h5",
             "summary.h5",
+            "my_shape.stp",
             "heating_on_2D_mesh_yz.png",
             "heating_on_2D_mesh_yz.png",
             "heating_on_2D_mesh_xz.png",
@@ -60,6 +61,9 @@ class TestExampleNeutronics(unittest.TestCase):
         """Runs the example and checks the output files are produced"""
         os.system("rm *.png *.vtk *.json *.h5")
         output_filenames = [
+            "my_shape60.stp",
+            "my_shape70.stp",
+            "my_shape80.stp",
             "results.json",
             "heating_vs_thickness.svg",
             "statepoint.10.h5",
