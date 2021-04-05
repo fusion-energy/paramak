@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Optional, Tuple
 
 from paramak import RotateMixedShape
 
@@ -19,6 +19,7 @@ class RotateSplineShape(RotateMixedShape):
         rotation_angle: Optional[float] = 360,
         stp_filename: Optional[str] = "RotateSplineShape.stp",
         stl_filename: Optional[str] = "RotateSplineShape.stl",
+        color: Optional[Tuple[int, int, int]] = (106, 61, 154),
         **kwargs
     ):
 
@@ -26,6 +27,7 @@ class RotateSplineShape(RotateMixedShape):
             rotation_angle=rotation_angle,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             connection_type="spline",
             **kwargs
         )

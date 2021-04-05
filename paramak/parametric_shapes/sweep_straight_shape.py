@@ -31,6 +31,7 @@ class SweepStraightShape(SweepMixedShape):
         stp_filename: Optional[str] = "SweepStraightShape.stp",
         stl_filename: Optional[str] = "SweepStraightShape.stl",
         force_cross_section: Optional[bool] = False,
+        color: Optional[Tuple[int, int, int]] = (178, 223, 138),
         **kwargs
     ):
 
@@ -42,5 +43,6 @@ class SweepStraightShape(SweepMixedShape):
             stl_filename=stl_filename,
             connection_type="straight",
             force_cross_section=force_cross_section,
+            color=color,
             **kwargs
         )

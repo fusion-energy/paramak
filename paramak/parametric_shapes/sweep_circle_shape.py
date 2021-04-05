@@ -34,6 +34,7 @@ class SweepCircleShape(Shape):
         stp_filename: Optional[str] = "SweepCircleShape.stp",
         stl_filename: Optional[str] = "SweepCircleShape.stl",
         force_cross_section: Optional[bool] = False,
+        color: Optional[Tuple[int, int, int]] = (166, 206, 227),
         **kwargs
     ):
 
@@ -41,6 +42,7 @@ class SweepCircleShape(Shape):
             workplane=workplane,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
 

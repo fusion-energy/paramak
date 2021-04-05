@@ -406,20 +406,25 @@ class Shape:
 
     @color.setter
     def color(self, value):
-        error = False
         if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 for i in value:
                     if not isinstance(i, (int, float)):
-                        error = True
+                        raise ValueError(
+                            "Individual entries in the Shape.color must a "
+                            "number (float or int)")
+                    if i > 255 or i < 0:
+                        raise ValueError(
+                            "Individual entries in the Shape.color must be "
+                            "between 0 and 255"
+                        )
             else:
-                error = True
+                raise ValueError(
+                    "Shape.color must be a list or tuple of 3 or 4 floats")
         else:
-            error = True
-        # raise error
-        if error:
             raise ValueError(
-                "Shape.color must be a list or tuple of 3 or 4 floats")
+                "Shape.color must be a list or tuple")
+
         self._color = value
 
     @property

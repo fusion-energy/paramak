@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
+from cadquery.occ_impl.shapes import Compound
 import matplotlib.pyplot as plt
 from cadquery import exporters
 from openmc import geometry
@@ -284,9 +285,20 @@ class Reactor:
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
         show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
 
-        from jupyter_cadquery.cadquery import show
-        self.solid
-        return show(self.solid)
+        from jupyter_cadquery.cadquery import show, PartGroup, Part
+        # self.solid
+        # return show(self.solid)
+        parts = []
+        for shape_or_compound in self.shapes_and_components:
+            name = shape_or_compound.__class__.__name__
+            if isinstance(
+                    shape_or_compound.solid,
+                    (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+                for i, solid in enumerate(shape_or_compound.solid.Solids()):
+                    parts.append(Part(solid, name=f"{name}{i}", color=shape_or_compound.color))
+            else:
+                parts.append(Part(shape_or_compound.solid.val(), name=f"{name}", color=shape_or_compound.color))
+        return PartGroup(parts)
 
     @show.setter
     def show(self, value):
@@ -669,7 +681,7 @@ class Reactor:
             height: Optional[float] = None,
             radius: Optional[float] = None,
             rotation_angle: Optional[float] = None,
-            material_tag='Vacuum',
+            material_tag='vacuum',
             stp_filename: Optional[str] = 'sector_wedge.stp',
             stl_filename: Optional[str] = 'sector_wedge.stl'
     ) -> Union[paramak.Shape, None]:

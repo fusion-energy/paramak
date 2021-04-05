@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Optional, Tuple
 
 from paramak import ExtrudeMixedShape
 
@@ -20,6 +20,7 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
         distance: float,
         stp_filename: Optional[str] = "ExtrudeSplineShape.stp",
         stl_filename: Optional[str] = "ExtrudeSplineShape.stl",
+        color: Optional[Tuple[int, int, int]] = (251, 154, 153),
         **kwargs
     ):
 
@@ -28,5 +29,6 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             connection_type="spline",
+            color=color,
             **kwargs
         )

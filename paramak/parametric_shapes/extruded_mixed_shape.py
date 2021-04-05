@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Optional, Tuple
 
 from paramak import Shape
 from paramak.utils import calculate_wedge_cut
@@ -29,12 +29,14 @@ class ExtrudeMixedShape(Shape):
         extrusion_start_offset: Optional[float] = 0.0,
         stp_filename: Optional[str] = "ExtrudeMixedShape.stp",
         stl_filename: Optional[str] = "ExtrudeMixedShape.stl",
+        color: Optional[Tuple[int, int, int]] = (51, 160, 44),
         **kwargs
     ):
 
         super().__init__(
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
         self.distance = distance

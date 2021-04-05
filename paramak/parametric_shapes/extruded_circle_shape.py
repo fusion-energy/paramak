@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Optional, Tuple
 
 import cadquery as cq
 from paramak import Shape
@@ -30,12 +30,14 @@ class ExtrudeCircleShape(Shape):
         extrude_both: Optional[bool] = True,
         stp_filename: Optional[str] = "ExtrudeCircleShape.stp",
         stl_filename: Optional[str] = "ExtrudeCircleShape.stl",
+        color: Optional[Tuple[int, int, int]] = (251, 154, 153),
         **kwargs
     ):
 
         super().__init__(
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
 
