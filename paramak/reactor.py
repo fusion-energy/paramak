@@ -295,9 +295,17 @@ class Reactor:
                     shape_or_compound.solid,
                     (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
                 for i, solid in enumerate(shape_or_compound.solid.Solids()):
-                    parts.append(Part(solid, name=f"{name}{i}", color=shape_or_compound.color))
+                    parts.append(
+                        Part(
+                            solid,
+                            name=f"{name}{i}",
+                            color=shape_or_compound.color))
             else:
-                parts.append(Part(shape_or_compound.solid.val(), name=f"{name}", color=shape_or_compound.color))
+                parts.append(
+                    Part(
+                        shape_or_compound.solid.val(),
+                        name=f"{name}",
+                        color=shape_or_compound.color))
         return PartGroup(parts)
 
     @show.setter
