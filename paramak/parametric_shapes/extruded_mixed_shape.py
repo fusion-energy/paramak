@@ -29,7 +29,7 @@ class ExtrudeMixedShape(Shape):
         extrusion_start_offset: Optional[float] = 0.0,
         stp_filename: Optional[str] = "ExtrudeMixedShape.stp",
         stl_filename: Optional[str] = "ExtrudeMixedShape.stl",
-        color: Optional[Tuple[int, int, int]] = (51, 160, 44),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.2, 0.627, 0.172),
         **kwargs
     ):
 

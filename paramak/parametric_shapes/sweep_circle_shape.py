@@ -34,7 +34,7 @@ class SweepCircleShape(Shape):
         stp_filename: Optional[str] = "SweepCircleShape.stp",
         stl_filename: Optional[str] = "SweepCircleShape.stl",
         force_cross_section: Optional[bool] = False,
-        color: Optional[Tuple[int, int, int]] = (166, 206, 227),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.651, 0.808, 0.89),
         **kwargs
     ):
 

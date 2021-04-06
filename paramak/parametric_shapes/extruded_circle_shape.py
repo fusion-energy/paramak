@@ -30,7 +30,7 @@ class ExtrudeCircleShape(Shape):
         extrude_both: Optional[bool] = True,
         stp_filename: Optional[str] = "ExtrudeCircleShape.stp",
         stl_filename: Optional[str] = "ExtrudeCircleShape.stl",
-        color: Optional[Tuple[int, int, int]] = (251, 154, 153),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.984, 0.603, 0.6),
         **kwargs
     ):
 

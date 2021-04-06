@@ -31,7 +31,7 @@ class SweepStraightShape(SweepMixedShape):
         stp_filename: Optional[str] = "SweepStraightShape.stp",
         stl_filename: Optional[str] = "SweepStraightShape.stl",
         force_cross_section: Optional[bool] = False,
-        color: Optional[Tuple[int, int, int]] = (178, 223, 138),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.698, 0.8745, 0.541),
         **kwargs
     ):
 

@@ -22,7 +22,7 @@ class RotateCircleShape(Shape):
         rotation_angle: Optional[float] = 360.0,
         stp_filename: Optional[str] = "RotateCircleShape.stp",
         stl_filename: Optional[str] = "RotateCircleShape.stl",
-        color: Optional[Tuple[int, int, int]] = (255, 255, 153),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (1., 1., 0.6),
         **kwargs
     ):
 

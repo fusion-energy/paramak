@@ -19,7 +19,7 @@ class ExtrudeStraightShape(ExtrudeMixedShape):
         distance: float,
         stp_filename: Optional[str] = "ExtrudeStraightShape.stp",
         stl_filename: Optional[str] = "ExtrudeStraightShape.stl",
-        color: Optional[Tuple[int, int, int]] = (255, 127, 0),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (1.0, 0.498, 0.0),
         **kwargs
     ):
 

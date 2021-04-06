@@ -20,7 +20,7 @@ class RotateStraightShape(RotateMixedShape):
         rotation_angle: Optional[float] = 360.0,
         stp_filename: Optional[str] = "RotateStraightShape.stp",
         stl_filename: Optional[str] = "RotateStraightShape.stl",
-        color: Optional[Tuple[int, int, int]] = (227, 26, 28),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.89, 0.101, 0.109),
         **kwargs
     ):
 
