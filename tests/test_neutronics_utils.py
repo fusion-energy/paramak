@@ -198,6 +198,16 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         assert output_filename == "watertight_dagmc.h5m"
         assert Path("watertight_dagmc.h5m").exists() is True
 
+    def test_export_vtk_without_h5m_raises_error(self):
+        """exports a h5m file when shapes_and_components is set to a string"""
+
+        def check_correct_error_is_rasied():
+            os.system('rm *.h5m *.vtk')
+            paramak.neutronics_utils.export_vtk(h5m_filename='dagmc.h5m')
+
+        self.assertRaises(FileNotFoundError, check_correct_error_is_rasied)
+
+
     # these tests only work if trelis is avaialbe
     # def test_make_watertight_cmd(self):
     #     """exports a h5m and makes it watertight, checks the the watertight

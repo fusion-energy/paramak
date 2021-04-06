@@ -768,6 +768,34 @@ class TestShape(unittest.TestCase):
         # TODO this can be removed in the future
         assert data[0]['stp_filename'] == 'test_shape.stp'
 
+    def test_export_vtk(self):
+        """Creates vtk files from the h5m files and checks they exist"""
+
+        os.system('rm *.h5m *.vtk')
+
+        assert self.my_shape.h5m_filename is None
+        self.my_shape.export_h5m_with_pymoab()
+        self.my_shape.export_vtk()
+        assert Path('dagmc.h5m').is_file
+        assert Path('dagmc.vtk').is_file
+        assert Path('dagmc_no_graveyard.vtk').is_file
+        assert self.my_shape.h5m_filename == 'dagmc.h5m'
+
+        self.my_shape.export_vtk(filename='custom_filename.vtk')
+        assert Path('custom_filename.vtk').is_file
+
+        self.my_shape.export_vtk(filename='suffixless_filename')
+        assert Path('suffixless_filename.vtk').is_file
+
+    def test_export_vtk_without_h5m_raises_error(self):
+        """exports a h5m file when shapes_and_components is set to a string"""
+
+        def check_correct_error_is_rasied():
+            os.system('rm *.h5m *.vtk')
+            self.my_shape.export_vtk()
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
+
 
 if __name__ == "__main__":
     unittest.main()

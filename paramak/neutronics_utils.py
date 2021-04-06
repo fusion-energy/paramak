@@ -267,8 +267,8 @@ def define_moab_core_and_tags():
 
 
 def export_vtk(
+    h5m_filename: str,
     filename: Optional[str] = 'dagmc.vtk',
-    h5m_filename: Optional[str] = None,
     include_graveyard: Optional[bool] = False
 ):
     """Produces a vtk geometry compatable from the dagmc h5m file. This is
@@ -278,8 +278,7 @@ def export_vtk(
         filename: filename of vtk outputfile. If the filename does not end
             with .vtk then .vtk will be added.
         h5m_filename: filename of h5m outputfile. If the filename does not
-            end with .h5m then .h5m will be added. Defaults to None which
-            uses the Reactor.h5m_filename.
+            end with .h5m then .h5m will be added.
 
     Returns:
         filename of the vtk file produced
@@ -288,8 +287,8 @@ def export_vtk(
     path_h5m_filename = Path(h5m_filename)
     if path_h5m_filename.suffix != ".h5m":
         path_h5m_filename = path_h5m_filename.with_suffix(".h5m")
-
-    if path_h5m_filename.is_file is False:
+    print('path_h5m_filename.is_file', path_h5m_filename.is_file)
+    if path_h5m_filename.is_file() is False:
         raise FileNotFoundError(
             'h5m_filename not found in location', path_h5m_filename
         )
@@ -299,9 +298,10 @@ def export_vtk(
         path_filename = path_filename.with_suffix(".vtk")
 
     if not include_graveyard:
+        tmp_file = str(path_h5m_filename.with_suffix(''))+str(Path('_no_graveyard'))+str(path_h5m_filename.suffix)
         h5m_filename = remove_graveyard_from_h5m_file(
             input_h5m_filename=str(path_h5m_filename),
-            output_h5m_filename='dagmc_no_graveyard.h5m'  # TODO should be based on input name
+            output_h5m_filename=tmp_file
         )
 
     try:

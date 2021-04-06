@@ -84,7 +84,7 @@ class Shape:
         points: list = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
-        color: Optional[Tuple[float, float, float]] = (0.5, 0.5, 0.5),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.5, 0.5, 0.5),
         material_tag: Optional[str] = None,
         stp_filename: Optional[str] = None,
         stl_filename: Optional[str] = None,
@@ -411,10 +411,10 @@ class Shape:
                         raise ValueError(
                             "Individual entries in the Shape.color must a "
                             "number (float or int)")
-                    if i > 255 or i < 0:
+                    if i > 1 or i < 0:
                         raise ValueError(
                             "Individual entries in the Shape.color must be "
-                            "between 0 and 255"
+                            "between 0 and 1"
                         )
             else:
                 raise ValueError(
@@ -1176,10 +1176,11 @@ class Shape:
         patch = PatchCollection(patches)
 
         if self.color is not None:
-            patch.set_facecolor(self.color)
-            patch.set_color(self.color)
-            patch.color = self.color
-            patch.edgecolor = self.color
+            print('color is ', self.color)
+            patch.set_facecolor(self.color[0:3])
+            patch.set_color(self.color[0:3])
+            patch.color = self.color[0:3]
+            patch.edgecolor = self.color[0:3]
             # checks to see if an alpha value is provided in the color
             if len(self.color) == 4:
                 patch.set_alpha = self.color[-1]
@@ -1436,8 +1437,6 @@ class Shape:
             raise ValueError("the method using in should be either trelis, \
                 pymoab. {} is not an option".format(method))
 
-        self.h5m_filename = output_filename
-
         return output_filename
 
     def export_h5m_with_trelis(
@@ -1479,6 +1478,8 @@ class Shape:
             input_filename=not_watertight_file,
             output_filename="dagmc.h5m"
         )
+
+        self.h5m_filename = water_tight_h5m
 
         return water_tight_h5m
 
@@ -1547,6 +1548,8 @@ class Shape:
         moab_core.add_entities(file_set, all_sets)
 
         moab_core.write_file(str(path_filename))
+
+        self.h5m_filename = str(path_filename)
 
         return str(path_filename)
 

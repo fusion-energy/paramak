@@ -772,7 +772,7 @@ class TestReactor(unittest.TestCase):
 
         assert neutronics_description[0]["material_tag"] == "test_material"
         assert neutronics_description[0]["stp_filename"] == "test.stp"
-        assert neutronics_description[1]["material_tag"] == "Vacuum"
+        assert neutronics_description[1]["material_tag"] == "vacuum"
         assert neutronics_description[1]["stp_filename"] == "sector_wedge.stp"
         assert neutronics_description[1]["surface_reflectivity"] is True
         assert neutronics_description[1]["stl_filename"] == "sector_wedge.stl"
@@ -1160,6 +1160,34 @@ class TestReactor(unittest.TestCase):
             assert Path('dagmc.h5m').is_file
 
         self.assertRaises(NotImplementedError, check_correct_error_is_rasied)
+
+    def test_export_vtk(self):
+        """Creates vtk files from the h5m files and checks they exist"""
+
+        os.system('rm *.h5m *.vtk')
+
+        assert self.test_reactor.h5m_filename is None
+        self.test_reactor.export_h5m_with_pymoab()
+        self.test_reactor.export_vtk()
+        assert Path('dagmc.h5m').is_file
+        assert Path('dagmc.vtk').is_file
+        assert Path('dagmc_no_graveyard.vtk').is_file
+        assert self.test_reactor.h5m_filename == 'dagmc.h5m'
+
+        self.test_reactor.export_vtk(filename='custom_filename.vtk')
+        assert Path('custom_filename.vtk').is_file
+
+        self.test_reactor.export_vtk(filename='suffixless_filename')
+        assert Path('suffixless_filename.vtk').is_file
+
+    def test_export_vtk_without_h5m_raises_error(self):
+        """exports a h5m file when shapes_and_components is set to a string"""
+
+        def check_correct_error_is_rasied():
+            os.system('rm *.h5m *.vtk')
+            self.test_reactor.export_vtk()
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
 
 
 if __name__ == "__main__":

@@ -287,11 +287,13 @@ class Reactor:
 
         from jupyter_cadquery.cadquery import Part, PartGroup, show
 
+
         # self.solid
         # return show(self.solid)
         parts = []
         for shape_or_compound in self.shapes_and_components:
             name = shape_or_compound.__class__.__name__
+            scaled_color = [i*255 for i in shape_or_compound.color[0:3]]
             if isinstance(
                     shape_or_compound.solid,
                     (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
@@ -300,13 +302,13 @@ class Reactor:
                         Part(
                             solid,
                             name=f"{name}{i}",
-                            color=shape_or_compound.color))
+                            color=scaled_color))
             else:
                 parts.append(
                     Part(
                         shape_or_compound.solid.val(),
                         name=f"{name}",
-                        color=shape_or_compound.color))
+                        color=scaled_color))
         return PartGroup(parts)
 
     @show.setter
@@ -723,8 +725,6 @@ class Reactor:
             raise ValueError("the method using in should be either trelis, \
                 pymoab. {} is not an option".format(method))
 
-        self.h5m_filename = output_filename
-
         return output_filename
 
     def make_sector_wedge(
@@ -851,6 +851,8 @@ class Reactor:
             output_filename=filename
         )
 
+        self.h5m_filename = water_tight_h5m_filename
+
         return water_tight_h5m_filename
 
     def export_h5m_with_pymoab(
@@ -931,6 +933,8 @@ class Reactor:
         moab_core.add_entities(file_set, all_sets)
 
         moab_core.write_file(str(path_filename))
+
+        self.h5m_filename = str(path_filename)
 
         return str(path_filename)
 
