@@ -330,8 +330,8 @@ def remove_graveyard_from_h5m_file(
     from https://github.com/svalinn/DAGMC-viz source code
 
     Arguments:
-        input_h5m_filename:
-        output_h5m_filename:
+        input_h5m_filename: The name of the h5m file to remove the graveyard from
+        output_h5m_filename: The name of the outfile h5m without a graveyard
 
     Returns:
         filename of the new dagmc h5m file without any graveyards
