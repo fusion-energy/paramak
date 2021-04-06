@@ -26,7 +26,7 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
         stp_filename="PoloidalFieldCoilCaseFC.stp",
         stl_filename="PoloidalFieldCoilCaseFC.stl",
         material_tag="pf_coil_case_mat",
-        color: Optional[Tuple[int, int, int]] = (255, 255, 127),
+        color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
         **kwargs
     ):
 

@@ -35,7 +35,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         stl_filename="PoloidalFieldCoilCaseSet.stl",
         name="pf_coil_case_set",
         material_tag="pf_coil_case_mat",
-        color: Optional[Tuple[int, int, int]] = (255, 255, 127),
+        color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
         **kwargs
     ):
 
