@@ -796,6 +796,22 @@ class TestShape(unittest.TestCase):
 
         self.assertRaises(ValueError, check_correct_error_is_rasied)
 
+    def test_setting_color_incorrectly_too_large(self):
+        """Sets the shape.colour outside of the the 0 to 1 range"""
+
+        def check_correct_error_is_rasied():
+            self.my_shape.color = (255, 255, 2)
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
+
+    def test_setting_color_incorrectly_too_small(self):
+        """Sets the shape.colour outside of the the 0 to 1 range"""
+
+        def check_correct_error_is_rasied():
+            self.my_shape.color = (-1, 0, 0)
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
+
 
 if __name__ == "__main__":
     unittest.main()
