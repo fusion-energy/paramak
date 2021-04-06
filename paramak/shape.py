@@ -1350,7 +1350,7 @@ class Shape:
         include_graveyard: Optional[bool] = False
     ):
         """Produces a vtk geometry compatable from the dagmc h5m file. This is
-        useful for checking the geometry that is used for transport. 
+        useful for checking the geometry that is used for transport.
 
         Arguments:
             filename: filename of vtk outputfile. If the filename does not end

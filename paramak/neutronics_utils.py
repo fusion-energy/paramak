@@ -272,7 +272,7 @@ def export_vtk(
     include_graveyard: Optional[bool] = False
 ):
     """Produces a vtk geometry compatable from the dagmc h5m file. This is
-    useful for checking the geometry that is used for transport. 
+    useful for checking the geometry that is used for transport.
 
     Arguments:
         filename: filename of vtk outputfile. If the filename does not end
@@ -353,7 +353,8 @@ def remove_graveyard_from_h5m_file(
     tag_category = moab_core.tag_get_handle(str(types.CATEGORY_TAG_NAME))
     root = moab_core.get_root_set()
 
-    # An array of tag values to be matched for entities returned by the following call.
+    # An array of tag values to be matched for entities returned by the
+    # following call.
     group_tag_values = np.array(["Group"])
 
     # Retrieve all EntitySets with a category tag of the user input value.
@@ -364,10 +365,16 @@ def remove_graveyard_from_h5m_file(
     group_names = moab_core.tag_get_data(tag_name, group_categories, flat=True)
 
     # Find the EntitySet whose name tag value contains "graveyard".
-    graveyard_sets = [group_set for group_set, name in zip(group_categories, group_names) if "graveyard" in str(name.lower())]
+    graveyard_sets = [
+        group_set for group_set,
+        name in zip(
+            group_categories,
+            group_names) if "graveyard" in str(
+            name.lower())]
 
     # Remove the graveyard EntitySet from the data.
-    groups_to_write = [group_set for group_set in group_categories if group_set not in graveyard_sets]
+    groups_to_write = [
+        group_set for group_set in group_categories if group_set not in graveyard_sets]
 
     moab_core.write_file(output_h5m_filename, output_sets=groups_to_write)
 
