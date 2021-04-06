@@ -207,7 +207,6 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
 
         self.assertRaises(FileNotFoundError, check_correct_error_is_rasied)
 
-
     # these tests only work if trelis is avaialbe
     # def test_make_watertight_cmd(self):
     #     """exports a h5m and makes it watertight, checks the the watertight

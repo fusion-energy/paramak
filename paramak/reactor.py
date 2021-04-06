@@ -287,13 +287,12 @@ class Reactor:
 
         from jupyter_cadquery.cadquery import Part, PartGroup, show
 
-
         # self.solid
         # return show(self.solid)
         parts = []
         for shape_or_compound in self.shapes_and_components:
             name = shape_or_compound.__class__.__name__
-            scaled_color = [i*255 for i in shape_or_compound.color[0:3]]
+            scaled_color = [i * 255 for i in shape_or_compound.color[0:3]]
             if isinstance(
                     shape_or_compound.solid,
                     (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
