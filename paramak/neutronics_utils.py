@@ -279,6 +279,7 @@ def export_vtk(
             with .vtk then .vtk will be added.
         h5m_filename: filename of h5m outputfile. If the filename does not
             end with .h5m then .h5m will be added.
+        include_graveyard: optionally include the graveyard in the vtk file
 
     Returns:
         filename of the vtk file produced
