@@ -1,9 +1,6 @@
 
 import json
 import numbers
-import os
-import pathlib
-import shutil
 import warnings
 from collections.abc import Iterable
 from pathlib import Path
@@ -139,6 +136,7 @@ class Shape:
         self.solid = None
         self.wire = None
         self.render_mesh = None
+        self.h5m_filename = None
         # self.volume = None
         self.hash_value = None
         self.points_hash_value = None
@@ -1344,6 +1342,45 @@ class Shape:
 
         return graveyard_shape
 
+    def export_vtk(
+        self,
+        filename: Optional[str] = 'dagmc.vtk',
+        h5m_filename: Optional[str] = None,
+        include_graveyard: Optional[bool] = False
+    ):
+        """Produces a vtk geometry compatable from the dagmc h5m file. This is
+        useful for checking the geometry that is used for transport. 
+
+        Arguments:
+            filename: filename of vtk outputfile. If the filename does not end
+                with .vtk then .vtk will be added.
+            h5m_filename: filename of h5m outputfile. If the filename does not
+                end with .h5m then .h5m will be added. Defaults to None which
+                uses the Reactor.h5m_filename.
+            include_graveyard: optionally include the graveyard in the vtk file
+
+        Returns:
+            filename of the vtk file produced
+        """
+
+        if h5m_filename is None:
+            if self.h5m_filename is None:
+                raise ValueError(
+                    'h5m_filename not provided and Reactor.h5m_filename is '
+                    'not set, Unable to use mbconvert to convert to vtk '
+                    'without input h5m filename. Try running '
+                    'Reactor.export_h5m() first.')
+            else:
+                h5m_filename = self.h5m_filename
+
+        vtk_filename = paramak.neutronics_utils.export_vtk(
+            filename=filename,
+            h5m_filename=h5m_filename,
+            include_graveyard=include_graveyard
+        )
+
+        return vtk_filename
+
     def export_h5m(
             self,
             filename: str = 'dagmc.h5m',
@@ -1352,7 +1389,8 @@ class Shape:
             faceting_tolerance: Optional[float] = None,
     ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations. Tags the volumes with their material_tag attributes.
+        simulations. Tags the volumes with their material_tag attributes. Sets
+        the Shape.h5m_filename to the filename of the h5m file produced.
 
         Arguments:
             method: The method to use when making the imprinted and
@@ -1397,6 +1435,8 @@ class Shape:
         else:
             raise ValueError("the method using in should be either trelis, \
                 pymoab. {} is not an option".format(method))
+
+        self.h5m_filename = output_filename
 
         return output_filename
 

@@ -3,15 +3,14 @@ import collections
 import json
 import os
 import shutil
+import subprocess
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
-from cadquery.occ_impl.shapes import Compound
 import matplotlib.pyplot as plt
 from cadquery import exporters
-from openmc import geometry
 
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
@@ -82,6 +81,7 @@ class Reactor:
 
         self.stp_filenames = []
         self.stl_filenames = []
+        self.h5m_filename = None
         self.tet_meshes = []
         self.graveyard = None
         self.solid = None
@@ -285,7 +285,8 @@ class Reactor:
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
         show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
 
-        from jupyter_cadquery.cadquery import show, PartGroup, Part
+        from jupyter_cadquery.cadquery import Part, PartGroup, show
+
         # self.solid
         # return show(self.solid)
         parts = []
@@ -611,6 +612,45 @@ class Reactor:
 
         return filenames
 
+    def export_vtk(
+        self,
+        filename: Optional[str] = 'dagmc.vtk',
+        h5m_filename: Optional[str] = None,
+        include_graveyard: Optional[bool] = False
+    ):
+        """Produces a vtk geometry compatable from the dagmc h5m file. This is
+        useful for checking the geometry that is used for transport. 
+
+        Arguments:
+            filename: filename of vtk outputfile. If the filename does not end
+                with .vtk then .vtk will be added.
+            h5m_filename: filename of h5m outputfile. If the filename does not
+                end with .h5m then .h5m will be added. Defaults to None which
+                uses the Reactor.h5m_filename.
+            include_graveyard: optionally include the graveyard in the vtk file
+
+        Returns:
+            filename of the vtk file produced
+        """
+
+        if h5m_filename is None:
+            if self.h5m_filename is None:
+                raise ValueError(
+                    'h5m_filename not provided and Reactor.h5m_filename is '
+                    'not set, Unable to use mbconvert to convert to vtk '
+                    'without input h5m filename. Try running '
+                    'Reactor.export_h5m() first.')
+            else:
+                h5m_filename = self.h5m_filename
+
+        vtk_filename = paramak.neutronics_utils.export_vtk(
+            filename=filename,
+            h5m_filename=h5m_filename,
+            include_graveyard=include_graveyard
+        )
+
+        return vtk_filename
+
     def export_h5m(
             self,
             filename: Optional[str] = 'dagmc.h5m',
@@ -620,7 +660,8 @@ class Reactor:
             faceting_tolerance: Optional[float] = None,
     ) -> str:
         """Produces a h5m neutronics geometry compatable with DAGMC
-        simulations. Tags the volumes with their material_tag attributes.
+        simulations. Tags the volumes with their material_tag attributes. Sets
+        the Reactor.h5m_filename to the filename of the h5m file produced.
 
         Arguments:
             filename: filename of h5m outputfile.
@@ -673,6 +714,8 @@ class Reactor:
         else:
             raise ValueError("the method using in should be either trelis, \
                 pymoab. {} is not an option".format(method))
+
+        self.h5m_filename = output_filename
 
         return output_filename
 
