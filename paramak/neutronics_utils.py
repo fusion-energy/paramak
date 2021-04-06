@@ -298,7 +298,8 @@ def export_vtk(
         path_filename = path_filename.with_suffix(".vtk")
 
     if not include_graveyard:
-        tmp_file = str(path_h5m_filename.with_suffix(''))+str(Path('_no_graveyard'))+str(path_h5m_filename.suffix)
+        tmp_file = str(path_h5m_filename.with_suffix('')) + \
+            str(Path('_no_graveyard')) + str(path_h5m_filename.suffix)
         h5m_filename = remove_graveyard_from_h5m_file(
             input_h5m_filename=str(path_h5m_filename),
             output_h5m_filename=tmp_file
