@@ -976,7 +976,7 @@ class Reactor:
             strokeWidth: Optional[float] = None,
             strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
             hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
-            showHidden: Optional[bool] = True,
+            showHidden: Optional[bool] = False,
             showAxes: Optional[bool] = False,
     ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
@@ -1004,7 +1004,7 @@ class Reactor:
                 RGB format with each value between 0 and 255. Defaults to
                 (100, 100, 100) which is light grey.
             showHidden: If the edges obscured by geometry should be included in
-                the diagram. Defaults to True.
+                the diagram. Defaults to False.
             showAxes: If the x, y, z axis should be included in the image.
                 Defaults to False.
 
