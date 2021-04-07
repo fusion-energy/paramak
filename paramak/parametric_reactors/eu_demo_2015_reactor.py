@@ -93,6 +93,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename="tf_coil_casing.stp",
             stl_filename="tf_coil_casing.stl",
+            color=(1., 1., 0.498),
         )
 
         return [tf_coil_casing]
@@ -135,6 +136,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
+            color=(0., 1., 0.498),
         )
 
         # SN Divertor
@@ -169,6 +171,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
+            color=(1., 0.667, 0.),
         )
 
         # Vacuum vessel
@@ -282,6 +285,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='vacvessel.stp',
             stl_filename='vacvessel.stl',
+            color=(0., 1., 1.),
         )
 
         return [divertor, blanket, vac_vessel, vac_vessel_inner]
