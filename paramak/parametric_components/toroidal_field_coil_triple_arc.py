@@ -38,6 +38,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         stp_filename: Optional[str] = "ToroidalFieldCoilTripleArc.stp",
         stl_filename: Optional[str] = "ToroidalFieldCoilTripleArc.stl",
         material_tag: Optional[str] = "outer_tf_coil_mat",
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
         **kwargs
     ) -> None:
 
@@ -46,6 +47,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            color=color,
             **kwargs
         )
         self.R1 = R1

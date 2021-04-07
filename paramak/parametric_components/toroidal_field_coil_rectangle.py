@@ -36,6 +36,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         stp_filename: Optional[str] = "ToroidalFieldCoilRectangle.stp",
         stl_filename: Optional[str] = "ToroidalFieldCoilRectangle.stl",
         material_tag: Optional[str] = "outer_tf_coil_mat",
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
         **kwargs
     ) -> None:
 
@@ -44,6 +45,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            color=color,
             **kwargs
         )
 
