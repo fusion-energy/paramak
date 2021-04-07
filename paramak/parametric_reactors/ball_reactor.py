@@ -360,7 +360,6 @@ class BallReactor(paramak.Reactor):
             inner_radius=self._inboard_tf_coils_start_radius,
             outer_radius=self._inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
-            # color=centre_column_color,
             stp_filename="inboard_tf_coils.stp",
             stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
@@ -375,7 +374,7 @@ class BallReactor(paramak.Reactor):
             inner_radius=self._center_column_shield_start_radius,
             outer_radius=self._center_column_shield_end_radius,
             rotation_angle=self.rotation_angle,
-            # color=centre_column_color,
+            color=(0., 0.333, 0.),
             stp_filename="center_column_shield.stp",
             stl_filename="center_column_shield.stl",
             name="center_column_shield",
@@ -390,7 +389,8 @@ class BallReactor(paramak.Reactor):
             height=self._center_column_shield_height * 1.5,
             inner_radius=0,
             outer_radius=self._center_column_shield_end_radius,
-            rotation_angle=360
+            rotation_angle=360,
+            color=(0., 0., 1.)
         )
 
         self._firstwall = paramak.BlanketFP(
@@ -403,6 +403,7 @@ class BallReactor(paramak.Reactor):
             material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
             stl_filename="firstwall.stl",
+            color=(0.5, 0.5, 0.5),
             cut=[self._center_column_cutter]
         )
 
@@ -417,6 +418,7 @@ class BallReactor(paramak.Reactor):
             material_tag="blanket_mat",
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
+            color=(0., 1., 0.498),
             cut=[self._center_column_cutter])
 
         self._blanket_rear_wall = paramak.BlanketFP(
@@ -431,6 +433,7 @@ class BallReactor(paramak.Reactor):
             material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
+            color=(0., 1., 1.),
             cut=[self._center_column_cutter],
         )
 
@@ -470,6 +473,7 @@ class BallReactor(paramak.Reactor):
             stl_filename="divertor.stl",
             name="divertor",
             material_tag="divertor_mat",
+            color=(1., 0.667, 0.),
             rotation_angle=self.rotation_angle
         )
 

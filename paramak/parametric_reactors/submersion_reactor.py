@@ -433,6 +433,7 @@ class SubmersionTokamak(paramak.Reactor):
             stop_angle=270,
             thickness=self.firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
+            color=(0.5, 0.5, 0.5),
         )
 
         self._firstwall = paramak.BlanketFP(
@@ -447,6 +448,7 @@ class SubmersionTokamak(paramak.Reactor):
             name="outboard_firstwall",
             material_tag="firstwall_mat",
             union=self._inboard_firstwall,
+            color=(0.5, 0.5, 0.5),
         )
         return self._firstwall
 
@@ -495,7 +497,8 @@ class SubmersionTokamak(paramak.Reactor):
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
             name="divertor",
-            material_tag="divertor_mat"
+            material_tag="divertor_mat",
+            color=(1., 0.667, 0.),
         )
 
         self._firstwall.cut = self._divertor
@@ -532,6 +535,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="blanket.stl",
             name="blanket",
             material_tag="blanket_mat",
+            color=(0., 1., 0.498),
             union=self._inboard_blanket,
         )
         return self._blanket
@@ -568,6 +572,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="supports.stl",
             name="supports",
             material_tag="supports_mat",
+            color=(0., 0., 0.),
             intersect=blanket_envelope,
         )
 
@@ -633,6 +638,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="outboard_rear_blanket_wall.stl",
             name="outboard_rear_blanket_wall",
             material_tag="blanket_rear_wall_mat",
+            color=(0., 1., 1.),
             union=[
                 self._outboard_rear_blanket_wall_upper,
                 self._outboard_rear_blanket_wall_lower],
@@ -652,6 +658,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
+            color=(0, 0, 1),
         )
         list_of_components.append(self._inboard_tf_coils)
         if self._tf_info_provided:
