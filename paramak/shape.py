@@ -192,9 +192,29 @@ class Shape:
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
         show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
 
-        from jupyter_cadquery.cadquery import show
-        self.solid
-        return show(self.solid)
+        from jupyter_cadquery.cadquery import Part, PartGroup
+
+        parts = []
+        name = self.__class__.__name__
+        scaled_color = [int(i * 255) for i in self.color[0:3]]
+        if isinstance(
+                self.solid,
+                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+            for i, solid in enumerate(self.solid.Solids()):
+                parts.append(
+                    Part(
+                        solid,
+                        name=f"{name}{i}",
+                        color=scaled_color))
+        else:
+            parts.append(
+                Part(
+                    self.solid.val(),
+                    name=f"{name}",
+                    color=scaled_color))
+                    
+        return PartGroup(parts)
+
 
     @show.setter
     def show(self, value):
