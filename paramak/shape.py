@@ -212,9 +212,8 @@ class Shape:
                     self.solid.val(),
                     name=f"{name}",
                     color=scaled_color))
-                    
-        return PartGroup(parts)
 
+        return PartGroup(parts)
 
     @show.setter
     def show(self, value):
