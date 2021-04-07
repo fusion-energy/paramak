@@ -637,7 +637,7 @@ class NeutronicsModel():
 
         if export_h5m is True:
             os.system('rm *.h5')
-            self.geometry.export_h5m()
+            self.geometry.export_h5m(include_graveyard=True)
 
         # checks all the nessecary files are found
         for required_file in ['geometry.xml', 'materials.xml', 'settings.xml',
