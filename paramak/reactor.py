@@ -649,8 +649,8 @@ class Reactor:
                     'not set, Unable to use mbconvert to convert to vtk '
                     'without input h5m filename. Try running '
                     'Reactor.export_h5m() first.')
-            else:
-                h5m_filename = self.h5m_filename
+
+            h5m_filename = self.h5m_filename
 
         vtk_filename = paramak.neutronics_utils.export_vtk(
             filename=filename,

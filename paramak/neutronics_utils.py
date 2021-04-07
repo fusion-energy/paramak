@@ -341,8 +341,8 @@ def remove_graveyard_from_h5m_file(
     try:
         from pymoab import core, types
         from pymoab.types import MBENTITYSET
-    except ImportError as err:
-        raise err(
+    except ImportError:
+        raise ImportError(
             'PyMoab not found, remove_graveyard_from_h5m_file method is not '
             ' available'
         )
