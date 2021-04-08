@@ -364,6 +364,7 @@ class BallReactor(paramak.Reactor):
             stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
+            color=(0, 0, 1)
         )
         return self._inboard_tf_coils
 
