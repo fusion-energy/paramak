@@ -281,38 +281,6 @@ class Reactor:
         self._graveyard_offset = value
 
     @property
-    def show(self):
-        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
-
-        from jupyter_cadquery.cadquery import Part, PartGroup, show
-
-        parts = []
-        for shape_or_compound in self.shapes_and_components:
-            name = shape_or_compound.__class__.__name__
-            scaled_color = [int(i * 255) for i in shape_or_compound.color[0:3]]
-            if isinstance(
-                    shape_or_compound.solid,
-                    (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
-                for i, solid in enumerate(shape_or_compound.solid.Solids()):
-                    parts.append(
-                        Part(
-                            solid,
-                            name=f"{name}{i}",
-                            color=scaled_color))
-            else:
-                parts.append(
-                    Part(
-                        shape_or_compound.solid.val(),
-                        name=f"{name}",
-                        color=scaled_color))
-        return PartGroup(parts)
-
-    @show.setter
-    def show(self, value):
-        self._show = value
-
-    @property
     def solid(self):
         """This combines all the parametric shapes and compents in the reactor
         object.
@@ -345,6 +313,38 @@ class Reactor:
     @ solid.setter
     def solid(self, value):
         self._solid = value
+
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
+
+        from jupyter_cadquery.cadquery import Part, PartGroup
+
+        parts = []
+        for shape_or_compound in self.shapes_and_components:
+
+            if shape_or_compound.name is None:
+                name = 'Shape.name not set'
+            else:
+                name = shape_or_compound.name
+
+            scaled_color = [int(i * 255) for i in shape_or_compound.color[0:3]]
+            if isinstance(
+                    shape_or_compound.solid,
+                    (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+                for i, solid in enumerate(shape_or_compound.solid.Solids()):
+                    parts.append(
+                        Part(
+                            solid,
+                            name=f"{name}{i}",
+                            color=scaled_color))
+            else:
+                parts.append(
+                    Part(
+                        shape_or_compound.solid.val(),
+                        name=f"{name}",
+                        color=scaled_color))
+        return PartGroup(parts)
 
     def neutronics_description(
             self,
@@ -548,7 +548,9 @@ class Reactor:
                 str(Path(output_folder) / Path(entry.stp_filename)))
             entry.export_stp(
                 filename=Path(output_folder) / Path(entry.stp_filename),
-                mode=mode, units=units
+                mode=mode,
+                units=units,
+                verbose=False,
             )
 
         if include_sector_wedge:
@@ -606,7 +608,10 @@ class Reactor:
                 )
 
             filename = entry.export_stl(
-                Path(output_folder) / entry.stl_filename, tolerance)
+                filename=Path(output_folder) / entry.stl_filename,
+                tolerance=tolerance,
+                verbose=False,
+            )
             filenames.append(filename)
 
         # creates a graveyard (bounding shell volume) which is needed for
@@ -822,7 +827,7 @@ class Reactor:
         if isinstance(self.shapes_and_components, list):
             self.export_stp(
                 include_graveyard=True,
-                include_sector_wedge=True
+                include_sector_wedge=True,
             )
             self.export_neutronics_description(
                 include_graveyard=True,

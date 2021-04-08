@@ -188,38 +188,6 @@ class Shape:
         self._method = value
 
     @property
-    def show(self):
-        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
-
-        from jupyter_cadquery.cadquery import Part, PartGroup
-
-        parts = []
-        name = self.__class__.__name__
-        scaled_color = [int(i * 255) for i in self.color[0:3]]
-        if isinstance(
-                self.solid,
-                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
-            for i, solid in enumerate(self.solid.Solids()):
-                parts.append(
-                    Part(
-                        solid,
-                        name=f"{name}{i}",
-                        color=scaled_color))
-        else:
-            parts.append(
-                Part(
-                    self.solid.val(),
-                    name=f"{name}",
-                    color=scaled_color))
-
-        return PartGroup(parts)
-
-    @show.setter
-    def show(self, value):
-        self._show = value
-
-    @property
     def solid(self):
         """The CadQuery solid of the 3d object. Returns a CadQuery workplane
         or CadQuery Compound"""
@@ -645,6 +613,37 @@ class Shape:
             raise ValueError(msg)
         self._azimuth_placement_angle = value
 
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
+
+        from jupyter_cadquery.cadquery import Part, PartGroup
+
+        parts = []
+        if self.name is None:
+            name = 'Shape.name not set'
+        else:
+            name = self.name
+
+        scaled_color = [int(i * 255) for i in self.color[0:3]]
+        if isinstance(
+                self.solid,
+                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+            for i, solid in enumerate(self.solid.Solids()):
+                parts.append(
+                    Part(
+                        solid,
+                        name=f"{name}{i}",
+                        color=scaled_color))
+        else:
+            parts.append(
+                Part(
+                    self.solid.val(),
+                    name=f"{name}",
+                    color=scaled_color))
+
+        return PartGroup(parts)
+
     def create_solid(self) -> cq.Workplane:
         solid = None
         if self.points is not None:
@@ -847,7 +846,8 @@ class Shape:
             self,
             filename: Optional[str] = None,
             tolerance: Optional[float] = 0.001,
-            angular_tolerance: Optional[float] = 0.1) -> str:
+            angular_tolerance: Optional[float] = 0.1,
+            verbose: Optional[bool] = True) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
         doesn't end with .stl it will be added.
 
@@ -857,6 +857,8 @@ class Shape:
                 None then a valueError will be raised.
             tolerance: the deflection tolerance of the faceting
             angular_tolerance: the angular tolerance, in radians
+            verbose: Enables (True) or disables (False) the printing of the
+                file produced.
         """
 
         if filename is not None:
@@ -876,7 +878,8 @@ class Shape:
                          tolerance=tolerance,
                          angularTolerance=angular_tolerance)
 
-        print("Saved file as ", path_filename)
+        if verbose == True:
+            print("Saved file as ", path_filename)
 
         return str(path_filename)
 
@@ -884,7 +887,8 @@ class Shape:
             self,
             filename: Optional[str] = None,
             units: Optional[str] = 'mm',
-            mode: Optional[str] = 'solid') -> str:
+            mode: Optional[str] = 'solid',
+            verbose: Optional[bool] = True) -> str:
         """Exports an stp file for the Shape.solid. If the filename provided
         doesn't end with .stp or .step then .stp will be added.
 
@@ -897,6 +901,8 @@ class Shape:
             mode: the object to export can be either
                 'solid' which exports 3D solid shapes or the 'wire' which
                 exports the wire edges of the shape. Defaults to 'solid'.
+            verbose: Enables (True) or disables (False) the printing of the
+                file produced.
         """
 
         if filename is not None:
@@ -928,7 +934,8 @@ class Shape:
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
 
-        print("Saved file as ", path_filename)
+        if verbose == True:
+            print("Saved file as ", path_filename)
 
         return str(path_filename)
 
