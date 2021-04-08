@@ -17,6 +17,12 @@ class TestReactor(unittest.TestCase):
 
         self.test_reactor = paramak.Reactor([test_shape])
 
+    def test_show_runs_without_error(self):
+        """checks that the jupyter notebook (with cadquery addition) runs
+        without error."""
+
+        self.test_reactor.show()
+
     def test_incorrect_graveyard_offset_too_small(self):
 
         def incorrect_graveyard_offset_too_small():

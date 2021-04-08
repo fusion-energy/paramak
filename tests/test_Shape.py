@@ -75,6 +75,12 @@ class TestShape(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_graveyard)
 
+    def test_show_runs_without_error(self):
+        """checks that the jupyter notebook (with cadquery addition) runs
+        without error."""
+
+        self.test_extrude_mixed_shape.show()
+
     def test_make_graveyard_offset(self):
         """checks that the graveyard can be exported with the correct default
         parameters and that these parameters can be changed"""
