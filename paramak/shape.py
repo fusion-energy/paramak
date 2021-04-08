@@ -878,7 +878,7 @@ class Shape:
                          tolerance=tolerance,
                          angularTolerance=angular_tolerance)
 
-        if verbose == True:
+        if verbose:
             print("Saved file as ", path_filename)
 
         return str(path_filename)
@@ -934,7 +934,7 @@ class Shape:
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
 
-        if verbose == True:
+        if verbose:
             print("Saved file as ", path_filename)
 
         return str(path_filename)
