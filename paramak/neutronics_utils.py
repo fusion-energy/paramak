@@ -4,7 +4,6 @@ import math
 import os
 import shutil
 import subprocess
-import warnings
 from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
@@ -224,8 +223,8 @@ def define_moab_core_and_tags():
 
     try:
         from pymoab import core, types
-    except ImportError as err:
-        raise err('PyMoab not found, export_h5m method is not available')
+    except ImportError:
+        raise ImportError('PyMoab not found, export_h5m method is not available')
 
     # create pymoab instance
     moab_core = core.Core()
