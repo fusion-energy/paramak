@@ -201,7 +201,7 @@ def make_watertight(
             universal_newlines=True,
         )
     except BaseException:
-        raise ValueError(
+        raise NameError(
             "make_watertight failed, check DAGMC is install and the DAGMC/bin "
             "folder is in the path directory (Linux and Mac) or set as an "
             "enviromental varible (Windows)")
