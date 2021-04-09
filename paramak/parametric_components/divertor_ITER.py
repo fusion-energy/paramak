@@ -128,7 +128,13 @@ class ITERtypeDivertor(RotateMixedShape):
         """
         points = []
 
-        dome_base = extend(c_coord, F, dome_pos * distance_between_two_points(F, c_coord))
+        dome_base = extend(
+            c_coord,
+            F,
+            dome_pos *
+            distance_between_two_points(
+                F,
+                c_coord))
         dome_lower_point = extend(
             dome_base, rotate(dome_base, c_coord, -math.pi / 2), dome_height
         )
