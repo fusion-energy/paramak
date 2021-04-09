@@ -921,7 +921,20 @@ class Shape:
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         if mode == 'solid':
-            exporters.export(self.solid, str(path_filename), exportType='STEP')
+
+            assembly = cq.Assembly(name=self.name)
+
+            if self.color is None:
+                assembly.add(self.solid)
+            else:
+                assembly.add(self.solid, color=cq.Color(*self.color))
+
+            print(assembly._flatten())
+            assembly.save(str(path_filename), exportType='STEP')  
+
+            # previous method does not support colours but puts the solid in the base file level
+            # exporters.export(self.solid, str(path_filename), exportType='STEP')
+
         elif mode == 'wire':
             exporters.export(self.wire, str(path_filename), exportType='STEP')
         else:
