@@ -79,10 +79,11 @@ class BallReactor(paramak.Reactor):
             triangularity,
             plasma_gap_vertical_thickness=None,
             number_of_tf_coils=12,
-            pf_coil_to_rear_blanket_radial_gap=None,
+            rear_blanket_to_tf_gap=None,
             pf_coil_radial_thicknesses=None,
             pf_coil_vertical_thicknesses=None,
-            pf_coil_to_tf_coil_radial_gap=None,
+            pf_coil_radial_position=None,
+            pf_coil_vertical_position=None,
             pf_coil_case_thickness=10,
             outboard_tf_coil_radial_thickness=None,
             outboard_tf_coil_poloidal_thickness=None,
@@ -108,11 +109,13 @@ class BallReactor(paramak.Reactor):
         self.blanket_radial_thickness = blanket_radial_thickness
         self.blanket_rear_wall_radial_thickness = \
             blanket_rear_wall_radial_thickness
-        self.pf_coil_to_rear_blanket_radial_gap = \
-            pf_coil_to_rear_blanket_radial_gap
+
+        self.pf_coil_vertical_position = pf_coil_vertical_position
+        self.pf_coil_radial_position = pf_coil_radial_position
         self.pf_coil_radial_thicknesses = pf_coil_radial_thicknesses
         self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
-        self.pf_coil_to_tf_coil_radial_gap = pf_coil_to_tf_coil_radial_gap
+        self.rear_blanket_to_tf_gap = rear_blanket_to_tf_gap
+
         self.pf_coil_case_thickness = pf_coil_case_thickness
         self.outboard_tf_coil_radial_thickness = \
             outboard_tf_coil_radial_thickness
@@ -208,17 +211,25 @@ class BallReactor(paramak.Reactor):
         """Creates a list of paramak.Shape for components and saves it in
         self.shapes_and_components
         """
-        shapes_and_components = []
+        uncut_shapes = []
 
-        shapes_and_components.append(self._make_plasma())
+        uncut_shapes.append(self._make_plasma())
         self._make_radial_build()
         self._make_vertical_build()
-        shapes_and_components.append(self._make_inboard_tf_coils())
-        shapes_and_components.append(self._make_center_column_shield())
-        shapes_and_components += self._make_blankets_layers()
-        shapes_and_components.append(self._make_divertor())
-        shapes_and_components += self._make_pf_coils()
-        shapes_and_components += self._make_tf_coils()
+        uncut_shapes.append(self._make_inboard_tf_coils())
+        uncut_shapes.append(self._make_center_column_shield())
+        uncut_shapes += self._make_blankets_layers()
+        uncut_shapes.append(self._make_divertor())
+        uncut_shapes += self._make_tf_coils()
+        pf_coils = self._make_pf_coils()
+
+        if pf_coils is None:
+            shapes_and_components = uncut_shapes
+        else:
+            for shape in uncut_shapes:
+                for pf_coil in pf_coils:
+                    shape.solid = shape.solid.cut(pf_coil.solid)
+            shapes_and_components = pf_coils + uncut_shapes
 
         self.shapes_and_components = shapes_and_components
 
@@ -304,54 +315,11 @@ class BallReactor(paramak.Reactor):
         self._center_column_shield_height = \
             self._blanket_rear_wall_end_height * 2
 
-        if (self.pf_coil_vertical_thicknesses,
-                self.pf_coil_radial_thicknesses,
-                self.pf_coil_to_rear_blanket_radial_gap) != (None, None, None):
-            self._number_of_pf_coils = len(self.pf_coil_vertical_thicknesses)
-
-            y_position_step = (2 * (
-                self._blanket_rear_wall_end_height
-                + self.pf_coil_to_rear_blanket_radial_gap
-            )
-            ) / (self._number_of_pf_coils + 1)
-
-            if not isinstance(self.pf_coil_case_thickness, list):
-                self.pf_coil_case_thickness = [
-                    self.pf_coil_case_thickness] * self._number_of_pf_coils
-
-            self._pf_coils_xy_values = []
-            # adds in coils with equal spacing strategy, should be updated to
-            # allow user positions
-            for i in range(self._number_of_pf_coils):
-                y_value = (
-                    self._blanket_rear_wall_end_height
-                    + self.pf_coil_to_rear_blanket_radial_gap
-                    - y_position_step * (i + 1)
-                )
-                x_value = (
-                    self._blanket_rear_wall_end_radius
-                    + self.pf_coil_to_rear_blanket_radial_gap
-                    + 0.5 * self.pf_coil_radial_thicknesses[i]
-                    + self.pf_coil_case_thickness[i]
-                )
-                self._pf_coils_xy_values.append((x_value, y_value))
-
-            self._pf_coil_start_radius = (
-                self._blanket_rear_wall_end_radius +
-                self.pf_coil_to_rear_blanket_radial_gap)
-
-            self._pf_coil_end_radius = self._pf_coil_start_radius + \
-                max(self.pf_coil_radial_thicknesses) + \
-                max(self.pf_coil_case_thickness) * 2
-
-            if (self.pf_coil_to_tf_coil_radial_gap,
-                    self.outboard_tf_coil_radial_thickness) != (None, None):
-                self._tf_coil_start_radius = (
-                    self._pf_coil_end_radius +
-                    self.pf_coil_to_rear_blanket_radial_gap)
-                self._tf_coil_end_radius = (
-                    self._tf_coil_start_radius +
-                    self.outboard_tf_coil_radial_thickness)
+        if self.rear_blanket_to_tf_gap != None:
+            self._tf_coil_start_radius = self._blanket_rear_wall_end_radius + self.rear_blanket_to_tf_gap
+            self._tf_coil_end_radius = (
+                self._tf_coil_start_radius +
+                self.outboard_tf_coil_radial_thickness)
 
     def _make_inboard_tf_coils(self):
 
@@ -487,15 +455,17 @@ class BallReactor(paramak.Reactor):
         return self._divertor
 
     def _make_pf_coils(self):
-        list_of_components = []
-        if (self.pf_coil_vertical_thicknesses,
-                self.pf_coil_radial_thicknesses,
-                self.pf_coil_to_rear_blanket_radial_gap) != (None, None, None):
+        if (self.pf_coil_vertical_thicknesses, self.pf_coil_radial_thicknesses, self.pf_coil_vertical_position, self.pf_coil_radial_position) != (None, None, None, None):
+            list_of_components = []
 
-            self._pf_coil = paramak.PoloidalFieldCoilSet(
+            # TODO make use of counter in the name attribute
+
+            center_points = [(x,y) for x,y in zip(self.pf_coil_radial_position, self.pf_coil_vertical_position)]
+
+            self._pf_coils = self._pf_coil = paramak.PoloidalFieldCoilSet(
                 heights=self.pf_coil_vertical_thicknesses,
                 widths=self.pf_coil_radial_thicknesses,
-                center_points=self._pf_coils_xy_values,
+                center_points=center_points,
                 rotation_angle=self.rotation_angle,
                 stp_filename='pf_coils.stp',
                 stl_filename='pf_coils.stl',
@@ -513,13 +483,18 @@ class BallReactor(paramak.Reactor):
                 material_tag="pf_coil_case_mat",
             )
 
-            list_of_components = [self._pf_coils_casing, self._pf_coil]
-        return list_of_components
+            list_of_components = [self._pf_coil, self._pf_coils_casing]
+            return list_of_components
+        else:
+            print(
+                'pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, '
+                'pf_coil_radial_position, pf_coil_vertical_position not '
+                'so not making pf coils')
+            return None
 
     def _make_tf_coils(self):
         comp = []
-        if (self.pf_coil_to_tf_coil_radial_gap,
-                self.outboard_tf_coil_radial_thickness) != (None, None):
+        if self.rear_blanket_to_tf_gap != None:
 
             self._tf_coil = paramak.ToroidalFieldCoilRectangle(
                 with_inner_leg=False,
