@@ -266,6 +266,123 @@ def define_moab_core_and_tags():
     return moab_core, tags
 
 
+def export_vtk(
+    h5m_filename: str,
+    filename: Optional[str] = 'dagmc.vtk',
+    include_graveyard: Optional[bool] = False
+):
+    """Produces a vtk geometry compatable from the dagmc h5m file. This is
+    useful for checking the geometry that is used for transport.
+
+    Arguments:
+        filename: filename of vtk outputfile. If the filename does not end
+            with .vtk then .vtk will be added.
+        h5m_filename: filename of h5m outputfile. If the filename does not
+            end with .h5m then .h5m will be added.
+        include_graveyard: optionally include the graveyard in the vtk file
+
+    Returns:
+        filename of the vtk file produced
+    """
+
+    path_h5m_filename = Path(h5m_filename)
+    if path_h5m_filename.suffix != ".h5m":
+        path_h5m_filename = path_h5m_filename.with_suffix(".h5m")
+    print('path_h5m_filename.is_file', path_h5m_filename.is_file)
+    if path_h5m_filename.is_file() is False:
+        raise FileNotFoundError(
+            'h5m_filename not found in location', path_h5m_filename
+        )
+
+    path_filename = Path(filename)
+    if path_filename.suffix != ".vtk":
+        path_filename = path_filename.with_suffix(".vtk")
+
+    if not include_graveyard:
+        tmp_file = str(path_h5m_filename.with_suffix('')) + \
+            str(Path('_no_graveyard')) + str(path_h5m_filename.suffix)
+        h5m_filename = remove_graveyard_from_h5m_file(
+            input_h5m_filename=str(path_h5m_filename),
+            output_h5m_filename=tmp_file
+        )
+
+    try:
+        subprocess.check_output(
+            'mbconvert {} {}'.format(h5m_filename, filename),
+            shell=True,
+            universal_newlines=True,
+        )
+    except BaseException:
+        raise ValueError(
+            "mbconvert failed, check MOAB is install and the MOAB/bin "
+            "folder is in the path directory (Linux and Mac) or set as an "
+            "enviromental varible (Windows)")
+
+    return str(path_filename)
+
+
+def remove_graveyard_from_h5m_file(
+    input_h5m_filename: Optional[str] = 'dagmc.h5m',
+    output_h5m_filename: Optional[str] = 'dagmc_no_graveyard.h5m'
+) -> str:
+    """Removes the graveyard or graveyards from a dagmc h5m file and saves
+    the remaining geometry as a new h5m file. Useful for visulising the
+    geometry without the bounding box graveyard obstructing the view. Adapted
+    from https://github.com/svalinn/DAGMC-viz source code
+
+    Arguments:
+        input_h5m_filename: The name of the h5m file to remove the graveyard from
+        output_h5m_filename: The name of the outfile h5m without a graveyard
+
+    Returns:
+        filename of the new dagmc h5m file without any graveyards
+    """
+
+    try:
+        from pymoab import core, types
+        from pymoab.types import MBENTITYSET
+    except ImportError:
+        raise ImportError(
+            'PyMoab not found, remove_graveyard_from_h5m_file method is not '
+            ' available'
+        )
+
+    moab_core = core.Core()
+    moab_core.load_file(input_h5m_filename)
+
+    tag_name = moab_core.tag_get_handle(str(types.NAME_TAG_NAME))
+
+    tag_category = moab_core.tag_get_handle(str(types.CATEGORY_TAG_NAME))
+    root = moab_core.get_root_set()
+
+    # An array of tag values to be matched for entities returned by the
+    # following call.
+    group_tag_values = np.array(["Group"])
+
+    # Retrieve all EntitySets with a category tag of the user input value.
+    group_categories = list(moab_core.get_entities_by_type_and_tag(
+                            root, MBENTITYSET, tag_category, group_tag_values))
+
+    # Retrieve all EntitySets with a name tag.
+    group_names = moab_core.tag_get_data(tag_name, group_categories, flat=True)
+
+    # Find the EntitySet whose name tag value contains "graveyard".
+    graveyard_sets = [
+        group_set for group_set,
+        name in zip(
+            group_categories,
+            group_names) if "graveyard" in str(
+            name.lower())]
+
+    # Remove the graveyard EntitySet from the data.
+    groups_to_write = [
+        group_set for group_set in group_categories if group_set not in graveyard_sets]
+
+    moab_core.write_file(output_h5m_filename, output_sets=groups_to_write)
+
+    return output_h5m_filename
+
+
 def add_stl_to_moab_core(
         moab_core,
         surface_id: int,

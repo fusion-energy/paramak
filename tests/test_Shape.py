@@ -75,6 +75,12 @@ class TestShape(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_graveyard)
 
+    def test_show_runs_without_error(self):
+        """checks that the jupyter notebook (with cadquery addition) runs
+        without error."""
+
+        self.test_extrude_mixed_shape.show()
+
     def test_make_graveyard_offset(self):
         """checks that the graveyard can be exported with the correct default
         parameters and that these parameters can be changed"""
@@ -767,6 +773,50 @@ class TestShape(unittest.TestCase):
         assert data[0]['stp_filename'] == 'test_shape.stp'
         # TODO this can be removed in the future
         assert data[0]['stp_filename'] == 'test_shape.stp'
+
+    def test_export_vtk(self):
+        """Creates vtk files from the h5m files and checks they exist"""
+
+        os.system('rm *.h5m *.vtk')
+
+        assert self.my_shape.h5m_filename is None
+        self.my_shape.export_h5m_with_pymoab()
+        self.my_shape.export_vtk()
+        assert Path('dagmc.h5m').is_file
+        assert Path('dagmc.vtk').is_file
+        assert Path('dagmc_no_graveyard.vtk').is_file
+        assert self.my_shape.h5m_filename == 'dagmc.h5m'
+
+        self.my_shape.export_vtk(filename='custom_filename.vtk')
+        assert Path('custom_filename.vtk').is_file
+
+        self.my_shape.export_vtk(filename='suffixless_filename')
+        assert Path('suffixless_filename.vtk').is_file
+
+    def test_export_vtk_without_h5m_raises_error(self):
+        """exports a h5m file when shapes_and_components is set to a string"""
+
+        def check_correct_error_is_rasied():
+            os.system('rm *.h5m *.vtk')
+            self.my_shape.export_vtk()
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
+
+    def test_setting_color_incorrectly_too_large(self):
+        """Sets the shape.colour outside of the the 0 to 1 range"""
+
+        def check_correct_error_is_rasied():
+            self.my_shape.color = (255, 255, 2)
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
+
+    def test_setting_color_incorrectly_too_small(self):
+        """Sets the shape.colour outside of the the 0 to 1 range"""
+
+        def check_correct_error_is_rasied():
+            self.my_shape.color = (-1, 0, 0)
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
 
 
 if __name__ == "__main__":

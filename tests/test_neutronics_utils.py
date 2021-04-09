@@ -141,7 +141,7 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         )
 
         pf_coil.export_h5m_with_pymoab(
-            filename='dagmc.h5',
+            filename='dagmc.h5',  # missing the m, but this is added
             include_graveyard=True,
         )
 
@@ -197,6 +197,38 @@ class TestNeutronicsUtilityFunctions(unittest.TestCase):
         assert Path("not_watertight_dagmc.h5m").exists() is True
         assert output_filename == "watertight_dagmc.h5m"
         assert Path("watertight_dagmc.h5m").exists() is True
+
+    def test_export_vtk_without_h5m_raises_error(self):
+        """exports a vtk file when shapes_and_components is set to a string"""
+
+        def check_correct_error_is_rasied():
+            os.system('rm *.h5m *.vtk')
+            paramak.neutronics_utils.export_vtk(h5m_filename='dagmc.h5m')
+
+        self.assertRaises(FileNotFoundError, check_correct_error_is_rasied)
+
+    def test_export_vtk_without_h5m_suffix(self):
+        """exports a vtk file when shapes_and_components is set to a string"""
+
+        os.system('rm *.stl *.h5m *.vtk')
+
+        pf_coil = paramak.PoloidalFieldCoil(
+            height=10,
+            width=10,
+            center_point=(100, 0),
+            rotation_angle=180,
+            material_tag='copper'
+        )
+
+        pf_coil.export_h5m_with_pymoab(
+            filename='dagmc',
+            include_graveyard=True,
+        )
+
+        paramak.neutronics_utils.export_vtk(h5m_filename='dagmc')
+
+        assert Path('dagmc.vtk').is_file()
+        assert Path('dagmc.h5m').is_file()
 
     # these tests only work if trelis is avaialbe
     # def test_make_watertight_cmd(self):

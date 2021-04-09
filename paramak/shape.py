@@ -1,9 +1,6 @@
 
 import json
 import numbers
-import os
-import pathlib
-import shutil
 import warnings
 from collections.abc import Iterable
 from pathlib import Path
@@ -87,7 +84,8 @@ class Shape:
         points: list = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
-        color: Optional[Tuple[float, float, float]] = (0.5, 0.5, 0.5),
+        color: Optional[Tuple[float, float, float,
+                              Optional[float]]] = (0.5, 0.5, 0.5),
         material_tag: Optional[str] = None,
         stp_filename: Optional[str] = None,
         stl_filename: Optional[str] = None,
@@ -139,6 +137,7 @@ class Shape:
         self.solid = None
         self.wire = None
         self.render_mesh = None
+        self.h5m_filename = None
         # self.volume = None
         self.hash_value = None
         self.points_hash_value = None
@@ -187,19 +186,6 @@ class Shape:
             raise ValueError("the method using in should be either trelis, \
                 pymoab. {} is not an option".format(value))
         self._method = value
-
-    @property
-    def show(self):
-        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
-
-        from jupyter_cadquery.cadquery import show
-        self.solid
-        return show(self.solid)
-
-    @show.setter
-    def show(self, value):
-        self._show = value
 
     @property
     def solid(self):
@@ -406,20 +392,25 @@ class Shape:
 
     @color.setter
     def color(self, value):
-        error = False
         if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 for i in value:
                     if not isinstance(i, (int, float)):
-                        error = True
+                        raise ValueError(
+                            "Individual entries in the Shape.color must a "
+                            "number (float or int)")
+                    if i > 1 or i < 0:
+                        raise ValueError(
+                            "Individual entries in the Shape.color must be "
+                            "between 0 and 1"
+                        )
             else:
-                error = True
+                raise ValueError(
+                    "Shape.color must be a list or tuple of 3 or 4 floats")
         else:
-            error = True
-        # raise error
-        if error:
             raise ValueError(
-                "Shape.color must be a list or tuple of 3 or 4 floats")
+                "Shape.color must be a list or tuple")
+
         self._color = value
 
     @property
@@ -621,6 +612,37 @@ class Shape:
             msg = "azimuth_placement_angle must be a float or list of floats"
             raise ValueError(msg)
         self._azimuth_placement_angle = value
+
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
+
+        from jupyter_cadquery.cadquery import Part, PartGroup
+
+        parts = []
+        if self.name is None:
+            name = 'Shape.name not set'
+        else:
+            name = self.name
+
+        scaled_color = [int(i * 255) for i in self.color[0:3]]
+        if isinstance(
+                self.solid,
+                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+            for i, solid in enumerate(self.solid.Solids()):
+                parts.append(
+                    Part(
+                        solid,
+                        name=f"{name}{i}",
+                        color=scaled_color))
+        else:
+            parts.append(
+                Part(
+                    self.solid.val(),
+                    name=f"{name}",
+                    color=scaled_color))
+
+        return PartGroup(parts)
 
     def create_solid(self) -> cq.Workplane:
         solid = None
@@ -824,7 +846,8 @@ class Shape:
             self,
             filename: Optional[str] = None,
             tolerance: Optional[float] = 0.001,
-            angular_tolerance: Optional[float] = 0.1) -> str:
+            angular_tolerance: Optional[float] = 0.1,
+            verbose: Optional[bool] = True) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
         doesn't end with .stl it will be added.
 
@@ -834,6 +857,8 @@ class Shape:
                 None then a valueError will be raised.
             tolerance: the deflection tolerance of the faceting
             angular_tolerance: the angular tolerance, in radians
+            verbose: Enables (True) or disables (False) the printing of the
+                file produced.
         """
 
         if filename is not None:
@@ -853,7 +878,8 @@ class Shape:
                          tolerance=tolerance,
                          angularTolerance=angular_tolerance)
 
-        print("Saved file as ", path_filename)
+        if verbose:
+            print("Saved file as ", path_filename)
 
         return str(path_filename)
 
@@ -861,7 +887,8 @@ class Shape:
             self,
             filename: Optional[str] = None,
             units: Optional[str] = 'mm',
-            mode: Optional[str] = 'solid') -> str:
+            mode: Optional[str] = 'solid',
+            verbose: Optional[bool] = True) -> str:
         """Exports an stp file for the Shape.solid. If the filename provided
         doesn't end with .stp or .step then .stp will be added.
 
@@ -874,6 +901,8 @@ class Shape:
             mode: the object to export can be either
                 'solid' which exports 3D solid shapes or the 'wire' which
                 exports the wire edges of the shape. Defaults to 'solid'.
+            verbose: Enables (True) or disables (False) the printing of the
+                file produced.
         """
 
         if filename is not None:
@@ -905,7 +934,8 @@ class Shape:
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
 
-        print("Saved file as ", path_filename)
+        if verbose:
+            print("Saved file as ", path_filename)
 
         return str(path_filename)
 
@@ -1173,10 +1203,11 @@ class Shape:
         patch = PatchCollection(patches)
 
         if self.color is not None:
-            patch.set_facecolor(self.color)
-            patch.set_color(self.color)
-            patch.color = self.color
-            patch.edgecolor = self.color
+            print('color is ', self.color)
+            patch.set_facecolor(self.color[0:3])
+            patch.set_color(self.color[0:3])
+            patch.color = self.color[0:3]
+            patch.edgecolor = self.color[0:3]
             # checks to see if an alpha value is provided in the color
             if len(self.color) == 4:
                 patch.set_alpha = self.color[-1]
@@ -1339,6 +1370,45 @@ class Shape:
 
         return graveyard_shape
 
+    def export_vtk(
+        self,
+        filename: Optional[str] = 'dagmc.vtk',
+        h5m_filename: Optional[str] = None,
+        include_graveyard: Optional[bool] = False
+    ):
+        """Produces a vtk geometry compatable from the dagmc h5m file. This is
+        useful for checking the geometry that is used for transport.
+
+        Arguments:
+            filename: filename of vtk outputfile. If the filename does not end
+                with .vtk then .vtk will be added.
+            h5m_filename: filename of h5m outputfile. If the filename does not
+                end with .h5m then .h5m will be added. Defaults to None which
+                uses the Reactor.h5m_filename.
+            include_graveyard: optionally include the graveyard in the vtk file
+
+        Returns:
+            filename of the vtk file produced
+        """
+
+        if h5m_filename is None:
+            if self.h5m_filename is None:
+                raise ValueError(
+                    'h5m_filename not provided and Reactor.h5m_filename is '
+                    'not set, Unable to use mbconvert to convert to vtk '
+                    'without input h5m filename. Try running '
+                    'Reactor.export_h5m() first.')
+
+            h5m_filename = self.h5m_filename
+
+        vtk_filename = paramak.neutronics_utils.export_vtk(
+            filename=filename,
+            h5m_filename=h5m_filename,
+            include_graveyard=include_graveyard
+        )
+
+        return vtk_filename
+
     def export_h5m(
             self,
             filename: str = 'dagmc.h5m',
@@ -1347,7 +1417,8 @@ class Shape:
             faceting_tolerance: Optional[float] = None,
     ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations. Tags the volumes with their material_tag attributes.
+        simulations. Tags the volumes with their material_tag attributes. Sets
+        the Shape.h5m_filename to the filename of the h5m file produced.
 
         Arguments:
             method: The method to use when making the imprinted and
@@ -1435,6 +1506,8 @@ class Shape:
             output_filename="dagmc.h5m"
         )
 
+        self.h5m_filename = water_tight_h5m
+
         return water_tight_h5m
 
     def export_h5m_with_pymoab(
@@ -1502,6 +1575,8 @@ class Shape:
         moab_core.add_entities(file_set, all_sets)
 
         moab_core.write_file(str(path_filename))
+
+        self.h5m_filename = str(path_filename)
 
         return str(path_filename)
 

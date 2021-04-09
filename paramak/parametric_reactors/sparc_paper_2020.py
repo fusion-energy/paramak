@@ -85,7 +85,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (242.0323325635104, -132.25806451612902),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename='efccu_coils_1.stp'
+            stp_filename='efccu_coils_1.stp',
         )
 
         efccu_coils_2 = paramak.RotateStraightShape(
@@ -243,7 +243,8 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (117.32101616628177, 123.04147465437785),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename='vacvessel.stp'
+            stp_filename='vacvessel.stp',
+            color=(0., 1., 1.),
         )
 
         inner_vessel = paramak.RotateMixedShape(
@@ -294,7 +295,8 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             stp_filename='inner_vessel.stp',
-            cut=[vac_vessel, vs_coils, antenna]
+            cut=[vac_vessel, vs_coils, antenna],
+            color=(0., 1., 0.498),
         )
 
         return [antenna, vac_vessel, inner_vessel]

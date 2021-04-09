@@ -3,6 +3,7 @@ import collections
 import json
 import os
 import shutil
+import subprocess
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -10,7 +11,6 @@ from typing import List, Optional, Tuple, Union
 import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import exporters
-from openmc import geometry
 
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
@@ -81,6 +81,7 @@ class Reactor:
 
         self.stp_filenames = []
         self.stl_filenames = []
+        self.h5m_filename = None
         self.tet_meshes = []
         self.graveyard = None
         self.solid = None
@@ -280,19 +281,6 @@ class Reactor:
         self._graveyard_offset = value
 
     @property
-    def show(self):
-        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
-
-        from jupyter_cadquery.cadquery import show
-        self.solid
-        return show(self.solid)
-
-    @show.setter
-    def show(self, value):
-        self._show = value
-
-    @property
     def solid(self):
         """This combines all the parametric shapes and compents in the reactor
         object.
@@ -325,6 +313,38 @@ class Reactor:
     @ solid.setter
     def solid(self, value):
         self._solid = value
+
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
+
+        from jupyter_cadquery.cadquery import Part, PartGroup
+
+        parts = []
+        for shape_or_compound in self.shapes_and_components:
+
+            if shape_or_compound.name is None:
+                name = 'Shape.name not set'
+            else:
+                name = shape_or_compound.name
+
+            scaled_color = [int(i * 255) for i in shape_or_compound.color[0:3]]
+            if isinstance(
+                    shape_or_compound.solid,
+                    (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+                for i, solid in enumerate(shape_or_compound.solid.Solids()):
+                    parts.append(
+                        Part(
+                            solid,
+                            name=f"{name}{i}",
+                            color=scaled_color))
+            else:
+                parts.append(
+                    Part(
+                        shape_or_compound.solid.val(),
+                        name=f"{name}",
+                        color=scaled_color))
+        return PartGroup(parts)
 
     def neutronics_description(
             self,
@@ -528,7 +548,9 @@ class Reactor:
                 str(Path(output_folder) / Path(entry.stp_filename)))
             entry.export_stp(
                 filename=Path(output_folder) / Path(entry.stp_filename),
-                mode=mode, units=units
+                mode=mode,
+                units=units,
+                verbose=False,
             )
 
         if include_sector_wedge:
@@ -586,7 +608,10 @@ class Reactor:
                 )
 
             filename = entry.export_stl(
-                Path(output_folder) / entry.stl_filename, tolerance)
+                filename=Path(output_folder) / entry.stl_filename,
+                tolerance=tolerance,
+                verbose=False,
+            )
             filenames.append(filename)
 
         # creates a graveyard (bounding shell volume) which is needed for
@@ -599,6 +624,45 @@ class Reactor:
 
         return filenames
 
+    def export_vtk(
+        self,
+        filename: Optional[str] = 'dagmc.vtk',
+        h5m_filename: Optional[str] = None,
+        include_graveyard: Optional[bool] = False
+    ):
+        """Produces a vtk geometry compatable from the dagmc h5m file. This is
+        useful for checking the geometry that is used for transport.
+
+        Arguments:
+            filename: filename of vtk outputfile. If the filename does not end
+                with .vtk then .vtk will be added.
+            h5m_filename: filename of h5m outputfile. If the filename does not
+                end with .h5m then .h5m will be added. Defaults to None which
+                uses the Reactor.h5m_filename.
+            include_graveyard: optionally include the graveyard in the vtk file
+
+        Returns:
+            filename of the vtk file produced
+        """
+
+        if h5m_filename is None:
+            if self.h5m_filename is None:
+                raise ValueError(
+                    'h5m_filename not provided and Reactor.h5m_filename is '
+                    'not set, Unable to use mbconvert to convert to vtk '
+                    'without input h5m filename. Try running '
+                    'Reactor.export_h5m() first.')
+
+            h5m_filename = self.h5m_filename
+
+        vtk_filename = paramak.neutronics_utils.export_vtk(
+            filename=filename,
+            h5m_filename=h5m_filename,
+            include_graveyard=include_graveyard
+        )
+
+        return vtk_filename
+
     def export_h5m(
             self,
             filename: Optional[str] = 'dagmc.h5m',
@@ -608,7 +672,8 @@ class Reactor:
             faceting_tolerance: Optional[float] = None,
     ) -> str:
         """Produces a h5m neutronics geometry compatable with DAGMC
-        simulations. Tags the volumes with their material_tag attributes.
+        simulations. Tags the volumes with their material_tag attributes. Sets
+        the Reactor.h5m_filename to the filename of the h5m file produced.
 
         Arguments:
             filename: filename of h5m outputfile.
@@ -669,7 +734,7 @@ class Reactor:
             height: Optional[float] = None,
             radius: Optional[float] = None,
             rotation_angle: Optional[float] = None,
-            material_tag='Vacuum',
+            material_tag='vacuum',
             stp_filename: Optional[str] = 'sector_wedge.stp',
             stl_filename: Optional[str] = 'sector_wedge.stl'
     ) -> Union[paramak.Shape, None]:
@@ -762,7 +827,7 @@ class Reactor:
         if isinstance(self.shapes_and_components, list):
             self.export_stp(
                 include_graveyard=True,
-                include_sector_wedge=True
+                include_sector_wedge=True,
             )
             self.export_neutronics_description(
                 include_graveyard=True,
@@ -787,6 +852,8 @@ class Reactor:
             input_filename=not_watertight_file[0],
             output_filename=filename
         )
+
+        self.h5m_filename = water_tight_h5m_filename
 
         return water_tight_h5m_filename
 
@@ -869,6 +936,8 @@ class Reactor:
 
         moab_core.write_file(str(path_filename))
 
+        self.h5m_filename = str(path_filename)
+
         return str(path_filename)
 
     def export_physical_groups(
@@ -913,7 +982,7 @@ class Reactor:
             strokeWidth: Optional[float] = None,
             strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
             hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
-            showHidden: Optional[bool] = True,
+            showHidden: Optional[bool] = False,
             showAxes: Optional[bool] = False,
     ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
@@ -941,7 +1010,7 @@ class Reactor:
                 RGB format with each value between 0 and 255. Defaults to
                 (100, 100, 100) which is light grey.
             showHidden: If the edges obscured by geometry should be included in
-                the diagram. Defaults to True.
+                the diagram. Defaults to False.
             showAxes: If the x, y, z axis should be included in the image.
                 Defaults to False.
 
