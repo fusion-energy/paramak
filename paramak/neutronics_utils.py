@@ -224,7 +224,8 @@ def define_moab_core_and_tags():
     try:
         from pymoab import core, types
     except ImportError:
-        raise ImportError('PyMoab not found, export_h5m method is not available')
+        raise ImportError(
+            'PyMoab not found, export_h5m method is not available')
 
     # create pymoab instance
     moab_core = core.Core()
