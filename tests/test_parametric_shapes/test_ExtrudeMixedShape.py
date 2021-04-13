@@ -170,7 +170,7 @@ class TestExtrudeMixedShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
+        assert pytest.approx(Path("test_solid.stp", abs=1).stat().st_size) == \
             Path("test_solid2.stp").stat().st_size
         assert Path("test_wire.stp").stat().st_size < \
             Path("test_solid2.stp").stat().st_size
