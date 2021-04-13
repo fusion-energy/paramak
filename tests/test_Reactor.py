@@ -12,10 +12,20 @@ import pytest
 class TestReactor(unittest.TestCase):
 
     def setUp(self):
-        test_shape = paramak.RotateStraightShape(
+        self.test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
 
-        self.test_reactor = paramak.Reactor([test_shape])
+        self.test_reactor = paramak.Reactor([self.test_shape])
+
+    def test_reactor_export_html_from_str_input(self):
+        """when the .solid is called it constructs the geometry. This should be
+        possible even whe the shapes_and_components passed to reactor is just a
+        text file"""
+        self.test_shape.export_stp()
+        self.test_shape.export_neutronics_description('manifest.json')
+        test_reactor = paramak.Reactor('manifest.json')
+        test_reactor.export_html('test_reactor_from_str.html')
+        assert Path('test_reactor_from_str.html').is_file()
 
     def test_show_runs_without_error(self):
         """checks that the jupyter notebook (with cadquery addition) runs
