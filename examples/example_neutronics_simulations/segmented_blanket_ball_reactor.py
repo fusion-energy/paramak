@@ -47,8 +47,9 @@ def make_model_and_simulate():
     blanket_rear_wall_structural_material = "eurofer"
     blanket_rear_wall_coolant_fraction = 0.3
     blanket_rear_wall_structural_fraction = 0.7
-    blanket_rear_wall_coolant_temperature = 473.15  # units of Kelvin, equivalent 200 degrees C
-    blanket_rear_wall_coolant_pressure = 1e6 # units of Pa
+    # units of Kelvin, equivalent 200 degrees C
+    blanket_rear_wall_coolant_temperature = 473.15
+    blanket_rear_wall_coolant_pressure = 1e6  # units of Pa
 
     blanket_rear_wall_material = nmm.Material.from_mixture(
         name="blanket_rear_wall_mat",
@@ -58,14 +59,14 @@ def make_model_and_simulate():
                 temperature=blanket_rear_wall_coolant_temperature,
                 pressure=blanket_rear_wall_coolant_pressure,
             ),
-            nmm.Material.from_library(name=blanket_rear_wall_structural_material),
+            nmm.Material.from_library(
+                name=blanket_rear_wall_structural_material),
         ],
         fracs=[
             blanket_rear_wall_coolant_fraction,
             blanket_rear_wall_structural_fraction,
         ],
-        percent_type="vo"
-    )
+        percent_type="vo")
 
     # based on
     # https://www.sciencedirect.com/science/article/pii/S2352179118300437
@@ -183,16 +184,17 @@ def make_model_and_simulate():
                 temperature=inboard_tf_coils_coolant_temperature_k,
                 pressure=inboard_tf_coils_coolant_pressure_Pa,
             ),
-            nmm.Material.from_library(name=inboard_tf_coils_conductor_material),
-            nmm.Material.from_library(name=inboard_tf_coils_structure_material),
+            nmm.Material.from_library(
+                name=inboard_tf_coils_conductor_material),
+            nmm.Material.from_library(
+                name=inboard_tf_coils_structure_material),
         ],
         fracs=[
             inboard_tf_coils_coolant_fraction,
             inboard_tf_coils_conductor_fraction,
             inboard_tf_coils_structure_fraction,
         ],
-        percent_type="vo"
-    )
+        percent_type="vo")
 
     # makes the 3d geometry
     my_reactor = paramak.BallReactor(

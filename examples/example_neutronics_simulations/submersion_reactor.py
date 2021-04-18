@@ -10,7 +10,7 @@ import paramak
 
 def make_model_and_simulate(temperature):
     """Makes a neutronics Reactor model and simulates the flux
-    
+
     Arguments:
         temperature: the temperature of the submersion blanket in Kelivin
     """
