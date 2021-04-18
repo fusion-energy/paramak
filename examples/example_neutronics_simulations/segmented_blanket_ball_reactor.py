@@ -18,20 +18,20 @@ def make_model_and_simulate():
     firstwall_structural_material = "eurofer"
     firstwall_armour_fraction = 0.106305
     firstwall_coolant_fraction = 0.333507
-    firstwall_coolant_temperature_C = 400
+    firstwall_coolant_temperature_k = 400
     firstwall_coolant_pressure_Pa = 8e6
     firstwall_structural_fraction = 0.560188
 
-    firstwall_material = nmm.MultiMaterial(
-        material_tag="firstwall_mat",
+    firstwall_material = nmm.Material.from_mixture(
+        name="firstwall_mat",
         materials=[
-            nmm.Material(
-                material_name=firstwall_coolant_material,
-                temperature_in_C=firstwall_coolant_temperature_C,
-                pressure_in_Pa=firstwall_coolant_pressure_Pa,
+            nmm.Material.from_library(
+                name=firstwall_coolant_material,
+                temperature=firstwall_coolant_temperature_k,
+                pressure=firstwall_coolant_pressure_Pa,
             ),
-            nmm.Material(material_name=firstwall_structural_material),
-            nmm.Material(material_name=firstwall_armour_material),
+            nmm.Material.from_library(name=firstwall_structural_material),
+            nmm.Material.from_library(name=firstwall_armour_material),
         ],
         fracs=[
             firstwall_coolant_fraction,
@@ -47,18 +47,18 @@ def make_model_and_simulate():
     blanket_rear_wall_structural_material = "eurofer"
     blanket_rear_wall_coolant_fraction = 0.3
     blanket_rear_wall_structural_fraction = 0.7
-    blanket_rear_wall_coolant_temperature_C = 200
-    blanket_rear_wall_coolant_pressure_Pa = 1e6
+    blanket_rear_wall_coolant_temperature = 473.15  # units of Kelvin, equivalent 200 degrees C
+    blanket_rear_wall_coolant_pressure = 1e6 # units of Pa
 
-    blanket_rear_wall_material = nmm.MultiMaterial(
-        material_tag="blanket_rear_wall_mat",
+    blanket_rear_wall_material = nmm.Material.from_mixture(
+        name="blanket_rear_wall_mat",
         materials=[
-            nmm.Material(
-                material_name=blanket_rear_wall_coolant_material,
-                temperature_in_C=blanket_rear_wall_coolant_temperature_C,
-                pressure_in_Pa=blanket_rear_wall_coolant_pressure_Pa,
+            nmm.Material.from_library(
+                name=blanket_rear_wall_coolant_material,
+                temperature=blanket_rear_wall_coolant_temperature,
+                pressure=blanket_rear_wall_coolant_pressure,
             ),
-            nmm.Material(material_name=blanket_rear_wall_structural_material),
+            nmm.Material.from_library(name=blanket_rear_wall_structural_material),
         ],
         fracs=[
             blanket_rear_wall_coolant_fraction,
@@ -80,30 +80,30 @@ def make_model_and_simulate():
     blanket_structural_fraction = 0.2
     blanket_breeder_packing_fraction = 0.64
     blanket_multiplier_packing_fraction = 0.64
-    blanket_coolant_temperature_C = 500
+    blanket_coolant_temperature_k = 773.15
     blanket_coolant_pressure_Pa = 1e6
-    blanket_breeder_temperature_C = 600
+    blanket_breeder_temperature_k = 873.15
     blanket_breeder_pressure_Pa = 8e6
 
-    blanket_material = nmm.MultiMaterial(
-        material_tag="blanket_mat",
+    blanket_material = nmm.Material.from_mixture(
+        name="blanket_mat",
         materials=[
-            nmm.Material(
-                material_name=blanket_coolant_material,
-                temperature_in_C=blanket_coolant_temperature_C,
-                pressure_in_Pa=blanket_coolant_pressure_Pa,
+            nmm.Material.from_library(
+                name=blanket_coolant_material,
+                temperature=blanket_coolant_temperature_k,
+                pressure=blanket_coolant_pressure_Pa,
             ),
-            nmm.Material(material_name=blanket_structural_material),
-            nmm.Material(
-                material_name=blanket_multiplier_material,
+            nmm.Material.from_library(name=blanket_structural_material),
+            nmm.Material.from_library(
+                name=blanket_multiplier_material,
                 packing_fraction=blanket_multiplier_packing_fraction,
             ),
-            nmm.Material(
-                material_name=blanket_breeder_material,
+            nmm.Material.from_library(
+                name=blanket_breeder_material,
                 enrichment=blanket_lithium6_enrichment_percent,
                 packing_fraction=blanket_breeder_packing_fraction,
-                temperature_in_C=blanket_breeder_temperature_C,
-                pressure_in_Pa=blanket_breeder_pressure_Pa,
+                temperature=blanket_breeder_temperature_k,
+                pressure=blanket_breeder_pressure_Pa,
             ),
         ],
         fracs=[
@@ -121,18 +121,18 @@ def make_model_and_simulate():
     divertor_structural_fraction = 0.42804201123
     divertor_coolant_material = "H2O"
     divertor_structural_material = "tungsten"
-    divertor_coolant_temperature_C = 150
+    divertor_coolant_temperature_k = 423.15  # equivalent to 150 degrees C
     divertor_coolant_pressure_Pa = 5e6
 
-    divertor_material = nmm.MultiMaterial(
-        material_tag="divertor_mat",
+    divertor_material = nmm.Material.from_mixture(
+        name="divertor_mat",
         materials=[
-            nmm.Material(
-                material_name=divertor_coolant_material,
-                temperature_in_C=divertor_coolant_temperature_C,
-                pressure_in_Pa=divertor_coolant_pressure_Pa,
+            nmm.Material.from_library(
+                name=divertor_coolant_material,
+                temperature=divertor_coolant_temperature_k,
+                pressure=divertor_coolant_pressure_Pa,
             ),
-            nmm.Material(material_name=divertor_structural_material),
+            nmm.Material.from_library(name=divertor_structural_material),
         ],
         fracs=[divertor_coolant_fraction, divertor_structural_fraction],
         percent_type="vo"
@@ -144,19 +144,19 @@ def make_model_and_simulate():
     center_column_shield_structural_fraction = 0.57
     center_column_shield_coolant_material = "H2O"
     center_column_shield_structural_material = "tungsten"
-    center_column_shield_coolant_temperature_C = 150
+    center_column_shield_coolant_temperature_k = 423.15  # equivalent to 150 degrees C
     center_column_shield_coolant_pressure_Pa = 5e6
 
-    center_column_shield_material = nmm.MultiMaterial(
-        material_tag="center_column_shield_mat",
+    center_column_shield_material = nmm.Material.from_mixture(
+        name="center_column_shield_mat",
         materials=[
-            nmm.Material(
-                material_name=center_column_shield_coolant_material,
-                temperature_in_C=center_column_shield_coolant_temperature_C,
-                pressure_in_Pa=center_column_shield_coolant_pressure_Pa,
+            nmm.Material.from_library(
+                name=center_column_shield_coolant_material,
+                temperature=center_column_shield_coolant_temperature_k,
+                pressure=center_column_shield_coolant_pressure_Pa,
             ),
-            nmm.Material(
-                material_name=center_column_shield_structural_material),
+            nmm.Material.from_library(
+                name=center_column_shield_structural_material),
         ],
         fracs=[
             center_column_shield_coolant_fraction,
@@ -172,19 +172,19 @@ def make_model_and_simulate():
     inboard_tf_coils_conductor_material = "copper"
     inboard_tf_coils_coolant_material = "He"
     inboard_tf_coils_structure_material = "SS_316L_N_IG"
-    inboard_tf_coils_coolant_temperature_C = 30
+    inboard_tf_coils_coolant_temperature_k = 303.15  # equivalent to 30 degrees C
     inboard_tf_coils_coolant_pressure_Pa = 8e6
 
-    inboard_tf_coils_material = nmm.MultiMaterial(
-        material_tag="inboard_tf_coils_mat",
+    inboard_tf_coils_material = nmm.Material.from_mixture(
+        name="inboard_tf_coils_mat",
         materials=[
-            nmm.Material(
-                material_name=inboard_tf_coils_coolant_material,
-                temperature_in_C=inboard_tf_coils_coolant_temperature_C,
-                pressure_in_Pa=inboard_tf_coils_coolant_pressure_Pa,
+            nmm.Material.from_library(
+                name=inboard_tf_coils_coolant_material,
+                temperature=inboard_tf_coils_coolant_temperature_k,
+                pressure=inboard_tf_coils_coolant_pressure_Pa,
             ),
-            nmm.Material(material_name=inboard_tf_coils_conductor_material),
-            nmm.Material(material_name=inboard_tf_coils_structure_material),
+            nmm.Material.from_library(name=inboard_tf_coils_conductor_material),
+            nmm.Material.from_library(name=inboard_tf_coils_structure_material),
         ],
         fracs=[
             inboard_tf_coils_coolant_fraction,
@@ -235,7 +235,6 @@ def make_model_and_simulate():
         cell_tallies=['TBR'],
         simulation_batches=5,
         simulation_particles_per_batch=1e4,
-        method='trelis',
     )
 
     # starts the neutronics simulation

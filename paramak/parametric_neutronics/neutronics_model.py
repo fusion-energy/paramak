@@ -255,21 +255,18 @@ class NeutronicsModel():
 
     def create_material(self, material_tag: str, material_entry):
         if isinstance(material_entry, str):
-            openmc_material = nmm.Material(
-                material_entry,
-                material_tag=material_tag).openmc_material
+            openmc_material = nmm.Material.from_library(name=material_entry).openmc_material
         elif isinstance(material_entry, openmc.Material):
             # sets the material name in the event that it had not been set
-            material_entry.name = material_tag
             openmc_material = material_entry
-        elif isinstance(material_entry, (nmm.Material, nmm.MultiMaterial)):
+        elif isinstance(material_entry, (nmm.Material)):
             # sets the material tag in the event that it had not been set
-            material_entry.material_tag = material_tag
             openmc_material = material_entry.openmc_material
         else:
             raise TypeError("materials must be either a str, \
                 openmc.Material, nmm.MultiMaterial or nmm.Material object \
                 not a ", type(material_entry), material_entry)
+        openmc_material.name = material_tag
         return openmc_material
 
     def create_openmc_materials(self):

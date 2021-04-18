@@ -79,7 +79,7 @@ class TestShape(unittest.TestCase):
     def test_neutronics_component_simulation_with_nmm(self):
         """Makes a neutronics model and simulates with a cell tally"""
 
-        test_mat = nmm.Material('Be')
+        test_mat = nmm.Material.from_library('Be')
 
         # converts the geometry into a neutronics geometry
         my_model = paramak.NeutronicsModel(
@@ -696,11 +696,11 @@ class TestNeutronicsBallReactor(unittest.TestCase):
 
         # makes a homogenised material for the blanket from lithium lead and
         # eurofer
-        self.blanket_material = nmm.MultiMaterial(
+        self.blanket_material = nmm.Material.from_mixture(
             fracs=[0.8, 0.2],
             materials=[
-                nmm.Material('SiC'),
-                nmm.Material('eurofer')
+                nmm.Material.from_library('SiC'),
+                nmm.Material.from_library('eurofer')
             ])
 
         self.source = openmc.Source()

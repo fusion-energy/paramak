@@ -9,7 +9,11 @@ import paramak
 
 
 def make_model_and_simulate(temperature):
-    """Makes a neutronics Reactor model and simulates the flux"""
+    """Makes a neutronics Reactor model and simulates the flux
+    
+    Arguments:
+        temperature: the temperature of the submersion blanket in Kelivin
+    """
 
     # makes the 3d geometry from input parameters
     my_reactor = paramak.SubmersionTokamak(
@@ -32,7 +36,7 @@ def make_model_and_simulate(temperature):
 
     # this can just be set as a string as temperature is needed for this
     # material
-    flibe = nmm.Material('FLiBe', temperature_in_C=temperature)
+    flibe = nmm.Material.from_library(name='FLiBe', temperature=temperature)
 
     source = openmc.Source()
     # sets the location of the source to x=0 y=0 z=0
@@ -57,9 +61,6 @@ def make_model_and_simulate(temperature):
         cell_tallies=['TBR'],
         simulation_batches=5,
         simulation_particles_per_batch=1e4,
-        faceting_tolerance=1e-4,
-        merge_tolerance=1e-4,
-        method='trelis'
     )
 
     # simulate the neutronics model
