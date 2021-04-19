@@ -31,14 +31,14 @@ def make_model_and_simulate():
 
     # makes a homogenised material for the blanket from lithium lead and
     # eurofer
-    blanket_material = nmm.MultiMaterial(
+    blanket_material = nmm.Material.from_mixture(
         fracs=[0.8, 0.2],
         materials=[
-            nmm.Material(
-                'Pb842Li158',
+            nmm.Material.from_library(
+                name='Pb842Li158',
                 enrichment=90,
-                temperature_in_K=500),
-            nmm.Material('eurofer')
+                temperature=500),
+            nmm.Material.from_library(name='eurofer')
         ])
 
     source = openmc.Source()
