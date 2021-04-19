@@ -188,9 +188,11 @@ def extend(point_a: Tuple[float, float], point_b: Tuple[float, float],
     return xc, yc
 
 
-def find_center_point_of_circle(point_a: Tuple[float, float],
-                                point_b: Tuple[float, float],
-                                point_3: Tuple[float, float]) -> Tuple[Tuple[float, float], float]:
+def find_center_point_of_circle(
+        point_a: Tuple[float, float],
+        point_b: Tuple[float, float],
+        point_3: Tuple[float, float]
+) -> Tuple[Tuple[float, float], float]:
     """
     Calculates the center and the radius of a circle
     passing through 3 points.

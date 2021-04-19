@@ -12,16 +12,48 @@ import pytest
 class TestReactor(unittest.TestCase):
 
     def setUp(self):
-        test_shape = paramak.RotateStraightShape(
+        self.test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
 
-        self.test_reactor = paramak.Reactor([test_shape])
+        self.test_reactor = paramak.Reactor([self.test_shape])
+
+    def test_reactor_export_html_from_str_input(self):
+        """when the .solid is called it constructs the geometry. This should be
+        possible even whe the shapes_and_components passed to reactor is just a
+        text file"""
+        self.test_shape.export_stp()
+        self.test_shape.export_neutronics_description('manifest.json')
+        test_reactor = paramak.Reactor('manifest.json')
+        test_reactor.export_html('test_reactor_from_str.html')
+        assert Path('test_reactor_from_str.html').is_file()
 
     def test_show_runs_without_error(self):
         """checks that the jupyter notebook (with cadquery addition) runs
         without error."""
 
         self.test_reactor.show()
+
+    def test_show_runs_without_error_when_names_are_set(self):
+        """checks that the jupyter notebook (with cadquery addition) runs
+        without error even when the .name property is set"""
+
+        self.test_reactor.shapes_and_components[0].name = 'test'
+        self.test_reactor.show()
+
+    def test_show_runs_without_error_when_compounds_are_used(self):
+        """checks that the jupyter notebook (with cadquery addition) runs
+        without error even when the .name property is set"""
+
+        test_shape = paramak.PoloidalFieldCoilCaseSet(
+            heights=[10, 20],
+            widths=[10, 20],
+            casing_thicknesses=10,
+            center_points=[(100, 200), (400, 400)],
+            name='test name'
+        )
+
+        test_reactor = paramak.Reactor([test_shape])
+        test_reactor.show()
 
     def test_incorrect_graveyard_offset_too_small(self):
 
@@ -145,6 +177,17 @@ class TestReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape])
         assert len(test_reactor.material_tags()) == 1
         assert test_reactor.material_tags()[0] == "mat1"
+
+    def test_adding_plasma_with_material_tag_to_reactor(self):
+        """Checks that a shape object can be added to a Reactor object with
+        the correct material tag and include_plasma set to true"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)], material_tag="dt_plasma", name='plasma'
+        )
+        test_reactor = paramak.Reactor([test_shape])
+        assert len(test_reactor.material_tags()) == 1
+        assert test_reactor.material_tags()[0] == "dt_plasma"
 
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
         """Checks that multiple shape objects can be added to a Reactor object
