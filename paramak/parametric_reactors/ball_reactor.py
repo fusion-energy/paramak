@@ -315,8 +315,9 @@ class BallReactor(paramak.Reactor):
         self._center_column_shield_height = \
             self._blanket_rear_wall_end_height * 2
 
-        if self.rear_blanket_to_tf_gap != None:
-            self._tf_coil_start_radius = self._blanket_rear_wall_end_radius + self.rear_blanket_to_tf_gap
+        if self.rear_blanket_to_tf_gap is not None:
+            self._tf_coil_start_radius = self._blanket_rear_wall_end_radius + \
+                self.rear_blanket_to_tf_gap
             self._tf_coil_end_radius = (
                 self._tf_coil_start_radius +
                 self.outboard_tf_coil_radial_thickness)
@@ -455,12 +456,20 @@ class BallReactor(paramak.Reactor):
         return self._divertor
 
     def _make_pf_coils(self):
-        if (self.pf_coil_vertical_thicknesses, self.pf_coil_radial_thicknesses, self.pf_coil_vertical_position, self.pf_coil_radial_position) != (None, None, None, None):
+        if (self.pf_coil_vertical_thicknesses,
+            self.pf_coil_radial_thicknesses,
+            self.pf_coil_vertical_position,
+            self.pf_coil_radial_position) != (None,
+                                              None,
+                                              None,
+                                              None):
             list_of_components = []
 
             # TODO make use of counter in the name attribute
 
-            center_points = [(x,y) for x,y in zip(self.pf_coil_radial_position, self.pf_coil_vertical_position)]
+            center_points = [
+                (x, y) for x, y in zip(
+                    self.pf_coil_radial_position, self.pf_coil_vertical_position)]
 
             self._pf_coils = self._pf_coil = paramak.PoloidalFieldCoilSet(
                 heights=self.pf_coil_vertical_thicknesses,
@@ -494,7 +503,7 @@ class BallReactor(paramak.Reactor):
 
     def _make_tf_coils(self):
         comp = []
-        if self.rear_blanket_to_tf_gap != None:
+        if self.rear_blanket_to_tf_gap is not None:
 
             self._tf_coil = paramak.ToroidalFieldCoilRectangle(
                 with_inner_leg=False,
