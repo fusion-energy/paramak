@@ -37,9 +37,6 @@ class BallReactor(paramak.Reactor):
             gap between the plasma and firstwall (cm). If left as None then the
             outer_plasma_gap_radial_thickness is used. Defaults to None.
         number_of_tf_coils (int, optional): the number of tf coils
-        pf_coil_to_rear_blanket_radial_gap (float, optional): the radial
-            distance between the rear blanket and the closest poloidal field
-            coil. Defaults to None.
         pf_coil_radial_thicknesses (list of floats, optional): the radial
             thickness of each poloidal field coil. Defaults to None.
         pf_coil_vertical_thicknesses (list of floats, optional): the vertical
