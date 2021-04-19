@@ -705,7 +705,7 @@ class Shape:
                         solid = solid.center(-point[0], 0).\
                             workplane(offset=-point[1] * factor)
 
-                elif self.force_cross_section == False:
+                elif self.force_cross_section is False:
                     solid = solid.workplane(
                         offset=self.path_points[0][1] *
                         factor).center(
