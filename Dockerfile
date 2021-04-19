@@ -182,7 +182,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 RUN if [ "$include_neutronics" = "true" ] ; \
     then pip install vtk ; \
     pip install parametric_plasma_source ; \
-    pip install neutronics_material_maker ; \
+    pip install neutronics_material_maker==0.3.2 ; \
     pip install openmc_data_downloader ; \
     fi
 

@@ -287,11 +287,12 @@ class Reactor:
         """
 
         if isinstance(self.shapes_and_components, str):
-            raise NotImplementedError(
-                'A solid from shapes_and_components that'
-                ' is a string is not currently implemented')
-            # TODO paramak.utils.load_stp_file can be used to load the stp
-            # files
+            list_of_cq_vals = []
+            for entry in self.stp_filenames:
+                # When loading an stp file the solid object is the first part
+                # of the tuple, hence the [0]
+                loaded_shape = paramak.utils.load_stp_file(entry)[0]
+                list_of_cq_vals.append(loaded_shape)
 
         else:
 
@@ -300,15 +301,15 @@ class Reactor:
                 if isinstance(
                     shape_or_compound.solid,
                     (cq.occ_impl.shapes.Shape,
-                     cq.occ_impl.shapes.Compound)):
+                        cq.occ_impl.shapes.Compound)):
                     for solid in shape_or_compound.solid.Solids():
                         list_of_cq_vals.append(solid)
                 else:
                     list_of_cq_vals.append(shape_or_compound.solid.val())
 
-            compound = cq.Compound.makeCompound(list_of_cq_vals)
+        compound = cq.Compound.makeCompound(list_of_cq_vals)
 
-            return compound
+        return compound
 
     @ solid.setter
     def solid(self, value):
