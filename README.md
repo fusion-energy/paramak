@@ -156,7 +156,7 @@ common reactor components.
 ## Selection Of Parametric Reactors
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/8583900/99137324-fddfa200-2621-11eb-9063-f5f7f60ddd8d.png" width="713">
+<img src="https://user-images.githubusercontent.com/8583900/115291309-7fe17300-a14c-11eb-9859-be85075eb0b9.png" width="713">
 </p>
 
 <p align="center">
