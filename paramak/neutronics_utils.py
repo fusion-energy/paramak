@@ -1,9 +1,9 @@
 
-import warnings
 import math
 import os
 import shutil
 import subprocess
+import warnings
 from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
@@ -12,6 +12,7 @@ from xml.etree.ElementTree import SubElement
 import defusedxml.ElementTree as ET
 import matplotlib.pyplot as plt
 import numpy as np
+from remove_dagmc_tags import remove_tags
 
 try:
     import openmc
@@ -288,7 +289,7 @@ def export_vtk(
     path_h5m_filename = Path(h5m_filename)
     if path_h5m_filename.suffix != ".h5m":
         path_h5m_filename = path_h5m_filename.with_suffix(".h5m")
-    print('path_h5m_filename.is_file', path_h5m_filename.is_file)
+
     if path_h5m_filename.is_file() is False:
         raise FileNotFoundError(
             'h5m_filename not found in location', path_h5m_filename
@@ -298,25 +299,16 @@ def export_vtk(
     if path_filename.suffix != ".vtk":
         path_filename = path_filename.with_suffix(".vtk")
 
-    if not include_graveyard:
-        tmp_file = str(path_h5m_filename.with_suffix('')) + \
-            str(Path('_no_graveyard')) + str(path_h5m_filename.suffix)
-        h5m_filename = remove_graveyard_from_h5m_file(
-            input_h5m_filename=str(path_h5m_filename),
-            output_h5m_filename=tmp_file
-        )
+    if include_graveyard:
+        tags_to_remove = None
+    else:
+        tags_to_remove = 'mat:graveyard', 'graveyard.stp', 'reflective'
 
-    try:
-        subprocess.check_output(
-            'mbconvert {} {}'.format(h5m_filename, filename),
-            shell=True,
-            universal_newlines=True,
-        )
-    except BaseException:
-        raise ValueError(
-            "mbconvert failed, check MOAB is install and the MOAB/bin "
-            "folder is in the path directory (Linux and Mac) or set as an "
-            "enviromental varible (Windows)")
+    remove_tags(
+        input=str(path_h5m_filename),
+        output=str(path_filename),
+        tags=tags_to_remove
+    )
 
     return str(path_filename)
 
