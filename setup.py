@@ -31,6 +31,7 @@ setuptools.setup(
         "tqdm",
         "matplotlib",
         "plasmaboundaries",
+        "remove_dagmc_tags",
     ],
     extras_require={
         "neutronics": [
