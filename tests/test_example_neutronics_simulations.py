@@ -10,10 +10,18 @@ from examples.example_neutronics_simulations import (
     component_based_parameter_study,
     shape_with_spectra_cell_tally)
 
+from .notebook_testing import notebook_run
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
 
 class TestExampleNeutronics(unittest.TestCase):
+
+    def test_jupyter_notebooks_example_neutronics_simulations(self):
+        for notebook in Path().rglob("examples/example_neutronics_simulations//*.ipynb"):
+            print(notebook)
+            nb, errors = notebook_run(notebook)
+            assert errors == []
 
     def test_shape_with_gas_production(self):
         """Runs the example and checks the output files are produced"""
