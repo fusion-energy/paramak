@@ -46,8 +46,8 @@ class NeutronicsModel():
         simulation_batches: the number of batch to simulate.
         simulation_particles_per_batch: particles per batch.
         cell_tallies: the cell based tallies to calculate, options include
-            TBR, heating, flux, MT numbers and OpenMC standard scores such as
-            (n,Xa) which is helium production are also supported
+            spectra, TBR, heating, flux, MT numbers and OpenMC standard scores
+            such as (n,Xa) which is helium production are also supported
             https://docs.openmc.org/en/latest/usersguide/tallies.html#scores
         mesh_tally_2d: the 2D mesh based tallies to calculate, options include
             heating and flux , MT numbers and OpenMC standard scores such as
@@ -288,10 +288,14 @@ class NeutronicsModel():
         os.system('rm materials.xml')
 
         openmc_materials = {}
+        existing_materials = []
         for material_tag, material_entry in self.materials.items():
-            openmc_material = self.create_material(
-                material_tag, material_entry)
-            openmc_materials[material_tag] = openmc_material
+            if material_entry not in existing_materials:
+                print('adding ', material_entry)
+                existing_materials.append(material_entry)
+                openmc_material = self.create_material(
+                    material_tag, material_entry)
+                openmc_materials[material_tag] = openmc_material
 
         self.openmc_materials = openmc_materials
 
