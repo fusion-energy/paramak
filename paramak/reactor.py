@@ -602,7 +602,6 @@ class Reactor:
 
         filenames = []
         for entry in self.shapes_and_components:
-            print("entry.stl_filename", entry.stl_filename)
             if entry.stl_filename is None:
                 raise ValueError(
                     "set .stl_filename attribute for Shapes before using the Reactor.export_stl method"
