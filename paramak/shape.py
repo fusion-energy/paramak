@@ -56,6 +56,8 @@ class Shape:
             floats. Defaults to None.
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
             the neutronics description output. Defaults to None.
+        scale (float, optional): If not None, a scale flag will be added to
+            the neutronics description output. Defaults to None.
         surface_reflectivity (Boolean, optional): If True, a
             surface_reflectivity flag will be added to the neutronics
             description output. Defaults to None.
@@ -93,6 +95,7 @@ class Shape:
         workplane: Optional[str] = "XZ",
         rotation_axis: Optional[str] = None,
         tet_mesh: Optional[str] = None,
+        scale: Optional[float] = None,
         surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
         method: str = 'pymoab',
@@ -125,6 +128,7 @@ class Shape:
         self.method = method
         self.material_tag = material_tag
         self.tet_mesh = tet_mesh
+        self.scale = scale
         self.surface_reflectivity = surface_reflectivity
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
@@ -442,6 +446,16 @@ class Shape:
         if value is not None and not isinstance(value, str):
             raise ValueError("Shape.tet_mesh must be a string", value)
         self._tet_mesh = value
+
+    @property
+    def scale(self):
+        return self._scale
+
+    @scale.setter
+    def scale(self, value):
+        if value is not None and not isinstance(value, float):
+            raise ValueError("Shape.scale must be a float", value)
+        self._scale = value
 
     @property
     def name(self):
@@ -1244,6 +1258,9 @@ class Shape:
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
+
+        if self.scale is not None:
+            neutronics_description["scale"] = self.scale
 
         if self.surface_reflectivity is True:
             neutronics_description["surface_reflectivity"] = self.surface_reflectivity
