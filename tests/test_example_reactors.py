@@ -4,45 +4,13 @@ import sys
 import unittest
 from pathlib import Path
 
-import nbformat
 from examples.example_parametric_reactors import (
     ball_reactor, ball_reactor_single_null, make_animation,
     submersion_reactor_single_null)
-from nbconvert.preprocessors import ExecutePreprocessor
-from nbconvert.preprocessors.execute import CellExecutionError
+
+from .notebook_testing import notebook_run
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
-
-
-def _notebook_run(path):
-    """
-    Execute a notebook via nbconvert and collect output.
-    :returns (parsed nb object, execution errors)
-    """
-    kernel_name = 'python%d' % sys.version_info[0]
-    this_file_directory = os.path.dirname(__file__)
-    errors = []
-
-    with open(path) as file:
-        note_book = nbformat.read(file, as_version=4)
-        note_book.metadata.get('kernelspec', {})['name'] = kernel_name
-        ep = ExecutePreprocessor(
-            kernel_name=kernel_name,
-            timeout=300)
-
-        try:
-            ep.preprocess(
-                note_book, {
-                    'metadata': {
-                        'path': this_file_directory}})
-
-        except CellExecutionError as e:
-            if "SKIP" in e.traceback:
-                print(str(e.traceback).split("\n")[-2])
-            else:
-                raise e
-
-    return note_book, errors
 
 
 class TestExampleReactors(unittest.TestCase):
@@ -50,7 +18,7 @@ class TestExampleReactors(unittest.TestCase):
     def test_jupyter_notebooks_example_parametric_reactors(self):
         for notebook in Path().rglob("examples/example_parametric_reactors/*.ipynb"):
             print(notebook)
-            nb, errors = _notebook_run(notebook)
+            nb, errors = notebook_run(notebook)
             assert errors == []
 
     def test_make_animations(self):
