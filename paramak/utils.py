@@ -416,8 +416,7 @@ def plotly_trace(
         mode: The mode to use for the Plotly.Scatter graph. Options include
             "markers", "lines" and "markers+lines". Defaults to
             "markers+lines"
-        name: The name to use in the graph legend
-        color
+        name: The name to use in the graph legend color
 
     Returns:
         plotly trace: trace object
