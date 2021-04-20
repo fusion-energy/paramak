@@ -301,9 +301,10 @@ def export_vtk(
     if not include_graveyard:
         tmp_file = str(path_h5m_filename.with_suffix('')) + \
             str(Path('_no_graveyard')) + str(path_h5m_filename.suffix)
-        h5m_filename = remove_graveyard_from_h5m_file(
+        h5m_filename = remove_tag_from_h5m_file(
             input_h5m_filename=str(path_h5m_filename),
-            output_h5m_filename=tmp_file
+            output_h5m_filename=tmp_file,
+            tag_to_remove='graveyard',
         )
 
     try:
@@ -321,21 +322,23 @@ def export_vtk(
     return str(path_filename)
 
 
-def remove_graveyard_from_h5m_file(
+def remove_tag_from_h5m_file(
     input_h5m_filename: Optional[str] = 'dagmc.h5m',
-    output_h5m_filename: Optional[str] = 'dagmc_no_graveyard.h5m'
+    output_h5m_filename: Optional[str] = 'dagmc_removed_tag.h5m',
+    tag_to_remove: Optional[str] = 'graveyard',
 ) -> str:
-    """Removes the graveyard or graveyards from a dagmc h5m file and saves
-    the remaining geometry as a new h5m file. Useful for visulising the
-    geometry without the bounding box graveyard obstructing the view. Adapted
-    from https://github.com/svalinn/DAGMC-viz source code
+    """Removes a specific tag from a dagmc h5m file and saves the remaining
+    geometry as a new h5m file. Useful for visulising the geometry by removing
+    the graveyard tag and then the vtk file can be made without a bounding box
+    graveyard obstructing the view. Adapted from
+    https://github.com/svalinn/DAGMC-viz source code
 
     Arguments:
         input_h5m_filename: The name of the h5m file to remove the graveyard from
         output_h5m_filename: The name of the outfile h5m without a graveyard
 
     Returns:
-        filename of the new dagmc h5m file without any graveyards
+        filename of the new dagmc h5m file with the tags removed
     """
 
     try:
@@ -343,8 +346,8 @@ def remove_graveyard_from_h5m_file(
         from pymoab.types import MBENTITYSET
     except ImportError:
         raise ImportError(
-            'PyMoab not found, remove_graveyard_from_h5m_file method is not '
-            ' available'
+            'PyMoab not found, remove_tag_from_h5m_file method is not '
+            'available'
         )
 
     moab_core = core.Core()
@@ -366,17 +369,17 @@ def remove_graveyard_from_h5m_file(
     # Retrieve all EntitySets with a name tag.
     group_names = moab_core.tag_get_data(tag_name, group_categories, flat=True)
 
-    # Find the EntitySet whose name tag value contains "graveyard".
-    graveyard_sets = [
+    # Find the EntitySet whose name includes tag provided
+    sets_to_remove = [
         group_set for group_set,
         name in zip(
             group_categories,
-            group_names) if "graveyard" in str(
+            group_names) if tag_to_remove in str(
             name.lower())]
 
     # Remove the graveyard EntitySet from the data.
     groups_to_write = [
-        group_set for group_set in group_categories if group_set not in graveyard_sets]
+        group_set for group_set in group_categories if group_set not in sets_to_remove]
 
     moab_core.write_file(output_h5m_filename, output_sets=groups_to_write)
 

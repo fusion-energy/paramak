@@ -370,11 +370,11 @@ class Reactor:
 
         for entry in self.shapes_and_components:
 
-            if include_plasma is False and isinstance(
+            if include_plasma is False and (isinstance(
                 entry,
                 (paramak.Plasma,
                  paramak.PlasmaFromPoints,
-                 paramak.PlasmaBoundaries)) is True:
+                 paramak.PlasmaBoundaries)) is True or entry.name == 'plasma'):
                 continue
 
             if entry.stp_filename is None:
@@ -825,13 +825,14 @@ class Reactor:
             faceting_tolerance = self.faceting_tolerance
 
         if isinstance(self.shapes_and_components, list):
+            self.export_neutronics_description(
+                include_graveyard=True,
+                include_sector_wedge=True,
+                include_plasma=False,
+            )
             self.export_stp(
                 include_graveyard=True,
                 include_sector_wedge=True,
-            )
-            self.export_neutronics_description(
-                include_graveyard=True,
-                include_sector_wedge=True
             )
         elif isinstance(self.shapes_and_components, str):
             if not Path(self.shapes_and_components).is_file():
