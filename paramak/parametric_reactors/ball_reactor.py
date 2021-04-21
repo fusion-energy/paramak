@@ -12,9 +12,12 @@ class BallReactor(paramak.Reactor):
     most spherical reactors.
 
     Arguments:
-        inner_bore_radial_thickness: the radial thickness of the inner bore (cm)
-        inboard_tf_leg_radial_thickness: the radial thickness of the inner leg of the toroidal field coils (cm)
-        center_column_shield_radial_thickness: the radial thickness of             the center column shield (cm)
+        inner_bore_radial_thickness: the radial thickness of the inner bore
+            (cm)
+        inboard_tf_leg_radial_thickness: the radial thickness of the inner leg
+            of the toroidal field coils (cm)
+        center_column_shield_radial_thickness: the radial thickness of the
+            center column shield (cm)
         divertor_radial_thickness: the radial thickness of the divertor
             (cm), this fills the gap between the center column shield and
             blanket
@@ -471,13 +474,10 @@ class BallReactor(paramak.Reactor):
         return self._divertor
 
     def _make_pf_coils(self):
-        if (self.pf_coil_vertical_thicknesses,
-            self.pf_coil_radial_thicknesses,
-            self.pf_coil_vertical_position,
-            self.pf_coil_radial_position) != (None,
-                                              None,
-                                              None,
-                                              None):
+        if None not in [self.pf_coil_vertical_thicknesses,
+                        self.pf_coil_radial_thicknesses,
+                        self.pf_coil_vertical_position,
+                        self.pf_coil_radial_position]:
             list_of_components = []
 
             # TODO make use of counter in the name attribute
@@ -520,7 +520,11 @@ class BallReactor(paramak.Reactor):
 
     def _make_tf_coils(self):
         comp = []
-        if self.rear_blanket_to_tf_gap is not None:
+        # checks that all the required information has been input by the user
+        if None not in [self.rear_blanket_to_tf_gap,
+                        self.outboard_tf_coil_radial_thickness,
+                        self.outboard_tf_coil_poloidal_thickness,
+                        self.number_of_tf_coils] and self.number_of_tf_coils>1:
 
             self._tf_coil = paramak.ToroidalFieldCoilRectangle(
                 with_inner_leg=False,
