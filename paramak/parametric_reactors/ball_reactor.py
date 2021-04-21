@@ -170,6 +170,26 @@ class BallReactor(paramak.Reactor):
         self._rotation_angle = value
 
     @property
+    def pf_coil_vertical_position(self):
+        return self._pf_coil_vertical_position
+
+    @pf_coil_vertical_position.setter
+    def pf_coil_vertical_position(self, value):
+        if not isinstance(value, list) and value is not None:
+            raise ValueError("pf_coil_vertical_position must be a list")
+        self._pf_coil_vertical_position = value
+
+    @property
+    def pf_coil_radial_position(self):
+        return self._pf_coil_radial_position
+
+    @pf_coil_radial_position.setter
+    def pf_coil_radial_position(self, value):
+        if not isinstance(value, list) and value is not None:
+            raise ValueError("pf_coil_radial_position must be a list")
+        self._pf_coil_radial_position = value
+
+    @property
     def pf_coil_radial_thicknesses(self):
         return self._pf_coil_radial_thicknesses
 
