@@ -498,7 +498,7 @@ class BallReactor(paramak.Reactor):
             )
             list_of_components.append(self._pf_coil)
 
-            if self.pf_coil_case_thicknesses != None:
+            if self.pf_coil_case_thicknesses is not None:
                 self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
                     pf_coils=self._pf_coil,
                     casing_thicknesses=self.pf_coil_case_thicknesses,
