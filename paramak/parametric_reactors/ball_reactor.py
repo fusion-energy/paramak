@@ -521,10 +521,11 @@ class BallReactor(paramak.Reactor):
     def _make_tf_coils(self):
         comp = []
         # checks that all the required information has been input by the user
-        if None not in [self.rear_blanket_to_tf_gap,
-                        self.outboard_tf_coil_radial_thickness,
-                        self.outboard_tf_coil_poloidal_thickness,
-                        self.number_of_tf_coils] and self.number_of_tf_coils>1:
+        if None not in [
+                self.rear_blanket_to_tf_gap,
+                self.outboard_tf_coil_radial_thickness,
+                self.outboard_tf_coil_poloidal_thickness,
+                self.number_of_tf_coils] and self.number_of_tf_coils > 1:
 
             self._tf_coil = paramak.ToroidalFieldCoilRectangle(
                 with_inner_leg=False,

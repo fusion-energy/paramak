@@ -348,7 +348,6 @@ class SubmersionTokamak(paramak.Reactor):
             self._outboard_tf_coils_horizontal_length = \
                 self._blanket_rear_wall_end_radius * 0.75
 
-
     def _make_center_column_shield(self):
 
         self._center_column_shield = paramak.CenterColumnShieldCylinder(
@@ -661,10 +660,11 @@ class SubmersionTokamak(paramak.Reactor):
         )
         list_of_components.append(self._inboard_tf_coils)
 
-        if None not in [self.rear_blanket_to_tf_gap,
-                        self.outboard_tf_coil_radial_thickness,
-                        self.outboard_tf_coil_poloidal_thickness,
-                        self.number_of_tf_coils] and self.number_of_tf_coils>1:
+        if None not in [
+                self.rear_blanket_to_tf_gap,
+                self.outboard_tf_coil_radial_thickness,
+                self.outboard_tf_coil_poloidal_thickness,
+                self.number_of_tf_coils] and self.number_of_tf_coils > 1:
 
             if self._tf_info_provided:
                 self._tf_coil = paramak.ToroidalFieldCoilCoatHanger(
