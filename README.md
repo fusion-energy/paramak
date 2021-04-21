@@ -19,9 +19,10 @@ STL. It can also create h5m files for
 
 :point_right: [Video presentation](https://www.youtube.com/embed/fXboew3U7rw)
 
+:point_right: [Installation](https://paramak.readthedocs.io/en/main/#system-installation)
+
 :point_right: [Publication](https://f1000research.com/articles/10-27/v1)
 
-:point_right: [Installation](https://paramak.readthedocs.io/en/main/#system-installation)
 
 ## Citing
 
