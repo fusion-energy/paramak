@@ -1,5 +1,6 @@
 
 import warnings
+from typing import List, Optional, Union
 
 import paramak
 
@@ -11,81 +12,78 @@ class BallReactor(paramak.Reactor):
     most spherical reactors.
 
     Arguments:
-        inner_bore_radial_thickness (float): the radial thickness of the
-            inner bore (cm)
-        inboard_tf_leg_radial_thickness (float): the radial thickness of the
-            inner leg of the toroidal field coils (cm)
-        center_column_shield_radial_thickness (float): the radial thickness of
-            the center column shield (cm)
-        divertor_radial_thickness (float): the radial thickness of the divertor
+        inner_bore_radial_thickness: the radial thickness of the inner bore (cm)
+        inboard_tf_leg_radial_thickness: the radial thickness of the inner leg of the toroidal field coils (cm)
+        center_column_shield_radial_thickness: the radial thickness of             the center column shield (cm)
+        divertor_radial_thickness: the radial thickness of the divertor
             (cm), this fills the gap between the center column shield and
             blanket
-        inner_plasma_gap_radial_thickness (float): the radial thickness of the
+        inner_plasma_gap_radial_thickness: the radial thickness of the
             inboard gap between the plasma and the center column shield (cm)
-        plasma_radial_thickness (float): the radial thickness of the plasma
-        outer_plasma_gap_radial_thickness (float): the radial thickness of the
+        plasma_radial_thickness: the radial thickness of the plasma
+        outer_plasma_gap_radial_thickness: the radial thickness of the
             outboard gap between the plasma and firstwall (cm)
-        firstwall_radial_thickness (float): the radial thickness of the first
-            wall (cm)
-        blanket_radial_thickness (float): the radial thickness of the blanket
-            (cm)
-        blanket_rear_wall_radial_thickness (float): the radial thickness of the
-            rear wall of the blanket (cm)
-        elongation (float): the elongation of the plasma
-        triangularity (float): the triangularity of the plasma
-        plasma_gap_vertical_thickness (float): the vertical thickness of the
-            gap between the plasma and firstwall (cm). If left as None then the
-            outer_plasma_gap_radial_thickness is used. Defaults to None.
-        number_of_tf_coils (int, optional): the number of tf coils
-        pf_coil_radial_thicknesses (list of floats, optional): the radial
-            thickness of each poloidal field coil. Defaults to None.
-        pf_coil_vertical_thicknesses (list of floats, optional): the vertical
-            thickness of each poloidal field coil. Defaults to None.
-        pf_coil_to_tf_coil_radial_gap (float, optional): the radial distance
+        firstwall_radial_thickness: the radial thickness of the first wall (cm)
+        blanket_radial_thickness: the radial thickness of the blanket (cm)
+        blanket_rear_wall_radial_thickness: the radial thickness of the rear
+            wall of the blanket (cm)
+        elongation: the elongation of the plasma
+        triangularity: the triangularity of the plasma
+        plasma_gap_vertical_thickness: the vertical thickness of the gap
+            between the plasma and firstwall (cm). If left as None then the
+            outer_plasma_gap_radial_thickness is used.
+        number_of_tf_coils: the number of tf coils
+        pf_coil_radial_thicknesses: the radial
+            thickness of each poloidal field coil.
+        pf_coil_vertical_thicknesses: the vertical
+            thickness of each poloidal field coil.
+        pf_coil_to_tf_coil_radial_gap: the radial distance
             between the rear of the poloidal field coil and the toroidal field
-            coil. Defaults to None.
-        pf_coil_case_thickness (float or list of floats, optional): the
-            thickness(s) to use in both the radial and vertical direction for
-            the casing around the pf coils. If float then the single value will
-            be applied to all pf coils. If list then each value will be applied
-            to the pf coils one by one. To have no casing set to 0. Defaults to
-            10.
-        outboard_tf_coil_radial_thickness (float, optional): the radial
-            thickness of the toroidal field coil. Defaults to None.
-        outboard_tf_coil_poloidal_thickness (float, optional): the poloidal
-            thickness of the toroidal field coil. Defaults to None.
-        divertor_position (str, optional): the position of the divertor,
-            "upper", "lower" or "both". Defaults to "both".
-        rotation_angle (float): the angle of the sector that is desired.
-            Defaults to 360.0.
+            coil.
+        pf_coil_radial_position: The radial (x) position(s) of the centers of
+            the poloidal field coils.
+        pf_coil_vertical_position: The vertical (z) position(s) of the centers
+            of the poloidal field coils.
+        pf_coil_case_thicknesses: the thickness(s) to use in both the radial
+            and vertical direction for the casing around the pf coils. If float
+            then the single value will be applied to all pf coils. If list then
+            each value will be applied to the pf coils one by one. To have no
+            casing set to 0.
+        outboard_tf_coil_radial_thickness: the radial thickness of the toroidal
+            field coil.
+        outboard_tf_coil_poloidal_thickness: the poloidal thickness of the
+            toroidal field coil.
+        divertor_position: the position of the divertor, "upper", "lower" or
+            "both".
+        rotation_angle: the angle of the sector that is desired.
     """
 
     def __init__(
             self,
-            inner_bore_radial_thickness,
-            inboard_tf_leg_radial_thickness,
-            center_column_shield_radial_thickness,
-            divertor_radial_thickness,
-            inner_plasma_gap_radial_thickness,
-            plasma_radial_thickness,
-            outer_plasma_gap_radial_thickness,
-            firstwall_radial_thickness,
-            blanket_radial_thickness,
-            blanket_rear_wall_radial_thickness,
-            elongation,
-            triangularity,
-            plasma_gap_vertical_thickness=None,
-            number_of_tf_coils=12,
-            rear_blanket_to_tf_gap=None,
-            pf_coil_radial_thicknesses=None,
-            pf_coil_vertical_thicknesses=None,
-            pf_coil_radial_position=None,
-            pf_coil_vertical_position=None,
-            pf_coil_case_thickness=10,
-            outboard_tf_coil_radial_thickness=None,
-            outboard_tf_coil_poloidal_thickness=None,
-            divertor_position="both",
-            rotation_angle=360.0,
+            inner_bore_radial_thickness: float,
+            inboard_tf_leg_radial_thickness: float,
+            center_column_shield_radial_thickness: float,
+            divertor_radial_thickness: float,
+            inner_plasma_gap_radial_thickness: float,
+            plasma_radial_thickness: float,
+            outer_plasma_gap_radial_thickness: float,
+            firstwall_radial_thickness: float,
+            blanket_radial_thickness: float,
+            blanket_rear_wall_radial_thickness: float,
+            elongation: float,
+            triangularity: float,
+            plasma_gap_vertical_thickness: Optional[float] = None,
+            number_of_tf_coils: Optional[int] = 12,
+            rear_blanket_to_tf_gap: Optional[float] = None,
+            pf_coil_radial_thicknesses: Optional[Union[float, List[float]]] = None,
+            pf_coil_vertical_thicknesses: Optional[Union[float, List[float]]] = None,
+            pf_coil_radial_position: Optional[Union[float, List[float]]] = None,
+            pf_coil_vertical_position: Optional[Union[float, List[float]]] = None,
+            pf_coil_case_thicknesses: Optional[Union[float, List[float]]] = 10,
+            outboard_tf_coil_radial_thickness: float = None,
+            outboard_tf_coil_poloidal_thickness: float = None,
+            divertor_position: Optional[str] = "both",
+            rotation_angle: Optional[str] = 360.0,
     ):
 
         super().__init__([])
@@ -113,7 +111,7 @@ class BallReactor(paramak.Reactor):
         self.pf_coil_vertical_thicknesses = pf_coil_vertical_thicknesses
         self.rear_blanket_to_tf_gap = rear_blanket_to_tf_gap
 
-        self.pf_coil_case_thickness = pf_coil_case_thickness
+        self.pf_coil_case_thicknesses = pf_coil_case_thicknesses
         self.outboard_tf_coil_radial_thickness = \
             outboard_tf_coil_radial_thickness
         self.outboard_tf_coil_poloidal_thickness = \
@@ -478,18 +476,20 @@ class BallReactor(paramak.Reactor):
                 name="pf_coil",
                 material_tag="pf_coil_mat",
             )
+            list_of_components.append(self._pf_coil)
 
-            self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
-                pf_coils=self._pf_coil,
-                casing_thicknesses=self.pf_coil_case_thickness,
-                rotation_angle=self.rotation_angle,
-                stp_filename='pf_coil_cases.stp',
-                stl_filename='pf_coil_cases.stl',
-                name="pf_coil_case",
-                material_tag="pf_coil_case_mat",
-            )
+            if self.pf_coil_case_thicknesses != None:
+                self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
+                    pf_coils=self._pf_coil,
+                    casing_thicknesses=self.pf_coil_case_thicknesses,
+                    rotation_angle=self.rotation_angle,
+                    stp_filename='pf_coil_cases.stp',
+                    stl_filename='pf_coil_cases.stl',
+                    name="pf_coil_case",
+                    material_tag="pf_coil_case_mat",
+                )
+                list_of_components.append(self._pf_coils_casing)
 
-            list_of_components = [self._pf_coil, self._pf_coils_casing]
             return list_of_components
         else:
             print(
