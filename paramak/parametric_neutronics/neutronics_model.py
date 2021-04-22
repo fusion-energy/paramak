@@ -288,14 +288,10 @@ class NeutronicsModel():
         os.system('rm materials.xml')
 
         openmc_materials = {}
-        existing_materials = []
         for material_tag, material_entry in self.materials.items():
-            if material_entry not in existing_materials:
-                print('adding ', material_entry)
-                existing_materials.append(material_entry)
-                openmc_material = self.create_material(
-                    material_tag, material_entry)
-                openmc_materials[material_tag] = openmc_material
+            openmc_material = self.create_material(
+                material_tag, material_entry)
+            openmc_materials[material_tag] = openmc_material
 
         self.openmc_materials = openmc_materials
 
