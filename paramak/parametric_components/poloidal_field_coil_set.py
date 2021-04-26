@@ -94,6 +94,11 @@ class PoloidalFieldCoilSet(RotateStraightShape):
                 self.heights, self.widths, self.center_points):
 
             if self.split == False:
+                
+                # 4---------1
+                # |         |
+                # |         |
+                # 3---------2
 
                 all_points = all_points + [
                     (
@@ -117,6 +122,10 @@ class PoloidalFieldCoilSet(RotateStraightShape):
             else:
 
                 # top half
+                # 4------1
+                # |      |
+                # |      |
+                # 3------2
                 all_points = all_points + [
                     (
                         center_point[0] + width / 2.0,
@@ -137,6 +146,11 @@ class PoloidalFieldCoilSet(RotateStraightShape):
                 ]
 
                 # bottom half
+                # top half
+                # 4------1
+                # |      |
+                # |      |
+                # 3------2
                 all_points = all_points + [
                     (
                         center_point[0] + width / 2.0,
@@ -155,6 +169,14 @@ class PoloidalFieldCoilSet(RotateStraightShape):
                         center_point[1]
                     )   # upper left
                 ]
+                
+                # X------X
+                # |      |
+                # |      |
+                # X------X
+                # |      |
+                # |      |
+                # X------X
 
         self.points = all_points
 
