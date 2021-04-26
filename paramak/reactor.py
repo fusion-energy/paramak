@@ -592,7 +592,7 @@ class Reactor:
 
             if units == 'cm':
                 _replace(
-                    path_filename,
+                    filename,
                     'SI_UNIT(.MILLI.,.METRE.)',
                     'SI_UNIT(.CENTI.,.METRE.)')
 
