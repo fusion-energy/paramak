@@ -49,6 +49,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename="tf_coils.stp",
             stl_filename="tf_coils.stl",
+            material_tag='tf_coils_mat',
         )
 
         return [tf_coil]
@@ -71,6 +72,7 @@ class ITERTokamak(paramak.Reactor):
             offset_from_plasma=[[-70, 0, 90, 180, 230], [50, 20, 59, 16, 50]],
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
+            material_tag='blanket_mat',
         )
 
         # SN Divertor
@@ -85,6 +87,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
+            material_tag='divertor_mat',
         )
 
         # Vacuum vessel
@@ -94,6 +97,9 @@ class ITERTokamak(paramak.Reactor):
         vac_vessel_inner = paramak.RotateMixedShape(
             points=blanket.outer_points + divertor.casing_points,
             rotation_angle=self.rotation_angle,
+            stp_filename='vacvesselinner.stp',
+            stl_filename='vacvesselinner.stl',
+            material_tag="inner_vacuum_vessel_mat",
         )
 
         vac_vessel = paramak.RotateSplineShape(
@@ -181,6 +187,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='vacvessel.stp',
             stl_filename='vacvessel.stl',
+            material_tag="vacuum_vessel_mat",
         )
 
         return [divertor, blanket, vac_vessel, vac_vessel_inner]
@@ -200,7 +207,6 @@ class ITERTokamak(paramak.Reactor):
             vertical_displacement=5.7e1,
             configuration="single-null",
             rotation_angle=self.rotation_angle,
-            stp_filename='plasma.stp',
         )
 
         return [self.plasma]
@@ -238,6 +244,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stl_filename='outboard_pf_coils.stl',
             stp_filename='outboard_pf_coils.stp',
+            material_tag='outboard_pf_coils_mat',
         )
 
         x_inner, x_outer = 132.73905996758506, 202.26904376012968
@@ -252,6 +259,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stl_filename='pf_coils_1.stl',
             stp_filename='pf_coils_1.stp',
+            material_tag='pf_coil_mat',
         )
 
         pf_coils_2 = paramak.RotateStraightShape(
@@ -264,6 +272,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stl_filename='pf_coils_2.stl',
             stp_filename='pf_coils_2.stp',
+            material_tag='pf_coil_mat',
         )
 
         pf_coils_3 = paramak.RotateStraightShape(
@@ -276,6 +285,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stl_filename='pf_coils_3.stl',
             stp_filename='pf_coils_3.stp',
+            material_tag='pf_coil_mat',
         )
 
         pf_coils_4 = paramak.RotateStraightShape(
@@ -288,6 +298,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stl_filename='pf_coils_4.stl',
             stp_filename='pf_coils_4.stp',
+            material_tag='pf_coil_mat',
         )
 
         pf_coils_5 = paramak.RotateStraightShape(
@@ -300,6 +311,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stl_filename='pf_coils_5.stl',
             stp_filename='pf_coils_5.stp',
+            material_tag='pf_coil_mat',
         )
 
         pf_coils_6 = paramak.RotateStraightShape(
@@ -312,6 +324,7 @@ class ITERTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stl_filename='pf_coils_6.stl',
             stp_filename='pf_coils_6.stp',
+            material_tag='pf_coil_mat',
         )
 
         return [outboard_pf_coils, pf_coils_1, pf_coils_2, pf_coils_3,
