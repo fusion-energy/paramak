@@ -104,12 +104,10 @@ class TestSubmersionTokamak(unittest.TestCase):
         os.system("rm -r pf_SubmersionTokamak")
 
         self.test_reactor.outboard_tf_coil_radial_thickness = 50
-        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50, 50]
-        self.test_reactor.pf_coil_radial_thicknesses = [40, 40, 40, 40, 40]
-        self.test_reactor.pf_coil_radial_position = [100, 100, 200, 200, 100]
-        self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200, 0]
-        self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
-        self.test_reactor.number_of_tf_coils = 4
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50]
+        self.test_reactor.pf_coil_radial_thicknesses = [40, 40]
+        self.test_reactor.pf_coil_radial_position = [100, 100]
+        self.test_reactor.pf_coil_vertical_position = [100, -100]
 
         self.test_reactor.export_stp("pf_SubmersionTokamak")
 
@@ -137,10 +135,10 @@ class TestSubmersionTokamak(unittest.TestCase):
 
         self.test_reactor.outboard_tf_coil_radial_thickness = 50
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
-        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50, 50]
-        self.test_reactor.pf_coil_radial_thicknesses = [40, 40, 40, 40, 40]
-        self.test_reactor.pf_coil_radial_position = [100, 100, 200, 200, 100]
-        self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200, 0]
+        self.test_reactor.pf_coil_vertical_thicknesses = [50, 50]
+        self.test_reactor.pf_coil_radial_thicknesses = [40, 40]
+        self.test_reactor.pf_coil_radial_position = [100, 100]
+        self.test_reactor.pf_coil_vertical_position = [100, -100]
         self.test_reactor.rear_blanket_to_tf_gap = 50
         self.test_reactor.pf_coil_case_thicknesses = 10
         self.test_reactor.number_of_tf_coils = 4
