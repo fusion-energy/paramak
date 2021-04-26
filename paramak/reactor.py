@@ -586,7 +586,7 @@ class Reactor:
                 if entry.color is None:
                     assembly.add(entry.solid)
                 else:
-                    assembly.add(entry.solid, color=cq.Color(*self.color))
+                    assembly.add(entry.solid, color=cq.Color(*entry.color))
 
             assembly.save(filename, exportType='STEP')
 
