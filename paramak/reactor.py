@@ -15,7 +15,7 @@ from cadquery import exporters
 import paramak
 from paramak.neutronics_utils import (add_stl_to_moab_core,
                                       define_moab_core_and_tags)
-from paramak.utils import get_hash
+from paramak.utils import get_hash, _replace
 
 
 class Reactor:
@@ -509,6 +509,7 @@ class Reactor:
             include_graveyard: Optional[bool] = True,
             include_sector_wedge: Optional[bool] = True,
             units: Optional[str] = 'mm',
+            filename: Optional[str] = None
     ) -> List[str]:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
@@ -528,50 +529,74 @@ class Reactor:
                 also be set.
             units: the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
+            filename: If specified all the shapes will be combined into a
+                single file. If left as Default (None) then the seperate shapes
+                are saved as seperate files using their shape.stp_filename
+                attribute. output_folder is ignored if filename is set.
         Returns:
             list: a list of stp filenames created
         """
 
-        if len(self.stp_filenames) != len(set(self.stp_filenames)):
-            print([item for item, count in collections.Counter(
-                self.stp_filenames).items() if count > 1])
-            raise ValueError("Set Reactor already contains shapes with the "
-                             "same stp_filename")
+        if filename is None:
+            if len(self.stp_filenames) != len(set(self.stp_filenames)):
+                print([item for item, count in collections.Counter(
+                    self.stp_filenames).items() if count > 1])
+                raise ValueError("Set Reactor already contains shapes with the "
+                                "same stp_filename")
 
-        filenames = []
-        for entry in self.shapes_and_components:
-            if entry.stp_filename is None:
-                raise ValueError(
-                    "set .stp_filename property for \
-                                 Shapes before using the export_stp method"
+            filenames = []
+            for entry in self.shapes_and_components:
+                if entry.stp_filename is None:
+                    raise ValueError(
+                        "set .stp_filename property for \
+                                    Shapes before using the export_stp method"
+                    )
+                filenames.append(
+                    str(Path(output_folder) / Path(entry.stp_filename)))
+                entry.export_stp(
+                    filename=Path(output_folder) / Path(entry.stp_filename),
+                    mode=mode,
+                    units=units,
+                    verbose=False,
                 )
-            filenames.append(
-                str(Path(output_folder) / Path(entry.stp_filename)))
-            entry.export_stp(
-                filename=Path(output_folder) / Path(entry.stp_filename),
-                mode=mode,
-                units=units,
-                verbose=False,
-            )
 
-        if include_sector_wedge:
-            sector_wedge = self.make_sector_wedge()
-            # if the self.rotation_angle is 360 then None is returned
-            if sector_wedge is not None:
-                filename = sector_wedge.export_stp(filename=str(
-                    Path(output_folder) / sector_wedge.stp_filename))
+            if include_sector_wedge:
+                sector_wedge = self.make_sector_wedge()
+                # if the self.rotation_angle is 360 then None is returned
+                if sector_wedge is not None:
+                    filename = sector_wedge.export_stp(filename=str(
+                        Path(output_folder) / sector_wedge.stp_filename))
+                    filenames.append(filename)
+
+            # creates a graveyard (bounding shell volume) which is needed for
+            # neutronics simulations with default Reactor attributes.
+            if include_graveyard:
+                graveyard = self.make_graveyard()
+                filename = self.graveyard.export_stp(
+                    filename=str(Path(output_folder) / graveyard.stp_filename)
+                )
                 filenames.append(filename)
 
-        # creates a graveyard (bounding shell volume) which is needed for
-        # neutronics simulations with default Reactor attributes.
-        if include_graveyard:
-            graveyard = self.make_graveyard()
-            filename = self.graveyard.export_stp(
-                filename=str(Path(output_folder) / graveyard.stp_filename)
-            )
-            filenames.append(filename)
+            return filenames
 
-        return filenames
+        else:
+
+            assembly = cq.Assembly(name='reactor')
+            for entry in self.shapes_and_components:
+                if entry.color is None:
+                    assembly.add(entry.solid)
+                else:
+                    assembly.add(entry.solid, color=cq.Color(*self.color))
+
+            assembly.save(filename, exportType='STEP')
+
+            if units == 'cm':
+                _replace(
+                    path_filename,
+                    'SI_UNIT(.MILLI.,.METRE.)',
+                    'SI_UNIT(.CENTI.,.METRE.)')
+
+            return [filename]
 
     def export_stl(
             self,
