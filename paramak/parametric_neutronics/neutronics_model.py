@@ -94,6 +94,7 @@ class NeutronicsModel():
         mesh_3d_corners: Optional[Tuple[Tuple[float, float,
                                               float], Tuple[float, float, float]]] = None,
         fusion_power: Optional[float] = 1e9,
+        photon_transport: Optional[bool] = True,
         # convert from watts to activity source_activity
         max_lost_particles: Optional[int] = 10,
     ):
@@ -112,6 +113,7 @@ class NeutronicsModel():
         self.mesh_3d_resolution = mesh_3d_resolution
         self.mesh_2d_corners = mesh_2d_corners
         self.mesh_3d_corners = mesh_3d_corners
+        self.photon_transport = photon_transport
         self.fusion_power = fusion_power
 
         self.model = None
@@ -412,7 +414,7 @@ class NeutronicsModel():
         settings.particles = self.simulation_particles_per_batch
         settings.run_mode = "fixed source"
         settings.dagmc = True
-        settings.photon_transport = True
+        settings.photon_transport = self.photon_transport
         settings.source = self.source
         settings.max_lost_particles = self.max_lost_particles
 
@@ -544,23 +546,23 @@ class NeutronicsModel():
                     self._add_tally_for_every_material(sufix, score)
 
                 elif standard_tally == 'spectra':
-                    neutron_particle_filter = openmc.ParticleFilter([
-                                                                    'neutron'])
-                    photon_particle_filter = openmc.ParticleFilter(['photon'])
+                                                                    
                     energy_bins = openmc.mgxs.GROUP_STRUCTURES['CCFE-709']
                     energy_filter = openmc.EnergyFilter(energy_bins)
 
+                    neutron_particle_filter = openmc.ParticleFilter(['neutron'])
                     self._add_tally_for_every_material(
                         'neutron_spectra',
                         'flux',
                         [neutron_particle_filter, energy_filter]
                     )
-
-                    self._add_tally_for_every_material(
-                        'photon_spectra',
-                        'flux',
-                        [photon_particle_filter, energy_filter]
-                    )
+                    if self.photon_transport is True:
+                        photon_particle_filter = openmc.ParticleFilter(['photon'])
+                        self._add_tally_for_every_material(
+                            'photon_spectra',
+                            'flux',
+                            [photon_particle_filter, energy_filter]
+                        )
                 else:
                     score = standard_tally
                     sufix = standard_tally
