@@ -546,18 +546,20 @@ class NeutronicsModel():
                     self._add_tally_for_every_material(sufix, score)
 
                 elif standard_tally == 'spectra':
-                                                                    
+
                     energy_bins = openmc.mgxs.GROUP_STRUCTURES['CCFE-709']
                     energy_filter = openmc.EnergyFilter(energy_bins)
 
-                    neutron_particle_filter = openmc.ParticleFilter(['neutron'])
+                    neutron_particle_filter = openmc.ParticleFilter([
+                                                                    'neutron'])
                     self._add_tally_for_every_material(
                         'neutron_spectra',
                         'flux',
                         [neutron_particle_filter, energy_filter]
                     )
                     if self.photon_transport is True:
-                        photon_particle_filter = openmc.ParticleFilter(['photon'])
+                        photon_particle_filter = openmc.ParticleFilter([
+                                                                       'photon'])
                         self._add_tally_for_every_material(
                             'photon_spectra',
                             'flux',
