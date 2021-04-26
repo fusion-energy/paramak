@@ -13,59 +13,75 @@ class SubmersionTokamak(paramak.Reactor):
     toroidal field coils and pf coils.
 
     Arguments:
-        inner_bore_radial_thickness: the radial thickness of the inner bore (cm)
-        inboard_tf_leg_radial_thickness: the radial thickness of the inner leg of the toroidal field coils (cm)
-        center_column_shield_radial_thickness: the radial thickness of the center column shield (cm)
-        inboard_blanket_radial_thickness: the radial thickness of the inboard blanket (cm)
+        inner_bore_radial_thickness: the radial thickness of the inner bore
+            (cm)
+        inboard_tf_leg_radial_thickness: the radial thickness of the inner leg
+            of the toroidal field coils (cm)
+        center_column_shield_radial_thickness: the radial thickness of the
+            center column shield (cm)
+        inboard_blanket_radial_thickness: the radial thickness of the inboard
+            blanket (cm)
         firstwall_radial_thickness: the radial thickness of the first wall (cm)
-        inner_plasma_gap_radial_thickness: the radial thickness of the inboard gap between the plasma and the center column shield (cm)
+        inner_plasma_gap_radial_thickness: the radial thickness of the inboard
+            gap between the plasma and the center column shield (cm)
         plasma_radial_thickness: the radial thickness of the plasma (cm)
         divertor_radial_thickness: the radial thickness of the divertors (cm)
-        support_radial_thickness: the radial thickness of the upper and lower supports (cm)
-        outer_plasma_gap_radial_thickness: the radial thickness of the outboard gap between the plasma and the first wall (cm)
-        outboard_blanket_radial_thickness: the radial thickness of the blanket (cm)
-        blanket_rear_wall_radial_thickness: the radial thickness of the rear wall of the blanket (cm)
+        support_radial_thickness: the radial thickness of the upper and lower
+            supports (cm)
+        outer_plasma_gap_radial_thickness: the radial thickness of the outboard
+            gap between the plasma and the first wall (cm)
+        outboard_blanket_radial_thickness: the radial thickness of the blanket
+            (cm)
+        blanket_rear_wall_radial_thickness: the radial thickness of the rear
+            wall of the blanket (cm)
         elongation: the elongation of the plasma
         triangularity: the triangularity of the plasma
         number_of_tf_coils: the number of tf coils.
         rotation_angle: the angle of the sector that is desired.
-        outboard_tf_coil_radial_thickness: the radial thickness of the toroidal field coil.
-        rear_blanket_to_tf_gap: the radial distance between the rear of the blanket and the toroidal field coil.
-        outboard_tf_coil_poloidal_thickness: the vertical thickness of each poloidal field coil.
-        pf_coil_vertical_thicknesses: the vertical thickness of each poloidal field coil.
-        pf_coil_radial_thicknesses: the radial thickness of  each poloidal field coil.
-        divertor_position: the position of the divertor, "upper", "lower" or "both". Defaults to "both".
-        support_position: the position of the supports, "upper", "lower" or "both". Defaults to "both".
+        outboard_tf_coil_radial_thickness: the radial thickness of the toroidal
+            field coil.
+        rear_blanket_to_tf_gap: the radial distance between the rear of the
+            blanket and the toroidal field coil.
+        outboard_tf_coil_poloidal_thickness: the vertical thickness of each
+            poloidal field coil.
+        pf_coil_vertical_thicknesses: the vertical thickness of each poloidal
+            field coil.
+        pf_coil_radial_thicknesses: the radial thickness of  each poloidal
+            field coil.
+        divertor_position: the position of the divertor, "upper", "lower" or
+            "both". Defaults to "both".
+        support_position: the position of the supports, "upper", "lower" or
+            "both". Defaults to "both".
     """
 
     def __init__(
         self,
-        inner_bore_radial_thickness,
-        inboard_tf_leg_radial_thickness,
-        center_column_shield_radial_thickness,
-        inboard_blanket_radial_thickness,
-        firstwall_radial_thickness,
-        inner_plasma_gap_radial_thickness,
-        plasma_radial_thickness,
-        divertor_radial_thickness,
-        support_radial_thickness,
-        outer_plasma_gap_radial_thickness,
-        outboard_blanket_radial_thickness,
-        blanket_rear_wall_radial_thickness,
-        elongation,
-        triangularity,
-        number_of_tf_coils=16,
-        rotation_angle=360.0,
-        outboard_tf_coil_radial_thickness=None,
-        rear_blanket_to_tf_gap=None,
-        outboard_tf_coil_poloidal_thickness=None,
-        pf_coil_vertical_thicknesses=None,
-        pf_coil_radial_thicknesses=None,
+        inner_bore_radial_thickness: float,
+        inboard_tf_leg_radial_thickness: float,
+        center_column_shield_radial_thickness: float,
+        inboard_blanket_radial_thickness: float,
+        firstwall_radial_thickness: float,
+        inner_plasma_gap_radial_thickness: float,
+        plasma_radial_thickness: float,
+        divertor_radial_thickness: float,
+        support_radial_thickness: float,
+        outer_plasma_gap_radial_thickness: float,
+        outboard_blanket_radial_thickness: float,
+        blanket_rear_wall_radial_thickness: float,
+        elongation: float,
+        triangularity: float,
+        number_of_tf_coils: int = 16,
+        rotation_angle: float = 360.0,
+        outboard_tf_coil_radial_thickness: Optional[float] = None,
+        rear_blanket_to_tf_gap: Optional[float] = None,
+        outboard_tf_coil_poloidal_thickness: Optional[float] = None,
+        pf_coil_vertical_thicknesses: Optional[float] = None,
+        pf_coil_radial_thicknesses: Optional[float] = None,
         pf_coil_radial_position: Optional[Union[float, List[float]]] = None,
         pf_coil_vertical_position: Optional[Union[float, List[float]]] = None,
-        pf_coil_case_thicknesses=10,
-        divertor_position="both",
-        support_position="both",
+        pf_coil_case_thicknesses: Optional[float] = 10,
+        divertor_position: Optional[str] = "both",
+        support_position: Optional[str] = "both",
     ):
 
         super().__init__([])
