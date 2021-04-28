@@ -196,11 +196,12 @@ def make_watertight(
     os.system('rm {}'.format(output_filename))
 
     try:
-        subprocess.check_output(
+        output = subprocess.check_output(
             "make_watertight {} -o {}".format(input_filename, output_filename),
             shell=True,
             universal_newlines=True,
         )
+        print(output)
     except BaseException:
         raise NameError(
             "make_watertight failed, check DAGMC is install and the DAGMC/bin "
