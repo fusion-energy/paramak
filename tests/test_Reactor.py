@@ -15,7 +15,22 @@ class TestReactor(unittest.TestCase):
         self.test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
 
+        self.test_shape2 = paramak.ExtrudeStraightShape(
+            points=[(100, 100), (50, 100), (50, 50)], distance=20)
+
         self.test_reactor = paramak.Reactor([self.test_shape])
+
+        self.test_reactor_2 = paramak.Reactor(
+            [self.test_shape, self.test_shape2])
+
+    def test_reactor_export_stp(self):
+        """Exports the reactor as seperate files and as a single file"""
+        os.system('rm *.stp')
+        self.test_reactor_2.export_stp()
+        assert Path('RotateStraightShape.stp').is_file()
+        assert Path('ExtrudeStraightShape.stp').is_file()
+        self.test_reactor_2.export_stp(filename='single_file.stp', units='cm')
+        assert Path('single_file.stp').is_file()
 
     def test_reactor_export_html_from_str_input(self):
         """when the .solid is called it constructs the geometry. This should be
