@@ -580,24 +580,23 @@ class Reactor:
 
             return filenames
 
-        else:
+        # exports a single file for the whole model
+        assembly = cq.Assembly(name='reactor')
+        for entry in self.shapes_and_components:
+            if entry.color is None:
+                assembly.add(entry.solid)
+            else:
+                assembly.add(entry.solid, color=cq.Color(*entry.color))
 
-            assembly = cq.Assembly(name='reactor')
-            for entry in self.shapes_and_components:
-                if entry.color is None:
-                    assembly.add(entry.solid)
-                else:
-                    assembly.add(entry.solid, color=cq.Color(*entry.color))
+        assembly.save(filename, exportType='STEP')
 
-            assembly.save(filename, exportType='STEP')
+        if units == 'cm':
+            _replace(
+                filename,
+                'SI_UNIT(.MILLI.,.METRE.)',
+                'SI_UNIT(.CENTI.,.METRE.)')
 
-            if units == 'cm':
-                _replace(
-                    filename,
-                    'SI_UNIT(.MILLI.,.METRE.)',
-                    'SI_UNIT(.CENTI.,.METRE.)')
-
-            return [filename]
+        return [filename]
 
     def export_stl(
             self,
