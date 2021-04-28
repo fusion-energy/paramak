@@ -176,7 +176,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     make -j"$compile_cores" install ; \
     cd ..  ; \
     pip install -e .[test] ; \
-    /opt/openmc/tools/ci/download-xs.sh ; \
     fi
 
 RUN if [ "$include_neutronics" = "true" ] ; \
@@ -184,12 +183,13 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     pip install parametric_plasma_source ; \
     pip install neutronics_material_maker==0.3.2 ; \
     pip install openmc_data_downloader ; \
+    openmc_data_downloader -e all -l ENDFB-7.1-NNDC TENDL-2019 ; \
     fi
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
+ENV OPENMC_CROSS_SECTIONS=/cross_sections.xml
 ENV PATH="/MOAB/build/bin:${PATH}"
 ENV PATH="/DAGMC/bin:${PATH}"
 
