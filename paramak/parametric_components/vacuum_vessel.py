@@ -54,7 +54,7 @@ class VacuumVessel(RotateStraightShape):
 
     @inner_radius.setter
     def inner_radius(self, value):
-        # todo check it is a positve number
+        assert value > 0
         self._inner_radius = value
 
     def find_points(self):

@@ -1,22 +1,217 @@
 
-import warnings
 import math
 import os
+import shutil
+import subprocess
 import warnings
 from collections import defaultdict
+from pathlib import Path
 from typing import List, Optional
 from xml.etree.ElementTree import SubElement
 
 import defusedxml.ElementTree as ET
 import matplotlib.pyplot as plt
 import numpy as np
+from remove_dagmc_tags import remove_tags
 
 try:
     import openmc
-    from openmc.data import REACTION_MT, REACTION_NAME
 except ImportError:
     warnings.warn('OpenMC not found, create_inital_particles \
             method not available', UserWarning)
+
+
+def find_material_groups_in_h5m(
+        filename: Optional[str] = 'dagmc.h5m'
+) -> List[str]:
+    """Reads in a DAGMC h5m file and uses mbsize to find the names of the
+    material groups in the file
+
+    Arguments:
+        filename:
+
+    Returns:
+        The filename of the h5m file created
+    """
+
+    try:
+        terminal_output = subprocess.check_output(
+            "mbsize -ll {} | grep 'mat:'".format(filename),
+            shell=True,
+            universal_newlines=True,
+        )
+    except BaseException:
+        raise ValueError(
+            "mbsize failed, check MOAB is install and the MOAB/build/bin "
+            "folder is in the path directory (Linux and Mac) or set as an "
+            "enviromental varible (Windows)")
+
+    list_of_mats = terminal_output.split()
+    list_of_mats = list(filter(lambda a: a != '=', list_of_mats))
+    list_of_mats = list(filter(lambda a: a != 'NAME', list_of_mats))
+    list_of_mats = list(filter(lambda a: a != 'EXTRA_NAME0', list_of_mats))
+    list_of_mats = list(set(list_of_mats))
+
+    return list_of_mats
+
+
+def trelis_command_to_create_dagmc_h5m(
+        faceting_tolerance: float,
+        merge_tolerance: float,
+        material_key_name: Optional[str] = 'material_tag',
+        geometry_key_name: Optional[str] = 'stp_filename',
+        batch: Optional[bool] = True,
+        h5m_filename: str = 'dagmc_not_watertight.h5m',
+        manifest_filename: str = 'manifest.json',
+        cubit_filename: str = 'dagmc.cub',
+        trelis_filename: str = 'dagmc.trelis',
+        geometry_details_filename: str = 'geometry_details.json',
+        surface_reflectivity_name: str = 'reflective',
+) -> List[str]:
+    """Runs the Trelis executable command with the
+    make_faceteted_neutronics_model.py script which produces a non water tight
+    DAGMC h5m file.
+
+    Arguments:
+        faceting_tolerance: the tolerance to use when faceting surfaces.
+        merge_tolerance: the tolerance to use when merging surfaces.
+        material_key_name: the dictionary key containing the str or int to use
+            as the material identifier.
+        geometry_key_name: the dictionary key containing the str to uses as the
+            CAD file identifier.
+        batch: Run the Trelis command in batch model with no GUI (True) or with
+            the GUI enabled (False).
+        h5m_filename: the filename of the DAGMC h5m file produced. This is not
+            water tight at this stage.
+        manifest_filename: The filename of the json file containing a list of
+            material_keys and geometry_keys.
+        cubit_filename: The output filename of the file. If None then no cubit
+            file will be exported.
+        trelis_filename: The output filename of the file. If None then no
+            trelis file will be exported.
+        geometry_details_filename: The output filename of the JSON file
+            containing details of the DAGMC geometry. This includes the
+            resulting volume numbers of the input CAD files, which can be
+            useful for specifying tallies. If None then no JSON fie will be
+            exported.
+        surface_reflectivity_name: The tag to assign to the reflective boundary
+            in the resulting DAGMC geometry Shift requires "spec.reflect" and
+            MCNP requires "boundary:Reflecting".
+
+    Returns:
+        The filename of the h5m file created
+    """
+    output_filenames = [
+        h5m_filename,
+        trelis_filename,
+        cubit_filename,
+        geometry_details_filename]
+    filenames_extensions = ['.h5m', '.trelis', '.cub', '.json']
+
+    path_output_filenames = []
+
+    for output_file, extension in zip(output_filenames, filenames_extensions):
+
+        if output_file is not None:
+            path_filename = Path(output_file)
+
+            if path_filename.suffix != extension:
+                path_filename = path_filename.with_suffix(extension)
+
+            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+            path_output_filenames.append(str(path_filename))
+
+    shutil.copy(
+        src=Path(__file__).parent.absolute() / Path('parametric_neutronics') /
+        'make_faceteted_neutronics_model.py',
+        dst=Path().absolute()
+    )
+
+    if not Path("make_faceteted_neutronics_model.py").is_file():
+        raise FileNotFoundError(
+            "The make_faceteted_neutronics_model.py was not found in the \
+            directory")
+
+    os.system('rm dagmc_not_watertight.h5m')
+
+    if batch:
+        trelis_cmd = 'trelis -batch -nographics'
+    else:
+        trelis_cmd = 'trelis'
+
+    os.system(
+        trelis_cmd +
+        " make_faceteted_neutronics_model.py \"faceting_tolerance='" +
+        str(faceting_tolerance) +
+        "'\" \"merge_tolerance='" +
+        str(merge_tolerance) +
+        "'\" \"material_key_name='" +
+        str(material_key_name) +
+        "'\" \"geometry_key_name='" +
+        str(geometry_key_name) +
+        "'\" \"h5m_filename='" +
+        str(h5m_filename) +
+        "'\" \"manifest_filename='" +
+        str(manifest_filename) +
+        "'\" \"cubit_filename='" +
+        str(cubit_filename) +
+        "'\" \"trelis_filename='" +
+        str(trelis_filename) +
+        "'\" \"geometry_details_filename='" +
+        str(geometry_details_filename) +
+        "'\" \"surface_reflectivity_name='" +
+        str(surface_reflectivity_name) +
+        "'\"")
+
+    os.system('rm make_faceteted_neutronics_model.py')
+
+    if not Path(h5m_filename).is_file():
+        raise FileNotFoundError(
+            "The h5m file " + h5m_filename + " was not found \
+            in the directory, the Trelis stage has failed")
+
+    return path_output_filenames
+
+
+def make_watertight(
+        input_filename: str = "dagmc_not_watertight.h5m",
+        output_filename: str = "dagmc.h5m",
+) -> str:
+    """Runs the DAGMC make_watertight executable that seals the facetets of
+    the geometry with specified input and output h5m files. Not needed for
+    h5m file produced with pymoab method.
+
+    Arguments:
+        input_filename: the non watertight h5m file to make watertight.
+        output_filename: the filename of the watertight h5m file.
+
+    Returns:
+        The filename of the h5m file created
+    """
+
+    if not Path(input_filename).is_file():
+        raise FileNotFoundError("Failed to find {}".format(input_filename))
+
+    os.system('rm {}'.format(output_filename))
+
+    try:
+        output = subprocess.check_output(
+            "make_watertight {} -o {}".format(input_filename, output_filename),
+            shell=True,
+            universal_newlines=True,
+        )
+        print(output)
+    except BaseException:
+        raise NameError(
+            "make_watertight failed, check DAGMC is install and the DAGMC/bin "
+            "folder is in the path directory (Linux and Mac) or set as an "
+            "enviromental varible (Windows)")
+
+    if not Path(output_filename).is_file():
+        raise FileNotFoundError("Failed to produce dagmc.h5m")
+
+    return output_filename
 
 
 def define_moab_core_and_tags():
@@ -30,8 +225,9 @@ def define_moab_core_and_tags():
 
     try:
         from pymoab import core, types
-    except ImportError as err:
-        raise err('PyMoab not found, export_h5m method is not available')
+    except ImportError:
+        raise ImportError(
+            'PyMoab not found, export_h5m method is not available')
 
     # create pymoab instance
     moab_core = core.Core()
@@ -70,6 +266,116 @@ def define_moab_core_and_tags():
     tags['global_id'] = moab_core.tag_get_handle(types.GLOBAL_ID_TAG_NAME)
 
     return moab_core, tags
+
+
+def export_vtk(
+    h5m_filename: str,
+    filename: Optional[str] = 'dagmc.vtk',
+    include_graveyard: Optional[bool] = False
+):
+    """Produces a vtk geometry compatable from the dagmc h5m file. This is
+    useful for checking the geometry that is used for transport.
+
+    Arguments:
+        filename: filename of vtk outputfile. If the filename does not end
+            with .vtk then .vtk will be added.
+        h5m_filename: filename of h5m outputfile. If the filename does not
+            end with .h5m then .h5m will be added.
+        include_graveyard: optionally include the graveyard in the vtk file
+
+    Returns:
+        filename of the vtk file produced
+    """
+
+    path_h5m_filename = Path(h5m_filename)
+    if path_h5m_filename.suffix != ".h5m":
+        path_h5m_filename = path_h5m_filename.with_suffix(".h5m")
+
+    if path_h5m_filename.is_file() is False:
+        raise FileNotFoundError(
+            'h5m_filename not found in location', path_h5m_filename
+        )
+
+    path_filename = Path(filename)
+    if path_filename.suffix != ".vtk":
+        path_filename = path_filename.with_suffix(".vtk")
+
+    if include_graveyard:
+        tags_to_remove = None
+    else:
+        tags_to_remove = 'mat:graveyard', 'graveyard.stp', 'reflective'
+
+    remove_tags(
+        input=str(path_h5m_filename),
+        output=str(path_filename),
+        tags=tags_to_remove
+    )
+
+    return str(path_filename)
+
+
+def remove_tag_from_h5m_file(
+    input_h5m_filename: Optional[str] = 'dagmc.h5m',
+    output_h5m_filename: Optional[str] = 'dagmc_removed_tag.h5m',
+    tag_to_remove: Optional[str] = 'graveyard',
+) -> str:
+    """Removes a specific tag from a dagmc h5m file and saves the remaining
+    geometry as a new h5m file. Useful for visulising the geometry by removing
+    the graveyard tag and then the vtk file can be made without a bounding box
+    graveyard obstructing the view. Adapted from
+    https://github.com/svalinn/DAGMC-viz source code
+
+    Arguments:
+        input_h5m_filename: The name of the h5m file to remove the graveyard from
+        output_h5m_filename: The name of the outfile h5m without a graveyard
+
+    Returns:
+        filename of the new dagmc h5m file with the tags removed
+    """
+
+    try:
+        from pymoab import core, types
+        from pymoab.types import MBENTITYSET
+    except ImportError:
+        raise ImportError(
+            'PyMoab not found, remove_tag_from_h5m_file method is not '
+            'available'
+        )
+
+    moab_core = core.Core()
+    moab_core.load_file(input_h5m_filename)
+
+    tag_name = moab_core.tag_get_handle(str(types.NAME_TAG_NAME))
+
+    tag_category = moab_core.tag_get_handle(str(types.CATEGORY_TAG_NAME))
+    root = moab_core.get_root_set()
+
+    # An array of tag values to be matched for entities returned by the
+    # following call.
+    group_tag_values = np.array(["Group"])
+
+    # Retrieve all EntitySets with a category tag of the user input value.
+    group_categories = list(moab_core.get_entities_by_type_and_tag(
+                            root, MBENTITYSET, tag_category, group_tag_values))
+
+    # Retrieve all EntitySets with a name tag.
+    group_names = moab_core.tag_get_data(tag_name, group_categories, flat=True)
+
+    # Find the EntitySet whose name includes tag provided
+    sets_to_remove = [
+        group_set for group_set,
+        name in zip(
+            group_categories,
+            group_names) if tag_to_remove in str(
+            name.lower())]
+
+    # Remove the graveyard EntitySet from the data.
+    groups_to_write = [
+        group_set for group_set in group_categories if group_set not in sets_to_remove]
+
+    moab_core.write_file(output_h5m_filename, output_sets=groups_to_write)
+
+    return output_h5m_filename
 
 
 def add_stl_to_moab_core(

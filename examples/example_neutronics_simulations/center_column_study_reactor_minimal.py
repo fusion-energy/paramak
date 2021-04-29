@@ -50,7 +50,7 @@ def make_model_and_simulate():
     )
 
     # starts the neutronics simulation
-    neutronics_model.simulate(method='trelis')
+    neutronics_model.simulate()
 
     # prints the results
     print(neutronics_model.results)

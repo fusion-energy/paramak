@@ -93,11 +93,11 @@ class ITERtypeDivertor(RotateMixedShape):
         base_circle_inner = anchor[0] + radius, anchor[1]
         A = rotate(base_circle_inner, anchor, coverage)
         A_prime = rotate(base_circle_inner, anchor, coverage / 2)
-        C = (anchor[0], anchor[1] - length)
+        c_coord = (anchor[0], anchor[1] - length)
 
         A = rotate(anchor, A, tilt)
         A_prime = rotate(anchor, A_prime, tilt)
-        C = rotate(anchor, C, tilt)
+        c_coord = rotate(anchor, c_coord, tilt)
         # upper inner A
         points.append([A[0], A[1]])
         # A'
@@ -105,17 +105,17 @@ class ITERtypeDivertor(RotateMixedShape):
         # B
         points.append([anchor[0], anchor[1]])
         # C
-        points.append([C[0], C[1]])
+        points.append([c_coord[0], c_coord[1]])
         return points
 
     def _create_dome_points(
-        self, C, F, dome_length, dome_height, dome_thickness, dome_pos
+        self, c_coord, F, dome_length, dome_height, dome_thickness, dome_pos
     ):
         """Creates a list of points for the dome alongside with their
         connectivity
 
         Args:
-            C (float, float): coordinate of inner end of the dome
+            c_coord (float, float): coordinate of inner end of the dome
             F (float, float): coordinate of outer end of the dome
             dome_length (float): dome length (cm)
             dome_height (float): dome height (cm)
@@ -128,9 +128,15 @@ class ITERtypeDivertor(RotateMixedShape):
         """
         points = []
 
-        dome_base = extend(C, F, dome_pos * distance_between_two_points(F, C))
+        dome_base = extend(
+            c_coord,
+            F,
+            dome_pos *
+            distance_between_two_points(
+                F,
+                c_coord))
         dome_lower_point = extend(
-            dome_base, rotate(dome_base, C, -math.pi / 2), dome_height
+            dome_base, rotate(dome_base, c_coord, -math.pi / 2), dome_height
         )
 
         D_prime = extend(
@@ -159,14 +165,14 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([E[0], E[1], "straight"])
         return points
 
-    def _create_casing_points(self, anchors, C, F, targets_lengths):
+    def _create_casing_points(self, anchors, c_coord, F, targets_lengths):
         """Creates a list of points for the casing alongside with their
         connectivity
 
         Args:
             anchors ((float, float), (float, float)): xz coordinates of points
                 at the top of vertical targets.
-            C (float, float): coordinate of inner end of the dome
+            c_coord (float, float): coordinate of inner end of the dome
             F (float, float): coordinate of outer end of the dome
             targets_lengths (float, float): leg lengths of the vertical targets
 
@@ -178,16 +184,16 @@ class ITERtypeDivertor(RotateMixedShape):
         h1, h2 = targets_lengths
         points = []
         # I
-        I_ = extend(C, F, distance_between_two_points(F, C) * 1.1)
+        I_ = extend(c_coord, F, distance_between_two_points(F, c_coord) * 1.1)
         points.append([I_[0], I_[1], "straight"])
         # J
         J = extend(G, F, h2 * 1.2)
         points.append([J[0], J[1], "straight"])
         # K
-        K = extend(B, C, h1 * 1.2)
+        K = extend(B, c_coord, h1 * 1.2)
         points.append([K[0], K[1], "straight"])
         # L
-        L = extend(F, C, distance_between_two_points(F, C) * 1.1)
+        L = extend(F, c_coord, distance_between_two_points(F, c_coord) * 1.1)
         points.append([L[0], L[1], "straight"])
         return points
 
@@ -240,7 +246,7 @@ class ITERtypeDivertor(RotateMixedShape):
         # casing points
         self.casing_points = self._create_casing_points(
             anchors=(self.IVT_anchor, self.OVT_anchor),
-            C=IVT_points[-1][:2],
+            c_coord=IVT_points[-1][:2],
             F=OVT_points[0][:2],
             targets_lengths=(self.IVT_length, self.OVT_length),
         )

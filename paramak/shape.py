@@ -4,7 +4,7 @@ import numbers
 import warnings
 from collections.abc import Iterable
 from pathlib import Path
-from typing import List, Tuple, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -56,6 +56,8 @@ class Shape:
             floats. Defaults to None.
         tet_mesh (str, optional): If not None, a tet mesh flag will be added to
             the neutronics description output. Defaults to None.
+        scale (float, optional): If not None, a scale flag will be added to
+            the neutronics description output. Defaults to None.
         surface_reflectivity (Boolean, optional): If True, a
             surface_reflectivity flag will be added to the neutronics
             description output. Defaults to None.
@@ -70,6 +72,13 @@ class Shape:
         union (paramak.shape or list, optional): If set, the current solid
             will be united with the provided solid or iterable of solids.
             Defaults to None.
+        method: The method to use when making the h5m geometry. Options are
+            "trelis" or "pymoab".
+        graveyard_size: The dimention of cube shaped the graveyard region used
+            by DAGMC. This attribtute is used preferentially over
+            graveyard_offset.
+        graveyard_offset: The distance between the graveyard and the largest
+            shape. If graveyard_size is set the this is ignored.
     """
 
     def __init__(
@@ -77,7 +86,8 @@ class Shape:
         points: list = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
-        color: Optional[Tuple[float, float, float]] = (0.5, 0.5, 0.5),
+        color: Optional[Tuple[float, float, float,
+                              Optional[float]]] = (0.5, 0.5, 0.5),
         material_tag: Optional[str] = None,
         stp_filename: Optional[str] = None,
         stl_filename: Optional[str] = None,
@@ -85,12 +95,18 @@ class Shape:
         workplane: Optional[str] = "XZ",
         rotation_axis: Optional[str] = None,
         tet_mesh: Optional[str] = None,
+        scale: Optional[float] = None,
         surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
+        method: str = 'pymoab',
+        faceting_tolerance: Optional[float] = 1e-1,
+        merge_tolerance: Optional[float] = 1e-4,
         # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
         union=None,
+        graveyard_size: Optional[float] = 20_000,
+        graveyard_offset: Optional[float] = None,
     ):
 
         self.connection_type = connection_type
@@ -109,9 +125,15 @@ class Shape:
         self.rotation_axis = rotation_axis
 
         # neutronics specific properties
+        self.method = method
         self.material_tag = material_tag
         self.tet_mesh = tet_mesh
+        self.scale = scale
         self.surface_reflectivity = surface_reflectivity
+        self.faceting_tolerance = faceting_tolerance
+        self.merge_tolerance = merge_tolerance
+        self.graveyard_offset = graveyard_offset
+        self.graveyard_size = graveyard_size
 
         self.physical_groups = physical_groups
 
@@ -119,6 +141,7 @@ class Shape:
         self.solid = None
         self.wire = None
         self.render_mesh = None
+        self.h5m_filename = None
         # self.volume = None
         self.hash_value = None
         self.points_hash_value = None
@@ -130,17 +153,43 @@ class Shape:
         self.patch = None
 
     @property
-    def show(self):
-        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
+    def graveyard_size(self):
+        return self._graveyard_size
 
-        from jupyter_cadquery.cadquery import show
-        self.solid
-        return show(self.solid)
+    @graveyard_size.setter
+    def graveyard_size(self, value):
+        if value is None:
+            self._graveyard_size = None
+        elif not isinstance(value, (float, int)):
+            raise TypeError("graveyard_size must be a number")
+        elif value < 0:
+            raise ValueError("graveyard_size must be positive")
+        self._graveyard_size = value
 
-    @show.setter
-    def show(self, value):
-        self._show = value
+    @property
+    def graveyard_offset(self):
+        return self._graveyard_offset
+
+    @graveyard_offset.setter
+    def graveyard_offset(self, value):
+        if value is None:
+            self._graveyard_offset = None
+        elif not isinstance(value, (float, int)):
+            raise TypeError("graveyard_offset must be a number")
+        elif value < 0:
+            raise ValueError("graveyard_offset must be positive")
+        self._graveyard_offset = value
+
+    @property
+    def method(self):
+        return self._method
+
+    @method.setter
+    def method(self, value):
+        if value not in ['trelis', 'pymoab']:
+            raise ValueError("the method using in should be either trelis, \
+                pymoab. {} is not an option".format(value))
+        self._method = value
 
     @property
     def solid(self):
@@ -347,20 +396,25 @@ class Shape:
 
     @color.setter
     def color(self, value):
-        error = False
         if isinstance(value, (list, tuple)):
             if len(value) in [3, 4]:
                 for i in value:
                     if not isinstance(i, (int, float)):
-                        error = True
+                        raise ValueError(
+                            "Individual entries in the Shape.color must a "
+                            "number (float or int)")
+                    if i > 1 or i < 0:
+                        raise ValueError(
+                            "Individual entries in the Shape.color must be "
+                            "between 0 and 1"
+                        )
             else:
-                error = True
+                raise ValueError(
+                    "Shape.color must be a list or tuple of 3 or 4 floats")
         else:
-            error = True
-        # raise error
-        if error:
             raise ValueError(
-                "Shape.color must be a list or tuple of 3 or 4 floats")
+                "Shape.color must be a list or tuple")
+
         self._color = value
 
     @property
@@ -392,6 +446,16 @@ class Shape:
         if value is not None and not isinstance(value, str):
             raise ValueError("Shape.tet_mesh must be a string", value)
         self._tet_mesh = value
+
+    @property
+    def scale(self):
+        return self._scale
+
+    @scale.setter
+    def scale(self, value):
+        if value is not None and not isinstance(value, float):
+            raise ValueError("Shape.scale must be a float", value)
+        self._scale = value
 
     @property
     def name(self):
@@ -563,6 +627,37 @@ class Shape:
             raise ValueError(msg)
         self._azimuth_placement_angle = value
 
+    def show(self):
+        """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
+        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
+
+        from jupyter_cadquery.cadquery import Part, PartGroup
+
+        parts = []
+        if self.name is None:
+            name = 'Shape.name not set'
+        else:
+            name = self.name
+
+        scaled_color = [int(i * 255) for i in self.color[0:3]]
+        if isinstance(
+                self.solid,
+                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+            for i, solid in enumerate(self.solid.Solids()):
+                parts.append(
+                    Part(
+                        solid,
+                        name=f"{name}{i}",
+                        color=scaled_color))
+        else:
+            parts.append(
+                Part(
+                    self.solid.val(),
+                    name=f"{name}",
+                    color=scaled_color))
+
+        return PartGroup(parts)
+
     def create_solid(self) -> cq.Workplane:
         solid = None
         if self.points is not None:
@@ -624,7 +719,7 @@ class Shape:
                         solid = solid.center(-point[0], 0).\
                             workplane(offset=-point[1] * factor)
 
-                elif self.force_cross_section == False:
+                elif self.force_cross_section is False:
                     solid = solid.workplane(
                         offset=self.path_points[0][1] *
                         factor).center(
@@ -763,19 +858,30 @@ class Shape:
 
     def export_stl(
             self,
-            filename: str,
+            filename: Optional[str] = None,
             tolerance: Optional[float] = 0.001,
-            angular_tolerance: Optional[float] = 0.1) -> str:
+            angular_tolerance: Optional[float] = 0.1,
+            verbose: Optional[bool] = True) -> str:
         """Exports an stl file for the Shape.solid. If the provided filename
-            doesn't end with .stl it will be added
+        doesn't end with .stl it will be added.
 
         Args:
-            filename: the filename of the stl file to be exported
+            filename: the filename of exported the stl file. Defaults to None
+                which will attempt to use the Shape.stl_filename. If both are
+                None then a valueError will be raised.
             tolerance: the deflection tolerance of the faceting
             angular_tolerance: the angular tolerance, in radians
+            verbose: Enables (True) or disables (False) the printing of the
+                file produced.
         """
 
-        path_filename = Path(filename)
+        if filename is not None:
+            path_filename = Path(filename)
+        elif self.stl_filename is not None:
+            path_filename = Path(self.stl_filename)
+        else:
+            raise ValueError("The filename must be specified either the \
+                filename argument or the Shape.stl_filename must be set")
 
         if path_filename.suffix != ".stl":
             path_filename = path_filename.with_suffix(".stl")
@@ -786,7 +892,8 @@ class Shape:
                          tolerance=tolerance,
                          angularTolerance=angular_tolerance)
 
-        print("Saved file as ", path_filename)
+        if verbose:
+            print("Saved file as ", path_filename)
 
         return str(path_filename)
 
@@ -794,35 +901,53 @@ class Shape:
             self,
             filename: Optional[str] = None,
             units: Optional[str] = 'mm',
-            mode: Optional[str] = 'solid') -> str:
+            mode: Optional[str] = 'solid',
+            verbose: Optional[bool] = True) -> str:
         """Exports an stp file for the Shape.solid. If the filename provided
-            doesn't end with .stp or .step then .stp will be added. If a
-            filename is not provided and the shape's stp_filename property is
-            not None the stp_filename will be used as the export filename.
+        doesn't end with .stp or .step then .stp will be added.
 
         Args:
-            filename (str): the filename of the stp
-            units (str): the units of the stp file, options are 'cm' or 'mm'.
+            filename: the filename of exported the stp file. Defaults to None
+                which will attempt to use the Shape.stp_filename. If both are
+                None then a valueError will be raised.
+            units: the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
-            mode (str, optional): the object to export can be either
+            mode: the object to export can be either
                 'solid' which exports 3D solid shapes or the 'wire' which
                 exports the wire edges of the shape. Defaults to 'solid'.
+            verbose: Enables (True) or disables (False) the printing of the
+                file produced.
         """
 
         if filename is not None:
             path_filename = Path(filename)
-
-            if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
-                pass
-            else:
-                path_filename = path_filename.with_suffix(".stp")
-
-            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
         elif self.stp_filename is not None:
             path_filename = Path(self.stp_filename)
+        else:
+            raise ValueError("The filename must be specified either the \
+                filename argument or the Shape.stp_filename must be set")
+
+        if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
+            pass
+        else:
+            path_filename = path_filename.with_suffix(".stp")
+
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         if mode == 'solid':
-            exporters.export(self.solid, str(path_filename), exportType='STEP')
+
+            assembly = cq.Assembly(name=self.name)
+
+            if self.color is None:
+                assembly.add(self.solid)
+            else:
+                assembly.add(self.solid, color=cq.Color(*self.color))
+
+            assembly.save(str(path_filename), exportType='STEP')
+
+            # previous method does not support colours but puts the solid in the base file level
+            # exporters.export(self.solid, str(path_filename), exportType='STEP')
+
         elif mode == 'wire':
             exporters.export(self.wire, str(path_filename), exportType='STEP')
         else:
@@ -835,7 +960,8 @@ class Shape:
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
 
-        print("Saved file as ", path_filename)
+        if verbose:
+            print("Saved file as ", path_filename)
 
         return str(path_filename)
 
@@ -1103,10 +1229,11 @@ class Shape:
         patch = PatchCollection(patches)
 
         if self.color is not None:
-            patch.set_facecolor(self.color)
-            patch.set_color(self.color)
-            patch.color = self.color
-            patch.edgecolor = self.color
+            print('color is ', self.color)
+            patch.set_facecolor(self.color[0:3])
+            patch.set_color(self.color[0:3])
+            patch.color = self.color[0:3]
+            patch.edgecolor = self.color[0:3]
             # checks to see if an alpha value is provided in the color
             if len(self.color) == 4:
                 patch.set_alpha = self.color[-1]
@@ -1124,15 +1251,16 @@ class Shape:
             dictionary: a dictionary of the step filename and material name
         """
 
-        neutronics_description = {"material": self.material_tag}
+        neutronics_description = {"material_tag": self.material_tag}
 
         if self.stp_filename is not None:
             neutronics_description["stp_filename"] = self.stp_filename
-            # this is needed as ppp looks for the filename key
-            neutronics_description["filename"] = self.stp_filename
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
+
+        if self.scale is not None:
+            neutronics_description["scale"] = self.scale
 
         if self.surface_reflectivity is True:
             neutronics_description["surface_reflectivity"] = self.surface_reflectivity
@@ -1141,6 +1269,52 @@ class Shape:
             neutronics_description["stl_filename"] = self.stl_filename
 
         return neutronics_description
+
+    def export_neutronics_description(
+            self,
+            filename: Optional[str] = "manifest.json") -> str:
+        """
+        Saves Shape.neutronics_description to a json file. The resulting json
+        file contains a list of dictionaries. Each dictionary entry comprises
+        of a material and a filename and optionally a tet_mesh instruction. The
+        json file can then be used with the neutronics workflows to create a
+        neutronics model. Creating of the neutronics model requires linkage
+        between volumes, materials and identification of which volumes to
+        tet_mesh. If the filename does not end with .json then .json will be
+        added. The plasma geometry is not included by default as it is
+        typically not included in neutronics simulations. The reason for this
+        is that the low number density results in minimal interactions with
+        neutrons. However, the plasma can be added if the include_plasma
+        argument is set to True.
+
+        Args:
+            filename (str, optional): the filename used to save the neutronics
+                description
+            include_plasma (Boolean, optional): should the plasma be included.
+                Defaults to False as the plasma volume and material has very
+                little impact on the neutronics results due to the low density.
+                Including the plasma does however slow down the simulation.
+            include_graveyard (Boolean, optional): should the graveyard be
+                included. Defaults to True as this is needed for DAGMC models.
+        """
+
+        path_filename = Path(filename)
+
+        if path_filename.suffix != ".json":
+            path_filename = path_filename.with_suffix(".json")
+
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        with open(path_filename, "w") as outfile:
+            json.dump(
+                [self.neutronics_description()],
+                outfile,
+                indent=4,
+            )
+
+        print("saved geometry description to ", path_filename)
+
+        return str(path_filename)
 
     def perform_boolean_operations(self, solid: cq.Workplane, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
@@ -1169,44 +1343,208 @@ class Shape:
 
     def make_graveyard(
             self,
-            graveyard_offset: Optional[int] = 100) -> cq.Workplane:
+            graveyard_size: Optional[float] = None,
+            graveyard_offset: Optional[float] = None,
+    ):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
-        simulations.
+        simulations. The graveyard size can be ascertained in two ways. Either
+        the size can be set directly using the graveyard_size which is the
+        quickest method. Alternativley the graveyard can be automatically sized
+        to the geometry by setting a graveyard_offset value. If both options
+        are set then the method will default to using the graveyard_size
+        preferentially.
 
         Args:
-            graveyard_offset (float): the offset between the largest edge of
-                the geometry and inner bounding shell created. Defaults to
-                100
+            graveyard_size: directly sets the size of the graveyard. Defaults
+                to None which then uses the Reactor.graveyard_size attribute.
+            graveyard_offset: the offset between the largest edge of the
+                geometry and inner bounding shell created. Defaults to None
+                which then uses Reactor.graveyard_offset attribute.
 
         Returns:
-            CadQuery solid: a shell volume that bounds the geometry, referred
-            to as a graveyard in DAGMC
+            paramak.HollowCube: a shell volume that bounds the geometry,
+                referred to as a graveyard in DAGMC.
         """
 
-        self.graveyard_offset = graveyard_offset
+        if graveyard_size is not None:
+            graveyard_size_to_use = graveyard_size
 
-        if self.solid is None:
-            self.create_solid()
+        elif self.graveyard_size is not None:
+            graveyard_size_to_use = self.graveyard_size
+
+        elif graveyard_offset is not None:
+            self.solid
+            graveyard_size_to_use = self.largest_dimension * 2 + graveyard_offset * 2
+
+        elif self.graveyard_offset is not None:
+            self.solid
+            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
+
+        else:
+            raise ValueError(
+                "the graveyard_size, Shape.graveyard_size, "
+                "graveyard_offset and Shape.graveyard_offset are all None. "
+                "Please specify at least one of these attributes or agruments")
 
         graveyard_shape = paramak.HollowCube(
-            length=self.largest_dimension * 2 + graveyard_offset * 2,
-            name="Graveyard",
-            material_tag="Graveyard",
-            stp_filename="Graveyard.stp",
-            stl_filename="Graveyard.stl",
+            length=graveyard_size_to_use,
+            name="graveyard",
+            material_tag="graveyard",
+            stp_filename="graveyard.stp",
+            stl_filename="graveyard.stl",
         )
 
         self.graveyard = graveyard_shape
 
         return graveyard_shape
 
+    def export_vtk(
+        self,
+        filename: Optional[str] = 'dagmc.vtk',
+        h5m_filename: Optional[str] = None,
+        include_graveyard: Optional[bool] = False
+    ):
+        """Produces a vtk geometry compatable from the dagmc h5m file. This is
+        useful for checking the geometry that is used for transport.
+
+        Arguments:
+            filename: filename of vtk outputfile. If the filename does not end
+                with .vtk then .vtk will be added.
+            h5m_filename: filename of h5m outputfile. If the filename does not
+                end with .h5m then .h5m will be added. Defaults to None which
+                uses the Reactor.h5m_filename.
+            include_graveyard: optionally include the graveyard in the vtk file
+
+        Returns:
+            filename of the vtk file produced
+        """
+
+        if h5m_filename is None:
+            if self.h5m_filename is None:
+                raise ValueError(
+                    'h5m_filename not provided and Reactor.h5m_filename is '
+                    'not set, Unable to use mbconvert to convert to vtk '
+                    'without input h5m filename. Try running '
+                    'Reactor.export_h5m() first.')
+
+            h5m_filename = self.h5m_filename
+
+        vtk_filename = paramak.neutronics_utils.export_vtk(
+            filename=filename,
+            h5m_filename=h5m_filename,
+            include_graveyard=include_graveyard
+        )
+
+        return vtk_filename
+
     def export_h5m(
             self,
+            filename: str = 'dagmc.h5m',
+            method: Optional[str] = None,
+            merge_tolerance: Optional[float] = None,
+            faceting_tolerance: Optional[float] = None,
+    ) -> str:
+        """Produces a dagmc.h5m neutronics file compatable with DAGMC
+        simulations. Tags the volumes with their material_tag attributes. Sets
+        the Shape.h5m_filename to the filename of the h5m file produced.
+
+        Arguments:
+            method: The method to use when making the imprinted and
+                merged geometry. Options are "trelis" and "pymoab" Defaults to
+                None which uses the Shape.method attribute.
+            merge_tolerance: the allowable distance between edges and surfaces
+                before merging these CAD objects into a single CAD object. See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Shape.merge_tolerance attribute.
+            faceting_tolerance: the allowable distance between facetets
+                before merging these CAD objects into a single CAD object See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Shape.faceting_tolerance attribute.
+
+        Returns:
+            The filename of the DAGMC file created
+        """
+
+        if merge_tolerance is None:
+            merge_tolerance = self.merge_tolerance
+
+        if faceting_tolerance is None:
+            faceting_tolerance = self.faceting_tolerance
+
+        if method is None:
+            method = self.method
+
+        if method == 'trelis':
+            output_filename = self.export_h5m_with_trelis(
+                merge_tolerance=merge_tolerance,
+                faceting_tolerance=faceting_tolerance,
+            )
+
+        elif method == 'pymoab':
+            output_filename = self.export_h5m_with_pymoab(
+                filename=filename,
+                faceting_tolerance=faceting_tolerance,
+            )
+
+        else:
+            raise ValueError("the method using in should be either trelis, \
+                pymoab. {} is not an option".format(method))
+
+        return output_filename
+
+    def export_h5m_with_trelis(
+            self,
+            merge_tolerance: Optional[float] = None,
+            faceting_tolerance: Optional[float] = None,
+    ):
+        """Produces a dagmc.h5m neutronics file compatable with DAGMC
+        simulations using Coreform Trelis.
+
+        Arguments:
+            merge_tolerance: the allowable distance between edges and surfaces
+                before merging these CAD objects into a single CAD object. See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Shape.merge_tolerance attribute.
+            faceting_tolerance: the allowable distance between facetets
+                before merging these CAD objects into a single CAD object See
+                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                for more details. Defaults to None which uses the
+                Shape.faceting_tolerance attribute.
+
+        Returns:
+            str: filename of the DAGMC file produced
+        """
+
+        if merge_tolerance is None:
+            merge_tolerance = self.merge_tolerance
+        if faceting_tolerance is None:
+            faceting_tolerance = self.faceting_tolerance
+
+        self.export_stp()
+        self.export_neutronics_description()
+
+        not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
+            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
+
+        water_tight_h5m = paramak.neutronics_utils.make_watertight(
+            input_filename=not_watertight_file,
+            output_filename="dagmc.h5m"
+        )
+
+        self.h5m_filename = water_tight_h5m
+
+        return water_tight_h5m
+
+    def export_h5m_with_pymoab(
+            self,
             filename: Optional[str] = 'dagmc.h5m',
-            skip_graveyard: Optional[bool] = False,
-            tolerance: Optional[float] = 0.001,
-            graveyard_offset: Optional[float] = 100) -> str:
+            include_graveyard: Optional[bool] = True,
+            faceting_tolerance: Optional[float] = 0.001,
+    ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
         supported method which uses Trelis to produce an imprinted and merged
@@ -1214,17 +1552,15 @@ class Shape:
         be added
 
         Args:
-            filename (str, optional): filename of h5m outputfile
-                Defaults to "dagmc.h5m".
-            skip_graveyard (boolean, optional): filename of h5m outputfile
-                Defaults to False.
-            tolerance (float, optional): the precision of the faceting
-                Defaults to 0.001.
-            graveyard_offset (float, optional): the offset between the largest
-                edge of the geometry and inner bounding shell created. Defualts
-                to 100.
+            filename: filename of h5m outputfile.
+            include_graveyard: specifiy if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
+            faceting_tolerance: the precision of the faceting.
+
         Returns:
-            filename: output h5m filename
+            The filename of the DAGMC file created
         """
 
         path_filename = Path(filename)
@@ -1234,7 +1570,7 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        self.export_stl(self.stl_filename, tolerance=tolerance)
+        self.export_stl(self.stl_filename, tolerance=faceting_tolerance)
 
         moab_core, moab_tags = define_moab_core_and_tags()
 
@@ -1247,8 +1583,8 @@ class Shape:
             stl_filename=self.stl_filename
         )
 
-        if skip_graveyard is False:
-            self.make_graveyard(graveyard_offset=graveyard_offset)
+        if include_graveyard:
+            self.make_graveyard()
             self.graveyard.export_stl(self.graveyard.stl_filename)
             volume_id = 2
             surface_id = 2
@@ -1269,11 +1605,13 @@ class Shape:
 
         moab_core.write_file(str(path_filename))
 
+        self.h5m_filename = str(path_filename)
+
         return str(path_filename)
 
     def export_graveyard(
             self,
-            filename: Optional[str] = "Graveyard.stp",
+            filename: Optional[str] = "graveyard.stp",
             graveyard_offset: Optional[float] = 100) -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls

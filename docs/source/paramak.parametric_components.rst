@@ -527,7 +527,7 @@ ToroidalFieldCoilPrincetonD()
 
 .. |ToroidalFieldCoilPrincetonDallstp| image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
    :width: 250px
-.. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/56687624/101485287-dc3cb680-3952-11eb-8b70-4ef40940ef98.png
+.. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/56687624/112809879-69c32400-9072-11eb-8f9f-34379d74659f.png
    :width: 280px
 .. |ToroidalFieldCoilPrincetonDastp| image:: https://user-images.githubusercontent.com/8583900/94479853-4c012900-01cd-11eb-9b59-0fcd5f4dc531.png
    :width: 170px

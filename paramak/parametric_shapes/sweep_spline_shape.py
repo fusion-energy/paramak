@@ -32,6 +32,7 @@ class SweepSplineShape(SweepMixedShape):
         stp_filename: Optional[str] = "SweepSplineShape.stp",
         stl_filename: Optional[str] = "SweepSplineShape.stl",
         force_cross_section: Optional[bool] = False,
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.992, 0.749, 0.435),
         **kwargs
     ):
 
@@ -43,5 +44,6 @@ class SweepSplineShape(SweepMixedShape):
             stl_filename=stl_filename,
             connection_type="spline",
             force_cross_section=force_cross_section,
+            color=color,
             **kwargs
         )

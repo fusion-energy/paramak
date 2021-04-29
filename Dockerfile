@@ -65,7 +65,7 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 RUN echo installing CadQuery version $cq_version && \
     conda install -c conda-forge -c python python=3.8 && \
     conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
-    pip install jupyter-cadquery==2.0.0 && \
+    pip install jupyter-cadquery==2.1.0 && \
     conda clean -afy
 
 
@@ -89,20 +89,9 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     apt-get --yes install libglfw3-dev ; \
     fi
 
-# Clone and install NJOY2016
-RUN if [ "$include_neutronics" = "true" ] ; \
-    then git clone --single-branch --branch master https://github.com/njoy/NJOY2016.git /opt/NJOY2016 ; \
-    cd /opt/NJOY2016 ; \
-    mkdir build ; \
-    cd build ; \
-    cmake -Dstatic=on .. ; \
-    make 2>/dev/null ; \
-    make install ; \
-    fi
-
 # Clone and install Embree
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then git clone --single-branch --branch master https://github.com/embree/embree.git ; \
+    then git clone --single-branch --branch v3.12.2 --depth 1 https://github.com/embree/embree.git ; \
     cd embree ; \
     mkdir build ; \
     cd build ; \
@@ -118,7 +107,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     mkdir MOAB ; \
     cd MOAB ; \
     mkdir build ; \
-    git clone  --single-branch --branch develop https://bitbucket.org/fathomteam/moab.git ; \
+    git clone  --single-branch --branch 5.2.1 --depth 1 https://bitbucket.org/fathomteam/moab.git ; \
     cd build ; \
     cmake ../moab -DENABLE_HDF5=ON \
                   -DENABLE_NETCDF=ON \
@@ -142,7 +131,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     python setup.py install ; \
     fi
 
-
 # Clone and install Double-Down
 RUN if [ "$include_neutronics" = "true" ] ; \
     then git clone --single-branch --branch main https://github.com/pshriwise/double-down.git ; \
@@ -160,7 +148,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 RUN if [ "$include_neutronics" = "true" ] ; \
     then mkdir DAGMC ; \
     cd DAGMC ; \
-    git clone --single-branch --branch develop https://github.com/svalinn/DAGMC.git ; \
+    git clone --single-branch --branch 3.2.0 --depth 1 https://github.com/svalinn/DAGMC.git ; \
     mkdir build ; \
     cd build ; \
     cmake ../DAGMC -DBUILD_TALLY=ON \
@@ -188,19 +176,22 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     make -j"$compile_cores" install ; \
     cd ..  ; \
     pip install -e .[test] ; \
-    /opt/openmc/tools/ci/download-xs.sh ; \
     fi
-
-ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
 
 RUN if [ "$include_neutronics" = "true" ] ; \
     then pip install vtk ; \
     pip install parametric_plasma_source ; \
-    pip install neutronics_material_maker ; \
+    pip install neutronics_material_maker==0.3.2 ; \
+    pip install openmc_data_downloader ; \
+    openmc_data_downloader -e all -l ENDFB-7.1-NNDC TENDL-2019 -p neutron photon ; \
     fi
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+ENV OPENMC_CROSS_SECTIONS=/cross_sections.xml
+ENV PATH="/MOAB/build/bin:${PATH}"
+ENV PATH="/DAGMC/bin:${PATH}"
 
 RUN mkdir /home/paramak
 EXPOSE 8888

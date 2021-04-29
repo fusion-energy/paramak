@@ -33,6 +33,7 @@ class SweepMixedShape(Shape):
         stp_filename: Optional[str] = "SweepMixedShape.stp",
         stl_filename: Optional[str] = "SweepMixedShape.stl",
         force_cross_section: Optional[bool] = False,
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.792, 0.698, 0.839),
         **kwargs
     ):
 
@@ -40,6 +41,7 @@ class SweepMixedShape(Shape):
             workplane=workplane,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
 

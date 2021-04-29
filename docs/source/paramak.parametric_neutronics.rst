@@ -10,7 +10,11 @@ with a suite of neutronics codes (MCNP, Fluka, Geant4, OpenMC).
 The automated simulations supported within the paramak are via OpenMC however
 one could also carry out simulations in other neutronics codes using the
 dagmc.h5m file created. Moab can be used to inspect the dagmc.h5 file and file
-the material tag names. mbsize -ll dagmc.h5m | grep 'mat:'
+the material tag names.
+
+.. code-block:: bash
+
+   mbsize -ll dagmc.h5m | grep 'mat:'
 
 The creation of the dagmc.h5m file can be carried out via three routes.
 

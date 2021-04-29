@@ -92,6 +92,8 @@ class BallReactor(paramak.Reactor):
 
         super().__init__([])
 
+        self.method = 'trelis'
+
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
         self.center_column_shield_radial_thickness = \
@@ -117,6 +119,7 @@ class BallReactor(paramak.Reactor):
         self.outboard_tf_coil_poloidal_thickness = \
             outboard_tf_coil_poloidal_thickness
         self.divertor_position = divertor_position
+        self.rotation_angle = rotation_angle
 
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
         if self.plasma_gap_vertical_thickness is None:
@@ -151,6 +154,22 @@ class BallReactor(paramak.Reactor):
             self.outer_plasma_gap_radial_thickness,
             self.plasma_gap_vertical_thickness,
             self.major_radius - self.minor_radius]
+
+    @property
+    def rotation_angle(self):
+        return self._rotation_angle
+
+    @rotation_angle.setter
+    def rotation_angle(self, value):
+        if value == 360:
+            msg = (
+                "360 degree rotation may result in a "
+                "Standard_ConstructionError or AttributeError"
+            )
+            warnings.warn(msg, UserWarning)
+        elif value > 360:
+            raise ValueError('rotation_angle can not be larger than 360')
+        self._rotation_angle = value
 
     @property
     def pf_coil_radial_thicknesses(self):
@@ -191,7 +210,6 @@ class BallReactor(paramak.Reactor):
         """
         shapes_and_components = []
 
-        self._rotation_angle_check()
         shapes_and_components.append(self._make_plasma())
         self._make_radial_build()
         self._make_vertical_build()
@@ -203,13 +221,6 @@ class BallReactor(paramak.Reactor):
         shapes_and_components += self._make_tf_coils()
 
         self.shapes_and_components = shapes_and_components
-
-    def _rotation_angle_check(self):
-
-        if self.rotation_angle == 360:
-            msg = "360 degree rotation may result " + \
-                "in a Standard_ConstructionError or AttributeError"
-            warnings.warn(msg, UserWarning)
 
     def _make_plasma(self):
 
@@ -349,11 +360,11 @@ class BallReactor(paramak.Reactor):
             inner_radius=self._inboard_tf_coils_start_radius,
             outer_radius=self._inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
-            # color=centre_column_color,
             stp_filename="inboard_tf_coils.stp",
             stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
+            color=(0, 0, 1)
         )
         return self._inboard_tf_coils
 
@@ -364,7 +375,7 @@ class BallReactor(paramak.Reactor):
             inner_radius=self._center_column_shield_start_radius,
             outer_radius=self._center_column_shield_end_radius,
             rotation_angle=self.rotation_angle,
-            # color=centre_column_color,
+            color=(0., 0.333, 0.),
             stp_filename="center_column_shield.stp",
             stl_filename="center_column_shield.stl",
             name="center_column_shield",
@@ -379,7 +390,8 @@ class BallReactor(paramak.Reactor):
             height=self._center_column_shield_height * 1.5,
             inner_radius=0,
             outer_radius=self._center_column_shield_end_radius,
-            rotation_angle=360
+            rotation_angle=360,
+            color=(0., 0., 1.)
         )
 
         self._firstwall = paramak.BlanketFP(
@@ -392,6 +404,7 @@ class BallReactor(paramak.Reactor):
             material_tag="firstwall_mat",
             stp_filename="firstwall.stp",
             stl_filename="firstwall.stl",
+            color=(0.5, 0.5, 0.5),
             cut=[self._center_column_cutter]
         )
 
@@ -406,6 +419,7 @@ class BallReactor(paramak.Reactor):
             material_tag="blanket_mat",
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
+            color=(0., 1., 0.498),
             cut=[self._center_column_cutter])
 
         self._blanket_rear_wall = paramak.BlanketFP(
@@ -420,6 +434,7 @@ class BallReactor(paramak.Reactor):
             material_tag="blanket_rear_wall_mat",
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
+            color=(0., 1., 1.),
             cut=[self._center_column_cutter],
         )
 
@@ -459,6 +474,7 @@ class BallReactor(paramak.Reactor):
             stl_filename="divertor.stl",
             name="divertor",
             material_tag="divertor_mat",
+            color=(1., 0.667, 0.),
             rotation_angle=self.rotation_angle
         )
 

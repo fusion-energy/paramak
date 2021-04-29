@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Optional, Tuple
 from paramak import RotateStraightShape
 
 
@@ -23,6 +23,8 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         stp_filename: Optional[str] = "CenterColumnShieldCylinder.stp",
         stl_filename: Optional[str] = "CenterColumnShieldCylinder.stl",
         material_tag: Optional[str] = "center_column_shield_mat",
+        color: Optional[Tuple[float, float, float,
+                              Optional[float]]] = (0., 0.333, 0.),
         **kwargs
     ) -> None:
 
@@ -30,6 +32,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
 
