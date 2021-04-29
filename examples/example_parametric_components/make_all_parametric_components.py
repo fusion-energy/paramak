@@ -424,6 +424,14 @@ def main():
     )
     all_components.append(component)
 
+    component = paramak.VacuumVesselInnerLeg(
+        inner_height=760,
+        inner_radius=400,
+        inner_leg_radius=250,
+        thickness=20
+    )
+    all_components.append(component)
+
     return all_components
 
 
