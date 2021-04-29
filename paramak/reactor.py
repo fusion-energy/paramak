@@ -362,6 +362,10 @@ class Reactor:
         interaction with neutrons. However, it can be added if the
         include_plasma argument is set to True.
 
+        Args:
+            include_plasma: Should the plasma material be included in the JSON
+                returned.
+
         Returns:
             dictionary: a dictionary of materials and filenames for the reactor
         """
@@ -692,6 +696,7 @@ class Reactor:
             self,
             filename: Optional[str] = 'dagmc.h5m',
             include_graveyard: Optional[bool] = True,
+            include_plasma: Optional[bool] = False,
             method: Optional[str] = None,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
@@ -740,12 +745,14 @@ class Reactor:
                 filename=filename,
                 merge_tolerance=merge_tolerance,
                 faceting_tolerance=faceting_tolerance,
+                include_plasma=include_plasma,
             )
         elif method == 'pymoab':
             output_filename = self.export_h5m_with_pymoab(
                 filename=filename,
                 include_graveyard=include_graveyard,
-                faceting_tolerance=faceting_tolerance
+                faceting_tolerance=faceting_tolerance,
+                include_plasma=include_plasma,
             )
 
         else:
@@ -823,6 +830,7 @@ class Reactor:
             filename: Optional[str] = 'dagmc.h5m',
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
+            include_plasma: Optional[bool] = False,
     ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations using Coreform Trelis.
@@ -853,7 +861,7 @@ class Reactor:
             self.export_neutronics_description(
                 include_graveyard=True,
                 include_sector_wedge=True,
-                include_plasma=False,
+                include_plasma=include_plasma,
             )
             self.export_stp(
                 include_graveyard=True,
@@ -887,7 +895,8 @@ class Reactor:
             self,
             filename: Optional[str] = 'dagmc.h5m',
             include_graveyard: Optional[bool] = True,
-            faceting_tolerance: Optional[float] = None
+            faceting_tolerance: Optional[float] = None,
+            include_plasma: Optional[bool] = False,
     ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
@@ -902,10 +911,13 @@ class Reactor:
                 using Reactor.graveyard_size and Reactor.graveyard_offset
                 attribute values.
             faceting_tolerance: the precision of the faceting.
+            include_plasma: Should the plasma material be included in the h5m
+                file.
 
         Returns:
             The filename of the DAGMC file created
         """
+
         if faceting_tolerance is None:
             faceting_tolerance = self.faceting_tolerance
 
@@ -922,18 +934,25 @@ class Reactor:
         volume_id = 1
 
         if isinstance(self.shapes_and_components, list):
-            for item in self.shapes_and_components:
+            for entry in self.shapes_and_components:
 
-                item.export_stl(
-                    item.stl_filename,
+                if include_plasma is False and (isinstance(
+                    entry,
+                    (paramak.Plasma,
+                    paramak.PlasmaFromPoints,
+                    paramak.PlasmaBoundaries)) is True or entry.name == 'plasma'):
+                    continue
+
+                entry.export_stl(
+                    entry.stl_filename,
                     tolerance=faceting_tolerance)
                 moab_core = add_stl_to_moab_core(
                     moab_core,
                     surface_id,
                     volume_id,
-                    item.material_tag,
+                    entry.material_tag,
                     moab_tags,
-                    item.stl_filename)
+                    entry.stl_filename)
                 volume_id += 1
                 surface_id += 1
         else:
