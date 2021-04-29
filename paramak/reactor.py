@@ -936,11 +936,12 @@ class Reactor:
         if isinstance(self.shapes_and_components, list):
             for entry in self.shapes_and_components:
 
-                if include_plasma is False and (isinstance(
-                    entry,
-                    (paramak.Plasma,
-                    paramak.PlasmaFromPoints,
-                    paramak.PlasmaBoundaries)) is True or entry.name == 'plasma'):
+                if include_plasma is False and (
+                    isinstance(
+                        entry,
+                        (paramak.Plasma,
+                         paramak.PlasmaFromPoints,
+                         paramak.PlasmaBoundaries)) is True or entry.name == 'plasma'):
                     continue
 
                 entry.export_stl(
