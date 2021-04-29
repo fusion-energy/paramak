@@ -7,7 +7,7 @@ import openmc
 import paramak
 
 
-def make_model_and_simulate():
+def main():
     simulation_values = []
     for mid_radius in [60, 70, 80]:
 
@@ -17,7 +17,8 @@ def make_model_and_simulate():
             inner_radius=50,
             mid_radius=mid_radius,
             outer_radius=100,
-            material_tag='center_column_shield_mat'
+            material_tag='center_column_shield_mat',
+            method='pymoab',
         )
 
         my_shape.export_stp('my_shape' + str(mid_radius) + '.stp')
@@ -32,14 +33,16 @@ def make_model_and_simulate():
         my_model = paramak.NeutronicsModel(
             geometry=my_shape,
             source=source,
-            materials={'center_column_shield_mat': 'eurofer'},
+            materials={
+                'center_column_shield_mat': 'WB'},
+            # WB is tungsten boride
             cell_tallies=['heating'],
             simulation_batches=10,  # should be increased for more accurate result
-            simulation_particles_per_batch=10  # settings are low to reduce time required
+            simulation_particles_per_batch=10,  # settings are low to reduce time required
         )
 
         # performs an openmc simulation on the model
-        my_model.simulate(method='pymoab')
+        my_model.simulate()
 
         # extracts the heat from the results dictionary
         heat = my_model.results['center_column_shield_mat_heating']['Watts']['result']
@@ -64,4 +67,4 @@ def make_model_and_simulate():
 
 
 if __name__ == "__main__":
-    make_model_and_simulate()
+    main()

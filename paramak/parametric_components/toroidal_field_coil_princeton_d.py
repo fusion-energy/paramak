@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Optional, Tuple
 
 import numpy as np
 from paramak import ExtrudeMixedShape
@@ -38,6 +38,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         stp_filename: Optional[str] = "ToroidalFieldCoilPrincetonD.stp",
         stl_filename: Optional[str] = "ToroidalFieldCoilPrincetonD.stl",
         material_tag: Optional[str] = "outer_tf_coil_mat",
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
         **kwargs
     ) -> None:
 
@@ -46,6 +47,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            color=color,
             **kwargs
         )
 
@@ -130,7 +132,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         """Finds the XZ points joined by connections that describe the 2D
         profile of the toroidal field coil shape."""
         # compute inner points
-        R_inner, Z_inner = self._compute_inner_points(self.R1, self.R2)
+        R_inner, Z_inner = self._compute_inner_points(
+            self.R1 + self.thickness, self.R2)
 
         # compute outer points
         dz_dr = np.diff(Z_inner) / np.diff(R_inner)

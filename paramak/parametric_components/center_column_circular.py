@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Optional, Tuple
 from paramak import RotateMixedShape
 
 
@@ -28,6 +28,8 @@ class CenterColumnShieldCircular(RotateMixedShape):
         stp_filename: Optional[str] = "CenterColumnShieldCircular.stp",
         stl_filename: Optional[str] = "CenterColumnShieldCircular.stl",
         material_tag: Optional[str] = "center_column_shield_mat",
+        color: Optional[Tuple[float, float, float,
+                              Optional[float]]] = (0., 0.333, 0.),
         **kwargs
     ) -> None:
 
@@ -35,6 +37,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
 

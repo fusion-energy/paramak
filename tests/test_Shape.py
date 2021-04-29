@@ -1,4 +1,5 @@
 
+import json
 import os
 import unittest
 from pathlib import Path
@@ -11,6 +12,15 @@ import pytest
 class TestShape(unittest.TestCase):
 
     def setUp(self):
+
+        self.my_shape = paramak.CenterColumnShieldHyperbola(
+            height=500,
+            inner_radius=50,
+            mid_radius=60,
+            outer_radius=100,
+            material_tag='center_column_shield_mat',
+            method='pymoab'
+        )
 
         self.test_rotate_mixed_shape = paramak.RotateMixedShape(
             rotation_angle=1,
@@ -37,6 +47,70 @@ class TestShape(unittest.TestCase):
             ]
         )
 
+    def test_graveyard_size_setting_type_checking(self):
+        """Attempts to make a shape with a graveyard_size that is an float
+        which should raise a ValueError"""
+
+        def incorrect_graveyard_size_type():
+            self.my_shape.graveyard_size = 'coucou'
+        self.assertRaises(TypeError, incorrect_graveyard_size_type)
+
+    def test_graveyard_size_setting_magnitude_checking(self):
+        """Attempts to make a shape with a graveyard_size that is an int
+        which should raise a ValueError"""
+
+        def incorrect_graveyard_size_size():
+            self.my_shape.graveyard_size = -10
+        self.assertRaises(ValueError, incorrect_graveyard_size_size)
+
+    def test_graveyard_error_when_no_offset_or_size(self):
+        """Attempts to make a shape with a graveyard_size that is an int
+        which should raise a ValueError"""
+
+        def incorrect_graveyard():
+            test_shape = paramak.RotateStraightShape(
+                points=[(0, 0), (0, 20), (20, 20)],
+                graveyard_size=None, graveyard_offset=None)
+            test_shape.make_graveyard()
+
+        self.assertRaises(ValueError, incorrect_graveyard)
+
+    def test_show_runs_without_error(self):
+        """checks that the jupyter notebook (with cadquery addition) runs
+        without error."""
+
+        self.test_extrude_mixed_shape.show()
+
+    def test_make_graveyard_offset(self):
+        """checks that the graveyard can be exported with the correct default
+        parameters and that these parameters can be changed"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            graveyard_size=None)
+        os.system("rm graveyard.stp")
+
+        test_shape.make_graveyard(graveyard_offset=50)
+        graveyard_volume_1 = test_shape.graveyard.volume
+
+        test_shape.make_graveyard(graveyard_offset=200)
+        graveyard_volume_2 = test_shape.graveyard.volume
+
+        assert graveyard_volume_2 > graveyard_volume_1
+
+    def test_export_h5m_makes_dagmc_file(self):
+        """Makes a NeutronicsModel from a shapes, then makes the h5m file"""
+
+        # tests method using class attribute
+        os.system('rm dagmc.h5m')
+        self.my_shape.export_h5m()
+        assert Path('dagmc.h5m').exists() is True
+
+        # tests method using method argument
+        os.system('rm dagmc.h5m')
+        self.my_shape.export_h5m(method='pymoab')
+        assert Path('dagmc.h5m').exists() is True
+
     def test_shape_default_properties(self):
         """Creates a Shape object and checks that the points attribute has
         a default of None."""
@@ -57,6 +131,54 @@ class TestShape(unittest.TestCase):
         test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         assert test_shape.azimuth_placement_angle == [0, 90, 180, 270]
 
+    def test_incorrect_graveyard_offset_too_small(self):
+
+        def incorrect_graveyard_offset_too_small():
+            """Set graveyard_offset as a negative number which should raise an error"""
+
+            self.my_shape.graveyard_offset = -3
+
+        self.assertRaises(
+            ValueError,
+            incorrect_graveyard_offset_too_small
+        )
+
+    def test_incorrect_graveyard_offset_wrong_type(self):
+
+        def incorrect_graveyard_offset_wrong_type():
+            """Set graveyard_offset as a string which should raise an error"""
+
+            self.my_shape.graveyard_offset = 'coucou'
+
+        self.assertRaises(
+            TypeError,
+            incorrect_graveyard_offset_wrong_type
+        )
+
+    def test_missing_filename_arg_in_export_stp(self):
+        """Checks that an error is raised when a stp export is requested without a filename."""
+
+        def incorrect_args():
+            self.my_shape.stp_filename = None
+            self.my_shape.export_stp()
+
+        self.assertRaises(
+            ValueError,
+            incorrect_args
+        )
+
+    def test_missing_filename_arg_in_export_stl(self):
+        """Checks that an error is raised when a stl export is requested without a filename."""
+
+        def incorrect_args():
+            self.my_shape.stl_filename = None
+            self.my_shape.export_stl()
+
+        self.assertRaises(
+            ValueError,
+            incorrect_args
+        )
+
     def test_incorrect_color_values(self):
         """Checks that an error is raised when the color of a shape is
         defined as an invalid string."""
@@ -67,6 +189,30 @@ class TestShape(unittest.TestCase):
         self.assertRaises(
             ValueError,
             incorrect_color_string
+        )
+
+    def test_incorrect_method(self):
+        """Checks that an error is raised when the method of a shape is
+        defined as an invalid string."""
+
+        def incorrect_method_string():
+            self.my_shape.method = 'coucou'
+
+        self.assertRaises(
+            ValueError,
+            incorrect_method_string
+        )
+
+    def test_incorrect_method_in_export_h5m(self):
+        """Checks that an error is raised when the export_h5m is used with an
+        incorrect method string."""
+
+        def incorrect_method_string():
+            self.my_shape.export_h5m(method='coucou')
+
+        self.assertRaises(
+            ValueError,
+            incorrect_method_string
         )
 
     def test_incorrect_workplane(self):
@@ -584,6 +730,93 @@ class TestShape(unittest.TestCase):
 
         for i in range(len(incorrect_values)):
             self.assertRaises(ValueError, set_value)
+
+    def test_export_neutronics_description_without_suffix(self):
+        """Creates a neutronics description with and without the .json file
+        extention and checks that the output file exists"""
+
+        test_shape = paramak.Shape()
+        test_shape.material_tag = 'm1'
+        test_shape.stp_filename = 'test_shape.stp'
+
+        os.system('rm test_shape.json')
+        test_shape.export_neutronics_description('test_shape')
+
+        assert Path('test_shape.json').is_file()
+        test_shape.export_neutronics_description('test_shape2.json')
+        assert Path('test_shape2.json').is_file()
+
+    def test_export_neutronics_description_contents(self):
+        """Creates a neutronics description for a shape and checks the
+        contents is a list with a dictionary entry that has specific keys and
+        values"""
+
+        test_shape = paramak.Shape()
+        test_shape.material_tag = 'm1'
+        test_shape.stp_filename = 'test_shape.stp'
+
+        os.system('rm *.json')
+        test_shape.export_neutronics_description('test_shape3.json')
+
+        with open('test_shape3.json') as json_file:
+            data = json.load(json_file)
+
+        assert isinstance(data, list)
+        assert len(data) == 1
+
+        assert 'stp_filename' in data[0].keys()
+        assert 'material_tag' in data[0].keys()
+        # TODO this can be removed in the future
+        assert 'stp_filename' in data[0].keys()
+
+        assert data[0]['material_tag'] == 'm1'
+        assert data[0]['stp_filename'] == 'test_shape.stp'
+        # TODO this can be removed in the future
+        assert data[0]['stp_filename'] == 'test_shape.stp'
+
+    def test_export_vtk(self):
+        """Creates vtk files from the h5m files and checks they exist"""
+
+        os.system('rm *.h5m *.vtk')
+
+        assert self.my_shape.h5m_filename is None
+        self.my_shape.export_h5m_with_pymoab()
+        self.my_shape.export_vtk()
+        assert Path('dagmc.h5m').is_file
+        assert Path('dagmc.vtk').is_file
+        assert Path('dagmc_no_graveyard.vtk').is_file
+        assert self.my_shape.h5m_filename == 'dagmc.h5m'
+
+        self.my_shape.export_vtk(filename='custom_filename.vtk')
+        assert Path('custom_filename.vtk').is_file
+
+        self.my_shape.export_vtk(filename='suffixless_filename')
+        assert Path('suffixless_filename.vtk').is_file
+
+    def test_export_vtk_without_h5m_raises_error(self):
+        """exports a h5m file when shapes_and_components is set to a string"""
+
+        def check_correct_error_is_rasied():
+            os.system('rm *.h5m *.vtk')
+            self.my_shape.export_vtk()
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
+
+    def test_setting_color_incorrectly_too_large(self):
+        """Sets the shape.colour outside of the the 0 to 1 range"""
+
+        def check_correct_error_is_rasied():
+            self.my_shape.color = (255, 255, 2)
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
+
+    def test_setting_color_incorrectly_too_small(self):
+        """Sets the shape.colour outside of the the 0 to 1 range"""
+
+        def check_correct_error_is_rasied():
+            self.my_shape.color = (-1, 0, 0)
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
 
 
 if __name__ == "__main__":

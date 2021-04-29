@@ -188,9 +188,11 @@ def extend(point_a: Tuple[float, float], point_b: Tuple[float, float],
     return xc, yc
 
 
-def find_center_point_of_circle(point_a: Tuple[float, float],
-                                point_b: Tuple[float, float],
-                                point_3: Tuple[float, float]) -> Tuple[Tuple[float, float], float]:
+def find_center_point_of_circle(
+        point_a: Tuple[float, float],
+        point_b: Tuple[float, float],
+        point_3: Tuple[float, float]
+) -> Tuple[Tuple[float, float], float]:
     """
     Calculates the center and the radius of a circle
     passing through 3 points.
@@ -414,8 +416,7 @@ def plotly_trace(
         mode: The mode to use for the Plotly.Scatter graph. Options include
             "markers", "lines" and "markers+lines". Defaults to
             "markers+lines"
-        name: The name to use in the graph legend
-        color
+        name: The name to use in the graph legend color
 
     Returns:
         plotly trace: trace object

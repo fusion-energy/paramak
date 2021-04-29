@@ -41,7 +41,7 @@ class TestDemo2015Reactor(unittest.TestCase):
         output_filenames = [
             'blanket.stp',
             'divertor.stp',
-            'Graveyard.stp',
+            'graveyard.stp',
             'outboard_pf_coils.stp',
             'pf_coils_1.stp',
             'pf_coils_2.stp',
@@ -66,7 +66,7 @@ class TestDemo2015Reactor(unittest.TestCase):
         output_filenames = [
             'blanket.stp',
             'divertor.stp',
-            'Graveyard.stp',
+            'graveyard.stp',
             'outboard_pf_coils.stp',
             'pf_coils_1.stp',
             'pf_coils_2.stp',

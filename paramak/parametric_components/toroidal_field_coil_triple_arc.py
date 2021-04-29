@@ -38,6 +38,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         stp_filename: Optional[str] = "ToroidalFieldCoilTripleArc.stp",
         stl_filename: Optional[str] = "ToroidalFieldCoilTripleArc.stl",
         material_tag: Optional[str] = "outer_tf_coil_mat",
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
         **kwargs
     ) -> None:
 
@@ -46,6 +47,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            color=color,
             **kwargs
         )
         self.R1 = R1
@@ -115,12 +117,12 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
 
         # create inner coordinates
         R_inner, Z_inner = self._compute_curve(
-            self.R1, self.h * 0.5, radii=(small_radius, mid_radius),
+            self.R1 + thickness, self.h * 0.5, radii=(small_radius, mid_radius),
             coverages=(small_coverage, mid_coverage))
 
         # create outer coordinates
         R_outer, Z_outer = self._compute_curve(
-            self.R1 - thickness, self.h * 0.5,
+            self.R1, self.h * 0.5,
             radii=(small_radius + thickness, mid_radius + thickness),
             coverages=(small_coverage, mid_coverage))
         R_outer, Z_outer = np.flip(R_outer), np.flip(Z_outer)

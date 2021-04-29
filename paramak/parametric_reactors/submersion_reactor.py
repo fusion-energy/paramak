@@ -94,6 +94,8 @@ class SubmersionTokamak(paramak.Reactor):
 
         super().__init__([])
 
+        self.method = 'trelis'
+
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
         self.center_column_shield_radial_thickness = (
@@ -431,6 +433,7 @@ class SubmersionTokamak(paramak.Reactor):
             stop_angle=270,
             thickness=self.firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
+            color=(0.5, 0.5, 0.5),
         )
 
         self._firstwall = paramak.BlanketFP(
@@ -445,11 +448,12 @@ class SubmersionTokamak(paramak.Reactor):
             name="outboard_firstwall",
             material_tag="firstwall_mat",
             union=self._inboard_firstwall,
+            color=(0.5, 0.5, 0.5),
         )
         return self._firstwall
 
     def _make_divertor(self):
-        fw_enveloppe_inboard = paramak.BlanketFP(
+        fw_envelope_inboard = paramak.BlanketFP(
             plasma=self._plasma,
             offset_from_plasma=self.inner_plasma_gap_radial_thickness,
             start_angle=90,
@@ -458,7 +462,7 @@ class SubmersionTokamak(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        fw_enveloppe = paramak.BlanketFP(
+        fw_envelope = paramak.BlanketFP(
             plasma=self._plasma,
             offset_from_plasma=self.outer_plasma_gap_radial_thickness,
             start_angle=90,
@@ -469,7 +473,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="outboard_firstwall.stl",
             name="outboard_firstwall",
             material_tag="firstwall_mat",
-            union=fw_enveloppe_inboard,
+            union=fw_envelope_inboard,
         )
         divertor_height = self._blanket_rear_wall_end_height
 
@@ -488,12 +492,13 @@ class SubmersionTokamak(paramak.Reactor):
                 (self._divertor_end_radius, divertor_height_top),
                 (self._divertor_start_radius, divertor_height_top)
             ],
-            intersect=fw_enveloppe,
+            intersect=fw_envelope,
             rotation_angle=self.rotation_angle,
             stp_filename="divertor.stp",
             stl_filename="divertor.stl",
             name="divertor",
-            material_tag="divertor_mat"
+            material_tag="divertor_mat",
+            color=(1., 0.667, 0.),
         )
 
         self._firstwall.cut = self._divertor
@@ -515,6 +520,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._inboard_blanket.solid = self._inboard_blanket.solid.solids(
             cq.selectors.NearestToPointSelector((0, 0, 0))
         )
+
         # this is the outboard fused /unioned with the inboard blanket
 
         self._blanket = paramak.BlanketFP(
@@ -529,12 +535,13 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="blanket.stl",
             name="blanket",
             material_tag="blanket_mat",
+            color=(0., 1., 0.498),
             union=self._inboard_blanket,
         )
         return self._blanket
 
     def _make_supports(self):
-        blanket_enveloppe = paramak.BlanketFP(
+        blanket_envelope = paramak.BlanketFP(
             plasma=self._plasma,
             start_angle=90,
             stop_angle=-90,
@@ -565,9 +572,11 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="supports.stl",
             name="supports",
             material_tag="supports_mat",
-            intersect=blanket_enveloppe,
+            color=(0., 0., 0.),
+            intersect=blanket_envelope,
         )
-        self._blanket.cut = self._supports
+
+        self._blanket.solid = self._blanket.solid.cut(self._supports.solid)
 
         return self._supports
 
@@ -629,6 +638,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="outboard_rear_blanket_wall.stl",
             name="outboard_rear_blanket_wall",
             material_tag="blanket_rear_wall_mat",
+            color=(0., 1., 1.),
             union=[
                 self._outboard_rear_blanket_wall_upper,
                 self._outboard_rear_blanket_wall_lower],
@@ -648,6 +658,7 @@ class SubmersionTokamak(paramak.Reactor):
             stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
+            color=(0, 0, 1),
         )
         list_of_components.append(self._inboard_tf_coils)
         if self._tf_info_provided:
