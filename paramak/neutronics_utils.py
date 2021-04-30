@@ -443,7 +443,7 @@ def add_stl_to_moab_core(
         tags['name'],
         group_set,
         dag_material_tag
-        )
+    )
     moab_core.tag_set_data(tags['geom_dimension'], group_set, 4)
 
     # add the volume to this group set
