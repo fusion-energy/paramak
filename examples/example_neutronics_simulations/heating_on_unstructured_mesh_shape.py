@@ -15,8 +15,7 @@ rotated_spline = paramak.RotateSplineShape(
         (400, 300),
         (500, 20),
     ],
-    tet_mesh=
-)
+    tet_mesh=)
 
 rotated_spline.export_h5m(
     # merge_tolerance,
