@@ -392,6 +392,7 @@ class BallReactor(paramak.Reactor):
             stp_filename="firstwall.stp",
             stl_filename="firstwall.stl",
             color=(0.5, 0.5, 0.5),
+            name='firstwall',
             cut=[self._center_column_cutter]
         )
 
@@ -407,6 +408,7 @@ class BallReactor(paramak.Reactor):
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
             color=(0., 1., 0.498),
+            name='blanket',
             cut=[self._center_column_cutter])
 
         self._blanket_rear_wall = paramak.BlanketFP(
@@ -422,6 +424,7 @@ class BallReactor(paramak.Reactor):
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
             color=(0., 1., 1.),
+            name='blanket_rear_wall',
             cut=[self._center_column_cutter],
         )
 

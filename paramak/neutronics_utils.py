@@ -303,8 +303,12 @@ def export_vtk(
     if include_graveyard:
         tags_to_remove = None
     else:
-        tags_to_remove = 'mat:graveyard', 'graveyard.stp', 'reflective'
-
+        tags_to_remove = [
+            'graveyard.stp',
+            'mat:graveyard',
+            'reflective',
+            'mat:vacuum',
+            'cuttingwedge.stp']
     remove_tags(
         input=str(path_h5m_filename),
         output=str(path_filename),

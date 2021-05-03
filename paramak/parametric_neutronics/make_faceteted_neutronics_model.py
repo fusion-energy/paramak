@@ -210,10 +210,12 @@ def imprint_and_merge_geometry():
     cubit.cmd("merge vol all group_results")
     cubit.cmd("graphics tol angle 3")
 
+
 def scale_geometry(geometry_details):
-  for entry in geometry_details:
-    if 'scale' in entry.keys():
-      cubit.cmd('volume ' + ' '.join(entry['volumes'] + ' scale ' + str(entry['scale'])))
+    for entry in geometry_details:
+        if 'scale' in entry.keys():
+            cubit.cmd('volume ' + ' '.join(entry['volumes']) + ' scale ' + str(entry['scale']))
+
 
 def save_output_files(h5m_filename, trelis_filename, cubit_filename, geometry_details_filename):
     """This saves the output files"""
