@@ -595,3 +595,17 @@ VacuumVessel()
 .. automodule:: paramak.parametric_components.vacuum_vessel
    :members:
    :show-inheritance:
+
+VacuumVesselInnerLeg()
+^^^^^^^^^^^^^^^^^^^^^^
+
+|VacuumVesselInnerLegstp| |VacuumVesselInnerLegsvg|
+
+.. |VacuumVesselInnerLegstp| image:: https://user-images.githubusercontent.com/8583900/116575888-fa598200-a906-11eb-8c87-1fcfb7917342.png
+   :width: 255
+.. |VacuumVesselInnerLegsvg| image:: https://user-images.githubusercontent.com/58937462/116578576-76ed6000-a909-11eb-9592-d87f2e702514.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.vacuum_vessel_inner_leg
+   :members:
+   :show-inheritance:

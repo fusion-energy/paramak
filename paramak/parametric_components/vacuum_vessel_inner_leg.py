@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 import cadquery as cq
 from paramak import RotateStraightShape
 
@@ -7,26 +9,24 @@ class VacuumVesselInnerLeg(RotateStraightShape):
     """A cylindrical vessel volume with constant thickness.
 
     Arguments:
-        inner_height (float): height of the vessel.
-        inner_radius (float): the inner radius of the vessel.
-        inner_leg_radius (float): the inner radius of the inner leg.
-        thickness (float): thickness of the vessel
-        stp_filename (str, optional): defaults to
-            "CenterColumnShieldCylinder.stp".
-        stl_filename (str, optional): defaults to
-            "CenterColumnShieldCylinder.stl".
-        material_tag (str, optional): defaults to "center_column_shield_mat".
+        inner_height: height of the vessel.
+        inner_radius: the inner radius of the vessel.
+        inner_leg_radius: the inner radius of the inner leg.
+        thickness: thickness of the vessel
+        stp_filename: defaults to "CenterColumnShieldCylinder.stp".
+        stl_filename: defaults to "CenterColumnShieldCylinder.stl".
+        material_tag: defaults to "center_column_shield_mat".
     """
 
     def __init__(
         self,
-        inner_height,
-        inner_radius,
-        inner_leg_radius,
-        thickness,
-        stp_filename="CenterColumnShieldCylinder.stp",
-        stl_filename="CenterColumnShieldCylinder.stl",
-        material_tag="center_column_shield_mat",
+        inner_height: float,
+        inner_radius: float,
+        inner_leg_radius: float,
+        thickness: float,
+        stp_filename: Optional[float] = "CenterColumnShieldCylinder.stp",
+        stl_filename: Optional[float] = "CenterColumnShieldCylinder.stl",
+        material_tag: Optional[float] = "center_column_shield_mat",
         **kwargs
     ):
         self.inner_height = inner_height
