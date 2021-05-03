@@ -392,8 +392,9 @@ def add_stl_to_moab_core(
         moab_core (pymoab.core.Core):
         surface_id (int): the id number to apply to the surface
         volume_id (int): the id numbers to apply to the volumes
-        material_name (str): the material tag name to add. Will be prepended
-            with mat:
+        material_name (str): the material tag name to add. the value provided
+            will be prepended with "mat:" unless it is "reflective" which is
+            a special case and therefore will remain as is.
         tags (pymoab tag_handle): the MOAB tags
         stl_filename (str): the filename of the stl file to load into the moab
             core
@@ -432,10 +433,17 @@ def add_stl_to_moab_core(
     group_set = moab_core.create_meshset()
     moab_core.tag_set_data(tags['category'], group_set, "Group")
 
+    # reflective is a special case that should not have mat: in front
+    if not material_name == 'reflective':
+        dag_material_tag = "mat:{}".format(material_name)
+    else:
+        dag_material_tag = material_name
+
     moab_core.tag_set_data(
         tags['name'],
         group_set,
-        "mat:{}".format(material_name))
+        dag_material_tag
+    )
     moab_core.tag_set_data(tags['geom_dimension'], group_set, 4)
 
     # add the volume to this group set

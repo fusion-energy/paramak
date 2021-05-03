@@ -40,8 +40,8 @@ class TestSparc2020Reactor(unittest.TestCase):
             "efccu_coils_6.stp",
             "antenna.stp",
             "tf_coil.stp",
-            "vacvessel.stp",
-            "inner_vessel.stp",
+            "vacuum_vessel.stp",
+            "vacuum_vessel_inner.stp",
             "graveyard.stp",
         ]
 
