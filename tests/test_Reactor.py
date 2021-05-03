@@ -1210,6 +1210,30 @@ class TestReactor(unittest.TestCase):
         my_reactor.faceting_tolerance = 1e-2
         my_reactor.export_h5m_with_pymoab(faceting_tolerance=None)
 
+    def test_export_h5m_with_pymoab_without_plasma(self):
+        """exports a h5m file with pymoab without the plasma"""
+
+        os.system('rm *.stl')
+
+        test_shape1 = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            stl_filename='RotateStraightShape.stl'
+        )
+        test_shape2 = paramak.Plasma(
+            stl_filename='plasma.stl'
+        )
+
+        my_reactor = paramak.Reactor([test_shape1, test_shape2])
+        my_reactor.export_h5m_with_pymoab(include_plasma=False, filename='no_plasma.h5m')
+
+        assert Path('RotateStraightShape.stl').is_file()
+        assert Path('plasma.stl').is_file() is False
+        my_reactor.export_h5m_with_pymoab(include_plasma=True, filename='with_plasma.h5m')
+        assert Path('plasma.stl').is_file()
+
+        assert Path('with_plasma.h5m').stat().st_size > Path('no_plasma.h5m').stat().st_size
+
+
     def test_export_h5m_with_pymoab_from_manifest_file(self):
         """exports a h5m file when shapes_and_components is set to a string"""
 
@@ -1221,7 +1245,7 @@ class TestReactor(unittest.TestCase):
             test_shape.export_neutronics_description('manifest.json')
             my_reactor = paramak.Reactor('manifest.json')
             my_reactor.export_h5m_with_pymoab()
-            assert Path('dagmc.h5m').is_file
+            assert Path('dagmc.h5m').is_file()
 
         self.assertRaises(NotImplementedError, check_correct_error_is_rasied)
 
@@ -1233,16 +1257,17 @@ class TestReactor(unittest.TestCase):
         assert self.test_reactor.h5m_filename is None
         self.test_reactor.export_h5m_with_pymoab()
         self.test_reactor.export_vtk()
-        assert Path('dagmc.h5m').is_file
-        assert Path('dagmc.vtk').is_file
-        assert Path('dagmc_no_graveyard.vtk').is_file
+        assert Path('dagmc.h5m').is_file()
+        assert Path('dagmc.vtk').is_file()
+        self.test_reactor.export_vtk(include_graveyard=False, filename='dagmc_no_graveyard.vtk')
+        assert Path('dagmc_no_graveyard.vtk').is_file()
         assert self.test_reactor.h5m_filename == 'dagmc.h5m'
 
         self.test_reactor.export_vtk(filename='custom_filename.vtk')
-        assert Path('custom_filename.vtk').is_file
+        assert Path('custom_filename.vtk').is_file()
 
         self.test_reactor.export_vtk(filename='suffixless_filename')
-        assert Path('suffixless_filename.vtk').is_file
+        assert Path('suffixless_filename.vtk').is_file()
 
     def test_export_vtk_without_h5m_raises_error(self):
         """exports a h5m file when shapes_and_components is set to a string"""
