@@ -303,10 +303,10 @@ def export_vtk(
         tags_to_remove = None
     else:
         tags_to_remove = [
-            'graveyard.stp'
-            'mat:graveyard'
-            'reflective'
-            'mat:vacuum'
+            'graveyard.stp',
+            'mat:graveyard',
+            'reflective',
+            'mat:vacuum',
             'cuttingwedge.stp']
     remove_tags(
         input=str(path_h5m_filename),
