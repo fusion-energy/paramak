@@ -1224,13 +1224,14 @@ class TestReactor(unittest.TestCase):
         )
 
         my_reactor = paramak.Reactor([test_shape1, test_shape2])
-        my_reactor.export_h5m_with_pymoab(include_plasma=False, filename='no_plasma.h5m')
+        my_reactor.export_h5m_with_pymoab(
+            include_plasma=False, filename='no_plasma.h5m')
 
         assert Path('RotateStraightShape.stl').is_file()
         assert Path('plasma.stl').is_file() is False
-        my_reactor.export_h5m_with_pymoab(include_plasma=True, filename='with_plasma.h5m')
+        my_reactor.export_h5m_with_pymoab(
+            include_plasma=True, filename='with_plasma.h5m')
         assert Path('plasma.stl').is_file()
-
         assert Path('with_plasma.h5m').stat().st_size > Path('no_plasma.h5m').stat().st_size
 
     def test_export_h5m_with_pymoab_from_manifest_file(self):
@@ -1255,7 +1256,9 @@ class TestReactor(unittest.TestCase):
         self.test_reactor.export_vtk()
         assert Path('dagmc.h5m').is_file()
         assert Path('dagmc.vtk').is_file()
-        self.test_reactor.export_vtk(include_graveyard=False, filename='dagmc_no_graveyard.vtk')
+        self.test_reactor.export_vtk(
+            include_graveyard=False,
+            filename='dagmc_no_graveyard.vtk')
         assert Path('dagmc_no_graveyard.vtk').is_file()
         assert self.test_reactor.h5m_filename == 'dagmc.h5m'
 

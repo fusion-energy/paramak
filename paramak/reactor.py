@@ -964,9 +964,11 @@ class Reactor:
             # gets all the stp files and loads them into shapes
             for entry in manifest:
                 new_shape = paramak.Shape()
-                new_shape.from_stp_file(entry['stp_filename'])  # loads the stp file into a Shape object
+                # loads the stp file into a Shape object
+                new_shape.from_stp_file(entry['stp_filename'])
                 new_shape.material_tag = entry['material_tag']
-                new_shape.stl_filename = str(Path(entry['stp_filename']).stem) + '.stl'
+                new_shape.stl_filename = str(
+                    Path(entry['stp_filename']).stem) + '.stl'
 
                 new_shape.export_stl(
                     new_shape.stl_filename,
@@ -981,7 +983,6 @@ class Reactor:
                     new_shape.stl_filename)
                 volume_id += 1
                 surface_id += 1
-
 
         if include_graveyard:
             self.make_graveyard()
