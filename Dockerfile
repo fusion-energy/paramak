@@ -183,7 +183,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     pip install parametric_plasma_source ; \
     pip install neutronics_material_maker==0.3.2 ; \
     pip install openmc_data_downloader ; \
-    openmc_data_downloader -e all -l ENDFB-7.1-NNDC TENDL-2019 -p neutron photon ; \
+    openmc_data_downloader -e all -i H3 -l ENDFB-7.1-NNDC TENDL-2019 -p neutron photon ; \
     fi
 
 COPY requirements.txt requirements.txt
