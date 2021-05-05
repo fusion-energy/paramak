@@ -630,7 +630,7 @@ class Shape:
     def from_stp_file(self, filename: str):
         """Loads the filename using CadQuery and populates the Shape.solid
         with the contents
-        
+
         Args:
             filename: the file name of the stp / step file to be loaded
         """
