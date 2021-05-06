@@ -21,7 +21,7 @@ def notebook_run(path):
         note_book.metadata.get('kernelspec', {})['name'] = kernel_name
         ep = ExecutePreprocessor(
             kernel_name=kernel_name,
-            timeout=600)
+            timeout=800)
 
         try:
             ep.preprocess(
