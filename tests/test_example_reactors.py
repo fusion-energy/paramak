@@ -21,7 +21,7 @@ class TestExampleReactors(unittest.TestCase):
             assert errors == []
 
             stop = time.time()
-            duration = stop-start
+            duration = stop - start
 
             print((notebook, duration))
             timings.append((notebook, duration))
