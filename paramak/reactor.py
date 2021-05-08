@@ -957,8 +957,32 @@ class Reactor:
                 volume_id += 1
                 surface_id += 1
         else:
-            raise NotImplementedError(
-                "Reading a JSON filename and converting to a DAGMC geometry using pymoab is not yet supported")
+            # loads up the json file
+            with open(self.shapes_and_components) as json_file:
+                manifest = json.load(json_file)
+
+            # gets all the stp files and loads them into shapes
+            for entry in manifest:
+                new_shape = paramak.Shape()
+                # loads the stp file into a Shape object
+                new_shape.from_stp_file(entry['stp_filename'])
+                new_shape.material_tag = entry['material_tag']
+                new_shape.stl_filename = str(
+                    Path(entry['stp_filename']).stem) + '.stl'
+
+                new_shape.export_stl(
+                    new_shape.stl_filename,
+                    tolerance=faceting_tolerance)
+
+                moab_core = add_stl_to_moab_core(
+                    moab_core,
+                    surface_id,
+                    volume_id,
+                    new_shape.material_tag,
+                    moab_tags,
+                    new_shape.stl_filename)
+                volume_id += 1
+                surface_id += 1
 
         if include_graveyard:
             self.make_graveyard()

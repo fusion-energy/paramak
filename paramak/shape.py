@@ -627,6 +627,16 @@ class Shape:
             raise ValueError(msg)
         self._azimuth_placement_angle = value
 
+    def from_stp_file(self, filename: str):
+        """Loads the filename using CadQuery and populates the Shape.solid
+        with the contents
+
+        Args:
+            filename: the file name of the stp / step file to be loaded
+        """
+        result = cq.importers.importStep(filename)
+        self.solid = result
+
     def show(self):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
         show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
