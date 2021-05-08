@@ -42,9 +42,15 @@ release = "1.0"
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx_autodoc_typehints",
     "sphinx.ext.coverage",
     "sphinx.ext.napoleon",
-    "sphinx_autodoc_typehints"]
+    "sphinxcadquery.sphinxcadquery",
+]
+
+# Configure `sphinxcadquery`
+sphinxcadquery_include_source = True
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

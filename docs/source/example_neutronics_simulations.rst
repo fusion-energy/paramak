@@ -19,6 +19,20 @@ vtk, png and JSON files depending on the tally.
 ball_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   
+   import paramak
+   result = paramak.RotateStraightShape(
+    points=[
+        (400, 100),
+        (400, 200),
+        (600, 200),
+        (600, 100)
+           ],
+    rotation_angle = 180
+   ).solid
+
+
 `Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor.py>`_
 
 

@@ -18,5 +18,6 @@ dependencies:
     - sympy
     - plasmaboundaries
     - sphinx-autodoc-typehints
+    - sphinxcadquery
     - defusedxml
     
