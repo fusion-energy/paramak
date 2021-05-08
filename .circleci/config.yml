@@ -73,7 +73,7 @@ jobs:
       - run:
           name: run example reactor tests
           command: 
-            pytest tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+            pytest --capture=tee-sys tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - store_test_results:
           path: test-reports

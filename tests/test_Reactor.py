@@ -1232,6 +1232,8 @@ class TestReactor(unittest.TestCase):
         my_reactor.export_h5m_with_pymoab(
             include_plasma=True, filename='with_plasma.h5m')
         assert Path('plasma.stl').is_file()
+
+        allowing_pymoab_from_manifest
         assert Path('with_plasma.h5m').stat().st_size > Path(
             'no_plasma.h5m').stat().st_size
 
