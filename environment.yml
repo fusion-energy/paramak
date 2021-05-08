@@ -15,6 +15,7 @@ dependencies:
   - openmc
   - pip:
     - neutronics-material-maker
+    - remove_dagmc_tags
     - sympy
     - plasmaboundaries
     - sphinx-autodoc-typehints
