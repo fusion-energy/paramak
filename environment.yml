@@ -13,9 +13,9 @@ dependencies:
   - Pillow
   - cadquery=2.1
   - openmc
+  - remove_dagmc_tags
   - pip:
     - neutronics-material-maker
-    - remove_dagmc_tags
     - sympy
     - plasmaboundaries
     - sphinx-autodoc-typehints
