@@ -14,12 +14,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from remove_dagmc_tags import remove_tags
 
-try:
-    import openmc
-except ImportError:
-    warnings.warn('OpenMC not found, create_inital_particles \
-            method not available', UserWarning)
-
 
 def find_material_groups_in_h5m(
         filename: Optional[str] = 'dagmc.h5m'
@@ -473,14 +467,14 @@ def _save_2d_mesh_tally_as_png(
     """
 
     try:
-        import openmc
+        from openmc import MeshFilter
     except ImportError as err:
         raise err(
             'openmc not found, _save_2d_mesh_tally_as_png method is not \
             available')
 
     my_slice = tally.get_slice(scores=[score])
-    tally_filter = tally.find_filter(filter_type=openmc.MeshFilter)
+    tally_filter = tally.find_filter(filter_type=MeshFilter)
     shape = tally_filter.mesh.dimension.tolist()
     shape.remove(1)
     my_slice.mean.shape = shape
@@ -509,14 +503,15 @@ def get_neutronics_results_from_statepoint_file(
     """
 
     try:
-        import openmc
+        from openmc import StatePoint
+        from openmc.mgxs import GROUP_STRUCTURES
     except ImportError as err:
         raise err(
             'openmc not found, get_neutronics_results_from_statepoint_file \
             method is not available')
 
     # open the results file
-    statepoint = openmc.StatePoint(statepoint_filename)
+    statepoint = StatePoint(statepoint_filename)
 
     results = defaultdict(dict)
 
@@ -564,7 +559,7 @@ def get_neutronics_results_from_statepoint_file(
             tally_result = data_frame["mean"]
             tally_std_dev = data_frame['std. dev.']
             results[tally.name]['Flux per source particle'] = {
-                'energy': openmc.mgxs.GROUP_STRUCTURES['CCFE-709'].tolist(),
+                'energy': GROUP_STRUCTURES['CCFE-709'].tolist(),
                 'result': tally_result.tolist(),
                 'std. dev.': tally_std_dev.tolist(),
             }
@@ -740,24 +735,31 @@ def create_inital_particles(
     Returns:
         str: the filename of the h5 file produced
     """
-
+    try:
+        from openmc import Materials, Sphere, Cell, Universe, Geometry, \
+            Settings, run
+        from openmc.model import Model
+    except ImportError as err:
+        raise err(
+            'openmc not found, _save_2d_mesh_tally_as_png method is not \
+            available')
     # MATERIALS
 
     # no real materials are needed for finding the source
-    mats = openmc.Materials([])
+    mats = Materials([])
 
     # GEOMETRY
 
     # just a minimal geometry
-    outer_surface = openmc.Sphere(r=100000, boundary_type='vacuum')
-    cell = openmc.Cell(region=-outer_surface)
-    universe = openmc.Universe(cells=[cell])
-    geom = openmc.Geometry(universe)
+    outer_surface = Sphere(r=100000, boundary_type='vacuum')
+    cell = Cell(region=-outer_surface)
+    universe = Universe(cells=[cell])
+    geom = Geometry(universe)
 
     # SIMULATION SETTINGS
 
     # Instantiate a Settings object
-    sett = openmc.Settings()
+    sett = Settings()
     # this will fail but it will write the inital_source.h5 file first
     sett.run_mode = "eigenvalue"
     sett.particles = number_of_source_particles
@@ -767,7 +769,7 @@ def create_inital_particles(
 
     sett.source = source
 
-    model = openmc.model.Model(geom, mats, sett)
+    model = Model(geom, mats, sett)
 
     os.system('rm *.xml')
     model.export_to_xml()
@@ -782,7 +784,7 @@ def create_inital_particles(
     # This will crash hence the try except loop, but it writes the
     # inital_source.h5
     try:
-        openmc.run(output=False)
+        run(output=False)
     except BaseException:
         pass
 
