@@ -4,23 +4,23 @@ Examples - Parametric Components
 make_components_blankets.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_components_blankets.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_components_blankets.ipynb>`__
 
 
 make_components_center_column.ipynb 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_components_center_column.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_components_center_column.ipynb>`__
 
 make_components_magnets.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_components_center_column.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_components_center_column.ipynb>`__
 
 make_components_other.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_components_other.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_components_other.ipynb>`__
 
 
 make_demo_style_blankets.ipynb
@@ -31,7 +31,7 @@ make_demo_style_blankets.ipynb
    :height: 350
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_demo_style_blankets.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_demo_style_blankets.ipynb>`__
 
 
 make_firstwall_for_neutron_wall_loading.ipynb
@@ -42,7 +42,7 @@ make_firstwall_for_neutron_wall_loading.ipynb
    :height: 807
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.ipynb>`__
 
 
 make_magnet_set.ipynb
@@ -52,7 +52,7 @@ make_magnet_set.ipynb
    :width: 500
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_magnet_set.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_magnet_set.ipynb>`__
 
 
 make_plasmas.ipynb
@@ -63,16 +63,16 @@ make_plasmas.ipynb
    :height: 700
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_plasmas.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_plasmas.ipynb>`__
 
 
 make_vacuum_vessel_with_ports.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_vacuum_vessel_with_ports.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_vacuum_vessel_with_ports.ipynb>`__
 
 
 make_varible_offset_firstwall.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_varible_offset_firstwall.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_components/make_varible_offset_firstwall.ipynb>`__

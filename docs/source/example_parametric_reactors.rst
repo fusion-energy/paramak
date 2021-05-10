@@ -4,24 +4,24 @@ Examples - Parametric Reactors
 ball_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor.ipynb>`__
 
 
 ball_reactor_single_null.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor_single_null.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor_single_null.ipynb>`__
 
 
 center_column_study_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/center_column_study_reactor.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/center_column_study_reactor.ipynb>`__
 
 eu_demo_from_2015_paper.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/eu_demo_from_2015_paper.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/eu_demo_from_2015_paper.ipynb>`__
 
 
 make_animation.ipynb
@@ -35,27 +35,27 @@ make_animation.ipynb
 .. |animation2| image:: https://user-images.githubusercontent.com/8583900/107030664-e2131480-67a8-11eb-84bb-59656e9e7722.gif
    :width: 300
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`__
 
 
 segmented_blanket_ball_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/segmented_blanket_ball_reactor.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/segmented_blanket_ball_reactor.ipynb>`__
 
 sparc_from_2020_paper.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/sparc_from_2020_paper.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/sparc_from_2020_paper.ipynb>`__
 
 
 submersion_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`__
 
 
 submersion_reactor_single_null.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor_single_null.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor_single_null.ipynb>`__

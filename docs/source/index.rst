@@ -497,7 +497,7 @@ Alternatively, run this without the GUI in batch mode using:
 
 This should export a h5m file for use in DAGMC.
 
-Further information on DAGMC neutronics can be found `here <https://svalinn.github.io/DAGMC/>`_ and information on OpenMC can be found `here <https://openmc.readthedocs.io/>`_ . The two codes can be used together to simulate neutron transport on the h5m file created. The UKAEA openmc workshop also has two tasks that might be of interest `task 10 <https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10>`_ and `task 12 <https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12>`_ .
+Further information on DAGMC neutronics can be found `here <https://svalinn.github.io/DAGMC/>`__ and information on OpenMC can be found `here <https://openmc.readthedocs.io/>`__ . The two codes can be used together to simulate neutron transport on the h5m file created. The UKAEA openmc workshop also has two tasks that might be of interest `task 10 <https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10>`_ and `task 12 <https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12>`_ .
 
 
 Example Scripts
