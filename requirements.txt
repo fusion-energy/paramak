@@ -4,7 +4,7 @@ plotly
 pytest
 pytest-cov
 numpy
-plasmaboundaries
+plasmaboundaries==0.1.8
 matplotlib
 pillow
 
