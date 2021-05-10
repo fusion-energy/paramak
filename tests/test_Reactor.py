@@ -1229,9 +1229,11 @@ class TestReactor(unittest.TestCase):
 
         assert Path('RotateStraightShape.stl').is_file()
         assert Path('plasma.stl').is_file() is False
-        my_reactor.export_h5m_with_pymoab(include_plasma=True, filename='with_plasma.h5m')
+        my_reactor.export_h5m_with_pymoab(
+            include_plasma=True, filename='with_plasma.h5m')
         assert Path('plasma.stl').is_file()
-        assert Path('with_plasma.h5m').stat().st_size > Path('no_plasma.h5m').stat().st_size
+        assert Path('with_plasma.h5m').stat().st_size > Path(
+            'no_plasma.h5m').stat().st_size
 
     def test_export_h5m_with_pymoab_from_manifest_file(self):
         """exports a h5m file when shapes_and_components is set to a string"""

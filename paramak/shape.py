@@ -489,8 +489,11 @@ class Shape:
         return self._points
 
     @points.setter
-    def points(self, values):
-
+    def points(self, values_in):
+        if values_in is None:
+            values = values_in
+        else:
+            values = values_in[:]
         if values is not None:
             if not isinstance(values, list):
                 raise ValueError("points must be a list")
