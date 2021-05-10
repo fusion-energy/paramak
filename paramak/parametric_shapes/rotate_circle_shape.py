@@ -1,7 +1,7 @@
 
 from typing import Optional, Tuple
 
-import cadquery as cq
+from cadquery import Workplane
 from paramak import Shape
 
 
