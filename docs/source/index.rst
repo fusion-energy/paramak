@@ -106,7 +106,7 @@ Alternatively you can download the repository using the `download link <https://
 
 .. code-block:: bash
 
-   git clone https://github.com/Shimwell/paramak.git
+   git clone https://github.com/ukaea/paramak.git
 
 Navigate to the paramak repository and within the terminal install the paramak
 package and the dependencies using pip3.
