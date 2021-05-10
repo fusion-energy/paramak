@@ -59,7 +59,7 @@ class RotateCircleShape(Shape):
         """
 
         wire = (
-            cq.Workplane(self.workplane)
+            Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
         )

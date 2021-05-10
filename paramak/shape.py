@@ -6,9 +6,12 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-import cadquery as cq
+from cadquery import exporters, Workplane, Compound, Assembly, Color
+from cadquery.occ_impl import shapes
+
+from cadquery import importers
+
 import matplotlib.pyplot as plt
-from cadquery import exporters
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
@@ -252,7 +255,7 @@ class Shape:
         """Calculates a bounding box for the Shape and returns the largest
         absolute value of the largest dimension of the bounding box"""
         largest_dimension = 0
-        if isinstance(self.solid, (cq.Compound, cq.occ_impl.shapes.Solid)):
+        if isinstance(self.solid, (Compound, shapes.Solid)):
             for solid in self.solid.Solids():
                 bound_box = solid.BoundingBox()
                 largest_dimension = max(
@@ -335,7 +338,7 @@ class Shape:
     @property
     def volume(self):
         """Get the total volume of the Shape. Returns a float"""
-        if isinstance(self.solid, cq.Compound):
+        if isinstance(self.solid, Compound):
             return self.solid.Volume()
 
         return self.solid.val().Volume()
@@ -345,7 +348,7 @@ class Shape:
         """Get the volumes of the Shape. Compound shapes provide a seperate
         volume value for each entry. Returns a list of floats"""
         all_volumes = []
-        if isinstance(self.solid, cq.Compound):
+        if isinstance(self.solid, Compound):
             for solid in self.solid.Solids():
                 all_volumes.append(solid.Volume())
             return all_volumes
@@ -355,7 +358,7 @@ class Shape:
     @property
     def area(self):
         """Get the total surface area of the Shape. Returns a float"""
-        if isinstance(self.solid, cq.Compound):
+        if isinstance(self.solid, Compound):
             return self.solid.Area()
 
         return self.solid.val().Area()
@@ -365,7 +368,7 @@ class Shape:
         """Get the surface areas of the Shape. Compound shapes provide a
         seperate area value for each entry. Returns a list of floats"""
         all_areas = []
-        if isinstance(self.solid, cq.Compound):
+        if isinstance(self.solid, Compound):
             for face in self.solid.Faces():
                 all_areas.append(face.Area())
             return all_areas
@@ -634,7 +637,7 @@ class Shape:
         Args:
             filename: the file name of the stp / step file to be loaded
         """
-        result = cq.importers.importStep(filename)
+        result = importers.importStep(filename)
         self.solid = result
 
     def show(self):
@@ -652,7 +655,7 @@ class Shape:
         scaled_color = [int(i * 255) for i in self.color[0:3]]
         if isinstance(
                 self.solid,
-                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+                (shapes.Shape, shapes.Compound)):
             for i, solid in enumerate(self.solid.Solids()):
                 parts.append(
                     Part(
@@ -668,7 +671,7 @@ class Shape:
 
         return PartGroup(parts)
 
-    def create_solid(self) -> cq.Workplane:
+    def create_solid(self) -> Workplane:
         solid = None
         if self.points is not None:
             # obtains the first two values of the points list
@@ -708,7 +711,7 @@ class Shape:
                 if self.workplane in ["XZ", "YX", "ZY"]:
                     factor *= -1
 
-                solid = cq.Workplane(self.workplane).center(0, 0)
+                solid = Workplane(self.workplane).center(0, 0)
 
                 if self.force_cross_section:
                     for point in self.path_points[:-1]:
@@ -759,7 +762,7 @@ class Shape:
 
             else:
                 # for rotate and extrude shapes
-                solid = cq.Workplane(self.workplane)
+                solid = Workplane(self.workplane)
                 # for extrude shapes
                 if hasattr(self, "extrusion_start_offset"):
                     extrusion_offset = -self.extrusion_start_offset
@@ -780,7 +783,7 @@ class Shape:
 
     def rotate_solid(
             self,
-            solid: Optional[cq.Workplane]) -> cq.Workplane:
+            solid: Optional[Workplane]) -> Workplane:
         # Checks if the azimuth_placement_angle is a list of angles
         if isinstance(self.azimuth_placement_angle, Iterable):
             azimuth_placement_angles = self.azimuth_placement_angle
@@ -793,7 +796,7 @@ class Shape:
             rotated_solids.append(
                 solid.rotate(
                     *self.get_rotation_axis()[0], angle))
-        solid = cq.Workplane(self.workplane)
+        solid = Workplane(self.workplane)
 
         # Joins the seperate solids together
         for i in rotated_solids:
@@ -946,12 +949,12 @@ class Shape:
 
         if mode == 'solid':
 
-            assembly = cq.Assembly(name=self.name)
+            assembly = Assembly(name=self.name)
 
             if self.color is None:
                 assembly.add(self.solid)
             else:
-                assembly.add(self.solid, color=cq.Color(*self.color))
+                assembly.add(self.solid, color=Color(*self.color))
 
             assembly.save(str(path_filename), exportType='STEP')
 
@@ -1117,7 +1120,7 @@ class Shape:
         if self.solid is None:
             raise ValueError("No solid was found for ", self)
 
-        if isinstance(self.solid, cq.Workplane):
+        if isinstance(self.solid, Workplane):
             edges = self.solid.val().Edges()
         else:
             edges = self.solid.Edges()
@@ -1326,7 +1329,7 @@ class Shape:
 
         return str(path_filename)
 
-    def perform_boolean_operations(self, solid: cq.Workplane, **kwargs):
+    def perform_boolean_operations(self, solid: Workplane, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""
 
