@@ -3,7 +3,6 @@ import collections
 import json
 import os
 import shutil
-import subprocess
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -13,9 +12,7 @@ import matplotlib.pyplot as plt
 from cadquery import exporters
 
 import paramak
-from paramak.neutronics_utils import (add_stl_to_moab_core,
-                                      define_moab_core_and_tags)
-from paramak.utils import get_hash, _replace
+from paramak.utils import get_hash, _replace, add_stl_to_moab_core, define_moab_core_and_tags, export_vtk
 
 
 class Reactor:
@@ -684,7 +681,7 @@ class Reactor:
 
             h5m_filename = self.h5m_filename
 
-        vtk_filename = paramak.neutronics_utils.export_vtk(
+        vtk_filename = paramak.utils.export_vtk(
             filename=filename,
             h5m_filename=h5m_filename,
             include_graveyard=include_graveyard
@@ -879,10 +876,10 @@ class Reactor:
             raise ValueError(
                 "shapes_and_components must be a list of paramak.Shape or a filename")
 
-        not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
+        not_watertight_file = paramak.utils.trelis_command_to_create_dagmc_h5m(
             faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
-        water_tight_h5m_filename = paramak.neutronics_utils.make_watertight(
+        water_tight_h5m_filename = paramak.utils.make_watertight(
             input_filename=not_watertight_file[0],
             output_filename=filename
         )
