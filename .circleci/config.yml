@@ -13,17 +13,7 @@ jobs:
       - run:
           name: install
           command: |
-            python setup.py install  # this dosen't support the optional packages like pip install .[neutronics] does
-
-      - run:
-          name: run neutronics_utils tests
-          command: 
-            pytest tests/test_neutronics_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      - run:
-          name: run neutronics_example tests
-          command: 
-            pytest tests/test_example_neutronics_simulations.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+            python setup.py install
 
       - run:
           name: run utils tests
@@ -54,11 +44,6 @@ jobs:
           name: run parametric_reactors tests
           command: 
             pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      - run:
-          name: run neutronics tests
-          command: 
-            pytest tests/test_parametric_neutronics/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run example shape tests

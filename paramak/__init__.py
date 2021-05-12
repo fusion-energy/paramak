@@ -1,9 +1,8 @@
 from .shape import Shape
 from .reactor import Reactor
+from .utils import define_moab_core_and_tags, add_stl_to_moab_core, export_vtk
 from .utils import rotate, extend, distance_between_two_points, diff_between_angles
 from .utils import EdgeLengthSelector, FaceAreaSelector
-from .neutronics_utils import define_moab_core_and_tags, add_stl_to_moab_core
-from .neutronics_utils import get_neutronics_results_from_statepoint_file
 
 from .parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from .parametric_shapes.extruded_spline_shape import ExtrudeSplineShape
@@ -88,5 +87,3 @@ from .parametric_reactors.segmented_blanket_ball_reactor import SegmentedBlanket
 from .parametric_reactors.center_column_study_reactor import CenterColumnStudyReactor
 from .parametric_reactors.sparc_paper_2020 import SparcFrom2020PaperDiagram
 from .parametric_reactors.iter_reactor import ITERTokamak
-
-from .parametric_neutronics.neutronics_model import NeutronicsModel
