@@ -32,5 +32,4 @@ setuptools.setup(
         "matplotlib",
         "plasmaboundaries",
         "remove_dagmc_tags",
-    ]
-)
+    ])

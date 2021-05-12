@@ -263,7 +263,6 @@ class TestUtilityFunctions(unittest.TestCase):
             point_a, point_b, point_3) == (
             None, np.inf)
 
-
     # these tests only work if trelis is avaialbe
     # def test_make_watertight_cmd(self):
     #     """exports a h5m and makes it watertight, checks the the watertight
