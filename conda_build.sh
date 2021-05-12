@@ -7,6 +7,7 @@ rm -rf /tmp/conda-build
 for i in "${array[@]}"
 do
 	conda-build conda/ -c cadquery -c conda-forge --croot /tmp/conda-build --python $i 
+	# conda build conda/meta.yaml -c cadquery -c conda-forge --croot /tmp/cbld
 done
 
 
