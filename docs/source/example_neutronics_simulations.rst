@@ -20,26 +20,34 @@ ball_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
-   
+   :select: my_reactor.solid
+
    import paramak
-   result = paramak.RotateStraightShape(
-    points=[
-        (400, 100),
-        (400, 200),
-        (600, 200),
-        (600, 100)
-           ],
-    rotation_angle = 180
-   ).solid
+   my_reactor = paramak.BallReactor(
+      inner_bore_radial_thickness=50,
+      inboard_tf_leg_radial_thickness=200,
+      center_column_shield_radial_thickness=50,
+      divertor_radial_thickness=50,
+      inner_plasma_gap_radial_thickness=50,
+      plasma_radial_thickness=100,
+      outer_plasma_gap_radial_thickness=50,
+      firstwall_radial_thickness=1,
+      blanket_radial_thickness=100,
+      blanket_rear_wall_radial_thickness=10,
+      elongation=2,
+      triangularity=0.55,
+      number_of_tf_coils=16,
+      rotation_angle=180
+   )
 
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor.py>`__
+`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor.ipynb>`__
 
 
 ball_reactor_minimal.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor_minimal.py>`__
+`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor_minimal.ipynb>`__
 
 
 ball_reactor_source_plot.ipynb 
