@@ -20,7 +20,7 @@ ball_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
-   :select: my_reactor.solid
+   :select: cadquery_object
 
    import paramak
    my_reactor = paramak.BallReactor(
@@ -39,6 +39,8 @@ ball_reactor.ipynb
       number_of_tf_coils=16,
       rotation_angle=180
    )
+   
+   cadquery_object = my_reactor.solid
 
 
 `Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor.ipynb>`__
