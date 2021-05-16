@@ -157,7 +157,7 @@ segmented_blanket_ball_reactor.ipynb
       blanket_rear_wall_radial_thickness=30,
       elongation=2,
       triangularity=0.55,
-      number_of_tf_coils=8,
+      number_of_tf_coils=16,
       pf_coil_case_thicknesses=[10, 10, 10, 10],
       pf_coil_radial_thicknesses=[20, 50, 50, 20],
       pf_coil_vertical_thicknesses=[20, 50, 50, 20],
@@ -272,3 +272,20 @@ submersion_reactor_single_null.ipynb
    cadquery_object = my_reactor.solid
 
 `Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor_single_null.ipynb>`__
+
+
+iter_from_2020_paper.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_reactor = paramak.IterFrom2020PaperDiagram(
+      rotation_angle=90
+   )
+   
+   cadquery_object = my_reactor.solid
+
+   `Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/iter_from_2020_paper_diagram.ipynb>`__
