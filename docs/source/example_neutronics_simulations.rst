@@ -21,6 +21,7 @@ ball_reactor.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :gridsize: 0
 
    import paramak
    my_reactor = paramak.BallReactor(
