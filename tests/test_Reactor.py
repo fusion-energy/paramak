@@ -1233,7 +1233,6 @@ class TestReactor(unittest.TestCase):
             include_plasma=True, filename='with_plasma.h5m')
         assert Path('plasma.stl').is_file()
 
-        allowing_pymoab_from_manifest
         assert Path('with_plasma.h5m').stat().st_size > Path(
             'no_plasma.h5m').stat().st_size
 
@@ -1244,6 +1243,7 @@ class TestReactor(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)]
         )
+        test_shape.export_stp()
         test_shape.export_neutronics_description('manifest.json')
         my_reactor = paramak.Reactor('manifest.json')
         my_reactor.export_h5m_with_pymoab()
