@@ -1,6 +1,23 @@
 Paramak
 =======
 
+
+.. cadquery::
+   :select: text
+   :gridsize: 0
+   :include-source: False
+
+   import cadquery as cq
+   text = cq.Workplane().text( 
+      txt="Paramak",
+      fontsize=0.5,
+      distance=-1,
+      cut=True,
+      halign="left",
+      valign="bottom",
+      font="Sans"
+   )
+
 The Paramak python package allows rapid production of 3D CAD models of fusion
 reactors. The purpose of the Paramak is to provide geometry for parametric
 studies. It is possible to use the created geometry in engineering and
