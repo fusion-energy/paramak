@@ -48,9 +48,6 @@ extensions = [
     "sphinxcadquery.sphinxcadquery",
 ]
 
-# Configure `sphinxcadquery`
-sphinxcadquery_include_source = True
-
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
