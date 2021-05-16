@@ -288,4 +288,4 @@ iter_from_2020_paper.ipynb
    
    cadquery_object = my_reactor.solid
 
-   `Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/iter_from_2020_paper_diagram.ipynb>`__
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/iter_from_2020_paper_diagram.ipynb>`__
