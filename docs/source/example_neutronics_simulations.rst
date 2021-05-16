@@ -19,31 +19,6 @@ vtk, png and JSON files depending on the tally.
 ball_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^
 
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_reactor = paramak.BallReactor(
-      inner_bore_radial_thickness=50,
-      inboard_tf_leg_radial_thickness=200,
-      center_column_shield_radial_thickness=50,
-      divertor_radial_thickness=50,
-      inner_plasma_gap_radial_thickness=50,
-      plasma_radial_thickness=100,
-      outer_plasma_gap_radial_thickness=50,
-      firstwall_radial_thickness=1,
-      blanket_radial_thickness=100,
-      blanket_rear_wall_radial_thickness=10,
-      elongation=2,
-      triangularity=0.55,
-      number_of_tf_coils=16,
-      rotation_angle=180
-   )
-   
-   cadquery_object = my_reactor.solid
-
-
 `Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor.ipynb>`__
 
 
