@@ -819,5 +819,21 @@ class TestShape(unittest.TestCase):
         self.assertRaises(ValueError, check_correct_error_is_rasied)
 
 
+def test_reuse_points():
+    """Checks that points can be reused between shapes"""
+    points = [
+        (100, 0, "straight"),
+        (200, 0, "straight"),
+        (250, 50, "straight"),
+        (200, 100, "straight"),
+    ]
+    paramak.Shape(
+        points=points
+    )
+    paramak.Shape(
+        points=points
+    )
+
+
 if __name__ == "__main__":
     unittest.main()

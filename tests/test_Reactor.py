@@ -1232,7 +1232,6 @@ class TestReactor(unittest.TestCase):
         my_reactor.export_h5m_with_pymoab(
             include_plasma=True, filename='with_plasma.h5m')
         assert Path('plasma.stl').is_file()
-
         assert Path('with_plasma.h5m').stat().st_size > Path(
             'no_plasma.h5m').stat().st_size
 
@@ -1240,8 +1239,10 @@ class TestReactor(unittest.TestCase):
         """exports a h5m file when shapes_and_components is set to a string"""
 
         os.system('rm dagmc.h5m')
+        os.system('rm *.stp')
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)]
+            points=[(0, 0), (0, 20), (20, 20)],
+            stp_filename='test_shape.stp'
         )
         test_shape.export_stp()
         test_shape.export_neutronics_description('manifest.json')

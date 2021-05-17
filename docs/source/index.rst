@@ -74,7 +74,6 @@ The Paramak source code is distributed with a permissive open-source license
 (MIT) and is avaialbe from the GitHub repository 
 `https://github.com/ukaea/paramak <https://github.com/ukaea/paramak>`_
 
-
 Publications and Presentations
 ------------------------------
 
