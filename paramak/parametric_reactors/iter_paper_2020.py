@@ -3,9 +3,9 @@ import paramak
 import numpy as np
 
 
-class ITERTokamak(paramak.Reactor):
-    """Creates geometry of a simplified ITER model. The geometry was taken
-    from "ITER Project: International Cooperation and Energy Investment"
+class IterFrom2020PaperDiagram(paramak.Reactor):
+    """Creates geometry of a simplified ITER model. The geometry was based on
+    "ITER Project: International Cooperation and Energy Investment"
     available at https://link.springer.com/chapter/10.1007/978-3-030-42913-3_26
     Many shapes are built-in paramak shapes therefore the model does not match
     the diagram exactly.

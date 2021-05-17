@@ -12,7 +12,7 @@ class TestITERReactor(unittest.TestCase):
         """Creates the plasma part of the ITERTokamak and checks
         the contruction runs"""
 
-        my_reactor = paramak.ITERTokamak(number_of_tf_coils=1)
+        my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
         plasma = my_reactor.create_plasma()
         assert plasma[0].volume > 0
 
@@ -20,7 +20,7 @@ class TestITERReactor(unittest.TestCase):
         """Creates the pf coil part of the ITERTokamak and
         checks the contruction runs"""
 
-        my_reactor = paramak.ITERTokamak(number_of_tf_coils=1)
+        my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
         pf_coils = my_reactor.create_pf_coils()
         for coil in pf_coils:
             assert coil.volume > 0
@@ -29,7 +29,7 @@ class TestITERReactor(unittest.TestCase):
         """Creates the pf coil part of the ITERTokamak and
         checks the contruction runs"""
 
-        my_reactor = paramak.ITERTokamak(number_of_tf_coils=1)
+        my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
         plasma = my_reactor.create_plasma()
         vessel_components = my_reactor.create_vessel_components()
         for component in vessel_components:
@@ -54,7 +54,7 @@ class TestITERReactor(unittest.TestCase):
             'vacvessel.stp',
         ]
         os.system("rm *.stp")
-        my_reactor = paramak.ITERTokamak(number_of_tf_coils=1)
+        my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
         my_reactor.export_stp()
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
@@ -80,7 +80,7 @@ class TestITERReactor(unittest.TestCase):
             'vacvessel.stp',
         ]
         os.system("rm *.stp")
-        my_reactor = paramak.ITERTokamak(
+        my_reactor = paramak.IterFrom2020PaperDiagram(
             number_of_tf_coils=1, rotation_angle=90)
         my_reactor.export_stp()
         for output_filename in output_filenames:

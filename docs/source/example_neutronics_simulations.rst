@@ -19,37 +19,37 @@ vtk, png and JSON files depending on the tally.
 ball_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor.py>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor.ipynb>`__
 
 
 ball_reactor_minimal.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor_minimal.py>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/ball_reactor_minimal.ipynb>`__
 
 
 ball_reactor_source_plot.ipynb 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_neutronics_simulations/ball_reactor_source_plot.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_neutronics_simulations/ball_reactor_source_plot.ipynb>`__
 
 
 center_column_study_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/center_column_study_reactor.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/center_column_study_reactor.ipynb>`__
 
 
 center_column_study_reactor_minimal.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/center_column_study_reactor_minimal.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/center_column_study_reactor_minimal.ipynb>`__
 
 
 OpenMC logo simulation
 ^^^^^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_neutronics_simulations/openmc_logo_example.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_neutronics_simulations/openmc_logo_example.ipynb>`__
 
 .. raw:: html
 
@@ -59,4 +59,4 @@ OpenMC logo simulation
 text_example.ipynb 
 ^^^^^^^^^^^^^^^^^^
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_neutronics_simulations/text_example.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_neutronics_simulations/text_example.ipynb>`__

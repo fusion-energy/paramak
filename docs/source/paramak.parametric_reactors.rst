@@ -149,7 +149,7 @@ ITERTokamak()
 
 The above image is colored by component.
 
-.. automodule:: paramak.parametric_reactors.iter_reactor
+.. automodule:: paramak.parametric_reactors.iter_paper_2020
    :members:
    :show-inheritance:
 

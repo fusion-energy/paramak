@@ -8,6 +8,21 @@ parametric Shape classes.
 BlanketConstantThicknessArcH()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketConstantThicknessArcH(
+      inner_lower_point=(300, -200),
+      inner_mid_point=(400, 0),
+      inner_upper_point=(300, 200),
+      thickness=100,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 |BlanketConstantThicknessArcHstp| |BlanketConstantThicknessArcHsvg|
 
 .. |BlanketConstantThicknessArcHstp| image:: https://user-images.githubusercontent.com/8583900/86519778-32eb1500-be36-11ea-9794-0383b66624c5.png
