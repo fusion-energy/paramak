@@ -6,6 +6,7 @@ ball_reactor.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak
@@ -44,6 +45,7 @@ ball_reactor_single_null.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak
@@ -80,6 +82,7 @@ center_column_study_reactor.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak
@@ -110,6 +113,7 @@ eu_demo_from_2015_paper.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak
@@ -141,6 +145,7 @@ segmented_blanket_ball_reactor.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak
@@ -181,6 +186,7 @@ sparc_from_2020_paper.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak
@@ -198,6 +204,7 @@ submersion_reactor.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak
@@ -237,6 +244,7 @@ submersion_reactor_single_null.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak
@@ -279,6 +287,7 @@ iter_from_2020_paper.ipynb
 
 .. cadquery::
    :select: cadquery_object
+   :include-source: true
    :gridsize: 0
 
    import paramak

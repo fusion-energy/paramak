@@ -5,7 +5,7 @@ Paramak
 .. cadquery::
    :select: text
    :gridsize: 0
-   :include-source: False
+   :height: 100px
 
    import cadquery as cq
    text = cq.Workplane().text( 
