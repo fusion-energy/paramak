@@ -1,6 +1,21 @@
 Paramak
 =======
 
+
+.. cadquery::
+   :select: text
+   :gridsize: 0
+   :height: 100px
+
+   import cadquery as cq
+   text = cq.Workplane().text( 
+      txt="Paramak",
+      fontsize=0.5,
+      distance=-0.5,
+      cut=True,
+      font="Sans"
+   )
+
 The Paramak python package allows rapid production of 3D CAD models of fusion
 reactors. The purpose of the Paramak is to provide geometry for parametric
 studies. It is possible to use the created geometry in engineering and
@@ -21,11 +36,14 @@ straightforward for developers with Python knowledge.
 .. toctree::
    :maxdepth: 1
 
+   paramak.install
    paramak.parametric_shapes
    paramak.parametric_components
    paramak.parametric_reactors
    paramak.parametric_neutronics
-   paramak.core_modules
+   paramak.shape
+   paramak.reactor
+   paramak.utils
    example_parametric_shapes
    example_parametric_components
    example_parametric_reactors
@@ -55,132 +73,6 @@ and inline `suggestions <https://github.com/ukaea/paramak/pull/639>`_.
 The Paramak source code is distributed with a permissive open-source license
 (MIT) and is avaialbe from the GitHub repository 
 `https://github.com/ukaea/paramak <https://github.com/ukaea/paramak>`_
-
-Prerequisites
--------------
-
-To use the paramak tool you will need Python 3 and Cadquery 2 installed.
-
-* `Python 3 <https://www.python.org/downloads/>`_
-
-* `CadQuery 2 <https://github.com/CadQuery/cadquery>`_
-
-Python 3 and CadQuery can be installed using Conda or Miniconda
-
-* `Anaconda <https://www.anaconda.com/>`_
-* `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
-  
-Once you have Conda or MiniConda installed then CadQuery can be installed
-into a new enviroment and that environment can be activated using Anaconda or Miniconda. 
-
-Cadquery 2 can be installed in a Conda environment via conda-forge.
-
-.. code-block:: python
-
-   conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2.1
-
-
-Once you have activated a conda environment, Cadquery 2 can be installed
-using the command:
-
-.. code-block:: python
-
-   conda activate paramak_env
-
-
-A more detailed description of installing Cadquery 2 can be found here:
-
-* `Cadquery 2 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
-
-
-System Installation
--------------------
-
-The quickest way to install the Paramak is to use pip. In the terminal type...
-
-.. code-block:: bash
-
-   pip install paramak
-
-Alternatively you can download the repository using the `download link <https://github.com/ukaea/paramak/archive/develop.zip>`_ or clone the repository using:
-
-.. code-block:: bash
-
-   git clone https://github.com/ukaea/paramak.git
-
-Navigate to the paramak repository and within the terminal install the paramak
-package and the dependencies using pip3.
-
-.. code-block:: bash
-
-   pip install .
-
-Alternatively you can install the paramak with the following command.
-
-.. code-block:: bash
-
-   python setup.py install
-
-You can also install optional dependencies that add some neutronics
-capabilities to the paramak. This will install neutronics_material_maker and
-parametric_plasma_source. In addition to this you would need DAGMC, OpenMC,
-MOAB and Trelis / Cubit.
-`More details <https://paramak.readthedocs.io/en/latest/paramak.parametric_neutronics.html>`_
-
-.. code-block:: bash
-
-   pip install .[neutronics]
-
-You could consider installing
-[jupyter-cadquery](https://github.com/bernhard-42/jupyter-cadquery) which adds
-3D viewing in Jupyter lab as shown in the example notebooks.
-
-.. code-block:: bash
-
-   pip install jupyter-cadquery
-
-
-
-Docker Image Installation
--------------------------
-
-Another option is to use the Docker image which contains all the required
-dependencies.
-
-1. Install Docker CE for `Ubuntu <https://docs.docker.com/install/linux/docker-ce/ubuntu/>`_ ,
-`Mac OS <https://store.docker.com/editions/community/docker-ce-desktop-mac>`_ or
-`Windows <https://hub.docker.com/editions/community/docker-ce-desktop-windows>`_
-including the part where you enable docker use as a non-root user.
-
-2. Pull the docker image from the store by typing the following command in a
-terminal window, or Windows users might prefer PowerShell.
-
-.. code-block:: bash
-
-   docker pull ukaea/paramak
-
-3. Now that you have the docker image you can enable graphics linking between
-your os and docker, and then run the docker container by typing the following
-commands in a terminal window.
-
-.. code-block:: bash
-
-   sudo docker run -p 8888:8888 ukaea/paramak
-
-4. A URL should be displayed in the terminal and can now be opened in the
-internet browser of your choice. This will load up the examples folder where
-you can view the 3D objects created.
-
-Alternatively the Docker image can be run in terminal mode .
-
-.. code-block:: bash
-
-   docker run -it ukaea/paramak
-
-You may also want to make use of the
-`--volume <https://docs.docker.com/storage/volumes/>`_
-flag when running Docker so that you can retrieve files from the Docker
-enviroment to your base system.
 
 Publications and Presentations
 ------------------------------
@@ -222,15 +114,14 @@ encoded in each parametric Ractor design.
 
 The different parametric reactor families are shown below.
 
-.. image:: https://user-images.githubusercontent.com/8583900/99137324-fddfa200-2621-11eb-9063-f5f7f60ddd8d.png
+.. image:: https://user-images.githubusercontent.com/8583900/118414245-58be8880-b69b-11eb-981e-c5806f721e0f.png
    :width: 713
    :align: center
 
-The different parametric Components are shown below.
+A selection of the parametric Components are shown below.
 
 .. image:: https://user-images.githubusercontent.com/8583900/98823600-387eea00-242a-11eb-9fe3-df65aaa3dd21.png
    :width: 713
-   :height: 245
    :align: center
 
 The different families of parametric Shapes that can be made with the Paramak
@@ -368,7 +259,12 @@ methods like export_stp() and export_stl().
 
    import paramak
 
-   my_plasma = paramak.Plasma(major_radius=620, minor_radius=210, triangularity=0.33, elongation=1.85)
+   my_plasma = paramak.Plasma(
+      major_radius=620,
+      minor_radius=210,
+      triangularity=0.33,
+      elongation=1.85
+   )
 
    my_plasma.export_stp('plasma.stp')
 
@@ -404,7 +300,6 @@ without the optional outer pf and tf coils.
       blanket_rear_wall_radial_thickness = 50,
       elongation = 2,
       triangularity = 0.55,
-      number_of_tf_coils = 16,
       rotation_angle = 180
    )
 
@@ -439,68 +334,3 @@ A html graph of the combined Shapes can be created.
 .. code-block:: python
 
    my_reactor.export_html('reactor.html')
-
-
-Usage - Neutronics Model Creation
----------------------------------
-
-First assign stp_filenames to each of the Shape objects that were created
-earlier on.
-
-.. code-block:: python
-
-   my_shape.stp_filename = 'my_shape.stp'
-
-   my_plasma.stp_filename = 'my_plasma.stp'
-
-Then assign material_tags to each of the Shape objects.
-
-.. code-block:: python
-
-   my_shape.material_tag = 'steel'
-
-   my_plasma.material_tag = 'DT_plasma'
-
-Note - Tetrahedral meshes can also be assigned to Shape objects.
-
-Now add the Shape objects to a freshly created reactor object.
-
-.. code-block:: python
-
-   new_reactor = Reactor([my_shape, my_plasma])
-
-The entire reactor can now be exported as step files. This also generates a
-DAGMC graveyard automatically.
-
-.. code-block:: python
-
-   my_reactor.export_stp()
-
-A manifest.json file that contains all the step filenames and materials can now
-be created.
-
-.. code-block:: python
-
-   my_reactor.export_neutronics_description()
-
-Once you step files and the neutronics description has been exported then `Trelis <https://www.csimsoft.com/trelis>`_ can be used to generate a DAGMC geometry in the usual manner. There is also a convenient script included in task 12 of the UKAEA openmc workshop which can be used in conjunction with the neutronics description json file to automatically create a DAGMC geometry. Download `this script <https://github.com/ukaea/openmc_workshop/blob/master/tasks/task_12/make_faceteted_neutronics_model.py>`_ and place it in the same directory as the manifest.json and step files. Then run the following command from the terminal. You will need to have previously installed the `DAGMC plugin <https://github.com/svalinn/Trelis-plugin>`_ for Trelis.
-
-::
-
-   trelis make_faceteted_neutronics_model.py
-
-Alternatively, run this without the GUI in batch mode using:
-
-::
-
-   trelis -batch -nographics make_faceteted_neutronics_model.py
-
-This should export a h5m file for use in DAGMC.
-
-Further information on DAGMC neutronics can be found `here <https://svalinn.github.io/DAGMC/>`_ and information on OpenMC can be found `here <https://openmc.readthedocs.io/>`_ . The two codes can be used together to simulate neutron transport on the h5m file created. The UKAEA openmc workshop also has two tasks that might be of interest `task 10 <https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_10>`_ and `task 12 <https://github.com/ukaea/openmc_workshop/tree/master/tasks/task_12>`_ .
-
-
-Example Scripts
----------------
-
-There are several example scripts in the `examples folder <https://github.com/ukaea/paramak/blob/develop/examples/>`_ . A good one to start with is `make_CAD_from_points <https://github.com/ukaea/paramak/blob/develop/examples/make_CAD_from_points.py>`_ which makes simple examples of the different types of shapes (extrude, rotate) with different connection methods (splines, straight lines and circles).

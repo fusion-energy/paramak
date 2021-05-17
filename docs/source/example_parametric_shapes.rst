@@ -9,7 +9,7 @@ make_CAD_from_points.ipynb
    :height: 275
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_CAD_from_points.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_CAD_from_points.ipynb>`__
 
 
 make_blanket_from_parameters.ipynb
@@ -20,7 +20,7 @@ make_blanket_from_parameters.ipynb
    :height: 400
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_blanket_from_parameters.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_blanket_from_parameters.ipynb>`__
 
 
 make_blanket_from_points.ipynb
@@ -31,7 +31,7 @@ make_blanket_from_points.ipynb
    :height: 400
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_blanket_from_points.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_blanket_from_points.ipynb>`__
 
 
 make_can_reactor_from_parameters.ipynb
@@ -42,7 +42,7 @@ make_can_reactor_from_parameters.ipynb
    :height: 450
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_can_reactor_from_parameters.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_can_reactor_from_parameters.ipynb>`__
 
 
 make_can_reactor_from_points.ipynb
@@ -53,7 +53,7 @@ make_can_reactor_from_points.ipynb
    :height: 450
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_can_reactor_from_points.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_can_reactor_from_points.ipynb>`__
 
 
 make_html_diagram_from_stp_file.ipynb
@@ -62,5 +62,5 @@ make_html_diagram_from_stp_file.ipynb
 .. image:: https://user-images.githubusercontent.com/8583900/117488160-fb705c00-af63-11eb-882e-27e284ceb79f.png
    :align: center
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_html_diagram_from_stp_file.ipynb>`_
+`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_shapes/make_html_diagram_from_stp_file.ipynb>`__
 

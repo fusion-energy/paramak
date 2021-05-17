@@ -1020,6 +1020,19 @@ class TestReactor(unittest.TestCase):
         assert Path("test_html.html").exists() is True
         os.system("rm test_html.html")
 
+    def test_export_3d_html(self):
+        """Checks the 3d html file is exported by the export_html_3d method
+        with the correct filename"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape.rotation_angle = 360
+        test_reactor = paramak.Reactor([test_shape])
+
+        os.system("rm filename.html")
+        test_reactor.export_html_3d('filename.html')
+        assert Path("filename.html").exists() is True
+
     def test_tet_meshes_error(self):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])

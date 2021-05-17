@@ -1252,6 +1252,30 @@ class Reactor:
 
         return str(path_filename)
 
+    def export_html_3d(
+            self,
+            filename: Optional[str] = "reactor_3d.html",
+    ):
+        """Saves an interactive 3d html view of the Reactor to a html file.
+
+        Args:
+            filename: the filename used to save the html graph. Defaults to
+                reactor_3d.html
+
+        Returns:
+            str: filename of the created html file
+        """
+
+        from ipywidgets.embed import embed_minimal_html
+
+        embed_minimal_html(
+            filename,
+            views=[self.show().show().cq_view.renderer],
+            title='Renderer'
+        )
+
+        return filename
+
     def export_html(
             self,
             filename: Optional[str] = "reactor.html",
