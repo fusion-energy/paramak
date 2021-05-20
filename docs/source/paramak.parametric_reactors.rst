@@ -10,7 +10,7 @@ These are the current reactor designs that can be created using the Paramak.
 BallReactor()
 ^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/119011892-6458ca80-b98d-11eb-92b1-bbc370cb9c84.png
+.. image:: https://user-images.githubusercontent.com/8583900/99136724-91af6f00-261e-11eb-9956-476b818a0ee3.png
    :width: 400
    :align: center
 
@@ -19,7 +19,7 @@ are red, PF coil cases are yellow, the center column shielding is dark green,
 the blanket is light green, the divertor is orange, the firstwall is grey
 and the rear wall of the blanket is teal.
 
-.. image:: https://user-images.githubusercontent.com/8583900/116444066-41367180-a84c-11eb-8e1b-dfa4815f560b.png
+.. image:: https://user-images.githubusercontent.com/8583900/119011892-6458ca80-b98d-11eb-92b1-bbc370cb9c84.png
    :width: 450
    :align: center
 
