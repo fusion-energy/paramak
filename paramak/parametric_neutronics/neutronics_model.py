@@ -415,6 +415,8 @@ class NeutronicsModel():
         settings.run_mode = "fixed source"
         settings.dagmc = True
         settings.photon_transport = self.photon_transport
+        if self.photon_transport:
+            settings.electron_treatment = 'ttb'
         settings.source = self.source
         settings.max_lost_particles = self.max_lost_particles
 
