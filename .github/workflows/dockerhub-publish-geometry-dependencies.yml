@@ -2,11 +2,13 @@
 # This Action will build and upload a Docker image to Dockerhub
 # https://github.com/marketplace/actions/publish-docker
 
-name: dockerhub-publish-dev
+name: dockerhub-publish-geometry-dependencies
 
 on:
   push:
-    branches: develop
+    branches:
+      - develop
+      - main
 
 jobs:
   main:
@@ -32,7 +34,7 @@ jobs:
           push: true
           tags: ukaea/paramak:geometry-dependencies
           build-args: |
-            cq_version=master
+            cq_version=2.1
             compile_cores=2
             include_neutronics=false
       -

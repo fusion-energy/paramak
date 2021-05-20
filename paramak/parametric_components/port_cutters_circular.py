@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 from paramak import ExtrudeCircleShape
 
 
@@ -7,30 +9,33 @@ class PortCutterCircular(ExtrudeCircleShape):
     other components (eg. blanket, vessel,..) in order to create ports.
 
     Args:
-        z_pos (float): Z position (cm) of the port
-        height (float): height (cm) of the port
-        width (float): width (cm) of the port
-        distance (float): extruded distance (cm) of the cutter
-        stp_filename (str, optional): defaults to "PortCutterCircular.stp".
-        stl_filename (str, optional): defaults to "PortCutterCircular.stl".
-        name (str, optional): defaults to "circular_port_cutter".
-        material_tag (str, optional): defaults to "circular_port_cutter_mat".
-        extrusion_start_offset (float, optional): the distance between 0 and
-            the start of the extrusion. Defaults to 1..
+        radius: radius (cm) of port cutter.
+        distance: extruded distance (cm) of the port cutter.
+        center_point: center point of the port cutter. Defaults to (0, 0).
+        workplane: workplane in which the port cutters are created. Defaults
+            to "ZY".
+        rotation_axis: axis around which the port cutters are rotated and
+            placed. Defaults to "Z".
+        extrusion_start_offset: the distance between 0 and the start of the
+            extrusion. Defaults to 1..
+        stp_filename: defaults to "PortCutterCircular.stp".
+        stl_filename: defaults to "PortCutterCircular.stl".
+        name: defaults to "circular_port_cutter".
+        material_tag: defaults to "circular_port_cutter_mat".
     """
 
     def __init__(
         self,
-        z_pos,
-        radius,
-        distance,
-        workplane="ZY",
-        rotation_axis="Z",
-        extrusion_start_offset=1.,
-        stp_filename="PortCutterCircular.stp",
-        stl_filename="PortCutterCircular.stl",
-        name="circular_port_cutter",
-        material_tag="circular_port_cutter_mat",
+        radius: float,
+        distance: float,
+        center_point: Optional[tuple] = (0, 0),
+        workplane: Optional[str] = "ZY",
+        rotation_axis: Optional[str] = "Z",
+        extrusion_start_offset: Optional[float] = 1.,
+        stp_filename: Optional[str] = "PortCutterCircular.stp",
+        stl_filename: Optional[str] = "PortCutterCircular.stl",
+        name: Optional[str] = "circular_port_cutter",
+        material_tag: Optional[str] = "circular_port_cutter_mat",
         **kwargs
     ):
         super().__init__(
@@ -47,8 +52,8 @@ class PortCutterCircular(ExtrudeCircleShape):
             **kwargs
         )
 
-        self.z_pos = z_pos
         self.radius = radius
+        self.center_point = center_point
 
     def find_points(self):
-        self.points = [(0, self.z_pos)]
+        self.points = [self.center_point]

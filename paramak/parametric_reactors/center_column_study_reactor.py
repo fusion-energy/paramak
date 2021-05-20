@@ -63,6 +63,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
         super().__init__([])
 
+        self.method = 'trelis'
+
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
         self.center_column_shield_radial_thickness_mid = \
@@ -223,6 +225,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
             material_tag="inboard_tf_coils_mat",
+            color=(0., 0., 1.)
         )
         return self._inboard_tf_coils
 
@@ -267,6 +270,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
                 self.inner_plasma_gap_radial_thickness],
             start_angle=-180,
             stop_angle=180,
+            color=(0., 1., 0.498),
             rotation_angle=self.rotation_angle,
             cut=[self._center_column_cutter]
         )
@@ -299,6 +303,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             name="divertor",
             material_tag="divertor_mat",
             intersect=self._blanket_enveloppe,
+            color=(1., 0.667, 0.),
         )
         self._blanket.cut.append(self._divertor)
         return self._divertor

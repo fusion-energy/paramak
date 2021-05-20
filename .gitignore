@@ -24,9 +24,11 @@ paramak.egg-info/
 coverage.xml
 .coverage
 
-# trelis journal files
+# trelis output files
 *.jou
 *.log
+*.trelis
+*.cub
 
 # neutronics geometry files
 *.h5m
@@ -59,3 +61,7 @@ test-reports/
 
 # ppp output directory
 manifest_processed/
+
+# conda buid and dist dir
+build/
+dist/

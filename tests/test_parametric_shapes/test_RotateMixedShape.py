@@ -15,6 +15,32 @@ class TestRotateMixedShape(unittest.TestCase):
                     (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")]
         )
 
+        self.test_shape_2 = RotateMixedShape(
+            rotation_angle=1,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "straight"),
+                (110, 45, "straight"),
+            ]
+        )
+
+        self.test_shape_3 = RotateMixedShape(
+            rotation_angle=180,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "circle"),
+                (110, 45, "circle"),
+            ]
+        )
+
     def test_export_2d_image(self):
         """Creates a RotateMixedShape object and checks that a png file of the
         object with the correct suffix can be exported using the
@@ -125,7 +151,7 @@ class TestRotateMixedShape(unittest.TestCase):
             """Checks ValueError is raised when an incorrect number of
             connections is specified."""
 
-            test_shape = RotateMixedShape(
+            RotateMixedShape(
                 points=[(0, 200, "straight"), (200, 100), (0, 0, "spline")]
             )
 
@@ -214,6 +240,40 @@ class TestRotateMixedShape(unittest.TestCase):
             Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
+
+    def test_convert_all_circle_points_change_to_splines(self):
+        """creates a RotateMixedShape with two circular edges and converts
+        them to spline edges. Checks the new edges have been correctly
+        replaced with splines"""
+
+        assert len(self.test_shape_3.points) == 8
+        self.test_shape_3.convert_all_circle_connections_to_splines()
+        assert len(self.test_shape_3.points) > 8
+        assert self.test_shape_3.points[0] == (100, 0, "straight")
+        assert self.test_shape_3.points[1][2] == 'spline'
+        assert self.test_shape_3.points[2][2] == 'spline'
+
+        # last point is the same as the first point
+        assert self.test_shape_3.points[-1] == (100, 0, "straight")
+        assert self.test_shape_3.points[-2][2] == 'spline'
+        assert self.test_shape_3.points[-3][2] == 'spline'
+
+    def test_convert_circles_to_splines_volume(self):
+        """creates a RotateMixedShape with a circular edge and converts the
+        edge to a spline edges. Checks the new shape has appoximatly the same
+        volume as the orignal shape (with circles)"""
+
+        original_volume = self.test_shape_2.volume
+        self.test_shape_2.convert_all_circle_connections_to_splines()
+        new_volume = self.test_shape_2.volume
+
+        assert pytest.approx(new_volume, rel=0.000001) == original_volume
+
+        original_volume = self.test_shape_3.volume
+        self.test_shape_3.convert_all_circle_connections_to_splines()
+        new_volume = self.test_shape_3.volume
+
+        assert pytest.approx(new_volume, rel=0.00001) == original_volume
 
 
 if __name__ == "__main__":

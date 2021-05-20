@@ -6,7 +6,7 @@ from os import fdopen, remove
 from pathlib import Path
 from shutil import copymode, move
 from tempfile import mkstemp
-from typing import List, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import numpy as np
@@ -17,7 +17,7 @@ from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 import paramak
 
 
-def _transform_curve(edge, tolerance: float = 1e-3):
+def transform_curve(edge, tolerance: float = 1e-3):
     """Converts a curved edge into a series of straight lines (facetets) with
     the provided tolerance.
 
@@ -71,7 +71,10 @@ def facet_wire(
     if facet_circles:
         types_to_facet.append('CIRCLE')
 
-    if isinstance(wire, cq.occ_impl.shapes.Wire):
+    if isinstance(wire, cq.occ_impl.shapes.Edge):
+        # this is for when a edge is passed
+        iterable_of_wires = [wire]
+    elif isinstance(wire, cq.occ_impl.shapes.Wire):
         # this is for imported stp files
         iterable_of_wires = wire.Edges()
     else:
@@ -80,7 +83,7 @@ def facet_wire(
 
     for edge in iterable_of_wires:
         if edge.geomType() in types_to_facet:
-            edges.extend(_transform_curve(edge, tolerance=tolerance).Edges())
+            edges.extend(transform_curve(edge, tolerance=tolerance).Edges())
         else:
             edges.append(edge)
 
@@ -185,16 +188,18 @@ def extend(point_a: Tuple[float, float], point_b: Tuple[float, float],
     return xc, yc
 
 
-def find_center_point_of_circle(point_a: Tuple[float, float],
-                                point_b: Tuple[float, float],
-                                point3: Tuple[float, float]) -> Tuple[Tuple[float, float], float]:
+def find_center_point_of_circle(
+        point_a: Tuple[float, float],
+        point_b: Tuple[float, float],
+        point_3: Tuple[float, float]
+) -> Tuple[Tuple[float, float], float]:
     """
     Calculates the center and the radius of a circle
     passing through 3 points.
     Args:
         point_a (float, float): point 1 coordinates
         point_b (float, float): point 2 coordinates
-        point3 (float, float): point 3 coordinates
+        point_3 (float, float): point 3 coordinates
     Returns:
         (float, float), float: center of the circle coordinates or
         None if 3 points on a line are input and the radius
@@ -202,17 +207,19 @@ def find_center_point_of_circle(point_a: Tuple[float, float],
 
     temp = point_b[0] * point_b[0] + point_b[1] * point_b[1]
     bc = (point_a[0] * point_a[0] + point_a[1] * point_a[1] - temp) / 2
-    cd = (temp - point3[0] * point3[0] - point3[1] * point3[1]) / 2
-    det = (point_a[0] - point_b[0]) * (point_b[1] - point3[1]) - (
-        point_b[0] - point3[0]
+    cd = (temp - point_3[0] * point_3[0] - point_3[1] * point_3[1]) / 2
+    det = (point_a[0] - point_b[0]) * (point_b[1] - point_3[1]) - (
+        point_b[0] - point_3[0]
     ) * (point_a[1] - point_b[1])
 
     if abs(det) < 1.0e-6:
         return (None, np.inf)
 
     # Center of circle
-    cx = (bc * (point_b[1] - point3[1]) - cd * (point_a[1] - point_b[1])) / det
-    cy = ((point_a[0] - point_b[0]) * cd - (point_b[0] - point3[0]) * bc) / det
+    cx = (bc * (point_b[1] - point_3[1]) -
+          cd * (point_a[1] - point_b[1])) / det
+    cy = ((point_a[0] - point_b[0]) * cd -
+          (point_b[0] - point_3[0]) * bc) / det
 
     radius = np.sqrt((cx - point_a[0]) ** 2 + (cy - point_a[1]) ** 2)
 
@@ -409,8 +416,7 @@ def plotly_trace(
         mode: The mode to use for the Plotly.Scatter graph. Options include
             "markers", "lines" and "markers+lines". Defaults to
             "markers+lines"
-        name: The name to use in the graph legend
-        color
+        name: The name to use in the graph legend color
 
     Returns:
         plotly trace: trace object
@@ -540,12 +546,13 @@ def load_stp_file(
 
 def export_wire_to_html(
     wires,
-    filename,
+    filename=None,
     view_plane='RZ',
     facet_splines: bool = True,
     facet_circles: bool = True,
     tolerance: float = 1e-3,
     title=None,
+    mode="markers+lines",
 ):
     """Creates a html graph representation of the points within the wires.
     Edges of certain types (spines and circles) can optionally be faceted.
@@ -555,7 +562,9 @@ def export_wire_to_html(
     Args:
         wires (CadQuery.Wire): the wire (edge) or list of wires to plot points
             from and to optionally facet.
-        filename: the filename used to save the html graph.
+        filename: the filename used to save the html graph. If None then no
+            html file will saved but a ploty figure will still be returned.
+            Defaults to None.
         view_plane: The axis to view the points and faceted edges from. The
             options are 'XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ' and 'XYZ'.
             Defaults to 'RZ'
@@ -566,17 +575,12 @@ def export_wire_to_html(
         tolerance: faceting toleranceto use when faceting cirles and splines.
             Defaults to 1e-3.
         title: the title of the plotly plot.
+        mode: the plotly trace mode to use when plotting the data. Options
+            include 'markers+lines', 'markers', 'lines'. Defaults to 'lines'.
 
     Returns:
         plotly.Figure(): figure object
     """
-
-    Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
-
-    path_filename = Path(filename)
-
-    if path_filename.suffix != ".html":
-        path_filename = path_filename.with_suffix(".html")
 
     fig = go.Figure()
     fig.update_layout(title=title, hovermode="closest")
@@ -622,14 +626,17 @@ def export_wire_to_html(
         fig.add_trace(
             plotly_trace(
                 points=points,
-                mode="markers+lines",
+                mode=mode,
                 name='edge ' + str(counter)
             )
         )
 
     for counter, wire in enumerate(list_of_wires):
 
-        if isinstance(wire, cq.occ_impl.shapes.Wire):
+        if isinstance(wire, cq.occ_impl.shapes.Edge):
+            # this is for when an edge is passed
+            edges = wire
+        elif isinstance(wire, cq.occ_impl.shapes.Wire):
             # this is for imported stp files
             edges = wire.Edges()
         else:
@@ -647,18 +654,63 @@ def export_wire_to_html(
         )
         )
 
-    fig.write_html(str(path_filename))
+    if filename is not None:
 
-    print("Exported html graph to ", path_filename)
+        Path(filename).parents[0].mkdir(parents=True, exist_ok=True)
+
+        path_filename = Path(filename)
+
+        if path_filename.suffix != ".html":
+            path_filename = path_filename.with_suffix(".html")
+
+        fig.write_html(str(path_filename))
+
+        print("Exported html graph to ", path_filename)
 
     return fig
+
+
+def convert_circle_to_spline(
+        p_0: Tuple[float, float],
+        p_1: Tuple[float, float],
+        p_2: Tuple[float, float],
+        tolerance: Optional[float] = 0.1
+) -> List[Tuple[float, float, str]]:
+    """Converts three points on the edge of a circle into a series of points
+    on the edge of the circle. This is done by creating a circle edge from the
+    the points provided (p_0, p_1, p_2), facets the circle with the provided
+    tolerance to extracts the points on the faceted edge and returns them.
+
+    Args:
+        p_0: coordinates of the first point
+        p_1: coordinates of the second point
+        p_2: coordinates of the third point
+        tolerance: the precision of the faceting.
+
+    Returns:
+        The new points
+    """
+
+    # work plane is arbitrarily selected and has no impact of function
+    solid = cq.Workplane('XZ').center(0, 0)
+    solid = solid.moveTo(p_0[0], p_0[1]).threePointArc(p_1, p_2)
+    edge = solid.vals()[0]
+
+    new_edge = paramak.utils.transform_curve(edge, tolerance=tolerance)
+
+    points = paramak.utils.extract_points_from_edges(
+        edges=new_edge,
+        view_plane='XZ'
+    )
+
+    return points
 
 
 class FaceAreaSelector(cq.Selector):
     """A custom CadQuery selector the selects faces based on their area with a
     tolerance. The following useage example will fillet the faces of an extrude
-    shape with an area of 0.5. paramak.ExtrudeStraightShape(points=[(1,1),(2,1),
-    (2,2)], distance=5).solid.faces(FaceAreaSelector(0.5)).fillet(0.1)
+    shape with an area of 0.5. paramak.ExtrudeStraightShape(points=[(1,1),
+    (2,1), (2,2)], distance=5).solid.faces(FaceAreaSelector(0.5)).fillet(0.1)
 
     Args:
         area (float): The area of the surface to select.

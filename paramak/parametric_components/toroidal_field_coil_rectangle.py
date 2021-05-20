@@ -36,6 +36,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         stp_filename: Optional[str] = "ToroidalFieldCoilRectangle.stp",
         stl_filename: Optional[str] = "ToroidalFieldCoilRectangle.stl",
         material_tag: Optional[str] = "outer_tf_coil_mat",
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
         **kwargs
     ) -> None:
 
@@ -44,6 +45,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            color=color,
             **kwargs
         )
 
@@ -140,6 +142,11 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
 
         solid = wire.extrude(distance=-self.distance / 2.0, both=True)
 
+        solid = self.rotate_solid(solid)
+
+        cutting_wedge = calculate_wedge_cut(self)
+        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+
         if self.with_inner_leg is True:
             inner_leg_solid = cq.Workplane(self.workplane)
             inner_leg_solid = inner_leg_solid.polyline(
@@ -147,13 +154,14 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             inner_leg_solid = inner_leg_solid.close().extrude(
                 distance=-self.distance / 2.0, both=True)
 
+            inner_leg_solid = self.rotate_solid(inner_leg_solid)
+            inner_leg_solid = self.perform_boolean_operations(
+                inner_leg_solid, wedge_cut=cutting_wedge)
+
             solid = cq.Compound.makeCompound(
                 [a.val() for a in [inner_leg_solid, solid]]
             )
 
-        solid = self.rotate_solid(solid)
-        cutting_wedge = calculate_wedge_cut(self)
-        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
         self.solid = solid   # not necessarily required as set in boolean_operations
 
         return solid

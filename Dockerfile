@@ -20,7 +20,7 @@
 #   Options: [1, 2, 3, 4, 5, 6...]
 #
 # Example builds:
-# Building using the defaults (cq_version 2, no neutronics and 1 core compile)
+# Building using the defaults (cq_version 2.1, no neutronics and 1 core compile)
 # docker build -t ukaea/paramak .
 #
 # Building to include cadquery master, neutronics dependencies and use 8 cores.
@@ -40,10 +40,10 @@
 # docker run --rm ukaea/paramak pytest /tests
 # docker run --rm ukaea/paramak  /bin/bash -c "cd .. && bash run_tests.sh"
 
-FROM continuumio/miniconda3:4.9.2
+FROM continuumio/miniconda3:4.9.2 as dependencies
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
-ARG cq_version=2
+ARG cq_version=2.1
 ARG include_neutronics=false
 ARG compile_cores=1
 
@@ -62,11 +62,12 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
                        apt-get clean
 
 # Installing CadQuery
-# jupyter is installed before cadquery to avoid a conflict
 RUN echo installing CadQuery version $cq_version && \
-    conda install jupyter -y --quiet && \
-    conda install -c cadquery -c conda-forge cadquery="$cq_version" && \
+    conda install -c conda-forge -c python python=3.8 && \
+    conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
+    pip install jupyter-cadquery==2.1.0 && \
     conda clean -afy
+
 
 # Install neutronics dependencies from Debian package manager
 RUN if [ "$include_neutronics" = "true" ] ; \
@@ -88,20 +89,9 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     apt-get --yes install libglfw3-dev ; \
     fi
 
-# Clone and install NJOY2016
-RUN if [ "$include_neutronics" = "true" ] ; \
-    then git clone --single-branch --branch master https://github.com/njoy/NJOY2016.git /opt/NJOY2016 ; \
-    cd /opt/NJOY2016 ; \
-    mkdir build ; \
-    cd build ; \
-    cmake -Dstatic=on .. ; \
-    make 2>/dev/null ; \
-    make install ; \
-    fi
-
 # Clone and install Embree
 RUN if [ "$include_neutronics" = "true" ] ; \
-    then git clone --single-branch --branch master https://github.com/embree/embree.git ; \
+    then git clone --single-branch --branch v3.12.2 --depth 1 https://github.com/embree/embree.git ; \
     cd embree ; \
     mkdir build ; \
     cd build ; \
@@ -117,7 +107,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     mkdir MOAB ; \
     cd MOAB ; \
     mkdir build ; \
-    git clone  --single-branch --branch develop https://bitbucket.org/fathomteam/moab.git ; \
+    git clone  --single-branch --branch 5.2.1 --depth 1 https://bitbucket.org/fathomteam/moab.git ; \
     cd build ; \
     cmake ../moab -DENABLE_HDF5=ON \
                   -DENABLE_NETCDF=ON \
@@ -141,7 +131,6 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     python setup.py install ; \
     fi
 
-
 # Clone and install Double-Down
 RUN if [ "$include_neutronics" = "true" ] ; \
     then git clone --single-branch --branch main https://github.com/pshriwise/double-down.git ; \
@@ -159,7 +148,7 @@ RUN if [ "$include_neutronics" = "true" ] ; \
 RUN if [ "$include_neutronics" = "true" ] ; \
     then mkdir DAGMC ; \
     cd DAGMC ; \
-    git clone --single-branch --branch develop https://github.com/svalinn/DAGMC.git ; \
+    git clone --single-branch --branch 3.2.0 --depth 1 https://github.com/svalinn/DAGMC.git ; \
     mkdir build ; \
     cd build ; \
     cmake ../DAGMC -DBUILD_TALLY=ON \
@@ -187,23 +176,30 @@ RUN if [ "$include_neutronics" = "true" ] ; \
     make -j"$compile_cores" install ; \
     cd ..  ; \
     pip install -e .[test] ; \
-    /opt/openmc/tools/ci/download-xs.sh ; \
     fi
-
-ENV OPENMC_CROSS_SECTIONS=/root/nndc_hdf5/cross_sections.xml
 
 RUN if [ "$include_neutronics" = "true" ] ; \
     then pip install vtk ; \
     pip install parametric_plasma_source ; \
-    pip install neutronics_material_maker ; \
+    pip install neutronics_material_maker==0.3.2 ; \
+    pip install openmc_data_downloader ; \
+    openmc_data_downloader -e all -i H3 -l ENDFB-7.1-NNDC TENDL-2019 -p neutron photon ; \
     fi
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# @pullrequest reviewer, we would like to make the copy optional but don't know
-# how. Then we can build a dependency image for use in circle ci.
-# Copy over the source code, examples and tests
+ENV OPENMC_CROSS_SECTIONS=/cross_sections.xml
+ENV PATH="/MOAB/build/bin:${PATH}"
+ENV PATH="/DAGMC/bin:${PATH}"
+
+RUN mkdir /home/paramak
+EXPOSE 8888
+WORKDIR /home/paramak
+
+
+FROM dependencies as final
+
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
 COPY examples examples/
@@ -213,3 +209,7 @@ COPY README.md README.md
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
+
+# this helps prevent the kernal failing
+RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> /home/paramak/docker-cmd.sh
+CMD bash /home/paramak/docker-cmd.sh

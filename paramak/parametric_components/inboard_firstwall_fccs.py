@@ -1,11 +1,13 @@
 
 from collections.abc import Iterable
+from typing import List, Optional, Tuple
 
 from paramak import (CenterColumnShieldCircular, CenterColumnShieldCylinder,
                      CenterColumnShieldFlatTopCircular,
                      CenterColumnShieldFlatTopHyperbola,
                      CenterColumnShieldHyperbola,
                      CenterColumnShieldPlasmaHyperbola, RotateMixedShape)
+import paramak
 
 
 class InboardFirstwallFCCS(RotateMixedShape):
@@ -16,21 +18,21 @@ class InboardFirstwallFCCS(RotateMixedShape):
     CenterColumnShieldPlasmaHyperbola or CenterColumnShieldFlatTopCircular
 
     Args:
-        central_column_shield (paramak.Shape): The central column shield object
-            to build from
-        thickness (float): the radial thickness of the firstwall (cm)
-        stp_filename (str, optional): Defaults to "InboardFirstwallFCCS.stp".
-        stl_filename (str, optional): Defaults to "InboardFirstwallFCCS.stl".
-        material_tag (str, optional): Defaults to "firstwall_mat".
+        central_column_shield: The central column shield object to build from
+        thickness: the radial thickness of the firstwall (cm)
+        stp_filename: Defaults to "InboardFirstwallFCCS.stp".
+        stl_filename: Defaults to "InboardFirstwallFCCS.stl".
+        material_tag: Defaults to "firstwall_mat".
     """
 
     def __init__(
         self,
-        central_column_shield,
-        thickness,
-        stp_filename="InboardFirstwallFCCS.stp",
-        stl_filename="InboardFirstwallFCCS.stl",
-        material_tag="firstwall_mat",
+        central_column_shield: paramak.Shape,
+        thickness: float,
+        stp_filename: Optional[str] = "InboardFirstwallFCCS.stp",
+        stl_filename: Optional[str] = "InboardFirstwallFCCS.stl",
+        material_tag: Optional[str] = "firstwall_mat",
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.5, 0.5, 0.5),
         **kwargs
     ):
 
@@ -38,6 +40,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             material_tag=material_tag,
+            color=color,
             **kwargs
         )
 
