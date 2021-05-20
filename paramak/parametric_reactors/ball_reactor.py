@@ -318,16 +318,21 @@ class BallReactor(paramak.Reactor):
         # this is the vertical build sequence, components build on each other
         # in a similar manner to the radial build
 
-        self._firstwall_start_height = (self._plasma.high_point[1] + self.plasma_gap_vertical_thickness)
-        self._firstwall_end_height = self._firstwall_start_height + self.firstwall_radial_thickness
+        self._firstwall_start_height = (
+            self._plasma.high_point[1] +
+            self.plasma_gap_vertical_thickness)
+        self._firstwall_end_height = self._firstwall_start_height + \
+            self.firstwall_radial_thickness
 
         self._blanket_start_height = self._firstwall_end_height
         self._blanket_end_height = self._blanket_start_height + self.blanket_radial_thickness
 
         self._blanket_rear_wall_start_height = self._blanket_end_height
-        self._blanket_rear_wall_end_height = self._blanket_rear_wall_start_height + self.blanket_rear_wall_radial_thickness
+        self._blanket_rear_wall_end_height = self._blanket_rear_wall_start_height + \
+            self.blanket_rear_wall_radial_thickness
 
-        self._tf_coil_start_height = self._blanket_rear_wall_end_height + self.divertor_to_tf_gap_vertical_thickness
+        self._tf_coil_start_height = self._blanket_rear_wall_end_height + \
+            self.divertor_to_tf_gap_vertical_thickness
 
         self._center_column_shield_height = self._blanket_rear_wall_end_height * 2
 
