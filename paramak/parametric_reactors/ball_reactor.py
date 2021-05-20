@@ -35,6 +35,8 @@ class BallReactor(paramak.Reactor):
         plasma_gap_vertical_thickness: the vertical thickness of the gap
             between the plasma and firstwall (cm). If left as None then the
             outer_plasma_gap_radial_thickness is used.
+        divertor_to_tf_gap_vertical_thickness: the vertical thickness of the
+            gap between the divertor and the TF coils.
         number_of_tf_coils: the number of tf coils
         pf_coil_radial_thicknesses: the radial
             thickness of each poloidal field coil.
@@ -76,6 +78,7 @@ class BallReactor(paramak.Reactor):
             elongation: float,
             triangularity: float,
             plasma_gap_vertical_thickness: Optional[float] = None,
+            divertor_to_tf_gap_vertical_thickness: Optional[float] = 0,
             number_of_tf_coils: Optional[int] = 12,
             rear_blanket_to_tf_gap: Optional[float] = None,
             pf_coil_radial_thicknesses: Optional[Union[float, List[float]]] = None,
@@ -123,6 +126,7 @@ class BallReactor(paramak.Reactor):
         self.rotation_angle = rotation_angle
 
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
+        self.divertor_to_tf_gap_vertical_thickness = divertor_to_tf_gap_vertical_thickness
         if self.plasma_gap_vertical_thickness is None:
             self.plasma_gap_vertical_thickness = \
                 self.outer_plasma_gap_radial_thickness
@@ -314,24 +318,18 @@ class BallReactor(paramak.Reactor):
         # this is the vertical build sequence, components build on each other
         # in a similar manner to the radial build
 
-        self._firstwall_start_height = (
-            self._plasma.high_point[1] + self.plasma_gap_vertical_thickness
-        )
-        self._firstwall_end_height = self._firstwall_start_height + \
-            self.firstwall_radial_thickness
+        self._firstwall_start_height = (self._plasma.high_point[1] + self.plasma_gap_vertical_thickness)
+        self._firstwall_end_height = self._firstwall_start_height + self.firstwall_radial_thickness
 
         self._blanket_start_height = self._firstwall_end_height
-        self._blanket_end_height = \
-            self._blanket_start_height + self.blanket_radial_thickness
+        self._blanket_end_height = self._blanket_start_height + self.blanket_radial_thickness
 
         self._blanket_rear_wall_start_height = self._blanket_end_height
-        self._blanket_rear_wall_end_height = (
-            self._blanket_rear_wall_start_height +
-            self.blanket_rear_wall_radial_thickness)
+        self._blanket_rear_wall_end_height = self._blanket_rear_wall_start_height + self.blanket_rear_wall_radial_thickness
 
-        self._tf_coil_height = self._blanket_rear_wall_end_height
-        self._center_column_shield_height = \
-            self._blanket_rear_wall_end_height * 2
+        self._tf_coil_start_height = self._blanket_rear_wall_end_height + self.divertor_to_tf_gap_vertical_thickness
+
+        self._center_column_shield_height = self._blanket_rear_wall_end_height * 2
 
         if self.rear_blanket_to_tf_gap is not None:
             self._tf_coil_start_radius = self._blanket_rear_wall_end_radius + \
@@ -343,7 +341,7 @@ class BallReactor(paramak.Reactor):
     def _make_inboard_tf_coils(self):
 
         self._inboard_tf_coils = paramak.CenterColumnShieldCylinder(
-            height=self._tf_coil_height * 2,
+            height=self._tf_coil_start_height * 2,
             inner_radius=self._inboard_tf_coils_start_radius,
             outer_radius=self._inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
@@ -534,7 +532,7 @@ class BallReactor(paramak.Reactor):
                 with_inner_leg=False,
                 horizontal_start_point=(
                     self._inboard_tf_coils_start_radius,
-                    self._tf_coil_height),
+                    self._tf_coil_start_height),
                 vertical_mid_point=(
                     self._tf_coil_start_radius, 0),
                 thickness=self.outboard_tf_coil_radial_thickness,
