@@ -2,7 +2,7 @@
 from typing import Optional, Tuple
 
 import cadquery as cq
-from paramak import RotateStraightShape
+from paramak import RotateStraightShape, PoloidalFieldCoilCase
 
 
 class PoloidalFieldCoilCaseSet(RotateStraightShape):
@@ -31,6 +31,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         widths,
         casing_thicknesses,
         center_points,
+        split=False,
         stp_filename="PoloidalFieldCoilCaseSet.stp",
         stl_filename="PoloidalFieldCoilCaseSet.stl",
         name="pf_coil_case_set",
@@ -52,6 +53,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         self.heights = heights
         self.widths = widths
         self.casing_thicknesses = casing_thicknesses
+        self.split = split
 
     @property
     def center_points(self):
@@ -93,11 +95,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
                     "Casing_thicknesses must be a list of numbers or a number")
         self._casing_thicknesses = value
 
-    def find_points(self):
-        """Finds the XZ points joined by straight connections that describe
-        the 2D profile of the poloidal field coil shape."""
-
-        all_points = []
+    def create_solid(self):
 
         if isinstance(self.casing_thicknesses, list):
             casing_thicknesses_list = self.casing_thicknesses
@@ -113,94 +111,34 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
                 "The number of heights, widths, center_points and "
                 "casing_thicknesses must be equal")
 
-        for height, width, center_point, casing_thickness in zip(
-                self.heights, self.widths,
-                self.center_points, casing_thicknesses_list):
-
-            if casing_thickness != 0:
-
-                all_points = all_points + [
-                    (
-                        center_point[0] + width / 2.0,
-                        center_point[1] + height / 2.0,
-                    ),  # upper right
-                    (
-                        center_point[0] + width / 2.0,
-                        center_point[1] - height / 2.0,
-                    ),  # lower right
-                    (
-                        center_point[0] - width / 2.0,
-                        center_point[1] - height / 2.0,
-                    ),  # lower left
-                    (
-                        center_point[0] - width / 2.0,
-                        center_point[1] + height / 2.0,
-                    ),  # upper left
-                    (
-                        center_point[0] + width / 2.0,
-                        center_point[1] + height / 2.0,
-                    ),  # upper right
-                    (
-                        center_point[0] + (casing_thickness + width / 2.0),
-                        center_point[1] + (casing_thickness + height / 2.0),
-                    ),
-                    (
-                        center_point[0] + (casing_thickness + width / 2.0),
-                        center_point[1] - (casing_thickness + height / 2.0),
-                    ),
-                    (
-                        center_point[0] - (casing_thickness + width / 2.0),
-                        center_point[1] - (casing_thickness + height / 2.0),
-                    ),
-                    (
-                        center_point[0] - (casing_thickness + width / 2.0),
-                        center_point[1] + (casing_thickness + height / 2.0),
-                    ),
-                    (
-                        center_point[0] + (casing_thickness + width / 2.0),
-                        center_point[1] + (casing_thickness + height / 2.0),
-                    )
-                ]
-
-        self.points = all_points
-
-    def create_solid(self):
-        """Creates a 3d solid using points with straight edges.
-
-           Returns:
-              A CadQuery solid: A 3D solid volume
-        """
-
-        iter_points = iter(self.points)
-        pf_coils_set = []
+        cases = []
         wires = []
-        for p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 in zip(
-                iter_points, iter_points, iter_points, iter_points,
-                iter_points, iter_points, iter_points, iter_points,
-                iter_points, iter_points,
-        ):
 
-            solid = (
-                cq.Workplane(self.workplane)
-                .polyline(
-                    [p1[:2], p2[:2], p3[:2], p4[:2], p5[:2], p6[:2],
-                     p7[:2], p8[:2], p9[:2], p10[:2]])
+        for height, width, center_point, casing_thickness in zip(
+            self.heights, self.widths, 
+            self.center_points, casing_thicknesses_list):
+
+            case = PoloidalFieldCoilCase(
+                coil_height = height,
+                coil_width = width,
+                center_point = center_point,
+                casing_thickness = casing_thickness,
+                split = self.split,
+                rotation_angle = self.rotation_angle
+            )
+            cases.append(case.solid)
+            wires.append(case.wire)
+
+        if self.split == True:
+            compound = cq.Compound.makeCompound(
+                [a for a in cases]
+            )
+        elif self.split == False:
+            compound = cq.Compound.makeCompound(
+                [a.val() for a in cases]
             )
 
-            wire = solid.close()
-
-            wires.append(wire)
-
-            solid = wire.revolve(self.rotation_angle)
-
-            pf_coils_set.append(solid)
-
-        compound = cq.Compound.makeCompound(
-            [a.val() for a in pf_coils_set]
-        )
-
-        self.wire = wires
-
         self.solid = compound
+        self.wire = wires
 
         return compound
