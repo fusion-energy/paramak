@@ -77,7 +77,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the poloidal field coil case shape."""
 
-        inner_top_right = (  
+        inner_top_right = (
             self.center_point[0] + self.width / 2.0,
             self.center_point[1] + self.height / 2.0
         )
@@ -85,7 +85,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
             self.center_point[0] + self.width / 2.0,
             self.center_point[1]
         )
-        inner_bottom_right = (  
+        inner_bottom_right = (
             self.center_point[0] + self.width / 2.0,
             self.center_point[1] - self.height / 2.0
         )
@@ -100,13 +100,13 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         inner_top_left = (
             self.center_point[0] - self.width / 2.0,
             self.center_point[1] + self.height / 2.0
-        )        
+        )
         outer_top_right = (
             self.center_point[0] + self.width / 2.0 + self.casing_thickness,
             self.center_point[1] + self.height / 2.0 + self.casing_thickness
         )
         outer_mid_right = (
-            self.center_point[0] + self.width / 2.0 + self.casing_thickness, 
+            self.center_point[0] + self.width / 2.0 + self.casing_thickness,
             self.center_point[1]
         )
         outer_bottom_right = (
@@ -132,7 +132,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         ]
 
         bottom_points = [
-            inner_bottom_right, inner_mid_right, outer_mid_right, 
+            inner_bottom_right, inner_mid_right, outer_mid_right,
             outer_bottom_right, outer_bottom_left, outer_mid_left,
             inner_mid_left, inner_bottom_left
         ]
@@ -144,14 +144,14 @@ class PoloidalFieldCoilCase(RotateStraightShape):
             outer_top_right
         ]
 
-        if self.split == False:
+        if not self.split:
             self.points = unsplit_points
-        
+
         else:
             self.points = top_points + bottom_points
             self._bottom_points = bottom_points
             self._top_points = top_points
-    
+
     def create_solid(self):
         """Creates a 3d solid using points with straight edges.
 
@@ -161,7 +161,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
 
         all_points = self.points
 
-        if self.split == True:
+        if self.split:
             wires = []
             casings = []
             for points in (self._top_points, self._bottom_points):
