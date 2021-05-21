@@ -1,6 +1,7 @@
 
 from typing import Optional, Tuple
 
+import cadquery as cq
 from paramak import RotateStraightShape
 
 
@@ -13,6 +14,8 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         coil_width: the horizontal (x axis) width of the coil (cm).
         center_point: the center of the coil (x,z) values (cm).
         casing_thickness: the thickness of the coil casing (cm).
+        split: controls whether the pf coil casing is split horizontally into
+            two sections. Defaults to False.
         stp_filename: defaults to "PoloidalFieldCoilCase.stp".
         stl_filename: defaults to "PoloidalFieldCoilCase.stl".
         material_tag: defaults to "pf_coil_case_mat".
@@ -24,6 +27,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         coil_height: float,
         coil_width: float,
         center_point: Tuple[float, float],
+        split: Optional[bool] = False,
         stp_filename: Optional[str] = "PoloidalFieldCoilCase.stp",
         stl_filename: Optional[str] = "PoloidalFieldCoilCase.stl",
         material_tag: Optional[str] = "pf_coil_case_mat",
@@ -43,6 +47,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         self.height = coil_height
         self.width = coil_width
         self.casing_thickness = casing_thickness
+        self.split = split
 
     @property
     def center_point(self):
@@ -72,57 +77,115 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the poloidal field coil case shape."""
 
-        points = [
-            (
-                self.center_point[0] + self.width / 2.0,
-                self.center_point[1] + self.height / 2.0,
-            ),  # upper right
-            (
-                self.center_point[0] + self.width / 2.0,
-                self.center_point[1] - self.height / 2.0,
-            ),  # lower right
-            (
-                self.center_point[0] - self.width / 2.0,
-                self.center_point[1] - self.height / 2.0,
-            ),  # lower left
-            (
-                self.center_point[0] - self.width / 2.0,
-                self.center_point[1] + self.height / 2.0,
-            ),  # upper left
-            (
-                self.center_point[0] + self.width / 2.0,
-                self.center_point[1] + self.height / 2.0,
-            ),  # upper right
-            (
-                self.center_point[0] + \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + \
-                (self.casing_thickness + self.height / 2.0),
-            ),
-            (
-                self.center_point[0] + \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] - \
-                (self.casing_thickness + self.height / 2.0),
-            ),
-            (
-                self.center_point[0] - \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] - \
-                (self.casing_thickness + self.height / 2.0),
-            ),
-            (
-                self.center_point[0] - \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + \
-                (self.casing_thickness + self.height / 2.0),
-            ),
-            (
-                self.center_point[0] + \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + \
-                (self.casing_thickness + self.height / 2.0),
-            )
+        inner_top_right = (  
+            self.center_point[0] + self.width / 2.0,
+            self.center_point[1] + self.height / 2.0
+        )
+        inner_mid_right = (
+            self.center_point[0] + self.width / 2.0,
+            self.center_point[1]
+        )
+        inner_bottom_right = (  
+            self.center_point[0] + self.width / 2.0,
+            self.center_point[1] - self.height / 2.0
+        )
+        inner_bottom_left = (
+            self.center_point[0] - self.width / 2.0,
+            self.center_point[1] - self.height / 2.0
+        )
+        inner_mid_left = (
+            self.center_point[0] - self.width / 2.0,
+            self.center_point[1]
+        )
+        inner_top_left = (
+            self.center_point[0] - self.width / 2.0,
+            self.center_point[1] + self.height / 2.0
+        )        
+        outer_top_right = (
+            self.center_point[0] + self.width / 2.0 + self.casing_thickness,
+            self.center_point[1] + self.height / 2.0 + self.casing_thickness
+        )
+        outer_mid_right = (
+            self.center_point[0] + self.width / 2.0 + self.casing_thickness, 
+            self.center_point[1]
+        )
+        outer_bottom_right = (
+            self.center_point[0] + self.width / 2.0 + self.casing_thickness,
+            self.center_point[1] - self.height / 2.0 - self.casing_thickness
+        )
+        outer_bottom_left = (
+            self.center_point[0] - self.width / 2.0 - self.casing_thickness,
+            self.center_point[1] - self.height / 2.0 - self.casing_thickness
+        )
+        outer_mid_left = (
+            self.center_point[0] - self.width / 2.0 - self.casing_thickness,
+            self.center_point[1]
+        )
+        outer_top_left = (
+            self.center_point[0] - self.width / 2.0 - self.casing_thickness,
+            self.center_point[1] + self.height / 2.0 + self.casing_thickness
+        )
+
+        top_points = [
+            inner_top_right, inner_mid_right, outer_mid_right, outer_top_right,
+            outer_top_left, outer_mid_left, inner_mid_left, inner_top_left
         ]
 
-        self.points = points
+        bottom_points = [
+            inner_bottom_right, inner_mid_right, outer_mid_right, 
+            outer_bottom_right, outer_bottom_left, outer_mid_left,
+            inner_mid_left, inner_bottom_left
+        ]
+
+        unsplit_points = [
+            inner_top_right, inner_bottom_right, inner_bottom_left,
+            inner_top_left, inner_top_right, outer_top_right,
+            outer_bottom_right, outer_bottom_left, outer_top_left,
+            outer_top_right
+        ]
+
+        if self.split == False:
+            self.points = unsplit_points
+        
+        else:
+            self.points = top_points + bottom_points
+            self._bottom_points = bottom_points
+            self._top_points = top_points
+    
+    def create_solid(self):
+        """Creates a 3d solid using points with straight edges.
+
+           Returns:
+              A CadQuery solid: A 3D solid volume
+        """
+
+        all_points = self.points
+
+        if self.split == True:
+            wires = []
+            casings = []
+            for points in (self._top_points, self._bottom_points):
+                solid = (
+                    cq.Workplane(self.workplane)
+                    .polyline([i[:2] for i in points])
+                )
+                wire = solid.close()
+                wires.append(wire)
+                solid = wire.revolve(self.rotation_angle)
+                casings.append(solid)
+            compound = cq.Compound.makeCompound(
+                [a.val() for a in casings]
+            )
+
+        elif self.split == False:
+            solid = (
+                cq.Workplane(self.workplane)
+                .polyline([i[:2] for i in all_points])
+            )
+            wires = solid.close()
+            compound = wires.revolve(self.rotation_angle)
+
+        self.wire = wires
+        self.solid = compound
+
+        return compound
