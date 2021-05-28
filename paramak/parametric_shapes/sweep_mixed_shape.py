@@ -1,7 +1,7 @@
 
 from typing import Optional, List, Tuple
 
-import cadquery as cq
+from cadquery import Workplane
 from paramak import Shape
 
 
@@ -82,7 +82,7 @@ class SweepMixedShape(Shape):
         """
 
         solid = super().create_solid()
-        path = cq.Workplane(self.path_workplane).spline(self.path_points)
+        path = Workplane(self.path_workplane).spline(self.path_points)
 
         wire = solid.close()
 

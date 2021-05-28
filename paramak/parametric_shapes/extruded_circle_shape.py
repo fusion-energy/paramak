@@ -1,7 +1,7 @@
 
 from typing import Optional, Tuple
 
-import cadquery as cq
+from cadquery import Workplane
 from paramak import Shape
 from paramak.utils import calculate_wedge_cut
 
@@ -96,7 +96,7 @@ class ExtrudeCircleShape(Shape):
             extrusion_distance = -self.distance / 2.0
 
         wire = (
-            cq.Workplane(self.workplane)
+            Workplane(self.workplane)
             .workplane(offset=extrusion_offset)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
