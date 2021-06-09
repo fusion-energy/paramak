@@ -7,7 +7,7 @@ setuptools.setup(
     name="paramak",
     version="0.2.4",
     author="The Paramak Development Team",
-    author_email="jonathan.shimwell@ukaea.uk",
+    author_email="mail@jshimwell.com",
     description="Create 3D fusion reactor CAD models based on input parameters",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -32,10 +32,4 @@ setuptools.setup(
         "matplotlib",
         "plasmaboundaries",
         "remove_dagmc_tags",
-    ],
-    extras_require={
-        "neutronics": [
-            "vtk",
-            "neutronics_material_maker",
-            "parametric_plasma_source",
-        ]})
+    ])

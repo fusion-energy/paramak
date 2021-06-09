@@ -16,10 +16,11 @@ from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-from paramak.neutronics_utils import (add_stl_to_moab_core,
-                                      define_moab_core_and_tags)
+
 from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
-                           intersect_solid, plotly_trace, union_solid)
+                           intersect_solid, plotly_trace, union_solid,
+                           add_stl_to_moab_core, define_moab_core_and_tags,
+                           export_vtk)
 
 
 class Shape:
@@ -1470,7 +1471,7 @@ class Shape:
 
             h5m_filename = self.h5m_filename
 
-        vtk_filename = paramak.neutronics_utils.export_vtk(
+        vtk_filename = paramak.utils.export_vtk(
             filename=filename,
             h5m_filename=h5m_filename,
             include_graveyard=include_graveyard
@@ -1567,10 +1568,10 @@ class Shape:
         self.export_stp()
         self.export_neutronics_description()
 
-        not_watertight_file = paramak.neutronics_utils.trelis_command_to_create_dagmc_h5m(
+        not_watertight_file = paramak.utils.trelis_command_to_create_dagmc_h5m(
             faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
-        water_tight_h5m = paramak.neutronics_utils.make_watertight(
+        water_tight_h5m = paramak.utils.make_watertight(
             input_filename=not_watertight_file,
             output_filename="dagmc.h5m"
         )
