@@ -37,6 +37,21 @@ BlanketConstantThicknessArcH()
 BlanketConstantThicknessArcV()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+   
+   import paramak
+   component = paramak.BlanketConstantThicknessArcV(
+      inner_lower_point=(300, -200),
+      inner_mid_point=(500, 0),
+      inner_upper_point=(300, 200),
+      thickness=100,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
 |BlanketConstantThicknessArcVstp| |BlanketConstantThicknessArcVsvg|
 
 .. |BlanketConstantThicknessArcVstp| image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
