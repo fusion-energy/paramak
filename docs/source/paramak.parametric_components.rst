@@ -97,6 +97,22 @@ BlanketCutterStar()
 BlanketFP()
 ^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   component = paramak.BlanketFP(
+      thickness=100,
+      stop_angle=250,
+      start_angle=-90,
+      offset_from_plasma=30,
+      rotation_angle=180,
+   )
+   
+   cadquery_object = my_component.solid
+
+
 |BlanketFPstp| |BlanketFPsvg|
 
 .. |BlanketFPstp| image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
