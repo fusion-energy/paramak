@@ -1,0 +1,70 @@
+{% set name = "paramak" %}
+{% set version = "0.2.3" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  host:
+    - matplotlib
+    - mpmath
+    - numpy
+    - pip
+    - plasmaboundaries
+    - plotly
+    - pytest-cov
+    - python
+    - scipy
+    - sympy
+    - cadquery
+    - neutronics_material_maker
+  run:
+    - matplotlib
+    - mpmath
+    - numpy
+    - plasmaboundaries
+    - plotly
+    - pytest-cov
+    - python
+    - scipy
+    - sympy
+    - cadquery
+    - neutronics_material_maker
+
+test:
+  imports:
+    - paramak
+    - paramak.parametric_components
+    - paramak.parametric_reactors
+    - paramak.parametric_shapes
+    - tests
+  requires:
+    - pytest-cov
+    - pytest-runner
+  source_files:
+    - tests/
+    - examples/
+  commands:
+    - pytest -v
+
+about:
+  home: "https://github.com/ukaea/paramak"
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE.txt
+  summary: "Create 3D fusion reactor CAD models based on input parameters"
+  doc_url: https://paramak.readthedocs.io/
+  dev_url: https://github.com/ukaea/paramak
+  summary: Paramak - parameter driven fusion reactor model creation
+
+extra:
+  recipe-maintainers:
+    - shimwell
