@@ -1,4 +1,6 @@
 
+from typing import Optional, Tuple
+
 import cadquery as cq
 from paramak import PoloidalFieldCoilSet, RotateStraightShape
 
@@ -27,6 +29,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         stl_filename="PoloidalFieldCoilCaseSetFC.stl",
         name="pf_coil_case_set_fc",
         material_tag="pf_coil_mat",
+        color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
         **kwargs
     ):
 
@@ -35,6 +38,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
 

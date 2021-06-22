@@ -8,6 +8,21 @@ parametric Shape classes.
 BlanketConstantThicknessArcH()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketConstantThicknessArcH(
+      inner_lower_point=(300, -200),
+      inner_mid_point=(400, 0),
+      inner_upper_point=(300, 200),
+      thickness=100,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 |BlanketConstantThicknessArcHstp| |BlanketConstantThicknessArcHsvg|
 
 .. |BlanketConstantThicknessArcHstp| image:: https://user-images.githubusercontent.com/8583900/86519778-32eb1500-be36-11ea-9794-0383b66624c5.png
@@ -527,7 +542,7 @@ ToroidalFieldCoilPrincetonD()
 
 .. |ToroidalFieldCoilPrincetonDallstp| image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
    :width: 250px
-.. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/56687624/101485287-dc3cb680-3952-11eb-8b70-4ef40940ef98.png
+.. |ToroidalFieldCoilPrincetonDsvg| image:: https://user-images.githubusercontent.com/56687624/112809879-69c32400-9072-11eb-8f9f-34379d74659f.png
    :width: 280px
 .. |ToroidalFieldCoilPrincetonDastp| image:: https://user-images.githubusercontent.com/8583900/94479853-4c012900-01cd-11eb-9b59-0fcd5f4dc531.png
    :width: 170px
@@ -593,5 +608,19 @@ VacuumVessel()
    :width: 255
 
 .. automodule:: paramak.parametric_components.vacuum_vessel
+   :members:
+   :show-inheritance:
+
+VacuumVesselInnerLeg()
+^^^^^^^^^^^^^^^^^^^^^^
+
+|VacuumVesselInnerLegstp| |VacuumVesselInnerLegsvg|
+
+.. |VacuumVesselInnerLegstp| image:: https://user-images.githubusercontent.com/8583900/116575888-fa598200-a906-11eb-8c87-1fcfb7917342.png
+   :width: 255
+.. |VacuumVesselInnerLegsvg| image:: https://user-images.githubusercontent.com/58937462/116578576-76ed6000-a909-11eb-9592-d87f2e702514.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.vacuum_vessel_inner_leg
    :members:
    :show-inheritance:

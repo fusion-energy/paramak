@@ -1,21 +1,55 @@
 
 import warnings
+from typing import Optional
 
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import add_thickness, cut_solid, union_solid
 
 
 class TFCoilCasing(ExtrudeMixedShape):
-    def __init__(self, magnet, inner_offset, outer_offset,
-                 vertical_section_offset, **kwargs):
+    """Casing component for TF coils
+
+    Args:
+        magnet: TF coil shape
+        inner_offset: radial distance between inner coil surface and inner
+            casing surface (cm)
+        outer_offset: radial distance between outer coil surface and outer
+            casing surface (cm)
+        vertical_section_offset: radial distance between outer coil surface and
+            outer vertical section surface (cm)
+        distance: extrusion distance (cm)
+    """
+
+    def __init__(
+        self,
+        magnet,
+        inner_offset: float,
+        outer_offset: float,
+        vertical_section_offset: float,
+        stp_filename: Optional[str] = "TFCoilCasing.stp",
+        stl_filename: Optional[str] = "TFCoilCasing.stl",
+        material_tag: Optional[str] = "TF_coil_casing_mat",
+        **kwargs
+    ) -> None:
+
         self.magnet = magnet
-        super().__init__(**kwargs)
+
+        super().__init__(
+            material_tag=material_tag,
+            stp_filename=stp_filename,
+            stl_filename=stl_filename,
+            **kwargs
+        )
+
         self.inner_offset = inner_offset
         self.outer_offset = outer_offset
         self.vertical_section_offset = vertical_section_offset
         self.leg_shape = ExtrudeStraightShape(
             distance=self.distance,
-            azimuth_placement_angle=self.azimuth_placement_angle)
+            azimuth_placement_angle=self.azimuth_placement_angle,
+            workplane=self.magnet.workplane)
+        self.inner_bore_cutting_points = None
+        self.workplane = self.magnet.workplane
 
     @property
     def azimuth_placement_angle(self):
@@ -66,7 +100,8 @@ class TFCoilCasing(ExtrudeMixedShape):
             min(outer_points[0], key=lambda x:abs(x - min(inner_points[0]))))]
         self.leg_points = [
             (
-                min(outer_points[0]) - self.vertical_section_offset,
+                min(outer_points[0]) -
+                self.vertical_section_offset + self.outer_offset,
                 min(outer_points[1])),
             (
                 outer_points[0][outer_points[1].index(min(outer_points[1]))],
@@ -87,8 +122,16 @@ class TFCoilCasing(ExtrudeMixedShape):
                 outer_points[0][outer_points[1].index(min(outer_points[1]))],
                 max(outer_points[1])),
             (
-                min(outer_points[0]) - self.vertical_section_offset,
+                min(outer_points[0]) - \
+                self.vertical_section_offset + self.outer_offset,
                 max(outer_points[1])),
+        ]
+
+        self.inner_bore_cutting_points = [
+            (0, self.leg_points[0][1]),
+            self.leg_points[0],
+            self.leg_points[-1],
+            (0, self.leg_points[-1][1])
         ]
 
     def create_solid(self):
@@ -100,5 +143,14 @@ class TFCoilCasing(ExtrudeMixedShape):
             self.azimuth_placement_angle
         solid = union_solid(solid, self.leg_shape)
         solid = cut_solid(solid, self.magnet)
+
+        # cut away excess casing outlined in #789
+        inner_bore_cutting_shape = ExtrudeStraightShape(
+            points=self.inner_bore_cutting_points,
+            distance=self.distance,
+            azimuth_placement_angle=self.azimuth_placement_angle
+        )
+        solid = cut_solid(solid, inner_bore_cutting_shape)
+
         self.solid = solid
         return solid

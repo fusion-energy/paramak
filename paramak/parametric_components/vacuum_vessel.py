@@ -9,11 +9,9 @@ class VacuumVessel(RotateStraightShape):
         height (float): height of the vessel.
         inner_radius (float): the inner radius of the vessel.
         thickness (float): thickness of the vessel
-        stp_filename (str, optional): defaults to
-            "CenterColumnShieldCylinder.stp".
-        stl_filename (str, optional): defaults to
-            "CenterColumnShieldCylinder.stl".
-        material_tag (str, optional): defaults to "center_column_shield_mat".
+        stp_filename (str, optional): defaults to "VacuumVessel.stp".
+        stl_filename (str, optional): defaults to "VacuumVessel.stl".
+        material_tag (str, optional): defaults to "vacuum_vessel_mat".
     """
 
     def __init__(
@@ -21,9 +19,9 @@ class VacuumVessel(RotateStraightShape):
         height,
         inner_radius,
         thickness,
-        stp_filename="CenterColumnShieldCylinder.stp",
-        stl_filename="CenterColumnShieldCylinder.stl",
-        material_tag="center_column_shield_mat",
+        stp_filename="VacuumVessel.stp",
+        stl_filename="VacuumVessel.stl",
+        material_tag="vacuum_vessel_mat",
         **kwargs
     ):
         self.height = height
@@ -41,16 +39,23 @@ class VacuumVessel(RotateStraightShape):
         return self._height
 
     @height.setter
-    def height(self, height):
-        self._height = height
+    def height(self, value):
+        if not isinstance(value, (float, int)):
+            raise ValueError(
+                'VacuumVessel.height must be a number. Not', value)
+        if value <= 0:
+            raise ValueError(
+                'VacuumVessel.height must be a positive number above 0. Not', value)
+        self._height = value
 
     @property
     def inner_radius(self):
         return self._inner_radius
 
     @inner_radius.setter
-    def inner_radius(self, inner_radius):
-        self._inner_radius = inner_radius
+    def inner_radius(self, value):
+        assert value > 0
+        self._inner_radius = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the

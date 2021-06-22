@@ -16,6 +16,32 @@ class TestExtrudeMixedShape(unittest.TestCase):
             distance=50
         )
 
+        self.test_shape_2 = ExtrudeMixedShape(
+            distance=1,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "straight"),
+                (110, 45, "straight"),
+            ]
+        )
+
+        self.test_shape_3 = ExtrudeMixedShape(
+            distance=180,
+            points=[
+                (100, 0, "straight"),
+                (200, 0, "circle"),
+                (250, 50, "circle"),
+                (200, 100, "straight"),
+                (150, 100, "straight"),
+                (140, 75, "circle"),
+                (110, 45, "circle"),
+            ]
+        )
+
     def test_default_parameters(self):
         """Checks that the default parameters of an ExtrudeMixedShape are correct."""
 
@@ -144,12 +170,51 @@ class TestExtrudeMixedShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
+        assert pytest.approx(Path("test_solid.stp").stat().st_size, rel=1) == \
             Path("test_solid2.stp").stat().st_size
         assert Path("test_wire.stp").stat().st_size < \
             Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
+
+    def test_convert_all_circle_points_change_to_splines(self):
+        """creates a ExtrudeMixedShape with one circular edges and converts
+        them to spline edges. Checks the new edges have been correctly
+        replaced with splines"""
+
+        assert len(self.test_shape_2.points) == 8
+        self.test_shape_2.convert_all_circle_connections_to_splines()
+        assert len(self.test_shape_2.points) > 8
+        assert self.test_shape_2.points[0] == (100, 0, "straight")
+        assert self.test_shape_2.points[1] == (200, 0, 'spline')
+
+        # last point is the same as the first point
+        assert self.test_shape_2.points[-1] == (100, 0, "straight")
+        assert self.test_shape_2.points[-2] == (110, 45, "straight")
+        assert self.test_shape_2.points[-3] == (140, 75, "straight")
+        assert self.test_shape_2.points[-4] == (150, 100, "straight")
+        assert self.test_shape_2.points[-5] == (200, 100, "straight")
+
+        for point in self.test_shape_2.points[1:len(
+                self.test_shape_2.points) - 5]:
+            assert point[2] == 'spline'
+
+    def test_convert_circles_to_splines_volume(self):
+        """creates a RotateMixedShape with a circular edge and converts the
+        edge to a spline edges. Checks the new shape has appoximatly the same
+        volume as the orignal shape (with circles)"""
+
+        original_volume = self.test_shape_2.volume
+        self.test_shape_2.convert_all_circle_connections_to_splines()
+        new_volume = self.test_shape_2.volume
+
+        assert pytest.approx(new_volume, rel=0.000001) == original_volume
+
+        original_volume = self.test_shape_3.volume
+        self.test_shape_3.convert_all_circle_connections_to_splines()
+        new_volume = self.test_shape_3.volume
+
+        assert pytest.approx(new_volume, rel=0.000001) == original_volume
 
 
 if __name__ == "__main__":

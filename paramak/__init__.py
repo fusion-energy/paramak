@@ -1,9 +1,8 @@
 from .shape import Shape
 from .reactor import Reactor
+from .utils import define_moab_core_and_tags, add_stl_to_moab_core, export_vtk
 from .utils import rotate, extend, distance_between_two_points, diff_between_angles
 from .utils import EdgeLengthSelector, FaceAreaSelector
-from .neutronics_utils import define_moab_core_and_tags, add_stl_to_moab_core
-from .neutronics_utils import get_neutronics_results_from_statepoint_file
 
 from .parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from .parametric_shapes.extruded_spline_shape import ExtrudeSplineShape
@@ -75,14 +74,16 @@ from .parametric_components.toroidal_field_coil_princeton_d import ToroidalField
 from .parametric_components.tf_coil_casing import TFCoilCasing
 
 from .parametric_components.vacuum_vessel import VacuumVessel
+from .parametric_components.vacuum_vessel_inner_leg import VacuumVesselInnerLeg
 from .parametric_components.hollow_cube import HollowCube
 from .parametric_components.shell_fs import ShellFS
 
+from .parametric_reactors.eu_demo_2015_reactor import EuDemoFrom2015PaperDiagram
 from .parametric_reactors.ball_reactor import BallReactor
 from .parametric_reactors.submersion_reactor import SubmersionTokamak
 from .parametric_reactors.single_null_submersion_reactor import SingleNullSubmersionTokamak
 from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
 from .parametric_reactors.segmented_blanket_ball_reactor import SegmentedBlanketBallReactor
 from .parametric_reactors.center_column_study_reactor import CenterColumnStudyReactor
-
-from .parametric_neutronics.neutronics_model import NeutronicsModel
+from .parametric_reactors.sparc_paper_2020 import SparcFrom2020PaperDiagram
+from .parametric_reactors.iter_paper_2020 import IterFrom2020PaperDiagram

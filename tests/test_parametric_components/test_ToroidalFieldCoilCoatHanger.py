@@ -56,6 +56,32 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
         )
         assert test_inner_leg.solid is not None
 
+    def test_creation_with_inner_leg_with_overlap(self):
+        """Creates tf coils with overlapping inner legs using the ToroidalFieldCoilCoatHanger
+        parametric component and checks that a cadquery solid is created correctly."""
+
+        self.test_shape.horizontal_start_point = (0, 500)
+        self.test_shape.number_of_coils = 8
+        assert self.test_shape.solid is not None
+
+        with_inner_leg_volume = self.test_shape.volume
+
+        self.test_shape.with_inner_leg = False
+        without_inner_leg_volume = self.test_shape.volume
+
+        assert self.test_shape.solid is not None
+
+        test_inner_leg = paramak.ExtrudeStraightShape(
+            points=[
+                (0, 500), (50, 500), (50, -500), (0, -500)
+            ], distance=30,
+            azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315]
+        )
+        inner_leg_volume = test_inner_leg.volume
+
+        assert with_inner_leg_volume == pytest.approx(
+            without_inner_leg_volume + inner_leg_volume)
+
     def test_creation_no_inner_leg(self):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created."""

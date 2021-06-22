@@ -1,7 +1,7 @@
 
 from typing import Optional, List, Tuple
 
-import cadquery as cq
+from cadquery import Workplane
 from paramak import Shape
 
 
@@ -34,6 +34,7 @@ class SweepCircleShape(Shape):
         stp_filename: Optional[str] = "SweepCircleShape.stp",
         stl_filename: Optional[str] = "SweepCircleShape.stl",
         force_cross_section: Optional[bool] = False,
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.651, 0.808, 0.89),
         **kwargs
     ):
 
@@ -41,6 +42,7 @@ class SweepCircleShape(Shape):
             workplane=workplane,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
 
@@ -90,7 +92,7 @@ class SweepCircleShape(Shape):
             A CadQuery solid: A 3D solid volume
         """
 
-        path = cq.Workplane(self.path_workplane).spline(self.path_points)
+        path = Workplane(self.path_workplane).spline(self.path_points)
 
         factor = 1
         if self.workplane in ["XZ", "YX", "ZY"]:
@@ -98,7 +100,7 @@ class SweepCircleShape(Shape):
 
         wires = []
         if self.force_cross_section:
-            wire = cq.Workplane(self.workplane).center(0, 0)
+            wire = Workplane(self.workplane).center(0, 0)
             for point in self.path_points[:-1]:
                 wire = (
                     wire.workplane(offset=point[1] * factor)
@@ -124,7 +126,7 @@ class SweepCircleShape(Shape):
         else:
 
             wire = (
-                cq.Workplane(self.workplane)
+                Workplane(self.workplane)
                 .workplane(offset=self.path_points[0][1] * factor)
                 .center(self.path_points[0][0], 0)
                 .workplane()

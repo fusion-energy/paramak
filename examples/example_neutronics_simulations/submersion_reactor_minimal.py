@@ -30,7 +30,7 @@ def make_model_and_simulate():
 
     # this can just be set as a string as temperature is needed for this
     # material
-    flibe = nmm.Material('FLiBe', temperature_in_C=500)
+    flibe = nmm.Material.from_library(name='FLiBe', temperature=773.15)
 
     source = openmc.Source()
     # sets the location of the source to x=0 y=0 z=0
@@ -58,7 +58,7 @@ def make_model_and_simulate():
     )
 
     # simulate the neutronics model
-    neutronics_model.simulate(method='trelis')
+    neutronics_model.simulate()
     print(neutronics_model.results)
 
 

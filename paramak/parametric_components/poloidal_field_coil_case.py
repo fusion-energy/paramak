@@ -1,5 +1,6 @@
 
 from typing import Optional, Tuple
+
 from paramak import RotateStraightShape
 
 
@@ -26,6 +27,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         stp_filename: Optional[str] = "PoloidalFieldCoilCase.stp",
         stl_filename: Optional[str] = "PoloidalFieldCoilCase.stl",
         material_tag: Optional[str] = "pf_coil_case_mat",
+        color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
         **kwargs
     ) -> None:
 
@@ -33,6 +35,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
             material_tag=material_tag,
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
 

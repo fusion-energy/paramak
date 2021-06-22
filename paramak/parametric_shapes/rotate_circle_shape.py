@@ -1,7 +1,7 @@
 
-from typing import Optional
+from typing import Optional, Tuple
 
-import cadquery as cq
+from cadquery import Workplane
 from paramak import Shape
 
 
@@ -22,12 +22,14 @@ class RotateCircleShape(Shape):
         rotation_angle: Optional[float] = 360.0,
         stp_filename: Optional[str] = "RotateCircleShape.stp",
         stl_filename: Optional[str] = "RotateCircleShape.stl",
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (1., 1., 0.6),
         **kwargs
     ):
 
         super().__init__(
             stp_filename=stp_filename,
             stl_filename=stl_filename,
+            color=color,
             **kwargs
         )
         self.radius = radius
@@ -57,7 +59,7 @@ class RotateCircleShape(Shape):
         """
 
         wire = (
-            cq.Workplane(self.workplane)
+            Workplane(self.workplane)
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.radius)
         )

@@ -3,7 +3,7 @@ Parametric Reactors
 
 These are the current reactor designs that can be created using the Paramak.
 
-.. image:: https://user-images.githubusercontent.com/8583900/99137324-fddfa200-2621-11eb-9063-f5f7f60ddd8d.png
+.. image:: https://user-images.githubusercontent.com/8583900/115291309-7fe17300-a14c-11eb-9859-be85075eb0b9.png
    :width: 713
    :align: center
 
@@ -19,7 +19,7 @@ are red, PF coil cases are yellow, the center column shielding is dark green,
 the blanket is light green, the divertor is orange, the firstwall is grey
 and the rear wall of the blanket is teal.
 
-.. image:: https://user-images.githubusercontent.com/8583900/99298720-09a9af00-2842-11eb-816b-86492555f97d.png
+.. image:: https://user-images.githubusercontent.com/8583900/119011892-6458ca80-b98d-11eb-92b1-bbc370cb9c84.png
    :width: 450
    :align: center
 
@@ -81,7 +81,7 @@ are red, PF coil cases are yellow, the center column shielding is dark green, th
 divertor is orange, the firstwall is grey and the rear wall of the blanket is
 teal and the support legs are black.
 
-.. image:: https://user-images.githubusercontent.com/8583900/99829028-aaa2ad80-2b53-11eb-9fd2-eba7521a0289.png
+.. image:: https://user-images.githubusercontent.com/8583900/116117207-e36f2180-a6b3-11eb-8c65-4263336b6a68.png
    :width: 450
    :align: center
 
@@ -124,5 +124,43 @@ studies can be performed quickly.
    :align: center
 
 .. automodule:: paramak.parametric_reactors.center_column_study_reactor
+   :members:
+   :show-inheritance:
+
+EuDemoFrom2015PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/110224418-4f62b400-7ed3-11eb-85f1-e40dc74f5671.png
+   :width: 400
+   :align: center
+
+The above image is colored by component.
+
+.. automodule:: paramak.parametric_reactors.eu_demo_2015_reactor
+   :members:
+   :show-inheritance:
+
+ITERTokamak()
+^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/40028739/110248118-cf3e5c00-7f6f-11eb-9e68-864c1a1e8676.png
+   :width: 400
+   :align: center
+
+The above image is colored by component.
+
+.. automodule:: paramak.parametric_reactors.iter_paper_2020
+   :members:
+   :show-inheritance:
+
+
+SparcFrom2020PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/100032191-5ae01280-2def-11eb-9654-47c3869b3a2c.png
+   :width: 400
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.sparc_paper_2020
    :members:
    :show-inheritance:
