@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ukaea/paramak:stable
+          tags: fusionenergy/paramak:stable
           build-args: |
             cq_version=2.1
             compile_cores=2
