@@ -7,7 +7,7 @@ jobs:
   # test:
   build:
     docker:
-      - image: ukaea/paramak:dependencies
+      - image: ghcr.io/fusion-energy/paramak:dependencies
     steps:
       - checkout
       - run:
