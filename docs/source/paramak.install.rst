@@ -49,7 +49,7 @@ The quickest way to install the Paramak is to use pip. In the terminal type...
 
    pip install paramak
 
-Alternatively you can download the repository using the `download link <https://github.com/ukaea/paramak/archive/develop.zip>`_ or clone the repository using:
+Alternatively you can download the repository using the `download link <https://github.com/fusion-energy/paramak/archive/develop.zip>`_ or clone the repository using:
 
 .. code-block:: bash
 
@@ -104,7 +104,7 @@ terminal window, or Windows users might prefer PowerShell.
 
 .. code-block:: bash
 
-   docker pull ukaea/paramak
+   docker pull ghcr.io/fusion-energy/paramak
 
 3. Now that you have the docker image you can enable graphics linking between
 your os and docker, and then run the docker container by typing the following
@@ -112,7 +112,7 @@ commands in a terminal window.
 
 .. code-block:: bash
 
-   sudo docker run -p 8888:8888 ukaea/paramak
+   sudo docker run -p 8888:8888 ghcr.io/fusion-energy/paramak
 
 4. A URL should be displayed in the terminal and can now be opened in the
 internet browser of your choice. This will load up the examples folder where
@@ -122,7 +122,7 @@ Alternatively the Docker image can be run in terminal mode .
 
 .. code-block:: bash
 
-   docker run -it ukaea/paramak
+   docker run -it ghcr.io/fusion-energy/paramak
 
 You may also want to make use of the
 `--volume <https://docs.docker.com/storage/volumes/>`_
