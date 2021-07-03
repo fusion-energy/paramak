@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/fusion-energy/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/fusion-energy/paramak)
 [![PyPI](https://img.shields.io/pypi/v/paramak?color=brightgreen&label=pypi&logo=grebrightgreenen&logoColor=green)](https://pypi.org/project/paramak/)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
-[![dockerhub-publish-stable](https://github.com/fusion-energy/paramak/workflows/dockerhub-publish-stable/badge.svg)](https://github.com/fusion-energy/paramak/actions?query=workflow%3Adockerhub-publish-stable)
+<!-- [![dockerhub-publish-stable](https://github.com/fusion-energy/paramak/workflows/dockerhub-publish-stable/badge.svg)](https://github.com/fusion-energy/paramak/actions?query=workflow%3Adockerhub-publish-stable) -->
 [![DOI](https://zenodo.org/badge/269635577.svg)](https://zenodo.org/badge/latestdoi/269635577)
 
 # Paramak

@@ -62,8 +62,8 @@ became open-source and has flourished ever since.
 The project has grown largely due to two contributors in particular
 (John Billingsley and Remi Delaporte-Mathurin) and others have also helped,
 you can see all those who have helped the development in the 
-`Authors.md <https://github.com/ukaea/paramak/blob/main/AUTHORS.md>`_ and in the 
-`GitHub contributions <https://github.com/ukaea/paramak/graphs/contributors>`_.
+`Authors.md <https://github.com/fusion-energy/paramak/blob/main/AUTHORS.md>`_ and in the 
+`GitHub contributions <https://github.com/fusion-energy/paramak/graphs/contributors>`_.
 
 The code has been professionally reviewed by
 `PullRequest.com <https://www.pullrequest.com/>`_ who produced a
@@ -72,7 +72,7 @@ and inline `suggestions <https://github.com/ukaea/paramak/pull/639>`_.
 
 The Paramak source code is distributed with a permissive open-source license
 (MIT) and is avaialbe from the GitHub repository 
-`https://github.com/ukaea/paramak <https://github.com/ukaea/paramak>`_
+`https://github.com/fusion-energy/paramak <https://github.com/fusion-energy/paramak>`_
 
 Publications and Presentations
 ------------------------------

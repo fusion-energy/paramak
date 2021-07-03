@@ -3,7 +3,8 @@ name: CI - Develop
 on:  
   pull_request:    
     branches:
-    - develop  
+    - develop
+ 
 jobs:  
   build:
     runs-on: ubuntu-latest
