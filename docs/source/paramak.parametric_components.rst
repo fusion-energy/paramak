@@ -23,11 +23,7 @@ BlanketConstantThicknessArcH()
 
    cadquery_object = my_component.solid
 
-|BlanketConstantThicknessArcHstp| |BlanketConstantThicknessArcHsvg|
-
-.. |BlanketConstantThicknessArcHstp| image:: https://user-images.githubusercontent.com/8583900/86519778-32eb1500-be36-11ea-9794-0383b66624c5.png
-   :width: 250
-.. |BlanketConstantThicknessArcHsvg| image:: https://user-images.githubusercontent.com/56687624/88293663-38c86d80-ccf3-11ea-9bfa-c166fc99c52c.png
+.. image:: https://user-images.githubusercontent.com/56687624/88293663-38c86d80-ccf3-11ea-9bfa-c166fc99c52c.png
    :width: 300
 
 .. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_h
@@ -52,11 +48,7 @@ BlanketConstantThicknessArcV()
 
    cadquery_object = my_component.solid
 
-|BlanketConstantThicknessArcVstp| |BlanketConstantThicknessArcVsvg|
-
-.. |BlanketConstantThicknessArcVstp| image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
-   :width: 250
-.. |BlanketConstantThicknessArcVsvg| image:: https://user-images.githubusercontent.com/56687624/88293666-39f99a80-ccf3-11ea-8c8d-84275fd0e0ce.png
+.. image:: https://user-images.githubusercontent.com/56687624/88293666-39f99a80-ccf3-11ea-8c8d-84275fd0e0ce.png
    :width: 350
 
 .. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_v
@@ -67,11 +59,7 @@ BlanketConstantThicknessArcV()
 BlanketCutterParallels()
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-|BlanketCutterParallelsstp| |BlanketCutterParallelssvg|
-
-.. |BlanketCutterParallelsstp| image:: https://user-images.githubusercontent.com/8583900/97328431-eb1d4d00-186d-11eb-9f5d-4bbee9e3b17d.png
-   :width: 250
-.. |BlanketCutterParallelssvg| image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
+.. image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
    :width: 400
 
 .. automodule:: paramak.parametric_components.blanket_cutter_parallels
@@ -95,11 +83,7 @@ BlanketCutterStar()
 
    cadquery_object = my_component.solid
 
-|BlanketCutterStarstp| |BlanketCutterStarsvg|
-
-.. |BlanketCutterStarstp| image:: https://user-images.githubusercontent.com/8583900/97103699-0178ac80-16a6-11eb-8e5a-ec3575d265fe.png
-   :width: 250
-.. |BlanketCutterStarsvg| image:: https://user-images.githubusercontent.com/8583900/97103794-b0b58380-16a6-11eb-86f0-fb5530d630af.png
+.. image:: https://user-images.githubusercontent.com/8583900/97103794-b0b58380-16a6-11eb-86f0-fb5530d630af.png
    :width: 400
 
 .. automodule:: paramak.parametric_components.blanket_cutters_star
@@ -125,11 +109,7 @@ BlanketFP()
 
    cadquery_object = my_component.solid
 
-|BlanketFPstp| |BlanketFPsvg|
-
-.. |BlanketFPstp| image:: https://user-images.githubusercontent.com/8583900/87254778-fe520b80-c47c-11ea-845f-470991d74874.png
-   :width: 220
-.. |BlanketFPsvg| image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
+.. image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
    :width: 350
 
 .. automodule:: paramak.parametric_components.blanket_fp
@@ -145,20 +125,18 @@ BlanketFPPoloidalSegments()
    :gridsize: 0
 
    import paramak
-   my_component = paramak.PoloidalSegments(
-    number_of_segments=10,
-    center_point=(500, 50),
-    rotation_angle=180
+   my_component = paramak.BlanketFPPoloidalSegments(
+      num_segments=7,
+      segments_gap = 10,
+      thickness=100,
+      stop_angle=250,
+      start_angle=-90,
+      rotation_angle=180
    )
 
    cadquery_object = my_component.solid
 
-
-|BlanketFPPoloidalSegmentsstp| |BlanketFPPoloidalSegmentssvg|
-
-.. |BlanketFPPoloidalSegmentsstp| image:: https://user-images.githubusercontent.com/8583900/98735027-af6ca200-239a-11eb-9a59-4a570f91a1fc.png
-   :width: 220
-.. |BlanketFPPoloidalSegmentssvg| image:: https://user-images.githubusercontent.com/8583900/98870151-ca0e4c00-246a-11eb-8a37-e7620344d8c1.png
+.. image:: https://user-images.githubusercontent.com/8583900/98870151-ca0e4c00-246a-11eb-8a37-e7620344d8c1.png
    :width: 350
 
 .. automodule:: paramak.parametric_components.blanket_poloidal_segment
@@ -178,16 +156,12 @@ CenterColumnShieldCylinder()
       inner_radius=80,
       outer_radius=100,
       height=300,
-      rotation_angle=90,
+      rotation_angle=180,
     )
 
    cadquery_object = my_component.solid
 
-|CenterColumnShieldCylinderstp| |CenterColumnShieldCylindersvg| 
-
-.. |CenterColumnShieldCylinderstp| image:: https://user-images.githubusercontent.com/56687624/86241438-caccd280-bb9a-11ea-9548-b199759a6dbc.png
-   :width: 160px
-.. |CenterColumnShieldCylindersvg| image:: https://user-images.githubusercontent.com/56687624/88293674-3c5bf480-ccf3-11ea-8197-8db75358ff36.png
+.. image:: https://user-images.githubusercontent.com/56687624/88293674-3c5bf480-ccf3-11ea-8197-8db75358ff36.png
    :width: 370px
 
 .. automodule:: paramak.parametric_components.center_column_cylinder
@@ -207,16 +181,12 @@ CenterColumnShieldHyperbola()
       mid_radius=75,
       outer_radius=100,
       height=300,
-      rotation_angle=90
+      rotation_angle=180
     )
 
    cadquery_object = my_component.solid
 
-|CenterColumnShieldHyperbolastp| |CenterColumnShieldHyperbolasvg|
-
-.. |CenterColumnShieldHyperbolastp| image:: https://user-images.githubusercontent.com/56687624/86241456-d0c2b380-bb9a-11ea-9728-88fe4081345f.png
-   :width: 170px
-.. |CenterColumnShieldHyperbolasvg| image:: https://user-images.githubusercontent.com/56687624/88293672-3b2ac780-ccf3-11ea-9907-b1c8fd1ba0f0.png
+.. image:: https://user-images.githubusercontent.com/56687624/88293672-3b2ac780-ccf3-11ea-9907-b1c8fd1ba0f0.png
    :width: 410px
 
 .. automodule:: paramak.parametric_components.center_column_hyperbola
@@ -237,16 +207,12 @@ CenterColumnShieldFlatTopHyperbola()
       outer_radius=100,
       arc_height=220,
       height=300,
-      rotation_angle=90
+      rotation_angle=180
     )
 
    cadquery_object = my_component.solid
 
-|CenterColumnShieldFlatTopHyperbolastp| |CenterColumnShieldFlatTopHyperbolasvg|
-
-.. |CenterColumnShieldFlatTopHyperbolastp| image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
-   :width: 170px
-.. |CenterColumnShieldFlatTopHyperbolasvg| image:: https://user-images.githubusercontent.com/56687624/88293680-3ebe4e80-ccf3-11ea-8603-b7a290e6bfb4.png
+.. image:: https://user-images.githubusercontent.com/56687624/88293680-3ebe4e80-ccf3-11ea-8603-b7a290e6bfb4.png
    :width: 370px
 
 .. automodule:: paramak.parametric_components.center_column_flat_top_hyperbola
@@ -267,16 +233,12 @@ CenterColumnShieldFlatTopCircular()
       outer_radius=100,
       arc_height=220,
       height=300,
-      rotation_angle=90
+      rotation_angle=180
     )
 
    cadquery_object = my_component.solid
 
-|CenterColumnShieldFlatTopCircularstp| |CenterColumnShieldFlatTopCircularsvg|
-
-.. |CenterColumnShieldFlatTopCircularstp| image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
-   :width: 170px
-.. |CenterColumnShieldFlatTopCircularsvg| image:: https://user-images.githubusercontent.com/56687624/88293678-3d8d2180-ccf3-11ea-97f7-da9a46beddbf.png
+.. image:: https://user-images.githubusercontent.com/56687624/88293678-3d8d2180-ccf3-11ea-97f7-da9a46beddbf.png
    :width: 370px
 
 .. automodule:: paramak.parametric_components.center_column_flat_top_circular
@@ -296,7 +258,7 @@ CenterColumnShieldPlasmaHyperbola()
       mid_offset=50,
       edge_offset=40,
       height=800,
-      rotation_angle=90
+      rotation_angle=180
     )
 
    cadquery_object = my_component.solid
@@ -328,14 +290,8 @@ CoolantChannelRingStraight()
 
    cadquery_object = my_component.solid
 
-|CoolantChannelRingStraightallstp| |CoolantChannelRingStraightsvg| |CoolantChannelRingStraightstp|
-
-.. |CoolantChannelRingStraightallstp| image:: https://user-images.githubusercontent.com/56687624/99049969-6467b000-258f-11eb-93b2-73e533b366c0.png
-   :width: 200
-.. |CoolantChannelRingStraightsvg| image:: https://user-images.githubusercontent.com/56687624/99048848-ff5f8a80-258d-11eb-9073-123185d7a4fb.png
+.. image:: https://user-images.githubusercontent.com/56687624/99048848-ff5f8a80-258d-11eb-9073-123185d7a4fb.png
    :width: 230
-.. |CoolantChannelRingStraightstp| image:: https://user-images.githubusercontent.com/56687624/99049922-574ac100-258f-11eb-8cb9-a57cef2b8086.png
-   :width: 100
 
 .. automodule:: paramak.parametric_components.coolant_channel_ring_straight
    :members:
