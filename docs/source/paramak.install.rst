@@ -20,19 +20,25 @@ Python 3 and CadQuery can be installed using Conda or Miniconda
 Once you have Conda or MiniConda installed then CadQuery can be installed
 into a new enviroment and that environment can be activated using Anaconda or Miniconda. 
 
-Cadquery 2 can be installed in a Conda environment via conda-forge.
+First create a new enviroment.
 
 .. code-block:: python
 
-   conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2.1
+   conda create --name paramak_env python=3.8
 
 
-Once you have activated a conda environment, Cadquery 2 can be installed
-using the command:
+Then activate the new enviroment.
 
 .. code-block:: python
 
    conda activate paramak_env
+
+
+Then install CadQuery.
+
+   .. code-block:: python
+
+   conda install -c conda-forge -c cadquery cadquery=2.1
 
 
 A more detailed description of installing Cadquery 2 can be found here:
@@ -72,11 +78,7 @@ You can also install optional dependencies that add some neutronics
 capabilities to the paramak. This will install neutronics_material_maker and
 parametric_plasma_source. In addition to this you would need DAGMC, OpenMC,
 MOAB and Trelis / Cubit.
-`More details <https://paramak.readthedocs.io/en/latest/paramak.parametric_neutronics.html>`_
-
-.. code-block:: bash
-
-   pip install .[neutronics]
+`More details <https://paramak-neutronics.readthedocs.io>`_
 
 You could consider installing
 [jupyter-cadquery](https://github.com/bernhard-42/jupyter-cadquery) which adds

@@ -73,7 +73,7 @@ The code has been professionally reviewed by
 and inline `suggestions <https://github.com/ukaea/paramak/pull/639>`_.
 
 The Paramak source code is distributed with a permissive open-source license
-(MIT) and is avaialbe from the GitHub repository 
+(MIT) and is available from the GitHub repository 
 `https://github.com/fusion-energy/paramak <https://github.com/fusion-energy/paramak>`_
 
 Publications and Presentations
