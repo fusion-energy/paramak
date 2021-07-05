@@ -37,6 +37,21 @@ BlanketConstantThicknessArcH()
 BlanketConstantThicknessArcV()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketConstantThicknessArcV(
+      inner_lower_point=(300, -200),
+      inner_mid_point=(500, 0),
+      inner_upper_point=(300, 200),
+      thickness=100,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 |BlanketConstantThicknessArcVstp| |BlanketConstantThicknessArcVsvg|
 
 .. |BlanketConstantThicknessArcVstp| image:: https://user-images.githubusercontent.com/8583900/86365020-dee30380-bc70-11ea-8258-5e591c6c3235.png
@@ -67,6 +82,19 @@ BlanketCutterParallels()
 BlanketCutterStar()
 ^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketCutterStar(
+    height=2000,
+    width=2000,
+    distance=100
+   )
+
+   cadquery_object = my_component.solid
+
 |BlanketCutterStarstp| |BlanketCutterStarsvg|
 
 .. |BlanketCutterStarstp| image:: https://user-images.githubusercontent.com/8583900/97103699-0178ac80-16a6-11eb-8e5a-ec3575d265fe.png
@@ -81,6 +109,21 @@ BlanketCutterStar()
 
 BlanketFP()
 ^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketFP(
+      thickness=100,
+      stop_angle=-80,
+      start_angle=250,
+      offset_from_plasma=30,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
 
 |BlanketFPstp| |BlanketFPsvg|
 
@@ -97,6 +140,20 @@ BlanketFP()
 BlanketFPPoloidalSegments()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalSegments(
+    number_of_segments=10,
+    center_point=(500, 50),
+    rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
+
 |BlanketFPPoloidalSegmentsstp| |BlanketFPPoloidalSegmentssvg|
 
 .. |BlanketFPPoloidalSegmentsstp| image:: https://user-images.githubusercontent.com/8583900/98735027-af6ca200-239a-11eb-9a59-4a570f91a1fc.png
@@ -112,6 +169,20 @@ BlanketFPPoloidalSegments()
 CenterColumnShieldCylinder()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CenterColumnShieldCylinder(
+      inner_radius=80,
+      outer_radius=100,
+      height=300,
+      rotation_angle=90,
+    )
+
+   cadquery_object = my_component.solid
+
 |CenterColumnShieldCylinderstp| |CenterColumnShieldCylindersvg| 
 
 .. |CenterColumnShieldCylinderstp| image:: https://user-images.githubusercontent.com/56687624/86241438-caccd280-bb9a-11ea-9548-b199759a6dbc.png
@@ -125,6 +196,21 @@ CenterColumnShieldCylinder()
 
 CenterColumnShieldHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CenterColumnShieldHyperbola(
+      inner_radius=50,
+      mid_radius=75,
+      outer_radius=100,
+      height=300,
+      rotation_angle=90
+    )
+
+   cadquery_object = my_component.solid
 
 |CenterColumnShieldHyperbolastp| |CenterColumnShieldHyperbolasvg|
 
@@ -140,6 +226,22 @@ CenterColumnShieldHyperbola()
 CenterColumnShieldFlatTopHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CenterColumnShieldFlatTopHyperbola(
+      inner_radius=50,
+      mid_radius=75,
+      outer_radius=100,
+      arc_height=220,
+      height=300,
+      rotation_angle=90
+    )
+
+   cadquery_object = my_component.solid
+
 |CenterColumnShieldFlatTopHyperbolastp| |CenterColumnShieldFlatTopHyperbolasvg|
 
 .. |CenterColumnShieldFlatTopHyperbolastp| image:: https://user-images.githubusercontent.com/56687624/86241446-cdc7c300-bb9a-11ea-8310-d54397338da8.png
@@ -153,6 +255,22 @@ CenterColumnShieldFlatTopHyperbola()
 
 CenterColumnShieldFlatTopCircular()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CenterColumnShieldFlatTopCircular(
+      inner_radius=50,
+      mid_radius=75,
+      outer_radius=100,
+      arc_height=220,
+      height=300,
+      rotation_angle=90
+    )
+
+   cadquery_object = my_component.solid
 
 |CenterColumnShieldFlatTopCircularstp| |CenterColumnShieldFlatTopCircularsvg|
 
@@ -168,6 +286,21 @@ CenterColumnShieldFlatTopCircular()
 CenterColumnShieldPlasmaHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CenterColumnShieldPlasmaHyperbola(
+      inner_radius=150,
+      mid_offset=50,
+      edge_offset=40,
+      height=800,
+      rotation_angle=90
+    )
+
+   cadquery_object = my_component.solid
+
 .. image:: https://user-images.githubusercontent.com/56687624/86241464-d3bda400-bb9a-11ea-83b4-a3ff0bf630c4.png
     :width: 180px
     :align: center
@@ -178,6 +311,22 @@ CenterColumnShieldPlasmaHyperbola()
 
 CoolantChannelRingStraight()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CoolantChannelRingStraight(
+      height=200,
+      channel_radius=10,
+      ring_radius=70,
+      number_of_coolant_channels=8,
+      workplane="XY",
+      rotation_axis="Z",
+      )
+
+   cadquery_object = my_component.solid
 
 |CoolantChannelRingStraightallstp| |CoolantChannelRingStraightsvg| |CoolantChannelRingStraightstp|
 
