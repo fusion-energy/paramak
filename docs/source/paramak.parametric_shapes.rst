@@ -6,10 +6,22 @@ Parametric Shapes
 RotateStraightShape()
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246786-767a2080-bba3-11ea-90e7-22d816690caa.png
-   :width: 250
-   :height: 200
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotateStraightShape(
+      points=[
+        (400, 100),
+        (400, 200),
+        (600, 200),
+        (600, 100)
+           ],
+      rotation_angle = 180
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.rotate_straight_shape
    :members:
@@ -18,10 +30,26 @@ RotateStraightShape()
 RotateSplineShape()
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246785-7548f380-bba3-11ea-90b7-03249be41a00.png
-   :width: 250
-   :height: 240
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotateSplineShape(
+      points=[
+       (500, 0),
+       (500, -20),
+       (400, -300),
+       (300, -300),
+       (400, 0),
+       (300, 300),
+       (400, 300),
+       (500, 20),
+      ],
+      rotation_angle = 180
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.rotate_spline_shape
    :members:
@@ -30,10 +58,26 @@ RotateSplineShape()
 RotateMixedShape()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86258771-17240c80-bbb3-11ea-990f-e87de26b1589.png
-   :width: 250
-   :height: 230
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotateMixedShape(
+      points=[
+        (100, 0, 'straight'),
+        (200, 0, 'circle'),
+        (250, 50, 'circle'),
+        (200, 100, 'straight'),
+        (150, 100, 'spline'),
+        (140, 75, 'spline'),
+        (110, 45, 'spline'),
+      ],
+      rotation_angle = 180
+   )
+
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.rotate_mixed_shape
    :members:
@@ -42,10 +86,18 @@ RotateMixedShape()
 RotateCircleShape()
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/98713427-868ae380-237f-11eb-87af-cf6b5fe032b2.png
-   :width: 250
-   :height: 200
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotateCircleShape(
+      points=[(50, 0)],
+      radius=5,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.rotate_circle_shape
    :members:
@@ -54,10 +106,24 @@ RotateCircleShape()
 ExtrudeStraightShape()
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246776-724e0300-bba3-11ea-91c9-0fd239225206.png
-   :width: 200
-   :height: 270
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeStraightShape(
+      points=[
+         (300, -300),
+         (400, 0),
+         (300, 300),
+         (400, 300),
+         (500, 0),
+         (400, -300),
+        ],
+      distance=200
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.extruded_straight_shape
    :members:
@@ -66,10 +132,27 @@ ExtrudeStraightShape()
 ExtrudeSplineShape()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/98713431-87bc1080-237f-11eb-9075-01bca99b7018.png
-   :width: 200
-   :height: 280
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeSplineShape(
+      points=[
+         (500, 0),
+         (500, -20),
+         (400, -300),
+         (300, -300),
+         (400, 0),
+         (300, 300),
+         (400, 300),
+         (500, 20),
+      ],
+      distance=200,
+
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.extruded_spline_shape
    :members:
@@ -78,10 +161,25 @@ ExtrudeSplineShape()
 ExtrudeMixedShape()
 ^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86261239-34a6a580-bbb6-11ea-812c-ac6fa6a8f0e2.png
-   :width: 200
-   :height: 200
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeMixedShape(
+      points=[
+        (100, 0, 'straight'),
+        (200, 0, 'circle'),
+        (250, 50, 'circle'),
+        (200, 100, 'straight'),
+        (150, 100, 'spline'),
+        (140, 75, 'spline'),
+        (110, 45, 'spline'),
+      ],
+      distance=200
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.extruded_mixed_shape
    :members:
@@ -90,10 +188,19 @@ ExtrudeMixedShape()
 ExtrudeCircleShape()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/8583900/86246768-6feba900-bba3-11ea-81a8-0d77a843b943.png
-   :width: 250
-   :height: 180
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeCircleShape(
+      points=[(50, 0)],
+      radius=5,
+      distance=15
+   )
+
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.extruded_circle_shape
    :members:
@@ -102,10 +209,17 @@ ExtrudeCircleShape()
 SweepStraightShape()
 ^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/98713447-8c80c480-237f-11eb-8615-c090e93138f6.png
-   :width: 300
-   :height: 230
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SweepStraightShape(
+      points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)] 
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.sweep_straight_shape
    :members:
@@ -114,10 +228,17 @@ SweepStraightShape()
 SweepSplineShape()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/98713443-8b4f9780-237f-11eb-83bb-38ca7f222073.png
-   :width: 300
-   :height: 230
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SweepSplineShape(
+      points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.sweep_spline_shape
    :members:
@@ -126,10 +247,18 @@ SweepSplineShape()
 SweepMixedShape()
 ^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/98713440-8a1e6a80-237f-11eb-9eed-12b9d7731090.png
-   :width: 300
-   :height: 230
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SweepMixedShape(
+      points=[(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"),
+      (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.sweep_mixed_shape
    :members:
@@ -138,10 +267,17 @@ SweepMixedShape()
 SweepCircleShape()
 ^^^^^^^^^^^^^^^^^^
 
-.. image:: https://user-images.githubusercontent.com/56687624/98713436-88ed3d80-237f-11eb-99cd-27dcb4f313b1.png
-   :width: 300
-   :height: 230
-   :align: center
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SweepCircleShape(
+      radius=10,
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+   )
+
+   cadquery_object = my_component.solid
 
 .. automodule:: paramak.parametric_shapes.sweep_circle_shape
    :members:

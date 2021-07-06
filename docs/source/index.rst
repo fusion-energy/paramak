@@ -28,6 +28,10 @@ means a finished product. Contributions are welcome. CadQuery functions provide
 the majority of the features, and incorporating additional capabilities is
 straightforward for developers with Python knowledge.
 
+You might also be interested in the `paramak-neutronics <https://github.com/fusion-energy/paramak-neutronics>`_   
+which is a separate module that adds neutronics capabilties.
+
+
 .. raw:: html
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/fXboew3U7rw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -40,14 +44,12 @@ straightforward for developers with Python knowledge.
    paramak.parametric_shapes
    paramak.parametric_components
    paramak.parametric_reactors
-   paramak.parametric_neutronics
    paramak.shape
    paramak.reactor
    paramak.utils
    example_parametric_shapes
    example_parametric_components
    example_parametric_reactors
-   example_neutronics_simulations
    tests
 
 History
@@ -71,7 +73,7 @@ The code has been professionally reviewed by
 and inline `suggestions <https://github.com/ukaea/paramak/pull/639>`_.
 
 The Paramak source code is distributed with a permissive open-source license
-(MIT) and is avaialbe from the GitHub repository 
+(MIT) and is available from the GitHub repository 
 `https://github.com/fusion-energy/paramak <https://github.com/fusion-energy/paramak>`_
 
 Publications and Presentations
