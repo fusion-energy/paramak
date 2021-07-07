@@ -4,10 +4,6 @@ on:
   pull_request:    
     branches:
     - develop
-    paths-ignore:
-      - docs/
-      - README.md
-      - .github/
  
 jobs:  
   build:
