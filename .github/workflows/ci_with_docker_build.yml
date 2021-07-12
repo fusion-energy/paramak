@@ -1,0 +1,24 @@
+# Builds a dockerimage and then runs tests from within the docker enviroment
+
+name: CI with docker build
+on:
+  pull_request:
+    branches:
+    - develop
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cadquery-version: [2.1, master]
+        include-neutronics: [true]
+    
+    steps:
+    - name: Build and test with Docker
+    - uses: actions/checkout@v2
+      run: |
+        docker build -t paramak --build-arg --build-arg cq_version=${{ matrix.cadquery-version}} .
+        docker run --rm paramak  /bin/bash -c "bash run_tests.sh"
