@@ -1,8 +1,10 @@
-# Runs on a miniconda base container, installs required software and performs
-# pytests
+
+# This CI will lauch a Docker image that contains all the dependencies required
+# within that image the pytest test suite is run 
 
 
 name: CI with install
+
 on:
   pull_request:    
     branches:
@@ -20,7 +22,6 @@ jobs:
       
       - name: install package
         run: |
-
           python setup.py install
       - name: run tests
         run: |
