@@ -59,7 +59,7 @@ RUN echo installing CadQuery version $cq_version && \
 RUN echo installing CadQuery version $cq_version && \
     # conda install -c conda-forge -c moab # included with dagmc
     # dagmc is needed as it includes the make_watertight command
-    conda install -c conda-forge -c dagmc
+    conda install -c conda-forge -c dagmc && \
     pip install jupyter-cadquery==2.1.0 && \
     conda clean -afy
 
