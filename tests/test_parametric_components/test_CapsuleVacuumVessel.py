@@ -126,9 +126,6 @@ def volume(outer_start_point, radius, thickness, angle):
     return total_volume
 
 
-volume((0, 0), 300, 10, 180)
-
-
 def testvolume1():
     testvol = round(volume(
         outer_start_point=(0, 0),
