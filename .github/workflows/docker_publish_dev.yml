@@ -2,7 +2,7 @@
 # This Action will build and upload a Docker image to GHCR
 # https://github.com/marketplace/actions/publish-docker
 
-name: dockerhub-publish-dependencies
+name: docker-publish-dev
 
 on:
   push:
