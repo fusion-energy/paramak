@@ -20,6 +20,7 @@ jobs:
           apt-get install -y ffmpeg libsm6 libxext6
           conda install -c conda-forge -c cadquery cadquery=2.1
           conda install -c conda-forge moab
-      - name: install requirments
+          pip install pytest
+      - name: run tests requirments
         run: |
           bash run_tests.sh
