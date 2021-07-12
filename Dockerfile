@@ -52,14 +52,13 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
 RUN echo installing CadQuery version $cq_version && \
     conda install -c conda-forge -c python python=3.8 && \
     conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
-    pip install jupyter-cadquery==2.1.0 && \
+    pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
 
-# Installing CadQuery
-# conda install -c conda-forge -c moab # included with dagmc
-# dagmc is needed as it includes the make_watertight command
+
+# dagmc is needed as it includes the make_watertight command and moab
+# conda install -c conda-forge -c moab # now included with dagmc
 RUN conda install -c conda-forge dagmc && \
-    pip install jupyter-cadquery==2.1.0 && \
     conda clean -afy
 
 COPY requirements.txt requirements.txt
