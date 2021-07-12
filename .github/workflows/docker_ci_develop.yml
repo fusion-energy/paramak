@@ -1,22 +1,25 @@
 
-name: CI - Develop
+name: CI - Develop from base docker
 on:
   pull_request:    
     branches:
     - develop
  
 jobs:  
-  build:
+  testing:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        cadquery-version: [2.1]
-        include-neutronics: [true]
-
-    steps:    
-    - uses: actions/checkout@v1
-    - name: Build and test with Docker
-      run: |
-        docker build -t paramak --build-arg include_neutronics=${{ matrix.include-neutronics }} --build-arg cq_version=${{ matrix.cadquery-version}} --build-arg compile_cores=2 .
-        docker run --rm paramak  /bin/bash -c "bash run_tests.sh include_neutronics=${{ matrix.include-neutronics }} && curl -s https://codecov.io/bash | bash"
+    container:
+      image: continuumio/miniconda3:4.9.2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: install requirments
+        run: |
+          apt-get -y update
+          apt-get install -y ffmpeg libsm6 libxext6
+          conda install -c conda-forge -c cadquery cadquery=2.1
+          conda install -c conda-forge moab
+      - name: install requirments
+        run: |
+          bash run_tests.sh
