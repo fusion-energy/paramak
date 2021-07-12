@@ -16,7 +16,6 @@ class CapsuleVacuumVessel(RotateMixedShape):
 
     def __init__(
         self,
-
         radius: float,
         outer_start_point: Tuple[float, float],
         thickness: float,
