@@ -1,0 +1,29 @@
+
+# This CI will lauch a Docker image that contains all the dependencies required
+# within that image the pytest test suite is run 
+
+
+name: CI with install
+
+on:
+  pull_request:    
+    branches:
+    - develop
+    - main
+ 
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/fusion-energy/paramak:dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: install package
+        run: |
+          python setup.py install
+      - name: run tests
+        run: |
+          bash run_tests.sh
+          curl -s https://codecov.io/bash
