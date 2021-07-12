@@ -1,4 +1,3 @@
-import capsule_vacuum_vessel
 import pytest
 import math
 import paramak
