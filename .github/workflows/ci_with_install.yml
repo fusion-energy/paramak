@@ -11,7 +11,7 @@ on:
     - develop
     - main
  
-jobs:  
+jobs:
   testing:
     runs-on: ubuntu-latest
     container:
