@@ -1,9 +1,13 @@
+# Runs on a miniconda base container, installs required software and performs
+# pytests
 
-name: CI - Develop from base docker
+
+name: CI with install
 on:
   pull_request:    
     branches:
     - develop
+    - main
  
 jobs:  
   testing:
@@ -19,8 +23,10 @@ jobs:
           apt-get -y update
           apt-get install -y ffmpeg libsm6 libxext6
           conda install -c conda-forge -c cadquery cadquery=2.1
-          conda install -c conda-forge moab
+          # dagmc install includes moab and make_watertight
+          conda install -c conda-forge dagmc
           python setup.py install
       - name: run tests requirments
         run: |
           bash run_tests.sh
+          curl -s https://codecov.io/bash
