@@ -12,7 +12,6 @@ dependencies:
   - matplotlib
   - Pillow
   - cadquery=2.1
-  - openmc
   - moab
   - pip:
     - neutronics-material-maker

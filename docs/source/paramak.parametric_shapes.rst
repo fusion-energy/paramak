@@ -215,17 +215,8 @@ SweepStraightShape()
 
    import paramak
    my_component = paramak.SweepStraightShape(
-      points=[
-       (500, 0),
-       (500, -20),
-       (400, -300),
-       (300, -300),
-       (400, 0),
-       (300, 300),
-       (400, 300),
-       (500, 20),
-      ],
-      rotation_angle = 180
+      points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)] 
    )
 
    cadquery_object = my_component.solid
@@ -243,17 +234,8 @@ SweepSplineShape()
 
    import paramak
    my_component = paramak.SweepSplineShape(
-      points=[
-       (500, 0),
-       (500, -20),
-       (400, -300),
-       (300, -300),
-       (400, 0),
-       (300, 300),
-       (400, 300),
-       (500, 20),
-      ],
-      rotation_angle = 180
+      points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
    )
 
    cadquery_object = my_component.solid
@@ -271,17 +253,9 @@ SweepMixedShape()
 
    import paramak
    my_component = paramak.SweepMixedShape(
-      points=[
-       (500, 0),
-       (500, -20),
-       (400, -300),
-       (300, -300),
-       (400, 0),
-       (300, 300),
-       (400, 300),
-       (500, 20),
-      ],
-      rotation_angle = 180
+      points=[(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"),
+      (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
    )
 
    cadquery_object = my_component.solid
@@ -299,17 +273,8 @@ SweepCircleShape()
 
    import paramak
    my_component = paramak.SweepCircleShape(
-      points=[
-       (500, 0),
-       (500, -20),
-       (400, -300),
-       (300, -300),
-       (400, 0),
-       (300, 300),
-       (400, 300),
-       (500, 20),
-      ],
-      rotation_angle = 180
+      radius=10,
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
    )
 
    cadquery_object = my_component.solid

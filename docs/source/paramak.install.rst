@@ -6,38 +6,40 @@ Installation
 Prerequisites
 -------------
 
-To use the paramak tool you will need Python 3 and Cadquery 2 installed.
-
-* `Python 3 <https://www.python.org/downloads/>`_
-
-* `CadQuery 2 <https://github.com/CadQuery/cadquery>`_
-
-Python 3 and CadQuery can be installed using Conda or Miniconda
+To use the paramak tool you will need Python 3 installed using Anaconda or
+Miniconda
 
 * `Anaconda <https://www.anaconda.com/>`_
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
-  
-Once you have Conda or MiniConda installed then CadQuery can be installed
-into a new enviroment and that environment can be activated using Anaconda or Miniconda. 
 
-Cadquery 2 can be installed in a Conda environment via conda-forge.
+Once you have Anaconda or MiniConda installed then CadQuery can be installed
+into a new enviroment. A more detailed description of installing Cadquery 2 can
+be found here:
+
+* `Cadquery 2 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
+
+
+First create a new enviroment.
 
 .. code-block:: python
 
-   conda create -n paramak_env -c conda-forge -c cadquery python=3.8 cadquery=2.1
+   conda create --name paramak_env python=3.8
 
 
-Once you have activated a conda environment, Cadquery 2 can be installed
-using the command:
+Then activate the new enviroment.
 
 .. code-block:: python
 
    conda activate paramak_env
 
 
-A more detailed description of installing Cadquery 2 can be found here:
+Then install CadQuery.
 
-* `Cadquery 2 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
+   .. code-block:: python
+
+      conda install -c conda-forge -c cadquery cadquery=2.1
+
+Now you are ready to install the Paramak
 
 
 System Installation
@@ -53,7 +55,7 @@ Alternatively you can download the repository using the `download link <https://
 
 .. code-block:: bash
 
-   git clone https://github.com/Shimwell/paramak.git
+   git clone https://github.com/fusion-energy/paramak.git
 
 Navigate to the paramak repository and within the terminal install the paramak
 package and the dependencies using pip3.
@@ -72,20 +74,7 @@ You can also install optional dependencies that add some neutronics
 capabilities to the paramak. This will install neutronics_material_maker and
 parametric_plasma_source. In addition to this you would need DAGMC, OpenMC,
 MOAB and Trelis / Cubit.
-`More details <https://paramak.readthedocs.io/en/latest/paramak.parametric_neutronics.html>`_
-
-.. code-block:: bash
-
-   pip install .[neutronics]
-
-You could consider installing
-[jupyter-cadquery](https://github.com/bernhard-42/jupyter-cadquery) which adds
-3D viewing in Jupyter lab as shown in the example notebooks.
-
-.. code-block:: bash
-
-   pip install jupyter-cadquery
-
+`More details <https://paramak-neutronics.readthedocs.io>`_
 
 
 Docker Image Installation

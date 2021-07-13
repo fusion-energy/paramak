@@ -13,7 +13,9 @@ The Paramak python package allows rapid production of 3D CAD models of fusion
 reactors. The purpose of the Paramak is to provide geometry for parametric
 studies. The paramak can created geometry in standard CAD formats such as STP,
 STL. It can also create h5m files for 
-[DAGMC](https://svalinn.github.io/DAGMC/) based neutronics simulations.
+[DAGMC](https://svalinn.github.io/DAGMC/) and carry out neutronics simulations
+when used with the optional [paramak-neutronics](https://github.com/fusion-energy/paramak-neutronics)
+module.
 
 :point_right: [Documentation](https://paramak.readthedocs.io)
 
@@ -22,6 +24,9 @@ STL. It can also create h5m files for
 :point_right: [Installation](https://paramak.readthedocs.io/en/main/#system-installation)
 
 :point_right: [Publication](https://f1000research.com/articles/10-27/v1)
+
+:point_right: [Docker images](https://github.com/fusion-energy/paramak/pkgs/container/paramak)
+
 
 
 ## Citing
