@@ -40,28 +40,27 @@ def perimeter(outer_start_point, radius, thickness):
 
 
 def test_perimeter1():
-    testp = round(perimeter(
+    testp = perimeter(
         outer_start_point=(0, 0),
         radius=300,
-        thickness=10), 2)
-    assert testp == 3073.54
+        thickness=10)
+    assert testp == pytest.approx(3073.54)
 
 
 def test_perimeter2():
-    testp = round(perimeter(
+    testp = perimeter(
         outer_start_point=(100, -100),
         radius=400,
-        thickness=25), 2)
-    assert testp == 4084.73
+        thickness=25)
+    assert testp == pytest.approx(4084.73)
 
 
 def test_perimeter3():
-    testp = round(perimeter(
+    testp = perimeter(
         outer_start_point=(1000, -500),
         radius=5000,
-        thickness=50),
-        2)
-    assert testp == 51358.85
+        thickness=50)
+    assert testp == pytest.approx(51358.85)
 
 
 '''this tests if the number of points returned are correct'''
@@ -127,30 +126,27 @@ def volume(outer_start_point, radius, thickness, angle):
 
 
 def testvolume1():
-    testvol = round(volume(
+    testvol = volume(
         outer_start_point=(0, 0),
         radius=300,
         thickness=10,
-        angle=180),
-        2)
-    assert testvol == 11029084.61
+        angle=180)
+    assert testvol == pytest.approx(11029084.61)
 
 
 def testvolume2():
-    testvol = round(volume(
+    testvol = volume(
         outer_start_point=(100, -100),
         radius=400,
         thickness=25,
-        angle=360),
-        2)
-    assert testvol == 95884025.78
+        angle=360)
+    assert testvol == pytest.approx(95884025.78)
 
 
 def testvolume3():
-    testvol = round(volume(
+    testvol = volume(
         outer_start_point=(1000, -500),
         radius=5000,
         thickness=50,
-        angle=90),
-        2)
-    assert testvol == 7795207671.41
+        angle=90)
+    assert testvol == pytest.approx(7795207671.41)
