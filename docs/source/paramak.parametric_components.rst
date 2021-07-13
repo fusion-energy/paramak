@@ -624,3 +624,30 @@ VacuumVesselInnerLeg()
 .. automodule:: paramak.parametric_components.vacuum_vessel_inner_leg
    :members:
    :show-inheritance:
+
+CapsuleVacuumVessel()
+^^^^^^^^^^^^^^^^^^^^^
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CapsuleVacuumVessel(
+      outer_start_point=(0, -600),
+      radius = 300,
+      thickness=30,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
+|CapsuleVacuumVesselstp| |CapsuleVacuumVesselsvg|
+
+.. |CapsuleVacuumVesselstp| image:: https://user-images.githubusercontent.com/85617923/125429341-e5bdf20d-1739-41ce-953b-eabc01c04511.png
+   :width: 255
+.. |CapsuleVacuumVesselsvg| image:: https://user-images.githubusercontent.com/85617923/125429341-e5bdf20d-1739-41ce-953b-eabc01c04511.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.capsule_vacuum_vessel
+   :members:
+   :show-inheritance:
