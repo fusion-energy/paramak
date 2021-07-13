@@ -4,7 +4,8 @@ import math
 
 
 class CapsuleVacuumVessel(RotateMixedShape):
-    """A cylindrical vessel volume with constant thickness that has addition sphereical edges.
+    """A cylindrical vessel volume with constant thickness that has addition spherical edges.
+
     Arguments:
         outer_start_point: the x,z coordinates of the outer bottom of the vacuum vessel
         radius: the radius from which the centres of the vessel meets the outer circumference.
