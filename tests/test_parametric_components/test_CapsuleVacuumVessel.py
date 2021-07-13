@@ -52,7 +52,7 @@ def test_perimeter2():
         outer_start_point=(100, -100),
         radius=400,
         thickness=25)
-    assert testp == pytest.approx(4084.73)
+    assert testp == pytest.approx(4084.734)
 
 
 def test_perimeter3():
