@@ -35,9 +35,9 @@ Then activate the new enviroment.
 
 Then install CadQuery.
 
-   .. code-block:: python
+.. code-block:: python
 
-      conda install -c conda-forge -c cadquery cadquery=2.1
+   conda install -c conda-forge -c cadquery cadquery=2.1
 
 Now you are ready to install the Paramak
 
@@ -62,6 +62,7 @@ package and the dependencies using pip3.
 
 .. code-block:: bash
 
+   cd paramak
    pip install .
 
 Alternatively you can install the paramak with the following command.
@@ -107,7 +108,7 @@ commands in a terminal window.
 internet browser of your choice. This will load up the examples folder where
 you can view the 3D objects created.
 
-Alternatively the Docker image can be run in terminal mode .
+Alternatively the Docker image can be run in interactive terminal mode .
 
 .. code-block:: bash
 
