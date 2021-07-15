@@ -73,8 +73,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         ### Check if input values are what they meant to be ###
         if not isinstance(self.lower_inner_coordinates, tuple):
             raise TypeError("Invalid input - Coordinates must be a tuple")
- 
-                
+
         if not isinstance(self.mid_point_coordinates, tuple):
             raise TypeError("Invalid input - Coordinates must be a tuple")
 

@@ -192,6 +192,7 @@ def test_input_param_thickness():
             number_of_coils=1,
         )
 
+
 @pytest.mark.dtype
 def test_input_param_thickness2():
     o = ToroidalFieldCoilRectangleRoundCorners(
@@ -204,8 +205,8 @@ def test_input_param_thickness2():
     inner_radius = o.analyse_attributes[2]
     outer_radius = o.analyse_attributes[3]
 
-    check_inner = 50*0.1
-    check_outer = 50*1.1
+    check_inner = 50 * 0.1
+    check_outer = 50 * 1.1
     assert inner_radius == check_inner
     assert outer_radius == check_outer
 
