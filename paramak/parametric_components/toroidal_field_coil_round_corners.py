@@ -311,18 +311,3 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self.solid = solid
 
         return solid
-
-
-if __name__ == "__main__":
-
-    obj = ToroidalFieldCoilRectangleRoundCorners(
-        lower_inner_coordinates=(50, 0),
-        mid_point_coordinates=(100, 100),
-        thickness=20,
-        distance=20,
-        number_of_coils=1,
-        rotation_angle=180,
-        with_inner_leg=True,
-        test=True,
-        analyse=True
-    )
