@@ -62,8 +62,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self.thickness = thickness
         self.number_of_coils = number_of_coils
         self.with_inner_leg = with_inner_leg
-        self.test = test
-        self.analyse = analyse
+
         self.analyse_attributes = [
             0,
             0,
@@ -99,12 +98,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         if self.lower_inner_coordinates[0] > self.mid_point_coordinates[0]:
             raise ValueError(
                 "The middle point's x-coordinate must be larger than the lower inner point's x-coordinate")
-
-        if not isinstance(test, bool):
-            raise TypeError("test argument must be a Boolean")
-
-        if not isinstance(analyse, bool):
-            raise TypeError("analyse argument must br a Boolean")
 
         else:
             # Adding hidden attributes for analyse list population
@@ -246,11 +239,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self.inner_leg_connection_points = [
             inner_p1, inner_p2, inner_p3, inner_p4]
 
-        # For self testing and debugging
-        if self.test:
-            print(tri_points)
-        if self.analyse:
-            print(self.analyse_attributes)
 
     def find_azimuth_placement_angle(self):
         """ Finds the placement angles from the number of coils given in a 360 degree """
