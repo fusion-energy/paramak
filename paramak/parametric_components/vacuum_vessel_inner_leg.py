@@ -146,6 +146,8 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         solid = big_solid.cut(small_solid).cut(inner_solid)
 
         self.wire = [big_wire, small_wire]
+        solid = self.rotate_solid(solid)
+        solid = self.perform_boolean_operations(solid)
 
         self.solid = solid
 
