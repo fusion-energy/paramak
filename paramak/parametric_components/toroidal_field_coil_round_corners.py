@@ -46,7 +46,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         stp_filename: Optional[str] = "ToroidalFieldCoilRectangleRoundCorners.stp",
         stl_filename: Optional[str] = "ToroidalFieldCoilRectangleRoundCorners.stl",
         material_tag: Optional[str] = "outter_tf_coil_mat",
-        test: Optional[bool] = False,
         analyse: Optional[bool] = False,
         **kwargs
     ) -> None:
