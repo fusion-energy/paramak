@@ -239,7 +239,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self.inner_leg_connection_points = [
             inner_p1, inner_p2, inner_p3, inner_p4]
 
-
     def find_azimuth_placement_angle(self):
         """ Finds the placement angles from the number of coils given in a 360 degree """
         angles = list(
