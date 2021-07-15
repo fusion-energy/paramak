@@ -1,54 +1,38 @@
-from math import dist
-from re import S
 from typing import Optional, Tuple, Union
-from _pytest.python_api import raises
-from cadquery.occ_impl.shapes import Wire
-from numpy.lib.function_base import angle
-from paramak.parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
-import numpy as np
+
 import cadquery as cq
+import numpy as np
+from paramak.parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from paramak.utils import calculate_wedge_cut
 
 
 class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
-    """
-    Creates geometry for TF coil with rounded corners.
-    Finds the coordinates for verteces of a TF coil, in a 2D profile on the XZ plane using
-    the main function find_points() which takes 3 positional arguments for the TF coil parameters,
-    and takes three additional boolean arguments.
+    """Creates geometry for TF coil with rounded corners. Finds the coordinates
+    for verteces of a TF coil, in a 2D profile on the XZ plane using the main
+    function find_points() which takes 3 positional arguments for the TF coil
+    parameters, and takes three additional boolean arguments.
 
     Arguments:
         lower_inner_coordinates (Tuple): the (X,Z) coordinate of the inner
-        corner of the lower end of the coil (cm)
-
+            corner of the lower end of the coil (cm)
         mid_point_coordinates (Tuple): the (X,Z) coordinate of the mid
-        point of the vertical section (cm)
-
+            point of the vertical section (cm)
         thickness: The thickness in the (X,Z) plane of the toroidal
         field coils (cm)
-
         extrusion_distance: The total extruded thickness of the coils
-        when in the y-direction (centered extrusion)
-
+            when in the y-direction (centered extrusion)
         coil_count: The number of coils placed in the model
-        (changing azimuth_placement_angle by dividing 360 by
-        the amount given) Defaults to 1
-
-        with_inner_leg: Boolean to include the inside of the Coils
-
+            (changing azimuth_placement_angle by dividing 360 by the amount
+            given). Defaults to 1
+            with_inner_leg: Boolean to include the inside of the Coils
         file_name_stp: Defults to "ToroidalFieldCoilRectangleRoundCorners.stp"
-
         file_name_stl: Defaults to "ToroidalFieldCoilRectangleRoundCorners.stl"
-
         material_tag: Defaults to "outter_tf_coil_mat"
-
         test: True prints to console the list of points
-
-        line_type: Sets the returned list to be populated by elements for MixedShape()
-        Defaults to True
-
-        analyse: Defaults to False; if True returns values that are calculated for the 2D Shape
-
+        line_type: Sets the returned list to be populated by elements for
+            MixedShape(). Defaults to True
+        analyse: Defaults to False; if True returns values that are calculated
+            for the 2D Shape
     """
 
     def __init__(
