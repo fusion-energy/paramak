@@ -113,7 +113,7 @@ def volume(
     return total_shape_volume
 
 
-#@pytest.mark.parametric
+@pytest.mark.parametric
 def test_parametric_surface_area_wLeg():
     paramak_area = obj2.area
     [print(val) for val in obj2.areas]
@@ -122,42 +122,42 @@ def test_parametric_surface_area_wLeg():
     assert pytest.approx(package_area) == paramak_area
 
 
-#@pytest.mark.parametric
+@pytest.mark.parametric
 def test_parametric_volume_wLeg():
     paramak_vol = obj2.volume
     package_vol = volume((50, 0), (100, 100), 20, 10, with_inner_leg=True)
     assert pytest.approx(package_vol) == paramak_vol
 
 
-#@pytest.mark.parametric
+@pytest.mark.parametric
 def test_parametric_surface_area():
     paramak_area = obj.area
     package_area = surface_area((50, 0), (100, 100), 20, 10)
     assert pytest.approx(package_area) == paramak_area
 
 
-#@pytest.mark.parametric
+@pytest.mark.parametric
 def test_parametric_volume():
     paramak_vol = obj.volume
     package_vol = volume((50, 0), (100, 100), 20, 10)
     assert pytest.approx(package_vol) == paramak_vol
 
 
-#@pytest.mark.analytical
+@pytest.mark.analytical
 def test_manual_area():
     analytical = 19872.92
     computational = surface_area((50, 0), (100, 100), 20, 10)
     assert pytest.approx(computational) == analytical
 
 
-#@pytest.mark.analytical
+@pytest.mark.analytical
 def test_manual_volume():
     analytical = 64909.73
     computational = volume((50, 0), (100, 100), 20, 10)
     assert pytest.approx(computational) == analytical
 
 
-#@pytest.mark.dtype
+@pytest.mark.dtype
 def test_input_param_lower_inner():
     with pytest.raises(TypeError):
         o = ToroidalFieldCoilRectangleRoundCorners(
@@ -169,7 +169,7 @@ def test_input_param_lower_inner():
         )
 
 
-#@pytest.mark.dtype
+@pytest.mark.dtype
 def test_input_param_mid_point():
     with pytest.raises(TypeError):
         o = ToroidalFieldCoilRectangleRoundCorners(
@@ -181,7 +181,7 @@ def test_input_param_mid_point():
         )
 
 
-#@pytest.mark.dtype
+@pytest.mark.dtype
 def test_input_param_thickness():
     with pytest.raises(TypeError):
         o = ToroidalFieldCoilRectangleRoundCorners(
@@ -193,7 +193,7 @@ def test_input_param_thickness():
         )
 
 
-#@pytest.mark.dtype
+@pytest.mark.dtype
 def test_input_param_distance():
     with pytest.raises(TypeError):
         o = ToroidalFieldCoilRectangleRoundCorners(
@@ -205,7 +205,7 @@ def test_input_param_distance():
         )
 
 
-#@pytest.mark.dtype
+@pytest.mark.dtype
 def test_input_param_num_coil():
     with pytest.raises(TypeError):
         o = ToroidalFieldCoilRectangleRoundCorners(
@@ -216,80 +216,72 @@ def test_input_param_num_coil():
             number_of_coils=1.5,
         )
 
-<<<<<<< HEAD
-#@pytest.mark.length
-=======
-
 @pytest.mark.length
->>>>>>> da621fbb480dce457efda345aa65724e1a178586
 def test_input_tuple():
     with pytest.raises(ValueError):
         o = ToroidalFieldCoilRectangleRoundCorners(
-            lower_inner_coordinates=(50, 0, 5),
-            mid_point_coordinates=(100, 100),
-            thickness=20,
-            distance=10,
-            number_of_coils=1,
-        )
+            lower_inner_coordinates= (50,0,5),
+            mid_point_coordinates= (100,100),
+            thickness= 20,
+            distance= 10,
+            number_of_coils= 1,
+            )
 
-
-#@pytest.mark.length
+@pytest.mark.length
 def test_input_tuple2():
     with pytest.raises(ValueError):
         o = ToroidalFieldCoilRectangleRoundCorners(
-            lower_inner_coordinates=(50, 0),
-            mid_point_coordinates=(100, 100, 100),
-            thickness=20,
-            distance=10,
-            number_of_coils=1,
-        )
+            lower_inner_coordinates= (50,0),
+            mid_point_coordinates= (100,100,100),
+            thickness= 20,
+            distance= 10,
+            number_of_coils= 1,
+            )
 
-
-#@pytest.mark.value
+@pytest.mark.value
 def test_input_num_coils():
     with pytest.raises(TypeError):
         o = ToroidalFieldCoilRectangleRoundCorners(
-            lower_inner_coordinates=(50, 0),
-            mid_point_coordinates=(100, 100),
-            thickness=20,
-            distance=10,
-            number_of_coils=1.5,
-        )
+            lower_inner_coordinates= (50,0),
+            mid_point_coordinates= (100,100),
+            thickness= 20,
+            distance= 10,
+            number_of_coils= 1.5,
+            )
 
-
-#@pytest.mark.value
+@pytest.mark.value
 def test_input_x_coordinates():
     with pytest.raises(ValueError):
         o = ToroidalFieldCoilRectangleRoundCorners(
-            lower_inner_coordinates=(50, 0),
-            mid_point_coordinates=(0, 100),
-            thickness=20,
-            distance=10,
-            number_of_coils=1,
-        )
+            lower_inner_coordinates= (50,0),
+            mid_point_coordinates= (0,100),
+            thickness= 20,
+            distance= 10,
+            number_of_coils= 1,
+            )
 
-
-#@pytest.mark.value
+@pytest.mark.value
 def test_input_testboolean():
     with pytest.raises(TypeError):
         o = ToroidalFieldCoilRectangleRoundCorners(
-            lower_inner_coordinates=(50, 0),
-            mid_point_coordinates=(100, 100),
-            thickness=20,
-            distance=10,
-            number_of_coils=1,
+            lower_inner_coordinates= (50,0),
+            mid_point_coordinates= (100,100),
+            thickness= 20,
+            distance= 10,
+            number_of_coils= 1,
             test="not a boolean"
-        )
+            )
 
 
-#@pytest.mark.value
+@pytest.mark.value
 def test_input_analyseboolean():
     with pytest.raises(TypeError):
         o = ToroidalFieldCoilRectangleRoundCorners(
-            lower_inner_coordinates=(50, 0),
-            mid_point_coordinates=(100, 100),
-            thickness=20,
-            distance=10,
-            number_of_coils=1,
+            lower_inner_coordinates= (50,0),
+            mid_point_coordinates= (100,100),
+            thickness= 20,
+            distance= 10,
+            number_of_coils= 1,
             analyse="not a boolean"
-        )
+            )
+
