@@ -28,7 +28,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         file_name_stp: Defults to "ToroidalFieldCoilRectangleRoundCorners.stp"
         file_name_stl: Defaults to "ToroidalFieldCoilRectangleRoundCorners.stl"
         material_tag: Defaults to "outter_tf_coil_mat"
-        test: True prints to console the list of points
         line_type: Sets the returned list to be populated by elements for
             MixedShape(). Defaults to True
         analyse: Defaults to False; if True returns values that are calculated
