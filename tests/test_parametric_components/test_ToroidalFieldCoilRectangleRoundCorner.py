@@ -1,6 +1,6 @@
-import pytest
 from paramak import ToroidalFieldCoilRectangleRoundCorners
 from math import pi
+import pytest
 
 obj = ToroidalFieldCoilRectangleRoundCorners(
     lower_inner_coordinates=(50, 0),
@@ -31,7 +31,8 @@ def surface_area(
         XZ_face_only=False,
         extrusion_area_only=False):
     """
-    Function calculates the total surface area of the TF coil from the coordinates given in the find_points function
+    Function calculates the total surface area of the TF coil from the 
+    coordinates given in the find_points function
     """
     test_object = ToroidalFieldCoilRectangleRoundCorners(
         lower_inner_coordinates=lower_left,
@@ -70,9 +71,8 @@ def surface_area(
 
         # Total bounding surface
         total_bounding_surface += total_leg_surface_area
-        print("Face area: {}\nExtrusion Ares: {}\ntotal bounding area: {}".format(
-            total_face_area, extrusion_area, total_bounding_surface))
-    #print("Self testing:\nCalculated parameters:\nbase: {}\nheight: {}\ninner radius: {}\noutter radius: {}".format(base,height,inner_rad,outter_rad))
+        print("Face area: {}\nExtrusion Ares: {}\ntotal bounding area: {}" \
+            .format(total_face_area, extrusion_area, total_bounding_surface))
 
     if XZ_face_only:
         return total_face_area
@@ -91,8 +91,10 @@ def volume(
         with_inner_leg=False,
         test=False):
     """
-    The function calculates the volume from the given coordinates used for parametarising the component in find_points function in core module
-    it takes an additional variable for extrusion length which is the thickness of the coil
+    The function calculates the volume from the given coordinates used for
+    parametarising the component in find_points function in core module it 
+    takes an additional variable for extrusion length which is the thickness 
+    of the coil
     """
 
     face_area = surface_area(
@@ -114,16 +116,15 @@ def volume(
 
 
 @pytest.mark.parametric
-def test_parametric_surface_area_wLeg():
+def test_parametric_surface_area_with_leg():
     paramak_area = obj2.area
-    [print(val) for val in obj2.areas]
     package_area = surface_area(
         (50, 0), (100, 100), 20, 10, with_inner_leg=True)
     assert pytest.approx(package_area) == paramak_area
 
 
 @pytest.mark.parametric
-def test_parametric_volume_wLeg():
+def test_parametric_volume_with_leg():
     paramak_vol = obj2.volume
     package_vol = volume((50, 0), (100, 100), 20, 10, with_inner_leg=True)
     assert pytest.approx(package_vol) == paramak_vol
@@ -160,50 +161,53 @@ def test_manual_volume():
 @pytest.mark.dtype
 def test_input_param_lower_inner():
     with pytest.raises(TypeError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=1,
             mid_point_coordinates=(100, 100),
             thickness=20,
             distance=10,
             number_of_coils=1,
         )
+        test_object.solid
 
 
 @pytest.mark.dtype
 def test_input_param_mid_point():
     with pytest.raises(TypeError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0),
             mid_point_coordinates=1,
             thickness=20,
             distance=10,
             number_of_coils=1,
         )
+        test_object.solid
 
 
 @pytest.mark.dtype
 def test_input_param_thickness():
     with pytest.raises(TypeError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0),
             mid_point_coordinates=(100, 100),
             thickness="fail",
             distance=10,
             number_of_coils=1,
         )
+        test_object.solid
 
 
 @pytest.mark.dtype
 def test_input_param_thickness2():
-    o = ToroidalFieldCoilRectangleRoundCorners(
+    test_object = ToroidalFieldCoilRectangleRoundCorners(
         lower_inner_coordinates=(50, 0),
         mid_point_coordinates=(100, 100),
         thickness=50,
         distance=10,
         number_of_coils=1,
     )
-    inner_radius = o.analyse_attributes[2]
-    outer_radius = o.analyse_attributes[3]
+    inner_radius = test_object.analyse_attributes[2]
+    outer_radius = test_object.analyse_attributes[3]
 
     check_inner = 50 * 0.1
     check_outer = 50 * 1.1
@@ -214,70 +218,76 @@ def test_input_param_thickness2():
 @pytest.mark.dtype
 def test_input_param_distance():
     with pytest.raises(TypeError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0),
             mid_point_coordinates=(100, 100),
             thickness=20,
             distance="fail",
             number_of_coils=1,
         )
+        test_object.solid
 
 
 @pytest.mark.dtype
 def test_input_param_num_coil():
     with pytest.raises(TypeError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0),
             mid_point_coordinates=(100, 100),
             thickness=20,
             distance=10,
             number_of_coils=1.5,
         )
+        test_object.solid
 
 
 @pytest.mark.length
 def test_input_tuple():
     with pytest.raises(ValueError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0, 5),
             mid_point_coordinates=(100, 100),
             thickness=20,
             distance=10,
             number_of_coils=1,
         )
+        test_object.solid
 
 
 @pytest.mark.length
 def test_input_tuple2():
     with pytest.raises(ValueError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0),
             mid_point_coordinates=(100, 100, 100),
             thickness=20,
             distance=10,
             number_of_coils=1,
         )
+        test_object.solid
 
 
 @pytest.mark.value
 def test_input_num_coils():
     with pytest.raises(TypeError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0),
             mid_point_coordinates=(100, 100),
             thickness=20,
             distance=10,
             number_of_coils=1.5,
         )
+        test_object.solid
 
 
 @pytest.mark.value
 def test_input_x_coordinates():
     with pytest.raises(ValueError):
-        o = ToroidalFieldCoilRectangleRoundCorners(
+        test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0),
             mid_point_coordinates=(0, 100),
             thickness=20,
             distance=10,
             number_of_coils=1,
         )
+        test_object.solid
