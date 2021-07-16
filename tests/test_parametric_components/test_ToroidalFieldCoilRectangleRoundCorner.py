@@ -1,5 +1,5 @@
-from paramak import ToroidalFieldCoilRectangleRoundCorners
 from math import pi
+from paramak import ToroidalFieldCoilRectangleRoundCorners
 import pytest
 
 obj = ToroidalFieldCoilRectangleRoundCorners(

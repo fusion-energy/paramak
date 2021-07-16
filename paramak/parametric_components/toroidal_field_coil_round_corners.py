@@ -159,18 +159,18 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         point4 = (point1[0], point1[1] + height)
         point5 = (point4[0], point4[1] + thickness)
         point6 = (point3[0], point4[1] + thickness)
-        point7 = (point3[0] + thickness, point3[1])
+        #point7 = (point3[0] + thickness, point3[1])
         point8 = (point2[0] + thickness, point2[1])
-        point9 = (point2[0], point2[1] - thickness)
+        #point9 = (point2[0], point2[1] - thickness)
         point10 = (lower_x, lower_z - thickness)
 
         inner_curve_radius = self.analyse_attributes[2]
         outter_curve_radius = self.analyse_attributes[3]
 
-        """ New subroutines to calculate inner and outter curve mid-points,
-            x and y displacement from existing points
-            long shift does a sin(45)*radius of curvature shift
-            short shift does a (1-sin(45))*radius of curvature shift """
+        #  New subroutines to calculate inner and outter curve mid-points,    #
+        #  x and y displacement from existing points                          #
+        #  long shift does a sin(45)*radius of curvature shift                #
+        #  short shift does a (1-sin(45))*radius of curvature shift           #
 
         def shift_long(radius):
             """radius is the radius of curvature"""
@@ -220,8 +220,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             + ['circle'] * 2 + ['straight'] * 3 + ['circle'] * 2 \
             + ['straight'] + ['circle'] * 2 + ['straight'] * 2
 
-        for i in range(len(points)):
-            tri_points.append(points[i] + (lines[i],))
+        for i in enumerate(points):
+            tri_points.append(points[i[0]] + (lines[i[0]],))
 
         self.points = tri_points
 
