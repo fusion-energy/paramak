@@ -752,3 +752,36 @@ CapsuleVacuumVessel()
 .. automodule:: paramak.parametric_components.capsule_vacuum_vessel
    :members:
    :show-inheritance:
+
+ToroidalFieldCoilRectangleRoundCorners()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilRectangleRoundCorners(
+      with_inner_leg=False,
+      lower_inner_coordinates=(0, 0),
+      mid_point_coordinates=(100, 100),
+      thickness=30,
+      number_of_coils=1,
+      distance=20,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
+|TFCoilRoundCornersvg| |TFCoilRoundCornersvg2| |TFCoilRoundCornerstp|
+
+..|TFCoilRoundCornersvg| image: https://user-images.githubusercontent.com/85617935/125979064-c9aff900-4a07-462d-91bd-53af3bc66559.png
+  :width: 255
+..|TFCoilRoundCornersvg2| image: https://user-images.githubusercontent.com/85617935/125979248-1dbbd7be-916b-4921-86ed-a942b6cda757.png
+  :width: 255
+..|TFCoilRoundCornersvg| image: https://user-images.githubusercontent.com/85617935/125977357-3b893496-fc6b-4f06-8a95-10164cb70d7c.png
+  :width: 255
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_round_corners
+   :members:
+   :show-inheritance:
+
