@@ -1,10 +1,14 @@
 
 [![N|Python](https://www.python.org/static/community_logos/python-powered-w-100x40.png)](https://www.python.org)
 [![CircleCI](https://circleci.com/gh/fusion-energy/paramak/tree/main.svg?style=svg)](https://circleci.com/gh/fusion-energy/paramak/tree/main)
+[![CI with docker build](https://github.com/fusion-energy/paramak/actions/workflows/ci_with_docker_build.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/ci_with_docker_build.yml)
+[![CI with install](https://github.com/fusion-energy/paramak/actions/workflows/ci_with_install.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/ci_with_install.yml)
 [![codecov](https://codecov.io/gh/fusion-energy/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/fusion-energy/paramak)
 [![PyPI](https://img.shields.io/pypi/v/paramak?color=brightgreen&label=pypi&logo=grebrightgreenen&logoColor=green)](https://pypi.org/project/paramak/)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
-<!-- [![dockerhub-publish-stable](https://github.com/fusion-energy/paramak/workflows/dockerhub-publish-stable/badge.svg)](https://github.com/fusion-energy/paramak/actions?query=workflow%3Adockerhub-publish-stable) -->
+[![docker-publish-release](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml)
+[![Code Grade](https://www.code-inspector.com/project/25342/score/svg)](https://frontend.code-inspector.com/public/project/25342/paramak/dashboard)
+[![Code Grade](https://www.code-inspector.com/project/25342/status/svg)](https://frontend.code-inspector.com/public/project/25342/paramak/dashboard)
 [![DOI](https://zenodo.org/badge/269635577.svg)](https://zenodo.org/badge/latestdoi/269635577)
 
 # Paramak
