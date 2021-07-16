@@ -167,7 +167,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         inner_curve_radius = self.analyse_attributes[2]
         outter_curve_radius = self.analyse_attributes[3]
 
-        """ New subroutines to calculate inner and outter curve mid-points, 
+        """ New subroutines to calculate inner and outter curve mid-points,
             x and y displacement from existing points
             long shift does a sin(45)*radius of curvature shift
             short shift does a (1-sin(45))*radius of curvature shift """
@@ -234,9 +234,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             inner_p1, inner_p2, inner_p3, inner_p4]
 
     def find_azimuth_placement_angle(self):
-        """ Finds the placement angles from the number of coils 
+        """ Finds the placement angles from the number of coils
             given in a 360 degree """
-            
+
         angles = list(
             np.linspace(
                 0,

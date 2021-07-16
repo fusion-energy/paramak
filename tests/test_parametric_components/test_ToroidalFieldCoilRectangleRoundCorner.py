@@ -31,7 +31,7 @@ def surface_area(
         XZ_face_only=False,
         extrusion_area_only=False):
     """
-    Function calculates the total surface area of the TF coil from the 
+    Function calculates the total surface area of the TF coil from the
     coordinates given in the find_points function
     """
     test_object = ToroidalFieldCoilRectangleRoundCorners(
@@ -71,8 +71,8 @@ def surface_area(
 
         # Total bounding surface
         total_bounding_surface += total_leg_surface_area
-        print("Face area: {}\nExtrusion Ares: {}\ntotal bounding area: {}" \
-            .format(total_face_area, extrusion_area, total_bounding_surface))
+        print("Face area: {}\nExtrusion Ares: {}\ntotal bounding area: {}"
+              .format(total_face_area, extrusion_area, total_bounding_surface))
 
     if XZ_face_only:
         return total_face_area
@@ -92,8 +92,8 @@ def volume(
         test=False):
     """
     The function calculates the volume from the given coordinates used for
-    parametarising the component in find_points function in core module it 
-    takes an additional variable for extrusion length which is the thickness 
+    parametarising the component in find_points function in core module it
+    takes an additional variable for extrusion length which is the thickness
     of the coil
     """
 
