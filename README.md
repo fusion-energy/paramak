@@ -7,8 +7,8 @@
 [![PyPI](https://img.shields.io/pypi/v/paramak?color=brightgreen&label=pypi&logo=grebrightgreenen&logoColor=green)](https://pypi.org/project/paramak/)
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
 [![docker-publish-release](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml)
-[![Code Grade](https://www.code-inspector.com/project/25342/score/svg)](https://www.code-inspector.com)
-[![Code Grade](https://www.code-inspector.com/project/25342/status/svg)](https://www.code-inspector.com)
+[![Code Grade](https://www.code-inspector.com/project/25342/score/svg)](https://frontend.code-inspector.com/public/project/25342/paramak/dashboard)
+[![Code Grade](https://www.code-inspector.com/project/25342/status/svg)](https://frontend.code-inspector.com/public/project/25342/paramak/dashboard)
 [![DOI](https://zenodo.org/badge/269635577.svg)](https://zenodo.org/badge/latestdoi/269635577)
 
 # Paramak
