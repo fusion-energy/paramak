@@ -57,7 +57,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self.thickness = thickness
         self.number_of_coils = number_of_coils
         self.with_inner_leg = with_inner_leg
-
+        self.inner_leg_connection_points = []
         self.analyse_attributes = [
             0,
             0,
@@ -91,39 +91,40 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         if self.lower_inner_coordinates[0] > self.mid_point_coordinates[0]:
             raise ValueError(
-                "The middle point's x-coordinate must be larger than the lower inner point's x-coordinate")
+                "The middle point's x-coordinate must be larger than the lower",
+                "inner point's x-coordinate")
 
+        
+        # Adding hidden attributes for analyse list population
+        # inner base length of the coil
+        self._base_length = mid_point_coordinates[0] - \
+            lower_inner_coordinates[0]
+        self.analyse_attributes[0] = self._base_length
+
+        # height of the coil
+        self._height = abs(
+            mid_point_coordinates[1] - lower_inner_coordinates[1]) * 2
+        self.analyse_attributes[1] = self._height
+
+        """ Inner and outter radius of curvature for the corners
+        The inner curvature is scales as a function of the base length
+        of the coil and its thickness as long as the thickness does not exceed the base length
+        if the thickness/base length ratio is larger or equal to 1
+        it takes 10% of the thickness as the inner curve radius
+        this to avoid having coordinates before the previous or at the same spot as Paramak
+        cannot compute it"""
+
+        if thickness / self._base_length >= 1:
+            self._inner_curve_radius = thickness * 0.1
+            self._outter_curve_radius = thickness * 1.1
+            self.analyse_attributes[2] = self._inner_curve_radius
+            self.analyse_attributes[3] = self._outter_curve_radius
         else:
-            # Adding hidden attributes for analyse list population
-            # inner base length of the coil
-            self._base_length = mid_point_coordinates[0] - \
-                lower_inner_coordinates[0]
-            self.analyse_attributes[0] = self._base_length
-
-            # height of the coil
-            self._height = abs(
-                mid_point_coordinates[1] - lower_inner_coordinates[1]) * 2
-            self.analyse_attributes[1] = self._height
-
-            """ Inner and outter radius of curvature for the corners
-            The inner curvature is scales as a function of the base length
-            of the coil and its thickness as long as the thickness does not exceed the base length
-            if the thickness/base length ratio is larger or equal to 1
-            it takes 10% of the thickness as the inner curve radius
-            this to avoid having coordinates before the previous or at the same spot as Paramak
-            cannot compute it"""
-
-            if thickness / self._base_length >= 1:
-                self._inner_curve_radius = thickness * 0.1
-                self._outter_curve_radius = thickness * 1.1
-                self.analyse_attributes[2] = self._inner_curve_radius
-                self.analyse_attributes[3] = self._outter_curve_radius
-            else:
-                self._outter_curve_radius = (
-                    1 + (thickness / self._base_length)) * thickness
-                self._inner_curve_radius = (thickness**2) / self._base_length
-                self.analyse_attributes[2] = self._inner_curve_radius
-                self.analyse_attributes[3] = self._outter_curve_radius
+            self._outter_curve_radius = (
+                1 + (thickness / self._base_length)) * thickness
+            self._inner_curve_radius = (thickness**2) / self._base_length
+            self.analyse_attributes[2] = self._inner_curve_radius
+            self.analyse_attributes[3] = self._outter_curve_radius
 
     @property
     def azimuth_placement_angle(self):
@@ -153,16 +154,16 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         height = self.analyse_attributes[1]
 
         # 10 points/tuples for initial calculation and to get aux points
-        p1 = (lower_x, lower_z)
-        p2 = (p1[0] + base_length, p1[1])
-        p3 = (p2[0], p2[1] + height)
-        p4 = (p1[0], p1[1] + height)
-        p5 = (p4[0], p4[1] + thickness)
-        p6 = (p3[0], p4[1] + thickness)
-        p7 = (p3[0] + thickness, p3[1])
-        p8 = (p2[0] + thickness, p2[1])
-        p9 = (p2[0], p2[1] - thickness)
-        p10 = (lower_x, lower_z - thickness)
+        point1 = (lower_x, lower_z)
+        point2 = (point1[0] + base_length, point1[1])
+        point3 = (point2[0], point2[1] + height)
+        point4 = (point1[0], point1[1] + height)
+        point5 = (point4[0], point4[1] + thickness)
+        point6 = (point3[0], point4[1] + thickness)
+        point7 = (point3[0] + thickness, point3[1])
+        point8 = (point2[0] + thickness, point2[1])
+        point9 = (point2[0], point2[1] - thickness)
+        point10 = (lower_x, lower_z - thickness)
 
         inner_curve_radius = self.analyse_attributes[2]
         outter_curve_radius = self.analyse_attributes[3]
@@ -180,40 +181,40 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             """radius is the radius of curvature"""
             return (2 - (2**0.5)) * 0.5 * radius
 
-        p11 = (p2[0] - inner_curve_radius, p2[1])
-        p12 = (p11[0] + shift_long(inner_curve_radius),
-               p11[1] + shift_short(inner_curve_radius))
-        p13 = (p2[0], p2[1] + inner_curve_radius)
-        p14 = (p3[0], p3[1] - inner_curve_radius)
-        p15 = (p14[0] - shift_short(inner_curve_radius),
-               p14[1] + shift_long(inner_curve_radius))
-        p16 = (p3[0] - inner_curve_radius, p3[1])
-        p17 = (p6[0] - inner_curve_radius, p6[1])
-        p18 = (p17[0] + shift_long(outter_curve_radius),
-               p17[1] - shift_short(outter_curve_radius))
-        p19 = (p14[0] + thickness, p14[1])
-        p20 = (p8[0], p8[1] + inner_curve_radius)
-        p21 = (p18[0], p20[1] - shift_long(outter_curve_radius))
-        p22 = (p11[0], p11[1] - thickness)
+        point11 = (point2[0] - inner_curve_radius, point2[1])
+        point12 = (point11[0] + shift_long(inner_curve_radius),
+               point11[1] + shift_short(inner_curve_radius))
+        point13 = (point2[0], point2[1] + inner_curve_radius)
+        point14 = (point3[0], point3[1] - inner_curve_radius)
+        point15 = (point14[0] - shift_short(inner_curve_radius),
+               point14[1] + shift_long(inner_curve_radius))
+        point16 = (point3[0] - inner_curve_radius, point3[1])
+        point17 = (point6[0] - inner_curve_radius, point6[1])
+        point18 = (point17[0] + shift_long(outter_curve_radius),
+               point17[1] - shift_short(outter_curve_radius))
+        point19 = (point14[0] + thickness, point14[1])
+        point20 = (point8[0], point8[1] + inner_curve_radius)
+        point21 = (point18[0], point20[1] - shift_long(outter_curve_radius))
+        point22 = (point11[0], point11[1] - thickness)
 
         # List holding the points that are being returned by the function
         points = [
-            p1,
-            p11,
-            p12,
-            p13,
-            p14,
-            p15,
-            p16,
-            p4,
-            p5,
-            p17,
-            p18,
-            p19,
-            p20,
-            p21,
-            p22,
-            p10]
+            point1,
+            point11,
+            point12,
+            point13,
+            point14,
+            point15,
+            point16,
+            point4,
+            point5,
+            point17,
+            point18,
+            point19,
+            point20,
+            point21,
+            point22,
+            point10]
         # List that holds the points with the corresponding line types
         tri_points = []
         lines = ["straight"] + ['circle'] * 2 + ['straight'] \
@@ -225,13 +226,13 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         self.points = tri_points
 
-        inner_p1 = (p1[0], p1[1])
-        inner_p2 = (p1[0] + thickness, p1[1])
-        inner_p3 = (p4[0] + thickness, p4[1])
-        inner_p4 = (p4[0], p4[1])
+        inner_point1 = (point1[0], point1[1])
+        inner_point2 = (point1[0] + thickness, point1[1])
+        inner_point3 = (point4[0] + thickness, point4[1])
+        inner_point4 = (point4[0], point4[1])
 
         self.inner_leg_connection_points = [
-            inner_p1, inner_p2, inner_p3, inner_p4]
+            inner_point1, inner_point2, inner_point3, inner_point4]
 
     def find_azimuth_placement_angle(self):
         """ Finds the placement angles from the number of coils

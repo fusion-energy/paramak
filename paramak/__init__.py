@@ -72,7 +72,8 @@ from .parametric_components.toroidal_field_coil_rectangle import ToroidalFieldCo
 from .parametric_components.toroidal_field_coil_triple_arc import ToroidalFieldCoilTripleArc
 from .parametric_components.toroidal_field_coil_princeton_d import ToroidalFieldCoilPrincetonD
 from .parametric_components.tf_coil_casing import TFCoilCasing
-from .parametric_components.toroidal_field_coil_round_corners import ToroidalFieldCoilRectangleRoundCorners
+from .parametric_components.toroidal_field_coil_round_corners \
+    import ToroidalFieldCoilRectangleRoundCorners
 
 from .parametric_components.vacuum_vessel import VacuumVessel
 from .parametric_components.vacuum_vessel_inner_leg import VacuumVesselInnerLeg

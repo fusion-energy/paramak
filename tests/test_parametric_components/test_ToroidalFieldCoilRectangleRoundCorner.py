@@ -27,8 +27,7 @@ def surface_area(
         thickness,
         extrusion_length,
         with_inner_leg=False,
-        test=False,
-        XZ_face_only=False,
+        xz_face_only=False,
         extrusion_area_only=False):
     """
     Function calculates the total surface area of the TF coil from the
@@ -74,7 +73,7 @@ def surface_area(
         print("Face area: {}\nExtrusion Ares: {}\ntotal bounding area: {}"
               .format(total_face_area, extrusion_area, total_bounding_surface))
 
-    if XZ_face_only:
+    if xz_face_only:
         return total_face_area
 
     if extrusion_area_only:
@@ -89,7 +88,7 @@ def volume(
         thickness,
         extrusion_length,
         with_inner_leg=False,
-        test=False):
+        ):
     """
     The function calculates the volume from the given coordinates used for
     parametarising the component in find_points function in core module it
@@ -102,15 +101,10 @@ def volume(
         middle_right,
         thickness,
         extrusion_length,
-        test=False,
-        XZ_face_only=True,
+        xz_face_only=True,
         with_inner_leg=with_inner_leg)
     print(face_area)
     total_shape_volume = face_area * extrusion_length
-
-    if test:
-        print("Self testing:\nArea of the XZ plane face:\n", face_area)
-        print("Total Shape Volume is:", total_shape_volume)
 
     return total_shape_volume
 
@@ -168,8 +162,7 @@ def test_input_param_lower_inner():
             distance=10,
             number_of_coils=1,
         )
-        test_object.solid
-
+        assert test_object.solid is not None
 
 @pytest.mark.dtype
 def test_input_param_mid_point():
@@ -181,7 +174,7 @@ def test_input_param_mid_point():
             distance=10,
             number_of_coils=1,
         )
-        test_object.solid
+        assert test_object.solid is not None
 
 
 @pytest.mark.dtype
@@ -194,7 +187,7 @@ def test_input_param_thickness():
             distance=10,
             number_of_coils=1,
         )
-        test_object.solid
+        assert test_object.solid is not None
 
 
 @pytest.mark.dtype
@@ -225,7 +218,7 @@ def test_input_param_distance():
             distance="fail",
             number_of_coils=1,
         )
-        test_object.solid
+        assert test_object.solid is not None
 
 
 @pytest.mark.dtype
@@ -238,7 +231,7 @@ def test_input_param_num_coil():
             distance=10,
             number_of_coils=1.5,
         )
-        test_object.solid
+        assert test_object.solid is not None
 
 
 @pytest.mark.length
@@ -251,7 +244,7 @@ def test_input_tuple():
             distance=10,
             number_of_coils=1,
         )
-        test_object.solid
+        assert test_object.solid is not None
 
 
 @pytest.mark.length
@@ -264,7 +257,7 @@ def test_input_tuple2():
             distance=10,
             number_of_coils=1,
         )
-        test_object.solid
+        assert test_object.solid is not None
 
 
 @pytest.mark.value
@@ -277,7 +270,7 @@ def test_input_num_coils():
             distance=10,
             number_of_coils=1.5,
         )
-        test_object.solid
+        assert test_object.solid is not None
 
 
 @pytest.mark.value
@@ -290,4 +283,4 @@ def test_input_x_coordinates():
             distance=10,
             number_of_coils=1,
         )
-        test_object.solid
+        assert test_object.solid is not None
