@@ -28,10 +28,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         file_name_stp: Defults to "ToroidalFieldCoilRectangleRoundCorners.stp"
         file_name_stl: Defaults to "ToroidalFieldCoilRectangleRoundCorners.stl"
         material_tag: Defaults to "outter_tf_coil_mat"
-        line_type: Sets the returned list to be populated by elements for
-            MixedShape(). Defaults to True
-        analyse: Defaults to False; if True returns values that are calculated
-            for the 2D Shape
     """
 
     def __init__(
@@ -45,7 +41,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         stp_filename: Optional[str] = "ToroidalFieldCoilRectangleRoundCorners.stp",
         stl_filename: Optional[str] = "ToroidalFieldCoilRectangleRoundCorners.stl",
         material_tag: Optional[str] = "outter_tf_coil_mat",
-        analyse: Optional[bool] = False,
         **kwargs
     ) -> None:
 
@@ -144,8 +139,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         lower_inner_coordinates must be a 2 element tuple
         mid_point_coordinates must be a 2 elemenet tuple
         thickness must be a float or an int
-        test=True will print the returned coordinates to console
-        analyse=True will return values for volumetric and surface analysis for 3D parametric shape
         """
 
         lower_x, lower_z = self.lower_inner_coordinates

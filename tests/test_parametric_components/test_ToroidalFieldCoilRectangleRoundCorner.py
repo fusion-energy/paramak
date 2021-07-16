@@ -45,7 +45,7 @@ def surface_area(
     analyse_attributes = test_object.analyse_attributes
 
     base, height, inner_rad, outter_rad = analyse_attributes
-    print(analyse_attributes)
+    
     # The surface area of the face in XZ plane is divisible into 5 segments
     base_segment_area = thickness * (base - inner_rad)
     vertical_segment_area = thickness * (height - (inner_rad * 2))
