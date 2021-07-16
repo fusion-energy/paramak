@@ -88,7 +88,7 @@ def volume(
         thickness,
         extrusion_length,
         with_inner_leg=False,
-        ):
+):
     """
     The function calculates the volume from the given coordinates used for
     parametarising the component in find_points function in core module it
@@ -163,6 +163,7 @@ def test_input_param_lower_inner():
             number_of_coils=1,
         )
         assert test_object.solid is not None
+
 
 @pytest.mark.dtype
 def test_input_param_mid_point():

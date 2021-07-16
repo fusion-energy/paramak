@@ -94,7 +94,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
                 "The middle point's x-coordinate must be larger than the lower",
                 "inner point's x-coordinate")
 
-        
         # Adding hidden attributes for analyse list population
         # inner base length of the coil
         self._base_length = mid_point_coordinates[0] - \
@@ -183,15 +182,15 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         point11 = (point2[0] - inner_curve_radius, point2[1])
         point12 = (point11[0] + shift_long(inner_curve_radius),
-               point11[1] + shift_short(inner_curve_radius))
+                   point11[1] + shift_short(inner_curve_radius))
         point13 = (point2[0], point2[1] + inner_curve_radius)
         point14 = (point3[0], point3[1] - inner_curve_radius)
         point15 = (point14[0] - shift_short(inner_curve_radius),
-               point14[1] + shift_long(inner_curve_radius))
+                   point14[1] + shift_long(inner_curve_radius))
         point16 = (point3[0] - inner_curve_radius, point3[1])
         point17 = (point6[0] - inner_curve_radius, point6[1])
         point18 = (point17[0] + shift_long(outter_curve_radius),
-               point17[1] - shift_short(outter_curve_radius))
+                   point17[1] - shift_short(outter_curve_radius))
         point19 = (point14[0] + thickness, point14[1])
         point20 = (point8[0], point8[1] + inner_curve_radius)
         point21 = (point18[0], point20[1] - shift_long(outter_curve_radius))
