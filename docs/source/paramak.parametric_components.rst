@@ -755,6 +755,7 @@ CapsuleVacuumVessel()
 
 ToroidalFieldCoilRectangleRoundCorners()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. cadquery::
    :select: cadquery_object
    :gridsize: 0
