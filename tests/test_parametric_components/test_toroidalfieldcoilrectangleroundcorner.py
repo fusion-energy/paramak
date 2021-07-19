@@ -112,6 +112,8 @@ def volume(
     return total_shape_volume
 
 # Parametric Tests
+
+
 @pytest.mark.parametric
 def test_parametric_surface_area_with_leg():
     paramak_area = obj2.area
@@ -141,6 +143,8 @@ def test_parametric_volume():
     assert pytest.approx(package_vol) == paramak_vol
 
 # Analytical Tests
+
+
 @pytest.mark.analytical
 def test_manual_area():
     analytical = 19872.92
@@ -156,6 +160,8 @@ def test_manual_volume():
 
 # Input Parameter Tests
 # Lower Point Coordinate
+
+
 @pytest.mark.dtype
 def test_input_param_lower_inner():
     with pytest.raises(TypeError):
@@ -167,6 +173,7 @@ def test_input_param_lower_inner():
             number_of_coils=1,
         )
         assert test_object.solid is not None
+
 
 @pytest.mark.length
 def test_input_lower_point_tuple():
@@ -180,6 +187,7 @@ def test_input_lower_point_tuple():
         )
         assert test_object.solid is not None
 
+
 @pytest.mark.dtype
 def test_input_tuple_element_type_lower_point():
     with pytest.raises(TypeError):
@@ -192,26 +200,29 @@ def test_input_tuple_element_type_lower_point():
         )
         assert test_object.solid is not None
 
+
 @pytest.mark.dtype
-def test_setter_lower_point():    
+def test_setter_lower_point():
     with pytest.raises(TypeError):
         obj2.lower_inner_coordinates = 1
+
 
 @pytest.mark.length
 def test_input_lower_point_tuple_length_with_setter():
     with pytest.raises(ValueError):
         obj2.lower_inner_coordinates = (0, 0, 0)
 
+
 @pytest.mark.dtype
 def test_lower_point_setter_elements_z():
     with pytest.raises(TypeError):
         obj.lower_inner_coordinates = (10, "string")
 
+
 @pytest.mark.dtype
 def test_lower_point_setter_elements_x():
     with pytest.raises(TypeError):
         obj.lower_inner_coordinates = ("string", 10)
-
 
 
 # Mid Point Coordinate
@@ -226,6 +237,7 @@ def test_input_param_mid_point():
             number_of_coils=1,
         )
 
+
 @pytest.mark.length
 def test_input_tuple2():
     with pytest.raises(ValueError):
@@ -237,6 +249,7 @@ def test_input_tuple2():
             number_of_coils=1,
         )
         assert test_object.solid is not None
+
 
 @pytest.mark.dtype
 def test_input_tuple_element_type_lower_point():
@@ -250,20 +263,24 @@ def test_input_tuple_element_type_lower_point():
         )
         assert test_object.solid is not None
 
+
 @pytest.mark.dtype
-def test_setter_mid_point():    
+def test_setter_mid_point():
     with pytest.raises(TypeError):
         obj.mid_point_coordinates = 1
+
 
 @pytest.mark.length
 def test_input_mid_point_tuple_length_with_setter():
     with pytest.raises(ValueError):
         obj2.mid_point_coordinates = (0, 0, 0)
 
+
 @pytest.mark.dtype
 def test_mid_point_setter_elements_z():
     with pytest.raises(TypeError):
         obj.mid_point_coordinates = (10, "string")
+
 
 @pytest.mark.dtype
 def test_mid_point_setter_elements_x():
@@ -284,6 +301,7 @@ def test_input_x_coordinates():
         )
         assert test_object.solid is not None
 
+
 @pytest.mark.value
 def test_x_coords_with_setters():
     with pytest.raises(ValueError):
@@ -291,6 +309,8 @@ def test_x_coords_with_setters():
         obj.mid_point_coordinates = (100, 0)
 
 # Thickness Parameter
+
+
 @pytest.mark.dtype
 def test_input_param_thickness():
     with pytest.raises(TypeError):
@@ -321,12 +341,15 @@ def test_input_param_thickness2():
     assert inner_radius == check_inner
     assert outer_radius == check_outer
 
+
 @pytest.mark.dtype
 def test_thickness_setter():
     with pytest.raises(TypeError):
         obj.thickness = "string"
 
 # Extrusion Distance
+
+
 @pytest.mark.dtype
 def test_input_param_distance():
     with pytest.raises(TypeError):
@@ -339,12 +362,15 @@ def test_input_param_distance():
         )
         assert test_object.solid is not None
 
+
 @pytest.mark.dtype
 def test_distance_setter():
     with pytest.raises(TypeError):
         obj.distance = "string"
 
 # Number of Coils
+
+
 @pytest.mark.value
 def test_input_num_coils():
     with pytest.raises(TypeError):
@@ -356,6 +382,7 @@ def test_input_num_coils():
             number_of_coils=1.5,
         )
         assert test_object.solid is not None
+
 
 @pytest.mark.dtype
 def test_num_coil_setter():
