@@ -25,7 +25,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         coil_count: The number of coils placed in the model
             (changing azimuth_placement_angle by dividing 360 by the amount
             given). Defaults to 1
-        with_inner_leg: Boolean to include the inside of the Coils 
+        with_inner_leg: Boolean to include the inside of the Coils
             defaults to False
         file_name_stp: Defults to "ToroidalFieldCoilRectangleRoundCorners.stp"
         file_name_stl: Defaults to "ToroidalFieldCoilRectangleRoundCorners.stl"
@@ -67,7 +67,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             0,
             0
         ]
-        
+
         ### Check if input values are what they meant to be ###
         if not isinstance(self._lower_inner_coordinates, tuple):
             raise TypeError("Invalid input - Coordinates must be a tuple")
@@ -147,12 +147,13 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             raise TypeError("Input Coordinate must be a tuple!")
         if len(val) != 2:
             raise ValueError("Input Tuple must be 2 elements long!")
-        if not isinstance(val[0], (float,int)):
+        if not isinstance(val[0], (float, int)):
             raise TypeError("Input X Coordinates must be a number!")
         if not isinstance(val[1], (float, int)):
             raise TypeError("Input Z Coordinates must be a number!")
         if val[0] > self._mid_point_coordinates[0]:
-            raise ValueError("Mid Point's x-coordinate, must be larger than lower point's!")
+            raise ValueError(
+                "Mid Point's x-coordinate, must be larger than lower point's!")
         self._lower_inner_coordinates = val
 
     @property
@@ -170,7 +171,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         if not isinstance(val[1], (float, int)):
             raise TypeError("Input Z Coordinates must be a number!")
         if val[0] < self._lower_inner_coordinates[0]:
-            raise ValueError("Mid Point's x-coordinate, must be larger than lower point's!")
+            raise ValueError(
+                "Mid Point's x-coordinate, must be larger than lower point's!")
         self._mid_point_coordinates = val
 
     @property
@@ -178,11 +180,10 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         return self._thickness
 
     @thickness.setter
-    def thickness(self, val):        
+    def thickness(self, val):
         if not isinstance(val, (float, int)):
             raise TypeError("Input Thickness must be a number!")
         self._thickness = val
-
 
     @property
     def distance(self):
@@ -197,7 +198,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     @property
     def number_of_coils(self):
         return self._number_of_coils
-    
+
     @number_of_coils.setter
     def number_of_coils(self, val):
         if not isinstance(val, int):
@@ -207,7 +208,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     @property
     def analyse_attributes(self):
         return self._analyse_attributes
-
 
     def find_points(self):
         """
@@ -307,7 +307,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         self._inner_leg_connection_points = [
             inner_point1, inner_point2, inner_point3, inner_point4]
-        
+
         return tri_points
 
     def find_azimuth_placement_angle(self):
@@ -378,7 +378,7 @@ object = ToroidalFieldCoilRectangleRoundCorners(
     thickness=20,
     number_of_coils=6,
     distance=20,
-    #rotation_angle=180,
+    # rotation_angle=180,
     workplane="XZ"
 )
 #object.mid_point_coordinates = 1
