@@ -512,6 +512,7 @@ PoloidalSegmenter()
       shape_to_segment=None,
       center_point=(450, 0),
       number_of_segments=10,
+      rotation_angle=180,
    )
 
    cadquery_object = my_component.solid
