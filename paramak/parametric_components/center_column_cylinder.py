@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 from paramak import RotateStraightShape
 
@@ -20,11 +19,16 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         height: float,
         inner_radius: float,
         outer_radius: float,
+        center_height: float = 0,
+        name="CenterColumnShieldCylinder",
         stp_filename: Optional[str] = "CenterColumnShieldCylinder.stp",
         stl_filename: Optional[str] = "CenterColumnShieldCylinder.stl",
         material_tag: Optional[str] = "center_column_shield_mat",
-        color: Optional[Tuple[float, float, float,
-                              Optional[float]]] = (0., 0.333, 0.),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.0,
+            0.333,
+            0.0,
+        ),
         **kwargs
     ) -> None:
 
@@ -33,12 +37,32 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             stp_filename=stp_filename,
             stl_filename=stl_filename,
             color=color,
+            name=name,
             **kwargs
         )
 
         self.height = height
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
+        self.center_height = center_height
+
+    @property
+    def center_height(self):
+        return self._center_height
+
+    @center_height.setter
+    def center_height(self, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError(
+                "CenterColumnShieldBlock.center_height should be a float or int. Not a {}".format(
+                    type(value)
+                )
+            )
+        if value is None:
+            raise ValueError(
+                "center_height of the CenterColumnShieldBlock cannot be None"
+            )
+        self._center_height = value
 
     @property
     def height(self):
@@ -47,8 +71,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     @height.setter
     def height(self, value):
         if value is None:
-            raise ValueError(
-                "height of the CenterColumnShieldBlock cannot be None")
+            raise ValueError("height of the CenterColumnShieldBlock cannot be None")
         self._height = value
 
     @property
@@ -61,7 +84,9 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             if value >= self.outer_radius:
                 raise ValueError(
                     "inner_radius ({}) is larger than outer_radius ({})".format(
-                        value, self.outer_radius))
+                        value, self.outer_radius
+                    )
+                )
         self._inner_radius = value
 
     @property
@@ -74,7 +99,9 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             if value <= self.inner_radius:
                 raise ValueError(
                     "inner_radius ({}) is larger than outer_radius ({})".format(
-                        self.inner_radius, value))
+                        self.inner_radius, value
+                    )
+                )
         self._outer_radius = value
 
     def find_points(self):
@@ -82,10 +109,10 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             2D profile of the center column shield shape."""
 
         points = [
-            (self.inner_radius, self.height / 2),
-            (self.outer_radius, self.height / 2),
-            (self.outer_radius, -self.height / 2),
-            (self.inner_radius, -self.height / 2),
+            (self.inner_radius, self.center_height + self.height / 2),
+            (self.outer_radius, self.center_height + self.height / 2),
+            (self.outer_radius, self.center_height + (-self.height / 2)),
+            (self.inner_radius, self.center_height + (-self.height / 2)),
         ]
 
         self.points = points
