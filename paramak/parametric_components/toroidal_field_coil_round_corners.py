@@ -1,4 +1,5 @@
 from typing import Optional, Tuple, Union
+from _pytest.python_api import raises
 
 import cadquery as cq
 import numpy as np
@@ -24,7 +25,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         coil_count: The number of coils placed in the model
             (changing azimuth_placement_angle by dividing 360 by the amount
             given). Defaults to 1
-            with_inner_leg: Boolean to include the inside of the Coils
+        with_inner_leg: Boolean to include the inside of the Coils 
+            defaults to False
         file_name_stp: Defults to "ToroidalFieldCoilRectangleRoundCorners.stp"
         file_name_stl: Defaults to "ToroidalFieldCoilRectangleRoundCorners.stl"
         material_tag: Defaults to "outter_tf_coil_mat"
@@ -36,8 +38,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         mid_point_coordinates: Tuple[float, float],
         thickness: Union[float, int],
         distance: float,
-        number_of_coils: int,
-        with_inner_leg: Optional[bool] = True,
+        number_of_coils: int = 1,
+        with_inner_leg: Optional[bool] = False,
         stp_filename: Optional[str] = "ToroidalFieldCoilRectangleRoundCorners.stp",
         stl_filename: Optional[str] = "ToroidalFieldCoilRectangleRoundCorners.stl",
         material_tag: Optional[str] = "outter_tf_coil_mat",
@@ -52,35 +54,36 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             **kwargs
         )
 
-        self.lower_inner_coordinates = lower_inner_coordinates[0], lower_inner_coordinates[1]
-        self.mid_point_coordinates = mid_point_coordinates[0], mid_point_coordinates[1]
-        self.thickness = thickness
-        self.number_of_coils = number_of_coils
-        self.with_inner_leg = with_inner_leg
-        self.inner_leg_connection_points = []
-        self.analyse_attributes = [
+        self._lower_inner_coordinates = lower_inner_coordinates[0], lower_inner_coordinates[1]
+        self._mid_point_coordinates = mid_point_coordinates[0], mid_point_coordinates[1]
+        self._thickness = thickness
+        self._distance = distance
+        self._number_of_coils = number_of_coils
+        self._with_inner_leg = with_inner_leg
+        self._inner_leg_connection_points = []
+        self._analyse_attributes = [
             0,
             0,
             0,
             0
         ]
-
+        
         ### Check if input values are what they meant to be ###
-        if not isinstance(self.lower_inner_coordinates, tuple):
+        if not isinstance(self._lower_inner_coordinates, tuple):
             raise TypeError("Invalid input - Coordinates must be a tuple")
 
-        if not isinstance(self.mid_point_coordinates, tuple):
+        if not isinstance(self._mid_point_coordinates, tuple):
             raise TypeError("Invalid input - Coordinates must be a tuple")
 
-        if not isinstance(self.thickness, float):
-            if not isinstance(self.thickness, int):
+        if not isinstance(self._thickness, float):
+            if not isinstance(self._thickness, int):
                 raise TypeError("Invalid input - Thickness must be a number")
 
-        if not isinstance(distance, float):
-            if not isinstance(distance, int):
+        if not isinstance(self._distance, float):
+            if not isinstance(self._distance, int):
                 raise TypeError("Invalid input - Distance must be a number")
 
-        if (number_of_coils % 1) != 0:
+        if (self._number_of_coils % 1) != 0:
             raise TypeError(
                 "Invalid input - Number of Coils must be an integer number")
 
@@ -89,21 +92,21 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             raise ValueError(
                 "The input tuples are too long or too short, they must be 2 element long")
 
-        if self.lower_inner_coordinates[0] > self.mid_point_coordinates[0]:
+        if self._lower_inner_coordinates[0] > self._mid_point_coordinates[0]:
             raise ValueError(
                 "The middle point's x-coordinate must be larger than the lower",
                 "inner point's x-coordinate")
 
         # Adding hidden attributes for analyse list population
         # inner base length of the coil
-        self._base_length = mid_point_coordinates[0] - \
-            lower_inner_coordinates[0]
-        self.analyse_attributes[0] = self._base_length
+        self._base_length = self._mid_point_coordinates[0] - \
+            self._lower_inner_coordinates[0]
+        self._analyse_attributes[0] = self._base_length
 
         # height of the coil
         self._height = abs(
             mid_point_coordinates[1] - lower_inner_coordinates[1]) * 2
-        self.analyse_attributes[1] = self._height
+        self._analyse_attributes[1] = self._height
 
         """ Inner and outter radius of curvature for the corners
         The inner curvature is scales as a function of the base length
@@ -113,17 +116,17 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         this to avoid having coordinates before the previous or at the same spot as Paramak
         cannot compute it"""
 
-        if thickness / self._base_length >= 1:
-            self._inner_curve_radius = thickness * 0.1
-            self._outter_curve_radius = thickness * 1.1
-            self.analyse_attributes[2] = self._inner_curve_radius
-            self.analyse_attributes[3] = self._outter_curve_radius
+        if self._thickness / self._base_length >= 1:
+            self._inner_curve_radius = self._thickness * 0.1
+            self._outter_curve_radius = self._thickness * 1.1
+            self._analyse_attributes[2] = self._inner_curve_radius
+            self._analyse_attributes[3] = self._outter_curve_radius
         else:
             self._outter_curve_radius = (
-                1 + (thickness / self._base_length)) * thickness
-            self._inner_curve_radius = (thickness**2) / self._base_length
-            self.analyse_attributes[2] = self._inner_curve_radius
-            self.analyse_attributes[3] = self._outter_curve_radius
+                1 + (self._thickness / self._base_length)) * self._thickness
+            self._inner_curve_radius = (self._thickness**2) / self._base_length
+            self._analyse_attributes[2] = self._inner_curve_radius
+            self._analyse_attributes[3] = self._outter_curve_radius
 
     @property
     def azimuth_placement_angle(self):
@@ -134,6 +137,78 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     def azimuth_placement_angle(self, val):
         self._azimuth_placement_angle = val
 
+    @property
+    def lower_inner_coordinates(self):
+        return self._lower_inner_coordinates
+
+    @lower_inner_coordinates.setter
+    def lower_inner_coordinates(self, val):
+        if not isinstance(val, tuple):
+            raise TypeError("Input Coordinate must be a tuple!")
+        if len(val) != 2:
+            raise ValueError("Input Tuple must be 2 elements long!")
+        if not isinstance(val[0], (float,int)):
+            raise TypeError("Input X Coordinates must be a number!")
+        if not isinstance(val[1], (float, int)):
+            raise TypeError("Input Z Coordinates must be a number!")
+        if val[0] > self._mid_point_coordinates[0]:
+            raise ValueError("Mid Point's x-coordinate, must be larger than lower point's!")
+        self._lower_inner_coordinates = val
+
+    @property
+    def mid_point_coordinates(self):
+        return self._mid_point_coordinates
+
+    @mid_point_coordinates.setter
+    def mid_point_coordinates(self, val):
+        if not isinstance(val, tuple):
+            raise TypeError("Input Coordinate must be a tuple!")
+        if len(val) != 2:
+            raise ValueError("Input Tuple must be 2 elements long!")
+        if not isinstance(val[0], (float, int)):
+            raise TypeError("Input X Coordinates must be a number!")
+        if not isinstance(val[1], (float, int)):
+            raise TypeError("Input Z Coordinates must be a number!")
+        if val[0] < self._lower_inner_coordinates[0]:
+            raise ValueError("Mid Point's x-coordinate, must be larger than lower point's!")
+        self._mid_point_coordinates = val
+
+    @property
+    def thickness(self):
+        return self._thickness
+
+    @thickness.setter
+    def thickness(self, val):        
+        if not isinstance(val, (float, int)):
+            raise TypeError("Input Thickness must be a number!")
+        self._thickness = val
+
+
+    @property
+    def distance(self):
+        return self._distance
+
+    @distance.setter
+    def distance(self, val):
+        if not isinstance(val, (float, int)):
+            raise TypeError("Input Distance must be a number!")
+        self._distance = val
+
+    @property
+    def number_of_coils(self):
+        return self._number_of_coils
+    
+    @number_of_coils.setter
+    def number_of_coils(self, val):
+        if not isinstance(val, int):
+            raise TypeError("Input Distance must be an integer number!")
+        self._number_of_coils = val
+
+    @property
+    def analyse_attributes(self):
+        return self._analyse_attributes
+
+
     def find_points(self):
         """
         lower_inner_coordinates must be a 2 element tuple
@@ -141,16 +216,16 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         thickness must be a float or an int
         """
 
-        lower_x, lower_z = self.lower_inner_coordinates
-        mid_x, mid_z = self.mid_point_coordinates
+        lower_x, lower_z = self._lower_inner_coordinates
+        mid_x, mid_z = self._mid_point_coordinates
 
         # redifine values to be floats to make it look consistent
         lower_x, lower_z, mid_x, mid_z, thickness = float(lower_x), float(
-            lower_z), float(mid_x), float(mid_z), float(self.thickness)
+            lower_z), float(mid_x), float(mid_z), float(self._thickness)
 
         # Define differences to avoid miss claculation due to signs
-        base_length = self.analyse_attributes[0]
-        height = self.analyse_attributes[1]
+        base_length = self._analyse_attributes[0]
+        height = self._analyse_attributes[1]
 
         # 10 points/tuples for initial calculation and to get aux points
         point1 = (lower_x, lower_z)
@@ -164,8 +239,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         #point9 = (point2[0], point2[1] - thickness)
         point10 = (lower_x, lower_z - thickness)
 
-        inner_curve_radius = self.analyse_attributes[2]
-        outter_curve_radius = self.analyse_attributes[3]
+        inner_curve_radius = self._analyse_attributes[2]
+        outter_curve_radius = self._analyse_attributes[3]
 
         #  New subroutines to calculate inner and outter curve mid-points,    #
         #  x and y displacement from existing points                          #
@@ -230,8 +305,10 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         inner_point3 = (point4[0] + thickness, point4[1])
         inner_point4 = (point4[0], point4[1])
 
-        self.inner_leg_connection_points = [
+        self._inner_leg_connection_points = [
             inner_point1, inner_point2, inner_point3, inner_point4]
+        
+        return tri_points
 
     def find_azimuth_placement_angle(self):
         """ Finds the placement angles from the number of coils
@@ -241,7 +318,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             np.linspace(
                 0,
                 360,
-                self.number_of_coils,
+                self._number_of_coils,
                 endpoint=False))
         self.azimuth_placement_angle = angles
 
@@ -268,7 +345,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             .lineTo(points[15][0], points[15][1]) \
             .lineTo(points[16][0], points[16][1]).close().consolidateWires()
 
-        solid = wire.extrude(distance=-self.distance / 2, both=True)
+        solid = wire.extrude(distance=-self._distance / 2, both=True)
         solid = self.rotate_solid(solid)
 
         cutting_wedge = calculate_wedge_cut(self)
@@ -276,11 +353,11 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         self.solid = solid
 
-        if self.with_inner_leg:
+        if self._with_inner_leg:
             inner_leg_solid = cq.Workplane(self.workplane)
             inner_leg_solid = inner_leg_solid.polyline(
-                self.inner_leg_connection_points).close().extrude(
-                distance=-self.distance / 2, both=True)
+                self._inner_leg_connection_points).close().extrude(
+                distance=-self._distance / 2, both=True)
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
             inner_leg_solid = self.perform_boolean_operations(
@@ -292,3 +369,17 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self.solid = solid
 
         return solid
+
+
+object = ToroidalFieldCoilRectangleRoundCorners(
+    with_inner_leg=True,
+    lower_inner_coordinates=(0, 0),
+    mid_point_coordinates=(200, 200),
+    thickness=20,
+    number_of_coils=6,
+    distance=20,
+    #rotation_angle=180,
+    workplane="XZ"
+)
+#object.mid_point_coordinates = 1
+print(object.lower_inner_coordinates)
