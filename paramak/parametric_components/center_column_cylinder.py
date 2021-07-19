@@ -9,6 +9,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         height: height of the center column shield.
         inner_radius: the inner radius of the center column shield.
         outer_radius: the outer radius of the center column shield.
+        center_height: the vertical height of the center of the component.
         stp_filename: Defaults to "CenterColumnShieldCylinder.stp".
         stl_filename: Defaults to "CenterColumnShieldCylinder.stl".
         material_tag: Defaults to "center_column_shield_mat".
