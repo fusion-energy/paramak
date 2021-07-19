@@ -775,12 +775,12 @@ ToroidalFieldCoilRectangleRoundCorners()
 
 |TFCoilRoundCornersvg| |TFCoilRoundCornersvg2| |TFCoilRoundCornerstp|
 
-.. |TFCoilRoundCornersvg| image: https://user-images.githubusercontent.com/85617935/125979064-c9aff900-4a07-462d-91bd-53af3bc66559.png
-  :width: 255
-.. |TFCoilRoundCornersvg2| image: https://user-images.githubusercontent.com/85617935/125979248-1dbbd7be-916b-4921-86ed-a942b6cda757.png
-  :width: 255
-.. |TFCoilRoundCornersvg| image: https://user-images.githubusercontent.com/85617935/125977357-3b893496-fc6b-4f06-8a95-10164cb70d7c.png
-  :width: 255
+.. |TFCoilRoundCornersvg| image:: https://user-images.githubusercontent.com/85617935/125979064-c9aff900-4a07-462d-91bd-53af3bc66559.png
+   :width: 255
+.. |TFCoilRoundCornersvg2| image:: https://user-images.githubusercontent.com/85617935/125979248-1dbbd7be-916b-4921-86ed-a942b6cda757.png
+   :width: 255
+.. |TFCoilRoundCornerstp| image:: https://user-images.githubusercontent.com/85617935/125977357-3b893496-fc6b-4f06-8a95-10164cb70d7c.png
+   :width: 255
 
 .. automodule:: paramak.parametric_components.toroidal_field_coil_round_corners
    :members:
