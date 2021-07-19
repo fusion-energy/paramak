@@ -112,7 +112,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self._analyse_attributes[2] = self._inner_curve_radius
             self._analyse_attributes[3] = self._outter_curve_radius
 
-
     @property
     def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
