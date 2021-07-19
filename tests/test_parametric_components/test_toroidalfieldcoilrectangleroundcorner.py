@@ -1,5 +1,6 @@
 from math import pi
 from _pytest.warning_types import PytestWarning
+from attr.setters import NO_OP
 from paramak import ToroidalFieldCoilRectangleRoundCorners
 from py import test
 import py
@@ -225,6 +226,7 @@ def test_input_param_mid_point():
             distance=10,
             number_of_coils=1,
         )
+        assert test_object.solid is not None
 
 @pytest.mark.length
 def test_input_tuple2():
@@ -239,7 +241,7 @@ def test_input_tuple2():
         assert test_object.solid is not None
 
 @pytest.mark.dtype
-def test_input_tuple_element_type_lower_point():
+def test_input_tuple_element_type_mid_point():
     with pytest.raises(TypeError):
         test_object = ToroidalFieldCoilRectangleRoundCorners(
             lower_inner_coordinates=(50, 0),
