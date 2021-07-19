@@ -5,12 +5,12 @@ import warnings
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
-
+import plotly.graph_objects as go
 from cadquery import exporters, Workplane, Compound, Assembly, Color
 from cadquery.occ_impl import shapes
 
 from cadquery import importers
-
+from typeguard import typechecked
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
@@ -22,7 +22,7 @@ from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
                            add_stl_to_moab_core, define_moab_core_and_tags,
                            export_vtk)
 
-
+@typechecked # TODO add type checking for everything to avoid user warnings
 class Shape:
     """A shape object that represents a 3d volume and can have materials and
     neutronics tallies assigned. Shape objects are not intended to be used
@@ -90,8 +90,7 @@ class Shape:
         points: list = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
-        color: Optional[Tuple[float, float, float,
-                              Optional[float]]] = (0.5, 0.5, 0.5),
+        color: Optional[Union[Tuple[float, float, float,float], Tuple[float, float, float]]] = (0.5, 0.5, 0.5),
         material_tag: Optional[str] = None,
         stp_filename: Optional[str] = None,
         stl_filename: Optional[str] = None,
@@ -875,7 +874,7 @@ class Shape:
 
     def export_stl(
             self,
-            filename: Optional[str] = None,
+            filename: Optional[Union[str,None]] = None,
             tolerance: Optional[float] = 0.001,
             angular_tolerance: Optional[float] = 0.1,
             verbose: Optional[bool] = True) -> str:
@@ -1090,7 +1089,7 @@ class Shape:
     def export_html_3d(
             self,
             filename: Optional[str] = "shape_3d.html",
-    ):
+    ) -> str:
         """Saves an interactive 3d html view of the Shape to a html file.
 
         Args:
@@ -1118,7 +1117,7 @@ class Shape:
             facet_circles: Optional[bool] = True,
             tolerance: Optional[float] = 1e-3,
             view_plane: Optional[str] = None,
-    ):
+    ) -> go.Figure():
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
         Shapes are also labelled by their .name. If filename provided doesn't

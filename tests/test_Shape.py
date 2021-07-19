@@ -187,7 +187,7 @@ class TestShape(unittest.TestCase):
             paramak.Shape(color=('1', '0', '1'))
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_color_string
         )
 
@@ -433,14 +433,14 @@ class TestShape(unittest.TestCase):
             )
             assert Path("filename.html").exists() is True
 
-    def test_export_html_with_points_None(self):
+    def test_export_html_with_points_none(self):
         """Checks that an error is raised when points is None and export_html
         """
         test_shape = paramak.Shape()
 
         def export():
             test_shape.export_html("out.html")
-        self.assertRaises(ValueError, export)
+        self.assertRaises(TypeError, export)
 
     def test_export_html_with_wire_None(self):
         """Checks that an error is raised when wire is None and export_html
@@ -483,7 +483,7 @@ class TestShape(unittest.TestCase):
                 stp_filename=123456
             )
 
-        self.assertRaises(ValueError, invalid_filename_type)
+        self.assertRaises(TypeError, invalid_filename_type)
 
     def test_invalid_stl_filename(self):
         """Checks ValueError is raised when invalid stl filenames are used."""
@@ -504,7 +504,7 @@ class TestShape(unittest.TestCase):
                 stl_filename=123456
             )
 
-        self.assertRaises(ValueError, invalid_filename_type)
+        self.assertRaises(TypeError, invalid_filename_type)
 
     def test_invalid_color(self):
         """Checks ValueError is raised when invalid colors are used."""
@@ -516,7 +516,7 @@ class TestShape(unittest.TestCase):
                 color=255
             )
 
-        self.assertRaises(ValueError, invalid_color_type)
+        self.assertRaises(TypeError, invalid_color_type)
 
         def invalid_color_length():
 
@@ -525,7 +525,7 @@ class TestShape(unittest.TestCase):
                 color=(255, 255, 255, 1, 1)
             )
 
-        self.assertRaises(ValueError, invalid_color_length)
+        self.assertRaises(TypeError, invalid_color_length)
 
     def test_volumes_add_up_to_total_volume_Compound(self):
         """Checks the volume and volumes attributes are correct types
@@ -829,6 +829,22 @@ class TestShape(unittest.TestCase):
             self.my_shape.color = (-1, 0, 0)
 
         self.assertRaises(ValueError, check_correct_error_is_rasied)
+
+    def test_setting_color_incorrectly_too_small(self):
+        """Sets the shape.colour outside of the the 0 to 1 range"""
+
+        def check_correct_error_is_rasied():
+            self.my_shape.color = (-1, 0, 0)
+
+        self.assertRaises(ValueError, check_correct_error_is_rasied)
+
+    def test_setting_input_args_for_export_stl(self):
+        """Sets the shape.colour outside of the the 0 to 1 range"""
+
+        def check_filename_arg_int():
+            self.my_shape.export_stl(filename=1)
+
+        self.assertRaises(TypeError, check_filename_arg_int)
 
 
 def test_reuse_points():
