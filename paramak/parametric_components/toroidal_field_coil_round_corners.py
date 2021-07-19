@@ -20,7 +20,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             point of the vertical section (cm)
         thickness: The thickness in the (X,Z) plane of the toroidal
         field coils (cm)
-        extrusion_distance: The total extruded thickness of the coils
+        extrusiondistance: The total extruded thickness of the coils
             when in the y-direction (centered extrusion)
         coil_count: The number of coils placed in the model
             (changing azimuth_placement_angle by dividing 360 by the amount
@@ -68,6 +68,16 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             0
         ]
 
+        if len(lower_inner_coordinates) != 2 or len(
+                mid_point_coordinates) != 2:
+            raise ValueError(
+                "The input tuples are too long or too short, they must be 2 element long")
+
+        if self._lower_inner_coordinates[0] > self._mid_point_coordinates[0]:
+            raise ValueError(
+                "The middle point's x-coordinate must be larger than the lower",
+                "inner point's x-coordinate")
+
         # Adding hidden attributes for analyse list population
         # inner base length of the coil
         self._base_length = self._mid_point_coordinates[0] - \
@@ -79,13 +89,16 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             mid_point_coordinates[1] - lower_inner_coordinates[1]) * 2
         self._analyse_attributes[1] = self._height
 
-        """ Inner and outter radius of curvature for the corners
-        The inner curvature is scales as a function of the base length
-        of the coil and its thickness as long as the thickness does not exceed the base length
-        if the thickness/base length ratio is larger or equal to 1
-        it takes 10% of the thickness as the inner curve radius
-        this to avoid having coordinates before the previous or at the same spot as Paramak
-        cannot compute it"""
+        self._find_radii()
+
+    def _find_radii(self):
+        # Inner and outter radius of curvature for the corners
+        # The inner curvature is scales as a function of the base length
+        # of the coil and its thickness as long as the thickness does not exceed the base length
+        # if the thickness/base length ratio is larger or equal to 1
+        # it takes 10% of the thickness as the inner curve radius
+        # this to avoid having coordinates before the previous or at the same spot as Paramak
+        # cannot compute it
 
         if self._thickness / self._base_length >= 1:
             self._inner_curve_radius = self._thickness * 0.1
@@ -98,6 +111,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self._inner_curve_radius = (self._thickness**2) / self._base_length
             self._analyse_attributes[2] = self._inner_curve_radius
             self._analyse_attributes[3] = self._outter_curve_radius
+
 
     @property
     def azimuth_placement_angle(self):
@@ -154,6 +168,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     def thickness(self, val):
         if not isinstance(val, (float, int)):
             raise TypeError("Input Thickness must be a number!")
+
+        self._find_radii()
+
         self._thickness = val
 
     @property
@@ -180,12 +197,23 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     def analyse_attributes(self):
         return self._analyse_attributes
 
+    @property
+    def with_inner_leg(self):
+        return self._with_inner_leg
+
+    @with_inner_leg.setter
+    def with_inner_leg(self, val):
+        if not isinstance(val, bool):
+            raise TypeError("With Inner Leg must be True or False")
+
     def find_points(self):
         """
         lower_inner_coordinates must be a 2 element tuple
         mid_point_coordinates must be a 2 elemenet tuple
         thickness must be a float or an int
         """
+
+        self._find_radii()
 
         lower_x, lower_z = self._lower_inner_coordinates
         mid_x, mid_z = self._mid_point_coordinates
