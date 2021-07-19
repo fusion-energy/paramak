@@ -503,6 +503,19 @@ PoloidalFieldCoilCaseSetFC()
 PoloidalSegmenter()
 ^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalSegments(
+      shape_to_segment=None,
+      center_point=(450, 0),
+      number_of_segments=10,
+   )
+
+   cadquery_object = my_component.solid
+
 .. image:: https://user-images.githubusercontent.com/8583900/93811079-84da5480-fc47-11ea-9c6c-7fd132f6d72d.png
     :width: 605px
     :align: center
