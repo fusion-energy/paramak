@@ -132,7 +132,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             inner_radius=3,
             outer_radius=3.3,
             height=5,
-            color=(1,0,0)
+            color=(1, 0, 0)
         )
 
         test_shape2 = paramak.CenterColumnShieldCylinder(
@@ -140,7 +140,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             outer_radius=3.3,
             height=5,
             center_height=-2.5,
-            color=(1,0,0)
+            color=(1, 0, 0)
         )
 
         test_shape3 = paramak.CenterColumnShieldCylinder(
@@ -148,7 +148,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             outer_radius=3.3,
             height=5,
             center_height=0,
-            color=(1,0,0),
+            color=(1, 0, 0),
             cut=test_shape2
         )
 

@@ -56,9 +56,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         if not isinstance(value, (int, float)):
             raise TypeError(
                 "CenterColumnShieldBlock.center_height should be a float or int. Not a {}".format(
-                    type(value)
-                )
-            )
+                    type(value)))
         if value is None:
             raise ValueError(
                 "center_height of the CenterColumnShieldBlock cannot be None"
@@ -72,7 +70,8 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     @height.setter
     def height(self, value):
         if value is None:
-            raise ValueError("height of the CenterColumnShieldBlock cannot be None")
+            raise ValueError(
+                "height of the CenterColumnShieldBlock cannot be None")
         self._height = value
 
     @property
@@ -85,9 +84,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             if value >= self.outer_radius:
                 raise ValueError(
                     "inner_radius ({}) is larger than outer_radius ({})".format(
-                        value, self.outer_radius
-                    )
-                )
+                        value, self.outer_radius))
         self._inner_radius = value
 
     @property
@@ -100,9 +97,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             if value <= self.inner_radius:
                 raise ValueError(
                     "inner_radius ({}) is larger than outer_radius ({})".format(
-                        self.inner_radius, value
-                    )
-                )
+                        self.inner_radius, value))
         self._outer_radius = value
 
     def find_points(self):
