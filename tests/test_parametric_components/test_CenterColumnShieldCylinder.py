@@ -126,7 +126,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         self.assertRaises(ValueError, incorrect_outer_radius)
         self.assertRaises(ValueError, incorrect_height)
         self.assertRaises(TypeError, incorrect_center_height)
-        self.assertRaises(ValueError, incorrect_center_height_none)
+        self.assertRaises(TypeError, incorrect_center_height_none)
 
     def test_center_height_usage(self):
         """Makes a offset cyclinder using center_height that overlaps half of
