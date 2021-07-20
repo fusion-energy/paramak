@@ -67,6 +67,10 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             0,
             0
         ]
+        self._base_length = 0
+        self._height = 0
+        self._inner_curve_radius = 0
+        self._outter_curve_radius = 0
 
         if len(lower_inner_coordinates) != 2 or len(
                 mid_point_coordinates) != 2:
