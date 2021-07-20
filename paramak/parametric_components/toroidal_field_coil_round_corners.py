@@ -54,8 +54,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             **kwargs
         )
 
-        self._lower_inner_coordinates = lower_inner_coordinates[0], lower_inner_coordinates[1]
-        self._mid_point_coordinates = mid_point_coordinates[0], mid_point_coordinates[1]
+        self._lower_inner_coordinates = lower_inner_coordinates
+        self._mid_point_coordinates = mid_point_coordinates
         self._thickness = thickness
         self._distance = distance
         self._number_of_coils = number_of_coils
