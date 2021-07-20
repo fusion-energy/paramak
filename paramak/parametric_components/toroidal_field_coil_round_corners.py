@@ -103,14 +103,13 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         if self._thickness / self._base_length >= 1:
             self._inner_curve_radius = self._thickness * 0.1
             self._outter_curve_radius = self._thickness * 1.1
-            self._analyse_attributes[2] = self._inner_curve_radius
-            self._analyse_attributes[3] = self._outter_curve_radius
         else:
             self._outter_curve_radius = (
                 1 + (self._thickness / self._base_length)) * self._thickness
             self._inner_curve_radius = (self._thickness**2) / self._base_length
-            self._analyse_attributes[2] = self._inner_curve_radius
-            self._analyse_attributes[3] = self._outter_curve_radius
+
+        self._analyse_attributes[2] = self._inner_curve_radius
+        self._analyse_attributes[3] = self._outter_curve_radius
 
     @property
     def azimuth_placement_angle(self):
