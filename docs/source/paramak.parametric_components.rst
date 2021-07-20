@@ -337,6 +337,28 @@ CuttingWedgeFS()
    :members:
    :show-inheritance:
 
+
+ExtrudeRectangle()
+^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component =  paramak.ExtrudeRectangle(
+       height=10,
+       width= 10,
+       distance=20,
+       center_point=(20, 20)
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_components.extrude_rectangle
+   :members:
+   :show-inheritance:
+
 HexagonPin()
 ^^^^^^^^^^^^
 
@@ -502,6 +524,20 @@ PoloidalFieldCoilCaseSetFC()
 
 PoloidalSegmenter()
 ^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalSegments(
+      shape_to_segment=None,
+      center_point=(450, 0),
+      number_of_segments=10,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
 
 .. image:: https://user-images.githubusercontent.com/8583900/93811079-84da5480-fc47-11ea-9c6c-7fd132f6d72d.png
     :width: 605px
@@ -750,5 +786,38 @@ CapsuleVacuumVessel()
    :width: 255
 
 .. automodule:: paramak.parametric_components.capsule_vacuum_vessel
+   :members:
+   :show-inheritance:
+
+ToroidalFieldCoilRectangleRoundCorners()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilRectangleRoundCorners(
+      with_inner_leg=False,
+      lower_inner_coordinates=(0, 0),
+      mid_point_coordinates=(100, 100),
+      thickness=30,
+      number_of_coils=1,
+      distance=20,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
+|TFCoilRoundCornersvg| |TFCoilRoundCornersvg2| |TFCoilRoundCornerstp|
+
+.. |TFCoilRoundCornersvg| image:: https://user-images.githubusercontent.com/85617935/125979064-c9aff900-4a07-462d-91bd-53af3bc66559.png
+   :width: 255
+.. |TFCoilRoundCornersvg2| image:: https://user-images.githubusercontent.com/85617935/125979248-1dbbd7be-916b-4921-86ed-a942b6cda757.png
+   :width: 255
+.. |TFCoilRoundCornerstp| image:: https://user-images.githubusercontent.com/85617935/125977357-3b893496-fc6b-4f06-8a95-10164cb70d7c.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_round_corners
    :members:
    :show-inheritance:

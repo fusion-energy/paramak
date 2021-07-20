@@ -52,6 +52,7 @@ from .parametric_components.poloidal_field_coil_case_fc import PoloidalFieldCoil
 from .parametric_components.poloidal_field_coil_set import PoloidalFieldCoilSet
 from .parametric_components.poloidal_field_coil_case_set import PoloidalFieldCoilCaseSet
 from .parametric_components.poloidal_field_coil_case_set_fc import PoloidalFieldCoilCaseSetFC
+from .parametric_components.extrude_rectangle import ExtrudeRectangle
 
 from .parametric_components.poloidal_segmenter import PoloidalSegments
 from .parametric_components.port_cutters_rotated import PortCutterRotated
@@ -72,6 +73,8 @@ from .parametric_components.toroidal_field_coil_rectangle import ToroidalFieldCo
 from .parametric_components.toroidal_field_coil_triple_arc import ToroidalFieldCoilTripleArc
 from .parametric_components.toroidal_field_coil_princeton_d import ToroidalFieldCoilPrincetonD
 from .parametric_components.tf_coil_casing import TFCoilCasing
+from .parametric_components.toroidal_field_coil_round_corners \
+    import ToroidalFieldCoilRectangleRoundCorners
 
 from .parametric_components.vacuum_vessel import VacuumVessel
 from .parametric_components.vacuum_vessel_inner_leg import VacuumVesselInnerLeg
