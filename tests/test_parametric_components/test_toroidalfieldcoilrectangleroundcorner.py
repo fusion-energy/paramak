@@ -112,8 +112,8 @@ def volume(
 
     return total_shape_volume
 
-# Parametric Tests
 
+# Parametric Tests
 
 @pytest.mark.parametric
 def test_parametric_surface_area_with_leg():
@@ -143,8 +143,8 @@ def test_parametric_volume():
     package_vol = volume((50, 0), (100, 100), 20, 10)
     assert pytest.approx(package_vol) == paramak_vol
 
-# Analytical Tests
 
+# Analytical Tests
 
 @pytest.mark.analytical
 def test_manual_area():
@@ -159,9 +159,9 @@ def test_manual_volume():
     computational = volume((50, 0), (100, 100), 20, 10)
     assert pytest.approx(computational) == analytical
 
+
 # Input Parameter Tests
 # Lower Point Coordinate
-
 
 @pytest.mark.dtype
 def test_input_param_lower_inner():
@@ -227,6 +227,7 @@ def test_lower_point_setter_elements_x():
 
 
 # Mid Point Coordinate
+
 @pytest.mark.dtype
 def test_input_param_mid_point():
     with pytest.raises(TypeError):
@@ -291,6 +292,7 @@ def test_mid_point_setter_elements_x():
 
 
 # Coordinate Comparison
+
 @pytest.mark.value
 def test_input_x_coordinates():
     with pytest.raises(ValueError):
@@ -310,8 +312,8 @@ def test_x_coords_with_setters():
         obj.lower_inner_coordinates = (150, 0)
         obj.mid_point_coordinates = (100, 0)
 
-# Thickness Parameter
 
+# Thickness Parameter
 
 @pytest.mark.dtype
 def test_input_param_thickness():
@@ -349,8 +351,8 @@ def test_thickness_setter():
     with pytest.raises(TypeError):
         obj.thickness = "string"
 
-# Extrusion Distance
 
+# Extrusion Distance
 
 @pytest.mark.dtype
 def test_input_param_distance():
@@ -370,8 +372,8 @@ def test_distance_setter():
     with pytest.raises(TypeError):
         obj.distance = "string"
 
-# Number of Coils
 
+# Number of Coils
 
 @pytest.mark.value
 def test_input_num_coils():
