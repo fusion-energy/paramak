@@ -116,6 +116,45 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             self.test_shape.outer_radius = 200
             self.test_shape.height = None
 
+        def incorrect_center_height():
+            self.test_shape.center_height = 'string'
+
+        def incorrect_center_height_none():
+            self.test_shape.center_height = None
+
         self.assertRaises(ValueError, incorrect_inner_radius)
         self.assertRaises(ValueError, incorrect_outer_radius)
         self.assertRaises(ValueError, incorrect_height)
+        self.assertRaises(TypeError, incorrect_center_height)
+        self.assertRaises(TypeError, incorrect_center_height_none)
+
+    def test_center_height_usage(self):
+        """Makes a offset cyclinder using center_height that overlaps half of
+        the default center_height=0 shape. Cuts shapes and checks volumes.
+        """
+        test_shape1 = paramak.CenterColumnShieldCylinder(
+            inner_radius=3,
+            outer_radius=3.3,
+            height=5,
+            color=(1, 0, 0)
+        )
+
+        test_shape2 = paramak.CenterColumnShieldCylinder(
+            inner_radius=3,
+            outer_radius=3.3,
+            height=5,
+            center_height=-2.5,
+            color=(1, 0, 0)
+        )
+
+        test_shape3 = paramak.CenterColumnShieldCylinder(
+            inner_radius=3,
+            outer_radius=3.3,
+            height=5,
+            center_height=0,
+            color=(1, 0, 0),
+            cut=test_shape2
+        )
+
+        assert test_shape2.volume == test_shape1.volume
+        assert pytest.approx(test_shape3.volume) == 0.5 * test_shape1.volume
