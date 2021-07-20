@@ -354,9 +354,6 @@ ExtrudeRectangle()
 
    cadquery_object = my_component.solid
 
-.. image:: https://user-images.githubusercontent.com/56687624/99048848-ff5f8a80-258d-11eb-9073-123185d7a4fb.png
-   :width: 230
-
 .. automodule:: paramak.parametric_components.extrude_rectangle
    :members:
    :show-inheritance:
