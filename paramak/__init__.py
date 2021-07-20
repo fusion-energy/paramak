@@ -52,6 +52,7 @@ from .parametric_components.poloidal_field_coil_case_fc import PoloidalFieldCoil
 from .parametric_components.poloidal_field_coil_set import PoloidalFieldCoilSet
 from .parametric_components.poloidal_field_coil_case_set import PoloidalFieldCoilCaseSet
 from .parametric_components.poloidal_field_coil_case_set_fc import PoloidalFieldCoilCaseSetFC
+from .parametric_components.extrude_rectangle import ExtrudeRectangle
 
 from .parametric_components.poloidal_segmenter import PoloidalSegments
 from .parametric_components.port_cutters_rotated import PortCutterRotated

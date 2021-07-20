@@ -337,6 +337,27 @@ CuttingWedgeFS()
    :members:
    :show-inheritance:
 
+
+ExtrudeRectangle()
+^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component =  paramak.ExtrudeRectangle(
+       height=10,
+       width= 10,
+       distance=20,
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_components.extrude_rectangle
+   :members:
+   :show-inheritance:
+
 HexagonPin()
 ^^^^^^^^^^^^
 
