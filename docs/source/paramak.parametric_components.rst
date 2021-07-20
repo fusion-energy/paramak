@@ -339,7 +339,7 @@ CuttingWedgeFS()
 
 
 ExtrudeRectangle()
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
