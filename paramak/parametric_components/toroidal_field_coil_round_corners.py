@@ -90,7 +90,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self.mid_point_coordinates[1] - self.lower_inner_coordinates[1]) * 2
         self._analyse_attributes[1] = self._height
 
-
     def _find_radii(self):
         # Inner and outter radius of curvature for the corners
         # The inner curvature is scales as a function of the base length
