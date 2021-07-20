@@ -78,6 +78,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
                 "The middle point's x-coordinate must be larger than the lower",
                 "inner point's x-coordinate")
 
+    def _find_base_and_height(self):
         # Adding hidden attributes for analyse list population
         # inner base length of the coil
         self._base_length = self._mid_point_coordinates[0] - \
@@ -86,10 +87,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         # height of the coil
         self._height = abs(
-            mid_point_coordinates[1] - lower_inner_coordinates[1]) * 2
+            self.mid_point_coordinates[1] - self.lower_inner_coordinates[1]) * 2
         self._analyse_attributes[1] = self._height
 
-        self._find_radii()
 
     def _find_radii(self):
         # Inner and outter radius of curvature for the corners
@@ -99,7 +99,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         # it takes 10% of the thickness as the inner curve radius
         # this to avoid having coordinates before the previous or at the same spot as Paramak
         # cannot compute it
-
+        self._find_base_and_height()
         if self._thickness / self._base_length >= 1:
             self._inner_curve_radius = self._thickness * 0.1
             self._outter_curve_radius = self._thickness * 1.1
@@ -166,9 +166,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     def thickness(self, val):
         if not isinstance(val, (float, int)):
             raise TypeError("Input Thickness must be a number!")
-
         self._find_radii()
-
         self._thickness = val
 
     @property
@@ -193,6 +191,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
     @property
     def analyse_attributes(self):
+        self.find_points()
         return self._analyse_attributes
 
     @property
@@ -210,7 +209,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         mid_point_coordinates must be a 2 elemenet tuple
         thickness must be a float or an int
         """
-
         self._find_radii()
 
         lower_x, lower_z = self._lower_inner_coordinates
