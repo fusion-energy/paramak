@@ -57,10 +57,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             raise TypeError(
                 "CenterColumnShieldBlock.center_height should be a float or int. Not a {}".format(
                     type(value)))
-        if value is None:
-            raise ValueError(
-                "center_height of the CenterColumnShieldBlock cannot be None"
-            )
         self._center_height = value
 
     @property
