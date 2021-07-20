@@ -350,6 +350,7 @@ ExtrudeRectangle()
        height=10,
        width= 10,
        distance=20,
+       center_point=(20, 20)
    )
 
    cadquery_object = my_component.solid
