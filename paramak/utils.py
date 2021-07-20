@@ -89,7 +89,7 @@ def trelis_command_to_create_dagmc_h5m(
             path_output_filenames.append(str(path_filename))
 
     shutil.copy(
-        src=Path(__file__).parent.absolute() / Path('parametric_neutronics') /
+        src=Path(__file__).parent.absolute() / Path('parametric') /
         'make_faceteted_neutronics_model.py',
         dst=Path().absolute()
     )
@@ -102,12 +102,12 @@ def trelis_command_to_create_dagmc_h5m(
     os.system('rm dagmc_not_watertight.h5m')
 
     if batch:
-        trelis_cmd = 'trelis -batch -nographics'
+        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION=1 coreform_cubit -batch -nographics'
     else:
-        trelis_cmd = 'trelis'
+        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION=1 coreform_cubit'
 
     os.system(
-        trelis_cmd +
+        cubit_cmd +
         " make_faceteted_neutronics_model.py \"faceting_tolerance='" +
         str(faceting_tolerance) +
         "'\" \"merge_tolerance='" +
