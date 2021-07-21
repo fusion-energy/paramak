@@ -846,7 +846,7 @@ class TestShape(unittest.TestCase):
             points=points
         )
 
-    def test_reuse_points(self):
+    def test_reuse_points_and_connections(self):
         """Checks that points can be reused between shapes"""
         points = [
             (100, 0, "straight"),
@@ -863,6 +863,25 @@ class TestShape(unittest.TestCase):
             (200, 0, "straight"),
             (250, 50, "straight"),
             (200, 100, "straight"),
+        ]
+
+    def test_reuse_points(self):
+        """Checks that points can be reused between shapes"""
+        points = [
+            (100, 0),
+            (200, 0),
+            (250, 50),
+            (200, 100),
+        ]
+        test_shape = paramak.Shape(
+            points=points
+        )
+        
+        assert test_shape.points == [
+            (100, 0),
+            (200, 0),
+            (250, 50),
+            (200, 100),
         ]
 
 

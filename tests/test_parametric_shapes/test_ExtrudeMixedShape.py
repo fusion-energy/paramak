@@ -182,9 +182,9 @@ class TestExtrudeMixedShape(unittest.TestCase):
         them to spline edges. Checks the new edges have been correctly
         replaced with splines"""
 
-        assert len(self.test_shape_2.points) == 8
+        assert len(self.test_shape_2.points) == 7
         self.test_shape_2.convert_all_circle_connections_to_splines()
-        assert len(self.test_shape_2.points) > 8
+        assert len(self.test_shape_2.points) > 7
         assert self.test_shape_2.points[0] == (100, 0, "straight")
         assert self.test_shape_2.points[1] == (200, 0, 'spline')
 
