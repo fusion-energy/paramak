@@ -474,7 +474,6 @@ class Shape:
             raise ValueError("Shape.name must be a string", value)
         self._name = value
 
-
     @property
     def processed_points(self):
         """Shape.processed_points attributes is set internally from the Shape.points"""
@@ -484,8 +483,12 @@ class Shape:
             else:
                 values = [(*p, self.connection_type) for p in self.points]
             values.append(values[0])
-        return values
+            return values
+        return None
 
+    @processed_points.setter
+    def processed_points(self, value):
+        self._processed_points = value
 
     @property
     def points(self):
@@ -513,12 +516,8 @@ class Shape:
         else:
             values = values_in[:]
         if values is not None:
-            if not isinstance(values, tuple):
+            if not isinstance(values, (list, tuple)):
                 raise ValueError("points must be a tuple")
-
-            # processed points will cointain this
-            # if self.connection_type != "mixed":
-            #     values = [(*p, self.connection_type) for p in values]
 
             for value in values:
                 if type(value) not in [tuple]:
@@ -566,9 +565,6 @@ class Shape:
                     msg = "The coordinates of the last and first points are \
                         the same."
                     raise ValueError(msg)
-
-                # processed_points will contain this
-                # values.append(values[0])
 
         self._points = values
 
@@ -706,6 +702,9 @@ class Shape:
             # obtains the last values of the points list
             connections = [p[2] for p in self.processed_points[:-1]]
 
+            print('self.processed_points', self.processed_points)
+            print('connections', connections)
+
             current_linetype = connections[0]
             current_points_list = []
             instructions = []
@@ -715,8 +714,7 @@ class Shape:
                     current_points_list.append(XZ_points[i])
                 else:
                     current_points_list.append(XZ_points[i])
-                    instructions.append(
-                        {current_linetype: current_points_list})
+                    instructions.append({current_linetype: current_points_list})
                     current_linetype = connection
                     current_points_list = [XZ_points[i]]
             instructions.append({current_linetype: current_points_list})
