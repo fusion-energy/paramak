@@ -255,7 +255,7 @@ class TestShape(unittest.TestCase):
         def incorrect_points_not_a_list():
             """Checks ValueError is raised when the points are not a list."""
 
-            test_shape.points = (0, 0), (0, 20), (20, 20), (20, 0)
+            test_shape.points = "(0, 0), (0, 20), (20, 20), (20, 0)"
 
         self.assertRaises(ValueError, incorrect_points_not_a_list)
 
@@ -831,20 +831,39 @@ class TestShape(unittest.TestCase):
         self.assertRaises(ValueError, check_correct_error_is_rasied)
 
 
-def test_reuse_points():
-    """Checks that points can be reused between shapes"""
-    points = [
-        (100, 0, "straight"),
-        (200, 0, "straight"),
-        (250, 50, "straight"),
-        (200, 100, "straight"),
-    ]
-    paramak.Shape(
-        points=points
-    )
-    paramak.Shape(
-        points=points
-    )
+    def test_reuse_points_between_shapes(self):
+        """Checks that points can be reused between shapes"""
+        points = [
+            (100, 0, "straight"),
+            (200, 0, "straight"),
+            (250, 50, "straight"),
+            (200, 100, "straight"),
+        ]
+        paramak.Shape(
+            points=points
+        )
+        paramak.Shape(
+            points=points
+        )
+
+    def test_reuse_points(self):
+        """Checks that points can be reused between shapes"""
+        points = [
+            (100, 0, "straight"),
+            (200, 0, "straight"),
+            (250, 50, "straight"),
+            (200, 100, "straight"),
+        ]
+        test_shape = paramak.Shape(
+            points=points
+        )
+        
+        assert test_shape.points == [
+            (100, 0, "straight"),
+            (200, 0, "straight"),
+            (250, 50, "straight"),
+            (200, 100, "straight"),
+        ]
 
 
 if __name__ == "__main__":
