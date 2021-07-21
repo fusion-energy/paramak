@@ -482,7 +482,8 @@ class Shape:
                 values = self.points
             else:
                 values = [(*p, self.connection_type) for p in self.points]
-            values.append(values[0])
+            if values[0][:2] != values[-1][:2]:
+                values.append(values[0])
             return values
         return None
 
@@ -517,10 +518,10 @@ class Shape:
             values = values_in[:]
         if values is not None:
             if not isinstance(values, (list, tuple)):
-                raise ValueError("points must be a tuple")
+                raise ValueError("points must be a list or a tuple")
 
             for value in values:
-                if type(value) not in [tuple]:
+                if not isinstance(value, (list, tuple)):
                     msg = "individual points must be a tuple." + \
                         "{} in of type {}".format(value, type(value))
                     raise ValueError(msg)
@@ -694,17 +695,15 @@ class Shape:
             XZ_points = [(p[0], p[1]) for p in self.processed_points]
 
             for point in self.processed_points:
+                print(point, len(point))
                 if len(point) != 3:
-                    msg = "The points list should contain two coordinates and \
-                        a connetion type"
+                    msg = "The processed_points list should contain two \
+                        coordinates and a connetion type"
                     raise ValueError(msg)
 
             # obtains the last values of the points list
             connections = [p[2] for p in self.processed_points[:-1]]
-
-            print('self.processed_points', self.processed_points)
-            print('connections', connections)
-
+  
             current_linetype = connections[0]
             current_points_list = []
             instructions = []
@@ -1263,8 +1262,8 @@ class Shape:
             Matplotlib object patch: a plotable polygon shape
         """
 
-        if self.points is None:
-            raise ValueError("No points defined for", self)
+        if self.processed_points is None:
+            raise ValueError("No processed_points defined for", self)
 
         patches = []
 
@@ -1691,13 +1690,14 @@ class Shape:
             self,
             tolerance: Optional[float] = 0.1
     ) -> List[Tuple[float, float, str]]:
-        """Replaces circle edges in Shape.points with spline edges. The spline
-        control coordinates are obtained by faceting the circle edge with the
-        provided tolerance. The Shape.points will be updated to exclude the
-        circle points and include the new spline points. This method works best
-        when the connection before and after the circle is s straight
-        connection type. This method is useful when converting the stp file
-        into other formats due to errors in the conversion of circle edges.
+        """Replaces circle edges in Shape.processed_points points with spline
+        edges. The spline control coordinates are obtained by faceting the
+        circle edge with the provided tolerance. The Shape.processed_points
+        will be updated to exclude the circle points and include the new spline
+        points. This method works best when the connection before and after the
+        circle is a straight connection type. This method is useful when
+        converting the stp file into other formats due to errors in the
+        conversion of circle edges.
 
         Args:
             tolerance: the precision of the faceting.
@@ -1708,12 +1708,12 @@ class Shape:
 
         new_points = []
         counter = 0
-        while counter < len(self.points):
+        while counter < len(self.processed_points):
 
-            if self.points[counter][2] == 'circle':
-                p_0 = self.points[counter][:2]
-                p_1 = self.points[counter + 1][:2]
-                p_2 = self.points[counter + 2][:2]
+            if self.processed_points[counter][2] == 'circle':
+                p_0 = self.processed_points[counter][:2]
+                p_1 = self.processed_points[counter + 1][:2]
+                p_2 = self.processed_points[counter + 2][:2]
 
                 points = paramak.utils.convert_circle_to_spline(
                     p_0, p_1, p_2, tolerance=tolerance
@@ -1723,10 +1723,10 @@ class Shape:
                 for point in points[:-1]:
                     new_points.append((point[0], point[1], 'spline'))
 
-                new_points.append(self.points[counter + 2])
+                new_points.append(self.processed_points[counter + 2])
                 counter = counter + 3
             else:
-                new_points.append(self.points[counter])
+                new_points.append(self.processed_points[counter])
                 counter = counter + 1
-        self.points = new_points[:-1]
+        self.processed_points = new_points[:-1]
         return new_points[:-1]
