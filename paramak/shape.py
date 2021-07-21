@@ -31,7 +31,7 @@ class Shape:
     in Jupyter Lab
 
     Args:
-        points (list of (float, float, float), optional): the x, y, z
+        points (tuple of (float, float, float), optional): the x, y, z
             coordinates of points that make up the shape. Defaults to None.
         connection_type (str, optional): The type of connection between points.
             Possible values are "straight", "circle", "spline", "mixed".
@@ -87,7 +87,7 @@ class Shape:
 
     def __init__(
         self,
-        points: list = None,
+        points: Tuple = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
         color: Optional[Tuple[float, float, float,
@@ -146,6 +146,7 @@ class Shape:
         self.wire = None
         self.render_mesh = None
         self.h5m_filename = None
+        self.processed_points = None
         # self.volume = None
         self.hash_value = None
         self.points_hash_value = None
@@ -473,12 +474,25 @@ class Shape:
             raise ValueError("Shape.name must be a string", value)
         self._name = value
 
+
+    @property
+    def processed_points(self):
+        """Shape.processed_points attributes is set internally from the Shape.points"""
+        if self.points is not None:
+            if self.connection_type == "mixed":
+                values = self.points
+            else:
+                values = [(*p, self.connection_type) for p in self.points]
+            values.append(values[0])
+        return values
+
+
     @property
     def points(self):
         """Sets the Shape.point attributes.
 
         Args:
-            points (a list of lists or tuples): list of points that create the
+            points (a tuple of tuples): tuple of points that create the
                 shape
 
         Raises:
@@ -499,15 +513,16 @@ class Shape:
         else:
             values = values_in[:]
         if values is not None:
-            if not isinstance(values, list):
-                raise ValueError("points must be a list")
+            if not isinstance(values, tuple):
+                raise ValueError("points must be a tuple")
 
-            if self.connection_type != "mixed":
-                values = [(*p, self.connection_type) for p in values]
+            # processed points will cointain this
+            # if self.connection_type != "mixed":
+            #     values = [(*p, self.connection_type) for p in values]
 
             for value in values:
-                if type(value) not in [list, tuple]:
-                    msg = "individual points must be a list or a tuple." + \
+                if type(value) not in [tuple]:
+                    msg = "individual points must be a tuple." + \
                         "{} in of type {}".format(value, type(value))
                     raise ValueError(msg)
 
@@ -542,8 +557,8 @@ class Shape:
             # all 3 long, not a mixture
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
-                    msg = "The points list should contain entries of length 2 \
-                            or 3 but not a mixture of 2 and 3"
+                    msg = "The points tuples should contain entries of length \
+                           2 or 3 but not a mixture of 2 and 3"
                     raise ValueError(msg)
 
             if len(values) > 1:
@@ -552,7 +567,8 @@ class Shape:
                         the same."
                     raise ValueError(msg)
 
-                values.append(values[0])
+                # processed_points will contain this
+                # values.append(values[0])
 
         self._points = values
 
@@ -677,18 +693,18 @@ class Shape:
 
     def create_solid(self) -> Workplane:
         solid = None
-        if self.points is not None:
+        if self.processed_points is not None:
             # obtains the first two values of the points list
-            XZ_points = [(p[0], p[1]) for p in self.points]
+            XZ_points = [(p[0], p[1]) for p in self.processed_points]
 
-            for point in self.points:
+            for point in self.processed_points:
                 if len(point) != 3:
                     msg = "The points list should contain two coordinates and \
                         a connetion type"
                     raise ValueError(msg)
 
             # obtains the last values of the points list
-            connections = [p[2] for p in self.points[:-1]]
+            connections = [p[2] for p in self.processed_points[:-1]]
 
             current_linetype = connections[0]
             current_points_list = []
