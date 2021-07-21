@@ -327,7 +327,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             CadQuery solid: A 3D solid Volume """
 
         # Create solid from points
-        points = [ps[:2] for ps in self.points]
+        points = [ps[:2] for ps in self.processed_points]
 
         wire = cq.Workplane(self.workplane).moveTo(points[0][0], points[0][1]) \
             .lineTo(points[1][0], points[1][1]) \
