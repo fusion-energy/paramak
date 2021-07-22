@@ -128,6 +128,9 @@ class Shape:
         self.workplane = workplane
         self.rotation_axis = rotation_axis
 
+        # initialise to something different than self.points
+        self.old_points = 0
+
         # neutronics specific properties
         self.method = method
         self.material_tag = material_tag
@@ -477,22 +480,20 @@ class Shape:
     @property
     def processed_points(self):
         """Shape.processed_points attributes is set internally from the Shape.points"""
-        # if self.points is not None:
-        ignored_keys = ["_points", "_points_hash_value"]
-        if self.points_hash_value != get_hash(self, ignored_keys):
-            print('coucou')
-            # TODO this should only recalculate if Shape.points change
-            if self.connection_type == "mixed":
-                values = self.points
-            else:
-                values = [(*p, self.connection_type) for p in self.points]
-            if values[0][:2] != values[-1][:2]:
-                values.append(values[0])
+        if self.points is not None:
+            if self.old_points != self.points:
+                if self.connection_type == "mixed":
+                    values = self.points
+                else:
+                    values = [(*p, self.connection_type) for p in self.points]
 
-            self._processed_points = values
-            # self.points_hash_value = get_hash(self, ignored_keys)
-        return self._processed_points
-        # return None
+                if values[0][:2] != values[-1][:2]:
+                    values.append(values[0])
+
+                self._processed_points = values
+                self.old_points = self.points
+            return self._processed_points
+        return None
 
     @processed_points.setter
     def processed_points(self, value):
@@ -669,6 +670,9 @@ class Shape:
             msg = "azimuth_placement_angle must be a float or list of floats"
             raise ValueError(msg)
         self._azimuth_placement_angle = value
+
+    def has_points_changed(self):
+        return self.old_points == self.points
 
     def from_stp_file(self, filename: str):
         """Loads the filename using CadQuery and populates the Shape.solid
