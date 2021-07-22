@@ -87,7 +87,7 @@ class Shape:
 
     def __init__(
         self,
-        points: Tuple = None,
+        points: Union[tuple, list] = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
         color: Optional[Tuple[float, float, float,
