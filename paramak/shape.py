@@ -552,8 +552,6 @@ class Shape:
                         the same."
                     raise ValueError(msg)
 
-                values.append(values[0])
-
         self._points = values
 
     @property
@@ -688,7 +686,7 @@ class Shape:
                     raise ValueError(msg)
 
             # obtains the last values of the points list
-            connections = [p[2] for p in self.points[:-1]]
+            connections = [p[2] for p in self.points]
 
             current_linetype = connections[0]
             current_points_list = []
