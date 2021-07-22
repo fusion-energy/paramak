@@ -246,17 +246,17 @@ class TestRotateMixedShape(unittest.TestCase):
         them to spline edges. Checks the new edges have been correctly
         replaced with splines"""
 
-        assert len(self.test_shape_3.points) == 7
+        assert len(self.test_shape_3.processed_points) == 8
         self.test_shape_3.convert_all_circle_connections_to_splines()
-        assert len(self.test_shape_3.points) > 7
-        assert self.test_shape_3.points[0] == (100, 0, "straight")
-        assert self.test_shape_3.points[1][2] == 'spline'
-        assert self.test_shape_3.points[2][2] == 'spline'
+        assert len(self.test_shape_3.processed_points) > 8
+        assert self.test_shape_3.processed_points[0] == (100, 0, "straight")
+        assert self.test_shape_3.processed_points[1][2] == 'spline'
+        assert self.test_shape_3.processed_points[2][2] == 'spline'
 
         # last point is the same as the first point
-        assert self.test_shape_3.points[-1] == (100, 0, "straight")
-        assert self.test_shape_3.points[-2][2] == 'spline'
-        assert self.test_shape_3.points[-3][2] == 'spline'
+        assert self.test_shape_3.processed_points[-1] == (100, 0, "straight")
+        assert self.test_shape_3.processed_points[-2][2] == 'spline'
+        assert self.test_shape_3.processed_points[-3][2] == 'spline'
 
     def test_convert_circles_to_splines_volume(self):
         """creates a RotateMixedShape with a circular edge and converts the
