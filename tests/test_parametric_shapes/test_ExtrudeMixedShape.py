@@ -201,7 +201,7 @@ class TestExtrudeMixedShape(unittest.TestCase):
         assert self.test_shape_2.processed_points[-4] == (150, 100, "straight")
         assert self.test_shape_2.processed_points[-5] == (200, 100, "straight")
 
-        for point in self.test_shape_2.points[1:len(
+        for point in self.test_shape_2.processed_points[1:len(
                 self.test_shape_2.points) - 5]:
             assert point[2] == 'spline'
 

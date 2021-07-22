@@ -128,6 +128,10 @@ class Shape:
         self.workplane = workplane
         self.rotation_axis = rotation_axis
 
+        # initialise to something different than self.points
+        # old_points is used in the processed_points getter
+        self.old_points = 0
+
         # neutronics specific properties
         self.method = method
         self.material_tag = material_tag
@@ -478,15 +482,22 @@ class Shape:
     def processed_points(self):
         """Shape.processed_points attributes is set internally from the Shape.points"""
         if self.points is not None:
-            # TODO this should only recalculate if Shape.points change
-            if self.connection_type == "mixed":
-                values = self.points
-            else:
-                values = [(*p, self.connection_type) for p in self.points]
-            if values[0][:2] != values[-1][:2]:
-                values.append(values[0])
+            # if .points have changed since last time this was run
+            if self.old_points != self.points:
+                # assign current .points value to .old_points
+                self.old_points = self.points
 
-            return values
+                # compute .processed_points
+                if self.connection_type == "mixed":
+                    values = self.points
+                else:
+                    values = [(*p, self.connection_type) for p in self.points]
+
+                if values[0][:2] != values[-1][:2]:
+                    values.append(values[0])
+
+                self._processed_points = values
+            return self._processed_points
         return None
 
     @processed_points.setter
@@ -504,15 +515,11 @@ class Shape:
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
-        print('getting points')
         ignored_keys = ["_points", "_points_hash_value"]
-        print('points 1setter', self.points_hash_value)
-        print('points 2setter', get_hash(self, ignored_keys))
         if hasattr(self, 'find_points') and \
                 self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
             self.points_hash_value = get_hash(self, ignored_keys)
-            print('set points_hash_value')
 
         return self._points
 
@@ -713,7 +720,6 @@ class Shape:
             XZ_points = [(p[0], p[1]) for p in self.processed_points]
 
             for point in self.processed_points:
-                print(point, len(point))
                 if len(point) != 3:
                     msg = "The processed_points list should contain two \
                         coordinates and a connetion type"
@@ -1747,5 +1753,7 @@ class Shape:
             else:
                 new_points.append(self.processed_points[counter])
                 counter = counter + 1
-        self.processed_points = new_points[:-1]
-        return new_points[:-1]
+
+        # @jon I'm not 100% if this change is correct or not
+        self.processed_points = new_points
+        return new_points
