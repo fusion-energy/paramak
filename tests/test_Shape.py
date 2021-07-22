@@ -47,6 +47,25 @@ class TestShape(unittest.TestCase):
             ]
         )
 
+    def test_reuse_points(self):
+        """Checks that points can be reused between shapes"""
+        points = [
+            (100, 0),
+            (200, 0),
+            (250, 50),
+            (200, 100),
+        ]
+        test_shape = paramak.Shape(
+            points=points
+        )
+        
+        assert test_shape.points == [
+            (100, 0),
+            (200, 0),
+            (250, 50),
+            (200, 100),
+        ]
+
     def test_graveyard_size_setting_type_checking(self):
         """Attempts to make a shape with a graveyard_size that is an float
         which should raise a ValueError"""
