@@ -515,10 +515,7 @@ class Shape:
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
-        # print('getting points')
         ignored_keys = ["_points", "_points_hash_value"]
-        # print('points 1setter', self.points_hash_value)
-        # print('points 2setter', get_hash(self, ignored_keys))
         if hasattr(self, 'find_points') and \
                 self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
@@ -723,7 +720,6 @@ class Shape:
             XZ_points = [(p[0], p[1]) for p in self.processed_points]
 
             for point in self.processed_points:
-                # print(point, len(point))
                 if len(point) != 3:
                     msg = "The processed_points list should contain two \
                         coordinates and a connetion type"
