@@ -31,7 +31,7 @@ class Shape:
     in Jupyter Lab
 
     Args:
-        points (list of (float, float, float), optional): the x, y, z
+        points (tuple of (float, float, float), optional): the x, y, z
             coordinates of points that make up the shape. Defaults to None.
         connection_type (str, optional): The type of connection between points.
             Possible values are "straight", "circle", "spline", "mixed".
@@ -87,7 +87,7 @@ class Shape:
 
     def __init__(
         self,
-        points: list = None,
+        points: Union[tuple, list] = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
         color: Optional[Tuple[float, float, float,
@@ -146,6 +146,7 @@ class Shape:
         self.wire = None
         self.render_mesh = None
         self.h5m_filename = None
+        self.processed_points = None
         # self.volume = None
         self.hash_value = None
         self.points_hash_value = None
@@ -474,21 +475,44 @@ class Shape:
         self._name = value
 
     @property
+    def processed_points(self):
+        """Shape.processed_points attributes is set internally from the Shape.points"""
+        if self.points is not None:
+            # TODO this should only recalculate if Shape.points change
+            if self.connection_type == "mixed":
+                values = self.points
+            else:
+                values = [(*p, self.connection_type) for p in self.points]
+            if values[0][:2] != values[-1][:2]:
+                values.append(values[0])
+
+            return values
+        return None
+
+    @processed_points.setter
+    def processed_points(self, value):
+        self._processed_points = value
+
+    @property
     def points(self):
         """Sets the Shape.point attributes.
 
         Args:
-            points (a list of lists or tuples): list of points that create the
+            points (a tuple of tuples): tuple of points that create the
                 shape
 
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
+        print('getting points')
         ignored_keys = ["_points", "_points_hash_value"]
+        print('points 1setter', self.points_hash_value)
+        print('points 2setter', get_hash(self, ignored_keys))
         if hasattr(self, 'find_points') and \
                 self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
             self.points_hash_value = get_hash(self, ignored_keys)
+            print('set points_hash_value')
 
         return self._points
 
@@ -499,24 +523,33 @@ class Shape:
         else:
             values = values_in[:]
         if values is not None:
-            if not isinstance(values, list):
-                raise ValueError("points must be a list")
-
-            if self.connection_type != "mixed":
-                values = [(*p, self.connection_type) for p in values]
+            if not isinstance(values, (list, tuple)):
+                raise ValueError("points must be a list or a tuple")
 
             for value in values:
-                if type(value) not in [list, tuple]:
-                    msg = "individual points must be a list or a tuple." + \
+                if not isinstance(value, (list, tuple)):
+                    msg = "individual points must be a tuple." + \
                         "{} in of type {}".format(value, type(value))
                     raise ValueError(msg)
 
-            for value in values:
-                # Checks that the length of each tuple in points is 2 or 3
-                if len(value) not in [2, 3]:
-                    msg = "individual points contain 2 or 3 entries {} has a \
-                        length of {}".format(value, len(values[0]))
-                    raise ValueError(msg)
+            for counter, value in enumerate(values):
+                if self.connection_type == 'mixed':
+                    if len(value) != 3:
+                        if counter != len(
+                                values) - 1:  # last point doesn't need connections
+                            msg = "individual points should contain 3 entries \
+                                when the Shape.connection_type is 'mixed'. \
+                                The entries should contain two coordinates \
+                                and a connection type. {} has a length of {}".format(value, len(value))
+                            print(values)
+                            raise ValueError(msg)
+                else:
+                    if len(value) != 2:
+                        msg = "individual points should contain 2 entries \
+                            when the Shape.connection_type is {}. The entries \
+                            should just contain the coordinates {} has a \
+                            length of {}".format(self.connection_type, value, len(value))
+                        raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
@@ -542,8 +575,8 @@ class Shape:
             # all 3 long, not a mixture
             if not all(len(entry) == 2 for entry in values):
                 if not all(len(entry) == 3 for entry in values):
-                    msg = "The points list should contain entries of length 2 \
-                            or 3 but not a mixture of 2 and 3"
+                    msg = "The points tuples should contain entries of length \
+                           2 or 3 but not a mixture of 2 and 3"
                     raise ValueError(msg)
 
             if len(values) > 1:
@@ -675,18 +708,19 @@ class Shape:
 
     def create_solid(self) -> Workplane:
         solid = None
-        if self.points is not None:
+        if self.processed_points is not None:
             # obtains the first two values of the points list
-            XZ_points = [(p[0], p[1]) for p in self.points]
+            XZ_points = [(p[0], p[1]) for p in self.processed_points]
 
-            for point in self.points:
+            for point in self.processed_points:
+                print(point, len(point))
                 if len(point) != 3:
-                    msg = "The points list should contain two coordinates and \
-                        a connetion type"
+                    msg = "The processed_points list should contain two \
+                        coordinates and a connetion type"
                     raise ValueError(msg)
 
             # obtains the last values of the points list
-            connections = [p[2] for p in self.points]
+            connections = [p[2] for p in self.processed_points[:-1]]
 
             current_linetype = connections[0]
             current_points_list = []
@@ -1247,8 +1281,8 @@ class Shape:
             Matplotlib object patch: a plotable polygon shape
         """
 
-        if self.points is None:
-            raise ValueError("No points defined for", self)
+        if self.processed_points is None:
+            raise ValueError("No processed_points defined for", self)
 
         patches = []
 
@@ -1675,13 +1709,14 @@ class Shape:
             self,
             tolerance: Optional[float] = 0.1
     ) -> List[Tuple[float, float, str]]:
-        """Replaces circle edges in Shape.points with spline edges. The spline
-        control coordinates are obtained by faceting the circle edge with the
-        provided tolerance. The Shape.points will be updated to exclude the
-        circle points and include the new spline points. This method works best
-        when the connection before and after the circle is s straight
-        connection type. This method is useful when converting the stp file
-        into other formats due to errors in the conversion of circle edges.
+        """Replaces circle edges in Shape.processed_points points with spline
+        edges. The spline control coordinates are obtained by faceting the
+        circle edge with the provided tolerance. The Shape.processed_points
+        will be updated to exclude the circle points and include the new spline
+        points. This method works best when the connection before and after the
+        circle is a straight connection type. This method is useful when
+        converting the stp file into other formats due to errors in the
+        conversion of circle edges.
 
         Args:
             tolerance: the precision of the faceting.
@@ -1692,12 +1727,12 @@ class Shape:
 
         new_points = []
         counter = 0
-        while counter < len(self.points):
+        while counter < len(self.processed_points):
 
-            if self.points[counter][2] == 'circle':
-                p_0 = self.points[counter][:2]
-                p_1 = self.points[counter + 1][:2]
-                p_2 = self.points[counter + 2][:2]
+            if self.processed_points[counter][2] == 'circle':
+                p_0 = self.processed_points[counter][:2]
+                p_1 = self.processed_points[counter + 1][:2]
+                p_2 = self.processed_points[counter + 2][:2]
 
                 points = paramak.utils.convert_circle_to_spline(
                     p_0, p_1, p_2, tolerance=tolerance
@@ -1707,10 +1742,10 @@ class Shape:
                 for point in points[:-1]:
                     new_points.append((point[0], point[1], 'spline'))
 
-                new_points.append(self.points[counter + 2])
+                new_points.append(self.processed_points[counter + 2])
                 counter = counter + 3
             else:
-                new_points.append(self.points[counter])
+                new_points.append(self.processed_points[counter])
                 counter = counter + 1
-        self.points = new_points[:-1]
+        self.processed_points = new_points[:-1]
         return new_points[:-1]

@@ -246,9 +246,9 @@ class TestRotateMixedShape(unittest.TestCase):
         them to spline edges. Checks the new edges have been correctly
         replaced with splines"""
 
-        assert len(self.test_shape_3.points) == 8
+        assert len(self.test_shape_3.points) == 7
         self.test_shape_3.convert_all_circle_connections_to_splines()
-        assert len(self.test_shape_3.points) > 8
+        assert len(self.test_shape_3.points) > 7
         assert self.test_shape_3.points[0] == (100, 0, "straight")
         assert self.test_shape_3.points[1][2] == 'spline'
         assert self.test_shape_3.points[2][2] == 'spline'

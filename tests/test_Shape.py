@@ -238,7 +238,7 @@ class TestShape(unittest.TestCase):
         """Creates Shape object with incorrect workplane and checks ValueError
         is raised."""
 
-        test_shape = paramak.Shape()
+        test_shape = paramak.Shape(connection_type='straight')
 
         def incorrect_workplane():
             """Creates Shape object with unacceptable workplane."""
@@ -274,7 +274,7 @@ class TestShape(unittest.TestCase):
         def incorrect_points_not_a_list():
             """Checks ValueError is raised when the points are not a list."""
 
-            test_shape.points = (0, 0), (0, 20), (20, 20), (20, 0)
+            test_shape.points = "(0, 0), (0, 20), (20, 20), (20, 0)"
 
         self.assertRaises(ValueError, incorrect_points_not_a_list)
 
@@ -304,7 +304,7 @@ class TestShape(unittest.TestCase):
         """Creates a Shape object and checks that the create_limits function
         returns the expected values for x_min, x_max, z_min and z_max."""
 
-        test_shape = paramak.Shape()
+        test_shape = paramak.Shape(connection_type='straight')
 
         test_shape.points = [
             (0, 0),
@@ -464,7 +464,10 @@ class TestShape(unittest.TestCase):
     def test_export_html_with_wire_None(self):
         """Checks that an error is raised when wire is None and export_html
         """
-        test_shape = paramak.Shape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        test_shape = paramak.Shape(
+            points=[(0, 0), (0, 20), (20, 20), (20, 0)],
+            connection_type='straight',
+        )
         test_shape.wire = None
 
         def export():
@@ -849,21 +852,59 @@ class TestShape(unittest.TestCase):
 
         self.assertRaises(ValueError, check_correct_error_is_rasied)
 
+    def test_reuse_points_between_shapes(self):
+        """Checks that points can be reused between shapes"""
+        points = [
+            (100, 0, "straight"),
+            (200, 0, "straight"),
+            (250, 50, "straight"),
+            (200, 100, "straight"),
+        ]
+        paramak.Shape(
+            points=points
+        )
+        paramak.Shape(
+            points=points
+        )
 
-def test_reuse_points():
-    """Checks that points can be reused between shapes"""
-    points = [
-        (100, 0, "straight"),
-        (200, 0, "straight"),
-        (250, 50, "straight"),
-        (200, 100, "straight"),
-    ]
-    paramak.Shape(
-        points=points
-    )
-    paramak.Shape(
-        points=points
-    )
+    def test_reuse_points_and_connections(self):
+        """Checks that points can be reused between shapes"""
+        points = [
+            (100, 0, "straight"),
+            (200, 0, "straight"),
+            (250, 50, "straight"),
+            (200, 100, "straight"),
+        ]
+        test_shape = paramak.Shape(
+            points=points
+        )
+
+        assert test_shape.points == [
+            (100, 0, "straight"),
+            (200, 0, "straight"),
+            (250, 50, "straight"),
+            (200, 100, "straight"),
+        ]
+
+    def test_reuse_points(self):
+        """Checks that points can be reused between shapes"""
+        points = [
+            (100, 0),
+            (200, 0),
+            (250, 50),
+            (200, 100),
+        ]
+        test_shape = paramak.Shape(
+            points=points,
+            connection_type='straight'
+        )
+
+        assert test_shape.points == [
+            (100, 0),
+            (200, 0),
+            (250, 50),
+            (200, 100),
+        ]
 
 
 if __name__ == "__main__":

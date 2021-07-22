@@ -31,10 +31,34 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (100, 700, 'straight'), (150, 700, 'straight'), (800, 700, 'straight'),
-            (800, -700, 'straight'), (150, -700, 'straight'), (100, -700, 'straight'),
-            (100, -750, 'straight'), (850, -750, 'straight'), (850, 750, 'straight'),
-            (100, 750, 'straight'), (100, 700, 'straight')
+            (100, 700),
+            (150, 700),
+            (800, 700),
+            (800, -700),
+            (150, -700),
+            (100, -700),
+            (100, -750),
+            (850, -750),
+            (850, 750),
+            (100, 750)
+        ]
+
+    def test_processed_points_calculation(self):
+        """Checks that the processed points used to construct the ToroidalFieldCoilRectangle are
+        calculated correctly from the parameters given."""
+
+        assert self.test_shape.processed_points == [
+            (100, 700, 'straight'),
+            (150, 700, 'straight'),
+            (800, 700, 'straight'),
+            (800, -700, 'straight'),
+            (150, -700, 'straight'),
+            (100, -700, 'straight'),
+            (100, -750, 'straight'),
+            (850, -750, 'straight'),
+            (850, 750, 'straight'),
+            (100, 750, 'straight'),
+            (100, 700, 'straight')
         ]
 
     def test_creation_with_inner_leg(self):
