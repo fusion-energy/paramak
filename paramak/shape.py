@@ -478,12 +478,14 @@ class Shape:
     def processed_points(self):
         """Shape.processed_points attributes is set internally from the Shape.points"""
         if self.points is not None:
+            # TODO this should only recalculate if Shape.points change
             if self.connection_type == "mixed":
                 values = self.points
             else:
                 values = [(*p, self.connection_type) for p in self.points]
             if values[0][:2] != values[-1][:2]:
                 values.append(values[0])
+
             return values
         return None
 
@@ -502,11 +504,15 @@ class Shape:
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
+        print('getting points')
         ignored_keys = ["_points", "_points_hash_value"]
+        print('points 1setter', self.points_hash_value)
+        print('points 2setter', get_hash(self, ignored_keys))
         if hasattr(self, 'find_points') and \
                 self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
             self.points_hash_value = get_hash(self, ignored_keys)
+            print('set points_hash_value')
 
         return self._points
 
@@ -526,12 +532,23 @@ class Shape:
                         "{} in of type {}".format(value, type(value))
                     raise ValueError(msg)
 
-            for value in values:
-                # Checks that the length of each tuple in points is 2 or 3
-                if len(value) not in [2, 3]:
-                    msg = "individual points contain 2 or 3 entries {} has a \
-                        length of {}".format(value, len(values[0]))
-                    raise ValueError(msg)
+            for counter, value in enumerate(values):
+                if self.connection_type == 'mixed':
+                    if len(value) != 3:
+                        if counter != len(values)-1:  # last point doesn't need connections
+                            msg = "individual points should contain 3 entries \
+                                when the Shape.connection_type is 'mixed'. \
+                                The entries should contain two coordinates \
+                                and a connection type. {} has a length of {}".format(value, len(value))
+                            print(values)
+                            raise ValueError(msg)
+                else:
+                    if len(value) != 2:
+                        msg = "individual points should contain 2 entries \
+                            when the Shape.connection_type is {}. The entries \
+                            should just contain the coordinates {} has a \
+                            length of {}".format(self.connection_type, value, len(value))
+                        raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):

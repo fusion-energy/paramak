@@ -11,8 +11,14 @@ class TestExtrudeMixedShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = ExtrudeMixedShape(
-            points=[(50, 0, "straight"), (50, 50, "spline"), (60, 70, "spline"),
-                    (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")],
+            points=[
+                (50, 0, "straight"),
+                (50, 50, "spline"),
+                (60, 70, "spline"),
+                (70, 50, "circle"),
+                (60, 25, "circle"),
+                (70, 0, "straight")
+            ],
             distance=50
         )
 
@@ -182,18 +188,18 @@ class TestExtrudeMixedShape(unittest.TestCase):
         them to spline edges. Checks the new edges have been correctly
         replaced with splines"""
 
-        assert len(self.test_shape_2.points) == 7
+        assert len(self.test_shape_2.processed_points) == 8
         self.test_shape_2.convert_all_circle_connections_to_splines()
-        assert len(self.test_shape_2.points) > 7
-        assert self.test_shape_2.points[0] == (100, 0, "straight")
-        assert self.test_shape_2.points[1] == (200, 0, 'spline')
+        assert len(self.test_shape_2.processed_points) > 8
+        assert self.test_shape_2.processed_points[0] == (100, 0, "straight")
+        assert self.test_shape_2.processed_points[1] == (200, 0, 'spline')
 
         # last point is the same as the first point
-        assert self.test_shape_2.points[-1] == (100, 0, "straight")
-        assert self.test_shape_2.points[-2] == (110, 45, "straight")
-        assert self.test_shape_2.points[-3] == (140, 75, "straight")
-        assert self.test_shape_2.points[-4] == (150, 100, "straight")
-        assert self.test_shape_2.points[-5] == (200, 100, "straight")
+        assert self.test_shape_2.processed_points[-1] == (100, 0, "straight")
+        assert self.test_shape_2.processed_points[-2] == (110, 45, "straight")
+        assert self.test_shape_2.processed_points[-3] == (140, 75, "straight")
+        assert self.test_shape_2.processed_points[-4] == (150, 100, "straight")
+        assert self.test_shape_2.processed_points[-5] == (200, 100, "straight")
 
         for point in self.test_shape_2.points[1:len(
                 self.test_shape_2.points) - 5]:
