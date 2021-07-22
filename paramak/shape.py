@@ -535,7 +535,8 @@ class Shape:
             for counter, value in enumerate(values):
                 if self.connection_type == 'mixed':
                     if len(value) != 3:
-                        if counter != len(values)-1:  # last point doesn't need connections
+                        if counter != len(
+                                values) - 1:  # last point doesn't need connections
                             msg = "individual points should contain 3 entries \
                                 when the Shape.connection_type is 'mixed'. \
                                 The entries should contain two coordinates \
@@ -720,7 +721,7 @@ class Shape:
 
             # obtains the last values of the points list
             connections = [p[2] for p in self.processed_points[:-1]]
-  
+
             current_linetype = connections[0]
             current_points_list = []
             instructions = []
@@ -730,7 +731,8 @@ class Shape:
                     current_points_list.append(XZ_points[i])
                 else:
                     current_points_list.append(XZ_points[i])
-                    instructions.append({current_linetype: current_points_list})
+                    instructions.append(
+                        {current_linetype: current_points_list})
                     current_linetype = connection
                     current_points_list = [XZ_points[i]]
             instructions.append({current_linetype: current_points_list})

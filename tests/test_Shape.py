@@ -448,7 +448,7 @@ class TestShape(unittest.TestCase):
         test_shape = paramak.Shape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)],
             connection_type='straight',
-            )
+        )
         test_shape.wire = None
 
         def export():
@@ -833,7 +833,6 @@ class TestShape(unittest.TestCase):
 
         self.assertRaises(ValueError, check_correct_error_is_rasied)
 
-
     def test_reuse_points_between_shapes(self):
         """Checks that points can be reused between shapes"""
         points = [
@@ -860,7 +859,7 @@ class TestShape(unittest.TestCase):
         test_shape = paramak.Shape(
             points=points
         )
-        
+
         assert test_shape.points == [
             (100, 0, "straight"),
             (200, 0, "straight"),
@@ -880,7 +879,7 @@ class TestShape(unittest.TestCase):
             points=points,
             connection_type='straight'
         )
-        
+
         assert test_shape.points == [
             (100, 0),
             (200, 0),

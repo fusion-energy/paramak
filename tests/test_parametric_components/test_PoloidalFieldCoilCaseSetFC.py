@@ -75,7 +75,7 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
             (20.0, 70.0, 'straight'),
             (80.0, 70.0, 'straight'),
             (105.0, 105.0, 'straight')
-       ]
+        ]
 
     def test_points_calculation(self):
         """Checks that the points used to construct the PoloidalFieldCoilCaseSetFC are
@@ -122,7 +122,7 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
             (20.0, 30.0),
             (20.0, 70.0),
             (80.0, 70.0),
-       ]
+        ]
 
     def test_from_pf_coil_set(self):
         """Checks that a set of PF coil cases can be constructed from a PF coils object
