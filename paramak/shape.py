@@ -1753,5 +1753,7 @@ class Shape:
             else:
                 new_points.append(self.processed_points[counter])
                 counter = counter + 1
+
+        # @jon I'm not 100% if this change is correct or not
         self.processed_points = new_points
         return new_points
