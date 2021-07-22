@@ -671,9 +671,6 @@ class Shape:
             raise ValueError(msg)
         self._azimuth_placement_angle = value
 
-    def has_points_changed(self):
-        return self.old_points == self.points
-
     def from_stp_file(self, filename: str):
         """Loads the filename using CadQuery and populates the Shape.solid
         with the contents
