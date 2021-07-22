@@ -129,6 +129,7 @@ class Shape:
         self.rotation_axis = rotation_axis
 
         # initialise to something different than self.points
+        # old_points is used in the processed_points getter
         self.old_points = 0
 
         # neutronics specific properties
@@ -481,7 +482,12 @@ class Shape:
     def processed_points(self):
         """Shape.processed_points attributes is set internally from the Shape.points"""
         if self.points is not None:
+            # if .points have changed since last time this was run
             if self.old_points != self.points:
+                # assign current .points value to .old_points
+                self.old_points = self.points
+
+                # compute .processed_points
                 if self.connection_type == "mixed":
                     values = self.points
                 else:
@@ -491,7 +497,6 @@ class Shape:
                     values.append(values[0])
 
                 self._processed_points = values
-                self.old_points = self.points
             return self._processed_points
         return None
 
@@ -518,7 +523,6 @@ class Shape:
                 self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
             self.points_hash_value = get_hash(self, ignored_keys)
-            print('set points_hash_value')
 
         return self._points
 
