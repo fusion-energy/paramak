@@ -58,7 +58,7 @@ class TestShape(unittest.TestCase):
         test_shape = paramak.Shape(
             points=points
         )
-        
+
         assert test_shape.points == [
             (100, 0),
             (200, 0),
