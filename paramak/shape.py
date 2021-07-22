@@ -477,7 +477,10 @@ class Shape:
     @property
     def processed_points(self):
         """Shape.processed_points attributes is set internally from the Shape.points"""
-        if self.points is not None:
+        # if self.points is not None:
+        ignored_keys = ["_points", "_points_hash_value"]
+        if self.points_hash_value != get_hash(self, ignored_keys):
+            print('coucou')
             # TODO this should only recalculate if Shape.points change
             if self.connection_type == "mixed":
                 values = self.points
@@ -486,8 +489,10 @@ class Shape:
             if values[0][:2] != values[-1][:2]:
                 values.append(values[0])
 
-            return values
-        return None
+            self._processed_points = values
+            # self.points_hash_value = get_hash(self, ignored_keys)
+        return self._processed_points
+        # return None
 
     @processed_points.setter
     def processed_points(self, value):
@@ -504,10 +509,10 @@ class Shape:
         Raises:
             incorrect type: only list of lists or tuples are accepted
         """
-        print('getting points')
+        # print('getting points')
         ignored_keys = ["_points", "_points_hash_value"]
-        print('points 1setter', self.points_hash_value)
-        print('points 2setter', get_hash(self, ignored_keys))
+        # print('points 1setter', self.points_hash_value)
+        # print('points 2setter', get_hash(self, ignored_keys))
         if hasattr(self, 'find_points') and \
                 self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
@@ -708,12 +713,13 @@ class Shape:
 
     def create_solid(self) -> Workplane:
         solid = None
+        print(self.processed_points)
         if self.processed_points is not None:
             # obtains the first two values of the points list
             XZ_points = [(p[0], p[1]) for p in self.processed_points]
 
             for point in self.processed_points:
-                print(point, len(point))
+                # print(point, len(point))
                 if len(point) != 3:
                     msg = "The processed_points list should contain two \
                         coordinates and a connetion type"
