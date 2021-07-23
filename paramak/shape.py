@@ -578,14 +578,6 @@ class Shape:
                             "straight", "circle" or "spline"'
                         raise ValueError(msg)
 
-            # checks that the entries in the points are either all 2 long or
-            # all 3 long, not a mixture
-            if not all(len(entry) == 2 for entry in values):
-                if not all(len(entry) == 3 for entry in values):
-                    msg = "The points tuples should contain entries of length \
-                           2 or 3 but not a mixture of 2 and 3"
-                    raise ValueError(msg)
-
             if len(values) > 1:
                 if values[0][:2] == values[-1][:2]:
                     msg = "The coordinates of the last and first points are \
