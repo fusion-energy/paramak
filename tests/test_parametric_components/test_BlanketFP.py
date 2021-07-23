@@ -216,4 +216,5 @@ class TestBlanketFP(unittest.TestCase):
             for a in w:
                 print(a.message)
             assert test_shape.solid is not None
-            assert "BlanketFP: Some points with negative R" in str(w[0].message)
+            assert "BlanketFP: Some points with negative R" in str(
+                w[0].message)
