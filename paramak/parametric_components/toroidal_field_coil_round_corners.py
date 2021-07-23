@@ -58,7 +58,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self._mid_point_coordinates = mid_point_coordinates
         self._thickness = thickness
         self._distance = distance
-        self._number_of_coils = number_of_coils
+        self.number_of_coils = number_of_coils
         self._with_inner_leg = with_inner_leg
         self._inner_leg_connection_points = []
         self._analyse_attributes = [
