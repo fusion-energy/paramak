@@ -10,11 +10,10 @@ dependencies:
   - scipy
   - numpy
   - matplotlib
-  - Pillow
+  - pillow
   - cadquery=2.1
   - moab
   - pip:
-    - neutronics-material-maker
     - remove_dagmc_tags
     - sympy
     - plasmaboundaries
