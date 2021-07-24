@@ -237,12 +237,17 @@ class TestShape(unittest.TestCase):
         def incorrect_points_end_point_is_start_point():
             """Checks ValueError is raised when the start and end points are
             the same."""
-
+            # setting straight otherwise another error is caught
+            test_shape.connection_type = "straight"
             test_shape.points = [(0, 200), (200, 100), (0, 0), (0, 200)]
 
-        self.assertRaises(
-            ValueError,
-            incorrect_points_end_point_is_start_point)
+        # check that an error is raised
+        with pytest.raises(ValueError) as err:
+            incorrect_points_end_point_is_start_point()
+
+        # check that the correct error was raised
+        expected_err_message = "The coordinates of the last and first points are"
+        assert expected_err_message in str(err.value)
 
         def incorrect_points_missing_z_value():
             """Checks ValueError is raised when a point is missing a z
