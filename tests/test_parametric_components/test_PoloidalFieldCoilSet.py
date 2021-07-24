@@ -25,14 +25,42 @@ class TestPoloidalFieldCoilSet(unittest.TestCase):
         assert self.test_shape.material_tag == "pf_coil_mat"
 
     def test_points_calculation(self):
-        """Checks that the points used to construct the PoloidalFieldCoilSet are
-        calculated correctly from the parameters given."""
+        """Checks that the points used to construct the PoloidalFieldCoilSet
+        are calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (110.0, 105.0, 'straight'), (110.0, 95.0, 'straight'), (90.0, 95.0, 'straight'),
-            (90.0, 105.0, 'straight'), (212.5, 207.5, 'straight'), (212.5, 192.5, 'straight'),
-            (187.5, 192.5, 'straight'), (187.5, 207.5, 'straight'), (315.0, 302.5, 'straight'),
-            (315.0, 297.5, 'straight'), (285.0, 297.5, 'straight'), (285.0, 302.5, 'straight'),
+            (110.0, 105.0),
+            (110.0, 95.0),
+            (90.0, 95.0),
+            (90.0, 105.0),
+            (212.5, 207.5),
+            (212.5, 192.5),
+            (187.5, 192.5),
+            (187.5, 207.5),
+            (315.0, 302.5),
+            (315.0, 297.5),
+            (285.0, 297.5),
+            (285.0, 302.5),
+        ]
+
+    def test_processed_points_calculation(self):
+        """Checks that the processed_points used to construct the
+        PoloidalFieldCoilSet are calculated correctly from the parameters
+        given."""
+
+        assert self.test_shape.processed_points == [
+            (110.0, 105.0, 'straight'),
+            (110.0, 95.0, 'straight'),
+            (90.0, 95.0, 'straight'),
+            (90.0, 105.0, 'straight'),
+            (212.5, 207.5, 'straight'),
+            (212.5, 192.5, 'straight'),
+            (187.5, 192.5, 'straight'),
+            (187.5, 207.5, 'straight'),
+            (315.0, 302.5, 'straight'),
+            (315.0, 297.5, 'straight'),
+            (285.0, 297.5, 'straight'),
+            (285.0, 302.5, 'straight'),
             (110.0, 105.0, 'straight')
         ]
 

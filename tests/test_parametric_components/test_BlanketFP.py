@@ -213,5 +213,8 @@ class TestBlanketFP(unittest.TestCase):
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
+            for a in w:
+                print(a.message)
             assert test_shape.solid is not None
-            assert len(w) == 1
+            assert "BlanketFP: Some points with negative R" in str(
+                w[0].message)

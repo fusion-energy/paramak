@@ -24,8 +24,9 @@ class TestBlanketConstantThicknessArcV(unittest.TestCase):
         assert self.test_shape.material_tag == "blanket_mat"
 
     def test_points_calculation(self):
-        """Checks that the points used to construct the BlanketConstantThicknessArcH component
-        are calculated correctly from the parameters given."""
+        """Checks that the points used to construct the
+        BlanketConstantThicknessArcH component are calculated correctly from
+        the parameters given."""
 
         assert self.test_shape.points == [
             (300, 200, 'circle'),
@@ -33,20 +34,35 @@ class TestBlanketConstantThicknessArcV(unittest.TestCase):
             (300, -200, 'straight'),
             (300, -220, 'circle'),
             (520, 0, 'circle'),
+            (300, 220, 'straight')
+        ]
+
+    def test_processed_points_calculation(self):
+        """Checks that the processed_points used to construct the
+        BlanketConstantThicknessArcH component are calculated correctly from
+        the parameters given."""
+
+        assert self.test_shape.processed_points == [
+            (300, 200, 'circle'),
+            (500, 0, 'circle'),
+            (300, -200, 'straight'),
+            (300, -220, 'circle'),
+            (520, 0, 'circle'),
             (300, 220, 'straight'),
-            (300, 200, 'circle')
+            (300, 200, 'circle'),
         ]
 
     def test_component_creation(self):
-        """Creates a blanekt using the BlanketConstantThicknessArcH parametric component and
-        checks that a cadquery solid is created."""
+        """Creates a blanekt using the BlanketConstantThicknessArcH parametric
+        component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
     def test_relative_shape_volume(self):
-        """Creates two blankets using the BlanketConstantThicknessArcV parametric component and
-        checks that their relative volumes are correct."""
+        """Creates two blankets using the BlanketConstantThicknessArcV
+        parametric component and checks that their relative volumes are
+        correct."""
 
         test_volume = self.test_shape.volume
         self.test_shape.rotation_angle = 180

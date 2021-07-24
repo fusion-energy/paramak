@@ -22,7 +22,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         stp_filename: Defaults to "BlanketCutterParallels.stp".
         stl_filename: Defaults to "BlanketCutterParallels.stl".
         name: Defaults to "blanket_cutter_Parallels".
-        material_tag: Defaults to "blanket_cutter_parallels_mat".
+        material_tag: Defaults to "blanket_cutter_mat".
         azimuth_placement_angle (float or list of floats): Defaults to [0., 36.,
             72., 108., 144., 180., 216., 252., 288., 324.].
     """
@@ -38,7 +38,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         stp_filename: Optional[str] = "BlanketCutterParallels.stp",
         stl_filename: Optional[str] = "BlanketCutterParallels.stl",
         name: Optional[str] = "blanket_cutter_parallels",
-        material_tag: Optional[str] = "blanket_cutter_parallels_mat",
+        material_tag: Optional[str] = "blanket_cutter_mat",
         **kwargs
     ) -> None:
         self.main_cutting_shape = \

@@ -8,7 +8,6 @@ import paramak
 import plotly.graph_objects as go
 import pytest
 import urllib.request
-from cadquery.cq import Workplane
 from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
                            add_stl_to_moab_core, define_moab_core_and_tags,
                            extract_points_from_edges, facet_wire,
@@ -17,6 +16,10 @@ from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
 
 class TestUtilityFunctions(unittest.TestCase):
 
+    # TODO move this test to paramak-neutronics
+    # make_watertight command line tool is to be replaced with watertight when outputting from trelis
+    # make_watertight is a dagmc tool so it is not included in the paramak (geometry only)
+    # dagmc is included in paramak-neutronics
     def test_make_watertight_cmd_with_example_dagmc_file(self):
         """downloads a h5m and makes it watertight, checks the the watertight
         file is produced."""

@@ -16,7 +16,7 @@ class RotateSplineShape(RotateMixedShape):
 
     def __init__(
         self,
-        rotation_angle: Optional[float] = 360,
+        rotation_angle: Optional[float] = 360.,
         stp_filename: Optional[str] = "RotateSplineShape.stp",
         stl_filename: Optional[str] = "RotateSplineShape.stl",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.415, 0.239, 0.603),

@@ -1,10 +1,9 @@
+
 from math import pi
-from _pytest.warning_types import PytestWarning
+
+import pytest
 from attr.setters import NO_OP
 from paramak import ToroidalFieldCoilRectangleRoundCorners
-from py import test
-import py
-import pytest
 
 obj = ToroidalFieldCoilRectangleRoundCorners(
     lower_inner_coordinates=(50, 0),

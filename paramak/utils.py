@@ -689,7 +689,7 @@ def add_thickness(x: List[float], y: List[float], thickness: float,
     return x_outer, y_outer
 
 
-def get_hash(shape, ignored_keys: List) -> str:
+def get_hash(shape, ignored_keys: List = None) -> str:
     """Computes a unique hash vaue for the shape.
 
     Args:

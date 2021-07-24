@@ -28,8 +28,27 @@ class TestBlanketConstantThicknessArcH(unittest.TestCase):
         are calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (300, 200, 'circle'), (500, 0, 'circle'), (300, -200, 'straight'), (320, -200, 'circle'),
-            (520, 0, 'circle'), (320, 200, 'straight'), (300, 200, 'circle')
+            (300, 200, 'circle'),
+            (500, 0, 'circle'),
+            (300, -200, 'straight'),
+            (320, -200, 'circle'),
+            (520, 0, 'circle'),
+            (320, 200, 'straight')
+        ]
+
+    def test_processed_points_calculation(self):
+        """Checks that the processed_points used to construct the
+        BlanketConstantThicknessArcH component are calculated correctly from
+        the parameters given."""
+
+        assert self.test_shape.processed_points == [
+            (300, 200, 'circle'),
+            (500, 0, 'circle'),
+            (300, -200, 'straight'),
+            (320, -200, 'circle'),
+            (520, 0, 'circle'),
+            (320, 200, 'straight'),
+            (300, 200, 'circle')
         ]
 
     def test_component_creation(self):

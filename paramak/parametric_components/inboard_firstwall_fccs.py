@@ -152,8 +152,8 @@ class InboardFirstwallFCCS(RotateMixedShape):
             )
 
         firstwall.rotation_angle = self.rotation_angle
-        points = firstwall.points[:-1]  # remove last point
-        self.points = points
+        self.connection_type = firstwall.connection_type
+        self.points = firstwall.points
 
         # add to cut attribute
         if self.cut is None:

@@ -23,12 +23,25 @@ class TestPoloidalFieldCoil(unittest.TestCase):
         assert self.test_shape.material_tag == "pf_coil_mat"
 
     def test_points_calculation(self):
-        """Checks that the points used to construct the PoloidalFieldCoil are calculated
-        correctly from the parameters given."""
+        """Checks that the points used to construct the PoloidalFieldCoil are
+        calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (1030.0, 525.0, 'straight'), (1030.0, 475.0, 'straight'),
-            (970.0, 475.0, 'straight'), (970.0, 525.0, 'straight'),
+            (1030.0, 525.0),
+            (1030.0, 475.0),
+            (970.0, 475.0),
+            (970.0, 525.0),
+        ]
+
+    def test_processed_points_calculation(self):
+        """Checks that the processed points used to construct the PoloidalFieldCoil are
+        calculated correctly from the parameters given."""
+
+        assert self.test_shape.processed_points == [
+            (1030.0, 525.0, 'straight'),
+            (1030.0, 475.0, 'straight'),
+            (970.0, 475.0, 'straight'),
+            (970.0, 525.0, 'straight'),
             (1030.0, 525.0, 'straight')
         ]
 
