@@ -1,20 +1,19 @@
 name: docs-environment
 
 channels:
-  - conda-forge
   - cadquery
+  - conda-forge
 
 dependencies:
+  - cadquery=2.1
   - pytest
   - plotly
   - scipy
   - numpy
   - matplotlib
-  - Pillow
-  - cadquery=2.1
+  - pillow
   - moab
   - pip:
-    - neutronics-material-maker
     - remove_dagmc_tags
     - sympy
     - plasmaboundaries

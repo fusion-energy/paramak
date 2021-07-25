@@ -1,0 +1,4 @@
+python:
+    - 3.8
+cadquery:
+    - 2.1

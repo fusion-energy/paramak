@@ -1,7 +1,13 @@
 
+#assumes anaconda-client and conda-build have been installed
+# conda install anaconda-client
+# conda install conda-build
+# anaconda login
+
 pkg='paramak'
 array=( 3.6 3.7 3.8 )
 
+mkdir -p /tmp/conda-build
 rm -rf /tmp/conda-build
 
 for i in "${array[@]}"
@@ -24,10 +30,9 @@ do
     done
 done
 
-# conda install anaconda-client
 
-# find /tmp/conda-build/ -name *.tar.bz2 | while read file
-# do
-#     echo $file
-#     anaconda upload $file
-# done
+find /tmp/conda-build/ -name *.tar.bz2 | while read file
+do
+    echo $file
+    anaconda upload $file
+done
