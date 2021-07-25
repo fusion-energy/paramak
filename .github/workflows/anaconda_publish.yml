@@ -2,6 +2,9 @@ name: publish_conda
 
 on:
   workflow_dispatch:
+  push:
+    branches: 
+    - automated_conda_build
   release:
     types: [published]
     
