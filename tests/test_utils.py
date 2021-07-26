@@ -20,23 +20,23 @@ class TestUtilityFunctions(unittest.TestCase):
     # make_watertight command line tool is to be replaced with watertight when outputting from trelis
     # make_watertight is a dagmc tool so it is not included in the paramak (geometry only)
     # dagmc is included in paramak-neutronics
-    def test_make_watertight_cmd_with_example_dagmc_file(self):
-        """downloads a h5m and makes it watertight, checks the the watertight
-        file is produced."""
+    # def test_make_watertight_cmd_with_example_dagmc_file(self):
+    #     """downloads a h5m and makes it watertight, checks the the watertight
+    #     file is produced."""
 
-        os.system('rm *.h5m')
+    #     os.system('rm *.h5m')
 
-        url = 'https://github.com/Shimwell/fusion_example_for_openmc_using_paramak/raw/main/dagmc.h5m'
-        urllib.request.urlretrieve(url, 'not_watertight_dagmc.h5m')
+    #     url = 'https://github.com/Shimwell/fusion_example_for_openmc_using_paramak/raw/main/dagmc.h5m'
+    #     urllib.request.urlretrieve(url, 'not_watertight_dagmc.h5m')
 
-        output_filename = paramak.utils.make_watertight(
-            input_filename="not_watertight_dagmc.h5m",
-            output_filename="watertight_dagmc.h5m"
-        )
+    #     output_filename = paramak.utils.make_watertight(
+    #         input_filename="not_watertight_dagmc.h5m",
+    #         output_filename="watertight_dagmc.h5m"
+    #     )
 
-        assert Path("not_watertight_dagmc.h5m").exists() is True
-        assert output_filename == "watertight_dagmc.h5m"
-        assert Path("watertight_dagmc.h5m").exists() is True
+    #     assert Path("not_watertight_dagmc.h5m").exists() is True
+    #     assert output_filename == "watertight_dagmc.h5m"
+    #     assert Path("watertight_dagmc.h5m").exists() is True
 
     def test_export_vtk_without_h5m_raises_error(self):
         """exports a vtk file when shapes_and_components is set to a string"""
