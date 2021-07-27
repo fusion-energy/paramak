@@ -469,7 +469,7 @@ class TestShape(unittest.TestCase):
         )
 
         os.system("rm filename.html")
-        filename= test_shape.export_html_3d('filename.html')
+        filename = test_shape.export_html_3d('filename.html')
         if filename is not None:
             assert Path("filename.html").exists() is True
 

@@ -679,10 +679,11 @@ class Shape:
         show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
 
         try:
-            from jupyter_cadquery.cadquery import Part, PartGroup                  
+            from jupyter_cadquery.cadquery import Part, PartGroup
         except ImportError:
             print('To use Shape.show() you must install jupyter_cadquery.')
-            print('To install jupyter_cadquery type pip install jupyter_cadquery in the terminal')
+            print(
+                'To install jupyter_cadquery type pip install jupyter_cadquery in the terminal')
             return None
 
         parts = []
