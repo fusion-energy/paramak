@@ -107,21 +107,6 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             test_incorrect_gap_size
         )
 
-    def test_gap_size(self):
-        """Checks that a ValueError is raised when a too large gap_size is
-        used."""
-
-        def test_incorrect_gap_size():
-            self.test_shape.inner_radius = 20
-            self.test_shape.outer_radius = 40
-            self.test_shape.gap_size = 50
-            self.test_shape.solid
-
-        self.assertRaises(
-            ValueError,
-            test_incorrect_gap_size
-        )
-
     def test_inner_radius_type(self):
         """Checks that a ValueError is raised when inner_radius_type is not a
         valid option."""
