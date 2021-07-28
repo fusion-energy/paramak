@@ -37,7 +37,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         outer_radius: float,
         number_of_coils: int,
         gap_size: float,
-        inner_radius_type: Optional[str]='corner',
+        inner_radius_type: Optional[str] = 'corner',
         azimuth_start_angle: Optional[float] = 0.0,
         stp_filename: Optional[str] = "InnerTfCoilsFlat.stp",
         stl_filename: Optional[str] = "InnerTfCoilsFlat.stl",
@@ -81,7 +81,8 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     @inner_radius_type.setter
     def inner_radius_type(self, value):
         if value not in ['corner', 'straight']:
-            msg = 'inner_radius_type must be either "corner" or "straight". Not {}'.format(value)
+            msg = 'inner_radius_type must be either "corner" or "straight". Not {}'.format(
+                value)
             raise ValueError(msg)
         self._inner_radius_type = value
 
@@ -145,7 +146,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     def find_points(self):
         """Finds the points that describe the 2D profile of the tf coil shape"""
 
-
         #        p4
         #        /¦
         #       / ¦
@@ -163,11 +163,14 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         if self.inner_radius_type == 'corner':
             distance_to_inner_corner = self.inner_radius
             distance_to_rear_corner = self.outer_radius
-        # this section calculates a new distance to the corners now that we know the user provided the distance to the straight
+        # this section calculates a new distance to the corners now that we
+        # know the user provided the distance to the straight
         if self.inner_radius_type == 'straight':
             angle = 360 / (self.number_of_coils * 2)
-            distance_to_inner_corner = self.inner_radius / math.cos(math.radians(angle))
-            distance_to_rear_corner = self.outer_radius / math.cos(math.radians(angle))
+            distance_to_inner_corner = self.inner_radius / \
+                math.cos(math.radians(angle))
+            distance_to_rear_corner = self.outer_radius / \
+                math.cos(math.radians(angle))
             print('distance_to_inner_corner', distance_to_inner_corner)
 
         if self.gap_size * self.number_of_coils > 2 * math.pi * distance_to_inner_corner:
@@ -214,7 +217,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
                 + distance_to_rear_corner * math.sin(theta_outer) * math.cos(-omega_outer)
             ),
         )
-
 
         points = [
             (point_1[0], point_1[1]),
