@@ -15,6 +15,15 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             gap_size=5
         )
 
+        self.test_shape2 = paramak.InnerTfCoilsFlat(
+            height=500,
+            inner_radius=50,
+            outer_radius=150,
+            number_of_coils=6,
+            gap_size=5,
+            inner_radius_type='straight'
+        )
+
     def test_default_parameters(self):
         """Checks that the default parameters of an InnerTfCoilsFlat are correct."""
 
@@ -25,6 +34,7 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         assert self.test_shape.material_tag == "inner_tf_coil_mat"
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.rotation_axis == "Z"
+        assert self.test_shape.inner_radius_type == "corner"
 
     def test_points_calculation(self):
         """Checks that the points used to construct the InnerTfCoilsFlat
@@ -96,3 +106,21 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             ValueError,
             test_incorrect_gap_size
         )
+
+    def test_inner_radius_type(self):
+        """Checks that a ValueError is raised when inner_radius_type is not a
+        valid option."""
+
+        def test_incorrect_inner_radius_type():
+            self.test_shape.inner_radius_type = 'coucou'
+
+        self.assertRaises(
+            ValueError,
+            test_incorrect_inner_radius_type
+        )
+
+    def test_volume_changes_with_inner_radius_type(self):
+        """When the radius args are set to the straight edge the resulting
+        solid should be smaller"""
+
+        assert self.test_shape.volume < self.test_shape2.volume
