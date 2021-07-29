@@ -102,9 +102,9 @@ def trelis_command_to_create_dagmc_h5m(
     os.system('rm dagmc_not_watertight.h5m')
 
     if batch:
-        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION=1 coreform_cubit -batch -nographics'
+        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION_CHECK=1 coreform_cubit -batch -nographics'
     else:
-        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION=1 coreform_cubit'
+        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION_CHECK=1 coreform_cubit'
 
     os.system(
         cubit_cmd +
