@@ -89,7 +89,7 @@ def trelis_command_to_create_dagmc_h5m(
             path_output_filenames.append(str(path_filename))
 
     shutil.copy(
-        src=Path(__file__).parent.absolute() / Path('parametric') /
+        src=Path(__file__).parent.absolute() /
         'make_faceteted_neutronics_model.py',
         dst=Path().absolute()
     )
