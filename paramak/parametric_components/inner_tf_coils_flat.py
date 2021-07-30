@@ -174,16 +174,18 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
                 math.cos(math.radians(angle))
 
         if self.gap_size * self.number_of_coils > 2 * math.pi * distance_to_inner_corner:
-            msg = ('Gap_size is too large. The gap_size * number of coils must '
-                    'be less than the circumference of the circle made by '
-                    'the inner_radius')
+            msg = (
+                'Gap_size is too large. The gap_size * number of coils must '
+                'be less than the circumference of the circle made by '
+                'the inner_radius')
             raise ValueError(msg)
 
         if distance_to_inner_corner != 0.:
             theta_inner = (
                 (2 * math.pi * distance_to_inner_corner) - (self.gap_size * self.number_of_coils)
             ) / (distance_to_inner_corner * self.number_of_coils)
-            omega_inner = math.asin(self.gap_size / (2 * distance_to_inner_corner))
+            omega_inner = math.asin(
+                self.gap_size / (2 * distance_to_inner_corner))
 
             # inner points
             point_1 = (
@@ -206,9 +208,8 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             ]
 
         else:
-   
-            points = [(0,0)]
 
+            points = [(0, 0)]
 
         # print(point_1)
         # print(point_2)
