@@ -2,6 +2,7 @@
 import unittest
 
 import paramak
+import pytest
 
 
 class TestInnerTfCoilsFlat(unittest.TestCase):
@@ -21,7 +22,17 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             outer_radius=150,
             number_of_coils=6,
             gap_size=5,
-            inner_radius_type='straight'
+            radius_type='straight'
+        )
+
+        # hexagon with 0 inner radius
+        self.test_shape_3 = paramak.InnerTfCoilsFlat(
+            height=10,
+            inner_radius=0,
+            outer_radius=20,
+            number_of_coils=6,
+            gap_size=0,
+            radius_type='straight',
         )
 
     def test_default_parameters(self):
@@ -34,7 +45,7 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         assert self.test_shape.material_tag == "inner_tf_coil_mat"
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.rotation_axis == "Z"
-        assert self.test_shape.inner_radius_type == "corner"
+        assert self.test_shape.radius_type == "corner"
 
     def test_points_calculation(self):
         """Checks that the points used to construct the InnerTfCoilsFlat
@@ -107,20 +118,41 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             test_incorrect_gap_size
         )
 
-    def test_inner_radius_type(self):
-        """Checks that a ValueError is raised when inner_radius_type is not a
+    def test_radius_type(self):
+        """Checks that a ValueError is raised when radius_type is not a
         valid option."""
 
-        def test_incorrect_inner_radius_type():
-            self.test_shape.inner_radius_type = 'coucou'
+        def test_incorrect_radius_type():
+            self.test_shape.radius_type = 'coucou'
 
         self.assertRaises(
             ValueError,
-            test_incorrect_inner_radius_type
+            test_incorrect_radius_type
         )
 
-    def test_volume_changes_with_inner_radius_type(self):
-        """When the radius args are set to the straight edge the resulting
-        solid should be smaller"""
+    def test_volume_changes_with_radius_type(self):
+        """Checks the analytical volume of the hex shaped extrusion and
+        that adding a hole reduces voulume."""
 
-        assert self.test_shape.volume < self.test_shape2.volume
+        hex_volume = self.test_shape_3.volume
+        hex_with_hole = self.test_shape_3
+        hex_with_hole.inner_radius = 1
+
+        assert hex_volume > hex_with_hole.volume
+        assert pytest.approx(hex_volume, abs=0.5) == 1385.6 * 10
+
+    def test_volume_changes_with_radius_type_for_corners(self):
+        """Checks the analytical volume of the hex shaped extrusion and
+        that adding a hole reduces voulume when the radius is to the corners."""
+
+        hex = self.test_shape_3
+        hex.radius_type = 'corner'
+        hex_volume = hex.volume
+
+        assert pytest.approx(hex_volume, abs=0.5) == 1039.2 * 10
+
+        hex_with_hole = self.test_shape_3
+        hex_with_hole.radius_type = 'corner'
+        hex_with_hole.inner_radius = 2
+
+        assert hex_volume > hex_with_hole.volume
