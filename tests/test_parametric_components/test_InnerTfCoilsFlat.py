@@ -145,9 +145,9 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         """Checks the analytical volume of the hex shaped extrusion and
         that adding a hole reduces voulume when the radius is to the corners."""
 
-        hex = self.test_shape_3
-        hex.radius_type = 'corner'
-        hex_volume = hex.volume
+        hex_shape = self.test_shape_3
+        hex_shape.radius_type = 'corner'
+        hex_volume = hex_shape.volume
 
         assert pytest.approx(hex_volume, abs=0.5) == 1039.2 * 10
 
