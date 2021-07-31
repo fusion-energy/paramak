@@ -5,6 +5,9 @@ These are components that represent a selection of the components found in fusio
 reactors and are created from parameters. These components all inherit from the 
 parametric Shape classes.
 
+Blankets
+---------
+
 BlanketConstantThicknessArcH()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -54,42 +57,6 @@ BlanketConstantThicknessArcV()
 .. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_v
    :members:
    :show-inheritance:
-
-
-BlanketCutterParallels()
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
-   :width: 400
-
-.. automodule:: paramak.parametric_components.blanket_cutter_parallels
-   :members:
-   :show-inheritance:
-
-
-BlanketCutterStar()
-^^^^^^^^^^^^^^^^^^^
-
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.BlanketCutterStar(
-    height=2000,
-    width=2000,
-    distance=100
-   )
-
-   cadquery_object = my_component.solid
-
-.. image:: https://user-images.githubusercontent.com/8583900/97103794-b0b58380-16a6-11eb-86f0-fb5530d630af.png
-   :width: 400
-
-.. automodule:: paramak.parametric_components.blanket_cutters_star
-   :members:
-   :show-inheritance:
-
 
 BlanketFP()
 ^^^^^^^^^^^
@@ -143,6 +110,123 @@ BlanketFPPoloidalSegments()
    :members:
    :show-inheritance:
 
+BlanketFP()
+^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketFP(
+      thickness=100,
+      stop_angle=-80,
+      start_angle=250,
+      offset_from_plasma=30,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
+.. image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
+   :width: 350
+
+.. automodule:: paramak.parametric_components.blanket_fp
+   :members:
+   :show-inheritance:
+
+BlanketFPPoloidalSegments()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketFPPoloidalSegments(
+      num_segments=7,
+      segments_gap = 10,
+      thickness=100,
+      stop_angle=250,
+      start_angle=-90,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
+.. image:: https://user-images.githubusercontent.com/8583900/98870151-ca0e4c00-246a-11eb-8a37-e7620344d8c1.png
+   :width: 350
+
+.. automodule:: paramak.parametric_components.blanket_poloidal_segment
+   :members:
+   :show-inheritance:
+
+
+Blanket Cutting Tools
+---------------------
+
+BlanketCutterParallels()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
+   :width: 400
+
+.. automodule:: paramak.parametric_components.blanket_cutter_parallels
+   :members:
+   :show-inheritance:
+
+
+BlanketCutterStar()
+^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketCutterStar(
+    height=2000,
+    width=2000,
+    distance=100
+   )
+
+   cadquery_object = my_component.solid
+
+.. image:: https://user-images.githubusercontent.com/8583900/97103794-b0b58380-16a6-11eb-86f0-fb5530d630af.png
+   :width: 400
+
+.. automodule:: paramak.parametric_components.blanket_cutters_star
+   :members:
+   :show-inheritance:
+
+PoloidalSegmenter()
+^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalSegments(
+      shape_to_segment=None,
+      center_point=(450, 0),
+      number_of_segments=10,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
+.. image:: https://user-images.githubusercontent.com/8583900/93811079-84da5480-fc47-11ea-9c6c-7fd132f6d72d.png
+    :width: 605px
+    :align: center
+
+.. automodule:: paramak.parametric_components.poloidal_segmenter
+   :members:
+   :show-inheritance:
+
+
+Center Columns
+--------------
 
 CenterColumnShieldCylinder()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -271,6 +355,10 @@ CenterColumnShieldPlasmaHyperbola()
    :members:
    :show-inheritance:
 
+
+Coolant Channels
+----------------
+
 CoolantChannelRingStraight()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -313,6 +401,10 @@ CoolantChannelRingCurved()
    :members:
    :show-inheritance:
 
+
+Cutting Tools
+-------------
+
 CuttingWedge()
 ^^^^^^^^^^^^^^
 
@@ -337,42 +429,6 @@ CuttingWedgeFS()
    :members:
    :show-inheritance:
 
-
-ExtrudeRectangle()
-^^^^^^^^^^^^^^^^^^
-
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component =  paramak.ExtrudeRectangle(
-       height=10,
-       width= 10,
-       distance=20,
-       center_point=(20, 20)
-   )
-
-   cadquery_object = my_component.solid
-
-.. automodule:: paramak.parametric_components.extrude_rectangle
-   :members:
-   :show-inheritance:
-
-HexagonPin()
-^^^^^^^^^^^^
-
-|HexagonPinstp| |HexagonPinsvg|
-
-.. |HexagonPinstp| image:: https://user-images.githubusercontent.com/8583900/107092190-07307300-67fb-11eb-995c-b5622de717ee.png
-    :width: 300px
-.. |HexagonPinsvg| image:: https://user-images.githubusercontent.com/8583900/107092487-9c336c00-67fb-11eb-8eb1-755462493140.png
-    :width: 300px
-
-.. automodule:: paramak.parametric_components.hexagon_pin
-   :members:
-   :show-inheritance:
-
 InboardFirstwallFCCS()
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -383,6 +439,10 @@ InboardFirstwallFCCS()
 .. automodule:: paramak.parametric_components.inboard_firstwall_fccs
    :members:
    :show-inheritance:
+
+
+Divertors
+---------
 
 ITERtypeDivertor()
 ^^^^^^^^^^^^^^^^^^
@@ -407,6 +467,10 @@ ITERtypeDivertorNoDome()
 .. autoclass:: ITERtypeDivertorNoDome
    :members:
    :show-inheritance:
+
+
+Inner Toroidal Field Coils
+--------------------------
 
 InnerTfCoilsCircular()
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -435,6 +499,10 @@ InnerTfCoilsFlat()
 .. automodule:: paramak.parametric_components.inner_tf_coils_flat
    :members:
    :show-inheritance:
+
+
+Poloidal Field coils
+--------------------
 
 PoloidalFieldCoil()
 ^^^^^^^^^^^^^^^^^^^
@@ -522,30 +590,9 @@ PoloidalFieldCoilCaseSetFC()
    :members:
    :show-inheritance:
 
-PoloidalSegmenter()
-^^^^^^^^^^^^^^^^^^^
 
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.PoloidalSegments(
-      shape_to_segment=None,
-      center_point=(450, 0),
-      number_of_segments=10,
-      rotation_angle=180,
-   )
-
-   cadquery_object = my_component.solid
-
-.. image:: https://user-images.githubusercontent.com/8583900/93811079-84da5480-fc47-11ea-9c6c-7fd132f6d72d.png
-    :width: 605px
-    :align: center
-
-.. automodule:: paramak.parametric_components.poloidal_segmenter
-   :members:
-   :show-inheritance:
+Port Cutters
+------------
 
 PortCutterRotated()
 ^^^^^^^^^^^^^^^^^^^
@@ -589,6 +636,10 @@ PortCutterCircular()
    :members:
    :show-inheritance:
 
+
+Plasmas
+-------
+
 Plasma()
 ^^^^^^^^
 
@@ -626,6 +677,10 @@ PlasmaBoundaries()
 .. automodule:: paramak.parametric_components.tokamak_plasma_plasmaboundaries
    :members:
    :show-inheritance:
+
+
+Toroidal Field Coils
+--------------------
 
 TFCoilCasing()
 ^^^^^^^^^^^^^^
@@ -708,6 +763,79 @@ ToroidalFieldCoilTripleArc()
    :members:
    :show-inheritance:
 
+
+ToroidalFieldCoilRectangleRoundCorners()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilRectangleRoundCorners(
+      with_inner_leg=False,
+      lower_inner_coordinates=(0, 0),
+      mid_point_coordinates=(100, 100),
+      thickness=30,
+      number_of_coils=1,
+      distance=20,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
+|TFCoilRoundCornersvg| |TFCoilRoundCornersvg2| |TFCoilRoundCornerstp|
+
+.. |TFCoilRoundCornersvg| image:: https://user-images.githubusercontent.com/85617935/125979064-c9aff900-4a07-462d-91bd-53af3bc66559.png
+   :width: 255
+.. |TFCoilRoundCornersvg2| image:: https://user-images.githubusercontent.com/85617935/125979248-1dbbd7be-916b-4921-86ed-a942b6cda757.png
+   :width: 255
+.. |TFCoilRoundCornerstp| image:: https://user-images.githubusercontent.com/85617935/125977357-3b893496-fc6b-4f06-8a95-10164cb70d7c.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.toroidal_field_coil_round_corners
+   :members:
+   :show-inheritance:
+
+
+Other components
+----------------
+
+ExtrudeRectangle()
+^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component =  paramak.ExtrudeRectangle(
+       height=10,
+       width= 10,
+       distance=20,
+       center_point=(20, 20)
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_components.extrude_rectangle
+   :members:
+   :show-inheritance:
+
+HexagonPin()
+^^^^^^^^^^^^
+
+|HexagonPinstp| |HexagonPinsvg|
+
+.. |HexagonPinstp| image:: https://user-images.githubusercontent.com/8583900/107092190-07307300-67fb-11eb-995c-b5622de717ee.png
+    :width: 300px
+.. |HexagonPinsvg| image:: https://user-images.githubusercontent.com/8583900/107092487-9c336c00-67fb-11eb-8eb1-755462493140.png
+    :width: 300px
+
+.. automodule:: paramak.parametric_components.hexagon_pin
+   :members:
+   :show-inheritance:
+
 RotatedTrapezoid()
 ^^^^^^^^^^^^^^^^^^
 
@@ -735,6 +863,10 @@ RotatedIsoscelesTriangle
 .. automodule:: paramak.parametric_components.rotated_isosceles_triangle
    :members:
    :show-inheritance:
+
+
+Vacuum Vacuums
+--------------
 
 VacuumVessel()
 ^^^^^^^^^^^^^^
@@ -786,38 +918,5 @@ CapsuleVacuumVessel()
    :width: 255
 
 .. automodule:: paramak.parametric_components.capsule_vacuum_vessel
-   :members:
-   :show-inheritance:
-
-ToroidalFieldCoilRectangleRoundCorners()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.ToroidalFieldCoilRectangleRoundCorners(
-      with_inner_leg=False,
-      lower_inner_coordinates=(0, 0),
-      mid_point_coordinates=(100, 100),
-      thickness=30,
-      number_of_coils=1,
-      distance=20,
-      rotation_angle=180,
-   )
-
-   cadquery_object = my_component.solid
-
-|TFCoilRoundCornersvg| |TFCoilRoundCornersvg2| |TFCoilRoundCornerstp|
-
-.. |TFCoilRoundCornersvg| image:: https://user-images.githubusercontent.com/85617935/125979064-c9aff900-4a07-462d-91bd-53af3bc66559.png
-   :width: 255
-.. |TFCoilRoundCornersvg2| image:: https://user-images.githubusercontent.com/85617935/125979248-1dbbd7be-916b-4921-86ed-a942b6cda757.png
-   :width: 255
-.. |TFCoilRoundCornerstp| image:: https://user-images.githubusercontent.com/85617935/125977357-3b893496-fc6b-4f06-8a95-10164cb70d7c.png
-   :width: 255
-
-.. automodule:: paramak.parametric_components.toroidal_field_coil_round_corners
    :members:
    :show-inheritance:
