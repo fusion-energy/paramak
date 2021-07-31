@@ -48,8 +48,8 @@ class CapsuleVacuumVessel(RotateMixedShape):
             raise ValueError(
                 'VacuumVessel.radius must be a number. Not', value)
         if value <= 0:
-            msg = (f'VacuumVessel.radius must be a positive number above 0. '
-                   'Not {value}')
+            msg = ('VacuumVessel.radius must be a positive number above 0. '
+                   f'Not {value}')
             raise ValueError(msg)
         self._radius = value
 

@@ -545,10 +545,10 @@ class Shape:
                         if counter != len(
                                 values) - 1:  # last point doesn't need connections
                             msg = (
-                                f'individual points should contain 3 '
+                                'individual points should contain 3 '
                                 'entries when the Shape.connection_type is '
                                 '"mixed". The entries should contain two '
-                                'coordinates and a connection type. {value} '
+                                f'coordinates and a connection type. {value} '
                                 'has a length of {len(value)}')
                             print(values)
                             raise ValueError(msg)
