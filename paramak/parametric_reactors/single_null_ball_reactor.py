@@ -14,7 +14,7 @@ class SingleNullBallReactor(paramak.BallReactor):
 
     def __init__(
         self,
-        divertor_position="upper",
+        divertor_position: str = "upper",
         **kwargs
     ):
 

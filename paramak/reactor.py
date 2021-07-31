@@ -36,8 +36,8 @@ class Reactor:
             the geometry. The list of dictionaries should each have a
             "material" key containing a material_tag value and a "stp_filename"
             key containing the path to the stp file. See the
-            external_stp_file_simulation.py neutronics for a complete example.
-            https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/external_stp_file_simulation.py
+            external_stp_file_simulation.py script in the examples folder for a
+            complete example.
         faceting_tolerance: the tolerance to use when faceting surfaces.
         merge_tolerance: the tolerance to use when merging surfaces.
         method: The method to use when making the h5m geometry. Options are
@@ -92,8 +92,8 @@ class Reactor:
     @method.setter
     def method(self, value):
         if value not in ['trelis', 'pymoab']:
-            raise ValueError("the method using in should be either trelis, \
-                pymoab. {} is not an option".format(value))
+            raise ValueError(f'the method using in should be either trelis, \
+                pymoab. {value} is not an option')
         self._method = value
 
     @property
@@ -131,13 +131,12 @@ class Reactor:
     @faceting_tolerance.setter
     def faceting_tolerance(self, value):
         if not isinstance(value, (int, float)):
-            raise TypeError(
-                "Reactor.faceting_tolerance should be a\
-                number (floats or ints are accepted)")
+            msg = ('Reactor.faceting_tolerance should be a number (floats or '
+                   'ints are accepted)')
+            raise TypeError(msg)
         if value < 0:
             raise ValueError(
-                "Reactor.faceting_tolerance should be a\
-                positive number")
+                "Reactor.faceting_tolerance should be a positive number")
         self._faceting_tolerance = value
 
     @property
@@ -147,13 +146,12 @@ class Reactor:
     @merge_tolerance.setter
     def merge_tolerance(self, value):
         if not isinstance(value, (int, float)):
-            raise TypeError(
-                "Reactor.merge_tolerance should be a\
-                number (floats or ints are accepted)")
+            msg = ('Reactor.merge_tolerance should be a number (floats or '
+                   'ints are accepted)')
+            raise TypeError(msg)
         if value < 0:
             raise ValueError(
-                "Reactor.merge_tolerance should be a\
-                positive number")
+                "Reactor.merge_tolerance should be a positive number")
         self._merge_tolerance = value
 
     @property
@@ -629,9 +627,9 @@ class Reactor:
         filenames = []
         for entry in self.shapes_and_components:
             if entry.stl_filename is None:
-                raise ValueError(
-                    "set .stl_filename attribute for Shapes before using the Reactor.export_stl method"
-                )
+                msg = ('set .stl_filename attribute for all Shapes before '
+                       'using the Reactor.export_stl method')
+                raise ValueError(msg)
 
             filename = entry.export_stl(
                 filename=Path(output_folder) / entry.stl_filename,
@@ -753,8 +751,8 @@ class Reactor:
             )
 
         else:
-            raise ValueError("the method using in should be either trelis, \
-                pymoab. {} is not an option".format(method))
+            raise ValueError('the method using in should be either trelis, \
+                pymoab. {method} is not an option')
 
         return output_filename
 
@@ -866,15 +864,18 @@ class Reactor:
             )
         elif isinstance(self.shapes_and_components, str):
             if not Path(self.shapes_and_components).is_file():
-                raise FileNotFoundError("The filename entered as the geometry \
-                    argument {} does not exist".format(self.shapes_and_components))
+                raise FileNotFoundError(
+                    f'The filename entered as the geometry \
+                    argument {self.shapes_and_components} does not exist')
             if self.shapes_and_components != 'manifest.json':
                 shutil.copy(
                     src=self.shapes_and_components,
                     dst='manifest.json')
         else:
-            raise ValueError(
-                "shapes_and_components must be a list of paramak.Shape or a filename")
+            msg = (
+                'shapes_and_components must be a list of paramak.Shape or a '
+                'filename')
+            raise ValueError(msg)
 
         not_watertight_file = paramak.utils.trelis_command_to_create_dagmc_h5m(
             faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
@@ -1028,10 +1029,10 @@ class Reactor:
         filenames = []
         for entry in self.shapes_and_components:
             if entry.stp_filename is None:
-                raise ValueError(
-                    "set .stp_filename property for \
-                                 Shapes before using the export_stp method"
-                )
+                msg = (
+                    'set .stp_filename property for Shapes before using the '
+                    'export_stp method')
+                raise ValueError(msg)
             filenames.append(
                 str(Path(output_folder) / Path(entry.stp_filename)))
             entry.export_physical_groups(

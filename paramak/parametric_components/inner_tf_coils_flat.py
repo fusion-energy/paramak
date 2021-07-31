@@ -81,8 +81,8 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     @radius_type.setter
     def radius_type(self, value):
         if value not in ['corner', 'straight']:
-            msg = 'radius_type must be either "corner" or "straight". Not {}'.format(
-                value)
+            msg = (
+                f'radius_type must be either "corner" or "straight". Not {value}')
             raise ValueError(msg)
         self._radius_type = value
 

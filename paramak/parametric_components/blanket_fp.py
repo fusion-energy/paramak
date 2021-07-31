@@ -1,10 +1,14 @@
 
 import warnings
+from typing import Callable, List, Optional, Union
 
 import mpmath
 import numpy as np
+import paramak
 import sympy as sp
 from paramak import RotateMixedShape, diff_between_angles
+from paramak.parametric_components.tokamak_plasma_plasmaboundaries import \
+    PlasmaBoundaries
 from scipy.interpolate import interp1d
 
 
@@ -20,53 +24,46 @@ class BlanketFP(RotateMixedShape):
             will be a function of poloidal angle (in degrees). If thickness is
             a list of two lists (thicknesses and angles) then these will be
             used together with linear interpolation.
-        start_angle (float): the angle in degrees to start the blanket,
-            measured anti clockwise from 3 o'clock.
-        stop_angle (float): the angle in degrees to stop the blanket, measured
-            anti clockwise from 3 o'clock.
-        plasma (paramak.Plasma, optional): If not None, the parameters of the
-            plasma Object will be used. Defaults to None.
-        minor_radius (float, optional): the minor radius of the plasma (cm).
-            Defaults to 150.0.
-        major_radius (float, optional): the major radius of the plasma (cm).
-            Defaults to 450.0.
-        triangularity (float, optional): the triangularity of the plasma.
-            Defaults to 0.55.
-        elongation (float, optional): the elongation of the plasma. Defaults
-            to 2.0.
-        vertical_displacement (float, optional): the vertical_displacement of
-            the plasma (cm). Defaults to 0.
-        offset_from_plasma (float, optional): the distance between the plasma
-            and the blanket (cm). If float, constant offset. If list of floats,
-            offset will vary linearly between the values. If callable, offset
-            will be a function of poloidal angle (in degrees). If a list of
-            two lists (angles and offsets) then these will be used together
-            with linear interpolation. Defaults to 0.0.
-        num_points (int, optional): number of points that will describe the
-            shape. Defaults to 50.
-        stp_filename (str, optional): Defaults to "BlanketFP.stp".
-        stl_filename (str, optional): Defaults to "BlanketFP.stl".
-        material_tag (str, optional): Defaults to "blanket_mat".
+        start_angle: the angle in degrees to start the blanket, measured anti
+            clockwise from 3 o'clock.
+        stop_angle: the angle in degrees to stop the blanket, measured anti
+            clockwise from 3 o'clock.
+        plasma: If not None, the parameters of the plasma Object will be used.
+        minor_radius: the minor radius of the plasma (cm).
+        major_radius: the major radius of the plasma (cm).
+        triangularity: the triangularity of the plasma.
+        elongation: the elongation of the plasma.
+        vertical_displacement: the vertical_displacement of the plasma (cm).
+        offset_from_plasma: the distance between the plasma and the blanket
+            (cm). If float, constant offset. If list of floats, offset will
+            vary linearly between the values. If callable, offset will be a
+            function of poloidal angle (in degrees). If a list of two lists
+            (angles and offsets) then these will be used together with linear
+            interpolation.
+        num_points: number of points that will describe the shape.
+        stp_filename: The default filename to use when exporting as a stp file.
+        stl_filename: The default filename to use when exporting as a stl file.
+        material_tag: The material tag to use in DAGMC geometry exports.
     """
 
-    def __init__(
-        self,
-        thickness,
-        start_angle,
-        stop_angle,
-        plasma=None,
-        minor_radius=150.0,
-        major_radius=450.0,
-        triangularity=0.55,
-        elongation=2.0,
-        vertical_displacement=0.0,
-        offset_from_plasma=0.0,
-        num_points=50,
-        stp_filename="BlanketFP.stp",
-        stl_filename="BlanketFP.stl",
-        material_tag="blanket_mat",
-        **kwargs
-    ):
+    def __init__(self,
+                 thickness,
+                 start_angle: float,
+                 stop_angle: float,
+                 plasma: Optional[Union[paramak.Plasma,
+                                        paramak.PlasmaBoundaries,
+                                        paramak.PlasmaFromPoints]] = None,
+                 minor_radius: Optional[float] = 150.0,
+                 major_radius: Optional[float] = 450.0,
+                 triangularity: Optional[float] = 0.55,
+                 elongation: Optional[float] = 2.0,
+                 vertical_displacement: Optional[float] = 0.0,
+                 offset_from_plasma: Optional[float] = 0.0,
+                 num_points: Optional[int] = 50,
+                 stp_filename: Optional[str] = "BlanketFP.stp",
+                 stl_filename: Optional[str] = "BlanketFP.stl",
+                 material_tag: Optional[str] = "blanket_mat",
+                 **kwargs):
 
         super().__init__(
             material_tag=material_tag,
@@ -221,8 +218,8 @@ class BlanketFP(RotateMixedShape):
         # assemble
         points = inner_points + outer_points
         if self._overlapping_shape:
-            msg = "BlanketFP: Some points with negative R" + \
-                " coordinate have been ignored."
+            msg = ("BlanketFP: Some points with negative R coordinate have "
+                   "been ignored.")
             warnings.warn(msg)
 
         self.points = points

@@ -14,7 +14,13 @@ setuptools.setup(
     url="https://github.com/fusion-energy/paramak",
     packages=setuptools.find_packages(),
     classifiers=[
+        'Natural Language :: English',
+        'Topic :: Scientific/Engineering'
         "Programming Language :: Python :: 3",
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
@@ -24,6 +30,7 @@ setuptools.setup(
         "nbformat>=5.1.3",
         "nbconvert>=6.1.0",
     ],
+    python_requires='>=3.6',
     install_requires=[
         "plotly>=5.1.0",
         "scipy>=1.7.0",

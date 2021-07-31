@@ -76,8 +76,8 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         self._azimuth_placement_angle = value
 
     def find_points(self):
-        """Finds the XZ points joined by straight connections that describe the 2D
-        profile of the poloidal field coil shape."""
+        """Finds the XZ points joined by straight connections that describe the
+        2D profile of the poloidal field coil shape."""
 
         # 16---15
         # -     -

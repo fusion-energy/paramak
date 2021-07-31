@@ -10,8 +10,8 @@ class CenterColumnShieldCircular(RotateMixedShape):
     Args:
         height: height of the center column shield (cm).
         inner_radius: the inner radius of the center column shield (cm).
-        mid_radius: the inner radius of the outer hyperbolic profile of the center
-            colunn shield (cm).
+        mid_radius: the inner radius of the outer hyperbolic profile of the
+            center colunn shield (cm).
         outer_radius: the outer radius of the center column shield.
         stp_filename: Defaults to "CenterColumnShieldCircular.stp".
         stl_filename: Defaults to "CenterColumnShieldCircular.stl".

@@ -74,8 +74,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         if len(lower_inner_coordinates) != 2 or len(
                 mid_point_coordinates) != 2:
-            raise ValueError(
-                "The input tuples are too long or too short, they must be 2 element long")
+            msg = ('The input tuples are too long or too short, they must be '
+                   '2 element long')
+            raise ValueError(msg)
 
         if self._lower_inner_coordinates[0] > self._mid_point_coordinates[0]:
             raise ValueError(
