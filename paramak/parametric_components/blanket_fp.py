@@ -47,7 +47,7 @@ class BlanketFP(RotateMixedShape):
 
     def __init__(
         self,
-        thickness: Union[float, List[float], Callable, List[float, float]],
+        thickness: Union[float, List[float], Callable, List[List[float], List[float]]],
         start_angle: float,
         stop_angle: float,
         plasma: Optional[Union[paramak.Plasma, paramak.PlasmaBoundaries, paramak.PlasmaFromPoints]] = None,
