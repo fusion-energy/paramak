@@ -46,24 +46,28 @@ class BlanketFP(RotateMixedShape):
         material_tag: The material tag to use in DAGMC geometry exports.
     """
 
-    def __init__(
-        self,
-        thickness: Union[float, List[float], Callable, List[List[float], List[float]]],
-        start_angle: float,
-        stop_angle: float,
-        plasma: Optional[Union[paramak.Plasma, paramak.PlasmaBoundaries, paramak.PlasmaFromPoints]] = None,
-        minor_radius: Optional[float] = 150.0,
-        major_radius: Optional[float] = 450.0,
-        triangularity: Optional[float] = 0.55,
-        elongation: Optional[float] = 2.0,
-        vertical_displacement: Optional[float] = 0.0,
-        offset_from_plasma: Optional[float] = 0.0,
-        num_points: Optional[int] = 50,
-        stp_filename: Optional[str] = "BlanketFP.stp",
-        stl_filename: Optional[str] = "BlanketFP.stl",
-        material_tag: Optional[str] = "blanket_mat",
-        **kwargs
-    ):
+    def __init__(self,
+                 thickness: Union[float,
+                                  List[float],
+                                  Callable,
+                                  List[List[float],
+                                       List[float]]],
+                 start_angle: float,
+                 stop_angle: float,
+                 plasma: Optional[Union[paramak.Plasma,
+                                        paramak.PlasmaBoundaries,
+                                        paramak.PlasmaFromPoints]] = None,
+                 minor_radius: Optional[float] = 150.0,
+                 major_radius: Optional[float] = 450.0,
+                 triangularity: Optional[float] = 0.55,
+                 elongation: Optional[float] = 2.0,
+                 vertical_displacement: Optional[float] = 0.0,
+                 offset_from_plasma: Optional[float] = 0.0,
+                 num_points: Optional[int] = 50,
+                 stp_filename: Optional[str] = "BlanketFP.stp",
+                 stl_filename: Optional[str] = "BlanketFP.stl",
+                 material_tag: Optional[str] = "blanket_mat",
+                 **kwargs):
 
         super().__init__(
             material_tag=material_tag,
