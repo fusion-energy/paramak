@@ -16,7 +16,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
 
     def __init__(
         self,
-        rotation_angle=360.0,
+        rotation_angle: float = 360.0,
     ):
 
         super().__init__([])

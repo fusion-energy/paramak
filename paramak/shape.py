@@ -196,8 +196,8 @@ class Shape:
     @method.setter
     def method(self, value):
         if value not in ['trelis', 'pymoab']:
-            raise ValueError("the method using in should be either trelis, \
-                pymoab. {} is not an option".format(value))
+            raise ValueError(f'the method using in should be either trelis, \
+                pymoab. {value} is not an option')
         self._method = value
 
     @property
@@ -535,8 +535,8 @@ class Shape:
 
             for value in values:
                 if not isinstance(value, (list, tuple)):
-                    msg = "individual points must be a tuple." + \
-                        "{} in of type {}".format(value, type(value))
+                    msg = (f'individual points must be a tuple.{value} in of '
+                           f'type {type(value)}')
                     raise ValueError(msg)
 
             for counter, value in enumerate(values):
@@ -544,44 +544,46 @@ class Shape:
                     if len(value) != 3:
                         if counter != len(
                                 values) - 1:  # last point doesn't need connections
-                            msg = "individual points should contain 3 entries \
-                                when the Shape.connection_type is 'mixed'. \
-                                The entries should contain two coordinates \
-                                and a connection type. {} has a length of {}".format(value, len(value))
+                            msg = (f'individual points should contain 3 '
+                                   'entries when the Shape.connection_type is '
+                                   '"mixed". The entries should contain two '
+                                   'coordinates and a connection type. {value} '
+                                   'has a length of {len(value)}')
                             print(values)
                             raise ValueError(msg)
                 else:
                     if len(value) != 2:
-                        msg = "individual points should contain 2 entries \
-                            when the Shape.connection_type is {}. The entries \
-                            should just contain the coordinates {} has a \
-                            length of {}".format(self.connection_type, value, len(value))
+                        msg = (f'individual points should contain 2 entries '
+                                'when the Shape.connection_type is '
+                                '{self.connection_type}. The entries should '
+                                'just contain the coordinates {value} has a '
+                                'length of {len(value)}')
                         raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
-                    msg = "The first value in the tuples that make \
-                                        up the points represents the X value \
-                                        and must be a number {}".format(value)
+                    msg = (f'The first value in the tuples that make up the '
+                           'points represents the X value and must be a number '
+                           '{value}')
                     raise ValueError(msg)
                 if not isinstance(value[1], numbers.Number):
-                    msg = "The second value in the tuples that make \
-                                      up the points represents the X value \
-                                      and must be a number {}".format(value)
+                    msg = (f'The second value in the tuples that make up the '
+                            'points represents the X value and must be a '
+                            'number {value}')
                     raise ValueError(msg)
 
                 # Checks that only straight and spline are in the connections
                 # part of points
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
-                        msg = 'individual connections must be either \
-                            "straight", "circle" or "spline"'
+                        msg = ('individual connections must be either '
+                               '"straight", "circle" or "spline"')
                         raise ValueError(msg)
 
             if len(values) > 1:
                 if values[0][:2] == values[-1][:2]:
-                    msg = "The coordinates of the last and first points are \
-                        the same."
+                    msg = ('The coordinates of the last and first points are '
+                           'the same.')
                     raise ValueError(msg)
 
         self._points = values
@@ -606,12 +608,11 @@ class Shape:
         if value is not None:
             if isinstance(value, str):
                 if Path(value).suffix not in [".stp", ".step"]:
-                    msg = "Incorrect filename ending, filename must end with \
-                            .stp or .step"
+                    msg = ('Incorrect filename ending, filename must end with '
+                           '.stp or .step')
                     raise ValueError(msg)
             else:
-                msg = "stp_filename must be a \
-                    string {} {}".format(value, type(value))
+                msg = f'stp_filename must be a string {value} {type(value)}'
                 raise ValueError(msg)
         self._stp_filename = value
 
@@ -634,12 +635,11 @@ class Shape:
         if value is not None:
             if isinstance(value, str):
                 if Path(value).suffix != ".stl":
-                    msg = "Incorrect filename ending, filename must end with \
-                            .stl"
+                    msg = ('Incorrect filename ending, filename must end with '
+                          '  .stl')
                     raise ValueError(msg)
             else:
-                msg = "stl_filename must be a string \
-                    {} {}".format(value, type(value))
+                msg = f'stl_filename must be a string {value} {type(value)}'
                 raise ValueError(msg)
         self._stl_filename = value
 
@@ -1025,14 +1025,9 @@ class Shape:
             with open(filename, "w") as outfile:
                 json.dump(self.physical_groups, outfile, indent=4)
 
-            print("Saved physical_groups description to ", path_filename)
+            print(f'Saved physical_groups description to {path_filename}')
         else:
-            print(
-                "Warning: physical_groups attribute is None \
-                for {}".format(
-                    self.name
-                )
-            )
+            print(f'Warning: physical_groups attribute is None for {self.name}')
 
         return str(path_filename)
 
@@ -1184,8 +1179,8 @@ class Shape:
             facet_splines=facet_splines,
             facet_circles=facet_circles,
             tolerance=tolerance,
-            title="coordinates of " + self.__class__.__name__ +
-            " shape, viewed from the " + view_plane + " plane",
+            title= (f'coordinates of {self.__class__.__name__} shape, viewed '
+                    'from the {view_plane} plane')
         )
 
         if self.points is not None:
@@ -1258,7 +1253,7 @@ class Shape:
 
         plt.savefig(filename, dpi=100)
         plt.close()
-        print("\n saved 2d image to ", filename)
+        print(f'\n saved 2d image to {filename}', )
 
         return plt
 
@@ -1555,8 +1550,9 @@ class Shape:
             )
 
         else:
-            raise ValueError("the method using in should be either trelis, \
-                pymoab. {} is not an option".format(method))
+            msg = (f'the method using in should be either trelis, pymoab. '
+                   '{method} is not an option')
+            raise ValueError(msg)
 
         return output_filename
 

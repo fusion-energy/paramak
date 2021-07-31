@@ -98,15 +98,13 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         describe the 2D profile of the center column shield shape."""
 
         if not self.inner_radius <= self.mid_radius <= self.outer_radius:
-            raise ValueError("inner_radius must be less than mid_radius. \
-                mid_radius must be less than outer_radius.")
+            raise ValueError('inner_radius must be less than mid_radius. \
+                mid_radius must be less than outer_radius.')
 
         if self.arc_height >= self.height:
-            raise ValueError(
-                "arc_height ({}) is larger than height ({})".format(
-                    self.arc_height, self.height
-                )
-            )
+            msg = ('arc_height ({self.arc_height}) is larger than height '
+                   '({self.height})')
+            raise ValueError(msg)
 
         points = [
             (self.inner_radius, 0, "straight"),

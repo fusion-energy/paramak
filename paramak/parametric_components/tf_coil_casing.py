@@ -60,8 +60,8 @@ class TFCoilCasing(ExtrudeMixedShape):
     def azimuth_placement_angle(self, value):
         correct_angles = self.magnet.azimuth_placement_angle
         if value != correct_angles:
-            msg = "Casing azimuth_placement_angle should be the" + \
-                " same value as TFCoilCasing.magnet."
+            msg = ('Casing azimuth_placement_angle should be the'
+                   'same value as TFCoilCasing.magnet.')
             warnings.warn(msg, UserWarning)
         self._azimuth_placement_angle = correct_angles
 

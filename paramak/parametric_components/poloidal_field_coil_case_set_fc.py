@@ -73,10 +73,10 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
     @pf_coils.setter
     def pf_coils(self, value):
         if not isinstance(value, (list, PoloidalFieldCoilSet)):
-            raise ValueError(
-                "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list \
-                paramak.PoloidalFieldCoil or a \
-                paramak.PoloidalFieldCoilSet object")
+            msg = ('PoloidalFieldCoilCaseSetFC.pf_coils must be either a list '
+                   'paramak.PoloidalFieldCoil or a '
+                   'paramak.PoloidalFieldCoilSet object')
+            raise ValueError(msg)
         self._pf_coils = value
 
     def find_points(self):
