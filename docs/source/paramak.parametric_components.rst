@@ -798,6 +798,63 @@ ToroidalFieldCoilRectangleRoundCorners()
    :show-inheritance:
 
 
+Vacuum Vessels
+--------------
+
+VacuumVessel()
+^^^^^^^^^^^^^^
+
+|VacuumVesselstp| |VacuumVesselsvgWP| |VacuumVesselsvg|
+
+.. |VacuumVesselstp| image:: https://user-images.githubusercontent.com/8583900/95792842-2d765400-0cdc-11eb-8a8a-e3a88e923bc0.png
+   :width: 150
+.. |VacuumVesselsvgWP| image:: https://user-images.githubusercontent.com/8583900/95792839-2c452700-0cdc-11eb-9313-edfd2bfad5dc.png
+   :width: 350
+.. |VacuumVesselsvg| image:: https://user-images.githubusercontent.com/8583900/95792893-4ed74000-0cdc-11eb-9d19-c66cdb3a5ca3.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.vacuum_vessel
+   :members:
+   :show-inheritance:
+
+VacuumVesselInnerLeg()
+^^^^^^^^^^^^^^^^^^^^^^
+
+|VacuumVesselInnerLegstp| |VacuumVesselInnerLegsvg|
+
+.. |VacuumVesselInnerLegstp| image:: https://user-images.githubusercontent.com/8583900/116575888-fa598200-a906-11eb-8c87-1fcfb7917342.png
+   :width: 255
+.. |VacuumVesselInnerLegsvg| image:: https://user-images.githubusercontent.com/58937462/116578576-76ed6000-a909-11eb-9592-d87f2e702514.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.vacuum_vessel_inner_leg
+   :members:
+   :show-inheritance:
+
+CapsuleVacuumVessel()
+^^^^^^^^^^^^^^^^^^^^^
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CapsuleVacuumVessel(
+      outer_start_point=(0, -600),
+      radius = 300,
+      thickness=30,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
+.. image:: https://user-images.githubusercontent.com/85617923/125429341-e5bdf20d-1739-41ce-953b-eabc01c04511.png
+   :width: 255
+
+.. automodule:: paramak.parametric_components.capsule_vacuum_vessel
+   :members:
+   :show-inheritance:
+
+
 Other components
 ----------------
 
@@ -861,62 +918,5 @@ RotatedIsoscelesTriangle
    :width: 510px
 
 .. automodule:: paramak.parametric_components.rotated_isosceles_triangle
-   :members:
-   :show-inheritance:
-
-
-Vacuum Vacuums
---------------
-
-VacuumVessel()
-^^^^^^^^^^^^^^
-
-|VacuumVesselstp| |VacuumVesselsvgWP| |VacuumVesselsvg|
-
-.. |VacuumVesselstp| image:: https://user-images.githubusercontent.com/8583900/95792842-2d765400-0cdc-11eb-8a8a-e3a88e923bc0.png
-   :width: 150
-.. |VacuumVesselsvgWP| image:: https://user-images.githubusercontent.com/8583900/95792839-2c452700-0cdc-11eb-9313-edfd2bfad5dc.png
-   :width: 350
-.. |VacuumVesselsvg| image:: https://user-images.githubusercontent.com/8583900/95792893-4ed74000-0cdc-11eb-9d19-c66cdb3a5ca3.png
-   :width: 255
-
-.. automodule:: paramak.parametric_components.vacuum_vessel
-   :members:
-   :show-inheritance:
-
-VacuumVesselInnerLeg()
-^^^^^^^^^^^^^^^^^^^^^^
-
-|VacuumVesselInnerLegstp| |VacuumVesselInnerLegsvg|
-
-.. |VacuumVesselInnerLegstp| image:: https://user-images.githubusercontent.com/8583900/116575888-fa598200-a906-11eb-8c87-1fcfb7917342.png
-   :width: 255
-.. |VacuumVesselInnerLegsvg| image:: https://user-images.githubusercontent.com/58937462/116578576-76ed6000-a909-11eb-9592-d87f2e702514.png
-   :width: 255
-
-.. automodule:: paramak.parametric_components.vacuum_vessel_inner_leg
-   :members:
-   :show-inheritance:
-
-CapsuleVacuumVessel()
-^^^^^^^^^^^^^^^^^^^^^
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.CapsuleVacuumVessel(
-      outer_start_point=(0, -600),
-      radius = 300,
-      thickness=30,
-      rotation_angle=180
-   )
-
-   cadquery_object = my_component.solid
-
-.. image:: https://user-images.githubusercontent.com/85617923/125429341-e5bdf20d-1739-41ce-953b-eabc01c04511.png
-   :width: 255
-
-.. automodule:: paramak.parametric_components.capsule_vacuum_vessel
    :members:
    :show-inheritance:
