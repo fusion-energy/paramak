@@ -63,9 +63,7 @@ class CapsuleVacuumVessel(RotateMixedShape):
             msg = f'VacuumVessel.thickness must be a number. Not {value}'
             raise ValueError(msg)
         if value <= 0:
-            msg = (
-                f'VacuumVessel.thickness must be a positive number above 0. '
-                'Not {value}')
+            msg = (f'VacuumVessel.thickness must be a positive number above 0. Not {value}')
             raise ValueError(msg)
         self._thickness = value
 

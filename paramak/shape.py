@@ -554,24 +554,24 @@ class Shape:
                             raise ValueError(msg)
                 else:
                     if len(value) != 2:
-                        msg = (f'individual points should contain 2 entries '
+                        msg = ('individual points should contain 2 entries '
                                'when the Shape.connection_type is '
-                               '{self.connection_type}. The entries should '
-                               'just contain the coordinates {value} has a '
+                               f'{self.connection_type}. The entries should '
+                               f'just contain the coordinates {value} has a '
                                'length of {len(value)}')
                         raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
                     msg = (
-                        f'The first value in the tuples that make up the '
+                        'The first value in the tuples that make up the '
                         'points represents the X value and must be a number '
-                        '{value}')
+                        f'{value}')
                     raise ValueError(msg)
                 if not isinstance(value[1], numbers.Number):
-                    msg = (f'The second value in the tuples that make up the '
+                    msg = ('The second value in the tuples that make up the '
                            'points represents the X value and must be a '
-                           'number {value}')
+                           f'number {value}')
                     raise ValueError(msg)
 
                 # Checks that only straight and spline are in the connections
@@ -1553,8 +1553,8 @@ class Shape:
             )
 
         else:
-            msg = (f'the method using in should be either trelis, pymoab. '
-                   '{method} is not an option')
+            msg = ('the method using in should be either trelis, pymoab. '
+                   f'{method} is not an option')
             raise ValueError(msg)
 
         return output_filename
