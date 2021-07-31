@@ -32,8 +32,8 @@ class BlanketFPPoloidalSegments(BlanketFP):
         self,
         segments_angles: Optional[List[float]] = None,
         num_segments: Optional[int] = 7,
-        length_limits: Optional[Tuple(Union[float, None], Union[float, None])] = None,
-        nb_segments_limits: Optional[Tuple(float, float)] = None,
+        length_limits: Optional[Tuple[Union[float, None], Union[float, None]]] = None,
+        nb_segments_limits: Optional[Tuple[float, float]] = None,
         segments_gap: Optional[float] = 0.0,
         **kwargs
     ):
