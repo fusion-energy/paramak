@@ -864,15 +864,17 @@ class Reactor:
             )
         elif isinstance(self.shapes_and_components, str):
             if not Path(self.shapes_and_components).is_file():
-                raise FileNotFoundError(f'The filename entered as the geometry \
+                raise FileNotFoundError(
+                    f'The filename entered as the geometry \
                     argument {self.shapes_and_components} does not exist')
             if self.shapes_and_components != 'manifest.json':
                 shutil.copy(
                     src=self.shapes_and_components,
                     dst='manifest.json')
         else:
-            msg = ('shapes_and_components must be a list of paramak.Shape or a '
-                   'filename')
+            msg = (
+                'shapes_and_components must be a list of paramak.Shape or a '
+                'filename')
             raise ValueError(msg)
 
         not_watertight_file = paramak.utils.trelis_command_to_create_dagmc_h5m(
@@ -1027,8 +1029,9 @@ class Reactor:
         filenames = []
         for entry in self.shapes_and_components:
             if entry.stp_filename is None:
-                msg = ('set .stp_filename property for Shapes before using the '
-                       'export_stp method')
+                msg = (
+                    'set .stp_filename property for Shapes before using the '
+                    'export_stp method')
                 raise ValueError(msg)
             filenames.append(
                 str(Path(output_folder) / Path(entry.stp_filename)))

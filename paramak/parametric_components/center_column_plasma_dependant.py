@@ -152,8 +152,8 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
                 plasma.high_point[0] - self.edge_offset,
                 self.height / 2, "straight"
             ),
-            (   
-                plasma.high_point[0] - self.edge_offset, 
+            (
+                plasma.high_point[0] - self.edge_offset,
                 plasma.high_point[1], "spline"
             ),
             (
