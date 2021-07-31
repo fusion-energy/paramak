@@ -193,8 +193,8 @@ class BlanketFPPoloidalSegments(BlanketFP):
 
 
 def compute_lengths_from_angles(
-    angles: List[float],
-    distribution: Callable):
+        angles: List[float],
+        distribution: Callable):
     """Computes the length of segments between a set of points on a (x,y)
     distribution.
 

@@ -544,32 +544,34 @@ class Shape:
                     if len(value) != 3:
                         if counter != len(
                                 values) - 1:  # last point doesn't need connections
-                            msg = (f'individual points should contain 3 '
-                                   'entries when the Shape.connection_type is '
-                                   '"mixed". The entries should contain two '
-                                   'coordinates and a connection type. {value} '
-                                   'has a length of {len(value)}')
+                            msg = (
+                                f'individual points should contain 3 '
+                                'entries when the Shape.connection_type is '
+                                '"mixed". The entries should contain two '
+                                'coordinates and a connection type. {value} '
+                                'has a length of {len(value)}')
                             print(values)
                             raise ValueError(msg)
                 else:
                     if len(value) != 2:
                         msg = (f'individual points should contain 2 entries '
-                                'when the Shape.connection_type is '
-                                '{self.connection_type}. The entries should '
-                                'just contain the coordinates {value} has a '
-                                'length of {len(value)}')
+                               'when the Shape.connection_type is '
+                               '{self.connection_type}. The entries should '
+                               'just contain the coordinates {value} has a '
+                               'length of {len(value)}')
                         raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
-                    msg = (f'The first value in the tuples that make up the '
-                           'points represents the X value and must be a number '
-                           '{value}')
+                    msg = (
+                        f'The first value in the tuples that make up the '
+                        'points represents the X value and must be a number '
+                        '{value}')
                     raise ValueError(msg)
                 if not isinstance(value[1], numbers.Number):
                     msg = (f'The second value in the tuples that make up the '
-                            'points represents the X value and must be a '
-                            'number {value}')
+                           'points represents the X value and must be a '
+                           'number {value}')
                     raise ValueError(msg)
 
                 # Checks that only straight and spline are in the connections
@@ -636,7 +638,7 @@ class Shape:
             if isinstance(value, str):
                 if Path(value).suffix != ".stl":
                     msg = ('Incorrect filename ending, filename must end with '
-                          '  .stl')
+                           '  .stl')
                     raise ValueError(msg)
             else:
                 msg = f'stl_filename must be a string {value} {type(value)}'
@@ -1027,7 +1029,8 @@ class Shape:
 
             print(f'Saved physical_groups description to {path_filename}')
         else:
-            print(f'Warning: physical_groups attribute is None for {self.name}')
+            print(
+                f'Warning: physical_groups attribute is None for {self.name}')
 
         return str(path_filename)
 
@@ -1179,8 +1182,8 @@ class Shape:
             facet_splines=facet_splines,
             facet_circles=facet_circles,
             tolerance=tolerance,
-            title= (f'coordinates of {self.__class__.__name__} shape, viewed '
-                    'from the {view_plane} plane')
+            title=(f'coordinates of {self.__class__.__name__} shape, viewed '
+                   'from the {view_plane} plane')
         )
 
         if self.points is not None:

@@ -67,9 +67,9 @@ class VacuumVesselInnerLeg(RotateStraightShape):
             raise ValueError(msg)
         if value <= 0:
             msg = (f'VacuumVesselInnerLeg.inner_radius must be a positive ',
-                  'number above 0. Not {value}')
+                   'number above 0. Not {value}')
             raise ValueError(msg)
-                
+
         self._inner_radius = value
 
     def find_points(self):

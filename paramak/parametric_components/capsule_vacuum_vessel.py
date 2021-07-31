@@ -4,7 +4,7 @@ import math
 
 
 class CapsuleVacuumVessel(RotateMixedShape):
-    """A cylindrical vessel volume with constant thickness that has addition 
+    """A cylindrical vessel volume with constant thickness that has addition
     spherical edges.
 
     Arguments:
@@ -63,8 +63,9 @@ class CapsuleVacuumVessel(RotateMixedShape):
             msg = f'VacuumVessel.thickness must be a number. Not {value}'
             raise ValueError(msg)
         if value <= 0:
-            msg = (f'VacuumVessel.thickness must be a positive number above 0. '
-                  'Not {value}')
+            msg = (
+                f'VacuumVessel.thickness must be a positive number above 0. '
+                'Not {value}')
             raise ValueError(msg)
         self._thickness = value
 
@@ -93,9 +94,9 @@ class CapsuleVacuumVessel(RotateMixedShape):
         p12 = (p1[0], p1[1] + thickness, 'straight')
         p2 = ((p1[0]) + (radius * math.cos((3 * math.pi) / 8)), (p1[1] + \
               radius) - (radius * math.sin((3 * math.pi) / 8)), 'circle')
-        p5 = ((p6[0] + (radius * math.cos((2 * math.pi) / 8))), (p6[1] -
+        p5 = ((p6[0] + (radius * math.cos((2 * math.pi) / 8))), (p6[1] - \
               radius) + (radius * math.sin((2 * math.pi) / 8)), 'circle')
-        p8 = ((p7[0] + (inner_r * math.cos((2 * math.pi) / 8))), (p7[1] -
+        p8 = ((p7[0] + (inner_r * math.cos((2 * math.pi) / 8))), (p7[1] - \
               inner_r) + (inner_r * math.sin((2 * math.pi) / 8)), 'circle')
         p11 = ((p12[0]) + (inner_r * math.cos((3 * math.pi) / 8)),
                (p12[1] + inner_r) - (inner_r * math.sin((3 * math.pi) / 8)),

@@ -82,7 +82,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     def radius_type(self, value):
         if value not in ['corner', 'straight']:
             msg = (f'radius_type must be either "corner" or "straight". Not '
-                  '{value}')
+                   '{value}')
             raise ValueError(msg)
         self._radius_type = value
 
@@ -174,9 +174,10 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
                 math.cos(math.radians(angle))
 
         if self.gap_size * self.number_of_coils > 2 * math.pi * distance_to_inner_corner:
-            msg = ('Gap_size is too large. The gap_size * number of coils must '
-                   'be less than the circumference of the circle made by '
-                   'the inner_radius')
+            msg = (
+                'Gap_size is too large. The gap_size * number of coils must '
+                'be less than the circumference of the circle made by '
+                'the inner_radius')
             raise ValueError(msg)
 
         if distance_to_inner_corner != 0.:
