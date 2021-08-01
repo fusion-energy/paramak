@@ -22,12 +22,12 @@ class Reactor:
     (bounding box) that is needed for neutronics simulations. There are two
     methods available for producing the the DAGMC h5m file. The PyMoab option
     is able to produce non imprinted and non merged geometry so is more suited
-    to individual components or reactors without touching surfaces. Trelis is
+    to individual components or reactors without touching surfaces. Cubit is
     the able to produce imprinted and merged DAGMC h5m geometry. Further
     details on imprinting and merging are available on the DAGMC homepage
-    https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html . Trelis
+    https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html . Cubit
     (also known as Cubit) is available from the CoreForm website
-    https://www.coreform.com/ version 17.1 is the version of Trelis used when
+    https://www.coreform.com/ version 17.1 is the version of Cubit used when
     testing the Paramak code.
 
     Args:
@@ -41,7 +41,7 @@ class Reactor:
         faceting_tolerance: the tolerance to use when faceting surfaces.
         merge_tolerance: the tolerance to use when merging surfaces.
         method: The method to use when making the h5m geometry. Options are
-            "trelis" or "pymoab".
+            "cubit" or "pymoab".
         graveyard_size: The dimention of cube shaped the graveyard region used
             by DAGMC. This attribtute is used preferentially over
             graveyard_offset.
@@ -91,8 +91,8 @@ class Reactor:
 
     @method.setter
     def method(self, value):
-        if value not in ['trelis', 'pymoab']:
-            raise ValueError(f'the method using in should be either trelis, \
+        if value not in ['cubit', 'pymoab']:
+            raise ValueError(f'the method using in should be either cubit, \
                 pymoab. {value} is not an option')
         self._method = value
 
@@ -707,16 +707,16 @@ class Reactor:
                 using Reactor.graveyard_size and Reactor.graveyard_offset
                 attribute values.
             method: The method to use when making the imprinted and
-                merged geometry. Options are "trelis" and "pymoab" Defaults to
+                merged geometry. Options are "cubit" and "pymoab" Defaults to
                 None which uses the Reactor.method attribute.
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Reactor.merge_tolerance attribute.
             faceting_tolerance: the allowable distance between facetets
                 before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Reactor.faceting_tolerance attribute.
 
@@ -735,8 +735,8 @@ class Reactor:
 
         os.system('rm ' + filename)
 
-        if method == 'trelis':
-            output_filename = self.export_h5m_with_trelis(
+        if method == 'cubit':
+            output_filename = self.export_h5m_with_cubit(
                 filename=filename,
                 merge_tolerance=merge_tolerance,
                 faceting_tolerance=faceting_tolerance,
@@ -751,7 +751,7 @@ class Reactor:
             )
 
         else:
-            raise ValueError('the method using in should be either trelis, \
+            raise ValueError('the method using in should be either cubit, \
                 pymoab. {method} is not an option')
 
         return output_filename
@@ -820,7 +820,7 @@ class Reactor:
 
         return sector_cutting_wedge
 
-    def export_h5m_with_trelis(
+    def export_h5m_with_cubit(
             self,
             filename: Optional[str] = 'dagmc.h5m',
             merge_tolerance: Optional[float] = None,
@@ -828,18 +828,18 @@ class Reactor:
             include_plasma: Optional[bool] = False,
     ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using Coreform Trelis.
+        simulations using Coreform cubit.
 
         Arguments:
             filename: filename of h5m outputfile.
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Reactor.merge_tolerance attribute.
             faceting_tolerance: the allowable distance between facetets
                 before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Reactor.faceting_tolerance attribute.
 
@@ -877,7 +877,7 @@ class Reactor:
                 'filename')
             raise ValueError(msg)
 
-        not_watertight_file = paramak.utils.trelis_command_to_create_dagmc_h5m(
+        not_watertight_file = paramak.utils.cubit_command_to_create_dagmc_h5m(
             faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
         water_tight_h5m_filename = paramak.utils.make_watertight(
@@ -898,7 +898,7 @@ class Reactor:
     ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
-        supported method which uses Trelis to produce an imprinted and merged
+        supported method which uses cubit to produce an imprinted and merged
         DAGMC geometry. If the provided filename doesn't end with .h5m it will
         be added
 

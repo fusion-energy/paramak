@@ -77,7 +77,7 @@ class Shape:
             will be united with the provided solid or iterable of solids.
             Defaults to None.
         method: The method to use when making the h5m geometry. Options are
-            "trelis" or "pymoab".
+            "cubit" or "pymoab".
         graveyard_size: The dimention of cube shaped the graveyard region used
             by DAGMC. This attribtute is used preferentially over
             graveyard_offset.
@@ -195,8 +195,8 @@ class Shape:
 
     @method.setter
     def method(self, value):
-        if value not in ['trelis', 'pymoab']:
-            raise ValueError(f'the method using in should be either trelis, \
+        if value not in ['cubit', 'pymoab']:
+            raise ValueError(f'the method using in should be either cubit, \
                 pymoab. {value} is not an option')
         self._method = value
 
@@ -1307,7 +1307,7 @@ class Shape:
         """Returns a neutronics description of the Shape object. This is needed
         for the use with automated neutronics model methods which require
         linkage between the stp files and materials. If tet meshing of the
-        volume is required then Trelis meshing commands can be optionally
+        volume is required then cubit meshing commands can be optionally
         specified as the tet_mesh argument.
 
         Returns:
@@ -1514,16 +1514,16 @@ class Shape:
 
         Arguments:
             method: The method to use when making the imprinted and
-                merged geometry. Options are "trelis" and "pymoab" Defaults to
+                merged geometry. Options are "cubit" and "pymoab" Defaults to
                 None which uses the Shape.method attribute.
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Shape.merge_tolerance attribute.
             faceting_tolerance: the allowable distance between facetets
                 before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Shape.faceting_tolerance attribute.
 
@@ -1540,8 +1540,8 @@ class Shape:
         if method is None:
             method = self.method
 
-        if method == 'trelis':
-            output_filename = self.export_h5m_with_trelis(
+        if method == 'cubit':
+            output_filename = self.export_h5m_with_cubit(
                 merge_tolerance=merge_tolerance,
                 faceting_tolerance=faceting_tolerance,
             )
@@ -1553,29 +1553,29 @@ class Shape:
             )
 
         else:
-            msg = ('the method using in should be either trelis, pymoab. '
+            msg = ('the method using in should be either cubit, pymoab. '
                    f'{method} is not an option')
             raise ValueError(msg)
 
         return output_filename
 
-    def export_h5m_with_trelis(
+    def export_h5m_with_cubit(
             self,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
     ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using Coreform Trelis.
+        simulations using Coreform cubit.
 
         Arguments:
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Shape.merge_tolerance attribute.
             faceting_tolerance: the allowable distance between facetets
                 before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Shape.faceting_tolerance attribute.
 
@@ -1591,7 +1591,7 @@ class Shape:
         self.export_stp()
         self.export_neutronics_description()
 
-        not_watertight_file = paramak.utils.trelis_command_to_create_dagmc_h5m(
+        not_watertight_file = paramak.utils.cubit_command_to_create_dagmc_h5m(
             faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
         water_tight_h5m = paramak.utils.make_watertight(
@@ -1611,7 +1611,7 @@ class Shape:
     ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
-        supported method which uses Trelis to produce an imprinted and merged
+        supported method which uses cubit to produce an imprinted and merged
         DAGMC geometry. If the provided filename doesn't end with .h5m it will
         be added
 

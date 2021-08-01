@@ -24,7 +24,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
 
         super().__init__([])
 
-        self.method = 'trelis'
+        self.method = 'cubit'
 
         self.rotation_angle = rotation_angle
         self.number_of_tf_coils = number_of_tf_coils
