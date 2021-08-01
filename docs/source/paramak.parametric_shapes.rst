@@ -2,6 +2,8 @@ Parametric Shapes
 =================
 
 
+Rotated Shapes
+--------------
 
 RotateStraightShape()
 ^^^^^^^^^^^^^^^^^^^^^
@@ -102,6 +104,10 @@ RotateCircleShape()
 .. automodule:: paramak.parametric_shapes.rotate_circle_shape
    :members:
    :show-inheritance:
+
+
+Extruded Shapes
+---------------
 
 ExtrudeStraightShape()
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -205,6 +211,10 @@ ExtrudeCircleShape()
 .. automodule:: paramak.parametric_shapes.extruded_circle_shape
    :members:
    :show-inheritance:
+
+
+Swept Shapes
+------------
 
 SweepStraightShape()
 ^^^^^^^^^^^^^^^^^^^^
