@@ -355,6 +355,16 @@ CenterColumnShieldPlasmaHyperbola()
    :members:
    :show-inheritance:
 
+InboardFirstwallFCCS()
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/94197757-219e2b80-feae-11ea-8e41-0786d56c8b66.png
+    :width: 786px
+    :align: center
+
+.. automodule:: paramak.parametric_components.inboard_firstwall_fccs
+   :members:
+   :show-inheritance:
 
 Coolant Channels
 ----------------
@@ -426,17 +436,6 @@ CuttingWedgeFS()
     :width: 300px
 
 .. automodule:: paramak.parametric_components.cutting_wedge_fs
-   :members:
-   :show-inheritance:
-
-InboardFirstwallFCCS()
-^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/8583900/94197757-219e2b80-feae-11ea-8e41-0786d56c8b66.png
-    :width: 786px
-    :align: center
-
-.. automodule:: paramak.parametric_components.inboard_firstwall_fccs
    :members:
    :show-inheritance:
 
