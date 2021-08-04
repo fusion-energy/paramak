@@ -31,7 +31,7 @@ class Shape:
     in Jupyter Lab
 
     Args:
-        points (list of (float, float, float), optional): the x, y, z
+        points (tuple of (float, float, float), optional): the x, y, z
             coordinates of points that make up the shape. Defaults to None.
         connection_type (str, optional): The type of connection between points.
             Possible values are "straight", "circle", "spline", "mixed".
@@ -77,7 +77,7 @@ class Shape:
             will be united with the provided solid or iterable of solids.
             Defaults to None.
         method: The method to use when making the h5m geometry. Options are
-            "trelis" or "pymoab".
+            "cubit" or "pymoab".
         graveyard_size: The dimention of cube shaped the graveyard region used
             by DAGMC. This attribtute is used preferentially over
             graveyard_offset.
@@ -87,7 +87,7 @@ class Shape:
 
     def __init__(
         self,
-        points: list = None,
+        points: Union[tuple, list] = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
         color: Optional[Tuple[float, float, float,
@@ -128,6 +128,10 @@ class Shape:
         self.workplane = workplane
         self.rotation_axis = rotation_axis
 
+        # initialise to something different than self.points
+        # old_points is used in the processed_points getter
+        self.old_points = 0
+
         # neutronics specific properties
         self.method = method
         self.material_tag = material_tag
@@ -146,6 +150,7 @@ class Shape:
         self.wire = None
         self.render_mesh = None
         self.h5m_filename = None
+        self.processed_points = None
         # self.volume = None
         self.hash_value = None
         self.points_hash_value = None
@@ -190,9 +195,9 @@ class Shape:
 
     @method.setter
     def method(self, value):
-        if value not in ['trelis', 'pymoab']:
-            raise ValueError("the method using in should be either trelis, \
-                pymoab. {} is not an option".format(value))
+        if value not in ['cubit', 'pymoab']:
+            raise ValueError(f'the method using in should be either cubit, \
+                pymoab. {value} is not an option')
         self._method = value
 
     @property
@@ -474,11 +479,37 @@ class Shape:
         self._name = value
 
     @property
+    def processed_points(self):
+        """Shape.processed_points attributes is set internally from the Shape.points"""
+        if self.points is not None:
+            # if .points have changed since last time this was run
+            if self.old_points != self.points:
+                # assign current .points value to .old_points
+                self.old_points = self.points
+
+                # compute .processed_points
+                if self.connection_type == "mixed":
+                    values = self.points
+                else:
+                    values = [(*p, self.connection_type) for p in self.points]
+
+                if values[0][:2] != values[-1][:2]:
+                    values.append(values[0])
+
+                self._processed_points = values
+            return self._processed_points
+        return None
+
+    @processed_points.setter
+    def processed_points(self, value):
+        self._processed_points = value
+
+    @property
     def points(self):
         """Sets the Shape.point attributes.
 
         Args:
-            points (a list of lists or tuples): list of points that create the
+            points (a tuple of tuples): tuple of points that create the
                 shape
 
         Raises:
@@ -499,60 +530,63 @@ class Shape:
         else:
             values = values_in[:]
         if values is not None:
-            if not isinstance(values, list):
-                raise ValueError("points must be a list")
-
-            if self.connection_type != "mixed":
-                values = [(*p, self.connection_type) for p in values]
+            if not isinstance(values, (list, tuple)):
+                raise ValueError("points must be a list or a tuple")
 
             for value in values:
-                if type(value) not in [list, tuple]:
-                    msg = "individual points must be a list or a tuple." + \
-                        "{} in of type {}".format(value, type(value))
+                if not isinstance(value, (list, tuple)):
+                    msg = (f'individual points must be a tuple.{value} in of '
+                           f'type {type(value)}')
                     raise ValueError(msg)
 
-            for value in values:
-                # Checks that the length of each tuple in points is 2 or 3
-                if len(value) not in [2, 3]:
-                    msg = "individual points contain 2 or 3 entries {} has a \
-                        length of {}".format(value, len(values[0]))
-                    raise ValueError(msg)
+            for counter, value in enumerate(values):
+                if self.connection_type == 'mixed':
+                    if len(value) != 3:
+                        if counter != len(
+                                values) - 1:  # last point doesn't need connections
+                            msg = (
+                                'individual points should contain 3 '
+                                'entries when the Shape.connection_type is '
+                                '"mixed". The entries should contain two '
+                                f'coordinates and a connection type. {value} '
+                                'has a length of {len(value)}')
+                            print(values)
+                            raise ValueError(msg)
+                else:
+                    if len(value) != 2:
+                        msg = ('individual points should contain 2 entries '
+                               'when the Shape.connection_type is '
+                               f'{self.connection_type}. The entries should '
+                               f'just contain the coordinates {value} has a '
+                               'length of {len(value)}')
+                        raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
-                    msg = "The first value in the tuples that make \
-                                        up the points represents the X value \
-                                        and must be a number {}".format(value)
+                    msg = (
+                        'The first value in the tuples that make up the '
+                        'points represents the X value and must be a number '
+                        f'{value}')
                     raise ValueError(msg)
                 if not isinstance(value[1], numbers.Number):
-                    msg = "The second value in the tuples that make \
-                                      up the points represents the X value \
-                                      and must be a number {}".format(value)
+                    msg = ('The second value in the tuples that make up the '
+                           'points represents the X value and must be a '
+                           f'number {value}')
                     raise ValueError(msg)
 
                 # Checks that only straight and spline are in the connections
                 # part of points
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
-                        msg = 'individual connections must be either \
-                            "straight", "circle" or "spline"'
+                        msg = ('individual connections must be either '
+                               '"straight", "circle" or "spline"')
                         raise ValueError(msg)
-
-            # checks that the entries in the points are either all 2 long or
-            # all 3 long, not a mixture
-            if not all(len(entry) == 2 for entry in values):
-                if not all(len(entry) == 3 for entry in values):
-                    msg = "The points list should contain entries of length 2 \
-                            or 3 but not a mixture of 2 and 3"
-                    raise ValueError(msg)
 
             if len(values) > 1:
                 if values[0][:2] == values[-1][:2]:
-                    msg = "The coordinates of the last and first points are \
-                        the same."
+                    msg = ('The coordinates of the last and first points are '
+                           'the same.')
                     raise ValueError(msg)
-
-                values.append(values[0])
 
         self._points = values
 
@@ -576,12 +610,11 @@ class Shape:
         if value is not None:
             if isinstance(value, str):
                 if Path(value).suffix not in [".stp", ".step"]:
-                    msg = "Incorrect filename ending, filename must end with \
-                            .stp or .step"
+                    msg = ('Incorrect filename ending, filename must end with '
+                           '.stp or .step')
                     raise ValueError(msg)
             else:
-                msg = "stp_filename must be a \
-                    string {} {}".format(value, type(value))
+                msg = f'stp_filename must be a string {value} {type(value)}'
                 raise ValueError(msg)
         self._stp_filename = value
 
@@ -604,12 +637,11 @@ class Shape:
         if value is not None:
             if isinstance(value, str):
                 if Path(value).suffix != ".stl":
-                    msg = "Incorrect filename ending, filename must end with \
-                            .stl"
+                    msg = ('Incorrect filename ending, filename must end with '
+                           '  .stl')
                     raise ValueError(msg)
             else:
-                msg = "stl_filename must be a string \
-                    {} {}".format(value, type(value))
+                msg = f'stl_filename must be a string {value} {type(value)}'
                 raise ValueError(msg)
         self._stl_filename = value
 
@@ -677,18 +709,12 @@ class Shape:
 
     def create_solid(self) -> Workplane:
         solid = None
-        if self.points is not None:
+        if self.processed_points is not None:
             # obtains the first two values of the points list
-            XZ_points = [(p[0], p[1]) for p in self.points]
-
-            for point in self.points:
-                if len(point) != 3:
-                    msg = "The points list should contain two coordinates and \
-                        a connetion type"
-                    raise ValueError(msg)
+            XZ_points = [(p[0], p[1]) for p in self.processed_points]
 
             # obtains the last values of the points list
-            connections = [p[2] for p in self.points[:-1]]
+            connections = [p[2] for p in self.processed_points[:-1]]
 
             current_linetype = connections[0]
             current_points_list = []
@@ -1001,14 +1027,10 @@ class Shape:
             with open(filename, "w") as outfile:
                 json.dump(self.physical_groups, outfile, indent=4)
 
-            print("Saved physical_groups description to ", path_filename)
+            print(f'Saved physical_groups description to {path_filename}')
         else:
             print(
-                "Warning: physical_groups attribute is None \
-                for {}".format(
-                    self.name
-                )
-            )
+                f'Warning: physical_groups attribute is None for {self.name}')
 
         return str(path_filename)
 
@@ -1160,8 +1182,8 @@ class Shape:
             facet_splines=facet_splines,
             facet_circles=facet_circles,
             tolerance=tolerance,
-            title="coordinates of " + self.__class__.__name__ +
-            " shape, viewed from the " + view_plane + " plane",
+            title=(f'coordinates of {self.__class__.__name__} shape, viewed '
+                   'from the {view_plane} plane')
         )
 
         if self.points is not None:
@@ -1234,7 +1256,7 @@ class Shape:
 
         plt.savefig(filename, dpi=100)
         plt.close()
-        print("\n saved 2d image to ", filename)
+        print(f'\n saved 2d image to {filename}', )
 
         return plt
 
@@ -1249,8 +1271,8 @@ class Shape:
             Matplotlib object patch: a plotable polygon shape
         """
 
-        if self.points is None:
-            raise ValueError("No points defined for", self)
+        if self.processed_points is None:
+            raise ValueError("No processed_points defined for", self)
 
         patches = []
 
@@ -1285,7 +1307,7 @@ class Shape:
         """Returns a neutronics description of the Shape object. This is needed
         for the use with automated neutronics model methods which require
         linkage between the stp files and materials. If tet meshing of the
-        volume is required then Trelis meshing commands can be optionally
+        volume is required then cubit meshing commands can be optionally
         specified as the tet_mesh argument.
 
         Returns:
@@ -1492,16 +1514,16 @@ class Shape:
 
         Arguments:
             method: The method to use when making the imprinted and
-                merged geometry. Options are "trelis" and "pymoab" Defaults to
+                merged geometry. Options are "cubit" and "pymoab" Defaults to
                 None which uses the Shape.method attribute.
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Shape.merge_tolerance attribute.
             faceting_tolerance: the allowable distance between facetets
                 before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Shape.faceting_tolerance attribute.
 
@@ -1518,8 +1540,8 @@ class Shape:
         if method is None:
             method = self.method
 
-        if method == 'trelis':
-            output_filename = self.export_h5m_with_trelis(
+        if method == 'cubit':
+            output_filename = self.export_h5m_with_cubit(
                 merge_tolerance=merge_tolerance,
                 faceting_tolerance=faceting_tolerance,
             )
@@ -1531,28 +1553,29 @@ class Shape:
             )
 
         else:
-            raise ValueError("the method using in should be either trelis, \
-                pymoab. {} is not an option".format(method))
+            msg = ('the method using in should be either cubit, pymoab. '
+                   f'{method} is not an option')
+            raise ValueError(msg)
 
         return output_filename
 
-    def export_h5m_with_trelis(
+    def export_h5m_with_cubit(
             self,
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
     ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using Coreform Trelis.
+        simulations using Coreform cubit.
 
         Arguments:
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Shape.merge_tolerance attribute.
             faceting_tolerance: the allowable distance between facetets
                 before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Shape.faceting_tolerance attribute.
 
@@ -1568,7 +1591,7 @@ class Shape:
         self.export_stp()
         self.export_neutronics_description()
 
-        not_watertight_file = paramak.utils.trelis_command_to_create_dagmc_h5m(
+        not_watertight_file = paramak.utils.cubit_command_to_create_dagmc_h5m(
             faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
         water_tight_h5m = paramak.utils.make_watertight(
@@ -1588,7 +1611,7 @@ class Shape:
     ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
-        supported method which uses Trelis to produce an imprinted and merged
+        supported method which uses cubit to produce an imprinted and merged
         DAGMC geometry. If the provided filename doesn't end with .h5m it will
         be added
 
@@ -1677,13 +1700,14 @@ class Shape:
             self,
             tolerance: Optional[float] = 0.1
     ) -> List[Tuple[float, float, str]]:
-        """Replaces circle edges in Shape.points with spline edges. The spline
-        control coordinates are obtained by faceting the circle edge with the
-        provided tolerance. The Shape.points will be updated to exclude the
-        circle points and include the new spline points. This method works best
-        when the connection before and after the circle is s straight
-        connection type. This method is useful when converting the stp file
-        into other formats due to errors in the conversion of circle edges.
+        """Replaces circle edges in Shape.processed_points points with spline
+        edges. The spline control coordinates are obtained by faceting the
+        circle edge with the provided tolerance. The Shape.processed_points
+        will be updated to exclude the circle points and include the new spline
+        points. This method works best when the connection before and after the
+        circle is a straight connection type. This method is useful when
+        converting the stp file into other formats due to errors in the
+        conversion of circle edges.
 
         Args:
             tolerance: the precision of the faceting.
@@ -1694,12 +1718,12 @@ class Shape:
 
         new_points = []
         counter = 0
-        while counter < len(self.points):
+        while counter < len(self.processed_points):
 
-            if self.points[counter][2] == 'circle':
-                p_0 = self.points[counter][:2]
-                p_1 = self.points[counter + 1][:2]
-                p_2 = self.points[counter + 2][:2]
+            if self.processed_points[counter][2] == 'circle':
+                p_0 = self.processed_points[counter][:2]
+                p_1 = self.processed_points[counter + 1][:2]
+                p_2 = self.processed_points[counter + 2][:2]
 
                 points = paramak.utils.convert_circle_to_spline(
                     p_0, p_1, p_2, tolerance=tolerance
@@ -1709,10 +1733,12 @@ class Shape:
                 for point in points[:-1]:
                     new_points.append((point[0], point[1], 'spline'))
 
-                new_points.append(self.points[counter + 2])
+                new_points.append(self.processed_points[counter + 2])
                 counter = counter + 3
             else:
-                new_points.append(self.points[counter])
+                new_points.append(self.processed_points[counter])
                 counter = counter + 1
-        self.points = new_points[:-1]
-        return new_points[:-1]
+
+        # @jon I'm not 100% if this change is correct or not
+        self.processed_points = new_points
+        return new_points

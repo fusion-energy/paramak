@@ -21,7 +21,7 @@ from remove_dagmc_tags import remove_tags
 import paramak
 
 
-def trelis_command_to_create_dagmc_h5m(
+def cubit_command_to_create_dagmc_h5m(
         faceting_tolerance: float,
         merge_tolerance: float,
         material_key_name: Optional[str] = 'material_tag',
@@ -45,7 +45,7 @@ def trelis_command_to_create_dagmc_h5m(
             as the material identifier.
         geometry_key_name: the dictionary key containing the str to uses as the
             CAD file identifier.
-        batch: Run the Trelis command in batch model with no GUI (True) or with
+        batch: Run the Cubit command in batch model with no GUI (True) or with
             the GUI enabled (False).
         h5m_filename: the filename of the DAGMC h5m file produced. This is not
             water tight at this stage.
@@ -89,7 +89,7 @@ def trelis_command_to_create_dagmc_h5m(
             path_output_filenames.append(str(path_filename))
 
     shutil.copy(
-        src=Path(__file__).parent.absolute() / Path('parametric') /
+        src=Path(__file__).parent.absolute() /
         'make_faceteted_neutronics_model.py',
         dst=Path().absolute()
     )
@@ -102,9 +102,9 @@ def trelis_command_to_create_dagmc_h5m(
     os.system('rm dagmc_not_watertight.h5m')
 
     if batch:
-        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION=1 coreform_cubit -batch -nographics'
+        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION_CHECK=1 coreform_cubit -batch -nographics'
     else:
-        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION=1 coreform_cubit'
+        cubit_cmd = 'LD_LIBRARY_PATH="" HDF5_DISABLE_VERSION_CHECK=1 coreform_cubit'
 
     os.system(
         cubit_cmd +
@@ -157,13 +157,13 @@ def make_watertight(
     """
 
     if not Path(input_filename).is_file():
-        raise FileNotFoundError("Failed to find {}".format(input_filename))
+        raise FileNotFoundError(f'Failed to find {input_filename}')
 
-    os.system('rm {}'.format(output_filename))
+    os.system(f'rm {output_filename}')
 
     try:
         output = subprocess.check_output(
-            "make_watertight {} -o {}".format(input_filename, output_filename),
+            f"make_watertight {input_filename} -o {output_filename}",
             shell=True,
             universal_newlines=True,
         )
@@ -341,7 +341,7 @@ def add_stl_to_moab_core(
 
     # reflective is a special case that should not have mat: in front
     if not material_name == 'reflective':
-        dag_material_tag = "mat:{}".format(material_name)
+        dag_material_tag = f'mat:{material_name}'
     else:
         dag_material_tag = material_name
 
@@ -689,7 +689,7 @@ def add_thickness(x: List[float], y: List[float], thickness: float,
     return x_outer, y_outer
 
 
-def get_hash(shape, ignored_keys: List) -> str:
+def get_hash(shape, ignored_keys: List = None) -> str:
     """Computes a unique hash vaue for the shape.
 
     Args:
@@ -779,10 +779,9 @@ def plotly_trace(
     text_values = []
 
     for i, point in enumerate(points):
-        text = "point number= {} <br> x={} <br> y= {}".format(
-            i, point[0], point[1])
+        text = 'point number= {i} <br> x={point[0]} <br> y= {point[1]}'
         if len(point) == 3:
-            text = text + "<br> z= {} <br>".format(point[2])
+            text = text + '<br> z= {point[2]} <br>'
 
         text_values.append(text)
 

@@ -26,10 +26,24 @@ class TestBlanketCutterStar(unittest.TestCase):
         """Checks that the points used to construct the BlanketCutterStar component
         are calculated correctly from the parameters given."""
 
-        assert self.test_shape.points == [(0, -
-                                           1000, "straight"), (2000, -
-                                                               1000, "straight"), (2000, 1000, "straight"), (0, 1000, "straight"), (0, -
-                                                                                                                                    1000, "straight")]
+        assert self.test_shape.points == [
+            (0, -1000),
+            (2000, -1000),
+            (2000, 1000),
+            (0, 1000),
+        ]
+
+    def test_processed_points_calculation(self):
+        """Checks that the points used to construct the BlanketCutterStar component
+        are calculated correctly from the parameters given."""
+
+        assert self.test_shape.processed_points == [
+            (0, -1000, "straight"),
+            (2000, -1000, "straight"),
+            (2000, 1000, "straight"),
+            (0, 1000, "straight"),
+            (0, -1000, "straight")
+        ]
 
     def test_creation(self):
         """Creates a solid using the BlanketCutterStar parametric component

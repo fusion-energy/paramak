@@ -4,11 +4,14 @@ import math
 
 
 class CapsuleVacuumVessel(RotateMixedShape):
-    """A cylindrical vessel volume with constant thickness that has addition spherical edges.
+    """A cylindrical vessel volume with constant thickness that has addition
+    spherical edges.
 
     Arguments:
-        outer_start_point: the x,z coordinates of the outer bottom of the vacuum vessel
-        radius: the radius from which the centres of the vessel meets the outer circumference.
+        outer_start_point: the x,z coordinates of the outer bottom of the
+            vacuum vessel
+        radius: the radius from which the centres of the vessel meets the outer
+            circumference.
         thickness: the radial thickness of the vessel in cm.
         stp_filename: Defaults to "CapsuleVacuumVessel.stp".
         stl_filename: Defaults to "CapsuleVacuumVessel.stl".
@@ -45,8 +48,9 @@ class CapsuleVacuumVessel(RotateMixedShape):
             raise ValueError(
                 'VacuumVessel.radius must be a number. Not', value)
         if value <= 0:
-            raise ValueError(
-                'VacuumVessel.radius must be a positive number above 0. Not', value)
+            msg = ('VacuumVessel.radius must be a positive number above 0. '
+                   f'Not {value}')
+            raise ValueError(msg)
         self._radius = value
 
     @property
@@ -56,11 +60,12 @@ class CapsuleVacuumVessel(RotateMixedShape):
     @thickness.setter
     def thickness(self, value):
         if not isinstance(value, (float, int)):
-            raise ValueError(
-                'VacuumVessel.thickness must be a number. Not', value)
+            msg = f'VacuumVessel.thickness must be a number. Not {value}'
+            raise ValueError(msg)
         if value <= 0:
-            raise ValueError(
-                'VacuumVessel.thickness must be a positive number above 0. Not', value)
+            msg = (
+                f'VacuumVessel.thickness must be a positive number above 0. Not {value}')
+            raise ValueError(msg)
         self._thickness = value
 
     def find_points(self):
@@ -86,8 +91,8 @@ class CapsuleVacuumVessel(RotateMixedShape):
         p9 = (p4[0] - thickness, p4[1], 'straight')
         p10 = (p3[0] - thickness, p3[1], 'circle')
         p12 = (p1[0], p1[1] + thickness, 'straight')
-        p2 = ((p1[0]) + (radius * math.cos((3 * math.pi) / 8)), (p1[1] + \
-              radius) - (radius * math.sin((3 * math.pi) / 8)), 'circle')
+        p2 = ((p1[0]) + (radius * math.cos((3 * math.pi) / 8)), (p1[1] +
+                                                                 radius) - (radius * math.sin((3 * math.pi) / 8)), 'circle')
         p5 = ((p6[0] + (radius * math.cos((2 * math.pi) / 8))), (p6[1] -
                                                                  radius) + (radius * math.sin((2 * math.pi) / 8)), 'circle')
         p8 = ((p7[0] + (inner_r * math.cos((2 * math.pi) / 8))), (p7[1] -

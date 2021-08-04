@@ -13,20 +13,11 @@ build:
   script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
-  host:
-    - matplotlib
-    - mpmath
-    - numpy
-    - pip
-    - plasmaboundaries
-    - plotly
-    - pytest-cov
-    - python
-    - scipy
-    - sympy
-    - cadquery
-    - neutronics_material_maker
+  build:
+    - python 3.8
+    - setuptools
   run:
+    - cadquery
     - matplotlib
     - mpmath
     - numpy
@@ -36,8 +27,10 @@ requirements:
     - python
     - scipy
     - sympy
-    - cadquery
-    - neutronics_material_maker
+    - remove_dagmc_tags
+    - nbformat
+    - nbconvert
+    # - jupyter-cadquery
 
 test:
   imports:

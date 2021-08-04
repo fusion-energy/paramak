@@ -8,7 +8,6 @@ import paramak
 import plotly.graph_objects as go
 import pytest
 import urllib.request
-from cadquery.cq import Workplane
 from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
                            add_stl_to_moab_core, define_moab_core_and_tags,
                            extract_points_from_edges, facet_wire,
@@ -17,6 +16,10 @@ from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
 
 class TestUtilityFunctions(unittest.TestCase):
 
+    # TODO move this test to paramak-neutronics
+    # make_watertight command line tool is to be replaced with watertight when outputting from cubit
+    # make_watertight is a dagmc tool so it is not included in the paramak (geometry only)
+    # dagmc is included in paramak-neutronics
     def test_make_watertight_cmd_with_example_dagmc_file(self):
         """downloads a h5m and makes it watertight, checks the the watertight
         file is produced."""
@@ -263,7 +266,7 @@ class TestUtilityFunctions(unittest.TestCase):
             point_a, point_b, point_3) == (
             None, np.inf)
 
-    # these tests only work if trelis is avaialbe
+    # these tests only work if cubit is avaialbe
     # def test_make_watertight_cmd(self):
     #     """exports a h5m and makes it watertight, checks the the watertight
     #     file is produced."""
@@ -278,10 +281,10 @@ class TestUtilityFunctions(unittest.TestCase):
     #         center_point=(100, 0),
     #         rotation_angle=180,
     #         material_tag='copper',
-    #         method='trelis'
+    #         method='cubit'
     #     )
 
-    #     pf_coil.export_h5m_with_trelis(
+    #     pf_coil.export_h5m_with_cubit(
     #         filename='not_watertight_dagmc.h5m',
     #         include_graveyard=True,
     #     )
@@ -297,8 +300,8 @@ class TestUtilityFunctions(unittest.TestCase):
     #     assert output_filename == "watertight_dagmc.h5m"
     #     assert Path("watertight_dagmc.h5").exists() is True
 
-    # def test_trelis_command_to_create_dagmc_h5m_with_default_mat_name(self):
-    #     """Creats a h5m file with trelis and forms groups using the material_tag
+    # def test_cubit_command_to_create_dagmc_h5m_with_default_mat_name(self):
+    #     """Creats a h5m file with cubit and forms groups using the material_tag
     #     key in the manifest.json file. Then checks the groups in the resulting
     #     h5 file match those in the original dictionary"""
 
@@ -330,7 +333,7 @@ class TestUtilityFunctions(unittest.TestCase):
     #     with open('manifest.json', 'w') as outfile:
     #         json.dump(manifest_with_material_tags, outfile)
 
-    #     paramak.utils.trelis_command_to_create_dagmc_h5m(
+    #     paramak.utils.cubit_command_to_create_dagmc_h5m(
     #         faceting_tolerance=1e-2,
     #         merge_tolerance=1e-4,
     #         material_key_name='material_tag',
@@ -346,8 +349,8 @@ class TestUtilityFunctions(unittest.TestCase):
     #     assert 'mat:tungsten_carbide' in list_of_mats
     #     # assert 'mat:graveyard' in list_of_mats
 
-    # def test_trelis_command_to_create_dagmc_h5m_with_user_mat_name(self):
-    #     """Creats a h5m file with trelis and forms groups using the material_id
+    # def test_cubit_command_to_create_dagmc_h5m_with_user_mat_name(self):
+    #     """Creats a h5m file with cubit and forms groups using the material_id
     #     key in the manifest.json file. Then checks the groups in the resulting
     #     h5 file match those in the original dictionary"""
 
@@ -381,7 +384,7 @@ class TestUtilityFunctions(unittest.TestCase):
     #     with open('manifest.json', 'w') as outfile:
     #         json.dump(manifest_with_material_tags, outfile)
 
-    #     paramak.utils.trelis_command_to_create_dagmc_h5m(
+    #     paramak.utils.cubit_command_to_create_dagmc_h5m(
     #         faceting_tolerance=1e-2,
     #         merge_tolerance=1e-4,
     #         material_key_name='material_id',
@@ -397,8 +400,8 @@ class TestUtilityFunctions(unittest.TestCase):
     #     assert 'mat:12' in list_of_mats
     #     # assert 'mat:graveyard' in list_of_mats
 
-    # def test_trelis_command_to_create_dagmc_h5m_with_custom_geometry_key(self):
-    #     """Creats a h5m file with trelis and loads stp files using a custom
+    # def test_cubit_command_to_create_dagmc_h5m_with_custom_geometry_key(self):
+    #     """Creats a h5m file with cubit and loads stp files using a custom
     #     key in the manifest.json file. Then checks the groups in the resulting
     #     h5 file match those in the original dictionary"""
 
@@ -432,7 +435,7 @@ class TestUtilityFunctions(unittest.TestCase):
     #     with open('manifest.json', 'w') as outfile:
     #         json.dump(manifest_with_material_tags, outfile)
 
-    #     paramak.utils.trelis_command_to_create_dagmc_h5m(
+    #     paramak.utils.cubit_command_to_create_dagmc_h5m(
     #         faceting_tolerance=1e-2,
     #         merge_tolerance=1e-4,
     #         geometry_key_name='geometry_filename',

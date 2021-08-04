@@ -58,7 +58,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self._mid_point_coordinates = mid_point_coordinates
         self._thickness = thickness
         self._distance = distance
-        self._number_of_coils = number_of_coils
+        self.number_of_coils = number_of_coils
         self._with_inner_leg = with_inner_leg
         self._inner_leg_connection_points = []
         self._analyse_attributes = [
@@ -74,8 +74,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         if len(lower_inner_coordinates) != 2 or len(
                 mid_point_coordinates) != 2:
-            raise ValueError(
-                "The input tuples are too long or too short, they must be 2 element long")
+            msg = ('The input tuples are too long or too short, they must be '
+                   '2 element long')
+            raise ValueError(msg)
 
         if self._lower_inner_coordinates[0] > self._mid_point_coordinates[0]:
             raise ValueError(
@@ -327,7 +328,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             CadQuery solid: A 3D solid Volume """
 
         # Create solid from points
-        points = [ps[:2] for ps in self.points]
+        points = [ps[:2] for ps in self.processed_points]
 
         wire = cq.Workplane(self.workplane).moveTo(points[0][0], points[0][1]) \
             .lineTo(points[1][0], points[1][1]) \

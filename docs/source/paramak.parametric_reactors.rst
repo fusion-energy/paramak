@@ -7,6 +7,10 @@ These are the current reactor designs that can be created using the Paramak.
    :width: 713
    :align: center
 
+
+BallReactors 
+------------
+
 BallReactor()
 ^^^^^^^^^^^^^
 
@@ -69,6 +73,10 @@ the rear wall of the blanket is teal.
    :members:
    :show-inheritance:
 
+
+Submersion Tokamaks
+-------------------
+
 SubmersionTokamak()
 ^^^^^^^^^^^^^^^^^^^
 
@@ -105,6 +113,10 @@ rear wall of the blanket is teal and the supports are black.
    :members:
    :show-inheritance:
 
+
+Specific use case reactors
+--------------------------
+
 CenterColumnStudyReactor()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -127,6 +139,10 @@ studies can be performed quickly.
    :members:
    :show-inheritance:
 
+
+Reactors from publications
+--------------------------
+
 EuDemoFrom2015PaperDiagram()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -140,8 +156,8 @@ The above image is colored by component.
    :members:
    :show-inheritance:
 
-ITERTokamak()
-^^^^^^^^^^^^^
+IterFrom2020PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/40028739/110248118-cf3e5c00-7f6f-11eb-9e68-864c1a1e8676.png
    :width: 400

@@ -63,35 +63,34 @@ def test_perimeter3():
     assert testp == pytest.approx(51358.85)
 
 
-'''this tests if the number of points returned are correct'''
-
-
 def test_pointnum1():
+    """this tests if the number of points returned are correct"""
     shape = paramak.CapsuleVacuumVessel(
         outer_start_point=(0, 0),
         radius=300,
         thickness=10)
-    pointnum = len(shape.points)
-
-    assert pointnum == 13
+    assert len(shape.points) == 12
+    assert len(shape.processed_points) == 13
 
 
 def test_pointnum2():
+    """this tests if the number of points returned are correct"""
     shape = paramak.CapsuleVacuumVessel(
         outer_start_point=(100, -100),
         radius=400,
         thickness=25)
-    pointnum = len(shape.points)
-    assert pointnum == 13
+    assert len(shape.points) == 12
+    assert len(shape.processed_points) == 13
 
 
 def test_pointnum3():
+    """this tests if the number of points returned are correct"""
     shape = paramak.CapsuleVacuumVessel(
         outer_start_point=(1000, -500),
         radius=5000,
         thickness=50)
-    pointnum = len(shape.points)
-    assert pointnum == 13
+    assert len(shape.points) == 12
+    assert len(shape.processed_points) == 13
 
 
 '''this tests the volume of the created component and asserts it agaist the known value'''

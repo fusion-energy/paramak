@@ -17,7 +17,7 @@ class RotateMixedShape(Shape):
 
     def __init__(
         self,
-        rotation_angle: Optional[float] = 360.0,
+        rotation_angle: Optional[float] = 360.,
         stp_filename: Optional[str] = "RotateMixedShape.stp",
         stl_filename: Optional[str] = "RotateMixedShape.stl",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.121, 0.47, 0.705),

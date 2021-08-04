@@ -1,5 +1,6 @@
 
 import warnings
+from typing import List, Optional, Tuple, Union, Callable
 
 import numpy as np
 from paramak import BlanketFP, RotateStraightShape
@@ -12,30 +13,28 @@ class BlanketFPPoloidalSegments(BlanketFP):
     """Poloidally segmented Blanket inheriting from paramak.BlanketFP.
 
     Args:
-        segments_angles (list, optional): If not None, the segments ends will
+        segments_angles: If not None, the segments ends will
             be located at these angles. If None and if the constraints
             length_limits and nb_segments_limits are not None, segments angles
             will be linearly distributed. Else, an optimum configuration
             meeting the set requirements will be found. Defaults to None.
-        num_segments (int, optional): Number of segments (igored if
-            segments_angles is not None). Defaults to 7.
-        length_limits ((float, float), optional): The minimum and maximum
-            acceptable length of the segments. Ex: (100, 500), (100, None),
-            (None, 300), None, (None, None). Defaults to None.
-        nb_segments_limits ((float, float), optional): The minimum and maximum
-            acceptable number of segments. Ex: (3, 10), (5, None), (None, 7),
-            None, (None, None). Defaults to None.
-        segments_gap (float, optional): Distance between segments. Defaults to
-            0.0.
+        num_segments: Number of segments (igored if segments_angles is not
+            None).
+        length_limits: The minimum and maximum acceptable length of the
+            segments. Ex: (100, 500), (100, None), (None, 300), None, (None,
+            None).
+        nb_segments_limits: The minimum and maximum acceptable number of
+            segments. Ex: (3, 10), (5, None), (None, 7), None, (None, None).
+        segments_gap: Distance between segments.
     """
 
     def __init__(
         self,
-        segments_angles=None,
-        num_segments=7,
-        length_limits=None,
-        nb_segments_limits=None,
-        segments_gap=0.0,
+        segments_angles: Optional[List[float]] = None,
+        num_segments: Optional[int] = 7,
+        length_limits: Optional[Tuple[Union[float, None], Union[float, None]]] = None,
+        nb_segments_limits: Optional[Tuple[float, float]] = None,
+        segments_gap: Optional[float] = 0.0,
         **kwargs
     ):
         super().__init__(
@@ -193,7 +192,9 @@ class BlanketFPPoloidalSegments(BlanketFP):
             self.segments_cutters = cutting_shape
 
 
-def compute_lengths_from_angles(angles, distribution):
+def compute_lengths_from_angles(
+        angles: List[float],
+        distribution: Callable):
     """Computes the length of segments between a set of points on a (x,y)
     distribution.
 

@@ -25,9 +25,31 @@ class TestCenterColumnShieldFlatTopCircular(unittest.TestCase):
         component are calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (100, 0, "straight"), (100, 300, "straight"), (200, 300, "straight"),
-            (200, 200, "circle"), (150, 0, "circle"), (200, -200, "straight"),
-            (200, -300, "straight"), (100, -300, "straight"), (100, 0, "straight")
+            (100, 0, "straight"),
+            (100, 300, "straight"),
+            (200, 300, "straight"),
+            (200, 200, "circle"),
+            (150, 0, "circle"),
+            (200, -200, "straight"),
+            (200, -300, "straight"),
+            (100, -300, "straight"),
+        ]
+
+    def test_processed_points_calculation(self):
+        """Checks that the processed_points used to construct the
+        CenterColumnShieldFlatTopCircular component are calculated correctly
+        from the parameters given."""
+
+        assert self.test_shape.processed_points == [
+            (100, 0, "straight"),
+            (100, 300, "straight"),
+            (200, 300, "straight"),
+            (200, 200, "circle"),
+            (150, 0, "circle"),
+            (200, -200, "straight"),
+            (200, -300, "straight"),
+            (100, -300, "straight"),
+            (100, 0, "straight")
         ]
 
     def test_creation(self):

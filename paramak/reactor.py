@@ -22,12 +22,12 @@ class Reactor:
     (bounding box) that is needed for neutronics simulations. There are two
     methods available for producing the the DAGMC h5m file. The PyMoab option
     is able to produce non imprinted and non merged geometry so is more suited
-    to individual components or reactors without touching surfaces. Trelis is
+    to individual components or reactors without touching surfaces. Cubit is
     the able to produce imprinted and merged DAGMC h5m geometry. Further
     details on imprinting and merging are available on the DAGMC homepage
-    https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html . Trelis
+    https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html . Cubit
     (also known as Cubit) is available from the CoreForm website
-    https://www.coreform.com/ version 17.1 is the version of Trelis used when
+    https://www.coreform.com/ version 17.1 is the version of Cubit used when
     testing the Paramak code.
 
     Args:
@@ -36,12 +36,12 @@ class Reactor:
             the geometry. The list of dictionaries should each have a
             "material" key containing a material_tag value and a "stp_filename"
             key containing the path to the stp file. See the
-            external_stp_file_simulation.py neutronics for a complete example.
-            https://github.com/ukaea/paramak/blob/main/examples/example_neutronics_simulations/external_stp_file_simulation.py
+            external_stp_file_simulation.py script in the examples folder for a
+            complete example.
         faceting_tolerance: the tolerance to use when faceting surfaces.
         merge_tolerance: the tolerance to use when merging surfaces.
         method: The method to use when making the h5m geometry. Options are
-            "trelis" or "pymoab".
+            "cubit" or "pymoab".
         graveyard_size: The dimention of cube shaped the graveyard region used
             by DAGMC. This attribtute is used preferentially over
             graveyard_offset.
@@ -91,9 +91,9 @@ class Reactor:
 
     @method.setter
     def method(self, value):
-        if value not in ['trelis', 'pymoab']:
-            raise ValueError("the method using in should be either trelis, \
-                pymoab. {} is not an option".format(value))
+        if value not in ['cubit', 'pymoab']:
+            raise ValueError(f'the method using in should be either cubit, \
+                pymoab. {value} is not an option')
         self._method = value
 
     @property
@@ -131,13 +131,12 @@ class Reactor:
     @faceting_tolerance.setter
     def faceting_tolerance(self, value):
         if not isinstance(value, (int, float)):
-            raise TypeError(
-                "Reactor.faceting_tolerance should be a\
-                number (floats or ints are accepted)")
+            msg = ('Reactor.faceting_tolerance should be a number (floats or '
+                   'ints are accepted)')
+            raise TypeError(msg)
         if value < 0:
             raise ValueError(
-                "Reactor.faceting_tolerance should be a\
-                positive number")
+                "Reactor.faceting_tolerance should be a positive number")
         self._faceting_tolerance = value
 
     @property
@@ -147,13 +146,12 @@ class Reactor:
     @merge_tolerance.setter
     def merge_tolerance(self, value):
         if not isinstance(value, (int, float)):
-            raise TypeError(
-                "Reactor.merge_tolerance should be a\
-                number (floats or ints are accepted)")
+            msg = ('Reactor.merge_tolerance should be a number (floats or '
+                   'ints are accepted)')
+            raise TypeError(msg)
         if value < 0:
             raise ValueError(
-                "Reactor.merge_tolerance should be a\
-                positive number")
+                "Reactor.merge_tolerance should be a positive number")
         self._merge_tolerance = value
 
     @property
@@ -629,9 +627,9 @@ class Reactor:
         filenames = []
         for entry in self.shapes_and_components:
             if entry.stl_filename is None:
-                raise ValueError(
-                    "set .stl_filename attribute for Shapes before using the Reactor.export_stl method"
-                )
+                msg = ('set .stl_filename attribute for all Shapes before '
+                       'using the Reactor.export_stl method')
+                raise ValueError(msg)
 
             filename = entry.export_stl(
                 filename=Path(output_folder) / entry.stl_filename,
@@ -709,16 +707,16 @@ class Reactor:
                 using Reactor.graveyard_size and Reactor.graveyard_offset
                 attribute values.
             method: The method to use when making the imprinted and
-                merged geometry. Options are "trelis" and "pymoab" Defaults to
+                merged geometry. Options are "cubit" and "pymoab" Defaults to
                 None which uses the Reactor.method attribute.
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Reactor.merge_tolerance attribute.
             faceting_tolerance: the allowable distance between facetets
                 before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Reactor.faceting_tolerance attribute.
 
@@ -737,8 +735,8 @@ class Reactor:
 
         os.system('rm ' + filename)
 
-        if method == 'trelis':
-            output_filename = self.export_h5m_with_trelis(
+        if method == 'cubit':
+            output_filename = self.export_h5m_with_cubit(
                 filename=filename,
                 merge_tolerance=merge_tolerance,
                 faceting_tolerance=faceting_tolerance,
@@ -753,8 +751,8 @@ class Reactor:
             )
 
         else:
-            raise ValueError("the method using in should be either trelis, \
-                pymoab. {} is not an option".format(method))
+            raise ValueError('the method using in should be either cubit, \
+                pymoab. {method} is not an option')
 
         return output_filename
 
@@ -822,7 +820,7 @@ class Reactor:
 
         return sector_cutting_wedge
 
-    def export_h5m_with_trelis(
+    def export_h5m_with_cubit(
             self,
             filename: Optional[str] = 'dagmc.h5m',
             merge_tolerance: Optional[float] = None,
@@ -830,18 +828,18 @@ class Reactor:
             include_plasma: Optional[bool] = False,
     ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using Coreform Trelis.
+        simulations using Coreform cubit.
 
         Arguments:
             filename: filename of h5m outputfile.
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Reactor.merge_tolerance attribute.
             faceting_tolerance: the allowable distance between facetets
                 before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/trelis_basics.html
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
                 for more details. Defaults to None which uses the
                 Reactor.faceting_tolerance attribute.
 
@@ -866,17 +864,20 @@ class Reactor:
             )
         elif isinstance(self.shapes_and_components, str):
             if not Path(self.shapes_and_components).is_file():
-                raise FileNotFoundError("The filename entered as the geometry \
-                    argument {} does not exist".format(self.shapes_and_components))
+                raise FileNotFoundError(
+                    f'The filename entered as the geometry \
+                    argument {self.shapes_and_components} does not exist')
             if self.shapes_and_components != 'manifest.json':
                 shutil.copy(
                     src=self.shapes_and_components,
                     dst='manifest.json')
         else:
-            raise ValueError(
-                "shapes_and_components must be a list of paramak.Shape or a filename")
+            msg = (
+                'shapes_and_components must be a list of paramak.Shape or a '
+                'filename')
+            raise ValueError(msg)
 
-        not_watertight_file = paramak.utils.trelis_command_to_create_dagmc_h5m(
+        not_watertight_file = paramak.utils.cubit_command_to_create_dagmc_h5m(
             faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
 
         water_tight_h5m_filename = paramak.utils.make_watertight(
@@ -897,7 +898,7 @@ class Reactor:
     ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
-        supported method which uses Trelis to produce an imprinted and merged
+        supported method which uses cubit to produce an imprinted and merged
         DAGMC geometry. If the provided filename doesn't end with .h5m it will
         be added
 
@@ -1028,10 +1029,10 @@ class Reactor:
         filenames = []
         for entry in self.shapes_and_components:
             if entry.stp_filename is None:
-                raise ValueError(
-                    "set .stp_filename property for \
-                                 Shapes before using the export_stp method"
-                )
+                msg = (
+                    'set .stp_filename property for Shapes before using the '
+                    'export_stp method')
+                raise ValueError(msg)
             filenames.append(
                 str(Path(output_folder) / Path(entry.stp_filename)))
             entry.export_physical_groups(

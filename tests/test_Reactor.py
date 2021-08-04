@@ -1064,7 +1064,7 @@ class TestReactor(unittest.TestCase):
 
     def test_method_setting(self):
         """Attempts to make a reactor with a method that is not pymoab or
-        trelis which should raise a ValueError"""
+        cubit which should raise a ValueError"""
 
         def incorrect_method_string():
             test_shape = paramak.RotateStraightShape(

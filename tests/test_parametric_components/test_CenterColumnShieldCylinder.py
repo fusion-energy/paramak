@@ -31,13 +31,29 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         assert self.test_shape.solid is not None
         assert self.test_shape.volume > 1000
 
+    def test_processed_points_calculation(self):
+        """Checks that the processed_points used to construct the
+        CenterColumnShieldCylinder component are calculated correctly from the
+        parameters given."""
+
+        assert self.test_shape.processed_points == [
+            (100, 300, "straight"),
+            (200, 300, "straight"),
+            (200, -300, "straight"),
+            (100, -300, "straight"),
+            (100, 300, "straight")
+        ]
+
     def test_points_calculation(self):
-        """Checks that the points used to construct the CenterColumnShieldCylinder component
-        are calculated correctly from the parameters given."""
+        """Checks that the points used to construct the
+        CenterColumnShieldCylinder component are calculated correctly from the
+        parameters given."""
 
         assert self.test_shape.points == [
-            (100, 300, "straight"), (200, 300, "straight"), (200, -300, "straight"),
-            (100, -300, "straight"), (100, 300, "straight")
+            (100, 300),
+            (200, 300),
+            (200, -300),
+            (100, -300),
         ]
 
     def test_relative_volume(self):

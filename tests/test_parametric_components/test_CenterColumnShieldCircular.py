@@ -25,8 +25,25 @@ class TestCenterColumnShieldCircular(unittest.TestCase):
         are calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (100, 0, 'straight'), (100, 300.0, 'straight'), (200, 300.0, 'circle'),
-            (150, 0, 'circle'), (200, -300.0, 'straight'), (100, -300.0, 'straight'),
+            (100, 0, 'straight'),
+            (100, 300.0, 'straight'),
+            (200, 300.0, 'circle'),
+            (150, 0, 'circle'),
+            (200, -300.0, 'straight'),
+            (100, -300.0, 'straight'),
+        ]
+
+    def test_processed_points_calculation(self):
+        """Checks that the processed_points used to construct the CenterColumnShieldCircular components
+        are calculated correctly from the parameters given."""
+
+        assert self.test_shape.processed_points == [
+            (100, 0, 'straight'),
+            (100, 300.0, 'straight'),
+            (200, 300.0, 'circle'),
+            (150, 0, 'circle'),
+            (200, -300.0, 'straight'),
+            (100, -300.0, 'straight'),
             (100, 0, 'straight')
         ]
 
