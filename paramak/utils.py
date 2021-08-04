@@ -21,7 +21,7 @@ from remove_dagmc_tags import remove_tags
 import paramak
 
 
-def trelis_command_to_create_dagmc_h5m(
+def cubit_command_to_create_dagmc_h5m(
         faceting_tolerance: float,
         merge_tolerance: float,
         material_key_name: Optional[str] = 'material_tag',
@@ -45,7 +45,7 @@ def trelis_command_to_create_dagmc_h5m(
             as the material identifier.
         geometry_key_name: the dictionary key containing the str to uses as the
             CAD file identifier.
-        batch: Run the Trelis command in batch model with no GUI (True) or with
+        batch: Run the Cubit command in batch model with no GUI (True) or with
             the GUI enabled (False).
         h5m_filename: the filename of the DAGMC h5m file produced. This is not
             water tight at this stage.

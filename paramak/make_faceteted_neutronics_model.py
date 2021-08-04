@@ -9,20 +9,20 @@ import os
 # faceting_tolerance and merge_tolerance which default to 1e-1 and 1e-4 by
 # default
 
-# To using this script with Trelis it can be run in batch mode
-# trelis -batch -nographics make_faceteted_neutronics_model.py
+# To using this script with Cubit it can be run in batch mode
+# c -batch -nographics make_faceteted_neutronics_model.py
 
-# With the Trelis GUI
-# trelis make_faceteted_neutronics_model.py
+# With the Cubit GUI
+# coreform_cubit make_faceteted_neutronics_model.py
 
 # With additional arguments to overwrite the defaults
-# trelis -batch -nographics make_faceteted_neutronics_model.py "faceting_tolerance='1e-4'" "merge_tolerance='1e-4'"
+# coreform_cubit -batch -nographics make_faceteted_neutronics_model.py "faceting_tolerance='1e-4'" "merge_tolerance='1e-4'"
 
 # An example manifest file would contain a list of dictionaries with entries
 # having stp_filename and material_tag keywords. Here is an example manifest
 # file with just two entries.
 
-# trelis -batch -nographics make_faceteted_neutronics_model.py
+# coreform_cubit -batch -nographics make_faceteted_neutronics_model.py
 
 # [
 #     {
@@ -42,7 +42,7 @@ import os
 # and integer values to make Cubit group names are compatable with MCNP and
 # Shift.
 
-# trelis -batch -nographics make_faceteted_neutronics_model.py "material_key_name='material_id'"
+# coreform_cubit -batch -nographics make_faceteted_neutronics_model.py "material_key_name='material_id'"
 
 # [
 #     {
@@ -62,7 +62,7 @@ import os
 # be changed using the geometry_key_name argument. For example you could have
 # a key name for sat files.
 
-# trelis -batch -nographics make_faceteted_neutronics_model.py "geometry_key_name='sat_filename'"
+# coreform_cubit -batch -nographics make_faceteted_neutronics_model.py "geometry_key_name='sat_filename'"
 
 # entries can also contain a "surface_reflectivity" key to indicate reflecting
 # surfaces. This will then be used to automatically tag the surfaces.
