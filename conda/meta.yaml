@@ -27,10 +27,10 @@ requirements:
     - python
     - scipy
     - sympy
-    - remove_dagmc_tags
     - nbformat
     - nbconvert
     - ipywidgets
+    # - remove_dagmc_tags is an optional dependancy
     # - jupyter-cadquery not avaialbe on conda
 
 test:
@@ -46,8 +46,17 @@ test:
   source_files:
     - tests/
     - examples/
-  commands:
-    - pytest -v
+  # commands:
+  #   - pytest -v tests/test_example_components.py
+  #   - pytest -v tests/test_example_reactors.py
+  #   - pytest -v tests/test_example_shapes.py
+  #   - pytest -v tests/test_parametric_components
+  #   - pytest -v tests/test_parametric_reactors
+  #   - pytest -v tests/test_parametric_shapes
+  #   - pytest -v tests/test_Reactor.py
+  #   - pytest -v tests/test_Shape.py
+    # - pytest -v tests/test_utils.py requires moab which is optional
+
 
 about:
   home: "https://github.com/fusion-energy/paramak"

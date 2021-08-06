@@ -1,8 +1,9 @@
 name: docs-environment
 
+channel_priority: strict
 channels:
-  - cadquery
   - conda-forge
+  - cadquery
   - defaults
 
 dependencies:
@@ -13,9 +14,9 @@ dependencies:
   - numpy
   - matplotlib
   - pillow
-  - moab
+  # - moab is an optional dependancy
+  # - remove_dagmc_tags is an optional dependancy
   - pip:
-    - remove_dagmc_tags
     - sympy
     - plasmaboundaries
     - sphinx-autodoc-typehints
