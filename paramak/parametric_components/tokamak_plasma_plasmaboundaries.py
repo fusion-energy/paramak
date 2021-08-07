@@ -2,8 +2,9 @@
 from paramak import Plasma
 try:
     from plasmaboundaries import get_separatrix_coordinates
-except:
+except BaseException:
     pass
+
 
 class PlasmaBoundaries(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
