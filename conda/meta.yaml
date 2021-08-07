@@ -17,35 +17,44 @@ requirements:
     - python {{ python }}
     - setuptools
   run:
+    - python {{ python }}
     - cadquery
-    - matplotlib
-    - mpmath
-    - numpy
-    - plasmaboundaries
-    - plotly
-    - pytest-cov
-    - python
-    - scipy
-    - sympy
-    - nbformat
-    - nbconvert
-    - ipywidgets
+    - ocp 7.5.2
+    - pyparsing 2.*
+    - ezdxf
+    - ipython
+    - typing_extensions
+    - nptyping
+    - nlopt
+    # conda install -c fusion-energy -c cadquery -c conda-forge paramak
+    # - matplotlib
+    # - mpmath
+    # - numpy
+    # - plasmaboundaries
+    # - plotly
+    # - pytest-cov
+    # - python
+    # - scipy
+    # - sympy
+    # - nbformat
+    # - nbconvert
+    # - ipywidgets
     # - remove_dagmc_tags is an optional dependancy
     # - jupyter-cadquery not avaialbe on conda
 
-test:
-  imports:
-    - paramak
-    - paramak.parametric_components
-    - paramak.parametric_reactors
-    - paramak.parametric_shapes
-    - tests
-  requires:
-    - pytest-cov
-    - pytest-runner
-  source_files:
-    - tests/
-    - examples/
+# test:
+#   imports:
+#     - paramak
+#     - paramak.parametric_components
+#     - paramak.parametric_reactors
+#     - paramak.parametric_shapes
+#     - tests
+#   requires:
+#     - pytest-cov
+#     - pytest-runner
+#   source_files:
+#     - tests/
+#     - examples/
   # commands:
   #   - pytest -v tests/test_example_components.py
   #   - pytest -v tests/test_example_reactors.py

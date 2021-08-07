@@ -246,7 +246,7 @@ def define_moab_core_and_tags():
     try:
         from pymoab import core, types
     except ImportError:
-        msg = ('PyMoab not found, export_h5m method is not available. To
+        msg = ('PyMoab not found, export_h5m method is not available. To '
                'install enter conda install moab into the terminal')
         raise ImportError(msg)
 

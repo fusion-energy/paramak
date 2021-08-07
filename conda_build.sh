@@ -21,7 +21,7 @@ sed -i "s/$PLACEHOLDER/version=\"${VERSION}\"/g" "$VERSION_FILE"
 
 conda-build conda/ -c cadquery -c conda-forge --croot /tmp/conda-build 
 
-conda convert /tmp/conda-build/linux-64/*.tar.bz2 --platform all  -o /tmp/conda-build
+# conda convert /tmp/conda-build/linux-64/*.tar.bz2 --platform all  -o /tmp/conda-build
 
 # # convert package to other platforms, all converts to:
 # platforms=( osx-64 linux-32 linux-64 win-32 win-64 )
