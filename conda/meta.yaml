@@ -21,7 +21,7 @@ requirements:
     - matplotlib
     - mpmath
     - numpy
-    # - plasmaboundaries
+    - plasmaboundaries
     - plotly
     - pytest-cov
     - python
@@ -30,7 +30,8 @@ requirements:
     - nbformat
     - nbconvert
     - ipywidgets
-    # - remove_dagmc_tags is an optional dependancy
+    - remove_dagmc_tags
+    - moab
     # - jupyter-cadquery not avaialbe on conda
 
 test:
@@ -46,16 +47,16 @@ test:
   source_files:
     - tests/
     - examples/
-  # commands:
-  #   - pytest -v tests/test_example_components.py
-  #   - pytest -v tests/test_example_reactors.py
-  #   - pytest -v tests/test_example_shapes.py
-  #   - pytest -v tests/test_parametric_components
-  #   - pytest -v tests/test_parametric_reactors
-  #   - pytest -v tests/test_parametric_shapes
-  #   - pytest -v tests/test_Reactor.py
-  #   - pytest -v tests/test_Shape.py
-    # - pytest -v tests/test_utils.py requires moab which is optional
+  commands:
+    - pytest -v tests/test_example_components.py
+    - pytest -v tests/test_example_reactors.py
+    - pytest -v tests/test_example_shapes.py
+    - pytest -v tests/test_parametric_components
+    - pytest -v tests/test_parametric_reactors
+    - pytest -v tests/test_parametric_shapes
+    - pytest -v tests/test_Reactor.py
+    - pytest -v tests/test_Shape.py
+    - pytest -v tests/test_utils.py
 
 
 about:
