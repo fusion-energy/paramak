@@ -54,8 +54,8 @@ test:
     - pytest -v tests/test_parametric_components
     - pytest -v tests/test_parametric_reactors
     - pytest -v tests/test_parametric_shapes
-    - pytest -v tests/test_Reactor.py
-    - pytest -v tests/test_Shape.py
+    - pytest -v tests/test_reactor.py
+    - pytest -v tests/test_shape.py
     - pytest -v tests/test_utils.py
 
 
