@@ -314,7 +314,13 @@ class Reactor:
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
         show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
 
-        from jupyter_cadquery.cadquery import Part, PartGroup
+        try:
+            from jupyter_cadquery.cadquery import Part, PartGroup
+        except ImportError:
+            print('To use Shape.show() you must install jupyter_cadquery.')
+            print(
+                'To install jupyter_cadquery type pip install jupyter_cadquery in the terminal')
+            return None
 
         parts = []
         for shape_or_compound in self.shapes_and_components:
@@ -1269,13 +1275,18 @@ class Reactor:
 
         from ipywidgets.embed import embed_minimal_html
 
-        embed_minimal_html(
-            filename,
-            views=[self.show().show().cq_view.renderer],
-            title='Renderer'
-        )
+        view = self.show()
 
-        return filename
+        if view is None:
+            return None
+        else:
+            embed_minimal_html(
+                filename,
+                views=[view.show().cq_view.renderer],
+                title='Renderer'
+            )
+
+            return filename
 
     def export_html(
             self,

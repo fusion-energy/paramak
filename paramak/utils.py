@@ -16,7 +16,6 @@ import numpy as np
 import plotly.graph_objects as go
 from cadquery import importers
 from OCP.GCPnts import GCPnts_QuasiUniformDeflection
-from remove_dagmc_tags import remove_tags
 
 import paramak
 
@@ -198,7 +197,12 @@ def export_vtk(
     Returns:
         filename of the vtk file produced
     """
-
+    try:
+        from remove_dagmc_tags import remove_tags
+    except ImportError:
+        msg = ('remove_dagmc_tags not found, export_h5m method is not '
+               'available. To install enter conda install v into the terminal')
+        raise ImportError(msg)
     path_h5m_filename = Path(h5m_filename)
     if path_h5m_filename.suffix != ".h5m":
         path_h5m_filename = path_h5m_filename.with_suffix(".h5m")
@@ -242,8 +246,9 @@ def define_moab_core_and_tags():
     try:
         from pymoab import core, types
     except ImportError:
-        raise ImportError(
-            'PyMoab not found, export_h5m method is not available')
+        msg = ('PyMoab not found, export_h5m method is not available. To '
+               'install enter conda install moab into the terminal')
+        raise ImportError(msg)
 
     # create pymoab instance
     moab_core = core.Core()

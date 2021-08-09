@@ -1,6 +1,9 @@
 
 from paramak import Plasma
-from plasmaboundaries import get_separatrix_coordinates
+try:
+    from plasmaboundaries import get_separatrix_coordinates
+except BaseException:
+    pass
 
 
 class PlasmaBoundaries(Plasma):

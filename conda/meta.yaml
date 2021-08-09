@@ -1,9 +1,9 @@
 {% set name = "paramak" %}
-{% set version = "0.2.3" %}
+{% set data = load_setup_py_data() %}
 
 package:
   name: "{{ name|lower }}"
-  version: "{{ version }}"
+  version: {{ data.get('version') }}
 
 source:
   path: ..
@@ -14,23 +14,24 @@ build:
 
 requirements:
   build:
-    - python 3.8
+    - python {{ python }}
     - setuptools
   run:
     - cadquery
     - matplotlib
     - mpmath
     - numpy
-    - plasmaboundaries
+    # - plasmaboundaries
     - plotly
     - pytest-cov
     - python
     - scipy
     - sympy
-    - remove_dagmc_tags
     - nbformat
     - nbconvert
-    # - jupyter-cadquery
+    - ipywidgets
+    # - remove_dagmc_tags is an optional dependancy
+    # - jupyter-cadquery not avaialbe on conda
 
 test:
   imports:
@@ -45,17 +46,26 @@ test:
   source_files:
     - tests/
     - examples/
-  commands:
-    - pytest -v
+  # commands:
+  #   - pytest -v tests/test_example_components.py
+  #   - pytest -v tests/test_example_reactors.py
+  #   - pytest -v tests/test_example_shapes.py
+  #   - pytest -v tests/test_parametric_components
+  #   - pytest -v tests/test_parametric_reactors
+  #   - pytest -v tests/test_parametric_shapes
+  #   - pytest -v tests/test_Reactor.py
+  #   - pytest -v tests/test_Shape.py
+    # - pytest -v tests/test_utils.py requires moab which is optional
+
 
 about:
-  home: "https://github.com/ukaea/paramak"
+  home: "https://github.com/fusion-energy/paramak"
   license: MIT
   license_family: MIT
   license_file: LICENSE.txt
   summary: "Create 3D fusion reactor CAD models based on input parameters"
   doc_url: https://paramak.readthedocs.io/
-  dev_url: https://github.com/ukaea/paramak
+  dev_url: https://github.com/fusion-energy/paramak
   summary: Paramak - parameter driven fusion reactor model creation
 
 extra:
