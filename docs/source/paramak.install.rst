@@ -6,11 +6,12 @@ Installation
 Prerequisites
 -------------
 
-To use the paramak tool you will need Python 3 installed using Anaconda or
-Miniconda
+To use the paramak tool you will need Python 3 installed using Miniconda or
+Anaconda
 
-* `Anaconda <https://www.anaconda.com/>`_
+
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
+* `Anaconda <https://www.anaconda.com/>`_
 
 Once you have Anaconda or MiniConda installed then create a new enviroment
 (Python 3.6, 3.7 or 3.8 are supported).
