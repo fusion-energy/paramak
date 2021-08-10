@@ -21,14 +21,14 @@ sed -i "s/$PLACEHOLDER/version=\"${VERSION}\"/g" "$VERSION_FILE"
 
 conda-build conda/ -c cadquery -c conda-forge --croot /tmp/conda-build 
 
-conda convert /tmp/conda-build/linux-64/*.tar.bz2 --platform all  -o /tmp/conda-build
+# converting using all includes quite a few oxs and linux versions (arm arch etc)
+# conda convert /tmp/conda-build/linux-64/*.tar.bz2 --platform all  -o /tmp/conda-build
 
-# # convert package to other platforms, all converts to:
+# option for converting package to specified platforms
 # platforms=( osx-64 linux-32 linux-64 win-32 win-64 )
 # find /tmp/conda-build/linux-64/ -name *.tar.bz2 | while read file
 # do
 #     echo $file
-#     #conda convert --platform all $file  -o /tmp/conda-build 
 #     for platform in "${platforms[@]}"
 #     do
 #        conda convert --platform $platform $file  -o /tmp/conda-build/
@@ -36,10 +36,5 @@ conda convert /tmp/conda-build/linux-64/*.tar.bz2 --platform all  -o /tmp/conda-
 # done
 
 anaconda upload -f /tmp/conda-build/*/*.tar.bz2
-# find /tmp/conda-build/ -name *.tar.bz2 | while read file
-# do
-#     echo $file
-#     anaconda upload $file
-# done
 
 sed -i "s/version=\"${VERSION}\"/$PLACEHOLDER/g" "$VERSION_FILE"

@@ -12,70 +12,73 @@ Miniconda
 * `Anaconda <https://www.anaconda.com/>`_
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
 
-Once you have Anaconda or MiniConda installed then CadQuery can be installed
-into a new enviroment. A more detailed description of installing Cadquery 2 can
-be found here:
-
-* `Cadquery 2 installation <https://cadquery.readthedocs.io/en/latest/installation.html>`_
+Once you have Anaconda or MiniConda installed then create a new enviroment
+(Python 3.6, 3.7 or 3.8 are supported).
 
 
-First create a new enviroment.
-
-.. code-block:: python
+.. code-block:: bash
 
    conda create --name paramak_env python=3.8
 
 
 Then activate the new enviroment.
 
-.. code-block:: python
+.. code-block:: bash
 
    conda activate paramak_env
 
 
-Then install CadQuery.
-
-.. code-block:: python
-
-   conda install -c conda-forge -c cadquery cadquery=2.1
-
-Now you are ready to install the Paramak
-
-
-System Installation
--------------------
-
-The quickest way to install the Paramak is to use pip. In the terminal type...
+Then install the Paramak.
 
 .. code-block:: bash
 
-   pip install paramak
+   conda install -c fusion-energy -c cadquery -c conda-forge paramak
 
-Alternatively you can download the repository using the `download link <https://github.com/fusion-energy/paramak/archive/develop.zip>`_ or clone the repository using:
+Now you should be ready to import paramak from your new python enviroment.
+
+Optional neutronics install
+---------------------------
+
+You can also install optional dependencies that add neutronics capabilities to
+the paramak. This will install neutronics_material_maker, OpenMC and DAGMC.
+`More details <https://paramak-neutronics.readthedocs.io>`_
+
+Developer Installation
+----------------------
+
+If you want to contribute to the paramak or then you might want to install the 
+package using setup tools.
+
+Download and install MiniConda, create a new python enviroment and activate the
+enviroment as covered in the installation procedure above.
+
+Then install CadQuery.
+
+.. code-block:: bash
+
+   conda install -c conda-forge -c cadquery cadquery=2.1
+
+
+Then install moab.
+
+.. code-block:: bash
+
+   conda install -c conda-forge moab
+
+
+Then clone the repository
 
 .. code-block:: bash
 
    git clone https://github.com/fusion-energy/paramak.git
 
 Navigate to the paramak repository and within the terminal install the paramak
-package and the dependencies using pip3.
+package and the dependencies using pip with e -e (developer option).
 
 .. code-block:: bash
 
    cd paramak
-   pip install .
-
-Alternatively you can install the paramak with the following command.
-
-.. code-block:: bash
-
-   python setup.py install
-
-You can also install optional dependencies that add some neutronics
-capabilities to the paramak. This will install neutronics_material_maker and
-parametric_plasma_source. In addition to this you would need DAGMC, OpenMC,
-MOAB and Trelis / Cubit.
-`More details <https://paramak-neutronics.readthedocs.io>`_
+   pip install -e .
 
 
 Docker Image Installation
