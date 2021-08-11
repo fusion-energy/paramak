@@ -843,7 +843,7 @@ class Reactor:
             cubit_path: the path to Cubit bin folder, this is apped to the
                 python path so that Cubit can be imported. Defaults to the path
                 for a Linux installed Cubit 2021.5 but can be changed to suit.
-                The default path for a Linux install of Cubit 2021.4 would be 
+                The default path for a Linux install of Cubit 2021.4 would be
                 '/opt/Coreform-Cubit-2021.5/bin/'
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
@@ -901,8 +901,8 @@ class Reactor:
             files_with_tags=files_with_tags,
             h5m_filename=filename,
             cubit_path=cubit_path,
-            faceting_tolerance = faceting_tolerance,
-            merge_tolerance = merge_tolerance,
+            faceting_tolerance=faceting_tolerance,
+            merge_tolerance=merge_tolerance,
         )
         self.h5m_filename = water_tight_h5m_filename
 

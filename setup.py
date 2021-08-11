@@ -40,5 +40,4 @@ setuptools.setup(
         "plasmaboundaries>=0.1.8",
         "remove_dagmc_tags>=0.0.5",
         "jupyter-cadquery>=2.2.0",
-        "cad_to_h5m>=0.0.1"
-    ])
+        "cad_to_h5m>=0.0.1"])
