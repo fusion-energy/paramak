@@ -21,3 +21,4 @@ dependencies:
     - sphinxcadquery
     - defusedxml
     - jupyter-cadquery
+    - cad_to_h5m
