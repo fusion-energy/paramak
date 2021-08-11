@@ -6,6 +6,7 @@ import shutil
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
+import cad_to_h5m
 
 import cadquery as cq
 import matplotlib.pyplot as plt
@@ -832,12 +833,18 @@ class Reactor:
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
             include_plasma: Optional[bool] = False,
+            cubit_path: Optional[str] = '/opt/Coreform-Cubit-2021.5/bin/'
     ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations using Coreform cubit.
 
         Arguments:
             filename: filename of h5m outputfile.
+            cubit_path: the path to Cubit bin folder, this is apped to the
+                python path so that Cubit can be imported. Defaults to the path
+                for a Linux installed Cubit 2021.5 but can be changed to suit.
+                The default path for a Linux install of Cubit 2021.4 would be 
+                '/opt/Coreform-Cubit-2021.5/bin/'
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
                 https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
@@ -883,14 +890,20 @@ class Reactor:
                 'filename')
             raise ValueError(msg)
 
-        not_watertight_file = paramak.utils.cubit_command_to_create_dagmc_h5m(
-            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
+        files_with_tags = self.neutronics_description()
 
-        water_tight_h5m_filename = paramak.utils.make_watertight(
-            input_filename=not_watertight_file[0],
-            output_filename=filename
+        for entry in files_with_tags:
+            # surface_reflectivity feature is unstable
+            entry.pop("surface_reflectivity", None)
+            entry['filename'] = entry['stp_filename']
+
+        water_tight_h5m_filename = cad_to_h5m.cad_to_h5m(
+            files_with_tags=files_with_tags,
+            h5m_filename=filename,
+            cubit_path=cubit_path,
+            faceting_tolerance = faceting_tolerance,
+            merge_tolerance = merge_tolerance,
         )
-
         self.h5m_filename = water_tight_h5m_filename
 
         return water_tight_h5m_filename

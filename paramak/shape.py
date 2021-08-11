@@ -5,6 +5,7 @@ import warnings
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
+import cad_to_h5m
 
 from cadquery import exporters, Workplane, Compound, Assembly, Color
 from cadquery.occ_impl import shapes
@@ -1572,13 +1573,21 @@ class Shape:
 
     def export_h5m_with_cubit(
             self,
+            filename: Optional[str] = 'dagmc.h5m',
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
+            cubit_path: Optional[str] = '/opt/Coreform-Cubit-2021.5/bin/'
     ):
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations using Coreform cubit.
 
         Arguments:
+            filename: filename of h5m outputfile.
+            cubit_path: the path to Cubit bin folder, this is apped to the
+                python path so that Cubit can be imported. Defaults to the path
+                for a Linux installed Cubit 2021.5 but can be changed to suit.
+                The default path for a Linux install of Cubit 2021.4 would be 
+                '/opt/Coreform-Cubit-2021.5/bin/'
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
                 https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
@@ -1600,25 +1609,27 @@ class Shape:
             faceting_tolerance = self.faceting_tolerance
 
         self.export_stp()
-        self.export_neutronics_description()
+        files_with_tags = self.neutronics_description()
 
-        not_watertight_file = paramak.utils.cubit_command_to_create_dagmc_h5m(
-            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
+        files_with_tags['filename'] = files_with_tags['stp_filename']
 
-        water_tight_h5m = paramak.utils.make_watertight(
-            input_filename=not_watertight_file,
-            output_filename="dagmc.h5m"
+        water_tight_h5m_filename = cad_to_h5m.cad_to_h5m(
+            files_with_tags=[files_with_tags],
+            h5m_filename=filename,
+            cubit_path=cubit_path,
+            faceting_tolerance = faceting_tolerance,
+            merge_tolerance = merge_tolerance,
         )
 
-        self.h5m_filename = water_tight_h5m
+        self.h5m_filename = water_tight_h5m_filename
 
-        return water_tight_h5m
+        return water_tight_h5m_filename
 
     def export_h5m_with_pymoab(
             self,
             filename: Optional[str] = 'dagmc.h5m',
             include_graveyard: Optional[bool] = True,
-            faceting_tolerance: Optional[float] = 0.001,
+            faceting_tolerance: Optional[float] = None,
     ) -> str:
         """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
         DAGMC file produced has not been imprinted and merged unlike the other
@@ -1632,11 +1643,18 @@ class Shape:
                 not. If True the the Reactor.make_graveyard will be called
                 using Reactor.graveyard_size and Reactor.graveyard_offset
                 attribute values.
-            faceting_tolerance: the precision of the faceting.
+            faceting_tolerance: the allowable distance between facetets
+                before merging these CAD objects into a single CAD object See
+                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
+                for more details. Defaults to None which uses the
+                Shape.faceting_tolerance attribute.
 
         Returns:
             The filename of the DAGMC file created
         """
+
+        if faceting_tolerance is None:
+            faceting_tolerance = self.faceting_tolerance
 
         path_filename = Path(filename)
 
