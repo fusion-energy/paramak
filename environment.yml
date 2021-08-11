@@ -1,8 +1,8 @@
 name: docs-environment
 
 channels:
-  - cadquery
   - conda-forge
+  - cadquery
 
 dependencies:
   - cadquery=2.1
@@ -12,12 +12,12 @@ dependencies:
   - numpy
   - matplotlib
   - pillow
-  - moab
+  - moab=5.3.0
+  - remove_dagmc_tags
   - pip:
-    - remove_dagmc_tags
     - sympy
     - plasmaboundaries
     - sphinx-autodoc-typehints
     - sphinxcadquery
     - defusedxml
-    
+    - jupyter-cadquery

@@ -17,7 +17,7 @@ class TestExampleReactors(unittest.TestCase):
             start = time.time()
 
             print(notebook)
-            nb, errors = notebook_run(notebook)
+            errors = notebook_run(notebook)
             assert errors == []
 
             stop = time.time()

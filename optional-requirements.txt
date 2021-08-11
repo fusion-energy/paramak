@@ -1,2 +1,0 @@
-neutronics_material_maker==0.3.2
-parametric_plasma_source

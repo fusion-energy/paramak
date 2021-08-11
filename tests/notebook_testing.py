@@ -35,4 +35,4 @@ def notebook_run(path):
             else:
                 raise e
 
-    return note_book, errors
+    return errors

@@ -1,38 +1,40 @@
 
 #assumes anaconda-client and conda-build have been installed
-# conda install anaconda-client
-# conda install conda-build
+# conda install -y anaconda-client
+# conda install -y conda-build
 # anaconda login
 
-pkg='paramak'
-array=( 3.6 3.7 3.8 )
 
+rm -rf /tmp/conda-build
 mkdir -p /tmp/conda-build
 rm -rf /tmp/conda-build
 
-for i in "${array[@]}"
-do
-	conda-build conda/ -c cadquery -c conda-forge --croot /tmp/conda-build --python $i 
-	# conda build conda/meta.yaml -c cadquery -c conda-forge --croot /tmp/cbld
-done
 
+# VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
+VERSION=0.3.2
+PLACEHOLDER='version="develop"'
+VERSION_FILE='setup.py'
+# Grep checks that the placeholder is in the file. If grep doesn't find
+# the placeholder then it exits with exit code 1 and github actions fails.
+grep "$PLACEHOLDER" "$VERSION_FILE"
+sed -i "s/$PLACEHOLDER/version=\"${VERSION}\"/g" "$VERSION_FILE"
 
-# # convert package to other platforms
-platforms=( osx-64 linux-32 linux-64 win-32 win-64 )
-platforms=( linux-64 )
-find /tmp/conda-build/linux-64/ -name *.tar.bz2 | while read file
-do
-    echo $file
-    #conda convert --platform all $file  -o $HOME/conda-bld/
-    for platform in "${platforms[@]}"
-    do
-       conda convert --platform $platform $file  -o /tmp/conda-build/
-    done
-done
+conda-build conda/ -c cadquery -c conda-forge --croot /tmp/conda-build 
 
+# converting using all includes quite a few oxs and linux versions (arm arch etc)
+# conda convert /tmp/conda-build/linux-64/*.tar.bz2 --platform all  -o /tmp/conda-build
 
-find /tmp/conda-build/ -name *.tar.bz2 | while read file
-do
-    echo $file
-    anaconda upload $file
-done
+# option for converting package to specified platforms
+# platforms=( osx-64 linux-32 linux-64 win-32 win-64 )
+# find /tmp/conda-build/linux-64/ -name *.tar.bz2 | while read file
+# do
+#     echo $file
+#     for platform in "${platforms[@]}"
+#     do
+#        conda convert --platform $platform $file  -o /tmp/conda-build/
+#     done
+# done
+
+anaconda upload -f /tmp/conda-build/*/*.tar.bz2
+
+sed -i "s/version=\"${VERSION}\"/$PLACEHOLDER/g" "$VERSION_FILE"
