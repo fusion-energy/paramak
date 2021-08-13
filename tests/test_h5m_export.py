@@ -5,6 +5,7 @@ from pathlib import Path
 
 import paramak
 
+
 class TestReactorNeutronics(unittest.TestCase):
 
     def test_export_h5m(self):
@@ -65,6 +66,7 @@ class TestReactorNeutronics(unittest.TestCase):
         test_reactor.export_h5m(filename='out', faceting_tolerance=0.01)
         assert Path("out.h5m").exists() is True
         os.system('rm out.h5m')
+
 
 if __name__ == "__main__":
     unittest.main()
