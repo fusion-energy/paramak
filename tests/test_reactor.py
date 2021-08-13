@@ -518,6 +518,22 @@ class TestReactor(unittest.TestCase):
             ValueError,
             test_stl_filename_None)
 
+    def test_make_graveyard_accepts_offset_from_graveyard(self):
+        """Creates a graveyard for a reactor and sets the graveyard_offset.
+        Checks that the Reactor.graveyard_offset property is set"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat1')
+        test_shape2 = paramak.RotateSplineShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat2')
+        test_shape.rotation_angle = 360
+        test_reactor = paramak.Reactor([test_shape, test_shape2])
+        test_reactor.graveyard_offset == 101
+        graveyard = test_reactor.make_graveyard()
+        assert graveyard.volume > 0
+
     def test_reactor_creation_with_default_properties(self):
         """creates a Reactor object and checks that it has no default properties"""
 
