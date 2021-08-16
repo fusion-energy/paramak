@@ -40,6 +40,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx \
     DEBIAN_FRONTEND=noninteractive
 
+RUN apt-get --allow-releaseinfo-change update
 RUN apt-get update -y && \
     apt-get upgrade -y
 
