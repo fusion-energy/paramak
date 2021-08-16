@@ -76,7 +76,10 @@ RUN apt-get install -y libxcb-xinerama0
 RUN dpkg -i coreform-cubit-2021.5.deb
 
 # Download Svalinn plugin
-RUN wget https://github.com/svalinn/Cubit-plugin/releases/download/v0.0.2/svalinn-plugin_debian-10.10_cubit_2021.5.tgz
+
+# this will be downloaded from the main release when avaialbe
+RUN wget https://github.com/Shimwell/Cubit-plugin/releases/download/v0.6.0/svalinn-plugin_debian-10.10_cubit_2021.5.tgz
+# RUN wget https://github.com/svalinn/Cubit-plugin/releases/download/v0.0.2/svalinn-plugin_debian-10.10_cubit_2021.5.tgz
 RUN tar -xzvf svalinn-plugin_debian-10.10_cubit_2021.5.tgz -C /opt/Coreform-Cubit-2021.5
 
 # dagmc is needed as it includes the make_watertight command and moab
