@@ -7,7 +7,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 import cad_to_h5m
-
+from collections import Counter
 import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import exporters
@@ -625,11 +625,10 @@ class Reactor:
         """
 
         if len(self.stl_filenames) != len(set(self.stl_filenames)):
-            raise ValueError(
-                "Set Reactor already contains a shape or component \
-                         with this stl_filename",
-                self.stl_filenames,
-            )
+            duplicates = [k for k,v in Counter(self.stl_filenames).items() if v>1]
+            msg = ("The reactor contains multiple shapes with the same",
+                   f"stl_filename. The duplications are: {duplicates}.", )
+            raise ValueError(msg)
 
         filenames = []
         for entry in self.shapes_and_components:
