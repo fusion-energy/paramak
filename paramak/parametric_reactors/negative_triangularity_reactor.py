@@ -328,6 +328,24 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._vacuum_vessel_body_end_rad = self._vacuum_vessel_body_start_rad + \
             self._vacuum_vessel_thickness
 
+        # TF Coils
+        # Getting small radius for inner corner
+        self._tf_coils_init = paramak.ToroidalFieldCoilRectangleRoundCorners(
+            with_inner_leg=False,
+            lower_inner_coordinates=(self._inner_bore_stop_rad, -self._inner_tf_leg_height / 2),
+            mid_point_coordinates=(self._vacuum_vessel_body_end_rad, 0),
+            thickness=self._outer_tf_coil_thickness,
+            number_of_coils=self._number_of_coils,
+            distance=self._tf_width,
+            rotation_angle=self._rotation_angle,
+            color=(0.2, 1, 0.2)
+        )
+
+        self._small_rad_displacement = self._tf_coils_init.analyse_attributes[2]
+
+        self._tf_start_rad = self._vacuum_vessel_body_end_rad + self._small_rad_displacement
+        self._tf_end_rad = self._tf_start_rad + self._inner_tf_coil_thickness
+
     def _make_tf_inner_leg(self):
 
         self._bore_cutter = paramak.CenterColumnShieldCylinder(
@@ -553,23 +571,10 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
     def _make_tf_coils(self):
 
-        _tf_coils_init = paramak.ToroidalFieldCoilRectangleRoundCorners(
-            with_inner_leg=False,
-            lower_inner_coordinates=(self._inner_bore_stop_rad, -self._inner_tf_leg_height / 2),
-            mid_point_coordinates=(self._vacuum_vessel_body_end_rad, 0),
-            thickness=self._outer_tf_coil_thickness,
-            number_of_coils=self._number_of_coils,
-            distance=self._tf_width,
-            rotation_angle=self._rotation_angle,
-            color=(0.2, 1, 0.2)
-        )
-
-        self._small_rad_displacement = _tf_coils_init.analyse_attributes[2]
-
         self._tf_coils = paramak.ToroidalFieldCoilRectangleRoundCorners(
             with_inner_leg=False,
             lower_inner_coordinates=(self._inner_bore_stop_rad, -self._inner_tf_leg_height / 2),
-            mid_point_coordinates=(self._vacuum_vessel_body_end_rad + self._small_rad_displacement, 0),
+            mid_point_coordinates=(self._tf_start_rad, 0),
             thickness=self._outer_tf_coil_thickness,
             number_of_coils=self._number_of_coils,
             distance=self._tf_width,
@@ -641,6 +646,12 @@ class NegativeTriangularityReactor(paramak.Reactor):
         return []
 
     def _make_pf_coils(self):
+
+
+        check_list = [x[0] >= self._tf_end_rad for x in self._pf_coil_center_points]
+        if False in check_list:
+            print('One or more Poloidal Field Coil is within the Reactor geometry!')
+
 
         self._pf_coils = paramak.PoloidalFieldCoilSet(
             heights=self._pf_coil_heights,
