@@ -647,11 +647,10 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
     def _make_pf_coils(self):
 
-
-        check_list = [x[0] >= self._tf_end_rad for x in self._pf_coil_center_points]
+        check_list = [
+            x[0] >= self._tf_end_rad for x in self._pf_coil_center_points]
         if False in check_list:
             print('One or more Poloidal Field Coil is within the Reactor geometry!')
-
 
         self._pf_coils = paramak.PoloidalFieldCoilSet(
             heights=self._pf_coil_heights,
