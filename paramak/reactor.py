@@ -390,9 +390,10 @@ class Reactor:
                 )
 
             if entry.material_tag is None:
-                msg = (f"Shape with name {entry.name} has no material_tag. Set "
-                       "shape.material_tag for all the shapes in "
-                       "Reactor.shapes_and_components")
+                msg = (
+                    f"Shape with name {entry.name} has no material_tag. Set "
+                    "shape.material_tag for all the shapes in "
+                    "Reactor.shapes_and_components")
                 raise ValueError(msg)
 
             neutronics_description.append(entry.neutronics_description())
@@ -625,7 +626,9 @@ class Reactor:
         """
 
         if len(self.stl_filenames) != len(set(self.stl_filenames)):
-            duplicates = [k for k,v in Counter(self.stl_filenames).items() if v>1]
+            duplicates = [
+                k for k, v in Counter(
+                    self.stl_filenames).items() if v > 1]
             msg = ("The reactor contains multiple shapes with the same",
                    f"stl_filename. The duplications are: {duplicates}.", )
             raise ValueError(msg)
