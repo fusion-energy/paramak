@@ -88,7 +88,7 @@ RUN printf 'Fri May 28 2021' >> /root/.config/Coreform/licenses/cubit-learn.lic
 ENV CUBIT_VERBOSE=5
 
 # dagmc is needed as it includes the make_watertight command and moab
-# conda install -c conda-forge -c moab # now included with dagmc
+RUN conda install -c conda-forge moab
 RUN conda install -c conda-forge dagmc && \
     conda clean -afy
 
