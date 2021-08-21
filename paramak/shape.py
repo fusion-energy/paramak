@@ -1135,14 +1135,14 @@ class Shape:
 
         if view is None:
             return None
-        else:
-            embed_minimal_html(
-                filename,
-                views=[view.show().cq_view.renderer],
-                title='Renderer'
-            )
 
-            return filename
+        embed_minimal_html(
+            filename,
+            views=[view.show().cq_view.renderer],
+            title='Renderer'
+        )
+
+        return filename
 
     def export_html(
             self,
