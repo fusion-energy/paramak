@@ -1661,6 +1661,12 @@ class Shape:
         if path_filename.suffix != ".h5m":
             path_filename = path_filename.with_suffix(".h5m")
 
+        if len(self.material_tag) > 27:
+            msg = ("Shape.material_tag > 28 characters. Material tags "
+                    "must be less than 28 characters use in DAGMC "
+                    f"{self.material_tag} is too long.")
+            raise ValueError(msg)
+
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
         self.export_stl(self.stl_filename, tolerance=faceting_tolerance)
