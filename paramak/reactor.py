@@ -963,6 +963,13 @@ class Reactor:
                 entry.export_stl(
                     entry.stl_filename,
                     tolerance=faceting_tolerance)
+
+                if len(entry.material_tag) > 27:
+                    msg = ("Shape.material_tag > 28 characters. Material tags"
+                           "must be less than 28 characters use in DAGMC "
+                           f"{entry.material_tag} is too long.")
+                    raise ValueError(msg)
+
                 moab_core = add_stl_to_moab_core(
                     moab_core,
                     surface_id,
