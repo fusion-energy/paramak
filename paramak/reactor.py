@@ -390,10 +390,10 @@ class Reactor:
                 )
 
             if entry.material_tag is None:
-                raise ValueError(
-                    "set Shape.material_tag for all the \
-                                  Reactor entries before using this method"
-                )
+                msg = (f"Shape with name {entry.name} has no material_tag. Set "
+                       "shape.material_tag for all the shapes in "
+                       "Reactor.shapes_and_components")
+                raise ValueError(msg)
 
             neutronics_description.append(entry.neutronics_description())
 
