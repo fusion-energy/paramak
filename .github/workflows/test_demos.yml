@@ -1,0 +1,30 @@
+name: Test demos
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+    - main
+    - develop
+  pull_request:
+    branches:
+    - main
+    - develop
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/fusion-energy/paramak:dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run the notebooks
+        run: |
+          python3 tests/test_example_components.py
