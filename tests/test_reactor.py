@@ -1030,8 +1030,9 @@ class TestReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape])
 
         os.system("rm filename.html")
-        test_reactor.export_html_3d('filename.html')
-        assert Path("filename.html").exists() is True
+        filename = test_reactor.export_html_3d('filename.html')
+        if filename is not None:
+            assert Path("filename.html").exists() is True
 
     def test_tet_meshes_error(self):
         test_shape = paramak.RotateStraightShape(

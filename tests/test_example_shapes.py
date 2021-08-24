@@ -14,7 +14,7 @@ class TestExampleShapes(unittest.TestCase):
     def test_jupyter_notebooks_example_parametric_shapes(self):
         for notebook in Path().rglob("examples/example_parametric_shapes/*.ipynb"):
             print(notebook)
-            nb, errors = notebook_run(notebook)
+            errors = notebook_run(notebook)
             assert errors == []
 
 

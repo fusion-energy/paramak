@@ -26,4 +26,3 @@ jobs:
       - name: run tests
         run: |
           bash run_tests.sh
-          curl -s https://codecov.io/bash

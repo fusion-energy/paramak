@@ -23,12 +23,12 @@ jobs:
       - run:
           name: run shape tests
           command: 
-            pytest tests/test_Shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run Reactor tests
           command: 
-            pytest tests/test_Reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+            pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run parametric_shapes tests
