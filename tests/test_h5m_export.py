@@ -110,5 +110,6 @@ class TestReactorNeutronics(unittest.TestCase):
         self.my_shape.export_vtk(filename='suffixless_filename')
         assert Path('suffixless_filename.vtk').is_file
 
+
 if __name__ == "__main__":
     unittest.main()
