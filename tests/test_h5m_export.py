@@ -6,7 +6,7 @@ from pathlib import Path
 import paramak
 
 
-class TestReactorNeutronics(unittest.TestCase):
+class TestShapeExportH5mPymoab(unittest.TestCase):
 
     def setUp(self):
 
@@ -109,6 +109,99 @@ class TestReactorNeutronics(unittest.TestCase):
 
         self.my_shape.export_vtk(filename='suffixless_filename')
         assert Path('suffixless_filename.vtk').is_file
+
+
+class TestReactorExportH5mPymoab(unittest.TestCase):
+
+    def setUp(self):
+        self.test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat1'
+        )
+
+        self.test_shape2 = paramak.ExtrudeStraightShape(
+            points=[(100, 100), (50, 100), (50, 50)],
+            distance=20,
+            material_tag='mat2'
+        )
+
+        self.test_reactor = paramak.Reactor([self.test_shape])
+
+    def test_export_h5m_with_pymoab_without_faceting_tolerance(self):
+        """exports a h5m file with faceting_tolerance set to None which uses
+        the the self.faceting_tolerance is used"""
+
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat2'
+        )
+        my_reactor = paramak.Reactor([test_shape])
+        my_reactor.faceting_tolerance = 1e-2
+        my_reactor.export_h5m_with_pymoab(faceting_tolerance=None)
+
+    def test_export_h5m_with_pymoab_without_plasma(self):
+        """exports a h5m file with pymoab without the plasma"""
+
+        os.system('rm *.stl')
+
+        test_shape1 = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            stl_filename='RotateStraightShape.stl',
+            material_tag='mat1',
+        )
+        test_shape2 = paramak.Plasma(
+            stl_filename='plasma.stl',
+            material_tag='mat1',
+        )
+
+        my_reactor = paramak.Reactor([test_shape1, test_shape2])
+        my_reactor.export_h5m_with_pymoab(
+            include_plasma=False, filename='no_plasma.h5m')
+
+        assert Path('RotateStraightShape.stl').is_file()
+        assert Path('plasma.stl').is_file() is False
+        my_reactor.export_h5m_with_pymoab(
+            include_plasma=True, filename='with_plasma.h5m')
+        assert Path('plasma.stl').is_file()
+        assert Path('with_plasma.h5m').stat().st_size > Path(
+            'no_plasma.h5m').stat().st_size
+
+    def test_export_h5m_with_pymoab_from_manifest_file(self):
+        """exports a h5m file when shapes_and_components is set to a string"""
+
+        os.system('rm dagmc.h5m')
+        os.system('rm *.stp')
+        test_shape = paramak.RotateStraightShape(
+            points=[(0, 0), (0, 20), (20, 20)],
+            stp_filename='test_shape.stp'
+        )
+        test_shape.export_stp()
+        test_shape.export_neutronics_description('manifest.json')
+        my_reactor = paramak.Reactor('manifest.json')
+        my_reactor.export_h5m_with_pymoab()
+        assert Path('dagmc.h5m').is_file()
+
+    def test_export_vtk(self):
+        """Creates vtk files from the h5m files and checks they exist"""
+
+        os.system('rm *.h5m *.vtk')
+
+        assert self.test_reactor.h5m_filename is None
+        self.test_reactor.export_h5m_with_pymoab()
+        self.test_reactor.export_vtk()
+        assert Path('dagmc.h5m').is_file()
+        assert Path('dagmc.vtk').is_file()
+        self.test_reactor.export_vtk(
+            include_graveyard=False,
+            filename='dagmc_no_graveyard.vtk')
+        assert Path('dagmc_no_graveyard.vtk').is_file()
+        assert self.test_reactor.h5m_filename == 'dagmc.h5m'
+
+        self.test_reactor.export_vtk(filename='custom_filename.vtk')
+        assert Path('custom_filename.vtk').is_file()
+
+        self.test_reactor.export_vtk(filename='suffixless_filename')
+        assert Path('suffixless_filename.vtk').is_file()
 
 
 if __name__ == "__main__":

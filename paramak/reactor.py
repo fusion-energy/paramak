@@ -963,7 +963,7 @@ class Reactor:
                          paramak.PlasmaBoundaries)) is True or entry.name == 'plasma'):
                     continue
 
-                if len(entry.material_tag) > 27:
+                if entry.material_tag is None or len(entry.material_tag) > 27:
                     msg = ("Shape.material_tag > 28 characters. Material tags "
                            "must be less than 28 characters use in DAGMC "
                            f"{entry.material_tag} is too long.")

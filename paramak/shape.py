@@ -1661,7 +1661,7 @@ class Shape:
         if path_filename.suffix != ".h5m":
             path_filename = path_filename.with_suffix(".h5m")
 
-        if len(self.material_tag) > 27:
+        if self.material_tag is None or len(self.material_tag) > 27:
             msg = ("Shape.material_tag > 28 characters. Material tags "
                    "must be less than 28 characters use in DAGMC "
                    f"{self.material_tag} is too long.")
