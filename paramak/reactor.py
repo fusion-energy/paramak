@@ -3,17 +3,19 @@ import collections
 import json
 import os
 import shutil
+from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
+
 import cad_to_h5m
-from collections import Counter
 import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import exporters
 
 import paramak
-from paramak.utils import get_hash, _replace, add_stl_to_moab_core, define_moab_core_and_tags, export_vtk
+from paramak.utils import (_replace, add_stl_to_moab_core,
+                           define_moab_core_and_tags, export_vtk, get_hash)
 
 
 class Reactor:

@@ -5,23 +5,19 @@ import warnings
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
+
 import cad_to_h5m
-
-from cadquery import exporters, Workplane, Compound, Assembly, Color
-from cadquery.occ_impl import shapes
-
-from cadquery import importers
-
 import matplotlib.pyplot as plt
+from cadquery import Assembly, Color, Compound, Workplane, exporters, importers
+from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-
-from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
-                           intersect_solid, plotly_trace, union_solid,
-                           add_stl_to_moab_core, define_moab_core_and_tags,
-                           export_vtk)
+from paramak.utils import (_replace, add_stl_to_moab_core, cut_solid,
+                           define_moab_core_and_tags, export_vtk, facet_wire,
+                           get_hash, intersect_solid, plotly_trace,
+                           union_solid)
 
 
 class Shape:
