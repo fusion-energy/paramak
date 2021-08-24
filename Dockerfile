@@ -60,17 +60,17 @@ RUN echo installing CadQuery version $cq_version && \
 RUN wget -O coreform-cubit-2021.5.deb https://f002.backblazeb2.com/file/cubit-downloads/Coreform-Cubit/Releases/Linux/Coreform-Cubit-2021.5%2B15962_5043ef39-Lin64.deb
 
 # install Cubit dependencies
-RUN apt-get install -y libx11-6 
-RUN apt-get install -y libxt6 
+RUN apt-get install -y libx11-6
+RUN apt-get install -y libxt6
 RUN apt-get install -y libgl1
 RUN apt-get install -y libglu1-mesa
 RUN apt-get install -y libgl1-mesa-glx
-RUN apt-get install -y libxcb-icccm4 
-RUN apt-get install -y libxcb-image0 
-RUN apt-get install -y libxcb-keysyms1 
-RUN apt-get install -y libxcb-render-util0 
-RUN apt-get install -y libxkbcommon-x11-0 
-RUN apt-get install -y libxcb-randr0 
+RUN apt-get install -y libxcb-icccm4
+RUN apt-get install -y libxcb-image0
+RUN apt-get install -y libxcb-keysyms1
+RUN apt-get install -y libxcb-render-util0
+RUN apt-get install -y libxkbcommon-x11-0
+RUN apt-get install -y libxcb-randr0
 RUN apt-get install -y libxcb-xinerama0
 
 # Install cubit
