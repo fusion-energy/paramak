@@ -16,6 +16,7 @@ class TestExampleComponents(unittest.TestCase):
             print(notebook)
             errors = notebook_run(notebook)
             assert errors == []
+            assert False
 
 
 if __name__ == "__main__":
