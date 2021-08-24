@@ -66,7 +66,7 @@ Then install the CadQuery.
    conda install -c cadquery -c conda-forge cadquery=2.1
 
 Then pip install the Paramak. Pip is used on windows as the conda install
-includes Moab which is currently not available as a conda isntall on Windows.
+includes Moab which is currently not available as a conda install on Windows.
 
 .. code-block:: bash
 
