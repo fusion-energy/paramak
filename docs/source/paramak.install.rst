@@ -13,9 +13,13 @@ Anaconda
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
 * `Anaconda <https://www.anaconda.com/>`_
 
-Once you have Anaconda or MiniConda installed then create a new enviroment
-(Python 3.6, 3.7 or 3.8 are supported).
+Once you have Anaconda or MiniConda installed then proceed with the OS specific
+steps.
 
+Install (Linux and Mac)
+-----------------------
+
+Create a new enviroment (Python 3.6, 3.7 or 3.8 are supported).
 
 .. code-block:: bash
 
@@ -36,6 +40,40 @@ Then install the Paramak.
    conda install -c fusion-energy -c cadquery -c conda-forge paramak
 
 Now you should be ready to import paramak from your new python enviroment.
+
+
+Install (Windows)
+-----------------
+
+Create a new enviroment (Python 3.6, 3.7 or 3.8 are supported).
+
+.. code-block:: bash
+
+   conda create --name paramak_env python=3.8
+
+
+Then activate the new enviroment.
+
+.. code-block:: bash
+
+   conda activate paramak_env
+
+
+Then install the CadQuery.
+
+.. code-block:: bash
+
+   conda install -c cadquery -c conda-forge cadquery=2.1
+
+Then pip install the Paramak. Pip is used on windows as the conda install
+includes Moab which is currently not available as a conda isntall on Windows.
+
+.. code-block:: bash
+
+   pip install paramak
+
+Now you should be ready to import paramak from your new python enviroment.
+
 
 Optional neutronics install
 ---------------------------
