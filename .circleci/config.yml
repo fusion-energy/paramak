@@ -25,6 +25,11 @@ jobs:
           command: 
             pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
+            - run:
+          name: run h5m export (pymoab) tests
+          command: 
+            pytest tests/test_h5m_export.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+
       - run:
           name: run Reactor tests
           command: 
