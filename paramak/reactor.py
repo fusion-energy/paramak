@@ -313,12 +313,22 @@ class Reactor:
     def solid(self, value):
         self._solid = value
 
-    def show(self):
+    def show(self, default_edgecolor: Tuple[float, float, float] = (0, 0, 0)):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)"""
+        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)
+
+        Args:
+            default_edgecolor: the color to use for the edges, passed to
+                jupyter_cadquery.cadquery show. Tuple of three values expected
+                individual values in the tuple should be floats between 0. and
+                1.
+
+        Returns:
+            jupyter_cadquery.cadquery.show object
+        """
 
         try:
-            from jupyter_cadquery.cadquery import Part, PartGroup
+            from jupyter_cadquery.cadquery import Part, PartGroup, show
         except ImportError:
             print('To use Shape.show() you must install jupyter_cadquery.')
             print(
@@ -334,6 +344,7 @@ class Reactor:
                 name = shape_or_compound.name
 
             scaled_color = [int(i * 255) for i in shape_or_compound.color[0:3]]
+            scaled_edge_color = [int(i * 255) for i in default_edgecolor[0:3]]
             if isinstance(
                     shape_or_compound.solid,
                     (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
@@ -349,7 +360,8 @@ class Reactor:
                         shape_or_compound.solid.val(),
                         name=f"{name}",
                         color=scaled_color))
-        return PartGroup(parts)
+
+        return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
     def neutronics_description(
             self,
@@ -1306,7 +1318,7 @@ class Reactor:
 
         embed_minimal_html(
             filename,
-            views=[view.show().cq_view.renderer],
+            views=[view.cq_view.renderer],
             title='Renderer'
         )
 
