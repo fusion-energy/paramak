@@ -874,7 +874,7 @@ class TestShape(unittest.TestCase):
             rotation_angle=90,
         )
 
-        # my_shape.export_h5m_with_cubit(filename='test_dagmc.h5m')
+        my_shape.export_h5m_with_cubit(filename='test_dagmc.h5m')
 
         assert Path('test_dagmc.h5m').is_file()
 
