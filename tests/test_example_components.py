@@ -4,7 +4,7 @@ import sys
 import unittest
 from pathlib import Path
 
-from .notebook_testing import notebook_run
+from notebook_testing import notebook_run
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'examples'))
 
@@ -16,7 +16,7 @@ class TestExampleComponents(unittest.TestCase):
             print(notebook)
             errors = notebook_run(notebook)
             assert errors == []
-            assert False
+            # assert False
 
 
 if __name__ == "__main__":
