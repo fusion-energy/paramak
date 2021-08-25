@@ -45,21 +45,6 @@ jobs:
           command: 
             pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
-      # - run:
-      #     name: run example shape tests
-      #     command: 
-      #       pytest tests/test_example_shapes.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      # - run:
-      #     name: run example component tests
-      #     command: 
-      #       pytest tests/test_example_components.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      # - run:
-      #     name: run example reactor tests
-      #     command: 
-      #       pytest --capture=tee-sys tests/test_example_reactors.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
       - store_test_results:
           path: test-reports
 
