@@ -24,6 +24,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Setup paramak
+        run: |
+          python3 setup.py develop
+  
       # Runs a single command using the runners shell
       - name: Run the notebooks
         run: |
