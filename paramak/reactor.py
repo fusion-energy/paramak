@@ -313,7 +313,7 @@ class Reactor:
     def solid(self, value):
         self._solid = value
 
-    def show(self, default_edgecolor: Tuple[float, float, float] = (0,0,0)):
+    def show(self, default_edgecolor: Tuple[float, float, float] = (0, 0, 0)):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
         show from jupyter_cadquery.cadquery and returns show(Reactor.solid)
 
@@ -362,7 +362,6 @@ class Reactor:
                         color=scaled_color))
 
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
-
 
     def neutronics_description(
             self,

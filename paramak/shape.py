@@ -673,16 +673,16 @@ class Shape:
         result = importers.importStep(filename)
         self.solid = result
 
-    def show(self, default_edgecolor: Tuple[float, float, float] = (0,0,0)):
+    def show(self, default_edgecolor: Tuple[float, float, float] = (0, 0, 0)):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
         show from jupyter_cadquery.cadquery and returns show(Shape.solid)
-        
+
         Args:
             default_edgecolor: the color to use for the edges, passed to
                 jupyter_cadquery.cadquery show. Tuple of three values expected
                 individual values in the tuple should be floats between 0. and
                 1.
-        
+
         Returns:
             jupyter_cadquery.cadquery.show object
         """
@@ -721,7 +721,7 @@ class Shape:
                     name=f"{name}",
                     color=scaled_color,
                     show_edges=True
-                    ))
+                ))
 
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
