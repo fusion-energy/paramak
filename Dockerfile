@@ -10,23 +10,23 @@
 #
 # Example builds:
 # Building using the defaults (cq_version 2.1)
-# docker build -t ukaea/paramak .
+# docker build -t paramak .
 #
 # Building to include cadquery master.
 # Run command from within the base repository directory
-# docker build -t ukaea/paramak --build-arg cq_version=master .
+# docker build -t paramak --build-arg cq_version=master .
 #
 # Once build the dockerimage can be run in a few different ways.
 #
 # Run with the following command for a terminal notebook interface
-# docker run -it ukaea/paramak .
+# docker run -it paramak .
 #
 # Run with the following command for a jupyter notebook interface
-# docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
+# docker run -p 8888:8888 paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
 #
 # Once built, the docker image can be tested with either of the following commands
-# docker run --rm ukaea/paramak pytest /tests
-# docker run --rm ukaea/paramak  /bin/bash -c "cd .. && bash run_tests.sh"
+# docker run --rm paramak pytest /tests
+# docker run --rm paramak  /bin/bash -c "bash run_tests.sh"
 
 FROM continuumio/miniconda3:4.9.2 as dependencies
 
@@ -88,7 +88,6 @@ RUN printf 'Fri May 28 2021' >> /root/.config/Coreform/licenses/cubit-learn.lic
 ENV CUBIT_VERBOSE=5
 
 # dagmc is needed as it includes the make_watertight command and moab
-RUN conda install -c conda-forge moab
 RUN conda install -c conda-forge dagmc && \
     conda clean -afy
 

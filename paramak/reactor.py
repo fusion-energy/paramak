@@ -3,16 +3,19 @@ import collections
 import json
 import os
 import shutil
+from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
+import cad_to_h5m
 import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import exporters
 
 import paramak
-from paramak.utils import get_hash, _replace, add_stl_to_moab_core, define_moab_core_and_tags, export_vtk
+from paramak.utils import (_replace, add_stl_to_moab_core,
+                           define_moab_core_and_tags, export_vtk, get_hash)
 
 
 class Reactor:
@@ -389,10 +392,11 @@ class Reactor:
                 )
 
             if entry.material_tag is None:
-                raise ValueError(
-                    "set Shape.material_tag for all the \
-                                  Reactor entries before using this method"
-                )
+                msg = (
+                    f"Shape with name {entry.name} has no material_tag. Set "
+                    "shape.material_tag for all the shapes in "
+                    "Reactor.shapes_and_components")
+                raise ValueError(msg)
 
             neutronics_description.append(entry.neutronics_description())
 
@@ -624,11 +628,12 @@ class Reactor:
         """
 
         if len(self.stl_filenames) != len(set(self.stl_filenames)):
-            raise ValueError(
-                "Set Reactor already contains a shape or component \
-                         with this stl_filename",
-                self.stl_filenames,
-            )
+            duplicates = [
+                k for k, v in Counter(
+                    self.stl_filenames).items() if v > 1]
+            msg = ("The reactor contains multiple shapes with the same",
+                   f"stl_filename. The duplications are: {duplicates}.", )
+            raise ValueError(msg)
 
         filenames = []
         for entry in self.shapes_and_components:
@@ -832,12 +837,18 @@ class Reactor:
             merge_tolerance: Optional[float] = None,
             faceting_tolerance: Optional[float] = None,
             include_plasma: Optional[bool] = False,
+            cubit_path: Optional[str] = '/opt/Coreform-Cubit-2021.5/bin/'
     ) -> str:
         """Produces a dagmc.h5m neutronics file compatable with DAGMC
         simulations using Coreform cubit.
 
         Arguments:
             filename: filename of h5m outputfile.
+            cubit_path: the path to Cubit bin folder, this is apped to the
+                python path so that Cubit can be imported. Defaults to the path
+                for a Linux installed Cubit 2021.5 but can be changed to suit.
+                The default path for a Linux install of Cubit 2021.4 would be
+                '/opt/Coreform-Cubit-2021.5/bin/'
             merge_tolerance: the allowable distance between edges and surfaces
                 before merging these CAD objects into a single CAD object. See
                 https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
@@ -883,14 +894,20 @@ class Reactor:
                 'filename')
             raise ValueError(msg)
 
-        not_watertight_file = paramak.utils.cubit_command_to_create_dagmc_h5m(
-            faceting_tolerance=faceting_tolerance, merge_tolerance=merge_tolerance)
+        files_with_tags = self.neutronics_description()
 
-        water_tight_h5m_filename = paramak.utils.make_watertight(
-            input_filename=not_watertight_file[0],
-            output_filename=filename
+        for entry in files_with_tags:
+            # surface_reflectivity feature is unstable
+            entry.pop("surface_reflectivity", None)
+            entry['filename'] = entry['stp_filename']
+
+        water_tight_h5m_filename = cad_to_h5m.cad_to_h5m(
+            files_with_tags=files_with_tags,
+            h5m_filename=filename,
+            cubit_path=cubit_path,
+            faceting_tolerance=faceting_tolerance,
+            merge_tolerance=merge_tolerance,
         )
-
         self.h5m_filename = water_tight_h5m_filename
 
         return water_tight_h5m_filename
@@ -948,9 +965,16 @@ class Reactor:
                          paramak.PlasmaBoundaries)) is True or entry.name == 'plasma'):
                     continue
 
+                if entry.material_tag is None or len(entry.material_tag) > 27:
+                    msg = ("Shape.material_tag > 28 characters. Material tags "
+                           "must be less than 28 characters use in DAGMC "
+                           f"{entry.material_tag} is too long.")
+                    raise ValueError(msg)
+
                 entry.export_stl(
                     entry.stl_filename,
                     tolerance=faceting_tolerance)
+
                 moab_core = add_stl_to_moab_core(
                     moab_core,
                     surface_id,
