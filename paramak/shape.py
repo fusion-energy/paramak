@@ -673,12 +673,22 @@ class Shape:
         result = importers.importStep(filename)
         self.solid = result
 
-    def show(self):
+    def show(self, default_edgecolor: Tuple[float, float, float] = (0,0,0)):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Shape.solid)"""
+        show from jupyter_cadquery.cadquery and returns show(Shape.solid)
+        
+        Args:
+            default_edgecolor: the color to use for the edges, passed to
+                jupyter_cadquery.cadquery show. Tuple of three values expected
+                individual values in the tuple should be floats between 0. and
+                1.
+        
+        Returns:
+            jupyter_cadquery.cadquery.show object
+        """
 
         try:
-            from jupyter_cadquery.cadquery import Part, PartGroup
+            from jupyter_cadquery.cadquery import Part, PartGroup, show
         except ImportError:
             print('To use Shape.show() you must install jupyter_cadquery.')
             print(
@@ -692,6 +702,7 @@ class Shape:
             name = self.name
 
         scaled_color = [int(i * 255) for i in self.color[0:3]]
+        scaled_edge_color = [int(i * 255) for i in default_edgecolor[0:3]]
         if isinstance(
                 self.solid,
                 (shapes.Shape, shapes.Compound)):
@@ -700,15 +711,19 @@ class Shape:
                     Part(
                         solid,
                         name=f"{name}{i}",
-                        color=scaled_color))
+                        color=scaled_color,
+                        show_edges=True
+                    ))
         else:
             parts.append(
                 Part(
                     self.solid.val(),
                     name=f"{name}",
-                    color=scaled_color))
+                    color=scaled_color,
+                    show_edges=True
+                    ))
 
-        return PartGroup(parts)
+        return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
     def create_solid(self) -> Workplane:
         solid = None
@@ -1135,7 +1150,7 @@ class Shape:
 
         embed_minimal_html(
             filename,
-            views=[view.show().cq_view.renderer],
+            views=[view.cq_view.renderer],
             title='Renderer'
         )
 
