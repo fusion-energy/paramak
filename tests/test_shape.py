@@ -861,22 +861,22 @@ class TestShape(unittest.TestCase):
             (200, 100),
         ]
 
-    # def test_cubit_h5m_export(self):
-    #     """exports a h5m file using cubit and checks that it has been created"""
+    def test_cubit_h5m_export(self):
+        """exports a h5m file using cubit and checks that it has been created"""
 
-    #     os.system("rm test_dagmc.h5m")
+        os.system("rm test_dagmc.h5m")
 
-    #     my_shape = paramak.Plasma(
-    #         major_radius=620,
-    #         minor_radius=210,
-    #         triangularity=0.33,
-    #         elongation=1.85,
-    #         rotation_angle=90,
-    #     )
+        my_shape = paramak.Plasma(
+            major_radius=620,
+            minor_radius=210,
+            triangularity=0.33,
+            elongation=1.85,
+            rotation_angle=90,
+        )
 
-    #     my_shape.export_h5m_with_cubit(filename='test_dagmc.h5m')
+        # my_shape.export_h5m_with_cubit(filename='test_dagmc.h5m')
 
-    #     assert Path('test_dagmc.h5m').is_file()
+        assert Path('test_dagmc.h5m').is_file()
 
 
 if __name__ == "__main__":
