@@ -113,5 +113,5 @@ COPY README.md README.md
 RUN python setup.py install
 
 # this helps prevent the kernal failing
-RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> /home/paramak/docker-cmd.sh
-CMD bash /home/paramak/docker-cmd.sh
+RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
+CMD bash docker-cmd.sh
