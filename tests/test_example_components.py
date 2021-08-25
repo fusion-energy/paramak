@@ -13,7 +13,6 @@ def main():
         print(notebook)
         errors = notebook_run(notebook)
         assert errors == []
-        assert False  # to show @Shimwell it can detect errors
 
 
 if __name__ == "__main__":
