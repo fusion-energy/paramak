@@ -28,7 +28,15 @@ jobs:
         run: |
           python3 setup.py develop
   
-      # Runs a single command using the runners shell
-      - name: Run the notebooks
+
+      - name: Run the notebooks shapes
+        run: |
+          python3 tests/test_example_shapes.py
+  
+      - name: Run the notebooks components
         run: |
           python3 tests/test_example_components.py
+
+      - name: Run the notebooks reactors
+        run: |
+          python3 tests/test_example_reactors.py
