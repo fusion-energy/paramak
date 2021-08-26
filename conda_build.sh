@@ -11,13 +11,13 @@ rm -rf /tmp/conda-build
 
 
 # VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
-VERSION=0.3.2
+VERSION=0.4.1
 PLACEHOLDER='version="develop"'
 VERSION_FILE='setup.py'
 # Grep checks that the placeholder is in the file. If grep doesn't find
 # the placeholder then it exits with exit code 1 and github actions fails.
 grep "$PLACEHOLDER" "$VERSION_FILE"
-sed -i "s/$PLACEHOLDER/version=\"${VERSION}\"/g" "$VERSION_FILE"
+sed -i "s@$PLACEHOLDER@version=\"${VERSION}\"@g" "$VERSION_FILE"
 
 conda-build conda/ -c cadquery -c conda-forge --croot /tmp/conda-build 
 
@@ -37,4 +37,4 @@ conda-build conda/ -c cadquery -c conda-forge --croot /tmp/conda-build
 
 anaconda upload -f /tmp/conda-build/*/*.tar.bz2
 
-sed -i "s/version=\"${VERSION}\"/$PLACEHOLDER/g" "$VERSION_FILE"
+sed -i "s@version=\"${VERSION}\"@$PLACEHOLDER@g" "$VERSION_FILE"
