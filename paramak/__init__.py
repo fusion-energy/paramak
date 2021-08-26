@@ -1,6 +1,5 @@
 from .shape import Shape
 from .reactor import Reactor
-from .utils import define_moab_core_and_tags, add_stl_to_moab_core, export_vtk
 from .utils import rotate, extend, distance_between_two_points, diff_between_angles
 from .utils import EdgeLengthSelector, FaceAreaSelector
 

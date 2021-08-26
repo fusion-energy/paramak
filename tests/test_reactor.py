@@ -155,31 +155,6 @@ class TestReactor(unittest.TestCase):
         test_reactor.largest_shapes = [test_shape]
         assert test_reactor.largest_dimension == 20
 
-    def test_incorrect_largest_shapes_settings(self):
-        """Creates NeutronicsModel objects and checks errors are
-        raised correctly when arguments are incorrect."""
-
-        def test_incorrect_largest_shapes():
-            """Tries to make a h5m with an inccorect largest_shapes which should return
-            a ValueError"""
-
-            self.test_reactor.largest_shapes = 'coucou'
-
-        self.assertRaises(ValueError, test_incorrect_largest_shapes)
-
-    def test_incorrect_methods_settings(self):
-        """Creates NeutronicsModel objects and checks errors are
-        raised correctly when arguments are incorrect."""
-
-        def test_incorrect_method():
-            """Tries to make a h5m with an inccorect method which should return
-            a ValueError"""
-
-            self.test_reactor.export_h5m(
-                method='incorrect')
-
-        self.assertRaises(ValueError, test_incorrect_method)
-
     def test_adding_shape_with_material_tag_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with
         the correct material tag property."""
@@ -1079,16 +1054,6 @@ class TestReactor(unittest.TestCase):
             paramak.Reactor(test_shape)
         self.assertRaises(ValueError, incorrect_shapes_and_components)
 
-    def test_method_setting(self):
-        """Attempts to make a reactor with a method that is not pymoab or
-        cubit which should raise a ValueError"""
-
-        def incorrect_method_string():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
-            paramak.Reactor([test_shape], method='coucou')
-        self.assertRaises(ValueError, incorrect_method_string)
-
     def test_graveyard_size_setting_type_checking(self):
         """Attempts to make a reactor with a graveyard_size that is an float
         which should raise a ValueError"""
@@ -1228,48 +1193,6 @@ class TestReactor(unittest.TestCase):
         )
         my_reactor = paramak.Reactor([test_shape])
         assert my_reactor.make_sector_wedge(rotation_angle=360) is None
-
-    def test_export_vtk_without_h5m_raises_error(self):
-        """exports a h5m file when shapes_and_components is set to a string"""
-
-        def check_correct_error_is_rasied():
-            os.system('rm *.h5m *.vtk')
-            self.test_reactor.export_vtk()
-
-        self.assertRaises(ValueError, check_correct_error_is_rasied)
-
-    def test_cubit_h5m_export(self):
-        """exports a h5m file using cubit and checks that it has been created"""
-
-        os.system("rm test_dagmc.h5m")
-
-        my_reactor = paramak.BallReactor(
-            inner_bore_radial_thickness=10,
-            inboard_tf_leg_radial_thickness=30,
-            center_column_shield_radial_thickness=60,
-            divertor_radial_thickness=150,
-            inner_plasma_gap_radial_thickness=30,
-            plasma_radial_thickness=300,
-            outer_plasma_gap_radial_thickness=30,
-            firstwall_radial_thickness=30,
-            blanket_radial_thickness=50,
-            blanket_rear_wall_radial_thickness=30,
-            elongation=2,
-            triangularity=0.55,
-            number_of_tf_coils=16,
-            rotation_angle=90,
-            pf_coil_case_thicknesses=[10, 10, 10, 10],
-            pf_coil_radial_thicknesses=[20, 50, 50, 20],
-            pf_coil_vertical_thicknesses=[20, 50, 50, 20],
-            pf_coil_radial_position=[500, 575, 575, 500],
-            pf_coil_vertical_position=[300, 100, -100, -300],
-            rear_blanket_to_tf_gap=50,
-            outboard_tf_coil_radial_thickness=100,
-            outboard_tf_coil_poloidal_thickness=50
-        )
-        my_reactor.export_h5m_with_cubit(filename='test_dagmc.h5m')
-
-        assert Path('test_dagmc.h5m').is_file()
 
 
 if __name__ == "__main__":

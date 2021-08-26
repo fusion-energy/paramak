@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="paramak",
-    version="develop",
+    version="0.5.0",
     author="The Paramak Development Team",
     author_email="mail@jshimwell.com",
     description="Create 3D fusion reactor CAD models based on input parameters",
@@ -38,7 +38,6 @@ setuptools.setup(
         "numpy>=1.21.1",
         "matplotlib>=3.4.2",
         "plasmaboundaries>=0.1.8",
-        "remove_dagmc_tags>=0.0.5",
         "jupyter-client<7",
         "jupyter-cadquery>=2.2.0",
-        "cad_to_h5m>=0.1"])
+    ])

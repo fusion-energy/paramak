@@ -336,3 +336,9 @@ A html graph of the combined Shapes can be created.
 .. code-block:: python
 
    my_reactor.export_html('reactor.html')
+
+An interactive 3D object can be embedded into a portable html file.
+
+.. code-block:: python
+
+   my_reactor.export_html_3d('reactor.html')
