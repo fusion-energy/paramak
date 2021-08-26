@@ -30,8 +30,6 @@ requirements:
     - nbformat
     - nbconvert
     - ipywidgets
-    - remove_dagmc_tags
-    - moab
     # - jupyter-cadquery not avaialbe on conda
 
 test:
@@ -48,9 +46,9 @@ test:
     - tests/
     - examples/
   commands:
-    - pytest -v tests/test_example_components.py
-    - pytest -v tests/test_example_reactors.py
-    - pytest -v tests/test_example_shapes.py
+    - python tests/test_example_components.py
+    - python tests/test_example_reactors.py
+    - python tests/test_example_shapes.py
     - pytest -v tests/test_parametric_components
     - pytest -v tests/test_parametric_reactors
     - pytest -v tests/test_parametric_shapes
