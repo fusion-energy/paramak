@@ -27,30 +27,23 @@ jobs:
       - name: Run test_utils
         run: |
           pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
-      # - name: Run test_shape
-      #   run: |
-      #     pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
-      # - name: Run test_reactor
-      #   run: |
-      #     pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
-      # - name: Run test_h5m_export
-      #   run: |
-      #     pytest tests/test_h5m_export.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
-      # - name: Run test_parametric_shapes
-      #   run: |
-      #     pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
-      # - name: Run test_parametric_components
-      #   run: |
-      #     pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
-      # - name: Run test_parametric_reactors
-      #   run: |
-      #     pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
+      - name: Run test_shape
+        run: |
+          pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
+      - name: Run test_reactor
+        run: |
+          pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
+      - name: Run test_h5m_export
+        run: |
+          pytest tests/test_h5m_export.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
+      - name: Run test_parametric_shapes
+        run: |
+          pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
+      - name: Run test_parametric_components
+        run: |
+          pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
+      - name: Run test_parametric_reactors
+        run: |
+          pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
       - name: Upload to codecov
         uses: codecov/codecov-action@v2
-        # with:
-          # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          # files: ./coverage1.xml,./coverage2.xml # optional
-          # flags: unittests # optional
-          # name: codecov-umbrella # optional
-          # fail_ci_if_error: true # optional (default = false)
-          # verbose: true # optional (default = false)
