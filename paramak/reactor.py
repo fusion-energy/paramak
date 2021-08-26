@@ -18,7 +18,7 @@ class Reactor:
     """The Reactor object allows shapes and components to be added and then
     collective operations to be performed on them. Combining all the shapes is
     required for creating images of the whole reactor and creating a Graveyard
-    (bounding box) that is useful for neutronics simulations. 
+    (bounding box) that is useful for neutronics simulations.
 
     Args:
         shapes_and_components (list): list of paramak.Shape objects or the
@@ -61,7 +61,7 @@ class Reactor:
         self.largest_shapes = largest_shapes
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
- 
+
         self.stp_filenames = []
         self.stl_filenames = []
         self.h5m_filename = None

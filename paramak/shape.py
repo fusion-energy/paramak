@@ -1492,7 +1492,6 @@ class Shape:
 
         return vtk_filename
 
-
     def export_graveyard(
             self,
             filename: Optional[str] = "graveyard.stp",
