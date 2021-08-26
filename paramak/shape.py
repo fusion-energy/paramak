@@ -1298,7 +1298,7 @@ class Shape:
         """Returns a neutronics description of the Shape object. This is needed
         for the use with the cad_to_h5m python package which will automatically
         convert the model to a DAGMC compatible neutronics geometry. If tet
-        meshing of the volume is required then cubit meshing commands can be 
+        meshing of the volume is required then cubit meshing commands can be
         optionally specified as the tet_mesh argument.
 
         Returns:
