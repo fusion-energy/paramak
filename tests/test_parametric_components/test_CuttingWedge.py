@@ -35,6 +35,6 @@ class TestCuttingWedge(unittest.TestCase):
             surface_reflectivity=True
         )
 
-        json_dict = test_shape.neutronics_description()
+        json_dict = test_shape.neutronics_description()[0]
         assert 'surface_reflectivity' in json_dict.keys()
         assert json_dict['surface_reflectivity'] is True

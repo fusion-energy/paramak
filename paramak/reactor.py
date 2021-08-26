@@ -370,7 +370,7 @@ class Reactor:
                     "Reactor.shapes_and_components")
                 raise ValueError(msg)
 
-            neutronics_description.append(entry.neutronics_description())
+            neutronics_description.append(entry.neutronics_description()[0])
 
         # This add the neutronics description for the graveyard which is
         # special as it is automatically calculated instead of being added by
@@ -380,7 +380,7 @@ class Reactor:
             # this only takes the json values so the actual size doesn't matter
             self.make_graveyard(graveyard_size=1)
             neutronics_description.append(
-                self.graveyard.neutronics_description())
+                self.graveyard.neutronics_description()[0])
 
         # This add the neutronics description for the sector which is
         # special as it is automatically calculated instead of being added by
@@ -391,7 +391,7 @@ class Reactor:
             sector_wedge = self.make_sector_wedge(height=1, radius=1)
             if sector_wedge is not None:
                 neutronics_description.append(
-                    sector_wedge.neutronics_description())
+                    sector_wedge.neutronics_description()[0])
 
         return neutronics_description
 

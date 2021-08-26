@@ -1296,10 +1296,10 @@ class Shape:
 
     def neutronics_description(self) -> dict:
         """Returns a neutronics description of the Shape object. This is needed
-        for the use with automated neutronics model methods which require
-        linkage between the stp files and materials. If tet meshing of the
-        volume is required then cubit meshing commands can be optionally
-        specified as the tet_mesh argument.
+        for the use with the cad_to_h5m python package which will automatically
+        convert the model to a DAGMC compatible neutronics geometry. If tet
+        meshing of the volume is required then cubit meshing commands can be 
+        optionally specified as the tet_mesh argument.
 
         Returns:
             dictionary: a dictionary of the step filename and material name
@@ -1309,6 +1309,7 @@ class Shape:
 
         if self.stp_filename is not None:
             neutronics_description["stp_filename"] = self.stp_filename
+            neutronics_description["cad_filename"] = self.stp_filename
 
         if self.tet_mesh is not None:
             neutronics_description["tet_mesh"] = self.tet_mesh
@@ -1322,7 +1323,7 @@ class Shape:
         if self.stl_filename is not None:
             neutronics_description["stl_filename"] = self.stl_filename
 
-        return neutronics_description
+        return [neutronics_description]
 
     def export_neutronics_description(
             self,
@@ -1361,7 +1362,7 @@ class Shape:
 
         with open(path_filename, "w") as outfile:
             json.dump(
-                [self.neutronics_description()],
+                self.neutronics_description(),
                 outfile,
                 indent=4,
             )
