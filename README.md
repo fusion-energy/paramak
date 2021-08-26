@@ -13,7 +13,8 @@
 
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
 
-[![Upload Python Package](https://github.com/fusion-energy/paramak/actions/workflows/python-publish.yml/badge.svg?branch=main)](https://github.com/fusion-energy/paramak/actions/workflows/python-publish.yml)
+
+[![Upload Python Package](https://github.com/fusion-energy/paramak/actions/workflows/python-publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/python-publish.yml)
 [![PyPI](https://img.shields.io/pypi/v/paramak?color=brightgreen&label=pypi&logo=grebrightgreenen&logoColor=green)](https://pypi.org/project/paramak/)
 
 [![docker-publish-release](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml)
