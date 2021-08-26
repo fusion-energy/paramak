@@ -6,7 +6,6 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-import cad_to_h5m
 import matplotlib.pyplot as plt
 from cadquery import Assembly, Color, Compound, Workplane, exporters, importers
 from cadquery.occ_impl import shapes

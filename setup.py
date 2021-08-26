@@ -38,7 +38,6 @@ setuptools.setup(
         "numpy>=1.21.1",
         "matplotlib>=3.4.2",
         "plasmaboundaries>=0.1.8",
-        "remove_dagmc_tags>=0.0.5",
         "jupyter-client<7",
         "jupyter-cadquery>=2.2.0",
-        "cad_to_h5m>=0.1"])
+        ])
