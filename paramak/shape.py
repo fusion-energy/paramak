@@ -14,10 +14,8 @@ from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-from paramak.utils import (_replace, add_stl_to_moab_core, cut_solid,
-                           define_moab_core_and_tags, export_vtk, facet_wire,
-                           get_hash, intersect_solid, plotly_trace,
-                           union_solid)
+from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
+                           intersect_solid, plotly_trace, union_solid)
 
 
 class Shape:
@@ -73,8 +71,6 @@ class Shape:
         union (paramak.shape or list, optional): If set, the current solid
             will be united with the provided solid or iterable of solids.
             Defaults to None.
-        method: The method to use when making the h5m geometry. Options are
-            "cubit" or "pymoab".
         graveyard_size: The dimention of cube shaped the graveyard region used
             by DAGMC. This attribtute is used preferentially over
             graveyard_offset.
@@ -99,7 +95,6 @@ class Shape:
         scale: Optional[float] = None,
         surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
-        method: str = 'pymoab',
         faceting_tolerance: Optional[float] = 1e-1,
         merge_tolerance: Optional[float] = 1e-4,
         # TODO defining Shape types as paramak.Shape results in circular import
@@ -130,7 +125,6 @@ class Shape:
         self.old_points = 0
 
         # neutronics specific properties
-        self.method = method
         self.material_tag = material_tag
         self.tet_mesh = tet_mesh
         self.scale = scale
@@ -185,17 +179,6 @@ class Shape:
         elif value < 0:
             raise ValueError("graveyard_offset must be positive")
         self._graveyard_offset = value
-
-    @property
-    def method(self):
-        return self._method
-
-    @method.setter
-    def method(self, value):
-        if value not in ['cubit', 'pymoab']:
-            raise ValueError(f'the method using in should be either cubit, \
-                pymoab. {value} is not an option')
-        self._method = value
 
     @property
     def solid(self):
@@ -1509,200 +1492,6 @@ class Shape:
 
         return vtk_filename
 
-    def export_h5m(
-            self,
-            filename: str = 'dagmc.h5m',
-            method: Optional[str] = None,
-            merge_tolerance: Optional[float] = None,
-            faceting_tolerance: Optional[float] = None,
-    ) -> str:
-        """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations. Tags the volumes with their material_tag attributes. Sets
-        the Shape.h5m_filename to the filename of the h5m file produced.
-
-        Arguments:
-            method: The method to use when making the imprinted and
-                merged geometry. Options are "cubit" and "pymoab" Defaults to
-                None which uses the Shape.method attribute.
-            merge_tolerance: the allowable distance between edges and surfaces
-                before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Shape.merge_tolerance attribute.
-            faceting_tolerance: the allowable distance between facetets
-                before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Shape.faceting_tolerance attribute.
-
-        Returns:
-            The filename of the DAGMC file created
-        """
-
-        if merge_tolerance is None:
-            merge_tolerance = self.merge_tolerance
-
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        if method is None:
-            method = self.method
-
-        if method == 'cubit':
-            output_filename = self.export_h5m_with_cubit(
-                merge_tolerance=merge_tolerance,
-                faceting_tolerance=faceting_tolerance,
-            )
-
-        elif method == 'pymoab':
-            output_filename = self.export_h5m_with_pymoab(
-                filename=filename,
-                faceting_tolerance=faceting_tolerance,
-            )
-
-        else:
-            msg = ('the method using in should be either cubit, pymoab. '
-                   f'{method} is not an option')
-            raise ValueError(msg)
-
-        return output_filename
-
-    def export_h5m_with_cubit(
-            self,
-            filename: Optional[str] = 'dagmc.h5m',
-            merge_tolerance: Optional[float] = None,
-            faceting_tolerance: Optional[float] = None,
-            cubit_path: Optional[str] = '/opt/Coreform-Cubit-2021.5/bin/'
-    ):
-        """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using Coreform cubit.
-
-        Arguments:
-            filename: filename of h5m outputfile.
-            cubit_path: the path to Cubit bin folder, this is apped to the
-                python path so that Cubit can be imported. Defaults to the path
-                for a Linux installed Cubit 2021.5 but can be changed to suit.
-                The default path for a Linux install of Cubit 2021.4 would be
-                '/opt/Coreform-Cubit-2021.5/bin/'
-            merge_tolerance: the allowable distance between edges and surfaces
-                before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Shape.merge_tolerance attribute.
-            faceting_tolerance: the allowable distance between facetets
-                before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Shape.faceting_tolerance attribute.
-
-        Returns:
-            str: filename of the DAGMC file produced
-        """
-
-        if merge_tolerance is None:
-            merge_tolerance = self.merge_tolerance
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        self.export_stp()
-        files_with_tags = self.neutronics_description()
-
-        files_with_tags['filename'] = files_with_tags['stp_filename']
-
-        water_tight_h5m_filename = cad_to_h5m.cad_to_h5m(
-            files_with_tags=[files_with_tags],
-            h5m_filename=filename,
-            cubit_path=cubit_path,
-            faceting_tolerance=faceting_tolerance,
-            merge_tolerance=merge_tolerance,
-        )
-
-        self.h5m_filename = water_tight_h5m_filename
-
-        return water_tight_h5m_filename
-
-    def export_h5m_with_pymoab(
-            self,
-            filename: Optional[str] = 'dagmc.h5m',
-            include_graveyard: Optional[bool] = True,
-            faceting_tolerance: Optional[float] = None,
-    ) -> str:
-        """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
-        DAGMC file produced has not been imprinted and merged unlike the other
-        supported method which uses cubit to produce an imprinted and merged
-        DAGMC geometry. If the provided filename doesn't end with .h5m it will
-        be added
-
-        Args:
-            filename: filename of h5m outputfile.
-            include_graveyard: specifiy if the graveyard will be included or
-                not. If True the the Reactor.make_graveyard will be called
-                using Reactor.graveyard_size and Reactor.graveyard_offset
-                attribute values.
-            faceting_tolerance: the allowable distance between facetets
-                before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Shape.faceting_tolerance attribute.
-
-        Returns:
-            The filename of the DAGMC file created
-        """
-
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".h5m":
-            path_filename = path_filename.with_suffix(".h5m")
-
-        if self.material_tag is None or len(self.material_tag) > 27:
-            msg = ("Shape.material_tag > 28 characters. Material tags "
-                   "must be less than 28 characters use in DAGMC "
-                   f"{self.material_tag} is too long.")
-            raise ValueError(msg)
-
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-
-        self.export_stl(self.stl_filename, tolerance=faceting_tolerance)
-
-        moab_core, moab_tags = define_moab_core_and_tags()
-
-        moab_core = add_stl_to_moab_core(
-            moab_core=moab_core,
-            surface_id=1,
-            volume_id=1,
-            material_name=self.material_tag,
-            tags=moab_tags,
-            stl_filename=self.stl_filename
-        )
-
-        if include_graveyard:
-            self.make_graveyard()
-            self.graveyard.export_stl(self.graveyard.stl_filename)
-            volume_id = 2
-            surface_id = 2
-            moab_core = add_stl_to_moab_core(
-                moab_core=moab_core,
-                surface_id=surface_id,
-                volume_id=volume_id,
-                material_name=self.graveyard.material_tag,
-                tags=moab_tags,
-                stl_filename=self.graveyard.stl_filename
-            )
-
-        all_sets = moab_core.get_entities_by_handle(0)
-
-        file_set = moab_core.create_meshset()
-
-        moab_core.add_entities(file_set, all_sets)
-
-        moab_core.write_file(str(path_filename))
-
-        self.h5m_filename = str(path_filename)
-
-        return str(path_filename)
 
     def export_graveyard(
             self,

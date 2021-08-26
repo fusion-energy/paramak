@@ -19,7 +19,6 @@ class TestShape(unittest.TestCase):
             mid_radius=60,
             outer_radius=100,
             material_tag='center_column_shield_mat',
-            method='pymoab'
         )
 
         self.test_rotate_mixed_shape = paramak.RotateMixedShape(
@@ -184,18 +183,6 @@ class TestShape(unittest.TestCase):
 
         def incorrect_method_string():
             self.my_shape.method = 'coucou'
-
-        self.assertRaises(
-            ValueError,
-            incorrect_method_string
-        )
-
-    def test_incorrect_method_in_export_h5m(self):
-        """Checks that an error is raised when the export_h5m is used with an
-        incorrect method string."""
-
-        def incorrect_method_string():
-            self.my_shape.export_h5m(method='coucou')
 
         self.assertRaises(
             ValueError,
@@ -782,15 +769,6 @@ class TestShape(unittest.TestCase):
         # TODO this can be removed in the future
         assert data[0]['stp_filename'] == 'test_shape.stp'
 
-    def test_export_vtk_without_h5m_raises_error(self):
-        """exports a h5m file when shapes_and_components is set to a string"""
-
-        def check_correct_error_is_rasied():
-            os.system('rm *.h5m *.vtk')
-            self.my_shape.export_vtk()
-
-        self.assertRaises(ValueError, check_correct_error_is_rasied)
-
     def test_setting_color_incorrectly_too_large(self):
         """Sets the shape.colour outside of the the 0 to 1 range"""
 
@@ -860,23 +838,6 @@ class TestShape(unittest.TestCase):
             (250, 50),
             (200, 100),
         ]
-
-    def test_cubit_h5m_export(self):
-        """exports a h5m file using cubit and checks that it has been created"""
-
-        os.system("rm test_dagmc.h5m")
-
-        my_shape = paramak.Plasma(
-            major_radius=620,
-            minor_radius=210,
-            triangularity=0.33,
-            elongation=1.85,
-            rotation_angle=90,
-        )
-
-        my_shape.export_h5m_with_cubit(filename='test_dagmc.h5m')
-
-        assert Path('test_dagmc.h5m').is_file()
 
 
 if __name__ == "__main__":
