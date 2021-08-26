@@ -177,18 +177,6 @@ class TestShape(unittest.TestCase):
             incorrect_color_string
         )
 
-    def test_incorrect_method(self):
-        """Checks that an error is raised when the method of a shape is
-        defined as an invalid string."""
-
-        def incorrect_method_string():
-            self.my_shape.method = 'coucou'
-
-        self.assertRaises(
-            ValueError,
-            incorrect_method_string
-        )
-
     def test_incorrect_workplane(self):
         """Creates Shape object with incorrect workplane and checks ValueError
         is raised."""
