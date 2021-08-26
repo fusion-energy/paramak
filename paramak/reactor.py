@@ -1,37 +1,24 @@
 
 import collections
 import json
-import os
-import shutil
 from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-import cad_to_h5m
 import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import exporters
 
 import paramak
-from paramak.utils import (_replace, add_stl_to_moab_core,
-                           define_moab_core_and_tags, export_vtk, get_hash)
+from paramak.utils import _replace, get_hash
 
 
 class Reactor:
     """The Reactor object allows shapes and components to be added and then
     collective operations to be performed on them. Combining all the shapes is
     required for creating images of the whole reactor and creating a Graveyard
-    (bounding box) that is needed for neutronics simulations. There are two
-    methods available for producing the the DAGMC h5m file. The PyMoab option
-    is able to produce non imprinted and non merged geometry so is more suited
-    to individual components or reactors without touching surfaces. Cubit is
-    the able to produce imprinted and merged DAGMC h5m geometry. Further
-    details on imprinting and merging are available on the DAGMC homepage
-    https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html . Cubit
-    (also known as Cubit) is available from the CoreForm website
-    https://www.coreform.com/ version 17.1 is the version of Cubit used when
-    testing the Paramak code.
+    (bounding box) that is useful for neutronics simulations.
 
     Args:
         shapes_and_components (list): list of paramak.Shape objects or the
@@ -43,8 +30,6 @@ class Reactor:
             complete example.
         faceting_tolerance: the tolerance to use when faceting surfaces.
         merge_tolerance: the tolerance to use when merging surfaces.
-        method: The method to use when making the h5m geometry. Options are
-            "cubit" or "pymoab".
         graveyard_size: The dimention of cube shaped the graveyard region used
             by DAGMC. This attribtute is used preferentially over
             graveyard_offset.
@@ -63,7 +48,6 @@ class Reactor:
     def __init__(
             self,
             shapes_and_components: Union[List[paramak.Shape], str],
-            method: str = 'pymoab',
             faceting_tolerance: Optional[float] = 1e-2,
             merge_tolerance: Optional[float] = 1e-4,
             graveyard_size: Optional[float] = 20_000,
@@ -77,7 +61,6 @@ class Reactor:
         self.largest_shapes = largest_shapes
         self.faceting_tolerance = faceting_tolerance
         self.merge_tolerance = merge_tolerance
-        self.method = method
 
         self.stp_filenames = []
         self.stl_filenames = []
@@ -87,17 +70,6 @@ class Reactor:
         self.solid = None
 
         self.reactor_hash_value = None
-
-    @property
-    def method(self):
-        return self._method
-
-    @method.setter
-    def method(self, value):
-        if value not in ['cubit', 'pymoab']:
-            raise ValueError(f'the method using in should be either cubit, \
-                pymoab. {value} is not an option')
-        self._method = value
 
     @property
     def graveyard_size(self):
@@ -698,75 +670,6 @@ class Reactor:
 
         return vtk_filename
 
-    def export_h5m(
-            self,
-            filename: Optional[str] = 'dagmc.h5m',
-            include_graveyard: Optional[bool] = True,
-            include_plasma: Optional[bool] = False,
-            method: Optional[str] = None,
-            merge_tolerance: Optional[float] = None,
-            faceting_tolerance: Optional[float] = None,
-    ) -> str:
-        """Produces a h5m neutronics geometry compatable with DAGMC
-        simulations. Tags the volumes with their material_tag attributes. Sets
-        the Reactor.h5m_filename to the filename of the h5m file produced.
-
-        Arguments:
-            filename: filename of h5m outputfile.
-            include_graveyard: specifiy if the graveyard will be included or
-                not. If True the the Reactor.make_graveyard will be called
-                using Reactor.graveyard_size and Reactor.graveyard_offset
-                attribute values.
-            method: The method to use when making the imprinted and
-                merged geometry. Options are "cubit" and "pymoab" Defaults to
-                None which uses the Reactor.method attribute.
-            merge_tolerance: the allowable distance between edges and surfaces
-                before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Reactor.merge_tolerance attribute.
-            faceting_tolerance: the allowable distance between facetets
-                before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Reactor.faceting_tolerance attribute.
-
-        Returns:
-            The filename of the DAGMC file created
-        """
-
-        if merge_tolerance is None:
-            merge_tolerance = self.merge_tolerance
-
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        if method is None:
-            method = self.method
-
-        os.system('rm ' + filename)
-
-        if method == 'cubit':
-            output_filename = self.export_h5m_with_cubit(
-                filename=filename,
-                merge_tolerance=merge_tolerance,
-                faceting_tolerance=faceting_tolerance,
-                include_plasma=include_plasma,
-            )
-        elif method == 'pymoab':
-            output_filename = self.export_h5m_with_pymoab(
-                filename=filename,
-                include_graveyard=include_graveyard,
-                faceting_tolerance=faceting_tolerance,
-                include_plasma=include_plasma,
-            )
-
-        else:
-            raise ValueError('the method using in should be either cubit, \
-                pymoab. {method} is not an option')
-
-        return output_filename
-
     def make_sector_wedge(
             self,
             height: Optional[float] = None,
@@ -830,213 +733,6 @@ class Reactor:
         self.sector_wedge = sector_cutting_wedge
 
         return sector_cutting_wedge
-
-    def export_h5m_with_cubit(
-            self,
-            filename: Optional[str] = 'dagmc.h5m',
-            merge_tolerance: Optional[float] = None,
-            faceting_tolerance: Optional[float] = None,
-            include_plasma: Optional[bool] = False,
-            cubit_path: Optional[str] = '/opt/Coreform-Cubit-2021.5/bin/'
-    ) -> str:
-        """Produces a dagmc.h5m neutronics file compatable with DAGMC
-        simulations using Coreform cubit.
-
-        Arguments:
-            filename: filename of h5m outputfile.
-            cubit_path: the path to Cubit bin folder, this is apped to the
-                python path so that Cubit can be imported. Defaults to the path
-                for a Linux installed Cubit 2021.5 but can be changed to suit.
-                The default path for a Linux install of Cubit 2021.4 would be
-                '/opt/Coreform-Cubit-2021.5/bin/'
-            merge_tolerance: the allowable distance between edges and surfaces
-                before merging these CAD objects into a single CAD object. See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Reactor.merge_tolerance attribute.
-            faceting_tolerance: the allowable distance between facetets
-                before merging these CAD objects into a single CAD object See
-                https://svalinn.github.io/DAGMC/usersguide/cubit_basics.html
-                for more details. Defaults to None which uses the
-                Reactor.faceting_tolerance attribute.
-
-        Returns:
-            filename of the DAGMC file produced
-        """
-
-        if merge_tolerance is None:
-            merge_tolerance = self.merge_tolerance
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        if isinstance(self.shapes_and_components, list):
-            self.export_neutronics_description(
-                include_graveyard=True,
-                include_sector_wedge=True,
-                include_plasma=include_plasma,
-            )
-            self.export_stp(
-                include_graveyard=True,
-                include_sector_wedge=True,
-            )
-        elif isinstance(self.shapes_and_components, str):
-            if not Path(self.shapes_and_components).is_file():
-                raise FileNotFoundError(
-                    f'The filename entered as the geometry \
-                    argument {self.shapes_and_components} does not exist')
-            if self.shapes_and_components != 'manifest.json':
-                shutil.copy(
-                    src=self.shapes_and_components,
-                    dst='manifest.json')
-        else:
-            msg = (
-                'shapes_and_components must be a list of paramak.Shape or a '
-                'filename')
-            raise ValueError(msg)
-
-        files_with_tags = self.neutronics_description()
-
-        for entry in files_with_tags:
-            # surface_reflectivity feature is unstable
-            entry.pop("surface_reflectivity", None)
-            entry['filename'] = entry['stp_filename']
-
-        water_tight_h5m_filename = cad_to_h5m.cad_to_h5m(
-            files_with_tags=files_with_tags,
-            h5m_filename=filename,
-            cubit_path=cubit_path,
-            faceting_tolerance=faceting_tolerance,
-            merge_tolerance=merge_tolerance,
-        )
-        self.h5m_filename = water_tight_h5m_filename
-
-        return water_tight_h5m_filename
-
-    def export_h5m_with_pymoab(
-            self,
-            filename: Optional[str] = 'dagmc.h5m',
-            include_graveyard: Optional[bool] = True,
-            faceting_tolerance: Optional[float] = None,
-            include_plasma: Optional[bool] = False,
-    ) -> str:
-        """Converts stl files into DAGMC compatible h5m file using PyMOAB. The
-        DAGMC file produced has not been imprinted and merged unlike the other
-        supported method which uses cubit to produce an imprinted and merged
-        DAGMC geometry. If the provided filename doesn't end with .h5m it will
-        be added
-
-        Arguments:
-            filename: filename of h5m outputfile.
-            include_graveyard: specifiy if the graveyard will be included or
-                not. If True the the Reactor.make_graveyard will be called
-                using Reactor.graveyard_size and Reactor.graveyard_offset
-                attribute values.
-            faceting_tolerance: the precision of the faceting.
-            include_plasma: Should the plasma material be included in the h5m
-                file.
-
-        Returns:
-            The filename of the DAGMC file created
-        """
-
-        if faceting_tolerance is None:
-            faceting_tolerance = self.faceting_tolerance
-
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".h5m":
-            path_filename = path_filename.with_suffix(".h5m")
-
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-
-        moab_core, moab_tags = define_moab_core_and_tags()
-
-        surface_id = 1
-        volume_id = 1
-
-        if isinstance(self.shapes_and_components, list):
-            for entry in self.shapes_and_components:
-
-                if include_plasma is False and (
-                    isinstance(
-                        entry,
-                        (paramak.Plasma,
-                         paramak.PlasmaFromPoints,
-                         paramak.PlasmaBoundaries)) is True or entry.name == 'plasma'):
-                    continue
-
-                if entry.material_tag is None or len(entry.material_tag) > 27:
-                    msg = ("Shape.material_tag > 28 characters. Material tags "
-                           "must be less than 28 characters use in DAGMC "
-                           f"{entry.material_tag} is too long.")
-                    raise ValueError(msg)
-
-                entry.export_stl(
-                    entry.stl_filename,
-                    tolerance=faceting_tolerance)
-
-                moab_core = add_stl_to_moab_core(
-                    moab_core,
-                    surface_id,
-                    volume_id,
-                    entry.material_tag,
-                    moab_tags,
-                    entry.stl_filename)
-                volume_id += 1
-                surface_id += 1
-        else:
-            # loads up the json file
-            with open(self.shapes_and_components) as json_file:
-                manifest = json.load(json_file)
-
-            # gets all the stp files and loads them into shapes
-            for entry in manifest:
-                new_shape = paramak.Shape()
-                # loads the stp file into a Shape object
-                new_shape.from_stp_file(entry['stp_filename'])
-                new_shape.material_tag = entry['material_tag']
-                new_shape.stl_filename = str(
-                    Path(entry['stp_filename']).stem) + '.stl'
-
-                new_shape.export_stl(
-                    new_shape.stl_filename,
-                    tolerance=faceting_tolerance)
-
-                moab_core = add_stl_to_moab_core(
-                    moab_core,
-                    surface_id,
-                    volume_id,
-                    new_shape.material_tag,
-                    moab_tags,
-                    new_shape.stl_filename)
-                volume_id += 1
-                surface_id += 1
-
-        if include_graveyard:
-            self.make_graveyard()
-            self.graveyard.export_stl()
-            volume_id += 1
-            surface_id += 1
-            moab_core = add_stl_to_moab_core(
-                moab_core,
-                surface_id,
-                volume_id,
-                self.graveyard.material_tag,
-                moab_tags,
-                self.graveyard.stl_filename
-            )
-
-        all_sets = moab_core.get_entities_by_handle(0)
-
-        file_set = moab_core.create_meshset()
-
-        moab_core.add_entities(file_set, all_sets)
-
-        moab_core.write_file(str(path_filename))
-
-        self.h5m_filename = str(path_filename)
-
-        return str(path_filename)
 
     def export_physical_groups(
             self,
