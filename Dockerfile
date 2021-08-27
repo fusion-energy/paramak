@@ -41,9 +41,7 @@ RUN apt-get --allow-releaseinfo-change update
 RUN apt-get update -y && \
     apt-get upgrade -y
 
-RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
-                       freeglut3-dev libosmesa6 libosmesa6-dev \
-                       libgles2-mesa-dev curl imagemagick && \
+RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
                        apt-get clean
 
 # Installing CadQuery
@@ -63,7 +61,7 @@ EXPOSE 8888
 WORKDIR /home/paramak
 
 
-FROM dependencies as final
+FROM ghcr.io/fusion-energy/paramak:dependencies as final
 
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
