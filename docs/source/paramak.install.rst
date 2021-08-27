@@ -79,9 +79,9 @@ Now you should be ready to import paramak from your new python enviroment.
 Optional neutronics install
 ---------------------------
 
-The Paramak is ideal for making CAD geometry including stp and stl files.
-As part of the neutronics workflow there are other packages that might be of
-interest.
+The Paramak is ideal for making CAD geometry including stp and stl files. This
+forms part of the `neutronics workflow <https://github.com/fusion-energy/neutronics_workflow>`_
+which includes other packages that might be of interest.
 
 * `cad_to_h5m <https://github.com/fusion-energy/cad_to_h5m>`_ allows automated conversion of stp or sat cad files to h5m files compatible with DAGMC enabled neutronics codes.
 
