@@ -76,32 +76,6 @@ Then pip install the Paramak.
 Now you should be ready to import paramak from your new python enviroment.
 
 
-Optional neutronics install
----------------------------
-
-The Paramak is ideal for making CAD geometry including stp and stl files. This
-forms part of the `neutronics workflow <https://github.com/fusion-energy/neutronics_workflow>`_
-which includes other packages that might be of interest.
-
-* `cad_to_h5m <https://github.com/fusion-energy/cad_to_h5m>`_ allows automated conversion of stp or sat cad files to h5m files compatible with DAGMC enabled neutronics codes.
-
-* `stl_to_h5m <https://github.com/fusion-energy/stl_to_h5m>`_ allows automated conversion of stl files to h5m files compatible with DAGMC enabled neutronics codes.
-
-* `openmc_dagmc_wrapper <https://github.com/fusion-energy/openmc-dagmc-wrapper>`_ allows one to quickly utilise the h5m geometry files in a range of standard neutronics simulations.
-
-* `openmc_data_downloader <https://github.com/openmc-data-storage/openmc_data_downloader>`_ facilitates on the fly downloading of nuclear data needed for OpenMC neutronics simulations.
-
-* `OpenMC <https://github.com/openmc-dev/openmc>`_ The OpenMC project, a Monte Carlo particle transport code based on modern methods.
-
-* `DAGMC <https://github.com/svalinn/DAGMC>`_ Direct Accelerated Geometry Monte Carlo Toolkit 
-
-* `Svalinn Cubit Plugin <https://github.com/svalinn/Cubit-plugin/>`_ A plugin and command extensions for Cubit that allows h5m files to be exported.
-
-* `Coreform Cubit <https://github.com/svalinn/Cubit-plugin/>`_ Advanced meshing for challenging simulations. Supports imprinting and merging of surfaces which speed up the neutronics transport time required for simulations through faceteted geometry.
-
-* `MOAB and pymoab <https://github.com/svalinn/Cubit-plugin/>`_ The Mesh-Oriented datABase MOAB is a component for representing and evaluating mesh data.
-
-
 Developer Installation
 ----------------------
 
@@ -173,3 +147,29 @@ You may also want to make use of the
 `--volume <https://docs.docker.com/storage/volumes/>`_
 flag when running Docker so that you can retrieve files from the Docker
 enviroment to your base system.
+
+
+Optional neutronics install
+---------------------------
+
+The Paramak is ideal for making CAD geometry including stp and stl files. This
+forms part of the `neutronics workflow <https://github.com/fusion-energy/neutronics_workflow>`_
+which includes other packages that might be of interest.
+
+* `cad_to_h5m <https://github.com/fusion-energy/cad_to_h5m>`_ allows automated conversion of stp or sat cad files to h5m files compatible with DAGMC enabled neutronics codes.
+
+* `stl_to_h5m <https://github.com/fusion-energy/stl_to_h5m>`_ allows automated conversion of stl files to h5m files compatible with DAGMC enabled neutronics codes.
+
+* `openmc_dagmc_wrapper <https://github.com/fusion-energy/openmc-dagmc-wrapper>`_ allows one to quickly utilise the h5m geometry files in a range of standard neutronics simulations.
+
+* `openmc_data_downloader <https://github.com/openmc-data-storage/openmc_data_downloader>`_ facilitates on the fly downloading of nuclear data needed for OpenMC neutronics simulations.
+
+* `OpenMC <https://github.com/openmc-dev/openmc>`_ The OpenMC project, a Monte Carlo particle transport code based on modern methods.
+
+* `DAGMC <https://github.com/svalinn/DAGMC>`_ Direct Accelerated Geometry Monte Carlo Toolkit 
+
+* `Svalinn Cubit Plugin <https://github.com/svalinn/Cubit-plugin/>`_ A plugin and command extensions for Cubit that allows h5m files to be exported.
+
+* `Coreform Cubit <https://github.com/svalinn/Cubit-plugin/>`_ Advanced meshing for challenging simulations. Supports imprinting and merging of surfaces which speed up the neutronics transport time required for simulations through faceteted geometry.
+
+* `MOAB and pymoab <https://github.com/svalinn/Cubit-plugin/>`_ The Mesh-Oriented datABase MOAB is a component for representing and evaluating mesh data.

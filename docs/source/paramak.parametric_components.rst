@@ -110,30 +110,6 @@ BlanketFPPoloidalSegments()
    :members:
    :show-inheritance:
 
-BlanketFP()
-^^^^^^^^^^^
-
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.BlanketFP(
-      thickness=100,
-      stop_angle=-80,
-      start_angle=250,
-      offset_from_plasma=30,
-      rotation_angle=180
-   )
-
-   cadquery_object = my_component.solid
-
-.. image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
-   :width: 350
-
-.. automodule:: paramak.parametric_components.blanket_fp
-   :members:
-   :show-inheritance:
 
 BlanketFPPoloidalSegments()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
