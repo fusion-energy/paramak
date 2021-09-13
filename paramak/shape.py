@@ -279,7 +279,7 @@ class Shape:
         if not isinstance(value, Plane):
             if value in acceptable_values:
                 self._workplane = value
-            elif type(value) is str:
+            elif isinstance(value, str):
                 raise ValueError(
                     "Shape.workplane must be one of ",
                     acceptable_values,
