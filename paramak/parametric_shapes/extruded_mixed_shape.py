@@ -128,7 +128,7 @@ class ExtrudeMixedShape(Shape):
                 vecNormal=vector,
             )
 
-            toFuse = [solid]
+            to_fuse = [solid]
 
             # if extrude both, do the same in the other direction
             if self.extrude_both:
@@ -137,10 +137,10 @@ class ExtrudeMixedShape(Shape):
                     innerWires=[],
                     vecNormal=vector.multiply(-1.0),
                 )
-                toFuse.append(solid2)
+                to_fuse.append(solid2)
 
                 # create a compound
-                solid = Compound.makeCompound(toFuse)
+                solid = Compound.makeCompound(to_fuse)
             # because combine is True by default
             solid = wire._combineWithBase(solid)
 
