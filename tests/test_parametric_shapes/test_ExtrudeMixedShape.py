@@ -227,32 +227,34 @@ def test_non_normal_extrusion():
     """Test that 2 shapes with opposite extrusion vectors have the same volume
     """
     test_shape1 = ExtrudeMixedShape(
-            points=[
-                (50, 0, "straight"),
-                (50, 50, "spline"),
-                (60, 70, "spline"),
-                (70, 50, "circle"),
-                (60, 25, "circle"),
-                (70, 0, "straight")
-            ],
-            distance=50,
-            extrusion_vector=(1, 1, 1)
+        points=[
+            (50, 0, "straight"),
+            (50, 50, "spline"),
+            (60, 70, "spline"),
+            (70, 50, "circle"),
+            (60, 25, "circle"),
+            (70, 0, "straight")
+        ],
+        distance=50,
+        extrusion_vector=(1, 1, 1)
     )
 
     test_shape2 = ExtrudeMixedShape(
-            points=[
-                (50, 0, "straight"),
-                (50, 50, "spline"),
-                (60, 70, "spline"),
-                (70, 50, "circle"),
-                (60, 25, "circle"),
-                (70, 0, "straight")
-            ],
-            distance=50,
-            extrusion_vector=(-1, -1, -1)
+        points=[
+            (50, 0, "straight"),
+            (50, 50, "spline"),
+            (60, 70, "spline"),
+            (70, 50, "circle"),
+            (60, 25, "circle"),
+            (70, 0, "straight")
+        ],
+        distance=50,
+        extrusion_vector=(-1, -1, -1)
     )
 
-    assert pytest.approx(test_shape1.volume, rel=0.000001) == test_shape2.volume
+    assert pytest.approx(
+        test_shape1.volume,
+        rel=0.000001) == test_shape2.volume
 
 
 def test_non_normal_extrusion_both():
@@ -260,66 +262,70 @@ def test_non_normal_extrusion_both():
     extrude_both args have the same volume
     """
     test_shape1 = ExtrudeMixedShape(
-            points=[
-                (50, 0, "straight"),
-                (50, 50, "spline"),
-                (60, 70, "spline"),
-                (70, 50, "circle"),
-                (60, 25, "circle"),
-                (70, 0, "straight")
-            ],
-            distance=50,
-            extrusion_vector=(1, 1, 1),
-            extrude_both=False
+        points=[
+            (50, 0, "straight"),
+            (50, 50, "spline"),
+            (60, 70, "spline"),
+            (70, 50, "circle"),
+            (60, 25, "circle"),
+            (70, 0, "straight")
+        ],
+        distance=50,
+        extrusion_vector=(1, 1, 1),
+        extrude_both=False
     )
 
     test_shape2 = ExtrudeMixedShape(
-            points=[
-                (50, 0, "straight"),
-                (50, 50, "spline"),
-                (60, 70, "spline"),
-                (70, 50, "circle"),
-                (60, 25, "circle"),
-                (70, 0, "straight")
-            ],
-            distance=50,
-            extrusion_vector=(1, 1, 1),
-            extrude_both=True
+        points=[
+            (50, 0, "straight"),
+            (50, 50, "spline"),
+            (60, 70, "spline"),
+            (70, 50, "circle"),
+            (60, 25, "circle"),
+            (70, 0, "straight")
+        ],
+        distance=50,
+        extrusion_vector=(1, 1, 1),
+        extrude_both=True
     )
 
-    assert pytest.approx(test_shape1.volume, rel=0.000001) == test_shape2.volume
+    assert pytest.approx(
+        test_shape1.volume,
+        rel=0.000001) == test_shape2.volume
 
 
 def test_non_normal_compared_to_normal():
     """Check that extrusion vector 001 is equilavent to default behaviour
     """
     test_shape1 = ExtrudeMixedShape(
-            points=[
-                (50, 0, "straight"),
-                (50, 50, "spline"),
-                (60, 70, "spline"),
-                (70, 50, "circle"),
-                (60, 25, "circle"),
-                (70, 0, "straight")
-            ],
-            distance=50,
+        points=[
+            (50, 0, "straight"),
+            (50, 50, "spline"),
+            (60, 70, "spline"),
+            (70, 50, "circle"),
+            (60, 25, "circle"),
+            (70, 0, "straight")
+        ],
+        distance=50,
     )
 
     test_shape2 = ExtrudeMixedShape(
-            points=[
-                (50, 0, "straight"),
-                (50, 50, "spline"),
-                (60, 70, "spline"),
-                (70, 50, "circle"),
-                (60, 25, "circle"),
-                (70, 0, "straight")
-            ],
-            distance=50,
-            extrusion_vector=(0, 1, 0),
-            extrude_both=True
+        points=[
+            (50, 0, "straight"),
+            (50, 50, "spline"),
+            (60, 70, "spline"),
+            (70, 50, "circle"),
+            (60, 25, "circle"),
+            (70, 0, "straight")
+        ],
+        distance=50,
+        extrusion_vector=(0, 1, 0),
+        extrude_both=True
     )
 
-    assert pytest.approx(test_shape1.volume, rel=0.000001) == test_shape2.volume
+    assert pytest.approx(
+        test_shape1.volume,
+        rel=0.000001) == test_shape2.volume
 
 
 if __name__ == "__main__":
