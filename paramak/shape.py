@@ -289,6 +289,8 @@ class Shape:
                 raise TypeError(
                     "Shape.workplane must be a string or a ",
                     "cadquery.Plane object")
+        else:
+            self._workplane = value
 
     @property
     def rotation_axis(self):
