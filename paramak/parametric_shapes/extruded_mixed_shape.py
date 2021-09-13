@@ -119,11 +119,11 @@ class ExtrudeMixedShape(Shape):
             )
 
             # extract wires
-            wireSets = [list(wire.ctx.pendingWires)]
+            wire_sets = [list(wire.ctx.pendingWires)]
 
             # extrude
             solid = Solid.extrudeLinear(
-                outerWire=wireSets[0][0],
+                outerWire=wire_sets[0][0],
                 innerWires=[],
                 vecNormal=vector,
             )
@@ -133,7 +133,7 @@ class ExtrudeMixedShape(Shape):
             # if extrude both, do the same in the other direction
             if self.extrude_both:
                 solid2 = Solid.extrudeLinear(
-                    outerWire=wireSets[0][0],
+                    outerWire=wire_sets[0][0],
                     innerWires=[],
                     vecNormal=vector.multiply(-1.0),
                 )
