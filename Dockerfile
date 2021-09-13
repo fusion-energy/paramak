@@ -19,7 +19,7 @@
 # Once build the dockerimage can be run in a few different ways.
 #
 # Run with the following command for a terminal notebook interface
-# docker run -it paramak .
+# docker run -it paramak
 #
 # Run with the following command for a jupyter notebook interface
 # docker run -p 8888:8888 paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
