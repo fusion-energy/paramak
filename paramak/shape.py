@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-from cadquery import Assembly, Color, Compound, Workplane, exporters, importers
+from cadquery import Assembly, Color, Compound, Workplane, exporters, importers, Plane
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
@@ -88,7 +88,7 @@ class Shape:
         stp_filename: Optional[str] = None,
         stl_filename: Optional[str] = None,
         azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
-        workplane: Optional[str] = "XZ",
+        workplane: Optional[Union[str, Plane]] = "XZ",
         rotation_axis: Optional[str] = None,
         tet_mesh: Optional[str] = None,
         scale: Optional[float] = None,
@@ -276,14 +276,19 @@ class Shape:
     @workplane.setter
     def workplane(self, value):
         acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
-        if value in acceptable_values:
-            self._workplane = value
-        else:
-            raise ValueError(
-                "Shape.workplane must be one of ",
-                acceptable_values,
-                " not ",
-                value)
+        if not isinstance(value, Plane):
+            if value in acceptable_values:
+                self._workplane = value
+            elif type(value) is str:
+                raise ValueError(
+                    "Shape.workplane must be one of ",
+                    acceptable_values,
+                    " not ",
+                    value)
+            else:
+                raise TypeError(
+                    "Shape.workplane must be a string or a ",
+                    "cadquery.Plane object")
 
     @property
     def rotation_axis(self):
