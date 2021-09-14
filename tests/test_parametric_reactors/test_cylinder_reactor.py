@@ -11,16 +11,16 @@ class TestBallReactor(unittest.TestCase):
 
     def setUp(self):
         self.test_reactor = paramak.CylinderReactor(
-            inner_blanket_radius = 100,
-            blanket_thickness = 60,
-            blanket_height = 500,
-            lower_blanket_thickness = 50,
-            upper_blanket_thickness = 40,
-            blanket_vv_gap = 20,
-            upper_vv_thickness = 10,
-            vv_thickness = 10,
-            lower_vv_thickness = 10,
-            rotation_angle = 180,
+            inner_blanket_radius=100,
+            blanket_thickness=60,
+            blanket_height=500,
+            lower_blanket_thickness=50,
+            upper_blanket_thickness=40,
+            blanket_vv_gap=20,
+            upper_vv_thickness=10,
+            vv_thickness=10,
+            lower_vv_thickness=10,
+            rotation_angle=180,
         )
 
     def test_stp_file_creation(self):

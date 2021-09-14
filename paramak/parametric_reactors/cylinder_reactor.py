@@ -27,6 +27,7 @@ class CylinderReactor(paramak.Reactor):
     Returns:
         paramak.Reactor object
     """
+
     def __init__(
         self,
         inner_blanket_radius: Optional[float] = 100,
@@ -58,7 +59,8 @@ class CylinderReactor(paramak.Reactor):
         """Creates a list of paramak.Shape for components and saves it in
         self.shapes_and_components
         """
-        inner_wall = self.inner_blanket_radius+self.blanket_thickness+self.blanket_vv_gap
+        inner_wall = self.inner_blanket_radius + \
+            self.blanket_thickness + self.blanket_vv_gap
         lower_vv = paramak.RotateStraightShape(
             points=[
                 (inner_wall, (-self.blanket_height / 2.) - self.lower_blanket_thickness),
@@ -123,7 +125,7 @@ class CylinderReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='upper_vv.stp',
             material_tag='vv_mat',
-            color=(0.5, 0.5, 0.5),    
+            color=(0.5, 0.5, 0.5),
             name='upper vacuum vessel'
         )
 
@@ -137,8 +139,14 @@ class CylinderReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='vv.stp',
             material_tag='vv_mat',
-            color=(0.5, 0.5, 0.5),    
+            color=(0.5, 0.5, 0.5),
             name='vacuum vessel'
         )
 
-        self.shapes_and_components = [blanket, vv, upper_blanket, lower_blanket, lower_vv, upper_vv]
+        self.shapes_and_components = [
+            blanket,
+            vv,
+            upper_blanket,
+            lower_blanket,
+            lower_vv,
+            upper_vv]
