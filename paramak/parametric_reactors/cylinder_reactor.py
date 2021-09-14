@@ -69,6 +69,8 @@ class CylinderReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='lower_vv.stp',
             material_tag='vv_mat',
+            color=(0.5, 0.5, 0.5),
+            name='lower vacuum vessel'
         )
 
         lower_blanket = paramak.RotateStraightShape(
@@ -81,6 +83,8 @@ class CylinderReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='lower_blanket.stp',
             material_tag='blanket_mat',
+            color=(0., 1., 0.498),
+            name='lower blanket'
         )
 
         blanket = paramak.CenterColumnShieldCylinder(
@@ -91,6 +95,8 @@ class CylinderReactor(paramak.Reactor):
             stp_filename='blanket.stp',
             cut=lower_blanket,
             material_tag='blanket_mat',
+            color=(0., 1., 0.498),
+            name='blanket'
         )
 
         upper_blanket = paramak.RotateStraightShape(
@@ -103,6 +109,8 @@ class CylinderReactor(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             stp_filename='upper_blanket.stp',
             material_tag='blanket_mat',
+            color=(0., 1., 0.498),
+            name='upper blanket'
         )
 
         upper_vv = paramak.RotateStraightShape(
@@ -114,7 +122,9 @@ class CylinderReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             stp_filename='upper_vv.stp',
-            material_tag='vv_mat',        
+            material_tag='vv_mat',
+            color=(0.5, 0.5, 0.5),    
+            name='upper vacuum vessel'
         )
 
         vv = paramak.RotateStraightShape(
@@ -126,7 +136,9 @@ class CylinderReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             stp_filename='vv.stp',
-            material_tag='vv_mat',        
+            material_tag='vv_mat',
+            color=(0.5, 0.5, 0.5),    
+            name='vacuum vessel'
         )
 
         self.shapes_and_components = [blanket, vv, upper_blanket, lower_blanket, lower_vv, upper_vv]
