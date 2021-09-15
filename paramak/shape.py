@@ -317,26 +317,6 @@ class Shape:
         self._rotation_axis = value
 
     @property
-    def volume(self):
-        """Get the total volume of the Shape. Returns a float"""
-        if isinstance(self.solid, Compound):
-            return self.solid.Volume()
-
-        return self.solid.val().Volume()
-
-    @property
-    def volumes(self):
-        """Get the volumes of the Shape. Compound shapes provide a separate
-        volume value for each entry. Returns a list of floats"""
-        all_volumes = []
-        if isinstance(self.solid, Compound):
-            for solid in self.solid.Solids():
-                all_volumes.append(solid.Volume())
-            return all_volumes
-
-        return [self.solid.val().Volume()]
-
-    @property
     def area(self):
         """Get the total surface area of the Shape. Returns a float"""
         if isinstance(self.solid, Compound):
@@ -1533,3 +1513,34 @@ class Shape:
         # @jon I'm not 100% if this change is correct or not
         self.processed_points = new_points
         return new_points
+
+    def volume(self, split_compounds=False) -> Union[float, List[float]]:
+        """Get the total volume of the Shape.
+
+        Args:
+            split_compounds: If the Shape is a compound of Shapes and therefore
+                contains multiple volumes. This option allows access to the
+                separate volumes of each component within a Shape (True) or the
+                volumes of compounds can be summed (False).
+
+        Returns:
+            The the volume(s) of the Shape
+        """
+
+        # returns a float
+        if split_compounds is False:
+            if isinstance(self.solid, Compound):
+                return self.solid.Volume()
+
+            return self.solid.val().Volume()
+
+        # returns a list of floats
+        if split_compounds is True:
+
+            all_volumes = []
+            if isinstance(self.solid, Compound):
+                for solid in self.solid.Solids():
+                    all_volumes.append(solid.Volume())
+                return all_volumes
+
+            return [self.solid.val().Volume()]

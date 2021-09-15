@@ -63,19 +63,6 @@ class Reactor:
 
         self.reactor_hash_value = None
 
-    @property
-    def volumes(self):
-        """Get the volumes of the Shapes. Compound shapes provide a separate
-        volume value for each entry. Returns a list of floats"""
-        all_volumes = []
-        for shape in self.shapes_and_components:
-            if isinstance(shape, Compound):
-                all_compound_volumes = []
-                for solid in shape.solid.Solids():
-                    all_compound_volumes.append(solid.Volume())
-                return all_volumes
-
-        return [self.solid.val().Volume()]
 
     @property
     def graveyard_size(self):
@@ -931,7 +918,7 @@ class Reactor:
     def export_html_3d(
             self,
             filename: Optional[str] = "reactor_3d.html",
-    ):
+    ) -> str:
         """Saves an interactive 3d html view of the Reactor to a html file.
 
         Args:
@@ -998,3 +985,25 @@ class Reactor:
         )
 
         return fig
+
+
+    def volume(
+        self,
+        split_compounds: bool = False
+    ) -> List[float]:
+        """Get the volumes of the Shapes in the Reactor.
+
+        Args:
+            split_compounds: If the Shape is a compound of Shapes and therefore
+                contains multiple volumes. This option allows access to the separate
+                volumes of each component within a Shape (True) or the volumes of
+                compounds can be summed (False).
+
+        Returns:
+            The the volumes of the Shapes
+        """
+
+        all_volumes = []
+        for shape in self.shapes_and_components:
+            all_volumes.append(shape.volume(split_compounds=split_compounds))
+        return all_volumes

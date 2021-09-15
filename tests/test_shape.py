@@ -90,10 +90,10 @@ class TestShape(unittest.TestCase):
         os.system("rm graveyard.stp")
 
         test_shape.make_graveyard(graveyard_offset=50)
-        graveyard_volume_1 = test_shape.graveyard.volume
+        graveyard_volume_1 = test_shape.graveyard.volume()
 
         test_shape.make_graveyard(graveyard_offset=200)
-        graveyard_volume_2 = test_shape.graveyard.volume
+        graveyard_volume_2 = test_shape.graveyard.volume()
 
         assert graveyard_volume_2 > graveyard_volume_1
 
@@ -508,12 +508,12 @@ class TestShape(unittest.TestCase):
             center_points=[(15, 15), (50, 50)]
         )
 
-        assert isinstance(test_shape.volume, float)
-        assert isinstance(test_shape.volumes, list)
-        assert isinstance(test_shape.volumes[0], float)
-        assert isinstance(test_shape.volumes[1], float)
-        assert len(test_shape.volumes) == 2
-        assert sum(test_shape.volumes) == pytest.approx(test_shape.volume)
+        assert isinstance(test_shape.volume(), float)
+        assert isinstance(test_shape.volume(split_compounds=True), list)
+        assert isinstance(test_shape.volume(split_compounds=True)[0], float)
+        assert isinstance(test_shape.volume(split_compounds=True)[1], float)
+        assert len(test_shape.volume(split_compounds=True)) == 2
+        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(test_shape.volume())
 
     def test_volumes_add_up_to_total_volume(self):
         """Checks the volume and volumes attributes are correct types
@@ -525,11 +525,11 @@ class TestShape(unittest.TestCase):
             width=50
         )
 
-        assert isinstance(test_shape.volume, float)
-        assert isinstance(test_shape.volumes, list)
-        assert isinstance(test_shape.volumes[0], float)
-        assert len(test_shape.volumes) == 1
-        assert sum(test_shape.volumes) == pytest.approx(test_shape.volume)
+        assert isinstance(test_shape.volume(), float)
+        assert isinstance(test_shape.volume(split_compounds=True), list)
+        assert isinstance(test_shape.volume(split_compounds=True)[0], float)
+        assert len(test_shape.volume(split_compounds=True)) == 1
+        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(test_shape.volume())
 
     def test_areas_add_up_to_total_area_Compound(self):
         """Checks the area and areas attributes are correct types
