@@ -16,7 +16,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             inner_radius=20,
             outer_radius=80)
         test_shape_2 = paramak.InboardFirstwallFCCS(
-            central_column_shield=a,
+            central_column_shield=test_shape_1,
             thickness=20,
             rotation_angle=180)
         assert test_shape_1.solid is not None

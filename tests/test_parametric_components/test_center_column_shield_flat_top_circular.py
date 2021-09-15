@@ -58,7 +58,7 @@ class TestCenterColumnShieldFlatTopCircular(unittest.TestCase):
         a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume()() > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_faces(self):
         """Creates a center column shield using the
