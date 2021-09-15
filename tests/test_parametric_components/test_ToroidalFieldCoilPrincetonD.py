@@ -28,7 +28,7 @@ class TestToroidalFieldCoilPrincetonD(unittest.TestCase):
         parametric component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
         assert self.test_shape.inner_leg_connection_points is not None
 
         test_inner_leg = paramak.ExtrudeStraightShape(
@@ -40,28 +40,28 @@ class TestToroidalFieldCoilPrincetonD(unittest.TestCase):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilPrincetonD
         parametric component and checks that a cadquery solid is created."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
 
         test_inner_leg = paramak.ExtrudeStraightShape(
             points=self.test_shape.inner_leg_connection_points, distance=30
         )
-        inner_leg_volume = test_inner_leg.volume
+        inner_leg_volume = test_inner_leg.volume()
 
         self.test_shape.with_inner_leg = False
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume < test_volume
+        assert self.test_shape.volume() < test_volume
 
     def test_relative_volume(self):
         """Creates tf coil shapes with different numbers of tf coils and checks that
         their relative volumes are correct."""
 
         self.test_shape.number_of_coils = 4
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
 
         self.test_shape.number_of_coils = 8
         assert test_volume == pytest.approx(
-            self.test_shape.volume * 0.5, rel=0.01)
+            self.test_shape.volume() * 0.5, rel=0.01)
 
     def test_rotation_angle(self):
         """Creates a tf coil with a rotation_angle < 360 degrees and checks
@@ -71,22 +71,22 @@ class TestToroidalFieldCoilPrincetonD(unittest.TestCase):
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "XZ"
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 0.5, rel=0.01)
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "YZ"
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 0.5, rel=0.01)
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "XY"
         self.test_shape.rotation_axis = "Y"
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 0.5, rel=0.01)

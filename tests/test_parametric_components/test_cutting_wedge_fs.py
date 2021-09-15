@@ -22,7 +22,7 @@ class TestCuttingWedgeFS(unittest.TestCase):
             azimuth_placement_angle=0,
         )
 
-        assert cutter.volume > hoop_shape.volume
+        assert cutter.volume() > hoop_shape.volume()
 
     def test_invalid_parameters_errors(self):
         """Checks that the correct errors are raised when invalid arguments are input as
@@ -68,8 +68,8 @@ class TestCuttingWedgeFS(unittest.TestCase):
             rotation_axis="Z"
         )
         rectangle.rotation_angle = 360
-        volume_full = rectangle.volume
+        volume_full = rectangle.volume()
         assert np.isclose(volume_full, 2)
         rectangle.rotation_angle = 90
-        volume_quarter = rectangle.volume
+        volume_quarter = rectangle.volume()
         assert np.isclose(volume_quarter, 0.5)

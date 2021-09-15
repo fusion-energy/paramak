@@ -30,13 +30,13 @@ class TestPoloidalFieldCoilCaseFC(unittest.TestCase):
         component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_absolute_volume(self):
         """Creates a pf coil case using the PoloidalFieldCoilCaseFC parametric
         component and checks that its volume is correct."""
 
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             (math.pi * 2 * 1000) * ((50 * 5 * 2) + (70 * 5 * 2)))
 
     def test_absolute_areas(self):

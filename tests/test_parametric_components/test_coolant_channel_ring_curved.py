@@ -30,21 +30,21 @@ class TestCoolantChannelRingCurved(unittest.TestCase):
         and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_relative_volumes(self):
         """Creates coolant channel rings using the CoolantChannelRingCurved parametric shape
         and checks the relative volumes are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.number_of_coolant_channels = 3
-        assert test_volume == pytest.approx(self.test_shape.volume * 2)
+        assert test_volume == pytest.approx(self.test_shape.volume() * 2)
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.mid_offset = -30
-        assert test_volume > self.test_shape.volume
+        assert test_volume > self.test_shape.volume()
         self.test_shape.force_cross_section = True
-        assert test_volume < self.test_shape.volume
+        assert test_volume < self.test_shape.volume()
 
     def test_start_angle(self):
         """Checks that the coolant channels are placed at the correct azimuthal placement

@@ -143,7 +143,7 @@ class TestPoloidalFieldCoilCaseSet(unittest.TestCase):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
         parametric component and checks that the volume is correct."""
 
-        assert self.test_shape.volume == pytest.approx((((20 * 5 * 2) +
+        assert self.test_shape.volume() == pytest.approx((((20 * 5 * 2) +
                                                          (10 * 5 * 2)) * math.pi * 2 * 100) + (((30 * 10 * 2) +
                                                                                                 (10 * 10 * 2)) * math.pi * 2 * 100) + (((30 * 5 * 2) +
                                                                                                                                         (20 * 5 * 2)) * math.pi * 2 * 50) + (((60 * 10 * 2) +

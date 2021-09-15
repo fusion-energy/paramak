@@ -11,17 +11,17 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
         """Makes a firstwall from a CenterColumnShieldCylinder and checks
         the volume is smaller than the shield."""
 
-        a = paramak.CenterColumnShieldCylinder(
+        test_shape_1 = paramak.CenterColumnShieldCylinder(
             height=100,
             inner_radius=20,
             outer_radius=80)
-        b = paramak.InboardFirstwallFCCS(
+        test_shape_2 = paramak.InboardFirstwallFCCS(
             central_column_shield=a,
             thickness=20,
             rotation_angle=180)
-        assert a.solid is not None
-        assert b.solid is not None
-        assert a.volume > b.volume
+        assert test_shape_1.solid is not None
+        assert test_shape_2.solid is not None
+        assert test_shape_1.volume() > test_shape_2.volume()
 
     def test_construction_with_CenterColumnShieldHyperbola(self):
         """Makes a firstwall from a CenterColumnShieldHyperbola and checks
@@ -38,7 +38,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180)
         assert a.solid is not None
         assert b.solid is not None
-        assert a.volume > b.volume
+        assert a.volume() > b.volume()
 
     def test_construction_with_CenterColumnShieldFlatTopHyperbola(self):
         """Makes a firstwall from a CenterColumnShieldFlatTopHyperbola and
@@ -56,7 +56,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180)
         assert a.solid is not None
         assert b.solid is not None
-        assert a.volume > b.volume
+        assert a.volume() > b.volume()
 
     def test_construction_with_CenterColumnShieldPlasmaHyperbola(self):
         """Makes a firstwall from a CenterColumnShieldPlasmaHyperbola and
@@ -73,7 +73,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180)
         assert a.solid is not None
         assert b.solid is not None
-        assert a.volume > b.volume
+        assert a.volume() > b.volume()
 
     def test_construction_with_CenterColumnShieldCircular(self):
         """Makes a firstwall from a CenterColumnShieldCircular and checks
@@ -90,7 +90,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180)
         assert a.solid is not None
         assert b.solid is not None
-        assert a.volume > b.volume
+        assert a.volume() > b.volume()
 
     def test_construction_with_CenterColumnShieldFlatTopCircular(self):
         """Makes a firstwall from a CenterColumnShieldFlatTopCircular and
@@ -108,7 +108,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180)
         assert a.solid is not None
         assert b.solid is not None
-        assert a.volume > b.volume
+        assert a.volume() > b.volume()
 
     def test_construction_with_wrong_column_shield_type(self):
         def test_construction_with_string():
@@ -147,7 +147,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180,
             azimuth_placement_angle=180,
             union=b)
-        assert np.isclose(c.volume, 2 * b.volume)
+        assert np.isclose(c.volume(), 2 * b.volume())
 
     def test_azimuth_placement_angle(self):
         """Makes two 180 degree firstwalls (one is rotated 90 degree), performs
@@ -172,7 +172,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             rotation_angle=180,
             azimuth_placement_angle=90,
             cut=b)
-        assert np.isclose(c.volume, 0.5 * b.volume)
+        assert np.isclose(c.volume(), 0.5 * b.volume())
 
     def test_cut_attribute(self):
         """Creates a firstwall then resets its cut attribute and checks that
@@ -187,7 +187,7 @@ class TestInboardFirstwallFCCS(unittest.TestCase):
             thickness=20,
             rotation_angle=180)
 
-        volume_1 = b.volume
+        volume_1 = b.volume()
         b.cut = None
-        volume_2 = b.volume
+        volume_2 = b.volume()
         assert np.isclose(volume_1, volume_2)
