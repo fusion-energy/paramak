@@ -59,30 +59,32 @@ class CylinderReactor(paramak.Reactor):
         self.shapes_and_components
         """
         inner_wall = (
-            self.inner_blanket_radius + self.blanket_thickness + self.blanket_vv_gap
-        )
+            self.inner_blanket_radius +
+            self.blanket_thickness +
+            self.blanket_vv_gap)
         lower_vv = paramak.RotateStraightShape(
             points=[
-                (
-                    inner_wall,
-                    (-self.blanket_height / 2.0) - self.lower_blanket_thickness,
-                ),
-                (
-                    inner_wall,
-                    (-self.blanket_height / 2.0)
-                    - (self.lower_blanket_thickness + self.lower_vv_thickness),
-                ),
-                (
-                    0,
-                    (-self.blanket_height / 2.0)
-                    - (self.lower_blanket_thickness + self.lower_vv_thickness),
-                ),
-                (0, (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
+                (inner_wall,
+                 (-self.blanket_height / 2.0) - self.lower_blanket_thickness,
+                 ),
+                (inner_wall,
+                 (-self.blanket_height / 2.0) - (
+                     self.lower_blanket_thickness + self.lower_vv_thickness),
+                 ),
+                (0,
+                 (-self.blanket_height / 2.0) - (
+                     self.lower_blanket_thickness + self.lower_vv_thickness),
+                 ),
+                (0,
+                 (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
             ],
             rotation_angle=self.rotation_angle,
             stp_filename="lower_vv.stp",
             material_tag="vv_mat",
-            color=(0.5, 0.5, 0.5),
+            color=(
+                0.5,
+                0.5,
+                0.5),
             name="lower vacuum vessel",
         )
 
