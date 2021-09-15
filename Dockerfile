@@ -61,18 +61,19 @@ EXPOSE 8888
 WORKDIR /home/paramak
 
 
-FROM ghcr.io/fusion-energy/paramak:dependencies as final
+# FROM ghcr.io/fusion-energy/paramak:dependencies as final
+FROM dependencies as final
 
+COPY README.md README.md
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
 COPY examples examples/
 COPY setup.py setup.py
 COPY tests tests/
-COPY README.md README.md
 
 # using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
 RUN python setup.py install
 
 # this helps prevent the kernal failing
-RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
-CMD bash docker-cmd.sh
+# RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
+# CMD bash docker-cmd.sh
