@@ -1536,7 +1536,6 @@ class Shape:
 
         # returns a list of floats
         if split_compounds is True:
-
             all_volumes = []
             if isinstance(self.solid, Compound):
                 for solid in self.solid.Solids():

@@ -66,10 +66,10 @@ class TestRotateMixedShape(unittest.TestCase):
         """Creates two RotateMixedShapes with different rotation_angles and checks
         that their relative volumes are correct."""
 
-        assert self.test_shape.volume > 100
-        test_volume = self.test_shape.volume
+        assert self.test_shape.volume() > 100
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert test_volume == pytest.approx(self.test_shape.volume * 2)
+        assert test_volume == pytest.approx(self.test_shape.volume() * 2)
 
     def test_relative_shape_volume_azimuth_placement_angle(self):
         """Creates two RotateMixedShapes with different azimuth_placement_angles and
@@ -77,10 +77,10 @@ class TestRotateMixedShape(unittest.TestCase):
 
         self.test_shape.rotation_angle = 10
         self.test_shape.azimuth_placement_angle = 0
-        test_volume_1 = self.test_shape.volume
+        test_volume_1 = self.test_shape.volume()
 
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(test_volume_1 * 4)
+        assert self.test_shape.volume() == pytest.approx(test_volume_1 * 4)
 
     def test_shape_face_areas(self):
         """Creates RotateMixedShapes and checks that the face areas are expected."""
@@ -124,8 +124,8 @@ class TestRotateMixedShape(unittest.TestCase):
             union=inner_box,
         )
 
-        assert inner_box.volume + outer_box.volume == pytest.approx(
-            outer_box_and_inner_box.volume
+        assert inner_box.volume() + outer_box.volume() == pytest.approx(
+            outer_box_and_inner_box.volume()
         )
 
     def test_incorrect_connections(self):
@@ -172,10 +172,10 @@ class TestRotateMixedShape(unittest.TestCase):
                 (80, -10, "straight")
             ]
         )
-        outer_shape_volume = outer_shape.volume
+        outer_shape_volume = outer_shape.volume()
         outer_shape.cut = self.test_shape
-        assert outer_shape.volume == pytest.approx(
-            outer_shape_volume - self.test_shape.volume
+        assert outer_shape.volume() == pytest.approx(
+            outer_shape_volume - self.test_shape.volume()
         )
 
     def test_mixed_shape_with_straight_and_circle(self):
@@ -192,7 +192,7 @@ class TestRotateMixedShape(unittest.TestCase):
             ],
             rotation_angle=10,
         )
-        assert test_shape.volume > 10 * 10
+        assert test_shape.volume() > 10 * 10
 
     def test_export_stp_extension(self):
         """Creates a RotateMixedShape and checks that a stp file of the shape
@@ -260,18 +260,18 @@ class TestRotateMixedShape(unittest.TestCase):
 
     def test_convert_circles_to_splines_volume(self):
         """creates a RotateMixedShape with a circular edge and converts the
-        edge to a spline edges. Checks the new shape has appoximatly the same
-        volume as the orignal shape (with circles)"""
+        edge to a spline edges. Checks the new shape has approximately the same
+        volume as the original shape (with circles)"""
 
-        original_volume = self.test_shape_2.volume
+        original_volume = self.test_shape_2.volume()
         self.test_shape_2.convert_all_circle_connections_to_splines()
-        new_volume = self.test_shape_2.volume
+        new_volume = self.test_shape_2.volume()
 
         assert pytest.approx(new_volume, rel=0.000001) == original_volume
 
-        original_volume = self.test_shape_3.volume
+        original_volume = self.test_shape_3.volume()
         self.test_shape_3.convert_all_circle_connections_to_splines()
-        new_volume = self.test_shape_3.volume
+        new_volume = self.test_shape_3.volume()
 
         assert pytest.approx(new_volume, rel=0.00001) == original_volume
 
