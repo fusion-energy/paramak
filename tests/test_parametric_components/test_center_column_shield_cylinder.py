@@ -173,4 +173,5 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         )
 
         assert test_shape2.volume() == test_shape1.volume()
-        assert pytest.approx(test_shape3.volume()) == 0.5 * test_shape1.volume()
+        assert pytest.approx(test_shape3.volume()) == 0.5 * \
+            test_shape1.volume()
