@@ -1150,24 +1150,42 @@ class TestReactor(unittest.TestCase):
         assert isinstance(self.test_reactor_2.volume()[1], float)
         assert len(self.test_reactor.volume()) == 1
         assert len(self.test_reactor_2.volume()) == 2
-        assert sum(self.test_reactor_2.volume()) > sum(self.test_reactor.volume())
+        assert sum(
+            self.test_reactor_2.volume()) > sum(
+            self.test_reactor.volume())
         assert self.test_reactor_2.volume()[0] == self.test_reactor.volume()[0]
 
     def test_reactor_volume_spliting_compounds(self):
         """Checks the volumes returned by the .volume method with splitting of
         compounds set to True are correct"""
 
-        assert isinstance(self.test_reactor_3.volume(split_compounds=True), list)
-        assert isinstance(self.test_reactor_3.volume(split_compounds=False), list)
-        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[0], list)
-        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1], list)
-        assert isinstance(self.test_reactor_3.volume(split_compounds=False)[0], float)
-        assert isinstance(self.test_reactor_3.volume(split_compounds=False)[1], float)
-        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1][0], float)
-        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1][1], float)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True), list)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=False), list)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True)[0], list)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True)[1], list)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=False)[0], float)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=False)[1], float)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True)[1][0], float)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True)[1][1], float)
         assert len(self.test_reactor_3.volume(split_compounds=True)) == 2
         assert len(self.test_reactor_3.volume(split_compounds=True)[1]) == 2
-        
+
         vol_1 = self.test_reactor_3.volume(split_compounds=True)[1][0]
         vol_2 = self.test_reactor_3.volume(split_compounds=True)[1][1]
         assert vol_1 == vol_2
