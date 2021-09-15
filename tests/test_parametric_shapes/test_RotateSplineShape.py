@@ -15,7 +15,8 @@ class TestRotateSplineShape(unittest.TestCase):
                     (90, -50), (70, -80), (50, -20)])
 
     def test_default_parameters(self):
-        """Checks that the default parameters of a RotateSplineShape are correct."""
+        """Checks that the default parameters of a RotateSplineShape are
+        correct."""
 
         assert self.test_shape.rotation_angle == 360
         assert self.test_shape.stp_filename == "RotateSplineShape.stp"
@@ -23,18 +24,18 @@ class TestRotateSplineShape(unittest.TestCase):
         assert self.test_shape.azimuth_placement_angle == 0
 
     def test_absolute_shape_volume(self):
-        """creates a rotated shape using spline connections and checks the volume
-        is correct"""
+        """creates a rotated shape using spline connections and checks the
+        volume is correct"""
 
         self.test_shape.rotation_angle = 360
-        volume_360 = self.test_shape.volume
+        volume_360 = self.test_shape.volume()
 
         assert self.test_shape.solid is not None
         assert volume_360 > 100
 
         self.test_shape.rotation_angle = 180
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume == pytest.approx(volume_360 * 0.5)
+        assert self.test_shape.volume() == pytest.approx(volume_360 * 0.5)
 
     def test_cut_volume(self):
         """Creates a RotateSplineShape with another RotateSplineShape cut out
@@ -54,13 +55,14 @@ class TestRotateSplineShape(unittest.TestCase):
             rotation_angle=180,
         )
 
-        assert inner_shape.volume == pytest.approx(900.88, abs=0.1)
-        assert outer_shape.volume == pytest.approx(2881.76, abs=0.1)
-        assert outer_shape_with_cut.volume == pytest.approx(
+        assert inner_shape.volume() == pytest.approx(900.88, abs=0.1)
+        assert outer_shape.volume() == pytest.approx(2881.76, abs=0.1)
+        assert outer_shape_with_cut.volume() == pytest.approx(
             2881.76 - 900.88, abs=0.2)
 
     def test_shape_face_areas(self):
-        """Creates RotateSplineShapes and checks that the face areas are expected."""
+        """Creates RotateSplineShapes and checks that the face areas are
+        expected."""
 
         assert len(self.test_shape.areas) == 1
         assert len(set(self.test_shape.areas)) == 1

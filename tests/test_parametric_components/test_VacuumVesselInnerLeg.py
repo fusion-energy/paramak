@@ -37,4 +37,4 @@ class TestVacuumVessel(unittest.TestCase):
         assert self.test_shape.solid is not None
 
     def test_cut(self):
-        assert self.test_shape.volume != self.test_shape_cut.volume
+        assert self.test_shape.volume() != self.test_shape_cut.volume()

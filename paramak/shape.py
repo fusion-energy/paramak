@@ -70,8 +70,8 @@ class Shape:
         union (paramak.shape or list, optional): If set, the current solid
             will be united with the provided solid or iterable of solids.
             Defaults to None.
-        graveyard_size: The dimention of cube shaped the graveyard region used
-            by DAGMC. This attribtute is used preferentially over
+        graveyard_size: The dimension of cube shaped the graveyard region used
+            by DAGMC. This attribute is used preferentially over
             graveyard_offset.
         graveyard_offset: The distance between the graveyard and the largest
             shape. If graveyard_size is set the this is ignored.
@@ -94,8 +94,6 @@ class Shape:
         scale: Optional[float] = None,
         surface_reflectivity: Optional[bool] = False,
         physical_groups=None,
-        faceting_tolerance: Optional[float] = 1e-1,
-        merge_tolerance: Optional[float] = 1e-4,
         # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
@@ -128,8 +126,6 @@ class Shape:
         self.tet_mesh = tet_mesh
         self.scale = scale
         self.surface_reflectivity = surface_reflectivity
-        self.faceting_tolerance = faceting_tolerance
-        self.merge_tolerance = merge_tolerance
         self.graveyard_offset = graveyard_offset
         self.graveyard_size = graveyard_size
 
@@ -321,26 +317,6 @@ class Shape:
         self._rotation_axis = value
 
     @property
-    def volume(self):
-        """Get the total volume of the Shape. Returns a float"""
-        if isinstance(self.solid, Compound):
-            return self.solid.Volume()
-
-        return self.solid.val().Volume()
-
-    @property
-    def volumes(self):
-        """Get the volumes of the Shape. Compound shapes provide a seperate
-        volume value for each entry. Returns a list of floats"""
-        all_volumes = []
-        if isinstance(self.solid, Compound):
-            for solid in self.solid.Solids():
-                all_volumes.append(solid.Volume())
-            return all_volumes
-
-        return [self.solid.val().Volume()]
-
-    @property
     def area(self):
         """Get the total surface area of the Shape. Returns a float"""
         if isinstance(self.solid, Compound):
@@ -351,7 +327,7 @@ class Shape:
     @property
     def areas(self):
         """Get the surface areas of the Shape. Compound shapes provide a
-        seperate area value for each entry. Returns a list of floats"""
+        separate area value for each entry. Returns a list of floats"""
         all_areas = []
         if isinstance(self.solid, Compound):
             for face in self.solid.Faces():
@@ -672,10 +648,11 @@ class Shape:
         try:
             from jupyter_cadquery.cadquery import Part, PartGroup, show
         except ImportError:
-            print('To use Shape.show() you must install jupyter_cadquery.')
-            print(
-                'To install jupyter_cadquery type pip install jupyter_cadquery in the terminal')
-            return None
+            msg = (
+                'To use Shape.show() you must install jupyter_cadquery. To'
+                'install jupyter_cadquery type "pip install jupyter_cadquery"'
+                ' in the terminal')
+            raise ImportError(msg)
 
         parts = []
         if self.name is None:
@@ -1235,14 +1212,14 @@ class Shape:
         then .png will be added.
 
         Args:
-            filename (str): the filename of the saved png image.
-            xmin (float, optional): the minimum x value of the x axis.
+            filename: the filename of the saved png image.
+            xmin: the minimum x value of the x axis.
                 Defaults to 0..
-            xmax (float, optional): the maximum x value of the x axis.
+            xmax: the maximum x value of the x axis.
                 Defaults to 900..
-            ymin (float, optional): the minimum y value of the y axis.
+            ymin: the minimum y value of the y axis.
                 Defaults to -600..
-            ymax (float, optional): the maximum y value of the y axis.
+            ymax: the maximum y value of the y axis.
                 Defaults to 600..
 
         Returns:
@@ -1394,7 +1371,7 @@ class Shape:
             solid = cut_solid(solid, self.cut)
 
         # If a wedge cut is provided then perform a boolean cut
-        # Performed independantly to avoid use of self.cut
+        # Performed independently to avoid use of self.cut
         # Prevents repetition of 'outdated' wedge cuts
         if 'wedge_cut' in kwargs:
             if kwargs['wedge_cut'] is not None:
@@ -1454,7 +1431,7 @@ class Shape:
             raise ValueError(
                 "the graveyard_size, Shape.graveyard_size, "
                 "graveyard_offset and Shape.graveyard_offset are all None. "
-                "Please specify at least one of these attributes or agruments")
+                "Please specify at least one of these attributes or arguments")
 
         graveyard_shape = paramak.HollowCube(
             length=graveyard_size_to_use,
@@ -1467,45 +1444,6 @@ class Shape:
         self.graveyard = graveyard_shape
 
         return graveyard_shape
-
-    def export_vtk(
-        self,
-        filename: Optional[str] = 'dagmc.vtk',
-        h5m_filename: Optional[str] = None,
-        include_graveyard: Optional[bool] = False
-    ):
-        """Produces a vtk geometry compatable from the dagmc h5m file. This is
-        useful for checking the geometry that is used for transport.
-
-        Arguments:
-            filename: filename of vtk outputfile. If the filename does not end
-                with .vtk then .vtk will be added.
-            h5m_filename: filename of h5m outputfile. If the filename does not
-                end with .h5m then .h5m will be added. Defaults to None which
-                uses the Reactor.h5m_filename.
-            include_graveyard: optionally include the graveyard in the vtk file
-
-        Returns:
-            filename of the vtk file produced
-        """
-
-        if h5m_filename is None:
-            if self.h5m_filename is None:
-                raise ValueError(
-                    'h5m_filename not provided and Reactor.h5m_filename is '
-                    'not set, Unable to use mbconvert to convert to vtk '
-                    'without input h5m filename. Try running '
-                    'Reactor.export_h5m() first.')
-
-            h5m_filename = self.h5m_filename
-
-        vtk_filename = paramak.utils.export_vtk(
-            filename=filename,
-            h5m_filename=h5m_filename,
-            include_graveyard=include_graveyard
-        )
-
-        return vtk_filename
 
     def export_graveyard(
             self,
@@ -1576,3 +1514,33 @@ class Shape:
         # @jon I'm not 100% if this change is correct or not
         self.processed_points = new_points
         return new_points
+
+    def volume(self, split_compounds=False) -> Union[float, List[float]]:
+        """Get the total volume of the Shape.
+
+        Args:
+            split_compounds: If the Shape is a compound of Shapes and therefore
+                contains multiple volumes. This option allows access to the
+                separate volumes of each component within a Shape (True) or the
+                volumes of compounds can be summed (False).
+
+        Returns:
+            The the volume(s) of the Shape
+        """
+
+        # returns a float
+        if split_compounds is False:
+            if isinstance(self.solid, Compound):
+                return self.solid.Volume()
+
+            return self.solid.val().Volume()
+
+        # returns a list of floats
+        if split_compounds is True:
+            all_volumes = []
+            if isinstance(self.solid, Compound):
+                for solid in self.solid.Solids():
+                    all_volumes.append(solid.Volume())
+                return all_volumes
+
+            return [self.solid.val().Volume()]

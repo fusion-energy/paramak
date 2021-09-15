@@ -42,18 +42,18 @@ class TestSweepSplineShape(unittest.TestCase):
         are correct."""
 
         self.test_shape.points = [(-20, 20), (20, 20), (20, -20), (-20, -20)]
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.points = [(-10, 10), (10, 10), (10, -10), (-10, -10)]
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 0.25, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepSplineShapes and checks that their relative volumes
         are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 4, rel=0.01)
 
     def test_force_cross_section(self):
@@ -85,9 +85,9 @@ class TestSweepSplineShape(unittest.TestCase):
         """Checks that a SweepSplineShape with a larger volume is created when
         force_cross_section = True than when force_cross_section = False."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.force_cross_section = True
-        assert self.test_shape.volume > test_volume
+        assert self.test_shape.volume() > test_volume
 
     def test_surface_count(self):
         """Creates a SweepSplineShape and checks that it has the correct number

@@ -229,6 +229,6 @@ class TestPlasma(unittest.TestCase):
         the relative volumes of the solids created are correct"""
 
         test_plasma = paramak.Plasma()
-        test_plasma_volume = test_plasma.volume
+        test_plasma_volume = test_plasma.volume()
         test_plasma.rotation_angle = 180
-        assert test_plasma.volume == pytest.approx(test_plasma_volume * 0.5)
+        assert test_plasma.volume() == pytest.approx(test_plasma_volume * 0.5)

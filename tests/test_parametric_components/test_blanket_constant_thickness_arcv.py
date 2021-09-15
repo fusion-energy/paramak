@@ -57,16 +57,16 @@ class TestBlanketConstantThicknessArcV(unittest.TestCase):
         component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_relative_shape_volume(self):
         """Creates two blankets using the BlanketConstantThicknessArcV
         parametric component and checks that their relative volumes are
         correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert test_volume == pytest.approx(self.test_shape.volume * 2)
+        assert test_volume == pytest.approx(self.test_shape.volume() * 2)
 
     def test_shape_face_areas(self):
         """Creates a blanket using the BlanketConstantThicknessArcV parametric component and

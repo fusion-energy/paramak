@@ -16,7 +16,8 @@ class TestSweepStraightShape(unittest.TestCase):
         )
 
     def test_default_parameters(self):
-        """Checks that the default parameters of a SweepStraightShape are correct."""
+        """Checks that the default parameters of a SweepStraightShape are
+        correct."""
 
         # assert self.test_shape.rotation_angle == 360
         assert self.test_shape.stp_filename == "SweepStraightShape.stp"
@@ -27,27 +28,28 @@ class TestSweepStraightShape(unittest.TestCase):
         assert self.test_shape.force_cross_section == False
 
     def test_absolute_shape_volume(self):
-        """Creates a SweepStraightShape and checks that the volume is correct."""
+        """Creates a SweepStraightShape and checks that the volume is
+        correct."""
 
         self.test_shape.path_points = [(50, 0), (50, 50), (50, 100)]
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume == pytest.approx(20 * 20 * 100)
+        assert self.test_shape.volume() == pytest.approx(20 * 20 * 100)
 
     def test_relative_shape_volume(self):
-        """Creates two SweepStraightShapes and checks that their relative volumes
-        are correct."""
+        """Creates two SweepStraightShapes and checks that their relative
+        volumes are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.points = [(-20, 20), (20, 20), (20, -20), (-20, -20)]
-        assert self.test_shape.volume == pytest.approx(test_volume * 4)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 4)
 
     def test_relative_shape_volume_again(self):
         """Creates two SweepStraightShapes and checks that their relative volumes
         are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(test_volume * 4)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 4)
 
     def test_force_cross_section(self):
         """Checks that a SweepStraightShape with the same cross-section at each path_point
@@ -73,9 +75,9 @@ class TestSweepStraightShape(unittest.TestCase):
         """Checks that a SweepStraightShape with a larger volume is created when
         force_cross_section = True than when force_cross_section = False."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.force_cross_section = True
-        assert self.test_shape.volume > test_volume
+        assert self.test_shape.volume() > test_volume
 
     def test_surface_count(self):
         """Creates a SweepStraightShape and checks that it has the correct number
