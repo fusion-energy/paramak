@@ -648,9 +648,10 @@ class Shape:
         try:
             from jupyter_cadquery.cadquery import Part, PartGroup, show
         except ImportError:
-            msg = ('To use Shape.show() you must install jupyter_cadquery. To'
-                  'install jupyter_cadquery type "pip install jupyter_cadquery"'
-                  ' in the terminal')
+            msg = (
+                'To use Shape.show() you must install jupyter_cadquery. To'
+                'install jupyter_cadquery type "pip install jupyter_cadquery"'
+                ' in the terminal')
             raise ImportError(msg)
 
         parts = []

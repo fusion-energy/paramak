@@ -513,7 +513,10 @@ class TestShape(unittest.TestCase):
         assert isinstance(test_shape.volume(split_compounds=True)[0], float)
         assert isinstance(test_shape.volume(split_compounds=True)[1], float)
         assert len(test_shape.volume(split_compounds=True)) == 2
-        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(test_shape.volume())
+        assert sum(
+            test_shape.volume(
+                split_compounds=True)) == pytest.approx(
+            test_shape.volume())
 
     def test_volumes_add_up_to_total_volume(self):
         """Checks the volume and volumes attributes are correct types
@@ -529,7 +532,10 @@ class TestShape(unittest.TestCase):
         assert isinstance(test_shape.volume(split_compounds=True), list)
         assert isinstance(test_shape.volume(split_compounds=True)[0], float)
         assert len(test_shape.volume(split_compounds=True)) == 1
-        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(test_shape.volume())
+        assert sum(
+            test_shape.volume(
+                split_compounds=True)) == pytest.approx(
+            test_shape.volume())
 
     def test_areas_add_up_to_total_area_Compound(self):
         """Checks the area and areas attributes are correct types
