@@ -1159,20 +1159,20 @@ class TestReactor(unittest.TestCase):
 
         assert isinstance(self.test_reactor_3.volume(split_compounds=True), list)
         assert isinstance(self.test_reactor_3.volume(split_compounds=False), list)
-        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[0], float)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[0], list)
         assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1], list)
         assert isinstance(self.test_reactor_3.volume(split_compounds=False)[0], float)
         assert isinstance(self.test_reactor_3.volume(split_compounds=False)[1], float)
         assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1][0], float)
         assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1][1], float)
-        assert len(self.test_reactor_3.volume(split_compounds=True)) == 1
+        assert len(self.test_reactor_3.volume(split_compounds=True)) == 2
         assert len(self.test_reactor_3.volume(split_compounds=True)[1]) == 2
         
         vol_1 = self.test_reactor_3.volume(split_compounds=True)[1][0]
         vol_2 = self.test_reactor_3.volume(split_compounds=True)[1][1]
         assert vol_1 == vol_2
         vol_3 = self.test_reactor_3.volume(split_compounds=False)[1]
-        assert vol_3 == vol_1 + vol_2
+        assert pytest.approx(vol_3, vol_1 + vol_2)
 
 
 if __name__ == "__main__":
