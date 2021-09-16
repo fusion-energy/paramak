@@ -1552,4 +1552,3 @@ class Shape:
                 return self.solid.Volume()
 
             return self.solid.val().Volume()
-        

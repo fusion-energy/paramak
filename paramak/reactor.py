@@ -421,7 +421,6 @@ class Reactor:
         else:
             return list(set(values))
 
-
     def export_neutronics_description(
             self,
             filename: Optional[str] = "manifest.json",
