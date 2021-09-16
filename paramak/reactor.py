@@ -399,24 +399,28 @@ class Reactor:
         Returns:
             A list of the material tags
         """
+
+        if not isinstance(allow_repeats, bool):
+            msg = f'allow_repeats must be either True or False. Not {allow_repeats}'
+            raise ValueError(msg)
+
         values = []
         for shape_or_component in self.shapes_and_components:
-            if include_plasma is False:
+            if include_plasma:
+                values.append(shape_or_component.material_tag)
+            else:
                 if not isinstance(
                     shape_or_component,
                     (paramak.Plasma,
                      paramak.PlasmaFromPoints,
                      paramak.PlasmaBoundaries)):
                     values.append(shape_or_component.material_tag)
-            else:
-                values.append(shape_or_component.material_tag)
 
-        if allow_repeats is False:
-            return list(set(values))
-        elif allow_repeats is True:
+        if allow_repeats:
             return values
         else:
-            raise ValueError('allow_repeats must be either True or False')
+            return list(set(values))
+
 
     def export_neutronics_description(
             self,

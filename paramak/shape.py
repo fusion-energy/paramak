@@ -1532,15 +1532,12 @@ class Shape:
             The the volume(s) of the Shape
         """
 
-        # returns a float
-        if split_compounds is False:
-            if isinstance(self.solid, Compound):
-                return self.solid.Volume()
-
-            return self.solid.val().Volume()
+        if not isinstance(split_compounds, bool):
+            msg = f'split_compounds must be True or False. Not {split_compounds}'
+            raise ValueError(msg)
 
         # returns a list of floats
-        if split_compounds is True:
+        if split_compounds:
             all_volumes = []
             if isinstance(self.solid, Compound):
                 for solid in self.solid.Solids():
@@ -1548,3 +1545,11 @@ class Shape:
                 return all_volumes
 
             return [self.solid.val().Volume()]
+
+        # returns a float
+        else:
+            if isinstance(self.solid, Compound):
+                return self.solid.Volume()
+
+            return self.solid.val().Volume()
+        
