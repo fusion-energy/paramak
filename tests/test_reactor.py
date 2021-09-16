@@ -1218,5 +1218,6 @@ class TestReactor(unittest.TestCase):
 
         self.assertRaises(ValueError, test_inccorect_allow_repeat)
 
+
 if __name__ == "__main__":
     unittest.main()
