@@ -51,9 +51,13 @@ RUN echo installing CadQuery version $cq_version && \
     pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
 
-
+# installs dependancies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+# installs required packages for dependancies
+COPY requirements-test.txt requirements-test.txt
+RUN pip install -r requirements-test.txt
 
 
 RUN mkdir /home/paramak

@@ -155,7 +155,7 @@ class CylinderReactor(paramak.Reactor):
             name="upper vacuum vessel",
         )
 
-        vv = paramak.RotateStraightShape(
+        vac_ves = paramak.RotateStraightShape(
             points=[
                 (
                     inner_wall + self.vv_thickness,
@@ -191,7 +191,7 @@ class CylinderReactor(paramak.Reactor):
 
         self.shapes_and_components = [
             blanket,
-            vv,
+            vac_ves,
             upper_blanket,
             lower_blanket,
             lower_vv,

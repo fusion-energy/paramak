@@ -24,12 +24,6 @@ setuptools.setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    tests_require=[
-        "pytest-cov>=2.12.1",
-        "pytest-runner>=5.3.1",
-        "nbformat>=5.1.3",
-        "nbconvert>=6.1.0",
-    ],
     python_requires='>=3.6',
     install_requires=[
         "plotly>=5.1.0",
