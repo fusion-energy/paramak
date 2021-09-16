@@ -39,15 +39,15 @@ class TestRotateStraightShape(unittest.TestCase):
         """Creates a RotateStraightShape and checks that its volume is correct."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume == pytest.approx(math.pi * (20**2) * 20)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (20**2) * 20)
 
     def test_relative_shape_volume(self):
         """Creates two RotateStraightShapes and checks that their relative volumes
         are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert test_volume == pytest.approx(self.test_shape.volume * 2)
+        assert test_volume == pytest.approx(self.test_shape.volume() * 2)
 
     def test_union_volume_addition(self):
         """Fuses two RotateStraightShapes and checks that their fused volume is
@@ -66,8 +66,8 @@ class TestRotateStraightShape(unittest.TestCase):
             union=inner_box,
         )
 
-        assert inner_box.volume + outer_box.volume == pytest.approx(
-            outer_box_and_inner_box.volume, rel=0.01
+        assert inner_box.volume() + outer_box.volume() == pytest.approx(
+            outer_box_and_inner_box.volume(), rel=0.01
         )
 
     def test_absolute_shape_areas(self):
@@ -218,7 +218,7 @@ class TestRotateStraightShape(unittest.TestCase):
             cut=self.test_shape
         )
 
-        assert shape_with_cut.volume == pytest.approx(
+        assert shape_with_cut.volume() == pytest.approx(
             (math.pi * (25**2) * 30) - (math.pi * (20**2) * 20)
         )
 
@@ -243,7 +243,7 @@ class TestRotateStraightShape(unittest.TestCase):
             cut=[shape_to_cut_1, shape_to_cut_2]
         )
 
-        assert main_shape_with_cuts.volume == pytest.approx(
+        assert main_shape_with_cuts.volume() == pytest.approx(
             (math.pi * (200**2) * 200) -
             ((math.pi * (40**2) * 200) - (math.pi * (20**2) * 200)) -
             ((math.pi * (140**2) * 200) - (math.pi * (120**2) * 200))

@@ -30,27 +30,27 @@ class TestPortCutterCircular(unittest.TestCase):
         component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_relative_volume(self):
         """Creates PortCutterCircular shapes and checks that their relative volumes
         are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
 
         self.test_shape.extrusion_start_offset = 20
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
 
-        assert self.test_shape.volume == pytest.approx(test_volume * 4)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 4)
 
     def test_absolute_volume(self):
         """Creates a PortCutterCircular shape and checks that its volume is correct."""
 
-        assert self.test_shape.volume == pytest.approx(math.pi * (20**2) * 300)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (20**2) * 300)
 
         self.test_shape.extrusion_start_offset = 20
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         self.test_shape.radius = 10
 
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             math.pi * (10**2) * 300 * 4)

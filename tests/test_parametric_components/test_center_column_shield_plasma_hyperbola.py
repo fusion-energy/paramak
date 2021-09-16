@@ -31,7 +31,7 @@ class TestCenterColumnShieldPlasmaHyperbola(unittest.TestCase):
         a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_points_calculation(self):
         """Checks that the points used to construct the

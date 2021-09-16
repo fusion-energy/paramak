@@ -47,9 +47,9 @@ class TestPortCutterRotated(unittest.TestCase):
             cut=large_ports
         )
 
-        assert large_ports.volume > small_ports.volume
-        assert vessel_with_out_ports.volume > vessel_with_small_ports.volume
-        assert vessel_with_small_ports.volume > vessel_with_large_ports.volume
+        assert large_ports.volume() > small_ports.volume()
+        assert vessel_with_out_ports.volume() > vessel_with_small_ports.volume()
+        assert vessel_with_small_ports.volume() > vessel_with_large_ports.volume()
 
     def test_polar_coverage_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
@@ -73,7 +73,7 @@ class TestPortCutterRotated(unittest.TestCase):
             rotation_angle=10
         )
 
-        assert large_ports.volume > small_ports.volume
+        assert large_ports.volume() > small_ports.volume()
 
     def test_max_distance_from_center_impacts_volume(self):
         """Checks the volumes of two port cutters with different
@@ -97,7 +97,7 @@ class TestPortCutterRotated(unittest.TestCase):
             rotation_angle=10
         )
 
-        assert large_ports.volume > small_ports.volume
+        assert large_ports.volume() > small_ports.volume()
 
     def test_azimuth_placement_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
@@ -121,7 +121,7 @@ class TestPortCutterRotated(unittest.TestCase):
             rotation_angle=10
         )
 
-        assert large_ports.volume > small_ports.volume
+        assert large_ports.volume() > small_ports.volume()
 
     def test_rotation_angle_impacts_volume(self):
         """Checks the volumes of two port cutters with different
@@ -145,7 +145,7 @@ class TestPortCutterRotated(unittest.TestCase):
             rotation_angle=20
         )
 
-        assert large_ports.volume > small_ports.volume
+        assert large_ports.volume() > small_ports.volume()
 
     def test_outerpoint_negative(self):
         """Tests that when polar_coverage_angle is greater than 180 an error is

@@ -8,7 +8,7 @@ from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-from cadquery import exporters
+from cadquery import exporters, Compound
 
 import paramak
 from paramak.utils import _replace, get_hash
@@ -28,28 +28,22 @@ class Reactor:
             key containing the path to the stp file. See the
             external_stp_file_simulation.py script in the examples folder for a
             complete example.
-        faceting_tolerance: the tolerance to use when faceting surfaces.
-        merge_tolerance: the tolerance to use when merging surfaces.
-        graveyard_size: The dimention of cube shaped the graveyard region used
-            by DAGMC. This attribtute is used preferentially over
+        graveyard_size: The dimension of cube shaped the graveyard region used
+            by DAGMC. This attribute is used preferentially over
             graveyard_offset.
         graveyard_offset: The distance between the graveyard and the largest
             shape. If graveyard_size is set the this is ignored.
         largest_shapes: Identifying the shape(s) with the largest size in each
-            dimention (x,y,z) can speed up the production of the graveyard.
+            dimension (x,y,z) can speed up the production of the graveyard.
             Defaults to None which finds the largest shapes by looping through
             all the shapes and creating bounding boxes. This can be slow and
             that is why the user is able to provide a subsection of shapes to
-            use when calculating the graveyard dimentions.
-        include_graveyard
-        include_sector_wedge
+            use when calculating the graveyard dimensions.
     """
 
     def __init__(
             self,
             shapes_and_components: Union[List[paramak.Shape], str],
-            faceting_tolerance: Optional[float] = 1e-2,
-            merge_tolerance: Optional[float] = 1e-4,
             graveyard_size: Optional[float] = 20_000,
             graveyard_offset: Optional[float] = None,
             largest_shapes: Optional[List[paramak.Shape]] = None,
@@ -59,8 +53,6 @@ class Reactor:
         self.graveyard_offset = graveyard_offset
         self.graveyard_size = graveyard_size
         self.largest_shapes = largest_shapes
-        self.faceting_tolerance = faceting_tolerance
-        self.merge_tolerance = merge_tolerance
 
         self.stp_filenames = []
         self.stl_filenames = []
@@ -98,36 +90,6 @@ class Reactor:
         elif value < 0:
             raise ValueError("graveyard_offset must be positive")
         self._graveyard_offset = value
-
-    @property
-    def faceting_tolerance(self):
-        return self._faceting_tolerance
-
-    @faceting_tolerance.setter
-    def faceting_tolerance(self, value):
-        if not isinstance(value, (int, float)):
-            msg = ('Reactor.faceting_tolerance should be a number (floats or '
-                   'ints are accepted)')
-            raise TypeError(msg)
-        if value < 0:
-            raise ValueError(
-                "Reactor.faceting_tolerance should be a positive number")
-        self._faceting_tolerance = value
-
-    @property
-    def merge_tolerance(self):
-        return self._merge_tolerance
-
-    @merge_tolerance.setter
-    def merge_tolerance(self, value):
-        if not isinstance(value, (int, float)):
-            msg = ('Reactor.merge_tolerance should be a number (floats or '
-                   'ints are accepted)')
-            raise TypeError(msg)
-        if value < 0:
-            raise ValueError(
-                "Reactor.merge_tolerance should be a positive number")
-        self._merge_tolerance = value
 
     @property
     def stp_filenames(self):
@@ -252,7 +214,7 @@ class Reactor:
 
     @property
     def solid(self):
-        """This combines all the parametric shapes and compents in the reactor
+        """This combines all the parametric shapes and components in the reactor
         object.
         """
 
@@ -302,10 +264,11 @@ class Reactor:
         try:
             from jupyter_cadquery.cadquery import Part, PartGroup, show
         except ImportError:
-            print('To use Shape.show() you must install jupyter_cadquery.')
-            print(
-                'To install jupyter_cadquery type pip install jupyter_cadquery in the terminal')
-            return None
+            msg = (
+                'To use Reactor.show() you must install jupyter_cadquery. To'
+                'install jupyter_cadquery type "pip install jupyter_cadquery"'
+                ' in the terminal')
+            raise ImportError(msg)
 
         parts = []
         for shape_or_compound in self.shapes_and_components:
@@ -643,45 +606,6 @@ class Reactor:
 
         return filenames
 
-    def export_vtk(
-        self,
-        filename: Optional[str] = 'dagmc.vtk',
-        h5m_filename: Optional[str] = None,
-        include_graveyard: Optional[bool] = False
-    ):
-        """Produces a vtk geometry compatable from the dagmc h5m file. This is
-        useful for checking the geometry that is used for transport.
-
-        Arguments:
-            filename: filename of vtk outputfile. If the filename does not end
-                with .vtk then .vtk will be added.
-            h5m_filename: filename of h5m outputfile. If the filename does not
-                end with .h5m then .h5m will be added. Defaults to None which
-                uses the Reactor.h5m_filename.
-            include_graveyard: optionally include the graveyard in the vtk file
-
-        Returns:
-            filename of the vtk file produced
-        """
-
-        if h5m_filename is None:
-            if self.h5m_filename is None:
-                raise ValueError(
-                    'h5m_filename not provided and Reactor.h5m_filename is '
-                    'not set, Unable to use mbconvert to convert to vtk '
-                    'without input h5m filename. Try running '
-                    'Reactor.export_h5m() first.')
-
-            h5m_filename = self.h5m_filename
-
-        vtk_filename = paramak.utils.export_vtk(
-            filename=filename,
-            h5m_filename=h5m_filename,
-            include_graveyard=include_graveyard
-        )
-
-        return vtk_filename
-
     def make_sector_wedge(
             self,
             height: Optional[float] = None,
@@ -994,7 +918,7 @@ class Reactor:
     def export_html_3d(
             self,
             filename: Optional[str] = "reactor_3d.html",
-    ):
+    ) -> str:
         """Saves an interactive 3d html view of the Reactor to a html file.
 
         Args:
@@ -1061,3 +985,24 @@ class Reactor:
         )
 
         return fig
+
+    def volume(
+        self,
+        split_compounds: bool = False
+    ) -> List[float]:
+        """Get the volumes of the Shapes in the Reactor.
+
+        Args:
+            split_compounds: If the Shape is a compound of Shapes and therefore
+                contains multiple volumes. This option allows access to the separate
+                volumes of each component within a Shape (True) or the volumes of
+                compounds can be summed (False).
+
+        Returns:
+            The the volumes of the Shapes
+        """
+
+        all_volumes = []
+        for shape in self.shapes_and_components:
+            all_volumes.append(shape.volume(split_compounds=split_compounds))
+        return all_volumes
