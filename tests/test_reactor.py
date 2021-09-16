@@ -13,10 +13,16 @@ class TestReactor(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat1',
+            name='test_shape'
+        )
 
         self.test_shape2 = paramak.ExtrudeStraightShape(
-            points=[(100, 100), (50, 100), (50, 50)], distance=20)
+            points=[(100, 100), (50, 100), (50, 50)], distance=20,
+            material_tag='mat1',
+            name='test_shape2'
+        )
 
         test_shape_3 = paramak.PoloidalFieldCoilSet(
             heights=[2, 2],
@@ -131,8 +137,8 @@ class TestReactor(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
-        assert len(test_reactor.material_tags()) == 1
-        assert test_reactor.material_tags()[0] == "mat1"
+        assert len(test_reactor.material_tag()) == 1
+        assert test_reactor.material_tag()[0] == "mat1"
 
     def test_adding_plasma_with_material_tag_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with
@@ -142,8 +148,8 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)], material_tag="dt_plasma", name='plasma'
         )
         test_reactor = paramak.Reactor([test_shape])
-        assert len(test_reactor.material_tags()) == 1
-        assert test_reactor.material_tags()[0] == "dt_plasma"
+        assert len(test_reactor.material_tag()) == 1
+        assert test_reactor.material_tag()[0] == "dt_plasma"
 
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
         """Checks that multiple shape objects can be added to a Reactor object
@@ -158,11 +164,11 @@ class TestReactor(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape, test_shape2])
-        assert len(test_reactor.material_tags()) == 2
-        assert "mat1" in test_reactor.material_tags()
-        assert "mat2" in test_reactor.material_tags()
+        assert len(test_reactor.material_tag()) == 2
+        assert "mat1" in test_reactor.material_tag()
+        assert "mat2" in test_reactor.material_tag()
 
-    def test_material_tags_without_plasma(self):
+    def test_material_tag_without_plasma(self):
         """Checks that the material tags don't contain the plasma when it is filtered out"""
 
         test_shape = paramak.RotateStraightShape(
@@ -172,9 +178,9 @@ class TestReactor(unittest.TestCase):
 
         test_reactor = paramak.Reactor([test_shape, test_shape2])
 
-        assert len(test_reactor.material_tags(include_plasma=False)) == 1
-        assert "mat1" in test_reactor.material_tags()
-        assert "plasma" not in test_reactor.material_tags()
+        assert len(test_reactor.material_tag(include_plasma=False)) == 1
+        assert "mat1" in test_reactor.material_tag()
+        assert "plasma" not in test_reactor.material_tag()
 
     def test_make_sector_wedge(self):
         """Checks that the wedge is not made when rotation angle is 360"""
@@ -1191,6 +1197,26 @@ class TestReactor(unittest.TestCase):
         assert vol_1 == vol_2
         vol_3 = self.test_reactor_3.volume(split_compounds=False)[1]
         assert pytest.approx(vol_3, vol_1 + vol_2)
+
+    def test_reactor_names(self):
+        'checks that the names attribute returns the expected results'
+        assert self.test_reactor_2.name == ['test_shape', 'test_shape2']
+
+    def test_reactor_material_tag(self):
+        'checks that the material_tag attribute returns the expected results'
+        assert self.test_reactor_2.material_tag() == ['mat1', 'mat1']
+        assert self.test_reactor_2.material_tag(
+            allow_repeats=False) == ['mat1']
+
+    def test_incorrect_repeat_raises_error(self):
+        """Finds the materials with the wrong type of allow_repeat"""
+
+        def test_inccorect_allow_repeat():
+            """checks ValueError is raised"""
+
+            self.test_reactor_2.material_tag(allow_repeats='yes') == ['mat1']
+
+        self.assertRaises(ValueError, test_inccorect_allow_repeat)
 
 
 if __name__ == "__main__":

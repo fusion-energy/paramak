@@ -14,6 +14,11 @@ class TestExtrudeStraightShape(unittest.TestCase):
             points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
         )
 
+    def test_volume_in_neutronics_description(self):
+        assert 'volume' in self.test_shape.neutronics_description()[0].keys()
+        assert pytest.approx(
+            self.test_shape.neutronics_description()[0]['volume'][0], 1200)
+
     def test_default_parameters(self):
         """Checks that the default parameters of an ExtrudeStraightShape are
         correct."""

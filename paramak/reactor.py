@@ -243,6 +243,17 @@ class Reactor:
 
         return compound
 
+    @property
+    def name(self):
+        """Returns a list of names of the individual Shapes that make up the
+        reactor """
+
+        all_names = []
+        for shape in self.shapes_and_components:
+            all_names.append(shape.name)
+
+        return all_names
+
     @ solid.setter
     def solid(self, value):
         self._solid = value
@@ -370,9 +381,10 @@ class Reactor:
 
         return neutronics_description
 
-    def material_tags(
+    def material_tag(
             self,
-            include_plasma: Optional[bool] = False
+            include_plasma: Optional[bool] = False,
+            allow_repeats: Optional[bool] = True,
     ) -> List[str]:
         """Returns a set of all the materials_tags used in the Reactor
         optionally with or without the plasma.
@@ -380,6 +392,9 @@ class Reactor:
         Args:
             include_plasma: Should the plasma material be included in the list
                 of materials returned.
+            allow_repeats: Material tags for individual shapes could be the
+                same. This flag allows repeat occurrences to be removed (False)
+                or kept (True).
 
         Returns:
             A list of the material tags
@@ -396,7 +411,12 @@ class Reactor:
             else:
                 values.append(shape_or_component.material_tag)
 
-        return values
+        if allow_repeats is False:
+            return list(set(values))
+        elif allow_repeats is True:
+            return values
+        else:
+            raise ValueError('allow_repeats must be either True or False')
 
     def export_neutronics_description(
             self,
