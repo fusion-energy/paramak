@@ -1208,6 +1208,15 @@ class TestReactor(unittest.TestCase):
         assert self.test_reactor_2.material_tag(
             allow_repeats=False) == ['mat1']
 
+    def test_incorrect_repeat_raises_error(self):
+        """Finds the materials with the wrong type of allow_repeat"""
+
+        def test_inccorect_allow_repeat():
+            """checks ValueError is raised"""
+
+            self.test_reactor_2.material_tag(allow_repeats='yes') == ['mat1']
+
+        self.assertRaises(ValueError, test_inccorect_allow_repeat)
 
 if __name__ == "__main__":
     unittest.main()
