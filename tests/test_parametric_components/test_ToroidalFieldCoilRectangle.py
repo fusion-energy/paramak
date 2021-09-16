@@ -66,7 +66,7 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         parametric component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
         assert self.test_shape.inner_leg_connection_points is not None
 
         test_inner_leg = paramak.ExtrudeStraightShape(
@@ -82,10 +82,10 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         self.test_shape.number_of_coils = 8
         assert self.test_shape.solid is not None
 
-        with_inner_leg_volume = self.test_shape.volume
+        with_inner_leg_volume = self.test_shape.volume()
 
         self.test_shape.with_inner_leg = False
-        without_inner_leg_volume = self.test_shape.volume
+        without_inner_leg_volume = self.test_shape.volume()
 
         assert self.test_shape.solid is not None
 
@@ -95,7 +95,7 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
             ], distance=30,
             azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315]
         )
-        inner_leg_volume = test_inner_leg.volume
+        inner_leg_volume = test_inner_leg.volume()
 
         assert with_inner_leg_volume == pytest.approx(
             without_inner_leg_volume + inner_leg_volume)
@@ -104,16 +104,16 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
         parametric component and checks that a cadquery solid is created."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
 
         test_inner_leg = paramak.ExtrudeStraightShape(
             points=self.test_shape.inner_leg_connection_points, distance=30
         )
-        inner_leg_volume = test_inner_leg.volume
+        inner_leg_volume = test_inner_leg.volume()
 
         self.test_shape.with_inner_leg = False
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume - inner_leg_volume)
 
     def test_absolute_volume(self):
@@ -123,21 +123,21 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         self.test_shape.thickness = 150
         self.test_shape.distance = 50
 
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             (850 * 150 * 50 * 2) + (1400 * 150 * 50 * 2))
 
         self.test_shape.with_inner_leg = False
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             (850 * 150 * 50 * 2) + (1400 * 150 * 50))
 
         self.test_shape.with_inner_leg = True
         self.test_shape.number_of_coils = 8
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             ((850 * 150 * 50 * 2) + (1400 * 150 * 50 * 2)) * 8
         )
 
         self.test_shape.with_inner_leg = False
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             ((850 * 150 * 50 * 2) + (1400 * 150 * 50)) * 8
         )
 
@@ -173,22 +173,22 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "XZ"
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.5)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 0.5)
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "YZ"
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.5)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 0.5)
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "XY"
         self.test_shape.rotation_axis = "Y"
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(test_volume * 0.5)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 0.5)
 
     def test_ToroidalFieldCoilRectangle_incorrect_horizonal_start_point(self):
         """Checks that an error is raised when a ToroidalFieldCoilRectangle is made

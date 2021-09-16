@@ -59,7 +59,7 @@ class TestInnerTfCoilsCircular(unittest.TestCase):
         component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_azimuth_offset(self):
         """Creates an inner tf coil using the InnerTfCoilsCircular parametric
@@ -76,16 +76,16 @@ class TestInnerTfCoilsCircular(unittest.TestCase):
         """Checks that changing the attributes of InnerTfCoilsCircular affects
         the cadquery solid produced."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
 
         self.test_shape.height = 1000
-        assert test_volume == self.test_shape.volume * 0.5
+        assert test_volume == self.test_shape.volume() * 0.5
         self.test_shape.height = 500
         self.test_shape.inner_radius = 30
-        assert test_volume < self.test_shape.volume
+        assert test_volume < self.test_shape.volume()
         self.test_shape.inner_radius = 50
         self.test_shape.outer_radius = 170
-        assert test_volume < self.test_shape.volume
+        assert test_volume < self.test_shape.volume()
 
     def test_gap_size(self):
         """Checks that a ValueError is raised when a too large gap_size is

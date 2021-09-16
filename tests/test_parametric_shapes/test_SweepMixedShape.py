@@ -44,19 +44,19 @@ class TestSweepMixedShape(unittest.TestCase):
 
         self.test_shape.points = [(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"),
                                   (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")]
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.points = [(-20, -20, "straight"), (-20, 20, "spline"), (0, 40, "spline"),
                                   (20, 20, "circle"), (0, 0, "circle"), (20, -20, "straight")]
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 4, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepMixedShapes and checks that their relative volumes
         are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 4, rel=0.01)
 
     def test_workplane_path_workplane_error_raises(self):
@@ -114,9 +114,9 @@ class TestSweepMixedShape(unittest.TestCase):
         """Checks that a SweepMixedShape with a larger volume is created when
         force_cross_section = True than when force_cross_section = False."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.force_cross_section = True
-        assert self.test_shape.volume > test_volume
+        assert self.test_shape.volume() > test_volume
 
     def test_surface_count(self):
         """Creates a SweepStraightShape and checks that it has the correct number

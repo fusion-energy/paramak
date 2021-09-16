@@ -19,7 +19,7 @@
 # Once build the dockerimage can be run in a few different ways.
 #
 # Run with the following command for a terminal notebook interface
-# docker run -it paramak .
+# docker run -it paramak
 #
 # Run with the following command for a jupyter notebook interface
 # docker run -p 8888:8888 paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
@@ -41,9 +41,7 @@ RUN apt-get --allow-releaseinfo-change update
 RUN apt-get update -y && \
     apt-get upgrade -y
 
-RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
-                       freeglut3-dev libosmesa6 libosmesa6-dev \
-                       libgles2-mesa-dev curl imagemagick && \
+RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
                        apt-get clean
 
 # Installing CadQuery
@@ -53,9 +51,13 @@ RUN echo installing CadQuery version $cq_version && \
     pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
 
-
+# installs dependancies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+# installs required packages for dependancies
+COPY requirements-test.txt requirements-test.txt
+RUN pip install -r requirements-test.txt
 
 
 RUN mkdir /home/paramak
@@ -63,7 +65,7 @@ EXPOSE 8888
 WORKDIR /home/paramak
 
 
-FROM dependencies as final
+FROM ghcr.io/fusion-energy/paramak:dependencies as final
 
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/

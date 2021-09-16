@@ -25,7 +25,7 @@ class TestShellFS(unittest.TestCase):
 
         assert casing_int.solid is not None
         assert casing_int.solid is not None
-        assert casing_int.volume > casing_arc.volume
+        assert casing_int.volume() > casing_arc.volume()
 
     def test_creation_with_different_thickness(self):
 
@@ -35,4 +35,4 @@ class TestShellFS(unittest.TestCase):
 
         assert casing_small.solid is not None
         assert casing_large.solid is not None
-        assert casing_large.volume > casing_small.volume
+        assert casing_large.volume() > casing_small.volume()

@@ -29,7 +29,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         parametric component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_processed_points_calculation(self):
         """Checks that the processed_points used to construct the
@@ -60,15 +60,15 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         """Creates CenterColumnShieldCylinder shapes and checks that their
         relative volumes are correct"""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert test_volume == pytest.approx(self.test_shape.volume * 2)
+        assert test_volume == pytest.approx(self.test_shape.volume() * 2)
 
     def test_absolute_volume(self):
         """Creates a CenterColumnShieldCylinder shape and checks that its
         relative volume is correct"""
 
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             ((math.pi * (200**2)) - (math.pi * (100**2))) * 600
         )
 
@@ -172,5 +172,6 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             cut=test_shape2
         )
 
-        assert test_shape2.volume == test_shape1.volume
-        assert pytest.approx(test_shape3.volume) == 0.5 * test_shape1.volume
+        assert test_shape2.volume() == test_shape1.volume()
+        assert pytest.approx(test_shape3.volume()) == 0.5 * \
+            test_shape1.volume()

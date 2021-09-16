@@ -124,7 +124,7 @@ def test_parametric_surface_area_with_leg():
 
 @pytest.mark.parametric
 def test_parametric_volume_with_leg():
-    paramak_vol = obj2.volume
+    paramak_vol = obj2.volume()
     package_vol = volume((50, 0), (100, 100), 20, 10, with_inner_leg=True)
     assert pytest.approx(package_vol) == paramak_vol
 
@@ -138,7 +138,7 @@ def test_parametric_surface_area():
 
 @pytest.mark.parametric
 def test_parametric_volume():
-    paramak_vol = obj.volume
+    paramak_vol = obj.volume()
     package_vol = volume((50, 0), (100, 100), 20, 10)
     assert pytest.approx(package_vol) == paramak_vol
 

@@ -46,7 +46,7 @@ class TestBlanketFP(unittest.TestCase):
         self.test_shape.offset_from_plasma = 30
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_faces(self):
         """creates a blanket using the BlanketFP parametric component and checks
@@ -67,7 +67,7 @@ class TestBlanketFP(unittest.TestCase):
         parametric component when no plasma is passed."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_creation_variable_thickness_from_tuple(self):
         """Checks that a cadquery solid can be created using the BlanketFP
@@ -77,7 +77,7 @@ class TestBlanketFP(unittest.TestCase):
         self.test_shape.thickness = (100, 200)
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_creation_variable_thickness_from_2_lists(self):
         """Checks that a cadquery solid can be created using the BlanketFP
@@ -99,7 +99,7 @@ class TestBlanketFP(unittest.TestCase):
         self.test_shape.thickness = thickness
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_creation_variable_offset_from_tuple(self):
         """Checks that a cadquery solid can be created using the BlanketFP
@@ -109,7 +109,7 @@ class TestBlanketFP(unittest.TestCase):
         self.test_shape.offset_from_plasma = (0, 10)
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_creation_variable_offset_from_2_lists(self):
         """Checks that a cadquery solid can be created using the BlanketFP
@@ -145,7 +145,7 @@ class TestBlanketFP(unittest.TestCase):
         self.test_shape.offset_from_plasma = offset
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_physical_groups(self):
         """Creates a blanket using the BlanketFP parametric component and

@@ -59,7 +59,7 @@ class TestCenterColumnShieldFlatTopHyperbola(unittest.TestCase):
         a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_invalid_parameters_errors(self):
         """Checks that the correct errors are raised when invalid arguments are input as
