@@ -381,7 +381,7 @@ class Reactor:
 
         return neutronics_description
 
-    def material_tags(
+    def material_tag(
             self,
             include_plasma: Optional[bool] = False,
             allow_repeats: Optional[bool] = True,
