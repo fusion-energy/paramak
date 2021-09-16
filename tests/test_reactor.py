@@ -1205,7 +1205,9 @@ class TestReactor(unittest.TestCase):
     def test_reactor_material_tag(self):
         'checks that the material_tag attribute returns the expected results'
         assert self.test_reactor_2.material_tag == ['mat1', 'mat1']
-        assert self.test_reactor_2.material_tag(allow_repeats=False) == ['mat1']
+        assert self.test_reactor_2.material_tag(
+            allow_repeats=False) == ['mat1']
+
 
 if __name__ == "__main__":
     unittest.main()

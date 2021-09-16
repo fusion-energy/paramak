@@ -1299,7 +1299,8 @@ class Shape:
         neutronics_description = {"material_tag": self.material_tag}
 
         if self.solid is not None:
-            neutronics_description["volume"] = self.volume(split_compounds=True)
+            neutronics_description["volume"] = self.volume(
+                split_compounds=True)
 
         if self.stp_filename is not None:
             neutronics_description["stp_filename"] = self.stp_filename
