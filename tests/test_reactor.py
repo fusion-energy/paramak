@@ -1214,7 +1214,7 @@ class TestReactor(unittest.TestCase):
         def test_inccorect_allow_repeat():
             """checks ValueError is raised"""
 
-            self.test_reactor_2.material_tag(allow_repeats='yes') == ['mat1']
+            self.test_reactor_2.material_tag(allow_repeats='yes')
 
         self.assertRaises(ValueError, test_inccorect_allow_repeat)
 

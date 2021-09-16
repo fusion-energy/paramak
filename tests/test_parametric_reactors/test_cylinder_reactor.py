@@ -1,13 +1,12 @@
 import os
-import time
 import unittest
-import warnings
 from pathlib import Path
 
 import paramak
 
 
-class TestBallReactor(unittest.TestCase):
+class TestCylinderReactor(unittest.TestCase):
+    """Tests the CylinderReactor functionality"""
 
     def setUp(self):
         self.test_reactor = paramak.CylinderReactor(

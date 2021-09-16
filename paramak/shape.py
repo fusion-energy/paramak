@@ -1547,8 +1547,8 @@ class Shape:
             return [self.solid.val().Volume()]
 
         # returns a float
-        else:
-            if isinstance(self.solid, Compound):
-                return self.solid.Volume()
 
-            return self.solid.val().Volume()
+        if isinstance(self.solid, Compound):
+            return self.solid.Volume()
+
+        return self.solid.val().Volume()

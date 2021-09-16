@@ -418,8 +418,8 @@ class Reactor:
 
         if allow_repeats:
             return values
-        else:
-            return list(set(values))
+
+        return list(set(values))
 
     def export_neutronics_description(
             self,
