@@ -45,6 +45,12 @@ class TestSparc2020Reactor(unittest.TestCase):
             "graveyard.stp",
         ]
 
+    def test_input_varible_names(self):
+        """tests that the number of inputs varibles is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 28
+        assert len(self.test_reactor.input_variable_names) == 28
+
     def test_make_sparc_2020_reactor(self):
         """Runs the example to check the output files are produced"""
         os.system("rm *.stp")

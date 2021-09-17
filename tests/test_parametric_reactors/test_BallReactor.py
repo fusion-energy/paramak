@@ -28,6 +28,12 @@ class TestBallReactor(unittest.TestCase):
             rotation_angle=180,
         )
 
+    def test_input_varible_names(self):
+        """tests that the number of inputs varibles is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 28
+        assert len(self.test_reactor.input_variable_names) == 28
+
     def test_creation_with_narrow_divertor(self):
         """Creates a BallReactor with a narrow divertor and checks that the correct
         number of components are created."""

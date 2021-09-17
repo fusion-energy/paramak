@@ -43,7 +43,7 @@ class Reactor:
 
     def __init__(
             self,
-            shapes_and_components: Union[List[paramak.Shape], str],
+            shapes_and_components: Union[List[paramak.Shape], str] = [],
             graveyard_size: Optional[float] = 20_000,
             graveyard_offset: Optional[float] = None,
             largest_shapes: Optional[List[paramak.Shape]] = None,
@@ -54,14 +54,29 @@ class Reactor:
         self.graveyard_size = graveyard_size
         self.largest_shapes = largest_shapes
 
+        self.input_variable_names = [
+            # 'shapes_and_components', commented out to avoid calculating solids
+            'graveyard_size',
+            'graveyard_offset',
+            'largest_shapes',
+        ]
+
         self.stp_filenames = []
         self.stl_filenames = []
-        self.h5m_filename = None
+
         self.tet_meshes = []
         self.graveyard = None
         self.solid = None
 
         self.reactor_hash_value = None
+
+
+    @property
+    def input_variables(self):
+        all_input_variables = {}
+        for name in self.input_variable_names:
+            all_input_variables[name] = getattr(self, name)
+        return all_input_variables
 
     @property
     def graveyard_size(self):

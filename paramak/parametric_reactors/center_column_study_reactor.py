@@ -84,6 +84,25 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.elongation = elongation
         self.triangularity = triangularity
 
+
+        # adds self.input_variable_names from the Reactor class
+        self.input_variable_names = self.input_variable_names + [
+            'inner_bore_radial_thickness',
+            'inboard_tf_leg_radial_thickness',
+            'center_column_shield_radial_thickness_mid',
+            'center_column_shield_radial_thickness_upper',
+            'inboard_firstwall_radial_thickness',
+            'divertor_radial_thickness',
+            'inner_plasma_gap_radial_thickness',
+            'plasma_radial_thickness',
+            'outer_plasma_gap_radial_thickness',
+            'center_column_arc_vertical_thickness',
+            'elongation',
+            'triangularity',
+            'plasma_gap_vertical_thickness',
+            'rotation_angle',
+        ]
+
         # sets major radius and minor radius from equatorial_points to allow a
         # radial build this helps avoid the plasma overlapping the center
         # column and other components

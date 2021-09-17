@@ -135,7 +135,7 @@ class Shape:
         self.solid = None
         self.wire = None
         self.render_mesh = None
-        self.h5m_filename = None
+
         self.processed_points = None
         # self.volume = None
         self.hash_value = None

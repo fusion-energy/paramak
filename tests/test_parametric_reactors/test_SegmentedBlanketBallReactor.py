@@ -33,6 +33,12 @@ class TestSegmentedBlanketBallReactor(unittest.TestCase):
             number_of_blanket_segments=4,
         )
 
+    def test_input_varible_names(self):
+        """tests that the number of inputs varibles is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 31
+        assert len(self.test_reactor.input_variable_names) == 31
+
     def test_gap_between_blankets_impacts_volume(self):
         """Creates a SegmentedBlanketBallReactor with different
         gap_between_blankets and checks the volume of the blankes and the

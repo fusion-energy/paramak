@@ -23,6 +23,11 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
 
         self.rotation_angle = rotation_angle
 
+        # adds self.input_variable_names from the Reactor class
+        self.input_variable_names = self.input_variable_names + [
+            'rotation_angle',
+        ]
+
     def create_pf_coils(self):
         """Creates a 3d solids for each pf coil.
 
