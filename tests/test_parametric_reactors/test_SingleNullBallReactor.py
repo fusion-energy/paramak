@@ -22,9 +22,9 @@ class test_SingleNullBallReactor(unittest.TestCase):
             elongation=2,
             triangularity=0.55,
             number_of_tf_coils=4,
-            rear_blanket_to_tf_gap = 10,
-            outboard_tf_coil_radial_thickness = 10,
-            outboard_tf_coil_poloidal_thickness = 10,
+            rear_blanket_to_tf_gap=10,
+            outboard_tf_coil_radial_thickness=10,
+            outboard_tf_coil_poloidal_thickness=10,
             divertor_position="lower",
             rotation_angle=180,
             pf_coil_case_thicknesses=[10, 10, 10, 10],
@@ -55,12 +55,11 @@ class test_SingleNullBallReactor(unittest.TestCase):
             component for component in self.test_reactor.shapes_and_components]
         self.test_reactor.rotation_angle = 180
         test_reactor_180_components = [
-component for component in self.test_reactor.shapes_and_components]
+            component for component in self.test_reactor.shapes_and_components]
 
         for r90, r180 in zip(test_reactor_90_components,
                              test_reactor_180_components):
             assert r90.volume() == pytest.approx(r180.volume() * 0.5, rel=0.1)
-
 
     def test_hash_value(self):
         """Creates a single null ball reactor and checks that all shapes in the reactor are created

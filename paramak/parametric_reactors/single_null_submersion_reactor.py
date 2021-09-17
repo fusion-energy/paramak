@@ -24,4 +24,3 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
             divertor_position=divertor_position,
             support_position=support_position,
             **kwargs)
-

@@ -76,7 +76,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         in the reactor are created when .shapes_and_components is first called.
         Checks that when .shapes_and_components is called again with no changes
         to the reactor, the shapes in the reactor are reconstructed and the
-        previously constructed shapes are returned. Checks that when 
+        previously constructed shapes are returned. Checks that when
         .shapes_and_components is called again with changes to the reactor,
         the shapes in the reactor are reconstructed and these new shapes are
         returned. Checks that the reactor_hash_value is only updated when the
