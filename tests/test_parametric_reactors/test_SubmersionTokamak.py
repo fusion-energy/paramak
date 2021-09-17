@@ -52,7 +52,7 @@ class TestSubmersionTokamak(unittest.TestCase):
         """Creates a SubmersionTokamak and checks that the correct number of
         components are created."""
 
-        assert len(self.test_reactor.shapes_and_components) == 8
+        assert len(self.test_reactor.shapes_and_components) == 9
 
     def test_with_tf_coils_creation(self):
         """Creates a SubmersionTokamak with tf coils and checks that the correct
