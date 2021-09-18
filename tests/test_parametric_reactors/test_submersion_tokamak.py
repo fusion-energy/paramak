@@ -8,6 +8,7 @@ import pytest
 
 
 class TestSubmersionTokamak(unittest.TestCase):
+    """Tests functionality of the SubmersionTokamak class"""
 
     def setUp(self):
         self.test_reactor = paramak.SubmersionTokamak(

@@ -5,7 +5,8 @@ import paramak
 import pytest
 
 
-class test_SingleNullSubmersionTokamak(unittest.TestCase):
+class TestSingleNullSubmersionTokamak(unittest.TestCase):
+    """Tests functionality of SingleNullSubmersionTokamak class"""
 
     def setUp(self):
         self.test_reactor = paramak.SingleNullSubmersionTokamak(
@@ -42,7 +43,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
         assert len(self.test_reactor.input_variables.keys()) == 29
         assert len(self.test_reactor.input_variable_names) == 29
 
-    def test_SingleNullSubmersionTokamak_with_pf_and_tf_coils(self):
+    def test_single_null_submersion_tokamak_with_pf_and_tf_coils(self):
         """Creates a SingleNullSubmersionTokamak with pf and tf coils and checks
         that the correct number of components are created."""
 
@@ -57,7 +58,7 @@ class test_SingleNullSubmersionTokamak(unittest.TestCase):
 
         assert len(self.test_reactor.shapes_and_components) == 11
 
-    def test_SingleNullSubmersionTokamak_rotation_angle_impacts_volume(self):
+    def test_single_null_submersion_tokamak_rotation_angle_impacts_volume(self):
         """Creates SingleNullSubmersionTokamaks with different rotation angles and
         checks that the relative volumes of the components are correct."""
 

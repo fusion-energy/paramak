@@ -9,6 +9,7 @@ import pytest
 
 
 class TestCenterColumnStudyReactor(unittest.TestCase):
+    """Test functionality of the CenterColumnStudyReactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.CenterColumnStudyReactor(

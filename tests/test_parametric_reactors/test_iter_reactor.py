@@ -7,6 +7,7 @@ import paramak
 
 
 class TestITERReactor(unittest.TestCase):
+    """Tests functionality of the ITERReactor class"""
 
     def test_input_varible_names(self):
         """tests that the number of inputs varibles is correct"""

@@ -7,6 +7,7 @@ import paramak
 
 
 class TestDemo2015Reactor(unittest.TestCase):
+    """Tests functionality of the TestDemo2015Reactor class"""
 
     def test_input_varible_names(self):
         """tests that the number of inputs varibles is correct"""

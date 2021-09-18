@@ -9,6 +9,7 @@ import paramak
 
 
 class TestBallReactor(unittest.TestCase):
+    """Tests functionality of the BallReactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.BallReactor(

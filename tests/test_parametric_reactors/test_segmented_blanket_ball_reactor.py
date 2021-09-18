@@ -5,6 +5,7 @@ import paramak
 
 
 class TestSegmentedBlanketBallReactor(unittest.TestCase):
+    """Tests functionality of the SegmentedBlanketBallReactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.SegmentedBlanketBallReactor(
