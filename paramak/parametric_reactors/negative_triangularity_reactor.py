@@ -7,88 +7,74 @@ from typing import List, Union, Optional
 
 class NegativeTriangularityReactor(paramak.Reactor):
     """
-    New class of reactor that builds a negative triangularity tokamak model.
+    negative triangularity tokamak model.
     """
 
-    def __init__(self,
-                 inner_tf_coil_thickness: float,
-                 vacuum_vessel_thickness: float,
-                 central_shield_thickness: float,
-                 wall_to_plasma_gap: float,
-                 plasma_radial_thickness: float,
-                 elongation: float,
-                 triangularity: float,
-                 inner_wall_thickness: float,
-                 blanket_thickness: float,
-                 rear_wall_thickness: float,
-                 divertor_radial_thickness: float,
-                 divertor_height_full: float,
-                 number_of_coils: int,
-                 tf_width: float,
-                 pf_coil_heights: Optional[Union[float, list]],
-                 pf_coil_widths: Optional[Union[float, list]],
-                 pf_coil_center_points: Optional[Union[list, tuple]],
-                 pf_coil_casing_thickness: Optional[float],
-
-                 rotation_angle: float,
-
-                 inner_bore_radius: Optional[float] = 5,
-                 port_side_length: Optional[float] = 20,
-                 port_thickness: Optional[float] = 20,
-                 show_plasma: bool = True,
-                 low_aspect: bool = False,
-                 outer_tf_coil_thickness: float = None,
-                 inner_pf_coil_width: Optional[Union[float, List[float]]] = None,
-                 inner_pf_coil_height: Optional[Union[float, List[float]]] = None,
-                 inner_pf_coil_case_thickness: Optional[Union[float, List[float]]] = None,
-                 inner_pf_coil_center_points: Optional[Union[float, List[float]]] = None,
-                 ports_enabled: Optional[bool] = False,
-                 pf_enabled: Optional[bool] = False,
-                 **kwargs,
-
-                 ):
+    def __init__(
+        self,
+        inner_tf_coil_thickness: float,
+        vacuum_vessel_thickness: float,
+        central_shield_thickness: float,
+        wall_to_plasma_gap: float,
+        plasma_radial_thickness: float,
+        elongation: float,
+        triangularity: float,
+        inner_wall_thickness: float,
+        blanket_thickness: float,
+        rear_wall_thickness: float,
+        divertor_radial_thickness: float,
+        divertor_height_full: float,
+        number_of_coils: int,
+        tf_width: float,
+        pf_coil_heights: Optional[Union[float, list]] = None,
+        pf_coil_widths: Optional[Union[float, list]] = None,
+        pf_coil_center_points: Optional[Union[list, tuple]] = None,
+        pf_coil_casing_thickness: Optional[float] = None,
+        inner_bore_radius: Optional[float] = 5,
+        port_side_length: Optional[float] = 20,
+        port_thickness: Optional[float] = 20,
+        low_aspect: bool = False,
+        outer_tf_coil_thickness: float = None,
+        inner_pf_coil_width: Optional[Union[float, List[float]]] = None,
+        inner_pf_coil_height: Optional[Union[float, List[float]]] = None,
+        inner_pf_coil_case_thickness: Optional[Union[float, List[float]]] = None,
+        inner_pf_coil_center_points: Optional[Union[float, List[float]]] = None,
+        ports_enabled: Optional[bool] = False,
+        rotation_angle: float = 360,
+    ):
 
         super().__init__([])
-        self.method = 'trelis'
-        self._inner_tf_coil_thickness = inner_tf_coil_thickness
-        self._vacuum_vessel_thickness = vacuum_vessel_thickness
-        self._central_shield_thickness = central_shield_thickness
-        self._wall_to_plasma_gap = wall_to_plasma_gap
-        self._plasma_radial_thickness = plasma_radial_thickness
-        self._elongation = elongation
-        self._triangularity = -1 * abs(triangularity)
-        self._inner_wall_thickness = inner_wall_thickness
-        self._blanket_thickness = blanket_thickness
-        self._rear_wall_thickness = rear_wall_thickness
-        self._divertor_radial_thickness = divertor_radial_thickness
-        self._inner_pf_coil_w = inner_pf_coil_width
-        self._inner_pf_coil_h = inner_pf_coil_height
-        self._inner_pf_coil_ct = inner_pf_coil_case_thickness
-        self._inner_tf_coil_cp = inner_pf_coil_center_points
-        self._divertor_height_full = divertor_height_full
-        self._inner_bore_radius = inner_bore_radius
+        self.inner_tf_coil_thickness = inner_tf_coil_thickness
+        self.vacuum_vessel_thickness = vacuum_vessel_thickness
+        self.central_shield_thickness = central_shield_thickness
+        self.wall_to_plasma_gap = wall_to_plasma_gap
+        self.plasma_radial_thickness = plasma_radial_thickness
+        self.elongation = elongation
+        self.triangularity = triangularity
+        self.inner_wall_thickness = inner_wall_thickness
+        self.blanket_thickness = blanket_thickness
+        self.rear_wall_thickness = rear_wall_thickness
+        self.divertor_radial_thickness = divertor_radial_thickness
+        self.inner_pf_coil_w = inner_pf_coil_width
+        self.inner_pf_coil_h = inner_pf_coil_height
+        self.inner_pf_coil_ct = inner_pf_coil_case_thickness
+        self.inner_tf_coil_cp = inner_pf_coil_center_points
+        self.divertor_height_full = divertor_height_full
+        self.inner_bore_radius = inner_bore_radius
+        self.outer_tf_coil_thickness = outer_tf_coil_thickness
 
-        if outer_tf_coil_thickness is None:
-            self._outer_tf_coil_thickness = inner_tf_coil_thickness
-        else:
-            self._outer_tf_coil_thickness = outer_tf_coil_thickness
+        self.pf_coil_heights = pf_coil_heights
+        self.pf_coil_widths = pf_coil_widths
+        self.pf_coil_center_points = pf_coil_center_points
+        self.pf_casing_thickness = pf_coil_casing_thickness
 
-        self._pf_enabled = pf_enabled
-
-        if self._pf_enabled:
-            self._pf_coil_heights = pf_coil_heights
-            self._pf_coil_widths = pf_coil_widths
-            self._pf_coil_center_points = pf_coil_center_points
-            self._pf_casing_thickness = pf_coil_casing_thickness
-
-        self._rotation_angle = rotation_angle
-        self.show_plasma = show_plasma
+        self.rotation_angle = rotation_angle
         self.low_aspect = low_aspect
-        self._number_of_coils = number_of_coils
-        self._tf_width = tf_width
-        self._port_side_length = port_side_length
-        self._port_thickness = port_thickness
-        self._ports_enable = ports_enabled
+        self.number_of_coils = number_of_coils
+        self.tf_width = tf_width
+        self.port_side_length = port_side_length
+        self.port_thickness = port_thickness
+        self.ports_enable = ports_enabled
 
         ########### Calculating plasma geometry from parameters above #########
 
@@ -120,18 +106,19 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._outer_equatorial_point = self._inner_equatorial_point + \
             self._plasma_radial_thickness
 
-        self._major_radius = (
-            self._outer_equatorial_point + self._inner_equatorial_point) / 2
-        self._minor_radius = (
-            self._major_radius -
-            self._inner_equatorial_point)
-        print(
-            "Aspect Ratio = {:.2f}".format(
-                self._major_radius /
-                self._minor_radius))
-        print("Major Radius = {:.2f}".format(self._major_radius))
-        print("Minor Radius = {:.2f}".format(self._minor_radius))
+        self._major_radius = (self._outer_equatorial_point + self._inner_equatorial_point) / 2
+        self._minor_radius = self._major_radius - self._inner_equatorial_point
 
+    @property
+    def triangularity(self):
+        return self._triangularity
+
+    @triangularity.setter
+    def triangularity(self, value):
+        if value < 0:
+            raise ValueError('triangularity must be a negative number, not {value}')
+        self._triangularity = value
+        
     @property
     def aspect_ratio(self):
         return (self._major_radius / self._minor_radius)
@@ -165,10 +152,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
         return self._elongation
 
     @property
-    def triangularity(self):
-        return self._triangularity
-
-    @property
     def inner_bore_radius(self):
         return self._inner_bore_radius
 
@@ -178,34 +161,31 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
     def create_solid(self):
 
-        shapes_and_components = []
+        uncut_shapes = []
 
-        self._make_plasma()
-        self._make_vertical_build()
-        self._make_radial_build()
+        uncut_shapes.append(self._make_plasma())
 
-        if self.show_plasma:
-            shapes_and_components.append(self._make_plasma())
-        else:
-            print("Plasma is excluded from the model.")
+        # self._make_plasma()
+        # self._make_vertical_build()
+        # self._make_radial_build()
 
-        shapes_and_components += self._make_tf_inner_leg()
-        shapes_and_components += self._make_vacuum_vessel_inner_wall()
-        shapes_and_components += self._make_inner_shield()
+        # shapes_and_components.append(self._make_plasma())
 
-        shapes_and_components += self._make_blankets()
-        shapes_and_components += self._make_divertor()
-        shapes_and_components += self._make_tf_coils()
-        #shapes_and_components += self._make_ports()
-        shapes_and_components += self._make_vacuum_vessel()
+        # shapes_and_components += self._make_tf_inner_leg()
+        # shapes_and_components += self._make_vacuum_vessel_inner_wall()
+        # shapes_and_components += self._make_inner_shield()
 
-        if self._ports_enable:
-            shapes_and_components += self._make_ports()
+        # shapes_and_components += self._make_blankets()
+        # shapes_and_components += self._make_divertor()
+        # shapes_and_components += self._make_tf_coils()
+        # shapes_and_components += self._make_vacuum_vessel()
 
-        if self._pf_enabled:
-            shapes_and_components += self._make_pf_coils()
+        # if self._ports_enable:
+        #     shapes_and_components += self._make_ports()
 
-        self.shapes_and_components = shapes_and_components
+        # shapes_and_components += self._make_pf_coils()
+
+        self.shapes_and_components = uncut_shapes
 
     def _make_plasma(self):
         plasma = paramak.Plasma(
@@ -368,7 +348,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             color=(0.2, 1, 0.2),
         )
 
-        self._tf_inner_leg.show()
         return [self._tf_inner_leg]
 
     def _make_vacuum_vessel_inner_wall(self):
@@ -651,28 +630,39 @@ class NegativeTriangularityReactor(paramak.Reactor):
             x[0] >= self._tf_end_rad for x in self._pf_coil_center_points]
         if False in check_list:
             print('One or more Poloidal Field Coil is within the Reactor geometry!')
+ 
+        if None not in [self.pf_coil_vertical_thicknesses,
+                        self.pf_coil_radial_thicknesses,
+                        self.pf_coil_vertical_position,
+                        self.pf_coil_radial_position]:
 
-        self._pf_coils = paramak.PoloidalFieldCoilSet(
-            heights=self._pf_coil_heights,
-            widths=self._pf_coil_widths,
-            center_points=self._pf_coil_center_points,
-            stp_filename="pf_coil_set.stp",
-            stl_filename="pf_coil_set.stl",
-            name="pf_coil_set",
-            color=(0.7, 0.7, 0.2),
-            rotation_angle=self._rotation_angle
+            self._pf_coils = paramak.PoloidalFieldCoilSet(
+                heights=self._pf_coil_heights,
+                widths=self._pf_coil_widths,
+                center_points=self._pf_coil_center_points,
+                stp_filename="pf_coil_set.stp",
+                stl_filename="pf_coil_set.stl",
+                name="pf_coil_set",
+                color=(0.7, 0.7, 0.2),
+                rotation_angle=self._rotation_angle
 
-        )
+            )
 
-        self._pf_casing = paramak.PoloidalFieldCoilCaseSet(
-            heights=self._pf_coil_heights,
-            widths=self._pf_coil_widths,
-            center_points=self._pf_coil_center_points,
-            casing_thicknesses=self._pf_casing_thickness,
-            stp_filename="pf_coil_set_case.stp",
-            stl_filename="pf_coil_set_case.stl",
-            name="pf_coil_set_case",
-            color=(0.7, 0.5, 0.2),
-            rotation_angle=self._rotation_angle
-        )
-        return [self._pf_coils, self._pf_casing]
+            self._pf_casing = paramak.PoloidalFieldCoilCaseSet(
+                heights=self._pf_coil_heights,
+                widths=self._pf_coil_widths,
+                center_points=self._pf_coil_center_points,
+                casing_thicknesses=self._pf_casing_thickness,
+                stp_filename="pf_coil_set_case.stp",
+                stl_filename="pf_coil_set_case.stl",
+                name="pf_coil_set_case",
+                color=(0.7, 0.5, 0.2),
+                rotation_angle=self._rotation_angle
+            )
+            return [self._pf_coils, self._pf_casing]
+        else:
+            print(
+                'pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, '
+                'pf_coil_radial_position, pf_coil_vertical_position not '
+                'so not making pf coils')
+            return None
