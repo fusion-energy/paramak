@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-from cadquery import Assembly, Color, Compound, Workplane, exporters, importers
+from cadquery import Assembly, Color, Compound, Workplane, exporters, importers, Plane
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
@@ -45,8 +45,8 @@ class Shape:
             azimuth angle(s) used when positioning the shape. If a list of
             angles is provided, the shape is duplicated at all angles.
             Defaults to 0.0.
-        workplane (str, optional): the orientation of the Cadquery workplane.
-            (XY, YZ or XZ). Defaults to "XZ".
+        workplane: the orientation of the Cadquery workplane. Options include
+            strings "XY", "YZ", "XZ" or a Cadquery.Plane(). Defaults to "XZ".
         rotation_axis (str or list, optional): rotation axis around which the
             solid is rotated. If None, the rotation axis will depend on the
             workplane or path_workplane if applicable. Can be set to "X", "-Y",
@@ -88,7 +88,7 @@ class Shape:
         stp_filename: Optional[str] = None,
         stl_filename: Optional[str] = None,
         azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
-        workplane: Optional[str] = "XZ",
+        workplane: Optional[Union[str, Plane]] = "XZ",
         rotation_axis: Optional[str] = None,
         tet_mesh: Optional[str] = None,
         scale: Optional[float] = None,
@@ -272,14 +272,21 @@ class Shape:
     @workplane.setter
     def workplane(self, value):
         acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
-        if value in acceptable_values:
-            self._workplane = value
+        if not isinstance(value, Plane):
+            if value in acceptable_values:
+                self._workplane = value
+            elif isinstance(value, str):
+                raise ValueError(
+                    "Shape.workplane must be one of ",
+                    acceptable_values,
+                    " not ",
+                    value)
+            else:
+                raise TypeError(
+                    "Shape.workplane must be a string or a ",
+                    "cadquery.Plane object")
         else:
-            raise ValueError(
-                "Shape.workplane must be one of ",
-                acceptable_values,
-                " not ",
-                value)
+            self._workplane = value
 
     @property
     def rotation_axis(self):
