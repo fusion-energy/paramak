@@ -16,6 +16,7 @@ class TestSegmentedBlanketBallReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=30,
             plasma_radial_thickness=300,
             outer_plasma_gap_radial_thickness=30,
+            plasma_gap_vertical_thickness=30,
             firstwall_radial_thickness=20,
             blanket_radial_thickness=50,
             blanket_rear_wall_radial_thickness=30,

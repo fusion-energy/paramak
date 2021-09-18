@@ -18,6 +18,7 @@ class TestSparc2020Reactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=150,
             plasma_radial_thickness=100,
             outer_plasma_gap_radial_thickness=50,
+            plasma_gap_vertical_thickness=50,
             firstwall_radial_thickness=50,
             blanket_radial_thickness=100,
             blanket_rear_wall_radial_thickness=10,
