@@ -102,6 +102,10 @@ class CenterColumnStudyReactor(paramak.Reactor):
             'rotation_angle',
         ]
 
+        # set by make_plasma
+        self.major_radius = None
+        self.minor_radius = None
+
     def create_solids(self):
         """Creates a 3d solids for each component.
 
