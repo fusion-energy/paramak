@@ -45,8 +45,8 @@ class Shape:
             azimuth angle(s) used when positioning the shape. If a list of
             angles is provided, the shape is duplicated at all angles.
             Defaults to 0.0.
-        workplane (str, optional): the orientation of the Cadquery workplane.
-            (XY, YZ or XZ). Defaults to "XZ".
+        workplane: the orientation of the Cadquery workplane. Options include
+            strings "XY", "YZ", "XZ" or a Cadquery.Plane(). Defaults to "XZ".
         rotation_axis (str or list, optional): rotation axis around which the
             solid is rotated. If None, the rotation axis will depend on the
             workplane or path_workplane if applicable. Can be set to "X", "-Y",
