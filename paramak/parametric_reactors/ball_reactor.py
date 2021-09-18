@@ -160,8 +160,6 @@ class BallReactor(paramak.Reactor):
             'rotation_angle',
         ]
 
-
-
     @property
     def rotation_angle(self):
         return self._rotation_angle
@@ -267,11 +265,11 @@ class BallReactor(paramak.Reactor):
         )
         outer_equatorial_point = inner_equatorial_point + self.plasma_radial_thickness
 
-
         # sets major radius and minor radius from equatorial_points to allow a
         # radial build. This helps avoid the plasma overlapping the center
         # column and other components
-        self.major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
+        self.major_radius = (outer_equatorial_point +
+                             inner_equatorial_point) / 2
         self.minor_radius = self.major_radius - inner_equatorial_point
 
         self.offset_from_plasma = [

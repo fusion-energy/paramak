@@ -153,7 +153,6 @@ class SubmersionTokamak(paramak.Reactor):
             'support_position',
         ]
 
-
     @property
     def pf_coil_radial_position(self):
         return self._pf_coil_radial_position
