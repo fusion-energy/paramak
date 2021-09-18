@@ -6,6 +6,7 @@ import pytest
 
 
 class test_SingleNullBallReactor(unittest.TestCase):
+    """tests functionaliy of the test_SingleNullBallReactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.SingleNullBallReactor(
@@ -40,34 +41,34 @@ class test_SingleNullBallReactor(unittest.TestCase):
         assert len(self.test_reactor.input_variables.keys()) == 28
         assert len(self.test_reactor.input_variable_names) == 28
 
-    def test_SingleNullBallReactor_with_pf_and_tf_coils(self):
+    def test_single_null_ball_reactor_with_pf_and_tf_coils(self):
         """Checks that a SingleNullBallReactor with optional pf and tf coils can
         be created and that the correct number of components are produced."""
 
         assert len(self.test_reactor.shapes_and_components) == 10
 
-    def test_SingleNullBallReactor_rotation_angle_impacts_volume(self):
-        """Creates SingleNullBallReactors with different rotation angles and checks
-        that the relative volumes of the components are correct."""
+    def test_single_null_ball_reactor_rotation_angle_impacts_volume(self):
+        """Creates SingleNullBallReactors with different rotation angles and
+        checks that the relative volumes of the components are correct."""
 
         self.test_reactor.rotation_angle = 90
-        test_reactor_90_components = [
-            component for component in self.test_reactor.shapes_and_components]
+        test_reactor_90_components = self.test_reactor.shapes_and_components
         self.test_reactor.rotation_angle = 180
-        test_reactor_180_components = [
-            component for component in self.test_reactor.shapes_and_components]
+        test_reactor_180_components = self.test_reactor.shapes_and_components
 
         for r90, r180 in zip(test_reactor_90_components,
                              test_reactor_180_components):
             assert r90.volume() == pytest.approx(r180.volume() * 0.5, rel=0.1)
 
     def test_hash_value(self):
-        """Creates a single null ball reactor and checks that all shapes in the reactor are created
-        when .shapes_and_components is first called. Checks that when .shapes_and_components is
-        called again with no changes to the reactor, the shapes in the reactor are not reconstructed
-        and the previously constructed shapes are returned. Checks that when .shapes_and_components
-        is called again with changes to the reactor, the shapes in the reactor are reconstructed and
-        these new shapes are returned. Checks that the reactor_hash_value is only updated when the
+        """Creates a single null ball reactor and checks that all shapes in the
+        reactor are created when .shapes_and_components is first called. Checks
+        that when .shapes_and_components is called again with no changes to the
+        reactor, the shapes in the reactor are not reconstructed and the
+        previously constructed shapes are returned. Checks that when
+        .shapes_and_components is called again with changes to the reactor, the
+        shapes in the reactor are reconstructed and these new shapes are
+        returned. Checks that the reactor_hash_value is only updated when the
         reactor is reconstruced."""
 
         assert self.test_reactor.reactor_hash_value is None
