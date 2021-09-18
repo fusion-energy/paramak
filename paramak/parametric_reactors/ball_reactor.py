@@ -125,6 +125,36 @@ class BallReactor(paramak.Reactor):
 
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
         self.divertor_to_tf_gap_vertical_thickness = divertor_to_tf_gap_vertical_thickness
+
+        # adds self.input_variable_names from the Reactor class
+        self.input_variable_names = self.input_variable_names + [
+            'inner_bore_radial_thickness',
+            'inboard_tf_leg_radial_thickness',
+            'center_column_shield_radial_thickness',
+            'divertor_radial_thickness',
+            'inner_plasma_gap_radial_thickness',
+            'plasma_radial_thickness',
+            'outer_plasma_gap_radial_thickness',
+            'firstwall_radial_thickness',
+            'blanket_radial_thickness',
+            'blanket_rear_wall_radial_thickness',
+            'elongation',
+            'triangularity',
+            'plasma_gap_vertical_thickness',
+            'divertor_to_tf_gap_vertical_thickness',
+            'number_of_tf_coils',
+            'rear_blanket_to_tf_gap',
+            'pf_coil_radial_thicknesses',
+            'pf_coil_vertical_thicknesses',
+            'pf_coil_radial_position',
+            'pf_coil_vertical_position',
+            'pf_coil_case_thicknesses',
+            'outboard_tf_coil_radial_thickness',
+            'outboard_tf_coil_poloidal_thickness',
+            'divertor_position',
+            'rotation_angle',
+        ]
+
         if self.plasma_gap_vertical_thickness is None:
             self.plasma_gap_vertical_thickness = \
                 self.outer_plasma_gap_radial_thickness

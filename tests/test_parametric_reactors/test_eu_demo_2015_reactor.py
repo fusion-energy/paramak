@@ -7,6 +7,14 @@ import paramak
 
 
 class TestDemo2015Reactor(unittest.TestCase):
+    """Tests functionality of the TestDemo2015Reactor class"""
+
+    def test_input_varible_names(self):
+        """tests that the number of inputs varibles is correct"""
+
+        my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1)
+        assert len(my_reactor.input_variables.keys()) == 5
+        assert len(my_reactor.input_variable_names) == 5
 
     def test_plasma_construction(self):
         """Creates the plasma part of the EuDemoFrom2015PaperDiagram and checks
