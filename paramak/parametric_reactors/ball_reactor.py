@@ -276,7 +276,6 @@ class BallReactor(paramak.Reactor):
                              inner_equatorial_point) / 2
         self.minor_radius = self.major_radius - inner_equatorial_point
 
-
         plasma = paramak.Plasma(
             major_radius=self.major_radius,
             minor_radius=self.minor_radius,
