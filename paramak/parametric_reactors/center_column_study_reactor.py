@@ -102,22 +102,6 @@ class CenterColumnStudyReactor(paramak.Reactor):
             'rotation_angle',
         ]
 
-        # sets major radius and minor radius from equatorial_points to allow a
-        # radial build this helps avoid the plasma overlapping the center
-        # column and other components
-
-        inner_equatorial_point = (
-            inner_bore_radial_thickness
-            + inboard_tf_leg_radial_thickness
-            + center_column_shield_radial_thickness_mid
-            + inner_plasma_gap_radial_thickness
-        )
-        outer_equatorial_point = \
-            inner_equatorial_point + plasma_radial_thickness
-        self.major_radius = \
-            (outer_equatorial_point + inner_equatorial_point) / 2
-        self.minor_radius = self.major_radius - inner_equatorial_point
-
     def create_solids(self):
         """Creates a 3d solids for each component.
 
@@ -147,6 +131,22 @@ class CenterColumnStudyReactor(paramak.Reactor):
             warnings.warn(msg, UserWarning)
 
     def _make_plasma(self):
+
+        # sets major radius and minor radius from equatorial_points to allow a
+        # radial build this helps avoid the plasma overlapping the center
+        # column and other components
+
+        inner_equatorial_point = (
+            self.inner_bore_radial_thickness
+            + self.inboard_tf_leg_radial_thickness
+            + self.center_column_shield_radial_thickness_mid
+            + self.inner_plasma_gap_radial_thickness
+        )
+        outer_equatorial_point = \
+            inner_equatorial_point + self.plasma_radial_thickness
+        self.major_radius = \
+            (outer_equatorial_point + inner_equatorial_point) / 2
+        self.minor_radius = self.major_radius - inner_equatorial_point
 
         plasma = paramak.Plasma(
             major_radius=self.major_radius,

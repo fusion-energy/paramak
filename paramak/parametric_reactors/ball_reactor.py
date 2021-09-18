@@ -33,8 +33,7 @@ class BallReactor(paramak.Reactor):
         elongation: the elongation of the plasma
         triangularity: the triangularity of the plasma
         plasma_gap_vertical_thickness: the vertical thickness of the gap
-            between the plasma and firstwall (cm). If left as None then the
-            outer_plasma_gap_radial_thickness is used.
+            between the plasma and firstwall (cm).
         divertor_to_tf_gap_vertical_thickness: the vertical thickness of the
             gap between the divertor and the TF coils.
         number_of_tf_coils: the number of tf coils
@@ -77,7 +76,7 @@ class BallReactor(paramak.Reactor):
             blanket_rear_wall_radial_thickness: float,
             elongation: float,
             triangularity: float,
-            plasma_gap_vertical_thickness: Optional[float] = None,
+            plasma_gap_vertical_thickness: float,
             divertor_to_tf_gap_vertical_thickness: Optional[float] = 0,
             number_of_tf_coils: Optional[int] = 12,
             rear_blanket_to_tf_gap: Optional[float] = None,
@@ -126,6 +125,12 @@ class BallReactor(paramak.Reactor):
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
         self.divertor_to_tf_gap_vertical_thickness = divertor_to_tf_gap_vertical_thickness
 
+        self.elongation = elongation
+        self.triangularity = triangularity
+
+        self.number_of_tf_coils = number_of_tf_coils
+        self.rotation_angle = rotation_angle
+
         # adds self.input_variable_names from the Reactor class
         self.input_variable_names = self.input_variable_names + [
             'inner_bore_radial_thickness',
@@ -155,38 +160,7 @@ class BallReactor(paramak.Reactor):
             'rotation_angle',
         ]
 
-        if self.plasma_gap_vertical_thickness is None:
-            self.plasma_gap_vertical_thickness = \
-                self.outer_plasma_gap_radial_thickness
-        # sets major radius and minor radius from equatorial_points to allow a
-        # radial build
-        # this helps avoid the plasma overlapping the center column and other
-        # components
 
-        inner_equatorial_point = (
-            inner_bore_radial_thickness
-            + inboard_tf_leg_radial_thickness
-            + center_column_shield_radial_thickness
-            + inner_plasma_gap_radial_thickness
-        )
-        outer_equatorial_point = \
-            inner_equatorial_point + plasma_radial_thickness
-        self.major_radius = \
-            (outer_equatorial_point + inner_equatorial_point) / 2
-        self.minor_radius = self.major_radius - inner_equatorial_point
-
-        self.elongation = elongation
-        self.triangularity = triangularity
-
-        self.number_of_tf_coils = number_of_tf_coils
-        self.rotation_angle = rotation_angle
-
-        self.offset_from_plasma = [
-            self.major_radius - self.minor_radius,
-            self.plasma_gap_vertical_thickness,
-            self.outer_plasma_gap_radial_thickness,
-            self.plasma_gap_vertical_thickness,
-            self.major_radius - self.minor_radius]
 
     @property
     def rotation_angle(self):
@@ -284,6 +258,29 @@ class BallReactor(paramak.Reactor):
         self.shapes_and_components = shapes_and_components
 
     def _make_plasma(self):
+
+        inner_equatorial_point = (
+            self.inner_bore_radial_thickness
+            + self.inboard_tf_leg_radial_thickness
+            + self.center_column_shield_radial_thickness
+            + self.inner_plasma_gap_radial_thickness
+        )
+        outer_equatorial_point = inner_equatorial_point + self.plasma_radial_thickness
+
+
+        # sets major radius and minor radius from equatorial_points to allow a
+        # radial build. This helps avoid the plasma overlapping the center
+        # column and other components
+        self.major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
+        self.minor_radius = self.major_radius - inner_equatorial_point
+
+        self.offset_from_plasma = [
+            self.major_radius - self.minor_radius,
+            self.plasma_gap_vertical_thickness,
+            self.outer_plasma_gap_radial_thickness,
+            self.plasma_gap_vertical_thickness,
+            self.major_radius - self.minor_radius
+        ]
 
         plasma = paramak.Plasma(
             major_radius=self.major_radius,
