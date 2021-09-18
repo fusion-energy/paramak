@@ -57,10 +57,10 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
 
         self.test_reactor.rotation_angle = 90
         r90_comp_vols = [
-            comp.volume for comp in self.test_reactor.shapes_and_components]
+            comp.volume() for comp in self.test_reactor.shapes_and_components]
         self.test_reactor.rotation_angle = 180
         r180_comp_vols = [
-            comp.volume for comp in self.test_reactor.shapes_and_components]
+            comp.volume() for comp in self.test_reactor.shapes_and_components]
         for r90_vol, r180_vol in zip(r90_comp_vols, r180_comp_vols):
             assert r90_vol == pytest.approx(r180_vol * 0.5, rel=0.1)
 

@@ -30,7 +30,7 @@ class TestCoolantChannelRingStraight(unittest.TestCase):
         and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_faces(self):
         """Creates a CoolantChannelRingStraight shape and checks that the areas of its faces
@@ -53,7 +53,7 @@ class TestCoolantChannelRingStraight(unittest.TestCase):
         self.test_shape.workplane = "XY"
         self.test_shape.rotation_axis = "Z"
 
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             math.pi * (10 ** 2) * 100 * 8)
 
     def test_start_angle(self):

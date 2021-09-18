@@ -13,15 +13,31 @@ class TestReactor(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+            points=[(0, 0), (0, 20), (20, 20)],
+            material_tag='mat1',
+            name='test_shape'
+        )
 
         self.test_shape2 = paramak.ExtrudeStraightShape(
-            points=[(100, 100), (50, 100), (50, 50)], distance=20)
+            points=[(100, 100), (50, 100), (50, 50)], distance=20,
+            material_tag='mat1',
+            name='test_shape2'
+        )
+
+        test_shape_3 = paramak.PoloidalFieldCoilSet(
+            heights=[2, 2],
+            widths=[3, 3],
+            center_points=[(50, -100), (50, 100)]
+        )
 
         self.test_reactor = paramak.Reactor([self.test_shape])
 
         self.test_reactor_2 = paramak.Reactor(
             [self.test_shape, self.test_shape2])
+
+        # this reactor has a compound shape in the geometry
+        self.test_reactor_3 = paramak.Reactor(
+            [self.test_shape, test_shape_3])
 
     def test_reactor_export_stp(self):
         """Exports the reactor as seperate files and as a single file"""
@@ -94,50 +110,6 @@ class TestReactor(unittest.TestCase):
             incorrect_graveyard_offset_wrong_type
         )
 
-    def test_incorrect_merge_tolerance_too_small(self):
-
-        def incorrect_merge_tolerance_too_small():
-            """Set merge_tolerance as a negative number which should raise an error"""
-
-            self.test_reactor.merge_tolerance = -3
-
-        self.assertRaises(
-            ValueError,
-            incorrect_merge_tolerance_too_small
-        )
-
-    def test_incorrect_merge_tolerance_wrong_type(self):
-
-        def incorrect_merge_tolerance_wrong_type():
-            """Set merge_tolerance as a string which should raise an error"""
-
-            self.test_reactor.merge_tolerance = 'coucou'
-
-        self.assertRaises(
-            TypeError,
-            incorrect_merge_tolerance_wrong_type
-        )
-
-    def test_incorrect_faceting_tolerance_too_small(self):
-
-        def incorrect_faceting_tolerance_too_small():
-            """Set faceting_tolerance as a negative int which should raise an error"""
-
-            self.test_reactor.faceting_tolerance = -3
-
-        self.assertRaises(
-            ValueError,
-            incorrect_faceting_tolerance_too_small
-        )
-
-    def test_merge_tolerance_setting_and_getting(self):
-        """Makes a neutronics model and checks the default merge_tolerance"""
-
-        assert self.test_reactor.merge_tolerance == 1e-4
-
-        self.test_reactor.merge_tolerance = 1e-6
-        assert self.test_reactor.merge_tolerance == 1e-6
-
     def test_largest_dimension_setting_and_getting_using_largest_shapes(self):
         """Makes a neutronics model and checks the default largest_dimension
         and that largest_dimension changes with largest_shapes"""
@@ -165,8 +137,8 @@ class TestReactor(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
-        assert len(test_reactor.material_tags()) == 1
-        assert test_reactor.material_tags()[0] == "mat1"
+        assert len(test_reactor.material_tag()) == 1
+        assert test_reactor.material_tag()[0] == "mat1"
 
     def test_adding_plasma_with_material_tag_to_reactor(self):
         """Checks that a shape object can be added to a Reactor object with
@@ -176,8 +148,8 @@ class TestReactor(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20)], material_tag="dt_plasma", name='plasma'
         )
         test_reactor = paramak.Reactor([test_shape])
-        assert len(test_reactor.material_tags()) == 1
-        assert test_reactor.material_tags()[0] == "dt_plasma"
+        assert len(test_reactor.material_tag()) == 1
+        assert test_reactor.material_tag()[0] == "dt_plasma"
 
     def test_adding_multiple_shapes_with_material_tag_to_reactor(self):
         """Checks that multiple shape objects can be added to a Reactor object
@@ -192,11 +164,11 @@ class TestReactor(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape, test_shape2])
-        assert len(test_reactor.material_tags()) == 2
-        assert "mat1" in test_reactor.material_tags()
-        assert "mat2" in test_reactor.material_tags()
+        assert len(test_reactor.material_tag()) == 2
+        assert "mat1" in test_reactor.material_tag()
+        assert "mat2" in test_reactor.material_tag()
 
-    def test_material_tags_without_plasma(self):
+    def test_material_tag_without_plasma(self):
         """Checks that the material tags don't contain the plasma when it is filtered out"""
 
         test_shape = paramak.RotateStraightShape(
@@ -206,9 +178,9 @@ class TestReactor(unittest.TestCase):
 
         test_reactor = paramak.Reactor([test_shape, test_shape2])
 
-        assert len(test_reactor.material_tags(include_plasma=False)) == 1
-        assert "mat1" in test_reactor.material_tags()
-        assert "plasma" not in test_reactor.material_tags()
+        assert len(test_reactor.material_tag(include_plasma=False)) == 1
+        assert "mat1" in test_reactor.material_tag()
+        assert "plasma" not in test_reactor.material_tag()
 
     def test_make_sector_wedge(self):
         """Checks that the wedge is not made when rotation angle is 360"""
@@ -507,7 +479,7 @@ class TestReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape, test_shape2])
         test_reactor.graveyard_offset == 101
         graveyard = test_reactor.make_graveyard()
-        assert graveyard.volume > 0
+        assert graveyard.volume() > 0
 
     def test_reactor_creation_with_default_properties(self):
         """creates a Reactor object and checks that it has no default properties"""
@@ -595,15 +567,15 @@ class TestReactor(unittest.TestCase):
             graveyard_offset=100)
         test_reactor.make_graveyard()
 
-        graveyard_volume_1 = test_reactor.graveyard.volume
+        graveyard_volume_1 = test_reactor.graveyard.volume()
 
         test_reactor.make_graveyard(graveyard_offset=50)
-        assert test_reactor.graveyard.volume < graveyard_volume_1
-        graveyard_volume_2 = test_reactor.graveyard.volume
+        assert test_reactor.graveyard.volume() < graveyard_volume_1
+        graveyard_volume_2 = test_reactor.graveyard.volume()
 
         test_reactor.make_graveyard(graveyard_offset=200)
-        assert test_reactor.graveyard.volume > graveyard_volume_1
-        assert test_reactor.graveyard.volume > graveyard_volume_2
+        assert test_reactor.graveyard.volume() > graveyard_volume_1
+        assert test_reactor.graveyard.volume() > graveyard_volume_2
 
     def test_exported_stp_files_exist(self):
         """creates a Reactor object with one shape and checks that a stp file
@@ -1094,26 +1066,6 @@ class TestReactor(unittest.TestCase):
             paramak.Reactor([test_shape], graveyard_offset=-10)
         self.assertRaises(ValueError, incorrect_graveyard_offset_size)
 
-    def test_faceting_tolerance_setting_type_checking(self):
-        """Attempts to make a reactor with a faceting_tolerance that is an float
-        which should raise a ValueError"""
-
-        def incorrect_faceting_tolerance_type():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
-            paramak.Reactor([test_shape], faceting_tolerance='coucou')
-        self.assertRaises(TypeError, incorrect_faceting_tolerance_type)
-
-    def test_faceting_tolerance_setting_magnitude_checking(self):
-        """Attempts to make a reactor with a faceting_tolerance that is an int
-        which should raise a ValueError"""
-
-        def incorrect_faceting_tolerance_size():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
-            paramak.Reactor([test_shape], faceting_tolerance=-10)
-        self.assertRaises(ValueError, incorrect_faceting_tolerance_size)
-
     def test_graveyard_error(self):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])
@@ -1193,6 +1145,78 @@ class TestReactor(unittest.TestCase):
         )
         my_reactor = paramak.Reactor([test_shape])
         assert my_reactor.make_sector_wedge(rotation_angle=360) is None
+
+    def test_reactor_volume(self):
+        """Checks the types returned by the .volume method are correct"""
+
+        assert isinstance(self.test_reactor.volume(), list)
+        assert isinstance(self.test_reactor.volume(), list)
+        assert isinstance(self.test_reactor.volume()[0], float)
+        assert isinstance(self.test_reactor_2.volume()[0], float)
+        assert isinstance(self.test_reactor_2.volume()[1], float)
+        assert len(self.test_reactor.volume()) == 1
+        assert len(self.test_reactor_2.volume()) == 2
+        assert sum(
+            self.test_reactor_2.volume()) > sum(
+            self.test_reactor.volume())
+        assert self.test_reactor_2.volume()[0] == self.test_reactor.volume()[0]
+
+    def test_reactor_volume_spliting_compounds(self):
+        """Checks the volumes returned by the .volume method with splitting of
+        compounds set to True are correct"""
+
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True), list)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=False), list)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True)[0], list)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True)[1], list)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=False)[0], float)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=False)[1], float)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True)[1][0], float)
+        assert isinstance(
+            self.test_reactor_3.volume(
+                split_compounds=True)[1][1], float)
+        assert len(self.test_reactor_3.volume(split_compounds=True)) == 2
+        assert len(self.test_reactor_3.volume(split_compounds=True)[1]) == 2
+
+        vol_1 = self.test_reactor_3.volume(split_compounds=True)[1][0]
+        vol_2 = self.test_reactor_3.volume(split_compounds=True)[1][1]
+        assert vol_1 == vol_2
+        vol_3 = self.test_reactor_3.volume(split_compounds=False)[1]
+        assert pytest.approx(vol_3, vol_1 + vol_2)
+
+    def test_reactor_names(self):
+        'checks that the names attribute returns the expected results'
+        assert self.test_reactor_2.name == ['test_shape', 'test_shape2']
+
+    def test_reactor_material_tag(self):
+        'checks that the material_tag attribute returns the expected results'
+        assert self.test_reactor_2.material_tag() == ['mat1', 'mat1']
+        assert self.test_reactor_2.material_tag(
+            allow_repeats=False) == ['mat1']
+
+    def test_incorrect_repeat_raises_error(self):
+        """Finds the materials with the wrong type of allow_repeat"""
+
+        def test_inccorect_allow_repeat():
+            """checks ValueError is raised"""
+
+            self.test_reactor_2.material_tag(allow_repeats='yes')
+
+        self.assertRaises(ValueError, test_inccorect_allow_repeat)
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ class TestITERReactor(unittest.TestCase):
 
         my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
         plasma = my_reactor.create_plasma()
-        assert plasma[0].volume > 0
+        assert plasma[0].volume() > 0
 
     def test_pf_coil_construction(self):
         """Creates the pf coil part of the ITERTokamak and
@@ -23,7 +23,7 @@ class TestITERReactor(unittest.TestCase):
         my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
         pf_coils = my_reactor.create_pf_coils()
         for coil in pf_coils:
-            assert coil.volume > 0
+            assert coil.volume() > 0
 
     def test_vessel_construction(self):
         """Creates the pf coil part of the ITERTokamak and
@@ -33,7 +33,7 @@ class TestITERReactor(unittest.TestCase):
         plasma = my_reactor.create_plasma()
         vessel_components = my_reactor.create_vessel_components()
         for component in vessel_components:
-            assert component.volume > 0
+            assert component.volume() > 0
 
     def test_make_demo_2015_reactor(self):
         """Creates a ITERTokamak reactor and eports the stp

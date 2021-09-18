@@ -49,7 +49,8 @@ class TestExtrudeMixedShape(unittest.TestCase):
         )
 
     def test_default_parameters(self):
-        """Checks that the default parameters of an ExtrudeMixedShape are correct."""
+        """Checks that the default parameters of an ExtrudeMixedShape are
+        correct."""
 
         assert self.test_shape.rotation_angle == 360
         assert self.test_shape.stp_filename == "ExtrudeMixedShape.stp"
@@ -57,30 +58,32 @@ class TestExtrudeMixedShape(unittest.TestCase):
         assert self.test_shape.azimuth_placement_angle == 0
 
     def test_absolute_shape_volume(self):
-        """Creates an ExtrudeMixedShape and checks that the volume is correct."""
+        """Creates an ExtrudeMixedShape and checks that the volume is
+        correct."""
 
-        assert self.test_shape.volume > 20 * 20 * 30
+        assert self.test_shape.volume() > 20 * 20 * 30
 
     def test_relative_shape_volume(self):
         """Creates two ExtrudeMixedShapes and checks that their relative volumes
         are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 180]
 
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 2, rel=0.01)
 
     def test_shape_face_areas(self):
-        """Creates an ExtrudeMixedShape and checks that the face areas are expected."""
+        """Creates an ExtrudeMixedShape and checks that the face areas are
+        expected."""
 
         self.test_shape.extrude_both = False
         assert len(self.test_shape.areas) == 6
         assert len(set([round(i) for i in self.test_shape.areas])) == 5
 
     def test_cut_volume(self):
-        """Creates an ExtrudeMixedShape with another ExtrudeMixedShape cut out and
-        checks that the volume is correct."""
+        """Creates an ExtrudeMixedShape with another ExtrudeMixedShape cut out
+        and checks that the volume is correct."""
 
         inner_shape = ExtrudeMixedShape(
             points=[
@@ -113,9 +116,9 @@ class TestExtrudeMixedShape(unittest.TestCase):
             distance=30,
         )
 
-        assert inner_shape.volume == pytest.approx(1068, abs=2)
-        assert outer_shape.volume == pytest.approx(3462, abs=2)
-        assert outer_shape_with_cut.volume == pytest.approx(3462 - 1068, abs=2)
+        assert inner_shape.volume() == pytest.approx(1068, abs=2)
+        assert outer_shape.volume() == pytest.approx(3462, abs=2)
+        assert outer_shape_with_cut.volume() == pytest.approx(2394, abs=2)
 
     def test_export_stp_extension(self):
         """Creates an ExtrudeMixedShape and checks that a stp file of the shape
@@ -144,22 +147,22 @@ class TestExtrudeMixedShape(unittest.TestCase):
         os.system("rm filename.stl")
 
     def test_rotation_angle(self):
-        """Creates an ExtrudeMixedShape with a rotation_angle < 360 and checks that
-        the correct cut is performed and the volume is correct."""
+        """Creates an ExtrudeMixedShape with a rotation_angle < 360 and checks
+        that the correct cut is performed and the volume is correct."""
 
         self.test_shape.azimuth_placement_angle = [45, 135, 225, 315]
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 0.5, rel=0.01)
 
     def test_extrude_both(self):
-        """Creates an ExtrudeMixedShape with extrude_both = True and False and checks
-        that the volumes are correct."""
+        """Creates an ExtrudeMixedShape with extrude_both = True and False and
+        checks that the volumes are correct."""
 
-        test_volume_extrude_both = self.test_shape.volume
+        test_volume_extrude_both = self.test_shape.volume()
         self.test_shape.extrude_both = False
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume_extrude_both)
 
     def test_export_stp(self):
@@ -207,18 +210,18 @@ class TestExtrudeMixedShape(unittest.TestCase):
 
     def test_convert_circles_to_splines_volume(self):
         """creates a RotateMixedShape with a circular edge and converts the
-        edge to a spline edges. Checks the new shape has appoximatly the same
-        volume as the orignal shape (with circles)"""
+        edge to a spline edges. Checks the new shape has approximately the same
+        volume as the original shape (with circles)"""
 
-        original_volume = self.test_shape_2.volume
+        original_volume = self.test_shape_2.volume()
         self.test_shape_2.convert_all_circle_connections_to_splines()
-        new_volume = self.test_shape_2.volume
+        new_volume = self.test_shape_2.volume()
 
         assert pytest.approx(new_volume, rel=0.000001) == original_volume
 
-        original_volume = self.test_shape_3.volume
+        original_volume = self.test_shape_3.volume()
         self.test_shape_3.convert_all_circle_connections_to_splines()
-        new_volume = self.test_shape_3.volume
+        new_volume = self.test_shape_3.volume()
 
         assert pytest.approx(new_volume, rel=0.000001) == original_volume
 

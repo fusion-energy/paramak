@@ -19,7 +19,7 @@
 # Once build the dockerimage can be run in a few different ways.
 #
 # Run with the following command for a terminal notebook interface
-# docker run -it paramak .
+# docker run -it paramak
 #
 # Run with the following command for a jupyter notebook interface
 # docker run -p 8888:8888 paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
@@ -51,9 +51,13 @@ RUN echo installing CadQuery version $cq_version && \
     pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
 
-
+# installs dependancies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+# installs required packages for dependancies
+COPY requirements-test.txt requirements-test.txt
+RUN pip install -r requirements-test.txt
 
 
 RUN mkdir /home/paramak

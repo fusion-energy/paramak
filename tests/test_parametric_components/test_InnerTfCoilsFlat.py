@@ -75,7 +75,7 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume > 1000
+        assert self.test_shape.volume() > 1000
 
     def test_azimuth_offset(self):
         """Creates an inner tf coil using the InnerTfCoilsFlat parametric
@@ -92,16 +92,16 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         """Checks that changing the attributes of InnerTfCoilsFlat affects the
         cadquery solid produced."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
 
         self.test_shape.height = 1000
-        assert test_volume == self.test_shape.volume * 0.5
+        assert test_volume == self.test_shape.volume() * 0.5
         self.test_shape.height = 500
         self.test_shape.inner_radius = 30
-        assert test_volume < self.test_shape.volume
+        assert test_volume < self.test_shape.volume()
         self.test_shape.inner_radius = 50
         self.test_shape.outer_radius = 170
-        assert test_volume < self.test_shape.volume
+        assert test_volume < self.test_shape.volume()
 
     def test_gap_size(self):
         """Checks that a ValueError is raised when a too large gap_size is
@@ -134,11 +134,11 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         """Checks the analytical volume of the hex shaped extrusion and
         that adding a hole reduces voulume."""
 
-        hex_volume = self.test_shape_3.volume
+        hex_volume = self.test_shape_3.volume()
         hex_with_hole = self.test_shape_3
         hex_with_hole.inner_radius = 1
 
-        assert hex_volume > hex_with_hole.volume
+        assert hex_volume > hex_with_hole.volume()
         assert pytest.approx(hex_volume, abs=0.5) == 1385.6 * 10
 
     def test_volume_changes_with_radius_type_for_corners(self):
@@ -147,7 +147,7 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
 
         hex_shape = self.test_shape_3
         hex_shape.radius_type = 'corner'
-        hex_volume = hex_shape.volume
+        hex_volume = hex_shape.volume()
 
         assert pytest.approx(hex_volume, abs=0.5) == 1039.2 * 10
 
@@ -155,4 +155,4 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         hex_with_hole.radius_type = 'corner'
         hex_with_hole.inner_radius = 2
 
-        assert hex_volume > hex_with_hole.volume
+        assert hex_volume > hex_with_hole.volume()

@@ -60,24 +60,24 @@ class TestSweepCircleShape(unittest.TestCase):
 
         self.test_shape.path_points = [(50, 0), (50, 50), (50, 100)]
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume == pytest.approx(math.pi * 10**2 * 100)
+        assert self.test_shape.volume() == pytest.approx(math.pi * 10**2 * 100)
 
     def test_relative_shape_volume_radius(self):
         """Creates two SweepCircleShapes and checks that their relative volume
         are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.radius = 20
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 4, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepCircleShapes and checks that their relative volumes
         are correct."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             test_volume * 4, rel=0.01)
 
     def test_points_equal_path_points(self):
@@ -121,9 +121,9 @@ class TestSweepCircleShape(unittest.TestCase):
         """Checks that a SweepCircleShape with a larger volume is created when
         force_cross_section = True than when force_cross_section = False."""
 
-        test_volume = self.test_shape.volume
+        test_volume = self.test_shape.volume()
         self.test_shape.force_cross_section = True
-        assert self.test_shape.volume > test_volume
+        assert self.test_shape.volume() > test_volume
 
     def test_surface_count(self):
         """Creates a SweepCircleShape and checks that it has the correct number

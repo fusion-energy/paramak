@@ -32,7 +32,7 @@ class TestRotateCircleShape(unittest.TestCase):
         #     2 * math.pi * 60 * math.pi * (10**2)
         # )
         self.test_shape.rotation_angle = 270
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             2 * math.pi * 60 * math.pi * (10**2) * 0.75
         )
 
@@ -57,30 +57,31 @@ class TestRotateCircleShape(unittest.TestCase):
             math.pi * (10 * 2) * math.pi * (60 * 2) / 2, rel=0.01)) == 1
 
     def test_relative_shape_volume_azimuth_placement_angle(self):
-        """Creates two RotateCircleShapes with different azimuth_placement_angles and
-        checks that their relative volumes are correct."""
+        """Creates two RotateCircleShapes with different
+        azimuth_placement_angles and checks that their relative volumes are
+        correct."""
 
         self.test_shape.rotation_angle = 10
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             (math.pi * 10**2) * ((2 * math.pi * 60) / 36)
         )
 
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume == pytest.approx(
+        assert self.test_shape.volume() == pytest.approx(
             (math.pi * 10**2) * ((2 * math.pi * 60) / 36) * 4
         )
 
     def test_cut_volume(self):
-        """Creates a RotateCircleShape with another RotateCircleShape cut out and
-        checks that the volume is correct."""
+        """Creates a RotateCircleShape with another RotateCircleShape cut out
+        and checks that the volume is correct."""
 
         outer_shape = RotateCircleShape(
             points=[(60, 0)], radius=15
         )
-        outer_shape_volume = outer_shape.volume
+        outer_shape_volume = outer_shape.volume()
         outer_shape.cut = self.test_shape
-        assert outer_shape.volume == pytest.approx(
-            outer_shape_volume - self.test_shape.volume
+        assert outer_shape.volume() == pytest.approx(
+            outer_shape_volume - self.test_shape.volume()
         )
 
     def test_export_stp(self):
