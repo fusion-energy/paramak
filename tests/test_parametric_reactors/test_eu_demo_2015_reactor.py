@@ -15,7 +15,6 @@ class TestDemo2015Reactor(unittest.TestCase):
         assert len(my_reactor.input_variables.keys()) == 5
         assert len(my_reactor.input_variable_names) == 5
 
-
     def test_plasma_construction(self):
         """Creates the plasma part of the EuDemoFrom2015PaperDiagram and checks
         the contruction runs"""

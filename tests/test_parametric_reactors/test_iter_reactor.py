@@ -15,7 +15,6 @@ class TestITERReactor(unittest.TestCase):
         assert len(my_reactor.input_variables.keys()) == 5
         assert len(my_reactor.input_variable_names) == 5
 
-
     def test_plasma_construction(self):
         """Creates the plasma part of the ITERTokamak and checks
         the contruction runs"""

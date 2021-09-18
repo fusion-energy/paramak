@@ -84,7 +84,6 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.elongation = elongation
         self.triangularity = triangularity
 
-
         # adds self.input_variable_names from the Reactor class
         self.input_variable_names = self.input_variable_names + [
             'inner_bore_radial_thickness',
