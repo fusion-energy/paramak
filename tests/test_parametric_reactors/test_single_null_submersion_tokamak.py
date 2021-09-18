@@ -58,7 +58,8 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
 
         assert len(self.test_reactor.shapes_and_components) == 11
 
-    def test_single_null_submersion_tokamak_rotation_angle_impacts_volume(self):
+    def test_single_null_submersion_tokamak_rotation_angle_impacts_volume(
+            self):
         """Creates SingleNullSubmersionTokamaks with different rotation angles and
         checks that the relative volumes of the components are correct."""
 
