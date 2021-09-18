@@ -7,6 +7,7 @@ import paramak
 
 
 class TestSparc2020Reactor(unittest.TestCase):
+    """"Tests functionality of the Sparc2020Reactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.BallReactor(
@@ -44,6 +45,12 @@ class TestSparc2020Reactor(unittest.TestCase):
             "vacuum_vessel_inner.stp",
             "graveyard.stp",
         ]
+
+    def test_input_varible_names(self):
+        """tests that the number of inputs varibles is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 28
+        assert len(self.test_reactor.input_variable_names) == 28
 
     def test_make_sparc_2020_reactor(self):
         """Runs the example to check the output files are produced"""

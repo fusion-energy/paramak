@@ -8,6 +8,7 @@ import pytest
 
 
 class TestSubmersionTokamak(unittest.TestCase):
+    """Tests functionality of the SubmersionTokamak class"""
 
     def setUp(self):
         self.test_reactor = paramak.SubmersionTokamak(
@@ -21,6 +22,9 @@ class TestSubmersionTokamak(unittest.TestCase):
             firstwall_radial_thickness=30,
             blanket_rear_wall_radial_thickness=30,
             number_of_tf_coils=16,
+            outboard_tf_coil_radial_thickness=10,
+            outboard_tf_coil_poloidal_thickness=10,
+            rear_blanket_to_tf_gap=10,
             support_radial_thickness=20,
             inboard_blanket_radial_thickness=20,
             outboard_blanket_radial_thickness=20,
@@ -28,6 +32,12 @@ class TestSubmersionTokamak(unittest.TestCase):
             triangularity=0.45,
             rotation_angle=359,
         )
+
+    def test_input_varible_names(self):
+        """tests that the number of inputs varibles is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 29
+        assert len(self.test_reactor.input_variable_names) == 29
 
     def test_svg_creation(self):
         """Creates a SubmersionTokamak and checks that an svg file of the reactor
@@ -43,7 +53,7 @@ class TestSubmersionTokamak(unittest.TestCase):
         """Creates a SubmersionTokamak and checks that the correct number of
         components are created."""
 
-        assert len(self.test_reactor.shapes_and_components) == 8
+        assert len(self.test_reactor.shapes_and_components) == 9
 
     def test_with_tf_coils_creation(self):
         """Creates a SubmersionTokamak with tf coils and checks that the correct

@@ -22,6 +22,12 @@ class TestCylinderReactor(unittest.TestCase):
             rotation_angle=180,
         )
 
+    def test_input_varible_names(self):
+        """tests that the number of inputs varibles is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 13
+        assert len(self.test_reactor.input_variable_names) == 13
+
     def test_stp_file_creation(self):
         """Creates a reactor with exports the step files and check they exist"""
 

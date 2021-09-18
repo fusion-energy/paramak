@@ -123,6 +123,36 @@ class SubmersionTokamak(paramak.Reactor):
         self.pf_coil_vertical_position = pf_coil_vertical_position
         self.pf_coil_radial_position = pf_coil_radial_position
 
+        # adds self.input_variable_names from the Reactor class
+        self.input_variable_names = self.input_variable_names + [
+            'inner_bore_radial_thickness',
+            'inboard_tf_leg_radial_thickness',
+            'center_column_shield_radial_thickness',
+            'inboard_blanket_radial_thickness',
+            'firstwall_radial_thickness',
+            'inner_plasma_gap_radial_thickness',
+            'plasma_radial_thickness',
+            'divertor_radial_thickness',
+            'support_radial_thickness',
+            'outer_plasma_gap_radial_thickness',
+            'outboard_blanket_radial_thickness',
+            'blanket_rear_wall_radial_thickness',
+            'elongation',
+            'triangularity',
+            'number_of_tf_coils',
+            'rotation_angle',
+            'outboard_tf_coil_radial_thickness',
+            'rear_blanket_to_tf_gap',
+            'outboard_tf_coil_poloidal_thickness',
+            'pf_coil_vertical_thicknesses',
+            'pf_coil_radial_thicknesses',
+            'pf_coil_radial_position',
+            'pf_coil_vertical_position',
+            'pf_coil_case_thicknesses',
+            'divertor_position',
+            'support_position',
+        ]
+
         # sets major radius and minor radius from equatorial_points to allow a
         # radial build this helps avoid the plasma overlapping the center
         # column and other components
