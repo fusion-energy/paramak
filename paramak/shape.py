@@ -272,21 +272,21 @@ class Shape:
     @workplane.setter
     def workplane(self, value):
         acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
-        if not isinstance(value, Plane):
+        if isinstance(value, Plane):
+            self._workplane = value
+        elif isinstance(value, str):
             if value in acceptable_values:
                 self._workplane = value
-            elif isinstance(value, str):
+            else:
                 raise ValueError(
                     "Shape.workplane must be one of ",
                     acceptable_values,
                     " not ",
                     value)
-            else:
-                raise TypeError(
-                    "Shape.workplane must be a string or a ",
-                    "cadquery.Plane object")
         else:
-            self._workplane = value
+            raise TypeError(
+                "Shape.workplane must be a string or a ",
+                "cadquery.Plane object")
 
     @property
     def rotation_axis(self):
