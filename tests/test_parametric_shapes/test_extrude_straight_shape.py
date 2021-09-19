@@ -30,7 +30,7 @@ class TestExtrudeStraightShape(unittest.TestCase):
         )
 
         assert isinstance(test_shape_2.workplane, Plane)
-        assert pytest.approx(test_shape_2.volume, self.test_shape.volume)    
+        assert pytest.approx(test_shape_2.volume, self.test_shape.volume)
 
     def test_volume_in_neutronics_description(self):
         assert 'volume' in self.test_shape.neutronics_description()[0].keys()
