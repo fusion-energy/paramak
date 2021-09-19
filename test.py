@@ -15,7 +15,8 @@ my_reactor = paramak.EuDemoFrom2015PaperDiagram(
 
 [divertor, blanket, vac_vessel, vac_vessel_inner] = my_reactor.create_vessel_components()
 
-vac_vessel_inner.solid = paramak.utils.cut_solid(vac_vessel_inner.solid, blanket)
+vac_vessel_inner.solid = paramak.utils.cut_solid(
+    vac_vessel_inner.solid, blanket)
 vac_vessel_inner.export_stl('stage_1_output/vac_vessel_inner.stl')
 # vac_vessel.export_stl('stage_1_output/vacvessel.stl')
 # my_reactor.export_stl(output_folder='stage_1_output')
