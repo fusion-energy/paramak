@@ -271,10 +271,10 @@ class Shape:
 
     @workplane.setter
     def workplane(self, value):
-        acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
         if isinstance(value, Plane):
             self._workplane = value
         elif isinstance(value, str):
+            acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
             if value in acceptable_values:
                 self._workplane = value
             else:
