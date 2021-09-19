@@ -179,17 +179,17 @@ class TestShape(unittest.TestCase):
         )
 
     def test_incorrect_workplane(self):
-        """Creates Shape object with incorrect workplane and checks ValueError
-        is raised."""
+        """Creates Shape object with incorrect workplane and checks errors
+        are raised."""
 
-        test_shape = paramak.Shape(connection_type='straight')
+        with pytest.raises(ValueError):
+            paramak.Shape(workplane="AB")
 
-        def incorrect_workplane():
-            """Creates Shape object with unacceptable workplane."""
+        with pytest.raises(TypeError):
+            paramak.Shape(workplane=2)
 
-            test_shape.workplane = "AB"
-
-        self.assertRaises(ValueError, incorrect_workplane)
+        with pytest.raises(TypeError):
+            paramak.Shape(workplane=[1, 2])
 
     def test_incorrect_points(self):
         """Creates Shape objects and checks errors are raised correctly when
@@ -665,15 +665,6 @@ class TestShape(unittest.TestCase):
         )
 
         assert isinstance(test_shape.workplane, Plane)
-
-    def test_wrong_type_for_workplane(self):
-        """Tests that a TypeError is raised when the argument workplane has
-        the wrong type
-        """
-        with pytest.raises(TypeError):
-            paramak.Shape(workplane=2)
-        with pytest.raises(TypeError):
-            paramak.Shape(workplane=[1, 2])
 
     def test_get_rotation_axis(self):
         """Creates a shape and test the expected rotation_axis is the correct
