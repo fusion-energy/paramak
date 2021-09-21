@@ -358,6 +358,28 @@ CenterColumnShieldPlasmaHyperbola()
 InboardFirstwallFCCS()
 ^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+
+   shield_to_build_from = paramak.CenterColumnShieldCylinder(
+      inner_radius=80,
+      outer_radius=100,
+      height=300,
+      rotation_angle=180,
+   )
+
+   my_component = paramak.InboardFirstwallFCCS(
+      central_column_shield=shield_to_build_from,
+      thickness=50,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
+
 .. image:: https://user-images.githubusercontent.com/8583900/94197757-219e2b80-feae-11ea-8e41-0786d56c8b66.png
     :width: 786px
     :align: center
@@ -488,6 +510,22 @@ InnerTfCoilsCircular()
 InnerTfCoilsFlat()
 ^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.InnerTfCoilsFlat(
+      inner_radius=25,
+      outer_radius=100,
+      number_of_coils=10,
+      gap_size=5,
+      height=300,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 |InnerTfCoilsFlatstp| |InnerTfCoilsFlatsvg|
 
 .. |InnerTfCoilsFlatstp| image:: https://user-images.githubusercontent.com/56687624/86241472-db7d4880-bb9a-11ea-8fb9-325b3342fe11.png
@@ -505,6 +543,20 @@ Poloidal Field coils
 
 PoloidalFieldCoil()
 ^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalFieldCoil(
+      center_point=(100, 100),
+      height=20,
+      width=20,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
 
 |PoloidalFieldCoilstp| |PoloidalFieldCoilsvg|
 
