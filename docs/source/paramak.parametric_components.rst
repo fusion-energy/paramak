@@ -110,57 +110,6 @@ BlanketFPPoloidalSegments()
    :members:
    :show-inheritance:
 
-BlanketFP()
-^^^^^^^^^^^
-
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.BlanketFP(
-      thickness=100,
-      stop_angle=-80,
-      start_angle=250,
-      offset_from_plasma=30,
-      rotation_angle=180
-   )
-
-   cadquery_object = my_component.solid
-
-.. image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
-   :width: 350
-
-.. automodule:: paramak.parametric_components.blanket_fp
-   :members:
-   :show-inheritance:
-
-BlanketFPPoloidalSegments()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.BlanketFPPoloidalSegments(
-      num_segments=7,
-      segments_gap = 10,
-      thickness=100,
-      stop_angle=250,
-      start_angle=-90,
-      rotation_angle=180
-   )
-
-   cadquery_object = my_component.solid
-
-.. image:: https://user-images.githubusercontent.com/8583900/98870151-ca0e4c00-246a-11eb-8a37-e7620344d8c1.png
-   :width: 350
-
-.. automodule:: paramak.parametric_components.blanket_poloidal_segment
-   :members:
-   :show-inheritance:
-
 
 Blanket Cutting Tools
 ---------------------
@@ -600,7 +549,6 @@ PoloidalFieldCoilSet()
 
    cadquery_object = my_component.solid
 
-
 .. image:: https://user-images.githubusercontent.com/8583900/93832861-eb269d80-fc6e-11ea-861c-45de724478a8.png
     :width: 395px
     :align: center
@@ -820,6 +768,23 @@ ToroidalFieldCoilCoatHanger()
 ToroidalFieldCoilPrincetonD()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilPrincetonD(
+      R1=80,
+      R2=300,
+      thickness=30,
+      distance=30,
+      number_of_coils=1,
+      stp_filename="toroidal_field_coil_princeton_d.stp"
+   )
+
+   cadquery_object = my_component.solid
+
 |ToroidalFieldCoilPrincetonDallstp| |ToroidalFieldCoilPrincetonDsvg| |ToroidalFieldCoilPrincetonDastp|
 
 .. |ToroidalFieldCoilPrincetonDallstp| image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
@@ -835,6 +800,25 @@ ToroidalFieldCoilPrincetonD()
 
 ToroidalFieldCoilTripleArc()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilTripleArc(
+      R1=80,
+      h=200,
+      radii=(70, 100),
+      coverages=(60, 60),
+      thickness=30,
+      distance=30,
+      number_of_coils=1,
+   )
+
+   cadquery_object = my_component.solid
+
+
 
 |ToroidalFieldCoilTripleArcallstp| |ToroidalFieldCoilTripleArcstp| |ToroidalFieldCoilTripleArcsvg|
 
@@ -968,6 +952,19 @@ ExtrudeRectangle()
 HexagonPin()
 ^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.HexagonPin(
+      length_of_side=5,
+      distance=10,
+      center_point=(10, 20)
+   )
+
+   cadquery_object = my_component.solid
+
 |HexagonPinstp| |HexagonPinsvg|
 
 .. |HexagonPinstp| image:: https://user-images.githubusercontent.com/8583900/107092190-07307300-67fb-11eb-995c-b5622de717ee.png
@@ -982,6 +979,22 @@ HexagonPin()
 RotatedTrapezoid()
 ^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotatedTrapezoid(
+      length_1=10,
+      length_2=20,
+      length_3=30,
+      pivot_angle=0,
+      pivot_point=(100, 50),
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 |RotatedTrapezoidstp| |RotatedTrapezoidsvg|
 
 .. |RotatedTrapezoidstp| image:: https://user-images.githubusercontent.com/8583900/101964551-b42aad00-3c09-11eb-8ff2-fc0e52ba33cc.png
@@ -995,6 +1008,22 @@ RotatedTrapezoid()
 
 RotatedIsoscelesTriangle
 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotatedIsoscelesTriangle(
+      height=20,
+      base_length=15,
+      pivot_angle=0,
+      pivot_point=(100, 50),
+      rotation_angle=180,
+      workplane='XY'
+   )
+
+   cadquery_object = my_component.solid
 
 |RotatedIsoscelesTrianglestp| |RotatedIsoscelesTrianglesvg|
 
