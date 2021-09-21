@@ -586,6 +586,21 @@ PoloidalFieldCoilFP()
 PoloidalFieldCoilSet()
 ^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalFieldCoilSet(
+      heights=[10, 10, 20, 20],
+      widths=[10, 10, 20, 40],
+      center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
+
 .. image:: https://user-images.githubusercontent.com/8583900/93832861-eb269d80-fc6e-11ea-861c-45de724478a8.png
     :width: 395px
     :align: center
@@ -632,6 +647,26 @@ PoloidalFieldCoilCaseSet()
 
 PoloidalFieldCoilCaseSetFC()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   pf_coil_set = paramak.PoloidalFieldCoilSet(
+      heights=[10, 10, 20, 20],
+      widths=[10, 10, 20, 40],
+      center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+      rotation_angle=180
+   )
+
+   my_component = paramak.PoloidalFieldCoilCaseSetFC(
+      pf_coils=pf_coil_set,
+      casing_thicknesses=[5, 5, 10, 10],
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 
 .. image:: https://user-images.githubusercontent.com/8583900/93908750-e86f8b00-fcf6-11ea-938e-349dd09e5915.png
     :width: 586px
