@@ -5,8 +5,8 @@ import paramak
 import pytest
 
 
-class test_SingleNullBallReactor(unittest.TestCase):
-    """tests functionaliy of the test_SingleNullBallReactor class"""
+class TestSingleNullBallReactor(unittest.TestCase):
+    """tests functionality of the test_SingleNullBallReactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.SingleNullBallReactor(
@@ -36,8 +36,8 @@ class test_SingleNullBallReactor(unittest.TestCase):
             pf_coil_vertical_position=[300, 100, -100, -300],
         )
 
-    def test_input_varible_names(self):
-        """tests that the number of inputs varibles is correct"""
+    def test_input_variable_names(self):
+        """tests that the number of inputs variables is correct"""
 
         assert len(self.test_reactor.input_variables.keys()) == 28
         assert len(self.test_reactor.input_variable_names) == 28

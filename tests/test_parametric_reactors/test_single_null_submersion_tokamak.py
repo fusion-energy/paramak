@@ -37,8 +37,8 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
             divertor_position="lower"
         )
 
-    def test_input_varible_names(self):
-        """tests that the number of inputs varibles is correct"""
+    def test_input_variable_names(self):
+        """tests that the number of inputs variables is correct"""
 
         assert len(self.test_reactor.input_variables.keys()) == 29
         assert len(self.test_reactor.input_variable_names) == 29

@@ -35,8 +35,8 @@ class TestSegmentedBlanketBallReactor(unittest.TestCase):
             number_of_blanket_segments=4,
         )
 
-    def test_input_varible_names(self):
-        """tests that the number of inputs varibles is correct"""
+    def test_input_variable_names(self):
+        """tests that the number of inputs variable is correct"""
 
         assert len(self.test_reactor.input_variables.keys()) == 31
         assert len(self.test_reactor.input_variable_names) == 31

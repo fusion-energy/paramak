@@ -9,8 +9,8 @@ import paramak
 class TestITERReactor(unittest.TestCase):
     """Tests functionality of the ITERReactor class"""
 
-    def test_input_varible_names(self):
-        """tests that the number of inputs varibles is correct"""
+    def test_input_variable_names(self):
+        """tests that the number of inputs variables is correct"""
 
         my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
         assert len(my_reactor.input_variables.keys()) == 5

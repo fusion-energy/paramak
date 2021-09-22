@@ -47,8 +47,8 @@ class TestSparc2020Reactor(unittest.TestCase):
             "graveyard.stp",
         ]
 
-    def test_input_varible_names(self):
-        """tests that the number of inputs varibles is correct"""
+    def test_input_variables_names(self):
+        """tests that the number of inputs variables is correct"""
 
         assert len(self.test_reactor.input_variables.keys()) == 28
         assert len(self.test_reactor.input_variable_names) == 28

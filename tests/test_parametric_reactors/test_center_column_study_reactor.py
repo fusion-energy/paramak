@@ -29,8 +29,8 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
             rotation_angle=359
         )
 
-    def test_input_varible_names(self):
-        """tests that the number of inputs varibles is correct"""
+    def test_input_variable_names(self):
+        """tests that the number of inputs variables is correct"""
 
         assert len(self.test_reactor.input_variables.keys()) == 17
         assert len(self.test_reactor.input_variable_names) == 17
