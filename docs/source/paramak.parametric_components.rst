@@ -744,7 +744,7 @@ PortCutterRectangular()
    :select: cadquery_object
    :gridsize: 0
 
-   my_component = paramak.PortCutterRotated(
+   my_component = paramak.PortCutterRectangular(
       distance=3,
       center_point=(0, 0),
       height=0.2,
@@ -773,7 +773,7 @@ PortCutterCircular()
    :select: cadquery_object
    :gridsize: 0
 
-   my_component = paramak.PortCutterRotated(
+   my_component = paramak.PortCutterCircular(
       distance=3,
       center_point=(0.25, 0),
       radius=0.1,
