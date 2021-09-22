@@ -10,6 +10,13 @@ on:
     branches:
     - develop
     - main
+    paths-ignore:
+      - 'docs/**'
+      - '.gitignore'
+      - '*.md'
+      - 'CITATION.cff'
+      - 'LICENSE.txt'
+      - 'readthedocs.yml'
  
 jobs:
   testing:
