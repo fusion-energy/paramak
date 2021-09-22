@@ -110,57 +110,6 @@ BlanketFPPoloidalSegments()
    :members:
    :show-inheritance:
 
-BlanketFP()
-^^^^^^^^^^^
-
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.BlanketFP(
-      thickness=100,
-      stop_angle=-80,
-      start_angle=250,
-      offset_from_plasma=30,
-      rotation_angle=180
-   )
-
-   cadquery_object = my_component.solid
-
-.. image:: https://user-images.githubusercontent.com/8583900/94867319-f0d36e80-0438-11eb-8516-7b8f2a7cc7ee.png
-   :width: 350
-
-.. automodule:: paramak.parametric_components.blanket_fp
-   :members:
-   :show-inheritance:
-
-BlanketFPPoloidalSegments()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. cadquery::
-   :select: cadquery_object
-   :gridsize: 0
-
-   import paramak
-   my_component = paramak.BlanketFPPoloidalSegments(
-      num_segments=7,
-      segments_gap = 10,
-      thickness=100,
-      stop_angle=250,
-      start_angle=-90,
-      rotation_angle=180
-   )
-
-   cadquery_object = my_component.solid
-
-.. image:: https://user-images.githubusercontent.com/8583900/98870151-ca0e4c00-246a-11eb-8a37-e7620344d8c1.png
-   :width: 350
-
-.. automodule:: paramak.parametric_components.blanket_poloidal_segment
-   :members:
-   :show-inheritance:
-
 
 Blanket Cutting Tools
 ---------------------
@@ -358,6 +307,28 @@ CenterColumnShieldPlasmaHyperbola()
 InboardFirstwallFCCS()
 ^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+
+   shield_to_build_from = paramak.CenterColumnShieldCylinder(
+      inner_radius=80,
+      outer_radius=100,
+      height=300,
+      rotation_angle=180,
+   )
+
+   my_component = paramak.InboardFirstwallFCCS(
+      central_column_shield=shield_to_build_from,
+      thickness=50,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
+
 .. image:: https://user-images.githubusercontent.com/8583900/94197757-219e2b80-feae-11ea-8e41-0786d56c8b66.png
     :width: 786px
     :align: center
@@ -446,6 +417,18 @@ Divertors
 ITERtypeDivertor()
 ^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ITERtypeDivertor(
+      # default parameters
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 .. image:: https://user-images.githubusercontent.com/40028739/88180936-626b9100-cc2e-11ea-92df-1bac68b11e3b.png
     :width: 250px
     :align: center
@@ -474,6 +457,22 @@ Inner Toroidal Field Coils
 InnerTfCoilsCircular()
 ^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.InnerTfCoilsCircular(
+      inner_radius=25,
+      outer_radius=100,
+      number_of_coils=10,
+      gap_size=5,
+      height=300,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 |InnerTfCoilsCircularstp| |InnerTfCoilsCircularsvg|
 
 .. |InnerTfCoilsCircularstp| image:: https://user-images.githubusercontent.com/56687624/86241469-d9b38500-bb9a-11ea-935f-8644fa01ab8c.png
@@ -487,6 +486,22 @@ InnerTfCoilsCircular()
 
 InnerTfCoilsFlat()
 ^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.InnerTfCoilsFlat(
+      inner_radius=25,
+      outer_radius=100,
+      number_of_coils=10,
+      gap_size=5,
+      height=300,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
 
 |InnerTfCoilsFlatstp| |InnerTfCoilsFlatsvg|
 
@@ -505,6 +520,20 @@ Poloidal Field coils
 
 PoloidalFieldCoil()
 ^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalFieldCoil(
+      center_point=(100, 100),
+      height=20,
+      width=20,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
 
 |PoloidalFieldCoilstp| |PoloidalFieldCoilsvg|
 
@@ -534,6 +563,20 @@ PoloidalFieldCoilFP()
 PoloidalFieldCoilSet()
 ^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalFieldCoilSet(
+      heights=[10, 10, 20, 20],
+      widths=[10, 10, 20, 40],
+      center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
 .. image:: https://user-images.githubusercontent.com/8583900/93832861-eb269d80-fc6e-11ea-861c-45de724478a8.png
     :width: 395px
     :align: center
@@ -544,6 +587,21 @@ PoloidalFieldCoilSet()
 
 PoloidalFieldCoilCase()
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PoloidalFieldCoilCase(
+      center_point=(100, 100),
+      coil_height=20,
+      coil_width=20,
+      casing_thickness=10,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
 
 |PoloidalFieldCoilCasestp| |PoloidalFieldCoilCasesvg|
 
@@ -559,6 +617,28 @@ PoloidalFieldCoilCase()
 PoloidalFieldCoilCaseFC()
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+
+   pf_coil = paramak.PoloidalFieldCoil(
+      center_point=(100, 100),
+      height=20,
+      width=20,
+      rotation_angle=180,
+      stp_filename="poloidal_field_coil.stp"
+   )
+
+   my_component = paramak.PoloidalFieldCoilCaseFC(
+      pf_coil=pf_coil,
+      casing_thickness=10,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
 .. image:: https://user-images.githubusercontent.com/56687624/86241492-e1732980-bb9a-11ea-9331-586a39d32cfb.png
     :width: 220px
     :align: center
@@ -570,6 +650,22 @@ PoloidalFieldCoilCaseFC()
 PoloidalFieldCoilCaseSet()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+
+   my_component = paramak.PoloidalFieldCoilCaseSet(
+      heights=[10, 10, 20, 20],
+      widths=[10, 10, 20, 40],
+      casing_thicknesses=[5, 5, 10, 10],
+      center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
 .. image:: https://user-images.githubusercontent.com/8583900/93908750-e86f8b00-fcf6-11ea-938e-349dd09e5915.png
     :width: 586px
     :align: center
@@ -580,6 +676,26 @@ PoloidalFieldCoilCaseSet()
 
 PoloidalFieldCoilCaseSetFC()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   pf_coil_set = paramak.PoloidalFieldCoilSet(
+      heights=[10, 10, 20, 20],
+      widths=[10, 10, 20, 40],
+      center_points=[(100, 100), (100, 150), (50, 200), (50, 50)],
+      rotation_angle=180
+   )
+
+   my_component = paramak.PoloidalFieldCoilCaseSetFC(
+      pf_coils=pf_coil_set,
+      casing_thicknesses=[5, 5, 10, 10],
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 
 .. image:: https://user-images.githubusercontent.com/8583900/93908750-e86f8b00-fcf6-11ea-938e-349dd09e5915.png
     :width: 586px
@@ -596,6 +712,20 @@ Port Cutters
 PortCutterRotated()
 ^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   my_component = paramak.PortCutterRotated(
+      center_point=(450, 0),
+      polar_coverage_angle=20,
+      rotation_angle=10,
+      polar_placement_angle=45,
+      azimuth_placement_angle=0
+   )
+
+   cadquery_object = my_component.solid
+
 |PortCutterRotatedstp| |PortCutterRotatedsvg|
 
 .. |PortCutterRotatedstp| image:: https://user-images.githubusercontent.com/8583900/95115392-511a2700-073d-11eb-9cb9-d6d2bec80e2c.png
@@ -610,6 +740,21 @@ PortCutterRotated()
 PortCutterRectangular()
 ^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   my_component = paramak.PortCutterRectangular(
+      distance=3,
+      center_point=(0, 0),
+      height=0.2,
+      width=0.4,
+      fillet_radius=0.02,
+      azimuth_placement_angle=[0, 45, 90, 180]
+   )
+
+   cadquery_object = my_component.solid
+
 |PortCutterRectangularstp| |PortCutterRectangularsvg|
 
 .. |PortCutterRectangularstp| image:: https://user-images.githubusercontent.com/8583900/95790579-8f808a80-0cd7-11eb-83e1-872a98fe0bc8.png
@@ -623,6 +768,19 @@ PortCutterRectangular()
 
 PortCutterCircular()
 ^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   my_component = paramak.PortCutterCircular(
+      distance=3,
+      center_point=(0.25, 0),
+      radius=0.1,
+      azimuth_placement_angle=[0, 45, 90],
+   )
+
+   cadquery_object = my_component.solid
 
 |PortCutterCircularstp| |PortCutterCircularsvg|
 
@@ -641,6 +799,21 @@ Plasmas
 
 Plasma()
 ^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.Plasma(
+      major_radius=620,
+      minor_radius=210,
+      triangularity=0.33,
+      elongation=1.85,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
 
 |Plasmastp| |Plasmasvg|
 
@@ -669,6 +842,22 @@ PlasmaFromPoints()
 
 PlasmaBoundaries()
 ^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.PlasmaBoundaries(
+      A=-0.155,
+      major_radius=620,
+      minor_radius=210,
+      triangularity=0.33,
+      elongation=1.85,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
 
 .. image:: https://user-images.githubusercontent.com/8583900/97366104-a958ca80-189e-11eb-8bc6-9892b04ab053.png
     :width: 300px
@@ -733,6 +922,23 @@ ToroidalFieldCoilCoatHanger()
 ToroidalFieldCoilPrincetonD()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilPrincetonD(
+      R1=80,
+      R2=300,
+      thickness=30,
+      distance=30,
+      number_of_coils=1,
+      stp_filename="toroidal_field_coil_princeton_d.stp"
+   )
+
+   cadquery_object = my_component.solid
+
 |ToroidalFieldCoilPrincetonDallstp| |ToroidalFieldCoilPrincetonDsvg| |ToroidalFieldCoilPrincetonDastp|
 
 .. |ToroidalFieldCoilPrincetonDallstp| image:: https://user-images.githubusercontent.com/56687624/92124475-bd7bd080-edf5-11ea-9c49-1db6422d77a0.png
@@ -748,6 +954,25 @@ ToroidalFieldCoilPrincetonD()
 
 ToroidalFieldCoilTripleArc()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilTripleArc(
+      R1=80,
+      h=200,
+      radii=(70, 100),
+      coverages=(60, 60),
+      thickness=30,
+      distance=30,
+      number_of_coils=1,
+   )
+
+   cadquery_object = my_component.solid
+
+
 
 |ToroidalFieldCoilTripleArcallstp| |ToroidalFieldCoilTripleArcstp| |ToroidalFieldCoilTripleArcsvg|
 
@@ -803,6 +1028,20 @@ Vacuum Vessels
 VacuumVessel()
 ^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.VacuumVessel(
+      height=20,
+      inner_radius=10,
+      thickness=2,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
 |VacuumVesselstp| |VacuumVesselsvgWP| |VacuumVesselsvg|
 
 .. |VacuumVesselstp| image:: https://user-images.githubusercontent.com/8583900/95792842-2d765400-0cdc-11eb-8a8a-e3a88e923bc0.png
@@ -818,6 +1057,22 @@ VacuumVessel()
 
 VacuumVesselInnerLeg()
 ^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.VacuumVesselInnerLeg(
+      inner_height=760,
+      inner_radius=400,
+      inner_leg_radius=250,
+      thickness=20,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_component.solid
+
 
 |VacuumVesselInnerLegstp| |VacuumVesselInnerLegsvg|
 
@@ -881,6 +1136,19 @@ ExtrudeRectangle()
 HexagonPin()
 ^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.HexagonPin(
+      length_of_side=5,
+      distance=10,
+      center_point=(10, 20)
+   )
+
+   cadquery_object = my_component.solid
+
 |HexagonPinstp| |HexagonPinsvg|
 
 .. |HexagonPinstp| image:: https://user-images.githubusercontent.com/8583900/107092190-07307300-67fb-11eb-995c-b5622de717ee.png
@@ -895,6 +1163,22 @@ HexagonPin()
 RotatedTrapezoid()
 ^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotatedTrapezoid(
+      length_1=10,
+      length_2=20,
+      length_3=30,
+      pivot_angle=0,
+      pivot_point=(100, 50),
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
 |RotatedTrapezoidstp| |RotatedTrapezoidsvg|
 
 .. |RotatedTrapezoidstp| image:: https://user-images.githubusercontent.com/8583900/101964551-b42aad00-3c09-11eb-8ff2-fc0e52ba33cc.png
@@ -908,6 +1192,22 @@ RotatedTrapezoid()
 
 RotatedIsoscelesTriangle
 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotatedIsoscelesTriangle(
+      height=20,
+      base_length=15,
+      pivot_angle=0,
+      pivot_point=(100, 50),
+      rotation_angle=180,
+      workplane='XY'
+   )
+
+   cadquery_object = my_component.solid
 
 |RotatedIsoscelesTrianglestp| |RotatedIsoscelesTrianglesvg|
 
