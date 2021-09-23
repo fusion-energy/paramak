@@ -5,6 +5,7 @@ import paramak
 
 
 class TestSegmentedBlanketBallReactor(unittest.TestCase):
+    """Tests functionality of the SegmentedBlanketBallReactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.SegmentedBlanketBallReactor(
@@ -15,6 +16,7 @@ class TestSegmentedBlanketBallReactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=30,
             plasma_radial_thickness=300,
             outer_plasma_gap_radial_thickness=30,
+            plasma_gap_vertical_thickness=30,
             firstwall_radial_thickness=20,
             blanket_radial_thickness=50,
             blanket_rear_wall_radial_thickness=30,
@@ -32,6 +34,12 @@ class TestSegmentedBlanketBallReactor(unittest.TestCase):
             gap_between_blankets=30,
             number_of_blanket_segments=4,
         )
+
+    def test_input_variable_names(self):
+        """tests that the number of inputs variable is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 31
+        assert len(self.test_reactor.input_variable_names) == 31
 
     def test_gap_between_blankets_impacts_volume(self):
         """Creates a SegmentedBlanketBallReactor with different

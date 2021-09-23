@@ -3,10 +3,11 @@ import json
 import os
 import unittest
 from pathlib import Path
-from numpy.testing._private.utils import assert_
 
 import paramak
 import pytest
+from cadquery import Plane
+from numpy.testing._private.utils import assert_
 
 
 class TestShape(unittest.TestCase):
@@ -178,17 +179,17 @@ class TestShape(unittest.TestCase):
         )
 
     def test_incorrect_workplane(self):
-        """Creates Shape object with incorrect workplane and checks ValueError
-        is raised."""
+        """Creates Shape object with incorrect workplane and checks errors
+        are raised."""
 
-        test_shape = paramak.Shape(connection_type='straight')
+        with pytest.raises(ValueError):
+            paramak.Shape(workplane="AB")
 
-        def incorrect_workplane():
-            """Creates Shape object with unacceptable workplane."""
+        with pytest.raises(TypeError):
+            paramak.Shape(workplane=2)
 
-            test_shape.workplane = "AB"
-
-        self.assertRaises(ValueError, incorrect_workplane)
+        with pytest.raises(TypeError):
+            paramak.Shape(workplane=[1, 2])
 
     def test_incorrect_points(self):
         """Creates Shape objects and checks errors are raised correctly when
@@ -651,6 +652,19 @@ class TestShape(unittest.TestCase):
         self.assertRaises(ValueError, tet_mesh_float)
         self.assertRaises(ValueError, tet_mesh_int)
         self.assertRaises(ValueError, tet_mesh_list)
+
+    def test_workplane_of_type_cadquery_plane(self):
+        """Tests that a Cadquery.Plane is accepted as a workplane entry"""
+
+        normal_vec = (1, 1, 1)
+        workplane = Plane(origin=(0, 0, 0), xDir=(-1, 1, 0), normal=normal_vec)
+        # in future releases of CQ, origin and xDir will be optional
+
+        test_shape = paramak.Shape(
+            workplane=workplane,
+        )
+
+        assert isinstance(test_shape.workplane, Plane)
 
     def test_get_rotation_axis(self):
         """Creates a shape and test the expected rotation_axis is the correct

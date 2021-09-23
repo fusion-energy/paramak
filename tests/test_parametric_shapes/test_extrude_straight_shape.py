@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 import pytest
+from cadquery import Plane
 from paramak import ExtrudeStraightShape
 
 
@@ -13,6 +14,23 @@ class TestExtrudeStraightShape(unittest.TestCase):
         self.test_shape = ExtrudeStraightShape(
             points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
         )
+
+    def test_workplane_of_type_cadquery_plane(self):
+        """Tests that a Cadquery.Plane is accepted as a workplane entry and
+        makes a shape with the same volume as the default 'XY' workplane"""
+
+        normal_vec = (1, 1, 1)
+        workplane = Plane(origin=(0, 0, 0), xDir=(-1, 1, 0), normal=normal_vec)
+        # in future releases of CQ, origin and xDir will be optional
+
+        test_shape_2 = ExtrudeStraightShape(
+            workplane=workplane,
+            rotation_axis='X',
+            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
+        )
+
+        assert isinstance(test_shape_2.workplane, Plane)
+        assert pytest.approx(test_shape_2.volume, self.test_shape.volume)
 
     def test_volume_in_neutronics_description(self):
         assert 'volume' in self.test_shape.neutronics_description()[0].keys()

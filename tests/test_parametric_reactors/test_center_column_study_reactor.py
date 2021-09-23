@@ -9,6 +9,7 @@ import pytest
 
 
 class TestCenterColumnStudyReactor(unittest.TestCase):
+    """Test functionality of the CenterColumnStudyReactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.CenterColumnStudyReactor(
@@ -27,6 +28,12 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
             center_column_arc_vertical_thickness=520,
             rotation_angle=359
         )
+
+    def test_input_variable_names(self):
+        """tests that the number of inputs variables is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 17
+        assert len(self.test_reactor.input_variable_names) == 17
 
     def test_creation(self):
         """Creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
