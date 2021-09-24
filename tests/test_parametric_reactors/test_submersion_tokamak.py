@@ -89,7 +89,9 @@ class TestSubmersionTokamak(unittest.TestCase):
         can be exported using the export_stp method."""
 
         os.system("rm -r minimal_SubmersionTokamak")
-        self.test_reactor.export_stp("minimal_SubmersionTokamak")
+        self.test_reactor.export_stp(
+            "minimal_SubmersionTokamak", include_graveyard=True
+        )
 
         output_filenames = [
             "minimal_SubmersionTokamak/inboard_tf_coils.stp",
@@ -119,7 +121,9 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_radial_position = [100, 100]
         self.test_reactor.pf_coil_vertical_position = [100, -100]
 
-        self.test_reactor.export_stp("pf_SubmersionTokamak")
+        self.test_reactor.export_stp(
+            "pf_SubmersionTokamak", include_graveyard=True
+        )
 
         output_filenames = [
             "pf_SubmersionTokamak/inboard_tf_coils.stp",
@@ -153,7 +157,9 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_case_thicknesses = 10
         self.test_reactor.number_of_tf_coils = 4
 
-        self.test_reactor.export_stp("tf_pf_SubmersionTokamak")
+        self.test_reactor.export_stp(
+            "tf_pf_SubmersionTokamak", include_graveyard=True
+        )
 
         output_filenames = [
             "tf_pf_SubmersionTokamak/inboard_tf_coils.stp",

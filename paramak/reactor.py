@@ -326,8 +326,8 @@ class Reactor:
     def neutronics_description(
             self,
             include_plasma: Optional[bool] = False,
-            include_graveyard: Optional[bool] = True,
-            include_sector_wedge: Optional[bool] = True,
+            include_graveyard: Optional[bool] = False,
+            include_sector_wedge: Optional[bool] = False,
     ) -> dict:
         """A description of the reactor containing material tags, stp filenames,
         and tet mesh instructions. This is used for neutronics simulations
@@ -439,7 +439,7 @@ class Reactor:
             self,
             filename: Optional[str] = "manifest.json",
             include_plasma: Optional[bool] = False,
-            include_graveyard: Optional[bool] = True,
+            include_graveyard: Optional[bool] = False,
             include_sector_wedge: Optional[bool] = False,
     ) -> str:
         """
@@ -499,8 +499,8 @@ class Reactor:
             self,
             output_folder: Optional[str] = "",
             mode: Optional[str] = 'solid',
-            include_graveyard: Optional[bool] = True,
-            include_sector_wedge: Optional[bool] = True,
+            include_graveyard: Optional[bool] = False,
+            include_sector_wedge: Optional[bool] = False,
             units: Optional[str] = 'mm',
             filename: Optional[str] = None
     ) -> List[str]:
@@ -512,19 +512,19 @@ class Reactor:
             mode: the object to export can be either 'solid' which exports 3D
                 solid shapes or the 'wire' which exports the wire edges of the
                 shape.
-            include_graveyard: specifiy if the graveyard will be included or
+            include_graveyard: specify if the graveyard will be included or
                 not. If True the the Reactor.make_graveyard will be called
                 using Reactor.graveyard_size and Reactor.graveyard_offset
                 attribute values.
             include_sector_wedge: specifies if a sector_wedge will be exported.
-                This wedge is useful when constructing reflectin surfaces in
-                DAGMC geometry. If set to True the the self.rotation_agle must
+                This wedge is useful when constructing reflecting surfaces in
+                DAGMC geometry. If set to True the the self.rotation_angle must
                 also be set.
             units: the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
             filename: If specified all the shapes will be combined into a
-                single file. If left as Default (None) then the seperate shapes
-                are saved as seperate files using their shape.stp_filename
+                single file. If left as Default (None) then the separate shapes
+                are saved as separate files using their shape.stp_filename
                 attribute. output_folder is ignored if filename is set.
         Returns:
             list: a list of stp filenames created
@@ -595,14 +595,14 @@ class Reactor:
             self,
             output_folder: Optional[str] = "",
             tolerance: Optional[float] = 0.001,
-            include_graveyard: Optional[bool] = True,
+            include_graveyard: Optional[bool] = False,
     ) -> List[str]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
             output_folder (str): the folder for saving the stl files to
             tolerance (float):  the precision of the faceting
-            include_graveyard: specifiy if the graveyard will be included or
+            include_graveyard: specify if the graveyard will be included or
                 not. If True the the Reactor.make_graveyard will be called
                 using Reactor.graveyard_size and Reactor.graveyard_offset
                 attribute values.
@@ -658,9 +658,9 @@ class Reactor:
 
         Args:
             height: The height of the rotated wedge. If None then the
-                largest_dimention of the model will be used.
+                largest_dimension of the model will be used.
             radius: The radius of the rotated wedge. If None then the
-                largest_dimention of the model will be used
+                largest_dimension of the model will be used
             rotation_angle: The rotation angle of the wedge will be the
                 inverse of the sector
             stp_filename:
@@ -823,7 +823,7 @@ class Reactor:
         """Writes a stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard() with the graveyard_size and graveyard_size
-        vaules.
+        values.
 
         Args:
             filename (str): the filename for saving the stp file. Appends
@@ -895,7 +895,7 @@ class Reactor:
         else:
             raise ValueError("the graveyard_size, Reactor.graveyard_size, \
                 graveyard_offset and Reactor.graveyard_offset are all None. \
-                Please specify at least one of these attributes or agruments")
+                Please specify at least one of these attributes or arguments")
 
         graveyard_shape = paramak.HollowCube(
             length=graveyard_size_to_use,
