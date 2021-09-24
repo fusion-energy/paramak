@@ -593,7 +593,9 @@ class TestReactor(unittest.TestCase):
         test_shape.stp_filename = "test_shape.stp"
         test_reactor = paramak.Reactor([test_shape])
 
-        test_reactor.export_stp(output_folder="test_reactor")
+        test_reactor.export_stp(
+            output_folder="test_reactor", include_graveyard=True
+        )
 
         assert Path("test_reactor/test_shape.stp").exists() is True
         assert Path("test_reactor/graveyard.stp").exists() is True
@@ -611,7 +613,9 @@ class TestReactor(unittest.TestCase):
         test_shape.stl_filename = "test_shape.stl"
         test_reactor = paramak.Reactor([test_shape])
 
-        test_reactor.export_stl(output_folder="test_reactor")
+        test_reactor.export_stl(
+            output_folder="test_reactor", include_graveyard=True
+        )
 
         for filepath in [
             "test_reactor/test_shape.stl",
@@ -721,7 +725,9 @@ class TestReactor(unittest.TestCase):
         test_shape.material_tag = "test_material"
         test_shape.stp_filename = "test.stp"
         test_reactor = paramak.Reactor([test_shape])
-        neutronics_description = test_reactor.neutronics_description()
+        neutronics_description = test_reactor.neutronics_description(
+            include_graveyard=True
+        )
 
         assert len(neutronics_description) == 2
         assert "stp_filename" in neutronics_description[0].keys()
@@ -746,7 +752,7 @@ class TestReactor(unittest.TestCase):
         test_shape.tet_mesh = "size 60"
         test_reactor = paramak.Reactor([test_shape])
         returned_filename = test_reactor.export_neutronics_description(
-            filename="manifest_test.json"
+            filename="manifest_test.json", include_graveyard=True
         )
         with open("manifest_test.json") as json_file:
             neutronics_description = json.load(json_file)
@@ -897,7 +903,9 @@ class TestReactor(unittest.TestCase):
         test_shape.tet_mesh = "size 60"
         test_plasma = paramak.Plasma(major_radius=500, minor_radius=100)
         test_reactor = paramak.Reactor([test_shape, test_plasma])
-        returned_filename = test_reactor.export_neutronics_description()
+        returned_filename = test_reactor.export_neutronics_description(
+            include_graveyard=True
+        )
         with open("manifest.json") as json_file:
             neutronics_description = json.load(json_file)
 

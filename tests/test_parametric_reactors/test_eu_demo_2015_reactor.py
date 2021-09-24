@@ -61,7 +61,7 @@ class TestDemo2015Reactor(unittest.TestCase):
         ]
         os.system("rm *.stp")
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1)
-        my_reactor.export_stp()
+        my_reactor.export_stp(include_graveyard=True)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")
@@ -87,7 +87,7 @@ class TestDemo2015Reactor(unittest.TestCase):
         os.system("rm *.stp")
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(
             number_of_tf_coils=1, rotation_angle=90)
-        my_reactor.export_stp()
+        my_reactor.export_stp(include_graveyard=True)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")

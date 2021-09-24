@@ -442,7 +442,9 @@ class Shape:
 
     @property
     def processed_points(self):
-        """Shape.processed_points attributes is set internally from the Shape.points"""
+        """Shape.processed_points attributes is set internally from the
+        Shape.points"""
+
         if self.points is not None:
             # if .points have changed since last time this was run
             if self.old_points != self.points:
@@ -1338,21 +1340,11 @@ class Shape:
         neutronics model. Creating of the neutronics model requires linkage
         between volumes, materials and identification of which volumes to
         tet_mesh. If the filename does not end with .json then .json will be
-        added. The plasma geometry is not included by default as it is
-        typically not included in neutronics simulations. The reason for this
-        is that the low number density results in minimal interactions with
-        neutrons. However, the plasma can be added if the include_plasma
-        argument is set to True.
+        added.
 
         Args:
             filename (str, optional): the filename used to save the neutronics
                 description
-            include_plasma (Boolean, optional): should the plasma be included.
-                Defaults to False as the plasma volume and material has very
-                little impact on the neutronics results due to the low density.
-                Including the plasma does however slow down the simulation.
-            include_graveyard (Boolean, optional): should the graveyard be
-                included. Defaults to True as this is needed for DAGMC models.
         """
 
         path_filename = Path(filename)
