@@ -1,5 +1,4 @@
 from typing import Optional, Tuple, Union
-from _pytest.python_api import raises
 
 import cadquery as cq
 import numpy as np
