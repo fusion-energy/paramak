@@ -7,10 +7,12 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-from cadquery import Assembly, Color, Compound, Workplane, exporters, importers, Plane
+from cadquery import (Assembly, Color, Compound, Plane, Workplane, exporters,
+                      importers)
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
+from OCP.BRepTools import BRepTools
 
 import paramak
 from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
@@ -923,6 +925,28 @@ class Shape:
 
         if verbose:
             print("Saved file as ", path_filename)
+
+        return str(path_filename)
+
+    def export_brep(
+        self,
+        filename
+    ):
+        """Exports a brep file for the Shape.solid. If the provided filename
+        doesn't end with .brep it will be added.
+
+        Args:
+            filename: the filename of exported the brep file.
+        """
+
+        path_filename = Path(filename)
+
+        if path_filename.suffix != ".brep":
+            path_filename = path_filename.with_suffix(".brep")
+
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        BRepTools.Write_s(self.solid.toOCC(), path_filename)
 
         return str(path_filename)
 
