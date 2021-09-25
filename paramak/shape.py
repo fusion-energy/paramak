@@ -946,7 +946,7 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        BRepTools.Write_s(self.solid.toOCC(), path_filename)
+        BRepTools.Write_s(self.solid.toOCC(), str(path_filename))
 
         return str(path_filename)
 
