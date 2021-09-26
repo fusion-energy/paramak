@@ -15,29 +15,20 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
             coil casing (cm). If float then the same thickness is applied to
             all coils. If list of floats then each entry is applied to a
             seperate pf_coil, one entry for each pf_coil.
-        stp_filename (str, optional): defaults to "PoloidalFieldCoilCaseSetFC.stp".
-        stl_filename (str, optional): defaults to "PoloidalFieldCoilCaseSetFC.stl".
         name (str, optional): defaults to "pf_coil_case_set_fc".
-        material_tag (str, optional): defaults to "pf_coil_mat".
     """
 
     def __init__(
         self,
         pf_coils,
         casing_thicknesses,
-        stp_filename="PoloidalFieldCoilCaseSetFC.stp",
-        stl_filename="PoloidalFieldCoilCaseSetFC.stl",
         name="pf_coil_case_set_fc",
-        material_tag="pf_coil_mat",
         color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
         **kwargs
     ):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

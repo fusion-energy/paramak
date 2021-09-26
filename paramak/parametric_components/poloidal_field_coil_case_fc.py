@@ -12,28 +12,17 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
         pf_coil (paramak.PoloidalFieldCoil): a pf coil object with a set width,
             height and center point.
         casing_thickness (float): the thickness of the coil casing (cm).
-        stp_filename (str, optional): defaults to
-            "PoloidalFieldCoilCaseFC.stp".
-        stl_filename (str, optional): defaults to
-            "PoloidalFieldCoilCaseFC.stl".
-        material_tag (str, optional): defaults to "pf_coil_case_mat".
     """
 
     def __init__(
         self,
         pf_coil,
         casing_thickness,
-        stp_filename="PoloidalFieldCoilCaseFC.stp",
-        stl_filename="PoloidalFieldCoilCaseFC.stl",
-        material_tag="pf_coil_case_mat",
         color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
         **kwargs
     ):
 
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

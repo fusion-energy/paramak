@@ -16,9 +16,6 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         inner_lower_point: the x,z coordinates of the lower point on the
             inner surface of the blanket.
         thickness: the radial thickness of the blanket in cm.
-        stp_filename: Defaults to "BlanketConstantThicknessArcV.stp".
-        stl_filename: Defaults to "BlanketConstantThicknessArcV.stl".
-        material_tag: Defaults to "blanket_mat".
     """
 
     def __init__(
@@ -27,18 +24,10 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
         inner_upper_point: Tuple[float, float],
         inner_lower_point: Tuple[float, float],
         thickness: float,
-        stp_filename: Optional[str] = "BlanketConstantThicknessArcV.stp",
-        stl_filename: Optional[str] = "BlanketConstantThicknessArcV.stl",
-        material_tag: Optional[str] = "blanket_mat",
         **kwargs
     ) -> None:
 
-        super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            **kwargs
-        )
+        super().__init__(**kwargs)
 
         self.inner_upper_point = inner_upper_point
         self.inner_lower_point = inner_lower_point

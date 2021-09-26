@@ -41,9 +41,6 @@ class BlanketFP(RotateMixedShape):
             (angles and offsets) then these will be used together with linear
             interpolation.
         num_points: number of points that will describe the shape.
-        stp_filename: The default filename to use when exporting as a stp file.
-        stl_filename: The default filename to use when exporting as a stl file.
-        material_tag: The material tag to use in DAGMC geometry exports.
     """
 
     def __init__(self,
@@ -60,17 +57,9 @@ class BlanketFP(RotateMixedShape):
                  vertical_displacement: Optional[float] = 0.0,
                  offset_from_plasma: Optional[float] = 0.0,
                  num_points: Optional[int] = 50,
-                 stp_filename: Optional[str] = "BlanketFP.stp",
-                 stl_filename: Optional[str] = "BlanketFP.stl",
-                 material_tag: Optional[str] = "blanket_mat",
                  **kwargs):
 
-        super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            **kwargs
-        )
+        super().__init__(**kwargs)
 
         self.thickness = thickness
         self.start_angle, self.stop_angle = None, None

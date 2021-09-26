@@ -10,9 +10,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         inner_radius: the inner radius of the center column shield.
         outer_radius: the outer radius of the center column shield.
         center_height: the vertical height of the center of the component.
-        stp_filename: Defaults to "CenterColumnShieldCylinder.stp".
-        stl_filename: Defaults to "CenterColumnShieldCylinder.stl".
-        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -22,9 +19,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         outer_radius: float,
         center_height: Optional[float] = 0,
         name: Optional[str] = "CenterColumnShieldCylinder",
-        stp_filename: Optional[str] = "CenterColumnShieldCylinder.stp",
-        stl_filename: Optional[str] = "CenterColumnShieldCylinder.stl",
-        material_tag: Optional[str] = "center_column_shield_mat",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (
             0.0,
             0.333,
@@ -34,9 +28,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     ) -> None:
 
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             name=name,
             **kwargs

@@ -13,9 +13,6 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         inner_radius: the inner radius of the vessel.
         inner_leg_radius: the inner radius of the inner leg.
         thickness: thickness of the vessel
-        stp_filename: defaults to "CenterColumnShieldCylinder.stp".
-        stl_filename: defaults to "CenterColumnShieldCylinder.stl".
-        material_tag: defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -24,9 +21,6 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         inner_radius: float,
         inner_leg_radius: float,
         thickness: float,
-        stp_filename: Optional[float] = "CenterColumnShieldCylinder.stp",
-        stl_filename: Optional[float] = "CenterColumnShieldCylinder.stl",
-        material_tag: Optional[float] = "center_column_shield_mat",
         **kwargs
     ):
         self.inner_height = inner_height
@@ -34,9 +28,6 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         self.inner_leg_radius = inner_leg_radius
         self.thickness = thickness
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

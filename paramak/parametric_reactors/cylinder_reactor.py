@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import paramak
 
@@ -68,6 +68,26 @@ class CylinderReactor(paramak.Reactor):
             'rotation_angle',
         ]
 
+    def export_stp(
+        self,
+        filename: Union[List[str], str] = [
+            'blanket.stp',
+            'vacuum_vessel.stp',
+            'upper_blanket.stp',
+            'lower_blanket.stp',
+            'lower_vacuum_vessel.stp',
+            'lower_vacuum_vessel.stp'
+            ],
+        mode: Optional[str] = 'solid',
+        units: Optional[str] = 'mm',
+    ):
+
+        filenames = super().export_stp(
+            filename=filename, model=mode, units=units
+        )
+
+        return filenames
+
     def create_solids(self):
         """Creates a list of paramak.Shape for components and saves it in
         self.shapes_and_components
@@ -93,7 +113,7 @@ class CylinderReactor(paramak.Reactor):
                  (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="lower_vv.stp",
+            # stp_filename="lower_vv.stp",
             material_tag="vv_mat",
             color=(
                 0.5,
@@ -113,7 +133,6 @@ class CylinderReactor(paramak.Reactor):
                 (0, -self.blanket_height / 2.0),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="lower_blanket.stp",
             material_tag="blanket_mat",
             color=(0.0, 1.0, 0.498),
             name="lower blanket",
@@ -124,7 +143,7 @@ class CylinderReactor(paramak.Reactor):
             inner_radius=self.inner_blanket_radius,
             outer_radius=self.blanket_thickness + self.inner_blanket_radius,
             rotation_angle=self.rotation_angle,
-            stp_filename="blanket.stp",
+            # stp_filename="blanket.stp",
             cut=lower_blanket,
             material_tag="blanket_mat",
             color=(0.0, 1.0, 0.498),
@@ -149,7 +168,7 @@ class CylinderReactor(paramak.Reactor):
                 (0, (self.blanket_height / 2.0) + self.upper_vv_thickness),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="upper_blanket.stp",
+            # stp_filename="upper_blanket.stp",
             material_tag="blanket_mat",
             color=(0.0, 1.0, 0.498),
             name="upper blanket",
@@ -163,7 +182,7 @@ class CylinderReactor(paramak.Reactor):
                 (0, self.blanket_height / 2.0),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="upper_vv.stp",
+            # stp_filename="upper_vv.stp",
             material_tag="vv_mat",
             color=(0.5, 0.5, 0.5),
             name="upper vacuum vessel",
@@ -197,7 +216,7 @@ class CylinderReactor(paramak.Reactor):
                 ),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="vv.stp",
+            # stp_filename="vv.stp",
             material_tag="vv_mat",
             color=(0.5, 0.5, 0.5),
             name="vacuum vessel",

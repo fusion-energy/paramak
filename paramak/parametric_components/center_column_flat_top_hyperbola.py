@@ -16,10 +16,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         mid_radius: the inner radius of the outer hyperbolic profile of the
             center column shield.
         outer_radius: the outer_radius of the center column shield.
-        stp_filename: Defaults to "CenterColumnShieldFlatTopHyperbola.stp".
-        stl_filename: Defaults to "CenterColumnShieldFlatTopHyperbola.stl".
         name: Defaults to "center_column".
-        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -29,10 +26,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         inner_radius: float,
         mid_radius: float,
         outer_radius: float,
-        stp_filename: Optional[str] = "CenterColumnShieldFlatTopHyperbola.stp",
-        stl_filename: Optional[str] = "CenterColumnShieldFlatTopHyperbola.stl",
         name: Optional[str] = "center_column",
-        material_tag: Optional[str] = "center_column_shield_mat",
         color: Optional[Tuple[float, float, float,
                               Optional[float]]] = (0., 0.333, 0.),
         **kwargs
@@ -40,9 +34,6 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

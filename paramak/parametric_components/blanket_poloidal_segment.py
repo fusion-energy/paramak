@@ -18,7 +18,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
             length_limits and nb_segments_limits are not None, segments angles
             will be linearly distributed. Else, an optimum configuration
             meeting the set requirements will be found. Defaults to None.
-        num_segments: Number of segments (igored if segments_angles is not
+        num_segments: Number of segments (ignored if segments_angles is not
             None).
         length_limits: The minimum and maximum acceptable length of the
             segments. Ex: (100, 500), (100, None), (None, 300), None, (None,
@@ -37,9 +37,8 @@ class BlanketFPPoloidalSegments(BlanketFP):
         segments_gap: Optional[float] = 0.0,
         **kwargs
     ):
-        super().__init__(
-            **kwargs
-        )
+        super().__init__(**kwargs)
+
         self.num_segments = num_segments
         self.length_limits = length_limits
         self.nb_segments_limits = nb_segments_limits

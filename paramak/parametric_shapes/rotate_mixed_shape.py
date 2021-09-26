@@ -11,22 +11,16 @@ class RotateMixedShape(Shape):
     Args:
         rotation_angle: The rotation_angle to use when revolving the solid
             (degrees). Defaults to 360.0.
-        stp_filename:  Defaults to "RotateMixedShape.stp".
-        stl_filename:  Defaults to "RotateMixedShape.stl".
     """
 
     def __init__(
         self,
         rotation_angle: Optional[float] = 360.,
-        stp_filename: Optional[str] = "RotateMixedShape.stp",
-        stl_filename: Optional[str] = "RotateMixedShape.stl",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.121, 0.47, 0.705),
         **kwargs
     ):
 
         super().__init__(
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

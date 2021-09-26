@@ -21,13 +21,7 @@ class Reactor:
     (bounding box) that is useful for neutronics simulations.
 
     Args:
-        shapes_and_components (list): list of paramak.Shape objects or the
-            filename of json file that contains the neutronics description of
-            the geometry. The list of dictionaries should each have a
-            "material" key containing a material_tag value and a "stp_filename"
-            key containing the path to the stp file. See the
-            external_stp_file_simulation.py script in the examples folder for a
-            complete example.
+        shapes_and_components: list of paramak.Shape objects
         graveyard_size: The dimension of cube shaped the graveyard region used
             by DAGMC. This attribute is used preferentially over
             graveyard_offset.
@@ -43,7 +37,7 @@ class Reactor:
 
     def __init__(
             self,
-            shapes_and_components: Union[List[paramak.Shape], str] = [],
+            shapes_and_components: List[paramak.Shape] = [],
             graveyard_size: Optional[float] = 20_000,
             graveyard_offset: Optional[float] = None,
             largest_shapes: Optional[List[paramak.Shape]] = None,
@@ -106,50 +100,6 @@ class Reactor:
         self._graveyard_offset = value
 
     @property
-    def stp_filenames(self):
-        values = []
-        if isinstance(self.shapes_and_components, str):
-            with open(self.shapes_and_components) as json_file:
-                data = json.load(json_file)
-            for entry in data:
-                if 'stp_filename' in entry.keys():
-                    values.append(entry['stp_filename'])
-                else:
-                    raise ValueError(
-                        'Entry is missing stp_filename key', entry)
-        else:
-            for shape_or_component in self.shapes_and_components:
-                values.append(shape_or_component.stp_filename)
-
-        return values
-
-    @stp_filenames.setter
-    def stp_filenames(self, value):
-        self._stp_filenames = value
-
-    @property
-    def stl_filenames(self):
-        values = []
-        if isinstance(self.shapes_and_components, str):
-            with open(self.shapes_and_components) as json_file:
-                data = json.load(json_file)
-            for entry in data:
-                if 'stl_filename' in entry.keys():
-                    values.append(entry['stl_filename'])
-                else:
-                    raise ValueError(
-                        'Entry is missing stl_filename key', entry)
-        else:
-            for shape_or_component in self.shapes_and_components:
-                values.append(shape_or_component.stl_filename)
-
-        return values
-
-    @stl_filenames.setter
-    def stl_filenames(self, value):
-        self._stl_filenames = value
-
-    @property
     def largest_dimension(self):
         """Calculates a bounding box for the Reactor and returns the largest
         absolute value of the largest dimension of the bounding box"""
@@ -197,8 +147,7 @@ class Reactor:
     def shapes_and_components(self):
         """Adds a list of parametric shape(s) and or parametric component(s)
         to the Reactor object. This allows collective operations to be
-        performed on all the shapes in the reactor. When adding a shape or
-        component the stp_filename of the shape or component should be unique"""
+        performed on all the shapes in the reactor."""
         if hasattr(self, "create_solids"):
             ignored_keys = ["reactor_hash_value"]
             if get_hash(self, ignored_keys) != self.reactor_hash_value:
@@ -228,30 +177,44 @@ class Reactor:
 
     @property
     def solid(self):
-        """This combines all the parametric shapes and components in the reactor
-        object.
+        """This combines all the parametric shapes and components in the
+        reactor object.
         """
 
-        if isinstance(self.shapes_and_components, str):
-            list_of_cq_vals = []
-            for entry in self.stp_filenames:
-                # When loading an stp file the solid object is the first part
-                # of the tuple, hence the [0]
-                loaded_shape = paramak.utils.load_stp_file(entry)[0]
-                list_of_cq_vals.append(loaded_shape)
+        list_of_cq_vals = []
+        for shape_or_compound in self.shapes_and_components:
+            if isinstance(
+                shape_or_compound.solid,
+                (cq.occ_impl.shapes.Shape,
+                    cq.occ_impl.shapes.Compound)):
+                for solid in shape_or_compound.solid.Solids():
+                    list_of_cq_vals.append(solid)
+            else:
+                list_of_cq_vals.append(shape_or_compound.solid.val())
 
-        else:
+        compound = cq.Compound.makeCompound(list_of_cq_vals)
 
-            list_of_cq_vals = []
-            for shape_or_compound in self.shapes_and_components:
-                if isinstance(
-                    shape_or_compound.solid,
-                    (cq.occ_impl.shapes.Shape,
-                        cq.occ_impl.shapes.Compound)):
-                    for solid in shape_or_compound.solid.Solids():
-                        list_of_cq_vals.append(solid)
-                else:
-                    list_of_cq_vals.append(shape_or_compound.solid.val())
+        return compound
+
+    @property
+    def solid_with_graveyard(self):
+        """This combines all the parametric shapes and components in the
+        reactor object with a graveyard.
+        """
+
+        list_of_cq_vals = []
+        for shape_or_compound in self.shapes_and_components:
+            if isinstance(
+                shape_or_compound.solid,
+                (cq.occ_impl.shapes.Shape,
+                    cq.occ_impl.shapes.Compound)):
+                for solid in shape_or_compound.solid.Solids():
+                    list_of_cq_vals.append(solid)
+            else:
+                list_of_cq_vals.append(shape_or_compound.solid.val())
+        list_of_cq_vals.append(shape_or_compound.solid.val())
+
+        list_of_cq_vals.append(self.make_graveyard())
 
         compound = cq.Compound.makeCompound(list_of_cq_vals)
 
@@ -323,186 +286,11 @@ class Reactor:
 
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
-    def neutronics_description(
-            self,
-            include_plasma: Optional[bool] = False,
-            include_graveyard: Optional[bool] = False,
-            include_sector_wedge: Optional[bool] = False,
-    ) -> dict:
-        """A description of the reactor containing material tags, stp filenames,
-        and tet mesh instructions. This is used for neutronics simulations
-        which require linkage between volumes, materials and identification of
-        which volumes to tet mesh. The plasma geometry is not included by
-        default as it is typically not included in neutronics simulations. The
-        reason for this is that the low number density results in minimal
-        interaction with neutrons. However, it can be added if the
-        include_plasma argument is set to True.
-
-        Args:
-            include_plasma: Should the plasma material be included in the JSON
-                returned.
-
-        Returns:
-            dictionary: a dictionary of materials and filenames for the reactor
-        """
-
-        neutronics_description = []
-
-        for entry in self.shapes_and_components:
-
-            if include_plasma is False and (isinstance(
-                entry,
-                (paramak.Plasma,
-                 paramak.PlasmaFromPoints,
-                 paramak.PlasmaBoundaries)) is True or entry.name == 'plasma'):
-                continue
-
-            if entry.stp_filename is None:
-                raise ValueError(
-                    "Set Shape.stp_filename for all the \
-                                  Reactor entries before using this method"
-                )
-
-            if entry.material_tag is None:
-                msg = (
-                    f"Shape with name {entry.name} has no material_tag. Set "
-                    "shape.material_tag for all the shapes in "
-                    "Reactor.shapes_and_components")
-                raise ValueError(msg)
-
-            neutronics_description.append(entry.neutronics_description()[0])
-
-        # This add the neutronics description for the graveyard which is
-        # special as it is automatically calculated instead of being added by
-        # the user. Also the graveyard must have 'graveyard' as the material
-        # name for using in DAGMC with OpenMC
-        if include_graveyard:
-            # this only takes the json values so the actual size doesn't matter
-            self.make_graveyard(graveyard_size=1)
-            neutronics_description.append(
-                self.graveyard.neutronics_description()[0])
-
-        # This add the neutronics description for the sector which is
-        # special as it is automatically calculated instead of being added by
-        # the user. Also the graveyard must have 'Vaccum' as the material
-        # name for using in DAGMC with OpenMC
-        if include_sector_wedge:
-            # this only takes the json values so the actual size doesn't matter
-            sector_wedge = self.make_sector_wedge(height=1, radius=1)
-            if sector_wedge is not None:
-                neutronics_description.append(
-                    sector_wedge.neutronics_description()[0])
-
-        return neutronics_description
-
-    def material_tag(
-            self,
-            include_plasma: Optional[bool] = False,
-            allow_repeats: Optional[bool] = True,
-    ) -> List[str]:
-        """Returns a set of all the materials_tags used in the Reactor
-        optionally with or without the plasma.
-
-        Args:
-            include_plasma: Should the plasma material be included in the list
-                of materials returned.
-            allow_repeats: Material tags for individual shapes could be the
-                same. This flag allows repeat occurrences to be removed (False)
-                or kept (True).
-
-        Returns:
-            A list of the material tags
-        """
-
-        if not isinstance(allow_repeats, bool):
-            msg = f'allow_repeats must be either True or False. Not {allow_repeats}'
-            raise ValueError(msg)
-
-        values = []
-        for shape_or_component in self.shapes_and_components:
-            if include_plasma:
-                values.append(shape_or_component.material_tag)
-            else:
-                if not isinstance(
-                    shape_or_component,
-                    (paramak.Plasma,
-                     paramak.PlasmaFromPoints,
-                     paramak.PlasmaBoundaries)):
-                    values.append(shape_or_component.material_tag)
-
-        if allow_repeats:
-            return values
-
-        return list(set(values))
-
-    def export_neutronics_description(
-            self,
-            filename: Optional[str] = "manifest.json",
-            include_plasma: Optional[bool] = False,
-            include_graveyard: Optional[bool] = False,
-            include_sector_wedge: Optional[bool] = False,
-    ) -> str:
-        """
-        Saves Reactor.neutronics_description to a json file. The resulting json
-        file contains a list of dictionaries. Each dictionary entry comprises
-        of a material and a filename and optionally a tet_mesh instruction. The
-        json file can then be used with the neutronics workflows to create a
-        neutronics model. Creating of the neutronics model requires linkage
-        between volumes, materials and identification of which volumes to
-        tet_mesh. If the filename does not end with .json then .json will be
-        added. The plasma geometry is not included by default as it is
-        typically not included in neutronics simulations. The reason for this
-        is that the low number density results in minimal interactions with
-        neutrons. However, the plasma can be added if the include_plasma
-        argument is set to True.
-
-        Args:
-            filename (str, optional): the filename used to save the neutronics
-                description
-            include_plasma: should the plasma be included. Defaults to False
-                as the plasma volume and material has very little impact on
-                the neutronics results due to the low density. Including the
-                plasma does however slow down the simulation.
-            include_graveyard: should the graveyard be included. Defaults to
-                True as this is needed for DAGMC models.
-            include_sector_wedge: should the sector wedge be included.
-                Defaults to False as this is only needed for DAGMC sector
-                models.
-
-        Returns:
-            filename of the neutronics description file saved
-        """
-
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".json":
-            path_filename = path_filename.with_suffix(".json")
-
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-
-        with open(path_filename, "w") as outfile:
-            json.dump(
-                self.neutronics_description(
-                    include_plasma=include_plasma,
-                    include_graveyard=include_graveyard,
-                    include_sector_wedge=include_sector_wedge,
-                ),
-                outfile,
-                indent=4,
-            )
-
-        print("saved geometry description to ", path_filename)
-
-        return str(path_filename)
-
     def export_stp(
             self,
-            output_folder: Optional[str] = "",
+            filename: Union[List[str], str],
             mode: Optional[str] = 'solid',
-            include_graveyard: Optional[bool] = False,
-            include_sector_wedge: Optional[bool] = False,
             units: Optional[str] = 'mm',
-            filename: Optional[str] = None
     ) -> List[str]:
         """Writes stp files (CAD geometry) for each Shape object in the reactor
         and the graveyard.
@@ -523,84 +311,64 @@ class Reactor:
             units: the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
             filename: If specified all the shapes will be combined into a
-                single file. If left as Default (None) then the separate shapes
-                are saved as separate files using their shape.stp_filename
-                attribute. output_folder is ignored if filename is set.
+                single file.
         Returns:
             list: a list of stp filenames created
         """
 
-        if filename is None:
-            if len(self.stp_filenames) != len(set(self.stp_filenames)):
-                print([item for item, count in collections.Counter(
-                    self.stp_filenames).items() if count > 1])
-                raise ValueError(
-                    "Set Reactor already contains shapes with the "
-                    "same stp_filename")
+        if isinstance(filename, str):
 
-            filenames = []
+            # exports a single file for the whole model
+            assembly = cq.Assembly(name='reactor')
             for entry in self.shapes_and_components:
-                if entry.stp_filename is None:
-                    raise ValueError(
-                        "set .stp_filename property for \
-                                    Shapes before using the export_stp method"
-                    )
-                filenames.append(
-                    str(Path(output_folder) / Path(entry.stp_filename)))
-                entry.export_stp(
-                    filename=Path(output_folder) / Path(entry.stp_filename),
-                    mode=mode,
-                    units=units,
-                    verbose=False,
-                )
+                if entry.color is None:
+                    assembly.add(entry.solid)
+                else:
+                    assembly.add(entry.solid, color=cq.Color(*entry.color))
 
-            if include_sector_wedge:
-                sector_wedge = self.make_sector_wedge()
-                # if the self.rotation_angle is 360 then None is returned
-                if sector_wedge is not None:
-                    filename = sector_wedge.export_stp(filename=str(
-                        Path(output_folder) / sector_wedge.stp_filename))
-                    filenames.append(filename)
+            assembly.save(filename, exportType='STEP')
 
-            # creates a graveyard (bounding shell volume) which is needed for
-            # neutronics simulations with default Reactor attributes.
-            if include_graveyard:
-                graveyard = self.make_graveyard()
-                filename = self.graveyard.export_stp(
-                    filename=str(Path(output_folder) / graveyard.stp_filename)
-                )
-                filenames.append(filename)
+            if units == 'cm':
+                _replace(
+                    filename,
+                    'SI_UNIT(.MILLI.,.METRE.)',
+                    'SI_UNIT(.CENTI.,.METRE.)')
 
-            return filenames
+            return [filename]
 
-        # exports a single file for the whole model
-        assembly = cq.Assembly(name='reactor')
-        for entry in self.shapes_and_components:
-            if entry.color is None:
-                assembly.add(entry.solid)
-            else:
-                assembly.add(entry.solid, color=cq.Color(*entry.color))
+       # exports the reactor solid as a separate stp files
+        if len(filename) != len(self.shapes_and_components):
+            msg = (f'The Reactor contains {len(self.shapes_and_components)} '
+                   f'Shapes and {len(filename)} filenames have be provided')
+            raise ValueError(msg)
 
-        assembly.save(filename, exportType='STEP')
+        for stp_filename, entry in zip(filename, self.shapes_and_components):
 
-        if units == 'cm':
-            _replace(
-                filename,
-                'SI_UNIT(.MILLI.,.METRE.)',
-                'SI_UNIT(.CENTI.,.METRE.)')
+            entry.export_stp(
+                filename=stp_filename,
+                mode=mode,
+                units=units,
+                verbose=False,
+            )
 
-        return [filename]
+            if units == 'cm':
+                _replace(
+                    stp_filename,
+                    'SI_UNIT(.MILLI.,.METRE.)',
+                    'SI_UNIT(.CENTI.,.METRE.)')
+
+        return filename
+
 
     def export_stl(
             self,
-            output_folder: Optional[str] = "",
+            filename: Union[List[str], str],
             tolerance: Optional[float] = 0.001,
-            include_graveyard: Optional[bool] = False,
+            angular_tolerance: Optional[float] = 0.1,
     ) -> List[str]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
-            output_folder (str): the folder for saving the stl files to
             tolerance (float):  the precision of the faceting
             include_graveyard: specify if the graveyard will be included or
                 not. If True the the Reactor.make_graveyard will be called
@@ -611,37 +379,36 @@ class Reactor:
             list: a list of stl filenames created
         """
 
-        if len(self.stl_filenames) != len(set(self.stl_filenames)):
-            duplicates = [
-                k for k, v in Counter(
-                    self.stl_filenames).items() if v > 1]
-            msg = ("The reactor contains multiple shapes with the same",
-                   f"stl_filename. The duplications are: {duplicates}.", )
+        if isinstance(filename, str):
+
+            path_filename = Path(filename)
+
+            if path_filename.suffix != ".stl":
+                path_filename = path_filename.with_suffix(".stl")
+
+            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+            # TODO add graveyard if requested
+            exporters.export(self.solid, str(path_filename), exportType='STL',
+                            tolerance=tolerance,
+                            angularTolerance=angular_tolerance)
+            return str(path_filename)
+
+        # exports the reactor solid as a separate stl files
+        if len(filename) != len(self.shapes_and_components):
+            msg = (f'The Reactor contains {len(self.shapes_and_components)} '
+                   f'Shapes and {len(filename)} filenames have be provided')
             raise ValueError(msg)
+        
+        for stl_filename, entry in zip(filename, self.shapes_and_components):
 
-        filenames = []
-        for entry in self.shapes_and_components:
-            if entry.stl_filename is None:
-                msg = ('set .stl_filename attribute for all Shapes before '
-                       'using the Reactor.export_stl method')
-                raise ValueError(msg)
-
-            filename = entry.export_stl(
-                filename=Path(output_folder) / entry.stl_filename,
+            entry.export_stl(
+                filename=stl_filename,
                 tolerance=tolerance,
                 verbose=False,
             )
-            filenames.append(filename)
 
-        # creates a graveyard (bounding shell volume) which is needed for
-        # neutronics simulations with default Reactor attributes.
-        if include_graveyard:
-            graveyard = self.make_graveyard()
-            filename = self.graveyard.export_stl(
-                Path(output_folder) / graveyard.stl_filename)
-            filenames.append(filename)
-
-        return filenames
+        return filename
 
     def make_sector_wedge(
             self,
@@ -649,8 +416,6 @@ class Reactor:
             radius: Optional[float] = None,
             rotation_angle: Optional[float] = None,
             material_tag='vacuum',
-            stp_filename: Optional[str] = 'sector_wedge.stp',
-            stl_filename: Optional[str] = 'sector_wedge.stl'
     ) -> Union[paramak.Shape, None]:
         """Creates a rotated wedge shaped object that is useful for creating
         sector models in DAGMC where reflecting surfaces are needed. If the
@@ -663,7 +428,6 @@ class Reactor:
                 largest_dimension of the model will be used
             rotation_angle: The rotation angle of the wedge will be the
                 inverse of the sector
-            stp_filename:
 
         Returns:
             the paramak.Shape object created
@@ -697,8 +461,6 @@ class Reactor:
             radius=radius,
             rotation_angle=360 - rotation_angle,
             surface_reflectivity=True,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             azimuth_placement_angle=rotation_angle,
             material_tag=material_tag,
         )
@@ -706,37 +468,6 @@ class Reactor:
         self.sector_wedge = sector_cutting_wedge
 
         return sector_cutting_wedge
-
-    def export_physical_groups(
-            self,
-            output_folder: Optional[str] = "",
-    ) -> List[str]:
-        """Exports several JSON files containing a look up table which is
-        useful for identifying faces and volumes. The output file names are
-        generated from .stp_filename properties.
-
-        Args:
-            output_folder (str, optional): directory of outputfiles.
-                Defaults to "".
-
-        Raises:
-            ValueError: if one .stp_filename property is set to None
-
-        Returns:
-            list: list of output file names
-        """
-        filenames = []
-        for entry in self.shapes_and_components:
-            if entry.stp_filename is None:
-                msg = (
-                    'set .stp_filename property for Shapes before using the '
-                    'export_stp method')
-                raise ValueError(msg)
-            filenames.append(
-                str(Path(output_folder) / Path(entry.stp_filename)))
-            entry.export_physical_groups(
-                Path(output_folder) / Path(entry.stp_filename))
-        return filenames
 
     def export_svg(
             self,
@@ -901,8 +632,6 @@ class Reactor:
             length=graveyard_size_to_use,
             name="graveyard",
             material_tag="graveyard",
-            stp_filename="graveyard.stp",
-            stl_filename="graveyard.stl",
         )
 
         self.graveyard = graveyard_shape

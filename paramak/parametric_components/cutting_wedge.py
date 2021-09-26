@@ -10,28 +10,18 @@ class CuttingWedge(RotateStraightShape):
     Args:
         height: the vertical (z axis) height of the coil (cm).
         radius: the horizontal (x axis) width of the coil (cm).
-        stp_filename: Defaults to "CuttingWedge.stp".
-        stl_filename: Defaults to "CuttingWedge.stl".
         rotation_angle: Defaults to 180.0.
-        material_tag: Defaults to "cutting_slice_mat".
-
     """
 
     def __init__(
         self,
         height: float,
         radius: float,
-        stp_filename: Optional[str] = "CuttingWedge.stp",
-        stl_filename: Optional[str] = "CuttingWedge.stl",
         rotation_angle: Optional[float] = 180.0,
-        material_tag: Optional[str] = "cutting_slice_mat",
         **kwargs
     ) -> None:
 
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             rotation_angle=rotation_angle,
             **kwargs
         )

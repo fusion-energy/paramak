@@ -11,12 +11,9 @@ class CenterColumnShieldCircular(RotateMixedShape):
         height: height of the center column shield (cm).
         inner_radius: the inner radius of the center column shield (cm).
         mid_radius: the inner radius of the outer hyperbolic profile of the
-            center colunn shield (cm).
+            center column shield (cm).
         outer_radius: the outer radius of the center column shield.
-        stp_filename: Defaults to "CenterColumnShieldCircular.stp".
-        stl_filename: Defaults to "CenterColumnShieldCircular.stl".
         name: Defaults to "center_column_shield".
-        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -25,18 +22,12 @@ class CenterColumnShieldCircular(RotateMixedShape):
         inner_radius: float,
         mid_radius: float,
         outer_radius: float,
-        stp_filename: Optional[str] = "CenterColumnShieldCircular.stp",
-        stl_filename: Optional[str] = "CenterColumnShieldCircular.stl",
-        material_tag: Optional[str] = "center_column_shield_mat",
         color: Optional[Tuple[float, float, float,
                               Optional[float]]] = (0., 0.333, 0.),
         **kwargs
     ) -> None:
 
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

@@ -16,13 +16,10 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         casing_thicknesses (float or list of floats): the thicknesses of the
             coil casing (cm). If float then the same thickness is applied to
             all coils. If list of floats then each entry is applied to a
-            seperate pf_coil, one entry for each pf_coil.
+            separate pf_coil, one entry for each pf_coil.
         center_points (tuple of floats): the center of the coil (x,z) values
             (cm).
-        stp_filename (str, optional): defaults to "PoloidalFieldCoilCaseSet.stp".
-        stl_filename (str, optional): defaults to "PoloidalFieldCoilCaseSet.stl".
         name (str, optional): defaults to "pf_coil_case_set".
-        material_tag (str, optional): defaults to "pf_coil_case_mat".
     """
 
     def __init__(
@@ -31,19 +28,13 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         widths,
         casing_thicknesses,
         center_points,
-        stp_filename="PoloidalFieldCoilCaseSet.stp",
-        stl_filename="PoloidalFieldCoilCaseSet.stl",
         name="pf_coil_case_set",
-        material_tag="pf_coil_case_mat",
         color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
         **kwargs
     ):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )
