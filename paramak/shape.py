@@ -35,8 +35,6 @@ class Shape:
         color ((float, float, float [, float]), optional): The color to use
             when exporting as html graphs or png images. Can be in RGB or RGBA
             format with floats between 0 and 1. Defaults to (0.5, 0.5, 0.5).
-        material_tag (str, optional): the material name to use when exporting
-            the neutronics description. Defaults to None.
         azimuth_placement_angle (iterable of floats or float, optional): the
             azimuth angle(s) used when positioning the shape. If a list of
             angles is provided, the shape is duplicated at all angles.
@@ -80,7 +78,6 @@ class Shape:
         name: Optional[str] = None,
         color: Optional[Tuple[float, float, float,
                               Optional[float]]] = (0.5, 0.5, 0.5),
-        material_tag: Optional[str] = None,
         azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
         workplane: Optional[Union[str, Plane]] = "XZ",
         rotation_axis: Optional[str] = None,
@@ -114,7 +111,6 @@ class Shape:
         self.old_points = 0
 
         # neutronics specific properties
-        self.material_tag = material_tag
         self.tet_mesh = tet_mesh
         self.scale = scale
         self.surface_reflectivity = surface_reflectivity
@@ -379,26 +375,6 @@ class Shape:
                 "Shape.color must be a list or tuple")
 
         self._color = value
-
-    @property
-    def material_tag(self):
-        """The material_tag assigned to the Shape. Used when taging materials
-        for use in neutronics descriptions"""
-
-        return self._material_tag
-
-    @material_tag.setter
-    def material_tag(self, value):
-        if value is None:
-            self._material_tag = value
-        elif isinstance(value, str):
-            if len(value) > 27:
-                msg = "Shape.material_tag > 28 characters." + \
-                      "Use with DAGMC will be affected." + str(value)
-                warnings.warn(msg)
-            self._material_tag = value
-        else:
-            raise ValueError("Shape.material_tag must be a string", value)
 
     @property
     def tet_mesh(self):
@@ -1291,7 +1267,6 @@ class Shape:
         graveyard_shape = paramak.HollowCube(
             length=graveyard_size_to_use,
             name="graveyard",
-            material_tag="graveyard",
         )
 
         self.graveyard = graveyard_shape

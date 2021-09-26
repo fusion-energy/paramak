@@ -291,29 +291,22 @@ class Reactor:
             filename: Union[List[str], str],
             mode: Optional[str] = 'solid',
             units: Optional[str] = 'mm',
-    ) -> List[str]:
-        """Writes stp files (CAD geometry) for each Shape object in the reactor
-        and the graveyard.
+    ) -> Union[List[str], str]:
+        """Exports the 3D reactor model as a stp file or files.
 
         Args:
-            output_folder: the folder for saving the stp files to
+            filename: Accepts a single filename as a string which exports the
+                full reactor model to a single file. Alternativley filename can
+                also accept a list of strings where each string is the filename
+                of the the individual shapes that make it up. This will result
+                in separate files for each shape in the reactor.
             mode: the object to export can be either 'solid' which exports 3D
                 solid shapes or the 'wire' which exports the wire edges of the
                 shape.
-            include_graveyard: specify if the graveyard will be included or
-                not. If True the the Reactor.make_graveyard will be called
-                using Reactor.graveyard_size and Reactor.graveyard_offset
-                attribute values.
-            include_sector_wedge: specifies if a sector_wedge will be exported.
-                This wedge is useful when constructing reflecting surfaces in
-                DAGMC geometry. If set to True the the self.rotation_angle must
-                also be set.
             units: the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
-            filename: If specified all the shapes will be combined into a
-                single file.
         Returns:
-            list: a list of stp filenames created
+            The stp filename(s) created
         """
 
         if isinstance(filename, str):
@@ -415,7 +408,6 @@ class Reactor:
             height: Optional[float] = None,
             radius: Optional[float] = None,
             rotation_angle: Optional[float] = None,
-            material_tag='vacuum',
     ) -> Union[paramak.Shape, None]:
         """Creates a rotated wedge shaped object that is useful for creating
         sector models in DAGMC where reflecting surfaces are needed. If the
@@ -462,7 +454,6 @@ class Reactor:
             rotation_angle=360 - rotation_angle,
             surface_reflectivity=True,
             azimuth_placement_angle=rotation_angle,
-            material_tag=material_tag,
         )
 
         self.sector_wedge = sector_cutting_wedge
@@ -631,7 +622,6 @@ class Reactor:
         graveyard_shape = paramak.HollowCube(
             length=graveyard_size_to_use,
             name="graveyard",
-            material_tag="graveyard",
         )
 
         self.graveyard = graveyard_shape
