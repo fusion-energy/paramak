@@ -41,3 +41,27 @@ class TestCylinderReactor(unittest.TestCase):
         os.system('rm *.html')
         self.test_reactor.export_html_3d('cylinder.html')
         assert Path('cylinder.html').is_file()
+
+    def test_export_brep(self):
+        """Exports a brep file and checks that the output exist"""
+
+        os.system("rm test_reactor.brep")
+
+        self.test_reactor.export_brep(filename='test_reactor.brep')
+
+        assert Path("test_reactor.brep").exists() is True
+
+        os.system("rm test_reactor.brep")
+
+    def test_export_brep_without_extention(self):
+        """Exports a brep file without the extention and checks that the
+        output exist"""
+
+        def missing_extention():
+
+            self.test_reactor.export_brep(filename='test_reactor_missing')
+
+        self.assertRaises(
+            ValueError,
+            missing_extention
+        )
