@@ -269,7 +269,6 @@ class TestReactor(unittest.TestCase):
 
         assert Path("test_reactor/test_shape.stp").exists() is True
 
-
     def test_exported_stl_files_exist(self):
         """creates a Reactor object with one shape and checks that a stl file
         of the reactor can be exported to a specified location using the
