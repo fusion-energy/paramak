@@ -118,17 +118,18 @@ class TestSweepStraightShape(unittest.TestCase):
 
         os.system("rm test_solid.brep")
 
-    def test_export_brep(self):
+    def test_export_brep_without_extention(self):
         """Exports a brep file without the extention and checks that the
         output exist"""
 
-        os.system("rm test_solid_missing.brep")
+        def missing_extention():
 
-        self.test_shape.export_brep(filename='test_solid_missing')
+            self.test_shape.export_brep(filename='test_solid_missing')
 
-        assert Path("test_solid_missing.brep").exists() is True
-
-        os.system("rm test_solid_missing.brep")
+        self.assertRaises(
+            ValueError,
+            missing_extention
+        )
 
     def test_incorrect_points_input(self):
         """Checks that an error is raised when the points are input with the

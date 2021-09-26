@@ -932,8 +932,7 @@ class Shape:
         self,
         filename
     ):
-        """Exports a brep file for the Shape.solid. If the provided filename
-        doesn't end with .brep it will be added.
+        """Exports a brep file for the Shape.solid.
 
         Args:
             filename: the filename of exported the brep file.
@@ -942,7 +941,8 @@ class Shape:
         path_filename = Path(filename)
 
         if path_filename.suffix != ".brep":
-            path_filename = path_filename.with_suffix(".brep")
+            msg = "When exporting a brep file the filename must end with .brep"
+            raise ValueError(msg)
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
