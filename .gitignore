@@ -8,6 +8,7 @@
 *.stp
 *.step
 *.stl
+*.brep
 
 # output files such as neutronics description files
 *.json

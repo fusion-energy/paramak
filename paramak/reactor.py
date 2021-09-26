@@ -8,7 +8,8 @@ from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-from cadquery import exporters, Compound
+from cadquery import Compound, exporters
+from OCP.BRepTools import BRepTools
 
 import paramak
 from paramak.utils import _replace, get_hash
@@ -327,6 +328,30 @@ class Reactor:
                     'SI_UNIT(.CENTI.,.METRE.)')
 
         return filename
+
+# TODO reactor geomety (cq.Compound) export as a brep file.
+# current error is AttributeError: 'Compound' object has no attribute 'toOCC'
+    # def export_brep(
+    #     self,
+    #     filename
+    # ):
+    #     """Exports a brep file for the Shape.solid. If the provided filename
+    #     doesn't end with .brep it will be added.
+
+    #     Args:
+    #         filename: the filename of exported the brep file.
+    #     """
+
+    #     path_filename = Path(filename)
+
+    #     if path_filename.suffix != ".brep":
+    #         path_filename = path_filename.with_suffix(".brep")
+
+    #     path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+    #     BRepTools.Write_s(self.solid.toOCC(), path_filename)
+
+    #     return str(path_filename)
 
     def export_stl(
             self,
