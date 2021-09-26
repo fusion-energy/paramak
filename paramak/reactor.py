@@ -197,30 +197,6 @@ class Reactor:
         return compound
 
     @property
-    def solid_with_graveyard(self):
-        """This combines all the parametric shapes and components in the
-        reactor object with a graveyard.
-        """
-
-        list_of_cq_vals = []
-        for shape_or_compound in self.shapes_and_components:
-            if isinstance(
-                shape_or_compound.solid,
-                (cq.occ_impl.shapes.Shape,
-                    cq.occ_impl.shapes.Compound)):
-                for solid in shape_or_compound.solid.Solids():
-                    list_of_cq_vals.append(solid)
-            else:
-                list_of_cq_vals.append(shape_or_compound.solid.val())
-        list_of_cq_vals.append(shape_or_compound.solid.val())
-
-        list_of_cq_vals.append(self.make_graveyard())
-
-        compound = cq.Compound.makeCompound(list_of_cq_vals)
-
-        return compound
-
-    @property
     def name(self):
         """Returns a list of names of the individual Shapes that make up the
         reactor """
@@ -380,7 +356,7 @@ class Reactor:
 
             path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-            # TODO add graveyard if requested
+            # add an include_graveyard that add graveyard if requested
             exporters.export(self.solid, str(path_filename), exportType='STL',
                              tolerance=tolerance,
                              angularTolerance=angular_tolerance)
