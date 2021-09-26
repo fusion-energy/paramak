@@ -13,10 +13,7 @@ class PoloidalFieldCoilSet(RotateStraightShape):
             (cm).
         center_points (list of tuple of floats): the center of the coil (x,z)
             values e.g. [(100,100), (100,200)] (cm).
-        stp_filename (str, optional): defaults to "PoloidalFieldCoilSet.stp".
-        stl_filename (str, optional): defaults to "PoloidalFieldCoilSet.stl".
         name (str, optional): defaults to "pf_coil".
-        material_tag (str, optional): defaults to "pf_coil_mat".
     """
 
     def __init__(
@@ -24,18 +21,12 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         heights,
         widths,
         center_points,
-        stp_filename="PoloidalFieldCoilSet.stp",
-        stl_filename="PoloidalFieldCoilSet.stl",
         name="pf_coil",
-        material_tag="pf_coil_mat",
         **kwargs
     ):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

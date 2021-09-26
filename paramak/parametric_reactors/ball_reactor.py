@@ -237,6 +237,7 @@ class BallReactor(paramak.Reactor):
         """Creates a list of paramak.Shape for components and saves it in
         self.shapes_and_components
         """
+
         uncut_shapes = []
 
         uncut_shapes.append(self._make_plasma())
@@ -369,10 +370,7 @@ class BallReactor(paramak.Reactor):
             inner_radius=self._inboard_tf_coils_start_radius,
             outer_radius=self._inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
-            stp_filename="inboard_tf_coils.stp",
-            stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
-            material_tag="inboard_tf_coils_mat",
             color=(0, 0, 1)
         )
         return self._inboard_tf_coils
@@ -385,10 +383,7 @@ class BallReactor(paramak.Reactor):
             outer_radius=self._center_column_shield_end_radius,
             rotation_angle=self.rotation_angle,
             color=(0., 0.333, 0.),
-            stp_filename="center_column_shield.stp",
-            stl_filename="center_column_shield.stl",
             name="center_column_shield",
-            material_tag="center_column_shield_mat",
         )
         return self._center_column_shield
 
@@ -418,9 +413,6 @@ class BallReactor(paramak.Reactor):
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            material_tag="firstwall_mat",
-            stp_filename="firstwall.stp",
-            stl_filename="firstwall.stl",
             color=(0.5, 0.5, 0.5),
             name='firstwall',
             cut=[self._center_column_cutter]
@@ -434,9 +426,6 @@ class BallReactor(paramak.Reactor):
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            material_tag="blanket_mat",
-            stp_filename="blanket.stp",
-            stl_filename="blanket.stl",
             color=(0., 1., 0.498),
             name='blanket',
             cut=[self._center_column_cutter])
@@ -450,9 +439,6 @@ class BallReactor(paramak.Reactor):
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            material_tag="blanket_rear_wall_mat",
-            stp_filename="blanket_rear_wall.stp",
-            stl_filename="blanket_rear_wall.stl",
             color=(0., 1., 1.),
             name='blanket_rear_wall',
             cut=[self._center_column_cutter],
@@ -499,10 +485,7 @@ class BallReactor(paramak.Reactor):
                 (self._divertor_start_radius, divertor_height_top)
             ],
             intersect=self._blanket_fw_rear_wall_envelope,
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
             name="divertor",
-            material_tag="divertor_mat",
             color=(1., 0.667, 0.),
             rotation_angle=self.rotation_angle
         )
@@ -533,10 +516,7 @@ class BallReactor(paramak.Reactor):
                 widths=self.pf_coil_radial_thicknesses,
                 center_points=center_points,
                 rotation_angle=self.rotation_angle,
-                stp_filename='pf_coils.stp',
-                stl_filename='pf_coils.stl',
                 name="pf_coil",
-                material_tag="pf_coil_mat",
             )
             list_of_components.append(self._pf_coil)
 
@@ -545,10 +525,7 @@ class BallReactor(paramak.Reactor):
                     pf_coils=self._pf_coil,
                     casing_thicknesses=self.pf_coil_case_thicknesses,
                     rotation_angle=self.rotation_angle,
-                    stp_filename='pf_coil_cases.stp',
-                    stl_filename='pf_coil_cases.stl',
                     name="pf_coil_case",
-                    material_tag="pf_coil_case_mat",
                 )
                 list_of_components.append(self._pf_coils_casing)
 
@@ -579,10 +556,7 @@ class BallReactor(paramak.Reactor):
                 thickness=self.outboard_tf_coil_radial_thickness,
                 number_of_coils=self.number_of_tf_coils,
                 distance=self.outboard_tf_coil_poloidal_thickness,
-                stp_filename="tf_coil.stp",
                 name="tf_coil",
-                material_tag="tf_coil_mat",
-                stl_filename="tf_coil.stl",
                 rotation_angle=self.rotation_angle
             )
             comp = [self._tf_coil]

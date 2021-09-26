@@ -24,8 +24,6 @@ class TestRotateStraightShape(unittest.TestCase):
         """Checks that the default parameters of a RotateStraightShape are correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "RotateStraightShape.stp"
-        assert self.test_shape.stl_filename == "RotateStraightShape.stl"
         assert self.test_shape.azimuth_placement_angle == 0
 
     def test_rotation_angle_getting_setting(self):
@@ -129,12 +127,6 @@ class TestRotateStraightShape(unittest.TestCase):
         assert Path("filename.stp").exists() is True
         assert Path("filename.step").exists() is True
         os.system("rm filename.stp filename.step")
-        self.test_shape.export_stp("filename")
-        assert Path("filename.stp").exists() is True
-        os.system("rm filename.stp")
-        self.test_shape.export_stp()
-        assert Path("RotateStraightShape.stp").exists() is True
-        os.system("rm RotateStraightShape.stp")
 
     def test_export_stp_extension_in_cm(self):
         """Creates a RotateStraightShape and checks that a stp file of the
@@ -147,12 +139,9 @@ class TestRotateStraightShape(unittest.TestCase):
         assert Path("filename.stp").exists() is True
         assert Path("filename.step").exists() is True
         os.system("rm filename.stp filename.step")
-        self.test_shape.export_stp("filename", units='cm')
-        assert Path("filename.stp").exists() is True
-        os.system("rm filename.stp")
-        self.test_shape.export_stp(units='cm')
-        assert Path("RotateStraightShape.stp").exists() is True
-        os.system("rm RotateStraightShape.stp")
+        self.test_shape.export_stp("filename_cm.stp", units='cm')
+        assert Path("filename_cm.stp").exists() is True
+        os.system("rm filename_cm.stp")
 
     def test_export_stl(self):
         """Creates a RotateStraightShape and checks that a stl file of the
@@ -161,9 +150,6 @@ class TestRotateStraightShape(unittest.TestCase):
 
         os.system("rm filename.stl")
         self.test_shape.export_stl("filename.stl")
-        assert Path("filename.stl").exists() is True
-        os.system("rm filename.stl")
-        self.test_shape.export_stl("filename")
         assert Path("filename.stl").exists() is True
         os.system("rm filename.stl")
 
@@ -310,9 +296,6 @@ class TestRotateStraightShape(unittest.TestCase):
 
         output_filename = self.test_shape.export_graveyard(filename='test.stp')
         assert 'test.stp' == output_filename
-
-        output_filename = self.test_shape.export_graveyard(filename='test2')
-        assert 'test2.stp' == output_filename
 
     def test_incorrect_points_input(self):
         """Checks that an error is raised when the points are input with the

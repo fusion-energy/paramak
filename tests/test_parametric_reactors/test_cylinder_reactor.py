@@ -32,9 +32,8 @@ class TestCylinderReactor(unittest.TestCase):
         """Creates a reactor with exports the step files and check they exist"""
 
         os.system('rm *.stp')
-        self.test_reactor.export_stp()
-        for filename in self.test_reactor.stp_filenames:
-            assert Path(filename).is_file()
+        self.test_reactor.export_stp(filename='cylinder.stp')
+        assert Path('cylinder.stp').is_file()
 
     def test_html_file_creation(self):
         """Creates a reactor with exports the step files and check they exist"""

@@ -95,9 +95,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             azimuth_placement_angle=np.linspace(
                 0 + 20, 360 + 20, self.number_of_tf_coils),
             rotation_angle=self.rotation_angle,
-            stp_filename="tf_coil_casing.stp",
-            stl_filename="tf_coil_casing.stl",
-            material_tag="tf_coil_casing_mat",
             color=(1., 1., 0.498),
         )
 
@@ -139,9 +136,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (945.6554596218276, -418.4558632109989, "straight"),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="blanket.stp",
-            stl_filename="blanket.stl",
-            material_tag="blanket_mat",
             color=(0., 1., 0.498),
         )
 
@@ -175,9 +169,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (584.5345245889013, -415.60146955751554, "straight"),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
-            material_tag="divertor_mat",
             color=(1., 0.667, 0.),
         )
 
@@ -233,9 +224,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             # avoid overlap between VV and blanket divertor
             union=[blanket, divertor],
-            material_tag="vacuum_vessel_inner_mat",
-            stp_filename='vacvesselinner.stp',
-            stl_filename='vacvesselinner.stl',
         )
         vac_vessel = paramak.RotateSplineShape(
             points=[
@@ -293,9 +281,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             ],
             cut=vac_vessel_inner,  # hollow shape
             rotation_angle=self.rotation_angle,
-            stp_filename='vacvessel.stp',
-            stl_filename='vacvessel.stl',
-            material_tag="vacuum_vessel_mat",
             color=(0., 1., 1.),
         )
 
@@ -314,7 +299,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             high_point=(853, 368),
             configuration="single-null",
             rotation_angle=self.rotation_angle,
-            stp_filename='plasma.stp',
         )
 
         return [plasma]
@@ -352,9 +336,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 684 - 563
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='outboard_pf_coils.stl',
-            stp_filename='outboard_pf_coils.stp',
-            material_tag='outboard_pf_coils_mat',
         )
 
         pf_coils_1 = paramak.RotateStraightShape(
@@ -365,9 +346,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (363.04586051526934, -881.6221003581469),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_1.stl',
-            stp_filename='pf_coils_1.stp',
-            material_tag='pf_coils_mat',
         )
 
         pf_coils_2 = paramak.RotateStraightShape(
@@ -378,9 +356,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (266.2030353910733, -600.8478453421652),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_2.stl',
-            stp_filename='pf_coils_2.stp',
-            material_tag='pf_coils_mat',
         )
 
         pf_coils_3 = paramak.RotateStraightShape(
@@ -391,9 +366,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (263.5606400431317, -316.0372010628879),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_3.stl',
-            stp_filename='pf_coils_3.stp',
-            material_tag='pf_coils_mat',
         )
 
         pf_coils_4 = paramak.RotateStraightShape(
@@ -404,9 +376,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (262.2297985905187, 229.49149612970268),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_4.stl',
-            stp_filename='pf_coils_4.stp',
-            material_tag='pf_coils_mat',
         )
 
         pf_coils_5 = paramak.RotateStraightShape(
@@ -417,9 +386,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (261.01468248161126, 510.27832556706545),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_5.stl',
-            stp_filename='pf_coils_5.stp',
-            material_tag='pf_coils_mat',
         )
 
         return [outboard_pf_coils, pf_coils_1, pf_coils_2, pf_coils_3,

@@ -20,9 +20,6 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
         with_inner_leg: include the inner tf leg. Defaults to True.
-        stp_filename: Defaults to "ToroidalFieldCoilRectangle.stp".
-        stl_filename: Defaults to "ToroidalFieldCoilRectangle.stl".
-        material_tag: Defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
@@ -33,18 +30,12 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         distance: float,
         number_of_coils: int,
         with_inner_leg: Optional[bool] = True,
-        stp_filename: Optional[str] = "ToroidalFieldCoilRectangle.stp",
-        stl_filename: Optional[str] = "ToroidalFieldCoilRectangle.stl",
-        material_tag: Optional[str] = "outer_tf_coil_mat",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
         **kwargs
     ) -> None:
 
         super().__init__(
             distance=distance,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            material_tag=material_tag,
             color=color,
             **kwargs
         )

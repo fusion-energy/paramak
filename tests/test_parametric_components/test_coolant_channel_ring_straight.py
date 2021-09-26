@@ -21,9 +21,6 @@ class TestCoolantChannelRingStraight(unittest.TestCase):
 
         # assert self.test_shape.rotation_angle == 360
         assert self.test_shape.start_angle == 0
-        assert self.test_shape.stp_filename == "CoolantChannelRingStraight.stp"
-        assert self.test_shape.stl_filename == "CoolantChannelRingStraight.stl"
-        assert self.test_shape.material_tag == "coolant_channel_mat"
 
     def test_creation(self):
         """Creates a coolant channel ring using the CoolantChannelRingStraight parameteric shape

@@ -19,9 +19,6 @@ class TestBlanketConstantThicknessArcH(unittest.TestCase):
         """Checks that the default parameters of a BlanketConstantThicknessArcH are correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "BlanketConstantThicknessArcH.stp"
-        assert self.test_shape.stl_filename == "BlanketConstantThicknessArcH.stl"
-        assert self.test_shape.material_tag == "blanket_mat"
 
     def test_points_calculation(self):
         """Checks that the points used to construct the BlanketConstantThicknessArcH component

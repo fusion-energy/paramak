@@ -24,10 +24,6 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
         """Checks that the default parameters of a PoloidalFieldCoilCaseSetFC are correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "PoloidalFieldCoilCaseSetFC.stp"
-        assert self.test_shape.stl_filename == "PoloidalFieldCoilCaseSetFC.stl"
-        # assert self.test_shape.name == "pf_coil_case_set_fc"
-        assert self.test_shape.material_tag == "pf_coil_mat"
 
     def test_processed_points_calculation(self):
         """Checks that the processed_points used to construct the

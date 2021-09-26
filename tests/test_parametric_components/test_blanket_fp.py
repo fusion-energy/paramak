@@ -34,9 +34,6 @@ class TestBlanketFP(unittest.TestCase):
         assert self.test_shape.vertical_displacement == 0
         assert self.test_shape.offset_from_plasma == 0
         assert self.test_shape.num_points == 50
-        assert self.test_shape.stp_filename == "BlanketFP.stp"
-        assert self.test_shape.stl_filename == "BlanketFP.stl"
-        assert self.test_shape.material_tag == "blanket_mat"
 
     def test_creation_plasma(self):
         """Checks that a cadquery solid can be created by passing a plasma to
@@ -146,30 +143,6 @@ class TestBlanketFP(unittest.TestCase):
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume() > 1000
-
-    def test_physical_groups(self):
-        """Creates a blanket using the BlanketFP parametric component and
-        checks that physical groups can be exported using the
-        export_physical_groups method"""
-
-        outfile = "tests/blanket.json"
-
-        # 180 coverage, full rotation
-        test_shape = paramak.BlanketFP(100, stop_angle=180, start_angle=0,)
-        test_shape.export_physical_groups(outfile)
-
-        # full coverage, 180 rotation
-        test_shape = paramak.BlanketFP(
-            100, stop_angle=0, start_angle=360,
-            rotation_angle=180)
-        test_shape.export_physical_groups(outfile)
-
-        # 180 coverage, 180 rotation
-        test_shape = paramak.BlanketFP(
-            100, stop_angle=180, start_angle=0,
-            rotation_angle=180)
-        test_shape.export_physical_groups(outfile)
-        os.system("rm " + outfile)
 
     def test_full_cov_stp_export(self):
         """Creates a blanket using the BlanketFP parametric component with full

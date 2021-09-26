@@ -53,8 +53,6 @@ class TestExtrudeMixedShape(unittest.TestCase):
         correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "ExtrudeMixedShape.stp"
-        assert self.test_shape.stl_filename == "ExtrudeMixedShape.stl"
         assert self.test_shape.azimuth_placement_angle == 0
 
     def test_absolute_shape_volume(self):
@@ -130,9 +128,6 @@ class TestExtrudeMixedShape(unittest.TestCase):
         assert Path("filename.stp").exists() is True
         assert Path("filename.step").exists() is True
         os.system("rm filename.stp filename.step")
-        self.test_shape.export_stp("filename")
-        assert Path("filename.stp").exists() is True
-        os.system("rm filename.stp")
 
     def test_export_stl(self):
         """Creates a ExtrudeMixedShape and checks that a stl file of the shape
@@ -140,9 +135,6 @@ class TestExtrudeMixedShape(unittest.TestCase):
 
         os.system("rm filename.stl")
         self.test_shape.export_stl("filename.stl")
-        assert Path("filename.stl").exists() is True
-        os.system("rm filename.stl")
-        self.test_shape.export_stl("filename")
         assert Path("filename.stl").exists() is True
         os.system("rm filename.stl")
 

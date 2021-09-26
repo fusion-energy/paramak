@@ -13,9 +13,6 @@ class CapsuleVacuumVessel(RotateMixedShape):
         radius: the radius from which the centres of the vessel meets the outer
             circumference.
         thickness: the radial thickness of the vessel in cm.
-        stp_filename: Defaults to "CapsuleVacuumVessel.stp".
-        stl_filename: Defaults to "CapsuleVacuumVessel.stl".
-        material_tag: Defaults to "capsule_vacuum_vessel_mat".
     """
 
     def __init__(
@@ -23,20 +20,13 @@ class CapsuleVacuumVessel(RotateMixedShape):
         radius: float,
         outer_start_point: Tuple[float, float],
         thickness: float,
-        stp_filename: Optional[str] = "CapsuleVacuumVessel.stp",
-        stl_filename: Optional[str] = "CapsuleVacuumVessel.stl",
-        material_tag: Optional[str] = "capsule_vacuum_vessel_mat",
         **kwargs
     ):
         self.radius = radius
         self.thickness = thickness
         self.outer_start_point = outer_start_point[0], outer_start_point[1]
-        super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            **kwargs
-        )
+
+        super().__init__(**kwargs)
 
     @property
     def radius(self):

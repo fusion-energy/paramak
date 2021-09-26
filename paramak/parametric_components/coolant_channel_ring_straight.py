@@ -15,9 +15,6 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         ring radius: radius of coolant channel ring.
         start_angle: angle at which the first channel in the ring is placed.
             Defaults to 0.0.
-        stp_filename: Defaults to "CoolantChannelRingStraight.stp".
-        stl_filename: Defaults to "CoolantChannelRingStraight.stl".
-        material_tag: Defaults to "coolant_channel_mat".
         rotation_axis (str, optional): azimuthal axis around which the separate
             coolant channels are placed.
         workplane (str, optional): plane in which the cross-sections of the
@@ -31,18 +28,12 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         number_of_coolant_channels: int,
         ring_radius: float,
         start_angle: Optional[float] = 0.0,
-        stp_filename: Optional[str] = "CoolantChannelRingStraight.stp",
-        stl_filename: Optional[str] = "CoolantChannelRingStraight.stl",
-        material_tag: Optional[str] = "coolant_channel_mat",
         **kwargs
     ) -> None:
 
         super().__init__(
             distance=height,
             radius=channel_radius,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

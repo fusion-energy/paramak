@@ -12,23 +12,17 @@ class RotateCircleShape(Shape):
         radius: radius of the shape
         rotation_angle: The rotation_angle to use when revolving the solid
             (degrees). Defaults to 360.0.
-        stp_filename:  Defaults to "RotateCircleShape.stp".
-        stl_filename:  Defaults to "RotateCircleShape.stl".
     """
 
     def __init__(
         self,
         radius: float,
         rotation_angle: Optional[float] = 360.0,
-        stp_filename: Optional[str] = "RotateCircleShape.stp",
-        stl_filename: Optional[str] = "RotateCircleShape.stl",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (1., 1., 0.6),
         **kwargs
     ):
 
         super().__init__(
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

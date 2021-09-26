@@ -26,18 +26,12 @@ class TFCoilCasing(ExtrudeMixedShape):
         inner_offset: float,
         outer_offset: float,
         vertical_section_offset: float,
-        stp_filename: Optional[str] = "TFCoilCasing.stp",
-        stl_filename: Optional[str] = "TFCoilCasing.stl",
-        material_tag: Optional[str] = "TF_coil_casing_mat",
         **kwargs
     ) -> None:
 
         self.magnet = magnet
 
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

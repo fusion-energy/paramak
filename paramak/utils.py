@@ -335,7 +335,7 @@ def add_thickness(x: List[float], y: List[float], thickness: float,
         if convex:
             nx *= -1
             ny *= -1
-        # normalise normal vector
+        # normalize normal vector
         normal_vector_norm = (nx ** 2 + ny ** 2) ** 0.5
         nx /= normal_vector_norm
         ny /= normal_vector_norm
@@ -349,7 +349,7 @@ def add_thickness(x: List[float], y: List[float], thickness: float,
 
 
 def get_hash(shape, ignored_keys: List = None) -> str:
-    """Computes a unique hash vaue for the shape.
+    """Computes a unique hash value for the shape.
 
     Args:
         shape (list): The paramak.Shape object to find the hash value for.
@@ -374,7 +374,7 @@ def get_hash(shape, ignored_keys: List = None) -> str:
 
 
 def _replace(filename: str, pattern: str, subst: str) -> None:
-    """Opens a file and replaces occurances of a particular string
+    """Opens a file and replaces occurrences of a particular string
         (pattern)with a new string (subst) and overwrites the file.
         Used internally within the paramak to ensure .STP files are
         in units of cm not the default mm.
@@ -522,7 +522,7 @@ def load_stp_file(
     filename: str,
     scale_factor: float = 1.
 ):
-    """Loads a stp file and makes the 3D solid and wires avaialbe for use.
+    """Loads a stp file and makes the 3D solid and wires available for use.
 
     Args:
         filename: the filename used to save the html graph.
@@ -532,7 +532,7 @@ def load_stp_file(
             simulations.
 
     Returns:
-        CadQuery.solid, CadQuery.Wires: soild and wires belonging to the object
+        CadQuery.solid, CadQuery.Wires: solid and wires belonging to the object
     """
 
     part = importers.importStep(str(filename)).val()
@@ -723,7 +723,7 @@ class FaceAreaSelector(cq.Selector):
 
     def filter(self, object_list):
         """Loops through all the faces in the object checking if the face
-        meets the custom selector requirments or not.
+        meets the custom selector requirements or not.
 
         Args:
             object_list (cadquery): The object to filter the faces from.
@@ -763,7 +763,7 @@ class EdgeLengthSelector(cq.Selector):
 
     def filter(self, object_list):
         """Loops through all the edges in the object checking if the edge
-        meets the custom selector requirments or not.
+        meets the custom selector requirements or not.
 
         Args:
             object_list (cadquery): The object to filter the edges from.

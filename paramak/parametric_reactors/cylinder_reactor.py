@@ -1,5 +1,5 @@
 
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import paramak
 
@@ -94,8 +94,6 @@ class CylinderReactor(paramak.Reactor):
                  (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="lower_vv.stp",
-            material_tag="vv_mat",
             color=(
                 0.5,
                 0.5,
@@ -114,8 +112,6 @@ class CylinderReactor(paramak.Reactor):
                 (0, -self.blanket_height / 2.0),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="lower_blanket.stp",
-            material_tag="blanket_mat",
             color=(0.0, 1.0, 0.498),
             name="lower blanket",
         )
@@ -125,9 +121,7 @@ class CylinderReactor(paramak.Reactor):
             inner_radius=self.inner_blanket_radius,
             outer_radius=self.blanket_thickness + self.inner_blanket_radius,
             rotation_angle=self.rotation_angle,
-            stp_filename="blanket.stp",
             cut=lower_blanket,
-            material_tag="blanket_mat",
             color=(0.0, 1.0, 0.498),
             name="blanket",
         )
@@ -150,8 +144,6 @@ class CylinderReactor(paramak.Reactor):
                 (0, (self.blanket_height / 2.0) + self.upper_vv_thickness),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="upper_blanket.stp",
-            material_tag="blanket_mat",
             color=(0.0, 1.0, 0.498),
             name="upper blanket",
         )
@@ -164,8 +156,6 @@ class CylinderReactor(paramak.Reactor):
                 (0, self.blanket_height / 2.0),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="upper_vv.stp",
-            material_tag="vv_mat",
             color=(0.5, 0.5, 0.5),
             name="upper vacuum vessel",
         )
@@ -198,8 +188,6 @@ class CylinderReactor(paramak.Reactor):
                 ),
             ],
             rotation_angle=self.rotation_angle,
-            stp_filename="vv.stp",
-            material_tag="vv_mat",
             color=(0.5, 0.5, 0.5),
             name="vacuum vessel",
         )

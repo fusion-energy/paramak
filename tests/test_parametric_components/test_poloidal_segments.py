@@ -6,7 +6,7 @@ import paramak
 
 class TestPoloidalSegments(unittest.TestCase):
 
-    def test_solid_count_with_incorect_input(self):
+    def test_solid_count_with_incorrect_input(self):
         """Checks the segmenter does not take a float as an input."""
 
         def create_shape():
@@ -25,7 +25,7 @@ class TestPoloidalSegments(unittest.TestCase):
         self.assertRaises(
             TypeError, create_shape)
 
-    def test_solid_count_with_incorect_inputs2(self):
+    def test_solid_count_with_incorrect_inputs2(self):
         """Checks the segmenter does not take a negative int as an input."""
 
         def create_shape():

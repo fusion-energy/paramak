@@ -20,8 +20,6 @@ class TestExtrudeSplineShape(unittest.TestCase):
         correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "ExtrudeSplineShape.stp"
-        assert self.test_shape.stl_filename == "ExtrudeSplineShape.stl"
         assert self.test_shape.extrude_both
 
     def test_absolute_shape_volume(self):

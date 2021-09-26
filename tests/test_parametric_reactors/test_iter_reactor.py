@@ -50,7 +50,6 @@ class TestITERReactor(unittest.TestCase):
         output_filenames = [
             'blanket.stp',
             'divertor.stp',
-            'graveyard.stp',
             'outboard_pf_coils.stp',
             'pf_coils_1.stp',
             'pf_coils_2.stp',
@@ -60,10 +59,11 @@ class TestITERReactor(unittest.TestCase):
             'pf_coils_6.stp',
             'tf_coils.stp',
             'vacvessel.stp',
+            'another.stp',
         ]
         os.system("rm *.stp")
         my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
-        my_reactor.export_stp(include_graveyard=True)
+        my_reactor.export_stp(filename=output_filenames)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")
@@ -76,7 +76,6 @@ class TestITERReactor(unittest.TestCase):
         output_filenames = [
             'blanket.stp',
             'divertor.stp',
-            'graveyard.stp',
             'outboard_pf_coils.stp',
             'pf_coils_1.stp',
             'pf_coils_2.stp',
@@ -86,11 +85,12 @@ class TestITERReactor(unittest.TestCase):
             'pf_coils_6.stp',
             'tf_coils.stp',
             'vacvessel.stp',
+            'another.stp',
         ]
         os.system("rm *.stp")
         my_reactor = paramak.IterFrom2020PaperDiagram(
             number_of_tf_coils=1, rotation_angle=90)
-        my_reactor.export_stp(include_graveyard=True)
+        my_reactor.export_stp(filename=output_filenames)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")

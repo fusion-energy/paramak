@@ -8,7 +8,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
     """Creates an extruded shape with a parallel rectangular section repeated
     around the reactor. The shape is used to cut other components (eg. blankets
     and firstwalls) in order to create a banana section of the blankets with
-    parrallel sides.Typically used to divide a blanket into vertical
+    parallel sides.Typically used to divide a blanket into vertical
     sections with a fixed distance between each section.
 
     Args:
@@ -19,10 +19,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
             extrusions
         height: height (cm) of the port. Defaults to 2000.0.
         width: width (cm) of the port. Defaults to 2000.0.
-        stp_filename: Defaults to "BlanketCutterParallels.stp".
-        stl_filename: Defaults to "BlanketCutterParallels.stl".
         name: Defaults to "blanket_cutter_Parallels".
-        material_tag: Defaults to "blanket_cutter_mat".
         azimuth_placement_angle (float or list of floats): Defaults to [0., 36.,
             72., 108., 144., 180., 216., 252., 288., 324.].
     """
@@ -35,12 +32,10 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         width: Optional[float] = 2000.,
         azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216.,
                                  252., 288., 324.],
-        stp_filename: Optional[str] = "BlanketCutterParallels.stp",
-        stl_filename: Optional[str] = "BlanketCutterParallels.stl",
         name: Optional[str] = "blanket_cutter_parallels",
-        material_tag: Optional[str] = "blanket_cutter_mat",
         **kwargs
     ) -> None:
+
         self.main_cutting_shape = \
             ExtrudeStraightShape(
                 distance=gap_size / 2.0,
@@ -51,10 +46,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         super().__init__(
             distance=self.distance,
             azimuth_placement_angle=azimuth_placement_angle,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             name=name,
-            material_tag=material_tag,
             **kwargs
         )
         self.height = height

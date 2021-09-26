@@ -23,10 +23,7 @@ class PortCutterRotated(RotateStraightShape):
         fillet_radius (float, optional): If not None, radius (cm) of fillets
             added to all edges. Defaults to 0.0.
         rotation_angle (float, optional): defaults to 10.0.
-        stp_filename (str, optional): defaults to "PortCutter.stp".
-        stl_filename (str, optional): defaults to "PortCutter.stl".
         name (str, optional): defaults to "port_cutter".
-        material_tag (str, optional): defaults to "port_cutter_mat".
     """
 
     def __init__(
@@ -37,18 +34,12 @@ class PortCutterRotated(RotateStraightShape):
         max_distance_from_center=3000.0,
         fillet_radius=0.0,
         rotation_angle=10.0,
-        stp_filename="PortCutter.stp",
-        stl_filename="PortCutter.stl",
         name="port_cutter",
-        material_tag="port_cutter_mat",
         **kwargs
     ):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             rotation_angle=rotation_angle,
             **kwargs
         )

@@ -22,10 +22,7 @@ class PoloidalSegments(RotateStraightShape):
             segments in 360 degrees. Defaults to 10.
         max_distance_from_center (float): the maximum distance from the center
             point outwards (cm). Defaults to 1000.0.
-        stp_filename (str, optional): defaults to "PoloidalSegmenter.stp".
-        stl_filename (str, optional): defaults to "PoloidalSegmenter.stl".
         name (str, optional): defaults to "poloidal_segmenter".
-        material_tag (str, optional): defaults to "poloidal_segmenter_mat".
     """
 
     def __init__(
@@ -34,18 +31,12 @@ class PoloidalSegments(RotateStraightShape):
         shape_to_segment=None,
         number_of_segments=10,
         max_distance_from_center=1000.0,
-        stp_filename="PoloidalSegmenter.stp",
-        stl_filename="PoloidalSegmenter.stl",
         name="poloidal_segmenter",
-        material_tag="poloidal_segmenter_mat",
         **kwargs
     ):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

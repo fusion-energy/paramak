@@ -16,9 +16,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         number_of_coils: number of tf coils.
         gap_size: gap between adjacent tf coils.
         azimuth_start_angle: Defaults to 0.0.
-        stp_filename: Defaults to "InnerTfCoilsCircular.stp".
-        stl_filename: Defaults to "InnerTfCoilsCircular.stl".
-        material_tag: Defaults to "inner_tf_coil_mat".
         workplane: Defaults to "XY".
         rotation_axis: Defaults to "Z".
     """
@@ -31,9 +28,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         number_of_coils: int,
         gap_size: float,
         azimuth_start_angle: Optional[float] = 0.0,
-        stp_filename: Optional[str] = "InnerTfCoilsCircular.stp",
-        stl_filename: Optional[str] = "InnerTfCoilsCircular.stl",
-        material_tag: Optional[str] = "inner_tf_coil_mat",
         workplane: Optional[str] = "XY",
         rotation_axis: Optional[str] = "Z",
         **kwargs
@@ -41,9 +35,6 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
 
         super().__init__(
             distance=height,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            material_tag=material_tag,
             workplane=workplane,
             rotation_axis=rotation_axis,
             **kwargs

@@ -241,10 +241,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             inner_radius=self._inboard_tf_coils_start_radius,
             outer_radius=self._inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
-            stp_filename="inboard_tf_coils.stp",
-            stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
-            material_tag="inboard_tf_coils_mat",
             color=(0., 0., 1.)
         )
         return self._inboard_tf_coils
@@ -318,10 +315,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             inner_radius=self._divertor_start_radius,
             outer_radius=self._divertor_end_radius,
             rotation_angle=self.rotation_angle,
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
             name="divertor",
-            material_tag="divertor_mat",
             intersect=self._blanket_enveloppe,
             color=(1., 0.667, 0.),
         )

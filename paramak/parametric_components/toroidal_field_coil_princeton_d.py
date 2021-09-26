@@ -21,9 +21,6 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             coils.
         vertical_displacement: vertical displacement (cm). Defaults to 0.0.
         with_inner_leg: Include the inner tf leg. Defaults to True.
-        stp_filename: Defaults to "ToroidalFieldCoilPrincetonD.stp".
-        stl_filename: Defaults to "ToroidalFieldCoilPrincetonD.stl".
-        material_tag: Defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
@@ -35,18 +32,12 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         number_of_coils: int,
         vertical_displacement: Optional[float] = 0.0,
         with_inner_leg: Optional[bool] = True,
-        stp_filename: Optional[str] = "ToroidalFieldCoilPrincetonD.stp",
-        stl_filename: Optional[str] = "ToroidalFieldCoilPrincetonD.stl",
-        material_tag: Optional[str] = "outer_tf_coil_mat",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
         **kwargs
     ) -> None:
 
         super().__init__(
             distance=distance,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            material_tag=material_tag,
             color=color,
             **kwargs
         )
