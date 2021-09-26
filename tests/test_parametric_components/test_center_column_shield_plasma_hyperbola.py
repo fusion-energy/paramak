@@ -20,10 +20,6 @@ class TestCenterColumnShieldPlasmaHyperbola(unittest.TestCase):
         assert self.test_shape.minor_radius == 150
         assert self.test_shape.triangularity == 0.55
         assert self.test_shape.elongation == 2
-        assert self.test_shape.stp_filename == "CenterColumnShieldPlasmaHyperbola.stp"
-        assert self.test_shape.stl_filename == "CenterColumnShieldPlasmaHyperbola.stl"
-        # assert self.test_shape.name == "center_column"
-        assert self.test_shape.material_tag == "center_column_shield_mat"
 
     def test_creation(self):
         """Creates a center column shield using the

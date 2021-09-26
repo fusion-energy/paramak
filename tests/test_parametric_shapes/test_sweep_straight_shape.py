@@ -20,8 +20,6 @@ class TestSweepStraightShape(unittest.TestCase):
         correct."""
 
         # assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "SweepStraightShape.stp"
-        assert self.test_shape.stl_filename == "SweepStraightShape.stl"
         assert self.test_shape.azimuth_placement_angle == 0
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.path_workplane == "XZ"

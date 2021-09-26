@@ -19,7 +19,7 @@ class TestDivertorITERNoDome(unittest.TestCase):
         exported using the export_stp method."""
 
         test_shape = paramak.ITERtypeDivertorNoDome()
-        test_shape.export_stp("tests/ITER_div_no_dome")
+        test_shape.export_stp("tests/ITER_div_no_dome.step")
 
     def test_faces(self):
         """Creates an ITER-type divertor using the ITERtypeDivertorNoDome

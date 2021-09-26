@@ -19,10 +19,6 @@ class TestBlanketCutterParallels(unittest.TestCase):
             0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
         assert self.test_shape.height == 2000
         assert self.test_shape.width == 2000
-        assert self.test_shape.stp_filename == "BlanketCutterParallels.stp"
-        assert self.test_shape.stl_filename == "BlanketCutterParallels.stl"
-        # assert self.test_shape.name == "blanket_cutter_parallels"
-        assert self.test_shape.material_tag == "blanket_cutter_mat"
 
     def test_creation(self):
         """Creates solid using the BlanketCutterParallels parametric component

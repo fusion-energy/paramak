@@ -804,8 +804,7 @@ class Shape:
             tolerance: Optional[float] = 0.001,
             angular_tolerance: Optional[float] = 0.1,
             verbose: Optional[bool] = True) -> str:
-        """Exports an stl file for the Shape.solid. If the provided filename
-        doesn't end with .stl it will be added.
+        """Exports an stl file for the Shape.solid.
 
         Args:
             filename: the filename of exported the stl file. Defaults to None
@@ -820,7 +819,8 @@ class Shape:
         path_filename = Path(filename)
 
         if path_filename.suffix != ".stl":
-            path_filename = path_filename.with_suffix(".stl")
+            msg = f'filename should end with .stl, not {path_filename.suffix}'
+            raise ValueError(msg)
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
@@ -839,8 +839,7 @@ class Shape:
             units: Optional[str] = 'mm',
             mode: Optional[str] = 'solid',
             verbose: Optional[bool] = True) -> str:
-        """Exports an stp file for the Shape.solid. If the filename provided
-        doesn't end with .stp or .step then .stp will be added.
+        """Exports an stp file for the Shape.solid.
 
         Args:
             filename: the filename of exported the stp file.
@@ -858,7 +857,8 @@ class Shape:
         if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
             pass
         else:
-            path_filename = path_filename.with_suffix(".stp")
+            msg = f'filename should end with .stp or .step, not {path_filename.suffix}'
+            raise ValueError(msg)
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
@@ -890,32 +890,6 @@ class Shape:
 
         if verbose:
             print(f"Saved file as {path_filename}")
-
-        return str(path_filename)
-
-    def export_physical_groups(self, filename: str) -> str:
-        """Exports a JSON file containing a look up table which is useful for
-        identifying faces and volumes. If filename provided doesn't end with
-        .json then .json will be added.
-
-        Args:
-            filename (str): the filename used to save the json file
-        """
-
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".json":
-            path_filename = path_filename.with_suffix(".json")
-
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-        if self.physical_groups is not None:
-            with open(filename, "w") as outfile:
-                json.dump(self.physical_groups, outfile, indent=4)
-
-            print(f'Saved physical_groups description to {path_filename}')
-        else:
-            print(
-                f'Warning: physical_groups attribute is None for {self.name}')
 
         return str(path_filename)
 

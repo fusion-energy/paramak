@@ -44,7 +44,6 @@ class TestSparc2020Reactor(unittest.TestCase):
             "tf_coil.stp",
             "vacuum_vessel.stp",
             "vacuum_vessel_inner.stp",
-            "graveyard.stp",
         ]
 
     def test_input_variables_names(self):
@@ -57,7 +56,7 @@ class TestSparc2020Reactor(unittest.TestCase):
         """Runs the example to check the output files are produced"""
         os.system("rm *.stp")
         my_reactor = paramak.SparcFrom2020PaperDiagram()
-        my_reactor.export_stp(include_graveyard=True)
+        my_reactor.export_stp(filename=self.output_filenames)
         for output_filename in self.output_filenames:
             assert Path(output_filename).exists() is True
 
@@ -67,6 +66,6 @@ class TestSparc2020Reactor(unittest.TestCase):
 
         os.system("rm *.stp")
         my_reactor = paramak.SparcFrom2020PaperDiagram(rotation_angle=90)
-        my_reactor.export_stp(include_graveyard=True)
+        my_reactor.export_stp(filename=self.output_filenames)
         for output_filename in self.output_filenames:
             assert Path(output_filename).exists() is True

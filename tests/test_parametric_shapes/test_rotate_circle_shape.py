@@ -20,8 +20,6 @@ class TestRotateCircleShape(unittest.TestCase):
         """Checks that the default parameters of a RotateCircleShape are correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "RotateCircleShape.stp"
-        assert self.test_shape.stl_filename == "RotateCircleShape.stl"
         assert self.test_shape.azimuth_placement_angle == 0
 
     def test_absolute_shape_volume(self):

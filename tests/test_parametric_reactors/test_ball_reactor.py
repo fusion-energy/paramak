@@ -111,14 +111,6 @@ class TestBallReactor(unittest.TestCase):
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 10
 
-    def test_with_pf_and_tf_coils_export_physical_groups(self):
-        """Creates a BallReactor and checks that the export_physical_groups method
-        works correctly."""
-
-        self.test_reactor.export_physical_groups()
-
-        # insert assertion
-
     def test_rotation_angle_warning(self):
         """Creates a BallReactor with rotation_angle = 360 and checks that the correct
         warning message is printed."""
@@ -250,18 +242,18 @@ class TestBallReactor(unittest.TestCase):
         """Exports and stp file with mode = solid and wire and checks
         that the outputs folders exist."""
 
-        os.system("rm -rf reactor_solids")
-        os.system("rm -rf reactor_wires")
+        os.system("rm reactor_solids.stp")
+        os.system("rm reactor_wires.stp")
 
         self.test_reactor.export_stp(
-            output_folder='reactor_solids',
+            filename='reactor_solid.stp',
             mode='solid'
         )
 
         self.test_reactor.export_stp(
-            output_folder='reactor_wires',
+            filename='reactor_wires.stp',
             mode='wire'
         )
 
-        assert Path("reactor_wires").exists() is True
-        assert Path("reactor_solids").exists() is True
+        assert Path("reactor_solid.stp").is_file()
+        assert Path("reactor_wires.stp").is_file()

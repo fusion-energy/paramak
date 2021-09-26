@@ -43,13 +43,12 @@ class TestDemo2015Reactor(unittest.TestCase):
             assert component.volume() > 0
 
     def test_make_demo_2015_reactor(self):
-        """Creates a EuDemoFrom2015PaperDiagram reactor and eports the stp
+        """Creates a EuDemoFrom2015PaperDiagram reactor and exports the stp
         files checking that each component results in a stp file"""
 
         output_filenames = [
             'blanket.stp',
             'divertor.stp',
-            'graveyard.stp',
             'outboard_pf_coils.stp',
             'pf_coils_1.stp',
             'pf_coils_2.stp',
@@ -58,23 +57,23 @@ class TestDemo2015Reactor(unittest.TestCase):
             'pf_coils_5.stp',
             'tf_coil_casing.stp',
             'vacvessel.stp',
+            'another.stp'
         ]
         os.system("rm *.stp")
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1)
-        my_reactor.export_stp(include_graveyard=True)
+        my_reactor.export_stp(filename=output_filenames)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")
 
     def test_make_parametric_demo_2015_rector(self):
-        """Creates a EuDemoFrom2015PaperDiagram reactor with a non defulat
-        rotation angle and eports the stp files checking that each component
+        """Creates a EuDemoFrom2015PaperDiagram reactor with a non default
+        rotation angle and exports the stp files checking that each component
         results in a stp file"""
 
         output_filenames = [
             'blanket.stp',
             'divertor.stp',
-            'graveyard.stp',
             'outboard_pf_coils.stp',
             'pf_coils_1.stp',
             'pf_coils_2.stp',
@@ -83,11 +82,12 @@ class TestDemo2015Reactor(unittest.TestCase):
             'pf_coils_5.stp',
             'tf_coil_casing.stp',
             'vacvessel.stp',
+            'another.stp'
         ]
         os.system("rm *.stp")
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(
             number_of_tf_coils=1, rotation_angle=90)
-        my_reactor.export_stp(include_graveyard=True)
+        my_reactor.export_stp(filename=output_filenames)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")

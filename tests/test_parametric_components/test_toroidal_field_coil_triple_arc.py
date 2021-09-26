@@ -19,9 +19,6 @@ class TestToroidalFieldCoilTripleArc(unittest.TestCase):
         assert self.test_shape.rotation_angle == 360
         assert self.test_shape.with_inner_leg
         assert self.test_shape.vertical_displacement == 0
-        assert self.test_shape.stp_filename == "ToroidalFieldCoilTripleArc.stp"
-        assert self.test_shape.stl_filename == "ToroidalFieldCoilTripleArc.stl"
-        assert self.test_shape.material_tag == "outer_tf_coil_mat"
 
     def test_creation_with_inner_leg(self):
         """Creates a tf coil with inner leg using the ToroidalFieldCoilTripleArc

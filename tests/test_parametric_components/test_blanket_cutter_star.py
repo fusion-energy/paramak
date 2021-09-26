@@ -17,10 +17,7 @@ class TestBlanketCutterStar(unittest.TestCase):
             0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
         assert self.test_shape.height == 2000
         assert self.test_shape.width == 2000
-        assert self.test_shape.stp_filename == "BlanketCutterStar.stp"
-        assert self.test_shape.stl_filename == "BlanketCutterStar.stl"
         assert self.test_shape.name == "blanket_cutter_star"
-        assert self.test_shape.material_tag == "blanket_cutter_star_mat"
 
     def test_points_calculation(self):
         """Checks that the points used to construct the BlanketCutterStar component

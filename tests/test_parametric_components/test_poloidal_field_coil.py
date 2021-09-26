@@ -17,10 +17,6 @@ class TestPoloidalFieldCoil(unittest.TestCase):
         """Checks that the default parameters of a PoloidalFieldCoil are correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "PoloidalFieldCoil.stp"
-        assert self.test_shape.stl_filename == "PoloidalFieldCoil.stl"
-        # assert self.test_shape.name == "pf_coil"
-        assert self.test_shape.material_tag == "pf_coil_mat"
 
     def test_points_calculation(self):
         """Checks that the points used to construct the PoloidalFieldCoil are

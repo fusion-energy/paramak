@@ -40,8 +40,8 @@ class TestSubmersionTokamak(unittest.TestCase):
         assert len(self.test_reactor.input_variable_names) == 29
 
     def test_svg_creation(self):
-        """Creates a SubmersionTokamak and checks that an svg file of the reactor
-        can be exported using the export_svg method."""
+        """Creates a SubmersionTokamak and checks that an svg file of the
+        reactor can be exported using the export_svg method."""
 
         os.system("rm test_image.svg")
         self.test_reactor.export_svg("test_image.svg")
@@ -85,14 +85,10 @@ class TestSubmersionTokamak(unittest.TestCase):
         assert len(self.test_reactor.shapes_and_components) == 11
 
     def test_minimal_stp_creation(self):
-        """Creates a SubmersionTokamak and checks that stp files of all components
-        can be exported using the export_stp method."""
+        """Creates a SubmersionTokamak and checks that stp files of all
+        components can be exported using the export_stp method."""
 
         os.system("rm -r minimal_SubmersionTokamak")
-        self.test_reactor.export_stp(
-            "minimal_SubmersionTokamak", include_graveyard=True
-        )
-
         output_filenames = [
             "minimal_SubmersionTokamak/inboard_tf_coils.stp",
             "minimal_SubmersionTokamak/center_column_shield.stp",
@@ -102,8 +98,9 @@ class TestSubmersionTokamak(unittest.TestCase):
             "minimal_SubmersionTokamak/supports.stp",
             "minimal_SubmersionTokamak/blanket.stp",
             "minimal_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "minimal_SubmersionTokamak/graveyard.stp",
+            "another.stp",
         ]
+        self.test_reactor.export_stp(filename=output_filenames)
 
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
@@ -121,10 +118,6 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_radial_position = [100, 100]
         self.test_reactor.pf_coil_vertical_position = [100, -100]
 
-        self.test_reactor.export_stp(
-            "pf_SubmersionTokamak", include_graveyard=True
-        )
-
         output_filenames = [
             "pf_SubmersionTokamak/inboard_tf_coils.stp",
             "pf_SubmersionTokamak/center_column_shield.stp",
@@ -134,8 +127,11 @@ class TestSubmersionTokamak(unittest.TestCase):
             "pf_SubmersionTokamak/supports.stp",
             "pf_SubmersionTokamak/blanket.stp",
             "pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "pf_SubmersionTokamak/graveyard.stp",
+            "tf_pf_SubmersionTokamak/another_shape.stp",
+            "tf_pf_SubmersionTokamak/another_shape2.stp",
+            "tf_pf_SubmersionTokamak/another_shape3.stp",
         ]
+        self.test_reactor.export_stp(filename=output_filenames)
 
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
@@ -157,10 +153,6 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_case_thicknesses = 10
         self.test_reactor.number_of_tf_coils = 4
 
-        self.test_reactor.export_stp(
-            "tf_pf_SubmersionTokamak", include_graveyard=True
-        )
-
         output_filenames = [
             "tf_pf_SubmersionTokamak/inboard_tf_coils.stp",
             "tf_pf_SubmersionTokamak/center_column_shield.stp",
@@ -170,9 +162,11 @@ class TestSubmersionTokamak(unittest.TestCase):
             "tf_pf_SubmersionTokamak/supports.stp",
             "tf_pf_SubmersionTokamak/blanket.stp",
             "tf_pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "tf_pf_SubmersionTokamak/graveyard.stp",
             "tf_pf_SubmersionTokamak/pf_coil_cases.stp"
+            "tf_pf_SubmersionTokamak/another1.stp"
+            "tf_pf_SubmersionTokamak/another2.stp"
         ]
+        self.test_reactor.export_stp(filename=output_filenames)
 
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True

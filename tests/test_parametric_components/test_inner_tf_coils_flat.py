@@ -40,9 +40,6 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
 
         assert self.test_shape.rotation_angle == 360
         assert self.test_shape.azimuth_start_angle == 0
-        assert self.test_shape.stp_filename == "InnerTfCoilsFlat.stp"
-        assert self.test_shape.stl_filename == "InnerTfCoilsFlat.stl"
-        assert self.test_shape.material_tag == "inner_tf_coil_mat"
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.rotation_axis == "Z"
         assert self.test_shape.radius_type == "corner"

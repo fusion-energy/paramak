@@ -19,7 +19,7 @@ class TestDivertorITER(unittest.TestCase):
         the export_stp method"""
 
         test_shape = paramak.ITERtypeDivertor()
-        test_shape.export_stp("tests/ITER_div")
+        test_shape.export_stp("tests/ITER_div.stp")
 
     def test_faces(self):
         """Creates an ITER-type divertor using the ITERtypeDivertor parametric
