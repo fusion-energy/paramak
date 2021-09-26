@@ -12,7 +12,6 @@ from cadquery import (Assembly, Color, Compound, Plane, Workplane, exporters,
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
-from OCP.BRepTools import BRepTools
 
 import paramak
 from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
@@ -946,7 +945,11 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        BRepTools.Write_s(self.solid.toOCC(), str(path_filename))
+        self.solid.val().exportBrep(str(path_filename))
+        # alternative method is to use BRepTools that might support imprinting
+        # and merging https://github.com/CadQuery/cadquery/issues/449
+        # from OCP.BRepTools import BRepTools
+        # BRepTools.Write_s(self.solid.toOCC(), str(path_filename))
 
         return str(path_filename)
 
