@@ -613,7 +613,6 @@ class Reactor:
         # alternative method is to use BRepTools that might support imprinting
         # and merging https://github.com/CadQuery/cadquery/issues/449
 
-
         return str(path_filename)
 
     def export_stl(
