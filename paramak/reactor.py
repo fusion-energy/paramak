@@ -352,7 +352,6 @@ class Reactor:
 
         return filename
 
-
     def export_stl(
             self,
             filename: Union[List[str], str],
@@ -383,8 +382,8 @@ class Reactor:
 
             # TODO add graveyard if requested
             exporters.export(self.solid, str(path_filename), exportType='STL',
-                            tolerance=tolerance,
-                            angularTolerance=angular_tolerance)
+                             tolerance=tolerance,
+                             angularTolerance=angular_tolerance)
             return str(path_filename)
 
         # exports the reactor solid as a separate stl files
@@ -392,7 +391,7 @@ class Reactor:
             msg = (f'The Reactor contains {len(self.shapes_and_components)} '
                    f'Shapes and {len(filename)} filenames have be provided')
             raise ValueError(msg)
-        
+
         for stl_filename, entry in zip(filename, self.shapes_and_components):
 
             entry.export_stl(
