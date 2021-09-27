@@ -110,7 +110,9 @@ class Reactor:
             shapes_to_bound = self.largest_shapes
 
         for component in shapes_to_bound:
-            largest_dimension = max(largest_dimension, component.largest_dimension)
+            largest_dimension = max(
+                largest_dimension,
+                component.largest_dimension)
         # self._largest_dimension = largest_dimension
         return largest_dimension
 
@@ -137,8 +139,8 @@ class Reactor:
     def largest_shapes(self, value):
         if not isinstance(value, (list, tuple, type(None))):
             raise ValueError(
-                "paramak.Reactor.largest_shapes should be a " "list of paramak.Shapes"
-            )
+                "paramak.Reactor.largest_shapes should be a "
+                "list of paramak.Shapes")
         self._largest_shapes = value
 
     @property
@@ -248,7 +250,11 @@ class Reactor:
                 (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
             ):
                 for i, solid in enumerate(shape_or_compound.solid.Solids()):
-                    parts.append(Part(solid, name=f"{name}{i}", color=scaled_color))
+                    parts.append(
+                        Part(
+                            solid,
+                            name=f"{name}{i}",
+                            color=scaled_color))
             else:
                 parts.append(
                     Part(
@@ -299,8 +305,9 @@ class Reactor:
 
             if units == "cm":
                 _replace(
-                    filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)"
-                )
+                    filename,
+                    "SI_UNIT(.MILLI.,.METRE.)",
+                    "SI_UNIT(.CENTI.,.METRE.)")
 
             return [filename]
 
@@ -326,8 +333,9 @@ class Reactor:
 
             if units == "cm":
                 _replace(
-                    stp_filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)"
-                )
+                    stp_filename,
+                    "SI_UNIT(.MILLI.,.METRE.)",
+                    "SI_UNIT(.CENTI.,.METRE.)")
 
         return filename
 
@@ -545,7 +553,11 @@ class Reactor:
         if strokeWidth is not None:
             opt["strokeWidth"] = strokeWidth
 
-        exporters.export(self.solid, str(path_filename), exportType="SVG", opt=opt)
+        exporters.export(
+            self.solid,
+            str(path_filename),
+            exportType="SVG",
+            opt=opt)
 
         print("Saved file as ", path_filename)
 
@@ -711,7 +723,11 @@ class Reactor:
         if view is None:
             return None
 
-        embed_minimal_html(filename, views=[view.cq_view.renderer], title="Renderer")
+        embed_minimal_html(
+            filename,
+            views=[
+                view.cq_view.renderer],
+            title="Renderer")
 
         return filename
 
