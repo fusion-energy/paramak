@@ -17,9 +17,6 @@ class TestExtrudeRectangle(unittest.TestCase):
         correct."""
 
         assert self.test_shape.distance == 333
-        assert self.test_shape.stp_filename == "ExtrudeRectangle.stp"
-        assert self.test_shape.stl_filename == "ExtrudeRectangle.stl"
-        assert self.test_shape.material_tag == "extrude_rectangle_mat"
 
     def test_processed_points_calculation(self):
         """Checks that the processed_points used to construct the

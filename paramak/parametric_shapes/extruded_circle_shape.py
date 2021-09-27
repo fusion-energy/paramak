@@ -17,8 +17,6 @@ class ExtrudeCircleShape(Shape):
             from rotation_angle to 360 degrees. Defaults to 360.
         extrude_both: if set to True, the extrusion will occur in both
             directions. Defaults to True.
-        stp_filename: Defaults to "ExtrudeCircleShape.stp".
-        stl_filename: Defaults to "ExtrudeCircleShape.stl".
     """
 
     def __init__(
@@ -28,15 +26,11 @@ class ExtrudeCircleShape(Shape):
         extrusion_start_offset: Optional[float] = 0.0,
         rotation_angle: Optional[float] = 360,
         extrude_both: Optional[bool] = True,
-        stp_filename: Optional[str] = "ExtrudeCircleShape.stp",
-        stl_filename: Optional[str] = "ExtrudeCircleShape.stl",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.984, 0.603, 0.6),
         **kwargs
     ):
 
         super().__init__(
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

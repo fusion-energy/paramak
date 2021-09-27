@@ -22,9 +22,6 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
 
         assert self.test_shape.rotation_angle == 360
         assert self.test_shape.with_inner_leg
-        assert self.test_shape.stp_filename == "ToroidalFieldCoilRectangle.stp"
-        assert self.test_shape.stl_filename == "ToroidalFieldCoilRectangle.stl"
-        assert self.test_shape.material_tag == "outer_tf_coil_mat"
 
     def test_points_calculation(self):
         """Checks that the points used to construct the ToroidalFieldCoilRectangle are

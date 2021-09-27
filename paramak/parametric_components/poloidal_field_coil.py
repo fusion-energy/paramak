@@ -10,10 +10,7 @@ class PoloidalFieldCoil(RotateStraightShape):
         height: the vertical (z axis) height of the coil (cm).
         width: the horizontal (x axis) width of the coil (cm).
         center_point: the center of the coil (x,z) values (cm).
-        stp_filename: defaults to "PoloidalFieldCoil.stp".
-        stl_filename: defaults to "PoloidalFieldCoil.stl".
         name: defaults to "pf_coil".
-        material_tag: defaults to "pf_coil_mat".
     """
 
     def __init__(
@@ -21,18 +18,12 @@ class PoloidalFieldCoil(RotateStraightShape):
         height: float,
         width: float,
         center_point: Tuple[float, float],
-        stp_filename: Optional[str] = "PoloidalFieldCoil.stp",
-        stl_filename: Optional[str] = "PoloidalFieldCoil.stl",
         name: Optional[str] = "pf_coil",
-        material_tag: Optional[str] = "pf_coil_mat",
         **kwargs
     ) -> None:
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

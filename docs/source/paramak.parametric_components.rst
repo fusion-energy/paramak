@@ -8,6 +8,7 @@ parametric Shape classes.
 Blankets
 ---------
 
+
 BlanketConstantThicknessArcH()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -33,6 +34,7 @@ BlanketConstantThicknessArcH()
    :members:
    :show-inheritance:
 
+
 BlanketConstantThicknessArcV()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -57,6 +59,7 @@ BlanketConstantThicknessArcV()
 .. automodule:: paramak.parametric_components.blanket_constant_thickness_arc_v
    :members:
    :show-inheritance:
+
 
 BlanketFP()
 ^^^^^^^^^^^
@@ -114,6 +117,7 @@ BlanketFPPoloidalSegments()
 Blanket Cutting Tools
 ---------------------
 
+
 BlanketCutterParallels()
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -147,6 +151,7 @@ BlanketCutterStar()
 .. automodule:: paramak.parametric_components.blanket_cutters_star
    :members:
    :show-inheritance:
+
 
 PoloidalSegmenter()
 ^^^^^^^^^^^^^^^^^^^
@@ -201,6 +206,7 @@ CenterColumnShieldCylinder()
    :members:
    :show-inheritance:
 
+
 CenterColumnShieldHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -225,6 +231,7 @@ CenterColumnShieldHyperbola()
 .. automodule:: paramak.parametric_components.center_column_hyperbola
    :members:
    :show-inheritance:
+
 
 CenterColumnShieldFlatTopHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -252,6 +259,7 @@ CenterColumnShieldFlatTopHyperbola()
    :members:
    :show-inheritance:
 
+
 CenterColumnShieldFlatTopCircular()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -278,6 +286,7 @@ CenterColumnShieldFlatTopCircular()
    :members:
    :show-inheritance:
 
+
 CenterColumnShieldPlasmaHyperbola()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -303,6 +312,7 @@ CenterColumnShieldPlasmaHyperbola()
 .. automodule:: paramak.parametric_components.center_column_plasma_dependant
    :members:
    :show-inheritance:
+
 
 InboardFirstwallFCCS()
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -340,6 +350,7 @@ InboardFirstwallFCCS()
 Coolant Channels
 ----------------
 
+
 CoolantChannelRingStraight()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -366,6 +377,7 @@ CoolantChannelRingStraight()
    :members:
    :show-inheritance:
 
+
 CoolantChannelRingCurved()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -386,6 +398,7 @@ CoolantChannelRingCurved()
 Cutting Tools
 -------------
 
+
 CuttingWedge()
 ^^^^^^^^^^^^^^
 
@@ -399,6 +412,7 @@ CuttingWedge()
 .. automodule:: paramak.parametric_components.cutting_wedge
    :members:
    :show-inheritance:
+
 
 CuttingWedgeFS()
 ^^^^^^^^^^^^^^^^
@@ -437,6 +451,7 @@ ITERtypeDivertor()
 .. autoclass:: ITERtypeDivertor
    :members:
    :show-inheritance:
+
 
 ITERtypeDivertorNoDome()
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -483,6 +498,7 @@ InnerTfCoilsCircular()
 .. automodule:: paramak.parametric_components.inner_tf_coils_circular
    :members:
    :show-inheritance:
+
 
 InnerTfCoilsFlat()
 ^^^^^^^^^^^^^^^^^^
@@ -546,6 +562,7 @@ PoloidalFieldCoil()
    :members:
    :show-inheritance:
 
+
 PoloidalFieldCoilFP()
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -559,6 +576,7 @@ PoloidalFieldCoilFP()
 .. automodule:: paramak.parametric_components.poloidal_field_coil_fp
    :members:
    :show-inheritance:
+
 
 PoloidalFieldCoilSet()
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -584,6 +602,7 @@ PoloidalFieldCoilSet()
 .. automodule:: paramak.parametric_components.poloidal_field_coil_set
    :members:
    :show-inheritance:
+
 
 PoloidalFieldCoilCase()
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -614,6 +633,7 @@ PoloidalFieldCoilCase()
    :members:
    :show-inheritance:
 
+
 PoloidalFieldCoilCaseFC()
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -627,8 +647,7 @@ PoloidalFieldCoilCaseFC()
       center_point=(100, 100),
       height=20,
       width=20,
-      rotation_angle=180,
-      stp_filename="poloidal_field_coil.stp"
+      rotation_angle=180
    )
 
    my_component = paramak.PoloidalFieldCoilCaseFC(
@@ -646,6 +665,7 @@ PoloidalFieldCoilCaseFC()
 .. automodule:: paramak.parametric_components.poloidal_field_coil_case_fc
    :members:
    :show-inheritance:
+
 
 PoloidalFieldCoilCaseSet()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -673,6 +693,7 @@ PoloidalFieldCoilCaseSet()
 .. automodule:: paramak.parametric_components.poloidal_field_coil_case_set
    :members:
    :show-inheritance:
+
 
 PoloidalFieldCoilCaseSetFC()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -737,6 +758,7 @@ PortCutterRotated()
    :members:
    :show-inheritance:
 
+
 PortCutterRectangular()
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -765,6 +787,7 @@ PortCutterRectangular()
 .. automodule:: paramak.parametric_components.port_cutters_rectangular
    :members:
    :show-inheritance:
+
 
 PortCutterCircular()
 ^^^^^^^^^^^^^^^^^^^^
@@ -826,6 +849,7 @@ Plasma()
    :members:
    :show-inheritance:
 
+
 PlasmaFromPoints()
 ^^^^^^^^^^^^^^^^^^
 
@@ -839,6 +863,7 @@ PlasmaFromPoints()
 .. automodule:: paramak.parametric_components.tokamak_plasma_from_points
    :members:
    :show-inheritance:
+
 
 PlasmaBoundaries()
 ^^^^^^^^^^^^^^^^^^
@@ -903,6 +928,7 @@ ToroidalFieldCoilRectangle()
    :members:
    :show-inheritance:
 
+
 ToroidalFieldCoilCoatHanger()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -919,9 +945,9 @@ ToroidalFieldCoilCoatHanger()
    :members:
    :show-inheritance:
 
+
 ToroidalFieldCoilPrincetonD()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 
 .. cadquery::
    :select: cadquery_object
@@ -933,8 +959,7 @@ ToroidalFieldCoilPrincetonD()
       R2=300,
       thickness=30,
       distance=30,
-      number_of_coils=1,
-      stp_filename="toroidal_field_coil_princeton_d.stp"
+      number_of_coils=1
    )
 
    cadquery_object = my_component.solid
@@ -951,6 +976,7 @@ ToroidalFieldCoilPrincetonD()
 .. automodule:: paramak.parametric_components.toroidal_field_coil_princeton_d
    :members:
    :show-inheritance:
+
 
 ToroidalFieldCoilTripleArc()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1055,6 +1081,7 @@ VacuumVessel()
    :members:
    :show-inheritance:
 
+
 VacuumVesselInnerLeg()
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1084,6 +1111,7 @@ VacuumVesselInnerLeg()
 .. automodule:: paramak.parametric_components.vacuum_vessel_inner_leg
    :members:
    :show-inheritance:
+
 
 CapsuleVacuumVessel()
 ^^^^^^^^^^^^^^^^^^^^^
@@ -1133,6 +1161,7 @@ ExtrudeRectangle()
    :members:
    :show-inheritance:
 
+
 HexagonPin()
 ^^^^^^^^^^^^
 
@@ -1159,6 +1188,7 @@ HexagonPin()
 .. automodule:: paramak.parametric_components.hexagon_pin
    :members:
    :show-inheritance:
+
 
 RotatedTrapezoid()
 ^^^^^^^^^^^^^^^^^^
@@ -1189,6 +1219,7 @@ RotatedTrapezoid()
 .. automodule:: paramak.parametric_components.rotated_trapezoid
    :members:
    :show-inheritance:
+
 
 RotatedIsoscelesTriangle
 ^^^^^^^^^^^^^^^^^^^^^^^^

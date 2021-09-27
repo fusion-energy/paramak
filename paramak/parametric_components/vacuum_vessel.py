@@ -9,9 +9,6 @@ class VacuumVessel(RotateStraightShape):
         height (float): height of the vessel.
         inner_radius (float): the inner radius of the vessel.
         thickness (float): thickness of the vessel
-        stp_filename (str, optional): defaults to "VacuumVessel.stp".
-        stl_filename (str, optional): defaults to "VacuumVessel.stl".
-        material_tag (str, optional): defaults to "vacuum_vessel_mat".
     """
 
     def __init__(
@@ -19,18 +16,12 @@ class VacuumVessel(RotateStraightShape):
         height,
         inner_radius,
         thickness,
-        stp_filename="VacuumVessel.stp",
-        stl_filename="VacuumVessel.stl",
-        material_tag="vacuum_vessel_mat",
         **kwargs
     ):
         self.height = height
         self.inner_radius = inner_radius
         self.thickness = thickness
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

@@ -32,18 +32,11 @@ class TestExtrudeStraightShape(unittest.TestCase):
         assert isinstance(test_shape_2.workplane, Plane)
         assert pytest.approx(test_shape_2.volume, self.test_shape.volume)
 
-    def test_volume_in_neutronics_description(self):
-        assert 'volume' in self.test_shape.neutronics_description()[0].keys()
-        assert pytest.approx(
-            self.test_shape.neutronics_description()[0]['volume'][0], 1200)
-
     def test_default_parameters(self):
         """Checks that the default parameters of an ExtrudeStraightShape are
         correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "ExtrudeStraightShape.stp"
-        assert self.test_shape.stl_filename == "ExtrudeStraightShape.stl"
         assert self.test_shape.extrude_both
 
     def test_absolute_shape_volume(self):

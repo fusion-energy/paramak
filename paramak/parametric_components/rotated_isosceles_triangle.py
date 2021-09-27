@@ -12,13 +12,10 @@ class RotatedIsoscelesTriangle(RotateStraightShape):
         base_length (float): the length of the base of the triangle (cm).
         height (float): the height of the triangle (cm).
         pivot_point ((float, float)): the coordinates of the tip of the
-            triangle at the oppersite side to the base of the triangle.
+            triangle at the opposite side to the base of the triangle.
         pivot_angle (float, optional): the angle (in degrees) to pivot (rotate)
             the shape by around the pivot point. Defaults to 0.
-        stp_filename (str, optional): defaults to "RotatedIsoscelesTriangle.stp".
-        stl_filename (str, optional): defaults to "RotatedIsoscelesTriangle.stl".
         name (str, optional): defaults to "rotated_triangle".
-        material_tag (str, optional): defaults to "rotated_triangle_mat".
     """
 
     def __init__(
@@ -27,18 +24,12 @@ class RotatedIsoscelesTriangle(RotateStraightShape):
         height,
         pivot_point,
         pivot_angle=0.,
-        stp_filename="RotatedIsoscelesTriangle.stp",
-        stl_filename="RotatedIsoscelesTriangle.stl",
         name="rotated_triangle",
-        material_tag="rotated_triangle_mat",
         **kwargs
     ):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

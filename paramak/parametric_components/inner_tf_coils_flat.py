@@ -23,9 +23,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             defining the inner_radius and outer_radius. Can be set to either
             'corner' or 'straight'.
         azimuth_start_angle: defaults to 0.0.
-        stp_filename: defaults to "InnerTfCoilsFlat.stp".
-        stl_filename: defaults to "InnerTfCoilsFlat.stl".
-        material_tag: defaults to "inner_tf_coil_mat".
         workplane:defaults to "XY".
         rotation_axis: Defaults to "Z".
     """
@@ -39,9 +36,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         gap_size: float,
         radius_type: Optional[str] = 'corner',
         azimuth_start_angle: Optional[float] = 0.0,
-        stp_filename: Optional[str] = "InnerTfCoilsFlat.stp",
-        stl_filename: Optional[str] = "InnerTfCoilsFlat.stl",
-        material_tag: Optional[str] = "inner_tf_coil_mat",
         workplane: Optional[str] = "XY",
         rotation_axis: Optional[str] = "Z",
         **kwargs
@@ -49,9 +43,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
 
         super().__init__(
             distance=height,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            material_tag=material_tag,
             workplane=workplane,
             rotation_axis=rotation_axis,
             **kwargs

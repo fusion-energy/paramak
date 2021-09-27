@@ -18,19 +18,12 @@ Paramak
 
 The Paramak python package allows rapid production of 3D CAD models of fusion
 reactors. The purpose of the Paramak is to provide geometry for parametric
-studies. It is possible to use the created geometry in engineering and
-neutronics studies as the STP files produced can be automatically converted to
-DAGMC compatible neutronics models or meshed and used in finite element
-analysis codes.
+studies in a varity of CAD formats including STL, STP and Brep files.
 
-Features have been added to address particular needs and the software is by no
-means a finished product. Contributions are welcome. CadQuery functions provide
-the majority of the features, and incorporating additional capabilities is
-straightforward for developers with Python knowledge.
+adQuery functions provide the majority of the features, and incorporating
+additional capabilities is straightforward for developers with Python knowledge.
 
-You might also be interested in the `paramak-neutronics <https://github.com/fusion-energy/paramak-neutronics>`_   
-which is a separate module that adds neutronics capabilties.
-
+Contributions are welcome. C
 
 .. raw:: html
 
@@ -63,8 +56,7 @@ became open-source and has flourished ever since.
 
 The project has grown largely due to two contributors in particular
 (John Billingsley and Remi Delaporte-Mathurin) and others have also helped,
-you can see all those who have helped the development in the 
-`Authors.md <https://github.com/fusion-energy/paramak/blob/main/AUTHORS.md>`_ and in the 
+you can see all those who have helped the development in the
 `GitHub contributions <https://github.com/fusion-energy/paramak/graphs/contributors>`_.
 
 The code has been professionally reviewed by
@@ -97,12 +89,12 @@ be accomplished via the use of parametric Shapes, parametric Components and
 parametric Reactors with each level building upon the level below.
 
 Parametric Shapes are the simplest and accept points and connection information
-in 2D space (defaults to x,z) and performs operations on them to create 3D
+in 2D space (defaults to x,z plane) and performs operations on them to create 3D
 volumes. The points and connections are provided by the user when making
-parametric Shapes. Supported CAD opperations include (rotate, extrude, sweep)
-and Boolean opperations such as cut, union and intersect. Additionally the 
+parametric Shapes. Supported CAD operations include (rotate, extrude, sweep)
+and Boolean operations such as cut, union and intersect. Additionally the 
 CadQuery objects created can be combined and modified using CadQuery's powerful 
-filtering capabilties to furter customise the shapes by performing operations
+filtering capabilities to further customise the shapes by performing operations
 like edge filleting.
 
 Parametric Components build on top of this foundation and will calculate the
@@ -111,8 +103,8 @@ differ between components as a center column requires different inputs to a
 breeder blanket or a magnet.
 
 Parametric Reactors build upon these two lower level objects to create an
-entire reactor model from input parameters. Linkage between the componets is
-encoded in each parametric Ractor design.
+entire reactor model from input parameters. Linkage between the components is
+encoded in each parametric Rector design.
 
 The different parametric reactor families are shown below.
 

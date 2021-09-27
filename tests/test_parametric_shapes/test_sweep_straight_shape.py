@@ -20,8 +20,6 @@ class TestSweepStraightShape(unittest.TestCase):
         correct."""
 
         # assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "SweepStraightShape.stp"
-        assert self.test_shape.stl_filename == "SweepStraightShape.stl"
         assert self.test_shape.azimuth_placement_angle == 0
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.path_workplane == "XZ"
@@ -106,6 +104,30 @@ class TestSweepStraightShape(unittest.TestCase):
             Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
+
+    def test_export_brep(self):
+        """Exports a brep file and checks that the output exist"""
+
+        os.system("rm test_solid.brep")
+
+        self.test_shape.export_brep(filename='test_solid.brep')
+
+        assert Path("test_solid.brep").exists() is True
+
+        os.system("rm test_solid.brep")
+
+    def test_export_brep_without_extention(self):
+        """Exports a brep file without the extention and checks that the
+        output exist"""
+
+        def missing_extention():
+
+            self.test_shape.export_brep(filename='test_solid_missing')
+
+        self.assertRaises(
+            ValueError,
+            missing_extention
+        )
 
     def test_incorrect_points_input(self):
         """Checks that an error is raised when the points are input with the

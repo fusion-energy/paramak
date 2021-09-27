@@ -9,28 +9,19 @@ class HollowCube(Shape):
 
     Arguments:
         length (float): The length to use for the height, width, depth of the
-            inner dimentions of the cube.
+            inner dimensions of the cube.
         thickness (float, optional): thickness of the vessel. Defaults to 10.0.
-        stp_filename (str, optional): Defaults to "HollowCube.stp".
-        stl_filename (str, optional): Defaults to "HollowCube.stl".
-        material_tag (str, optional): defaults to "hollow_cube_mat".
     """
 
     def __init__(
         self,
         length,
         thickness=10.,
-        stp_filename="HollowCube.stp",
-        stl_filename="HollowCube.stl",
-        material_tag="hollow_cube_mat",
         **kwargs
     ):
         self.length = length
         self.thickness = thickness
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

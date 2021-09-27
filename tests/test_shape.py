@@ -19,7 +19,6 @@ class TestShape(unittest.TestCase):
             inner_radius=50,
             mid_radius=60,
             outer_radius=100,
-            material_tag='center_column_shield_mat',
         )
 
         self.test_rotate_mixed_shape = paramak.RotateMixedShape(
@@ -121,7 +120,8 @@ class TestShape(unittest.TestCase):
     def test_incorrect_graveyard_offset_too_small(self):
 
         def incorrect_graveyard_offset_too_small():
-            """Set graveyard_offset as a negative number which should raise an error"""
+            """Set graveyard_offset as a negative number which should raise an
+            error"""
 
             self.my_shape.graveyard_offset = -3
 
@@ -143,26 +143,26 @@ class TestShape(unittest.TestCase):
         )
 
     def test_missing_filename_arg_in_export_stp(self):
-        """Checks that an error is raised when a stp export is requested without a filename."""
+        """Checks that an error is raised when a stp export is requested
+        without a filename."""
 
         def incorrect_args():
-            self.my_shape.stp_filename = None
             self.my_shape.export_stp()
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_args
         )
 
     def test_missing_filename_arg_in_export_stl(self):
-        """Checks that an error is raised when a stl export is requested without a filename."""
+        """Checks that an error is raised when a stl export is requested
+        without a filename."""
 
         def incorrect_args():
-            self.my_shape.stl_filename = None
             self.my_shape.export_stl()
 
         self.assertRaises(
-            ValueError,
+            TypeError,
             incorrect_args
         )
 
@@ -344,30 +344,6 @@ class TestShape(unittest.TestCase):
         test_shape.solid
         assert test_shape.hash_value != initial_hash_value
 
-    def test_material_tag_warning(self):
-        """Checks that a warning is raised when a Shape has a material tag >
-        28 characters."""
-
-        test_shape = paramak.Shape()
-
-        def warning_material_tag():
-
-            test_shape.material_tag = "abcdefghijklmnopqrstuvwxyz12345"
-
-        self.assertWarns(UserWarning, warning_material_tag)
-
-    def test_invalid_material_tag(self):
-        """Checks a ValueError is raised when a Shape has an invalid material
-        tag."""
-
-        test_shape = paramak.Shape()
-
-        def invalid_material_tag():
-
-            test_shape.material_tag = 123
-
-        self.assertRaises(ValueError, invalid_material_tag)
-
     def test_export_html(self):
         """Checks a plotly figure of the Shape is exported by the export_html
         method with the correct filename with RGB and RGBA colors."""
@@ -441,42 +417,42 @@ class TestShape(unittest.TestCase):
 
         def invalid_filename_suffix():
 
-            paramak.RotateStraightShape(
+            test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
-                stp_filename="filename.invalid_suffix"
             )
+            test_shape.export_stp(filename='test_shape.txt')
 
         self.assertRaises(ValueError, invalid_filename_suffix)
 
         def invalid_filename_type():
 
-            paramak.RotateStraightShape(
+            test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
-                stp_filename=123456
             )
+            test_shape.export_stp(filename=1)
 
-        self.assertRaises(ValueError, invalid_filename_type)
+        self.assertRaises(TypeError, invalid_filename_type)
 
     def test_invalid_stl_filename(self):
         """Checks ValueError is raised when invalid stl filenames are used."""
 
         def invalid_filename_suffix():
 
-            paramak.RotateStraightShape(
+            test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
-                stl_filename="filename.invalid_suffix"
             )
+            test_shape.export_stl(filename='test_shape.txt')
 
         self.assertRaises(ValueError, invalid_filename_suffix)
 
         def invalid_filename_type():
 
-            paramak.RotateStraightShape(
+            test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
-                stl_filename=123456
             )
+            test_shape.export_stp(filename=1)
 
-        self.assertRaises(ValueError, invalid_filename_type)
+        self.assertRaises(TypeError, invalid_filename_type)
 
     def test_invalid_color(self):
         """Checks ValueError is raised when invalid colors are used."""
@@ -733,49 +709,6 @@ class TestShape(unittest.TestCase):
 
         for i in range(len(incorrect_values)):
             self.assertRaises(ValueError, set_value)
-
-    def test_export_neutronics_description_without_suffix(self):
-        """Creates a neutronics description with and without the .json file
-        extention and checks that the output file exists"""
-
-        test_shape = paramak.Shape()
-        test_shape.material_tag = 'm1'
-        test_shape.stp_filename = 'test_shape.stp'
-
-        os.system('rm test_shape.json')
-        test_shape.export_neutronics_description('test_shape')
-
-        assert Path('test_shape.json').is_file()
-        test_shape.export_neutronics_description('test_shape2.json')
-        assert Path('test_shape2.json').is_file()
-
-    def test_export_neutronics_description_contents(self):
-        """Creates a neutronics description for a shape and checks the
-        contents is a list with a dictionary entry that has specific keys and
-        values"""
-
-        test_shape = paramak.Shape()
-        test_shape.material_tag = 'm1'
-        test_shape.stp_filename = 'test_shape.stp'
-
-        os.system('rm *.json')
-        test_shape.export_neutronics_description('test_shape3.json')
-
-        with open('test_shape3.json') as json_file:
-            data = json.load(json_file)
-
-        assert isinstance(data, list)
-        assert len(data) == 1
-
-        assert 'stp_filename' in data[0].keys()
-        assert 'material_tag' in data[0].keys()
-        # TODO this can be removed in the future
-        assert 'stp_filename' in data[0].keys()
-
-        assert data[0]['material_tag'] == 'm1'
-        assert data[0]['stp_filename'] == 'test_shape.stp'
-        # TODO this can be removed in the future
-        assert data[0]['stp_filename'] == 'test_shape.stp'
 
     def test_setting_color_incorrectly_too_large(self):
         """Sets the shape.colour outside of the the 0 to 1 range"""

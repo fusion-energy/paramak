@@ -15,10 +15,6 @@ class TestCenterColumnShieldFlatTopHyperbola(unittest.TestCase):
         correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "CenterColumnShieldFlatTopHyperbola.stp"
-        assert self.test_shape.stl_filename == "CenterColumnShieldFlatTopHyperbola.stl"
-        # assert self.test_shape.name == "center_column"
-        assert self.test_shape.material_tag == "center_column_shield_mat"
 
     def test_points_calculation(self):
         """Checks that the points used to construct the

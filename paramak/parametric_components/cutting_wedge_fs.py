@@ -14,26 +14,17 @@ class CuttingWedgeFS(CuttingWedge):
     Args:
         shape (paramak.Shape): a paramak.Shape object that is used to find the
             height and radius of the wedge
-        stp_filename (str, optional): Defaults to "CuttingWedgeFS.stp".
-        stl_filename (str, optional): Defaults to "CuttingWedgeFS.stl".
-        material_tag (str, optional): Defaults to "cutting_slice_mat".
     """
 
     def __init__(
         self,
         shape,
-        stp_filename="CuttingWedgeAlternate.stp",
-        stl_filename="CuttingWedgeAlternate.stl",
-        material_tag="cutting_slice_mat",
         **kwargs
     ):
         self.shape = shape
         super().__init__(
             height=self.height,
             radius=self.radius,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

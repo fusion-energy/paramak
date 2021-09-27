@@ -33,8 +33,6 @@ class ITERtypeDivertor(RotateMixedShape):
             in between the targets. Defaults to 0.5.
         tilts ((float, float), optional): tilt angles (anticlockwise) in
             degrees for the vertical targets. Defaults to (-27, 0).
-        stp_filename (str, optional): defaults to "ITERtypeDivertor.stp".
-        stl_filename (str, optional): defaults to "ITERtypeDivertor.stl".
     """
 
     def __init__(
@@ -49,14 +47,10 @@ class ITERtypeDivertor(RotateMixedShape):
         dome_thickness=10,
         dome_pos=0.5,
         tilts=(-27, 0),
-        stp_filename="ITERtypeDivertor.stp",
-        stl_filename="ITERtypeDivertor.stl",
         **kwargs
     ):
 
         super().__init__(
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

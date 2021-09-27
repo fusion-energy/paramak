@@ -18,10 +18,7 @@ class TestHexagonPin(unittest.TestCase):
         assert self.test_shape.length_of_side == 5
         assert self.test_shape.distance == 42.
         assert self.test_shape.center_point == (0, 0)
-        assert self.test_shape.stp_filename == "HexagonPin.stp"
-        assert self.test_shape.stl_filename == "HexagonPin.stl"
         assert self.test_shape.name == "hexagon_pin"
-        assert self.test_shape.material_tag == "hexagon_pin_mat"
 
     def test_volume(self):
         """Checks the volume against the actual value"""

@@ -19,10 +19,6 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         """Checks that the default parameters of a CenterColumnShieldCylinder are correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "CenterColumnShieldCylinder.stp"
-        assert self.test_shape.stl_filename == "CenterColumnShieldCylinder.stl"
-        # assert self.test_shape.name == "center_column_shield"
-        assert self.test_shape.material_tag == "center_column_shield_mat"
 
     def test_creation(self):
         """Creates a center column shield using the CenterColumnShieldCylinder

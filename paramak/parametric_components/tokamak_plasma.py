@@ -26,9 +26,6 @@ class Plasma(RotateSplineShape):
         x_point_shift (float, optional): shift parameters for locating the
             X points in [0, 1]. Defaults to 0.1.
         name (str, optional): Defaults to "plasma".
-        material_tag (str, optional): defaults to "DT_plasma".
-        stp_filename (str, optional): defaults to "plasma.stp".
-        stl_filename (str, optional): defaults to "plasma.stl".
     """
 
     def __init__(
@@ -42,17 +39,11 @@ class Plasma(RotateSplineShape):
         configuration="non-null",
         x_point_shift=0.1,
         name="plasma",
-        material_tag="DT_plasma",
-        stp_filename="plasma.stp",
-        stl_filename="plasma.stl",
         **kwargs
     ):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

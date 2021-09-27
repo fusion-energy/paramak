@@ -15,9 +15,6 @@ class CoolantChannelRingCurved(SweepCircleShape):
         ring_radius: radius of coolant channel ring.
         start_angle: angle at which the first channel in the ring is placed.
             Defaults to 0.0.
-        stp_filename: Defaults to "CoolantChannelRingCurved.stp".
-        stl_filename: Defaults to "CoolantChannelRingCurved.stl".
-        material_tag: Defaults to "coolant_channel_mat".
         rotation_axis: azimuthal axis around which the separate coolant channels
             are placed. Default calculated by workplane and path_workplane.
         workplane (str, optional): plane in which the cross-sections of the
@@ -36,9 +33,6 @@ class CoolantChannelRingCurved(SweepCircleShape):
         ring_radius: float,
         mid_offset: float,
         start_angle: Optional[float] = 0.0,
-        stp_filename: Optional[str] = "CoolantChannelRingCurved.stp",
-        stl_filename: Optional[str] = "CoolantChannelRingCurved.stl",
-        material_tag: Optional[str] = "coolant_channel_mat",
         **kwargs
     ) -> None:
 
@@ -50,9 +44,6 @@ class CoolantChannelRingCurved(SweepCircleShape):
         super().__init__(
             path_points=self.path_points,
             radius=channel_radius,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

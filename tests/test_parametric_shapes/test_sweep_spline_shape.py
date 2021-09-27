@@ -19,8 +19,6 @@ class TestSweepSplineShape(unittest.TestCase):
         """Checks that the default parameters of a SweepSplineShape are correct."""
 
         # assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "SweepSplineShape.stp"
-        assert self.test_shape.stl_filename == "SweepSplineShape.stl"
         assert self.test_shape.azimuth_placement_angle == 0
         assert self.test_shape.workplane == "XY"
         assert self.test_shape.path_workplane == "XZ"

@@ -7,7 +7,8 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-from cadquery import Assembly, Color, Compound, Workplane, exporters, importers, Plane
+from cadquery import (Assembly, Color, Compound, Plane, Workplane, exporters,
+                      importers)
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
@@ -35,12 +36,6 @@ class Shape:
         color ((float, float, float [, float]), optional): The color to use
             when exporting as html graphs or png images. Can be in RGB or RGBA
             format with floats between 0 and 1. Defaults to (0.5, 0.5, 0.5).
-        material_tag (str, optional): the material name to use when exporting
-            the neutronics description. Defaults to None.
-        stp_filename (str, optional): the filename used when saving stp files.
-            Defaults to None.
-        stl_filename (str, optional): the filename used when saving stl files.
-            Defaults to None.
         azimuth_placement_angle (iterable of floats or float, optional): the
             azimuth angle(s) used when positioning the shape. If a list of
             angles is provided, the shape is duplicated at all angles.
@@ -84,9 +79,6 @@ class Shape:
         name: Optional[str] = None,
         color: Optional[Tuple[float, float, float,
                               Optional[float]]] = (0.5, 0.5, 0.5),
-        material_tag: Optional[str] = None,
-        stp_filename: Optional[str] = None,
-        stl_filename: Optional[str] = None,
         azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
         workplane: Optional[Union[str, Plane]] = "XZ",
         rotation_axis: Optional[str] = None,
@@ -104,8 +96,6 @@ class Shape:
 
         self.connection_type = connection_type
         self.points = points
-        self.stp_filename = stp_filename
-        self.stl_filename = stl_filename
         self.color = color
         self.name = name
 
@@ -122,7 +112,6 @@ class Shape:
         self.old_points = 0
 
         # neutronics specific properties
-        self.material_tag = material_tag
         self.tet_mesh = tet_mesh
         self.scale = scale
         self.surface_reflectivity = surface_reflectivity
@@ -389,26 +378,6 @@ class Shape:
         self._color = value
 
     @property
-    def material_tag(self):
-        """The material_tag assigned to the Shape. Used when taging materials
-        for use in neutronics descriptions"""
-
-        return self._material_tag
-
-    @material_tag.setter
-    def material_tag(self, value):
-        if value is None:
-            self._material_tag = value
-        elif isinstance(value, str):
-            if len(value) > 27:
-                msg = "Shape.material_tag > 28 characters." + \
-                      "Use with DAGMC will be affected." + str(value)
-                warnings.warn(msg)
-            self._material_tag = value
-        else:
-            raise ValueError("Shape.material_tag must be a string", value)
-
-    @property
     def tet_mesh(self):
         return self._tet_mesh
 
@@ -442,7 +411,9 @@ class Shape:
 
     @property
     def processed_points(self):
-        """Shape.processed_points attributes is set internally from the Shape.points"""
+        """Shape.processed_points attributes is set internally from the
+        Shape.points"""
+
         if self.points is not None:
             # if .points have changed since last time this was run
             if self.old_points != self.points:
@@ -551,61 +522,6 @@ class Shape:
                     raise ValueError(msg)
 
         self._points = values
-
-    @property
-    def stp_filename(self):
-        """Sets the Shape.stp_filename attribute which is used as the filename
-        when exporting the geometry to stp format. Note, .stp will be added to
-        filenames not ending with .step or .stp.
-
-        Args:
-            value (str): the value to use as the stp_filename
-
-        Raises:
-            incorrect type: only str values are accepted
-        """
-
-        return self._stp_filename
-
-    @stp_filename.setter
-    def stp_filename(self, value):
-        if value is not None:
-            if isinstance(value, str):
-                if Path(value).suffix not in [".stp", ".step"]:
-                    msg = ('Incorrect filename ending, filename must end with '
-                           '.stp or .step')
-                    raise ValueError(msg)
-            else:
-                msg = f'stp_filename must be a string {value} {type(value)}'
-                raise ValueError(msg)
-        self._stp_filename = value
-
-    @property
-    def stl_filename(self):
-        """Sets the Shape.stl_filename attribute which is used as the filename
-        when exporting the geometry to stl format. Note .stl will be added to
-        filenames not ending with .stl
-
-        Args:
-            value (str): the value to use as the stl_filename
-
-        Raises:
-            incorrect type: only str values are accepted
-        """
-        return self._stl_filename
-
-    @stl_filename.setter
-    def stl_filename(self, value):
-        if value is not None:
-            if isinstance(value, str):
-                if Path(value).suffix != ".stl":
-                    msg = ('Incorrect filename ending, filename must end with '
-                           '  .stl')
-                    raise ValueError(msg)
-            else:
-                msg = f'stl_filename must be a string {value} {type(value)}'
-                raise ValueError(msg)
-        self._stl_filename = value
 
     @property
     def azimuth_placement_angle(self):
@@ -885,12 +801,11 @@ class Shape:
 
     def export_stl(
             self,
-            filename: Optional[str] = None,
+            filename: str,
             tolerance: Optional[float] = 0.001,
             angular_tolerance: Optional[float] = 0.1,
             verbose: Optional[bool] = True) -> str:
-        """Exports an stl file for the Shape.solid. If the provided filename
-        doesn't end with .stl it will be added.
+        """Exports an stl file for the Shape.solid.
 
         Args:
             filename: the filename of exported the stl file. Defaults to None
@@ -902,16 +817,11 @@ class Shape:
                 file produced.
         """
 
-        if filename is not None:
-            path_filename = Path(filename)
-        elif self.stl_filename is not None:
-            path_filename = Path(self.stl_filename)
-        else:
-            raise ValueError("The filename must be specified either the \
-                filename argument or the Shape.stl_filename must be set")
+        path_filename = Path(filename)
 
         if path_filename.suffix != ".stl":
-            path_filename = path_filename.with_suffix(".stl")
+            msg = f'filename should end with .stl, not {path_filename.suffix}'
+            raise ValueError(msg)
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
@@ -924,19 +834,42 @@ class Shape:
 
         return str(path_filename)
 
+    def export_brep(
+        self,
+        filename
+    ):
+        """Exports a brep file for the Shape.solid.
+
+        Args:
+            filename: the filename of exported the brep file.
+        """
+
+        path_filename = Path(filename)
+
+        if path_filename.suffix != ".brep":
+            msg = "When exporting a brep file the filename must end with .brep"
+            raise ValueError(msg)
+
+        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+        self.solid.val().exportBrep(str(path_filename))
+        # alternative method is to use BRepTools that might support imprinting
+        # and merging https://github.com/CadQuery/cadquery/issues/449
+        # from OCP.BRepTools import BRepTools
+        # BRepTools.Write_s(self.solid.toOCC(), str(path_filename))
+
+        return str(path_filename)
+
     def export_stp(
             self,
-            filename: Optional[str] = None,
+            filename: str,
             units: Optional[str] = 'mm',
             mode: Optional[str] = 'solid',
             verbose: Optional[bool] = True) -> str:
-        """Exports an stp file for the Shape.solid. If the filename provided
-        doesn't end with .stp or .step then .stp will be added.
+        """Exports an stp file for the Shape.solid.
 
         Args:
-            filename: the filename of exported the stp file. Defaults to None
-                which will attempt to use the Shape.stp_filename. If both are
-                None then a valueError will be raised.
+            filename: the filename of exported the stp file.
             units: the units of the stp file, options are 'cm' or 'mm'.
                 Default is mm.
             mode: the object to export can be either
@@ -946,18 +879,13 @@ class Shape:
                 file produced.
         """
 
-        if filename is not None:
-            path_filename = Path(filename)
-        elif self.stp_filename is not None:
-            path_filename = Path(self.stp_filename)
-        else:
-            raise ValueError("The filename must be specified either the \
-                filename argument or the Shape.stp_filename must be set")
+        path_filename = Path(filename)
 
         if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
             pass
         else:
-            path_filename = path_filename.with_suffix(".stp")
+            msg = f'filename should end with .stp or .step, not {path_filename.suffix}'
+            raise ValueError(msg)
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
@@ -988,33 +916,7 @@ class Shape:
                 'SI_UNIT(.CENTI.,.METRE.)')
 
         if verbose:
-            print("Saved file as ", path_filename)
-
-        return str(path_filename)
-
-    def export_physical_groups(self, filename: str) -> str:
-        """Exports a JSON file containing a look up table which is useful for
-        identifying faces and volumes. If filename provided doesn't end with
-        .json then .json will be added.
-
-        Args:
-            filename (str): the filename used to save the json file
-        """
-
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".json":
-            path_filename = path_filename.with_suffix(".json")
-
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-        if self.physical_groups is not None:
-            with open(filename, "w") as outfile:
-                json.dump(self.physical_groups, outfile, indent=4)
-
-            print(f'Saved physical_groups description to {path_filename}')
-        else:
-            print(
-                f'Warning: physical_groups attribute is None for {self.name}')
+            print(f"Saved file as {path_filename}")
 
         return str(path_filename)
 
@@ -1292,87 +1194,6 @@ class Shape:
         self.patch = patch
         return patch
 
-    def neutronics_description(self) -> dict:
-        """Returns a neutronics description of the Shape object. This is needed
-        for the use with the cad_to_h5m python package which will automatically
-        convert the model to a DAGMC compatible neutronics geometry. If tet
-        meshing of the volume is required then cubit meshing commands can be
-        optionally specified as the tet_mesh argument.
-
-        Returns:
-            dictionary: a dictionary of the step filename and material name
-        """
-
-        neutronics_description = {"material_tag": self.material_tag}
-
-        if self.solid is not None:
-            neutronics_description["volume"] = self.volume(
-                split_compounds=True)
-
-        if self.stp_filename is not None:
-            neutronics_description["stp_filename"] = self.stp_filename
-            neutronics_description["cad_filename"] = self.stp_filename
-
-        if self.tet_mesh is not None:
-            neutronics_description["tet_mesh"] = self.tet_mesh
-
-        if self.scale is not None:
-            neutronics_description["scale"] = self.scale
-
-        if self.surface_reflectivity is True:
-            neutronics_description["surface_reflectivity"] = self.surface_reflectivity
-
-        if self.stl_filename is not None:
-            neutronics_description["stl_filename"] = self.stl_filename
-
-        return [neutronics_description]
-
-    def export_neutronics_description(
-            self,
-            filename: Optional[str] = "manifest.json") -> str:
-        """
-        Saves Shape.neutronics_description to a json file. The resulting json
-        file contains a list of dictionaries. Each dictionary entry comprises
-        of a material and a filename and optionally a tet_mesh instruction. The
-        json file can then be used with the neutronics workflows to create a
-        neutronics model. Creating of the neutronics model requires linkage
-        between volumes, materials and identification of which volumes to
-        tet_mesh. If the filename does not end with .json then .json will be
-        added. The plasma geometry is not included by default as it is
-        typically not included in neutronics simulations. The reason for this
-        is that the low number density results in minimal interactions with
-        neutrons. However, the plasma can be added if the include_plasma
-        argument is set to True.
-
-        Args:
-            filename (str, optional): the filename used to save the neutronics
-                description
-            include_plasma (Boolean, optional): should the plasma be included.
-                Defaults to False as the plasma volume and material has very
-                little impact on the neutronics results due to the low density.
-                Including the plasma does however slow down the simulation.
-            include_graveyard (Boolean, optional): should the graveyard be
-                included. Defaults to True as this is needed for DAGMC models.
-        """
-
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".json":
-            path_filename = path_filename.with_suffix(".json")
-
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-
-        with open(path_filename, "w") as outfile:
-            json.dump(
-                self.neutronics_description(),
-                outfile,
-                indent=4,
-            )
-
-        print("saved geometry description to ", path_filename)
-
-        return str(path_filename)
-
     def perform_boolean_operations(self, solid: Workplane, **kwargs):
         """Performs boolean cut, intersect and union operations if shapes are
         provided"""
@@ -1447,9 +1268,6 @@ class Shape:
         graveyard_shape = paramak.HollowCube(
             length=graveyard_size_to_use,
             name="graveyard",
-            material_tag="graveyard",
-            stp_filename="graveyard.stp",
-            stl_filename="graveyard.stl",
         )
 
         self.graveyard = graveyard_shape

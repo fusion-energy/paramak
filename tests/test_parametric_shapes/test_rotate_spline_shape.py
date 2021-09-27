@@ -19,8 +19,6 @@ class TestRotateSplineShape(unittest.TestCase):
         correct."""
 
         assert self.test_shape.rotation_angle == 360
-        assert self.test_shape.stp_filename == "RotateSplineShape.stp"
-        assert self.test_shape.stl_filename == "RotateSplineShape.stl"
         assert self.test_shape.azimuth_placement_angle == 0
 
     def test_absolute_shape_volume(self):
