@@ -6,16 +6,16 @@ channels:
 
 dependencies:
   - cadquery=2.1
-  - pytest
-  - plotly
-  - scipy
-  - numpy
-  - matplotlib
-  - pillow
-  - sympy
-  - defusedxml
+  - plotly<=5.3.0
+  - scipy<=1.6.2
+  - numpy>=1.9
+  - matplotlib<=3.4.2
+  - pillow<=8.3.1
+  - sympy<=1.8.0
+  - defusedxml<=0.7.1
   - plasmaboundaries
-  - sphinx-autodoc-typehints
+  - sphinx-autodoc-typehints<=1.12.0
+  - pip<=21.2.4
   - pip:
     - sphinxcadquery
     - jupyter-cadquery
