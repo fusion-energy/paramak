@@ -12,10 +12,10 @@ dependencies:
   - numpy
   - matplotlib
   - pillow
+  - sympy
+  - defusedxml
+  - plasmaboundaries
+  - sphinx-autodoc-typehints
   - pip:
-    - sympy
-    - plasmaboundaries
-    - sphinx-autodoc-typehints
     - sphinxcadquery
-    - defusedxml
     - jupyter-cadquery
