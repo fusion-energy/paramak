@@ -1,4 +1,3 @@
-
 import collections
 import json
 from collections import Counter
@@ -36,11 +35,11 @@ class Reactor:
     """
 
     def __init__(
-            self,
-            shapes_and_components: List[paramak.Shape] = [],
-            graveyard_size: Optional[float] = 20_000,
-            graveyard_offset: Optional[float] = None,
-            largest_shapes: Optional[List[paramak.Shape]] = None,
+        self,
+        shapes_and_components: List[paramak.Shape] = [],
+        graveyard_size: Optional[float] = 20_000,
+        graveyard_offset: Optional[float] = None,
+        largest_shapes: Optional[List[paramak.Shape]] = None,
     ):
 
         self.shapes_and_components = shapes_and_components
@@ -50,9 +49,9 @@ class Reactor:
 
         self.input_variable_names = [
             # 'shapes_and_components', commented out to avoid calculating solids
-            'graveyard_size',
-            'graveyard_offset',
-            'largest_shapes',
+            "graveyard_size",
+            "graveyard_offset",
+            "largest_shapes",
         ]
 
         self.stp_filenames = []
@@ -111,9 +110,7 @@ class Reactor:
             shapes_to_bound = self.largest_shapes
 
         for component in shapes_to_bound:
-            largest_dimension = max(
-                largest_dimension,
-                component.largest_dimension)
+            largest_dimension = max(largest_dimension, component.largest_dimension)
         # self._largest_dimension = largest_dimension
         return largest_dimension
 
@@ -139,8 +136,9 @@ class Reactor:
     @largest_shapes.setter
     def largest_shapes(self, value):
         if not isinstance(value, (list, tuple, type(None))):
-            raise ValueError('paramak.Reactor.largest_shapes should be a '
-                             'list of paramak.Shapes')
+            raise ValueError(
+                "paramak.Reactor.largest_shapes should be a " "list of paramak.Shapes"
+            )
         self._largest_shapes = value
 
     @property
@@ -185,8 +183,8 @@ class Reactor:
         for shape_or_compound in self.shapes_and_components:
             if isinstance(
                 shape_or_compound.solid,
-                (cq.occ_impl.shapes.Shape,
-                    cq.occ_impl.shapes.Compound)):
+                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
+            ):
                 for solid in shape_or_compound.solid.Solids():
                     list_of_cq_vals.append(solid)
             else:
@@ -199,7 +197,7 @@ class Reactor:
     @property
     def name(self):
         """Returns a list of names of the individual Shapes that make up the
-        reactor """
+        reactor"""
 
         all_names = []
         for shape in self.shapes_and_components:
@@ -207,7 +205,7 @@ class Reactor:
 
         return all_names
 
-    @ solid.setter
+    @solid.setter
     def solid(self, value):
         self._solid = value
 
@@ -229,44 +227,44 @@ class Reactor:
             from jupyter_cadquery.cadquery import Part, PartGroup, show
         except ImportError:
             msg = (
-                'To use Reactor.show() you must install jupyter_cadquery. To'
+                "To use Reactor.show() you must install jupyter_cadquery. To"
                 'install jupyter_cadquery type "pip install jupyter_cadquery"'
-                ' in the terminal')
+                " in the terminal"
+            )
             raise ImportError(msg)
 
         parts = []
         for shape_or_compound in self.shapes_and_components:
 
             if shape_or_compound.name is None:
-                name = 'Shape.name not set'
+                name = "Shape.name not set"
             else:
                 name = shape_or_compound.name
 
             scaled_color = [int(i * 255) for i in shape_or_compound.color[0:3]]
             scaled_edge_color = [int(i * 255) for i in default_edgecolor[0:3]]
             if isinstance(
-                    shape_or_compound.solid,
-                    (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound)):
+                shape_or_compound.solid,
+                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
+            ):
                 for i, solid in enumerate(shape_or_compound.solid.Solids()):
-                    parts.append(
-                        Part(
-                            solid,
-                            name=f"{name}{i}",
-                            color=scaled_color))
+                    parts.append(Part(solid, name=f"{name}{i}", color=scaled_color))
             else:
                 parts.append(
                     Part(
                         shape_or_compound.solid.val(),
                         name=f"{name}",
-                        color=scaled_color))
+                        color=scaled_color,
+                    )
+                )
 
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
     def export_stp(
-            self,
-            filename: Union[List[str], str],
-            mode: Optional[str] = 'solid',
-            units: Optional[str] = 'mm',
+        self,
+        filename: Union[List[str], str] = None,
+        mode: Optional[str] = "solid",
+        units: Optional[str] = "mm",
     ) -> Union[List[str], str]:
         """Exports the 3D reactor model as a stp file or files.
 
@@ -275,7 +273,9 @@ class Reactor:
                 full reactor model to a single file. Alternativley filename can
                 also accept a list of strings where each string is the filename
                 of the the individual shapes that make it up. This will result
-                in separate files for each shape in the reactor.
+                in separate files for each shape in the reactor. Defaults to
+                None which uses the Reactor.name with '.stp' appended to the end
+                of each entry.
             mode: the object to export can be either 'solid' which exports 3D
                 solid shapes or the 'wire' which exports the wire edges of the
                 shape.
@@ -288,27 +288,31 @@ class Reactor:
         if isinstance(filename, str):
 
             # exports a single file for the whole model
-            assembly = cq.Assembly(name='reactor')
+            assembly = cq.Assembly(name="reactor")
             for entry in self.shapes_and_components:
                 if entry.color is None:
                     assembly.add(entry.solid)
                 else:
                     assembly.add(entry.solid, color=cq.Color(*entry.color))
 
-            assembly.save(filename, exportType='STEP')
+            assembly.save(filename, exportType="STEP")
 
-            if units == 'cm':
+            if units == "cm":
                 _replace(
-                    filename,
-                    'SI_UNIT(.MILLI.,.METRE.)',
-                    'SI_UNIT(.CENTI.,.METRE.)')
+                    filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)"
+                )
 
             return [filename]
 
-       # exports the reactor solid as a separate stp files
+        if filename is None:
+            filename = [f"{name}.stp" for name in self.name]
+
+        # exports the reactor solid as a separate stp files
         if len(filename) != len(self.shapes_and_components):
-            msg = (f'The Reactor contains {len(self.shapes_and_components)} '
-                   f'Shapes and {len(filename)} filenames have be provided')
+            msg = (
+                f"The Reactor contains {len(self.shapes_and_components)} "
+                f"Shapes and {len(filename)} filenames have be provided"
+            )
             raise ValueError(msg)
 
         for stp_filename, entry in zip(filename, self.shapes_and_components):
@@ -320,18 +324,14 @@ class Reactor:
                 verbose=False,
             )
 
-            if units == 'cm':
+            if units == "cm":
                 _replace(
-                    stp_filename,
-                    'SI_UNIT(.MILLI.,.METRE.)',
-                    'SI_UNIT(.CENTI.,.METRE.)')
+                    stp_filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)"
+                )
 
         return filename
 
-    def export_brep(
-        self,
-        filename
-    ):
+    def export_brep(self, filename):
         """Exports a brep file for the Reactor.solid.
 
         Args:
@@ -353,14 +353,21 @@ class Reactor:
         return str(path_filename)
 
     def export_stl(
-            self,
-            filename: Union[List[str], str],
-            tolerance: Optional[float] = 0.001,
-            angular_tolerance: Optional[float] = 0.1,
+        self,
+        filename: Union[List[str], str],
+        tolerance: Optional[float] = 0.001,
+        angular_tolerance: Optional[float] = 0.1,
     ) -> List[str]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
+            filename: Accepts a single filename as a string which exports the
+                full reactor model to a single file. Alternativley filename can
+                also accept a list of strings where each string is the filename
+                of the the individual shapes that make it up. This will result
+                in separate files for each shape in the reactor. Defaults to
+                None which uses the Reactor.name with '.stl' appended to the end
+                of each entry.
             tolerance (float):  the precision of the faceting
             include_graveyard: specify if the graveyard will be included or
                 not. If True the the Reactor.make_graveyard will be called
@@ -381,15 +388,24 @@ class Reactor:
             path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
             # add an include_graveyard that add graveyard if requested
-            exporters.export(self.solid, str(path_filename), exportType='STL',
-                             tolerance=tolerance,
-                             angularTolerance=angular_tolerance)
+            exporters.export(
+                self.solid,
+                str(path_filename),
+                exportType="STL",
+                tolerance=tolerance,
+                angularTolerance=angular_tolerance,
+            )
             return str(path_filename)
+
+        if filename is None:
+            filename = [f"{name}.stl" for name in self.name]
 
         # exports the reactor solid as a separate stl files
         if len(filename) != len(self.shapes_and_components):
-            msg = (f'The Reactor contains {len(self.shapes_and_components)} '
-                   f'Shapes and {len(filename)} filenames have be provided')
+            msg = (
+                f"The Reactor contains {len(self.shapes_and_components)} "
+                f"Shapes and {len(filename)} filenames have be provided"
+            )
             raise ValueError(msg)
 
         for stl_filename, entry in zip(filename, self.shapes_and_components):
@@ -403,10 +419,10 @@ class Reactor:
         return filename
 
     def make_sector_wedge(
-            self,
-            height: Optional[float] = None,
-            radius: Optional[float] = None,
-            rotation_angle: Optional[float] = None,
+        self,
+        height: Optional[float] = None,
+        radius: Optional[float] = None,
+        rotation_angle: Optional[float] = None,
     ) -> Union[paramak.Shape, None]:
         """Creates a rotated wedge shaped object that is useful for creating
         sector models in DAGMC where reflecting surfaces are needed. If the
@@ -425,20 +441,21 @@ class Reactor:
         """
 
         if rotation_angle is None:
-            if hasattr(self, 'rotation_angle'):
+            if hasattr(self, "rotation_angle"):
                 rotation_angle = self.rotation_angle
             if rotation_angle is None:
-                Warning('No sector_wedge can be made as rotation_angle'
-                        ' or Reactor.rotation_angle have not been set')
+                Warning(
+                    "No sector_wedge can be made as rotation_angle"
+                    " or Reactor.rotation_angle have not been set"
+                )
                 return None
 
         if rotation_angle > 360:
-            Warning(
-                'No wedge can be made for a rotation angle of 360 or above')
+            Warning("No wedge can be made for a rotation angle of 360 or above")
             return None
 
         if rotation_angle == 360:
-            print('No sector wedge made as rotation angle is 360')
+            print("No sector wedge made as rotation angle is 360")
             return None
 
         if height is None:
@@ -460,18 +477,18 @@ class Reactor:
         return sector_cutting_wedge
 
     def export_svg(
-            self,
-            filename: Optional[str] = 'reactor.svg',
-            projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
-            width: Optional[float] = 1000,
-            height: Optional[float] = 800,
-            marginLeft: Optional[float] = 120,
-            marginTop: Optional[float] = 100,
-            strokeWidth: Optional[float] = None,
-            strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
-            hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
-            showHidden: Optional[bool] = False,
-            showAxes: Optional[bool] = False,
+        self,
+        filename: Optional[str] = "reactor.svg",
+        projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+        width: Optional[float] = 1000,
+        height: Optional[float] = 800,
+        marginLeft: Optional[float] = 120,
+        marginTop: Optional[float] = 100,
+        strokeWidth: Optional[float] = None,
+        strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
+        hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
+        showHidden: Optional[bool] = False,
+        showAxes: Optional[bool] = False,
     ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
@@ -522,24 +539,23 @@ class Reactor:
             "projectionDir": projectionDir,
             "strokeColor": strokeColor,
             "hiddenColor": hiddenColor,
-            "showHidden": showHidden
+            "showHidden": showHidden,
         }
 
         if strokeWidth is not None:
             opt["strokeWidth"] = strokeWidth
 
-        exporters.export(self.solid, str(path_filename), exportType='SVG',
-                         opt=opt)
+        exporters.export(self.solid, str(path_filename), exportType="SVG", opt=opt)
 
         print("Saved file as ", path_filename)
 
         return str(path_filename)
 
     def export_stp_graveyard(
-            self,
-            filename: Optional[str] = "graveyard.stp",
-            graveyard_size: Optional[float] = None,
-            graveyard_offset: Optional[float] = None,
+        self,
+        filename: Optional[str] = "graveyard.stp",
+        graveyard_size: Optional[float] = None,
+        graveyard_offset: Optional[float] = None,
     ) -> str:
         """Writes a stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
@@ -574,9 +590,9 @@ class Reactor:
         return str(path_filename)
 
     def make_graveyard(
-            self,
-            graveyard_size: Optional[float] = None,
-            graveyard_offset: Optional[float] = None,
+        self,
+        graveyard_size: Optional[float] = None,
+        graveyard_offset: Optional[float] = None,
     ) -> paramak.Shape:
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
@@ -611,12 +627,16 @@ class Reactor:
 
         elif self.graveyard_offset is not None:
             self.solid
-            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
+            graveyard_size_to_use = (
+                self.largest_dimension * 2 + self.graveyard_offset * 2
+            )
 
         else:
-            raise ValueError("the graveyard_size, Reactor.graveyard_size, \
+            raise ValueError(
+                "the graveyard_size, Reactor.graveyard_size, \
                 graveyard_offset and Reactor.graveyard_offset are all None. \
-                Please specify at least one of these attributes or arguments")
+                Please specify at least one of these attributes or arguments"
+            )
 
         graveyard_shape = paramak.HollowCube(
             length=graveyard_size_to_use,
@@ -628,12 +648,12 @@ class Reactor:
         return graveyard_shape
 
     def export_2d_image(
-            self,
-            filename: Optional[str] = "2d_slice.png",
-            xmin: Optional[float] = 0.0,
-            xmax: Optional[float] = 900.0,
-            ymin: Optional[float] = -600.0,
-            ymax: Optional[float] = 600.0,
+        self,
+        filename: Optional[str] = "2d_slice.png",
+        xmin: Optional[float] = 0.0,
+        xmax: Optional[float] = 900.0,
+        ymin: Optional[float] = -600.0,
+        ymax: Optional[float] = 600.0,
     ) -> str:
         """Creates a 2D slice image (png) of the reactor.
 
@@ -671,8 +691,8 @@ class Reactor:
         return str(path_filename)
 
     def export_html_3d(
-            self,
-            filename: Optional[str] = "reactor_3d.html",
+        self,
+        filename: Optional[str] = "reactor_3d.html",
     ) -> str:
         """Saves an interactive 3d html view of the Reactor to a html file.
 
@@ -691,21 +711,18 @@ class Reactor:
         if view is None:
             return None
 
-        embed_minimal_html(
-            filename,
-            views=[view.cq_view.renderer],
-            title='Renderer'
-        )
+        embed_minimal_html(filename, views=[view.cq_view.renderer], title="Renderer")
 
         return filename
 
     def export_html(
-            self,
-            filename: Optional[str] = "reactor.html",
-            facet_splines: Optional[bool] = True,
-            facet_circles: Optional[bool] = True,
-            tolerance: Optional[float] = 1.,
-            view_plane: Optional[str] = 'RZ'):
+        self,
+        filename: Optional[str] = "reactor.html",
+        facet_splines: Optional[bool] = True,
+        facet_circles: Optional[bool] = True,
+        tolerance: Optional[float] = 1.0,
+        view_plane: Optional[str] = "RZ",
+    ):
         """Creates a html graph representation of the points for the Shape
         objects that make up the reactor. Shapes are colored by their .color
         property. Shapes are also labelled by their .name. If filename provided
@@ -734,17 +751,17 @@ class Reactor:
             facet_splines=facet_splines,
             facet_circles=facet_circles,
             tolerance=tolerance,
-            title="coordinates of the " + self.__class__.__name__ +
-            " reactor, viewed from the " + view_plane + " plane",
+            title="coordinates of the "
+            + self.__class__.__name__
+            + " reactor, viewed from the "
+            + view_plane
+            + " plane",
             mode="lines",
         )
 
         return fig
 
-    def volume(
-        self,
-        split_compounds: bool = False
-    ) -> List[float]:
+    def volume(self, split_compounds: bool = False) -> List[float]:
         """Get the volumes of the Shapes in the Reactor.
 
         Args:
