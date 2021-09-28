@@ -355,7 +355,7 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        if merge == False:
+        if not merge:
             self.solid.exportBrep(str(path_filename))
         else:
             import OCP
