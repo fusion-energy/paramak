@@ -339,11 +339,12 @@ class Reactor:
 
         return filename
 
-    def export_brep(self, filename):
+    def export_brep(self, filename: str, merged: bool = True):
         """Exports a brep file for the Reactor.solid.
 
         Args:
             filename: the filename of exported the brep file.
+            merged: if the surfaces should be merged (True) or not (False).
         """
 
         path_filename = Path(filename)
@@ -354,10 +355,26 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        self.solid.exportBrep(str(path_filename))
-        # alternative method is to use BRepTools that might support imprinting
-        # and merging https://github.com/CadQuery/cadquery/issues/449
+        if merged == False:
+            self.solid.exportBrep(str(path_filename))
+        else:
+            import OCP
+            bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
 
+            for shape in self.shapes_and_components:
+                bldr.AddArgument(shape.solid.val().wrapped)
+
+            bldr.SetNonDestructive(True)
+
+            bldr.Perform()
+
+            im = bldr.Images()
+
+            merged = cq.Compound(bldr.Shape())
+
+            merged.exportBrep(str(path_filename))
+
+            
         return str(path_filename)
 
     def export_stl(
