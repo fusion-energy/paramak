@@ -11,7 +11,7 @@ rm -rf /tmp/conda-build
 
 
 # VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
-VERSION=0.5.0
+VERSION=0.6.1
 PLACEHOLDER='version="develop"'
 VERSION_FILE='setup.py'
 # Grep checks that the placeholder is in the file. If grep doesn't find
