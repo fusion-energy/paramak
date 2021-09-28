@@ -374,7 +374,6 @@ class Reactor:
 
             merged.exportBrep(str(path_filename))
 
-            
         return str(path_filename)
 
     def export_stl(
