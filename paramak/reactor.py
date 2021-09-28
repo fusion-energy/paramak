@@ -355,7 +355,7 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        if merged == False:
+        if not merged:
             self.solid.exportBrep(str(path_filename))
         else:
             import OCP
@@ -374,7 +374,6 @@ class Reactor:
 
             merged.exportBrep(str(path_filename))
 
-            
         return str(path_filename)
 
     def export_stl(
