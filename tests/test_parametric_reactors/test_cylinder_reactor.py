@@ -47,8 +47,8 @@ class TestCylinderReactor(unittest.TestCase):
 
         os.system("rm test_reactor.brep")
 
-        self.test_reactor.export_brep(filename='merged.brep', merged=True)
-        self.test_reactor.export_brep(filename='not_merged.brep', merged=False)
+        self.test_reactor.export_brep(filename='merged.brep', merge=True)
+        self.test_reactor.export_brep(filename='not_merged.brep', merge=False)
 
         assert Path("merged.brep").exists() is True
         assert Path("not_merged.brep").exists() is True
