@@ -362,7 +362,7 @@ class Reactor:
 
     def export_stl(
         self,
-        filename: Union[List[str], str],
+        filename: Union[List[str], str] = None,
         tolerance: Optional[float] = 0.001,
         angular_tolerance: Optional[float] = 0.1,
     ) -> List[str]:
