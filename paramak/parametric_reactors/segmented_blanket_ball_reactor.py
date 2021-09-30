@@ -22,9 +22,9 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
 
     def __init__(
             self,
-            gap_between_blankets,
-            number_of_blanket_segments,
-            blanket_fillet_radius: float = 10.0,
+            gap_between_blankets: float = 15.,
+            number_of_blanket_segments: int = 12,
+            blanket_fillet_radius: float = 10.,
             **kwargs
     ):
 

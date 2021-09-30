@@ -30,15 +30,15 @@ class CylinderReactor(paramak.Reactor):
 
     def __init__(
         self,
-        inner_blanket_radius: Optional[float] = 100,
-        blanket_thickness: Optional[float] = 60,
-        blanket_height: Optional[float] = 500,
-        lower_blanket_thickness: Optional[float] = 50,
-        upper_blanket_thickness: Optional[float] = 40,
-        blanket_vv_gap: Optional[float] = 20,
-        upper_vv_thickness: Optional[float] = 10,
-        vv_thickness: Optional[float] = 10,
-        lower_vv_thickness: Optional[float] = 10,
+        inner_blanket_radius: Optional[float] = 100.,
+        blanket_thickness: Optional[float] = 70.,
+        blanket_height: Optional[float] = 500.,
+        lower_blanket_thickness: Optional[float] = 50.,
+        upper_blanket_thickness: Optional[float] = 40.,
+        blanket_vv_gap: Optional[float] = 20.,
+        upper_vv_thickness: Optional[float] = 10.,
+        vv_thickness: Optional[float] = 10.,
+        lower_vv_thickness: Optional[float] = 10.,
         rotation_angle: Optional[float] = 360,
     ):
 
@@ -98,7 +98,7 @@ class CylinderReactor(paramak.Reactor):
                 0.5,
                 0.5,
                 0.5),
-            name="lower vacuum vessel",
+            name="lower_vacuum_vessel",
         )
 
         lower_blanket = paramak.RotateStraightShape(
@@ -113,7 +113,7 @@ class CylinderReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.0, 1.0, 0.498),
-            name="lower blanket",
+            name="lower_blanket",
         )
 
         blanket = paramak.CenterColumnShieldCylinder(
@@ -145,7 +145,7 @@ class CylinderReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.0, 1.0, 0.498),
-            name="upper blanket",
+            name="upper_blanket",
         )
 
         upper_vv = paramak.RotateStraightShape(
@@ -157,7 +157,7 @@ class CylinderReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),
-            name="upper vacuum vessel",
+            name="upper_vacuum_vessel",
         )
 
         vac_ves = paramak.RotateStraightShape(
@@ -189,7 +189,7 @@ class CylinderReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),
-            name="vacuum vessel",
+            name="vacuum_vessel",
         )
 
         self.shapes_and_components = [
