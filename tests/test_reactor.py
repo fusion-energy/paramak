@@ -126,18 +126,18 @@ class TestReactor(unittest.TestCase):
         )
         assert sector_wedge is None
 
-    def test_missing_filename_arg(self):
+    def test_wrong_number_of_filenames(self):
 
-        def test_stl_filename_None():
+        def test_stl_filename_list_length():
             test_shape = paramak.ExtrudeCircleShape(
                 points=[(20, 20)], radius=10, distance=10
             )
             my_reactor = paramak.Reactor([test_shape])
-            my_reactor.export_stl()
+            my_reactor.export_stl(['wrong.stl', 'number_of.stl', 'files.stl'])
 
         self.assertRaises(
             TypeError,
-            test_stl_filename_None)
+            test_stl_filename_list_length)
 
     def test_make_graveyard_accepts_offset_from_graveyard(self):
         """Creates a graveyard for a reactor and sets the graveyard_offset.
