@@ -136,7 +136,7 @@ class TestReactor(unittest.TestCase):
             my_reactor.export_stl(['wrong.stl', 'number_of.stl', 'files.stl'])
 
         self.assertRaises(
-            TypeError,
+            ValueError,
             test_stl_filename_list_length)
 
     def test_make_graveyard_accepts_offset_from_graveyard(self):
