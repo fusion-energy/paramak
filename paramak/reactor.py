@@ -368,7 +368,7 @@ class Reactor:
 
             bldr.Perform()
 
-            im = bldr.Images()
+            bldr.Images()
 
             merged = cq.Compound(bldr.Shape())
 
