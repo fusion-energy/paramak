@@ -2,7 +2,7 @@
 Reactor() class
 ===============
 
-The Reactor() class allows Shapes() to be grouped together and joinly operated
+The Reactor() class allows Shapes() to be grouped together and jointly operated
 on.
 
 Reactor()

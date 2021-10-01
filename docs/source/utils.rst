@@ -2,7 +2,7 @@
 Utils functions
 ===============
 
-Utility functions povide useful functions that are used by both the Shape()
+Utility functions provides useful functions that are used by both the Shape()
 class and the Reactor class. They can also be used directly.
 
 utils
