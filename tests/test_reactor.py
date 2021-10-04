@@ -37,8 +37,21 @@ class TestReactor(unittest.TestCase):
         self.test_reactor_3 = paramak.Reactor(
             [self.test_shape, test_shape_3])
 
+    def test_reactor_export_stp_with_name_set_to_none(self):
+        """Exports the reactor as separate files and as a single file"""
+
+        def incorrect_name():
+            self.test_shape.name = None
+
+            test_reactor = paramak.Reactor([self.test_shape])
+
+            self.test_reactor.export_stp()
+
+        self.assertRaises(ValueError, incorrect_name)
+
+
     def test_reactor_export_stp(self):
-        """Exports the reactor as seperate files and as a single file"""
+        """Exports the reactor as separate files and as a single file"""
         os.system('rm *.stp')
         self.test_reactor_2.export_stp(
             filename=['RotateStraightShape.stp', 'ExtrudeStraightShape.stp']
