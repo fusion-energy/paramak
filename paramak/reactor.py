@@ -316,7 +316,7 @@ class Reactor:
                 msg = ("Shape.name is None and therefore it can't be used "
                     "to name a stp file. Try setting Shape.name for all "
                     "shapes in the reactor")
-                raise ValueError()
+                raise ValueError(msg)
             filename = [f"{name}.stp" for name in self.name]
 
         # exports the reactor solid as a separate stp files
