@@ -43,7 +43,7 @@ class TestReactor(unittest.TestCase):
         def incorrect_name():
             self.test_shape.name = None
 
-            test_reactor = paramak.Reactor([self.test_shape])
+            paramak.Reactor([self.test_shape])
 
             self.test_reactor.export_stp()
 
@@ -303,7 +303,7 @@ class TestReactor(unittest.TestCase):
         def incorrect_name():
             self.test_shape.name = None
 
-            test_reactor = paramak.Reactor([self.test_shape])
+            paramak.Reactor([self.test_shape])
 
             self.test_reactor.export_stl()
 
