@@ -24,8 +24,8 @@ using  `autopep8 and Github Actions. <https://github.com/ukaea/paramak/actions?q
 
 Continuing the theme of automation we also have automated distribution updates.
 The distribution is performed by `PyPI <https://pypi.org/>`_ and this is kept
-upto date using Github Actions
+up to date using Github Actions
 `(upload python package) <https://github.com/ukaea/paramak/actions?query=workflow%3A%22Upload+Python+Package%22>`_ 
 which trigger on every merge to the main branch.
 
-There are also plans for a continiously updated Dockerhub image in the pipeline.
+There are also plans for a continuously updated Dockerhub image in the pipeline.
