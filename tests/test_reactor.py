@@ -49,7 +49,6 @@ class TestReactor(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_name)
 
-
     def test_reactor_export_stp(self):
         """Exports the reactor as separate files and as a single file"""
         os.system('rm *.stp')
