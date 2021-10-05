@@ -79,7 +79,6 @@ class BlanketFP(RotateMixedShape):
             self.elongation = plasma.elongation
         self.offset_from_plasma = offset_from_plasma
         self.num_points = num_points
-        self.physical_groups = None
 
     @property
     def start_angle(self):
@@ -96,15 +95,6 @@ class BlanketFP(RotateMixedShape):
     @stop_angle.setter
     def stop_angle(self, value):
         self._stop_angle = value
-
-    @property
-    def physical_groups(self):
-        self.create_physical_groups()
-        return self._physical_groups
-
-    @physical_groups.setter
-    def physical_groups(self, physical_groups):
-        self._physical_groups = physical_groups
 
     @property
     def minor_radius(self):
@@ -258,68 +248,6 @@ class BlanketFP(RotateMixedShape):
             else:
                 self._overlapping_shape = True
         return points
-
-    def create_physical_groups(self):
-        """Creates the physical groups for STP files
-
-        Returns:
-            list: list of dicts containing the physical groups
-        """
-
-        groups = []
-        number_of_volumes = 1  # only one volume
-        number_of_surfaces = 2  # inner and outer
-
-        surface_names = ["inner", "outer"]
-        volumes_names = ["inside"]
-
-        # add two cut sections if they exist
-        if self.rotation_angle != 360:
-            number_of_surfaces += 2
-            surface_names += ["left_section", "right_section"]
-            full_rotation = False
-        else:
-            full_rotation = True
-
-        # add two surfaces between blanket and div if they exist
-        if diff_between_angles(self.start_angle, self.stop_angle) != 0:
-            number_of_surfaces += 2
-            surface_names += ["inner_section", "outer_section"]
-            stop_equals_start = False
-        else:
-            stop_equals_start = True
-
-        # rearrange order
-        new_order = [i for i in range(len(surface_names))]
-        if full_rotation:
-            if not stop_equals_start:
-                # from ["inner", "outer", "inner_section", "outer_section"]
-
-                # to ["inner", "inner_section", "outer", "outer_section"]
-                new_order = [0, 2, 1, 3]
-        else:
-            if stop_equals_start:
-                print(
-                    "Warning: If start_angle = stop_angle surfaces will not\
-                     be handled correctly"
-                )
-                new_order = [0, 1, 2, 3]
-            else:
-                # from ['inner', 'outer', 'left_section', 'right_section',
-                #           'inner_section', 'outer_section']
-
-                # to ["inner", "inner_section", "outer", "outer_section",
-                #         "left_section", "right_section"]
-                new_order = [0, 4, 1, 5, 2, 3]
-        surface_names = [surface_names[i] for i in new_order]
-
-        for i in range(1, number_of_volumes + 1):
-            group = {"dim": 3, "id": i, "name": volumes_names[i - 1]}
-            groups.append(group)
-        for i in range(1, number_of_surfaces + 1):
-            group = {"dim": 2, "id": i, "name": surface_names[i - 1]}
-            groups.append(group)
-        self.physical_groups = groups
 
     def distribution(self, theta, pkg=np):
         """Plasma distribution theta in degrees
