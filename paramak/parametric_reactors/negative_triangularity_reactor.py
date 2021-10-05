@@ -107,7 +107,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
         else:
             self._inner_leg_to_vacuum_inner_wall_gap = 0
 
-        
     def _equatorial_points(self):
         # Define Equatorial points
         self._inner_equatorial_point = self._inner_bore_radius \
@@ -129,7 +128,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._minor_radius = (
             self._major_radius -
             self._inner_equatorial_point)
-
 
     # Setup Setters and getters for parameters
     # Getters
