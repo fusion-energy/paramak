@@ -91,6 +91,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         else:
             self._ports_enable = True
 
+    def _plasma_geometry(self):
         ######### Calculating plasma geometry from parameters above #########
 
         # Adjust a gap between inner TF leg and vacuum vessel to accomodate a
@@ -106,6 +107,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
         else:
             self._inner_leg_to_vacuum_inner_wall_gap = 0
 
+        
+    def _equatorial_points(self):
         # Define Equatorial points
         self._inner_equatorial_point = self._inner_bore_radius \
             + self._inner_tf_coil_thickness \
@@ -126,6 +129,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._minor_radius = (
             self._major_radius -
             self._inner_equatorial_point)
+
 
     # Setup Setters and getters for parameters
     # Getters
@@ -423,6 +427,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         shapes_and_components = []
 
+        self._plasma_geometry()
+        self._equatorial_points()
         self._make_plasma()
         self._make_vertical_build()
         self._make_radial_build()
@@ -450,6 +456,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self.shapes_and_components = shapes_and_components
 
     def _make_plasma(self):
+
         plasma = paramak.Plasma(
             major_radius=self._major_radius,
             minor_radius=self._minor_radius,
