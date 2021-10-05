@@ -82,7 +82,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._ports_angles = port_angles
         self._port_z_pos = port_z_pos
 
-        if None in [self._ports_angles, self._port_side_lengths, self._port_heights, self._port_z_pos]:
+        if None in [
+                self._ports_angles,
+                self._port_side_lengths,
+                self._port_heights,
+                self._port_z_pos]:
             self._ports_enable = False
         else:
             self._ports_enable = True
@@ -122,10 +126,10 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._minor_radius = (
             self._major_radius -
             self._inner_equatorial_point)
-        
-        
+
     # Setup Setters and getters for parameters
     # Getters
+
     @property
     def aspect_ratio(self):
         print(
@@ -135,7 +139,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         return (self._major_radius / self._minor_radius)
 
     @property
-    def minor_radius(self):        
+    def minor_radius(self):
         print("Minor Radius = {:.2f}".format(self._minor_radius))
         return self._minor_radius
 
@@ -255,31 +259,36 @@ class NegativeTriangularityReactor(paramak.Reactor):
     @inner_tf_coil_thickness.setter
     def inner_tf_coil_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('Inbore tf coil thickness must be float or integer value!')
+            raise TypeError(
+                'Inbore tf coil thickness must be float or integer value!')
         self._inner_tf_coil_thickness = val
 
     @vacuum_vessel_thickness.setter
     def vacuum_vessel_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('Vacuum vessel thickness must be float or integer value!')
+            raise TypeError(
+                'Vacuum vessel thickness must be float or integer value!')
         self._vacuum_vessel_thickness = val
 
     @central_shield_thickness.setter
     def central_shield_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('Inbore heat shield thickness must be float or integer value!')
+            raise TypeError(
+                'Inbore heat shield thickness must be float or integer value!')
         self._central_shield_thickness = val
 
     @wall_to_plasma_gap.setter
     def wall_to_plasma_gap(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('Plasma to wall gap must be float or integer value!')
+            raise TypeError(
+                'Plasma to wall gap must be float or integer value!')
         self._wall_to_plasma_gap = val
 
     @plasma_radial_thickness.setter
     def plasma_radial_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('plasma radial thickness must be float or integer value!')
+            raise TypeError(
+                'plasma radial thickness must be float or integer value!')
         self._plasma_radial_thickness = val
 
     @elongation.setter
@@ -299,25 +308,29 @@ class NegativeTriangularityReactor(paramak.Reactor):
     @inner_wall_thickness.setter
     def inner_wall_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('Inner blanket wall must be float or integer value!')
+            raise TypeError(
+                'Inner blanket wall must be float or integer value!')
         self._inner_wall_thickness = val
 
     @blanket_thickness.setter
     def blanket_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('Blanket thickness must be float or integer value!')
+            raise TypeError(
+                'Blanket thickness must be float or integer value!')
         self._blanket_thickness = val
 
     @rear_wall_thickness.setter
     def rear_wall_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('rear blanket wall must be float or integer value!')
+            raise TypeError(
+                'rear blanket wall must be float or integer value!')
         self._rear_wall_thickness = val
 
     @divertor_radial_thickness.setter
     def divertor_radial_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError('Divertor radial thickness must be float or integer value!')
+            raise TypeError(
+                'Divertor radial thickness must be float or integer value!')
         self._divertor_radial_thickness = val
 
     @divertor_height.setter
@@ -334,56 +347,68 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
     @port_side_lengths.setter
     def port_side_lengths(self, val):
-        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
+        if not isinstance(val, list) or False in [
+                isinstance(x, (float, int)) for x in val]:
             raise TypeError('Port side lengths must be a list of numbers!')
         self._port_checks()
         self._port_side_lengths = val
 
     @port_heights.setter
     def port_heights(self, val):
-        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
+        if not isinstance(val, list) or False in [
+                isinstance(x, (float, int)) for x in val]:
             raise TypeError('Port heights must be a list of numbers!')
         self._port_checks()
         self._port_thickness = val
 
     @port_angles.setter
     def port_angles(self, val):
-        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
+        if not isinstance(val, list) or False in [
+                isinstance(x, (float, int)) for x in val]:
             raise TypeError('Port angles must be a list of numbers!')
         self._port_checks()
         self._ports_angles = val
 
     @port_z_pos.setter
     def port_z_pos(self, val):
-        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
+        if not isinstance(val, list) or False in [
+                isinstance(x, (float, int)) for x in val]:
             raise TypeError('Port Z positions must be a list of numbers!')
         self._port_checks()
         self._port_z_pos = val
 
     @pf_coil_heights.setter
     def pf_coil_heights(self, val):
-        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
+        if not isinstance(val, list) or False in [
+                isinstance(x, (float, int)) for x in val]:
             raise TypeError('Pf coil heights must be a list of numbers!')
         self._pf_checks(False)
         self._pf_coil_heights = val
 
     @pf_coil_widths.setter
     def pf_coil_widths(self, val):
-        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
+        if not isinstance(val, list) or False in [
+                isinstance(x, (float, int)) for x in val]:
             raise TypeError('Pf coil width must be a list of numbers!')
         self._pf_checks(False)
         self._pf_coil_widths = val
 
     @pf_coil_center_points.setter
     def pf_coil_center_points(self, val):
-        if not isinstance(val, list) or False in [isinstance(x, tuple) for x in val]:
+        if not isinstance(
+                val,
+                list) or False in [
+                isinstance(
+                x,
+                tuple) for x in val]:
             raise TypeError('Pf coil center points must be a list of tuples!')
         self._pf_checks(True)
         self._pf_coil_center_points = val
 
     @pf_coil_casing_thickness.setter
     def pf_coil_casing_thickness(self, val):
-        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
+        if not isinstance(val, list) or False in [
+                isinstance(x, (float, int)) for x in val]:
             raise TypeError('Pf coil heights must be a list of numbers!')
         self._pf_checks(False)
         self._pf_casing_thickness = val
@@ -393,7 +418,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
         if not isinstance(val, bool):
             raise TypeError('Low-aspect argument must be True or False!')
         self._low_aspect = val
-
 
     def create_solid(self):
 
@@ -506,11 +530,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._rear_wall_plasma_offset = self._wall_to_plasma_gap + \
             self._blanket_thickness + self._inner_wall_thickness
 
-        ## Inner PF Coils
-        #if self._inner_pf_coil_w is not None:
+        # Inner PF Coils
+        # if self._inner_pf_coil_w is not None:
         #    self._inner_pf_thickness = max(self._inner_pf_coil_w)
         #    self._inner_pf_case_thickness = max(self._inner_pf_coil_ct)
-        #else:
+        # else:
         #    self._inner_pf_thickness = 0
         #    self._inner_pf_case_thickness = 0
 
@@ -605,7 +629,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._ports = []
 
         for index, val in enumerate(self._port_side_lengths):
-            
+
             _port = paramak.PortCutterRectangular(
                 height=self._port_heights[index],
                 width=val,
@@ -618,7 +642,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._ports.append(_port)
 
         return [x for x in self._ports]
-    
+
     def _make_tf_inner_leg(self):
 
         self._bore_cutter = paramak.CenterColumnShieldCylinder(
@@ -627,8 +651,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             outer_radius=self._inner_bore_stop_rad,
             rotation_angle=self._rotation_angle,
         )
-
-
 
         self._tf_inner_leg = paramak.CenterColumnShieldCylinder(
             height=self._inner_tf_leg_height,
@@ -675,7 +697,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             name="inner_shield",
             material_tag="center_column_shield_mat",
             color=(1, 0.7, 0.5),
-            cut = [self._pf_coils, self._pf_casing]
+            cut=[self._pf_coils, self._pf_casing]
         )
 
         return [self._inner_shield]
@@ -826,7 +848,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         if self._ports_enable:
             cutting_list = [
                 vac_cutter,
-                self._pf_coils, 
+                self._pf_coils,
                 self._pf_casing] + self._ports
         else:
             cutting_list = [vac_cutter, self._pf_coils, self._pf_casing]
@@ -866,45 +888,56 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         return [self._tf_coils]
 
-    
     # Checks and tests
+
     def _port_checks(self):
         if len(self._ports_angles) != len(self._port_heights) or \
-            len(self._ports_angles) != len(self._port_side_lengths) or \
-            len(self._port_heights) != len(self._port_side_lengths) or \
-            len(self._port_z_pos) != len(self._port_side_lengths) or \
-            len(self._port_z_pos) != len(self._port_heights) or \
-            len(self._port_z_pos) != len(self._ports_angles):
-            raise ValueError("Number of elements in Port Parameters don't match!")
-        
-        _port_coord_list = self._port_side_lengths + self._ports_angles + self._port_heights + self._ports_angles
+                len(self._ports_angles) != len(self._port_side_lengths) or \
+                len(self._port_heights) != len(self._port_side_lengths) or \
+                len(self._port_z_pos) != len(self._port_side_lengths) or \
+                len(self._port_z_pos) != len(self._port_heights) or \
+                len(self._port_z_pos) != len(self._ports_angles):
+            raise ValueError(
+                "Number of elements in Port Parameters don't match!")
+
+        _port_coord_list = self._port_side_lengths + \
+            self._ports_angles + self._port_heights + self._ports_angles
 
         for cord in _port_coord_list:
             if not isinstance(cord, (float, int)):
-                raise TypeError("Port parameters must be float or integer values!")
+                raise TypeError(
+                    "Port parameters must be float or integer values!")
 
     def _pf_checks(self, tuple_bool):
-        if len(self._pf_coil_heights) != len(self._pf_coil_widths) or \
-            len(self._pf_coil_heights) != len(self._pf_coil_center_points) or \
-            len(self._pf_coil_heights) != len(self._pf_casing_thickness) or \
-            len(self._pf_coil_widths) != len(self._pf_coil_center_points) or \
-            len(self._pf_coil_widths) != len(self._pf_casing_thickness) or \
-            len(self._pf_coil_center_points) != len(self._pf_casing_thickness):
-            raise ValueError("Number of elements in PF Parameters don't match!")
-        
-        if tuple_bool == False:
-            _pf_lists = self._pf_coil_heights + self._pf_coil_widths + self._pf_casing_thickness
+        if len(
+            self._pf_coil_heights) != len(
+            self._pf_coil_widths) or len(
+            self._pf_coil_heights) != len(
+                self._pf_coil_center_points) or len(
+                    self._pf_coil_heights) != len(
+                        self._pf_casing_thickness) or len(
+                            self._pf_coil_widths) != len(
+                                self._pf_coil_center_points) or len(
+                                    self._pf_coil_widths) != len(
+                                        self._pf_casing_thickness) or len(
+                                            self._pf_coil_center_points) != len(
+                                                self._pf_casing_thickness):
+            raise ValueError(
+                "Number of elements in PF Parameters don't match!")
+
+        if not tuple_bool:
+            _pf_lists = self._pf_coil_heights + \
+                self._pf_coil_widths + self._pf_casing_thickness
 
             for cord in _pf_lists:
                 if not isinstance(cord, (float, int)):
-                    raise TypeError("PF parameters must be float or integer values! yay")
+                    raise TypeError(
+                        "PF parameters must be float or integer values! yay")
         else:
-            _pf_lists = self._pf_coil_heights + self._pf_coil_widths + self._pf_casing_thickness \
-                + [x[0]for x in self._pf_coil_center_points] + [x[1]for x in self._pf_coil_center_points]
+            _pf_lists = self._pf_coil_heights + self._pf_coil_widths + self._pf_casing_thickness + \
+                [x[0]for x in self._pf_coil_center_points] + [x[1]for x in self._pf_coil_center_points]
 
             for cord in _pf_lists:
                 if not isinstance(cord, (float, int)):
-                    raise TypeError("PF parameters must be float or integer values!")
-    
-
-
+                    raise TypeError(
+                        "PF parameters must be float or integer values!")
