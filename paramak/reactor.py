@@ -312,6 +312,11 @@ class Reactor:
             return [filename]
 
         if filename is None:
+            if None in self.name:
+                msg = ("Shape.name is None and therefore it can't be used "
+                       "to name a stp file. Try setting Shape.name for all "
+                       "shapes in the reactor")
+                raise ValueError(msg)
             filename = [f"{name}.stp" for name in self.name]
 
         # exports the reactor solid as a separate stp files
@@ -422,6 +427,11 @@ class Reactor:
             return str(path_filename)
 
         if filename is None:
+            if None in self.name:
+                msg = ("Shape.name is None and therefore it can't be used "
+                       "to name a stl file. Try setting Shape.name for all "
+                       "shapes in the reactor")
+                raise ValueError()
             filename = [f"{name}.stl" for name in self.name]
 
         # exports the reactor solid as a separate stl files
