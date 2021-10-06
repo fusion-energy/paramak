@@ -121,7 +121,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._ports_angles = port_angles
         self._port_z_pos = port_z_pos
 
-        self.input_variable_names = [  # self.input_variable_names +
+        self.input_variable_names = self.input_variable_names + [
             'inner_tf_coil_thickness',
             'vacuum_vessel_thickness',
             'central_shield_thickness',
