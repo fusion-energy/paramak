@@ -8,6 +8,46 @@ from typing import List, Union, Optional
 class NegativeTriangularityReactor(paramak.Reactor):
     """
     New class of reactor that builds a negative triangularity tokamak model.
+
+    Arguments:
+        inner_tf_coil_thickness: radial thickness of the Toroidal Field coil's 
+            inner leg (cm),
+        vacuum_vessel_thickness: the radial and vertical thickness of the 
+            vacuum vessel (cm),
+        central_shield_thickness: radial thickness of the central heat shield
+            (cm),
+        wall_to_plasma_gap: gap of inner blanket wall and the plasma outter 
+            edge (cm),
+        plasma_radial_thickness: radial thickness of the plasma 
+            (2x minor radius) (cm),
+        elongation: plasma elongation,
+        triangularity: plasma triangularity - both positive or negative values 
+            will result in negative triangularity,
+        inner_wall_thickness: plasma facing blanket wall thickness (cm),
+        blanket_thickness: breeder blanket thickness (cm),
+        rear_wall_thickness: outer blanket wall thickness (cm),
+        divertor_radial_thickness: radial thickness of the divertor (cm),
+        divertor_height_full: divertor vertical thickness (cm),
+        number_of_coils: number of Toroidal Field coils around the reactor 
+            evenly spaced,
+        tf_width: Toroidal Field coil extrusion distance / thickness (cm),
+        pf_coil_heights: List of Poloidal field coil heights (cm),
+        pf_coil_widths: List of Poloidal field coil widths (cm),
+        pf_coil_center_points: List of Poloidal field coil center points on the
+            XZ workplane (cm),
+        pf_coil_casing_thickness: List of Poloidal field coil casing thickness
+            (cm),
+        rotation_angle: Angle of rotation arounbd the Z axis of which the 
+            reactor is shown - 180° shows half a reactor,
+        inner_bore_radius: inner bore radial thickness (cm); Defaults to 5 cm,
+        port_side_lengths: ,
+        port_heights: ,
+        port_angles: ,
+        port_z_pos: ,
+        outer_tf_coil_thickness: ,
+        show_plasma: ,
+        low_aspect: ,
+        pf_enabled: ,
     """
 
     def __init__(self,
@@ -35,13 +75,12 @@ class NegativeTriangularityReactor(paramak.Reactor):
                  port_heights: Optional[list] = None,
                  port_angles: Optional[list] = None,
                  port_z_pos: Optional[list] = None,
+                 outer_tf_coil_thickness: float = None,
                  show_plasma: bool = True,
                  low_aspect: bool = False,
-                 outer_tf_coil_thickness: float = None,
                  pf_enabled: Optional[bool] = False,
                  **kwargs,
-
-                 ):
+        ):
 
         super().__init__([])
         self.method = 'trelis'
@@ -82,6 +121,37 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._ports_angles = port_angles
         self._port_z_pos = port_z_pos
 
+        self.input_variable_names =  [ #self.input_variable_names +
+            'inner_tf_coil_thickness',
+            'vacuum_vessel_thickness',
+            'central_shield_thickness',
+            'wall_to_plasma_gap',
+            'plasma_radial_thickness',
+            'elongation',
+            'triangularity',
+            'inner_wall_thickness',
+            'blanket_thickness',
+            'rear_wall_thickness',
+            'divertor_radial_thickness',
+            'divertor_height_full',
+            'number_of_coils',
+            'tf_width',
+            'pf_coil_heights',
+            'pf_coil_widths',
+            'pf_coil_center_points',
+            'pf_coil_casing_thickness',
+            'rotation_angle',
+            'inner_bore_radius',
+            'port_side_lengths',
+            'port_heights',
+            'port_angles',
+            'port_z_pos',
+            'outer_tf_coil_thickness',
+            'show_plasma',
+            'low_aspect',
+            'pf_enabled',
+        ]
+
         if None in [
                 self._ports_angles,
                 self._port_side_lengths,
@@ -90,6 +160,9 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._ports_enable = False
         else:
             self._ports_enable = True
+
+        self._plasma_geometry()
+        self._equatorial_points()
 
     def _plasma_geometry(self):
         ######### Calculating plasma geometry from parameters above #########
@@ -138,7 +211,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             "Aspect Ratio = {:.2f}".format(
                 self._major_radius /
                 self._minor_radius))
-        return (self._major_radius / self._minor_radius)
+        return self._major_radius / self._minor_radius
 
     @property
     def minor_radius(self):
@@ -490,10 +563,12 @@ class NegativeTriangularityReactor(paramak.Reactor):
         ### Diverter height check ###
         min_div_h = self._rear_wall_end_height_top - self._divertor_start_height
 
-        if (min_div_h > self._divertor_height_full):
+        if min_div_h > self._divertor_height_full:
             print(
-                "Set divertor height is too low. Diverter height is set to minimum of {:.2f} cm".format(
-                    (min_div_h)))
+                "Set divertor height is too low. \
+                Diverter height is set to minimum of {:.2f} cm".format(
+                (min_div_h))
+                )
             self._divertor_end_height_top = self._divertor_start_height + min_div_h
 
         # Vacuum Vessel Inner Wall
@@ -562,7 +637,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._plasma.high_point[0]
 
         if self._divertor_radial_thickness < width_parameter_difference:
-            print("The given radial thickness of the divertor is too small. Diverter set to minimum radial thickness of {:.2f} cm".format(
+            print("The given radial thickness of the divertor is too small. \
+                Diverter set to minimum radial thickness of {:.2f} cm".format(
                 width_parameter_difference))
             self._divertor_radial_thickness = width_parameter_difference
 
@@ -646,17 +722,20 @@ class NegativeTriangularityReactor(paramak.Reactor):
             )
             self._ports.append(_port)
 
-        return [x for x in self._ports]
+        return self._ports
 
     def _make_tf_inner_leg(self):
 
-        self._bore_cutter = paramak.CenterColumnShieldCylinder(
-            height=self._inner_tf_leg_height + 10,
-            inner_radius=0,
-            outer_radius=self._inner_bore_stop_rad,
-            rotation_angle=self._rotation_angle,
-        )
-
+        _cutting_list = [self._pf_coils, self._pf_casing]
+        if self._inner_bore_radius != 0:
+            self._bore_cutter = paramak.CenterColumnShieldCylinder(
+                height=self._inner_tf_leg_height + 10,
+                inner_radius=0,
+                outer_radius=self._inner_bore_stop_rad,
+                rotation_angle=self._rotation_angle,
+            )
+            _cutting_list.append(self._bore_cutter)
+        
         self._tf_inner_leg = paramak.CenterColumnShieldCylinder(
             height=self._inner_tf_leg_height,
             inner_radius=0,
@@ -666,7 +745,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stl_filename="tf_inner_leg.stl",
             name="tf_inner_leg",
             material_tag="inboard_tf_coils_mat",
-            cut=[self._bore_cutter, self._pf_coils, self._pf_casing],
+            cut=_cutting_list,
             color=(0.2, 1, 0.2),
         )
 
@@ -939,8 +1018,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
                     raise TypeError(
                         "PF parameters must be float or integer values! yay")
         else:
-            _pf_lists = self._pf_coil_heights + self._pf_coil_widths + self._pf_casing_thickness + \
-                [x[0]for x in self._pf_coil_center_points] + [x[1]for x in self._pf_coil_center_points]
+            _pf_lists = self._pf_coil_heights + \
+                self._pf_coil_widths + \
+                self._pf_casing_thickness + \
+                [x[0]for x in self._pf_coil_center_points] + \
+                [x[1]for x in self._pf_coil_center_points]
 
             for cord in _pf_lists:
                 if not isinstance(cord, (float, int)):
