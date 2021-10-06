@@ -10,25 +10,25 @@ class NegativeTriangularityReactor(paramak.Reactor):
     New class of reactor that builds a negative triangularity tokamak model.
 
     Arguments:
-        inner_tf_coil_thickness: radial thickness of the Toroidal Field coil's 
+        inner_tf_coil_thickness: radial thickness of the Toroidal Field coil's
             inner leg (cm),
-        vacuum_vessel_thickness: the radial and vertical thickness of the 
+        vacuum_vessel_thickness: the radial and vertical thickness of the
             vacuum vessel (cm),
         central_shield_thickness: radial thickness of the central heat shield
             (cm),
-        wall_to_plasma_gap: gap of inner blanket wall and the plasma outter 
+        wall_to_plasma_gap: gap of inner blanket wall and the plasma outter
             edge (cm),
-        plasma_radial_thickness: radial thickness of the plasma 
+        plasma_radial_thickness: radial thickness of the plasma
             (2x minor radius) (cm),
         elongation: plasma elongation,
-        triangularity: plasma triangularity - both positive or negative values 
+        triangularity: plasma triangularity - both positive or negative values
             will result in negative triangularity,
         inner_wall_thickness: plasma facing blanket wall thickness (cm),
         blanket_thickness: breeder blanket thickness (cm),
         rear_wall_thickness: outer blanket wall thickness (cm),
         divertor_radial_thickness: radial thickness of the divertor (cm),
         divertor_height_full: divertor vertical thickness (cm),
-        number_of_coils: number of Toroidal Field coils around the reactor 
+        number_of_coils: number of Toroidal Field coils around the reactor
             evenly spaced,
         tf_width: Toroidal Field coil extrusion distance / thickness (cm),
         pf_coil_heights: List of Poloidal field coil heights (cm),
@@ -37,7 +37,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             XZ workplane (cm),
         pf_coil_casing_thickness: List of Poloidal field coil casing thickness
             (cm),
-        rotation_angle: Angle of rotation arounbd the Z axis of which the 
+        rotation_angle: Angle of rotation arounbd the Z axis of which the
             reactor is shown - 180° shows half a reactor,
         inner_bore_radius: inner bore radial thickness (cm); Defaults to 5 cm,
         port_side_lengths: ,
@@ -80,7 +80,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
                  low_aspect: bool = False,
                  pf_enabled: Optional[bool] = False,
                  **kwargs,
-        ):
+                 ):
 
         super().__init__([])
         self.method = 'trelis'
@@ -121,7 +121,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._ports_angles = port_angles
         self._port_z_pos = port_z_pos
 
-        self.input_variable_names =  [ #self.input_variable_names +
+        self.input_variable_names = [  # self.input_variable_names +
             'inner_tf_coil_thickness',
             'vacuum_vessel_thickness',
             'central_shield_thickness',
@@ -567,8 +567,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
             print(
                 "Set divertor height is too low. \
                 Diverter height is set to minimum of {:.2f} cm".format(
-                (min_div_h))
-                )
+                    (min_div_h))
+            )
             self._divertor_end_height_top = self._divertor_start_height + min_div_h
 
         # Vacuum Vessel Inner Wall
@@ -735,7 +735,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 rotation_angle=self._rotation_angle,
             )
             _cutting_list.append(self._bore_cutter)
-        
+
         self._tf_inner_leg = paramak.CenterColumnShieldCylinder(
             height=self._inner_tf_leg_height,
             inner_radius=0,
