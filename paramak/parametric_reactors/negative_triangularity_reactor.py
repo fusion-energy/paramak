@@ -179,7 +179,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         # Adjust a gap between inner TF leg and vacuum vessel to accomodate a
         # wider range of thicknesses
-        core_width = self._inner_tf_coil_thickness + \
+        core_width = self._inner_bore_radius + \
+            self._inner_tf_coil_thickness + \
             self._vacuum_vessel_thickness + self._central_shield_thickness
         blanket_width = self._inner_wall_thickness + \
             self._blanket_thickness + self._rear_wall_thickness
@@ -197,7 +198,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
             + self._vacuum_vessel_thickness \
             + self._central_shield_thickness \
             + self._wall_to_plasma_gap \
-            + self._inner_leg_to_vacuum_inner_wall_gap
+            + self._inner_leg_to_vacuum_inner_wall_gap \
+            + self._rear_wall_thickness
         if not self._low_aspect:
             self._inner_equatorial_point += self._inner_wall_thickness \
                 + self._blanket_thickness \
@@ -620,14 +622,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._rear_wall_plasma_offset = self._wall_to_plasma_gap + \
             self._blanket_thickness + self._inner_wall_thickness
 
-        # Inner PF Coils
-        # if self._inner_pf_coil_w is not None:
-        #    self._inner_pf_thickness = max(self._inner_pf_coil_w)
-        #    self._inner_pf_case_thickness = max(self._inner_pf_coil_ct)
-        # else:
-        #    self._inner_pf_thickness = 0
-        #    self._inner_pf_case_thickness = 0
-
         ### Run check for diverter parameters ###
 
         full_outer_blanket_rad = (
@@ -637,11 +631,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._inner_wall_thickness +
             self._blanket_thickness +
             self._rear_wall_thickness)
-
-        if not self._low_aspect:
-            full_outer_blanket_rad += self._inner_wall_thickness \
-                + self._blanket_thickness \
-                + self._rear_wall_thickness
 
         width_parameter_difference = full_outer_blanket_rad - \
             self._plasma.high_point[0]
@@ -817,14 +806,14 @@ class NegativeTriangularityReactor(paramak.Reactor):
             height=self._inner_tf_leg_height + 10,  # for overlap
             inner_radius=0,
             outer_radius=self._inner_shield_end_rad,
-            union=[self._divertor_cutter]
         )
+
+        ### Blanket layers ###
 
         self._rear_wall = paramak.BlanketFP(
             thickness=self._rear_wall_thickness,
             start_angle=180,
-            stop_angle=-
-            180,
+            stop_angle=-180,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
             offset_from_plasma=[
@@ -837,7 +826,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
             name="blanket_rear_wall",
-            cut=[central_cutter, self._pf_coils, self._pf_casing],
+            cut=[central_cutter, self._divertor_cutter, self._pf_coils, self._pf_casing], 
             color=(
                 0.3,
                 0.3,
@@ -860,7 +849,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
             name="blanket",
-            cut=[central_cutter, self._pf_coils, self._pf_casing],
+            cut=[central_cutter, self._divertor_cutter, self._pf_coils, self._pf_casing],
             color=(
                 0.5,
                 1,
@@ -880,13 +869,14 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stp_filename="firstwall.stp",
             stl_filename="firstwall.stl",
             name="firstwall",
-            cut=[central_cutter, self._pf_coils, self._pf_casing],
+            cut=[central_cutter, self._divertor_cutter, self._pf_coils, self._pf_casing],
             color=(
                 0.3,
                 0.3,
                 0.3))
 
         return [self._rear_wall, self._breeder_blanket, self._inner_wall]
+
 
     def _make_divertor(self):
 
