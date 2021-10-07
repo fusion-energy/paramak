@@ -681,8 +681,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             heights=self._pf_coil_heights,
             widths=self._pf_coil_widths,
             center_points=self._pf_coil_center_points,
-            stp_filename="pf_coil_set.stp",
-            stl_filename="pf_coil_set.stl",
             name="pf_coil_set",
             color=(0.7, 0.7, 0.2),
             rotation_angle=self._rotation_angle
@@ -694,8 +692,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             widths=self._pf_coil_widths,
             center_points=self._pf_coil_center_points,
             casing_thicknesses=self._pf_casing_thickness,
-            stp_filename="pf_coil_set_case.stp",
-            stl_filename="pf_coil_set_case.stl",
             name="pf_coil_set_case",
             color=(0.7, 0.5, 0.2),
             rotation_angle=self._rotation_angle
@@ -740,10 +736,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             inner_radius=0,
             outer_radius=self._tf_inner_leg_end_rad,
             rotation_angle=self._rotation_angle,
-            stp_filename="tf_inner_leg.stp",
-            stl_filename="tf_inner_leg.stl",
             name="tf_inner_leg",
-            material_tag="inboard_tf_coils_mat",
             cut=_cutting_list,
             color=(0.2, 1, 0.2),
         )
@@ -758,10 +751,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             inner_radius=self._vacuum_vessel_inwall_start_rad,
             outer_radius=self._vacuum_vessel_inwall_end_rad,
             rotation_angle=self._rotation_angle,
-            stp_filename="vacuum_vessel_inner_wall.stp",
-            stl_filename="vacuum_vessel_inner_wall.stl",
             name="vacuum_vessel_inner_wall",
-            material_tag="vacuum_vessel_inner_mat",
             color=(0.5, 0.5, 0.5),
             cut=[self._pf_coils, self._pf_casing]
         )
@@ -775,10 +765,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             inner_radius=self._inner_shield_start_rad,
             outer_radius=self._inner_shield_end_rad,
             rotation_angle=self._rotation_angle,
-            stp_filename="inner_shield.stp",
-            stl_filename="inner_shield.stl",
             name="inner_shield",
-            material_tag="center_column_shield_mat",
             color=(1, 0.7, 0.5),
             cut=[self._pf_coils, self._pf_casing]
         )
@@ -823,9 +810,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._rear_wall_plasma_offset,
                 self._rear_wall_plasma_offset +
                 self._wall_to_plasma_gap],
-            material_tag="blanket_rear_wall_mat",
-            stp_filename="blanket_rear_wall.stp",
-            stl_filename="blanket_rear_wall.stl",
             name="blanket_rear_wall",
             cut=[
                 central_cutter,
@@ -850,9 +834,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._blanket_offset,
                 self._blanket_offset +
                 self._wall_to_plasma_gap],
-            material_tag="blanket_mat",
-            stp_filename="blanket.stp",
-            stl_filename="blanket.stl",
             name="blanket",
             cut=[
                 central_cutter,
@@ -874,9 +855,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._wall_to_plasma_gap * 2,
                 self._wall_to_plasma_gap,
                 self._wall_to_plasma_gap * 2],
-            material_tag="firstwall_mat",
-            stp_filename="firstwall.stp",
-            stl_filename="firstwall.stl",
             name="firstwall",
             cut=[
                 central_cutter,
@@ -924,9 +902,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 1,
                 0.2,
                 0.2),
-            material_tag="divertor_mat",
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
             name="divertor")
 
         return [self._divertor]
@@ -954,10 +929,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             inner_radius=self._vacuum_vessel_inwall_start_rad,
             outer_radius=self._vacuum_vessel_body_end_rad,
             rotation_angle=self._rotation_angle,
-            stp_filename="vacuum_vessel_body.stp",
-            stl_filename="vacuum_vessel_body.stl",
             name="vacuum_vessel_body",
-            material_tag="vacuum_vessel_mat",
             cut=cutting_list,
             color=(0.5, 0.5, 0.5)
         )
@@ -974,10 +946,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             number_of_coils=self._number_of_coils,
             distance=self._tf_width,
             rotation_angle=self._rotation_angle,
-            stp_filename="tf_coil_outer.stp",
-            stl_filename="tf_coil_outer.stl",
             name="tf_coil_outer",
-            material_tag="inboard_tf_coils_mat",
             color=(0.2, 1, 0.2),
             cut=[self._pf_coils, self._pf_casing]
         )
