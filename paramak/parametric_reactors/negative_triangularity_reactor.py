@@ -45,14 +45,14 @@ class NegativeTriangularityReactor(paramak.Reactor):
         port_angles: List containing the angles of the ports center points (°),
         port_z_pos: List containing the Z position of the ports as Zero in the
             centre of the reactor (cm),
-        outer_tf_coil_thickness: Outer Toroidal Field coil thickness (cm) - 
+        outer_tf_coil_thickness: Outer Toroidal Field coil thickness (cm) -
             defaults to the inner Toroidal Field coil thickness,
         show_plasma: Boolean to include (True) or exlcude (False) plasma from
             the model,
-        low_aspect: Boolean allowing a swift switch between a lower 
-            aspect-ratio reactor (True) where the inner blanket is cut by the 
-            center column, whereas (False) non-low-aspect will produce a full 
-            inner blanket and only part being cut by the centre column is the 
+        low_aspect: Boolean allowing a swift switch between a lower
+            aspect-ratio reactor (True) where the inner blanket is cut by the
+            center column, whereas (False) non-low-aspect will produce a full
+            inner blanket and only part being cut by the centre column is the
             rear blanket wall,
     """
 
@@ -123,7 +123,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._ports_angles = port_angles
         self._port_z_pos = port_z_pos
 
-        self.input_variable_names = [ #self.input_variable_names + [ 
+        self.input_variable_names = [  # self.input_variable_names + [
             'inner_tf_coil_thickness',
             'vacuum_vessel_thickness',
             'central_shield_thickness',
