@@ -813,7 +813,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._rear_wall = paramak.BlanketFP(
             thickness=self._rear_wall_thickness,
             start_angle=180,
-            stop_angle=-180,
+            stop_angle=-
+            180,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
             offset_from_plasma=[
@@ -826,7 +827,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stp_filename="blanket_rear_wall.stp",
             stl_filename="blanket_rear_wall.stl",
             name="blanket_rear_wall",
-            cut=[central_cutter, self._divertor_cutter, self._pf_coils, self._pf_casing], 
+            cut=[
+                central_cutter,
+                self._divertor_cutter,
+                self._pf_coils,
+                self._pf_casing],
             color=(
                 0.3,
                 0.3,
@@ -849,7 +854,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stp_filename="blanket.stp",
             stl_filename="blanket.stl",
             name="blanket",
-            cut=[central_cutter, self._divertor_cutter, self._pf_coils, self._pf_casing],
+            cut=[
+                central_cutter,
+                self._divertor_cutter,
+                self._pf_coils,
+                self._pf_casing],
             color=(
                 0.5,
                 1,
@@ -869,14 +878,17 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stp_filename="firstwall.stp",
             stl_filename="firstwall.stl",
             name="firstwall",
-            cut=[central_cutter, self._divertor_cutter, self._pf_coils, self._pf_casing],
+            cut=[
+                central_cutter,
+                self._divertor_cutter,
+                self._pf_coils,
+                self._pf_casing],
             color=(
                 0.3,
                 0.3,
                 0.3))
 
         return [self._rear_wall, self._breeder_blanket, self._inner_wall]
-
 
     def _make_divertor(self):
 
