@@ -1,6 +1,32 @@
 Examples - Parametric Reactors
 ==============================
 
+
+FlfSystemCodeReactor
+^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :include-source: true
+   :gridsize: 0
+
+   import paramak
+   my_reactor = paramak.FlfSystemCodeReactor(
+      inner_blanket_radius=100.,
+      blanket_thickness=70.,
+      blanket_height=500.,
+      lower_blanket_thickness=50.,
+      upper_blanket_thickness=40.,
+      blanket_vv_gap=20.,
+      upper_vv_thickness=10.,
+      vv_thickness=10.,
+      lower_vv_thickness=10.,
+      rotation_angle=180,
+   )
+
+   cadquery_object = my_reactor.solid
+
+
 ball_reactor.ipynb
 ^^^^^^^^^^^^^^^^^^
 

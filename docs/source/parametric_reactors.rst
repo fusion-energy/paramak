@@ -8,6 +8,18 @@ These are the current reactor designs that can be created using the Paramak.
    :align: center
 
 
+FlfSystemCodeReactor()
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/136050185-da7e3cc8-1ead-4e11-8c17-2cbe2e4a3ad2.png
+   :width: 450
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.flf_system_code_reactor
+   :members:
+   :show-inheritance:
+
+
 BallReactors 
 ------------
 
