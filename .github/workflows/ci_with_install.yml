@@ -1,15 +1,13 @@
-
 # This CI will lauch a Docker image that contains all the dependencies required
 # within that image the pytest test suite is run 
-
 
 name: CI with install
 
 on:
-  pull_request:    
+  pull_request:
     branches:
-    - develop
-    - main
+      - develop
+      - main
     paths-ignore:
       - 'docs/**'
       - '.gitignore'
@@ -17,7 +15,7 @@ on:
       - 'CITATION.cff'
       - 'LICENSE.txt'
       - 'readthedocs.yml'
- 
+
 jobs:
   testing:
     runs-on: ubuntu-latest
@@ -26,7 +24,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+
       - name: install package
         run: |
           python setup.py install
