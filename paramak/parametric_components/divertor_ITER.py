@@ -54,11 +54,11 @@ class ITERtypeDivertor(RotateMixedShape):
             **kwargs
         )
 
-        self.IVT_anchor, self.OVT_anchor = anchors
-        self.IVT_coverage, self.OVT_coverage = coverages
-        self.IVT_radius, self.OVT_radius = radii
-        self.IVT_length, self.OVT_length = lengths
-        self.IVT_tilt, self.OVT_tilt = tilts
+        self.ivt_anchor, self.ovt_anchor = anchors
+        self.ivt_coverage, self.ovt_coverage = coverages
+        self.ivt_radius, self.ovt_radius = radii
+        self.ivt_length, self.ovt_length = lengths
+        self.ivt_tilt, self.ovt_tilt = tilts
         self.dome = dome
         self.dome_length = dome_length
         self.dome_height = dome_height
@@ -196,41 +196,41 @@ class ITERtypeDivertor(RotateMixedShape):
         describe the 2D profile of the ITER-like divertor
         """
 
-        # IVT points
-        IVT_points = self._create_vertical_target_points(
-            self.IVT_anchor,
-            math.radians(self.IVT_coverage),
-            math.radians(self.IVT_tilt),
-            -self.IVT_radius,
-            self.IVT_length,
+        # ivt points
+        ivt_points = self._create_vertical_target_points(
+            self.ivt_anchor,
+            math.radians(self.ivt_coverage),
+            math.radians(self.ivt_tilt),
+            -self.ivt_radius,
+            self.ivt_length,
         )
         # add connections
         connections = ["circle"] * 2 + ["straight"] * 2
         for i, connection in enumerate(connections):
-            IVT_points[i].append(connection)
+            ivt_points[i].append(connection)
 
-        # OVT points
-        OVT_points = self._create_vertical_target_points(
-            self.OVT_anchor,
-            -math.radians(self.OVT_coverage),
-            math.radians(self.OVT_tilt),
-            self.OVT_radius,
-            self.OVT_length,
+        # ovt points
+        ovt_points = self._create_vertical_target_points(
+            self.ovt_anchor,
+            -math.radians(self.ovt_coverage),
+            math.radians(self.ovt_tilt),
+            self.ovt_radius,
+            self.ovt_length,
         )
         # add connections
         connections = ["straight"] + ["circle"] * 2 + ["straight"]
         for i, connection in enumerate(connections):
-            OVT_points[i].append(connection)
-        # OVT_points need to be fliped for correct connections
-        OVT_points = [[float(e[0]), float(e[1]), e[2]]
-                      for e in np.flipud(OVT_points)]
+            ovt_points[i].append(connection)
+        # ovt_points need to be fliped for correct connections
+        ovt_points = [[float(e[0]), float(e[1]), e[2]]
+                      for e in np.flipud(ovt_points)]
 
         # Dome points
         dome_points = []
         if self.dome:
             dome_points = self._create_dome_points(
-                IVT_points[-1][:2],
-                OVT_points[0][:2],
+                ivt_points[-1][:2],
+                ovt_points[0][:2],
                 self.dome_length,
                 self.dome_height,
                 self.dome_thickness,
@@ -239,12 +239,12 @@ class ITERtypeDivertor(RotateMixedShape):
 
         # casing points
         self.casing_points = self._create_casing_points(
-            anchors=(self.IVT_anchor, self.OVT_anchor),
-            c_coord=IVT_points[-1][:2],
-            F=OVT_points[0][:2],
-            targets_lengths=(self.IVT_length, self.OVT_length),
+            anchors=(self.ivt_anchor, self.ovt_anchor),
+            c_coord=ivt_points[-1][:2],
+            F=ovt_points[0][:2],
+            targets_lengths=(self.ivt_length, self.ovt_length),
         )
 
         # append all points
-        points = IVT_points + dome_points + OVT_points + self.casing_points
+        points = ivt_points + dome_points + ovt_points + self.casing_points
         self.points = points

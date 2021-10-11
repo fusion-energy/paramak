@@ -22,72 +22,33 @@ jobs:
 
       - run:
           name: run shape tests
-          command: 
+          command:
             pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run Reactor tests
-          command: 
+          command:
             pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run parametric_shapes tests
-          command: 
+          command:
             pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run parametric_components tests
-          command: 
+          command:
             pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - run:
           name: run parametric_reactors tests
-          command: 
+          command:
             pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
 
       - store_test_results:
           path: test-reports
 
       - run: bash <(curl -s https://codecov.io/bash)
-  # @pullrequest we can't find a way of getting this next part to work, any hints appreciated
-  # the following jobs fail on the publish to Dockerhub step. This may be due to a bad authentification
-  # build-deploy-master:
-  #   environment:
-  #     IMAGE_NAME: openmcworkshop/paramak
-  #   docker:
-  #     - image: circleci/buildpack-deps:stretch
-  #       auth:
-  #         username: $DOCKERHUB_USERNAME
-  #         password: $DOCKERHUB_TOKEN
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker
-  #     - run:
-  #         name: Build Docker image
-  #         command: docker build -t $IMAGE_NAME .
-  #     - run:
-  #         name: Publish Docker Image to Docker Hub
-  #         command: |
-  #           docker login
-  #           docker push $IMAGE_NAME
-  # build-deploy-dev:
-  #   environment:
-  #     IMAGE_NAME: openmcworkshop/paramak
-  #   docker:
-  #     - image: circleci/buildpack-deps:stretch
-  #       auth:
-  #         username: $DOCKERHUB_USERNAME
-  #         password: $DOCKERHUB_TOKEN
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker
-  #     - run:
-  #         name: Build Docker image
-  #         command: docker build -t $IMAGE_NAME:dev .
-  #     - run:
-  #         name: Publish Docker Image to Docker Hub
-  #         command: |
-  #           docker push $IMAGE_NAME:dev
 
 workflows:
   version: 2

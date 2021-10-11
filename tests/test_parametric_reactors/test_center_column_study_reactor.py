@@ -89,3 +89,40 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
             assert issubclass(w[-1].category, UserWarning)
             assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
                 w[-1].message)
+
+    def test_html_file_creation(self):
+        """Creates a reactor with exports the step files and check they exist"""
+
+        os.system('rm *.html')
+        self.test_reactor.export_html_3d('cylinder.html')
+        assert Path('cylinder.html').is_file()
+
+    def test_export_brep(self):
+        """Exports a brep file and checks that the output exist"""
+
+        os.system("rm test_reactor.brep")
+
+        self.test_reactor.export_brep(filename='merged.brep', merge=True)
+        self.test_reactor.export_brep(filename='not_merged.brep', merge=False)
+
+        assert Path("merged.brep").exists() is True
+        assert Path("not_merged.brep").exists() is True
+        # not always true
+        # assert Path("not_merged.brep").stat().st_size > Path(
+        #     "merged.brep").stat().st_size
+
+        os.system("rm merged.brep")
+        os.system("rm not_merged.brep")
+
+    def test_export_brep_without_extention(self):
+        """Exports a brep file without the extention and checks that the
+        output exist"""
+
+        def missing_extention():
+
+            self.test_reactor.export_brep(filename='test_reactor_missing')
+
+        self.assertRaises(
+            ValueError,
+            missing_extention
+        )

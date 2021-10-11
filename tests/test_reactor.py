@@ -37,8 +37,20 @@ class TestReactor(unittest.TestCase):
         self.test_reactor_3 = paramak.Reactor(
             [self.test_shape, test_shape_3])
 
+    def test_reactor_export_stp_with_name_set_to_none(self):
+        """Exports the reactor as separate files and as a single file"""
+
+        def incorrect_name():
+            self.test_shape.name = None
+
+            paramak.Reactor([self.test_shape])
+
+            self.test_reactor.export_stp()
+
+        self.assertRaises(ValueError, incorrect_name)
+
     def test_reactor_export_stp(self):
-        """Exports the reactor as seperate files and as a single file"""
+        """Exports the reactor as separate files and as a single file"""
         os.system('rm *.stp')
         self.test_reactor_2.export_stp(
             filename=['RotateStraightShape.stp', 'ExtrudeStraightShape.stp']
@@ -284,6 +296,18 @@ class TestReactor(unittest.TestCase):
 
         assert Path("test_reactor/test_shape.stl").exists() is True
         os.system("rm test_reactor/test_shape.stl")
+
+    def test_reactor_export_stl_with_name_set_to_none(self):
+        """Exports the reactor as separate files and as a single file"""
+
+        def incorrect_name():
+            self.test_shape.name = None
+
+            paramak.Reactor([self.test_shape])
+
+            self.test_reactor.export_stl()
+
+        self.assertRaises(ValueError, incorrect_name)
 
     def test_exported_svg_files_exist(self):
         """Creates a Reactor object with one shape and checks that a svg file

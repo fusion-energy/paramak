@@ -4,10 +4,11 @@ from typing import List, Optional, Union
 import paramak
 
 
-class CylinderReactor(paramak.Reactor):
-    """Creates the 3D geometry for the cylinder reactor model based on
-    parameters.
-
+class FlfSystemCodeReactor(paramak.Reactor):
+    """Creates the 3D geometry for the a simplified FLF reactor model based
+    on parameters. Model design was originally presented at University of
+    York in 2019. Model shown at 50 mins 48 seconds in presentation
+    https://www.youtube.com/watch?v=DtvcEkIb4D4
     Args:
         inner_blanket_radius: The radial distance between the center of the
             reactor on the start of the blanket (cm).
@@ -15,6 +16,8 @@ class CylinderReactor(paramak.Reactor):
         blanket_height: The height (z axis direction) of the blanket (cm).
         lower_blanket_thickness: The thickness (z axis direction) of the
             lower blanket pool (cm).
+        upper_blanket_thickness: The thickness (z axis direction) of the
+            upper blanket pool (cm).
         blanket_vv_gap: The radial distance between the outer edge of the
             blanket and the inner edge of the vaccum vessel (cm).
         upper_vv_thickness: The thickness (z axis direction) of the

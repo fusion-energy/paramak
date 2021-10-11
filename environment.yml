@@ -13,9 +13,9 @@ dependencies:
   - matplotlib
   - pillow
   - pip:
-    - sympy
-    - plasmaboundaries
-    - sphinx-autodoc-typehints
-    - sphinxcadquery
-    - defusedxml
-    - jupyter-cadquery
+      - sympy
+      - plasmaboundaries
+      - sphinx-autodoc-typehints
+      - sphinxcadquery
+      - defusedxml
+      - jupyter-cadquery

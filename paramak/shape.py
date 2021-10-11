@@ -54,8 +54,6 @@ class Shape:
         surface_reflectivity (Boolean, optional): If True, a
             surface_reflectivity flag will be added to the neutronics
             description output. Defaults to None.
-        physical_groups (dict, optional): contains information on physical
-            groups (volumes and surfaces). Defaults to None.
         cut (paramak.shape or list, optional): If set, the current solid will
             be cut with the provided solid or iterable in cut. Defaults to
             None.
@@ -85,7 +83,6 @@ class Shape:
         tet_mesh: Optional[str] = None,
         scale: Optional[float] = None,
         surface_reflectivity: Optional[bool] = False,
-        physical_groups=None,
         # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
@@ -117,8 +114,6 @@ class Shape:
         self.surface_reflectivity = surface_reflectivity
         self.graveyard_offset = graveyard_offset
         self.graveyard_size = graveyard_size
-
-        self.physical_groups = physical_groups
 
         # properties calculated internally by the class
         self.solid = None

@@ -4,6 +4,17 @@
 # conda install -y conda-build
 # anaconda login
 
+#cleans up files that get uploaded to the anaconda repo if not deleted
+find . -name \*.svg -type f -delete
+find . -name \*.stl -type f -delete
+find . -name \*.stp -type f -delete
+find . -name \*.step -type f -delete
+find . -name \*.brep -type f -delete
+find . -name \*.png -type f -delete
+find . -name \*.gif -type f -delete
+find . -name \*.html -type f -delete
+find . -name \*.json -type f -delete
+
 
 rm -rf /tmp/conda-build
 mkdir -p /tmp/conda-build

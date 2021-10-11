@@ -21,14 +21,14 @@ Install (conda)
 
 This is the recommended method.
 
-Create a new enviroment (Python 3.6, 3.7 or 3.8 are supported).
+Create a new environment (Python 3.6, 3.7 or 3.8 are supported).
 
 .. code-block:: bash
 
    conda create --name paramak_env python=3.8
 
 
-Then activate the new enviroment.
+Then activate the new environment.
 
 .. code-block:: bash
 
@@ -41,20 +41,20 @@ Then install the Paramak.
 
    conda install -c fusion-energy -c cadquery -c conda-forge paramak
 
-Now you should be ready to import paramak from your new python enviroment.
+Now you should be ready to import paramak from your new python environment.
 
 
 Install (conda + pip)
 ---------------------
 
-Create a new enviroment (Python 3.6, 3.7 or 3.8 are supported).
+Create a new environment (Python 3.6, 3.7 or 3.8 are supported).
 
 .. code-block:: bash
 
    conda create --name paramak_env python=3.8
 
 
-Then activate the new enviroment.
+Then activate the new environment.
 
 .. code-block:: bash
 
@@ -73,7 +73,7 @@ Then pip install the Paramak.
 
    pip install paramak
 
-Now you should be ready to import paramak from your new python enviroment.
+Now you should be ready to import paramak from your new python environment.
 
 
 Optional neutronics install
@@ -108,8 +108,8 @@ Developer Installation
 If you want to contribute to the paramak or then you might want to install the 
 package using setup tools.
 
-Download and install MiniConda, create a new python enviroment and activate the
-enviroment as covered in the installation procedure above.
+Download and install MiniConda, create a new python environment and activate the
+environment as covered in the installation procedure above.
 
 Then install CadQuery.
 
@@ -172,4 +172,4 @@ Alternatively the Docker image can be run in interactive terminal mode .
 You may also want to make use of the
 `--volume <https://docs.docker.com/storage/volumes/>`_
 flag when running Docker so that you can retrieve files from the Docker
-enviroment to your base system.
+environment to your base system.
