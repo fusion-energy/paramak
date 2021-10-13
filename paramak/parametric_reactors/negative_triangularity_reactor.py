@@ -175,10 +175,10 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._equatorial_points()
 
     def _plasma_geometry(self):
-        ######### Calculating plasma geometry from parameters above #########
+        """Calculating plasma geometry from parameters above
 
-        # Adjust a gap between inner TF leg and vacuum vessel to accomodate a
-        # wider range of thicknesses
+        Adjust a gap between inner TF leg and vacuum vessel to accomodate a
+        wider range of thicknesses"""
         core_width = self._inner_bore_radius + \
             self._inner_tf_coil_thickness + \
             self._vacuum_vessel_thickness + self._central_shield_thickness
@@ -214,9 +214,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._major_radius -
             self._inner_equatorial_point)
 
-    # Setup Setters and getters for parameters
     # Getters
-
     @property
     def aspect_ratio(self):
         print(
