@@ -10,10 +10,7 @@ class ExtrudeRectangle(ExtrudeStraightShape):
         height: the vertical (z axis) height of the coil (cm).
         width: the horizontal (x axis) width of the coil (cm).
         center_point: the center of the coil (x,z) values (cm).
-        stp_filename: defaults to "ExtrudeRectangle.stp".
-        stl_filename: defaults to "ExtrudeRectangle.stl".
         name: defaults to "extrude_rectangle".
-        material_tag: defaults to "extrude_rectangle_mat".
     """
 
     def __init__(
@@ -21,18 +18,12 @@ class ExtrudeRectangle(ExtrudeStraightShape):
         height: float,
         width: float,
         center_point: Tuple[float, float],
-        stp_filename: Optional[str] = "ExtrudeRectangle.stp",
-        stl_filename: Optional[str] = "ExtrudeRectangle.stl",
         name: Optional[str] = "extrude_rectangle",
-        material_tag: Optional[str] = "extrude_rectangle_mat",
         **kwargs
     ) -> None:
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

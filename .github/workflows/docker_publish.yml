@@ -5,6 +5,8 @@
 name: docker-publish-release
 
 on:
+  # allows us to run workflows manually
+  workflow_dispatch:
   release:
     types: [created]
 

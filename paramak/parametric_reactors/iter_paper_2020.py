@@ -26,6 +26,12 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         self.rotation_angle = rotation_angle
         self.number_of_tf_coils = number_of_tf_coils
 
+        # adds self.input_variable_names from the Reactor class
+        self.input_variable_names = self.input_variable_names + [
+            'number_of_tf_coils',
+            'rotation_angle',
+        ]
+
     def create_tf_coils(self) -> list:
         """Creates a 3d solids for each tf coil.
 
@@ -47,9 +53,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             distance=coil_thickness,
             number_of_coils=self.number_of_tf_coils,
             rotation_angle=self.rotation_angle,
-            stp_filename="tf_coils.stp",
-            stl_filename="tf_coils.stl",
-            material_tag='tf_coils_mat',
         )
 
         return [tf_coil]
@@ -70,9 +73,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             vertical_displacement=self.plasma.vertical_displacement,
             offset_from_plasma=[[-70, 0, 90, 180, 230], [50, 20, 59, 16, 50]],
-            stp_filename="blanket.stp",
-            stl_filename="blanket.stl",
-            material_tag='blanket_mat',
         )
 
         # SN Divertor
@@ -85,9 +85,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             dome_height=45,
             dome_pos=0.45,
             rotation_angle=self.rotation_angle,
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
-            material_tag='divertor_mat',
         )
 
         # Vacuum vessel
@@ -97,9 +94,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         vac_vessel_inner = paramak.RotateMixedShape(
             points=blanket.outer_points + divertor.casing_points,
             rotation_angle=self.rotation_angle,
-            stp_filename='vacvesselinner.stp',
-            stl_filename='vacvesselinner.stl',
-            material_tag="inner_vacuum_vessel_mat",
         )
 
         vac_vessel = paramak.RotateSplineShape(
@@ -185,9 +179,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             ],
             cut=[vac_vessel_inner],  # to make a hollow shape
             rotation_angle=self.rotation_angle,
-            stp_filename='vacvessel.stp',
-            stl_filename='vacvessel.stl',
-            material_tag="vacuum_vessel_mat",
         )
 
         return [divertor, blanket, vac_vessel, vac_vessel_inner]
@@ -242,9 +233,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             widths=(top_rights[:, 0] - bot_lefts[:, 0]).tolist(),
             heights=(top_rights[:, 1] - bot_lefts[:, 1]).tolist(),
             rotation_angle=self.rotation_angle,
-            stl_filename='outboard_pf_coils.stl',
-            stp_filename='outboard_pf_coils.stp',
-            material_tag='outboard_pf_coils_mat',
         )
 
         x_inner, x_outer = 132.73905996758506, 202.26904376012968
@@ -257,9 +245,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, -400),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_1.stl',
-            stp_filename='pf_coils_1.stp',
-            material_tag='pf_coil_mat',
         )
 
         pf_coils_2 = paramak.RotateStraightShape(
@@ -270,9 +255,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, -200),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_2.stl',
-            stp_filename='pf_coils_2.stp',
-            material_tag='pf_coil_mat',
         )
 
         pf_coils_3 = paramak.RotateStraightShape(
@@ -283,9 +265,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, 0),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_3.stl',
-            stp_filename='pf_coils_3.stp',
-            material_tag='pf_coil_mat',
         )
 
         pf_coils_4 = paramak.RotateStraightShape(
@@ -296,9 +275,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, 200),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_4.stl',
-            stp_filename='pf_coils_4.stp',
-            material_tag='pf_coil_mat',
         )
 
         pf_coils_5 = paramak.RotateStraightShape(
@@ -309,9 +285,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, 400),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_5.stl',
-            stp_filename='pf_coils_5.stp',
-            material_tag='pf_coil_mat',
         )
 
         pf_coils_6 = paramak.RotateStraightShape(
@@ -322,9 +295,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, 600),
             ],
             rotation_angle=self.rotation_angle,
-            stl_filename='pf_coils_6.stl',
-            stp_filename='pf_coils_6.stp',
-            material_tag='pf_coil_mat',
         )
 
         return [outboard_pf_coils, pf_coils_1, pf_coils_2, pf_coils_3,

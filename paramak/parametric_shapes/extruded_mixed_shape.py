@@ -16,9 +16,6 @@ class ExtrudeMixedShape(Shape):
             directions. Defaults to True.
         rotation_angle: rotation angle of solid created. A cut is performed
             from rotation_angle to 360 degrees. Defaults to 360.0.
-        stp_filename: Defaults to "ExtrudeMixedShape.stp".
-        stl_filename: Defaults to "ExtrudeMixedShape.stl".
-
     """
 
     def __init__(
@@ -27,15 +24,11 @@ class ExtrudeMixedShape(Shape):
         extrude_both: Optional[bool] = True,
         rotation_angle: Optional[float] = 360.0,
         extrusion_start_offset: Optional[float] = 0.0,
-        stp_filename: Optional[str] = "ExtrudeMixedShape.stp",
-        stl_filename: Optional[str] = "ExtrudeMixedShape.stl",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.2, 0.627, 0.172),
         **kwargs
     ):
 
         super().__init__(
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

@@ -26,9 +26,6 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
         with_inner_leg: Include the inner TF leg. Defaults to True.
-        stp_filename: Defaults to "ToroidalFieldCoilCoatHanger.stp".
-        stl_filename: Defaults to "ToroidalFieldCoilCoatHanger.stl".
-        material_tag: Defaults to "outer_tf_coil_mat".
     """
 
     def __init__(
@@ -41,18 +38,12 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         distance: float,
         number_of_coils: int,
         with_inner_leg: Optional[bool] = True,
-        stp_filename: Optional[str] = "ToroidalFieldCoilCoatHanger.stp",
-        stl_filename: Optional[str] = "ToroidalFieldCoilCoatHanger.stl",
-        material_tag: Optional[str] = "outer_tf_coil_mat",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
         **kwargs
     ) -> None:
 
         super().__init__(
             distance=distance,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            material_tag=material_tag,
             color=color,
             **kwargs
         )
@@ -76,8 +67,8 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         self._azimuth_placement_angle = value
 
     def find_points(self):
-        """Finds the XZ points joined by straight connections that describe the 2D
-        profile of the poloidal field coil shape."""
+        """Finds the XZ points joined by straight connections that describe the
+        2D profile of the poloidal field coil shape."""
 
         # 16---15
         # -     -

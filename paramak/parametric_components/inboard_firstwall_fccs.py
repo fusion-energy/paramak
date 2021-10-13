@@ -20,26 +20,17 @@ class InboardFirstwallFCCS(RotateMixedShape):
     Args:
         central_column_shield: The central column shield object to build from
         thickness: the radial thickness of the firstwall (cm)
-        stp_filename: Defaults to "InboardFirstwallFCCS.stp".
-        stl_filename: Defaults to "InboardFirstwallFCCS.stl".
-        material_tag: Defaults to "firstwall_mat".
     """
 
     def __init__(
         self,
         central_column_shield: paramak.Shape,
         thickness: float,
-        stp_filename: Optional[str] = "InboardFirstwallFCCS.stp",
-        stl_filename: Optional[str] = "InboardFirstwallFCCS.stl",
-        material_tag: Optional[str] = "firstwall_mat",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.5, 0.5, 0.5),
         **kwargs
     ):
 
         super().__init__(
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            material_tag=material_tag,
             color=color,
             **kwargs
         )

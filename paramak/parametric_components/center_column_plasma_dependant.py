@@ -20,9 +20,6 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         minor_radius: the minor radius of the plasma. Defaults to 150.0.
         triangularity: the triangularity of the plasma. Defaults to 0.55.
         elongation: the elongation of the plasma. Defaults to 2.0.
-        material_tag: Defaults to "center_column_shield_mat".
-        stp_filename: Defaults to "CenterColumnShieldPlasmaHyperbola.stp".
-        stl_filename: Defaults to "CenterColumnShieldPlasmaHyperbola.stl".
     """
 
     def __init__(
@@ -35,24 +32,15 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         minor_radius: Optional[float] = 150.0,
         triangularity: Optional[float] = 0.55,
         elongation: Optional[float] = 2.0,
-        material_tag: Optional[str] = "center_column_shield_mat",
-        stp_filename: Optional[str] = "CenterColumnShieldPlasmaHyperbola.stp",
-        stl_filename: Optional[str] = "CenterColumnShieldPlasmaHyperbola.stl",
         **kwargs
     ) -> None:
 
-        super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            **kwargs
-        )
+        super().__init__(**kwargs)
 
         self.major_radius = major_radius
         self.minor_radius = minor_radius
         self.triangularity = triangularity
         self.elongation = elongation
-        self.stp_filename = stp_filename
         self.height = height
         self.inner_radius = inner_radius
         self.mid_offset = mid_offset
@@ -135,12 +123,11 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         plasma.rotation_angle = self.rotation_angle
         plasma.find_points()
 
-        if self.height <= abs(plasma.high_point[1]) + abs(plasma.low_point[1]):
-            raise ValueError(
-                "Center column height ({}) is smaller than plasma height ({})".format(
-                    self.height, abs(plasma.high_point[1]) + abs(plasma.low_point[1])
-                )
-            )
+        plasma_height = abs(plasma.high_point[1]) + abs(plasma.low_point[1])
+        if self.height <= plasma_height:
+            msg = (f'Center column height ({self.height}) is smaller than '
+                   'plasma height ({plasma_height}')
+            raise ValueError(msg)
 
         if self.inner_radius >= plasma.inner_equatorial_point[0] - \
                 self.mid_offset:
@@ -149,15 +136,26 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         points = [
             (self.inner_radius, 0, "straight"),
             (self.inner_radius, self.height / 2, "straight"),
-            (plasma.high_point[0] - self.edge_offset, self.height / 2, "straight"),
-            (plasma.high_point[0] - self.edge_offset, plasma.high_point[1], "spline"),
+            (
+                plasma.high_point[0] - self.edge_offset,
+                self.height / 2, "straight"
+            ),
+            (
+                plasma.high_point[0] - self.edge_offset,
+                plasma.high_point[1], "spline"
+            ),
             (
                 plasma.inner_equatorial_point[0] - self.mid_offset,
                 plasma.inner_equatorial_point[1],
                 "spline",
             ),
-            (plasma.low_point[0] - self.edge_offset, plasma.low_point[1], "straight"),
-            (plasma.low_point[0] - self.edge_offset, -1 * self.height / 2, "straight"),
+            (
+                plasma.low_point[0] - self.edge_offset,
+                plasma.low_point[1], "straight"),
+            (
+                plasma.low_point[0] - self.edge_offset,
+                -1 * self.height / 2, "straight"
+            ),
             (self.inner_radius, -1 * self.height / 2, "straight")
         ]
 

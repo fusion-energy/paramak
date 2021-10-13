@@ -20,10 +20,7 @@ class RotatedTrapezoid(RotateStraightShape):
             length_1 edge (cm).
         pivot_angle (float, optional): the angle (in degrees) to pivot (rotate)
             the shape by around the pivot point. Defaults to 0.
-        stp_filename (str, optional): defaults to "RotatedTrapezoid.stp".
-        stl_filename (str, optional): defaults to "RotatedTrapezoid.stl".
         name (str, optional): defaults to "rotated_trapezoid".
-        material_tag (str, optional): defaults to "rotated_trapezoid_mat".
     """
 
     def __init__(
@@ -33,18 +30,12 @@ class RotatedTrapezoid(RotateStraightShape):
         length_3,
         pivot_point,
         pivot_angle=0.,
-        stp_filename="RotatedTrapezoid.stp",
-        stl_filename="RotatedTrapezoid.stl",
         name="rotated_trapezoid",
-        material_tag="rotated_trapezoid_mat",
         **kwargs
     ):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

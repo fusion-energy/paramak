@@ -45,25 +45,23 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
     def __init__(
         self,
-        inner_bore_radial_thickness,
-        inboard_tf_leg_radial_thickness,
-        center_column_shield_radial_thickness_mid,
-        center_column_shield_radial_thickness_upper,
-        inboard_firstwall_radial_thickness,
-        divertor_radial_thickness,
-        inner_plasma_gap_radial_thickness,
-        plasma_radial_thickness,
-        outer_plasma_gap_radial_thickness,
-        center_column_arc_vertical_thickness,
-        elongation,
-        triangularity,
-        plasma_gap_vertical_thickness,
-        rotation_angle=360.0,
+        inner_bore_radial_thickness: float = 20,
+        inboard_tf_leg_radial_thickness: float = 50.,
+        center_column_shield_radial_thickness_mid: float = 50.,
+        center_column_shield_radial_thickness_upper: float = 100.,
+        inboard_firstwall_radial_thickness: float = 20.,
+        divertor_radial_thickness: float = 100.,
+        inner_plasma_gap_radial_thickness: float = 80.,
+        plasma_radial_thickness: float = 200.,
+        outer_plasma_gap_radial_thickness: float = 90,
+        center_column_arc_vertical_thickness: float = 520.,
+        elongation: float = 2.3,
+        triangularity: float = 0.45,
+        plasma_gap_vertical_thickness: float = 40,
+        rotation_angle: float = 360.0,
     ):
 
         super().__init__([])
-
-        self.method = 'trelis'
 
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
@@ -86,21 +84,27 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.elongation = elongation
         self.triangularity = triangularity
 
-        # sets major radius and minor radius from equatorial_points to allow a
-        # radial build this helps avoid the plasma overlapping the center
-        # column and other components
+        # adds self.input_variable_names from the Reactor class
+        self.input_variable_names = self.input_variable_names + [
+            'inner_bore_radial_thickness',
+            'inboard_tf_leg_radial_thickness',
+            'center_column_shield_radial_thickness_mid',
+            'center_column_shield_radial_thickness_upper',
+            'inboard_firstwall_radial_thickness',
+            'divertor_radial_thickness',
+            'inner_plasma_gap_radial_thickness',
+            'plasma_radial_thickness',
+            'outer_plasma_gap_radial_thickness',
+            'center_column_arc_vertical_thickness',
+            'elongation',
+            'triangularity',
+            'plasma_gap_vertical_thickness',
+            'rotation_angle',
+        ]
 
-        inner_equatorial_point = (
-            inner_bore_radial_thickness
-            + inboard_tf_leg_radial_thickness
-            + center_column_shield_radial_thickness_mid
-            + inner_plasma_gap_radial_thickness
-        )
-        outer_equatorial_point = \
-            inner_equatorial_point + plasma_radial_thickness
-        self.major_radius = \
-            (outer_equatorial_point + inner_equatorial_point) / 2
-        self.minor_radius = self.major_radius - inner_equatorial_point
+        # set by make_plasma
+        self.major_radius = None
+        self.minor_radius = None
 
     def create_solids(self):
         """Creates a 3d solids for each component.
@@ -131,6 +135,22 @@ class CenterColumnStudyReactor(paramak.Reactor):
             warnings.warn(msg, UserWarning)
 
     def _make_plasma(self):
+
+        # sets major radius and minor radius from equatorial_points to allow a
+        # radial build this helps avoid the plasma overlapping the center
+        # column and other components
+
+        inner_equatorial_point = (
+            self.inner_bore_radial_thickness
+            + self.inboard_tf_leg_radial_thickness
+            + self.center_column_shield_radial_thickness_mid
+            + self.inner_plasma_gap_radial_thickness
+        )
+        outer_equatorial_point = \
+            inner_equatorial_point + self.plasma_radial_thickness
+        self.major_radius = \
+            (outer_equatorial_point + inner_equatorial_point) / 2
+        self.minor_radius = self.major_radius - inner_equatorial_point
 
         plasma = paramak.Plasma(
             major_radius=self.major_radius,
@@ -221,10 +241,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             inner_radius=self._inboard_tf_coils_start_radius,
             outer_radius=self._inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
-            stp_filename="inboard_tf_coils.stp",
-            stl_filename="inboard_tf_coils.stl",
             name="inboard_tf_coils",
-            material_tag="inboard_tf_coils_mat",
             color=(0., 0., 1.)
         )
         return self._inboard_tf_coils
@@ -298,10 +315,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             inner_radius=self._divertor_start_radius,
             outer_radius=self._divertor_end_radius,
             rotation_angle=self.rotation_angle,
-            stp_filename="divertor.stp",
-            stl_filename="divertor.stl",
             name="divertor",
-            material_tag="divertor_mat",
             intersect=self._blanket_enveloppe,
             color=(1., 0.667, 0.),
         )

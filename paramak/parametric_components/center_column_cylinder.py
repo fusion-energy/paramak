@@ -10,9 +10,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         inner_radius: the inner radius of the center column shield.
         outer_radius: the outer radius of the center column shield.
         center_height: the vertical height of the center of the component.
-        stp_filename: Defaults to "CenterColumnShieldCylinder.stp".
-        stl_filename: Defaults to "CenterColumnShieldCylinder.stl".
-        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -22,9 +19,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         outer_radius: float,
         center_height: Optional[float] = 0,
         name: Optional[str] = "CenterColumnShieldCylinder",
-        stp_filename: Optional[str] = "CenterColumnShieldCylinder.stp",
-        stl_filename: Optional[str] = "CenterColumnShieldCylinder.stl",
-        material_tag: Optional[str] = "center_column_shield_mat",
         color: Optional[Tuple[float, float, float, Optional[float]]] = (
             0.0,
             0.333,
@@ -34,9 +28,6 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     ) -> None:
 
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             name=name,
             **kwargs
@@ -54,9 +45,10 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     @center_height.setter
     def center_height(self, value):
         if not isinstance(value, (int, float)):
-            raise TypeError(
-                "CenterColumnShieldBlock.center_height should be a float or int. Not a {}".format(
-                    type(value)))
+            msg = (
+                f'CenterColumnShieldBlock.center_height should be a float or int. Not a {type(value)}')
+            raise TypeError(msg)
+
         self._center_height = value
 
     @property
@@ -78,9 +70,9 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     def inner_radius(self, value):
         if hasattr(self, "outer_radius"):
             if value >= self.outer_radius:
-                raise ValueError(
-                    "inner_radius ({}) is larger than outer_radius ({})".format(
-                        value, self.outer_radius))
+                msg = (f'inner_radius ({value}) is larger than outer_radius '
+                       '({self.outer_radius})')
+                raise ValueError(msg)
         self._inner_radius = value
 
     @property
@@ -91,9 +83,10 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     def outer_radius(self, value):
         if hasattr(self, "inner_radius"):
             if value <= self.inner_radius:
-                raise ValueError(
-                    "inner_radius ({}) is larger than outer_radius ({})".format(
-                        self.inner_radius, value))
+                msg = (f'inner_radius ({self.inner_radius}) is larger than '
+                       'outer_radius ({value})')
+                raise ValueError(msg)
+
         self._outer_radius = value
 
     def find_points(self):

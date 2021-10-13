@@ -7,6 +7,7 @@ import paramak
 
 
 class TestSparc2020Reactor(unittest.TestCase):
+    """"Tests functionality of the Sparc2020Reactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.BallReactor(
@@ -17,6 +18,7 @@ class TestSparc2020Reactor(unittest.TestCase):
             inner_plasma_gap_radial_thickness=150,
             plasma_radial_thickness=100,
             outer_plasma_gap_radial_thickness=50,
+            plasma_gap_vertical_thickness=50,
             firstwall_radial_thickness=50,
             blanket_radial_thickness=100,
             blanket_rear_wall_radial_thickness=10,
@@ -42,14 +44,19 @@ class TestSparc2020Reactor(unittest.TestCase):
             "tf_coil.stp",
             "vacuum_vessel.stp",
             "vacuum_vessel_inner.stp",
-            "graveyard.stp",
         ]
+
+    def test_input_variables_names(self):
+        """tests that the number of inputs variables is correct"""
+
+        assert len(self.test_reactor.input_variables.keys()) == 28
+        assert len(self.test_reactor.input_variable_names) == 28
 
     def test_make_sparc_2020_reactor(self):
         """Runs the example to check the output files are produced"""
         os.system("rm *.stp")
         my_reactor = paramak.SparcFrom2020PaperDiagram()
-        my_reactor.export_stp()
+        my_reactor.export_stp(filename=self.output_filenames)
         for output_filename in self.output_filenames:
             assert Path(output_filename).exists() is True
 
@@ -59,6 +66,6 @@ class TestSparc2020Reactor(unittest.TestCase):
 
         os.system("rm *.stp")
         my_reactor = paramak.SparcFrom2020PaperDiagram(rotation_angle=90)
-        my_reactor.export_stp()
+        my_reactor.export_stp(filename=self.output_filenames)
         for output_filename in self.output_filenames:
             assert Path(output_filename).exists() is True

@@ -21,11 +21,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
             the start of the extrusion. Defaults to 1..
         fillet_radius (float, optional): If not None, radius (cm) of fillets
             added to edges orthogonal to the Z direction. Defaults to None.
-        stp_filename (str, optional): defaults to "PortCutterRectangular.stp".
-        stl_filename (str, optional): defaults to "PortCutterRectangular.stl".
         name (str, optional): defaults to "rectangular_port_cutter".
-        material_tag (str, optional): defaults to
-            "rectangular_port_cutter_mat".
     """
 
     def __init__(
@@ -38,10 +34,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
         rotation_axis: Optional[str] = "Z",
         extrusion_start_offset: Optional[float] = 1.,
         fillet_radius: Optional[float] = None,
-        stp_filename: Optional[str] = "PortCutterRectangular.stp",
-        stl_filename: Optional[str] = "PortCutterRectangular.stl",
         name: Optional[str] = "rectangular_port_cutter",
-        material_tag: Optional[str] = "rectangular_port_cutter_mat",
         **kwargs
     ):
 
@@ -51,9 +44,6 @@ class PortCutterRectangular(ExtrudeStraightShape):
             extrusion_start_offset=extrusion_start_offset,
             extrude_both=False,
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             distance=distance,
             **kwargs
         )

@@ -26,18 +26,12 @@ class TFCoilCasing(ExtrudeMixedShape):
         inner_offset: float,
         outer_offset: float,
         vertical_section_offset: float,
-        stp_filename: Optional[str] = "TFCoilCasing.stp",
-        stl_filename: Optional[str] = "TFCoilCasing.stl",
-        material_tag: Optional[str] = "TF_coil_casing_mat",
         **kwargs
     ) -> None:
 
         self.magnet = magnet
 
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 
@@ -60,8 +54,8 @@ class TFCoilCasing(ExtrudeMixedShape):
     def azimuth_placement_angle(self, value):
         correct_angles = self.magnet.azimuth_placement_angle
         if value != correct_angles:
-            msg = "Casing azimuth_placement_angle should be the" + \
-                " same value as TFCoilCasing.magnet."
+            msg = ('Casing azimuth_placement_angle should be the'
+                   'same value as TFCoilCasing.magnet.')
             warnings.warn(msg, UserWarning)
         self._azimuth_placement_angle = correct_angles
 

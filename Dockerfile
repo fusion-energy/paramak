@@ -10,23 +10,23 @@
 #
 # Example builds:
 # Building using the defaults (cq_version 2.1)
-# docker build -t ukaea/paramak .
+# docker build -t paramak .
 #
 # Building to include cadquery master.
 # Run command from within the base repository directory
-# docker build -t ukaea/paramak --build-arg cq_version=master .
+# docker build -t paramak --build-arg cq_version=master .
 #
 # Once build the dockerimage can be run in a few different ways.
 #
 # Run with the following command for a terminal notebook interface
-# docker run -it ukaea/paramak .
+# docker run -it paramak
 #
 # Run with the following command for a jupyter notebook interface
-# docker run -p 8888:8888 ukaea/paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
+# docker run -p 8888:8888 paramak /bin/bash -c "jupyter notebook --notebook-dir=/examples --ip='*' --port=8888 --no-browser --allow-root"
 #
 # Once built, the docker image can be tested with either of the following commands
-# docker run --rm ukaea/paramak pytest /tests
-# docker run --rm ukaea/paramak  /bin/bash -c "cd .. && bash run_tests.sh"
+# docker run --rm paramak pytest /tests
+# docker run --rm paramak  /bin/bash -c "bash run_tests.sh"
 
 FROM continuumio/miniconda3:4.9.2 as dependencies
 
@@ -35,17 +35,13 @@ ARG cq_version=2.1
 
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
-    PATH=/opt/openmc/bin:/opt/NJOY2016/build:$PATH \
-    LD_LIBRARY_PATH=/opt/openmc/lib:$LD_LIBRARY_PATH \
-    CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx \
     DEBIAN_FRONTEND=noninteractive
 
+RUN apt-get --allow-releaseinfo-change update
 RUN apt-get update -y && \
     apt-get upgrade -y
 
-RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev \
-                       freeglut3-dev libosmesa6 libosmesa6-dev \
-                       libgles2-mesa-dev curl imagemagick && \
+RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
                        apt-get clean
 
 # Installing CadQuery
@@ -55,14 +51,13 @@ RUN echo installing CadQuery version $cq_version && \
     pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
 
-
-# dagmc is needed as it includes the make_watertight command and moab
-# conda install -c conda-forge -c moab # now included with dagmc
-RUN conda install -c conda-forge dagmc && \
-    conda clean -afy
-
+# installs dependancies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+# installs required packages for dependancies
+COPY requirements-test.txt requirements-test.txt
+RUN pip install -r requirements-test.txt
 
 
 RUN mkdir /home/paramak
@@ -70,7 +65,7 @@ EXPOSE 8888
 WORKDIR /home/paramak
 
 
-FROM dependencies as final
+FROM ghcr.io/fusion-energy/paramak:dependencies as final
 
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
@@ -83,5 +78,5 @@ COPY README.md README.md
 RUN python setup.py install
 
 # this helps prevent the kernal failing
-RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> /home/paramak/docker-cmd.sh
-CMD bash /home/paramak/docker-cmd.sh
+RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
+CMD bash docker-cmd.sh

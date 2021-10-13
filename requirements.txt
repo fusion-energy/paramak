@@ -4,8 +4,6 @@ sympy>=1.8
 numpy>=1.21.1
 matplotlib>=3.4.2
 plasmaboundaries>=0.1.8
-remove_dagmc_tags>=0.0.5
-jupyter-cadquery>=2.2.0
 jupyter-cadquery>=2.2.0
 
 # tests require additional packages

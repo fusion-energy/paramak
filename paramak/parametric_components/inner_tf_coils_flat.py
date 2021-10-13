@@ -19,13 +19,10 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             the tf coils.
         number_of_coils: number of tf coils.
         gap_size: gap between adjacent tf coils.
-        inner_radius_type: Controls the part of the inner surface used when
+        radius_type: Controls the part of the inner surface used when
             defining the inner_radius and outer_radius. Can be set to either
             'corner' or 'straight'.
         azimuth_start_angle: defaults to 0.0.
-        stp_filename: defaults to "InnerTfCoilsFlat.stp".
-        stl_filename: defaults to "InnerTfCoilsFlat.stl".
-        material_tag: defaults to "inner_tf_coil_mat".
         workplane:defaults to "XY".
         rotation_axis: Defaults to "Z".
     """
@@ -37,11 +34,8 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         outer_radius: float,
         number_of_coils: int,
         gap_size: float,
-        inner_radius_type: Optional[str] = 'corner',
+        radius_type: Optional[str] = 'corner',
         azimuth_start_angle: Optional[float] = 0.0,
-        stp_filename: Optional[str] = "InnerTfCoilsFlat.stp",
-        stl_filename: Optional[str] = "InnerTfCoilsFlat.stl",
-        material_tag: Optional[str] = "inner_tf_coil_mat",
         workplane: Optional[str] = "XY",
         rotation_axis: Optional[str] = "Z",
         **kwargs
@@ -49,9 +43,6 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
 
         super().__init__(
             distance=height,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            material_tag=material_tag,
             workplane=workplane,
             rotation_axis=rotation_axis,
             **kwargs
@@ -61,7 +52,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         self.height = height
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
-        self.inner_radius_type = inner_radius_type
+        self.radius_type = radius_type
         self.number_of_coils = number_of_coils
         self.gap_size = gap_size
         self.distance = height
@@ -75,16 +66,16 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         self._azimuth_start_angle = value
 
     @property
-    def inner_radius_type(self):
-        return self._inner_radius_type
+    def radius_type(self):
+        return self._radius_type
 
-    @inner_radius_type.setter
-    def inner_radius_type(self, value):
+    @radius_type.setter
+    def radius_type(self, value):
         if value not in ['corner', 'straight']:
-            msg = 'inner_radius_type must be either "corner" or "straight". Not {}'.format(
-                value)
+            msg = (
+                f'radius_type must be either "corner" or "straight". Not {value}')
             raise ValueError(msg)
-        self._inner_radius_type = value
+        self._radius_type = value
 
     @property
     def azimuth_placement_angle(self):
@@ -146,61 +137,78 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
     def find_points(self):
         """Finds the points that describe the 2D profile of the tf coil shape"""
 
-        #        p4
-        #        /¦
-        #       / ¦
-        #      /  ¦
-        #     /   ¦
-        #  p1/    ¦
-        #   ¦     ¦
-        #   ¦     ¦
-        #  p2\    ¦
-        #     \   ¦
-        #      \  ¦
-        #       \ ¦
-        #        p3
+        #       /   p4
+        #      /    /¦
+        #     /    / ¦
+        #    /    /  ¦
+        #   /    /   ¦
+        #     p1/    ¦
+        #      ¦     ¦
+        # x    ¦     ¦
+        #      ¦     ¦
+        #     p2\    ¦
+        #   \    \   ¦
+        #    \    \  ¦
+        #     \    \ ¦
+        #      \    p3
 
-        if self.inner_radius_type == 'corner':
+        if self.radius_type == 'corner':
             distance_to_inner_corner = self.inner_radius
             distance_to_rear_corner = self.outer_radius
         # this section calculates a new distance to the corners now that we
         # know the user provided the distance to the straight
-        if self.inner_radius_type == 'straight':
+        if self.radius_type == 'straight':
             angle = 360 / (self.number_of_coils * 2)
             distance_to_inner_corner = self.inner_radius / \
                 math.cos(math.radians(angle))
             distance_to_rear_corner = self.outer_radius / \
                 math.cos(math.radians(angle))
-            print('distance_to_inner_corner', distance_to_inner_corner)
 
         if self.gap_size * self.number_of_coils > 2 * math.pi * distance_to_inner_corner:
-            raise ValueError('gap_size is too large')
+            msg = (
+                'Gap_size is too large. The gap_size * number of coils must '
+                'be less than the circumference of the circle made by '
+                'the inner_radius')
+            raise ValueError(msg)
 
-        theta_inner = (
-            (2 * math.pi * distance_to_inner_corner) - (self.gap_size * self.number_of_coils)
-        ) / (distance_to_inner_corner * self.number_of_coils)
-        omega_inner = math.asin(self.gap_size / (2 * distance_to_inner_corner))
+        if distance_to_inner_corner != 0.:
+            theta_inner = (
+                (2 * math.pi * distance_to_inner_corner) - (self.gap_size * self.number_of_coils)
+            ) / (distance_to_inner_corner * self.number_of_coils)
+            omega_inner = math.asin(
+                self.gap_size / (2 * distance_to_inner_corner))
+
+            # inner points
+            point_1 = (
+                (distance_to_inner_corner * math.cos(-omega_inner)),
+                (-distance_to_inner_corner * math.sin(-omega_inner)),
+            )
+            point_2 = (
+                (
+                    distance_to_inner_corner * math.cos(theta_inner) * math.cos(-omega_inner)
+                    + distance_to_inner_corner * math.sin(theta_inner) * math.sin(-omega_inner)
+                ),
+                (
+                    -distance_to_inner_corner * math.cos(theta_inner) * math.sin(-omega_inner)
+                    + distance_to_inner_corner * math.sin(theta_inner) * math.cos(-omega_inner)
+                ),
+            )
+            points = [
+                (point_1[0], point_1[1]),
+                (point_2[0], point_2[1])
+            ]
+
+        else:
+
+            points = [(0, 0)]
+
+        # print(point_1)
+        # print(point_2)
 
         theta_outer = (
             (2 * math.pi * distance_to_rear_corner) - (self.gap_size * self.number_of_coils)
         ) / (distance_to_rear_corner * self.number_of_coils)
         omega_outer = math.asin(self.gap_size / (2 * distance_to_rear_corner))
-
-        # inner points
-        point_1 = (
-            (distance_to_inner_corner * math.cos(-omega_inner)),
-            (-distance_to_inner_corner * math.sin(-omega_inner)),
-        )
-        point_2 = (
-            (
-                distance_to_inner_corner * math.cos(theta_inner) * math.cos(-omega_inner)
-                + distance_to_inner_corner * math.sin(theta_inner) * math.sin(-omega_inner)
-            ),
-            (
-                -distance_to_inner_corner * math.cos(theta_inner) * math.sin(-omega_inner)
-                + distance_to_inner_corner * math.sin(theta_inner) * math.cos(-omega_inner)
-            ),
-        )
 
         # outer points
         point_4 = (
@@ -217,13 +225,8 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
                 + distance_to_rear_corner * math.sin(theta_outer) * math.cos(-omega_outer)
             ),
         )
-
-        points = [
-            (point_1[0], point_1[1]),
-            (point_2[0], point_2[1]),
-            (point_6[0], point_6[1]),
-            (point_4[0], point_4[1]),
-        ]
+        points.append((point_6[0], point_6[1]))
+        points.append((point_4[0], point_4[1]))
 
         self.points = points
 

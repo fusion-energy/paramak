@@ -13,9 +13,6 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         inner_radius: the inner radius of the vessel.
         inner_leg_radius: the inner radius of the inner leg.
         thickness: thickness of the vessel
-        stp_filename: defaults to "CenterColumnShieldCylinder.stp".
-        stl_filename: defaults to "CenterColumnShieldCylinder.stl".
-        material_tag: defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -24,9 +21,6 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         inner_radius: float,
         inner_leg_radius: float,
         thickness: float,
-        stp_filename: Optional[float] = "CenterColumnShieldCylinder.stp",
-        stl_filename: Optional[float] = "CenterColumnShieldCylinder.stl",
-        material_tag: Optional[float] = "center_column_shield_mat",
         **kwargs
     ):
         self.inner_height = inner_height
@@ -34,9 +28,6 @@ class VacuumVesselInnerLeg(RotateStraightShape):
         self.inner_leg_radius = inner_leg_radius
         self.thickness = thickness
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 
@@ -50,9 +41,9 @@ class VacuumVesselInnerLeg(RotateStraightShape):
             raise ValueError(
                 'VacuumVesselInnerLeg.inner_height must be a number. Not', value)
         if value <= 0:
-            raise ValueError(
-                'VacuumVesselInnerLeg.inner_height must be a positive number above 0. Not',
-                value)
+            msg = (
+                f'VacuumVesselInnerLeg.inner_height must be a positive number above 0. Not {value}')
+            raise ValueError(msg)
         self._inner_height = value
 
     @property
@@ -62,12 +53,14 @@ class VacuumVesselInnerLeg(RotateStraightShape):
     @inner_radius.setter
     def inner_radius(self, value):
         if not isinstance(value, (float, int)):
-            raise ValueError(
-                'VacuumVesselInnerLeg.inner_radius must be a number. Not', value)
+            msg = (
+                f'VacuumVesselInnerLeg.inner_radius must be a number. Not {value}')
+            raise ValueError(msg)
         if value <= 0:
-            raise ValueError(
-                'VacuumVesselInnerLeg.inner_radius must be a positive number above 0. Not',
-                value)
+            msg = (
+                f'VacuumVesselInnerLeg.inner_radius must be a positive number above 0. Not {value}')
+            raise ValueError(msg)
+
         self._inner_radius = value
 
     def find_points(self):

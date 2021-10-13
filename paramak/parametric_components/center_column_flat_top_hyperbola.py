@@ -16,10 +16,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         mid_radius: the inner radius of the outer hyperbolic profile of the
             center column shield.
         outer_radius: the outer_radius of the center column shield.
-        stp_filename: Defaults to "CenterColumnShieldFlatTopHyperbola.stp".
-        stl_filename: Defaults to "CenterColumnShieldFlatTopHyperbola.stl".
         name: Defaults to "center_column".
-        material_tag: Defaults to "center_column_shield_mat".
     """
 
     def __init__(
@@ -29,10 +26,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         inner_radius: float,
         mid_radius: float,
         outer_radius: float,
-        stp_filename: Optional[str] = "CenterColumnShieldFlatTopHyperbola.stp",
-        stl_filename: Optional[str] = "CenterColumnShieldFlatTopHyperbola.stl",
         name: Optional[str] = "center_column",
-        material_tag: Optional[str] = "center_column_shield_mat",
         color: Optional[Tuple[float, float, float,
                               Optional[float]]] = (0., 0.333, 0.),
         **kwargs
@@ -40,9 +34,6 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
 
         super().__init__(
             name=name,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )
@@ -98,15 +89,13 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         describe the 2D profile of the center column shield shape."""
 
         if not self.inner_radius <= self.mid_radius <= self.outer_radius:
-            raise ValueError("inner_radius must be less than mid_radius. \
-                mid_radius must be less than outer_radius.")
+            raise ValueError('inner_radius must be less than mid_radius. \
+                mid_radius must be less than outer_radius.')
 
         if self.arc_height >= self.height:
-            raise ValueError(
-                "arc_height ({}) is larger than height ({})".format(
-                    self.arc_height, self.height
-                )
-            )
+            msg = ('arc_height ({self.arc_height}) is larger than height '
+                   '({self.height})')
+            raise ValueError(msg)
 
         points = [
             (self.inner_radius, 0, "straight"),

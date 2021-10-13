@@ -12,10 +12,7 @@ class HexagonPin(ExtrudeStraightShape):
         length_of_side: the length of one side of the hexagon (mm).
         distance: extruded distance along the y-direction (mm).
         center_point: the center of the hexagon on the x-z plane (mm).
-        stp_filename: defaults to "HexagonPin.stp".
-        stl_filename: defaults to "HexagonPin.stl".
         name: defaults to "hexagon_pin".
-        material_tag: defaults to "hexagon_pin_mat".
     """
 
     def __init__(
@@ -23,19 +20,13 @@ class HexagonPin(ExtrudeStraightShape):
         length_of_side: float,
         distance: float,
         center_point: Tuple[float, float] = (0, 0),
-        stp_filename: Optional[str] = "HexagonPin.stp",
-        stl_filename: Optional[str] = "HexagonPin.stl",
         name: Optional[str] = "hexagon_pin",
-        material_tag: Optional[str] = "hexagon_pin_mat",
         **kwargs
     ) -> None:
 
         super().__init__(
             name=name,
             distance=distance,
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

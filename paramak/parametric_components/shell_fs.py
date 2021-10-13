@@ -18,11 +18,6 @@ class ShellFS(Shape):
             shelled shape. Options include 'arc' or 'intersection'. Use 'arc'
             for rounded edges 'intersection' for sharp edges. Passed directly
             to CadQuery.shell(). Defaults to intersection.
-        stp_filename (str, optional): Defaults to
-            "ShellFS.stp".
-        stl_filename (str, optional): Defaults to
-            "ShellFS.stl".
-        material_tag (str, optional): Defaults to "pf_coil_case_mat".
     """
 
     def __init__(
@@ -30,16 +25,10 @@ class ShellFS(Shape):
         shape,
         thickness=10.0,
         kind='intersection',
-        stp_filename="ShellFS.stp",
-        stl_filename="ShellFS.stl",
-        material_tag="pf_coil_case_mat",
         **kwargs
     ):
 
         super().__init__(
-            material_tag=material_tag,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             **kwargs
         )
 

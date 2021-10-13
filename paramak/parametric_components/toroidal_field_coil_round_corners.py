@@ -1,5 +1,4 @@
 from typing import Optional, Tuple, Union
-from _pytest.python_api import raises
 
 import cadquery as cq
 import numpy as np
@@ -9,7 +8,7 @@ from paramak.utils import calculate_wedge_cut
 
 class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     """Creates geometry for TF coil with rounded corners. Finds the coordinates
-    for verteces of a TF coil, in a 2D profile on the XZ plane using the main
+    for vertices of a TF coil, in a 2D profile on the XZ plane using the main
     function find_points() which takes 3 positional arguments for the TF coil
     parameters, and takes three additional boolean arguments.
 
@@ -27,9 +26,6 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             given). Defaults to 1
         with_inner_leg: Boolean to include the inside of the Coils
             defaults to False
-        file_name_stp: Defults to "ToroidalFieldCoilRectangleRoundCorners.stp"
-        file_name_stl: Defaults to "ToroidalFieldCoilRectangleRoundCorners.stl"
-        material_tag: Defaults to "outter_tf_coil_mat"
     """
 
     def __init__(
@@ -40,17 +36,11 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         distance: float,
         number_of_coils: int = 1,
         with_inner_leg: Optional[bool] = False,
-        stp_filename: Optional[str] = "ToroidalFieldCoilRectangleRoundCorners.stp",
-        stl_filename: Optional[str] = "ToroidalFieldCoilRectangleRoundCorners.stl",
-        material_tag: Optional[str] = "outter_tf_coil_mat",
         **kwargs
     ) -> None:
 
         super().__init__(
             distance=distance,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
-            material_tag=material_tag,
             **kwargs
         )
 
@@ -74,8 +64,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         if len(lower_inner_coordinates) != 2 or len(
                 mid_point_coordinates) != 2:
-            raise ValueError(
-                "The input tuples are too long or too short, they must be 2 element long")
+            msg = ('The input tuples are too long or too short, they must be '
+                   '2 element long')
+            raise ValueError(msg)
 
         if self._lower_inner_coordinates[0] > self._mid_point_coordinates[0]:
             raise ValueError(

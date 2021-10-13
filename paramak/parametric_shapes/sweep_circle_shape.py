@@ -18,8 +18,6 @@ class SweepCircleShape(Shape):
             is defined. Defaults to "XY".
         path_workplane: Workplane in which the spline path is
             defined. Defaults to "XZ".
-        stp_filename: Defaults to "SweepCircleShape.stp".
-        stl_filename: Defaults to "SweepCircleShape.stl".
         force_cross_section: If True, cross-section of solid is forced to be
             shape defined by points in workplane at each path_point. Defaults
             to False.
@@ -31,8 +29,6 @@ class SweepCircleShape(Shape):
         path_points: List[Tuple[float, float]],
         workplane: Optional[str] = "XY",
         path_workplane: Optional[str] = "XZ",
-        stp_filename: Optional[str] = "SweepCircleShape.stp",
-        stl_filename: Optional[str] = "SweepCircleShape.stl",
         force_cross_section: Optional[bool] = False,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.651, 0.808, 0.89),
         **kwargs
@@ -40,8 +36,6 @@ class SweepCircleShape(Shape):
 
         super().__init__(
             workplane=workplane,
-            stp_filename=stp_filename,
-            stl_filename=stl_filename,
             color=color,
             **kwargs
         )

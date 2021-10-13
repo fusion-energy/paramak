@@ -22,9 +22,9 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
 
     def __init__(
             self,
-            gap_between_blankets,
-            number_of_blanket_segments,
-            blanket_fillet_radius=10.0,
+            gap_between_blankets: float = 15.,
+            number_of_blanket_segments: int = 12,
+            blanket_fillet_radius: float = 10.,
             **kwargs
     ):
 
@@ -33,6 +33,13 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         self.blanket_fillet_radius = blanket_fillet_radius
 
         super().__init__(**kwargs)
+
+        # adds self.input_variable_names from the Reactor class
+        self.input_variable_names = self.input_variable_names + [
+            'gap_between_blankets',
+            'number_of_blanket_segments',
+            'blanket_fillet_radius'
+        ]
 
     @property
     def gap_between_blankets(self):
