@@ -27,11 +27,13 @@ class ExtrudeCircleShape(Shape):
         rotation_angle: Optional[float] = 360,
         extrude_both: Optional[bool] = True,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.984, 0.603, 0.6),
+        name: str = 'extrudecircleshape'
         **kwargs
     ):
 
         super().__init__(
             color=color,
+            name=name,
             **kwargs
         )
 
@@ -40,6 +42,7 @@ class ExtrudeCircleShape(Shape):
         self.rotation_angle = rotation_angle
         self.extrude_both = extrude_both
         self.extrusion_start_offset = extrusion_start_offset
+        self.name = name
 
     @property
     def radius(self):

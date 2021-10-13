@@ -19,15 +19,18 @@ class RotateCircleShape(Shape):
         radius: float,
         rotation_angle: Optional[float] = 360.0,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (1., 1., 0.6),
+        name: str = 'rotatecircleshape',
         **kwargs
     ):
 
         super().__init__(
             color=color,
+            name=name,
             **kwargs
         )
         self.radius = radius
         self.rotation_angle = rotation_angle
+        self.name = name
 
     @property
     def rotation_angle(self):

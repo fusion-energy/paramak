@@ -17,6 +17,7 @@ class RotateStraightShape(RotateMixedShape):
         self,
         rotation_angle: Optional[float] = 360.,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.89, 0.101, 0.109),
+        name: str = 'rotatestraightshape',
         **kwargs
     ):
 
@@ -24,5 +25,6 @@ class RotateStraightShape(RotateMixedShape):
             rotation_angle=rotation_angle,
             color=color,
             connection_type="straight",
+            name=name,
             **kwargs
         )

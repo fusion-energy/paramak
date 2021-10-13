@@ -17,6 +17,7 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
         self,
         distance: float,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.984, 0.603, 0.6),
+        name: str = 'extrudesplineshape',
         **kwargs
     ):
 
@@ -24,5 +25,6 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
             distance=distance,
             connection_type="spline",
             color=color,
+            name=name,
             **kwargs
         )

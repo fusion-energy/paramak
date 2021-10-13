@@ -31,12 +31,14 @@ class SweepCircleShape(Shape):
         path_workplane: Optional[str] = "XZ",
         force_cross_section: Optional[bool] = False,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.651, 0.808, 0.89),
+        name: str = 'sweepcircleshape',
         **kwargs
     ):
 
         super().__init__(
             workplane=workplane,
             color=color,
+            name=name,
             **kwargs
         )
 
@@ -44,6 +46,7 @@ class SweepCircleShape(Shape):
         self.path_points = path_points
         self.path_workplane = path_workplane
         self.force_cross_section = force_cross_section
+        self.name = name
 
     @property
     def radius(self):

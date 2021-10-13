@@ -16,6 +16,7 @@ class ExtrudeStraightShape(ExtrudeMixedShape):
         self,
         distance: float,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (1.0, 0.498, 0.0),
+        name: str = 'extrudestraightshape',
         **kwargs
     ):
 
@@ -23,5 +24,6 @@ class ExtrudeStraightShape(ExtrudeMixedShape):
             distance=distance,
             connection_type="straight",
             color=color,
+            name=name,
             **kwargs
         )
