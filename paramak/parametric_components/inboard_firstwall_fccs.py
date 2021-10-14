@@ -2,12 +2,12 @@
 from collections.abc import Iterable
 from typing import List, Optional, Tuple
 
+import paramak
 from paramak import (CenterColumnShieldCircular, CenterColumnShieldCylinder,
                      CenterColumnShieldFlatTopCircular,
                      CenterColumnShieldFlatTopHyperbola,
                      CenterColumnShieldHyperbola,
                      CenterColumnShieldPlasmaHyperbola, RotateMixedShape)
-import paramak
 
 
 class InboardFirstwallFCCS(RotateMixedShape):

@@ -1,6 +1,7 @@
 
-import paramak
 import numpy as np
+
+import paramak
 
 
 class IterFrom2020PaperDiagram(paramak.Reactor):

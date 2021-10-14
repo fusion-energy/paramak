@@ -1,7 +1,8 @@
 
-import paramak
-import numpy as np
 import cadquery as cq
+import numpy as np
+
+import paramak
 
 
 class SegmentedBlanketBallReactor(paramak.BallReactor):

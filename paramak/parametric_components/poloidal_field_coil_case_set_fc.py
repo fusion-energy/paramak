@@ -2,6 +2,7 @@
 from typing import Optional, Tuple
 
 import cadquery as cq
+
 from paramak import PoloidalFieldCoilSet, RotateStraightShape
 
 

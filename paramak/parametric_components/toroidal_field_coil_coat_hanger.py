@@ -1,9 +1,10 @@
 
 import math
-
 from typing import Optional, Tuple
+
 import cadquery as cq
 import numpy as np
+
 from paramak import ExtrudeStraightShape
 from paramak.utils import calculate_wedge_cut, rotate
 

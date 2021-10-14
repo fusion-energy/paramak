@@ -2,10 +2,11 @@
 from typing import Optional, Tuple
 
 import numpy as np
-from paramak import ExtrudeMixedShape
-from paramak.utils import add_thickness
 from scipy import integrate
 from scipy.optimize import minimize
+
+from paramak import ExtrudeMixedShape
+from paramak.utils import add_thickness
 
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):

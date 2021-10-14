@@ -4,12 +4,14 @@ import unittest
 from pathlib import Path
 
 import numpy as np
-import paramak
 import plotly.graph_objects as go
 import pytest
+
+import paramak
 from paramak.utils import (EdgeLengthSelector, FaceAreaSelector,
                            extract_points_from_edges, facet_wire,
-                           find_center_point_of_circle, plotly_trace)
+                           find_center_point_of_circle, plotly_trace,
+                           find_radius_of_circle)
 
 
 class TestUtilityFunctions(unittest.TestCase):
@@ -116,9 +118,16 @@ class TestUtilityFunctions(unittest.TestCase):
         point_b = (20, 0)
         point_3 = (0, -20)
 
-        assert find_center_point_of_circle(
-            point_a, point_b, point_3) == (
-            (0, 0), 20)
+        assert find_center_point_of_circle(point_a, point_b, point_3) == (0, 0)
+
+    def test_find_radius_circle(self):
+        """passes and edge point and the center point of a circle in to the
+        function and checks the radius is calculated correctly"""
+
+        edge_point = (0, 20)
+        center_point = (0, 0)
+
+        assert find_radius_of_circle(center_point, edge_point) == 20
 
     def test_EdgeLengthSelector_with_fillet_areas(self):
         """tests the filleting of a RotateStraightShape results in an extra
@@ -154,6 +163,4 @@ class TestUtilityFunctions(unittest.TestCase):
         point_b = (0, 0)
         point_3 = (0, 0)
 
-        assert find_center_point_of_circle(
-            point_a, point_b, point_3) == (
-            None, np.inf)
+        assert find_center_point_of_circle(point_a, point_b, point_3) == None

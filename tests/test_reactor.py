@@ -5,8 +5,9 @@ import unittest
 from pathlib import Path
 
 import cadquery as cq
-import paramak
 import pytest
+
+import paramak
 
 
 class TestReactor(unittest.TestCase):

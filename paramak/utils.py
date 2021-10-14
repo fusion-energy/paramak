@@ -192,17 +192,16 @@ def find_center_point_of_circle(
         point_a: Tuple[float, float],
         point_b: Tuple[float, float],
         point_3: Tuple[float, float]
-) -> Tuple[Tuple[float, float], float]:
+) -> Union[Tuple[float, float], None]:
     """
-    Calculates the center and the radius of a circle
-    passing through 3 points.
+    Calculates the center of a circle passing through 3 points.
     Args:
-        point_a (float, float): point 1 coordinates
-        point_b (float, float): point 2 coordinates
-        point_3 (float, float): point 3 coordinates
+        point_a: point 1 coordinates
+        point_b: point 2 coordinates
+        point_3: point 3 coordinates
     Returns:
-        (float, float), float: center of the circle coordinates or
-        None if 3 points on a line are input and the radius
+        center of the circle coordinates or None if 3 points on a line are
+        input and the radius
     """
 
     temp = point_b[0] * point_b[0] + point_b[1] * point_b[1]
@@ -213,7 +212,7 @@ def find_center_point_of_circle(
     ) * (point_a[1] - point_b[1])
 
     if abs(det) < 1.0e-6:
-        return (None, np.inf)
+        return None
 
     # Center of circle
     cx = (bc * (point_b[1] - point_3[1]) -
@@ -221,9 +220,28 @@ def find_center_point_of_circle(
     cy = ((point_a[0] - point_b[0]) * cd -
           (point_b[0] - point_3[0]) * bc) / det
 
-    radius = np.sqrt((cx - point_a[0]) ** 2 + (cy - point_a[1]) ** 2)
+    return (cx, cy)
 
-    return (cx, cy), radius
+
+def find_radius_of_circle(
+        center_point:  Tuple[float, float],
+        edge_point: Tuple[float, float],
+) -> float:
+    """Calculates the radius of a circle.
+
+    Args:
+        center_point: x, y coordinates of the center of te circle
+        edge_point: x, y coordinates of a point on the edge of the circle
+    Returns:
+        the radius of the circle
+    """
+
+    if center_point == edge_point:
+        return np.inf
+
+    radius = np.sqrt((center_point[0] - edge_point[0]) ** 2 + (center_point[1] - edge_point[1]) ** 2)
+
+    return radius
 
 
 def intersect_solid(solid, intersecter):
@@ -300,7 +318,7 @@ def calculate_wedge_cut(self):
 
 
 def add_thickness(x: List[float], y: List[float], thickness: float,
-                  dy_dx: List[float] = None):
+                  dy_dx: List[float] = None) -> Tuple[list, list]:
     """Computes outer curve points based on thickness
 
     Args:
@@ -311,7 +329,7 @@ def add_thickness(x: List[float], y: List[float], thickness: float,
             derivatives
 
     Returns:
-        (list, list): R and Z lists for outer curve points
+        R and Z lists for outer curve points
     """
 
     if dy_dx is None:
@@ -546,11 +564,11 @@ def load_stp_file(
 def export_wire_to_html(
     wires,
     filename=None,
-    view_plane='RZ',
-    facet_splines: bool = True,
-    facet_circles: bool = True,
-    tolerance: float = 1e-3,
-    title=None,
+    view_plane: Optional[str] = 'RZ',
+    facet_splines: Optional[bool] = True,
+    facet_circles: Optional[bool] = True,
+    tolerance: Optional[float] = 1e-3,
+    title: Optional[str] = None,
     mode="markers+lines",
 ):
     """Creates a html graph representation of the points within the wires.

@@ -1,9 +1,9 @@
 import math
 import unittest
 
-import paramak
-
 import pytest
+
+import paramak
 
 
 class TestPortCutterCircular(unittest.TestCase):

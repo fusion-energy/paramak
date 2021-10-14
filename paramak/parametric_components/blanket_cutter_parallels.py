@@ -1,5 +1,6 @@
 
 from typing import Optional
+
 from paramak import ExtrudeStraightShape
 from paramak.utils import cut_solid
 

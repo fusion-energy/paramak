@@ -2,6 +2,7 @@ from typing import Optional, Tuple, Union
 
 import cadquery as cq
 import numpy as np
+
 from paramak.parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from paramak.utils import calculate_wedge_cut
 

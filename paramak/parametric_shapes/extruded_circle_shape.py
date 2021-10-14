@@ -2,6 +2,7 @@
 from typing import Optional, Tuple
 
 from cadquery import Workplane
+
 from paramak import Shape
 from paramak.utils import calculate_wedge_cut
 

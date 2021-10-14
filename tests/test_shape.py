@@ -4,10 +4,11 @@ import os
 import unittest
 from pathlib import Path
 
-import paramak
 import pytest
 from cadquery import Plane
 from numpy.testing._private.utils import assert_
+
+import paramak
 
 
 class TestShape(unittest.TestCase):

@@ -3,8 +3,9 @@ import math
 import random
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestCuttingWedge(unittest.TestCase):

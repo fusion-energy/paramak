@@ -3,8 +3,9 @@ import os
 import unittest
 from pathlib import Path
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestSubmersionTokamak(unittest.TestCase):

@@ -1,6 +1,7 @@
-from typing import Optional, Tuple
-from paramak import RotateMixedShape
 import math
+from typing import Optional, Tuple
+
+from paramak import RotateMixedShape
 
 
 class CapsuleVacuumVessel(RotateMixedShape):

@@ -1,5 +1,7 @@
-import pytest
 import math
+
+import pytest
+
 import paramak
 
 '''This test evaluates the perimeter of the resultant points and asserts them agaist the known value'''

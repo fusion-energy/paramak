@@ -4,8 +4,9 @@ import os
 import unittest
 from pathlib import Path
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestCenterColumnShieldCylinder(unittest.TestCase):
