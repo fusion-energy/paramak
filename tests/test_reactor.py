@@ -432,13 +432,6 @@ class TestReactor(unittest.TestCase):
         if filename is not None:
             assert Path("filename.html").exists() is True
 
-    def test_tet_meshes_error(self):
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
-        test_shape.rotation_angle = 360
-        test_reactor = paramak.Reactor([test_shape])
-        assert test_reactor.tet_meshes is not None
-
     def test_largest_dimension(self):
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)])

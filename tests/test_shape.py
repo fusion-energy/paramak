@@ -611,25 +611,6 @@ class TestShape(unittest.TestCase):
         self.assertRaises(ValueError, name_int)
         self.assertRaises(ValueError, name_list)
 
-    def test_tet_mesh_error(self):
-        """Checks an error is raised when invalid value for tet_mesh is set.
-        """
-
-        test_shape = paramak.Shape()
-
-        def tet_mesh_float():
-            test_shape.tet_mesh = 2.0
-
-        def tet_mesh_int():
-            test_shape.tet_mesh = 1
-
-        def tet_mesh_list():
-            test_shape.tet_mesh = ['coucou']
-
-        self.assertRaises(ValueError, tet_mesh_float)
-        self.assertRaises(ValueError, tet_mesh_int)
-        self.assertRaises(ValueError, tet_mesh_list)
-
     def test_workplane_of_type_cadquery_plane(self):
         """Tests that a Cadquery.Plane is accepted as a workplane entry"""
 

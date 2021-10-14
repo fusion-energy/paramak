@@ -47,13 +47,6 @@ class Shape:
             workplane or path_workplane if applicable. Can be set to "X", "-Y",
             "Z", etc. A custom axis can be set by setting a list of two XYZ
             floats. Defaults to None.
-        tet_mesh (str, optional): If not None, a tet mesh flag will be added to
-            the neutronics description output. Defaults to None.
-        scale (float, optional): If not None, a scale flag will be added to
-            the neutronics description output. Defaults to None.
-        surface_reflectivity (Boolean, optional): If True, a
-            surface_reflectivity flag will be added to the neutronics
-            description output. Defaults to None.
         cut (paramak.shape or list, optional): If set, the current solid will
             be cut with the provided solid or iterable in cut. Defaults to
             None.
@@ -80,9 +73,6 @@ class Shape:
         azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
         workplane: Optional[Union[str, Plane]] = "XZ",
         rotation_axis: Optional[str] = None,
-        tet_mesh: Optional[str] = None,
-        scale: Optional[float] = None,
-        surface_reflectivity: Optional[bool] = False,
         # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
@@ -109,9 +99,6 @@ class Shape:
         self.old_points = 0
 
         # neutronics specific properties
-        self.tet_mesh = tet_mesh
-        self.scale = scale
-        self.surface_reflectivity = surface_reflectivity
         self.graveyard_offset = graveyard_offset
         self.graveyard_size = graveyard_size
 
@@ -380,26 +367,6 @@ class Shape:
         self._color = value
 
     @property
-    def tet_mesh(self):
-        return self._tet_mesh
-
-    @tet_mesh.setter
-    def tet_mesh(self, value):
-        if value is not None and not isinstance(value, str):
-            raise ValueError("Shape.tet_mesh must be a string", value)
-        self._tet_mesh = value
-
-    @property
-    def scale(self):
-        return self._scale
-
-    @scale.setter
-    def scale(self, value):
-        if value is not None and not isinstance(value, float):
-            raise ValueError("Shape.scale must be a float", value)
-        self._scale = value
-
-    @property
     def name(self):
         """The name of the Shape, used to identify Shapes when exporting_html
         """
@@ -451,7 +418,7 @@ class Shape:
             incorrect type: only list of lists or tuples are accepted
         """
         ignored_keys = ["_points", "_points_hash_value"]
-        if hasattr(self, 'find_points') and \
+        if self.find_points() and \
                 self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
             self.points_hash_value = get_hash(self, ignored_keys)
@@ -637,7 +604,7 @@ class Shape:
                 keyname = list(instructions[-1].keys())[0]
                 instructions[-1][keyname].append(XZ_points[0])
 
-            if hasattr(self, "path_points"):
+            if self.path_points:
 
                 factor = 1
                 if self.workplane in ["XZ", "YX", "ZY"]:
@@ -696,7 +663,7 @@ class Shape:
                 # for rotate and extrude shapes
                 solid = Workplane(self.workplane)
                 # for extrude shapes
-                if hasattr(self, "extrusion_start_offset"):
+                if self.extrusion_start_offset:
                     extrusion_offset = -self.extrusion_start_offset
                     solid = solid.workplane(offset=extrusion_offset)
 
@@ -803,7 +770,7 @@ class Shape:
     def find_points(self):
         """Calculates the shape points. Empty method which some components
         overright when inheritting."""
-        pass
+        return None
 
     def export_stl(
             self,
@@ -1093,7 +1060,7 @@ class Shape:
             )
 
         # sweep shapes have .path_points but not .points attribute
-        if hasattr(self, 'path_points'):
+        if self.path_points:
             fig.add_trace(
                 plotly_trace(
                     points=self.path_points,
