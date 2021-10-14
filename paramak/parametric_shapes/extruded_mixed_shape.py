@@ -26,7 +26,7 @@ class ExtrudeMixedShape(Shape):
         extrusion_start_offset: Optional[float] = 0.0,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.2, 0.627, 0.172),
         name: str = 'extrudemixedshape'
-        **kwargs
+        ** kwargs
     ):
 
         super().__init__(

@@ -28,7 +28,7 @@ class ExtrudeCircleShape(Shape):
         extrude_both: Optional[bool] = True,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.984, 0.603, 0.6),
         name: str = 'extrudecircleshape'
-        **kwargs
+        ** kwargs
     ):
 
         super().__init__(
