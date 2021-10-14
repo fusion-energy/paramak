@@ -28,6 +28,7 @@ class SweepStraightShape(SweepMixedShape):
         path_workplane: Optional[str] = "XZ",
         force_cross_section: Optional[bool] = False,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.698, 0.8745, 0.541),
+        name:str = 'sweepstraightshape',
         **kwargs
     ):
 
@@ -38,5 +39,6 @@ class SweepStraightShape(SweepMixedShape):
             connection_type="straight",
             force_cross_section=force_cross_section,
             color=color,
+            name=name,
             **kwargs
         )

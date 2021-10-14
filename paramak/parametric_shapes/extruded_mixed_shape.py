@@ -25,7 +25,7 @@ class ExtrudeMixedShape(Shape):
         rotation_angle: Optional[float] = 360.0,
         extrusion_start_offset: Optional[float] = 0.0,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.2, 0.627, 0.172),
-        name: str = 'extrudemixedshape'
+        name: str = 'extrudemixedshape',
         **kwargs
     ):
 
