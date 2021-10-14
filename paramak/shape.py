@@ -125,7 +125,7 @@ class Shape:
         self.force_cross_section = None
 
         # set here but only used by Extrude shapes
-        self.extrusion_start_offset
+        self.extrusion_start_offset = None
 
         self.processed_points = None
         # self.volume = None
