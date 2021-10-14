@@ -1,5 +1,4 @@
-
-from typing import Optional, Tuple
+from typing import Optional, Union, Tuple
 
 from paramak import RotateMixedShape
 
@@ -23,15 +22,13 @@ class CenterColumnShieldCircular(RotateMixedShape):
         inner_radius: float,
         mid_radius: float,
         outer_radius: float,
-        color: Optional[Tuple[float, float, float,
-                              Optional[float]]] = (0., 0.333, 0.),
+        color: Optional[
+            Union[Tuple[float, float, float], Tuple[float, float, float, float]]
+        ] = (0.0, 0.333, 0.0),
         **kwargs
     ) -> None:
 
-        super().__init__(
-            color=color,
-            **kwargs
-        )
+        super().__init__(color=color, **kwargs)
 
         self.height = height
         self.inner_radius = inner_radius
@@ -80,7 +77,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
             (self.outer_radius, self.height / 2, "circle"),
             (self.mid_radius, 0, "circle"),
             (self.outer_radius, -self.height / 2, "straight"),
-            (self.inner_radius, -self.height / 2, "straight")
+            (self.inner_radius, -self.height / 2, "straight"),
         ]
 
         self.points = points

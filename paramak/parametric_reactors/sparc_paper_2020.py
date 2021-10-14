@@ -1,4 +1,6 @@
 
+from typing import List
+
 import paramak
 
 
@@ -24,7 +26,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
         self.rotation_angle = rotation_angle
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
+        self.input_variable_names: List[str] = self.input_variable_names + [
             'rotation_angle',
         ]
 

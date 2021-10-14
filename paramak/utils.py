@@ -17,7 +17,7 @@ from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 import paramak
 
 
-def transform_curve(edge, tolerance: float = 1e-3):
+def transform_curve(edge, tolerance: Optional[float] = 1e-3):
     """Converts a curved edge into a series of straight lines (facetets) with
     the provided tolerance.
 
@@ -43,9 +43,9 @@ def transform_curve(edge, tolerance: float = 1e-3):
 
 def facet_wire(
         wire,
-        facet_splines: bool = True,
-        facet_circles: bool = True,
-        tolerance: float = 1e-3
+        facet_splines: Optional[bool] = True,
+        facet_circles: Optional[bool] = True,
+        tolerance: Optional[float] = 1e-3
 ):
     """Converts specified curved edge types from a wire into a series of
     straight lines (facetets) with the provided tol (tolerance).
@@ -440,13 +440,16 @@ def plotly_trace(
         plotly trace: trace object
     """
 
-    if color is not None:
+    if color is None:
+        color_string = "rgb(125, 125, 125)"
+    else:
         color_list = [i * 255 for i in color]
 
         if len(color_list) == 3:
-            color = "rgb(" + str(color_list).strip("[]") + ")"
+            color_string = "rgb(" + str(color_list).strip("[]") + ")"
         elif len(color_list) == 4:
-            color = "rgba(" + str(color_list).strip("[]") + ")"
+            color_string = "rgba(" + str(color_list).strip("[]") + ")"
+
 
     if name is None:
         name = "Shape not named"
@@ -468,7 +471,7 @@ def plotly_trace(
             y=[row[1] for row in points],
             z=[row[2] for row in points],
             mode=mode,
-            marker={"size": 3, "color": color},
+            marker={"size": 3, "color": color_string},
             name=name
         )
 
@@ -489,8 +492,8 @@ def plotly_trace(
 
 def extract_points_from_edges(
     edges: Union[List[cq.Wire], cq.Wire],
-    view_plane: str = 'XZ',
-):
+    view_plane: Optional[str] = 'XZ',
+) -> list:
     """Extracts points (coordinates) from a CadQuery Edge, optionally projects
     the points to a plane and returns the points.
 

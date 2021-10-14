@@ -120,6 +120,13 @@ class Shape:
         self.wire = None
         self.render_mesh = None
 
+        # set here but only used by Sweep shapes
+        self.path_points = None
+        self.force_cross_section = None
+
+        # set here but only used by Extrude shapes
+        self.extrusion_start_offset
+
         self.processed_points = None
         # self.volume = None
         self.hash_value = None
@@ -716,7 +723,7 @@ class Shape:
             azimuth_placement_angles = [self.azimuth_placement_angle]
 
         rotated_solids = []
-        # Perform seperate rotations for each angle
+        # Perform separate rotations for each angle
         for angle in azimuth_placement_angles:
             rotated_solids.append(
                 solid.rotate(
@@ -781,8 +788,7 @@ class Shape:
             y_minimum, y_maximum, z_minimum, z_maximum
         """
 
-        if hasattr(self, "find_points"):
-            self.find_points()
+        self.find_points()
         if self.points is None:
             raise ValueError("No points defined for", self)
 
@@ -793,6 +799,11 @@ class Shape:
         self.z_max = float(max([row[1] for row in self.points]))
 
         return self.x_min, self.x_max, self.z_min, self.z_max
+
+    def find_points(self):
+        """Calculates the shape points. Empty method which some components
+        overright when inheritting."""
+        pass
 
     def export_stl(
             self,
@@ -906,7 +917,7 @@ class Shape:
 
         if units == 'cm':
             _replace(
-                path_filename,
+                str(path_filename),
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
 
@@ -1288,7 +1299,7 @@ class Shape:
         """
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
-        new_filename = self.graveyard.export_stp(Path(filename))
+        new_filename = self.graveyard.export_stp(str(Path(filename)))
 
         return new_filename
 

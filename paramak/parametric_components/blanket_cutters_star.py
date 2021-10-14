@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Optional, List, Union
 
 from paramak import ExtrudeStraightShape
 
@@ -26,7 +26,7 @@ class BlanketCutterStar(ExtrudeStraightShape):
             distance: float,
             height: Optional[float] = 2000.,
             width: Optional[float] = 2000.,
-            azimuth_placement_angle: Optional[float] = [
+            azimuth_placement_angle: Optional[Union[float, List[float]]] = [
                 0.,
                 36.,
                 72.,
