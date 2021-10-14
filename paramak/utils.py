@@ -224,7 +224,7 @@ def find_center_point_of_circle(
 
 
 def find_radius_of_circle(
-        center_point:  Tuple[float, float],
+        center_point: Tuple[float, float],
         edge_point: Tuple[float, float],
 ) -> float:
     """Calculates the radius of a circle.
@@ -239,7 +239,8 @@ def find_radius_of_circle(
     if center_point == edge_point:
         return np.inf
 
-    radius = np.sqrt((center_point[0] - edge_point[0]) ** 2 + (center_point[1] - edge_point[1]) ** 2)
+    radius = np.sqrt((center_point[0] - edge_point[0])
+                     ** 2 + (center_point[1] - edge_point[1]) ** 2)
 
     return radius
 
@@ -449,7 +450,6 @@ def plotly_trace(
             color_string = "rgb(" + str(color_list).strip("[]") + ")"
         elif len(color_list) == 4:
             color_string = "rgba(" + str(color_list).strip("[]") + ")"
-
 
     if name is None:
         name = "Shape not named"

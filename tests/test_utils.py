@@ -163,4 +163,4 @@ class TestUtilityFunctions(unittest.TestCase):
         point_b = (0, 0)
         point_3 = (0, 0)
 
-        assert find_center_point_of_circle(point_a, point_b, point_3) == None
+        assert find_center_point_of_circle(point_a, point_b, point_3) is None

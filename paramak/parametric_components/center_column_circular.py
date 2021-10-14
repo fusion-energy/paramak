@@ -16,17 +16,21 @@ class CenterColumnShieldCircular(RotateMixedShape):
         name: Defaults to "center_column_shield".
     """
 
-    def __init__(
-        self,
-        height: float,
-        inner_radius: float,
-        mid_radius: float,
-        outer_radius: float,
-        color: Optional[
-            Union[Tuple[float, float, float], Tuple[float, float, float, float]]
-        ] = (0.0, 0.333, 0.0),
-        **kwargs
-    ) -> None:
+    def __init__(self,
+                 height: float,
+                 inner_radius: float,
+                 mid_radius: float,
+                 outer_radius: float,
+                 color: Optional[Union[Tuple[float,
+                                             float,
+                                             float],
+                                       Tuple[float,
+                                             float,
+                                             float,
+                                             float]]] = (0.0,
+                                                         0.333,
+                                                         0.0),
+                 **kwargs) -> None:
 
         super().__init__(color=color, **kwargs)
 
