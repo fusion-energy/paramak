@@ -30,6 +30,7 @@ class RotateCircleShape(Shape):
         )
         self.radius = radius
         self.rotation_angle = rotation_angle
+        self.color = color
         self.name = name
 
     @property

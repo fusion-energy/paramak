@@ -27,6 +27,8 @@ class RotateMixedShape(Shape):
             **kwargs
         )
         self.rotation_angle = rotation_angle
+        self.color = color
+        self.name = name
 
     @property
     def rotation_angle(self):

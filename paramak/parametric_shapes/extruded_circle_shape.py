@@ -37,11 +37,12 @@ class ExtrudeCircleShape(Shape):
             **kwargs
         )
 
-        self.radius = radius
         self.distance = distance
+        self.radius = radius
+        self.extrusion_start_offset = extrusion_start_offset
         self.rotation_angle = rotation_angle
         self.extrude_both = extrude_both
-        self.extrusion_start_offset = extrusion_start_offset
+        self.color = color
         self.name = name
 
     @property

@@ -38,6 +38,7 @@ class ExtrudeMixedShape(Shape):
         self.extrude_both = extrude_both
         self.rotation_angle = rotation_angle
         self.extrusion_start_offset = extrusion_start_offset
+        self.color = color
         self.name = name
 
     @property

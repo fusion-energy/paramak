@@ -44,8 +44,10 @@ class SweepCircleShape(Shape):
 
         self.radius = radius
         self.path_points = path_points
+        self.workplane = workplane
         self.path_workplane = path_workplane
         self.force_cross_section = force_cross_section
+        self.color = color
         self.name = name
 
     @property
