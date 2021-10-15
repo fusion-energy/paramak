@@ -17,14 +17,18 @@ class RotateMixedShape(Shape):
         self,
         rotation_angle: Optional[float] = 360.,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.121, 0.47, 0.705),
+        name: str = 'rotatemixedshape',
         **kwargs
     ):
 
         super().__init__(
             color=color,
+            name=name,
             **kwargs
         )
         self.rotation_angle = rotation_angle
+        self.color = color
+        self.name = name
 
     @property
     def rotation_angle(self):

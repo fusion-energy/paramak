@@ -25,17 +25,21 @@ class ExtrudeMixedShape(Shape):
         rotation_angle: Optional[float] = 360.0,
         extrusion_start_offset: Optional[float] = 0.0,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.2, 0.627, 0.172),
+        name: str = 'extrudemixedshape',
         **kwargs
     ):
 
         super().__init__(
             color=color,
+            name=name,
             **kwargs
         )
         self.distance = distance
         self.extrude_both = extrude_both
         self.rotation_angle = rotation_angle
         self.extrusion_start_offset = extrusion_start_offset
+        self.color = color
+        self.name = name
 
     @property
     def distance(self):
