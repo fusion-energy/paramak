@@ -1,9 +1,11 @@
+import math
 import os
 import unittest
 from pathlib import Path
-import math
-import paramak
+
 import pytest
+
+import paramak
 
 
 class TestFlfSystemCodeReactor(unittest.TestCase):

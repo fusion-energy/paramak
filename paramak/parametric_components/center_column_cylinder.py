@@ -1,4 +1,5 @@
 from typing import Optional, Tuple
+
 from paramak import RotateStraightShape
 
 

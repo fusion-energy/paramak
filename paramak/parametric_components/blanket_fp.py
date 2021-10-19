@@ -4,12 +4,13 @@ from typing import Callable, List, Optional, Union
 
 import mpmath
 import numpy as np
-import paramak
 import sympy as sp
+from scipy.interpolate import interp1d
+
+import paramak
 from paramak import RotateMixedShape, diff_between_angles
 from paramak.parametric_components.tokamak_plasma_plasmaboundaries import \
     PlasmaBoundaries
-from scipy.interpolate import interp1d
 
 
 class BlanketFP(RotateMixedShape):

@@ -4,8 +4,9 @@ import unittest
 import warnings
 from pathlib import Path
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestCenterColumnStudyReactor(unittest.TestCase):

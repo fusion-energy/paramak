@@ -1,9 +1,9 @@
 
 import unittest
 
-import paramak
-
 import pytest
+
+import paramak
 
 
 class TestPortCutterRectangular(unittest.TestCase):

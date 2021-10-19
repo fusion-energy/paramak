@@ -1,6 +1,8 @@
 
-import paramak
+from typing import List
+
 import numpy as np
+import paramak
 
 
 class IterFrom2020PaperDiagram(paramak.Reactor):
@@ -27,7 +29,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         self.number_of_tf_coils = number_of_tf_coils
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
+        self.input_variable_names: List[str] = self.input_variable_names + [
             'number_of_tf_coils',
             'rotation_angle',
         ]

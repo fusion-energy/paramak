@@ -47,13 +47,6 @@ class Shape:
             workplane or path_workplane if applicable. Can be set to "X", "-Y",
             "Z", etc. A custom axis can be set by setting a list of two XYZ
             floats. Defaults to None.
-        tet_mesh (str, optional): If not None, a tet mesh flag will be added to
-            the neutronics description output. Defaults to None.
-        scale (float, optional): If not None, a scale flag will be added to
-            the neutronics description output. Defaults to None.
-        surface_reflectivity (Boolean, optional): If True, a
-            surface_reflectivity flag will be added to the neutronics
-            description output. Defaults to None.
         cut (paramak.shape or list, optional): If set, the current solid will
             be cut with the provided solid or iterable in cut. Defaults to
             None.
@@ -80,9 +73,6 @@ class Shape:
         azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
         workplane: Optional[Union[str, Plane]] = "XZ",
         rotation_axis: Optional[str] = None,
-        tet_mesh: Optional[str] = None,
-        scale: Optional[float] = None,
-        surface_reflectivity: Optional[bool] = False,
         # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
@@ -109,9 +99,6 @@ class Shape:
         self.old_points = 0
 
         # neutronics specific properties
-        self.tet_mesh = tet_mesh
-        self.scale = scale
-        self.surface_reflectivity = surface_reflectivity
         self.graveyard_offset = graveyard_offset
         self.graveyard_size = graveyard_size
 
@@ -119,6 +106,13 @@ class Shape:
         self.solid = None
         self.wire = None
         self.render_mesh = None
+
+        # set here but only used by Sweep shapes
+        self.path_points = None
+        self.force_cross_section = None
+
+        # set here but only used by Extrude shapes
+        self.extrusion_start_offset = None
 
         self.processed_points = None
         # self.volume = None
@@ -373,26 +367,6 @@ class Shape:
         self._color = value
 
     @property
-    def tet_mesh(self):
-        return self._tet_mesh
-
-    @tet_mesh.setter
-    def tet_mesh(self, value):
-        if value is not None and not isinstance(value, str):
-            raise ValueError("Shape.tet_mesh must be a string", value)
-        self._tet_mesh = value
-
-    @property
-    def scale(self):
-        return self._scale
-
-    @scale.setter
-    def scale(self, value):
-        if value is not None and not isinstance(value, float):
-            raise ValueError("Shape.scale must be a float", value)
-        self._scale = value
-
-    @property
     def name(self):
         """The name of the Shape, used to identify Shapes when exporting_html
         """
@@ -444,7 +418,7 @@ class Shape:
             incorrect type: only list of lists or tuples are accepted
         """
         ignored_keys = ["_points", "_points_hash_value"]
-        if hasattr(self, 'find_points') and \
+        if self.find_points() and \
                 self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
             self.points_hash_value = get_hash(self, ignored_keys)
@@ -630,7 +604,7 @@ class Shape:
                 keyname = list(instructions[-1].keys())[0]
                 instructions[-1][keyname].append(XZ_points[0])
 
-            if hasattr(self, "path_points"):
+            if self.path_points:
 
                 factor = 1
                 if self.workplane in ["XZ", "YX", "ZY"]:
@@ -689,7 +663,7 @@ class Shape:
                 # for rotate and extrude shapes
                 solid = Workplane(self.workplane)
                 # for extrude shapes
-                if hasattr(self, "extrusion_start_offset"):
+                if self.extrusion_start_offset:
                     extrusion_offset = -self.extrusion_start_offset
                     solid = solid.workplane(offset=extrusion_offset)
 
@@ -716,7 +690,7 @@ class Shape:
             azimuth_placement_angles = [self.azimuth_placement_angle]
 
         rotated_solids = []
-        # Perform seperate rotations for each angle
+        # Perform separate rotations for each angle
         for angle in azimuth_placement_angles:
             rotated_solids.append(
                 solid.rotate(
@@ -781,8 +755,7 @@ class Shape:
             y_minimum, y_maximum, z_minimum, z_maximum
         """
 
-        if hasattr(self, "find_points"):
-            self.find_points()
+        self.find_points()
         if self.points is None:
             raise ValueError("No points defined for", self)
 
@@ -793,6 +766,11 @@ class Shape:
         self.z_max = float(max([row[1] for row in self.points]))
 
         return self.x_min, self.x_max, self.z_min, self.z_max
+
+    def find_points(self):
+        """Calculates the shape points. Empty method which some components
+        overright when inheritting."""
+        return None
 
     def export_stl(
             self,
@@ -906,7 +884,7 @@ class Shape:
 
         if units == 'cm':
             _replace(
-                path_filename,
+                str(path_filename),
                 'SI_UNIT(.MILLI.,.METRE.)',
                 'SI_UNIT(.CENTI.,.METRE.)')
 
@@ -1082,7 +1060,7 @@ class Shape:
             )
 
         # sweep shapes have .path_points but not .points attribute
-        if hasattr(self, 'path_points'):
+        if self.path_points:
             fig.add_trace(
                 plotly_trace(
                     points=self.path_points,
@@ -1288,7 +1266,7 @@ class Shape:
         """
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
-        new_filename = self.graveyard.export_stp(Path(filename))
+        new_filename = self.graveyard.export_stp(str(Path(filename)))
 
         return new_filename
 

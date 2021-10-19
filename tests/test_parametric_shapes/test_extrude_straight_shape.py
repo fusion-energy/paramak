@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 from cadquery import Plane
+
 from paramak import ExtrudeStraightShape
 
 

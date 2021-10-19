@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 import pytest
+
 from paramak import RotateSplineShape
 
 

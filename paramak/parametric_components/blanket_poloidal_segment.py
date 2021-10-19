@@ -1,12 +1,13 @@
 
 import warnings
-from typing import List, Optional, Tuple, Union, Callable
+from typing import Callable, List, Optional, Tuple, Union
 
 import numpy as np
+from scipy.optimize import minimize
+
 from paramak import BlanketFP, RotateStraightShape
 from paramak.utils import (cut_solid, distance_between_two_points, extend,
                            rotate)
-from scipy.optimize import minimize
 
 
 class BlanketFPPoloidalSegments(BlanketFP):

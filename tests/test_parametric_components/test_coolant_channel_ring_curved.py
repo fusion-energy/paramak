@@ -1,8 +1,9 @@
 
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestCoolantChannelRingCurved(unittest.TestCase):

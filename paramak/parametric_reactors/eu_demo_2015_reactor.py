@@ -1,6 +1,7 @@
 
-import paramak
 import numpy as np
+
+import paramak
 
 
 class EuDemoFrom2015PaperDiagram(paramak.Reactor):

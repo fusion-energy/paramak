@@ -59,7 +59,7 @@ class FlfSystemCodeReactor(paramak.Reactor):
         self.lower_vv_thickness = lower_vv_thickness
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
+        self.input_variable_names: List[str] = self.input_variable_names + [
             'inner_blanket_radius',
             'blanket_thickness',
             'blanket_height',

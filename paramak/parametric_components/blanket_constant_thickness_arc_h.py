@@ -1,5 +1,6 @@
 
-from typing import Optional, Tuple
+from typing import Tuple
+
 from paramak import RotateMixedShape
 
 

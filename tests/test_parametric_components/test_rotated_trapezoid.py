@@ -2,8 +2,9 @@
 
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestRotatedTrapezoid(unittest.TestCase):

@@ -1,5 +1,6 @@
 
 import warnings
+from typing import List
 
 import paramak
 
@@ -85,7 +86,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         self.triangularity = triangularity
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
+        self.input_variable_names: List[str] = self.input_variable_names + [
             'inner_bore_radial_thickness',
             'inboard_tf_leg_radial_thickness',
             'center_column_shield_radial_thickness_mid',

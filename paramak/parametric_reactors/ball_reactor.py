@@ -132,7 +132,7 @@ class BallReactor(paramak.Reactor):
         self.rotation_angle = rotation_angle
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
+        self.input_variable_names: List[str] = self.input_variable_names + [
             'inner_bore_radial_thickness',
             'inboard_tf_leg_radial_thickness',
             'center_column_shield_radial_thickness',

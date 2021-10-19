@@ -1,7 +1,9 @@
 
-import paramak
-import numpy as np
+from typing import List
+
 import cadquery as cq
+import numpy as np
+import paramak
 
 
 class SegmentedBlanketBallReactor(paramak.BallReactor):
@@ -35,7 +37,7 @@ class SegmentedBlanketBallReactor(paramak.BallReactor):
         super().__init__(**kwargs)
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
+        self.input_variable_names: List[str] = self.input_variable_names + [
             'gap_between_blankets',
             'number_of_blanket_segments',
             'blanket_fillet_radius'

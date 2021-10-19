@@ -2,6 +2,7 @@
 import math
 
 import cadquery as cq
+
 from paramak import RotateStraightShape
 from paramak.utils import (coefficients_of_line_from_points, intersect_solid,
                            rotate)

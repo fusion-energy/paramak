@@ -3,6 +3,7 @@ import warnings
 from typing import List, Optional, Union
 
 import cadquery as cq
+
 import paramak
 
 
@@ -124,7 +125,7 @@ class SubmersionTokamak(paramak.Reactor):
         self.pf_coil_radial_position = pf_coil_radial_position
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
+        self.input_variable_names: List[str] = self.input_variable_names + [
             'inner_bore_radial_thickness',
             'inboard_tf_leg_radial_thickness',
             'center_column_shield_radial_thickness',
