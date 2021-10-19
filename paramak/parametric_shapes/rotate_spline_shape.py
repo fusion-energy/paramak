@@ -16,6 +16,7 @@ class RotateSplineShape(RotateMixedShape):
         self,
         rotation_angle: Optional[float] = 360.,
         color: Optional[Tuple[float, float, float, Optional[float]]] = (0.415, 0.239, 0.603),
+        name: str = 'rotatesplineshape',
         **kwargs
     ):
 
@@ -23,5 +24,6 @@ class RotateSplineShape(RotateMixedShape):
             rotation_angle=rotation_angle,
             color=color,
             connection_type="spline",
+            name=name,
             **kwargs
         )
