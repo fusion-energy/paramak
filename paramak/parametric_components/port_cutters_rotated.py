@@ -1,4 +1,3 @@
-
 import math
 
 from paramak import RotateStraightShape
@@ -38,11 +37,7 @@ class PortCutterRotated(RotateStraightShape):
         **kwargs
     ):
 
-        super().__init__(
-            name=name,
-            rotation_angle=rotation_angle,
-            **kwargs
-        )
+        super().__init__(name=name, rotation_angle=rotation_angle, **kwargs)
 
         self.center_point = center_point
         self.polar_coverage_angle = polar_coverage_angle
@@ -85,23 +80,26 @@ class PortCutterRotated(RotateStraightShape):
 
         points = [self.center_point]
 
-        outer_point = (self.center_point[0] + self.max_distance_from_center,
-                       self.center_point[1])
+        outer_point = (
+            self.center_point[0] + self.max_distance_from_center,
+            self.center_point[1],
+        )
 
         outer_point_rotated = rotate(
-            self.center_point,
-            outer_point,
-            math.radians(self.polar_placement_angle))
+            self.center_point, outer_point, math.radians(self.polar_placement_angle)
+        )
 
         outer_point_1 = rotate(
             self.center_point,
             outer_point_rotated,
-            math.radians(0.5 * self.polar_coverage_angle))
+            math.radians(0.5 * self.polar_coverage_angle),
+        )
 
         outer_point_2 = rotate(
             self.center_point,
             outer_point_rotated,
-            math.radians(-0.5 * self.polar_coverage_angle))
+            math.radians(-0.5 * self.polar_coverage_angle),
+        )
 
         points.append(outer_point_1)
         points.append(outer_point_2)

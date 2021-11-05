@@ -58,9 +58,7 @@ def create_reactor_renders(
         trimesh_obj.visual.vertex_colors = value
         trimesh_obj.visual
 
-        render_mesh = pyrender.Mesh.from_trimesh(
-            trimesh_obj, smooth=False
-        )
+        render_mesh = pyrender.Mesh.from_trimesh(trimesh_obj, smooth=False)
         scene.add(render_mesh)
 
     camera = pyrender.camera.PerspectiveCamera(

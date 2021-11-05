@@ -1,5 +1,3 @@
-
-
 import unittest
 
 import pytest
@@ -8,7 +6,6 @@ import paramak
 
 
 class TestRotatedIsoscelesTriangle(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.RotatedIsoscelesTriangle(
             height=10,
@@ -42,15 +39,11 @@ class TestRotatedIsoscelesTriangle(unittest.TestCase):
 
         self.test_shape.pivot_angle = 180
 
-        assert pytest.approx(
-            self.test_shape.volume(),
-            rel=0.01) == test_shape_vol
+        assert pytest.approx(self.test_shape.volume(), rel=0.01) == test_shape_vol
 
         self.test_shape.pivot_point = (100, 300)
 
-        assert pytest.approx(
-            self.test_shape.volume(),
-            rel=0.01) == test_shape_vol
+        assert pytest.approx(self.test_shape.volume(), rel=0.01) == test_shape_vol
 
     def test_args_impact_volume(self):
         """Changes args that should impact the volume and checks that the

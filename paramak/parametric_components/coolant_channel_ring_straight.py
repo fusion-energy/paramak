@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 import numpy as np
@@ -33,11 +32,7 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         **kwargs
     ) -> None:
 
-        super().__init__(
-            distance=height,
-            radius=channel_radius,
-            **kwargs
-        )
+        super().__init__(distance=height, radius=channel_radius, **kwargs)
 
         self.height = height
         self.channel_radius = channel_radius
@@ -63,7 +58,9 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
                 0 + self.start_angle,
                 360 + self.start_angle,
                 self.number_of_coolant_channels,
-                endpoint=False))
+                endpoint=False,
+            )
+        )
 
         self.azimuth_placement_angle = angles
 

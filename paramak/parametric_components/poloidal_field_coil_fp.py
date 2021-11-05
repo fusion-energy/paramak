@@ -1,4 +1,3 @@
-
 from paramak import PoloidalFieldCoil
 
 
@@ -10,24 +9,17 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
             corners of the rectangular shaped coil e.g [(x1, y1), (x2, y2)]
     """
 
-    def __init__(
-        self,
-        corner_points,
-        **kwargs
-    ):
+    def __init__(self, corner_points, **kwargs):
 
         height = abs(corner_points[0][1] - corner_points[1][1])
         width = abs(corner_points[0][0] - corner_points[1][0])
 
-        center_width = (corner_points[0][1] + corner_points[1][1]) / 2.
-        center_height = (corner_points[0][1] + corner_points[1][1]) / 2.
+        center_width = (corner_points[0][1] + corner_points[1][1]) / 2.0
+        center_height = (corner_points[0][1] + corner_points[1][1]) / 2.0
         center_point = (center_width, center_height)
 
         super().__init__(
-            height=height,
-            width=width,
-            center_point=center_point,
-            **kwargs
+            height=height, width=width, center_point=center_point, **kwargs
         )
 
         self.corner_points = corner_points

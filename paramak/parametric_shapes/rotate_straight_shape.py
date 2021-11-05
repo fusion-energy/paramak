@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from paramak import RotateMixedShape
@@ -15,9 +14,13 @@ class RotateStraightShape(RotateMixedShape):
 
     def __init__(
         self,
-        rotation_angle: Optional[float] = 360.,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.89, 0.101, 0.109),
-        name: str = 'rotatestraightshape',
+        rotation_angle: Optional[float] = 360.0,
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.89,
+            0.101,
+            0.109,
+        ),
+        name: str = "rotatestraightshape",
         **kwargs
     ):
 

@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -9,11 +8,10 @@ from paramak import RotateStraightShape, SweepSplineShape
 
 
 class TestSweepSplineShape(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = SweepSplineShape(
             points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
-            path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+            path_points=[(50, 0), (30, 50), (70, 100), (50, 150)],
         )
 
     def test_default_parameters(self):
@@ -43,8 +41,7 @@ class TestSweepSplineShape(unittest.TestCase):
         self.test_shape.points = [(-20, 20), (20, 20), (20, -20), (-20, -20)]
         test_volume = self.test_shape.volume()
         self.test_shape.points = [(-10, 10), (10, 10), (10, -10), (-10, -10)]
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 0.25, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 0.25, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepSplineShapes and checks that their relative volumes
@@ -52,8 +49,7 @@ class TestSweepSplineShape(unittest.TestCase):
 
         test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 4, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 4, rel=0.01)
 
     def test_force_cross_section(self):
         """Checks that a SweepSplineShape with the same cross-section at each path_point
@@ -63,22 +59,19 @@ class TestSweepSplineShape(unittest.TestCase):
 
         test_area = round(min(self.test_shape.areas))
 
-        assert self.test_shape.areas.count(
-            pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
             points=[(0, 50), (0, 200), (100, 200), (100, 50)]
         )
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(
-            pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
         cutting_shape.points = [(0, 100), (0, 200), (100, 200), (100, 100)]
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(
-            pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
     def test_force_cross_section_volume(self):
         """Checks that a SweepSplineShape with a larger volume is created when
@@ -101,18 +94,22 @@ class TestSweepSplineShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp', mode='solid')
-        self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp', mode='wire')
+        self.test_shape.export_stp("test_solid.stp", mode="solid")
+        self.test_shape.export_stp("test_solid2.stp")
+        self.test_shape.export_stp("test_wire.stp", mode="wire")
 
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
-            Path("test_solid2.stp").stat().st_size
-        assert Path("test_wire.stp").stat().st_size < \
-            Path("test_solid2.stp").stat().st_size
+        assert (
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
+        )
+        assert (
+            Path("test_wire.stp").stat().st_size
+            < Path("test_solid2.stp").stat().st_size
+        )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
@@ -122,16 +119,13 @@ class TestSweepSplineShape(unittest.TestCase):
 
         def incorrect_points_definition():
             self.test_shape.points = [
-                (10, 10, 'spline'),
-                (10, 30, 'spline'),
-                (30, 30, 'spline'),
-                (30, 10, 'spline')
+                (10, 10, "spline"),
+                (10, 30, "spline"),
+                (30, 30, "spline"),
+                (30, 10, "spline"),
             ]
 
-        self.assertRaises(
-            ValueError,
-            incorrect_points_definition
-        )
+        self.assertRaises(ValueError, incorrect_points_definition)
 
 
 if __name__ == "__main__":

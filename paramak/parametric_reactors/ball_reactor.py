@@ -1,4 +1,3 @@
-
 import warnings
 from typing import List, Optional, Union
 
@@ -63,50 +62,48 @@ class BallReactor(paramak.Reactor):
     """
 
     def __init__(
-            self,
-            inner_bore_radial_thickness: float = 10.,
-            inboard_tf_leg_radial_thickness: float = 30.,
-            center_column_shield_radial_thickness: float = 60.,
-            divertor_radial_thickness: float = 150.,
-            inner_plasma_gap_radial_thickness: float = 30.,
-            plasma_radial_thickness: float = 300.,
-            outer_plasma_gap_radial_thickness: float = 30.,
-            plasma_gap_vertical_thickness: float = 50.,
-            firstwall_radial_thickness: float = 30.,
-            blanket_radial_thickness: float = 50.,
-            blanket_rear_wall_radial_thickness: float = 30.,
-            elongation: float = 2.,
-            triangularity: float = 0.55,
-            divertor_to_tf_gap_vertical_thickness: Optional[float] = 0,
-            number_of_tf_coils: Optional[int] = 12,
-            rear_blanket_to_tf_gap: Optional[float] = None,
-            pf_coil_radial_thicknesses: Optional[Union[float, List[float]]] = None,
-            pf_coil_vertical_thicknesses: Optional[Union[float, List[float]]] = None,
-            pf_coil_radial_position: Optional[Union[float, List[float]]] = None,
-            pf_coil_vertical_position: Optional[Union[float, List[float]]] = None,
-            pf_coil_case_thicknesses: Optional[Union[float, List[float]]] = 10,
-            outboard_tf_coil_radial_thickness: float = None,
-            outboard_tf_coil_poloidal_thickness: float = None,
-            divertor_position: Optional[str] = "both",
-            rotation_angle: Optional[str] = 360.0,
+        self,
+        inner_bore_radial_thickness: float = 10.0,
+        inboard_tf_leg_radial_thickness: float = 30.0,
+        center_column_shield_radial_thickness: float = 60.0,
+        divertor_radial_thickness: float = 150.0,
+        inner_plasma_gap_radial_thickness: float = 30.0,
+        plasma_radial_thickness: float = 300.0,
+        outer_plasma_gap_radial_thickness: float = 30.0,
+        plasma_gap_vertical_thickness: float = 50.0,
+        firstwall_radial_thickness: float = 30.0,
+        blanket_radial_thickness: float = 50.0,
+        blanket_rear_wall_radial_thickness: float = 30.0,
+        elongation: float = 2.0,
+        triangularity: float = 0.55,
+        divertor_to_tf_gap_vertical_thickness: Optional[float] = 0,
+        number_of_tf_coils: Optional[int] = 12,
+        rear_blanket_to_tf_gap: Optional[float] = None,
+        pf_coil_radial_thicknesses: Optional[Union[float, List[float]]] = None,
+        pf_coil_vertical_thicknesses: Optional[Union[float, List[float]]] = None,
+        pf_coil_radial_position: Optional[Union[float, List[float]]] = None,
+        pf_coil_vertical_position: Optional[Union[float, List[float]]] = None,
+        pf_coil_case_thicknesses: Optional[Union[float, List[float]]] = 10,
+        outboard_tf_coil_radial_thickness: float = None,
+        outboard_tf_coil_poloidal_thickness: float = None,
+        divertor_position: Optional[str] = "both",
+        rotation_angle: Optional[str] = 360.0,
     ):
 
         super().__init__([])
 
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
-        self.center_column_shield_radial_thickness = \
+        self.center_column_shield_radial_thickness = (
             center_column_shield_radial_thickness
+        )
         self.divertor_radial_thickness = divertor_radial_thickness
-        self.inner_plasma_gap_radial_thickness = \
-            inner_plasma_gap_radial_thickness
+        self.inner_plasma_gap_radial_thickness = inner_plasma_gap_radial_thickness
         self.plasma_radial_thickness = plasma_radial_thickness
-        self.outer_plasma_gap_radial_thickness = \
-            outer_plasma_gap_radial_thickness
+        self.outer_plasma_gap_radial_thickness = outer_plasma_gap_radial_thickness
         self.firstwall_radial_thickness = firstwall_radial_thickness
         self.blanket_radial_thickness = blanket_radial_thickness
-        self.blanket_rear_wall_radial_thickness = \
-            blanket_rear_wall_radial_thickness
+        self.blanket_rear_wall_radial_thickness = blanket_rear_wall_radial_thickness
 
         self.pf_coil_vertical_position = pf_coil_vertical_position
         self.pf_coil_radial_position = pf_coil_radial_position
@@ -115,15 +112,15 @@ class BallReactor(paramak.Reactor):
         self.rear_blanket_to_tf_gap = rear_blanket_to_tf_gap
 
         self.pf_coil_case_thicknesses = pf_coil_case_thicknesses
-        self.outboard_tf_coil_radial_thickness = \
-            outboard_tf_coil_radial_thickness
-        self.outboard_tf_coil_poloidal_thickness = \
-            outboard_tf_coil_poloidal_thickness
+        self.outboard_tf_coil_radial_thickness = outboard_tf_coil_radial_thickness
+        self.outboard_tf_coil_poloidal_thickness = outboard_tf_coil_poloidal_thickness
         self.divertor_position = divertor_position
         self.rotation_angle = rotation_angle
 
         self.plasma_gap_vertical_thickness = plasma_gap_vertical_thickness
-        self.divertor_to_tf_gap_vertical_thickness = divertor_to_tf_gap_vertical_thickness
+        self.divertor_to_tf_gap_vertical_thickness = (
+            divertor_to_tf_gap_vertical_thickness
+        )
 
         self.elongation = elongation
         self.triangularity = triangularity
@@ -133,31 +130,31 @@ class BallReactor(paramak.Reactor):
 
         # adds self.input_variable_names from the Reactor class
         self.input_variable_names: List[str] = self.input_variable_names + [
-            'inner_bore_radial_thickness',
-            'inboard_tf_leg_radial_thickness',
-            'center_column_shield_radial_thickness',
-            'divertor_radial_thickness',
-            'inner_plasma_gap_radial_thickness',
-            'plasma_radial_thickness',
-            'outer_plasma_gap_radial_thickness',
-            'firstwall_radial_thickness',
-            'blanket_radial_thickness',
-            'blanket_rear_wall_radial_thickness',
-            'elongation',
-            'triangularity',
-            'plasma_gap_vertical_thickness',
-            'divertor_to_tf_gap_vertical_thickness',
-            'number_of_tf_coils',
-            'rear_blanket_to_tf_gap',
-            'pf_coil_radial_thicknesses',
-            'pf_coil_vertical_thicknesses',
-            'pf_coil_radial_position',
-            'pf_coil_vertical_position',
-            'pf_coil_case_thicknesses',
-            'outboard_tf_coil_radial_thickness',
-            'outboard_tf_coil_poloidal_thickness',
-            'divertor_position',
-            'rotation_angle',
+            "inner_bore_radial_thickness",
+            "inboard_tf_leg_radial_thickness",
+            "center_column_shield_radial_thickness",
+            "divertor_radial_thickness",
+            "inner_plasma_gap_radial_thickness",
+            "plasma_radial_thickness",
+            "outer_plasma_gap_radial_thickness",
+            "firstwall_radial_thickness",
+            "blanket_radial_thickness",
+            "blanket_rear_wall_radial_thickness",
+            "elongation",
+            "triangularity",
+            "plasma_gap_vertical_thickness",
+            "divertor_to_tf_gap_vertical_thickness",
+            "number_of_tf_coils",
+            "rear_blanket_to_tf_gap",
+            "pf_coil_radial_thicknesses",
+            "pf_coil_vertical_thicknesses",
+            "pf_coil_radial_position",
+            "pf_coil_vertical_position",
+            "pf_coil_case_thicknesses",
+            "outboard_tf_coil_radial_thickness",
+            "outboard_tf_coil_poloidal_thickness",
+            "divertor_position",
+            "rotation_angle",
         ]
 
         # set by make_plasma
@@ -177,7 +174,7 @@ class BallReactor(paramak.Reactor):
             )
             warnings.warn(msg, UserWarning)
         elif value > 360:
-            raise ValueError('rotation_angle can not be larger than 360')
+            raise ValueError("rotation_angle can not be larger than 360")
         self._rotation_angle = value
 
     @property
@@ -273,8 +270,7 @@ class BallReactor(paramak.Reactor):
         # sets major radius and minor radius from equatorial_points to allow a
         # radial build. This helps avoid the plasma overlapping the center
         # column and other components
-        self.major_radius = (outer_equatorial_point +
-                             inner_equatorial_point) / 2
+        self.major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
         self.minor_radius = self.major_radius - inner_equatorial_point
 
         plasma = paramak.Plasma(
@@ -300,11 +296,10 @@ class BallReactor(paramak.Reactor):
 
         self._inboard_tf_coils_start_radius = self._inner_bore_end_radius
         self._inboard_tf_coils_end_radius = (
-            self._inboard_tf_coils_start_radius +
-            self.inboard_tf_leg_radial_thickness)
+            self._inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
+        )
 
-        self._center_column_shield_start_radius = \
-            self._inboard_tf_coils_end_radius
+        self._center_column_shield_start_radius = self._inboard_tf_coils_end_radius
         self._center_column_shield_end_radius = (
             self._center_column_shield_start_radius
             + self.center_column_shield_radial_thickness
@@ -312,8 +307,8 @@ class BallReactor(paramak.Reactor):
 
         self._divertor_start_radius = self._center_column_shield_end_radius
         self._divertor_end_radius = (
-            self._center_column_shield_end_radius +
-            self.divertor_radial_thickness)
+            self._center_column_shield_end_radius + self.divertor_radial_thickness
+        )
 
         self._firstwall_start_radius = (
             self._center_column_shield_end_radius
@@ -321,17 +316,20 @@ class BallReactor(paramak.Reactor):
             + self.plasma_radial_thickness
             + self.outer_plasma_gap_radial_thickness
         )
-        self._firstwall_end_radius = self._firstwall_start_radius + \
-            self.firstwall_radial_thickness
+        self._firstwall_end_radius = (
+            self._firstwall_start_radius + self.firstwall_radial_thickness
+        )
 
         self._blanket_start_radius = self._firstwall_end_radius
-        self._blanket_end_radius = \
+        self._blanket_end_radius = (
             self._blanket_start_radius + self.blanket_radial_thickness
+        )
 
         self._blanket_rear_wall_start_radius = self._blanket_end_radius
         self._blanket_rear_wall_end_radius = (
-            self._blanket_rear_wall_start_radius +
-            self.blanket_rear_wall_radial_thickness)
+            self._blanket_rear_wall_start_radius
+            + self.blanket_rear_wall_radial_thickness
+        )
 
     def _make_vertical_build(self):
 
@@ -339,29 +337,37 @@ class BallReactor(paramak.Reactor):
         # in a similar manner to the radial build
 
         self._firstwall_start_height = (
-            self._plasma.high_point[1] +
-            self.plasma_gap_vertical_thickness)
-        self._firstwall_end_height = self._firstwall_start_height + \
-            self.firstwall_radial_thickness
+            self._plasma.high_point[1] + self.plasma_gap_vertical_thickness
+        )
+        self._firstwall_end_height = (
+            self._firstwall_start_height + self.firstwall_radial_thickness
+        )
 
         self._blanket_start_height = self._firstwall_end_height
-        self._blanket_end_height = self._blanket_start_height + self.blanket_radial_thickness
+        self._blanket_end_height = (
+            self._blanket_start_height + self.blanket_radial_thickness
+        )
 
         self._blanket_rear_wall_start_height = self._blanket_end_height
-        self._blanket_rear_wall_end_height = self._blanket_rear_wall_start_height + \
-            self.blanket_rear_wall_radial_thickness
+        self._blanket_rear_wall_end_height = (
+            self._blanket_rear_wall_start_height
+            + self.blanket_rear_wall_radial_thickness
+        )
 
-        self._tf_coil_start_height = self._blanket_rear_wall_end_height + \
-            self.divertor_to_tf_gap_vertical_thickness
+        self._tf_coil_start_height = (
+            self._blanket_rear_wall_end_height
+            + self.divertor_to_tf_gap_vertical_thickness
+        )
 
         self._center_column_shield_height = self._blanket_rear_wall_end_height * 2
 
         if self.rear_blanket_to_tf_gap is not None:
-            self._tf_coil_start_radius = self._blanket_rear_wall_end_radius + \
-                self.rear_blanket_to_tf_gap
+            self._tf_coil_start_radius = (
+                self._blanket_rear_wall_end_radius + self.rear_blanket_to_tf_gap
+            )
             self._tf_coil_end_radius = (
-                self._tf_coil_start_radius +
-                self.outboard_tf_coil_radial_thickness)
+                self._tf_coil_start_radius + self.outboard_tf_coil_radial_thickness
+            )
 
     def _make_inboard_tf_coils(self):
 
@@ -371,7 +377,7 @@ class BallReactor(paramak.Reactor):
             outer_radius=self._inboard_tf_coils_end_radius,
             rotation_angle=self.rotation_angle,
             name="inboard_tf_coils",
-            color=(0, 0, 1)
+            color=(0, 0, 1),
         )
         return self._inboard_tf_coils
 
@@ -382,7 +388,7 @@ class BallReactor(paramak.Reactor):
             inner_radius=self._center_column_shield_start_radius,
             outer_radius=self._center_column_shield_end_radius,
             rotation_angle=self.rotation_angle,
-            color=(0., 0.333, 0.),
+            color=(0.0, 0.333, 0.0),
             name="center_column_shield",
         )
         return self._center_column_shield
@@ -394,7 +400,7 @@ class BallReactor(paramak.Reactor):
             self.plasma_gap_vertical_thickness,
             self.outer_plasma_gap_radial_thickness,
             self.plasma_gap_vertical_thickness,
-            self.major_radius - self.minor_radius
+            self.major_radius - self.minor_radius,
         ]
 
         self._center_column_cutter = paramak.CenterColumnShieldCylinder(
@@ -403,7 +409,7 @@ class BallReactor(paramak.Reactor):
             inner_radius=0,
             outer_radius=self._center_column_shield_end_radius,
             rotation_angle=360,
-            color=(0., 0., 1.)
+            color=(0.0, 0.0, 1.0),
         )
 
         self._firstwall = paramak.BlanketFP(
@@ -414,33 +420,36 @@ class BallReactor(paramak.Reactor):
             stop_angle=180,
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),
-            name='firstwall',
-            cut=[self._center_column_cutter]
+            name="firstwall",
+            cut=[self._center_column_cutter],
         )
 
         self._blanket = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_radial_thickness,
-            offset_from_plasma=[e + self.firstwall_radial_thickness
-                                for e in offset_from_plasma],
+            offset_from_plasma=[
+                e + self.firstwall_radial_thickness for e in offset_from_plasma
+            ],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            color=(0., 1., 0.498),
-            name='blanket',
-            cut=[self._center_column_cutter])
+            color=(0.0, 1.0, 0.498),
+            name="blanket",
+            cut=[self._center_column_cutter],
+        )
 
         self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_rear_wall_radial_thickness,
-            offset_from_plasma=[e + self.firstwall_radial_thickness
-                                + self.blanket_radial_thickness
-                                for e in offset_from_plasma],
+            offset_from_plasma=[
+                e + self.firstwall_radial_thickness + self.blanket_radial_thickness
+                for e in offset_from_plasma
+            ],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
-            color=(0., 1., 1.),
-            name='blanket_rear_wall',
+            color=(0.0, 1.0, 1.0),
+            name="blanket_rear_wall",
             cut=[self._center_column_cutter],
         )
 
@@ -453,15 +462,15 @@ class BallReactor(paramak.Reactor):
             self.plasma_gap_vertical_thickness,
             self.outer_plasma_gap_radial_thickness,
             self.plasma_gap_vertical_thickness,
-            self.major_radius - self.minor_radius
+            self.major_radius - self.minor_radius,
         ]
 
         # used as an intersect when making the divertor
         self._blanket_fw_rear_wall_envelope = paramak.BlanketFP(
             plasma=self._plasma,
-            thickness=self.firstwall_radial_thickness +
-            self.blanket_radial_thickness +
-            self.blanket_rear_wall_radial_thickness,
+            thickness=self.firstwall_radial_thickness
+            + self.blanket_radial_thickness
+            + self.blanket_rear_wall_radial_thickness,
             offset_from_plasma=offset_from_plasma,
             start_angle=-180,
             stop_angle=180,
@@ -482,34 +491,36 @@ class BallReactor(paramak.Reactor):
                 (self._divertor_start_radius, divertor_height_bottom),
                 (self._divertor_end_radius, divertor_height_bottom),
                 (self._divertor_end_radius, divertor_height_top),
-                (self._divertor_start_radius, divertor_height_top)
+                (self._divertor_start_radius, divertor_height_top),
             ],
             intersect=self._blanket_fw_rear_wall_envelope,
             name="divertor",
-            color=(1., 0.667, 0.),
-            rotation_angle=self.rotation_angle
+            color=(1.0, 0.667, 0.0),
+            rotation_angle=self.rotation_angle,
         )
 
-        for component in [
-                self._firstwall,
-                self._blanket,
-                self._blanket_rear_wall]:
+        for component in [self._firstwall, self._blanket, self._blanket_rear_wall]:
             component.cut.append(self._divertor)
 
         return self._divertor
 
     def _make_pf_coils(self):
-        if None not in [self.pf_coil_vertical_thicknesses,
-                        self.pf_coil_radial_thicknesses,
-                        self.pf_coil_vertical_position,
-                        self.pf_coil_radial_position]:
+        if None not in [
+            self.pf_coil_vertical_thicknesses,
+            self.pf_coil_radial_thicknesses,
+            self.pf_coil_vertical_position,
+            self.pf_coil_radial_position,
+        ]:
             list_of_components = []
 
             # TODO make use of counter in the name attribute
 
             center_points = [
-                (x, y) for x, y in zip(
-                    self.pf_coil_radial_position, self.pf_coil_vertical_position)]
+                (x, y)
+                for x, y in zip(
+                    self.pf_coil_radial_position, self.pf_coil_vertical_position
+                )
+            ]
 
             self._pf_coils = self._pf_coil = paramak.PoloidalFieldCoilSet(
                 heights=self.pf_coil_vertical_thicknesses,
@@ -532,32 +543,38 @@ class BallReactor(paramak.Reactor):
             return list_of_components
         else:
             print(
-                'pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, '
-                'pf_coil_radial_position, pf_coil_vertical_position not '
-                'so not making pf coils')
+                "pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, "
+                "pf_coil_radial_position, pf_coil_vertical_position not "
+                "so not making pf coils"
+            )
             return None
 
     def _make_tf_coils(self):
         comp = []
         # checks that all the required information has been input by the user
-        if None not in [
+        if (
+            None
+            not in [
                 self.rear_blanket_to_tf_gap,
                 self.outboard_tf_coil_radial_thickness,
                 self.outboard_tf_coil_poloidal_thickness,
-                self.number_of_tf_coils] and self.number_of_tf_coils > 1:
+                self.number_of_tf_coils,
+            ]
+            and self.number_of_tf_coils > 1
+        ):
 
             self._tf_coil = paramak.ToroidalFieldCoilRectangle(
                 with_inner_leg=False,
                 horizontal_start_point=(
                     self._inboard_tf_coils_start_radius,
-                    self._tf_coil_start_height),
-                vertical_mid_point=(
-                    self._tf_coil_start_radius, 0),
+                    self._tf_coil_start_height,
+                ),
+                vertical_mid_point=(self._tf_coil_start_radius, 0),
                 thickness=self.outboard_tf_coil_radial_thickness,
                 number_of_coils=self.number_of_tf_coils,
                 distance=self.outboard_tf_coil_poloidal_thickness,
                 name="tf_coil",
-                rotation_angle=self.rotation_angle
+                rotation_angle=self.rotation_angle,
             )
             comp = [self._tf_coil]
         return comp

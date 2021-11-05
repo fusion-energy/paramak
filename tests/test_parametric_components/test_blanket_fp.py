@@ -1,4 +1,3 @@
-
 import os
 import unittest
 import warnings
@@ -8,13 +7,9 @@ import paramak
 
 
 class TestBlanketFP(unittest.TestCase):
-
     def setUp(self):
         self.plasma = paramak.Plasma(
-            major_radius=450,
-            minor_radius=150,
-            triangularity=0.55,
-            elongation=2
+            major_radius=450, minor_radius=150, triangularity=0.55, elongation=2
         )
 
         self.test_shape = paramak.BlanketFP(
@@ -126,8 +121,7 @@ class TestBlanketFP(unittest.TestCase):
         def test_different_lengths():
             self.test_shape.start_angle = 90
             self.test_shape.stop_angle = 270
-            self.test_shape.offset_from_plasma = [
-                [270, 100, 90], [0, 5, 10, 15]]
+            self.test_shape.offset_from_plasma = [[270, 100, 90], [0, 5, 10, 15]]
             self.test_shape.solid
 
         self.assertRaises(ValueError, test_different_lengths)
@@ -171,8 +165,7 @@ class TestBlanketFP(unittest.TestCase):
         os.system("rm test_blanket_full_cov_full_rot.stp")
 
     def test_overlapping(self):
-        """Creates an overlapping geometry and checks that a warning is raised.
-        """
+        """Creates an overlapping geometry and checks that a warning is raised."""
 
         test_shape = paramak.BlanketFP(
             major_radius=100,
@@ -189,5 +182,4 @@ class TestBlanketFP(unittest.TestCase):
             for a in w:
                 print(a.message)
             assert test_shape.solid is not None
-            assert "BlanketFP: Some points with negative R" in str(
-                w[0].message)
+            assert "BlanketFP: Some points with negative R" in str(w[0].message)

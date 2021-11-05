@@ -1,11 +1,9 @@
-
 import math
 
 import cadquery as cq
 
 from paramak import RotateStraightShape
-from paramak.utils import (coefficients_of_line_from_points, intersect_solid,
-                           rotate)
+from paramak.utils import coefficients_of_line_from_points, intersect_solid, rotate
 
 
 class PoloidalSegments(RotateStraightShape):
@@ -36,10 +34,7 @@ class PoloidalSegments(RotateStraightShape):
         **kwargs
     ):
 
-        super().__init__(
-            name=name,
-            **kwargs
-        )
+        super().__init__(name=name, **kwargs)
 
         self.center_point = center_point
         self.shape_to_segment = shape_to_segment
@@ -53,11 +48,11 @@ class PoloidalSegments(RotateStraightShape):
     @number_of_segments.setter
     def number_of_segments(self, value):
         if isinstance(value, int) is False:
-            raise TypeError(
-                "PoloidalSegmenter.number_of_segments must be an int.")
+            raise TypeError("PoloidalSegmenter.number_of_segments must be an int.")
         if value < 1:
             raise ValueError(
-                "PoloidalSegmenter.number_of_segments must be a minimum of 1.")
+                "PoloidalSegmenter.number_of_segments must be a minimum of 1."
+            )
         self._number_of_segments = value
 
     @property
@@ -88,37 +83,36 @@ class PoloidalSegments(RotateStraightShape):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the poloidal segmentation shape."""
 
-        angle_per_segment = 360. / self.number_of_segments
+        angle_per_segment = 360.0 / self.number_of_segments
 
         points = []
 
         current_angle = 0
 
         outer_point = (
-            self.center_point[0] +
-            self.max_distance_from_center,
-            self.center_point[1])
+            self.center_point[0] + self.max_distance_from_center,
+            self.center_point[1],
+        )
         for i in range(self.number_of_segments):
 
             points.append(self.center_point)
 
             outer_point_1 = rotate(
-                self.center_point,
-                outer_point,
-                math.radians(current_angle)
+                self.center_point, outer_point, math.radians(current_angle)
             )
 
             outer_point_2 = rotate(
                 self.center_point,
                 outer_point,
-                math.radians(current_angle + angle_per_segment)
+                math.radians(current_angle + angle_per_segment),
             )
 
             # if the point goes beyond the zero line then set to zero
             for new_point in [outer_point_1, outer_point_2]:
                 if new_point[0] < 0:
                     m, c = coefficients_of_line_from_points(
-                        new_point, self.center_point)
+                        new_point, self.center_point
+                    )
                     points.append((0, c))
                 else:
                     points.append(new_point)
@@ -141,10 +135,7 @@ class PoloidalSegments(RotateStraightShape):
         wires = []
         for p1, p2, p3 in zip(iter_points, iter_points, iter_points):
 
-            solid = (
-                cq.Workplane(self.workplane)
-                .polyline([p1[:2], p2[:2], p3[:2]])
-            )
+            solid = cq.Workplane(self.workplane).polyline([p1[:2], p2[:2], p3[:2]])
 
             wire = solid.close()
 
@@ -158,9 +149,7 @@ class PoloidalSegments(RotateStraightShape):
 
         if self.shape_to_segment is None:
 
-            compound = cq.Compound.makeCompound(
-                [a.val() for a in triangle_wedges]
-            )
+            compound = cq.Compound.makeCompound([a.val() for a in triangle_wedges])
 
         else:
 
@@ -169,9 +158,7 @@ class PoloidalSegments(RotateStraightShape):
                 overlap = intersect_solid(segment, self.shape_to_segment)
                 intersected_solids.append(overlap)
 
-            compound = cq.Compound.makeCompound(
-                [a.val() for a in intersected_solids]
-            )
+            compound = cq.Compound.makeCompound([a.val() for a in intersected_solids])
 
         self.solid = compound
 

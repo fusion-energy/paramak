@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 import numpy as np
@@ -43,11 +42,7 @@ class CoolantChannelRingCurved(SweepCircleShape):
         self.height = height
         self.start_angle = start_angle
 
-        super().__init__(
-            path_points=self.path_points,
-            radius=channel_radius,
-            **kwargs
-        )
+        super().__init__(path_points=self.path_points, radius=channel_radius, **kwargs)
 
         self.channel_radius = channel_radius
         self.number_of_coolant_channels = number_of_coolant_channels
@@ -79,7 +74,9 @@ class CoolantChannelRingCurved(SweepCircleShape):
                 0 + self.start_angle,
                 360 + self.start_angle,
                 self.number_of_coolant_channels,
-                endpoint=False))
+                endpoint=False,
+            )
+        )
 
         self.azimuth_placement_angle = angles
 
@@ -88,7 +85,7 @@ class CoolantChannelRingCurved(SweepCircleShape):
         path_points = [
             (self.ring_radius, -self.height / 2),
             (self.ring_radius + self.mid_offset, 0),
-            (self.ring_radius, self.height / 2)
+            (self.ring_radius, self.height / 2),
         ]
 
         self.path_points = path_points

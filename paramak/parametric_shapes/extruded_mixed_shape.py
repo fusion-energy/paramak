@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from paramak import Shape
@@ -24,16 +23,16 @@ class ExtrudeMixedShape(Shape):
         extrude_both: Optional[bool] = True,
         rotation_angle: Optional[float] = 360.0,
         extrusion_start_offset: Optional[float] = 0.0,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.2, 0.627, 0.172),
-        name: str = 'extrudemixedshape',
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.2,
+            0.627,
+            0.172,
+        ),
+        name: str = "extrudemixedshape",
         **kwargs
     ):
 
-        super().__init__(
-            color=color,
-            name=name,
-            **kwargs
-        )
+        super().__init__(color=color, name=name, **kwargs)
         self.distance = distance
         self.extrude_both = extrude_both
         self.rotation_angle = rotation_angle
@@ -84,9 +83,7 @@ class ExtrudeMixedShape(Shape):
 
         self.wire = wire
 
-        solid = wire.extrude(
-            distance=extrusion_distance,
-            both=self.extrude_both)
+        solid = wire.extrude(distance=extrusion_distance, both=self.extrude_both)
 
         # filleting rectangular port cutter edges
         # must be done before azimuthal placement

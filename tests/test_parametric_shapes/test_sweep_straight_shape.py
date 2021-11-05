@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -9,11 +8,10 @@ from paramak import RotateStraightShape, SweepStraightShape
 
 
 class TestSweepStraightShape(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = SweepStraightShape(
             points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
-            path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+            path_points=[(50, 0), (30, 50), (70, 100), (50, 150)],
         )
 
     def test_default_parameters(self):
@@ -91,18 +89,22 @@ class TestSweepStraightShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp', mode='solid')
-        self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp', mode='wire')
+        self.test_shape.export_stp("test_solid.stp", mode="solid")
+        self.test_shape.export_stp("test_solid2.stp")
+        self.test_shape.export_stp("test_wire.stp", mode="wire")
 
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
-            Path("test_solid2.stp").stat().st_size
-        assert Path("test_wire.stp").stat().st_size < \
-            Path("test_solid2.stp").stat().st_size
+        assert (
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
+        )
+        assert (
+            Path("test_wire.stp").stat().st_size
+            < Path("test_solid2.stp").stat().st_size
+        )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
@@ -111,7 +113,7 @@ class TestSweepStraightShape(unittest.TestCase):
 
         os.system("rm test_solid.brep")
 
-        self.test_shape.export_brep(filename='test_solid.brep')
+        self.test_shape.export_brep(filename="test_solid.brep")
 
         assert Path("test_solid.brep").exists() is True
 
@@ -123,12 +125,9 @@ class TestSweepStraightShape(unittest.TestCase):
 
         def missing_extention():
 
-            self.test_shape.export_brep(filename='test_solid_missing')
+            self.test_shape.export_brep(filename="test_solid_missing")
 
-        self.assertRaises(
-            ValueError,
-            missing_extention
-        )
+        self.assertRaises(ValueError, missing_extention)
 
     def test_incorrect_points_input(self):
         """Checks that an error is raised when the points are input with the
@@ -136,16 +135,13 @@ class TestSweepStraightShape(unittest.TestCase):
 
         def incorrect_points_definition():
             self.test_shape.points = [
-                (10, 10, 'straight'),
-                (10, 30, 'straight'),
-                (30, 30, 'straight'),
-                (30, 10, 'straight')
+                (10, 10, "straight"),
+                (10, 30, "straight"),
+                (30, 30, "straight"),
+                (30, 10, "straight"),
             ]
 
-        self.assertRaises(
-            ValueError,
-            incorrect_points_definition
-        )
+        self.assertRaises(ValueError, incorrect_points_definition)
 
 
 if __name__ == "__main__":

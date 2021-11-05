@@ -1,4 +1,3 @@
-
 import paramak
 
 
@@ -12,10 +11,6 @@ class SingleNullBallReactor(paramak.BallReactor):
         divertor_position (str): Defaults to "upper".
     """
 
-    def __init__(
-        self,
-        divertor_position: str = "upper",
-        **kwargs
-    ):
+    def __init__(self, divertor_position: str = "upper", **kwargs):
 
         super().__init__(divertor_position=divertor_position, **kwargs)

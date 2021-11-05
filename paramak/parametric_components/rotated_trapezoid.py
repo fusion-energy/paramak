@@ -1,4 +1,3 @@
-
 import math
 
 from paramak import RotateStraightShape
@@ -29,15 +28,12 @@ class RotatedTrapezoid(RotateStraightShape):
         length_2,
         length_3,
         pivot_point,
-        pivot_angle=0.,
+        pivot_angle=0.0,
         name="rotated_trapezoid",
         **kwargs
     ):
 
-        super().__init__(
-            name=name,
-            **kwargs
-        )
+        super().__init__(name=name, **kwargs)
 
         self.length_1 = length_1
         self.length_2 = length_2
@@ -90,21 +86,15 @@ class RotatedTrapezoid(RotateStraightShape):
         the 2D profile of the trapezoid shape."""
 
         non_rotated_points = [
-            (
-                self.pivot_point[0] + self.length_1 / 2.0,
-                self.pivot_point[1]
-            ),
-            (
-                self.pivot_point[0] - self.length_1 / 2.0,
-                self.pivot_point[1]
-            ),
+            (self.pivot_point[0] + self.length_1 / 2.0, self.pivot_point[1]),
+            (self.pivot_point[0] - self.length_1 / 2.0, self.pivot_point[1]),
             (
                 self.pivot_point[0] - self.length_2 / 2.0,
-                self.pivot_point[1] - self.length_3
+                self.pivot_point[1] - self.length_3,
             ),
             (
                 self.pivot_point[0] + self.length_2 / 2.0,
-                self.pivot_point[1] - self.length_3
+                self.pivot_point[1] - self.length_3,
             ),
         ]
 
@@ -114,7 +104,7 @@ class RotatedTrapezoid(RotateStraightShape):
             x, y = rotate(
                 origin=self.pivot_point,
                 point=point,
-                angle=math.radians(self.pivot_angle)
+                angle=math.radians(self.pivot_angle),
             )
             points.append((x, y))
 

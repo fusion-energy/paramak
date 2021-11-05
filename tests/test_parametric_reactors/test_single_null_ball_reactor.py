@@ -1,4 +1,3 @@
-
 import unittest
 
 import pytest
@@ -58,8 +57,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
         self.test_reactor.rotation_angle = 180
         test_reactor_180_components = self.test_reactor.shapes_and_components
 
-        for r90, r180 in zip(test_reactor_90_components,
-                             test_reactor_180_components):
+        for r90, r180 in zip(test_reactor_90_components, test_reactor_180_components):
             assert r90.volume() == pytest.approx(r180.volume() * 0.5, rel=0.1)
 
     def test_hash_value(self):
@@ -84,7 +82,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
             "_pf_coils_casing",
-            "_tf_coil"
+            "_tf_coil",
         ]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
@@ -99,7 +97,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
             "_pf_coils_casing",
-            "_tf_coil"
+            "_tf_coil",
         ]:
             assert key in self.test_reactor.__dict__.keys()
         assert len(self.test_reactor.shapes_and_components) == 10

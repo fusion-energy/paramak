@@ -1,4 +1,3 @@
-
 import math
 import os
 import unittest
@@ -10,11 +9,9 @@ from paramak import RotateStraightShape, SweepCircleShape
 
 
 class TestSweepCircleShape(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = SweepCircleShape(
-            radius=10,
-            path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+            radius=10, path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
         )
 
     def test_default_parameters(self):
@@ -50,16 +47,14 @@ class TestSweepCircleShape(unittest.TestCase):
             self.test_shape.path_workplane = "YZ"
 
         self.assertRaises(ValueError, workplane_and_path_workplane_equal)
-        self.assertRaises(
-            ValueError,
-            invalid_relative_workplane_and_path_workplane)
+        self.assertRaises(ValueError, invalid_relative_workplane_and_path_workplane)
 
     def test_absolute_shape_volume(self):
         """Creates a SweepCircleShape and checks that the volume is correct."""
 
         self.test_shape.path_points = [(50, 0), (50, 50), (50, 100)]
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume() == pytest.approx(math.pi * 10**2 * 100)
+        assert self.test_shape.volume() == pytest.approx(math.pi * 10 ** 2 * 100)
 
     def test_relative_shape_volume_radius(self):
         """Creates two SweepCircleShapes and checks that their relative volume
@@ -67,8 +62,7 @@ class TestSweepCircleShape(unittest.TestCase):
 
         test_volume = self.test_shape.volume()
         self.test_shape.radius = 20
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 4, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 4, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepCircleShapes and checks that their relative volumes
@@ -76,8 +70,7 @@ class TestSweepCircleShape(unittest.TestCase):
 
         test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 4, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 4, rel=0.01)
 
     def test_points_equal_path_points(self):
         """Checks that shape.points = shape.path_points upon construction of a
@@ -97,24 +90,30 @@ class TestSweepCircleShape(unittest.TestCase):
 
         self.test_shape.force_cross_section = True
 
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (10**2), rel=0.01)) == 2
+        assert (
+            self.test_shape.areas.count(pytest.approx(math.pi * (10 ** 2), rel=0.01))
+            == 2
+        )
 
         cutting_shape = RotateStraightShape(
             points=[(0, 50), (0, 200), (100, 200), (100, 50)],
         )
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (10**2), rel=0.01)) == 2
+        assert (
+            self.test_shape.areas.count(pytest.approx(math.pi * (10 ** 2), rel=0.01))
+            == 2
+        )
 
         cutting_shape = RotateStraightShape(
             points=[(0, 100), (0, 200), (100, 200), (100, 100)]
         )
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (10**2), rel=0.01)) == 2
+        assert (
+            self.test_shape.areas.count(pytest.approx(math.pi * (10 ** 2), rel=0.01))
+            == 2
+        )
 
     def test_force_cross_section_volume(self):
         """Checks that a SweepCircleShape with a larger volume is created when
@@ -137,18 +136,22 @@ class TestSweepCircleShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp', mode='solid')
-        self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp', mode='wire')
+        self.test_shape.export_stp("test_solid.stp", mode="solid")
+        self.test_shape.export_stp("test_solid2.stp")
+        self.test_shape.export_stp("test_wire.stp", mode="wire")
 
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
-            Path("test_solid2.stp").stat().st_size
-        assert Path("test_wire.stp").stat().st_size < \
-            Path("test_solid2.stp").stat().st_size
+        assert (
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
+        )
+        assert (
+            Path("test_wire.stp").stat().st_size
+            < Path("test_solid2.stp").stat().st_size
+        )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

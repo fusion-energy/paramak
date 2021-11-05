@@ -1,4 +1,3 @@
-
 from plasmaboundaries import get_separatrix_coordinates
 
 from paramak import Plasma
@@ -66,8 +65,7 @@ class PlasmaBoundaries(Plasma):
             "elongation": self.elongation,
             "triangularity": self.triangularity,
         }
-        points = get_separatrix_coordinates(
-            params, self.configuration)
+        points = get_separatrix_coordinates(params, self.configuration)
         # add vertical displacement
         points[:, 1] += self.vertical_displacement
         # rescale to cm
@@ -84,5 +82,6 @@ class PlasmaBoundaries(Plasma):
                 upper_point_y = self.upper_x_point[1]
 
         points = points[
-            (points[:, 1] >= lower_point_y) & (points[:, 1] <= upper_point_y)]
+            (points[:, 1] >= lower_point_y) & (points[:, 1] <= upper_point_y)
+        ]
         self.points = points.tolist()[:-1]

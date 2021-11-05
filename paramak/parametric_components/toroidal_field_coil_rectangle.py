@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 import cadquery as cq
@@ -32,15 +31,11 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         distance: float,
         number_of_coils: int,
         with_inner_leg: Optional[bool] = True,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 
-        super().__init__(
-            distance=distance,
-            color=color,
-            **kwargs
-        )
+        super().__init__(distance=distance, color=color, **kwargs)
 
         self.horizontal_start_point = horizontal_start_point
         self.vertical_mid_point = vertical_mid_point
@@ -64,41 +59,50 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
 
         if self.horizontal_start_point[0] >= self.vertical_mid_point[0]:
             raise ValueError(
-                'horizontal_start_point x should be smaller than the \
-                    vertical_mid_point x value')
+                "horizontal_start_point x should be smaller than the \
+                    vertical_mid_point x value"
+            )
         if self.vertical_mid_point[1] >= self.horizontal_start_point[1]:
             raise ValueError(
-                'vertical_mid_point y value should be smaller than the \
-                    horizontal_start_point y value')
+                "vertical_mid_point y value should be smaller than the \
+                    horizontal_start_point y value"
+            )
 
         points = [
             self.horizontal_start_point,  # connection point
             # connection point
-            (self.horizontal_start_point[0] +
-             self.thickness, self.horizontal_start_point[1]),
+            (
+                self.horizontal_start_point[0] + self.thickness,
+                self.horizontal_start_point[1],
+            ),
             (self.vertical_mid_point[0], self.horizontal_start_point[1]),
             (self.vertical_mid_point[0], -self.horizontal_start_point[1]),
             # connection point
-            (self.horizontal_start_point[0] +
-             self.thickness, -
-             self.horizontal_start_point[1]),
+            (
+                self.horizontal_start_point[0] + self.thickness,
+                -self.horizontal_start_point[1],
+            ),
             # connection point
             (self.horizontal_start_point[0], -self.horizontal_start_point[1]),
-            (self.horizontal_start_point[0], -
-             (self.horizontal_start_point[1] +
-                self.thickness)),
-            (self.vertical_mid_point[0] +
-             self.thickness, -
-             (self.horizontal_start_point[1] +
-                self.thickness)),
-            (self.vertical_mid_point[0] + self.thickness,
-             self.horizontal_start_point[1] + self.thickness),
-            (self.horizontal_start_point[0],
-             self.horizontal_start_point[1] + self.thickness),
+            (
+                self.horizontal_start_point[0],
+                -(self.horizontal_start_point[1] + self.thickness),
+            ),
+            (
+                self.vertical_mid_point[0] + self.thickness,
+                -(self.horizontal_start_point[1] + self.thickness),
+            ),
+            (
+                self.vertical_mid_point[0] + self.thickness,
+                self.horizontal_start_point[1] + self.thickness,
+            ),
+            (
+                self.horizontal_start_point[0],
+                self.horizontal_start_point[1] + self.thickness,
+            ),
         ]
 
-        self.inner_leg_connection_points = [
-            points[0], points[1], points[4], points[5]]
+        self.inner_leg_connection_points = [points[0], points[1], points[4], points[5]]
 
         self.points = points
 
@@ -106,12 +110,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         """Calculates the azimuth placement angles based on the number of tf
         coils"""
 
-        angles = list(
-            np.linspace(
-                0,
-                360,
-                self.number_of_coils,
-                endpoint=False))
+        angles = list(np.linspace(0, 360, self.number_of_coils, endpoint=False))
 
         self.azimuth_placement_angle = angles
 
@@ -124,10 +123,7 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
 
         # Creates a cadquery solid from points and revolves
         points_without_connections = [p[:2] for p in self.points]
-        solid = (
-            cq.Workplane(self.workplane)
-            .polyline(points_without_connections)
-        )
+        solid = cq.Workplane(self.workplane).polyline(points_without_connections)
 
         wire = solid.close()
 
@@ -142,19 +138,20 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
 
         if self.with_inner_leg is True:
             inner_leg_solid = cq.Workplane(self.workplane)
-            inner_leg_solid = inner_leg_solid.polyline(
-                self.inner_leg_connection_points)
+            inner_leg_solid = inner_leg_solid.polyline(self.inner_leg_connection_points)
             inner_leg_solid = inner_leg_solid.close().extrude(
-                distance=-self.distance / 2.0, both=True)
+                distance=-self.distance / 2.0, both=True
+            )
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
             inner_leg_solid = self.perform_boolean_operations(
-                inner_leg_solid, wedge_cut=cutting_wedge)
+                inner_leg_solid, wedge_cut=cutting_wedge
+            )
 
             solid = cq.Compound.makeCompound(
                 [a.val() for a in [inner_leg_solid, solid]]
             )
 
-        self.solid = solid   # not necessarily required as set in boolean_operations
+        self.solid = solid  # not necessarily required as set in boolean_operations
 
         return solid

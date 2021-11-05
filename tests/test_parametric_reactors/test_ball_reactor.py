@@ -1,4 +1,3 @@
-
 import os
 import time
 import unittest
@@ -81,6 +80,7 @@ class TestBallReactor(unittest.TestCase):
 
         def invalid_rotation_angle():
             self.test_reactor.rotation_angle = 361
+
         self.assertRaises(ValueError, invalid_rotation_angle)
 
     def test_pf_coil_thicknesses_error(self):
@@ -89,10 +89,12 @@ class TestBallReactor(unittest.TestCase):
 
         def invalid_pf_coil_radial_thicknesses():
             self.test_reactor.pf_coil_radial_thicknesses = 2
+
         self.assertRaises(ValueError, invalid_pf_coil_radial_thicknesses)
 
         def invalid_pf_coil_vertical_thicknesses():
             self.test_reactor.pf_coil_vertical_thicknesses = 2
+
         self.assertRaises(ValueError, invalid_pf_coil_vertical_thicknesses)
 
     def test_with_pf_and_tf_coils(self):
@@ -123,8 +125,10 @@ class TestBallReactor(unittest.TestCase):
             warning_trigger()
             assert len(w) == 1
             assert issubclass(w[-1].category, UserWarning)
-            assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
-                w[-1].message)
+            assert (
+                "360 degree rotation may result in a Standard_ConstructionError or AttributeError"
+                in str(w[-1].message)
+            )
 
     def test_ball_reactor_hash_value(self):
         """Creates a ball reactor and checks that all shapes in the reactor are
@@ -157,7 +161,7 @@ class TestBallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
             "_pf_coils_casing",
-            "_tf_coil"
+            "_tf_coil",
         ]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
@@ -172,7 +176,7 @@ class TestBallReactor(unittest.TestCase):
             "_blanket_rear_wall",
             "_pf_coil",
             "_pf_coils_casing",
-            "_tf_coil"
+            "_tf_coil",
         ]:
             assert key in self.test_reactor.__dict__.keys()
         assert len(self.test_reactor.shapes_and_components) == 10
@@ -245,15 +249,9 @@ class TestBallReactor(unittest.TestCase):
         os.system("rm reactor_solids.stp")
         os.system("rm reactor_wires.stp")
 
-        self.test_reactor.export_stp(
-            filename='reactor_solid.stp',
-            mode='solid'
-        )
+        self.test_reactor.export_stp(filename="reactor_solid.stp", mode="solid")
 
-        self.test_reactor.export_stp(
-            filename='reactor_wires.stp',
-            mode='wire'
-        )
+        self.test_reactor.export_stp(filename="reactor_wires.stp", mode="wire")
 
         assert Path("reactor_solid.stp").is_file()
         assert Path("reactor_wires.stp").is_file()

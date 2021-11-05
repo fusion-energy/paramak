@@ -34,7 +34,7 @@ release = "1.0"
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
-needs_sphinx = '4.1.2'
+needs_sphinx = "4.1.2"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -135,11 +135,13 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc,
-     "Paramak.tex",
-     "Paramak Documentation",
-     "Paramak contributors",
-     "manual"),
+    (
+        master_doc,
+        "Paramak.tex",
+        "Paramak Documentation",
+        "Paramak contributors",
+        "manual",
+    ),
 ]
 
 
@@ -188,4 +190,4 @@ epub_exclude_files = ["search.html"]
 
 # -- Extension configuration -------------------------------------------------
 
-html_favicon = 'favicon.ico'
+html_favicon = "favicon.ico"

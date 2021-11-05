@@ -1,22 +1,27 @@
-
 import unittest
 
 import paramak
 
 
 class TestBlanketCutterParallels(unittest.TestCase):
-
     def setUp(self):
-        self.test_shape = paramak.BlanketCutterParallels(
-            thickness=50,
-            gap_size=200
-        )
+        self.test_shape = paramak.BlanketCutterParallels(thickness=50, gap_size=200)
 
     def test_default_parameters(self):
         """Checks that the default parameters of a BlanketCutterParallel are correct."""
 
         assert self.test_shape.azimuth_placement_angle == [
-            0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
+            0.0,
+            36.0,
+            72.0,
+            108.0,
+            144.0,
+            180.0,
+            216.0,
+            252.0,
+            288.0,
+            324.0,
+        ]
         assert self.test_shape.height == 2000
         assert self.test_shape.width == 2000
 
@@ -65,4 +70,7 @@ class TestBlanketCutterParallels(unittest.TestCase):
             test_shape.gap_size = gap_size
             test_shape.azimuth_placement_angle = angles
             assert test_shape.main_cutting_shape.distance == test_shape.gap_size / 2.0
-            assert test_shape.main_cutting_shape.azimuth_placement_angle == test_shape.azimuth_placement_angle
+            assert (
+                test_shape.main_cutting_shape.azimuth_placement_angle
+                == test_shape.azimuth_placement_angle
+            )

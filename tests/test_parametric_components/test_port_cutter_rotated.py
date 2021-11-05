@@ -1,4 +1,3 @@
-
 import unittest
 
 import numpy as np
@@ -16,7 +15,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=1000,
             azimuth_placement_angle=np.linspace(0, 360, 4),
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         large_ports = paramak.PortCutterRotated(
@@ -25,27 +24,19 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             azimuth_placement_angle=np.linspace(0, 360, 4),
             max_distance_from_center=1000,
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         vessel_with_out_ports = paramak.CenterColumnShieldCylinder(
-            height=500,
-            inner_radius=200,
-            outer_radius=300
+            height=500, inner_radius=200, outer_radius=300
         )
 
         vessel_with_small_ports = paramak.CenterColumnShieldCylinder(
-            height=500,
-            inner_radius=200,
-            outer_radius=300,
-            cut=small_ports
+            height=500, inner_radius=200, outer_radius=300, cut=small_ports
         )
 
         vessel_with_large_ports = paramak.CenterColumnShieldCylinder(
-            height=500,
-            inner_radius=200,
-            outer_radius=300,
-            cut=large_ports
+            height=500, inner_radius=200, outer_radius=300, cut=large_ports
         )
 
         assert large_ports.volume() > small_ports.volume()
@@ -62,7 +53,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=1000,
             azimuth_placement_angle=np.linspace(0, 360, 4),
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         large_ports = paramak.PortCutterRotated(
@@ -71,7 +62,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=1000,
             azimuth_placement_angle=np.linspace(0, 360, 4),
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         assert large_ports.volume() > small_ports.volume()
@@ -86,7 +77,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=1000,
             azimuth_placement_angle=np.linspace(0, 360, 4),
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         large_ports = paramak.PortCutterRotated(
@@ -95,7 +86,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=2000,
             azimuth_placement_angle=np.linspace(0, 360, 4),
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         assert large_ports.volume() > small_ports.volume()
@@ -110,7 +101,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=1000,
             azimuth_placement_angle=np.linspace(0, 360, 4),
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         large_ports = paramak.PortCutterRotated(
@@ -119,7 +110,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=1000,
             azimuth_placement_angle=np.linspace(0, 360, 5),
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         assert large_ports.volume() > small_ports.volume()
@@ -134,7 +125,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=1000,
             azimuth_placement_angle=np.linspace(0, 360, 4),
-            rotation_angle=10
+            rotation_angle=10,
         )
 
         large_ports = paramak.PortCutterRotated(
@@ -143,7 +134,7 @@ class TestPortCutterRotated(unittest.TestCase):
             polar_placement_angle=10,
             max_distance_from_center=1000,
             azimuth_placement_angle=np.linspace(0, 360, 4),
-            rotation_angle=20
+            rotation_angle=20,
         )
 
         assert large_ports.volume() > small_ports.volume()
@@ -151,6 +142,7 @@ class TestPortCutterRotated(unittest.TestCase):
     def test_outerpoint_negative(self):
         """Tests that when polar_coverage_angle is greater than 180 an error is
         raised."""
+
         def error():
             paramak.PortCutterRotated(
                 center_point=(1, 1),
@@ -158,4 +150,5 @@ class TestPortCutterRotated(unittest.TestCase):
                 polar_placement_angle=0,
                 rotation_angle=10,
             )
+
         self.assertRaises(ValueError, error)
