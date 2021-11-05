@@ -1,4 +1,4 @@
-# This eamples creates a 3 by 3 grid of random reactor renders and saves
+# This examples creates a 3 by 3 grid of random reactor renders and saves
 # them as a png image
 
 import math
@@ -19,8 +19,8 @@ def create_reactor_renders(
     lower_blanket_thickness,
     upper_blanket_thickness,
     blanket_vv_gap,
-    number_of_images_in_x=3,
-    number_of_images_in_y=3,
+    number_of_images_in_x,
+    number_of_images_in_y,
 ):
 
     # creates a reactor from the input arguments
@@ -79,11 +79,11 @@ def create_reactor_renders(
     scene.add(light, pose=camera_pose)
 
     # renders the scene 
-    r = pyrender.OffscreenRenderer(800, 800)
+    r = pyrender.OffscreenRenderer(1000, 1000)
     color, depth = r.render(scene)
 
     # adds the render to the plot as a subplot in the correct location
-    plt.subplot(number_of_images_in_x, number_of_images_in_y, render_number)
+    plt.subplot(number_of_images_in_y, number_of_images_in_x, render_number+1)
     plt.axis("off")
     plt.imshow(color)
 
@@ -92,16 +92,21 @@ def create_reactor_renders(
 plt.figure()
 
 # loops through adding a random reactor render to the figure with each iteration
-for i in range(1, 10):
+number_of_images_in_x = 4
+number_of_images_in_y = 3
+total_number_of_images = number_of_images_in_x*number_of_images_in_y
+for i in range(total_number_of_images):
     create_reactor_renders(
         render_number=i,
+        number_of_images_in_x=number_of_images_in_x,
+        number_of_images_in_y=number_of_images_in_y,
         inner_blanket_radius=np.random.uniform(low=50, high=90),
         blanket_thickness=np.random.uniform(low=50, high=140),
         blanket_height=np.random.uniform(low=400, high=550),
-        lower_blanket_thickness=np.random.uniform(low=50, high=70),
-        upper_blanket_thickness=np.random.uniform(low=50, high=70),
-        blanket_vv_gap=np.random.uniform(low=10, high=100),
+        lower_blanket_thickness=np.random.uniform(low=20, high=70),
+        upper_blanket_thickness=np.random.uniform(low=20, high=70),
+        blanket_vv_gap=np.random.uniform(low=10, high=90),
     )
 
 # saves the plot
-plt.savefig("render4.png")
+plt.savefig("render.png", dpi=200)
