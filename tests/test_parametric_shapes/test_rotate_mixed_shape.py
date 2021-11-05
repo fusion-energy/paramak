@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -9,11 +8,16 @@ from paramak import RotateMixedShape
 
 
 class TestRotateMixedShape(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = RotateMixedShape(
-            points=[(50, 0, "straight"), (50, 50, "spline"), (60, 70, "spline"),
-                    (70, 50, "circle"), (60, 25, "circle"), (70, 0, "straight")]
+            points=[
+                (50, 0, "straight"),
+                (50, 50, "spline"),
+                (60, 70, "spline"),
+                (70, 50, "circle"),
+                (60, 25, "circle"),
+                (70, 0, "straight"),
+            ]
         )
 
         self.test_shape_2 = RotateMixedShape(
@@ -26,7 +30,7 @@ class TestRotateMixedShape(unittest.TestCase):
                 (150, 100, "straight"),
                 (140, 75, "straight"),
                 (110, 45, "straight"),
-            ]
+            ],
         )
 
         self.test_shape_3 = RotateMixedShape(
@@ -39,7 +43,7 @@ class TestRotateMixedShape(unittest.TestCase):
                 (150, 100, "straight"),
                 (140, 75, "circle"),
                 (110, 45, "circle"),
-            ]
+            ],
         )
 
     def test_export_2d_image(self):
@@ -168,7 +172,7 @@ class TestRotateMixedShape(unittest.TestCase):
                 (80, 80, "circle"),
                 (100, 40, "circle"),
                 (80, 0, "straight"),
-                (80, -10, "straight")
+                (80, -10, "straight"),
             ]
         )
         outer_shape_volume = outer_shape.volume()
@@ -219,18 +223,22 @@ class TestRotateMixedShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp', mode='solid')
-        self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp', mode='wire')
+        self.test_shape.export_stp("test_solid.stp", mode="solid")
+        self.test_shape.export_stp("test_solid2.stp")
+        self.test_shape.export_stp("test_wire.stp", mode="wire")
 
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
-            Path("test_solid2.stp").stat().st_size
-        assert Path("test_wire.stp").stat().st_size < \
-            Path("test_solid2.stp").stat().st_size
+        assert (
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
+        )
+        assert (
+            Path("test_wire.stp").stat().st_size
+            < Path("test_solid2.stp").stat().st_size
+        )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
@@ -243,13 +251,13 @@ class TestRotateMixedShape(unittest.TestCase):
         self.test_shape_3.convert_all_circle_connections_to_splines()
         assert len(self.test_shape_3.processed_points) > 8
         assert self.test_shape_3.processed_points[0] == (100, 0, "straight")
-        assert self.test_shape_3.processed_points[1][2] == 'spline'
-        assert self.test_shape_3.processed_points[2][2] == 'spline'
+        assert self.test_shape_3.processed_points[1][2] == "spline"
+        assert self.test_shape_3.processed_points[2][2] == "spline"
 
         # last point is the same as the first point
         assert self.test_shape_3.processed_points[-1] == (100, 0, "straight")
-        assert self.test_shape_3.processed_points[-2][2] == 'spline'
-        assert self.test_shape_3.processed_points[-3][2] == 'spline'
+        assert self.test_shape_3.processed_points[-2][2] == "spline"
+        assert self.test_shape_3.processed_points[-3][2] == "spline"
 
     def test_convert_circles_to_splines_volume(self):
         """creates a RotateMixedShape with a circular edge and converts the

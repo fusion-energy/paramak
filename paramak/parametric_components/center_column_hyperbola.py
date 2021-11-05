@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from paramak import RotateMixedShape
@@ -24,16 +23,15 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         mid_radius: float,
         outer_radius: float,
         name: Optional[str] = "center_column",
-        color: Optional[Tuple[float, float, float,
-                              Optional[float]]] = (0., 0.333, 0.),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.0,
+            0.333,
+            0.0,
+        ),
         **kwargs
     ) -> None:
 
-        super().__init__(
-            name=name,
-            color=color,
-            **kwargs
-        )
+        super().__init__(name=name, color=color, **kwargs)
 
         self.height = height
         self.inner_radius = inner_radius
@@ -77,8 +75,10 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         describe the 2D profile of the center column shield shape."""
 
         if not self.inner_radius <= self.mid_radius <= self.outer_radius:
-            raise ValueError("inner_radius must be less than mid radius. \
-                mid_radius must be less than outer_radius.")
+            raise ValueError(
+                "inner_radius must be less than mid radius. \
+                mid_radius must be less than outer_radius."
+            )
 
         points = [
             (self.inner_radius, 0, "straight"),
@@ -86,7 +86,7 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
             (self.outer_radius, self.height / 2, "spline"),
             (self.mid_radius, 0, "spline"),
             (self.outer_radius, -self.height / 2, "straight"),
-            (self.inner_radius, -self.height / 2, "straight")
+            (self.inner_radius, -self.height / 2, "straight"),
         ]
 
         self.points = points

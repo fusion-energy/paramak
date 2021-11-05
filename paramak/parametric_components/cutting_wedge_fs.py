@@ -1,4 +1,3 @@
-
 from collections.abc import Iterable
 from operator import itemgetter
 
@@ -16,17 +15,9 @@ class CuttingWedgeFS(CuttingWedge):
             height and radius of the wedge
     """
 
-    def __init__(
-        self,
-        shape,
-        **kwargs
-    ):
+    def __init__(self, shape, **kwargs):
         self.shape = shape
-        super().__init__(
-            height=self.height,
-            radius=self.radius,
-            **kwargs
-        )
+        super().__init__(height=self.height, radius=self.radius, **kwargs)
 
     @property
     def shape(self):
@@ -35,8 +26,10 @@ class CuttingWedgeFS(CuttingWedge):
     @shape.setter
     def shape(self, value):
         if value.rotation_angle == 360:
-            msg = ('cutting_wedge cannot be created, rotation_angle must be '
-                   'less than 360 degrees')
+            msg = (
+                "cutting_wedge cannot be created, rotation_angle must be "
+                "less than 360 degrees"
+            )
             raise ValueError(msg)
         self._shape = value
 
@@ -94,8 +87,9 @@ class CuttingWedgeFS(CuttingWedge):
         if isinstance(self.shape.azimuth_placement_angle, Iterable):
             self.azimuth_placement_angle = self.shape.rotation_angle
         else:
-            self.azimuth_placement_angle = \
+            self.azimuth_placement_angle = (
                 self.shape.azimuth_placement_angle + self.shape.rotation_angle
+            )
         return self._azimuth_placement_angle
 
     @azimuth_placement_angle.setter
@@ -105,23 +99,26 @@ class CuttingWedgeFS(CuttingWedge):
     def find_radius_height(self):
         shape = self.shape
         if shape.rotation_angle == 360:
-            msg = ('cutting_wedge cannot be created, rotation_angle must be '
-                   'less than 360 degrees')
+            msg = (
+                "cutting_wedge cannot be created, rotation_angle must be "
+                "less than 360 degrees"
+            )
             raise ValueError(msg)
         shape_points = shape.points
-        if hasattr(shape, 'radius') and len(shape_points) == 1:
+        if hasattr(shape, "radius") and len(shape_points) == 1:
             max_x = shape_points[0][0] + shape.radius
             max_y = shape_points[0][1] + shape.radius
 
         elif len(shape_points) > 1:
             max_x = max(shape_points, key=itemgetter(0))[0]
-            if shape.get_rotation_axis()[1] not in shape.workplane and \
-                    hasattr(shape, "distance"):
+            if shape.get_rotation_axis()[1] not in shape.workplane and hasattr(
+                shape, "distance"
+            ):
                 max_y = shape.distance
             else:
                 max_y = max(shape_points, key=itemgetter(1))[1]
 
         else:
-            raise ValueError('cutting_wedge cannot be created')
+            raise ValueError("cutting_wedge cannot be created")
         self.radius = SAFETY_FACTOR * max_x
         self.height = SAFETY_FACTOR * max_y

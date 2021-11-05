@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -165,7 +164,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             "tf_pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
             "tf_pf_SubmersionTokamak/pf_coil_cases.stp",
             "tf_pf_SubmersionTokamak/another1.stp",
-            "tf_pf_SubmersionTokamak/another2.stp"
+            "tf_pf_SubmersionTokamak/another2.stp",
         ]
         self.test_reactor.export_stp(filename=output_filenames)
 
@@ -183,8 +182,11 @@ class TestSubmersionTokamak(unittest.TestCase):
                 self.test_reactor._rotation_angle_check()
             except BaseException:
                 pass
-        msg = "360 degree rotation may result in a " + \
-            "Standard_ConstructionError or AttributeError"
+
+        msg = (
+            "360 degree rotation may result in a "
+            + "Standard_ConstructionError or AttributeError"
+        )
         with pytest.warns(UserWarning, match=msg):
             warning_trigger()
 
@@ -223,7 +225,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coils_casing"
+            "_pf_coils_casing",
         ]:
             assert key not in self.test_reactor.__dict__
 
@@ -243,7 +245,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coils_casing"
+            "_pf_coils_casing",
         ]:
             assert key in self.test_reactor.__dict__.keys()
 

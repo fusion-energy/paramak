@@ -1,4 +1,3 @@
-
 import unittest
 
 import pytest
@@ -7,7 +6,6 @@ import paramak
 
 
 class TestBlanketConstantThicknessArcV(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.BlanketConstantThicknessArcV(
             inner_lower_point=(300, -200),
@@ -27,12 +25,12 @@ class TestBlanketConstantThicknessArcV(unittest.TestCase):
         the parameters given."""
 
         assert self.test_shape.points == [
-            (300, 200, 'circle'),
-            (500, 0, 'circle'),
-            (300, -200, 'straight'),
-            (300, -220, 'circle'),
-            (520, 0, 'circle'),
-            (300, 220, 'straight')
+            (300, 200, "circle"),
+            (500, 0, "circle"),
+            (300, -200, "straight"),
+            (300, -220, "circle"),
+            (520, 0, "circle"),
+            (300, 220, "straight"),
         ]
 
     def test_processed_points_calculation(self):
@@ -41,13 +39,13 @@ class TestBlanketConstantThicknessArcV(unittest.TestCase):
         the parameters given."""
 
         assert self.test_shape.processed_points == [
-            (300, 200, 'circle'),
-            (500, 0, 'circle'),
-            (300, -200, 'straight'),
-            (300, -220, 'circle'),
-            (520, 0, 'circle'),
-            (300, 220, 'straight'),
-            (300, 200, 'circle'),
+            (300, 200, "circle"),
+            (500, 0, "circle"),
+            (300, -200, "straight"),
+            (300, -220, "circle"),
+            (520, 0, "circle"),
+            (300, 220, "straight"),
+            (300, 200, "circle"),
         ]
 
     def test_component_creation(self):

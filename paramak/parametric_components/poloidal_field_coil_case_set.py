@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 import cadquery as cq
@@ -30,15 +29,11 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         casing_thicknesses,
         center_points,
         name="pf_coil_case_set",
-        color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
+        color: Optional[Tuple[int, int, int]] = (1.0, 1.0, 0.498),
         **kwargs
     ):
 
-        super().__init__(
-            name=name,
-            color=color,
-            **kwargs
-        )
+        super().__init__(name=name, color=color, **kwargs)
 
         self.center_points = center_points
         self.heights = heights
@@ -78,11 +73,13 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         if isinstance(value, list):
             if not all(isinstance(x, (int, float)) for x in value):
                 raise ValueError(
-                    "Every entry in Casing_thicknesses must be a float or int")
+                    "Every entry in Casing_thicknesses must be a float or int"
+                )
         else:
             if not isinstance(value, (float, int)):
                 raise ValueError(
-                    "Casing_thicknesses must be a list of numbers or a number")
+                    "Casing_thicknesses must be a list of numbers or a number"
+                )
         self._casing_thicknesses = value
 
     def find_points(self):
@@ -94,20 +91,22 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         if isinstance(self.casing_thicknesses, list):
             casing_thicknesses_list = self.casing_thicknesses
         else:
-            casing_thicknesses_list = [
-                self.casing_thicknesses] * len(self.widths)
+            casing_thicknesses_list = [self.casing_thicknesses] * len(self.widths)
 
-        if not len(
-            self.heights) == len(
-            self.widths) == len(
-                self.center_points) == len(casing_thicknesses_list):
+        if (
+            not len(self.heights)
+            == len(self.widths)
+            == len(self.center_points)
+            == len(casing_thicknesses_list)
+        ):
             raise ValueError(
                 "The number of heights, widths, center_points and "
-                "casing_thicknesses must be equal")
+                "casing_thicknesses must be equal"
+            )
 
         for height, width, center_point, casing_thickness in zip(
-                self.heights, self.widths,
-                self.center_points, casing_thicknesses_list):
+            self.heights, self.widths, self.center_points, casing_thicknesses_list
+        ):
 
             if casing_thickness != 0:
 
@@ -151,7 +150,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
                     (
                         center_point[0] + (casing_thickness + width / 2.0),
                         center_point[1] + (casing_thickness + height / 2.0),
-                    )
+                    ),
                 ]
 
         self.points = all_points
@@ -159,24 +158,39 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
     def create_solid(self):
         """Creates a 3d solid using points with straight edges.
 
-           Returns:
-              A CadQuery solid: A 3D solid volume
+        Returns:
+           A CadQuery solid: A 3D solid volume
         """
 
         iter_points = iter(self.points)
         pf_coils_set = []
         wires = []
         for p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 in zip(
-                iter_points, iter_points, iter_points, iter_points,
-                iter_points, iter_points, iter_points, iter_points,
-                iter_points, iter_points,
+            iter_points,
+            iter_points,
+            iter_points,
+            iter_points,
+            iter_points,
+            iter_points,
+            iter_points,
+            iter_points,
+            iter_points,
+            iter_points,
         ):
 
-            solid = (
-                cq.Workplane(self.workplane)
-                .polyline(
-                    [p1[:2], p2[:2], p3[:2], p4[:2], p5[:2], p6[:2],
-                     p7[:2], p8[:2], p9[:2], p10[:2]])
+            solid = cq.Workplane(self.workplane).polyline(
+                [
+                    p1[:2],
+                    p2[:2],
+                    p3[:2],
+                    p4[:2],
+                    p5[:2],
+                    p6[:2],
+                    p7[:2],
+                    p8[:2],
+                    p9[:2],
+                    p10[:2],
+                ]
             )
 
             wire = solid.close()
@@ -187,9 +201,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
 
             pf_coils_set.append(solid)
 
-        compound = cq.Compound.makeCompound(
-            [a.val() for a in pf_coils_set]
-        )
+        compound = cq.Compound.makeCompound([a.val() for a in pf_coils_set])
 
         self.wire = wires
 

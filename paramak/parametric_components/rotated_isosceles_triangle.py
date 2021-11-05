@@ -1,4 +1,3 @@
-
 import math
 
 from paramak import RotateStraightShape
@@ -23,15 +22,12 @@ class RotatedIsoscelesTriangle(RotateStraightShape):
         base_length,
         height,
         pivot_point,
-        pivot_angle=0.,
+        pivot_angle=0.0,
         name="rotated_triangle",
         **kwargs
     ):
 
-        super().__init__(
-            name=name,
-            **kwargs
-        )
+        super().__init__(name=name, **kwargs)
 
         self.base_length = base_length
         self.height = height
@@ -78,11 +74,11 @@ class RotatedIsoscelesTriangle(RotateStraightShape):
             self.pivot_point,
             (
                 self.pivot_point[0] - self.base_length / 2.0,
-                self.pivot_point[1] - self.height
+                self.pivot_point[1] - self.height,
             ),
             (
                 self.pivot_point[0] + self.base_length / 2.0,
-                self.pivot_point[1] - self.height
+                self.pivot_point[1] - self.height,
             ),
         ]
 
@@ -92,7 +88,7 @@ class RotatedIsoscelesTriangle(RotateStraightShape):
             x, y = rotate(
                 origin=self.pivot_point,
                 point=point,
-                angle=math.radians(self.pivot_angle)
+                angle=math.radians(self.pivot_angle),
             )
             points.append((x, y))
 

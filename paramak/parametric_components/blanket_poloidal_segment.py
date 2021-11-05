@@ -1,4 +1,3 @@
-
 import warnings
 from typing import Callable, List, Optional, Tuple, Union
 
@@ -6,8 +5,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 from paramak import BlanketFP, RotateStraightShape
-from paramak.utils import (cut_solid, distance_between_two_points, extend,
-                           rotate)
+from paramak.utils import cut_solid, distance_between_two_points, extend, rotate
 
 
 class BlanketFPPoloidalSegments(BlanketFP):
@@ -55,12 +53,16 @@ class BlanketFPPoloidalSegments(BlanketFP):
     def segments_angles(self, value):
         if value is not None:
             if self.start_angle is not None or self.stop_angle is not None:
-                msg = "start_angle and stop_angle attributes will be " + \
-                    "ignored if segments_angles is not None"
+                msg = (
+                    "start_angle and stop_angle attributes will be "
+                    + "ignored if segments_angles is not None"
+                )
                 warnings.warn(msg)
             elif self.num_segments is not None:
-                msg = "num_segment attribute will be ignored if " + \
-                    "segments_angles is not None"
+                msg = (
+                    "num_segment attribute will be ignored if "
+                    + "segments_angles is not None"
+                )
                 warnings.warn(msg)
         self._segments_angles = value
 
@@ -91,14 +93,16 @@ class BlanketFPPoloidalSegments(BlanketFP):
         """
         if (self.length_limits, self.nb_segments_limits) != (None, None):
             angles = segments_optimiser(
-                self.length_limits, self.nb_segments_limits,
-                self.distribution, (self.start_angle, self.stop_angle),
-                stop_on_success=True
+                self.length_limits,
+                self.nb_segments_limits,
+                self.distribution,
+                (self.start_angle, self.stop_angle),
+                stop_on_success=True,
             )
         elif self.segments_angles is None:
             angles = np.linspace(
-                self.start_angle, self.stop_angle,
-                num=self.num_segments + 1)
+                self.start_angle, self.stop_angle, num=self.num_segments + 1
+            )
         else:
             angles = self.segments_angles
         return angles
@@ -108,7 +112,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
 
         # every points straight connections
         for point in points:
-            point[-1] = 'straight'
+            point[-1] = "straight"
         self.points = points[:-1]
 
     def create_solid(self):
@@ -128,35 +132,33 @@ class BlanketFPPoloidalSegments(BlanketFP):
             cutting_shape = RotateStraightShape(
                 rotation_angle=self.rotation_angle,
                 azimuth_placement_angle=self.azimuth_placement_angle,
-                union=[])
+                union=[],
+            )
             # add points to the shape to avoid void solid
             cutting_shape.points = [
-                (self.major_radius,
-                 self.vertical_displacement),
-                (self.major_radius +
-                 self.minor_radius /
-                 10,
-                 self.vertical_displacement),
-                (self.major_radius +
-                 self.minor_radius /
-                 10,
-                 self.vertical_displacement +
-                 self.minor_radius /
-                 10),
-                (self.major_radius,
-                 self.vertical_displacement +
-                 self.minor_radius /
-                 10),
+                (self.major_radius, self.vertical_displacement),
+                (
+                    self.major_radius + self.minor_radius / 10,
+                    self.vertical_displacement,
+                ),
+                (
+                    self.major_radius + self.minor_radius / 10,
+                    self.vertical_displacement + self.minor_radius / 10,
+                ),
+                (
+                    self.major_radius,
+                    self.vertical_displacement + self.minor_radius / 10,
+                ),
             ]
 
             # Create cutters for each gap
             for inner_point, outer_point in zip(
-                    self.inner_points[:-1],
-                    self.outer_points[-1::-1]):
+                self.inner_points[:-1], self.outer_points[-1::-1]
+            ):
                 # initialise cutter for gap
                 cutter = RotateStraightShape(
                     rotation_angle=self.rotation_angle,
-                    azimuth_placement_angle=self.azimuth_placement_angle
+                    azimuth_placement_angle=self.azimuth_placement_angle,
                 )
                 # create rectangle of dimension |AB|*2.6 x self.segments_gap
                 A = (inner_point[0], inner_point[1])
@@ -171,20 +173,9 @@ class BlanketFPPoloidalSegments(BlanketFP):
                 points_cutter = [
                     A,
                     B,
-                    rotate(
-                        B,
-                        extend(
-                            B,
-                            A,
-                            self.segments_gap),
-                        angle=-np.pi / 2),
-                    rotate(
-                        A,
-                        extend(
-                            A,
-                            B,
-                            self.segments_gap),
-                        angle=np.pi / 2)]
+                    rotate(B, extend(B, A, self.segments_gap), angle=-np.pi / 2),
+                    rotate(A, extend(A, B, self.segments_gap), angle=np.pi / 2),
+                ]
                 cutter.points = points_cutter
                 # add cutter to global cutting shape
                 cutting_shape.union.append(cutter)
@@ -192,9 +183,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
             self.segments_cutters = cutting_shape
 
 
-def compute_lengths_from_angles(
-        angles: List[float],
-        distribution: Callable):
+def compute_lengths_from_angles(angles: List[float], distribution: Callable):
     """Computes the length of segments between a set of points on a (x,y)
     distribution.
 
@@ -216,8 +205,9 @@ def compute_lengths_from_angles(
     return lengths
 
 
-def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
-                       stop_on_success=True):
+def segments_optimiser(
+    length_limits, nb_segments_limits, distribution, angles, stop_on_success=True
+):
     """Optimiser segmenting a given R(theta), Z(theta) distribution of points
     with constraints regarding the number of segments and the length of the
     segments.
@@ -251,7 +241,7 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
     if min_length is None:
         min_length = 0
     if max_length is None:
-        max_length = float('inf')
+        max_length = float("inf")
     if min_nb_segments is None:
         min_nb_segments = 1
     if max_nb_segments is None:
@@ -263,8 +253,7 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
     def cost_function(angles):
         angles_with_extremums = [start_angle, *angles, stop_angle]
 
-        lengths = compute_lengths_from_angles(
-            angles_with_extremums, distribution)
+        lengths = compute_lengths_from_angles(angles_with_extremums, distribution)
 
         cost = 0
         for length in lengths:
@@ -277,16 +266,13 @@ def segments_optimiser(length_limits, nb_segments_limits, distribution, angles,
 
     for nb_segments in range(min_nb_segments, max_nb_segments + 1):
         # initialise angles to linspace
-        list_of_angles = \
-            np.linspace(start_angle, stop_angle, num=nb_segments + 1)
+        list_of_angles = np.linspace(start_angle, stop_angle, num=nb_segments + 1)
 
         # use scipy minimize to find best set of angles
-        res = minimize(
-            cost_function, list_of_angles[1:-1], method="Nelder-Mead")
+        res = minimize(cost_function, list_of_angles[1:-1], method="Nelder-Mead")
 
         # complete the optimised angles with extrema
-        optimised_angles = [start_angle] + \
-            [angle for angle in res.x] + [stop_angle]
+        optimised_angles = [start_angle] + [angle for angle in res.x] + [stop_angle]
 
         # check that the optimised angles meet the lengths requirements
         lengths = compute_lengths_from_angles(optimised_angles, distribution)

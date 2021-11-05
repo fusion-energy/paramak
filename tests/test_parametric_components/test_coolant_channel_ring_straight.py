@@ -1,4 +1,3 @@
-
 import math
 import unittest
 
@@ -8,13 +7,9 @@ import paramak
 
 
 class TestCoolantChannelRingStraight(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.CoolantChannelRingStraight(
-            height=100,
-            channel_radius=10,
-            ring_radius=70,
-            number_of_coolant_channels=8
+            height=100, channel_radius=10, ring_radius=70, number_of_coolant_channels=8
         )
 
     def test_default_parameters(self):
@@ -38,12 +33,11 @@ class TestCoolantChannelRingStraight(unittest.TestCase):
         self.test_shape.rotation_axis = "Z"
 
         assert self.test_shape.area == pytest.approx(
-            (((math.pi * (10**2)) * 2) + (math.pi * (10 * 2) * 100)) * 8)
+            (((math.pi * (10 ** 2)) * 2) + (math.pi * (10 * 2) * 100)) * 8
+        )
         assert len(self.test_shape.areas) == 24
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (10**2))) == 16
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (10 * 2) * 100)) == 8
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (10 ** 2))) == 16
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (10 * 2) * 100)) == 8
 
     def test_volume(self):
         """Creates CoolantChannelRingStraight shapes and checks that the volumes are correct."""
@@ -51,17 +45,30 @@ class TestCoolantChannelRingStraight(unittest.TestCase):
         self.test_shape.workplane = "XY"
         self.test_shape.rotation_axis = "Z"
 
-        assert self.test_shape.volume() == pytest.approx(
-            math.pi * (10 ** 2) * 100 * 8)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (10 ** 2) * 100 * 8)
 
     def test_start_angle(self):
         """Checks that the coolant channels are placed at the correct azimuthal placement
         angles for a given start angle."""
 
         assert self.test_shape.azimuth_placement_angle == [
-            0, 45, 90, 135, 180, 225, 270, 315
+            0,
+            45,
+            90,
+            135,
+            180,
+            225,
+            270,
+            315,
         ]
         self.test_shape.start_angle = 10
         assert self.test_shape.azimuth_placement_angle == [
-            10, 55, 100, 145, 190, 235, 280, 325
+            10,
+            55,
+            100,
+            145,
+            190,
+            235,
+            280,
+            325,
         ]

@@ -1,4 +1,3 @@
-
 from paramak import RotateStraightShape
 
 
@@ -11,19 +10,11 @@ class VacuumVessel(RotateStraightShape):
         thickness (float): thickness of the vessel
     """
 
-    def __init__(
-        self,
-        height,
-        inner_radius,
-        thickness,
-        **kwargs
-    ):
+    def __init__(self, height, inner_radius, thickness, **kwargs):
         self.height = height
         self.inner_radius = inner_radius
         self.thickness = thickness
-        super().__init__(
-            **kwargs
-        )
+        super().__init__(**kwargs)
 
     @property
     def height(self):
@@ -32,11 +23,11 @@ class VacuumVessel(RotateStraightShape):
     @height.setter
     def height(self, value):
         if not isinstance(value, (float, int)):
-            raise ValueError('VacuumVessel.height must be a number. Not '
-                             f'{value}')
+            raise ValueError("VacuumVessel.height must be a number. Not " f"{value}")
         if value <= 0:
-            msg = ('VacuumVessel.height must be a positive number above 0. '
-                   f'Not {value}')
+            msg = (
+                "VacuumVessel.height must be a positive number above 0. " f"Not {value}"
+            )
             raise ValueError(msg)
         self._height = value
 
@@ -51,7 +42,7 @@ class VacuumVessel(RotateStraightShape):
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the
-            2D profile of the vessel shape."""
+        2D profile of the vessel shape."""
         thickness = self.thickness
         inner_radius = self.inner_radius
         height = self.height

@@ -1,11 +1,9 @@
-
 import unittest
 
 import paramak
 
 
 class TestCenterColumnShieldCircular(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldCircular(
             height=600, inner_radius=100, mid_radius=150, outer_radius=200
@@ -21,12 +19,12 @@ class TestCenterColumnShieldCircular(unittest.TestCase):
         are calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
-            (100, 0, 'straight'),
-            (100, 300.0, 'straight'),
-            (200, 300.0, 'circle'),
-            (150, 0, 'circle'),
-            (200, -300.0, 'straight'),
-            (100, -300.0, 'straight'),
+            (100, 0, "straight"),
+            (100, 300.0, "straight"),
+            (200, 300.0, "circle"),
+            (150, 0, "circle"),
+            (200, -300.0, "straight"),
+            (100, -300.0, "straight"),
         ]
 
     def test_processed_points_calculation(self):
@@ -34,13 +32,13 @@ class TestCenterColumnShieldCircular(unittest.TestCase):
         are calculated correctly from the parameters given."""
 
         assert self.test_shape.processed_points == [
-            (100, 0, 'straight'),
-            (100, 300.0, 'straight'),
-            (200, 300.0, 'circle'),
-            (150, 0, 'circle'),
-            (200, -300.0, 'straight'),
-            (100, -300.0, 'straight'),
-            (100, 0, 'straight')
+            (100, 0, "straight"),
+            (100, 300.0, "straight"),
+            (200, 300.0, "circle"),
+            (150, 0, "circle"),
+            (200, -300.0, "straight"),
+            (100, -300.0, "straight"),
+            (100, 0, "straight"),
         ]
 
     def test_creation(self):

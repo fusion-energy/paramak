@@ -1,11 +1,9 @@
-
 import unittest
 
 import paramak
 
 
 class TestCenterColumnShieldHyperbola(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldHyperbola(
             height=600, inner_radius=100, mid_radius=150, outer_radius=200
@@ -29,7 +27,7 @@ class TestCenterColumnShieldHyperbola(unittest.TestCase):
             (150.0, 0.0, "spline"),
             (200.0, -300.0, "straight"),
             (100.0, -300.0, "straight"),
-            (100.0, 0.0, "straight")
+            (100.0, 0.0, "straight"),
         ]
 
     def test_points_calculation(self):
@@ -43,7 +41,7 @@ class TestCenterColumnShieldHyperbola(unittest.TestCase):
             (200.0, 300.0, "spline"),
             (150.0, 0.0, "spline"),
             (200.0, -300.0, "straight"),
-            (100.0, -300.0, "straight")
+            (100.0, -300.0, "straight"),
         ]
 
     def test_creation(self):

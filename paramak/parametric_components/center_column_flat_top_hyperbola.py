@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from paramak import RotateMixedShape
@@ -28,16 +27,15 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         mid_radius: float,
         outer_radius: float,
         name: Optional[str] = "center_column",
-        color: Optional[Tuple[float, float, float,
-                              Optional[float]]] = (0., 0.333, 0.),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.0,
+            0.333,
+            0.0,
+        ),
         **kwargs
     ) -> None:
 
-        super().__init__(
-            name=name,
-            color=color,
-            **kwargs
-        )
+        super().__init__(name=name, color=color, **kwargs)
 
         self.height = height
         self.arc_height = arc_height
@@ -90,12 +88,16 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
         describe the 2D profile of the center column shield shape."""
 
         if not self.inner_radius <= self.mid_radius <= self.outer_radius:
-            raise ValueError('inner_radius must be less than mid_radius. \
-                mid_radius must be less than outer_radius.')
+            raise ValueError(
+                "inner_radius must be less than mid_radius. \
+                mid_radius must be less than outer_radius."
+            )
 
         if self.arc_height >= self.height:
-            msg = ('arc_height ({self.arc_height}) is larger than height '
-                   '({self.height})')
+            msg = (
+                "arc_height ({self.arc_height}) is larger than height "
+                "({self.height})"
+            )
             raise ValueError(msg)
 
         points = [
@@ -106,7 +108,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
             (self.mid_radius, 0, "spline"),
             (self.outer_radius, -self.arc_height / 2, "straight"),
             (self.outer_radius, -self.height / 2, "straight"),
-            (self.inner_radius, -self.height / 2, "straight")
+            (self.inner_radius, -self.height / 2, "straight"),
         ]
 
         self.points = points

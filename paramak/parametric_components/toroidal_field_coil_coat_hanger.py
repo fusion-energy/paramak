@@ -1,4 +1,3 @@
-
 import math
 from typing import Optional, Tuple
 
@@ -39,15 +38,11 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         distance: float,
         number_of_coils: int,
         with_inner_leg: Optional[bool] = True,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0., 0., 1.),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 
-        super().__init__(
-            distance=distance,
-            color=color,
-            **kwargs
-        )
+        super().__init__(distance=distance, color=color, **kwargs)
 
         self.horizontal_start_point = horizontal_start_point
         self.horizontal_length = horizontal_length
@@ -94,9 +89,11 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         # 7---8
 
         adjacent_length = self.vertical_mid_point[0] - (
-            self.horizontal_start_point[0] + self.horizontal_length)
+            self.horizontal_start_point[0] + self.horizontal_length
+        )
         oppersite_length = self.horizontal_start_point[1] - (
-            self.vertical_mid_point[1] + 0.5 * self.vertical_length)
+            self.vertical_mid_point[1] + 0.5 * self.vertical_length
+        )
 
         point_rotation = math.atan(oppersite_length / adjacent_length)
         point_rotation_mid = math.radians(90) - point_rotation
@@ -140,7 +137,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                     self.horizontal_start_point[0] + self.horizontal_length,
                     -self.horizontal_start_point[1] - self.thickness,
                 ),  # same as point 8
-                point_rotation
+                point_rotation,
             ),  # point 9
             rotate(
                 (
@@ -151,7 +148,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                     self.vertical_mid_point[0] + self.thickness,
                     self.vertical_mid_point[1] - 0.5 * self.vertical_length,
                 ),  # same as point 11
-                -point_rotation_mid
+                -point_rotation_mid,
             ),  # point 10
             (
                 self.vertical_mid_point[0] + self.thickness,
@@ -170,7 +167,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                     self.vertical_mid_point[0] + self.thickness,
                     self.vertical_mid_point[1] + 0.5 * self.vertical_length,
                 ),  # same as point 12
-                point_rotation_mid
+                point_rotation_mid,
             ),  # point 13
             rotate(
                 (
@@ -181,7 +178,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
                     self.horizontal_start_point[0] + self.horizontal_length,
                     self.horizontal_start_point[1] + self.thickness,
                 ),  # same as point 15
-                -point_rotation
+                -point_rotation,
             ),  # point 14
             (
                 self.horizontal_start_point[0] + self.horizontal_length,
@@ -190,7 +187,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             (
                 self.horizontal_start_point[0],
                 self.horizontal_start_point[1] + self.thickness,
-            )   # point 16
+            ),  # point 16
         ]
 
         self.inner_leg_connection_points = [
@@ -206,12 +203,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
         """Calculates the azimuth placement angles based on the number of
         toroidal field coils"""
 
-        angles = list(
-            np.linspace(
-                0,
-                360,
-                self.number_of_coils,
-                endpoint=False))
+        angles = list(np.linspace(0, 360, self.number_of_coils, endpoint=False))
 
         self.azimuth_placement_angle = angles
 
@@ -224,10 +216,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
 
         # Creates a cadquery solid from points and revolves
         points_without_connections = [p[:2] for p in self.points]
-        solid = (
-            cq.Workplane(self.workplane)
-            .polyline(points_without_connections)
-        )
+        solid = cq.Workplane(self.workplane).polyline(points_without_connections)
 
         wire = solid.close()
 
@@ -242,19 +231,20 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
 
         if self.with_inner_leg is True:
             inner_leg_solid = cq.Workplane(self.workplane)
-            inner_leg_solid = inner_leg_solid.polyline(
-                self.inner_leg_connection_points)
+            inner_leg_solid = inner_leg_solid.polyline(self.inner_leg_connection_points)
             inner_leg_solid = inner_leg_solid.close().extrude(
-                distance=-self.distance / 2.0, both=True)
+                distance=-self.distance / 2.0, both=True
+            )
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
             inner_leg_solid = self.perform_boolean_operations(
-                inner_leg_solid, wedge_cut=cutting_wedge)
+                inner_leg_solid, wedge_cut=cutting_wedge
+            )
 
             solid = cq.Compound.makeCompound(
                 [a.val() for a in [inner_leg_solid, solid]]
             )
 
-        self.solid = solid   # not necessarily required as set in boolean_operations
+        self.solid = solid  # not necessarily required as set in boolean_operations
 
         return solid

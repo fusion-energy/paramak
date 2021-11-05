@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 from paramak import ExtrudeStraightShape
@@ -29,19 +28,28 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         self,
         thickness: float,
         gap_size: float,
-        height: Optional[float] = 2000.,
-        width: Optional[float] = 2000.,
-        azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216.,
-                                 252., 288., 324.],
+        height: Optional[float] = 2000.0,
+        width: Optional[float] = 2000.0,
+        azimuth_placement_angle=[
+            0.0,
+            36.0,
+            72.0,
+            108.0,
+            144.0,
+            180.0,
+            216.0,
+            252.0,
+            288.0,
+            324.0,
+        ],
         name: Optional[str] = "blanket_cutter_parallels",
         **kwargs
     ) -> None:
 
-        self.main_cutting_shape = \
-            ExtrudeStraightShape(
-                distance=gap_size / 2.0,
-                azimuth_placement_angle=azimuth_placement_angle,
-            )
+        self.main_cutting_shape = ExtrudeStraightShape(
+            distance=gap_size / 2.0,
+            azimuth_placement_angle=azimuth_placement_angle,
+        )
         self.gap_size = gap_size
         self.thickness = thickness
         super().__init__(
@@ -86,7 +94,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
             (0, -self.height / 2),
             (self.width, -self.height / 2),
             (self.width, self.height / 2),
-            (0, self.height / 2)
+            (0, self.height / 2),
         ]
 
         self.main_cutting_shape.points = points

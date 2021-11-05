@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 from paramak import ExtrudeCircleShape
@@ -28,7 +27,7 @@ class PortCutterCircular(ExtrudeCircleShape):
         center_point: Optional[tuple] = (0, 0),
         workplane: Optional[str] = "ZY",
         rotation_axis: Optional[str] = "Z",
-        extrusion_start_offset: Optional[float] = 1.,
+        extrusion_start_offset: Optional[float] = 1.0,
         name: Optional[str] = "circular_port_cutter",
         **kwargs
     ):
