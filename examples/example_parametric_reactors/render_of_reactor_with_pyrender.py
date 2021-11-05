@@ -76,12 +76,12 @@ def create_reactor_renders(
     light = pyrender.PointLight(color=np.ones(3), intensity=300000.0)
     scene.add(light, pose=camera_pose)
 
-    # renders the scene 
+    # renders the scene
     r = pyrender.OffscreenRenderer(1000, 1000)
     color, depth = r.render(scene)
 
     # adds the render to the plot as a subplot in the correct location
-    plt.subplot(number_of_images_in_y, number_of_images_in_x, render_number+1)
+    plt.subplot(number_of_images_in_y, number_of_images_in_x, render_number + 1)
     plt.axis("off")
     plt.imshow(color)
 
@@ -92,7 +92,7 @@ plt.figure()
 # loops through adding a random reactor render to the figure with each iteration
 number_of_images_in_x = 4
 number_of_images_in_y = 3
-total_number_of_images = number_of_images_in_x*number_of_images_in_y
+total_number_of_images = number_of_images_in_x * number_of_images_in_y
 for i in range(total_number_of_images):
     create_reactor_renders(
         render_number=i,
