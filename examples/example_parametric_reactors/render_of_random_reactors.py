@@ -16,13 +16,13 @@ def generate_random_reactor():
     all_reactors = [
         paramak.BallReactor(),
         paramak.CenterColumnStudyReactor(),
-        paramak.EuDemoFrom2015PaperDiagram(), 
-        paramak.FlfSystemCodeReactor(), 
-        paramak.IterFrom2020PaperDiagram(), 
+        paramak.EuDemoFrom2015PaperDiagram(),
+        paramak.FlfSystemCodeReactor(),
+        paramak.IterFrom2020PaperDiagram(),
         paramak.SegmentedBlanketBallReactor(),
-        paramak.SingleNullBallReactor(), 
-        paramak.SingleNullSubmersionTokamak(), 
-        paramak.SparcFrom2020PaperDiagram(), 
+        paramak.SingleNullBallReactor(),
+        paramak.SingleNullSubmersionTokamak(),
+        paramak.SparcFrom2020PaperDiagram(),
         paramak.SubmersionTokamak(),
     ]
 
@@ -30,34 +30,37 @@ def generate_random_reactor():
 
     print(my_reactor)
 
-    input_variables =my_reactor.input_variable_names
-    my_reactor.rotation_angle=180
+    input_variables = my_reactor.input_variable_names
+    my_reactor.rotation_angle = 180
 
     for i in [
-        'graveyard_size', 'graveyard_offset', 'largest_shapes',
-        'elongation', 'triangularity', 'rotation_angle'
+        "graveyard_size",
+        "graveyard_offset",
+        "largest_shapes",
+        "elongation",
+        "triangularity",
+        "rotation_angle",
     ]:
         try:
             input_variables.remove(i)
         except:
             pass
 
-    print(my_reactor.__dict__, '\n\n')
+    print(my_reactor.__dict__, "\n\n")
 
     for input_arg in my_reactor.input_variables:
         if input_arg in my_reactor.__dict__:
             if isinstance(my_reactor.__dict__[input_arg], float):
-                rand_scale = random.uniform(0.8,1.2)
-                setattr(my_reactor, input_arg, my_reactor.__dict__[input_arg] * rand_scale)
+                rand_scale = random.uniform(0.8, 1.2)
+                setattr(
+                    my_reactor, input_arg, my_reactor.__dict__[input_arg] * rand_scale
+                )
 
     return my_reactor
 
 
 def create_reactor_renders(
-    render_number,
-    number_of_images_in_x,
-    number_of_images_in_y,
-    reactor
+    render_number, number_of_images_in_x, number_of_images_in_y, reactor
 ):
 
     # saves the reactor geometry as separate stl files
@@ -69,7 +72,7 @@ def create_reactor_renders(
 
     # for each stl file and color combination
     for entry in reactor.shapes_and_components:
-        trimesh_obj = trimesh.load(entry.name+'.stl')
+        trimesh_obj = trimesh.load(entry.name + ".stl")
         trimesh_obj.visual.vertex_colors = entry.color
 
         render_mesh = pyrender.Mesh.from_trimesh(trimesh_obj, smooth=False)
@@ -112,7 +115,7 @@ for i in range(total_number_of_images):
         render_number=i,
         number_of_images_in_x=number_of_images_in_x,
         number_of_images_in_y=number_of_images_in_y,
-        reactor=generate_random_reactor()
+        reactor=generate_random_reactor(),
     )
 
 # saves the plot
