@@ -100,7 +100,6 @@ def create_reactor_renders(
     plt.imshow(color)
     return reactor.reactor_hash_value
 
-
 # creates a blank figure for populating with subplots
 plt.figure()
 
