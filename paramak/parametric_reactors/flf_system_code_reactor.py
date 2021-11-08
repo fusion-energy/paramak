@@ -20,10 +20,10 @@ class FlfSystemCodeReactor(paramak.Reactor):
         blanket_vv_gap: The radial distance between the outer edge of the
             blanket and the inner edge of the vaccum vessel (cm).
         upper_vv_thickness: The thickness (z axis direction) of the
-            the upper section of vaccum vessel (cm).
+            upper section of vaccum vessel (cm).
         vv_thickness: The radial thickness of the vaccum vessel (cm)
         lower_vv_thickness: The thickness (z axis direction) of the
-            the lower section of vaccum vessel (cm).
+            lower section of vaccum vessel (cm).
         rotation_angle: The angle of the sector simulated. Set to 360 for
             simulations and less when creating models for visualization.
     Returns:
