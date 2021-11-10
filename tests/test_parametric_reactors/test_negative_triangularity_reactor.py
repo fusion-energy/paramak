@@ -4,11 +4,10 @@ from paramak.parametric_reactors.negative_triangularity_reactor import NegativeT
 
 
 class TestNegativeTriangularityReactor(unittest.TestCase):
-
+    """
+    New Test class for the negative triangularity reactor.
+    """
     def setUp(self):
-        """
-        New Test class for the negative triangularity reactor.
-        """
         self.test_reactor = NegativeTriangularityReactor(
             inner_bore_radius=10,
             inner_tf_coil_thickness=100,
@@ -92,9 +91,3 @@ class TestNegativeTriangularityReactor(unittest.TestCase):
     #    that is overwritten by the automated algorithm to size divertor to at
     #    least the size that lines up with the blanket's outer wall."""
     #    self.test_reactor.divertor
-
-
-#obj = TestNegativeTriangularityReactor()
-# obj.setUp()
-#
-# obj.test_bore_radius()

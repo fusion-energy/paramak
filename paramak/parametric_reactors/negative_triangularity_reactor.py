@@ -174,9 +174,31 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._plasma_geometry()
         self._equatorial_points()
 
-    def _plasma_geometry(self):
-        """Calculating plasma geometry from parameters above
+        # Set by plasma, radial or vertical build
+        self._plasma = None
+        self._inner_wall_start_height = None
+        self._inner_wall_end_height = None
+        self._blanket_end_height_top = None
+        self._blanket_start_height_top = None
+        self._rear_wall_start_height_top = None
+        self._rear_wall_end_height_top = None
+        self._divertor_start_height = None
+        self._divertor_end_height_top = None
+        self._vacuum_vessel_start_height = None
+        self._vacuum_vessel_end_height = None
+        self._inner_tf_leg_height = None
+        self._inner_shield_height = None
+        self._outer_blanket_height = None
+        self._inner_bore_start_rad = None
+        self._inner_bore_stop_rad = None
+        self._tf_inner_leg_start_rad = None
+        self._tf_inner_leg_end_rad = None
+        self._vacuum_vessel_inwall_start_rad = None
+        self._vacuum_vessel_inwall_end_rad = None
 
+
+    def _plasma_geometry(self):
+        """Calculating plasma geometry from parameters
         Adjust a gap between inner TF leg and vacuum vessel to accomodate a
         wider range of thicknesses"""
         core_width = self._inner_bore_radius + \
@@ -515,14 +537,12 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         if self._ports_enable:
             self._make_ports()
-
         if self._pf_enabled:
             shapes_and_components += self._make_pf_coils()
 
         shapes_and_components += self._make_tf_inner_leg()
         shapes_and_components += self._make_vacuum_vessel_inner_wall()
         shapes_and_components += self._make_inner_shield()
-
         shapes_and_components += self._make_blankets()
         shapes_and_components += self._make_divertor()
         shapes_and_components += self._make_tf_coils()
@@ -531,8 +551,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self.shapes_and_components = shapes_and_components
 
     def _make_plasma(self):
-
-        plasma = paramak.Plasma(
+        self._plasma = paramak.Plasma(
             major_radius=self._major_radius,
             minor_radius=self._minor_radius,
             elongation=self._elongation,
@@ -540,13 +559,10 @@ class NegativeTriangularityReactor(paramak.Reactor):
             rotation_angle=self._rotation_angle,
             color=(0, 0.5, 0.5)
         )
-        self._plasma = plasma
         return self._plasma
 
     def _make_vertical_build(self):
-
         ### Above the plasma ###
-
         # Inner wall
         self._inner_wall_start_height = self._plasma.high_point[1] + \
             self._wall_to_plasma_gap
@@ -566,12 +582,10 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         ### Diverter height check ###
         min_div_h = self._rear_wall_end_height_top - self._divertor_start_height
-
         if min_div_h > self._divertor_height_full:
             print(f"Set divertor height is too low. \
                 Diverter height is set to minimum of {round(min_div_h)} cm")
             self._divertor_end_height_top = self._divertor_start_height + min_div_h
-
         # Vacuum Vessel Inner Wall
         self._vacuum_vessel_start_height = self._divertor_end_height_top
         self._vacuum_vessel_end_height = self._vacuum_vessel_start_height \
@@ -580,7 +594,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._inner_tf_leg_height = self._vacuum_vessel_end_height * 2
         self._vacuum_vessel_height = self._vacuum_vessel_start_height * 2
         self._inner_shield_height = self._vacuum_vessel_start_height * 2
-
         # Outer Blanket Height
         self._outer_blanket_height = self._inner_shield_height - \
             (2 * self._divertor_height_full)
@@ -612,14 +625,9 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._blanket_thickness + self._inner_wall_thickness
 
         ### Run check for diverter parameters ###
-
-        full_outer_blanket_rad = (
-            self._major_radius +
-            self._minor_radius +
-            self._wall_to_plasma_gap +
-            self._inner_wall_thickness +
-            self._blanket_thickness +
-            self._rear_wall_thickness)
+        full_outer_blanket_rad = (self._major_radius + self._minor_radius +
+            self._wall_to_plasma_gap + self._inner_wall_thickness +
+            self._blanket_thickness + self._rear_wall_thickness)
 
         width_parameter_difference = full_outer_blanket_rad - \
             self._plasma.high_point[0]
@@ -633,12 +641,10 @@ class NegativeTriangularityReactor(paramak.Reactor):
         ### Divertor parts ###
         self._divertor_start_rad = self._plasma.high_point[0]
         self._divertor_end_rad = self._divertor_start_rad + self._divertor_radial_thickness
-
         # Vacuum Vessel Body
         self._vacuum_vessel_body_start_rad = self._divertor_end_rad
         self._vacuum_vessel_body_end_rad = self._vacuum_vessel_body_start_rad + \
             self._vacuum_vessel_thickness
-
         # TF Coils
         # Getting small radius for inner corner
         self._tf_coils_init = paramak.ToroidalFieldCoilRectangleRoundCorners(
