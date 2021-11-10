@@ -84,7 +84,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
                  outer_tf_coil_thickness: float = None,
                  show_plasma: bool = True,
                  low_aspect: bool = False,
-                 **kwargs,
+
                  ):
 
         super().__init__([])
@@ -568,11 +568,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
         min_div_h = self._rear_wall_end_height_top - self._divertor_start_height
 
         if min_div_h > self._divertor_height_full:
-            print(
-                "Set divertor height is too low. \
-                Diverter height is set to minimum of {:.2f} cm".format(
-                    (min_div_h))
-            )
+            print(f"Set divertor height is too low. \
+                Diverter height is set to minimum of {round(min_div_h)} cm")
             self._divertor_end_height_top = self._divertor_start_height + min_div_h
 
         # Vacuum Vessel Inner Wall
@@ -628,9 +625,9 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._plasma.high_point[0]
 
         if self._divertor_radial_thickness < width_parameter_difference:
-            print("The given radial thickness of the divertor is too small. \
-                Diverter set to minimum radial thickness of {:.2f} cm".format(
-                width_parameter_difference))
+            print(f"The given radial thickness of the divertor is too small.\
+                Diverter set to minimum radial thickness of \
+                    {round(width_parameter_difference, 2)} cm")
             self._divertor_radial_thickness = width_parameter_difference
 
         ### Divertor parts ###
@@ -705,7 +702,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 center_point=(self._port_z_pos[index], 0),
                 extrusion_start_offset=0,
                 azimuth_placement_angle=self._ports_angles[index],
-                name='port_{}'.format(index)
+                name=f'port_{index}'
             )
             self._ports.append(_port)
 
@@ -950,7 +947,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
     def _port_checks(self):
         if len(self._ports_angles) != len(self._port_heights) or \
                 len(self._ports_angles) != len(self._port_side_lengths) or \
-                len(self._port_heights) != len(self._port_side_lengths) or \
                 len(self._port_z_pos) != len(self._port_side_lengths) or \
                 len(self._port_z_pos) != len(self._port_heights) or \
                 len(self._port_z_pos) != len(self._ports_angles):
@@ -966,13 +962,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
                     "Port parameters must be float or integer values!")
 
     def _pf_checks(self, tuple_bool):
-        if len(
-            self._pf_coil_heights) != len(self._pf_coil_widths) or len(
-            self._pf_coil_heights) != len(self._pf_coil_center_points) or len(
-            self._pf_coil_heights) != len(self._pf_casing_thickness) or len(
-            self._pf_coil_widths) != len(self._pf_coil_center_points) or len(
-            self._pf_coil_widths) != len(self._pf_casing_thickness) or len(
-            self._pf_coil_center_points) != len(self._pf_casing_thickness):
+        if len(self._pf_coil_heights) != len(self._pf_coil_widths) or \
+            len(self._pf_coil_heights) != len(self._pf_coil_center_points) or \
+            len(self._pf_coil_heights) != len(self._pf_casing_thickness) or \
+            len(self._pf_coil_widths) != len(self._pf_casing_thickness) or \
+            len(self._pf_coil_center_points) != len(self._pf_casing_thickness):
             raise ValueError(
                 "Number of elements in PF Parameters don't match!")
 
