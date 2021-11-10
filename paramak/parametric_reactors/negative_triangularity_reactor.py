@@ -1,8 +1,8 @@
+from typing import List, Union, Optional
 import numpy as np
 import paramak
 from paramak import shape
 from paramak.utils import union_solid
-from typing import List, Union, Optional
 
 
 class NegativeTriangularityReactor(paramak.Reactor):
@@ -176,26 +176,56 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         # Set by plasma, radial or vertical build
         self._plasma = None
-        self._inner_wall_start_height = None
-        self._inner_wall_end_height = None
-        self._blanket_end_height_top = None
-        self._blanket_start_height_top = None
-        self._rear_wall_start_height_top = None
-        self._rear_wall_end_height_top = None
-        self._divertor_start_height = None
-        self._divertor_end_height_top = None
-        self._vacuum_vessel_start_height = None
-        self._vacuum_vessel_end_height = None
-        self._inner_tf_leg_height = None
-        self._inner_shield_height = None
-        self._outer_blanket_height = None
-        self._inner_bore_start_rad = None
-        self._inner_bore_stop_rad = None
-        self._tf_inner_leg_start_rad = None
-        self._tf_inner_leg_end_rad = None
-        self._vacuum_vessel_inwall_start_rad = None
-        self._vacuum_vessel_inwall_end_rad = None
+        self._tf_coils_init = None
+        self._pf_coils = None
+        self._pf_casing = None
+        self._ports = None
+        self._bore_cutter = None
+        self._tf_inner_leg = None
+        self._vacuum_vessel_inner_wall = None
+        self._inner_shield = None
+        self._divertor_cutter_cutter = None
+        self._divertor_cutter = None
+        self._rear_wall = None
+        self._breeder_blanket = None
+        self._inner_wall = None
+        self._divertor_extention_cutter = None
+        self._divertor_midplane_cutter = None
+        self._divertor = None
+        self._vacuum_vessel_body = None
+        self._tf_coils = None
 
+        self._inner_bore_start_rad = 0
+        self._inner_bore_stop_rad = 0
+        self._inner_tf_leg_height = 0
+        self._tf_inner_leg_start_rad = 0
+        self._tf_inner_leg_end_rad = 0
+        self._inner_shield_height = 0
+        self._inner_shield_start_rad = 0
+        self._inner_shield_end_rad = 0
+        self._blanket_start_height_top = 0
+        self._blanket_end_height_top = 0
+        self._blanket_offset = 0
+        self._inner_wall_start_height = 0
+        self._inner_wall_end_height = 0
+        self._rear_wall_start_height_top = 0
+        self._rear_wall_end_height_top = 0
+        self._divertor_start_height = 0
+        self._divertor_end_height_top = 0
+        self._vacuum_vessel_start_height = 0
+        self._vacuum_vessel_end_height = 0
+        self._vacuum_vessel_height = 0
+        self._vacuum_vessel_body_start_rad = 0
+        self._vacuum_vessel_body_end_rad = 0
+        self._outer_blanket_height = 0
+        self._vacuum_vessel_inwall_start_rad = 0
+        self._vacuum_vessel_inwall_end_rad = 0
+        self._rear_wall_plasma_offset = 0
+        self._divertor_start_rad = 0
+        self._divertor_end_rad = 0
+        self._small_rad_displacement = 0
+        self._tf_start_rad = 0
+        self._tf_end_rad = 0
 
     def _plasma_geometry(self):
         """Calculating plasma geometry from parameters
@@ -811,10 +841,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._divertor_cutter,
                 self._pf_coils,
                 self._pf_casing],
-            color=(
-                0.3,
-                0.3,
-                0.3))
+            color=(0.3, 0.3, 0.3))
 
         self._breeder_blanket = paramak.BlanketFP(
             thickness=self._blanket_thickness,
@@ -835,10 +862,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._divertor_cutter,
                 self._pf_coils,
                 self._pf_casing],
-            color=(
-                0.5,
-                1,
-                0.5))
+            color=(0.5, 1.0, 0.5))
 
         self._inner_wall = paramak.BlanketFP(
             thickness=self._inner_wall_thickness,
@@ -856,11 +880,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._divertor_cutter,
                 self._pf_coils,
                 self._pf_casing],
-            color=(
-                0.3,
-                0.3,
-                0.3))
-
+            color=(0.3, 0.3, 0.3))
         return [self._rear_wall, self._breeder_blanket, self._inner_wall]
 
     def _make_divertor(self):
@@ -876,14 +896,12 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._wall_to_plasma_gap,
                 self._wall_to_plasma_gap * 2],
         )
-
         self._divertor_midplane_cutter = paramak.CenterColumnShieldCylinder(
             height=(self._divertor_start_height) * 2,
             inner_radius=self._divertor_start_rad,
             outer_radius=self._divertor_end_rad,
             rotation_angle=self._rotation_angle,
         )
-
         self._divertor = paramak.CenterColumnShieldCylinder(
             height=self._divertor_end_height_top * 2,
             inner_radius=self._divertor_start_rad,
@@ -893,16 +911,12 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._divertor_extention_cutter,
                 self._divertor_midplane_cutter,
                 self._pf_coils, self._pf_casing],
-            color=(
-                1,
-                0.2,
-                0.2),
+            color=(1.0, 0.2, 0.2),
             name="divertor")
 
         return [self._divertor]
 
     def _make_vacuum_vessel(self):
-
         vac_cutter = paramak.CenterColumnShieldCylinder(
             height=self._vacuum_vessel_height,
             inner_radius=self._vacuum_vessel_inwall_start_rad,
@@ -910,7 +924,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             rotation_angle=self._rotation_angle,
             color=(0.5, 0.5, 0.5)
         )
-
         if self._ports_enable:
             cutting_list = [
                 vac_cutter,
@@ -918,7 +931,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._pf_casing] + self._ports
         else:
             cutting_list = [vac_cutter, self._pf_coils, self._pf_casing]
-
         self._vacuum_vessel_body = paramak.CenterColumnShieldCylinder(
             height=self._vacuum_vessel_height + (self._vacuum_vessel_thickness * 2),
             inner_radius=self._vacuum_vessel_inwall_start_rad,
@@ -932,10 +944,9 @@ class NegativeTriangularityReactor(paramak.Reactor):
         return [self._vacuum_vessel_body]
 
     def _make_tf_coils(self):
-
         self._tf_coils = paramak.ToroidalFieldCoilRectangleRoundCorners(
             with_inner_leg=False,
-            lower_inner_coordinates=(self._inner_bore_stop_rad, -self._inner_tf_leg_height / 2),
+            lower_inner_coordinates=(self._inner_bore_stop_rad, - self._inner_tf_leg_height / 2),
             mid_point_coordinates=(self._tf_start_rad, 0),
             thickness=self._outer_tf_coil_thickness,
             number_of_coils=self._number_of_coils,
@@ -947,9 +958,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         )
 
         return [self._tf_coils]
-
-    # Checks and tests
-
+    # Checks and test
     def _port_checks(self):
         if len(self._ports_angles) != len(self._port_heights) or \
                 len(self._ports_angles) != len(self._port_side_lengths) or \
@@ -958,10 +967,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 len(self._port_z_pos) != len(self._ports_angles):
             raise ValueError(
                 "Number of elements in Port Parameters don't match!")
-
         _port_coord_list = self._port_side_lengths + \
             self._ports_angles + self._port_heights + self._ports_angles
-
         for cord in _port_coord_list:
             if not isinstance(cord, (float, int)):
                 raise TypeError(
@@ -975,7 +982,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             len(self._pf_coil_center_points) != len(self._pf_casing_thickness):
             raise ValueError(
                 "Number of elements in PF Parameters don't match!")
-
         if not tuple_bool:
             _pf_lists = self._pf_coil_heights + \
                 self._pf_coil_widths + self._pf_casing_thickness
@@ -990,7 +996,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 self._pf_casing_thickness + \
                 [x[0]for x in self._pf_coil_center_points] + \
                 [x[1]for x in self._pf_coil_center_points]
-
             for cord in _pf_lists:
                 if not isinstance(cord, (float, int)):
                     raise TypeError(
