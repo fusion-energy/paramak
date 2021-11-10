@@ -153,6 +153,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             'low_aspect',
         ]
 
+        print(len(self.input_variable_names))
         if None in [
                 self._ports_angles,
                 self._port_side_lengths,

@@ -40,6 +40,12 @@ class TestNegativeTriangularityReactor(unittest.TestCase):
         )
         self.test_reactor.create_solid()
 
+    def test_input_variable_names(self):
+        """tests for the number of inputs variables"""
+
+        assert len(self.test_reactor.input_variables) == 27
+        #assert len(self.test_reactor.input_variable_names) == 27
+
     def test_bore_radius_small(self):
         """Creates the reactor with 0cm inner bore checks if the right
         amount of components are adding to the object."""
