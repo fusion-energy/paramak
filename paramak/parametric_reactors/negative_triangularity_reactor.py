@@ -153,7 +153,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             'low_aspect',
         ]
 
-        print(len(self.input_variable_names))
         if None in [
                 self._ports_angles,
                 self._port_side_lengths,
@@ -218,20 +217,14 @@ class NegativeTriangularityReactor(paramak.Reactor):
     # Getters
     @property
     def aspect_ratio(self):
-        print(
-            "Aspect Ratio = {:.2f}".format(
-                self._major_radius /
-                self._minor_radius))
         return self._major_radius / self._minor_radius
 
     @property
     def minor_radius(self):
-        print("Minor Radius = {:.2f}".format(self._minor_radius))
         return self._minor_radius
 
     @property
     def major_radius(self):
-        print("Major Radius = {:.2f}".format(self._major_radius))
         return self._major_radius
 
     @property
@@ -974,18 +967,12 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
     def _pf_checks(self, tuple_bool):
         if len(
-            self._pf_coil_heights) != len(
-            self._pf_coil_widths) or len(
-            self._pf_coil_heights) != len(
-                self._pf_coil_center_points) or len(
-                    self._pf_coil_heights) != len(
-                        self._pf_casing_thickness) or len(
-                            self._pf_coil_widths) != len(
-                                self._pf_coil_center_points) or len(
-                                    self._pf_coil_widths) != len(
-                                        self._pf_casing_thickness) or len(
-                                            self._pf_coil_center_points) != len(
-                                                self._pf_casing_thickness):
+            self._pf_coil_heights) != len(self._pf_coil_widths) or len(
+            self._pf_coil_heights) != len(self._pf_coil_center_points) or len(
+            self._pf_coil_heights) != len(self._pf_casing_thickness) or len(
+            self._pf_coil_widths) != len(self._pf_coil_center_points) or len(
+            self._pf_coil_widths) != len(self._pf_casing_thickness) or len(
+            self._pf_coil_center_points) != len(self._pf_casing_thickness):
             raise ValueError(
                 "Number of elements in PF Parameters don't match!")
 

@@ -1,12 +1,14 @@
-
-import pytest
 import unittest
+import pytest
 from paramak.parametric_reactors.negative_triangularity_reactor import NegativeTriangularityReactor
 
 
 class TestNegativeTriangularityReactor(unittest.TestCase):
 
     def setUp(self):
+        """
+        New Test class for the negative triangularity reactor.
+        """
         self.test_reactor = NegativeTriangularityReactor(
             inner_bore_radius=10,
             inner_tf_coil_thickness=100,
