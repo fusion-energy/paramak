@@ -43,7 +43,7 @@ class TestNegativeTriangularityReactor(unittest.TestCase):
     def test_input_variable_names(self):
         """tests for the number of inputs variables"""
 
-        assert len(self.test_reactor.input_variables) == 27
+        assert len(self.test_reactor.input_variable_names) == 27
         #assert len(self.test_reactor.input_variable_names) == 27
 
     def test_bore_radius_small(self):
