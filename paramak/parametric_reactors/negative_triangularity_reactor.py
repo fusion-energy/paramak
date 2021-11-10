@@ -55,7 +55,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             inner blanket and only part being cut by the centre column is the
             rear blanket wall,
     """
-
     def __init__(self,
                  inner_tf_coil_thickness: float,
                  vacuum_vessel_thickness: float,
@@ -741,7 +740,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
                 name=f'port_{index}'
             )
             self._ports.append(_port)
-
         return self._ports
 
     def _make_tf_inner_leg(self):
@@ -791,7 +789,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             outer_radius=self._inner_shield_end_rad,
             rotation_angle=self._rotation_angle,
             name="inner_shield",
-            color=(1, 0.7, 0.5),
+            color=(1.0, 0.7, 0.5),
             cut=[self._pf_coils, self._pf_casing]
         )
 
@@ -940,7 +938,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             cut=cutting_list,
             color=(0.5, 0.5, 0.5)
         )
-
         return [self._vacuum_vessel_body]
 
     def _make_tf_coils(self):
