@@ -1,4 +1,3 @@
-
 from typing import List, Optional, Tuple
 
 from paramak import SweepMixedShape
@@ -28,8 +27,12 @@ class SweepSplineShape(SweepMixedShape):
         workplane: Optional[str] = "XY",
         path_workplane: Optional[str] = "XZ",
         force_cross_section: Optional[bool] = False,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.992, 0.749, 0.435),
-        name: str = 'sweepsplineshape',
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.992,
+            0.749,
+            0.435,
+        ),
+        name: str = "sweepsplineshape",
         **kwargs
     ):
 

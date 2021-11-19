@@ -1,4 +1,3 @@
-
 import cadquery as cq
 
 from paramak import Shape
@@ -14,17 +13,10 @@ class HollowCube(Shape):
         thickness (float, optional): thickness of the vessel. Defaults to 10.0.
     """
 
-    def __init__(
-        self,
-        length,
-        thickness=10.,
-        **kwargs
-    ):
+    def __init__(self, length, thickness=10.0, **kwargs):
         self.length = length
         self.thickness = thickness
-        super().__init__(
-            **kwargs
-        )
+        super().__init__(**kwargs)
 
     @property
     def thickness(self):
@@ -45,17 +37,13 @@ class HollowCube(Shape):
     def create_solid(self):
 
         # creates a small box that surrounds the geometry
-        inner_box = cq.Workplane("front").box(
-            self.length,
-            self.length,
-            self.length
-        )
+        inner_box = cq.Workplane("front").box(self.length, self.length, self.length)
 
         # creates a large box that surrounds the smaller box
         outer_box = cq.Workplane("front").box(
             self.length + self.thickness,
             self.length + self.thickness,
-            self.length + self.thickness
+            self.length + self.thickness,
         )
 
         # subtracts the two boxes to leave a hollow box

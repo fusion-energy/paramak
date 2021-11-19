@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -7,7 +6,7 @@ import paramak
 
 
 class TestSparc2020Reactor(unittest.TestCase):
-    """"Tests functionality of the Sparc2020Reactor class"""
+    """ "Tests functionality of the Sparc2020Reactor class"""
 
     def setUp(self):
         self.test_reactor = paramak.BallReactor(

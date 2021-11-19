@@ -1,4 +1,3 @@
-
 import json
 import os
 import unittest
@@ -12,7 +11,6 @@ import paramak
 
 
 class TestShape(unittest.TestCase):
-
     def setUp(self):
 
         self.my_shape = paramak.CenterColumnShieldHyperbola(
@@ -32,7 +30,7 @@ class TestShape(unittest.TestCase):
                 (150, 100, "straight"),
                 (140, 75, "straight"),
                 (110, 45, "straight"),
-            ]
+            ],
         )
         self.test_extrude_mixed_shape = paramak.ExtrudeMixedShape(
             distance=1,
@@ -44,7 +42,7 @@ class TestShape(unittest.TestCase):
                 (150, 100, "straight"),
                 (140, 75, "straight"),
                 (110, 45, "straight"),
-            ]
+            ],
         )
 
     def test_graveyard_size_setting_type_checking(self):
@@ -52,7 +50,8 @@ class TestShape(unittest.TestCase):
         which should raise a ValueError"""
 
         def incorrect_graveyard_size_type():
-            self.my_shape.graveyard_size = 'coucou'
+            self.my_shape.graveyard_size = "coucou"
+
         self.assertRaises(TypeError, incorrect_graveyard_size_type)
 
     def test_graveyard_size_setting_magnitude_checking(self):
@@ -61,6 +60,7 @@ class TestShape(unittest.TestCase):
 
         def incorrect_graveyard_size_size():
             self.my_shape.graveyard_size = -10
+
         self.assertRaises(ValueError, incorrect_graveyard_size_size)
 
     def test_graveyard_error_when_no_offset_or_size(self):
@@ -70,7 +70,9 @@ class TestShape(unittest.TestCase):
         def incorrect_graveyard():
             test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
-                graveyard_size=None, graveyard_offset=None)
+                graveyard_size=None,
+                graveyard_offset=None,
+            )
             test_shape.make_graveyard()
 
         self.assertRaises(ValueError, incorrect_graveyard)
@@ -86,8 +88,8 @@ class TestShape(unittest.TestCase):
         parameters and that these parameters can be changed"""
 
         test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            graveyard_size=None)
+            points=[(0, 0), (0, 20), (20, 20)], graveyard_size=None
+        )
         os.system("rm graveyard.stp")
 
         test_shape.make_graveyard(graveyard_offset=50)
@@ -119,29 +121,21 @@ class TestShape(unittest.TestCase):
         assert test_shape.azimuth_placement_angle == [0, 90, 180, 270]
 
     def test_incorrect_graveyard_offset_too_small(self):
-
         def incorrect_graveyard_offset_too_small():
             """Set graveyard_offset as a negative number which should raise an
             error"""
 
             self.my_shape.graveyard_offset = -3
 
-        self.assertRaises(
-            ValueError,
-            incorrect_graveyard_offset_too_small
-        )
+        self.assertRaises(ValueError, incorrect_graveyard_offset_too_small)
 
     def test_incorrect_graveyard_offset_wrong_type(self):
-
         def incorrect_graveyard_offset_wrong_type():
             """Set graveyard_offset as a string which should raise an error"""
 
-            self.my_shape.graveyard_offset = 'coucou'
+            self.my_shape.graveyard_offset = "coucou"
 
-        self.assertRaises(
-            TypeError,
-            incorrect_graveyard_offset_wrong_type
-        )
+        self.assertRaises(TypeError, incorrect_graveyard_offset_wrong_type)
 
     def test_missing_filename_arg_in_export_stp(self):
         """Checks that an error is raised when a stp export is requested
@@ -150,10 +144,7 @@ class TestShape(unittest.TestCase):
         def incorrect_args():
             self.my_shape.export_stp()
 
-        self.assertRaises(
-            TypeError,
-            incorrect_args
-        )
+        self.assertRaises(TypeError, incorrect_args)
 
     def test_missing_filename_arg_in_export_stl(self):
         """Checks that an error is raised when a stl export is requested
@@ -162,22 +153,16 @@ class TestShape(unittest.TestCase):
         def incorrect_args():
             self.my_shape.export_stl()
 
-        self.assertRaises(
-            TypeError,
-            incorrect_args
-        )
+        self.assertRaises(TypeError, incorrect_args)
 
     def test_incorrect_color_values(self):
         """Checks that an error is raised when the color of a shape is
         defined as an invalid string."""
 
         def incorrect_color_string():
-            paramak.Shape(color=('1', '0', '1'))
+            paramak.Shape(color=("1", "0", "1"))
 
-        self.assertRaises(
-            ValueError,
-            incorrect_color_string
-        )
+        self.assertRaises(ValueError, incorrect_color_string)
 
     def test_incorrect_workplane(self):
         """Creates Shape object with incorrect workplane and checks errors
@@ -254,7 +239,7 @@ class TestShape(unittest.TestCase):
         """Creates a Shape object and checks that the create_limits function
         returns the expected values for x_min, x_max, z_min and z_max."""
 
-        test_shape = paramak.Shape(connection_type='straight')
+        test_shape = paramak.Shape(connection_type="straight")
 
         test_shape.points = [
             (0, 0),
@@ -281,6 +266,7 @@ class TestShape(unittest.TestCase):
 
         def limits():
             test_shape.create_limits()
+
         self.assertRaises(ValueError, limits)
 
     def test_initial_solid_construction(self):
@@ -354,11 +340,11 @@ class TestShape(unittest.TestCase):
         )
 
         os.system("rm filename.html")
-        test_shape.export_html('filename')
+        test_shape.export_html("filename")
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
         test_shape.color = (1, 0, 0, 0.5)
-        test_shape.export_html('filename')
+        test_shape.export_html("filename")
         assert Path("filename.html").exists() is True
         os.system("rm filename.html")
 
@@ -370,34 +356,31 @@ class TestShape(unittest.TestCase):
             points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=180
         )
 
-        for view_plane in ['XZ', 'XY', 'YZ', 'YX', 'ZY', 'ZX', 'RZ', 'XYZ']:
+        for view_plane in ["XZ", "XY", "YZ", "YX", "ZY", "ZX", "RZ", "XYZ"]:
             os.system("rm *.html")
-            test_shape.export_html(
-                filename='filename',
-                view_plane=view_plane
-            )
+            test_shape.export_html(filename="filename", view_plane=view_plane)
             assert Path("filename.html").exists() is True
 
     def test_export_html_with_points_None(self):
-        """Checks that an error is raised when points is None and export_html
-        """
+        """Checks that an error is raised when points is None and export_html"""
         test_shape = paramak.Shape()
 
         def export():
             test_shape.export_html("out.html")
+
         self.assertRaises(ValueError, export)
 
     def test_export_html_with_wire_None(self):
-        """Checks that an error is raised when wire is None and export_html
-        """
+        """Checks that an error is raised when wire is None and export_html"""
         test_shape = paramak.Shape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)],
-            connection_type='straight',
+            connection_type="straight",
         )
         test_shape.wire = None
 
         def export():
             test_shape.export_html("out.html")
+
         self.assertRaises(ValueError, export)
 
     def test_export_3d_html(self):
@@ -409,7 +392,7 @@ class TestShape(unittest.TestCase):
         )
 
         os.system("rm filename.html")
-        filename = test_shape.export_html_3d('filename.html')
+        filename = test_shape.export_html_3d("filename.html")
         if filename is not None:
             assert Path("filename.html").exists() is True
 
@@ -421,7 +404,7 @@ class TestShape(unittest.TestCase):
             test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
             )
-            test_shape.export_stp(filename='test_shape.txt')
+            test_shape.export_stp(filename="test_shape.txt")
 
         self.assertRaises(ValueError, invalid_filename_suffix)
 
@@ -442,7 +425,7 @@ class TestShape(unittest.TestCase):
             test_shape = paramak.RotateStraightShape(
                 points=[(0, 0), (0, 20), (20, 20)],
             )
-            test_shape.export_stl(filename='test_shape.txt')
+            test_shape.export_stl(filename="test_shape.txt")
 
         self.assertRaises(ValueError, invalid_filename_suffix)
 
@@ -460,18 +443,14 @@ class TestShape(unittest.TestCase):
 
         def invalid_color_type():
 
-            paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                color=255
-            )
+            paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], color=255)
 
         self.assertRaises(ValueError, invalid_color_type)
 
         def invalid_color_length():
 
             paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                color=(255, 255, 255, 1, 1)
+                points=[(0, 0), (0, 20), (20, 20)], color=(255, 255, 255, 1, 1)
             )
 
         self.assertRaises(ValueError, invalid_color_length)
@@ -481,9 +460,7 @@ class TestShape(unittest.TestCase):
         and that the volumes sum to equalt the volume for a Compound."""
 
         test_shape = paramak.PoloidalFieldCoilSet(
-            heights=[10, 10],
-            widths=[20, 20],
-            center_points=[(15, 15), (50, 50)]
+            heights=[10, 10], widths=[20, 20], center_points=[(15, 15), (50, 50)]
         )
 
         assert isinstance(test_shape.volume(), float)
@@ -491,38 +468,32 @@ class TestShape(unittest.TestCase):
         assert isinstance(test_shape.volume(split_compounds=True)[0], float)
         assert isinstance(test_shape.volume(split_compounds=True)[1], float)
         assert len(test_shape.volume(split_compounds=True)) == 2
-        assert sum(
-            test_shape.volume(
-                split_compounds=True)) == pytest.approx(
-            test_shape.volume())
+        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(
+            test_shape.volume()
+        )
 
     def test_volumes_add_up_to_total_volume(self):
         """Checks the volume and volumes attributes are correct types
         and that the volumes sum to equalt the volume."""
 
         test_shape = paramak.PoloidalFieldCoil(
-            center_point=(100, 100),
-            height=50,
-            width=50
+            center_point=(100, 100), height=50, width=50
         )
 
         assert isinstance(test_shape.volume(), float)
         assert isinstance(test_shape.volume(split_compounds=True), list)
         assert isinstance(test_shape.volume(split_compounds=True)[0], float)
         assert len(test_shape.volume(split_compounds=True)) == 1
-        assert sum(
-            test_shape.volume(
-                split_compounds=True)) == pytest.approx(
-            test_shape.volume())
+        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(
+            test_shape.volume()
+        )
 
     def test_areas_add_up_to_total_area_Compound(self):
         """Checks the area and areas attributes are correct types
         and that the areas sum to equalt the area for a Compound."""
 
         test_shape = paramak.PoloidalFieldCoilSet(
-            heights=[10, 10],
-            widths=[20, 20],
-            center_points=[(15, 15), (50, 50)]
+            heights=[10, 10], widths=[20, 20], center_points=[(15, 15), (50, 50)]
         )
 
         assert isinstance(test_shape.area, float)
@@ -543,9 +514,7 @@ class TestShape(unittest.TestCase):
         and that the areas sum to equalt the area."""
 
         test_shape = paramak.PoloidalFieldCoil(
-            center_point=(100, 100),
-            height=50,
-            width=50
+            center_point=(100, 100), height=50, width=50
         )
 
         assert isinstance(test_shape.area, float)
@@ -564,16 +533,14 @@ class TestShape(unittest.TestCase):
 
         def patch():
             test_shape._create_patch()
+
         self.assertRaises(ValueError, patch)
 
     def test_create_patch_alpha(self):
         """Checks _create_patch returns a patch when alpha is given."""
 
         test_shape = paramak.PoloidalFieldCoil(
-            center_point=(100, 100),
-            height=50,
-            width=50,
-            color=(0.5, 0.5, 0.5, 0.1)
+            center_point=(100, 100), height=50, width=50, color=(0.5, 0.5, 0.5, 0.1)
         )
         assert test_shape._create_patch() is not None
 
@@ -605,7 +572,7 @@ class TestShape(unittest.TestCase):
             test_shape.name = 1
 
         def name_list():
-            test_shape.name = ['coucou']
+            test_shape.name = ["coucou"]
 
         self.assertRaises(ValueError, name_float)
         self.assertRaises(ValueError, name_int)
@@ -673,7 +640,7 @@ class TestShape(unittest.TestCase):
             "coucou",
             2,
             2.2,
-            [(1, 1, 1), 'coucou'],
+            [(1, 1, 1), "coucou"],
             [(1, 1, 1), 1],
             [(1, 1, 1), 1.0],
             [(1, 1, 1), (1, 1, 1)],
@@ -681,7 +648,7 @@ class TestShape(unittest.TestCase):
             [(1, 1, 1, 2), (1, 0, 2)],
             [(1, 1, 2), [1, 0, 2]],
             [(1, 1, 1)],
-            [(1, 1, 1), (1, 'coucou', 1)],
+            [(1, 1, 1), (1, "coucou", 1)],
             [(1, 1, 1), (1, 0, 1), (1, 2, 3)],
         ]
         shape = paramak.Shape()
@@ -716,12 +683,8 @@ class TestShape(unittest.TestCase):
             (250, 50, "straight"),
             (200, 100, "straight"),
         ]
-        paramak.Shape(
-            points=points
-        )
-        paramak.Shape(
-            points=points
-        )
+        paramak.Shape(points=points)
+        paramak.Shape(points=points)
 
     def test_reuse_points_and_connections(self):
         """Checks that points can be reused between shapes"""
@@ -731,9 +694,7 @@ class TestShape(unittest.TestCase):
             (250, 50, "straight"),
             (200, 100, "straight"),
         ]
-        test_shape = paramak.Shape(
-            points=points
-        )
+        test_shape = paramak.Shape(points=points)
 
         assert test_shape.points == [
             (100, 0, "straight"),
@@ -750,10 +711,7 @@ class TestShape(unittest.TestCase):
             (250, 50),
             (200, 100),
         ]
-        test_shape = paramak.Shape(
-            points=points,
-            connection_type='straight'
-        )
+        test_shape = paramak.Shape(points=points, connection_type="straight")
 
         assert test_shape.points == [
             (100, 0),

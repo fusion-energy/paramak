@@ -1,4 +1,3 @@
-
 import os
 import unittest
 from pathlib import Path
@@ -47,17 +46,17 @@ class TestDemo2015Reactor(unittest.TestCase):
         files checking that each component results in a stp file"""
 
         output_filenames = [
-            'blanket.stp',
-            'divertor.stp',
-            'outboard_pf_coils.stp',
-            'pf_coils_1.stp',
-            'pf_coils_2.stp',
-            'pf_coils_3.stp',
-            'pf_coils_4.stp',
-            'pf_coils_5.stp',
-            'tf_coil_casing.stp',
-            'vacvessel.stp',
-            'another.stp'
+            "blanket.stp",
+            "divertor.stp",
+            "outboard_pf_coils.stp",
+            "pf_coils_1.stp",
+            "pf_coils_2.stp",
+            "pf_coils_3.stp",
+            "pf_coils_4.stp",
+            "pf_coils_5.stp",
+            "tf_coil_casing.stp",
+            "vacvessel.stp",
+            "another.stp",
         ]
         os.system("rm *.stp")
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1)
@@ -72,21 +71,22 @@ class TestDemo2015Reactor(unittest.TestCase):
         results in a stp file"""
 
         output_filenames = [
-            'blanket.stp',
-            'divertor.stp',
-            'outboard_pf_coils.stp',
-            'pf_coils_1.stp',
-            'pf_coils_2.stp',
-            'pf_coils_3.stp',
-            'pf_coils_4.stp',
-            'pf_coils_5.stp',
-            'tf_coil_casing.stp',
-            'vacvessel.stp',
-            'another.stp'
+            "blanket.stp",
+            "divertor.stp",
+            "outboard_pf_coils.stp",
+            "pf_coils_1.stp",
+            "pf_coils_2.stp",
+            "pf_coils_3.stp",
+            "pf_coils_4.stp",
+            "pf_coils_5.stp",
+            "tf_coil_casing.stp",
+            "vacvessel.stp",
+            "another.stp",
         ]
         os.system("rm *.stp")
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(
-            number_of_tf_coils=1, rotation_angle=90)
+            number_of_tf_coils=1, rotation_angle=90
+        )
         my_reactor.export_stp(filename=output_filenames)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True

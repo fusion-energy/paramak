@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 from paramak import RotateStraightShape
@@ -22,10 +21,7 @@ class CuttingWedge(RotateStraightShape):
         **kwargs
     ) -> None:
 
-        super().__init__(
-            rotation_angle=rotation_angle,
-            **kwargs
-        )
+        super().__init__(rotation_angle=rotation_angle, **kwargs)
 
         self.height = height
         self.radius = radius
@@ -52,7 +48,7 @@ class CuttingWedge(RotateStraightShape):
             (0, self.height / 2),
             (self.radius, self.height / 2),
             (self.radius, -self.height / 2),
-            (0, -self.height / 2)
+            (0, -self.height / 2),
         ]
 
         self.points = points

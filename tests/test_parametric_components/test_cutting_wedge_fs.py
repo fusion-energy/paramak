@@ -1,4 +1,3 @@
-
 import unittest
 
 import numpy as np
@@ -7,16 +6,14 @@ import paramak
 
 
 class TestCuttingWedgeFS(unittest.TestCase):
-
     def test_shape_construction_and_volume(self):
         """Makes cutting cylinders from shapes and checks the
         volume of the cutter shape is larger than the shape it
         encompasses."""
 
-        hoop_shape = paramak.PoloidalFieldCoil(height=20,
-                                               width=20,
-                                               center_point=(50, 200),
-                                               rotation_angle=180)
+        hoop_shape = paramak.PoloidalFieldCoil(
+            height=20, width=20, center_point=(50, 200), rotation_angle=180
+        )
 
         cutter = paramak.CuttingWedgeFS(
             shape=hoop_shape,
@@ -30,9 +27,7 @@ class TestCuttingWedgeFS(unittest.TestCase):
         shape parameters."""
 
         shape = paramak.ExtrudeStraightShape(
-            distance=1,
-            points=[(0, 0), (0, 1), (1, 1)],
-            rotation_angle=180
+            distance=1, points=[(0, 0), (0, 1), (1, 1)], rotation_angle=180
         )
 
         cutter = paramak.CuttingWedgeFS(
@@ -46,7 +41,7 @@ class TestCuttingWedgeFS(unittest.TestCase):
 
         def incorrect_shape_points():
             shape.rotation_angle = 180
-            cutter.shape.points = [(0, 0, 'straight')]
+            cutter.shape.points = [(0, 0, "straight")]
             cutter.solid
 
         def incorrect_shape_rotation_angle():
@@ -66,7 +61,7 @@ class TestCuttingWedgeFS(unittest.TestCase):
             2,
             points=[(-0.5, -0.5), (0.5, -0.5), (0.5, 0.5), (-0.5, 0.5)],
             workplane="XY",
-            rotation_axis="Z"
+            rotation_axis="Z",
         )
         rectangle.rotation_angle = 360
         volume_full = rectangle.volume()

@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from paramak import ExtrudeMixedShape
@@ -16,8 +15,12 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
     def __init__(
         self,
         distance: float,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.984, 0.603, 0.6),
-        name: str = 'extrudesplineshape',
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.984,
+            0.603,
+            0.6,
+        ),
+        name: str = "extrudesplineshape",
         **kwargs
     ):
 

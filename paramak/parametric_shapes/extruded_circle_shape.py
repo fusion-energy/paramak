@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from cadquery import Workplane
@@ -27,16 +26,16 @@ class ExtrudeCircleShape(Shape):
         extrusion_start_offset: Optional[float] = 0.0,
         rotation_angle: Optional[float] = 360,
         extrude_both: Optional[bool] = True,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.984, 0.603, 0.6),
-        name: str = 'extrudecircleshape',
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.984,
+            0.603,
+            0.6,
+        ),
+        name: str = "extrudecircleshape",
         **kwargs
     ):
 
-        super().__init__(
-            color=color,
-            name=name,
-            **kwargs
-        )
+        super().__init__(color=color, name=name, **kwargs)
 
         self.distance = distance
         self.radius = radius
@@ -81,8 +80,8 @@ class ExtrudeCircleShape(Shape):
     def create_solid(self):
         """Creates a extruded 3d solid using points with circular edges.
 
-           Returns:
-              A CadQuery solid: A 3D solid volume
+        Returns:
+           A CadQuery solid: A 3D solid volume
         """
 
         # so a positive offset moves extrusion further from axis of azimuthal
@@ -103,9 +102,7 @@ class ExtrudeCircleShape(Shape):
 
         self.wire = wire
 
-        solid = wire.extrude(
-            distance=extrusion_distance,
-            both=self.extrude_both)
+        solid = wire.extrude(distance=extrusion_distance, both=self.extrude_both)
 
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)

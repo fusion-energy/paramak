@@ -1,4 +1,3 @@
-
 import math
 import unittest
 
@@ -8,13 +7,9 @@ import paramak
 
 
 class TestPoloidalFieldCoilCase(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.PoloidalFieldCoilCase(
-            casing_thickness=5,
-            coil_height=50,
-            coil_width=50,
-            center_point=(1000, 500)
+            casing_thickness=5, coil_height=50, coil_width=50, center_point=(1000, 500)
         )
 
     def test_default_parameters(self):
@@ -28,17 +23,17 @@ class TestPoloidalFieldCoilCase(unittest.TestCase):
         given."""
 
         assert self.test_shape.processed_points == [
-            (1025.0, 525.0, 'straight'),
-            (1025.0, 475.0, 'straight'),
-            (975.0, 475.0, 'straight'),
-            (975.0, 525.0, 'straight'),
-            (1025.0, 525.0, 'straight'),
-            (1030.0, 530.0, 'straight'),
-            (1030.0, 470.0, 'straight'),
-            (970.0, 470.0, 'straight'),
-            (970.0, 530.0, 'straight'),
-            (1030.0, 530.0, 'straight'),
-            (1025.0, 525.0, 'straight')
+            (1025.0, 525.0, "straight"),
+            (1025.0, 475.0, "straight"),
+            (975.0, 475.0, "straight"),
+            (975.0, 525.0, "straight"),
+            (1025.0, 525.0, "straight"),
+            (1030.0, 530.0, "straight"),
+            (1030.0, 470.0, "straight"),
+            (970.0, 470.0, "straight"),
+            (970.0, 530.0, "straight"),
+            (1030.0, 530.0, "straight"),
+            (1025.0, 525.0, "straight"),
         ]
 
     def test_points_calculation(self):
@@ -70,7 +65,8 @@ class TestPoloidalFieldCoilCase(unittest.TestCase):
         component and checks that its volume is correct."""
 
         assert self.test_shape.volume() == pytest.approx(
-            (math.pi * 2 * 1000) * ((60 * 5 * 2) + (50 * 5 * 2)))
+            (math.pi * 2 * 1000) * ((60 * 5 * 2) + (50 * 5 * 2))
+        )
 
     def test_absolute_areas(self):
         """Creates a pf coil case using the PoloidalFieldCoilCase parametric
@@ -78,15 +74,9 @@ class TestPoloidalFieldCoilCase(unittest.TestCase):
 
         assert len(self.test_shape.areas) == 8
         assert len(set([round(i) for i in self.test_shape.areas])) == 6
-        assert self.test_shape.areas.count(
-            pytest.approx(50 * math.pi * 2 * 1000)) == 2
-        assert self.test_shape.areas.count(
-            pytest.approx(60 * math.pi * 2 * 1000)) == 2
-        assert self.test_shape.areas.count(
-            pytest.approx(50 * math.pi * 2 * 1025)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx(50 * math.pi * 2 * 975)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx(60 * math.pi * 2 * 1030)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx(60 * math.pi * 2 * 970)) == 1
+        assert self.test_shape.areas.count(pytest.approx(50 * math.pi * 2 * 1000)) == 2
+        assert self.test_shape.areas.count(pytest.approx(60 * math.pi * 2 * 1000)) == 2
+        assert self.test_shape.areas.count(pytest.approx(50 * math.pi * 2 * 1025)) == 1
+        assert self.test_shape.areas.count(pytest.approx(50 * math.pi * 2 * 975)) == 1
+        assert self.test_shape.areas.count(pytest.approx(60 * math.pi * 2 * 1030)) == 1
+        assert self.test_shape.areas.count(pytest.approx(60 * math.pi * 2 * 970)) == 1

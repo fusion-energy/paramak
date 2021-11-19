@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 from paramak import ExtrudeStraightShape
@@ -32,7 +31,7 @@ class PortCutterRectangular(ExtrudeStraightShape):
         center_point: Optional[tuple] = (0, 0),
         workplane: Optional[str] = "ZY",
         rotation_axis: Optional[str] = "Z",
-        extrusion_start_offset: Optional[float] = 1.,
+        extrusion_start_offset: Optional[float] = 1.0,
         fillet_radius: Optional[float] = None,
         name: Optional[str] = "rectangular_port_cutter",
         **kwargs
@@ -67,8 +66,9 @@ class PortCutterRectangular(ExtrudeStraightShape):
             (parameter_1 / 2, -parameter_2 / 2),
             (-parameter_1 / 2, -parameter_2 / 2),
         ]
-        points = [(e[0] + self.center_point[0], e[1] +
-                   self.center_point[1]) for e in points]
+        points = [
+            (e[0] + self.center_point[0], e[1] + self.center_point[1]) for e in points
+        ]
 
         self.points = points
 

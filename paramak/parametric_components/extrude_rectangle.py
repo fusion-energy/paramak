@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from paramak import ExtrudeStraightShape
@@ -23,10 +22,7 @@ class ExtrudeRectangle(ExtrudeStraightShape):
         **kwargs
     ) -> None:
 
-        super().__init__(
-            name=name,
-            **kwargs
-        )
+        super().__init__(name=name, **kwargs)
 
         self.center_point = center_point
         self.height = height
@@ -76,7 +72,7 @@ class ExtrudeRectangle(ExtrudeStraightShape):
             (
                 self.center_point[0] - self.width / 2.0,
                 self.center_point[1] + self.height / 2.0,
-            )
+            ),
         ]
 
         self.points = points

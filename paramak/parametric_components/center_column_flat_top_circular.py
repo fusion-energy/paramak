@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from paramak import RotateMixedShape
@@ -28,16 +27,15 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         mid_radius: float,
         outer_radius: float,
         name: Optional[str] = "center_column",
-        color: Optional[Tuple[float, float, float,
-                              Optional[float]]] = (0., 0.333, 0.),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.0,
+            0.333,
+            0.0,
+        ),
         **kwargs
     ) -> None:
 
-        super().__init__(
-            name=name,
-            color=color,
-            **kwargs
-        )
+        super().__init__(name=name, color=color, **kwargs)
 
         self.height = height
         self.arc_height = arc_height
@@ -97,7 +95,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
             (self.mid_radius, 0, "circle"),
             (self.outer_radius, -self.arc_height / 2, "straight"),
             (self.outer_radius, -self.height / 2, "straight"),
-            (self.inner_radius, -self.height / 2, "straight")
+            (self.inner_radius, -self.height / 2, "straight"),
         ]
 
         self.points = points
