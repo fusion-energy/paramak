@@ -87,7 +87,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
                  ):
 
         super().__init__([])
-        self.method = 'trelis'
         self._inner_tf_coil_thickness = inner_tf_coil_thickness
         self._vacuum_vessel_thickness = vacuum_vessel_thickness
         self._central_shield_thickness = central_shield_thickness
