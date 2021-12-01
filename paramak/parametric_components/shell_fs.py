@@ -1,5 +1,5 @@
-
 import cadquery as cq
+
 from paramak import CuttingWedgeFS, Shape
 
 
@@ -20,17 +20,9 @@ class ShellFS(Shape):
             to CadQuery.shell(). Defaults to intersection.
     """
 
-    def __init__(
-        self,
-        shape,
-        thickness=10.0,
-        kind='intersection',
-        **kwargs
-    ):
+    def __init__(self, shape, thickness=10.0, kind="intersection", **kwargs):
 
-        super().__init__(
-            **kwargs
-        )
+        super().__init__(**kwargs)
 
         self.shape = shape
         self.thickness = thickness

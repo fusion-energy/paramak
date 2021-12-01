@@ -1,7 +1,7 @@
-
-from typing import Optional, List, Tuple
+from typing import List, Optional, Tuple
 
 from cadquery import Workplane
+
 from paramak import Shape
 
 
@@ -29,17 +29,16 @@ class SweepMixedShape(Shape):
         workplane: Optional[str] = "XY",
         path_workplane: Optional[str] = "XZ",
         force_cross_section: Optional[bool] = False,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.792, 0.698, 0.839),
-        name: str = 'sweepmixedshape',
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.792,
+            0.698,
+            0.839,
+        ),
+        name: str = "sweepmixedshape",
         **kwargs
     ):
 
-        super().__init__(
-            workplane=workplane,
-            color=color,
-            name=name,
-            **kwargs
-        )
+        super().__init__(workplane=workplane, color=color, name=name, **kwargs)
 
         self.path_points = path_points
         self.workplane = workplane
@@ -67,9 +66,7 @@ class SweepMixedShape(Shape):
                 "workplane and path_workplane must start with the same letter"
             )
         elif value == self.workplane:
-            raise ValueError(
-                "workplane and path_workplane must be different"
-            )
+            raise ValueError("workplane and path_workplane must be different")
         else:
             self._path_workplane = value
 

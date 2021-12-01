@@ -1,15 +1,16 @@
-
 import warnings
 from typing import Callable, List, Optional, Union
 
 import mpmath
 import numpy as np
-import paramak
 import sympy as sp
-from paramak import RotateMixedShape, diff_between_angles
-from paramak.parametric_components.tokamak_plasma_plasmaboundaries import \
-    PlasmaBoundaries
 from scipy.interpolate import interp1d
+
+import paramak
+from paramak import RotateMixedShape, diff_between_angles
+from paramak.parametric_components.tokamak_plasma_plasmaboundaries import (
+    PlasmaBoundaries,
+)
 
 
 class BlanketFP(RotateMixedShape):
@@ -43,21 +44,23 @@ class BlanketFP(RotateMixedShape):
         num_points: number of points that will describe the shape.
     """
 
-    def __init__(self,
-                 thickness,
-                 start_angle: float,
-                 stop_angle: float,
-                 plasma: Optional[Union[paramak.Plasma,
-                                        paramak.PlasmaBoundaries,
-                                        paramak.PlasmaFromPoints]] = None,
-                 minor_radius: Optional[float] = 150.0,
-                 major_radius: Optional[float] = 450.0,
-                 triangularity: Optional[float] = 0.55,
-                 elongation: Optional[float] = 2.0,
-                 vertical_displacement: Optional[float] = 0.0,
-                 offset_from_plasma: Optional[float] = 0.0,
-                 num_points: Optional[int] = 50,
-                 **kwargs):
+    def __init__(
+        self,
+        thickness,
+        start_angle: float,
+        stop_angle: float,
+        plasma: Optional[
+            Union[paramak.Plasma, paramak.PlasmaBoundaries, paramak.PlasmaFromPoints]
+        ] = None,
+        minor_radius: Optional[float] = 150.0,
+        major_radius: Optional[float] = 450.0,
+        triangularity: Optional[float] = 0.55,
+        elongation: Optional[float] = 2.0,
+        vertical_displacement: Optional[float] = 0.0,
+        offset_from_plasma: Optional[float] = 0.0,
+        num_points: Optional[int] = 50,
+        **kwargs
+    ):
 
         super().__init__(**kwargs)
 
@@ -137,23 +140,25 @@ class BlanketFP(RotateMixedShape):
         # if the attribute is a list, create a interpolated object of the
         # values
         if isinstance(attribute, (tuple, list)):
-            if isinstance(attribute[0], (tuple, list)) and \
-                isinstance(attribute[1], (tuple, list)) and \
-                    len(attribute) == 2:
+            if (
+                isinstance(attribute[0], (tuple, list))
+                and isinstance(attribute[1], (tuple, list))
+                and len(attribute) == 2
+            ):
                 # attribute is a list of 2 lists
                 if len(attribute[0]) != len(attribute[1]):
-                    raise ValueError('The length of angles list must equal \
-                     the length of values list')
+                    raise ValueError(
+                        "The length of angles list must equal \
+                     the length of values list"
+                    )
                 list_of_angles = np.array(attribute[0])
                 offset_values = attribute[1]
             else:
                 # no list of angles is given
                 offset_values = attribute
                 list_of_angles = np.linspace(
-                    self.start_angle,
-                    self.stop_angle,
-                    len(offset_values),
-                    endpoint=True)
+                    self.start_angle, self.stop_angle, len(offset_values), endpoint=True
+                )
             interpolated_values = interp1d(list_of_angles, offset_values)
 
         def fun(theta):
@@ -163,6 +168,7 @@ class BlanketFP(RotateMixedShape):
                 return interpolated_values(theta)
             else:
                 return attribute
+
         return fun
 
     def find_points(self, angles=None):
@@ -197,8 +203,10 @@ class BlanketFP(RotateMixedShape):
         # assemble
         points = inner_points + outer_points
         if self._overlapping_shape:
-            msg = ("BlanketFP: Some points with negative R coordinate have "
-                   "been ignored.")
+            msg = (
+                "BlanketFP: Some points with negative R coordinate have "
+                "been ignored."
+            )
             warnings.warn(msg)
 
         self.points = points
@@ -243,8 +251,7 @@ class BlanketFP(RotateMixedShape):
             val_R_outer = self.distribution(theta)[0] + offset(theta) * nx
             val_Z_outer = self.distribution(theta)[1] + offset(theta) * ny
             if float(val_R_outer) > 0:
-                points.append(
-                    [float(val_R_outer), float(val_Z_outer), "spline"])
+                points.append([float(val_R_outer), float(val_Z_outer), "spline"])
             else:
                 self._overlapping_shape = True
         return points

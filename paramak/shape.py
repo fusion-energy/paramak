@@ -1,4 +1,3 @@
-
 import json
 import numbers
 import warnings
@@ -7,15 +6,21 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-from cadquery import (Assembly, Color, Compound, Plane, Workplane, exporters,
-                      importers)
+from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
-                           intersect_solid, plotly_trace, union_solid)
+from paramak.utils import (
+    _replace,
+    cut_solid,
+    facet_wire,
+    get_hash,
+    intersect_solid,
+    plotly_trace,
+    union_solid,
+)
 
 
 class Shape:
@@ -47,13 +52,6 @@ class Shape:
             workplane or path_workplane if applicable. Can be set to "X", "-Y",
             "Z", etc. A custom axis can be set by setting a list of two XYZ
             floats. Defaults to None.
-        tet_mesh (str, optional): If not None, a tet mesh flag will be added to
-            the neutronics description output. Defaults to None.
-        scale (float, optional): If not None, a scale flag will be added to
-            the neutronics description output. Defaults to None.
-        surface_reflectivity (Boolean, optional): If True, a
-            surface_reflectivity flag will be added to the neutronics
-            description output. Defaults to None.
         cut (paramak.shape or list, optional): If set, the current solid will
             be cut with the provided solid or iterable in cut. Defaults to
             None.
@@ -75,14 +73,10 @@ class Shape:
         points: Union[tuple, list] = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
-        color: Optional[Tuple[float, float, float,
-                              Optional[float]]] = (0.5, 0.5, 0.5),
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.5, 0.5, 0.5),
         azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
         workplane: Optional[Union[str, Plane]] = "XZ",
         rotation_axis: Optional[str] = None,
-        tet_mesh: Optional[str] = None,
-        scale: Optional[float] = None,
-        surface_reflectivity: Optional[bool] = False,
         # TODO defining Shape types as paramak.Shape results in circular import
         cut=None,
         intersect=None,
@@ -109,9 +103,6 @@ class Shape:
         self.old_points = 0
 
         # neutronics specific properties
-        self.tet_mesh = tet_mesh
-        self.scale = scale
-        self.surface_reflectivity = surface_reflectivity
         self.graveyard_offset = graveyard_offset
         self.graveyard_size = graveyard_size
 
@@ -119,6 +110,13 @@ class Shape:
         self.solid = None
         self.wire = None
         self.render_mesh = None
+
+        # set here but only used by Sweep shapes
+        self.path_points = None
+        self.force_cross_section = None
+
+        # set here but only used by Extrude shapes
+        self.extrusion_start_offset = None
 
         self.processed_points = None
         # self.volume = None
@@ -230,7 +228,7 @@ class Shape:
                     abs(bound_box.ymin),
                     abs(bound_box.zmax),
                     abs(bound_box.zmin),
-                    largest_dimension
+                    largest_dimension,
                 )
         else:
             bound_box = self.solid.val().BoundingBox()
@@ -263,14 +261,12 @@ class Shape:
                 self._workplane = value
             else:
                 raise ValueError(
-                    "Shape.workplane must be one of ",
-                    acceptable_values,
-                    " not ",
-                    value)
+                    "Shape.workplane must be one of ", acceptable_values, " not ", value
+                )
         else:
             raise TypeError(
-                "Shape.workplane must be a string or a ",
-                "cadquery.Plane object")
+                "Shape.workplane must be a string or a ", "cadquery.Plane object"
+            )
 
     @property
     def rotation_axis(self):
@@ -279,12 +275,14 @@ class Shape:
     @rotation_axis.setter
     def rotation_axis(self, value):
         if isinstance(value, str):
-            acceptable_values = \
-                ["X", "Y", "Z", "-X", "-Y", "-Z", "+X", "+Y", "+Z"]
+            acceptable_values = ["X", "Y", "Z", "-X", "-Y", "-Z", "+X", "+Y", "+Z"]
             if value not in acceptable_values:
-                msg = "Shape.rotation_axis must be one of " + \
-                    " ".join(acceptable_values) + \
-                    " not " + value
+                msg = (
+                    "Shape.rotation_axis must be one of "
+                    + " ".join(acceptable_values)
+                    + " not "
+                    + value
+                )
                 raise ValueError(msg)
         elif isinstance(value, Iterable):
             msg = "Shape.rotation_axis must be a tuple of three floats (X, Y, Z)"
@@ -357,45 +355,23 @@ class Shape:
                     if not isinstance(i, (int, float)):
                         raise ValueError(
                             "Individual entries in the Shape.color must a "
-                            "number (float or int)")
+                            "number (float or int)"
+                        )
                     if i > 1 or i < 0:
                         raise ValueError(
                             "Individual entries in the Shape.color must be "
                             "between 0 and 1"
                         )
             else:
-                raise ValueError(
-                    "Shape.color must be a list or tuple of 3 or 4 floats")
+                raise ValueError("Shape.color must be a list or tuple of 3 or 4 floats")
         else:
-            raise ValueError(
-                "Shape.color must be a list or tuple")
+            raise ValueError("Shape.color must be a list or tuple")
 
         self._color = value
 
     @property
-    def tet_mesh(self):
-        return self._tet_mesh
-
-    @tet_mesh.setter
-    def tet_mesh(self, value):
-        if value is not None and not isinstance(value, str):
-            raise ValueError("Shape.tet_mesh must be a string", value)
-        self._tet_mesh = value
-
-    @property
-    def scale(self):
-        return self._scale
-
-    @scale.setter
-    def scale(self, value):
-        if value is not None and not isinstance(value, float):
-            raise ValueError("Shape.scale must be a float", value)
-        self._scale = value
-
-    @property
     def name(self):
-        """The name of the Shape, used to identify Shapes when exporting_html
-        """
+        """The name of the Shape, used to identify Shapes when exporting_html"""
         return self._name
 
     @name.setter
@@ -444,8 +420,9 @@ class Shape:
             incorrect type: only list of lists or tuples are accepted
         """
         ignored_keys = ["_points", "_points_hash_value"]
-        if hasattr(self, 'find_points') and \
-                self.points_hash_value != get_hash(self, ignored_keys):
+        if self.find_points() and self.points_hash_value != get_hash(
+            self, ignored_keys
+        ):
             self.find_points()
             self.points_hash_value = get_hash(self, ignored_keys)
 
@@ -463,57 +440,69 @@ class Shape:
 
             for value in values:
                 if not isinstance(value, (list, tuple)):
-                    msg = (f'individual points must be a tuple.{value} in of '
-                           f'type {type(value)}')
+                    msg = (
+                        f"individual points must be a tuple.{value} in of "
+                        f"type {type(value)}"
+                    )
                     raise ValueError(msg)
 
             for counter, value in enumerate(values):
-                if self.connection_type == 'mixed':
+                if self.connection_type == "mixed":
                     if len(value) != 3:
-                        if counter != len(
-                                values) - 1:  # last point doesn't need connections
+                        if (
+                            counter != len(values) - 1
+                        ):  # last point doesn't need connections
                             msg = (
-                                'individual points should contain 3 '
-                                'entries when the Shape.connection_type is '
+                                "individual points should contain 3 "
+                                "entries when the Shape.connection_type is "
                                 '"mixed". The entries should contain two '
-                                f'coordinates and a connection type. {value} '
-                                'has a length of {len(value)}')
+                                f"coordinates and a connection type. {value} "
+                                "has a length of {len(value)}"
+                            )
                             print(values)
                             raise ValueError(msg)
                 else:
                     if len(value) != 2:
-                        msg = ('individual points should contain 2 entries '
-                               'when the Shape.connection_type is '
-                               f'{self.connection_type}. The entries should '
-                               f'just contain the coordinates {value} has a '
-                               'length of {len(value)}')
+                        msg = (
+                            "individual points should contain 2 entries "
+                            "when the Shape.connection_type is "
+                            f"{self.connection_type}. The entries should "
+                            f"just contain the coordinates {value} has a "
+                            "length of {len(value)}"
+                        )
                         raise ValueError(msg)
 
                 # Checks that the XY points are numbers
                 if not isinstance(value[0], numbers.Number):
                     msg = (
-                        'The first value in the tuples that make up the '
-                        'points represents the X value and must be a number '
-                        f'{value}')
+                        "The first value in the tuples that make up the "
+                        "points represents the X value and must be a number "
+                        f"{value}"
+                    )
                     raise ValueError(msg)
                 if not isinstance(value[1], numbers.Number):
-                    msg = ('The second value in the tuples that make up the '
-                           'points represents the X value and must be a '
-                           f'number {value}')
+                    msg = (
+                        "The second value in the tuples that make up the "
+                        "points represents the X value and must be a "
+                        f"number {value}"
+                    )
                     raise ValueError(msg)
 
                 # Checks that only straight and spline are in the connections
                 # part of points
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
-                        msg = ('individual connections must be either '
-                               '"straight", "circle" or "spline"')
+                        msg = (
+                            "individual connections must be either "
+                            '"straight", "circle" or "spline"'
+                        )
                         raise ValueError(msg)
 
             if len(values) > 1:
                 if values[0][:2] == values[-1][:2]:
-                    msg = ('The coordinates of the last and first points are '
-                           'the same.')
+                    msg = (
+                        "The coordinates of the last and first points are " "the same."
+                    )
                     raise ValueError(msg)
 
         self._points = values
@@ -525,8 +514,7 @@ class Shape:
     @azimuth_placement_angle.setter
     def azimuth_placement_angle(self, value):
         error = False
-        if isinstance(value, (int, float, Iterable)) and \
-                not isinstance(value, str):
+        if isinstance(value, (int, float, Iterable)) and not isinstance(value, str):
             if isinstance(value, Iterable):
                 for i in value:
                     if not isinstance(i, (int, float)):
@@ -567,38 +555,34 @@ class Shape:
             from jupyter_cadquery.cadquery import Part, PartGroup, show
         except ImportError:
             msg = (
-                'To use Shape.show() you must install jupyter_cadquery. To'
+                "To use Shape.show() you must install jupyter_cadquery. To"
                 'install jupyter_cadquery type "pip install jupyter_cadquery"'
-                ' in the terminal')
+                " in the terminal"
+            )
             raise ImportError(msg)
 
         parts = []
         if self.name is None:
-            name = 'Shape.name not set'
+            name = "Shape.name not set"
         else:
             name = self.name
 
         scaled_color = [int(i * 255) for i in self.color[0:3]]
         scaled_edge_color = [int(i * 255) for i in default_edgecolor[0:3]]
-        if isinstance(
-                self.solid,
-                (shapes.Shape, shapes.Compound)):
+        if isinstance(self.solid, (shapes.Shape, shapes.Compound)):
             for i, solid in enumerate(self.solid.Solids()):
                 parts.append(
-                    Part(
-                        solid,
-                        name=f"{name}{i}",
-                        color=scaled_color,
-                        show_edges=True
-                    ))
+                    Part(solid, name=f"{name}{i}", color=scaled_color, show_edges=True)
+                )
         else:
             parts.append(
                 Part(
                     self.solid.val(),
                     name=f"{name}",
                     color=scaled_color,
-                    show_edges=True
-                ))
+                    show_edges=True,
+                )
+            )
 
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
@@ -620,8 +604,7 @@ class Shape:
                     current_points_list.append(XZ_points[i])
                 else:
                     current_points_list.append(XZ_points[i])
-                    instructions.append(
-                        {current_linetype: current_points_list})
+                    instructions.append({current_linetype: current_points_list})
                     current_linetype = connection
                     current_points_list = [XZ_points[i]]
             instructions.append({current_linetype: current_points_list})
@@ -630,7 +613,7 @@ class Shape:
                 keyname = list(instructions[-1].keys())[0]
                 instructions[-1][keyname].append(XZ_points[0])
 
-            if hasattr(self, "path_points"):
+            if self.path_points:
 
                 factor = 1
                 if self.workplane in ["XZ", "YX", "ZY"]:
@@ -640,56 +623,63 @@ class Shape:
 
                 if self.force_cross_section:
                     for point in self.path_points[:-1]:
-                        solid = solid.workplane(offset=point[1] * factor).\
-                            center(point[0], 0).workplane()
+                        solid = (
+                            solid.workplane(offset=point[1] * factor)
+                            .center(point[0], 0)
+                            .workplane()
+                        )
                         for entry in instructions:
                             connection_type = list(entry.keys())[0]
                             if connection_type == "spline":
                                 solid = solid.spline(
-                                    listOfXYTuple=list(entry.values())[0])
+                                    listOfXYTuple=list(entry.values())[0]
+                                )
                             elif connection_type == "straight":
                                 solid = solid.polyline(list(entry.values())[0])
                             elif connection_type == "circle":
                                 p0, p1, p2 = list(entry.values())[0][:3]
-                                solid = solid.moveTo(p0[0], p0[1]).\
-                                    threePointArc(p1, p2)
+                                solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
                         solid = solid.close()
-                        solid = solid.center(-point[0], 0).\
-                            workplane(offset=-point[1] * factor)
+                        solid = solid.center(-point[0], 0).workplane(
+                            offset=-point[1] * factor
+                        )
 
                 elif self.force_cross_section is False:
-                    solid = solid.workplane(
-                        offset=self.path_points[0][1] *
-                        factor).center(
-                        self.path_points[0][0],
-                        0).workplane()
+                    solid = (
+                        solid.workplane(offset=self.path_points[0][1] * factor)
+                        .center(self.path_points[0][0], 0)
+                        .workplane()
+                    )
                     for entry in instructions:
                         connection_type = list(entry.keys())[0]
                         if connection_type == "spline":
-                            solid = solid.spline(
-                                listOfXYTuple=list(entry.values())[0])
+                            solid = solid.spline(listOfXYTuple=list(entry.values())[0])
                         elif connection_type == "straight":
                             solid = solid.polyline(list(entry.values())[0])
                         elif connection_type == "circle":
                             p0 = list(entry.values())[0][0]
                             p1 = list(entry.values())[0][1]
                             p2 = list(entry.values())[0][2]
-                            solid = solid.moveTo(
-                                p0[0], p0[1]).threePointArc(
-                                p1, p2)
+                            solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
-                    solid = solid.close().center(0, 0).\
-                        center(-self.path_points[0][0], 0).\
-                        workplane(offset=-self.path_points[0][1] * factor)
+                    solid = (
+                        solid.close()
+                        .center(0, 0)
+                        .center(-self.path_points[0][0], 0)
+                        .workplane(offset=-self.path_points[0][1] * factor)
+                    )
 
-                solid = solid.workplane(offset=self.path_points[-1][1] * factor).\
-                    center(self.path_points[-1][0], 0).workplane()
+                solid = (
+                    solid.workplane(offset=self.path_points[-1][1] * factor)
+                    .center(self.path_points[-1][0], 0)
+                    .workplane()
+                )
 
             else:
                 # for rotate and extrude shapes
                 solid = Workplane(self.workplane)
                 # for extrude shapes
-                if hasattr(self, "extrusion_start_offset"):
+                if self.extrusion_start_offset:
                     extrusion_offset = -self.extrusion_start_offset
                     solid = solid.workplane(offset=extrusion_offset)
 
@@ -706,9 +696,7 @@ class Shape:
 
         return solid
 
-    def rotate_solid(
-            self,
-            solid: Optional[Workplane]) -> Workplane:
+    def rotate_solid(self, solid: Optional[Workplane]) -> Workplane:
         # Checks if the azimuth_placement_angle is a list of angles
         if isinstance(self.azimuth_placement_angle, Iterable):
             azimuth_placement_angles = self.azimuth_placement_angle
@@ -716,11 +704,9 @@ class Shape:
             azimuth_placement_angles = [self.azimuth_placement_angle]
 
         rotated_solids = []
-        # Perform seperate rotations for each angle
+        # Perform separate rotations for each angle
         for angle in azimuth_placement_angles:
-            rotated_solids.append(
-                solid.rotate(
-                    *self.get_rotation_axis()[0], angle))
+            rotated_solids.append(solid.rotate(*self.get_rotation_axis()[0], angle))
         solid = Workplane(self.workplane)
 
         # Joins the seperate solids together
@@ -754,7 +740,7 @@ class Shape:
             # X, Y or Z axis
             return (
                 rotation_axis[self.rotation_axis.replace("+", "")],
-                self.rotation_axis
+                self.rotation_axis,
             )
         elif isinstance(self.rotation_axis, Iterable):
             # Custom axis
@@ -781,8 +767,7 @@ class Shape:
             y_minimum, y_maximum, z_minimum, z_maximum
         """
 
-        if hasattr(self, "find_points"):
-            self.find_points()
+        self.find_points()
         if self.points is None:
             raise ValueError("No points defined for", self)
 
@@ -794,12 +779,18 @@ class Shape:
 
         return self.x_min, self.x_max, self.z_min, self.z_max
 
+    def find_points(self):
+        """Calculates the shape points. Empty method which some components
+        overright when inheritting."""
+        return None
+
     def export_stl(
-            self,
-            filename: str,
-            tolerance: Optional[float] = 0.001,
-            angular_tolerance: Optional[float] = 0.1,
-            verbose: Optional[bool] = True) -> str:
+        self,
+        filename: str,
+        tolerance: Optional[float] = 0.001,
+        angular_tolerance: Optional[float] = 0.1,
+        verbose: Optional[bool] = True,
+    ) -> str:
         """Exports an stl file for the Shape.solid.
 
         Args:
@@ -815,24 +806,25 @@ class Shape:
         path_filename = Path(filename)
 
         if path_filename.suffix != ".stl":
-            msg = f'filename should end with .stl, not {path_filename.suffix}'
+            msg = f"filename should end with .stl, not {path_filename.suffix}"
             raise ValueError(msg)
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        exporters.export(self.solid, str(path_filename), exportType='STL',
-                         tolerance=tolerance,
-                         angularTolerance=angular_tolerance)
+        exporters.export(
+            self.solid,
+            str(path_filename),
+            exportType="STL",
+            tolerance=tolerance,
+            angularTolerance=angular_tolerance,
+        )
 
         if verbose:
             print("Saved file as ", path_filename)
 
         return str(path_filename)
 
-    def export_brep(
-        self,
-        filename
-    ):
+    def export_brep(self, filename):
         """Exports a brep file for the Shape.solid.
 
         Args:
@@ -856,11 +848,12 @@ class Shape:
         return str(path_filename)
 
     def export_stp(
-            self,
-            filename: str,
-            units: Optional[str] = 'mm',
-            mode: Optional[str] = 'solid',
-            verbose: Optional[bool] = True) -> str:
+        self,
+        filename: str,
+        units: Optional[str] = "mm",
+        mode: Optional[str] = "solid",
+        verbose: Optional[bool] = True,
+    ) -> str:
         """Exports an stp file for the Shape.solid.
 
         Args:
@@ -879,12 +872,12 @@ class Shape:
         if path_filename.suffix == ".stp" or path_filename.suffix == ".step":
             pass
         else:
-            msg = f'filename should end with .stp or .step, not {path_filename.suffix}'
+            msg = f"filename should end with .stp or .step, not {path_filename.suffix}"
             raise ValueError(msg)
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        if mode == 'solid':
+        if mode == "solid":
 
             assembly = Assembly(name=self.name)
 
@@ -893,22 +886,26 @@ class Shape:
             else:
                 assembly.add(self.solid, color=Color(*self.color))
 
-            assembly.save(str(path_filename), exportType='STEP')
+            assembly.save(str(path_filename), exportType="STEP")
 
             # previous method does not support colours but puts the solid in the base file level
             # exporters.export(self.solid, str(path_filename), exportType='STEP')
 
-        elif mode == 'wire':
-            exporters.export(self.wire, str(path_filename), exportType='STEP')
+        elif mode == "wire":
+            exporters.export(self.wire, str(path_filename), exportType="STEP")
         else:
-            raise ValueError("The mode argument for export_stp \
-                only accepts 'solid' or 'wire'", self)
+            raise ValueError(
+                "The mode argument for export_stp \
+                only accepts 'solid' or 'wire'",
+                self,
+            )
 
-        if units == 'cm':
+        if units == "cm":
             _replace(
-                path_filename,
-                'SI_UNIT(.MILLI.,.METRE.)',
-                'SI_UNIT(.CENTI.,.METRE.)')
+                str(path_filename),
+                "SI_UNIT(.MILLI.,.METRE.)",
+                "SI_UNIT(.CENTI.,.METRE.)",
+            )
 
         if verbose:
             print(f"Saved file as {path_filename}")
@@ -916,18 +913,19 @@ class Shape:
         return str(path_filename)
 
     def export_svg(
-            self,
-            filename: Optional[str] = 'shape.svg',
-            projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
-            width: Optional[float] = 800,
-            height: Optional[float] = 800,
-            marginLeft: Optional[float] = 100,
-            marginTop: Optional[float] = 100,
-            strokeWidth: Optional[float] = None,
-            strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
-            hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
-            showHidden: Optional[bool] = True,
-            showAxes: Optional[bool] = False) -> str:
+        self,
+        filename: Optional[str] = "shape.svg",
+        projectionDir: Tuple[float, float, float] = (-1.75, 1.1, 5),
+        width: Optional[float] = 800,
+        height: Optional[float] = 800,
+        marginLeft: Optional[float] = 100,
+        marginTop: Optional[float] = 100,
+        strokeWidth: Optional[float] = None,
+        strokeColor: Optional[Tuple[int, int, int]] = (0, 0, 0),
+        hiddenColor: Optional[Tuple[int, int, int]] = (100, 100, 100),
+        showHidden: Optional[bool] = True,
+        showAxes: Optional[bool] = False,
+    ) -> str:
         """Exports an svg file for the Reactor.solid. If the filename provided
         doesn't end with .svg it will be added.
 
@@ -977,22 +975,21 @@ class Shape:
             "projectionDir": projectionDir,
             "strokeColor": strokeColor,
             "hiddenColor": hiddenColor,
-            "showHidden": showHidden
+            "showHidden": showHidden,
         }
 
         if strokeWidth is not None:
             opt["strokeWidth"] = strokeWidth
 
-        exporters.export(self.solid, str(path_filename), exportType='SVG',
-                         opt=opt)
+        exporters.export(self.solid, str(path_filename), exportType="SVG", opt=opt)
 
         print("Saved file as ", path_filename)
 
         return str(path_filename)
 
     def export_html_3d(
-            self,
-            filename: Optional[str] = "shape_3d.html",
+        self,
+        filename: Optional[str] = "shape_3d.html",
     ):
         """Saves an interactive 3d html view of the Shape to a html file.
 
@@ -1011,21 +1008,17 @@ class Shape:
         if view is None:
             return None
 
-        embed_minimal_html(
-            filename,
-            views=[view.cq_view.renderer],
-            title='Renderer'
-        )
+        embed_minimal_html(filename, views=[view.cq_view.renderer], title="Renderer")
 
         return filename
 
     def export_html(
-            self,
-            filename: Optional[str] = "shape.html",
-            facet_splines: Optional[bool] = True,
-            facet_circles: Optional[bool] = True,
-            tolerance: Optional[float] = 1e-3,
-            view_plane: Optional[str] = None,
+        self,
+        filename: Optional[str] = "shape.html",
+        facet_splines: Optional[bool] = True,
+        facet_circles: Optional[bool] = True,
+        tolerance: Optional[float] = 1e-3,
+        view_plane: Optional[str] = None,
     ):
         """Creates a html graph representation of the points and connections
         for the Shape object. Shapes are colored by their .color property.
@@ -1068,26 +1061,22 @@ class Shape:
             facet_splines=facet_splines,
             facet_circles=facet_circles,
             tolerance=tolerance,
-            title=(f'coordinates of {self.__class__.__name__} shape, viewed '
-                   'from the {view_plane} plane')
+            title=(
+                f"coordinates of {self.__class__.__name__} shape, viewed "
+                "from the {view_plane} plane"
+            ),
         )
 
         if self.points is not None:
             fig.add_trace(
-                plotly_trace(
-                    points=self.points,
-                    mode="markers",
-                    name='Shape.points'
-                )
+                plotly_trace(points=self.points, mode="markers", name="Shape.points")
             )
 
         # sweep shapes have .path_points but not .points attribute
-        if hasattr(self, 'path_points'):
+        if self.path_points:
             fig.add_trace(
                 plotly_trace(
-                    points=self.path_points,
-                    mode="markers",
-                    name='Shape.path_points'
+                    points=self.path_points, mode="markers", name="Shape.path_points"
                 )
             )
 
@@ -1105,12 +1094,13 @@ class Shape:
         return fig
 
     def export_2d_image(
-            self,
-            filename: Optional[str] = 'shape.png',
-            xmin: Optional[float] = 0.,
-            xmax: Optional[float] = 900.,
-            ymin: Optional[float] = -600.,
-            ymax: Optional[float] = 600.):
+        self,
+        filename: Optional[str] = "shape.png",
+        xmin: Optional[float] = 0.0,
+        xmax: Optional[float] = 900.0,
+        ymin: Optional[float] = -600.0,
+        ymax: Optional[float] = 600.0,
+    ):
         """Exports a 2d image (png) of the reactor. Components are colored by
         their Shape.color property. If filename provided doesn't end with .png
         then .png will be added.
@@ -1142,7 +1132,9 @@ class Shape:
 
         plt.savefig(filename, dpi=100)
         plt.close()
-        print(f'\n saved 2d image to {filename}', )
+        print(
+            f"\n saved 2d image to {filename}",
+        )
 
         return plt
 
@@ -1162,10 +1154,7 @@ class Shape:
 
         patches = []
 
-        edges = facet_wire(
-            wire=self.wire,
-            facet_splines=True,
-            facet_circles=True)
+        edges = facet_wire(wire=self.wire, facet_splines=True, facet_circles=True)
 
         fpoints = []
         for edge in edges:
@@ -1178,7 +1167,7 @@ class Shape:
         patch = PatchCollection(patches)
 
         if self.color is not None:
-            print('color is ', self.color)
+            print("color is ", self.color)
             patch.set_facecolor(self.color[0:3])
             patch.set_color(self.color[0:3])
             patch.color = self.color[0:3]
@@ -1200,9 +1189,9 @@ class Shape:
         # If a wedge cut is provided then perform a boolean cut
         # Performed independently to avoid use of self.cut
         # Prevents repetition of 'outdated' wedge cuts
-        if 'wedge_cut' in kwargs:
-            if kwargs['wedge_cut'] is not None:
-                solid = cut_solid(solid, kwargs['wedge_cut'])
+        if "wedge_cut" in kwargs:
+            if kwargs["wedge_cut"] is not None:
+                solid = cut_solid(solid, kwargs["wedge_cut"])
 
         # If an intersect is provided then perform a boolean intersect
         if self.intersect is not None:
@@ -1215,9 +1204,9 @@ class Shape:
         return solid
 
     def make_graveyard(
-            self,
-            graveyard_size: Optional[float] = None,
-            graveyard_offset: Optional[float] = None,
+        self,
+        graveyard_size: Optional[float] = None,
+        graveyard_offset: Optional[float] = None,
     ):
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
@@ -1252,13 +1241,16 @@ class Shape:
 
         elif self.graveyard_offset is not None:
             self.solid
-            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
+            graveyard_size_to_use = (
+                self.largest_dimension * 2 + self.graveyard_offset * 2
+            )
 
         else:
             raise ValueError(
                 "the graveyard_size, Shape.graveyard_size, "
                 "graveyard_offset and Shape.graveyard_offset are all None. "
-                "Please specify at least one of these attributes or arguments")
+                "Please specify at least one of these attributes or arguments"
+            )
 
         graveyard_shape = paramak.HollowCube(
             length=graveyard_size_to_use,
@@ -1270,9 +1262,10 @@ class Shape:
         return graveyard_shape
 
     def export_graveyard(
-            self,
-            filename: Optional[str] = "graveyard.stp",
-            graveyard_offset: Optional[float] = 100) -> str:
+        self,
+        filename: Optional[str] = "graveyard.stp",
+        graveyard_offset: Optional[float] = 100,
+    ) -> str:
         """Writes an stp file (CAD geometry) for the reactor graveyard. This
         is needed for DAGMC simulations. This method also calls
         Reactor.make_graveyard with the offset.
@@ -1288,13 +1281,12 @@ class Shape:
         """
 
         self.make_graveyard(graveyard_offset=graveyard_offset)
-        new_filename = self.graveyard.export_stp(Path(filename))
+        new_filename = self.graveyard.export_stp(str(Path(filename)))
 
         return new_filename
 
     def convert_all_circle_connections_to_splines(
-            self,
-            tolerance: Optional[float] = 0.1
+        self, tolerance: Optional[float] = 0.1
     ) -> List[Tuple[float, float, str]]:
         """Replaces circle edges in Shape.processed_points points with spline
         edges. The spline control coordinates are obtained by faceting the
@@ -1316,7 +1308,7 @@ class Shape:
         counter = 0
         while counter < len(self.processed_points):
 
-            if self.processed_points[counter][2] == 'circle':
+            if self.processed_points[counter][2] == "circle":
                 p_0 = self.processed_points[counter][:2]
                 p_1 = self.processed_points[counter + 1][:2]
                 p_2 = self.processed_points[counter + 2][:2]
@@ -1327,7 +1319,7 @@ class Shape:
 
                 # the last point needs to have the connection type of p2
                 for point in points[:-1]:
-                    new_points.append((point[0], point[1], 'spline'))
+                    new_points.append((point[0], point[1], "spline"))
 
                 new_points.append(self.processed_points[counter + 2])
                 counter = counter + 3
@@ -1353,7 +1345,7 @@ class Shape:
         """
 
         if not isinstance(split_compounds, bool):
-            msg = f'split_compounds must be True or False. Not {split_compounds}'
+            msg = f"split_compounds must be True or False. Not {split_compounds}"
             raise ValueError(msg)
 
         # returns a list of floats

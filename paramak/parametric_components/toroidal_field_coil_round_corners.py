@@ -2,6 +2,7 @@ from typing import Optional, Tuple, Union
 
 import cadquery as cq
 import numpy as np
+
 from paramak.parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from paramak.utils import calculate_wedge_cut
 
@@ -39,10 +40,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         **kwargs
     ) -> None:
 
-        super().__init__(
-            distance=distance,
-            **kwargs
-        )
+        super().__init__(distance=distance, **kwargs)
 
         self._lower_inner_coordinates = lower_inner_coordinates
         self._mid_point_coordinates = mid_point_coordinates
@@ -51,38 +49,37 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self.number_of_coils = number_of_coils
         self._with_inner_leg = with_inner_leg
         self._inner_leg_connection_points = []
-        self._analyse_attributes = [
-            0,
-            0,
-            0,
-            0
-        ]
+        self._analyse_attributes = [0, 0, 0, 0]
         self._base_length = 0
         self._height = 0
         self._inner_curve_radius = 0
         self._outter_curve_radius = 0
 
-        if len(lower_inner_coordinates) != 2 or len(
-                mid_point_coordinates) != 2:
-            msg = ('The input tuples are too long or too short, they must be '
-                   '2 element long')
+        if len(lower_inner_coordinates) != 2 or len(mid_point_coordinates) != 2:
+            msg = (
+                "The input tuples are too long or too short, they must be "
+                "2 element long"
+            )
             raise ValueError(msg)
 
         if self._lower_inner_coordinates[0] > self._mid_point_coordinates[0]:
             raise ValueError(
                 "The middle point's x-coordinate must be larger than the lower",
-                "inner point's x-coordinate")
+                "inner point's x-coordinate",
+            )
 
     def _find_base_and_height(self):
         # Adding hidden attributes for analyse list population
         # inner base length of the coil
-        self._base_length = self._mid_point_coordinates[0] - \
-            self._lower_inner_coordinates[0]
+        self._base_length = (
+            self._mid_point_coordinates[0] - self._lower_inner_coordinates[0]
+        )
         self._analyse_attributes[0] = self._base_length
 
         # height of the coil
-        self._height = abs(
-            self.mid_point_coordinates[1] - self.lower_inner_coordinates[1]) * 2
+        self._height = (
+            abs(self.mid_point_coordinates[1] - self.lower_inner_coordinates[1]) * 2
+        )
         self._analyse_attributes[1] = self._height
 
     def _find_radii(self):
@@ -99,8 +96,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self._outter_curve_radius = self._thickness * 1.1
         else:
             self._outter_curve_radius = (
-                1 + (self._thickness / self._base_length)) * self._thickness
-            self._inner_curve_radius = (self._thickness**2) / self._base_length
+                1 + (self._thickness / self._base_length)
+            ) * self._thickness
+            self._inner_curve_radius = (self._thickness ** 2) / self._base_length
 
         self._analyse_attributes[2] = self._inner_curve_radius
         self._analyse_attributes[3] = self._outter_curve_radius
@@ -130,7 +128,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             raise TypeError("Input Z Coordinates must be a number!")
         if val[0] > self._mid_point_coordinates[0]:
             raise ValueError(
-                "Mid Point's x-coordinate, must be larger than lower point's!")
+                "Mid Point's x-coordinate, must be larger than lower point's!"
+            )
         self._lower_inner_coordinates = val
 
     @property
@@ -149,7 +148,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             raise TypeError("Input Z Coordinates must be a number!")
         if val[0] < self._lower_inner_coordinates[0]:
             raise ValueError(
-                "Mid Point's x-coordinate, must be larger than lower point's!")
+                "Mid Point's x-coordinate, must be larger than lower point's!"
+            )
         self._mid_point_coordinates = val
 
     @property
@@ -209,8 +209,13 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         mid_x, mid_z = self._mid_point_coordinates
 
         # redifine values to be floats to make it look consistent
-        lower_x, lower_z, mid_x, mid_z, thickness = float(lower_x), float(
-            lower_z), float(mid_x), float(mid_z), float(self._thickness)
+        lower_x, lower_z, mid_x, mid_z, thickness = (
+            float(lower_x),
+            float(lower_z),
+            float(mid_x),
+            float(mid_z),
+            float(self._thickness),
+        )
 
         # Define differences to avoid miss claculation due to signs
         base_length = self._analyse_attributes[0]
@@ -223,9 +228,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         point4 = (point1[0], point1[1] + height)
         point5 = (point4[0], point4[1] + thickness)
         point6 = (point3[0], point4[1] + thickness)
-        #point7 = (point3[0] + thickness, point3[1])
+        # point7 = (point3[0] + thickness, point3[1])
         point8 = (point2[0] + thickness, point2[1])
-        #point9 = (point2[0], point2[1] - thickness)
+        # point9 = (point2[0], point2[1] - thickness)
         point10 = (lower_x, lower_z - thickness)
 
         inner_curve_radius = self._analyse_attributes[2]
@@ -238,23 +243,29 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         def shift_long(radius):
             """radius is the radius of curvature"""
-            return (2**0.5) * 0.5 * radius
+            return (2 ** 0.5) * 0.5 * radius
 
         def shift_short(radius):
             """radius is the radius of curvature"""
-            return (2 - (2**0.5)) * 0.5 * radius
+            return (2 - (2 ** 0.5)) * 0.5 * radius
 
         point11 = (point2[0] - inner_curve_radius, point2[1])
-        point12 = (point11[0] + shift_long(inner_curve_radius),
-                   point11[1] + shift_short(inner_curve_radius))
+        point12 = (
+            point11[0] + shift_long(inner_curve_radius),
+            point11[1] + shift_short(inner_curve_radius),
+        )
         point13 = (point2[0], point2[1] + inner_curve_radius)
         point14 = (point3[0], point3[1] - inner_curve_radius)
-        point15 = (point14[0] - shift_short(inner_curve_radius),
-                   point14[1] + shift_long(inner_curve_radius))
+        point15 = (
+            point14[0] - shift_short(inner_curve_radius),
+            point14[1] + shift_long(inner_curve_radius),
+        )
         point16 = (point3[0] - inner_curve_radius, point3[1])
         point17 = (point6[0] - inner_curve_radius, point6[1])
-        point18 = (point17[0] + shift_long(outter_curve_radius),
-                   point17[1] - shift_short(outter_curve_radius))
+        point18 = (
+            point17[0] + shift_long(outter_curve_radius),
+            point17[1] - shift_short(outter_curve_radius),
+        )
         point19 = (point14[0] + thickness, point14[1])
         point20 = (point8[0], point8[1] + inner_curve_radius)
         point21 = (point18[0], point20[1] - shift_long(outter_curve_radius))
@@ -277,12 +288,21 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             point20,
             point21,
             point22,
-            point10]
+            point10,
+        ]
         # List that holds the points with the corresponding line types
         tri_points = []
-        lines = ["straight"] + ['circle'] * 2 + ['straight'] \
-            + ['circle'] * 2 + ['straight'] * 3 + ['circle'] * 2 \
-            + ['straight'] + ['circle'] * 2 + ['straight'] * 2
+        lines = (
+            ["straight"]
+            + ["circle"] * 2
+            + ["straight"]
+            + ["circle"] * 2
+            + ["straight"] * 3
+            + ["circle"] * 2
+            + ["straight"]
+            + ["circle"] * 2
+            + ["straight"] * 2
+        )
 
         for i in enumerate(points):
             tri_points.append(points[i[0]] + (lines[i[0]],))
@@ -295,44 +315,52 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         inner_point4 = (point4[0], point4[1])
 
         self._inner_leg_connection_points = [
-            inner_point1, inner_point2, inner_point3, inner_point4]
+            inner_point1,
+            inner_point2,
+            inner_point3,
+            inner_point4,
+        ]
 
         return tri_points
 
     def find_azimuth_placement_angle(self):
-        """ Finds the placement angles from the number of coils
-            given in a 360 degree """
+        """Finds the placement angles from the number of coils
+        given in a 360 degree"""
 
-        angles = list(
-            np.linspace(
-                0,
-                360,
-                self._number_of_coils,
-                endpoint=False))
+        angles = list(np.linspace(0, 360, self._number_of_coils, endpoint=False))
         self.azimuth_placement_angle = angles
 
     def create_solid(self):
-        """ Creates a Cadquery 3D geometry
+        """Creates a Cadquery 3D geometry
 
         Returns:
-            CadQuery solid: A 3D solid Volume """
+            CadQuery solid: A 3D solid Volume"""
 
         # Create solid from points
         points = [ps[:2] for ps in self.processed_points]
 
-        wire = cq.Workplane(self.workplane).moveTo(points[0][0], points[0][1]) \
-            .lineTo(points[1][0], points[1][1]) \
-            .threePointArc((points[2][0], points[2][1]), (points[3][0], points[3][1])) \
-            .lineTo(points[4][0], points[4][1]) \
-            .threePointArc((points[5][0], points[5][1]), (points[6][0], points[6][1])) \
-            .lineTo(points[7][0], points[7][1]) \
-            .lineTo(points[8][0], points[8][1]) \
-            .lineTo(points[9][0], points[9][1]) \
-            .threePointArc((points[10][0], points[10][1]), (points[11][0], points[11][1])) \
-            .lineTo(points[12][0], points[12][1]) \
-            .threePointArc((points[13][0], points[13][1]), (points[14][0], points[14][1])) \
-            .lineTo(points[15][0], points[15][1]) \
-            .lineTo(points[16][0], points[16][1]).close().consolidateWires()
+        wire = (
+            cq.Workplane(self.workplane)
+            .moveTo(points[0][0], points[0][1])
+            .lineTo(points[1][0], points[1][1])
+            .threePointArc((points[2][0], points[2][1]), (points[3][0], points[3][1]))
+            .lineTo(points[4][0], points[4][1])
+            .threePointArc((points[5][0], points[5][1]), (points[6][0], points[6][1]))
+            .lineTo(points[7][0], points[7][1])
+            .lineTo(points[8][0], points[8][1])
+            .lineTo(points[9][0], points[9][1])
+            .threePointArc(
+                (points[10][0], points[10][1]), (points[11][0], points[11][1])
+            )
+            .lineTo(points[12][0], points[12][1])
+            .threePointArc(
+                (points[13][0], points[13][1]), (points[14][0], points[14][1])
+            )
+            .lineTo(points[15][0], points[15][1])
+            .lineTo(points[16][0], points[16][1])
+            .close()
+            .consolidateWires()
+        )
 
         solid = wire.extrude(distance=-self._distance / 2, both=True)
         solid = self.rotate_solid(solid)
@@ -344,16 +372,20 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         if self._with_inner_leg:
             inner_leg_solid = cq.Workplane(self.workplane)
-            inner_leg_solid = inner_leg_solid.polyline(
-                self._inner_leg_connection_points).close().extrude(
-                distance=-self._distance / 2, both=True)
+            inner_leg_solid = (
+                inner_leg_solid.polyline(self._inner_leg_connection_points)
+                .close()
+                .extrude(distance=-self._distance / 2, both=True)
+            )
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
             inner_leg_solid = self.perform_boolean_operations(
-                inner_leg_solid, wedge_cut=cutting_wedge)
+                inner_leg_solid, wedge_cut=cutting_wedge
+            )
 
             solid = cq.Compound.makeCompound(
-                [a.val() for a in [inner_leg_solid, solid]])
+                [a.val() for a in [inner_leg_solid, solid]]
+            )
 
             self.solid = solid
 

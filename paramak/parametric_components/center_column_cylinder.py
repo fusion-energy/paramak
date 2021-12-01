@@ -1,4 +1,5 @@
 from typing import Optional, Tuple
+
 from paramak import RotateStraightShape
 
 
@@ -24,14 +25,10 @@ class CenterColumnShieldCylinder(RotateStraightShape):
             0.333,
             0.0,
         ),
-        **kwargs
+        **kwargs,
     ) -> None:
 
-        super().__init__(
-            color=color,
-            name=name,
-            **kwargs
-        )
+        super().__init__(color=color, name=name, **kwargs)
 
         self.height = height
         self.inner_radius = inner_radius
@@ -45,8 +42,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     @center_height.setter
     def center_height(self, value):
         if not isinstance(value, (int, float)):
-            msg = (
-                f'CenterColumnShieldBlock.center_height should be a float or int. Not a {type(value)}')
+            msg = f"CenterColumnShieldBlock.center_height should be a float or int. Not a {type(value)}"
             raise TypeError(msg)
 
         self._center_height = value
@@ -58,8 +54,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     @height.setter
     def height(self, value):
         if value is None:
-            raise ValueError(
-                "height of the CenterColumnShieldBlock cannot be None")
+            raise ValueError("height of the CenterColumnShieldBlock cannot be None")
         self._height = value
 
     @property
@@ -70,8 +65,10 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     def inner_radius(self, value):
         if hasattr(self, "outer_radius"):
             if value >= self.outer_radius:
-                msg = (f'inner_radius ({value}) is larger than outer_radius '
-                       '({self.outer_radius})')
+                msg = (
+                    f"inner_radius ({value}) is larger than outer_radius "
+                    "({self.outer_radius})"
+                )
                 raise ValueError(msg)
         self._inner_radius = value
 
@@ -83,15 +80,17 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     def outer_radius(self, value):
         if hasattr(self, "inner_radius"):
             if value <= self.inner_radius:
-                msg = (f'inner_radius ({self.inner_radius}) is larger than '
-                       'outer_radius ({value})')
+                msg = (
+                    f"inner_radius ({self.inner_radius}) is larger than "
+                    "outer_radius ({value})"
+                )
                 raise ValueError(msg)
 
         self._outer_radius = value
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the
-            2D profile of the center column shield shape."""
+        2D profile of the center column shield shape."""
 
         points = [
             (self.inner_radius, self.center_height + self.height / 2),

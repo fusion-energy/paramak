@@ -1,5 +1,5 @@
-
 import numpy as np
+
 from paramak import RotateSplineShape
 
 
@@ -42,10 +42,7 @@ class Plasma(RotateSplineShape):
         **kwargs
     ):
 
-        super().__init__(
-            name=name,
-            **kwargs
-        )
+        super().__init__(name=name, **kwargs)
 
         # properties needed for plasma shapes
         self.elongation = elongation
@@ -89,7 +86,9 @@ class Plasma(RotateSplineShape):
     @property
     def outer_equatorial_point(self):
         self.outer_equatorial_point = (
-            self.major_radius + self.minor_radius, self.vertical_displacement)
+            self.major_radius + self.minor_radius,
+            self.vertical_displacement,
+        )
         return self._outer_equatorial_point
 
     @outer_equatorial_point.setter
@@ -99,7 +98,9 @@ class Plasma(RotateSplineShape):
     @property
     def inner_equatorial_point(self):
         self.inner_equatorial_point = (
-            self.major_radius - self.minor_radius, self.vertical_displacement)
+            self.major_radius - self.minor_radius,
+            self.vertical_displacement,
+        )
         return self._inner_equatorial_point
 
     @inner_equatorial_point.setter
@@ -179,16 +180,11 @@ class Plasma(RotateSplineShape):
         triangularity = self.triangularity
         if self.configuration in ["single-null", "double-null"]:
             # no X points for non-null config
-            lower_x_point = (1 -
-                             (1 +
-                              shift) *
-                             triangularity *
-                             self.minor_radius, -
-                             (1 +
-                              shift) *
-                             elongation *
-                             self.minor_radius +
-                             self.vertical_displacement, )
+            lower_x_point = (
+                1 - (1 + shift) * triangularity * self.minor_radius,
+                -(1 + shift) * elongation * self.minor_radius
+                + self.vertical_displacement,
+            )
 
             if self.configuration == "double-null":
                 # upper_x_point is up-down symmetrical

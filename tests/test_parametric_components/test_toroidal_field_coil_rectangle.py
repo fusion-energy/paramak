@@ -1,12 +1,11 @@
-
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestToroidalFieldCoilRectangle(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.ToroidalFieldCoilRectangle(
             horizontal_start_point=(100, 700),
@@ -14,7 +13,7 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
             thickness=50,
             distance=30,
             number_of_coils=1,
-            with_inner_leg=True
+            with_inner_leg=True,
         )
 
     def test_default_parameters(self):
@@ -37,7 +36,7 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
             (100, -750),
             (850, -750),
             (850, 750),
-            (100, 750)
+            (100, 750),
         ]
 
     def test_processed_points_calculation(self):
@@ -45,17 +44,17 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         calculated correctly from the parameters given."""
 
         assert self.test_shape.processed_points == [
-            (100, 700, 'straight'),
-            (150, 700, 'straight'),
-            (800, 700, 'straight'),
-            (800, -700, 'straight'),
-            (150, -700, 'straight'),
-            (100, -700, 'straight'),
-            (100, -750, 'straight'),
-            (850, -750, 'straight'),
-            (850, 750, 'straight'),
-            (100, 750, 'straight'),
-            (100, 700, 'straight')
+            (100, 700, "straight"),
+            (150, 700, "straight"),
+            (800, 700, "straight"),
+            (800, -700, "straight"),
+            (150, -700, "straight"),
+            (100, -700, "straight"),
+            (100, -750, "straight"),
+            (850, -750, "straight"),
+            (850, 750, "straight"),
+            (100, 750, "straight"),
+            (100, 700, "straight"),
         ]
 
     def test_creation_with_inner_leg(self):
@@ -87,15 +86,15 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         assert self.test_shape.solid is not None
 
         test_inner_leg = paramak.ExtrudeStraightShape(
-            points=[
-                (0, 700), (50, 700), (50, -700), (0, -700)
-            ], distance=30,
-            azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315]
+            points=[(0, 700), (50, 700), (50, -700), (0, -700)],
+            distance=30,
+            azimuth_placement_angle=[0, 45, 90, 135, 180, 225, 270, 315],
         )
         inner_leg_volume = test_inner_leg.volume()
 
         assert with_inner_leg_volume == pytest.approx(
-            without_inner_leg_volume + inner_leg_volume)
+            without_inner_leg_volume + inner_leg_volume
+        )
 
     def test_creation_no_inner_leg(self):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
@@ -110,8 +109,7 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
 
         self.test_shape.with_inner_leg = False
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume - inner_leg_volume)
+        assert self.test_shape.volume() == pytest.approx(test_volume - inner_leg_volume)
 
     def test_absolute_volume(self):
         """Creates a tf coil using the ToroidalFieldCoilRectangle parametric
@@ -121,11 +119,13 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         self.test_shape.distance = 50
 
         assert self.test_shape.volume() == pytest.approx(
-            (850 * 150 * 50 * 2) + (1400 * 150 * 50 * 2))
+            (850 * 150 * 50 * 2) + (1400 * 150 * 50 * 2)
+        )
 
         self.test_shape.with_inner_leg = False
         assert self.test_shape.volume() == pytest.approx(
-            (850 * 150 * 50 * 2) + (1400 * 150 * 50))
+            (850 * 150 * 50 * 2) + (1400 * 150 * 50)
+        )
 
         self.test_shape.with_inner_leg = True
         self.test_shape.number_of_coils = 8
@@ -145,11 +145,20 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         self.test_shape.thickness = 150
         self.test_shape.distance = 50
 
-        assert self.test_shape.area == pytest.approx((((850 * 150 * 2) + (1400 * 150)) * 2) + (
-            1400 * 150 * 2) + (850 * 50 * 2) + (1700 * 50) + (1400 * 50 * 3) + (700 * 50 * 2) + (150 * 50 * 4))
+        assert self.test_shape.area == pytest.approx(
+            (((850 * 150 * 2) + (1400 * 150)) * 2)
+            + (1400 * 150 * 2)
+            + (850 * 50 * 2)
+            + (1700 * 50)
+            + (1400 * 50 * 3)
+            + (700 * 50 * 2)
+            + (150 * 50 * 4)
+        )
         assert len(self.test_shape.areas) == 16
-        assert self.test_shape.areas.count(pytest.approx(
-            (850 * 150 * 2) + (1400 * 150))) == 2
+        assert (
+            self.test_shape.areas.count(pytest.approx((850 * 150 * 2) + (1400 * 150)))
+            == 2
+        )
         assert self.test_shape.areas.count(pytest.approx((1400 * 150))) == 2
         assert self.test_shape.areas.count(pytest.approx(850 * 50)) == 2
         assert self.test_shape.areas.count(pytest.approx(1700 * 50)) == 1
@@ -158,8 +167,14 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
         assert self.test_shape.areas.count(pytest.approx(150 * 50)) == 4
 
         self.test_shape.with_inner_leg = False
-        assert self.test_shape.area == pytest.approx((((850 * 150 * 2) + (1400 * 150)) * 2) + (
-            850 * 50 * 2) + (1700 * 50) + (1400 * 50) + (700 * 50 * 2) + (150 * 50 * 2))
+        assert self.test_shape.area == pytest.approx(
+            (((850 * 150 * 2) + (1400 * 150)) * 2)
+            + (850 * 50 * 2)
+            + (1700 * 50)
+            + (1400 * 50)
+            + (700 * 50 * 2)
+            + (150 * 50 * 2)
+        )
 
     def test_rotation_angle(self):
         """Creates tf coils with rotation_angles < 360 degrees in different
@@ -197,8 +212,7 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
             self.test_shape.solid
 
         self.assertRaises(
-            ValueError,
-            make_ToroidalFieldCoilRectangle_incorrect_horizontal_start_point
+            ValueError, make_ToroidalFieldCoilRectangle_incorrect_horizontal_start_point
         )
 
     def test_ToroidalFieldCoilRectangle_incorrect_vertical_mid_point(self):
@@ -211,6 +225,5 @@ class TestToroidalFieldCoilRectangle(unittest.TestCase):
             self.test_shape.solid
 
         self.assertRaises(
-            ValueError,
-            make_ToroidalFieldCoilRectangle_incorrect_vertical_mid_point
+            ValueError, make_ToroidalFieldCoilRectangle_incorrect_vertical_mid_point
         )

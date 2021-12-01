@@ -1,9 +1,11 @@
+import math
 import os
 import unittest
 from pathlib import Path
-import math
-import paramak
+
 import pytest
+
+import paramak
 
 
 class TestFlfSystemCodeReactor(unittest.TestCase):
@@ -32,45 +34,54 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
     def test_stp_file_creation(self):
         """Exports a step file and checks that it was saved successfully"""
 
-        os.system('rm *.stp')
-        self.test_reactor.export_stp(filename='cylinder.stp')
-        assert Path('cylinder.stp').is_file()
+        os.system("rm *.stp")
+        self.test_reactor.export_stp(filename="cylinder.stp")
+        assert Path("cylinder.stp").is_file()
 
     def test_multiple_stp_file_creation(self):
         """Exports the reactor as separate step files and checks
         that they are saved successfully"""
 
-        os.system('rm *.stp')
+        os.system("rm *.stp")
         self.test_reactor.export_stp()
-        assert Path('lower_vacuum_vessel.stp').is_file()
-        assert Path('lower_blanket.stp').is_file()
-        assert Path('blanket.stp').is_file()
-        assert Path('upper_blanket.stp').is_file()
-        assert Path('upper_vacuum_vessel.stp').is_file()
-        assert Path('vacuum_vessel.stp').is_file()
+        assert Path("lower_vacuum_vessel.stp").is_file()
+        assert Path("lower_blanket.stp").is_file()
+        assert Path("blanket.stp").is_file()
+        assert Path("upper_blanket.stp").is_file()
+        assert Path("upper_vacuum_vessel.stp").is_file()
+        assert Path("vacuum_vessel.stp").is_file()
 
     def test_order_of_names_in_reactor(self):
         """tests the order of Shapes in the reactor is as expected"""
 
         assert self.test_reactor.name == [
-            'blanket',
-            'vacuum_vessel',
-            'upper_blanket',
-            'lower_blanket',
-            'lower_vacuum_vessel',
-            'upper_vacuum_vessel',
+            "blanket",
+            "vacuum_vessel",
+            "upper_blanket",
+            "lower_blanket",
+            "lower_vacuum_vessel",
+            "upper_vacuum_vessel",
         ]
 
     def test_blanket_volume_against_analytical_volume(self):
         """Checks the volume of the blanket is approximately equal
         to the analytical volume of the half cylinder"""
 
-        outer_volume = math.pi * math.pow(
-            self.test_reactor.inner_blanket_radius + self.test_reactor.blanket_thickness,
-            2) * self.test_reactor.blanket_height
-        inner_volume = math.pi * \
-            math.pow(self.test_reactor.inner_blanket_radius, 2) * self.test_reactor.blanket_height
-        sector_fraction = 360. / self.test_reactor.rotation_angle
+        outer_volume = (
+            math.pi
+            * math.pow(
+                self.test_reactor.inner_blanket_radius
+                + self.test_reactor.blanket_thickness,
+                2,
+            )
+            * self.test_reactor.blanket_height
+        )
+        inner_volume = (
+            math.pi
+            * math.pow(self.test_reactor.inner_blanket_radius, 2)
+            * self.test_reactor.blanket_height
+        )
+        sector_fraction = 360.0 / self.test_reactor.rotation_angle
         blanket_volume = (outer_volume - inner_volume) / sector_fraction
 
         assert pytest.approx(self.test_reactor.volume()[0]) == blanket_volume
@@ -79,10 +90,17 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
         """Checks the volume of the upper_blanket is approximately equal
         to the analytical volume of the half cylinder"""
 
-        full_rotation_volume = math.pi * math.pow(
-            self.test_reactor.inner_blanket_radius + self.test_reactor.blanket_thickness + self.test_reactor.blanket_vv_gap,
-            2) * self.test_reactor.upper_blanket_thickness
-        sector_fraction = 360. / self.test_reactor.rotation_angle
+        full_rotation_volume = (
+            math.pi
+            * math.pow(
+                self.test_reactor.inner_blanket_radius
+                + self.test_reactor.blanket_thickness
+                + self.test_reactor.blanket_vv_gap,
+                2,
+            )
+            * self.test_reactor.upper_blanket_thickness
+        )
+        sector_fraction = 360.0 / self.test_reactor.rotation_angle
         blanket_volume = full_rotation_volume / sector_fraction
 
         assert pytest.approx(self.test_reactor.volume()[2]) == blanket_volume

@@ -1,5 +1,5 @@
-
 from typing import Optional, Tuple
+
 from paramak import RotateMixedShape
 
 
@@ -54,5 +54,5 @@ class BlanketConstantThicknessArcV(RotateMixedShape):
                 self.inner_upper_point[0],
                 self.inner_upper_point[1] + abs(self.thickness),
                 "straight",
-            )
+            ),
         ]

@@ -1,7 +1,8 @@
-
 import math
 from typing import Optional
+
 import numpy as np
+
 from paramak import ExtrudeMixedShape
 
 
@@ -34,10 +35,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
     ) -> None:
 
         super().__init__(
-            distance=height,
-            workplane=workplane,
-            rotation_axis=rotation_axis,
-            **kwargs
+            distance=height, workplane=workplane, rotation_axis=rotation_axis, **kwargs
         )
 
         self.azimuth_start_angle = azimuth_start_angle
@@ -117,7 +115,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         """Finds the points that describe the 2D profile of the tf coil shape"""
 
         if self.gap_size * self.number_of_coils > 2 * math.pi * self.inner_radius:
-            raise ValueError('gap_size is too large')
+            raise ValueError("gap_size is too large")
 
         theta_inner = (
             (2 * math.pi * self.inner_radius) - (self.gap_size * self.number_of_coils)
@@ -201,6 +199,8 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
                 0 + self.azimuth_start_angle,
                 360 + self.azimuth_start_angle,
                 self.number_of_coils,
-                endpoint=False))
+                endpoint=False,
+            )
+        )
 
         self.azimuth_placement_angle = angles

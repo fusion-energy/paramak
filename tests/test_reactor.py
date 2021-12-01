@@ -1,41 +1,34 @@
-
 import json
 import os
 import unittest
 from pathlib import Path
 
 import cadquery as cq
-import paramak
 import pytest
+
+import paramak
 
 
 class TestReactor(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)],
-            name='test_shape'
+            points=[(0, 0), (0, 20), (20, 20)], name="test_shape"
         )
 
         self.test_shape2 = paramak.ExtrudeStraightShape(
-            points=[(100, 100), (50, 100), (50, 50)], distance=20,
-            name='test_shape2'
+            points=[(100, 100), (50, 100), (50, 50)], distance=20, name="test_shape2"
         )
 
         test_shape_3 = paramak.PoloidalFieldCoilSet(
-            heights=[2, 2],
-            widths=[3, 3],
-            center_points=[(50, -100), (50, 100)]
+            heights=[2, 2], widths=[3, 3], center_points=[(50, -100), (50, 100)]
         )
 
         self.test_reactor = paramak.Reactor([self.test_shape])
 
-        self.test_reactor_2 = paramak.Reactor(
-            [self.test_shape, self.test_shape2])
+        self.test_reactor_2 = paramak.Reactor([self.test_shape, self.test_shape2])
 
         # this reactor has a compound shape in the geometry
-        self.test_reactor_3 = paramak.Reactor(
-            [self.test_shape, test_shape_3])
+        self.test_reactor_3 = paramak.Reactor([self.test_shape, test_shape_3])
 
     def test_reactor_export_stp_with_name_set_to_none(self):
         """Exports the reactor as separate files and as a single file"""
@@ -51,14 +44,14 @@ class TestReactor(unittest.TestCase):
 
     def test_reactor_export_stp(self):
         """Exports the reactor as separate files and as a single file"""
-        os.system('rm *.stp')
+        os.system("rm *.stp")
         self.test_reactor_2.export_stp(
-            filename=['RotateStraightShape.stp', 'ExtrudeStraightShape.stp']
+            filename=["RotateStraightShape.stp", "ExtrudeStraightShape.stp"]
         )
-        assert Path('RotateStraightShape.stp').is_file()
-        assert Path('ExtrudeStraightShape.stp').is_file()
-        self.test_reactor_2.export_stp(filename='single_file.stp', units='cm')
-        assert Path('single_file.stp').is_file()
+        assert Path("RotateStraightShape.stp").is_file()
+        assert Path("ExtrudeStraightShape.stp").is_file()
+        self.test_reactor_2.export_stp(filename="single_file.stp", units="cm")
+        assert Path("single_file.stp").is_file()
 
     def test_show_runs_without_error(self):
         """checks that the jupyter notebook (with cadquery addition) runs
@@ -70,7 +63,7 @@ class TestReactor(unittest.TestCase):
         """checks that the jupyter notebook (with cadquery addition) runs
         without error even when the .name property is set"""
 
-        self.test_reactor.shapes_and_components[0].name = 'test'
+        self.test_reactor.shapes_and_components[0].name = "test"
         self.test_reactor.show()
 
     def test_show_runs_without_error_when_compounds_are_used(self):
@@ -82,46 +75,36 @@ class TestReactor(unittest.TestCase):
             widths=[10, 20],
             casing_thicknesses=10,
             center_points=[(100, 200), (400, 400)],
-            name='test name'
+            name="test name",
         )
 
         test_reactor = paramak.Reactor([test_shape])
         test_reactor.show()
 
     def test_incorrect_graveyard_offset_too_small(self):
-
         def incorrect_graveyard_offset_too_small():
             """Set graveyard_offset as a negative number which should raise an error"""
 
             self.test_reactor.graveyard_offset = -3
 
-        self.assertRaises(
-            ValueError,
-            incorrect_graveyard_offset_too_small
-        )
+        self.assertRaises(ValueError, incorrect_graveyard_offset_too_small)
 
     def test_incorrect_graveyard_offset_wrong_type(self):
-
         def incorrect_graveyard_offset_wrong_type():
             """Set graveyard_offset as a string which should raise an error"""
 
-            self.test_reactor.graveyard_offset = 'coucou'
+            self.test_reactor.graveyard_offset = "coucou"
 
-        self.assertRaises(
-            TypeError,
-            incorrect_graveyard_offset_wrong_type
-        )
+        self.assertRaises(TypeError, incorrect_graveyard_offset_wrong_type)
 
     def test_largest_dimension_setting_and_getting_using_largest_shapes(self):
         """Makes a neutronics model and checks the default largest_dimension
         and that largest_dimension changes with largest_shapes"""
 
-        assert self.test_reactor.largest_dimension == 20.
+        assert self.test_reactor.largest_dimension == 20.0
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
-        test_shape2 = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 40), (40, 40)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        test_shape2 = paramak.RotateStraightShape(points=[(0, 0), (0, 40), (40, 40)])
 
         test_reactor = paramak.Reactor([test_shape, test_shape2])
         assert test_reactor.largest_dimension == 40
@@ -132,24 +115,19 @@ class TestReactor(unittest.TestCase):
     def test_make_sector_wedge(self):
         """Checks that the wedge is not made when rotation angle is 360"""
         sector_wedge = self.test_reactor.make_sector_wedge(
-            height=100,
-            radius=100,
-            rotation_angle=360
+            height=100, radius=100, rotation_angle=360
         )
         assert sector_wedge is None
 
     def test_wrong_number_of_filenames(self):
-
         def test_stl_filename_list_length():
             test_shape = paramak.ExtrudeCircleShape(
                 points=[(20, 20)], radius=10, distance=10
             )
             my_reactor = paramak.Reactor([test_shape])
-            my_reactor.export_stl(['wrong.stl', 'number_of.stl', 'files.stl'])
+            my_reactor.export_stl(["wrong.stl", "number_of.stl", "files.stl"])
 
-        self.assertRaises(
-            ValueError,
-            test_stl_filename_list_length)
+        self.assertRaises(ValueError, test_stl_filename_list_length)
 
     def test_make_graveyard_accepts_offset_from_graveyard(self):
         """Creates a graveyard for a reactor and sets the graveyard_offset.
@@ -177,8 +155,7 @@ class TestReactor(unittest.TestCase):
     def test_adding_component_to_reactor(self):
         """creates a Reactor object and checks that shapes can be added to it"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([])
@@ -190,8 +167,7 @@ class TestReactor(unittest.TestCase):
         """creates a Reactor object with one shape and checks that a graveyard
         can be produced using the make_graveyard method"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
@@ -204,8 +180,7 @@ class TestReactor(unittest.TestCase):
         can be produced using the make_graveyard method when the solid
         attribute of the shape is None"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
@@ -218,8 +193,7 @@ class TestReactor(unittest.TestCase):
         """creates a Reactor object with one shape and checks that a graveyard
         can be exported to a specified location using the make_graveyard method"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm my_graveyard.stp")
         os.system("rm graveyard.stp")
@@ -232,7 +206,8 @@ class TestReactor(unittest.TestCase):
         for filepath in [
             "graveyard.stp",
             "my_graveyard.stp",
-                "my_graveyard_without_ext.stp"]:
+            "my_graveyard_without_ext.stp",
+        ]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
 
@@ -243,13 +218,11 @@ class TestReactor(unittest.TestCase):
         """checks that the graveyard can be exported with the correct default parameters
         and that these parameters can be changed"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         os.system("rm graveyard.stp")
         test_reactor = paramak.Reactor(
-            [test_shape],
-            graveyard_size=None,
-            graveyard_offset=100)
+            [test_shape], graveyard_size=None, graveyard_offset=100
+        )
         test_reactor.make_graveyard()
 
         graveyard_volume_1 = test_reactor.graveyard.volume()
@@ -268,8 +241,7 @@ class TestReactor(unittest.TestCase):
         method"""
 
         os.system("rm test_reactor/*.stp")
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
 
         os.system("rm test_reactor/test_shape.stp")
@@ -277,7 +249,7 @@ class TestReactor(unittest.TestCase):
 
         test_reactor = paramak.Reactor([test_shape])
 
-        test_reactor.export_stp('test_reactor/test_shape.stp')
+        test_reactor.export_stp("test_reactor/test_shape.stp")
 
         assert Path("test_reactor/test_shape.stp").exists() is True
 
@@ -286,13 +258,12 @@ class TestReactor(unittest.TestCase):
         of the reactor can be exported to a specified location using the
         export_stl method"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         os.system("rm test_reactor/test_shape.stl")
         test_reactor = paramak.Reactor([test_shape])
 
-        test_reactor.export_stl(filename='test_reactor/test_shape.stl')
+        test_reactor.export_stl(filename="test_reactor/test_shape.stl")
 
         assert Path("test_reactor/test_shape.stl").exists() is True
         os.system("rm test_reactor/test_shape.stl")
@@ -348,16 +319,11 @@ class TestReactor(unittest.TestCase):
         assert Path("r_marginTop.svg").exists() is True
         self.test_reactor.export_svg("r_showAxes.svg", showAxes=True)
         assert Path("r_showAxes.svg").exists() is True
-        self.test_reactor.export_svg(
-            "r_projectionDir.svg", projectionDir=(-1, -1, -1))
+        self.test_reactor.export_svg("r_projectionDir.svg", projectionDir=(-1, -1, -1))
         assert Path("r_projectionDir.svg").exists() is True
-        self.test_reactor.export_svg(
-            "r_strokeColor.svg", strokeColor=(
-                42, 42, 42))
+        self.test_reactor.export_svg("r_strokeColor.svg", strokeColor=(42, 42, 42))
         assert Path("r_strokeColor.svg").exists() is True
-        self.test_reactor.export_svg(
-            "r_hiddenColor.svg", hiddenColor=(
-                42, 42, 42))
+        self.test_reactor.export_svg("r_hiddenColor.svg", hiddenColor=(42, 42, 42))
         assert Path("r_hiddenColor.svg").exists() is True
         self.test_reactor.export_svg("r_showHidden.svg", showHidden=False)
         assert Path("r_showHidden.svg").exists() is True
@@ -372,12 +338,10 @@ class TestReactor(unittest.TestCase):
         method."""
 
         os.system("rm 2D_test_image.png")
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
-        returned_filename = test_reactor.export_2d_image(
-            filename="2D_test_image.png")
+        returned_filename = test_reactor.export_2d_image(filename="2D_test_image.png")
 
         assert Path(returned_filename).exists() is True
         os.system("rm 2D_test_image.png")
@@ -388,12 +352,10 @@ class TestReactor(unittest.TestCase):
         method"""
 
         os.system("rm 2d_test_image.png")
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
-        returned_filename = test_reactor.export_2d_image(
-            filename="2d_test_image")
+        returned_filename = test_reactor.export_2d_image(filename="2d_test_image")
 
         assert Path(returned_filename).exists() is True
         os.system("rm 2d_test_image.png")
@@ -404,8 +366,7 @@ class TestReactor(unittest.TestCase):
         method."""
 
         os.system("rm test_html.html")
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
         test_reactor.export_html(filename="test_html.html")
@@ -421,31 +382,21 @@ class TestReactor(unittest.TestCase):
         """Checks the 3d html file is exported by the export_html_3d method
         with the correct filename"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
 
         os.system("rm filename.html")
-        filename = test_reactor.export_html_3d('filename.html')
+        filename = test_reactor.export_html_3d("filename.html")
         if filename is not None:
             assert Path("filename.html").exists() is True
 
-    def test_tet_meshes_error(self):
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
-        test_shape.rotation_angle = 360
-        test_reactor = paramak.Reactor([test_shape])
-        assert test_reactor.tet_meshes is not None
-
     def test_largest_dimension(self):
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
         assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 20)
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (30, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (30, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
         assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 30)
@@ -455,9 +406,9 @@ class TestReactor(unittest.TestCase):
         shapes which should raise a ValueError"""
 
         def incorrect_shapes_and_components():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
+            test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
             paramak.Reactor(test_shape)
+
         self.assertRaises(ValueError, incorrect_shapes_and_components)
 
     def test_graveyard_size_setting_type_checking(self):
@@ -465,9 +416,9 @@ class TestReactor(unittest.TestCase):
         which should raise a ValueError"""
 
         def incorrect_graveyard_size_type():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
-            paramak.Reactor([test_shape], graveyard_size='coucou')
+            test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], graveyard_size="coucou")
+
         self.assertRaises(TypeError, incorrect_graveyard_size_type)
 
     def test_graveyard_size_setting_magnitude_checking(self):
@@ -475,9 +426,9 @@ class TestReactor(unittest.TestCase):
         which should raise a ValueError"""
 
         def incorrect_graveyard_size_size():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
+            test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
             paramak.Reactor([test_shape], graveyard_size=-10)
+
         self.assertRaises(ValueError, incorrect_graveyard_size_size)
 
     def test_graveyard_offset_setting_type_checking(self):
@@ -485,9 +436,9 @@ class TestReactor(unittest.TestCase):
         which should raise a ValueError"""
 
         def incorrect_graveyard_offset_type():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
-            paramak.Reactor([test_shape], graveyard_offset='coucou')
+            test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+            paramak.Reactor([test_shape], graveyard_offset="coucou")
+
         self.assertRaises(TypeError, incorrect_graveyard_offset_type)
 
     def test_graveyard_offset_setting_magnitude_checking(self):
@@ -495,33 +446,33 @@ class TestReactor(unittest.TestCase):
         which should raise a ValueError"""
 
         def incorrect_graveyard_offset_size():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)])
+            test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
             paramak.Reactor([test_shape], graveyard_offset=-10)
+
         self.assertRaises(ValueError, incorrect_graveyard_offset_size)
 
     def test_graveyard_error(self):
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_reactor = paramak.Reactor([test_shape])
 
         def str_graveyard_offset():
-            test_reactor.graveyard_offset = 'coucou'
+            test_reactor.graveyard_offset = "coucou"
+
         self.assertRaises(TypeError, str_graveyard_offset)
 
         def negative_graveyard_offset():
             test_reactor.graveyard_offset = -2
+
         self.assertRaises(ValueError, negative_graveyard_offset)
 
         def list_graveyard_offset():
             test_reactor.graveyard_offset = [1.2]
+
         self.assertRaises(TypeError, list_graveyard_offset)
 
     def test_compound_in_shapes(self):
-        shape1 = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
-        shape2 = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)])
+        shape1 = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
+        shape2 = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         shape3 = paramak.Shape()
         shape3.solid = cq.Compound.makeCompound(
             [a.val() for a in [shape1.solid, shape2.solid]]
@@ -533,9 +484,7 @@ class TestReactor(unittest.TestCase):
         """Trys to make a sector wedge with full 360 degree rotation and checks
         that None is returned"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)]
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         my_reactor = paramak.Reactor([test_shape])
         assert my_reactor.make_sector_wedge(rotation_angle=360) is None
 
@@ -549,39 +498,21 @@ class TestReactor(unittest.TestCase):
         assert isinstance(self.test_reactor_2.volume()[1], float)
         assert len(self.test_reactor.volume()) == 1
         assert len(self.test_reactor_2.volume()) == 2
-        assert sum(
-            self.test_reactor_2.volume()) > sum(
-            self.test_reactor.volume())
+        assert sum(self.test_reactor_2.volume()) > sum(self.test_reactor.volume())
         assert self.test_reactor_2.volume()[0] == self.test_reactor.volume()[0]
 
     def test_reactor_volume_spliting_compounds(self):
         """Checks the volumes returned by the .volume method with splitting of
         compounds set to True are correct"""
 
-        assert isinstance(
-            self.test_reactor_3.volume(
-                split_compounds=True), list)
-        assert isinstance(
-            self.test_reactor_3.volume(
-                split_compounds=False), list)
-        assert isinstance(
-            self.test_reactor_3.volume(
-                split_compounds=True)[0], list)
-        assert isinstance(
-            self.test_reactor_3.volume(
-                split_compounds=True)[1], list)
-        assert isinstance(
-            self.test_reactor_3.volume(
-                split_compounds=False)[0], float)
-        assert isinstance(
-            self.test_reactor_3.volume(
-                split_compounds=False)[1], float)
-        assert isinstance(
-            self.test_reactor_3.volume(
-                split_compounds=True)[1][0], float)
-        assert isinstance(
-            self.test_reactor_3.volume(
-                split_compounds=True)[1][1], float)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=True), list)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=False), list)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[0], list)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1], list)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=False)[0], float)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=False)[1], float)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1][0], float)
+        assert isinstance(self.test_reactor_3.volume(split_compounds=True)[1][1], float)
         assert len(self.test_reactor_3.volume(split_compounds=True)) == 2
         assert len(self.test_reactor_3.volume(split_compounds=True)[1]) == 2
 
@@ -592,8 +523,8 @@ class TestReactor(unittest.TestCase):
         assert pytest.approx(vol_3, vol_1 + vol_2)
 
     def test_reactor_names(self):
-        'checks that the names attribute returns the expected results'
-        assert self.test_reactor_2.name == ['test_shape', 'test_shape2']
+        "checks that the names attribute returns the expected results"
+        assert self.test_reactor_2.name == ["test_shape", "test_shape2"]
 
 
 if __name__ == "__main__":

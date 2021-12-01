@@ -1,5 +1,4 @@
-
-from typing import List, Optional, Union
+from typing import List, Optional
 
 import paramak
 
@@ -21,10 +20,10 @@ class FlfSystemCodeReactor(paramak.Reactor):
         blanket_vv_gap: The radial distance between the outer edge of the
             blanket and the inner edge of the vaccum vessel (cm).
         upper_vv_thickness: The thickness (z axis direction) of the
-            the upper section of vaccum vessel (cm).
+            upper section of vaccum vessel (cm).
         vv_thickness: The radial thickness of the vaccum vessel (cm)
         lower_vv_thickness: The thickness (z axis direction) of the
-            the lower section of vaccum vessel (cm).
+            lower section of vaccum vessel (cm).
         rotation_angle: The angle of the sector simulated. Set to 360 for
             simulations and less when creating models for visualization.
     Returns:
@@ -33,15 +32,15 @@ class FlfSystemCodeReactor(paramak.Reactor):
 
     def __init__(
         self,
-        inner_blanket_radius: Optional[float] = 100.,
-        blanket_thickness: Optional[float] = 70.,
-        blanket_height: Optional[float] = 500.,
-        lower_blanket_thickness: Optional[float] = 50.,
-        upper_blanket_thickness: Optional[float] = 40.,
-        blanket_vv_gap: Optional[float] = 20.,
-        upper_vv_thickness: Optional[float] = 10.,
-        vv_thickness: Optional[float] = 10.,
-        lower_vv_thickness: Optional[float] = 10.,
+        inner_blanket_radius: Optional[float] = 100.0,
+        blanket_thickness: Optional[float] = 70.0,
+        blanket_height: Optional[float] = 500.0,
+        lower_blanket_thickness: Optional[float] = 50.0,
+        upper_blanket_thickness: Optional[float] = 40.0,
+        blanket_vv_gap: Optional[float] = 20.0,
+        upper_vv_thickness: Optional[float] = 10.0,
+        vv_thickness: Optional[float] = 10.0,
+        lower_vv_thickness: Optional[float] = 10.0,
         rotation_angle: Optional[float] = 360,
     ):
 
@@ -59,17 +58,17 @@ class FlfSystemCodeReactor(paramak.Reactor):
         self.lower_vv_thickness = lower_vv_thickness
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
-            'inner_blanket_radius',
-            'blanket_thickness',
-            'blanket_height',
-            'lower_blanket_thickness',
-            'upper_blanket_thickness',
-            'blanket_vv_gap',
-            'upper_vv_thickness',
-            'vv_thickness',
-            'lower_vv_thickness',
-            'rotation_angle',
+        self.input_variable_names: List[str] = self.input_variable_names + [
+            "inner_blanket_radius",
+            "blanket_thickness",
+            "blanket_height",
+            "lower_blanket_thickness",
+            "upper_blanket_thickness",
+            "blanket_vv_gap",
+            "upper_vv_thickness",
+            "vv_thickness",
+            "lower_vv_thickness",
+            "rotation_angle",
         ]
 
     def create_solids(self):
@@ -77,30 +76,28 @@ class FlfSystemCodeReactor(paramak.Reactor):
         self.shapes_and_components
         """
         inner_wall = (
-            self.inner_blanket_radius +
-            self.blanket_thickness +
-            self.blanket_vv_gap)
+            self.inner_blanket_radius + self.blanket_thickness + self.blanket_vv_gap
+        )
         lower_vv = paramak.RotateStraightShape(
             points=[
-                (inner_wall,
-                 (-self.blanket_height / 2.0) - self.lower_blanket_thickness,
-                 ),
-                (inner_wall,
-                 (-self.blanket_height / 2.0) - (
-                     self.lower_blanket_thickness + self.lower_vv_thickness),
-                 ),
-                (0,
-                 (-self.blanket_height / 2.0) - (
-                     self.lower_blanket_thickness + self.lower_vv_thickness),
-                 ),
-                (0,
-                 (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
+                (
+                    inner_wall,
+                    (-self.blanket_height / 2.0) - self.lower_blanket_thickness,
+                ),
+                (
+                    inner_wall,
+                    (-self.blanket_height / 2.0)
+                    - (self.lower_blanket_thickness + self.lower_vv_thickness),
+                ),
+                (
+                    0,
+                    (-self.blanket_height / 2.0)
+                    - (self.lower_blanket_thickness + self.lower_vv_thickness),
+                ),
+                (0, (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
             ],
             rotation_angle=self.rotation_angle,
-            color=(
-                0.5,
-                0.5,
-                0.5),
+            color=(0.5, 0.5, 0.5),
             name="lower_vacuum_vessel",
         )
 

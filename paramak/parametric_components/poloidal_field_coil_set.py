@@ -1,5 +1,5 @@
-
 import cadquery as cq
+
 from paramak import RotateStraightShape
 
 
@@ -16,31 +16,21 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         name (str, optional): defaults to "pf_coil".
     """
 
-    def __init__(
-        self,
-        heights,
-        widths,
-        center_points,
-        name="pf_coil",
-        **kwargs
-    ):
+    def __init__(self, heights, widths, center_points, name="pf_coil", **kwargs):
 
-        super().__init__(
-            name=name,
-            **kwargs
-        )
+        super().__init__(name=name, **kwargs)
 
         self.center_points = center_points
         self.heights = heights
         self.widths = widths
 
-        if len(
-            self.widths) != len(
-            self.heights) or len(
-            self.heights) != len(
-                self.center_points):
-            raise ValueError("The length of widthts, height and center_points \
-                must be the same when making a PoloidalFieldCoilSet")
+        if len(self.widths) != len(self.heights) or len(self.heights) != len(
+            self.center_points
+        ):
+            raise ValueError(
+                "The length of widthts, height and center_points \
+                must be the same when making a PoloidalFieldCoilSet"
+            )
 
     @property
     def center_points(self):
@@ -49,8 +39,7 @@ class PoloidalFieldCoilSet(RotateStraightShape):
     @center_points.setter
     def center_points(self, value):
         if not isinstance(value, list):
-            raise ValueError(
-                "PoloidalFieldCoilSet center_points must be a list")
+            raise ValueError("PoloidalFieldCoilSet center_points must be a list")
         self._center_points = value
 
     @property
@@ -80,7 +69,8 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         all_points = []
 
         for height, width, center_point in zip(
-                self.heights, self.widths, self.center_points):
+            self.heights, self.widths, self.center_points
+        ):
 
             all_points = all_points + [
                 (
@@ -116,12 +106,10 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         iter_points = iter(self.points)
         pf_coils_set = []
         wires = []
-        for p1, p2, p3, p4 in zip(
-                iter_points, iter_points, iter_points, iter_points):
+        for point_1, point_2, point_3, point_4 in zip(iter_points, iter_points, iter_points, iter_points):
 
-            solid = (
-                cq.Workplane(self.workplane)
-                .polyline([p1[:2], p2[:2], p3[:2], p4[:2]])
+            solid = cq.Workplane(self.workplane).polyline(
+                [point_1[:2], point_2[:2], point_3[:2], point_4[:2]]
             )
 
             wire = solid.close()
@@ -132,9 +120,7 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
             pf_coils_set.append(solid)
 
-        compound = cq.Compound.makeCompound(
-            [a.val() for a in pf_coils_set]
-        )
+        compound = cq.Compound.makeCompound([a.val() for a in pf_coils_set])
 
         self.wire = wires
 

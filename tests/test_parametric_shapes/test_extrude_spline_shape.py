@@ -1,18 +1,26 @@
-
 import os
 import unittest
 from pathlib import Path
 
 import pytest
+
 from paramak import ExtrudeSplineShape
 
 
 class TestExtrudeSplineShape(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = ExtrudeSplineShape(
-            points=[(50, 0), (50, 20), (70, 80), (90, 50), (70, 0), (90, -50),
-                    (70, -80), (50, -20)], distance=30
+            points=[
+                (50, 0),
+                (50, 20),
+                (70, 80),
+                (90, 50),
+                (70, 0),
+                (90, -50),
+                (70, -80),
+                (50, -20),
+            ],
+            distance=30,
         )
 
     def test_default_parameters(self):
@@ -44,8 +52,7 @@ class TestExtrudeSplineShape(unittest.TestCase):
         test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 180]
 
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 2, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 2, rel=0.01)
 
     def test_cut_volume(self):
         """Creates an ExtrudeSplineShape with another ExtrudeSplineShape cut out
@@ -60,7 +67,8 @@ class TestExtrudeSplineShape(unittest.TestCase):
         )
 
         outer_shape_with_cut = ExtrudeSplineShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3)], cut=inner_shape,
+            points=[(3, 3), (3, 12), (12, 12), (12, 3)],
+            cut=inner_shape,
             distance=30,
         )
 
@@ -75,8 +83,7 @@ class TestExtrudeSplineShape(unittest.TestCase):
         self.test_shape.azimuth_placement_angle = [45, 135, 225, 315]
         test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 0.5, rel=0.01)
 
     def test_extrude_both(self):
         """Creates an ExtrudeSplineShape with extrude_both = True and False and
@@ -84,8 +91,7 @@ class TestExtrudeSplineShape(unittest.TestCase):
 
         test_volume_extrude_both = self.test_shape.volume()
         self.test_shape.extrude_both = False
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume_extrude_both)
+        assert self.test_shape.volume() == pytest.approx(test_volume_extrude_both)
 
     def test_export_stp(self):
         """Exports and stp file with mode = solid and wire and checks that the
@@ -93,18 +99,22 @@ class TestExtrudeSplineShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp', mode='solid')
-        self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp', mode='wire')
+        self.test_shape.export_stp("test_solid.stp", mode="solid")
+        self.test_shape.export_stp("test_solid2.stp")
+        self.test_shape.export_stp("test_wire.stp", mode="wire")
 
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
-            Path("test_solid2.stp").stat().st_size
-        assert Path("test_wire.stp").stat().st_size < \
-            Path("test_solid2.stp").stat().st_size
+        assert (
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
+        )
+        assert (
+            Path("test_wire.stp").stat().st_size
+            < Path("test_solid2.stp").stat().st_size
+        )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
@@ -114,16 +124,13 @@ class TestExtrudeSplineShape(unittest.TestCase):
 
         def incorrect_points_definition():
             self.test_shape.points = [
-                (10, 10, 'spline'),
-                (10, 30, 'spline'),
-                (30, 30, 'spline'),
-                (30, 10, 'spline')
+                (10, 10, "spline"),
+                (10, 30, "spline"),
+                (30, 30, "spline"),
+                (30, 10, "spline"),
             ]
 
-        self.assertRaises(
-            ValueError,
-            incorrect_points_definition
-        )
+        self.assertRaises(ValueError, incorrect_points_definition)
 
 
 if __name__ == "__main__":

@@ -1,11 +1,9 @@
-
 import unittest
 
 import paramak
 
 
 class TestDivertorITER(unittest.TestCase):
-
     def test_creation(self):
         """Creates an ITER-type divertor using the ITERtypeDivertor parametric
         component and checks that a cadquery solid is created"""

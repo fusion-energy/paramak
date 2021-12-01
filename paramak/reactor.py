@@ -47,17 +47,16 @@ class Reactor:
         self.graveyard_size = graveyard_size
         self.largest_shapes = largest_shapes
 
-        self.input_variable_names = [
+        self.input_variable_names: List[str] = [
             # 'shapes_and_components', commented out to avoid calculating solids
             "graveyard_size",
             "graveyard_offset",
             "largest_shapes",
         ]
 
-        self.stp_filenames = []
-        self.stl_filenames = []
+        self.stp_filenames: List[str] = []
+        self.stl_filenames: List[str] = []
 
-        self.tet_meshes = []
         self.graveyard = None
         self.solid = None
 
@@ -110,26 +109,13 @@ class Reactor:
             shapes_to_bound = self.largest_shapes
 
         for component in shapes_to_bound:
-            largest_dimension = max(
-                largest_dimension,
-                component.largest_dimension)
+            largest_dimension = max(largest_dimension, component.largest_dimension)
         # self._largest_dimension = largest_dimension
         return largest_dimension
 
     @largest_dimension.setter
     def largest_dimension(self, value):
         self._largest_dimension = value
-
-    @property
-    def tet_meshes(self):
-        values = []
-        for shape_or_component in self.shapes_and_components:
-            values.append(shape_or_component.tet_mesh)
-        return values
-
-    @tet_meshes.setter
-    def tet_meshes(self, value):
-        self._tet_meshes = value
 
     @property
     def largest_shapes(self):
@@ -139,8 +125,8 @@ class Reactor:
     def largest_shapes(self, value):
         if not isinstance(value, (list, tuple, type(None))):
             raise ValueError(
-                "paramak.Reactor.largest_shapes should be a "
-                "list of paramak.Shapes")
+                "paramak.Reactor.largest_shapes should be a " "list of paramak.Shapes"
+            )
         self._largest_shapes = value
 
     @property
@@ -160,20 +146,6 @@ class Reactor:
         if not isinstance(value, (Iterable, str)):
             raise ValueError("shapes_and_components must be a list")
         self._shapes_and_components = value
-
-    @property
-    def graveyard_offset(self):
-        return self._graveyard_offset
-
-    @graveyard_offset.setter
-    def graveyard_offset(self, value):
-        if value is None:
-            self._graveyard_offset = None
-        elif not isinstance(value, (float, int)):
-            raise TypeError("graveyard_offset must be a number")
-        elif value < 0:
-            raise ValueError("graveyard_offset must be positive")
-        self._graveyard_offset = value
 
     @property
     def solid(self):
@@ -196,6 +168,10 @@ class Reactor:
 
         return compound
 
+    @solid.setter
+    def solid(self, value):
+        self._solid = value
+
     @property
     def name(self):
         """Returns a list of names of the individual Shapes that make up the
@@ -206,10 +182,6 @@ class Reactor:
             all_names.append(shape.name)
 
         return all_names
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
 
     def show(self, default_edgecolor: Tuple[float, float, float] = (0, 0, 0)):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
@@ -250,11 +222,7 @@ class Reactor:
                 (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
             ):
                 for i, solid in enumerate(shape_or_compound.solid.Solids()):
-                    parts.append(
-                        Part(
-                            solid,
-                            name=f"{name}{i}",
-                            color=scaled_color))
+                    parts.append(Part(solid, name=f"{name}{i}", color=scaled_color))
             else:
                 parts.append(
                     Part(
@@ -305,17 +273,18 @@ class Reactor:
 
             if units == "cm":
                 _replace(
-                    filename,
-                    "SI_UNIT(.MILLI.,.METRE.)",
-                    "SI_UNIT(.CENTI.,.METRE.)")
+                    filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)"
+                )
 
             return [filename]
 
         if filename is None:
             if None in self.name:
-                msg = ("Shape.name is None and therefore it can't be used "
-                       "to name a stp file. Try setting Shape.name for all "
-                       "shapes in the reactor")
+                msg = (
+                    "Shape.name is None and therefore it can't be used "
+                    "to name a stp file. Try setting Shape.name for all "
+                    "shapes in the reactor"
+                )
                 raise ValueError(msg)
             filename = [f"{name}.stp" for name in self.name]
 
@@ -338,9 +307,8 @@ class Reactor:
 
             if units == "cm":
                 _replace(
-                    stp_filename,
-                    "SI_UNIT(.MILLI.,.METRE.)",
-                    "SI_UNIT(.CENTI.,.METRE.)")
+                    stp_filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)"
+                )
 
         return filename
 
@@ -364,6 +332,7 @@ class Reactor:
             self.solid.exportBrep(str(path_filename))
         else:
             import OCP
+
             bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
 
             for shape in self.shapes_and_components:
@@ -386,7 +355,7 @@ class Reactor:
         filename: Union[List[str], str] = None,
         tolerance: Optional[float] = 0.001,
         angular_tolerance: Optional[float] = 0.1,
-    ) -> List[str]:
+    ) -> Union[str, List[str]]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
@@ -428,9 +397,11 @@ class Reactor:
 
         if filename is None:
             if None in self.name:
-                msg = ("Shape.name is None and therefore it can't be used "
-                       "to name a stl file. Try setting Shape.name for all "
-                       "shapes in the reactor")
+                msg = (
+                    "Shape.name is None and therefore it can't be used "
+                    "to name a stl file. Try setting Shape.name for all "
+                    "shapes in the reactor"
+                )
                 raise ValueError()
             filename = [f"{name}.stl" for name in self.name]
 
@@ -579,11 +550,7 @@ class Reactor:
         if strokeWidth is not None:
             opt["strokeWidth"] = strokeWidth
 
-        exporters.export(
-            self.solid,
-            str(path_filename),
-            exportType="SVG",
-            opt=opt)
+        exporters.export(self.solid, str(path_filename), exportType="SVG", opt=opt)
 
         print("Saved file as ", path_filename)
 
@@ -731,7 +698,7 @@ class Reactor:
     def export_html_3d(
         self,
         filename: Optional[str] = "reactor_3d.html",
-    ) -> str:
+    ) -> Optional[str]:
         """Saves an interactive 3d html view of the Reactor to a html file.
 
         Args:
@@ -749,11 +716,7 @@ class Reactor:
         if view is None:
             return None
 
-        embed_minimal_html(
-            filename,
-            views=[
-                view.cq_view.renderer],
-            title="Renderer")
+        embed_minimal_html(filename, views=[view.cq_view.renderer], title="Renderer")
 
         return filename
 
@@ -793,11 +756,7 @@ class Reactor:
             facet_splines=facet_splines,
             facet_circles=facet_circles,
             tolerance=tolerance,
-            title="coordinates of the "
-            + self.__class__.__name__
-            + " reactor, viewed from the "
-            + view_plane
-            + " plane",
+            title=f"coordinates of the {self.__class__.__name__} reactor, viewed from the {view_plane} plane",
             mode="lines",
         )
 

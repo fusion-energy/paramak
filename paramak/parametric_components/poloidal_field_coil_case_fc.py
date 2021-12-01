@@ -1,4 +1,3 @@
-
 from typing import Optional, Tuple
 
 from paramak import RotateStraightShape
@@ -18,14 +17,11 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
         self,
         pf_coil,
         casing_thickness,
-        color: Optional[Tuple[int, int, int]] = (1., 1., 0.498),
+        color: Optional[Tuple[int, int, int]] = (1.0, 1.0, 0.498),
         **kwargs
     ):
 
-        super().__init__(
-            color=color,
-            **kwargs
-        )
+        super().__init__(color=color, **kwargs)
 
         self.center_point = pf_coil.center_point
         self.height = pf_coil.height
@@ -82,35 +78,25 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
                 self.center_point[1] + self.height / 2.0,
             ),  # upper right
             (
-                self.center_point[0] + \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + \
-                (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
             ),
             (
-                self.center_point[0] + \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] - \
-                (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] - (self.casing_thickness + self.height / 2.0),
             ),
             (
-                self.center_point[0] - \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] - \
-                (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] - (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] - (self.casing_thickness + self.height / 2.0),
             ),
             (
-                self.center_point[0] - \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + \
-                (self.casing_thickness + self.height / 2.0),
+                self.center_point[0] - (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
             ),
             (
-                self.center_point[0] + \
-                (self.casing_thickness + self.width / 2.0),
-                self.center_point[1] + \
-                (self.casing_thickness + self.height / 2.0),
-            )
+                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
+            ),
         ]
 
         self.points = points

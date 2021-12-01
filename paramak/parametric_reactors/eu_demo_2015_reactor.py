@@ -1,6 +1,6 @@
+import numpy as np
 
 import paramak
-import numpy as np
 
 
 class EuDemoFrom2015PaperDiagram(paramak.Reactor):
@@ -18,7 +18,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
 
     def __init__(
         self,
-        rotation_angle: float = 360.,
+        rotation_angle: float = 360.0,
         number_of_tf_coils: int = 16,
     ):
 
@@ -29,8 +29,8 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
 
         # adds self.input_variable_names from the Reactor class
         self.input_variable_names = self.input_variable_names + [
-            'number_of_tf_coils',
-            'rotation_angle',
+            "number_of_tf_coils",
+            "rotation_angle",
         ]
 
     def create_tf_coils(self, vac_vessel_inner, vac_vessel) -> list:
@@ -67,7 +67,6 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (1472.0427244009875, 273.43725790865426, "spline"),
                 (1486.7783924978662, 209.78591729219943, "spline"),
                 (1498.1749436860923, 130.9324032157914, "spline"),
-
                 (1506.997123663055, -64.35717673922625, "spline"),
                 (1499.4815546503473, -158.26084228529953, "spline"),
                 (1489.8271514144617, -227.50802018403465, "spline"),
@@ -83,9 +82,8 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (1088.9153538821483, -828.8191952873351, "spline"),
                 (1025.9076696058407, -851.7220231166343, "spline"),
                 (962.899985329533, -866.3620671041153, "spline"),
-
-                (805.5787769784172, -875., "straight"),
-                (377.70287769784176, -875., "straight"),
+                (805.5787769784172, -875.0, "straight"),
+                (377.70287769784176, -875.0, "straight"),
                 (375.4508992805756, 755, "straight"),
             ],
             distance=200,
@@ -93,9 +91,10 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             # azimuth placement angle can't start at
             # zero nor end at 360 until #757 is solved
             azimuth_placement_angle=np.linspace(
-                0 + 20, 360 + 20, self.number_of_tf_coils),
+                0 + 20, 360 + 20, self.number_of_tf_coils
+            ),
             rotation_angle=self.rotation_angle,
-            color=(1., 1., 0.498),
+            color=(1.0, 1.0, 0.498),
         )
 
         return [tf_coil_casing]
@@ -136,7 +135,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (945.6554596218276, -418.4558632109989, "straight"),
             ],
             rotation_angle=self.rotation_angle,
-            color=(0., 1., 0.498),
+            color=(0.0, 1.0, 0.498),
         )
 
         # SN Divertor
@@ -169,7 +168,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (584.5345245889013, -415.60146955751554, "straight"),
             ],
             rotation_angle=self.rotation_angle,
-            color=(1., 0.667, 0.),
+            color=(1.0, 0.667, 0.0),
         )
 
         # Vacuum vessel
@@ -281,7 +280,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             ],
             cut=vac_vessel_inner,  # hollow shape
             rotation_angle=self.rotation_angle,
-            color=(0., 1., 1.),
+            color=(0.0, 1.0, 1.0),
         )
 
         return [divertor, blanket, vac_vessel, vac_vessel_inner]
@@ -325,7 +324,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 1628 - 1526,
                 1598 - 1503,
                 1439 - 1360,
-                684 - 563
+                684 - 563,
             ],
             heights=[
                 803 - 599,
@@ -333,7 +332,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 1628 - 1526,
                 1598 - 1503,
                 1439 - 1360,
-                684 - 563
+                684 - 563,
             ],
             rotation_angle=self.rotation_angle,
         )
@@ -388,8 +387,14 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        return [outboard_pf_coils, pf_coils_1, pf_coils_2, pf_coils_3,
-                pf_coils_4, pf_coils_5]
+        return [
+            outboard_pf_coils,
+            pf_coils_1,
+            pf_coils_2,
+            pf_coils_3,
+            pf_coils_4,
+            pf_coils_5,
+        ]
 
     def create_solids(self):
         """Creates a 3d solids for each component.
@@ -403,8 +408,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
         vessel = self.create_vessel_components()
         tf_coil_casing = self.create_tf_coils(vessel[-1], vessel[-2])
 
-        shapes_and_components = plasma + \
-            pf_coils + vessel[:-1] + tf_coil_casing
+        shapes_and_components = plasma + pf_coils + vessel[:-1] + tf_coil_casing
         self.shapes_and_components = shapes_and_components
 
         return shapes_and_components

@@ -1,5 +1,5 @@
-
 from typing import Optional
+
 from paramak import Plasma, RotateMixedShape
 
 
@@ -32,7 +32,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         minor_radius: Optional[float] = 150.0,
         triangularity: Optional[float] = 0.55,
         elongation: Optional[float] = 2.0,
-        **kwargs
+        **kwargs,
     ) -> None:
 
         super().__init__(**kwargs)
@@ -125,38 +125,28 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
 
         plasma_height = abs(plasma.high_point[1]) + abs(plasma.low_point[1])
         if self.height <= plasma_height:
-            msg = (f'Center column height ({self.height}) is smaller than '
-                   'plasma height ({plasma_height}')
+            msg = (
+                f"Center column height ({self.height}) is smaller than "
+                "plasma height ({plasma_height}"
+            )
             raise ValueError(msg)
 
-        if self.inner_radius >= plasma.inner_equatorial_point[0] - \
-                self.mid_offset:
+        if self.inner_radius >= plasma.inner_equatorial_point[0] - self.mid_offset:
             raise ValueError("Inner radius is too large")
 
         points = [
             (self.inner_radius, 0, "straight"),
             (self.inner_radius, self.height / 2, "straight"),
-            (
-                plasma.high_point[0] - self.edge_offset,
-                self.height / 2, "straight"
-            ),
-            (
-                plasma.high_point[0] - self.edge_offset,
-                plasma.high_point[1], "spline"
-            ),
+            (plasma.high_point[0] - self.edge_offset, self.height / 2, "straight"),
+            (plasma.high_point[0] - self.edge_offset, plasma.high_point[1], "spline"),
             (
                 plasma.inner_equatorial_point[0] - self.mid_offset,
                 plasma.inner_equatorial_point[1],
                 "spline",
             ),
-            (
-                plasma.low_point[0] - self.edge_offset,
-                plasma.low_point[1], "straight"),
-            (
-                plasma.low_point[0] - self.edge_offset,
-                -1 * self.height / 2, "straight"
-            ),
-            (self.inner_radius, -1 * self.height / 2, "straight")
+            (plasma.low_point[0] - self.edge_offset, plasma.low_point[1], "straight"),
+            (plasma.low_point[0] - self.edge_offset, -1 * self.height / 2, "straight"),
+            (self.inner_radius, -1 * self.height / 2, "straight"),
         ]
 
         self.points = points

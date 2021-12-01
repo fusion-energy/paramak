@@ -1,18 +1,26 @@
-
 import os
 import unittest
 from pathlib import Path
 
 import pytest
+
 from paramak import RotateSplineShape
 
 
 class TestRotateSplineShape(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = RotateSplineShape(
-            points=[(50, 0), (50, 20), (70, 80), (90, 50), (70, 0),
-                    (90, -50), (70, -80), (50, -20)])
+            points=[
+                (50, 0),
+                (50, 20),
+                (70, 80),
+                (90, 50),
+                (70, 0),
+                (90, -50),
+                (70, -80),
+                (50, -20),
+            ]
+        )
 
     def test_default_parameters(self):
         """Checks that the default parameters of a RotateSplineShape are
@@ -55,8 +63,7 @@ class TestRotateSplineShape(unittest.TestCase):
 
         assert inner_shape.volume() == pytest.approx(900.88, abs=0.1)
         assert outer_shape.volume() == pytest.approx(2881.76, abs=0.1)
-        assert outer_shape_with_cut.volume() == pytest.approx(
-            2881.76 - 900.88, abs=0.2)
+        assert outer_shape_with_cut.volume() == pytest.approx(2881.76 - 900.88, abs=0.2)
 
     def test_shape_face_areas(self):
         """Creates RotateSplineShapes and checks that the face areas are
@@ -75,18 +82,22 @@ class TestRotateSplineShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp', mode='solid')
-        self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp', mode='wire')
+        self.test_shape.export_stp("test_solid.stp", mode="solid")
+        self.test_shape.export_stp("test_solid2.stp")
+        self.test_shape.export_stp("test_wire.stp", mode="wire")
 
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
-            Path("test_solid2.stp").stat().st_size
-        assert Path("test_wire.stp").stat().st_size < \
-            Path("test_solid2.stp").stat().st_size
+        assert (
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
+        )
+        assert (
+            Path("test_wire.stp").stat().st_size
+            < Path("test_solid2.stp").stat().st_size
+        )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
@@ -96,16 +107,13 @@ class TestRotateSplineShape(unittest.TestCase):
 
         def incorrect_points_definition():
             self.test_shape.points = [
-                (10, 10, 'spline'),
-                (10, 30, 'spline'),
-                (30, 30, 'spline'),
-                (30, 10, 'spline')
+                (10, 10, "spline"),
+                (10, 30, "spline"),
+                (30, 30, "spline"),
+                (30, 10, "spline"),
             ]
 
-        self.assertRaises(
-            ValueError,
-            incorrect_points_definition
-        )
+        self.assertRaises(ValueError, incorrect_points_definition)
 
 
 if __name__ == "__main__":

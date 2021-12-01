@@ -1,11 +1,11 @@
-
 import json
 import os
 import unittest
 from pathlib import Path
 
-import paramak
 import pytest
+
+import paramak
 
 cwd = os.getcwd()
 
@@ -14,7 +14,7 @@ cwd = os.getcwd()
 
 class TestLocalExamples(unittest.TestCase):
     def test_make_collarge(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples"))
         output_filenames = [
@@ -40,7 +40,7 @@ class TestLocalExamples(unittest.TestCase):
             os.system("rm " + output_filename)
 
     def test_make_paramak_animation(self):
-        """ Runs the example and checks the output files are produced"""
+        """Runs the example and checks the output files are produced"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples"))
         output_filenames = [
@@ -76,7 +76,7 @@ class TestLocalExamples(unittest.TestCase):
         os.system("rm filename.png")
 
     def test_neutronics_cell_tally(self):
-        """ Runs the neutronics example and checks the TBR"""
+        """Runs the neutronics example and checks the TBR"""
         os.chdir(Path(cwd))
         os.chdir(Path("examples/neutronics"))
         output_filename = "simulation_result.json"

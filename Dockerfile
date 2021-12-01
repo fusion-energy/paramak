@@ -65,7 +65,7 @@ EXPOSE 8888
 WORKDIR /home/paramak
 
 
-FROM ghcr.io/fusion-energy/paramak:dependencies as final
+FROM dependencies as final
 
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/

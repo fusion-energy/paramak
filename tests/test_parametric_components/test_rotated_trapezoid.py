@@ -1,13 +1,11 @@
-
-
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestRotatedTrapezoid(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.RotatedTrapezoid(
             length_1=10,
@@ -42,15 +40,11 @@ class TestRotatedTrapezoid(unittest.TestCase):
 
         self.test_shape.pivot_angle = 180
 
-        assert pytest.approx(
-            self.test_shape.volume(),
-            rel=0.01) == test_shape_vol
+        assert pytest.approx(self.test_shape.volume(), rel=0.01) == test_shape_vol
 
         self.test_shape.pivot_point = (100, 300)
 
-        assert pytest.approx(
-            self.test_shape.volume(),
-            rel=0.01) == test_shape_vol
+        assert pytest.approx(self.test_shape.volume(), rel=0.01) == test_shape_vol
 
     def test_args_impact_volume(self):
         """Changes args that should impact the volume and checks that the

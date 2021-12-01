@@ -1,4 +1,3 @@
-
 import paramak
 
 
@@ -23,4 +22,5 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         super().__init__(
             divertor_position=divertor_position,
             support_position=support_position,
-            **kwargs)
+            **kwargs
+        )

@@ -1,13 +1,12 @@
-
 import math
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestPoloidalFieldCoilCaseFC(unittest.TestCase):
-
     def setUp(self):
         self.pf_coil = paramak.PoloidalFieldCoil(
             height=50, width=60, center_point=(1000, 500)
@@ -34,7 +33,8 @@ class TestPoloidalFieldCoilCaseFC(unittest.TestCase):
         component and checks that its volume is correct."""
 
         assert self.test_shape.volume() == pytest.approx(
-            (math.pi * 2 * 1000) * ((50 * 5 * 2) + (70 * 5 * 2)))
+            (math.pi * 2 * 1000) * ((50 * 5 * 2) + (70 * 5 * 2))
+        )
 
     def test_absolute_areas(self):
         """Creates a pf coil case using the PoloidalFieldCoilCaseFC parametric
@@ -42,15 +42,9 @@ class TestPoloidalFieldCoilCaseFC(unittest.TestCase):
 
         assert len(self.test_shape.areas) == 8
         assert len(set([round(i) for i in self.test_shape.areas])) == 6
-        assert self.test_shape.areas.count(
-            pytest.approx(60 * math.pi * 2 * 1000)) == 2
-        assert self.test_shape.areas.count(
-            pytest.approx(70 * math.pi * 2 * 1000)) == 2
-        assert self.test_shape.areas.count(
-            pytest.approx(50 * math.pi * 2 * 1030)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx(50 * math.pi * 2 * 970)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx(60 * math.pi * 2 * 1035)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx(60 * math.pi * 2 * 965)) == 1
+        assert self.test_shape.areas.count(pytest.approx(60 * math.pi * 2 * 1000)) == 2
+        assert self.test_shape.areas.count(pytest.approx(70 * math.pi * 2 * 1000)) == 2
+        assert self.test_shape.areas.count(pytest.approx(50 * math.pi * 2 * 1030)) == 1
+        assert self.test_shape.areas.count(pytest.approx(50 * math.pi * 2 * 970)) == 1
+        assert self.test_shape.areas.count(pytest.approx(60 * math.pi * 2 * 1035)) == 1
+        assert self.test_shape.areas.count(pytest.approx(60 * math.pi * 2 * 965)) == 1

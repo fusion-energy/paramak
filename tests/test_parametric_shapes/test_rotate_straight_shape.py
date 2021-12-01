@@ -1,15 +1,14 @@
-
 import math
 import os
 import unittest
 from pathlib import Path
 
 import pytest
+
 from paramak import RotateStraightShape
 
 
 class TestRotateStraightShape(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)]
@@ -37,7 +36,7 @@ class TestRotateStraightShape(unittest.TestCase):
         """Creates a RotateStraightShape and checks that its volume is correct."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume() == pytest.approx(math.pi * (20**2) * 20)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (20 ** 2) * 20)
 
     def test_relative_shape_volume(self):
         """Creates two RotateStraightShapes and checks that their relative volumes
@@ -73,48 +72,60 @@ class TestRotateStraightShape(unittest.TestCase):
         are correct."""
 
         assert self.test_shape.area == pytest.approx(
-            (math.pi * (20**2) * 2) + (math.pi * (20 * 2) * 20))
+            (math.pi * (20 ** 2) * 2) + (math.pi * (20 * 2) * 20)
+        )
         assert len(self.test_shape.areas) == 3
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (20**2))) == 2
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (20 * 2) * 20)) == 1
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (20 ** 2))) == 2
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (20 * 2) * 20)) == 1
 
         self.test_shape.rotation_angle = 180
         assert self.test_shape.area == pytest.approx(
-            ((math.pi * (20**2) / 2) * 2) + (20 * 40) + (math.pi * (20 * 2) * 20 / 2))
+            ((math.pi * (20 ** 2) / 2) * 2) + (20 * 40) + (math.pi * (20 * 2) * 20 / 2)
+        )
         assert len(self.test_shape.areas) == 4
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (20**2) / 2)) == 2
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (20 ** 2) / 2)) == 2
         assert self.test_shape.areas.count(pytest.approx(20 * 40)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx((math.pi * (20 * 2) * 20) / 2)) == 1
+        assert (
+            self.test_shape.areas.count(pytest.approx((math.pi * (20 * 2) * 20) / 2))
+            == 1
+        )
 
         test_shape = RotateStraightShape(
             points=[(50, 0), (50, 50), (70, 50), (70, 0)],
         )
 
         assert test_shape.area == pytest.approx(
-            (((math.pi * (70**2)) - (math.pi * (50**2))) * 2) + (math.pi * (50 * 2) * 50) + (math.pi * (70 * 2) * 50))
+            (((math.pi * (70 ** 2)) - (math.pi * (50 ** 2))) * 2)
+            + (math.pi * (50 * 2) * 50)
+            + (math.pi * (70 * 2) * 50)
+        )
         assert len(test_shape.areas) == 4
-        assert test_shape.areas.count(pytest.approx(
-            (math.pi * (70**2)) - (math.pi * (50**2)))) == 2
-        assert test_shape.areas.count(
-            pytest.approx(math.pi * (50 * 2) * 50)) == 1
-        assert test_shape.areas.count(
-            pytest.approx(math.pi * (70 * 2) * 50)) == 1
+        assert (
+            test_shape.areas.count(
+                pytest.approx((math.pi * (70 ** 2)) - (math.pi * (50 ** 2)))
+            )
+            == 2
+        )
+        assert test_shape.areas.count(pytest.approx(math.pi * (50 * 2) * 50)) == 1
+        assert test_shape.areas.count(pytest.approx(math.pi * (70 * 2) * 50)) == 1
 
         test_shape.rotation_angle = 180
-        assert test_shape.area == pytest.approx((20 * 50 * 2) + ((((math.pi * (70**2)) / 2) - (
-            (math.pi * (50**2)) / 2)) * 2) + ((math.pi * (50 * 2) * 50) / 2) + ((math.pi * (70 * 2) * 50) / 2))
+        assert test_shape.area == pytest.approx(
+            (20 * 50 * 2)
+            + ((((math.pi * (70 ** 2)) / 2) - ((math.pi * (50 ** 2)) / 2)) * 2)
+            + ((math.pi * (50 * 2) * 50) / 2)
+            + ((math.pi * (70 * 2) * 50) / 2)
+        )
         assert len(test_shape.areas) == 6
         assert test_shape.areas.count(pytest.approx(20 * 50)) == 2
-        assert test_shape.areas.count(pytest.approx(
-            ((math.pi * (70**2)) / 2) - ((math.pi * (50**2)) / 2))) == 2
-        assert test_shape.areas.count(
-            pytest.approx(math.pi * (50 * 2) * 50 / 2)) == 1
-        assert test_shape.areas.count(
-            pytest.approx(math.pi * (70 * 2) * 50 / 2)) == 1
+        assert (
+            test_shape.areas.count(
+                pytest.approx(((math.pi * (70 ** 2)) / 2) - ((math.pi * (50 ** 2)) / 2))
+            )
+            == 2
+        )
+        assert test_shape.areas.count(pytest.approx(math.pi * (50 * 2) * 50 / 2)) == 1
+        assert test_shape.areas.count(pytest.approx(math.pi * (70 * 2) * 50 / 2)) == 1
 
     def test_export_stp_extension(self):
         """Creates a RotateStraightShape and checks that a stp file of the
@@ -134,12 +145,12 @@ class TestRotateStraightShape(unittest.TestCase):
         method."""
 
         os.system("rm filename.stp filename.step")
-        self.test_shape.export_stp("filename.stp", units='cm')
-        self.test_shape.export_stp("filename.step", units='cm')
+        self.test_shape.export_stp("filename.stp", units="cm")
+        self.test_shape.export_stp("filename.step", units="cm")
         assert Path("filename.stp").exists() is True
         assert Path("filename.step").exists() is True
         os.system("rm filename.stp filename.step")
-        self.test_shape.export_stp("filename_cm.stp", units='cm')
+        self.test_shape.export_stp("filename_cm.stp", units="cm")
         assert Path("filename_cm.stp").exists() is True
         os.system("rm filename_cm.stp")
 
@@ -181,8 +192,7 @@ class TestRotateStraightShape(unittest.TestCase):
         assert Path("marginTop.svg").exists() is True
         self.test_shape.export_svg("showAxes.svg", showAxes=True)
         assert Path("showAxes.svg").exists() is True
-        self.test_shape.export_svg(
-            "projectionDir.svg", projectionDir=(-1, -1, -1))
+        self.test_shape.export_svg("projectionDir.svg", projectionDir=(-1, -1, -1))
         assert Path("projectionDir.svg").exists() is True
         self.test_shape.export_svg("strokeColor.svg", strokeColor=(42, 42, 42))
         assert Path("strokeColor.svg").exists() is True
@@ -200,12 +210,11 @@ class TestRotateStraightShape(unittest.TestCase):
         cut out and checks that the volume is correct."""
 
         shape_with_cut = RotateStraightShape(
-            points=[(0, -5), (0, 25), (25, 25), (25, -5)],
-            cut=self.test_shape
+            points=[(0, -5), (0, 25), (25, 25), (25, -5)], cut=self.test_shape
         )
 
         assert shape_with_cut.volume() == pytest.approx(
-            (math.pi * (25**2) * 30) - (math.pi * (20**2) * 20)
+            (math.pi * (25 ** 2) * 30) - (math.pi * (20 ** 2) * 20)
         )
 
     def test_multiple_cut_volume(self):
@@ -226,13 +235,13 @@ class TestRotateStraightShape(unittest.TestCase):
 
         main_shape_with_cuts = RotateStraightShape(
             points=[(0, 0), (0, 200), (200, 200), (200, 0)],
-            cut=[shape_to_cut_1, shape_to_cut_2]
+            cut=[shape_to_cut_1, shape_to_cut_2],
         )
 
         assert main_shape_with_cuts.volume() == pytest.approx(
-            (math.pi * (200**2) * 200) -
-            ((math.pi * (40**2) * 200) - (math.pi * (20**2) * 200)) -
-            ((math.pi * (140**2) * 200) - (math.pi * (120**2) * 200))
+            (math.pi * (200 ** 2) * 200)
+            - ((math.pi * (40 ** 2) * 200) - (math.pi * (20 ** 2) * 200))
+            - ((math.pi * (140 ** 2) * 200) - (math.pi * (120 ** 2) * 200))
         )
 
     def test_hash_value(self):
@@ -261,41 +270,40 @@ class TestRotateStraightShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp', mode='solid')
-        self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp', mode='wire')
+        self.test_shape.export_stp("test_solid.stp", mode="solid")
+        self.test_shape.export_stp("test_solid2.stp")
+        self.test_shape.export_stp("test_wire.stp", mode="wire")
 
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
-            Path("test_solid2.stp").stat().st_size
-        assert Path("test_wire.stp").stat().st_size < \
-            Path("test_solid2.stp").stat().st_size
+        assert (
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
+        )
+        assert (
+            Path("test_wire.stp").stat().st_size
+            < Path("test_solid2.stp").stat().st_size
+        )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
     def test_export_stp_with_incorrect_args(self):
-        """Checks errors are raised when incorrect arguments are used
-        """
+        """Checks errors are raised when incorrect arguments are used"""
 
         def export_mode_incorrect():
-            self.test_shape.export_stp(
-                'test_solid.stp',
-                mode='coucou'
-            )
+            self.test_shape.export_stp("test_solid.stp", mode="coucou")
 
         self.assertRaises(ValueError, export_mode_incorrect)
 
     def test_graveyard_filename(self):
-        """Checks the name of the stp file for the Graveyard is correct
-        """
+        """Checks the name of the stp file for the Graveyard is correct"""
         output_filename = self.test_shape.export_graveyard()
-        assert 'graveyard.stp' == output_filename
+        assert "graveyard.stp" == output_filename
 
-        output_filename = self.test_shape.export_graveyard(filename='test.stp')
-        assert 'test.stp' == output_filename
+        output_filename = self.test_shape.export_graveyard(filename="test.stp")
+        assert "test.stp" == output_filename
 
     def test_incorrect_points_input(self):
         """Checks that an error is raised when the points are input with the
@@ -303,16 +311,13 @@ class TestRotateStraightShape(unittest.TestCase):
 
         def incorrect_points_definition():
             self.test_shape.points = [
-                (10, 10, 'straight'),
-                (10, 30, 'straight'),
-                (30, 30, 'straight'),
-                (30, 10, 'straight')
+                (10, 10, "straight"),
+                (10, 30, "straight"),
+                (30, 30, "straight"),
+                (30, 10, "straight"),
             ]
 
-        self.assertRaises(
-            ValueError,
-            incorrect_points_definition
-        )
+        self.assertRaises(ValueError, incorrect_points_definition)
 
 
 if __name__ == "__main__":

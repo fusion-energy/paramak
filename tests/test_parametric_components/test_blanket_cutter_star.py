@@ -1,12 +1,11 @@
-
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestBlanketCutterStar(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.BlanketCutterStar(distance=100)
 
@@ -14,7 +13,17 @@ class TestBlanketCutterStar(unittest.TestCase):
         """Checks that the default parameters of a BlanketCutterStar are correct."""
 
         assert self.test_shape.azimuth_placement_angle == [
-            0., 36., 72., 108., 144., 180., 216., 252., 288., 324.]
+            0.0,
+            36.0,
+            72.0,
+            108.0,
+            144.0,
+            180.0,
+            216.0,
+            252.0,
+            288.0,
+            324.0,
+        ]
         assert self.test_shape.height == 2000
         assert self.test_shape.width == 2000
         assert self.test_shape.name == "blanket_cutter_star"
@@ -39,7 +48,7 @@ class TestBlanketCutterStar(unittest.TestCase):
             (2000, -1000, "straight"),
             (2000, 1000, "straight"),
             (0, 1000, "straight"),
-            (0, -1000, "straight")
+            (0, -1000, "straight"),
         ]
 
     def test_creation(self):
@@ -57,5 +66,4 @@ class TestBlanketCutterStar(unittest.TestCase):
         test_volume = self.test_shape.volume()
         self.test_shape.distance = 50
         # not quite two times as large as there is overlap in the center
-        assert test_volume == pytest.approx(
-            self.test_shape.volume() * 2, rel=0.1)
+        assert test_volume == pytest.approx(self.test_shape.volume() * 2, rel=0.1)

@@ -1,11 +1,9 @@
-
 import unittest
 
 import paramak
 
 
 class TestCenterColumnShieldPlasmaHyperbola(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldPlasmaHyperbola(
             height=800, inner_radius=100, mid_offset=40, edge_offset=30
@@ -35,14 +33,14 @@ class TestCenterColumnShieldPlasmaHyperbola(unittest.TestCase):
         from the parameters given."""
 
         assert self.test_shape.points == [
-            (100, 0, 'straight'),
-            (100, 400.0, 'straight'),
-            (337.5, 400.0, 'straight'),
-            (337.5, 300.0, 'spline'),
-            (260.0, 0.0, 'spline'),
-            (337.5, -300.0, 'straight'),
-            (337.5, -400.0, 'straight'),
-            (100, -400.0, 'straight'),
+            (100, 0, "straight"),
+            (100, 400.0, "straight"),
+            (337.5, 400.0, "straight"),
+            (337.5, 300.0, "spline"),
+            (260.0, 0.0, "spline"),
+            (337.5, -300.0, "straight"),
+            (337.5, -400.0, "straight"),
+            (100, -400.0, "straight"),
         ]
 
     def test_processed_points_calculation(self):
@@ -51,15 +49,15 @@ class TestCenterColumnShieldPlasmaHyperbola(unittest.TestCase):
         from the parameters given."""
 
         assert self.test_shape.processed_points == [
-            (100, 0, 'straight'),
-            (100, 400.0, 'straight'),
-            (337.5, 400.0, 'straight'),
-            (337.5, 300.0, 'spline'),
-            (260.0, 0.0, 'spline'),
-            (337.5, -300.0, 'straight'),
-            (337.5, -400.0, 'straight'),
-            (100, -400.0, 'straight'),
-            (100, 0, 'straight')
+            (100, 0, "straight"),
+            (100, 400.0, "straight"),
+            (337.5, 400.0, "straight"),
+            (337.5, 300.0, "spline"),
+            (260.0, 0.0, "spline"),
+            (337.5, -300.0, "straight"),
+            (337.5, -400.0, "straight"),
+            (100, -400.0, "straight"),
+            (100, 0, "straight"),
         ]
 
     def test_invalid_parameters_errors(self):

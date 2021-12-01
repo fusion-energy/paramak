@@ -1,19 +1,14 @@
-
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestInnerTfCoilsFlat(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.InnerTfCoilsFlat(
-            height=500,
-            inner_radius=50,
-            outer_radius=150,
-            number_of_coils=6,
-            gap_size=5
+            height=500, inner_radius=50, outer_radius=150, number_of_coils=6, gap_size=5
         )
 
         self.test_shape2 = paramak.InnerTfCoilsFlat(
@@ -22,7 +17,7 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             outer_radius=150,
             number_of_coils=6,
             gap_size=5,
-            radius_type='straight'
+            radius_type="straight",
         )
 
         # hexagon with 0 inner radius
@@ -32,7 +27,7 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             outer_radius=20,
             number_of_coils=6,
             gap_size=0,
-            radius_type='straight',
+            radius_type="straight",
         )
 
     def test_default_parameters(self):
@@ -52,7 +47,7 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             (49.937460888595446, 2.5),
             (27.1320420790315, 41.99824154201773),
             (77.154447582418, 128.6358861991937),
-            (149.97916521970643, 2.5)
+            (149.97916521970643, 2.5),
         ]
 
     def test_processed_points_calculation(self):
@@ -60,11 +55,11 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         component are calculated correctly from the parameters given."""
 
         assert self.test_shape.processed_points == [
-            (49.937460888595446, 2.5, 'straight'),
-            (27.1320420790315, 41.99824154201773, 'straight'),
-            (77.154447582418, 128.6358861991937, 'straight'),
-            (149.97916521970643, 2.5, 'straight'),
-            (49.937460888595446, 2.5, 'straight')
+            (49.937460888595446, 2.5, "straight"),
+            (27.1320420790315, 41.99824154201773, "straight"),
+            (77.154447582418, 128.6358861991937, "straight"),
+            (149.97916521970643, 2.5, "straight"),
+            (49.937460888595446, 2.5, "straight"),
         ]
 
     def test_creation(self):
@@ -79,11 +74,9 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         component and checks that the azimuthal start angle can be changed
         correctly."""
 
-        assert self.test_shape.azimuth_placement_angle == [
-            0, 60, 120, 180, 240, 300]
+        assert self.test_shape.azimuth_placement_angle == [0, 60, 120, 180, 240, 300]
         self.test_shape.azimuth_start_angle = 20
-        assert self.test_shape.azimuth_placement_angle == [
-            20, 80, 140, 200, 260, 320]
+        assert self.test_shape.azimuth_placement_angle == [20, 80, 140, 200, 260, 320]
 
     def test_attributes(self):
         """Checks that changing the attributes of InnerTfCoilsFlat affects the
@@ -110,22 +103,16 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
             self.test_shape.gap_size = 50
             self.test_shape.solid
 
-        self.assertRaises(
-            ValueError,
-            test_incorrect_gap_size
-        )
+        self.assertRaises(ValueError, test_incorrect_gap_size)
 
     def test_radius_type(self):
         """Checks that a ValueError is raised when radius_type is not a
         valid option."""
 
         def test_incorrect_radius_type():
-            self.test_shape.radius_type = 'coucou'
+            self.test_shape.radius_type = "coucou"
 
-        self.assertRaises(
-            ValueError,
-            test_incorrect_radius_type
-        )
+        self.assertRaises(ValueError, test_incorrect_radius_type)
 
     def test_volume_changes_with_radius_type(self):
         """Checks the analytical volume of the hex shaped extrusion and
@@ -143,13 +130,13 @@ class TestInnerTfCoilsFlat(unittest.TestCase):
         that adding a hole reduces voulume when the radius is to the corners."""
 
         hex_shape = self.test_shape_3
-        hex_shape.radius_type = 'corner'
+        hex_shape.radius_type = "corner"
         hex_volume = hex_shape.volume()
 
         assert pytest.approx(hex_volume, abs=0.5) == 1039.2 * 10
 
         hex_with_hole = self.test_shape_3
-        hex_with_hole.radius_type = 'corner'
+        hex_with_hole.radius_type = "corner"
         hex_with_hole.inner_radius = 2
 
         assert hex_volume > hex_with_hole.volume()

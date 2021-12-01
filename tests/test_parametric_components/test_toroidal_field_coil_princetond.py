@@ -1,16 +1,19 @@
-
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestToroidalFieldCoilPrincetonD(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.ToroidalFieldCoilPrincetonD(
-            R1=100, R2=300, thickness=50, distance=30, number_of_coils=1,
-            with_inner_leg=True
+            R1=100,
+            R2=300,
+            thickness=50,
+            distance=30,
+            number_of_coils=1,
+            with_inner_leg=True,
         )
 
     def test_default_parameters(self):
@@ -57,8 +60,7 @@ class TestToroidalFieldCoilPrincetonD(unittest.TestCase):
         test_volume = self.test_shape.volume()
 
         self.test_shape.number_of_coils = 8
-        assert test_volume == pytest.approx(
-            self.test_shape.volume() * 0.5, rel=0.01)
+        assert test_volume == pytest.approx(self.test_shape.volume() * 0.5, rel=0.01)
 
     def test_rotation_angle(self):
         """Creates a tf coil with a rotation_angle < 360 degrees and checks
@@ -70,20 +72,17 @@ class TestToroidalFieldCoilPrincetonD(unittest.TestCase):
         self.test_shape.workplane = "XZ"
         test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 0.5, rel=0.01)
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "YZ"
         test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 0.5, rel=0.01)
 
         self.test_shape.rotation_angle = 360
         self.test_shape.workplane = "XY"
         self.test_shape.rotation_axis = "Y"
         test_volume = self.test_shape.volume()
         self.test_shape.rotation_angle = 180
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 0.5, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 0.5, rel=0.01)

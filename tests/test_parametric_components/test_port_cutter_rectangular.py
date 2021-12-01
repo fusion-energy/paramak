@@ -1,13 +1,11 @@
-
 import unittest
-
-import paramak
 
 import pytest
 
+import paramak
+
 
 class TestPortCutterRectangular(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.PortCutterRectangular(
             width=20, height=40, distance=300

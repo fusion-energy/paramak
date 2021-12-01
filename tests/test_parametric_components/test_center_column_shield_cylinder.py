@@ -1,15 +1,14 @@
-
 import math
 import os
 import unittest
 from pathlib import Path
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestCenterColumnShieldCylinder(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = paramak.CenterColumnShieldCylinder(
             height=600, inner_radius=100, outer_radius=200
@@ -37,7 +36,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             (200, 300, "straight"),
             (200, -300, "straight"),
             (100, -300, "straight"),
-            (100, 300, "straight")
+            (100, 300, "straight"),
         ]
 
     def test_points_calculation(self):
@@ -65,7 +64,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         relative volume is correct"""
 
         assert self.test_shape.volume() == pytest.approx(
-            ((math.pi * (200**2)) - (math.pi * (100**2))) * 600
+            ((math.pi * (200 ** 2)) - (math.pi * (100 ** 2))) * 600
         )
 
     def test_absolute_area(self):
@@ -73,14 +72,23 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         areas of the faces of the solid created are correct"""
 
         assert len(self.test_shape.areas) == 4
-        assert self.test_shape.area == pytest.approx((((math.pi * (200**2)) - (math.pi * (
-            100**2))) * 2) + (math.pi * (2 * 200) * 600) + (math.pi * (2 * 100) * 600))
-        assert self.test_shape.areas.count(pytest.approx(
-            (math.pi * (200**2)) - (math.pi * (100**2)))) == 2
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (2 * 200) * 600)) == 1
-        assert self.test_shape.areas.count(
-            pytest.approx(math.pi * (2 * 100) * 600)) == 1
+        assert self.test_shape.area == pytest.approx(
+            (((math.pi * (200 ** 2)) - (math.pi * (100 ** 2))) * 2)
+            + (math.pi * (2 * 200) * 600)
+            + (math.pi * (2 * 100) * 600)
+        )
+        assert (
+            self.test_shape.areas.count(
+                pytest.approx((math.pi * (200 ** 2)) - (math.pi * (100 ** 2)))
+            )
+            == 2
+        )
+        assert (
+            self.test_shape.areas.count(pytest.approx(math.pi * (2 * 200) * 600)) == 1
+        )
+        assert (
+            self.test_shape.areas.count(pytest.approx(math.pi * (2 * 100) * 600)) == 1
+        )
 
     def test_export_stp_CenterColumnShieldCylinder(self):
         """Creates a CenterColumnShieldCylinder shape and checks that a stp
@@ -129,7 +137,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             self.test_shape.height = None
 
         def incorrect_center_height():
-            self.test_shape.center_height = 'string'
+            self.test_shape.center_height = "string"
 
         def incorrect_center_height_none():
             self.test_shape.center_height = None
@@ -145,10 +153,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         the default center_height=0 shape. Cuts shapes and checks volumes.
         """
         test_shape1 = paramak.CenterColumnShieldCylinder(
-            inner_radius=3,
-            outer_radius=3.3,
-            height=5,
-            color=(1, 0, 0)
+            inner_radius=3, outer_radius=3.3, height=5, color=(1, 0, 0)
         )
 
         test_shape2 = paramak.CenterColumnShieldCylinder(
@@ -156,7 +161,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             outer_radius=3.3,
             height=5,
             center_height=-2.5,
-            color=(1, 0, 0)
+            color=(1, 0, 0),
         )
 
         test_shape3 = paramak.CenterColumnShieldCylinder(
@@ -165,9 +170,8 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             height=5,
             center_height=0,
             color=(1, 0, 0),
-            cut=test_shape2
+            cut=test_shape2,
         )
 
         assert test_shape2.volume() == test_shape1.volume()
-        assert pytest.approx(test_shape3.volume()) == 0.5 * \
-            test_shape1.volume()
+        assert pytest.approx(test_shape3.volume()) == 0.5 * test_shape1.volume()

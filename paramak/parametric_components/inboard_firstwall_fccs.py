@@ -1,13 +1,16 @@
-
 from collections.abc import Iterable
 from typing import List, Optional, Tuple
 
-from paramak import (CenterColumnShieldCircular, CenterColumnShieldCylinder,
-                     CenterColumnShieldFlatTopCircular,
-                     CenterColumnShieldFlatTopHyperbola,
-                     CenterColumnShieldHyperbola,
-                     CenterColumnShieldPlasmaHyperbola, RotateMixedShape)
 import paramak
+from paramak import (
+    CenterColumnShieldCircular,
+    CenterColumnShieldCylinder,
+    CenterColumnShieldFlatTopCircular,
+    CenterColumnShieldFlatTopHyperbola,
+    CenterColumnShieldHyperbola,
+    CenterColumnShieldPlasmaHyperbola,
+    RotateMixedShape,
+)
 
 
 class InboardFirstwallFCCS(RotateMixedShape):
@@ -30,10 +33,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
         **kwargs
     ):
 
-        super().__init__(
-            color=color,
-            **kwargs
-        )
+        super().__init__(color=color, **kwargs)
 
         self.central_column_shield = central_column_shield
         self.thickness = thickness
@@ -63,7 +63,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
             CenterColumnShieldFlatTopHyperbola,
             CenterColumnShieldPlasmaHyperbola,
             CenterColumnShieldCircular,
-            CenterColumnShieldFlatTopCircular
+            CenterColumnShieldFlatTopCircular,
         )
         if not isinstance(self.central_column_shield, acceptable_classes):
             raise ValueError(
@@ -72,7 +72,8 @@ class InboardFirstwallFCCS(RotateMixedShape):
                 CenterColumnShieldHyperbola, \
                 CenterColumnShieldFlatTopHyperbola, \
                 CenterColumnShieldPlasmaHyperbola, \
-                CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular")
+                CenterColumnShieldCircular, CenterColumnShieldFlatTopCircular"
+            )
 
         inner_radius = self.central_column_shield.inner_radius
         height = self.central_column_shield.height
@@ -81,65 +82,49 @@ class InboardFirstwallFCCS(RotateMixedShape):
             firstwall = CenterColumnShieldCylinder(
                 height=height,
                 inner_radius=inner_radius,
-                outer_radius=self.central_column_shield.outer_radius +
-                self.thickness
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
             )
 
-        elif isinstance(self.central_column_shield,
-                        CenterColumnShieldHyperbola):
+        elif isinstance(self.central_column_shield, CenterColumnShieldHyperbola):
             firstwall = CenterColumnShieldHyperbola(
                 height=height,
                 inner_radius=inner_radius,
-                mid_radius=self.central_column_shield.mid_radius +
-                self.thickness,
-                outer_radius=self.central_column_shield.outer_radius +
-                self.thickness,
+                mid_radius=self.central_column_shield.mid_radius + self.thickness,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
             )
 
-        elif isinstance(self.central_column_shield,
-                        CenterColumnShieldFlatTopHyperbola):
+        elif isinstance(self.central_column_shield, CenterColumnShieldFlatTopHyperbola):
             firstwall = CenterColumnShieldFlatTopHyperbola(
                 height=height,
                 arc_height=self.central_column_shield.arc_height,
                 inner_radius=inner_radius,
-                mid_radius=self.central_column_shield.mid_radius +
-                self.thickness,
-                outer_radius=self.central_column_shield.outer_radius +
-                self.thickness,
+                mid_radius=self.central_column_shield.mid_radius + self.thickness,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
             )
 
-        elif isinstance(self.central_column_shield,
-                        CenterColumnShieldPlasmaHyperbola):
+        elif isinstance(self.central_column_shield, CenterColumnShieldPlasmaHyperbola):
             firstwall = CenterColumnShieldPlasmaHyperbola(
                 height=height,
                 inner_radius=inner_radius,
-                mid_offset=self.central_column_shield.mid_offset -
-                self.thickness,
-                edge_offset=self.central_column_shield.edge_offset -
-                self.thickness,
+                mid_offset=self.central_column_shield.mid_offset - self.thickness,
+                edge_offset=self.central_column_shield.edge_offset - self.thickness,
             )
 
-        elif isinstance(self.central_column_shield,
-                        CenterColumnShieldCircular):
+        elif isinstance(self.central_column_shield, CenterColumnShieldCircular):
             firstwall = CenterColumnShieldCircular(
                 height=height,
                 inner_radius=inner_radius,
-                mid_radius=self.central_column_shield.mid_radius +
-                self.thickness,
-                outer_radius=self.central_column_shield.outer_radius +
-                self.thickness,
+                mid_radius=self.central_column_shield.mid_radius + self.thickness,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
             )
 
-        elif isinstance(self.central_column_shield,
-                        CenterColumnShieldFlatTopCircular):
+        elif isinstance(self.central_column_shield, CenterColumnShieldFlatTopCircular):
             firstwall = CenterColumnShieldFlatTopCircular(
                 height=height,
                 arc_height=self.central_column_shield.arc_height,
                 inner_radius=inner_radius,
-                mid_radius=self.central_column_shield.mid_radius +
-                self.thickness,
-                outer_radius=self.central_column_shield.outer_radius +
-                self.thickness,
+                mid_radius=self.central_column_shield.mid_radius + self.thickness,
+                outer_radius=self.central_column_shield.outer_radius + self.thickness,
             )
 
         firstwall.rotation_angle = self.rotation_angle

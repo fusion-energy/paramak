@@ -1,19 +1,24 @@
-
 import os
 import unittest
 from pathlib import Path
 
 import pytest
+
 from paramak import RotateStraightShape, SweepMixedShape
 
 
 class TestSweepMixedShape(unittest.TestCase):
-
     def setUp(self):
         self.test_shape = SweepMixedShape(
-            points=[(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"),
-                    (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")],
-            path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+            points=[
+                (-10, -10, "straight"),
+                (-10, 10, "spline"),
+                (0, 20, "spline"),
+                (10, 10, "circle"),
+                (0, 0, "circle"),
+                (10, -10, "straight"),
+            ],
+            path_points=[(50, 0), (30, 50), (70, 100), (50, 150)],
         )
 
     def test_default_parameters(self):
@@ -40,13 +45,24 @@ class TestSweepMixedShape(unittest.TestCase):
         """Creates two SweepMixedShapes and checks that their relative volumes
         are correct."""
 
-        self.test_shape.points = [(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"),
-                                  (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")]
+        self.test_shape.points = [
+            (-10, -10, "straight"),
+            (-10, 10, "spline"),
+            (0, 20, "spline"),
+            (10, 10, "circle"),
+            (0, 0, "circle"),
+            (10, -10, "straight"),
+        ]
         test_volume = self.test_shape.volume()
-        self.test_shape.points = [(-20, -20, "straight"), (-20, 20, "spline"), (0, 40, "spline"),
-                                  (20, 20, "circle"), (0, 0, "circle"), (20, -20, "straight")]
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 4, rel=0.01)
+        self.test_shape.points = [
+            (-20, -20, "straight"),
+            (-20, 20, "spline"),
+            (0, 40, "spline"),
+            (20, 20, "circle"),
+            (0, 0, "circle"),
+            (20, -20, "straight"),
+        ]
+        assert self.test_shape.volume() == pytest.approx(test_volume * 4, rel=0.01)
 
     def test_relative_shape_volume_azimuthal_placement(self):
         """Creates two SweepMixedShapes and checks that their relative volumes
@@ -54,8 +70,7 @@ class TestSweepMixedShape(unittest.TestCase):
 
         test_volume = self.test_shape.volume()
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume() == pytest.approx(
-            test_volume * 4, rel=0.01)
+        assert self.test_shape.volume() == pytest.approx(test_volume * 4, rel=0.01)
 
     def test_workplane_path_workplane_error_raises(self):
         """Checks that errors are raised when SweepMixedShapes are created with
@@ -70,9 +85,7 @@ class TestSweepMixedShape(unittest.TestCase):
             self.test_shape.path_workplane = "YZ"
 
         self.assertRaises(ValueError, workplane_and_path_workplane_equal)
-        self.assertRaises(
-            ValueError,
-            invalid_relative_workplane_and_path_workplane)
+        self.assertRaises(ValueError, invalid_relative_workplane_and_path_workplane)
 
     def test_workplane_opposite_distance(self):
         """Checks that a SweepMixedShape can be created with workplane XZ and
@@ -91,22 +104,19 @@ class TestSweepMixedShape(unittest.TestCase):
 
         test_area = round(min(self.test_shape.areas))
 
-        assert self.test_shape.areas.count(
-            pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
             points=[(0, 50), (0, 200), (100, 200), (100, 50)]
         )
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(
-            pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
         cutting_shape.points = [(0, 100), (0, 200), (100, 200), (100, 100)]
         self.test_shape.cut = cutting_shape
 
-        assert self.test_shape.areas.count(
-            pytest.approx(test_area, rel=0.01)) == 2
+        assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
     def test_force_cross_section_volume(self):
         """Checks that a SweepMixedShape with a larger volume is created when
@@ -129,18 +139,22 @@ class TestSweepMixedShape(unittest.TestCase):
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
-        self.test_shape.export_stp('test_solid.stp', mode='solid')
-        self.test_shape.export_stp('test_solid2.stp')
-        self.test_shape.export_stp('test_wire.stp', mode='wire')
+        self.test_shape.export_stp("test_solid.stp", mode="solid")
+        self.test_shape.export_stp("test_solid2.stp")
+        self.test_shape.export_stp("test_wire.stp", mode="wire")
 
         assert Path("test_solid.stp").exists() is True
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert Path("test_solid.stp").stat().st_size == \
-            Path("test_solid2.stp").stat().st_size
-        assert Path("test_wire.stp").stat().st_size < \
-            Path("test_solid2.stp").stat().st_size
+        assert (
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
+        )
+        assert (
+            Path("test_wire.stp").stat().st_size
+            < Path("test_solid2.stp").stat().st_size
+        )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

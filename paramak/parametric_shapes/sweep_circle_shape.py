@@ -1,7 +1,7 @@
-
-from typing import Optional, List, Tuple
+from typing import List, Optional, Tuple
 
 from cadquery import Workplane
+
 from paramak import Shape
 
 
@@ -30,17 +30,16 @@ class SweepCircleShape(Shape):
         workplane: Optional[str] = "XY",
         path_workplane: Optional[str] = "XZ",
         force_cross_section: Optional[bool] = False,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.651, 0.808, 0.89),
-        name: str = 'sweepcircleshape',
+        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+            0.651,
+            0.808,
+            0.89,
+        ),
+        name: str = "sweepcircleshape",
         **kwargs
     ):
 
-        super().__init__(
-            workplane=workplane,
-            color=color,
-            name=name,
-            **kwargs
-        )
+        super().__init__(workplane=workplane, color=color, name=name, **kwargs)
 
         self.radius = radius
         self.path_points = path_points
@@ -78,9 +77,7 @@ class SweepCircleShape(Shape):
                 "workplane and path_workplane must start with the same letter"
             )
         elif value == self.workplane:
-            raise ValueError(
-                "workplane and path_workplane must be different"
-            )
+            raise ValueError("workplane and path_workplane must be different")
         else:
             self._path_workplane = value
 
@@ -109,18 +106,16 @@ class SweepCircleShape(Shape):
 
                 wires.append(wire)
 
-                wire = (
-                    wire.center(-point[0], 0)
-                    .workplane(offset=-point[1] * factor)
-                )
+                wire = wire.center(-point[0], 0).workplane(offset=-point[1] * factor)
 
             self.wire = wires
 
-            solid = wire.workplane(
-                offset=self.path_points[-1][1] * factor) \
-                .center(self.path_points[-1][0], 0) \
-                .circle(self.radius) \
+            solid = (
+                wire.workplane(offset=self.path_points[-1][1] * factor)
+                .center(self.path_points[-1][0], 0)
+                .circle(self.radius)
                 .sweep(path, multisection=True)
+            )
 
         else:
 

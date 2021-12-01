@@ -1,6 +1,7 @@
+from typing import List
 
-import paramak
 import numpy as np
+import paramak
 
 
 class IterFrom2020PaperDiagram(paramak.Reactor):
@@ -17,7 +18,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
 
     def __init__(
         self,
-        rotation_angle: float = 360.,
+        rotation_angle: float = 360.0,
         number_of_tf_coils: int = 18,
     ):
 
@@ -27,9 +28,9 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         self.number_of_tf_coils = number_of_tf_coils
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names = self.input_variable_names + [
-            'number_of_tf_coils',
-            'rotation_angle',
+        self.input_variable_names: List[str] = self.input_variable_names + [
+            "number_of_tf_coils",
+            "rotation_angle",
         ]
 
     def create_tf_coils(self) -> list:
@@ -117,7 +118,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (510.2245275810152, 564.0927634387052),
                 (545.6438096482208, 565.1200145185009),
                 (565.832800426528, 563.1864687746993),
-
                 (580.9745435102584, 559.4390362932862),
                 (616.3052773722961, 548.4109567158157),
                 (651.6360112343338, 533.224020531035),
@@ -136,7 +136,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (962.8829523999035, 118.10702768634405),
                 (967.9302000944803, 80.39197257542594),
                 (968.7714080435763, 38.24754419835381),
-
                 (968.7714080435763, 25.77097437642317),
                 (964.5653682980957, -1.670738783514139),
                 (956.9944967562304, -29.93883090626548),
@@ -175,7 +174,6 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (327.770950832322, -137.06073162914538),
                 (327.770950832322, -102.12633612773948),
                 (327.770950832322, -67.19194062633369),
-
             ],
             cut=[vac_vessel_inner],  # to make a hollow shape
             rotation_angle=self.rotation_angle,
@@ -210,23 +208,27 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         """
 
         # from diagram
-        bot_lefts = np.array([
-            (345.5429497568881, -788.0537547271744),
-            (800.6482982171799, -703.3664235548353),
-            (1160.9400324149108, -272.69381415451096),
-            (1158.833063209076, 268.97622906537015),
-            (798.5413290113453, 621.6369529983793),
-            (345.5429497568881, 707.7795786061589),
-        ])
+        bot_lefts = np.array(
+            [
+                (345.5429497568881, -788.0537547271744),
+                (800.6482982171799, -703.3664235548353),
+                (1160.9400324149108, -272.69381415451096),
+                (1158.833063209076, 268.97622906537015),
+                (798.5413290113453, 621.6369529983793),
+                (345.5429497568881, 707.7795786061589),
+            ]
+        )
 
-        top_rights = np.array([
-            (511.99351701782825, -690.4038357644516),
-            (880.7131280388979, -611.8280659103187),
-            (1222.0421393841166, -162.37506753106413),
-            (1230.4700162074555, 379.2780929227446),
-            (861.7504051863858, 681.9523230686117),
-            (446.677471636953, 803.4508373851974),
-        ])
+        top_rights = np.array(
+            [
+                (511.99351701782825, -690.4038357644516),
+                (880.7131280388979, -611.8280659103187),
+                (1222.0421393841166, -162.37506753106413),
+                (1230.4700162074555, 379.2780929227446),
+                (861.7504051863858, 681.9523230686117),
+                (446.677471636953, 803.4508373851974),
+            ]
+        )
 
         outboard_pf_coils = paramak.PoloidalFieldCoilSet(
             center_points=((bot_lefts + top_rights) / 2).tolist(),
@@ -297,8 +299,15 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
         )
 
-        return [outboard_pf_coils, pf_coils_1, pf_coils_2, pf_coils_3,
-                pf_coils_4, pf_coils_5, pf_coils_6]
+        return [
+            outboard_pf_coils,
+            pf_coils_1,
+            pf_coils_2,
+            pf_coils_3,
+            pf_coils_4,
+            pf_coils_5,
+            pf_coils_6,
+        ]
 
     def create_solids(self):
         """Creates a 3d solids for each component.
@@ -312,8 +321,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         tf_coil = self.create_tf_coils()
         vessel = self.create_vessel_components()
 
-        shapes_and_components = plasma + \
-            pf_coils + vessel[:-1] + tf_coil
+        shapes_and_components = plasma + pf_coils + vessel[:-1] + tf_coil
         self.shapes_and_components = shapes_and_components
 
         return shapes_and_components

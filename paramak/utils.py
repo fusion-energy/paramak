@@ -1,4 +1,3 @@
-
 import math
 from collections.abc import Iterable
 from hashlib import blake2b
@@ -17,7 +16,7 @@ from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 import paramak
 
 
-def transform_curve(edge, tolerance: float = 1e-3):
+def transform_curve(edge, tolerance: Optional[float] = 1e-3):
     """Converts a curved edge into a series of straight lines (facetets) with
     the provided tolerance.
 
@@ -42,10 +41,10 @@ def transform_curve(edge, tolerance: float = 1e-3):
 
 
 def facet_wire(
-        wire,
-        facet_splines: bool = True,
-        facet_circles: bool = True,
-        tolerance: float = 1e-3
+    wire,
+    facet_splines: Optional[bool] = True,
+    facet_circles: Optional[bool] = True,
+    tolerance: Optional[float] = 1e-3,
 ):
     """Converts specified curved edge types from a wire into a series of
     straight lines (facetets) with the provided tol (tolerance).
@@ -67,9 +66,9 @@ def facet_wire(
 
     types_to_facet = []
     if facet_splines:
-        types_to_facet.append('BSPLINE')
+        types_to_facet.append("BSPLINE")
     if facet_circles:
-        types_to_facet.append('CIRCLE')
+        types_to_facet.append("CIRCLE")
 
     if isinstance(wire, cq.occ_impl.shapes.Edge):
         # this is for when a edge is passed
@@ -91,7 +90,8 @@ def facet_wire(
 
 
 def coefficients_of_line_from_points(
-        point_a: Tuple[float, float], point_b: Tuple[float, float]) -> Tuple[float, float]:
+    point_a: Tuple[float, float], point_b: Tuple[float, float]
+) -> Tuple[float, float]:
     """Computes the m and c coefficients of the equation (y=mx+c) for
     a straight line from two points.
 
@@ -148,8 +148,9 @@ def diff_between_angles(angle_a: float, angle_b: float) -> float:
     return delta_mod
 
 
-def distance_between_two_points(point_a: Tuple[float, float],
-                                point_b: Tuple[float, float]) -> float:
+def distance_between_two_points(
+    point_a: Tuple[float, float], point_b: Tuple[float, float]
+) -> float:
     """Computes the distance between two points.
 
     Args:
@@ -166,8 +167,9 @@ def distance_between_two_points(point_a: Tuple[float, float],
     return np.linalg.norm(u_vec)
 
 
-def extend(point_a: Tuple[float, float], point_b: Tuple[float, float],
-           L: float) -> Tuple[float, float]:
+def extend(
+    point_a: Tuple[float, float], point_b: Tuple[float, float], L: float
+) -> Tuple[float, float]:
     """Creates a point C in (ab) direction so that \\|aC\\| = L
 
     Args:
@@ -189,20 +191,19 @@ def extend(point_a: Tuple[float, float], point_b: Tuple[float, float],
 
 
 def find_center_point_of_circle(
-        point_a: Tuple[float, float],
-        point_b: Tuple[float, float],
-        point_3: Tuple[float, float]
-) -> Tuple[Tuple[float, float], float]:
+    point_a: Tuple[float, float],
+    point_b: Tuple[float, float],
+    point_3: Tuple[float, float],
+) -> Union[Tuple[float, float], None]:
     """
-    Calculates the center and the radius of a circle
-    passing through 3 points.
+    Calculates the center of a circle passing through 3 points.
     Args:
-        point_a (float, float): point 1 coordinates
-        point_b (float, float): point 2 coordinates
-        point_3 (float, float): point 3 coordinates
+        point_a: point 1 coordinates
+        point_b: point 2 coordinates
+        point_3: point 3 coordinates
     Returns:
-        (float, float), float: center of the circle coordinates or
-        None if 3 points on a line are input and the radius
+        center of the circle coordinates or None if 3 points on a line are
+        input and the radius
     """
 
     temp = point_b[0] * point_b[0] + point_b[1] * point_b[1]
@@ -213,17 +214,36 @@ def find_center_point_of_circle(
     ) * (point_a[1] - point_b[1])
 
     if abs(det) < 1.0e-6:
-        return (None, np.inf)
+        return None
 
     # Center of circle
-    cx = (bc * (point_b[1] - point_3[1]) -
-          cd * (point_a[1] - point_b[1])) / det
-    cy = ((point_a[0] - point_b[0]) * cd -
-          (point_b[0] - point_3[0]) * bc) / det
+    cx = (bc * (point_b[1] - point_3[1]) - cd * (point_a[1] - point_b[1])) / det
+    cy = ((point_a[0] - point_b[0]) * cd - (point_b[0] - point_3[0]) * bc) / det
 
-    radius = np.sqrt((cx - point_a[0]) ** 2 + (cy - point_a[1]) ** 2)
+    return (cx, cy)
 
-    return (cx, cy), radius
+
+def find_radius_of_circle(
+    center_point: Tuple[float, float],
+    edge_point: Tuple[float, float],
+) -> float:
+    """Calculates the radius of a circle.
+
+    Args:
+        center_point: x, y coordinates of the center of te circle
+        edge_point: x, y coordinates of a point on the edge of the circle
+    Returns:
+        the radius of the circle
+    """
+
+    if center_point == edge_point:
+        return np.inf
+
+    radius = np.sqrt(
+        (center_point[0] - edge_point[0]) ** 2 + (center_point[1] - edge_point[1]) ** 2
+    )
+
+    return radius
 
 
 def intersect_solid(solid, intersecter):
@@ -246,8 +266,7 @@ def intersect_solid(solid, intersecter):
     return solid
 
 
-def rotate(origin: Tuple[float, float], point: Tuple[float, float],
-           angle: float):
+def rotate(origin: Tuple[float, float], point: Tuple[float, float], angle: float):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
     The angle should be given in radians.
@@ -299,8 +318,9 @@ def calculate_wedge_cut(self):
     return cutting_wedge
 
 
-def add_thickness(x: List[float], y: List[float], thickness: float,
-                  dy_dx: List[float] = None):
+def add_thickness(
+    x: List[float], y: List[float], thickness: float, dy_dx: List[float] = None
+) -> Tuple[list, list]:
     """Computes outer curve points based on thickness
 
     Args:
@@ -311,7 +331,7 @@ def add_thickness(x: List[float], y: List[float], thickness: float,
             derivatives
 
     Returns:
-        (list, list): R and Z lists for outer curve points
+        R and Z lists for outer curve points
     """
 
     if dy_dx is None:
@@ -319,9 +339,9 @@ def add_thickness(x: List[float], y: List[float], thickness: float,
 
     x_outer, y_outer = [], []
     for i in range(len(dy_dx)):
-        if dy_dx[i] == float('-inf'):
+        if dy_dx[i] == float("-inf"):
             nx, ny = -1, 0
-        elif dy_dx[i] == float('inf'):
+        elif dy_dx[i] == float("inf"):
             nx, ny = 1, 0
         else:
             nx = -dy_dx[i]
@@ -386,7 +406,7 @@ def _replace(filename: str, pattern: str, subst: str) -> None:
     """
     # Create temp file
     file_handle, abs_path = mkstemp()
-    with fdopen(file_handle, 'w') as new_file:
+    with fdopen(file_handle, "w") as new_file:
         with open(filename) as old_file:
             for line in old_file:
                 new_file.write(line.replace(pattern, subst))
@@ -402,10 +422,10 @@ def _replace(filename: str, pattern: str, subst: str) -> None:
 
 
 def plotly_trace(
-        points: Union[List[Tuple[float, float]], List[Tuple[float, float, float]]],
-        mode: str = "markers+lines",
-        name: str = None,
-        color: Union[Tuple[float, float, float], Tuple[float, float, float, float]] = None
+    points: Union[List[Tuple[float, float]], List[Tuple[float, float, float]]],
+    mode: str = "markers+lines",
+    name: str = None,
+    color: Union[Tuple[float, float, float], Tuple[float, float, float, float]] = None,
 ) -> Union[go.Scatter, go.Scatter3d]:
     """Creates a plotly trace representation of the points of the Shape
     object. This method is intended for internal use by Shape.export_html.
@@ -422,13 +442,15 @@ def plotly_trace(
         plotly trace: trace object
     """
 
-    if color is not None:
+    if color is None:
+        color_string = "rgb(125, 125, 125)"
+    else:
         color_list = [i * 255 for i in color]
 
         if len(color_list) == 3:
-            color = "rgb(" + str(color_list).strip("[]") + ")"
+            color_string = "rgb(" + str(color_list).strip("[]") + ")"
         elif len(color_list) == 4:
-            color = "rgba(" + str(color_list).strip("[]") + ")"
+            color_string = "rgba(" + str(color_list).strip("[]") + ")"
 
     if name is None:
         name = "Shape not named"
@@ -438,9 +460,9 @@ def plotly_trace(
     text_values = []
 
     for i, point in enumerate(points):
-        text = 'point number= {i} <br> x={point[0]} <br> y= {point[1]}'
+        text = "point number= {i} <br> x={point[0]} <br> y= {point[1]}"
         if len(point) == 3:
-            text = text + '<br> z= {point[2]} <br>'
+            text = text + "<br> z= {point[2]} <br>"
 
         text_values.append(text)
 
@@ -450,8 +472,8 @@ def plotly_trace(
             y=[row[1] for row in points],
             z=[row[2] for row in points],
             mode=mode,
-            marker={"size": 3, "color": color},
-            name=name
+            marker={"size": 3, "color": color_string},
+            name=name,
         )
 
         return trace
@@ -471,8 +493,8 @@ def plotly_trace(
 
 def extract_points_from_edges(
     edges: Union[List[cq.Wire], cq.Wire],
-    view_plane: str = 'XZ',
-):
+    view_plane: Optional[str] = "XZ",
+) -> list:
     """Extracts points (coordinates) from a CadQuery Edge, optionally projects
     the points to a plane and returns the points.
 
@@ -495,33 +517,31 @@ def extract_points_from_edges(
 
     for edge in list_of_edges:
         for vertex in edge.Vertices():
-            if view_plane == 'XZ':
+            if view_plane == "XZ":
                 points.append((vertex.X, vertex.Z))
-            elif view_plane == 'XY':
+            elif view_plane == "XY":
                 points.append((vertex.X, vertex.Y))
-            elif view_plane == 'YZ':
+            elif view_plane == "YZ":
                 points.append((vertex.Y, vertex.Z))
-            elif view_plane == 'YX':
+            elif view_plane == "YX":
                 points.append((vertex.Y, vertex.X))
-            elif view_plane == 'ZY':
+            elif view_plane == "ZY":
                 points.append((vertex.Z, vertex.Y))
-            elif view_plane == 'ZX':
+            elif view_plane == "ZX":
                 points.append((vertex.Z, vertex.X))
-            elif view_plane == 'RZ':
+            elif view_plane == "RZ":
                 xy_coord = math.pow(vertex.X, 2) + math.pow(vertex.Y, 2)
                 points.append((math.sqrt(xy_coord), vertex.Z))
-            elif view_plane == 'XYZ':
+            elif view_plane == "XYZ":
                 points.append((vertex.X, vertex.Y, vertex.Z))
             else:
-                raise ValueError('view_plane value of ', view_plane,
-                                 ' is not supported')
+                raise ValueError(
+                    "view_plane value of ", view_plane, " is not supported"
+                )
     return points
 
 
-def load_stp_file(
-    filename: str,
-    scale_factor: float = 1.
-):
+def load_stp_file(filename: str, scale_factor: float = 1.0):
     """Loads a stp file and makes the 3D solid and wires available for use.
 
     Args:
@@ -546,11 +566,11 @@ def load_stp_file(
 def export_wire_to_html(
     wires,
     filename=None,
-    view_plane='RZ',
-    facet_splines: bool = True,
-    facet_circles: bool = True,
-    tolerance: float = 1e-3,
-    title=None,
+    view_plane: Optional[str] = "RZ",
+    facet_splines: Optional[bool] = True,
+    facet_circles: Optional[bool] = True,
+    tolerance: Optional[float] = 1e-3,
+    title: Optional[str] = None,
     mode="markers+lines",
 ):
     """Creates a html graph representation of the points within the wires.
@@ -584,10 +604,10 @@ def export_wire_to_html(
     fig = go.Figure()
     fig.update_layout(title=title, hovermode="closest")
 
-    if view_plane == 'XYZ':
+    if view_plane == "XYZ":
         fig.update_layout(
             title=title,
-            scene_aspectmode='data',
+            scene_aspectmode="data",
             scene=dict(
                 xaxis_title=view_plane[0],
                 yaxis_title=view_plane[1],
@@ -597,10 +617,9 @@ def export_wire_to_html(
     else:
 
         fig.update_layout(
-            yaxis=dict(scaleanchor="x",
-                       scaleratio=1),
+            yaxis=dict(scaleanchor="x", scaleratio=1),
             xaxis_title=view_plane[0],
-            yaxis_title=view_plane[1]
+            yaxis_title=view_plane[1],
         )
 
     if isinstance(wires, list):
@@ -614,20 +633,15 @@ def export_wire_to_html(
             wire=wire,
             facet_splines=facet_splines,
             facet_circles=facet_circles,
-            tolerance=tolerance
+            tolerance=tolerance,
         )
 
         points = paramak.utils.extract_points_from_edges(
-            edges=edges,
-            view_plane=view_plane
+            edges=edges, view_plane=view_plane
         )
 
         fig.add_trace(
-            plotly_trace(
-                points=points,
-                mode=mode,
-                name='edge ' + str(counter)
-            )
+            plotly_trace(points=points, mode=mode, name="edge " + str(counter))
         )
 
     for counter, wire in enumerate(list_of_wires):
@@ -643,14 +657,13 @@ def export_wire_to_html(
             edges = wire.val().Edges()
 
         points = paramak.utils.extract_points_from_edges(
-            edges=edges,
-            view_plane=view_plane)
-
-        fig.add_trace(plotly_trace(
-            points=points,
-            mode="markers",
-            name='points on wire ' + str(counter)
+            edges=edges, view_plane=view_plane
         )
+
+        fig.add_trace(
+            plotly_trace(
+                points=points, mode="markers", name="points on wire " + str(counter)
+            )
         )
 
     if filename is not None:
@@ -670,10 +683,10 @@ def export_wire_to_html(
 
 
 def convert_circle_to_spline(
-        p_0: Tuple[float, float],
-        p_1: Tuple[float, float],
-        p_2: Tuple[float, float],
-        tolerance: Optional[float] = 0.1
+    p_0: Tuple[float, float],
+    p_1: Tuple[float, float],
+    p_2: Tuple[float, float],
+    tolerance: Optional[float] = 0.1,
 ) -> List[Tuple[float, float, str]]:
     """Converts three points on the edge of a circle into a series of points
     on the edge of the circle. This is done by creating a circle edge from the
@@ -691,16 +704,13 @@ def convert_circle_to_spline(
     """
 
     # work plane is arbitrarily selected and has no impact of function
-    solid = cq.Workplane('XZ').center(0, 0)
+    solid = cq.Workplane("XZ").center(0, 0)
     solid = solid.moveTo(p_0[0], p_0[1]).threePointArc(p_1, p_2)
     edge = solid.vals()[0]
 
     new_edge = paramak.utils.transform_curve(edge, tolerance=tolerance)
 
-    points = paramak.utils.extract_points_from_edges(
-        edges=new_edge,
-        view_plane='XZ'
-    )
+    points = paramak.utils.extract_points_from_edges(edges=new_edge, view_plane="XZ")
 
     return points
 
@@ -738,7 +748,10 @@ class FaceAreaSelector(cq.Selector):
             face_area = obj.Area()
 
             # Only return faces that meet the requirements
-            if face_area > self.area - self.tolerance and face_area < self.area + self.tolerance:
+            if (
+                face_area > self.area - self.tolerance
+                and face_area < self.area + self.tolerance
+            ):
                 new_obj_list.append(obj)
 
         return new_obj_list
@@ -774,14 +787,17 @@ class EdgeLengthSelector(cq.Selector):
         """
 
         new_obj_list = []
-        print('filleting edge#')
+        print("filleting edge#")
         for obj in object_list:
 
             edge_len = obj.Length()
 
             # Only return edges that meet our requirements
-            if edge_len > self.length - self.tolerance and edge_len < self.length + self.tolerance:
+            if (
+                edge_len > self.length - self.tolerance
+                and edge_len < self.length + self.tolerance
+            ):
 
                 new_obj_list.append(obj)
-        print('length(new_obj_list)', len(new_obj_list))
+        print("length(new_obj_list)", len(new_obj_list))
         return new_obj_list

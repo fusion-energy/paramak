@@ -1,8 +1,8 @@
-
 import unittest
 
-import paramak
 import pytest
+
+import paramak
 
 
 class TestSingleNullSubmersionTokamak(unittest.TestCase):
@@ -34,7 +34,7 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
             rear_blanket_to_tf_gap=50,
             outboard_tf_coil_radial_thickness=30,
             outboard_tf_coil_poloidal_thickness=30,
-            divertor_position="lower"
+            divertor_position="lower",
         )
 
     def test_input_variable_names(self):
@@ -58,17 +58,18 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
 
         assert len(self.test_reactor.shapes_and_components) == 11
 
-    def test_single_null_submersion_tokamak_rotation_angle_impacts_volume(
-            self):
+    def test_single_null_submersion_tokamak_rotation_angle_impacts_volume(self):
         """Creates SingleNullSubmersionTokamaks with different rotation angles and
         checks that the relative volumes of the components are correct."""
 
         self.test_reactor.rotation_angle = 90
         comps_90_vol = [
-            comp.volume() for comp in self.test_reactor.shapes_and_components]
+            comp.volume() for comp in self.test_reactor.shapes_and_components
+        ]
         self.test_reactor.rotation_angle = 180
         comps_180_vol = [
-            comp.volume() for comp in self.test_reactor.shapes_and_components]
+            comp.volume() for comp in self.test_reactor.shapes_and_components
+        ]
 
         for vol_90, vol_180 in zip(comps_90_vol, comps_180_vol):
             assert vol_90 == pytest.approx(vol_180 * 0.5, rel=0.1)
@@ -109,7 +110,7 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coils_casing"
+            "_pf_coils_casing",
         ]:
             assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
@@ -129,7 +130,7 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
             "_outboard_rear_blanket_wall",
             "_tf_coil",
             "_pf_coil",
-            "_pf_coils_casing"
+            "_pf_coils_casing",
         ]:
             assert key in self.test_reactor.__dict__.keys()
         assert len(self.test_reactor.shapes_and_components) == 11
