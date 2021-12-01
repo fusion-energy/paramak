@@ -56,34 +56,37 @@ class NegativeTriangularityReactor(paramak.Reactor):
             rear blanket wall,
     """
     def __init__(self,
-                 inner_tf_coil_thickness: float,
-                 vacuum_vessel_thickness: float,
-                 central_shield_thickness: float,
-                 wall_to_plasma_gap: float,
-                 plasma_radial_thickness: float,
-                 elongation: float,
-                 triangularity: float,
-                 inner_wall_thickness: float,
-                 blanket_thickness: float,
-                 rear_wall_thickness: float,
-                 divertor_radial_thickness: float,
-                 divertor_height_full: float,
-                 number_of_coils: int,
-                 tf_width: float,
-                 pf_coil_heights: Optional[Union[float, list]],
-                 pf_coil_widths: Optional[Union[float, list]],
-                 pf_coil_center_points: Optional[Union[list, tuple]],
-                 pf_coil_casing_thickness: Optional[float],
-                 rotation_angle: float,
-                 inner_bore_radius: Optional[float] = 5,
-                 port_side_lengths: Optional[list] = None,
-                 port_heights: Optional[list] = None,
-                 port_angles: Optional[list] = None,
-                 port_z_pos: Optional[list] = None,
+                 inner_tf_coil_thickness: float = 100,
+                 vacuum_vessel_thickness: float = 50,
+                 central_shield_thickness: float = 30,
+                 wall_to_plasma_gap: float = 150,
+                 plasma_radial_thickness: float = 650,
+                 elongation: float = 2,
+                 triangularity: float = 0.6,
+                 inner_wall_thickness: float = 20,
+                 blanket_thickness: float = 105,
+                 rear_wall_thickness: float = 20,
+                 divertor_radial_thickness: float = 430,
+                 divertor_height_full: float = 300,
+                 number_of_coils: int = 12,
+                 tf_width: float = 75,
+                 pf_coil_heights: Optional[Union[float, list]] = [75,75,150,75,75],
+                 pf_coil_widths: Optional[Union[float, list]] = [75,75,150,75,75],
+                 pf_coil_center_points: Optional[Union[list, tuple]] = [(350,850), 
+                                                                        (1350,650),
+                                                                        (1400,0), 
+                                                                        (1350,-650),
+                                                                        (350,-850)],
+                 pf_coil_casing_thickness: Optional[float] = [15,15,15,15,15],
+                 rotation_angle: float = 180,
+                 inner_bore_radius: Optional[float] = 50,
+                 port_side_lengths: Optional[list] = [200,200,150],
+                 port_heights: Optional[list] = [200,100,400],
+                 port_angles: Optional[list] = [75, 170, 15],
+                 port_z_pos: Optional[list] = [500,-500, 200],
                  outer_tf_coil_thickness: float = None,
                  show_plasma: bool = True,
                  low_aspect: bool = False,
-
                  ):
 
         super().__init__([])
@@ -248,8 +251,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             + self._vacuum_vessel_thickness \
             + self._central_shield_thickness \
             + self._wall_to_plasma_gap \
-            + self._inner_leg_to_vacuum_inner_wall_gap \
-            + self._rear_wall_thickness
+            + self._inner_leg_to_vacuum_inner_wall_gap
         if not self._low_aspect:
             self._inner_equatorial_point += self._inner_wall_thickness \
                 + self._blanket_thickness \
@@ -606,7 +608,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         # Divertor
         self._divertor_start_height = (self._plasma.high_point[1])
         self._divertor_end_height_top = self._divertor_start_height + \
-            self._divertor_height_full
+            self._divertor_height_full 
 
         ### Diverter height check ###
         min_div_h = self._rear_wall_end_height_top - self._divertor_start_height
@@ -814,24 +816,18 @@ class NegativeTriangularityReactor(paramak.Reactor):
         central_cutter = paramak.CenterColumnShieldCylinder(
             height=self._inner_tf_leg_height + 10,  # for overlap
             inner_radius=0,
-            outer_radius=self._inner_shield_end_rad,
+            outer_radius=self._inner_shield_end_rad #+ 0.0001, # slight overlap: without it doesn't cut properly
         )
 
         ### Blanket layers ###
 
         self._rear_wall = paramak.BlanketFP(
             thickness=self._rear_wall_thickness,
-            start_angle=180,
-            stop_angle=-
-            180,
+            start_angle=0,
+            stop_angle=360,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
-            offset_from_plasma=[
-                self._rear_wall_plasma_offset +
-                self._wall_to_plasma_gap,
-                self._rear_wall_plasma_offset,
-                self._rear_wall_plasma_offset +
-                self._wall_to_plasma_gap],
+            offset_from_plasma=self._inner_wall_thickness + self._blanket_thickness + self._wall_to_plasma_gap,
             name="blanket_rear_wall",
             cut=[
                 central_cutter,
@@ -842,17 +838,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         self._breeder_blanket = paramak.BlanketFP(
             thickness=self._blanket_thickness,
-            start_angle=180,
-            stop_angle=-
-            180,
+            start_angle=0,
+            stop_angle=360,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
-            offset_from_plasma=[
-                self._blanket_offset +
-                self._wall_to_plasma_gap,
-                self._blanket_offset,
-                self._blanket_offset +
-                self._wall_to_plasma_gap],
+            offset_from_plasma=self._inner_wall_thickness + self._wall_to_plasma_gap,
             name="blanket",
             cut=[
                 central_cutter,
@@ -863,14 +853,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         self._inner_wall = paramak.BlanketFP(
             thickness=self._inner_wall_thickness,
-            start_angle=180,
-            stop_angle=-180,
+            start_angle=0,
+            stop_angle=360,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
-            offset_from_plasma=[
-                self._wall_to_plasma_gap * 2,
-                self._wall_to_plasma_gap,
-                self._wall_to_plasma_gap * 2],
+            offset_from_plasma=self._wall_to_plasma_gap,
             name="firstwall",
             cut=[
                 central_cutter,
@@ -883,15 +870,15 @@ class NegativeTriangularityReactor(paramak.Reactor):
     def _make_divertor(self):
 
         self._divertor_extention_cutter = paramak.BlanketFP(
-            thickness=-self._wall_to_plasma_gap * 2,
+            thickness=-self._wall_to_plasma_gap,
             start_angle=180,
             stop_angle=-180,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
             offset_from_plasma=[
-                self._wall_to_plasma_gap * 2,
                 self._wall_to_plasma_gap,
-                self._wall_to_plasma_gap * 2],
+                self._wall_to_plasma_gap,
+                self._wall_to_plasma_gap],
         )
         self._divertor_midplane_cutter = paramak.CenterColumnShieldCylinder(
             height=(self._divertor_start_height) * 2,
