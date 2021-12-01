@@ -1,5 +1,5 @@
 import math
-from typing import Optional, Tuple
+from typing import Tuple
 
 from paramak import RotateMixedShape
 
@@ -103,12 +103,12 @@ class CapsuleVacuumVessel(RotateMixedShape):
             (point_1[1] + radius) - (radius * math.sin((3 * math.pi) / 8)),
             "circle",
         )
-        p5 = (
+        point_5 = (
             (point_6[0] + (radius * math.cos((2 * math.pi) / 8))),
             (point_6[1] - radius) + (radius * math.sin((2 * math.pi) / 8)),
             "circle",
         )
-        p8 = (
+        point_8 = (
             (point_7[0] + (inner_r * math.cos((2 * math.pi) / 8))),
             (point_7[1] - inner_r) + (inner_r * math.sin((2 * math.pi) / 8)),
             "circle",
@@ -124,10 +124,10 @@ class CapsuleVacuumVessel(RotateMixedShape):
             point_2,
             point_3,
             point_4,
-            p5,
+            point_5,
             point_6,
             point_7,
-            p8,
+            point_8,
             point_9,
             point_10,
             point_11,
