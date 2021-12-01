@@ -197,11 +197,11 @@ NegativeTriangularityReactor()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: https://user-images.githubusercontent.com/85617935/144302746-181689dd-a4a8-43d4-9ed5-33518f36d4de.png
-   :width: 400
+   :width: 300
    :align: left
 
 .. image:: https://user-images.githubusercontent.com/85617935/144303187-8cb71e2d-fc35-450f-a8f4-88b6650d56b7.png
-   :width: 400
+   :width: 300
    :align: right
 
 The above image is coloured by component. On the left the low_aspect attribute is True, whereas on the right, the 
