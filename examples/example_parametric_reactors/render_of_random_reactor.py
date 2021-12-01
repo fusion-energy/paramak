@@ -38,7 +38,7 @@ def create_reactor_renders(
     )
 
     # saves the reactor geometry as separate stl files
-    stl_files = my_reactor.export_stl()
+    my_reactor.export_stl()
 
     # assigns colours to each stl file
     stl_files_with_colors = {
@@ -66,9 +66,9 @@ def create_reactor_renders(
     )
 
     # sets the position of the camera using a matrix
-    c = 2 ** -0.5
+    cam = 2 ** -0.5
     camera_pose = np.array(
-        [[1, 0, 0, 0], [0, c, -c, -350], [0, c, c, 350], [0, 0, 0, 1]]
+        [[1, 0, 0, 0], [0, cam, -cam, -350], [0, cam, cam, 350], [0, 0, 0, 1]]
     )
 
     # adds a camera and a point light source at the same location
@@ -77,8 +77,8 @@ def create_reactor_renders(
     scene.add(light, pose=camera_pose)
 
     # renders the scene
-    r = pyrender.OffscreenRenderer(1000, 1000)
-    color, depth = r.render(scene)
+    my_render = pyrender.OffscreenRenderer(1000, 1000)
+    color, depth = my_render.render(scene)
 
     # adds the render to the plot as a subplot in the correct location
     plt.subplot(number_of_images_in_y, number_of_images_in_x, render_number + 1)
@@ -90,14 +90,11 @@ def create_reactor_renders(
 plt.figure()
 
 # loops through adding a random reactor render to the figure with each iteration
-number_of_images_in_x = 4
-number_of_images_in_y = 3
-total_number_of_images = number_of_images_in_x * number_of_images_in_y
-for i in range(total_number_of_images):
+for i in range(4*3):
     create_reactor_renders(
         render_number=i,
-        number_of_images_in_x=number_of_images_in_x,
-        number_of_images_in_y=number_of_images_in_y,
+        number_of_images_in_x=4,
+        number_of_images_in_y=3,
         inner_blanket_radius=np.random.uniform(low=50, high=90),
         blanket_thickness=np.random.uniform(low=50, high=140),
         blanket_height=np.random.uniform(low=400, high=550),

@@ -2,6 +2,7 @@
 # them as a png image
 
 import math
+import random
 
 # to run this example you will need all of the following packages installed
 import matplotlib.pyplot as plt
@@ -9,7 +10,6 @@ import numpy as np
 import paramak
 import pyrender
 import trimesh
-import random
 
 
 def generate_random_reactor():
@@ -33,7 +33,7 @@ def generate_random_reactor():
     input_variables = my_reactor.input_variable_names
     my_reactor.rotation_angle = 180
 
-    for i in [
+    for input_var in [
         "graveyard_size",
         "graveyard_offset",
         "largest_shapes",
@@ -42,7 +42,7 @@ def generate_random_reactor():
         "rotation_angle",
     ]:
         try:
-            input_variables.remove(i)
+            input_variables.remove(input_var)
         except:
             pass
 
@@ -64,7 +64,7 @@ def create_reactor_renders(
 ):
 
     # saves the reactor geometry as separate stl files
-    stl_files = reactor.export_stl()
+    reactor.export_stl()
 
     # assigns colours to each stl file
 
@@ -83,9 +83,9 @@ def create_reactor_renders(
     )
 
     # sets the position of the camera using a matrix
-    c = 2 ** -0.5
+    cam = 2 ** -0.5
     camera_pose = np.array(
-        [[1, 0, 0, 0], [0, c, -c, -650], [0, c, c, 650], [0, 0, 0, 1]]
+        [[1, 0, 0, 0], [0, cam, -cam, -650], [0, cam, cam, 650], [0, 0, 0, 1]]
     )
 
     # adds a camera and a point light source at the same location
@@ -94,8 +94,8 @@ def create_reactor_renders(
     scene.add(light, pose=camera_pose)
 
     # renders the scene
-    r = pyrender.OffscreenRenderer(1000, 1000)
-    color, depth = r.render(scene)
+    my_render = pyrender.OffscreenRenderer(1000, 1000)
+    color, depth = my_render.render(scene)
 
     # adds the render to the plot as a subplot in the correct location
     plt.subplot(number_of_images_in_y, number_of_images_in_x, render_number + 1)
@@ -108,14 +108,11 @@ def create_reactor_renders(
 plt.figure()
 
 # loops through adding a random reactor render to the figure with each iteration
-number_of_images_in_x = 4
-number_of_images_in_y = 3
-total_number_of_images = number_of_images_in_x * number_of_images_in_y
-for i in range(total_number_of_images):
+for i in range(4*3):
     reactor_hash_value = create_reactor_renders(
         render_number=i,
-        number_of_images_in_x=number_of_images_in_x,
-        number_of_images_in_y=number_of_images_in_y,
+        number_of_images_in_x=4,
+        number_of_images_in_y=3,
         reactor=generate_random_reactor(),
     )
 
