@@ -125,15 +125,15 @@ class ITERtypeDivertor(RotateMixedShape):
             dome_base, rotate(dome_base, c_coord, -math.pi / 2), dome_height
         )
 
-        D_prime = extend(dome_base, dome_lower_point, dome_height + dome_thickness)
+        d_prime = extend(dome_base, dome_lower_point, dome_height + dome_thickness)
         D = extend(
             dome_lower_point,
-            rotate(dome_lower_point, D_prime, math.pi / 2),
+            rotate(dome_lower_point, d_prime, math.pi / 2),
             dome_length / 2,
         )
         E = extend(
             dome_lower_point,
-            rotate(dome_lower_point, D_prime, -math.pi / 2),
+            rotate(dome_lower_point, d_prime, -math.pi / 2),
             dome_length / 2,
         )
 
@@ -141,7 +141,7 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([D[0], D[1], "circle"])
 
         # D'
-        points.append([D_prime[0], D_prime[1], "circle"])
+        points.append([d_prime[0], d_prime[1], "circle"])
 
         # E
         points.append([E[0], E[1], "straight"])

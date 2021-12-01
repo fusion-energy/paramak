@@ -82,7 +82,7 @@ class TFCoilCasing(ExtrudeMixedShape):
         points = curve_points[0] + curve_points[1]
         self.points = points
 
-        yA = outer_points[1][
+        ya = outer_points[1][
             outer_points[0].index(
                 min(outer_points[0], key=lambda x: abs(x - min(inner_points[0])))
             )
@@ -100,10 +100,10 @@ class TFCoilCasing(ExtrudeMixedShape):
                 inner_points[0][inner_points[1].index(min(inner_points[1]))],
                 min(inner_points[1]),
             ),
-            (min(inner_points[0]), min(yA, self.magnet.vertical_displacement - yA)),
+            (min(inner_points[0]), min(ya, self.magnet.vertical_displacement - ya)),
             # not having this line avoid unexpected surfaces
             (inner_points[0][-1], inner_points[1][-1]),
-            (min(inner_points[0]), max(yA, self.magnet.vertical_displacement - yA)),
+            (min(inner_points[0]), max(ya, self.magnet.vertical_displacement - ya)),
             (
                 inner_points[0][inner_points[1].index(min(inner_points[1]))],
                 max(inner_points[1]),

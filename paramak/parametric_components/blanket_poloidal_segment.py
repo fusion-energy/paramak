@@ -272,7 +272,7 @@ def segments_optimiser(
         res = minimize(cost_function, list_of_angles[1:-1], method="Nelder-Mead")
 
         # complete the optimised angles with extrema
-        optimised_angles = [start_angle] + [angle for angle in res.x] + [stop_angle]
+        optimised_angles = [start_angle] + list(res.x) + [stop_angle]
 
         # check that the optimised angles meet the lengths requirements
         lengths = compute_lengths_from_angles(optimised_angles, distribution)

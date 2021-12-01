@@ -110,7 +110,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         segment1 = get_segment(R0, R1, z_0)
         segment2 = get_segment(R0, R2, z_0)
 
-        R = np.concatenate(
+        r_values = np.concatenate(
             [
                 np.flip(segment1[0]),
                 segment2[0][1:],
@@ -118,7 +118,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
                 segment1[0][1:],
             ]
         )
-        Z = np.concatenate(
+        z_values = np.concatenate(
             [
                 np.flip(segment1[1]),
                 segment2[1][1:],
@@ -126,44 +126,44 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
                 -segment1[1][1:],
             ]
         )
-        return R, Z
+        return r_values, z_values
 
     def find_points(self):
         """Finds the XZ points joined by connections that describe the 2D
         profile of the toroidal field coil shape."""
         # compute inner points
-        R_inner, Z_inner = self._compute_inner_points(self.R1 + self.thickness, self.R2)
+        R_inner, z_inner = self._compute_inner_points(self.R1 + self.thickness, self.R2)
 
         # compute outer points
-        dz_dr = np.diff(Z_inner) / np.diff(R_inner)
+        dz_dr = np.diff(z_inner) / np.diff(R_inner)
         dz_dr[0] = float("-inf")
         dz_dr = np.append(dz_dr, float("inf"))
-        R_outer, Z_outer = add_thickness(R_inner, Z_inner, self.thickness, dy_dx=dz_dr)
-        R_outer, Z_outer = np.flip(R_outer), np.flip(Z_outer)
+        r_outer, z_outer = add_thickness(R_inner, z_inner, self.thickness, dy_dx=dz_dr)
+        r_outer, z_outer = np.flip(r_outer), np.flip(z_outer)
 
         # add vertical displacement
-        Z_outer += self.vertical_displacement
-        Z_inner += self.vertical_displacement
+        z_outer += self.vertical_displacement
+        z_inner += self.vertical_displacement
 
         # extract helping points for inner leg
         inner_leg_connection_points = [
-            (R_inner[0], Z_inner[0]),
-            (R_inner[-1], Z_inner[-1]),
-            (R_outer[0], Z_outer[0]),
-            (R_outer[-1], Z_outer[-1]),
+            (R_inner[0], z_inner[0]),
+            (R_inner[-1], z_inner[-1]),
+            (r_outer[0], z_outer[0]),
+            (r_outer[-1], z_outer[-1]),
         ]
         self.inner_leg_connection_points = inner_leg_connection_points
 
         # add the leg to the points
         if self.with_inner_leg:
             R_inner = np.append(R_inner, R_inner[0])
-            Z_inner = np.append(Z_inner, Z_inner[0])
+            z_inner = np.append(z_inner, z_inner[0])
 
-            R_outer = np.append(R_outer, R_outer[0])
-            Z_outer = np.append(Z_outer, Z_outer[0])
+            r_outer = np.append(r_outer, r_outer[0])
+            z_outer = np.append(z_outer, z_outer[0])
         # add connections
-        inner_points = [[r, z, "spline"] for r, z in zip(R_inner, Z_inner)]
-        outer_points = [[r, z, "spline"] for r, z in zip(R_outer, Z_outer)]
+        inner_points = [[r, z, "spline"] for r, z in zip(R_inner, z_inner)]
+        outer_points = [[r, z, "spline"] for r, z in zip(r_outer, z_outer)]
         if self.with_inner_leg:
             outer_points[-2][2] = "straight"
             inner_points[-2][2] = "straight"
@@ -172,8 +172,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         outer_points[-1][2] = "straight"
 
         points = inner_points + outer_points
-        self.outer_points = np.vstack((R_outer, Z_outer)).T
-        self.inner_points = np.vstack((R_inner, Z_inner)).T
+        self.outer_points = np.vstack((r_outer, Z_outer)).T
+        self.inner_points = np.vstack((R_inner, z_inner)).T
         self.points = points
 
     def find_azimuth_placement_angle(self):
