@@ -72,9 +72,9 @@ class NegativeTriangularityReactor(paramak.Reactor):
                  tf_width: float = 75,
                  pf_coil_heights: Optional[Union[float, list]] = [75,75,150,75,75],
                  pf_coil_widths: Optional[Union[float, list]] = [75,75,150,75,75],
-                 pf_coil_center_points: Optional[Union[list, tuple]] = [(350,850), 
+                 pf_coil_center_points: Optional[Union[list, tuple]] = [(350,850),
                                                                         (1350,650),
-                                                                        (1400,0), 
+                                                                        (1400,0),
                                                                         (1350,-650),
                                                                         (350,-850)],
                  pf_coil_casing_thickness: Optional[float] = [15,15,15,15,15],
@@ -608,7 +608,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         # Divertor
         self._divertor_start_height = (self._plasma.high_point[1])
         self._divertor_end_height_top = self._divertor_start_height + \
-            self._divertor_height_full 
+            self._divertor_height_full
 
         ### Diverter height check ###
         min_div_h = self._rear_wall_end_height_top - self._divertor_start_height
@@ -816,7 +816,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         central_cutter = paramak.CenterColumnShieldCylinder(
             height=self._inner_tf_leg_height + 10,  # for overlap
             inner_radius=0,
-            outer_radius=self._inner_shield_end_rad #+ 0.0001, # slight overlap: without it doesn't cut properly
+            outer_radius=self._inner_shield_end_rad
         )
 
         ### Blanket layers ###
@@ -827,7 +827,9 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stop_angle=360,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
-            offset_from_plasma=self._inner_wall_thickness + self._blanket_thickness + self._wall_to_plasma_gap,
+            offset_from_plasma=self._inner_wall_thickness + \
+                self._blanket_thickness + \
+                self._wall_to_plasma_gap,
             name="blanket_rear_wall",
             cut=[
                 central_cutter,
@@ -842,7 +844,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stop_angle=360,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
-            offset_from_plasma=self._inner_wall_thickness + self._wall_to_plasma_gap,
+            offset_from_plasma=self._inner_wall_thickness + \
+                self._wall_to_plasma_gap,
             name="blanket",
             cut=[
                 central_cutter,
