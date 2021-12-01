@@ -171,14 +171,14 @@ class TestNegativeTriangularityReactor(unittest.TestCase):
         with pytest.raises(TypeError):
             self.test_reactor.elongation = 'asd'
         assert self.test_reactor.solid is not None
-    
+
     def test_triangularity_small(self):
         """Creates the reactor with small triangularity"""
         with pytest.raises(ValueError):
             self.test_reactor.triangularity = -5
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 11
-    
+
     def test_triangularity_large(self):
         """Creates the reactor with large triangularity"""
         with pytest.raises(ValueError):
