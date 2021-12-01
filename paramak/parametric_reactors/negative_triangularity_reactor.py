@@ -430,7 +430,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
     def triangularity(self, val):
         if not isinstance(val, (float, int)):
             raise TypeError('Triangularity must be float or integer value!')
-        if val > 1 or val < 1:
+        if val > 1 or val < -1:
             raise ValueError('Triangularity must be between -1 and 1!')
         self._triangularity = val
 
