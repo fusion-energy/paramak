@@ -119,4 +119,17 @@ class CapsuleVacuumVessel(RotateMixedShape):
             "circle",
         )
 
-        self.points = [point_1, point_2, point_3, point_4, p5, point_6, point_7, p8, point_9, point_10, point_11, point_12]
+        self.points = [
+            point_1,
+            point_2,
+            point_3,
+            point_4,
+            p5,
+            point_6,
+            point_7,
+            p8,
+            point_9,
+            point_10,
+            point_11,
+            point_12,
+        ]
