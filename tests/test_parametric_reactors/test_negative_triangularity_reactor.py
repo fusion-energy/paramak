@@ -175,13 +175,13 @@ class TestNegativeTriangularityReactor(unittest.TestCase):
 
     def test_triangularity_small(self):
         """Creates the reactor with small triangularity"""
-        self.test_reactor.triangularity = -0.5
+        self.test_reactor.triangularity = -5
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 11
 
     def test_triangularity_large(self):
         """Creates the reactor with large triangularity"""
-        self.test_reactor.triangularity = 0.5
+        self.test_reactor.triangularity = 5
         assert self.test_reactor.solid is not None
         assert len(self.test_reactor.shapes_and_components) == 11
 
