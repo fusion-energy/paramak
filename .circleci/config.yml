@@ -8,7 +8,8 @@ executors:
   paramak:
     docker:
       - image: ghcr.io/fusion-energy/paramak:dependencies
-    resource_class: medium
+    resource_class: large
+
 commands:
   install: 
     steps:
@@ -22,12 +23,11 @@ commands:
           name: Codecov upload
           command: bash <(curl -s https://codecov.io/bash)
 
-
 jobs:
-
   # Tests: Utils, Shape, Reactor, Parametric Shapes
   quick-tests:
     executor: paramak
+    resource_class: medium
     steps:
       - checkout
       - install
@@ -35,22 +35,18 @@ jobs:
           name: run utils tests
           command: 
             pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
       - run:
           name: run shape tests
           command:
             pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
       - run:
           name: run Reactor tests
           command:
             pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
       - run:
           name: run parametric_shapes tests
           command:
             pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
       - store_test_results:
           path: test-reports
       - store_artifacts:
@@ -60,6 +56,7 @@ jobs:
   # Tests: Parametric components
   parametric-components-tests:
     executor: paramak
+    resource_class: medium
     parallelism: 2
     steps: 
       - checkout
@@ -75,7 +72,6 @@ jobs:
       - store_artifacts:
           path: test-reports
       - codecov-upload 
-
 
   # Tests: Parametric reactors
   parametric-reactors-tests:
@@ -96,52 +92,6 @@ jobs:
           path: test-reports
       - codecov-upload 
 
-  # test:
-  build:
-    docker:
-      - image: ghcr.io/fusion-energy/paramak:dependencies
-    steps:
-      - checkout
-      - run:
-          name: install
-          command: |
-            python setup.py install
-
-      - run:
-          name: run utils tests
-          command: 
-            pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      - run:
-          name: run shape tests
-          command:
-            pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      - run:
-          name: run Reactor tests
-          command:
-            pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      - run:
-          name: run parametric_shapes tests
-          command:
-            pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      - run:
-          name: run parametric_components tests
-          command:
-            pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      - run:
-          name: run parametric_reactors tests
-          command:
-            pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
-
-      - store_test_results:
-          path: test-reports
-
-      - codecov-upload
-
 workflows:
   version: 2
   test-build-deploy:
@@ -149,19 +99,4 @@ workflows:
       - quick-tests
       - parametric-components-tests
       - parametric-reactors-tests
-      
-      # - build
-      
-      # - test
-      # - build-deploy-master:
-      #     requires:
-      #       - test
-      #     filters:
-      #       branches:
-      #         only: master
-      # - build-deploy-dev:
-      #     requires:
-      #       - test
-      #     filters:
-      #       branches:
-      #         only: develop
+    
