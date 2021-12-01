@@ -11,13 +11,13 @@ executors:
     resource_class: large
 
 commands:
-  install: 
+  install:
     steps:
-      - run: 
+      - run:
           name: Install
           command: |
             python setup.py install
-  codecov-upload: 
+  codecov-upload:
     steps:
       - run:
           name: Codecov upload
@@ -33,32 +33,28 @@ jobs:
       - install
       - run:
           name: run utils tests
-          command: 
-            pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - run:
           name: run shape tests
-          command:
-            pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - run:
           name: run Reactor tests
-          command:
-            pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - run:
           name: run parametric_shapes tests
-          command:
-            pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - store_test_results:
           path: test-reports
       - store_artifacts:
           path: test-reports
       - codecov-upload
-    
+
   # Tests: Parametric components
   parametric-components-tests:
     executor: paramak
     resource_class: medium
     parallelism: 2
-    steps: 
+    steps:
       - checkout
       - install
       - run:
@@ -71,13 +67,13 @@ jobs:
           path: test-reports
       - store_artifacts:
           path: test-reports
-      - codecov-upload 
+      - codecov-upload
 
   # Tests: Parametric reactors
   parametric-reactors-tests:
     executor: paramak
     parallelism: 6
-    steps: 
+    steps:
       - checkout
       - install
       - run:
@@ -90,7 +86,7 @@ jobs:
           path: test-reports
       - store_artifacts:
           path: test-reports
-      - codecov-upload 
+      - codecov-upload
 
 workflows:
   version: 2
@@ -99,4 +95,3 @@ workflows:
       - quick-tests
       - parametric-components-tests
       - parametric-reactors-tests
-    
