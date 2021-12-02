@@ -23,10 +23,10 @@ class ExtrudeCircleShape(Shape):
         self,
         distance: float,
         radius: float,
-        extrusion_start_offset: Optional[float] = 0.0,
-        rotation_angle: Optional[float] = 360,
-        extrude_both: Optional[bool] = True,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        extrusion_start_offset: float = 0.0,
+        rotation_angle: float = 360,
+        extrude_both: bool = True,
+        color: Tuple[float, float, float, Optional[float]] = (
             0.984,
             0.603,
             0.6,

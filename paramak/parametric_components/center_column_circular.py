@@ -22,9 +22,7 @@ class CenterColumnShieldCircular(RotateMixedShape):
         inner_radius: float,
         mid_radius: float,
         outer_radius: float,
-        color: Optional[
-            Union[Tuple[float, float, float], Tuple[float, float, float, float]]
-        ] = (0.0, 0.333, 0.0),
+        color: Tuple[float, float, float, Optional[float]] = (0.0, 0.333, 0.0),
         **kwargs
     ) -> None:
 

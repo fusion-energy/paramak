@@ -1,4 +1,3 @@
-from typing import Optional
 
 from paramak import ExtrudeStraightShape
 from paramak.utils import cut_solid
@@ -28,8 +27,8 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         self,
         thickness: float,
         gap_size: float,
-        height: Optional[float] = 2000.0,
-        width: Optional[float] = 2000.0,
+        height: float = 2000.0,
+        width: float = 2000.0,
         azimuth_placement_angle=[
             0.0,
             36.0,
@@ -42,7 +41,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
             288.0,
             324.0,
         ],
-        name: Optional[str] = "blanket_cutter_parallels",
+        name: str = "blanket_cutter_parallels",
         **kwargs
     ) -> None:
 

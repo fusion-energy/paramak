@@ -14,8 +14,8 @@ class RotateMixedShape(Shape):
 
     def __init__(
         self,
-        rotation_angle: Optional[float] = 360.0,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        rotation_angle: float = 360.0,
+        color: Tuple[float, float, float, Optional[float]] = (
             0.121,
             0.47,
             0.705,

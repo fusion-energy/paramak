@@ -18,7 +18,7 @@ class PoloidalFieldCoil(RotateStraightShape):
         height: float,
         width: float,
         center_point: Tuple[float, float],
-        name: Optional[str] = "pf_coil",
+        name: str = "pf_coil",
         **kwargs
     ) -> None:
 

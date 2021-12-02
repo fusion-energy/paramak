@@ -37,7 +37,7 @@ class Reactor:
     def __init__(
         self,
         shapes_and_components: List[paramak.Shape] = [],
-        graveyard_size: Optional[float] = 20_000,
+        graveyard_size: float = 20_000.,
         graveyard_offset: Optional[float] = None,
         largest_shapes: Optional[List[paramak.Shape]] = None,
     ):
@@ -353,8 +353,8 @@ class Reactor:
     def export_stl(
         self,
         filename: Union[List[str], str] = None,
-        tolerance: Optional[float] = 0.001,
-        angular_tolerance: Optional[float] = 0.1,
+        tolerance: float = 0.001,
+        angular_tolerance: float = 0.1,
     ) -> Union[str, List[str]]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 

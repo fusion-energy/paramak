@@ -29,7 +29,7 @@ class InboardFirstwallFCCS(RotateMixedShape):
         self,
         central_column_shield: paramak.Shape,
         thickness: float,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.5, 0.5, 0.5),
+        color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5),
         **kwargs
     ):
 

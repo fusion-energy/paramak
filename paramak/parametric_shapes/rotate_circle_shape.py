@@ -17,8 +17,8 @@ class RotateCircleShape(Shape):
     def __init__(
         self,
         radius: float,
-        rotation_angle: Optional[float] = 360.0,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (1.0, 1.0, 0.6),
+        rotation_angle: float = 360.0,
+        color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.6),
         name: str = "rotatecircleshape",
         **kwargs
     ):

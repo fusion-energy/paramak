@@ -108,7 +108,7 @@ def create_reactor_renders(
 plt.figure()
 
 # loops through adding a random reactor render to the figure with each iteration
-for i in range(4*3):
+for i in range(4 * 3):
     reactor_hash_value = create_reactor_renders(
         render_number=i,
         number_of_images_in_x=4,

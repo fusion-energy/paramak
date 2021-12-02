@@ -20,7 +20,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         coil_height: float,
         coil_width: float,
         center_point: Tuple[float, float],
-        color: Optional[Tuple[int, int, int]] = (1.0, 1.0, 0.498),
+        color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
         **kwargs
     ) -> None:
 

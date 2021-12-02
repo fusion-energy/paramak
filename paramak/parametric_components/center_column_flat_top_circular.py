@@ -26,8 +26,8 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         inner_radius: float,
         mid_radius: float,
         outer_radius: float,
-        name: Optional[str] = "center_column",
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        name: str = "center_column",
+        color: Tuple[float, float, float, Optional[float]] = (
             0.0,
             0.333,
             0.0,

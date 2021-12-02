@@ -106,7 +106,9 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         iter_points = iter(self.points)
         pf_coils_set = []
         wires = []
-        for point_1, point_2, point_3, point_4 in zip(iter_points, iter_points, iter_points, iter_points):
+        for point_1, point_2, point_3, point_4 in zip(
+            iter_points, iter_points, iter_points, iter_points
+        ):
 
             solid = cq.Workplane(self.workplane).polyline(
                 [point_1[:2], point_2[:2], point_3[:2], point_4[:2]]

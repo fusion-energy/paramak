@@ -15,7 +15,7 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
     def __init__(
         self,
         distance: float,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        color: Tuple[float, float, float, Optional[float]] = (
             0.984,
             0.603,
             0.6,
