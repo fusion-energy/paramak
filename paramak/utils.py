@@ -494,7 +494,7 @@ def plotly_trace(
 def extract_points_from_edges(
     edges: Union[List[cq.Wire], cq.Wire],
     view_plane: Optional[str] = "XZ",
-) -> list:
+) -> Union[Tuple[float, float, float], Tuple[float, float]]:
     """Extracts points (coordinates) from a CadQuery Edge, optionally projects
     the points to a plane and returns the points.
 
@@ -566,10 +566,10 @@ def load_stp_file(filename: str, scale_factor: float = 1.0):
 def export_wire_to_html(
     wires,
     filename=None,
-    view_plane: Optional[str] = "RZ",
-    facet_splines: Optional[bool] = True,
-    facet_circles: Optional[bool] = True,
-    tolerance: Optional[float] = 1e-3,
+    view_plane: str = "RZ",
+    facet_splines: bool = True,
+    facet_circles: bool = True,
+    tolerance: float = 1e-3,
     title: Optional[str] = None,
     mode="markers+lines",
 ):

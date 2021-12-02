@@ -23,10 +23,10 @@ class SweepStraightShape(SweepMixedShape):
     def __init__(
         self,
         path_points: List[Tuple[float, float]],
-        workplane: Optional[str] = "XY",
-        path_workplane: Optional[str] = "XZ",
-        force_cross_section: Optional[bool] = False,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        workplane: str = "XY",
+        path_workplane: str = "XZ",
+        force_cross_section: bool = False,
+        color: Tuple[float, float, float, Optional[float]] = (
             0.698,
             0.8745,
             0.541,

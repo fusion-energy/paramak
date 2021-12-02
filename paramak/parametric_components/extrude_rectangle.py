@@ -18,7 +18,7 @@ class ExtrudeRectangle(ExtrudeStraightShape):
         height: float,
         width: float,
         center_point: Tuple[float, float],
-        name: Optional[str] = "extrude_rectangle",
+        name: str = "extrude_rectangle",
         **kwargs
     ) -> None:
 

@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import List, Union
 
 from paramak import ExtrudeStraightShape
 
@@ -23,9 +23,9 @@ class BlanketCutterStar(ExtrudeStraightShape):
     def __init__(
         self,
         distance: float,
-        height: Optional[float] = 2000.0,
-        width: Optional[float] = 2000.0,
-        azimuth_placement_angle: Optional[Union[float, List[float]]] = [
+        height: float = 2000.,
+        width: float = 2000.,
+        azimuth_placement_angle: Union[float, List[float]] = [
             0.0,
             36.0,
             72.0,
@@ -37,7 +37,7 @@ class BlanketCutterStar(ExtrudeStraightShape):
             288.0,
             324.0,
         ],
-        name: Optional[str] = "blanket_cutter_star",
+        name: str = "blanket_cutter_star",
         **kwargs
     ) -> None:
 

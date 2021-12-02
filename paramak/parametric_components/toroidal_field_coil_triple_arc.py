@@ -31,9 +31,9 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         thickness: float,
         distance: float,
         number_of_coils: int,
-        vertical_displacement: Optional[float] = 0.0,
-        with_inner_leg: Optional[bool] = True,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.0, 0.0, 1.0),
+        vertical_displacement: float = 0.0,
+        with_inner_leg: bool = True,
+        color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 

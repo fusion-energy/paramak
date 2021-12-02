@@ -20,10 +20,10 @@ class ExtrudeMixedShape(Shape):
     def __init__(
         self,
         distance: float,
-        extrude_both: Optional[bool] = True,
-        rotation_angle: Optional[float] = 360.0,
-        extrusion_start_offset: Optional[float] = 0.0,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        extrude_both: bool = True,
+        rotation_angle: float = 360.0,
+        extrusion_start_offset: float = 0.0,
+        color: Tuple[float, float, float, Optional[float]] = (
             0.2,
             0.627,
             0.172,

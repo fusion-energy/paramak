@@ -18,9 +18,9 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         height: float,
         inner_radius: float,
         outer_radius: float,
-        center_height: Optional[float] = 0,
-        name: Optional[str] = "CenterColumnShieldCylinder",
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        center_height: float = 0.,
+        name: str = "CenterColumnShieldCylinder",
+        color: Tuple[float, float, float, Optional[float]] = (
             0.0,
             0.333,
             0.0,

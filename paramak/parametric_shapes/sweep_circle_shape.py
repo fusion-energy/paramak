@@ -27,10 +27,10 @@ class SweepCircleShape(Shape):
         self,
         radius: float,
         path_points: List[Tuple[float, float]],
-        workplane: Optional[str] = "XY",
-        path_workplane: Optional[str] = "XZ",
-        force_cross_section: Optional[bool] = False,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        workplane: str = "XY",
+        path_workplane: str = "XZ",
+        force_cross_section: bool = False,
+        color: Tuple[float, float, float, Optional[float]] = (
             0.651,
             0.808,
             0.89,

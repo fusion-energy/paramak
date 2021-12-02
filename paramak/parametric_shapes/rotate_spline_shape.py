@@ -13,8 +13,8 @@ class RotateSplineShape(RotateMixedShape):
 
     def __init__(
         self,
-        rotation_angle: Optional[float] = 360.0,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (
+        rotation_angle: float = 360.0,
+        color: Tuple[float, float, float, Optional[float]] = (
             0.415,
             0.239,
             0.603,

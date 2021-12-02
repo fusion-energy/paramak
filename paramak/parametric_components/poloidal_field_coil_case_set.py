@@ -29,7 +29,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         casing_thicknesses,
         center_points,
         name="pf_coil_case_set",
-        color: Optional[Tuple[int, int, int]] = (1.0, 1.0, 0.498),
+        color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
         **kwargs
     ):
 

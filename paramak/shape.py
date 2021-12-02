@@ -73,7 +73,7 @@ class Shape:
         points: Union[tuple, list] = None,
         connection_type: Optional[str] = "mixed",
         name: Optional[str] = None,
-        color: Optional[Tuple[float, float, float, Optional[float]]] = (0.5, 0.5, 0.5),
+        color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5),
         azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
         workplane: Optional[Union[str, Plane]] = "XZ",
         rotation_axis: Optional[str] = None,
@@ -787,9 +787,9 @@ class Shape:
     def export_stl(
         self,
         filename: str,
-        tolerance: Optional[float] = 0.001,
-        angular_tolerance: Optional[float] = 0.1,
-        verbose: Optional[bool] = True,
+        tolerance: float = 0.001,
+        angular_tolerance: float = 0.1,
+        verbose: bool = True,
     ) -> str:
         """Exports an stl file for the Shape.solid.
 
@@ -1014,10 +1014,10 @@ class Shape:
 
     def export_html(
         self,
-        filename: Optional[str] = "shape.html",
-        facet_splines: Optional[bool] = True,
-        facet_circles: Optional[bool] = True,
-        tolerance: Optional[float] = 1e-3,
+        filename: str = "shape.html",
+        facet_splines: bool = True,
+        facet_circles: bool = True,
+        tolerance: float = 1e-3,
         view_plane: Optional[str] = None,
     ):
         """Creates a html graph representation of the points and connections
