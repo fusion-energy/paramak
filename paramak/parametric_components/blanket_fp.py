@@ -57,7 +57,7 @@ class BlanketFP(RotateMixedShape):
         triangularity: Optional[float] = 0.55,
         elongation: Optional[float] = 2.0,
         vertical_displacement: Optional[float] = 0.0,
-        offset_from_plasma: Union[float, List[float], List[List[float],List[float]]] = 0.0,
+        offset_from_plasma: Union[float, list] = 0.0,
         num_points: Optional[int] = 50,
         **kwargs
     ):
