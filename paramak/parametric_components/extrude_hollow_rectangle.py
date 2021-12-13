@@ -1,14 +1,15 @@
-from typing import Optional, Tuple
+from typing import Tuple
 
 from paramak import ExtrudeStraightShape
 
 
-class ExtrudeRectangle(ExtrudeStraightShape):
-    """Creates a rectangular extrusion.
+class ExtrudeHollowRectangle(ExtrudeStraightShape):
+    """Creates a rectangular with a hollow section extrusion.
 
     Args:
         height: the vertical (z axis) height of the rectangle (cm).
         width: the horizontal (x axis) width of the rectangle (cm).
+        casing_thickness: the thickness of the casing (cm).
         center_point: the center of the rectangle (x,z) values (cm).
         name: defaults to "extrude_rectangle".
     """
@@ -17,8 +18,9 @@ class ExtrudeRectangle(ExtrudeStraightShape):
         self,
         height: float,
         width: float,
+        casing_thickness: float,
         center_point: Tuple[float, float],
-        name: str = "extrude_rectangle",
+        name: str = "extrude_hollow_rectangle",
         **kwargs
     ) -> None:
 
@@ -27,6 +29,7 @@ class ExtrudeRectangle(ExtrudeStraightShape):
         self.center_point = center_point
         self.height = height
         self.width = width
+        self.casing_thickness = casing_thickness
 
     @property
     def center_point(self):
@@ -72,6 +75,30 @@ class ExtrudeRectangle(ExtrudeStraightShape):
             (
                 self.center_point[0] - self.width / 2.0,
                 self.center_point[1] + self.height / 2.0,
+            ),  # upper left
+            (
+                self.center_point[0] + self.width / 2.0,
+                self.center_point[1] + self.height / 2.0,
+            ),  # upper right
+            (
+                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
+            ),
+            (
+                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] - (self.casing_thickness + self.height / 2.0),
+            ),
+            (
+                self.center_point[0] - (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] - (self.casing_thickness + self.height / 2.0),
+            ),
+            (
+                self.center_point[0] - (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
+            ),
+            (
+                self.center_point[0] + (self.casing_thickness + self.width / 2.0),
+                self.center_point[1] + (self.casing_thickness + self.height / 2.0),
             ),
         ]
 
