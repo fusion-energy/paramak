@@ -23,8 +23,8 @@ class BlanketCutterStar(ExtrudeStraightShape):
     def __init__(
         self,
         distance: float,
-        height: float = 2000.,
-        width: float = 2000.,
+        height: float = 2000.0,
+        width: float = 2000.0,
         azimuth_placement_angle: Union[float, List[float]] = [
             0.0,
             36.0,
