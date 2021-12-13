@@ -37,7 +37,7 @@ class Reactor:
     def __init__(
         self,
         shapes_and_components: List[paramak.Shape] = [],
-        graveyard_size: float = 20_000.,
+        graveyard_size: float = 20_000.0,
         graveyard_offset: Optional[float] = None,
         largest_shapes: Optional[List[paramak.Shape]] = None,
     ):
