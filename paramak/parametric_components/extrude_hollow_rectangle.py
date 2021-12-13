@@ -18,13 +18,15 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         self,
         height: float,
         width: float,
+        distance: float,
         casing_thickness: float,
-        center_point: Tuple[float, float],
+        center_point: Tuple[float, float]= (0,0),
         name: str = "extrude_hollow_rectangle",
         **kwargs
     ) -> None:
 
-        super().__init__(name=name, **kwargs)
+        self.distance = distance
+        super().__init__(name=name, distance=self.distance, **kwargs)
 
         self.center_point = center_point
         self.height = height
@@ -59,27 +61,35 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the shape."""
 
+        #   9-------------6
+        #   | 4 -------5,1|
+        #   | |         | |
+        #   | |  (0,0)  | |
+        #   | |         | |
+        #   | 3 ------- 2 |
+        #   8-------------7
+
         points = [
             (
                 self.center_point[0] + self.width / 2.0,
                 self.center_point[1] + self.height / 2.0,
-            ),  # upper right
+            ),
             (
                 self.center_point[0] + self.width / 2.0,
                 self.center_point[1] - self.height / 2.0,
-            ),  # lower right
+            ),
             (
                 self.center_point[0] - self.width / 2.0,
                 self.center_point[1] - self.height / 2.0,
-            ),  # lower left
+            ),
             (
                 self.center_point[0] - self.width / 2.0,
                 self.center_point[1] + self.height / 2.0,
-            ),  # upper left
+            ),
             (
                 self.center_point[0] + self.width / 2.0,
                 self.center_point[1] + self.height / 2.0,
-            ),  # upper right
+            ),
             (
                 self.center_point[0] + (self.casing_thickness + self.width / 2.0),
                 self.center_point[1] + (self.casing_thickness + self.height / 2.0),
