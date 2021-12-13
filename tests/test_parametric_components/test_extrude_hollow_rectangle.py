@@ -64,7 +64,7 @@ class TestExtrudeHollowRectangle(unittest.TestCase):
         """Creates a rectangular extrusion using the ExtrudeHollowRectangle
         parametric component and checks that the volume is correct"""
 
-        assert self.test_shape.volume() == pytest.approx((17*12*2)-(15*10*2))
+        assert self.test_shape.volume() == pytest.approx((17 * 12 * 2) - (15 * 10 * 2))
 
     def test_absolute_areas(self):
         """Creates a rectangular extrusion using the ExtrudeHollowRectangle

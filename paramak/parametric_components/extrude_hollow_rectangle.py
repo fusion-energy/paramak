@@ -20,7 +20,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         width: float,
         distance: float,
         casing_thickness: float,
-        center_point: Tuple[float, float]= (0,0),
+        center_point: Tuple[float, float] = (0, 0),
         name: str = "extrude_hollow_rectangle",
         **kwargs
     ) -> None:
