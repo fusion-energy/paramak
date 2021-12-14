@@ -402,7 +402,6 @@ class BallReactor(paramak.Reactor):
             self.plasma_gap_vertical_thickness,
             self.inner_plasma_gap_radial_thickness,
         ]
-        print(offset_from_plasma)
 
         self._center_column_cutter = paramak.CenterColumnShieldCylinder(
             # extra 0.5 to ensure overlap,
@@ -416,7 +415,7 @@ class BallReactor(paramak.Reactor):
         self._firstwall = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.firstwall_radial_thickness,
-            offset_from_plasma=offset_from_plasma,
+            offset_from_plasma= [[-180, 90, 0, 90, 180], offset_from_plasma],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -428,9 +427,9 @@ class BallReactor(paramak.Reactor):
         self._blanket = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_radial_thickness,
-            offset_from_plasma=[
+            offset_from_plasma=[[-180, 90, 0, 90, 180], [
                 e + self.firstwall_radial_thickness for e in offset_from_plasma
-            ],
+            ]],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -442,10 +441,10 @@ class BallReactor(paramak.Reactor):
         self._blanket_rear_wall = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=self.blanket_rear_wall_radial_thickness,
-            offset_from_plasma=[
+            offset_from_plasma=[[-180, 90, 0, 90, 180], [
                 e + self.firstwall_radial_thickness + self.blanket_radial_thickness
                 for e in offset_from_plasma
-            ],
+            ]],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
@@ -459,11 +458,11 @@ class BallReactor(paramak.Reactor):
     def _make_divertor(self):
 
         offset_from_plasma = [
-            self.inner_plasma_gap_radial_thickness,
+            self.major_radius - self.minor_radius,
             self.plasma_gap_vertical_thickness,
             self.outer_plasma_gap_radial_thickness,
             self.plasma_gap_vertical_thickness,
-            self.inner_plasma_gap_radial_thickness,
+            self.major_radius - self.minor_radius,
         ]
 
         # used as an intersect when making the divertor
