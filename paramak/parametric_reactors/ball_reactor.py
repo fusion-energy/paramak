@@ -230,6 +230,15 @@ class BallReactor(paramak.Reactor):
             msg = "divertor_position must be 'upper', 'lower' or 'both'"
             raise ValueError(msg)
 
+    def volumes_with_names(self, include_plasma=False):
+        """Returns a dictionary of of volume numbers with names of the
+        individual Shapes for each volume. Useful when whating to know the
+        volume order in a Brep file"""
+        if include_plasma:
+            return {vol_id: name for vol_id, name  in enumerate(self.name, 1)}
+        else:
+            return {vol_id: name for vol_id, name  in enumerate(self.name, 1) if name != 'plasma'}
+
     def create_solids(self):
         """Creates a list of paramak.Shape for components and saves it in
         self.shapes_and_components
@@ -243,7 +252,7 @@ class BallReactor(paramak.Reactor):
         uncut_shapes.append(self._make_inboard_tf_coils())
         uncut_shapes.append(self._make_center_column_shield())
         uncut_shapes += self._make_blankets_layers()
-        uncut_shapes.append(self._make_divertor())
+        uncut_shapes += self._make_divertor()
         uncut_shapes += self._make_tf_coils()
         pf_coils = self._make_pf_coils()
 
@@ -482,27 +491,45 @@ class BallReactor(paramak.Reactor):
         divertor_height_top = divertor_height
         divertor_height_bottom = -divertor_height
 
-        if self.divertor_position == "lower":
-            divertor_height_top = 0
-        elif self.divertor_position == "upper":
-            divertor_height_bottom = 0
-        self._divertor = paramak.RotateStraightShape(
-            points=[
-                (self._divertor_start_radius, divertor_height_bottom),
-                (self._divertor_end_radius, divertor_height_bottom),
-                (self._divertor_end_radius, divertor_height_top),
-                (self._divertor_start_radius, divertor_height_top),
-            ],
-            intersect=self._blanket_fw_rear_wall_envelope,
-            name="divertor",
-            color=(1.0, 0.667, 0.0),
-            rotation_angle=self.rotation_angle,
-        )
+        if self.divertor_position == "lower" or self.divertor_position == "both":
+            self._divertor_lower = paramak.RotateStraightShape(
+                points=[
+                    (self._divertor_start_radius, divertor_height_bottom),
+                    (self._divertor_end_radius, divertor_height_bottom),
+                    (self._divertor_end_radius, 0),
+                    (self._divertor_start_radius, 0),
+                ],
+                intersect=self._blanket_fw_rear_wall_envelope,
+                name="divertor_lower",
+                color=(1.0, 0.667, 0.0),
+                rotation_angle=self.rotation_angle,
+            )
+        if self.divertor_position == "upper" or self.divertor_position == "both":
+            self._divertor_upper = paramak.RotateStraightShape(
+                points=[
+                    (self._divertor_start_radius, 0),
+                    (self._divertor_end_radius, 0),
+                    (self._divertor_end_radius, divertor_height_top),
+                    (self._divertor_start_radius, divertor_height_top),
+                ],
+                intersect=self._blanket_fw_rear_wall_envelope,
+                name="divertor_upper",
+                color=(1.0, 0.667, 0.0),
+                rotation_angle=self.rotation_angle,
+            )
 
         for component in [self._firstwall, self._blanket, self._blanket_rear_wall]:
-            component.cut.append(self._divertor)
+            if self.divertor_position == "upper" or self.divertor_position == "both":
+                component.cut.append(self._divertor_upper)
+            if self.divertor_position == "lower" or self.divertor_position == "both":
+                component.cut.append(self._divertor_lower)
 
-        return self._divertor
+        if self.divertor_position == "upper":
+            return [self._divertor_upper]
+        if self.divertor_position == "lower":
+            return [self._divertor_lower]
+        if self.divertor_position == "both":
+            return [self._divertor_upper, self._divertor_lower]
 
     def _make_pf_coils(self):
         if None not in [
