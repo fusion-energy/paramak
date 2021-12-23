@@ -531,14 +531,16 @@ class BallReactor(paramak.Reactor):
             self.pf_coil_vertical_thicknesses,
             self.pf_coil_radial_thicknesses,
             self.pf_coil_vertical_position,
-            self.pf_coil_radial_position
+            self.pf_coil_radial_position,
         ]
 
         # checks if lists are all the same length
-        if all(len(input_list) == len(pf_input_lists[0]) for input_list in pf_input_lists):
+        if all(
+            len(input_list) == len(pf_input_lists[0]) for input_list in pf_input_lists
+        ):
             number_of_pf_coils = len(pf_input_lists[0])
             if number_of_pf_coils == 0:
-                print('number_of_pf_coils is 0')
+                print("number_of_pf_coils is 0")
                 return None
 
             center_points = [
@@ -548,13 +550,19 @@ class BallReactor(paramak.Reactor):
                 )
             ]
 
-            self._pf_coils  = []
-            for counter, (center_point, pf_coil_vertical_thickness, pf_coil_radial_thickness) in enumerate(
-                    zip(
-                        center_points,
-                        self.pf_coil_vertical_thicknesses,
-                        self.pf_coil_radial_thicknesses
-                    ), 1):
+            self._pf_coils = []
+            for counter, (
+                center_point,
+                pf_coil_vertical_thickness,
+                pf_coil_radial_thickness,
+            ) in enumerate(
+                zip(
+                    center_points,
+                    self.pf_coil_vertical_thicknesses,
+                    self.pf_coil_radial_thicknesses,
+                ),
+                1,
+            ):
                 pf_coil = paramak.PoloidalFieldCoil(
                     height=pf_coil_vertical_thickness,
                     width=pf_coil_radial_thickness,
@@ -565,11 +573,13 @@ class BallReactor(paramak.Reactor):
                 self._pf_coils.append(pf_coil)
 
             if self.pf_coil_case_thicknesses == []:
-                return self._pf_coils 
+                return self._pf_coils
 
             self._pf_coils_casing = []
             if len(self.pf_coil_case_thicknesses) == number_of_pf_coils:
-                for counter, (pf_coil_case_thickness, pf_coil)in enumerate(zip(self.pf_coil_case_thicknesses, self._pf_coils), 1):
+                for counter, (pf_coil_case_thickness, pf_coil) in enumerate(
+                    zip(self.pf_coil_case_thicknesses, self._pf_coils), 1
+                ):
                     pf_coils_casing = paramak.PoloidalFieldCoilCaseFC(
                         pf_coil=pf_coil,
                         casing_thickness=pf_coil_case_thickness,
@@ -585,7 +595,7 @@ class BallReactor(paramak.Reactor):
                     "pf_coil_vertical_position) so can not make pf coils cases"
                 )
 
-            return self._pf_coils  + self._pf_coils_casing
+            return self._pf_coils + self._pf_coils_casing
         else:
             raise ValueError(
                 "pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, "

@@ -318,7 +318,7 @@ class Reactor:
         Args:
             filename: the filename of exported the brep file.
             merged: if the surfaces should be merged (True) or not (False).
-        
+
         Returns:
             filename of the brep and a correspondence dictionary of volume ids
             with their component name.
@@ -352,7 +352,9 @@ class Reactor:
 
             merged.exportBrep(str(path_filename))
 
-        volume_ids_with_shape_name = {vol_id: name for vol_id, name  in enumerate(self.name, 1)}
+        volume_ids_with_shape_name = {
+            vol_id: name for vol_id, name in enumerate(self.name, 1)
+        }
 
         return str(path_filename), volume_ids_with_shape_name
 

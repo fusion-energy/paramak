@@ -59,7 +59,7 @@ class BlanketFP(RotateMixedShape):
         vertical_displacement: Optional[float] = 0.0,
         offset_from_plasma: Union[float, list] = 0.0,
         num_points: Optional[int] = 50,
-        allow_overlapping_shape = False,
+        allow_overlapping_shape=False,
         **kwargs
     ):
 
@@ -204,7 +204,7 @@ class BlanketFP(RotateMixedShape):
 
         # assemble
         points = inner_points + outer_points
-        if self._overlapping_shape and self.allow_overlapping_shape==False:
+        if self._overlapping_shape and self.allow_overlapping_shape == False:
             msg = (
                 "BlanketFP: Some points with negative R coordinate have "
                 "been ignored."
