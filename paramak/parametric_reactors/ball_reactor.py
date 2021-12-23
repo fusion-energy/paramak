@@ -48,10 +48,9 @@ class BallReactor(paramak.Reactor):
         pf_coil_vertical_position: The vertical (z) position(s) of the centers
             of the poloidal field coils.
         pf_coil_case_thicknesses: the thickness(s) to use in both the radial
-            and vertical direction for the casing around the pf coils. If float
-            then the single value will be applied to all pf coils. If list then
-            each value will be applied to the pf coils one by one. To have no
-            casing set to 0.
+            and vertical direction for the casing around the pf coils. Each
+            float value in the list will be applied to the pf coils one by one.
+            To have no casing set each entry to 0 or leave as an empty list.
         outboard_tf_coil_radial_thickness: the radial thickness of the toroidal
             field coil.
         outboard_tf_coil_poloidal_thickness: the poloidal thickness of the
@@ -79,11 +78,11 @@ class BallReactor(paramak.Reactor):
         divertor_to_tf_gap_vertical_thickness: Optional[float] = 0,
         number_of_tf_coils: Optional[int] = 12,
         rear_blanket_to_tf_gap: Optional[float] = None,
-        pf_coil_radial_thicknesses: Optional[Union[float, List[float]]] = None,
-        pf_coil_vertical_thicknesses: Optional[Union[float, List[float]]] = None,
-        pf_coil_radial_position: Optional[Union[float, List[float]]] = None,
-        pf_coil_vertical_position: Optional[Union[float, List[float]]] = None,
-        pf_coil_case_thicknesses: Optional[Union[float, List[float]]] = 10,
+        pf_coil_radial_thicknesses: List[float] = [],
+        pf_coil_vertical_thicknesses: List[float] = [],
+        pf_coil_radial_position: List[float] = [],
+        pf_coil_vertical_position: List[float] = [],
+        pf_coil_case_thicknesses: List[float] = [],
         outboard_tf_coil_radial_thickness: float = None,
         outboard_tf_coil_poloidal_thickness: float = None,
         divertor_position: Optional[str] = "both",
@@ -183,7 +182,7 @@ class BallReactor(paramak.Reactor):
 
     @pf_coil_vertical_position.setter
     def pf_coil_vertical_position(self, value):
-        if not isinstance(value, list) and value is not None:
+        if not isinstance(value, list):
             raise ValueError("pf_coil_vertical_position must be a list")
         self._pf_coil_vertical_position = value
 
@@ -193,7 +192,7 @@ class BallReactor(paramak.Reactor):
 
     @pf_coil_radial_position.setter
     def pf_coil_radial_position(self, value):
-        if not isinstance(value, list) and value is not None:
+        if not isinstance(value, list):
             raise ValueError("pf_coil_radial_position must be a list")
         self._pf_coil_radial_position = value
 
@@ -203,7 +202,7 @@ class BallReactor(paramak.Reactor):
 
     @pf_coil_radial_thicknesses.setter
     def pf_coil_radial_thicknesses(self, value):
-        if not isinstance(value, list) and value is not None:
+        if not isinstance(value, list):
             raise ValueError("pf_coil_radial_thicknesses must be a list")
         self._pf_coil_radial_thicknesses = value
 
@@ -213,7 +212,7 @@ class BallReactor(paramak.Reactor):
 
     @pf_coil_vertical_thicknesses.setter
     def pf_coil_vertical_thicknesses(self, value):
-        if not isinstance(value, list) and value is not None:
+        if not isinstance(value, list):
             raise ValueError("pf_coil_vertical_thicknesses must be a list")
         self._pf_coil_vertical_thicknesses = value
 
@@ -422,6 +421,7 @@ class BallReactor(paramak.Reactor):
             color=(0.5, 0.5, 0.5),
             name="firstwall",
             cut=[self._center_column_cutter],
+            allow_overlapping_shape=True,
         )
 
         self._blanket = paramak.BlanketFP(
@@ -436,6 +436,7 @@ class BallReactor(paramak.Reactor):
             color=(0.0, 1.0, 0.498),
             name="blanket",
             cut=[self._center_column_cutter],
+            allow_overlapping_shape=True,
         )
 
         self._blanket_rear_wall = paramak.BlanketFP(
@@ -451,6 +452,7 @@ class BallReactor(paramak.Reactor):
             color=(0.0, 1.0, 1.0),
             name="blanket_rear_wall",
             cut=[self._center_column_cutter],
+            allow_overlapping_shape=True,
         )
 
         return [self._firstwall, self._blanket, self._blanket_rear_wall]
@@ -475,6 +477,7 @@ class BallReactor(paramak.Reactor):
             start_angle=-180,
             stop_angle=180,
             rotation_angle=self.rotation_angle,
+            allow_overlapping_shape=True,
         )
 
         divertor_height = self._blanket_rear_wall_end_height * 2
@@ -523,12 +526,20 @@ class BallReactor(paramak.Reactor):
             return [self._divertor_upper, self._divertor_lower]
 
     def _make_pf_coils(self):
-        if None not in [
+
+        pf_input_lists = [
             self.pf_coil_vertical_thicknesses,
             self.pf_coil_radial_thicknesses,
             self.pf_coil_vertical_position,
-            self.pf_coil_radial_position,
-        ]:
+            self.pf_coil_radial_position
+        ]
+
+        # checks if lists are all the same length
+        if all(len(input_list) == len(pf_input_lists[0]) for input_list in pf_input_lists):
+            number_of_pf_coils = len(pf_input_lists[0])
+            if number_of_pf_coils == 0:
+                print('number_of_pf_coils is 0')
+                return None
 
             center_points = [
                 (x, y)
@@ -553,8 +564,11 @@ class BallReactor(paramak.Reactor):
                 )
                 self._pf_coils.append(pf_coil)
 
-            if self.pf_coil_case_thicknesses is not None:
-                self._pf_coils_casing = []
+            if self.pf_coil_case_thicknesses == []:
+                return self._pf_coils 
+
+            self._pf_coils_casing = []
+            if len(self.pf_coil_case_thicknesses) == number_of_pf_coils:
                 for counter, (pf_coil_case_thickness, pf_coil)in enumerate(zip(self.pf_coil_case_thicknesses, self._pf_coils), 1):
                     pf_coils_casing = paramak.PoloidalFieldCoilCaseFC(
                         pf_coil=pf_coil,
@@ -563,15 +577,21 @@ class BallReactor(paramak.Reactor):
                         name=f"pf_coil_case_{counter}",
                     )
                     self._pf_coils_casing.append(pf_coils_casing)
+            else:
+                raise ValueError(
+                    "pf_coil_case_thicknesses is not the same length as the other "
+                    "PF coil inputs (pf_coil_vertical_thicknesses, "
+                    "pf_coil_radial_thicknesses, pf_coil_radial_position, "
+                    "pf_coil_vertical_position) so can not make pf coils cases"
+                )
 
             return self._pf_coils  + self._pf_coils_casing
         else:
-            print(
+            raise ValueError(
                 "pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, "
-                "pf_coil_radial_position, pf_coil_vertical_position not "
-                "so not making pf coils"
+                "pf_coil_radial_position, pf_coil_vertical_position are not "
+                "the same length so can not make PF coils"
             )
-            return None
 
     def _make_tf_coils(self):
         comp = []
