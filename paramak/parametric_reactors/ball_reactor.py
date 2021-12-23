@@ -230,15 +230,6 @@ class BallReactor(paramak.Reactor):
             msg = "divertor_position must be 'upper', 'lower' or 'both'"
             raise ValueError(msg)
 
-    def volumes_with_names(self, include_plasma=False):
-        """Returns a dictionary of of volume numbers with names of the
-        individual Shapes for each volume. Useful when whating to know the
-        volume order in a Brep file"""
-        if include_plasma:
-            return {vol_id: name for vol_id, name  in enumerate(self.name, 1)}
-        else:
-            return {vol_id: name for vol_id, name  in enumerate(self.name, 1) if name != 'plasma'}
-
     def create_solids(self):
         """Creates a list of paramak.Shape for components and saves it in
         self.shapes_and_components
