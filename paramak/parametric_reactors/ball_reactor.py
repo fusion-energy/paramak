@@ -529,9 +529,6 @@ class BallReactor(paramak.Reactor):
             self.pf_coil_vertical_position,
             self.pf_coil_radial_position,
         ]:
-            list_of_components = []
-
-            # TODO make use of counter in the name attribute
 
             center_points = [
                 (x, y)
@@ -540,25 +537,34 @@ class BallReactor(paramak.Reactor):
                 )
             ]
 
-            self._pf_coils = self._pf_coil = paramak.PoloidalFieldCoilSet(
-                heights=self.pf_coil_vertical_thicknesses,
-                widths=self.pf_coil_radial_thicknesses,
-                center_points=center_points,
-                rotation_angle=self.rotation_angle,
-                name="pf_coil",
-            )
-            list_of_components.append(self._pf_coil)
+            self._pf_coils  = []
+            for counter, (center_point, pf_coil_vertical_thickness, pf_coil_radial_thickness) in enumerate(
+                    zip(
+                        center_points,
+                        self.pf_coil_vertical_thicknesses,
+                        self.pf_coil_radial_thicknesses
+                    ), 1):
+                pf_coil = paramak.PoloidalFieldCoil(
+                    height=pf_coil_vertical_thickness,
+                    width=pf_coil_radial_thickness,
+                    center_point=center_point,
+                    rotation_angle=self.rotation_angle,
+                    name=f"pf_coil_{counter}",
+                )
+                self._pf_coils.append(pf_coil)
 
             if self.pf_coil_case_thicknesses is not None:
-                self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
-                    pf_coils=self._pf_coil,
-                    casing_thicknesses=self.pf_coil_case_thicknesses,
-                    rotation_angle=self.rotation_angle,
-                    name="pf_coil_case",
-                )
-                list_of_components.append(self._pf_coils_casing)
+                self._pf_coils_casing = []
+                for counter, (pf_coil_case_thickness, pf_coil)in enumerate(zip(self.pf_coil_case_thicknesses, self._pf_coils), 1):
+                    pf_coils_casing = paramak.PoloidalFieldCoilCaseFC(
+                        pf_coil=pf_coil,
+                        casing_thickness=pf_coil_case_thickness,
+                        rotation_angle=self.rotation_angle,
+                        name=f"pf_coil_case_{counter}",
+                    )
+                    self._pf_coils_casing.append(pf_coils_casing)
 
-            return list_of_components
+            return self._pf_coils  + self._pf_coils_casing
         else:
             print(
                 "pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, "
