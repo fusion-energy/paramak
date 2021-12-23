@@ -37,72 +37,96 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
 
         """
 
-        inboard_pf_coils = paramak.PoloidalFieldCoilSet(
-            center_points=[
-                (53.5, -169.58),
-                (53.5, -118.43),
-                (53.5, -46.54),
-                (53.5, 46.54),
-                (53.5, 118.43),
-                (53.5, 169.58),
-            ],
-            heights=[
-                41.5,
-                40.5,
-                82.95,
-                82.95,
-                40.5,
-                41.5,
-            ],
-            widths=[27.7, 27.7, 27.7, 27.7, 27.7, 27.7],
-            rotation_angle=self.rotation_angle,
-        )
+        center_points=[
+            (53.5, -169.58),
+            (53.5, -118.43),
+            (53.5, -46.54),
+            (53.5, 46.54),
+            (53.5, 118.43),
+            (53.5, 169.58),
+        ]
+        heights=[
+            41.5,
+            40.5,
+            82.95,
+            82.95,
+            40.5,
+            41.5,
+        ]
+        widths=[27.7, 27.7, 27.7, 27.7, 27.7, 27.7]
 
-        outboard_pf_coils = paramak.PoloidalFieldCoilSet(
-            center_points=[
-                (86, 230),
-                (86, -230),
-                (164, 241),
-                (164, -241),
-                (263, 222),
-                (263, -222),
-                (373, 131),
-                (373, -131),
-            ],
-            widths=[
-                32,
-                32,
-                50,
-                50,
-                43,
-                43,
-                48,
-                48,
-            ],
-            heights=[
-                40,
-                40,
-                30,
-                30,
-                28,
-                28,
-                37,
-                37,
-            ],
-            rotation_angle=self.rotation_angle,
-        )
+        inboard_pf_coils = []
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights),1):
+            pf_coil = paramak.PoloidalFieldCoil(
+                        height=height,
+                        width=width,
+                        center_point=center_point,
+                        rotation_angle=self.rotation_angle,
+                        name=f"inboard_pf_coil_{counter}",
+                    )
+            inboard_pf_coils.append(pf_coil)
 
-        div_coils = paramak.PoloidalFieldCoilSet(
-            center_points=[
-                (207, 144),
-                (207, 125),
-                (207, -144),
-                (207, -125),
-            ],
-            widths=[15, 15, 15, 15],
-            heights=[15, 15, 15, 15],
-            rotation_angle=self.rotation_angle,
-        )
+
+        center_points=[
+            (86, 230),
+            (86, -230),
+            (164, 241),
+            (164, -241),
+            (263, 222),
+            (263, -222),
+            (373, 131),
+            (373, -131),
+        ]
+        widths=[
+            32,
+            32,
+            50,
+            50,
+            43,
+            43,
+            48,
+            48,
+        ]
+        heights=[
+            40,
+            40,
+            30,
+            30,
+            28,
+            28,
+            37,
+            37,
+        ]
+        outboard_pf_coils = []
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights),1):
+            pf_coil = paramak.PoloidalFieldCoil(
+                        height=height,
+                        width=width,
+                        center_point=center_point,
+                        rotation_angle=self.rotation_angle,
+                        name=f"outboard_pf_coil_{counter}",
+                    )
+            outboard_pf_coils.append(pf_coil)
+
+        center_points=[
+            (207, 144),
+            (207, 125),
+            (207, -144),
+            (207, -125),
+        ]
+        widths=[15, 15, 15, 15]
+        heights=[15, 15, 15, 15]
+
+        div_coils = []
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights),1):
+            pf_coil = paramak.PoloidalFieldCoil(
+                        height=height,
+                        width=width,
+                        center_point=center_point,
+                        rotation_angle=self.rotation_angle,
+                        name=f"div_coil_{counter}",
+                    )
+            div_coils.append(pf_coil)
 
         efccu_coils_1 = paramak.RotateStraightShape(
             points=[
@@ -112,6 +136,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (242.0323325635104, -132.25806451612902),
             ],
             rotation_angle=self.rotation_angle,
+            name='efccu_coils_1'
         )
 
         efccu_coils_2 = paramak.RotateStraightShape(
@@ -122,6 +147,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (268.82217090069287, -94.47004608294935),
             ],
             rotation_angle=self.rotation_angle,
+            name='efccu_coils_2'
         )
 
         efccu_coils_3 = paramak.RotateStraightShape(
@@ -132,6 +158,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (281.7551963048499, -78.80184331797238),
             ],
             rotation_angle=self.rotation_angle,
+            name='efccu_coils_3'
         )
 
         efccu_coils_4 = paramak.RotateStraightShape(
@@ -142,6 +169,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (242.0323325635104, 132.25806451612902),
             ],
             rotation_angle=self.rotation_angle,
+            name='efccu_coils_4'
         )
 
         efccu_coils_5 = paramak.RotateStraightShape(
@@ -152,6 +180,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (268.82217090069287, 94.47004608294935),
             ],
             rotation_angle=self.rotation_angle,
+            name='efccu_coils_5'
         )
 
         efccu_coils_6 = paramak.RotateStraightShape(
@@ -162,30 +191,37 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (281.7551963048499, 78.80184331797238),
             ],
             rotation_angle=self.rotation_angle,
+            name='efccu_coils_6'
         )
 
         # these are cut away from the vessel components
-        vs_coils = paramak.PoloidalFieldCoilSet(
-            center_points=[
-                (240, 70),
-                (240, -70),
-            ],
-            widths=[10, 10],
-            heights=[10, 10],
-            rotation_angle=self.rotation_angle,
-        )
+        center_points=[
+            (240, 70),
+            (240, -70),
+        ]
+        widths=[10, 10]
+        heights=[10, 10]
 
-        return [
-            inboard_pf_coils,
-            outboard_pf_coils,
-            div_coils,
+        vs_coils = []
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights),1):
+            pf_coil = paramak.PoloidalFieldCoil(
+                        height=height,
+                        width=width,
+                        center_point=center_point,
+                        rotation_angle=self.rotation_angle,
+                        name=f"vs_coil_{counter}",
+                    )
+            vs_coils.append(pf_coil)
+
+
+
+        return vs_coils+inboard_pf_coils + outboard_pf_coils + div_coils+[
             efccu_coils_1,
             efccu_coils_2,
             efccu_coils_3,
             efccu_coils_4,
             efccu_coils_5,
             efccu_coils_6,
-            vs_coils,
         ]
 
     def create_tf_coils(self):
@@ -203,6 +239,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             distance=33,
             number_of_coils=12,
             rotation_angle=self.rotation_angle,
+            name='tf_coil'
         )
 
         return [tf_coil]
@@ -229,6 +266,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (231.87066974595842, 46.5437788018433, "straight"),
             ],
             rotation_angle=self.rotation_angle,
+            name='antenna'
         )
 
         vac_vessel = paramak.RotateStraightShape(
@@ -269,6 +307,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.0, 1.0, 1.0),
+            name='vessel'
         )
 
         inner_vessel = paramak.RotateMixedShape(
@@ -318,8 +357,9 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
                 (269.7459584295612, -63.13364055299536, "straight"),
             ],
             rotation_angle=self.rotation_angle,
-            cut=[vac_vessel, vs_coils, antenna],
+            cut=[vac_vessel, antenna] + vs_coils,
             color=(0.0, 1.0, 0.498),
+            name='inner_vessel'
         )
 
         return [antenna, vac_vessel, inner_vessel]
@@ -357,7 +397,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
         plasma = self.create_plasma()
         pf_coils = self.create_pf_coils()
         tf_coils = self.create_tf_coils()
-        vessel = self.create_vessel_components(pf_coils[-1])
+        vessel = self.create_vessel_components([pf_coils[0], pf_coils[1]])
 
         all_shapes_and_components = plasma + pf_coils + tf_coils + vessel
 

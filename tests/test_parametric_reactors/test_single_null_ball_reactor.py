@@ -46,7 +46,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
         """Checks that a SingleNullBallReactor with optional pf and tf coils can
         be created and that the correct number of components are produced."""
 
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 16
 
     def test_single_null_ball_reactor_rotation_angle_impacts_volume(self):
         """Creates SingleNullBallReactors with different rotation angles and
@@ -76,7 +76,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
             "_plasma",
             "_inboard_tf_coils",
             "_center_column_shield",
-            "_divertor",
+            "_divertor_lower",
             "_firstwall",
             "_blanket",
             "_blanket_rear_wall",
@@ -91,7 +91,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
             "_plasma",
             "_inboard_tf_coils",
             "_center_column_shield",
-            "_divertor",
+            "_divertor_lower",
             "_firstwall",
             "_blanket",
             "_blanket_rear_wall",

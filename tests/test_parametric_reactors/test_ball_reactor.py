@@ -42,7 +42,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.divertor_radial_thickness = 50
 
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 7
+        assert len(self.test_reactor.shapes_and_components) == 8
 
     def test_creation_with_wide_divertor(self):
         """Creates a BallReactor with a wide divertor and checks that the correct
@@ -51,7 +51,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.divertor_radial_thickness = 172.5
 
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 7
+        assert len(self.test_reactor.shapes_and_components) == 8
 
     def test_svg_creation(self):
         """Creates a BallReactor and checks that an svg image of the reactor can be
@@ -73,7 +73,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_case_thickness = 10
 
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 12
 
     def test_rotation_angle_error(self):
         """Checks that an error is raised when an angle is over 360."""
@@ -111,7 +111,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 13
 
     def test_rotation_angle_warning(self):
         """Creates a BallReactor with rotation_angle = 360 and checks that the correct
@@ -155,7 +155,8 @@ class TestBallReactor(unittest.TestCase):
             "_plasma",
             "_inboard_tf_coils",
             "_center_column_shield",
-            "_divertor",
+            "_divertor_upper",
+            "_divertor_lower",
             "_firstwall",
             "_blanket",
             "_blanket_rear_wall",
@@ -170,7 +171,8 @@ class TestBallReactor(unittest.TestCase):
             "_plasma",
             "_inboard_tf_coils",
             "_center_column_shield",
-            "_divertor",
+            "_divertor_upper",
+            "_divertor_lower",
             "_firstwall",
             "_blanket",
             "_blanket_rear_wall",
@@ -236,11 +238,11 @@ class TestBallReactor(unittest.TestCase):
 
         self.test_reactor.divertor_position = "lower"
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 12
 
         self.test_reactor.divertor_position = "upper"
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 12
 
     def test_export_stp(self):
         """Exports and stp file with mode = solid and wire and checks
