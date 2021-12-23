@@ -252,7 +252,7 @@ class BallReactor(paramak.Reactor):
             for shape in uncut_shapes:
                 for pf_coil in pf_coils:
                     shape.solid = shape.solid.cut(pf_coil.solid)
-            shapes_and_components = pf_coils + uncut_shapes
+            shapes_and_components = uncut_shapes + pf_coils
 
         self.shapes_and_components = shapes_and_components
 
