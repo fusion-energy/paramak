@@ -49,14 +49,13 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
 
         self.test_reactor.pf_coil_radial_thicknesses = [50, 50, 50, 50]
         self.test_reactor.pf_coil_vertical_thicknesses = [50, 50, 50, 50]
-        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
-        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.pf_coil_case_thicknesses = [10, 20, 10, 10]
+        self.test_reactor.rear_blanket_to_tf_gap = 50
         self.test_reactor.outboard_tf_coil_radial_thickness = 100
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 20
         self.test_reactor.number_of_tf_coils = 16
 
-        assert len(self.test_reactor.shapes_and_components) == 11
+        assert len(self.test_reactor.shapes_and_components) == 17
 
     def test_single_null_submersion_tokamak_rotation_angle_impacts_volume(self):
         """Creates SingleNullSubmersionTokamaks with different rotation angles and
@@ -87,11 +86,10 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
 
         self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
         self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
-        self.test_reactor.pf_coil_to_tf_coil_radial_gap = 50
-        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.rear_blanket_to_tf_gap = 50
+        self.test_reactor.pf_coil_case_thicknesses = [10, 20, 20, 30]
         self.test_reactor.outboard_tf_coil_radial_thickness = 30
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 30
-        self.test_reactor.tf_coil_to_rear_blanket_radial_gap = 20
         self.test_reactor.number_of_tf_coils = 16
 
         assert self.test_reactor.reactor_hash_value is None
@@ -102,14 +100,14 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
             "_inboard_firstwall",
             "_inboard_blanket",
             "_firstwall",
-            "_divertor",
+            "_divertor_lower",
             "_blanket",
             "_supports",
             "_outboard_rear_blanket_wall_upper",
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-            "_pf_coil",
+            "_pf_coils",
             "_pf_coils_casing",
         ]:
             assert key not in self.test_reactor.__dict__.keys()
@@ -122,18 +120,18 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
             "_inboard_firstwall",
             "_inboard_blanket",
             "_firstwall",
-            "_divertor",
+            "_divertor_lower",
             "_blanket",
             "_supports",
             "_outboard_rear_blanket_wall_upper",
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-            "_pf_coil",
+            "_pf_coils",
             "_pf_coils_casing",
         ]:
             assert key in self.test_reactor.__dict__.keys()
-        assert len(self.test_reactor.shapes_and_components) == 11
+        assert len(self.test_reactor.shapes_and_components) == 17
         assert self.test_reactor.reactor_hash_value is not None
         initial_hash_value = self.test_reactor.reactor_hash_value
         self.test_reactor.rotation_angle = 270

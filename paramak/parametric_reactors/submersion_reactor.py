@@ -1,5 +1,5 @@
 import warnings
-from typing import List, Optional, Union
+from typing import List, Optional
 
 import cadquery as cq
 
@@ -75,11 +75,11 @@ class SubmersionTokamak(paramak.Reactor):
         outboard_tf_coil_radial_thickness: Optional[float] = None,
         rear_blanket_to_tf_gap: Optional[float] = None,
         outboard_tf_coil_poloidal_thickness: Optional[float] = None,
-        pf_coil_vertical_thicknesses: Optional[float] = None,
-        pf_coil_radial_thicknesses: Optional[float] = None,
-        pf_coil_radial_position: Optional[Union[float, List[float]]] = None,
-        pf_coil_vertical_position: Optional[Union[float, List[float]]] = None,
-        pf_coil_case_thicknesses: Optional[float] = 10,
+        pf_coil_radial_thicknesses: List[float] = [],
+        pf_coil_vertical_thicknesses: List[float] = [],
+        pf_coil_radial_position: List[float] = [],
+        pf_coil_vertical_position: List[float] = [],
+        pf_coil_case_thicknesses: List[float] = [],
         divertor_position: Optional[str] = "both",
         support_position: Optional[str] = "both",
     ):
@@ -219,7 +219,7 @@ class SubmersionTokamak(paramak.Reactor):
         uncut_shapes.append(self._make_center_column_shield())
         uncut_shapes.append(self._make_firstwall())
         uncut_shapes.append(self._make_blanket())
-        uncut_shapes.append(self._make_divertor())
+        uncut_shapes += self._make_divertor()
         uncut_shapes.append(self._make_supports())
         uncut_shapes.append(self._make_rear_blanket_wall())
         uncut_shapes += self._make_tf_coils()
@@ -465,27 +465,45 @@ class SubmersionTokamak(paramak.Reactor):
         divertor_height_top = divertor_height
         divertor_height_bottom = -divertor_height
 
+        if self.divertor_position == "lower" or self.divertor_position == "both":
+            self._divertor_lower = paramak.RotateStraightShape(
+                points=[
+                    (self._divertor_start_radius, divertor_height_bottom),
+                    (self._divertor_end_radius, divertor_height_bottom),
+                    (self._divertor_end_radius, 0),
+                    (self._divertor_start_radius, 0),
+                ],
+                intersect=fw_envelope,
+                name="divertor_lower",
+                color=(1.0, 0.667, 0.0),
+                rotation_angle=self.rotation_angle,
+            )
+        if self.divertor_position == "upper" or self.divertor_position == "both":
+            self._divertor_upper = paramak.RotateStraightShape(
+                points=[
+                    (self._divertor_start_radius, 0),
+                    (self._divertor_end_radius, 0),
+                    (self._divertor_end_radius, divertor_height_top),
+                    (self._divertor_start_radius, divertor_height_top),
+                ],
+                intersect=fw_envelope,
+                name="divertor_upper",
+                color=(1.0, 0.667, 0.0),
+                rotation_angle=self.rotation_angle,
+            )
+
+        for component in [self._firstwall, self._inboard_firstwall]:
+            if self.divertor_position == "upper" or self.divertor_position == "both":
+                component.cut = [self._divertor_upper]
+            if self.divertor_position == "lower" or self.divertor_position == "both":
+                component.cut = [self._divertor_lower]
+
+        if self.divertor_position == "upper":
+            return [self._divertor_upper]
         if self.divertor_position == "lower":
-            divertor_height_top = 0
-        elif self.divertor_position == "upper":
-            divertor_height_bottom = 0
-
-        self._divertor = paramak.RotateStraightShape(
-            points=[
-                (self._divertor_start_radius, divertor_height_bottom),
-                (self._divertor_end_radius, divertor_height_bottom),
-                (self._divertor_end_radius, divertor_height_top),
-                (self._divertor_start_radius, divertor_height_top),
-            ],
-            intersect=fw_envelope,
-            rotation_angle=self.rotation_angle,
-            name="divertor",
-            color=(1.0, 0.667, 0.0),
-        )
-
-        self._firstwall.cut = self._divertor
-        self._inboard_firstwall.cut = self._divertor
-        return self._divertor
+            return [self._divertor_lower]
+        if self.divertor_position == "both":
+            return [self._divertor_upper, self._divertor_lower]
 
     def _make_blanket(self):
         self._inboard_blanket = paramak.CenterColumnShieldCylinder(
@@ -621,15 +639,22 @@ class SubmersionTokamak(paramak.Reactor):
         return self._outboard_rear_blanket_wall
 
     def _make_pf_coils(self):
-        if None not in [
+
+        pf_input_lists = [
             self.pf_coil_vertical_thicknesses,
             self.pf_coil_radial_thicknesses,
             self.pf_coil_vertical_position,
             self.pf_coil_radial_position,
-        ]:
-            list_of_components = []
+        ]
 
-            # TODO make use of counter in the name attribute
+        # checks if lists are all the same length
+        if all(
+            len(input_list) == len(pf_input_lists[0]) for input_list in pf_input_lists
+        ):
+            number_of_pf_coils = len(pf_input_lists[0])
+            if number_of_pf_coils == 0:
+                print("number_of_pf_coils is 0")
+                return None
 
             center_points = [
                 (x, y)
@@ -638,32 +663,53 @@ class SubmersionTokamak(paramak.Reactor):
                 )
             ]
 
-            self._pf_coils = self._pf_coil = paramak.PoloidalFieldCoilSet(
-                heights=self.pf_coil_vertical_thicknesses,
-                widths=self.pf_coil_radial_thicknesses,
-                center_points=center_points,
-                rotation_angle=self.rotation_angle,
-                name="pf_coil",
-            )
-            list_of_components.append(self._pf_coil)
-
-            if self.pf_coil_case_thicknesses is not None:
-                self._pf_coils_casing = paramak.PoloidalFieldCoilCaseSetFC(
-                    pf_coils=self._pf_coil,
-                    casing_thicknesses=self.pf_coil_case_thicknesses,
+            self._pf_coils = []
+            for counter, (
+                center_point,
+                pf_coil_vertical_thickness,
+                pf_coil_radial_thickness,
+            ) in enumerate(
+                zip(
+                    center_points,
+                    self.pf_coil_vertical_thicknesses,
+                    self.pf_coil_radial_thicknesses,
+                ),
+                1,
+            ):
+                pf_coil = paramak.PoloidalFieldCoil(
+                    height=pf_coil_vertical_thickness,
+                    width=pf_coil_radial_thickness,
+                    center_point=center_point,
                     rotation_angle=self.rotation_angle,
-                    name="pf_coil_case",
+                    name=f"pf_coil_{counter}",
                 )
-                list_of_components.append(self._pf_coils_casing)
+                self._pf_coils.append(pf_coil)
 
-            return list_of_components
-        else:
-            print(
-                "pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, "
-                "pf_coil_radial_position, pf_coil_vertical_position not "
-                "so not making pf coils"
-            )
-            return None
+            if self.pf_coil_case_thicknesses == []:
+                return self._pf_coils
+
+            self._pf_coils_casing = []
+            if len(self.pf_coil_case_thicknesses) == number_of_pf_coils:
+                for counter, (pf_coil_case_thickness, pf_coil) in enumerate(
+                    zip(self.pf_coil_case_thicknesses, self._pf_coils), 1
+                ):
+                    pf_coils_casing = paramak.PoloidalFieldCoilCaseFC(
+                        pf_coil=pf_coil,
+                        casing_thickness=pf_coil_case_thickness,
+                        rotation_angle=self.rotation_angle,
+                        name=f"pf_coil_case_{counter}",
+                    )
+                    self._pf_coils_casing.append(pf_coils_casing)
+            else:
+                raise ValueError(
+                    "pf_coil_case_thicknesses is not the same length as the other "
+                    "PF coil inputs (pf_coil_vertical_thicknesses, "
+                    "pf_coil_radial_thicknesses, pf_coil_radial_position, "
+                    "pf_coil_vertical_position) so can not make pf coils cases"
+                )
+
+            return self._pf_coils + self._pf_coils_casing
+
 
     def _make_tf_coils(self):
         list_of_components = []
@@ -703,6 +749,7 @@ class SubmersionTokamak(paramak.Reactor):
                     rotation_angle=self.rotation_angle,
                     horizontal_length=self._outboard_tf_coils_horizontal_length,
                     vertical_length=self._outboard_tf_coils_vertical_height,
+                    name='tf_coils'
                 )
                 list_of_components.append(self._tf_coil)
 

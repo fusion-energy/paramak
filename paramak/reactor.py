@@ -292,7 +292,8 @@ class Reactor:
         if len(filename) != len(self.shapes_and_components):
             msg = (
                 f"The Reactor contains {len(self.shapes_and_components)} "
-                f"Shapes and {len(filename)} filenames have be provided"
+                f"Shapes and {len(filename)} filenames have be provided. "
+                f"The names of the shapes are {self.name}"
             )
             raise ValueError(msg)
 
@@ -412,7 +413,8 @@ class Reactor:
         if len(filename) != len(self.shapes_and_components):
             msg = (
                 f"The Reactor contains {len(self.shapes_and_components)} "
-                f"Shapes and {len(filename)} filenames have be provided"
+                f"Shapes and {len(filename)} filenames have be provided. "
+                f"The names of the shapes are {self.name}"
             )
             raise ValueError(msg)
 
