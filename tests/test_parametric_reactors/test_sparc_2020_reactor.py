@@ -27,23 +27,7 @@ class TestSparc2020Reactor(unittest.TestCase):
             rotation_angle=180,
         )
 
-        self.output_filenames = [
-            "plasma.stp",
-            "inboard_pf_coils.stp",
-            "outboard_pf_coils.stp",
-            "div_coils.stp",
-            "vs_coils.stp",
-            "efccu_coils_1.stp",
-            "efccu_coils_2.stp",
-            "efccu_coils_3.stp",
-            "efccu_coils_4.stp",
-            "efccu_coils_5.stp",
-            "efccu_coils_6.stp",
-            "antenna.stp",
-            "tf_coil.stp",
-            "vacuum_vessel.stp",
-            "vacuum_vessel_inner.stp",
-        ]
+        self.output_filenames = ['plasma.stp', 'vs_coil_1.stp', 'vs_coil_2.stp', 'inboard_pf_coil_1.stp', 'inboard_pf_coil_2.stp', 'inboard_pf_coil_3.stp', 'inboard_pf_coil_4.stp', 'inboard_pf_coil_5.stp', 'inboard_pf_coil_6.stp', 'outboard_pf_coil_1.stp', 'outboard_pf_coil_2.stp', 'outboard_pf_coil_3.stp', 'outboard_pf_coil_4.stp', 'outboard_pf_coil_5.stp', 'outboard_pf_coil_6.stp', 'outboard_pf_coil_7.stp', 'outboard_pf_coil_8.stp', 'div_coil_1.stp', 'div_coil_2.stp', 'div_coil_3.stp', 'div_coil_4.stp', 'efccu_coils_1.stp', 'efccu_coils_2.stp', 'efccu_coils_3.stp', 'efccu_coils_4.stp', 'efccu_coils_5.stp', 'efccu_coils_6.stp', 'tf_coil.stp', 'antenna.stp', 'vessel.stp', 'inner_vessel.stp']
 
     def test_input_variables_names(self):
         """tests that the number of inputs variables is correct"""

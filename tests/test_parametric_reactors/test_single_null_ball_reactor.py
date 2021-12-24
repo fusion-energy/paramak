@@ -80,7 +80,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
             "_firstwall",
             "_blanket",
             "_blanket_rear_wall",
-            "_pf_coil",
+            "_pf_coils",
             "_pf_coils_casing",
             "_tf_coil",
         ]:
@@ -95,12 +95,12 @@ class TestSingleNullBallReactor(unittest.TestCase):
             "_firstwall",
             "_blanket",
             "_blanket_rear_wall",
-            "_pf_coil",
+            "_pf_coils",
             "_pf_coils_casing",
             "_tf_coil",
         ]:
             assert key in self.test_reactor.__dict__.keys()
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 16
         assert self.test_reactor.reactor_hash_value is not None
         initial_hash_value = self.test_reactor.reactor_hash_value
         self.test_reactor.rotation_angle = 270
