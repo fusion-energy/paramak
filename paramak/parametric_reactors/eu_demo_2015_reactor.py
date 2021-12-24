@@ -95,7 +95,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             ),
             rotation_angle=self.rotation_angle,
             color=(1.0, 1.0, 0.498),
-            name='tf_coil_casing'
+            name="tf_coil_casing",
         )
 
         return [tf_coil_casing]
@@ -137,7 +137,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.0, 1.0, 0.498),
-            name='blanket'
+            name="blanket",
         )
 
         # SN Divertor
@@ -171,7 +171,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(1.0, 0.667, 0.0),
-            name='divertor'
+            name="divertor",
         )
 
         # Vacuum vessel
@@ -226,7 +226,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             # avoid overlap between VV and blanket divertor
             union=[blanket, divertor],
-            name='vessel_inner'
+            name="vessel_inner",
         )
         vac_vessel = paramak.RotateSplineShape(
             points=[
@@ -285,7 +285,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             cut=vac_vessel_inner,  # hollow shape
             rotation_angle=self.rotation_angle,
             color=(0.0, 1.0, 1.0),
-            name='vessel'
+            name="vessel",
         )
 
         return [divertor, blanket, vac_vessel, vac_vessel_inner]
@@ -314,7 +314,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             A list of CadQuery solids: A list of 3D solid volumes
         """
 
-        center_points=[
+        center_points = [
             (689, -985),
             (1421, -689),
             (1580, -252),
@@ -322,7 +322,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             (1400, 598),
             (621, 811),
         ]
-        widths=[
+        widths = [
             803 - 599,
             1492 - 1351,
             1628 - 1526,
@@ -330,7 +330,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             1439 - 1360,
             684 - 563,
         ]
-        heights=[
+        heights = [
             803 - 599,
             1492 - 1351,
             1628 - 1526,
@@ -339,14 +339,16 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             684 - 563,
         ]
         outboard_pf_coils = []
-        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights),1):
+        for counter, (center_point, width, height) in enumerate(
+            zip(center_points, widths, heights), 1
+        ):
             pf_coil = paramak.PoloidalFieldCoil(
-                        height=height,
-                        width=width,
-                        center_point=center_point,
-                        rotation_angle=self.rotation_angle,
-                        name=f"outboard_pf_coil_{counter}",
-                    )
+                height=height,
+                width=width,
+                center_point=center_point,
+                rotation_angle=self.rotation_angle,
+                name=f"outboard_pf_coil_{counter}",
+            )
             outboard_pf_coils.append(pf_coil)
 
         pf_coils_1 = paramak.RotateStraightShape(
@@ -357,7 +359,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (363.04586051526934, -881.6221003581469),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coils_1'
+            name="pf_coils_1",
         )
 
         pf_coils_2 = paramak.RotateStraightShape(
@@ -368,7 +370,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (266.2030353910733, -600.8478453421652),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coils_2'
+            name="pf_coils_2",
         )
 
         pf_coils_3 = paramak.RotateStraightShape(
@@ -379,7 +381,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (263.5606400431317, -316.0372010628879),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coils_3'
+            name="pf_coils_3",
         )
 
         pf_coils_4 = paramak.RotateStraightShape(
@@ -390,7 +392,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (262.2297985905187, 229.49149612970268),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coils_4'
+            name="pf_coils_4",
         )
 
         pf_coils_5 = paramak.RotateStraightShape(
@@ -401,7 +403,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
                 (261.01468248161126, 510.27832556706545),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coils_5'
+            name="pf_coils_5",
         )
 
         return outboard_pf_coils + [

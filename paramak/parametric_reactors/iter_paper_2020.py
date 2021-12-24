@@ -54,7 +54,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             distance=coil_thickness,
             number_of_coils=self.number_of_tf_coils,
             rotation_angle=self.rotation_angle,
-            name='tf_coils'
+            name="tf_coils",
         )
 
         return [tf_coil]
@@ -75,7 +75,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             rotation_angle=self.rotation_angle,
             vertical_displacement=self.plasma.vertical_displacement,
             offset_from_plasma=[[-70, 0, 90, 180, 230], [50, 20, 59, 16, 50]],
-            name='blanket'
+            name="blanket",
         )
 
         # SN Divertor
@@ -88,7 +88,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             dome_height=45,
             dome_pos=0.45,
             rotation_angle=self.rotation_angle,
-            name='divertor'
+            name="divertor",
         )
 
         # Vacuum vessel
@@ -98,7 +98,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         vac_vessel_inner = paramak.RotateMixedShape(
             points=blanket.outer_points + divertor.casing_points,
             rotation_angle=self.rotation_angle,
-            name='vessel'
+            name="vessel",
         )
 
         vac_vessel = paramak.RotateSplineShape(
@@ -181,7 +181,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
             ],
             cut=[vac_vessel_inner],  # to make a hollow shape
             rotation_angle=self.rotation_angle,
-            name='vessel_inner'
+            name="vessel_inner",
         )
 
         return [divertor, blanket, vac_vessel, vac_vessel_inner]
@@ -236,11 +236,13 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         )
 
         outboard_pf_coils = []
-        for counter, (top_right, lower_left) in enumerate(zip(top_rights, lower_lefts), 1):
+        for counter, (top_right, lower_left) in enumerate(
+            zip(top_rights, lower_lefts), 1
+        ):
             pf_coil = paramak.PoloidalFieldCoilFP(
-                corner_points= (top_right, lower_left),
+                corner_points=(top_right, lower_left),
                 rotation_angle=self.rotation_angle,
-                name=f'outboard_pf_coils_{counter}'
+                name=f"outboard_pf_coils_{counter}",
             )
             outboard_pf_coils.append(pf_coil)
 
@@ -254,7 +256,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, -400),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coil_1'
+            name="pf_coil_1",
         )
 
         pf_coils_2 = paramak.RotateStraightShape(
@@ -265,7 +267,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, -200),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coil_2'
+            name="pf_coil_2",
         )
 
         pf_coils_3 = paramak.RotateStraightShape(
@@ -276,7 +278,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, 0),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coil_3'
+            name="pf_coil_3",
         )
 
         pf_coils_4 = paramak.RotateStraightShape(
@@ -287,7 +289,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, 200),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coil_4'
+            name="pf_coil_4",
         )
 
         pf_coils_5 = paramak.RotateStraightShape(
@@ -298,7 +300,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, 400),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coil_5'
+            name="pf_coil_5",
         )
 
         pf_coils_6 = paramak.RotateStraightShape(
@@ -309,7 +311,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
                 (x_inner, 600),
             ],
             rotation_angle=self.rotation_angle,
-            name='pf_coil_6'
+            name="pf_coil_6",
         )
 
         return outboard_pf_coils + [

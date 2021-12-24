@@ -710,7 +710,6 @@ class SubmersionTokamak(paramak.Reactor):
 
             return self._pf_coils + self._pf_coils_casing
 
-
     def _make_tf_coils(self):
         list_of_components = []
 
@@ -749,7 +748,7 @@ class SubmersionTokamak(paramak.Reactor):
                     rotation_angle=self.rotation_angle,
                     horizontal_length=self._outboard_tf_coils_horizontal_length,
                     vertical_length=self._outboard_tf_coils_vertical_height,
-                    name='tf_coils'
+                    name="tf_coils",
                 )
                 list_of_components.append(self._tf_coil)
 

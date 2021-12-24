@@ -45,22 +45,24 @@ class TestDemo2015Reactor(unittest.TestCase):
         """Creates a EuDemoFrom2015PaperDiagram reactor and exports the stp
         files checking that each component results in a stp file"""
 
-        output_filenames = ['plasma.stp',
-            'outboard_pf_coil_1.stp',
-            'outboard_pf_coil_2.stp',
-            'outboard_pf_coil_3.stp',
-            'outboard_pf_coil_4.stp',
-            'outboard_pf_coil_5.stp',
-            'outboard_pf_coil_6.stp',
-            'pf_coils_1.stp',
-            'pf_coils_2.stp',
-            'pf_coils_3.stp',
-            'pf_coils_4.stp',
-            'pf_coils_5.stp',
-            'divertor.stp',
-            'blanket.stp',
-            'vessel.stp',
-            'tf_coil_casing.stp']
+        output_filenames = [
+            "plasma.stp",
+            "outboard_pf_coil_1.stp",
+            "outboard_pf_coil_2.stp",
+            "outboard_pf_coil_3.stp",
+            "outboard_pf_coil_4.stp",
+            "outboard_pf_coil_5.stp",
+            "outboard_pf_coil_6.stp",
+            "pf_coils_1.stp",
+            "pf_coils_2.stp",
+            "pf_coils_3.stp",
+            "pf_coils_4.stp",
+            "pf_coils_5.stp",
+            "divertor.stp",
+            "blanket.stp",
+            "vessel.stp",
+            "tf_coil_casing.stp",
+        ]
         os.system("rm *.stp")
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1)
         my_reactor.export_stp(filename=output_filenames)
@@ -73,22 +75,24 @@ class TestDemo2015Reactor(unittest.TestCase):
         rotation angle and exports the stp files checking that each component
         results in a stp file"""
 
-        output_filenames =['plasma.stp',
-            'outboard_pf_coil_1.stp',
-            'outboard_pf_coil_2.stp',
-            'outboard_pf_coil_3.stp',
-            'outboard_pf_coil_4.stp',
-            'outboard_pf_coil_5.stp',
-            'outboard_pf_coil_6.stp',
-            'pf_coils_1.stp',
-            'pf_coils_2.stp',
-            'pf_coils_3.stp',
-            'pf_coils_4.stp',
-            'pf_coils_5.stp',
-            'divertor.stp',
-            'blanket.stp',
-            'vessel.stp',
-            'tf_coil_casing.stp']
+        output_filenames = [
+            "plasma.stp",
+            "outboard_pf_coil_1.stp",
+            "outboard_pf_coil_2.stp",
+            "outboard_pf_coil_3.stp",
+            "outboard_pf_coil_4.stp",
+            "outboard_pf_coil_5.stp",
+            "outboard_pf_coil_6.stp",
+            "pf_coils_1.stp",
+            "pf_coils_2.stp",
+            "pf_coils_3.stp",
+            "pf_coils_4.stp",
+            "pf_coils_5.stp",
+            "divertor.stp",
+            "blanket.stp",
+            "vessel.stp",
+            "tf_coil_casing.stp",
+        ]
 
         os.system("rm *.stp")
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(

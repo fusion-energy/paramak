@@ -46,7 +46,25 @@ class TestITERReactor(unittest.TestCase):
         """Creates a ITERTokamak reactor and exports the stp
         files checking that each component results in a stp file"""
 
-        output_filenames = ['plasma.stp', 'outboard_pf_coils_1.stp', 'outboard_pf_coils_2.stp', 'outboard_pf_coils_3.stp', 'outboard_pf_coils_4.stp', 'outboard_pf_coils_5.stp', 'outboard_pf_coils_6.stp', 'pf_coil_1.stp', 'pf_coil_2.stp', 'pf_coil_3.stp', 'pf_coil_4.stp', 'pf_coil_5.stp', 'pf_coil_6.stp', 'divertor.stp', 'blanket.stp', 'vessel_inner.stp', 'tf_coils.stp']
+        output_filenames = [
+            "plasma.stp",
+            "outboard_pf_coils_1.stp",
+            "outboard_pf_coils_2.stp",
+            "outboard_pf_coils_3.stp",
+            "outboard_pf_coils_4.stp",
+            "outboard_pf_coils_5.stp",
+            "outboard_pf_coils_6.stp",
+            "pf_coil_1.stp",
+            "pf_coil_2.stp",
+            "pf_coil_3.stp",
+            "pf_coil_4.stp",
+            "pf_coil_5.stp",
+            "pf_coil_6.stp",
+            "divertor.stp",
+            "blanket.stp",
+            "vessel_inner.stp",
+            "tf_coils.stp",
+        ]
         os.system("rm *.stp")
         my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
         my_reactor.export_stp(filename=output_filenames)
@@ -59,7 +77,25 @@ class TestITERReactor(unittest.TestCase):
         rotation angle and exports the stp files checking that each component
         results in a stp file"""
 
-        output_filenames = ['plasma.stp', 'outboard_pf_coils_1.stp', 'outboard_pf_coils_2.stp', 'outboard_pf_coils_3.stp', 'outboard_pf_coils_4.stp', 'outboard_pf_coils_5.stp', 'outboard_pf_coils_6.stp', 'pf_coil_1.stp', 'pf_coil_2.stp', 'pf_coil_3.stp', 'pf_coil_4.stp', 'pf_coil_5.stp', 'pf_coil_6.stp', 'divertor.stp', 'blanket.stp', 'vessel_inner.stp', 'tf_coils.stp']
+        output_filenames = [
+            "plasma.stp",
+            "outboard_pf_coils_1.stp",
+            "outboard_pf_coils_2.stp",
+            "outboard_pf_coils_3.stp",
+            "outboard_pf_coils_4.stp",
+            "outboard_pf_coils_5.stp",
+            "outboard_pf_coils_6.stp",
+            "pf_coil_1.stp",
+            "pf_coil_2.stp",
+            "pf_coil_3.stp",
+            "pf_coil_4.stp",
+            "pf_coil_5.stp",
+            "pf_coil_6.stp",
+            "divertor.stp",
+            "blanket.stp",
+            "vessel_inner.stp",
+            "tf_coils.stp",
+        ]
         os.system("rm *.stp")
         my_reactor = paramak.IterFrom2020PaperDiagram(
             number_of_tf_coils=1, rotation_angle=90
