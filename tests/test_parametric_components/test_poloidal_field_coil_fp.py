@@ -11,6 +11,6 @@ class TestPoloidalFieldCoilFP(unittest.TestCase):
 
         test_component = paramak.PoloidalFieldCoilFP(corner_points=[(10, 10), (20, 22)])
 
-        assert test_component.volume() == pytest.approx(12063.715789784808)
+        assert test_component.volume() == pytest.approx(11309.)
         assert test_component.corner_points == [(10, 10), (20, 22)]
         assert test_component.solid is not None
