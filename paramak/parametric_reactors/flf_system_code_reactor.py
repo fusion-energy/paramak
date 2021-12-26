@@ -8,7 +8,8 @@ class FlfSystemCodeReactor(paramak.Reactor):
     on parameters. Model design was originally presented at University of
     York in 2019. Model shown at 50 mins 48 seconds in presentation
     https://www.youtube.com/watch?v=DtvcEkIb4D4
-    Args:
+
+    Arguments:
         inner_blanket_radius: The radial distance between the center of the
             reactor on the start of the blanket (cm).
         blanket_thickness: The radial thickness of the blanket (cm).
@@ -26,8 +27,6 @@ class FlfSystemCodeReactor(paramak.Reactor):
             lower section of vaccum vessel (cm).
         rotation_angle: The angle of the sector simulated. Set to 360 for
             simulations and less when creating models for visualization.
-    Returns:
-        paramak.Reactor object
     """
 
     def __init__(
