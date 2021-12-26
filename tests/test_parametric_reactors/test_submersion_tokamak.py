@@ -191,7 +191,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             "supports.stp",
             "outboard_rear_blanket_wall.stp",
             "inboard_tf_coils.stp",
-            "tf_coils.stp"
+            "tf_coils.stp",
         ]
         self.test_reactor.export_stp(filename=output_filenames)
 
