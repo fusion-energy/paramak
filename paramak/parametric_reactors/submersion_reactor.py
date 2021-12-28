@@ -149,6 +149,12 @@ class SubmersionTokamak(paramak.Reactor):
         self.major_radius = None
         self.minor_radius = None
 
+        # set during geometry creation
+        self._pf_coils = None
+        self._pf_coil_casing = None
+        self._divertor_lower = None
+        self._divertor_upper = None
+
     @property
     def pf_coil_radial_position(self):
         return self._pf_coil_radial_position
@@ -465,7 +471,7 @@ class SubmersionTokamak(paramak.Reactor):
         divertor_height_top = divertor_height
         divertor_height_bottom = -divertor_height
 
-        if self.divertor_position == "lower" or self.divertor_position == "both":
+        if self.divertor_position in ["lower", "both"]:
             self._divertor_lower = paramak.RotateStraightShape(
                 points=[
                     (self._divertor_start_radius, divertor_height_bottom),
@@ -478,7 +484,7 @@ class SubmersionTokamak(paramak.Reactor):
                 color=(1.0, 0.667, 0.0),
                 rotation_angle=self.rotation_angle,
             )
-        if self.divertor_position == "upper" or self.divertor_position == "both":
+        if self.divertor_position in ["upper", "both"]:
             self._divertor_upper = paramak.RotateStraightShape(
                 points=[
                     (self._divertor_start_radius, 0),
@@ -493,9 +499,9 @@ class SubmersionTokamak(paramak.Reactor):
             )
 
         for component in [self._firstwall, self._inboard_firstwall]:
-            if self.divertor_position == "upper" or self.divertor_position == "both":
+            if self.divertor_position in ["upper", "both"]:
                 component.cut = [self._divertor_upper]
-            if self.divertor_position == "lower" or self.divertor_position == "both":
+            if self.divertor_position in ["lower", "both"]:
                 component.cut = [self._divertor_lower]
 
         if self.divertor_position == "upper":
@@ -653,7 +659,6 @@ class SubmersionTokamak(paramak.Reactor):
         ):
             number_of_pf_coils = len(pf_input_lists[0])
             if number_of_pf_coils == 0:
-                print("number_of_pf_coils is 0")
                 return None
 
             center_points = [

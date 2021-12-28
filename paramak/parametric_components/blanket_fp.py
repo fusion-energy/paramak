@@ -204,7 +204,7 @@ class BlanketFP(RotateMixedShape):
 
         # assemble
         points = inner_points + outer_points
-        if self._overlapping_shape and self.allow_overlapping_shape == False:
+        if self._overlapping_shape and self.allow_overlapping_shape is False:
             msg = (
                 "BlanketFP: Some points with negative R coordinate have "
                 "been ignored."
