@@ -228,12 +228,12 @@ class TestSubmersionTokamak(unittest.TestCase):
 
         self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
         self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
-        self.test_reactor.rear_blanket_to_tf_gap = 50
-        self.test_reactor.pf_coil_case_thicknesses = [10, 10, 10, 10]
-        self.test_reactor.outboard_tf_coil_radial_thickness = 30
-        self.test_reactor.outboard_tf_coil_poloidal_thickness = 30
         self.test_reactor.pf_coil_radial_position = [100, 100, 200, 200]
         self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200]
+        self.test_reactor.pf_coil_case_thicknesses = [10, 10, 10, 10]
+        self.test_reactor.rear_blanket_to_tf_gap = 50
+        self.test_reactor.outboard_tf_coil_radial_thickness = 30
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 30
         self.test_reactor.number_of_tf_coils = 16
 
         assert self.test_reactor.reactor_hash_value is None
@@ -301,6 +301,19 @@ class TestSubmersionTokamak(unittest.TestCase):
             self.test_reactor.support_position = "coucou"
 
         self.assertRaises(ValueError, invalid_support_position)
+
+    def test_error_coil_case_thickness(self):
+        """checks an invalid number of coil case thicknesses raises the correct
+        ValueError."""
+        def invalid_pf_coil_case_thicknesses():
+            self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
+            self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
+            self.test_reactor.pf_coil_radial_position = [100, 100, 200, 200]
+            self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200]
+            self.test_reactor.pf_coil_case_thicknesses = [10, 10]
+            self.test_reactor.create_solids()
+
+        self.assertRaises(ValueError, invalid_pf_coil_case_thicknesses)
 
     def test_divertors_supports(self):
         """Checks that SubmersionTokamaks with lower and upper supports
