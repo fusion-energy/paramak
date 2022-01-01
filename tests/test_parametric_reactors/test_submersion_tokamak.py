@@ -21,10 +21,6 @@ class TestSubmersionTokamak(unittest.TestCase):
             outer_plasma_gap_radial_thickness=30,
             firstwall_radial_thickness=30,
             blanket_rear_wall_radial_thickness=30,
-            number_of_tf_coils=16,
-            outboard_tf_coil_radial_thickness=10,
-            outboard_tf_coil_poloidal_thickness=10,
-            rear_blanket_to_tf_gap=10,
             support_radial_thickness=20,
             inboard_blanket_radial_thickness=20,
             outboard_blanket_radial_thickness=20,
@@ -66,7 +62,7 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
         self.test_reactor.number_of_tf_coils = 4
 
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 10
 
     def test_with_tf_and_pf_coils_creation(self):
         """Creates a SubmersionTokamak with tf and pf coils and checks that the
@@ -78,33 +74,60 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_radial_thicknesses = [40, 40, 40, 40, 40]
         self.test_reactor.pf_coil_radial_position = [100, 100, 200, 200, 100]
         self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200, 0]
+        self.test_reactor.pf_coil_case_thicknesses = [10, 10, 10, 10, 10]
         self.test_reactor.rear_blanket_to_tf_gap = 50
-        self.test_reactor.pf_coil_case_thicknesses = 10
         self.test_reactor.number_of_tf_coils = 4
 
-        assert len(self.test_reactor.shapes_and_components) == 11
+        assert len(self.test_reactor.shapes_and_components) == 20
 
     def test_minimal_stp_creation(self):
         """Creates a SubmersionTokamak and checks that stp files of all
         components can be exported using the export_stp method."""
 
-        os.system("rm -r minimal_SubmersionTokamak")
+        os.system("rm -r *.stp")
         output_filenames = [
-            "minimal_SubmersionTokamak/inboard_tf_coils.stp",
-            "minimal_SubmersionTokamak/center_column_shield.stp",
-            "minimal_SubmersionTokamak/plasma.stp",
-            "minimal_SubmersionTokamak/divertor.stp",
-            "minimal_SubmersionTokamak/outboard_firstwall.stp",
-            "minimal_SubmersionTokamak/supports.stp",
-            "minimal_SubmersionTokamak/blanket.stp",
-            "minimal_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "another.stp",
+            "plasma.stp",
+            "center_column_shield.stp",
+            "outboard_firstwall.stp",
+            "blanket.stp",
+            "divertor_upper.stp",
+            "divertor_lower.stp",
+            "supports.stp",
+            "outboard_rear_blanket_wall.stp",
+            "inboard_tf_coils.stp",
         ]
         self.test_reactor.export_stp(filename=output_filenames)
 
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
-        os.system("rm -r minimal_SubmersionTokamak")
+        os.system("rm -r *.stp")
+
+    def test_stp_creation_with_tf(self):
+        """Creates a SubmersionTokamak and checks that stp files of all
+        components can be exported using the export_stp method."""
+
+        os.system("rm -r *.stp")
+        self.test_reactor.number_of_tf_coils = 4
+        self.test_reactor.outboard_tf_coil_radial_thickness = 10
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 10
+        self.test_reactor.rear_blanket_to_tf_gap = 10
+        output_filenames = [
+            "plasma.stp",
+            "center_column_shield.stp",
+            "outboard_firstwall.stp",
+            "blanket.stp",
+            "divertor_upper.stp",
+            "divertor_lower.stp",
+            "supports.stp",
+            "outboard_rear_blanket_wall.stp",
+            "inboard_tf_coils.stp",
+            "tf_coils.stp",
+        ]
+        self.test_reactor.export_stp(filename=output_filenames)
+
+        for output_filename in output_filenames:
+            assert Path(output_filename).exists() is True
+        os.system("rm -r *.stp")
 
     def test_with_pf_coils_stp_creation(self):
         """Creates a SubmersionTokamak with pf coils and checks that stp files
@@ -119,18 +142,19 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_vertical_position = [100, -100]
 
         output_filenames = [
-            "pf_SubmersionTokamak/inboard_tf_coils.stp",
-            "pf_SubmersionTokamak/center_column_shield.stp",
-            "pf_SubmersionTokamak/plasma.stp",
-            "pf_SubmersionTokamak/divertor.stp",
-            "pf_SubmersionTokamak/outboard_firstwall.stp",
-            "pf_SubmersionTokamak/supports.stp",
-            "pf_SubmersionTokamak/blanket.stp",
-            "pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "tf_pf_SubmersionTokamak/another_shape.stp",
-            "tf_pf_SubmersionTokamak/another_shape2.stp",
-            "tf_pf_SubmersionTokamak/another_shape3.stp",
+            "pf_coil_1.stp",
+            "pf_coil_2.stp",
+            "plasma.stp",
+            "center_column_shield.stp",
+            "outboard_firstwall.stp",
+            "blanket.stp",
+            "divertor_lower.stp",
+            "supports.stp",
+            "outboard_rear_blanket_wall.stp",
+            "inboard_tf_coils.stp",
+            "tf_coils.stp",
         ]
+
         self.test_reactor.export_stp(filename=output_filenames)
 
         for output_filename in output_filenames:
@@ -141,7 +165,7 @@ class TestSubmersionTokamak(unittest.TestCase):
         """Creates a SubmersionTokamak with tf and pf coils and checks that
         stp files of all components can be exported using the export_stp method."""
 
-        os.system("rm -r tf_pf_SubmersionTokamak")
+        os.system("rm -r *.stp")
 
         self.test_reactor.outboard_tf_coil_radial_thickness = 50
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 70
@@ -150,27 +174,30 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.pf_coil_radial_position = [100, 100]
         self.test_reactor.pf_coil_vertical_position = [100, -100]
         self.test_reactor.rear_blanket_to_tf_gap = 50
-        self.test_reactor.pf_coil_case_thicknesses = 10
+        self.test_reactor.pf_coil_case_thicknesses = [10, 10]
         self.test_reactor.number_of_tf_coils = 4
 
         output_filenames = [
-            "tf_pf_SubmersionTokamak/inboard_tf_coils.stp",
-            "tf_pf_SubmersionTokamak/center_column_shield.stp",
-            "tf_pf_SubmersionTokamak/plasma.stp",
-            "tf_pf_SubmersionTokamak/divertor.stp",
-            "tf_pf_SubmersionTokamak/outboard_firstwall.stp",
-            "tf_pf_SubmersionTokamak/supports.stp",
-            "tf_pf_SubmersionTokamak/blanket.stp",
-            "tf_pf_SubmersionTokamak/outboard_rear_blanket_wall.stp",
-            "tf_pf_SubmersionTokamak/pf_coil_cases.stp",
-            "tf_pf_SubmersionTokamak/another1.stp",
-            "tf_pf_SubmersionTokamak/another2.stp",
+            "pf_coil_1.stp",
+            "pf_coil_2.stp",
+            "pf_coil_case_1.stp",
+            "pf_coil_case_2.stp",
+            "plasma.stp",
+            "center_column_shield.stp",
+            "outboard_firstwall.stp",
+            "blanket.stp",
+            "divertor_upper.stp",
+            "divertor_lower.stp",
+            "supports.stp",
+            "outboard_rear_blanket_wall.stp",
+            "inboard_tf_coils.stp",
+            "tf_coils.stp",
         ]
         self.test_reactor.export_stp(filename=output_filenames)
 
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True
-        os.system("rm -r tf_pf_SubmersionTokamak")
+        os.system("rm -r *.stp")
 
     def test_rotation_angle_warning(self):
         """Creates a SubmersionTokamak with rotation_angle = 360 and checks that the
@@ -201,33 +228,36 @@ class TestSubmersionTokamak(unittest.TestCase):
 
         self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
         self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
-        self.test_reactor.rear_blanket_to_tf_gap = 50
-        self.test_reactor.pf_coil_case_thicknesses = 10
-        self.test_reactor.outboard_tf_coil_radial_thickness = 30
-        self.test_reactor.outboard_tf_coil_poloidal_thickness = 30
         self.test_reactor.pf_coil_radial_position = [100, 100, 200, 200]
         self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200]
+        self.test_reactor.pf_coil_case_thicknesses = [10, 10, 10, 10]
+        self.test_reactor.rear_blanket_to_tf_gap = 50
+        self.test_reactor.outboard_tf_coil_radial_thickness = 30
+        self.test_reactor.outboard_tf_coil_poloidal_thickness = 30
         self.test_reactor.number_of_tf_coils = 16
 
         assert self.test_reactor.reactor_hash_value is None
-        for key in [
-            "_inboard_tf_coils",
-            "_center_column_shield",
-            "_plasma",
-            "_inboard_firstwall",
-            "_inboard_blanket",
-            "_firstwall",
-            "_divertor",
-            "_blanket",
-            "_supports",
-            "_outboard_rear_blanket_wall_upper",
-            "_outboard_rear_blanket_wall_lower",
-            "_outboard_rear_blanket_wall",
-            "_tf_coil",
-            "_pf_coil",
-            "_pf_coils_casing",
-        ]:
-            assert key not in self.test_reactor.__dict__
+        # commented out as code inspector suggests all attributs should be
+        # declaired in class init
+        # for key in [
+        #     "_inboard_tf_coils",
+        #     "_center_column_shield",
+        #     "_plasma",
+        #     "_inboard_firstwall",
+        #     "_inboard_blanket",
+        #     "_firstwall",
+        #     "_divertor_upper",
+        #     "_divertor_lower",
+        #     "_blanket",
+        #     "_supports",
+        #     "_outboard_rear_blanket_wall_upper",
+        #     "_outboard_rear_blanket_wall_lower",
+        #     "_outboard_rear_blanket_wall",
+        #     "_tf_coil",
+        #     "_pf_coils",
+        #     "_pf_coils_casing",
+        # ]:
+        #     assert key not in self.test_reactor.__dict__
 
         assert self.test_reactor.shapes_and_components is not None
         for key in [
@@ -237,19 +267,20 @@ class TestSubmersionTokamak(unittest.TestCase):
             "_inboard_firstwall",
             "_inboard_blanket",
             "_firstwall",
-            "_divertor",
+            "_divertor_upper",
+            "_divertor_lower",
             "_blanket",
             "_supports",
             "_outboard_rear_blanket_wall_upper",
             "_outboard_rear_blanket_wall_lower",
             "_outboard_rear_blanket_wall",
             "_tf_coil",
-            "_pf_coil",
+            "_pf_coils",
             "_pf_coils_casing",
         ]:
             assert key in self.test_reactor.__dict__.keys()
 
-        assert len(self.test_reactor.shapes_and_components) == 11
+        assert len(self.test_reactor.shapes_and_components) == 18
         assert self.test_reactor.reactor_hash_value is not None
         initial_hash_value = self.test_reactor.reactor_hash_value
         self.test_reactor.rotation_angle = 270
@@ -270,6 +301,20 @@ class TestSubmersionTokamak(unittest.TestCase):
             self.test_reactor.support_position = "coucou"
 
         self.assertRaises(ValueError, invalid_support_position)
+
+    def test_error_coil_case_thickness(self):
+        """checks an invalid number of coil case thicknesses raises the correct
+        ValueError."""
+
+        def invalid_pf_coil_case_thicknesses():
+            self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
+            self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
+            self.test_reactor.pf_coil_radial_position = [100, 100, 200, 200]
+            self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200]
+            self.test_reactor.pf_coil_case_thicknesses = [10, 10]
+            self.test_reactor.create_solids()
+
+        self.assertRaises(ValueError, invalid_pf_coil_case_thicknesses)
 
     def test_divertors_supports(self):
         """Checks that SubmersionTokamaks with lower and upper supports

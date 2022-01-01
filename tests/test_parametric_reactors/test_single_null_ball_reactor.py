@@ -46,7 +46,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
         """Checks that a SingleNullBallReactor with optional pf and tf coils can
         be created and that the correct number of components are produced."""
 
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 16
 
     def test_single_null_ball_reactor_rotation_angle_impacts_volume(self):
         """Creates SingleNullBallReactors with different rotation angles and
@@ -72,35 +72,37 @@ class TestSingleNullBallReactor(unittest.TestCase):
         reactor is reconstruced."""
 
         assert self.test_reactor.reactor_hash_value is None
-        for key in [
-            "_plasma",
-            "_inboard_tf_coils",
-            "_center_column_shield",
-            "_divertor",
-            "_firstwall",
-            "_blanket",
-            "_blanket_rear_wall",
-            "_pf_coil",
-            "_pf_coils_casing",
-            "_tf_coil",
-        ]:
-            assert key not in self.test_reactor.__dict__.keys()
+        # commented out as code inspector suggests all attributs should be
+        # declaired in class init
+        # for key in [
+        #     "_plasma",
+        #     "_inboard_tf_coils",
+        #     "_center_column_shield",
+        #     "_divertor_lower",
+        #     "_firstwall",
+        #     "_blanket",
+        #     "_blanket_rear_wall",
+        #     "_pf_coils",
+        #     "_pf_coils_casing",
+        #     "_tf_coil",
+        # ]:
+        #     assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
 
         for key in [
             "_plasma",
             "_inboard_tf_coils",
             "_center_column_shield",
-            "_divertor",
+            "_divertor_lower",
             "_firstwall",
             "_blanket",
             "_blanket_rear_wall",
-            "_pf_coil",
+            "_pf_coils",
             "_pf_coils_casing",
             "_tf_coil",
         ]:
             assert key in self.test_reactor.__dict__.keys()
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 16
         assert self.test_reactor.reactor_hash_value is not None
         initial_hash_value = self.test_reactor.reactor_hash_value
         self.test_reactor.rotation_angle = 270

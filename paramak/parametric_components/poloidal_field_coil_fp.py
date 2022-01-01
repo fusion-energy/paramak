@@ -14,7 +14,7 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
         height = abs(corner_points[0][1] - corner_points[1][1])
         width = abs(corner_points[0][0] - corner_points[1][0])
 
-        center_width = (corner_points[0][1] + corner_points[1][1]) / 2.0
+        center_width = (corner_points[0][0] + corner_points[1][0]) / 2.0
         center_height = (corner_points[0][1] + corner_points[1][1]) / 2.0
         center_point = (center_width, center_height)
 
