@@ -93,24 +93,26 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
         self.test_reactor.number_of_tf_coils = 16
 
         assert self.test_reactor.reactor_hash_value is None
-        for key in [
-            "_inboard_tf_coils",
-            "_center_column_shield",
-            "_plasma",
-            "_inboard_firstwall",
-            "_inboard_blanket",
-            "_firstwall",
-            "_divertor_lower",
-            "_blanket",
-            "_supports",
-            "_outboard_rear_blanket_wall_upper",
-            "_outboard_rear_blanket_wall_lower",
-            "_outboard_rear_blanket_wall",
-            "_tf_coil",
-            "_pf_coils",
-            "_pf_coils_casing",
-        ]:
-            assert key not in self.test_reactor.__dict__.keys()
+        # commented out as code inspector suggests all attributs should be 
+        # declaired in class init
+        # for key in [
+        #     "_inboard_tf_coils",
+        #     "_center_column_shield",
+        #     "_plasma",
+        #     "_inboard_firstwall",
+        #     "_inboard_blanket",
+        #     "_firstwall",
+        #     "_divertor_lower",
+        #     "_blanket",
+        #     "_supports",
+        #     "_outboard_rear_blanket_wall_upper",
+        #     "_outboard_rear_blanket_wall_lower",
+        #     "_outboard_rear_blanket_wall",
+        #     "_tf_coil",
+        #     "_pf_coils",
+        #     "_pf_coils_casing",
+        # ]:
+        #     assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
 
         for key in [
