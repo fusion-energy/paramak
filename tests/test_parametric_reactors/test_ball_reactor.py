@@ -151,7 +151,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
         assert self.test_reactor.reactor_hash_value is None
-        # commented out as code inspector suggests all attributs should be 
+        # commented out as code inspector suggests all attributs should be
         # declaired in class init
         # for key in [
         #     "_plasma",

@@ -237,7 +237,7 @@ class TestSubmersionTokamak(unittest.TestCase):
         self.test_reactor.number_of_tf_coils = 16
 
         assert self.test_reactor.reactor_hash_value is None
-        # commented out as code inspector suggests all attributs should be 
+        # commented out as code inspector suggests all attributs should be
         # declaired in class init
         # for key in [
         #     "_inboard_tf_coils",

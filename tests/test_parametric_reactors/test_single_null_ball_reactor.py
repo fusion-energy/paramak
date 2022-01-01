@@ -72,7 +72,7 @@ class TestSingleNullBallReactor(unittest.TestCase):
         reactor is reconstruced."""
 
         assert self.test_reactor.reactor_hash_value is None
-        # commented out as code inspector suggests all attributs should be 
+        # commented out as code inspector suggests all attributs should be
         # declaired in class init
         # for key in [
         #     "_plasma",
