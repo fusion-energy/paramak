@@ -305,6 +305,7 @@ class TestSubmersionTokamak(unittest.TestCase):
     def test_error_coil_case_thickness(self):
         """checks an invalid number of coil case thicknesses raises the correct
         ValueError."""
+
         def invalid_pf_coil_case_thicknesses():
             self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
             self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]

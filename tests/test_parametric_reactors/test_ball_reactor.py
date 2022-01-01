@@ -229,6 +229,7 @@ class TestBallReactor(unittest.TestCase):
     def test_pf_coil_cases_error(self):
         """checks an invalid number of coil case thicknesses raises the correct
         ValueError."""
+
         def invalid_pf_coil_case_thicknesses():
             self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
             self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
@@ -236,6 +237,7 @@ class TestBallReactor(unittest.TestCase):
             self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200]
             self.test_reactor.pf_coil_case_thicknesses = [10, 10]
             self.test_reactor.create_solids()
+
         self.assertRaises(ValueError, invalid_pf_coil_case_thicknesses)
 
     def test_divertor_upper_lower(self):
