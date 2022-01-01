@@ -151,7 +151,7 @@ class SubmersionTokamak(paramak.Reactor):
 
         # set during geometry creation
         self._pf_coils = None
-        self._pf_coil_casing = None
+        self._pf_coils_casing = None
         self._divertor_lower = None
         self._divertor_upper = None
 

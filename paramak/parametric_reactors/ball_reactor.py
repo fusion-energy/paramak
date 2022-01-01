@@ -162,7 +162,7 @@ class BallReactor(paramak.Reactor):
 
         # set during geometry creation
         self._pf_coils = None
-        self._pf_coil_casing = None
+        self._pf_coils_casing = None
         self._divertor_lower = None
         self._divertor_upper = None
 
@@ -601,12 +601,12 @@ class BallReactor(paramak.Reactor):
                 )
 
             return self._pf_coils + self._pf_coils_casing
-        else:
-            raise ValueError(
-                "pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, "
-                "pf_coil_radial_position, pf_coil_vertical_position are not "
-                "the same length so can not make PF coils"
-            )
+
+        raise ValueError(
+            "pf_coil_vertical_thicknesses, pf_coil_radial_thicknesses, "
+            "pf_coil_radial_position, pf_coil_vertical_position are not "
+            "the same length so can not make PF coils"
+        )
 
     def _make_tf_coils(self):
         comp = []
