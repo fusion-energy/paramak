@@ -68,18 +68,13 @@ class Reactor:
         for part in self.shapes_and_components:
             part_bb = part.solid.val().BoundingBox()
             part_center = part.solid.val().Center()
-            properties[part.name]= {
-                'volume':part.solid.val().Volume(),
-                'center':(part_center.x, part_center.y, part_center.z),
-                'bounding_box':((
-                    part_bb.xmin,
-                    part_bb.ymin,
-                    part_bb.zmin
-                ),(
-                    part_bb.xmax,
-                    part_bb.ymax,
-                    part_bb.zmax
-                ))
+            properties[part.name] = {
+                "volume": part.solid.val().Volume(),
+                "center": (part_center.x, part_center.y, part_center.z),
+                "bounding_box": (
+                    (part_bb.xmin, part_bb.ymin, part_bb.zmin),
+                    (part_bb.xmax, part_bb.ymax, part_bb.zmax),
+                ),
             }
         self._part_properties = properties
         return self._part_properties
