@@ -59,8 +59,34 @@ class Reactor:
 
         self.graveyard = None
         self.solid = None
-
+        self.part_properties = None
         self.reactor_hash_value = None
+
+    @property
+    def part_properties(self):
+        properties = {}
+        for part in self.shapes_and_components:
+            part_bb = part.solid.val().BoundingBox()
+            part_center = part.solid.val().Center()
+            properties[part.name]= {
+                'volume':part.solid.val().Volume(),
+                'center':(part_center.x, part_center.y, part_center.z),
+                'bounding_box':((
+                    part_bb.xmin,
+                    part_bb.ymin,
+                    part_bb.zmin
+                ),(
+                    part_bb.xmax,
+                    part_bb.ymax,
+                    part_bb.zmax
+                ))
+            }
+        self._part_properties = properties
+        return self._part_properties
+
+    @part_properties.setter
+    def part_properties(self, value):
+        self._part_properties = value
 
     @property
     def input_variables(self):
