@@ -7,9 +7,9 @@ class ExtrudeRectangle(ExtrudeStraightShape):
     """Creates a rectangular extrusion.
 
     Args:
-        height: the vertical (z axis) height of the coil (cm).
-        width: the horizontal (x axis) width of the coil (cm).
-        center_point: the center of the coil (x,z) values (cm).
+        height: the vertical (z axis) height of the rectangle (cm).
+        width: the horizontal (x axis) width of the rectangle (cm).
+        center_point: the center of the rectangle (x,z) values (cm).
         name: defaults to "extrude_rectangle".
     """
 
@@ -54,7 +54,7 @@ class ExtrudeRectangle(ExtrudeStraightShape):
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
-        the 2D profile of the poloidal field coil shape."""
+        the 2D profile of the shape."""
 
         points = [
             (

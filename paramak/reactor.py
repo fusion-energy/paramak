@@ -37,7 +37,7 @@ class Reactor:
     def __init__(
         self,
         shapes_and_components: List[paramak.Shape] = [],
-        graveyard_size: float = 20_000.,
+        graveyard_size: float = 20_000.0,
         graveyard_offset: Optional[float] = None,
         largest_shapes: Optional[List[paramak.Shape]] = None,
     ):
@@ -292,7 +292,8 @@ class Reactor:
         if len(filename) != len(self.shapes_and_components):
             msg = (
                 f"The Reactor contains {len(self.shapes_and_components)} "
-                f"Shapes and {len(filename)} filenames have be provided"
+                f"Shapes and {len(filename)} filenames have be provided. "
+                f"The names of the shapes are {self.name}"
             )
             raise ValueError(msg)
 
@@ -318,6 +319,9 @@ class Reactor:
         Args:
             filename: the filename of exported the brep file.
             merged: if the surfaces should be merged (True) or not (False).
+
+        Returns:
+            filename of the brep created
         """
 
         path_filename = Path(filename)
@@ -409,7 +413,8 @@ class Reactor:
         if len(filename) != len(self.shapes_and_components):
             msg = (
                 f"The Reactor contains {len(self.shapes_and_components)} "
-                f"Shapes and {len(filename)} filenames have be provided"
+                f"Shapes and {len(filename)} filenames have be provided. "
+                f"The names of the shapes are {self.name}"
             )
             raise ValueError(msg)
 

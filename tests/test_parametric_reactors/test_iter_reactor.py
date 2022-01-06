@@ -42,23 +42,28 @@ class TestITERReactor(unittest.TestCase):
         for component in vessel_components:
             assert component.volume() > 0
 
-    def test_make_demo_2015_reactor(self):
+    def test_make_iter_reactor(self):
         """Creates a ITERTokamak reactor and exports the stp
         files checking that each component results in a stp file"""
 
         output_filenames = [
-            "blanket.stp",
+            "plasma.stp",
+            "outboard_pf_coils_1.stp",
+            "outboard_pf_coils_2.stp",
+            "outboard_pf_coils_3.stp",
+            "outboard_pf_coils_4.stp",
+            "outboard_pf_coils_5.stp",
+            "outboard_pf_coils_6.stp",
+            "pf_coil_1.stp",
+            "pf_coil_2.stp",
+            "pf_coil_3.stp",
+            "pf_coil_4.stp",
+            "pf_coil_5.stp",
+            "pf_coil_6.stp",
             "divertor.stp",
-            "outboard_pf_coils.stp",
-            "pf_coils_1.stp",
-            "pf_coils_2.stp",
-            "pf_coils_3.stp",
-            "pf_coils_4.stp",
-            "pf_coils_5.stp",
-            "pf_coils_6.stp",
+            "blanket.stp",
+            "vessel_inner.stp",
             "tf_coils.stp",
-            "vacvessel.stp",
-            "another.stp",
         ]
         os.system("rm *.stp")
         my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
@@ -67,24 +72,29 @@ class TestITERReactor(unittest.TestCase):
             assert Path(output_filename).exists() is True
         os.system("rm *.stp")
 
-    def test_make_parametric_demo_2015_rector(self):
+    def test_make_parametric_iter_rector(self):
         """Creates a ITERTokamak reactor with a non defaults
         rotation angle and exports the stp files checking that each component
         results in a stp file"""
 
         output_filenames = [
-            "blanket.stp",
+            "plasma.stp",
+            "outboard_pf_coils_1.stp",
+            "outboard_pf_coils_2.stp",
+            "outboard_pf_coils_3.stp",
+            "outboard_pf_coils_4.stp",
+            "outboard_pf_coils_5.stp",
+            "outboard_pf_coils_6.stp",
+            "pf_coil_1.stp",
+            "pf_coil_2.stp",
+            "pf_coil_3.stp",
+            "pf_coil_4.stp",
+            "pf_coil_5.stp",
+            "pf_coil_6.stp",
             "divertor.stp",
-            "outboard_pf_coils.stp",
-            "pf_coils_1.stp",
-            "pf_coils_2.stp",
-            "pf_coils_3.stp",
-            "pf_coils_4.stp",
-            "pf_coils_5.stp",
-            "pf_coils_6.stp",
+            "blanket.stp",
+            "vessel_inner.stp",
             "tf_coils.stp",
-            "vacvessel.stp",
-            "another.stp",
         ]
         os.system("rm *.stp")
         my_reactor = paramak.IterFrom2020PaperDiagram(

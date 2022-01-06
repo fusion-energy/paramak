@@ -42,7 +42,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.divertor_radial_thickness = 50
 
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 7
+        assert len(self.test_reactor.shapes_and_components) == 8
 
     def test_creation_with_wide_divertor(self):
         """Creates a BallReactor with a wide divertor and checks that the correct
@@ -51,7 +51,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.divertor_radial_thickness = 172.5
 
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 7
+        assert len(self.test_reactor.shapes_and_components) == 8
 
     def test_svg_creation(self):
         """Creates a BallReactor and checks that an svg image of the reactor can be
@@ -73,7 +73,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_case_thickness = 10
 
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 9
+        assert len(self.test_reactor.shapes_and_components) == 12
 
     def test_rotation_angle_error(self):
         """Checks that an error is raised when an angle is over 360."""
@@ -106,12 +106,12 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_radial_position = [200, 200, 200, 200]
         self.test_reactor.pf_coil_vertical_position = [200, 100, -100, -200]
         self.test_reactor.rear_blanket_to_tf_gap = 50
-        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.pf_coil_case_thicknesses = [10, 10, 10, 10]
         self.test_reactor.outboard_tf_coil_radial_thickness = 50
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 17
 
     def test_rotation_angle_warning(self):
         """Creates a BallReactor with rotation_angle = 360 and checks that the correct
@@ -146,40 +146,44 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_radial_position = [200, 200, 200, 200]
         self.test_reactor.pf_coil_vertical_position = [200, 100, -100, -200]
         self.test_reactor.rear_blanket_to_tf_gap = 50
-        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.pf_coil_case_thicknesses = [10, 10, 10, 10]
         self.test_reactor.outboard_tf_coil_radial_thickness = 100
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
         assert self.test_reactor.reactor_hash_value is None
-        for key in [
-            "_plasma",
-            "_inboard_tf_coils",
-            "_center_column_shield",
-            "_divertor",
-            "_firstwall",
-            "_blanket",
-            "_blanket_rear_wall",
-            "_pf_coil",
-            "_pf_coils_casing",
-            "_tf_coil",
-        ]:
-            assert key not in self.test_reactor.__dict__.keys()
+        # commented out as code inspector suggests all attributs should be
+        # declaired in class init
+        # for key in [
+        #     "_plasma",
+        #     "_inboard_tf_coils",
+        #     "_center_column_shield",
+        #     "_divertor_upper",
+        #     "_divertor_lower",
+        #     "_firstwall",
+        #     "_blanket",
+        #     "_blanket_rear_wall",
+        #     "_pf_coils",
+        #     "_pf_coils_casing",
+        #     "_tf_coil",
+        # ]:
+        #     assert key not in self.test_reactor.__dict__.keys()
         assert self.test_reactor.shapes_and_components is not None
 
         for key in [
             "_plasma",
             "_inboard_tf_coils",
             "_center_column_shield",
-            "_divertor",
+            "_divertor_upper",
+            "_divertor_lower",
             "_firstwall",
             "_blanket",
             "_blanket_rear_wall",
-            "_pf_coil",
+            "_pf_coils",
             "_pf_coils_casing",
             "_tf_coil",
         ]:
             assert key in self.test_reactor.__dict__.keys()
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 17
         assert self.test_reactor.reactor_hash_value is not None
         initial_hash_value = self.test_reactor.reactor_hash_value
         self.test_reactor.rotation_angle = 270
@@ -196,7 +200,7 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_radial_position = [200, 200, 200, 200]
         self.test_reactor.pf_coil_vertical_position = [200, 100, -100, -200]
         self.test_reactor.rear_blanket_to_tf_gap = 50
-        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.pf_coil_case_thicknesses = [10, 10, 10, 10]
         self.test_reactor.outboard_tf_coil_radial_thickness = 100
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
@@ -222,6 +226,20 @@ class TestBallReactor(unittest.TestCase):
 
         self.assertRaises(ValueError, invalid_position)
 
+    def test_pf_coil_cases_error(self):
+        """checks an invalid number of coil case thicknesses raises the correct
+        ValueError."""
+
+        def invalid_pf_coil_case_thicknesses():
+            self.test_reactor.pf_coil_radial_thicknesses = [30, 30, 30, 30]
+            self.test_reactor.pf_coil_vertical_thicknesses = [30, 30, 30, 30]
+            self.test_reactor.pf_coil_radial_position = [100, 100, 200, 200]
+            self.test_reactor.pf_coil_vertical_position = [100, -100, 200, -200]
+            self.test_reactor.pf_coil_case_thicknesses = [10, 10]
+            self.test_reactor.create_solids()
+
+        self.assertRaises(ValueError, invalid_pf_coil_case_thicknesses)
+
     def test_divertor_upper_lower(self):
         """Checks that BallReactors with coils with lower and upper divertors
         can be created."""
@@ -230,17 +248,17 @@ class TestBallReactor(unittest.TestCase):
         self.test_reactor.pf_coil_radial_position = [200, 200, 200, 200]
         self.test_reactor.pf_coil_vertical_position = [200, 100, -100, -200]
         self.test_reactor.rear_blanket_to_tf_gap = 50
-        self.test_reactor.pf_coil_case_thickness = 10
+        self.test_reactor.pf_coil_case_thicknesses = [10, 10, 10, 10]
         self.test_reactor.outboard_tf_coil_radial_thickness = 50
         self.test_reactor.outboard_tf_coil_poloidal_thickness = 50
 
         self.test_reactor.divertor_position = "lower"
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 16
 
         self.test_reactor.divertor_position = "upper"
         assert self.test_reactor.solid is not None
-        assert len(self.test_reactor.shapes_and_components) == 10
+        assert len(self.test_reactor.shapes_and_components) == 16
 
     def test_export_stp(self):
         """Exports and stp file with mode = solid and wire and checks

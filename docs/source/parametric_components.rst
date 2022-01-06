@@ -1161,6 +1161,29 @@ ExtrudeRectangle()
    :members:
    :show-inheritance:
 
+ExtrudeHollowRectangle()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeHollowRectangle(
+      height=10,
+      width=15,
+      casing_thickness=1,
+      distance=2
+   )
+
+   cadquery_object = my_component.solid
+
+.. image:: https://user-images.githubusercontent.com/8583900/145905435-87d05386-d2e5-4de3-8f03-5a08cc5a4b22.png
+    :width: 200px
+
+.. automodule:: paramak.parametric_components.extrude_hollow_rectangle
+   :members:
+   :show-inheritance:
 
 HexagonPin()
 ^^^^^^^^^^^^
