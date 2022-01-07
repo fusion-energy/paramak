@@ -69,7 +69,6 @@ class Shape(BaseModel):
             shape. If graveyard_size is set the this is ignored.
     """
 
-
     points: Union[tuple, list] = None
     connection_type: Optional[str] = "mixed"
     name: Optional[str] = None
@@ -77,9 +76,9 @@ class Shape(BaseModel):
     azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0
     workplane: Optional[Union[str, Plane]] = "XZ"
     rotation_axis: Optional[str] = None
-    cut: list=None
-    intersect: list=None
-    union: list=None
+    cut: list = None
+    intersect: list = None
+    union: list = None
     graveyard_size: Optional[float] = 20_000
     graveyard_offset: Optional[float] = None
 
@@ -96,7 +95,6 @@ class Shape(BaseModel):
     path_points: List[Tuple[float, float]] = None
     force_cross_section: bool = None
     rotation_angle: float = None
-
 
     # set here but only used by Extrude shapes
     extrusion_start_offset: float = None
