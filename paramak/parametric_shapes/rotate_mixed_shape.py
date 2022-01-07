@@ -24,10 +24,10 @@ class RotateMixedShape(Shape):
         **kwargs
     ):
 
+        # self.rotation_angle = rotation_angle
+        # self.color = color
+        # self.name = name
         super().__init__(color=color, name=name, **kwargs)
-        self.rotation_angle = rotation_angle
-        self.color = color
-        self.name = name
 
     @property
     def rotation_angle(self):

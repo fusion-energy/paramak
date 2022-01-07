@@ -10,6 +10,7 @@ from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, imp
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
+from pydantic import BaseModel
 
 import paramak
 from paramak.utils import (
@@ -23,7 +24,7 @@ from paramak.utils import (
 )
 
 
-class Shape:
+class Shape(BaseModel):
     """A shape object that represents a 3d volume and can have materials and
     neutronics tallies assigned. Shape objects are not intended to be used
     directly by the user but provide basic functionality for user-facing
@@ -68,66 +69,47 @@ class Shape:
             shape. If graveyard_size is set the this is ignored.
     """
 
-    def __init__(
-        self,
-        points: Union[tuple, list] = None,
-        connection_type: Optional[str] = "mixed",
-        name: Optional[str] = None,
-        color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5),
-        azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
-        workplane: Optional[Union[str, Plane]] = "XZ",
-        rotation_axis: Optional[str] = None,
-        # TODO defining Shape types as paramak.Shape results in circular import
-        cut=None,
-        intersect=None,
-        union=None,
-        graveyard_size: Optional[float] = 20_000,
-        graveyard_offset: Optional[float] = None,
-    ):
 
-        self.connection_type = connection_type
-        self.points = points
-        self.color = color
-        self.name = name
+    points: Union[tuple, list] = None
+    connection_type: Optional[str] = "mixed"
+    name: Optional[str] = None
+    color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5)
+    azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0
+    workplane: Optional[Union[str, Plane]] = "XZ"
+    rotation_axis: Optional[str] = None
+    cut: list=None
+    intersect: list=None
+    union: list=None
+    graveyard_size: Optional[float] = 20_000
+    graveyard_offset: Optional[float] = None
 
-        self.cut = cut
-        self.intersect = intersect
-        self.union = union
+    # initialise to something different than self.points
+    # old_points is used in the processed_points getter
+    # self.old_points = 0
+    old_points = 0
 
-        self.azimuth_placement_angle = azimuth_placement_angle
-        self.workplane = workplane
-        self.rotation_axis = rotation_axis
+    # properties calculated internally by the class
+    solid = None
+    wire = None
 
-        # initialise to something different than self.points
-        # old_points is used in the processed_points getter
-        self.old_points = 0
+    # set here but only used by Sweep shapes
+    path_points: List[Tuple[float, float]] = None
+    force_cross_section: bool = None
+    rotation_angle: float = None
 
-        # neutronics specific properties
-        self.graveyard_offset = graveyard_offset
-        self.graveyard_size = graveyard_size
 
-        # properties calculated internally by the class
-        self.solid = None
-        self.wire = None
-        self.render_mesh = None
+    # set here but only used by Extrude shapes
+    extrusion_start_offset: float = None
 
-        # set here but only used by Sweep shapes
-        self.path_points = None
-        self.force_cross_section = None
-
-        # set here but only used by Extrude shapes
-        self.extrusion_start_offset = None
-
-        self.processed_points = None
-        # self.volume = None
-        self.hash_value = None
-        self.points_hash_value = None
-        self.x_min = None
-        self.x_max = None
-        self.z_min = None
-        self.z_max = None
-        self.graveyard_offset = None  # set by the make_graveyard method
-        self.patch = None
+    processed_points = None
+    # volume = None
+    hash_value: str = None
+    points_hash_value: str = None
+    x_min: float = None
+    x_max: float = None
+    z_min: float = None
+    z_max: float = None
+    graveyard_offset = None  # set by the make_graveyard method
 
     @property
     def graveyard_size(self):
@@ -184,34 +166,6 @@ class Shape:
             self.hash_value = get_hash(self, ignored_keys)
 
         return self._wire
-
-    @wire.setter
-    def wire(self, value):
-        self._wire = value
-
-    @property
-    def cut(self):
-        return self._cut
-
-    @cut.setter
-    def cut(self, value):
-        self._cut = value
-
-    @property
-    def intersect(self):
-        return self._intersect
-
-    @intersect.setter
-    def intersect(self, value):
-        self._intersect = value
-
-    @property
-    def union(self):
-        return self._union
-
-    @union.setter
-    def union(self, value):
-        self._union = value
 
     @property
     def largest_dimension(self):
@@ -327,21 +281,21 @@ class Shape:
             all_areas.append(face.Area())
         return all_areas
 
-    @property
-    def hash_value(self):
-        return self._hash_value
+    # @property
+    # def hash_value(self):
+    #     return self._hash_value
 
-    @hash_value.setter
-    def hash_value(self, value):
-        self._hash_value = value
+    # @hash_value.setter
+    # def hash_value(self, value):
+    #     self._hash_value = value
 
-    @property
-    def points_hash_value(self):
-        return self._points_hash_value
+    # @property
+    # def points_hash_value(self):
+    #     return self._points_hash_value
 
-    @points_hash_value.setter
-    def points_hash_value(self, value):
-        self._points_hash_value = value
+    # @points_hash_value.setter
+    # def points_hash_value(self, value):
+    #     self._points_hash_value = value
 
     @property
     def color(self):
@@ -1175,7 +1129,6 @@ class Shape:
             # checks to see if an alpha value is provided in the color
             if len(self.color) == 4:
                 patch.set_alpha = self.color[-1]
-        self.patch = patch
         return patch
 
     def perform_boolean_operations(self, solid: Workplane, **kwargs):

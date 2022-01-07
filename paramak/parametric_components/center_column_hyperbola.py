@@ -33,10 +33,10 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
 
         super().__init__(name=name, color=color, **kwargs)
 
-        self.height = height
-        self.inner_radius = inner_radius
-        self.mid_radius = mid_radius
-        self.outer_radius = outer_radius
+        # self.height = height
+        # self.inner_radius = inner_radius
+        # self.mid_radius = mid_radius
+        # self.outer_radius = outer_radius
 
     @property
     def height(self):
