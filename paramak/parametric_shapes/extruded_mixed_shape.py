@@ -5,6 +5,7 @@ from paramak.utils import calculate_wedge_cut
 
 from pydantic import BaseModel, Field
 
+
 class ExtrudeMixedShape(Shape):
     """Extrudes a 3d CadQuery solid from points connected with a mixture of
     straight and spline connections.
@@ -22,12 +23,13 @@ class ExtrudeMixedShape(Shape):
     extrude_both: bool = True
     rotation_angle: float = 360.0
     extrusion_start_offset: float = 0.0
-    
-    colorE:  Tuple[float, float, float, Optional[float]] = Field(( 0.2, 0.627, 0.172 ), alias='color')
-    # color = 
+
+    colorE: Tuple[float, float, float, Optional[float]] = Field(
+        (0.2, 0.627, 0.172), alias="color"
+    )
+    # color =
     # name: str = Field("extrudemixedshape", alias='name')
     # **kwargs
-
 
     # super().__init__(color=color, name=name)#, **kwargs)
     # self.distance = distance
@@ -36,8 +38,6 @@ class ExtrudeMixedShape(Shape):
     # self.extrusion_start_offset = extrusion_start_offset
     # self.color = color
     # self.name = name
-
-
 
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with straight

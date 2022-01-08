@@ -4,6 +4,7 @@ from paramak import Shape
 
 from pydantic import Field
 
+
 class RotateMixedShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with a mixture of
     straight lines and splines.
@@ -26,10 +27,10 @@ class RotateMixedShape(Shape):
     #     **kwargs
     # ):
 
-        # self.rotation_angle = rotation_angle
-        # self.color = color
-        # self.name = name
-        # super().__init__(color=color, name=name, **kwargs)
+    # self.rotation_angle = rotation_angle
+    # self.color = color
+    # self.name = name
+    # super().__init__(color=color, name=name, **kwargs)
 
     @property
     def rotation_angle(self):

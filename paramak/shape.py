@@ -300,10 +300,11 @@ class Shape(BaseModel):
     # def color(self):
     #     return self._color
 
-    @validator('color')
+    @validator("color")
     def color_length(cls, value):
-        assert len(value) in [3, 4], 'must be an iterable of 3 or 4 entries'
+        assert len(value) in [3, 4], "must be an iterable of 3 or 4 entries"
         return value
+
     # @color.setter
     # def color(self, value):
     #     if isinstance(value, (list, tuple)):
