@@ -3,6 +3,7 @@ from typing import Optional, Tuple
 from paramak import Shape
 from paramak.utils import calculate_wedge_cut
 
+from pydantic import BaseModel, Field
 
 class ExtrudeMixedShape(Shape):
     """Extrudes a 3d CadQuery solid from points connected with a mixture of
@@ -17,52 +18,26 @@ class ExtrudeMixedShape(Shape):
             from rotation_angle to 360 degrees. Defaults to 360.0.
     """
 
-    def __init__(
-        self,
-        distance: float,
-        extrude_both: bool = True,
-        rotation_angle: float = 360.0,
-        extrusion_start_offset: float = 0.0,
-        color: Tuple[float, float, float, Optional[float]] = (
-            0.2,
-            0.627,
-            0.172,
-        ),
-        name: str = "extrudemixedshape",
-        **kwargs
-    ):
+    distance: float
+    extrude_both: bool = True
+    rotation_angle: float = 360.0
+    extrusion_start_offset: float = 0.0
+    
+    colorE:  Tuple[float, float, float, Optional[float]] = Field(( 0.2, 0.627, 0.172 ), alias='color')
+    # color = 
+    # name: str = Field("extrudemixedshape", alias='name')
+    # **kwargs
 
-        super().__init__(color=color, name=name, **kwargs)
-        self.distance = distance
-        self.extrude_both = extrude_both
-        self.rotation_angle = rotation_angle
-        self.extrusion_start_offset = extrusion_start_offset
-        self.color = color
-        self.name = name
 
-    @property
-    def distance(self):
-        return self._distance
+    # super().__init__(color=color, name=name)#, **kwargs)
+    # self.distance = distance
+    # self.extrude_both = extrude_both
+    # self.rotation_angle = rotation_angle
+    # self.extrusion_start_offset = extrusion_start_offset
+    # self.color = color
+    # self.name = name
 
-    @distance.setter
-    def distance(self, value):
-        self._distance = value
 
-    @property
-    def rotation_angle(self):
-        return self._rotation_angle
-
-    @rotation_angle.setter
-    def rotation_angle(self, value):
-        self._rotation_angle = value
-
-    @property
-    def extrusion_start_offset(self):
-        return self._extrusion_start_offset
-
-    @extrusion_start_offset.setter
-    def extrusion_start_offset(self, value):
-        self._extrusion_start_offset = value
 
     def create_solid(self):
         """Creates an extruded 3d solid using points connected with straight

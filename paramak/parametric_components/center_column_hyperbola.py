@@ -16,22 +16,18 @@ class CenterColumnShieldHyperbola(RotateMixedShape):
         name: Defaults to "center_column".
     """
 
-    def __init__(
-        self,
-        height: float,
-        inner_radius: float,
-        mid_radius: float,
-        outer_radius: float,
-        name: str = "center_column",
-        color: Tuple[float, float, float, Optional[float]] = (
-            0.0,
-            0.333,
-            0.0,
-        ),
-        **kwargs
-    ) -> None:
+    # def __init__(
+    #     self,
+    height: float
+    inner_radius: float
+    mid_radius: float
+    outer_radius: float
+    # name: str = "center_column"
+    # color = (        0.0,        0.333,        0.0    )
+        # **kwargs
+    # ) -> None:
 
-        super().__init__(name=name, color=color, **kwargs)
+        # super().__init__(name=name, color=color, **kwargs)
 
         # self.height = height
         # self.inner_radius = inner_radius

@@ -2,6 +2,7 @@ from typing import Optional, Tuple
 
 from paramak import Shape
 
+from pydantic import Field
 
 class RotateMixedShape(Shape):
     """Rotates a 3d CadQuery solid from points connected with a mixture of
@@ -12,22 +13,23 @@ class RotateMixedShape(Shape):
             (degrees). Defaults to 360.0.
     """
 
-    def __init__(
-        self,
-        rotation_angle: float = 360.0,
-        color: Tuple[float, float, float, Optional[float]] = (
-            0.121,
-            0.47,
-            0.705,
-        ),
-        name: str = "rotatemixedshape",
-        **kwargs
-    ):
+    # def __init__(
+    #     self,
+    rotation_angle: float = 360.0
+    color: Tuple[float, float, float, Optional[float]] = (
+        0.121,
+        0.47,
+        0.705,
+    )
+    # name: str = Field("shape", alias='name')
+    name: str = "rotatemixedshape"
+    #     **kwargs
+    # ):
 
         # self.rotation_angle = rotation_angle
         # self.color = color
         # self.name = name
-        super().__init__(color=color, name=name, **kwargs)
+        # super().__init__(color=color, name=name, **kwargs)
 
     @property
     def rotation_angle(self):

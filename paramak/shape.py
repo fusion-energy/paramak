@@ -10,7 +10,7 @@ from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, imp
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, validator
 
 import paramak
 from paramak.utils import (
@@ -72,6 +72,7 @@ class Shape(BaseModel):
     points: Union[tuple, list] = None
     connection_type: Optional[str] = "mixed"
     name: Optional[str] = None
+    # name: str = Field("shape", alias='name')
     color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5)
     azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0
     workplane: Optional[Union[str, Plane]] = "XZ"
@@ -295,42 +296,46 @@ class Shape(BaseModel):
     # def points_hash_value(self, value):
     #     self._points_hash_value = value
 
-    @property
-    def color(self):
-        return self._color
+    # @property
+    # def color(self):
+    #     return self._color
 
-    @color.setter
-    def color(self, value):
-        if isinstance(value, (list, tuple)):
-            if len(value) in [3, 4]:
-                for i in value:
-                    if not isinstance(i, (int, float)):
-                        raise ValueError(
-                            "Individual entries in the Shape.color must a "
-                            "number (float or int)"
-                        )
-                    if i > 1 or i < 0:
-                        raise ValueError(
-                            "Individual entries in the Shape.color must be "
-                            "between 0 and 1"
-                        )
-            else:
-                raise ValueError("Shape.color must be a list or tuple of 3 or 4 floats")
-        else:
-            raise ValueError("Shape.color must be a list or tuple")
+    @validator('color')
+    def color_length(cls, value):
+        assert len(value) in [3, 4], 'must be an iterable of 3 or 4 entries'
+        return value
+    # @color.setter
+    # def color(self, value):
+    #     if isinstance(value, (list, tuple)):
+    #         if len(value) in [3, 4]:
+    #             for i in value:
+    #                 if not isinstance(i, (int, float)):
+    #                     raise ValueError(
+    #                         "Individual entries in the Shape.color must a "
+    #                         "number (float or int)"
+    #                     )
+    #                 if i > 1 or i < 0:
+    #                     raise ValueError(
+    #                         "Individual entries in the Shape.color must be "
+    #                         "between 0 and 1"
+    #                     )
+    #         else:
+    #             raise ValueError("Shape.color must be a list or tuple of 3 or 4 floats")
+    #     else:
+    #         raise ValueError("Shape.color must be a list or tuple")
 
-        self._color = value
+    #     self._color = value
 
-    @property
-    def name(self):
-        """The name of the Shape, used to identify Shapes when exporting_html"""
-        return self._name
+    # @property
+    # def name(self):
+    #     """The name of the Shape, used to identify Shapes when exporting_html"""
+    #     return self._name
 
-    @name.setter
-    def name(self, value):
-        if value is not None and not isinstance(value, str):
-            raise ValueError("Shape.name must be a string", value)
-        self._name = value
+    # @name.setter
+    # def name(self, value):
+    #     if value is not None and not isinstance(value, str):
+    #         raise ValueError("Shape.name must be a string", value)
+    #     self._name = value
 
     @property
     def processed_points(self):

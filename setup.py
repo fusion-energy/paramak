@@ -34,5 +34,6 @@ setuptools.setup(
         "plasmaboundaries>=0.1.8",
         "jupyter-client<7",
         "jupyter-cadquery>=2.2.0",
+        "pydantic>=v1.9.0"
     ],
 )
