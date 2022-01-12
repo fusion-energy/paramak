@@ -73,7 +73,8 @@ class Shape(BaseModel):
     connection_type: Optional[str] = "mixed"
     name: Optional[str] = None
     # name: str = Field("shape", alias='name')
-    color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5)
+    color = (0.5, 0.5, 0.5, 0.5)
+    # color: Union[Tuple[float, float, float, float], Tuple[float, float, float]] = (0.5, 0.5, 0.5)
     azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0
     workplane: Optional[Union[str, Plane]] = "XZ"
     rotation_axis: Optional[str] = None
@@ -109,6 +110,8 @@ class Shape(BaseModel):
     z_min: float = None
     z_max: float = None
     graveyard_offset = None  # set by the make_graveyard method
+    class Config:
+            arbitrary_types_allowed = True
 
     @property
     def graveyard_size(self):
@@ -200,26 +203,43 @@ class Shape(BaseModel):
     def largest_dimension(self, value):
         self._largest_dimension = value
 
-    @property
-    def workplane(self):
-        return self._workplane
 
-    @workplane.setter
-    def workplane(self, value):
+    @validator('workplane')
+    def workplane_correct_type(cls, value):
         if isinstance(value, Plane):
-            self._workplane = value
+            return value
         elif isinstance(value, str):
             acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
-            if value in acceptable_values:
-                self._workplane = value
-            else:
+            if value not in acceptable_values:
                 raise ValueError(
                     "Shape.workplane must be one of ", acceptable_values, " not ", value
                 )
+            return value
         else:
             raise TypeError(
                 "Shape.workplane must be a string or a ", "cadquery.Plane object"
             )
+
+    # @property
+    # def workplane(self):
+    #     return self._workplane
+
+    # @workplane.setter
+    # def workplane(self, value):
+    #     if isinstance(value, Plane):
+    #         self._workplane = value
+    #     elif isinstance(value, str):
+    #         acceptable_values = ["XY", "YZ", "XZ", "YX", "ZY", "ZX"]
+    #         if value in acceptable_values:
+    #             self._workplane = value
+    #         else:
+    #             raise ValueError(
+    #                 "Shape.workplane must be one of ", acceptable_values, " not ", value
+    #             )
+    #     else:
+    #         raise TypeError(
+    #             "Shape.workplane must be a string or a ", "cadquery.Plane object"
+    #         )
 
     @property
     def rotation_axis(self):
@@ -300,10 +320,12 @@ class Shape(BaseModel):
     # def color(self):
     #     return self._color
 
-    @validator("color")
-    def color_length(cls, value):
-        assert len(value) in [3, 4], "must be an iterable of 3 or 4 entries"
-        return value
+    # @validator("color")
+    # def color_length(cls, value):
+    #     if len(value) not in [3,4]:
+    #         raise ValueError('color must be of length 3 or 4')
+    #     # assert len(value) in [3, 4], "must be an iterable of 3 or 4 entries"
+    #     return value
 
     # @color.setter
     # def color(self, value):

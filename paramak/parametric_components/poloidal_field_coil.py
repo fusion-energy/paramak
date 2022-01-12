@@ -13,44 +13,41 @@ class PoloidalFieldCoil(RotateStraightShape):
         name: defaults to "pf_coil".
     """
 
-    def __init__(
-        self,
-        height: float,
-        width: float,
-        center_point: Tuple[float, float],
-        name: str = "pf_coil",
-        **kwargs
-    ) -> None:
+    # def __init__(
+    #     self,
+    height: float
+    width: float
+    center_point: Tuple[float, float]
+    name: str = "pf_coil"
+#     **kwargs
+# ) -> None:
 
-        super().__init__(name=name, **kwargs)
+    # super().__init__(name=name, **kwargs)
 
-        self.center_point = center_point
-        self.height = height
-        self.width = width
 
-    @property
-    def center_point(self):
-        return self._center_point
+    # @property
+    # def center_point(self):
+    #     return self._center_point
 
-    @center_point.setter
-    def center_point(self, center_point):
-        self._center_point = center_point
+    # @center_point.setter
+    # def center_point(self, center_point):
+    #     self._center_point = center_point
 
-    @property
-    def height(self):
-        return self._height
+    # @property
+    # def height(self):
+    #     return self._height
 
-    @height.setter
-    def height(self, height):
-        self._height = height
+    # @height.setter
+    # def height(self, height):
+    #     self._height = height
 
-    @property
-    def width(self):
-        return self._width
+    # @property
+    # def width(self):
+    #     return self._width
 
-    @width.setter
-    def width(self, width):
-        self._width = width
+    # @width.setter
+    # def width(self, width):
+    #     self._width = width
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe

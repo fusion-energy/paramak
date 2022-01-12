@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 from paramak import Shape
 
@@ -24,21 +24,22 @@ class RotateMixedShape(Shape):
     )
     # name: str = Field("shape", alias='name')
     name: str = "rotatemixedshape"
+    # points:Union[tuple, list]=None
     #     **kwargs
     # ):
-
+    # points: Union[tuple, list] = None
     # self.rotation_angle = rotation_angle
     # self.color = color
     # self.name = name
     # super().__init__(color=color, name=name, **kwargs)
 
-    @property
-    def rotation_angle(self):
-        return self._rotation_angle
+    # @property
+    # def rotation_angle(self):
+    #     return self._rotation_angle
 
-    @rotation_angle.setter
-    def rotation_angle(self, value):
-        self._rotation_angle = value
+    # @rotation_angle.setter
+    # def rotation_angle(self, value):
+    #     self._rotation_angle = value
 
     def create_solid(self):
         """Creates a rotated 3d solid using points with straight and spline
