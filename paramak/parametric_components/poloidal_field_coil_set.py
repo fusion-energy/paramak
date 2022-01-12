@@ -16,55 +16,59 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         name (str, optional): defaults to "pf_coil".
     """
 
-    def __init__(self, heights, widths, center_points, name="pf_coil", **kwargs):
+    # def __init__(self,
+    heights: list
+    widths: list
+    center_points: list
+    name: str ="pf_coil"
+    # , **kwargs):
 
-        super().__init__(name=name, **kwargs)
+        # super().__init__(name=name, **kwargs)
 
-        self.center_points = center_points
-        self.heights = heights
-        self.widths = widths
+        # self.center_points = center_points
+        # self.heights = heights
+        # self.widths = widths
 
-        if len(self.widths) != len(self.heights) or len(self.heights) != len(
-            self.center_points
-        ):
+    # @property
+    # def center_points(self):
+    #     return self._center_points
+
+    # @center_points.setter
+    # def center_points(self, value):
+    #     if not isinstance(value, list):
+    #         raise ValueError("PoloidalFieldCoilSet center_points must be a list")
+    #     self._center_points = value
+
+    # @property
+    # def heights(self):
+    #     return self._heights
+
+    # @heights.setter
+    # def heights(self, value):
+    #     if not isinstance(value, list):
+    #         raise ValueError("PoloidalFieldCoilSet heights must be a list")
+    #     self._heights = value
+
+    # @property
+    # def widths(self):
+    #     return self._widths
+
+    # @widths.setter
+    # def widths(self, value):
+    #     if not isinstance(value, list):
+    #         raise ValueError("PoloidalFieldCoilSet widths must be a list")
+    #     self._widths = value
+
+    def find_points(self):
+        """Finds the XZ points joined by straight connections that describe
+        the 2D profile of the poloidal field coil shape."""
+
+        if len(self.widths) != len(self.heights) or len(self.heights) != len(self.center_points):
             raise ValueError(
                 "The length of widthts, height and center_points \
                 must be the same when making a PoloidalFieldCoilSet"
             )
 
-    @property
-    def center_points(self):
-        return self._center_points
-
-    @center_points.setter
-    def center_points(self, value):
-        if not isinstance(value, list):
-            raise ValueError("PoloidalFieldCoilSet center_points must be a list")
-        self._center_points = value
-
-    @property
-    def heights(self):
-        return self._heights
-
-    @heights.setter
-    def heights(self, value):
-        if not isinstance(value, list):
-            raise ValueError("PoloidalFieldCoilSet heights must be a list")
-        self._heights = value
-
-    @property
-    def widths(self):
-        return self._widths
-
-    @widths.setter
-    def widths(self, value):
-        if not isinstance(value, list):
-            raise ValueError("PoloidalFieldCoilSet widths must be a list")
-        self._widths = value
-
-    def find_points(self):
-        """Finds the XZ points joined by straight connections that describe
-        the 2D profile of the poloidal field coil shape."""
 
         all_points = []
 
