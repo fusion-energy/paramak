@@ -20,14 +20,14 @@ class PoloidalFieldCoilSet(RotateStraightShape):
     heights: list
     widths: list
     center_points: list
-    name: str ="pf_coil"
+    name: str = "pf_coil"
     # , **kwargs):
 
-        # super().__init__(name=name, **kwargs)
+    # super().__init__(name=name, **kwargs)
 
-        # self.center_points = center_points
-        # self.heights = heights
-        # self.widths = widths
+    # self.center_points = center_points
+    # self.heights = heights
+    # self.widths = widths
 
     # @property
     # def center_points(self):
@@ -63,12 +63,13 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         """Finds the XZ points joined by straight connections that describe
         the 2D profile of the poloidal field coil shape."""
 
-        if len(self.widths) != len(self.heights) or len(self.heights) != len(self.center_points):
+        if len(self.widths) != len(self.heights) or len(self.heights) != len(
+            self.center_points
+        ):
             raise ValueError(
                 "The length of widthts, height and center_points \
                 must be the same when making a PoloidalFieldCoilSet"
             )
-
 
         all_points = []
 

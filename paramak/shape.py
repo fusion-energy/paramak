@@ -110,8 +110,9 @@ class Shape(BaseModel):
     z_min: float = None
     z_max: float = None
     graveyard_offset = None  # set by the make_graveyard method
+
     class Config:
-            arbitrary_types_allowed = True
+        arbitrary_types_allowed = True
 
     @property
     def graveyard_size(self):
@@ -203,8 +204,7 @@ class Shape(BaseModel):
     def largest_dimension(self, value):
         self._largest_dimension = value
 
-
-    @validator('workplane')
+    @validator("workplane")
     def workplane_correct_type(cls, value):
         if isinstance(value, Plane):
             return value

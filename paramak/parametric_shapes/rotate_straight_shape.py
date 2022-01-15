@@ -15,21 +15,19 @@ class RotateStraightShape(RotateMixedShape):
     # def __init__(
     #     self,
     rotation_angle: float = 360.0
-    color: Union[Tuple[float, float, float, float], Tuple[float, float, float]]= (
-        0.89,
-        0.101,
-        0.109
-    ),
+    color: Union[Tuple[float, float, float, float], Tuple[float, float, float]] = (
+        (0.89, 0.101, 0.109),
+    )
     name: str = "rotatestraightshape"
     #     **kwargs
     # ):
-    connection_type:str="straight"
+    connection_type: str = "straight"
     # points:Union[tuple, list]=None
 
-        # super().__init__(
-        #     rotation_angle=rotation_angle,
-        #     # color=color,
-        #     connection_type="straight",
-        #     name=name,
-        #     **kwargs
-        # )
+    # super().__init__(
+    #     rotation_angle=rotation_angle,
+    #     # color=color,
+    #     connection_type="straight",
+    #     name=name,
+    #     **kwargs
+    # )
