@@ -19,11 +19,10 @@ class PoloidalFieldCoil(RotateStraightShape):
     width: float
     center_point: Tuple[float, float]
     name: str = "pf_coil"
-#     **kwargs
-# ) -> None:
+    #     **kwargs
+    # ) -> None:
 
     # super().__init__(name=name, **kwargs)
-
 
     # @property
     # def center_point(self):
