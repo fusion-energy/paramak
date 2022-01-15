@@ -24,7 +24,7 @@ class RotateMixedShape(Shape):
     )
     # name: str = Field("shape", alias='name')
     name: str = "rotatemixedshape"
-    points:Union[tuple, list]=None
+    points: Union[tuple, list] = None
     #     **kwargs
     # ):
     # points: Union[tuple, list]
