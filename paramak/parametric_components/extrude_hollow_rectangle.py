@@ -113,3 +113,18 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         ]
 
         self.points = points
+
+    def create_solid(self):
+
+        # creates a small box that surrounds the geometry
+        inner_box = ExtrudeStraightShape(distance=self.distance, points=self.points[:4])
+
+        # creates a large box that surrounds the smaller box
+        outer_box = ExtrudeStraightShape(distance=self.distance, points=self.points[5:9])
+
+        # subtracts the two boxes to leave a hollow box
+        new_shape = outer_box.cut(inner_box.solid)
+
+        self.solid = new_shape
+
+        return new_shape
