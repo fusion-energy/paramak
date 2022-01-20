@@ -34,7 +34,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
     ) -> None:
 
         super().__init__(
-            name=name, 
+            name=name,
             distance=distance,
             extrude_both=extrude_both,
             color=color,
@@ -42,8 +42,9 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
             workplane=workplane,
             cut=cut,
             intersect=intersect,
-            union=union, 
-            **kwargs)
+            union=union,
+            **kwargs
+        )
 
         self.center_point = center_point
         self.height = height
@@ -142,7 +143,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
             workplane=self.workplane,
             cut=self.cut,
             intersect=self.intersect,
-            union=self.union, 
+            union=self.union,
         )
 
         # creates a large box that surrounds the smaller box

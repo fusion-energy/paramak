@@ -15,14 +15,13 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         casing_thickness: the thickness of the coil casing (cm).
     """
 
-
     def __init__(
         self,
         casing_thickness: Tuple[float, float],
         coil_height: float,
         coil_width: float,
         center_point: Tuple[float, float],
-        name: str = 'poloidal_field_coil',
+        name: str = "poloidal_field_coil",
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
         rotation_axis: Optional[str] = None,
         rotation_angle: float = 360.0,
@@ -37,7 +36,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         super().__init__(color=color, **kwargs)
 
         super().__init__(
-            name=name, 
+            name=name,
             rotation_axis=rotation_axis,
             rotation_angle=rotation_angle,
             color=color,
@@ -45,8 +44,9 @@ class PoloidalFieldCoilCase(RotateStraightShape):
             workplane=workplane,
             cut=cut,
             intersect=intersect,
-            union=union, 
-            **kwargs)
+            union=union,
+            **kwargs
+        )
 
         self.center_point = center_point
         self.height = coil_height
@@ -137,7 +137,7 @@ class PoloidalFieldCoilCase(RotateStraightShape):
             workplane=self.workplane,
             cut=self.cut,
             intersect=self.intersect,
-            union=self.union, 
+            union=self.union,
         )
 
         # creates a large box that surrounds the smaller box
