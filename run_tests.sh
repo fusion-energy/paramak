@@ -1,11 +1,4 @@
 #!/bin/bash
 
-pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
-pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
-pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml
-pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
-pytest tests/test_parametric_components/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
-pytest tests/test_parametric_reactors/ -v --cov=paramak --cov-append --cov-report term --cov-report xml
-python tests/test_example_shapes.py
-python tests/test_example_components.py
-python tests/test_example_reactors.py
+pytest tests -v --durations=0 --cov=paramak --cov-append --cov-report term --cov-report xml
+pytest examples_tests -v --durations=0

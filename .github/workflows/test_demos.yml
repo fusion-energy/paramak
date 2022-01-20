@@ -27,12 +27,12 @@ jobs:
 
       - name: Run the notebooks shapes
         run: |
-          python3 tests/test_example_shapes.py
+          pytest examples_tests/test_example_shapes.py
 
       - name: Run the notebooks components
         run: |
-          python3 tests/test_example_components.py
+          pytest examples_tests/test_example_components.py
 
       - name: Run the notebooks reactors
         run: |
-          python3 tests/test_example_reactors.py
+          pytest examples_tests/test_example_reactors.py
