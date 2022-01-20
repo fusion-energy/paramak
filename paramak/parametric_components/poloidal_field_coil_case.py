@@ -1,5 +1,6 @@
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
+from cadquery import Plane
 from paramak import RotateStraightShape
 
 
@@ -14,17 +15,38 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         casing_thickness: the thickness of the coil casing (cm).
     """
 
+
     def __init__(
         self,
         casing_thickness: Tuple[float, float],
         coil_height: float,
         coil_width: float,
         center_point: Tuple[float, float],
+        name: str = 'poloidal_field_coil',
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
+        rotation_axis: Optional[str] = None,
+        rotation_angle: float = 360.0,
+        azimuth_placement_angle: Optional[Union[float, List[float]]] = 0.0,
+        workplane: Optional[Union[str, Plane]] = "XZ",
+        cut=None,
+        intersect=None,
+        union=None,
         **kwargs
     ) -> None:
 
         super().__init__(color=color, **kwargs)
+
+        super().__init__(
+            name=name, 
+            rotation_axis=rotation_axis,
+            rotation_angle=rotation_angle,
+            color=color,
+            azimuth_placement_angle=azimuth_placement_angle,
+            workplane=workplane,
+            cut=cut,
+            intersect=intersect,
+            union=union, 
+            **kwargs)
 
         self.center_point = center_point
         self.height = coil_height
@@ -103,3 +125,36 @@ class PoloidalFieldCoilCase(RotateStraightShape):
         ]
 
         self.points = points
+
+    def create_solid(self):
+
+        # creates a small box that surrounds the geometry
+        inner_box = RotateStraightShape(
+            points=self.points[:4],
+            rotation_axis=self.rotation_axis,
+            # rotation_angle=self.rotation_angle,
+            azimuth_placement_angle=self.azimuth_placement_angle,
+            workplane=self.workplane,
+            cut=self.cut,
+            intersect=self.intersect,
+            union=self.union, 
+        )
+
+        # creates a large box that surrounds the smaller box
+        outer_box = RotateStraightShape(
+            points=self.points[5:9],
+            rotation_axis=self.rotation_axis,
+            rotation_angle=self.rotation_angle,
+            azimuth_placement_angle=self.azimuth_placement_angle,
+            workplane=self.workplane,
+            cut=self.cut,
+            intersect=self.intersect,
+            union=self.union,
+        )
+
+        # subtracts the two boxes to leave a hollow box
+        new_shape = outer_box.solid.cut(inner_box.solid)
+
+        self.solid = new_shape
+
+        return new_shape
