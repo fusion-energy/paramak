@@ -23,6 +23,7 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
 
         super().__init__(color=color, **kwargs)
 
+        self.pf_coil = pf_coil
         self.center_point = pf_coil.center_point
         self.height = pf_coil.height
         self.width = pf_coil.width
@@ -100,3 +101,27 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
         ]
 
         self.points = points
+
+    def create_solid(self):
+
+        # creates a small box that surrounds the geometry
+        inner_box = self.pf_coil
+
+        # creates a large box that surrounds the smaller box
+        outer_box = RotateStraightShape(
+            points=self.points[5:9],
+            rotation_axis=inner_box.rotation_axis,
+            rotation_angle=inner_box.rotation_angle,
+            azimuth_placement_angle=inner_box.azimuth_placement_angle,
+            workplane=inner_box.workplane,
+            cut=self.cut,
+            intersect=self.intersect,
+            union=self.union,
+        )
+
+        # subtracts the two boxes to leave a hollow box
+        new_shape = outer_box.solid.cut(inner_box.solid)
+
+        self.solid = new_shape
+
+        return new_shape
