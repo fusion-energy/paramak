@@ -61,7 +61,6 @@ class Reactor:
         self.solid = None
         self.reactor_hash_value = None
 
-
     @property
     def input_variables(self):
         all_input_variables = {}
