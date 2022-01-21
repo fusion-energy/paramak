@@ -233,6 +233,59 @@ class Reactor:
 
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
+
+    def export_h5m(
+        self,
+        filename: Union[List[str], str] = None,
+        min_mesh_size: float=1,
+        max_mesh_size: float=3,
+    ) -> str:
+
+        import tempfile
+        from brep_to_h5m import brep_to_h5m
+        import brep_part_finder as bpf
+
+        # saves the reactor as a Brep file with merged surfaces
+        self.export_brep("my_brep_file_with_merged_surfaces.brep")
+
+        # brep file is imported
+        brep_file_part_properties = bpf.get_brep_part_properties(
+            "my_brep_file_with_merged_surfaces.brep"
+        )
+        shape_properties = {}
+        for part in self.shapes_and_components:
+            part_bb = part.solid.val().BoundingBox()
+            part_center = part.solid.val().Center()
+            shape_properties[part.name] = {
+                "volume": part.solid.val().Volume(),
+                "center": (part_center.x, part_center.y, part_center.z),
+                "bounding_box": (
+                    (part_bb.xmin, part_bb.ymin, part_bb.zmin),
+                    (part_bb.xmax, part_bb.ymax, part_bb.zmax),
+                ),
+            }
+
+        # request to find part ids that are mixed up in the Brep file
+        # using the volume, center, bounding box that we know about when creating the
+        # CAD geometry in the first place
+        key_and_part_id = bpf.get_dict_of_part_ids(
+            brep_part_properties=brep_file_part_properties,
+            shape_properties=shape_properties,
+        )
+
+        key_and_part_id = {key: val for key, val in key_and_part_id.items() if val != "plasma"}
+
+        brep_to_h5m(
+            brep_filename="my_brep_file_with_merged_surfaces.brep",
+            volumes_with_tags=key_and_part_id,
+            h5m_filename=filename,
+            min_mesh_size=min_mesh_size,
+            max_mesh_size=max_mesh_size,
+        )
+
+        return filename
+
+
     def export_stp(
         self,
         filename: Union[List[str], str] = None,
