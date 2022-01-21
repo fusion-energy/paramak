@@ -51,15 +51,6 @@ RUN echo installing CadQuery version $cq_version && \
     pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
 
-# installs dependancies
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-
-# installs required packages for dependancies
-COPY requirements-test.txt requirements-test.txt
-RUN pip install -r requirements-test.txt
-
-
 RUN mkdir /home/paramak
 EXPOSE 8888
 WORKDIR /home/paramak
@@ -74,8 +65,7 @@ COPY setup.py setup.py
 COPY tests tests/
 COPY README.md README.md
 
-# using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
-RUN python setup.py install
+RUN pip install -e .[tests,docs]
 
 # this helps prevent the kernal failing
 RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
