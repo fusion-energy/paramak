@@ -24,15 +24,6 @@ jobs:
         run: |
           pip install -e .
 
-
-      - name: Run the notebooks shapes
+      - name: Run the notebooks
         run: |
-          pytest examples_tests/test_example_shapes.py
-
-      - name: Run the notebooks components
-        run: |
-          pytest examples_tests/test_example_components.py
-
-      - name: Run the notebooks reactors
-        run: |
-          pytest examples_tests/test_example_reactors.py
+          pytest -v examples_tests/test_examples.py
