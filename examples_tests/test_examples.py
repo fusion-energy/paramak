@@ -5,6 +5,7 @@ from nbconvert.preprocessors import ExecutePreprocessor
 from nbconvert.preprocessors.execute import CellExecutionError
 from pathlib import Path
 
+
 def notebook_run(path):
     """
     Execute a notebook via nbconvert and collect output.
@@ -26,10 +27,11 @@ def notebook_run(path):
             else:
                 raise e
 
+
 @pytest.mark.parametrize(
     "notebook",
     Path().rglob("examples/*/*.ipynb"),
-    ids = lambda x : x.stem,
+    ids=lambda x: x.stem,
 )
 def test_example(notebook):
     notebook_run(notebook)
