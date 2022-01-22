@@ -1,13 +1,16 @@
-import collections
-import json
-from collections import Counter
+
+import os
+import tempfile
+
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
+import brep_part_finder as bpf
 import cadquery as cq
 import matplotlib.pyplot as plt
-from cadquery import Compound, exporters
+from brep_to_h5m import brep_to_h5m
+from cadquery import exporters
 
 import paramak
 from paramak.utils import _replace, get_hash
@@ -234,7 +237,7 @@ class Reactor:
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
 
-    def export_h5m(
+    def export_dagmc_h5m(
         self,
         filename: Union[List[str], str] = None,
         min_mesh_size: float=10,
@@ -244,7 +247,8 @@ class Reactor:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
         MOAB is used to convert the meshed geometry into a h5m with parts tagged by
-        using the reactor.shape_and_components.name properties.
+        using the reactor.shape_and_components.name properties. You will need
+        Gmsh installed and MOAB installed to use this function
 
         Args:
             filename: the filename of the DAGMC h5m file to write
@@ -254,25 +258,15 @@ class Reactor:
                 into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
         """
 
-        import tempfile
-        from brep_to_h5m import brep_to_h5m
-        import brep_part_finder as bpf
-        import os
-
-        # stl_to_h5m, gmsh and pymoab also needed indirectly
-
-        tmp_filename = tempfile.mkstemp(suffix=".brep", prefix=f"paramak_")[1]
+        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix=f"paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
-        self.export_brep(tmp_filename)
+        self.export_brep(tmp_brep_filename)
 
         # brep file is imported
         brep_file_part_properties = bpf.get_brep_part_properties(
-            tmp_filename
+            tmp_brep_filename
         )
-
-        # temporary brep is deleted
-        os.remove(tmp_filename)
 
         shape_properties = {}
         for part in self.shapes_and_components:
@@ -295,16 +289,20 @@ class Reactor:
             shape_properties=shape_properties,
         )
 
+        # allows components like the plasma to be removed
         for name_to_remove in names_not_included:
             key_and_part_id = {key: val for key, val in key_and_part_id.items() if val != name_to_remove}
 
         brep_to_h5m(
-            brep_filename="my_brep_file_with_merged_surfaces.brep",
+            brep_filename=tmp_brep_filename,
             volumes_with_tags=key_and_part_id,
             h5m_filename=filename,
             min_mesh_size=min_mesh_size,
             max_mesh_size=max_mesh_size,
         )
+
+        # temporary brep is deleted
+        os.remove(tmp_brep_filename)
 
         return filename
 
