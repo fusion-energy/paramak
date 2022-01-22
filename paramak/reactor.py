@@ -237,21 +237,43 @@ class Reactor:
     def export_h5m(
         self,
         filename: Union[List[str], str] = None,
-        min_mesh_size: float=1,
-        max_mesh_size: float=3,
+        min_mesh_size: float=10,
+        max_mesh_size: float=20,
+        names_not_included: List[str] = []
     ) -> str:
+        """Export a DAGMC compatible h5m file for use in neutronics simulations.
+        This method makes use of Gmsh to create a surface mesh of the geometry.
+        MOAB is used to convert the meshed geometry into a h5m with parts tagged by
+        using the reactor.shape_and_components.name properties.
+
+        Args:
+            filename: the filename of the DAGMC h5m file to write
+            min_mesh_size: the minimum mesh element size to use in Gmsh. Passed
+                into gmsh.option.setNumber("Mesh.MeshSizeMin", min_mesh_size)
+            max_mesh_size: the maximum mesh element size to use in Gmsh. Passed
+                into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
+        """
 
         import tempfile
         from brep_to_h5m import brep_to_h5m
         import brep_part_finder as bpf
+        import os
+
+        # stl_to_h5m, gmsh and pymoab also needed indirectly
+
+        tmp_filename = tempfile.mkstemp(suffix=".brep", prefix=f"paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
-        self.export_brep("my_brep_file_with_merged_surfaces.brep")
+        self.export_brep(tmp_filename)
 
         # brep file is imported
         brep_file_part_properties = bpf.get_brep_part_properties(
-            "my_brep_file_with_merged_surfaces.brep"
+            tmp_filename
         )
+
+        # temporary brep is deleted
+        os.remove(tmp_filename)
+
         shape_properties = {}
         for part in self.shapes_and_components:
             part_bb = part.solid.val().BoundingBox()
@@ -273,7 +295,8 @@ class Reactor:
             shape_properties=shape_properties,
         )
 
-        key_and_part_id = {key: val for key, val in key_and_part_id.items() if val != "plasma"}
+        for name_to_remove in names_not_included:
+            key_and_part_id = {key: val for key, val in key_and_part_id.items() if val != name_to_remove}
 
         brep_to_h5m(
             brep_filename="my_brep_file_with_merged_surfaces.brep",
