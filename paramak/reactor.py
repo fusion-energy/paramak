@@ -1,4 +1,3 @@
-
 import os
 import tempfile
 
@@ -236,13 +235,12 @@ class Reactor:
 
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
-
     def export_dagmc_h5m(
         self,
         filename: Union[List[str], str] = None,
-        min_mesh_size: float=10,
-        max_mesh_size: float=20,
-        names_not_included: List[str] = []
+        min_mesh_size: float = 10,
+        max_mesh_size: float = 20,
+        names_not_included: List[str] = [],
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -264,9 +262,7 @@ class Reactor:
         self.export_brep(tmp_brep_filename)
 
         # brep file is imported
-        brep_file_part_properties = bpf.get_brep_part_properties(
-            tmp_brep_filename
-        )
+        brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
 
         shape_properties = {}
         for part in self.shapes_and_components:
@@ -291,7 +287,11 @@ class Reactor:
 
         # allows components like the plasma to be removed
         for name_to_remove in names_not_included:
-            key_and_part_id = {key: val for key, val in key_and_part_id.items() if val != name_to_remove}
+            key_and_part_id = {
+                key: val
+                for key, val in key_and_part_id.items()
+                if val != name_to_remove
+            }
 
         brep_to_h5m(
             brep_filename=tmp_brep_filename,
@@ -305,7 +305,6 @@ class Reactor:
         os.remove(tmp_brep_filename)
 
         return filename
-
 
     def export_stp(
         self,
