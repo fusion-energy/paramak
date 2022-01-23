@@ -871,7 +871,7 @@ class Shape:
 
         brep_to_h5m(
             brep_filename=tmp_brep_filename,
-            volumes_with_tags={1: f'mat_'{self.name}},
+            volumes_with_tags={1: f'mat_{self.name}'},
             h5m_filename=filename,
             min_mesh_size=min_mesh_size,
             max_mesh_size=max_mesh_size,
