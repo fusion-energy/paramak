@@ -5,22 +5,18 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
+import brep_part_finder as bpf
 import matplotlib.pyplot as plt
-from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
+from brep_to_h5m import brep_to_h5m
+from cadquery import (Assembly, Color, Compound, Plane, Workplane, exporters,
+                      importers)
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-from paramak.utils import (
-    _replace,
-    cut_solid,
-    facet_wire,
-    get_hash,
-    intersect_solid,
-    plotly_trace,
-    union_solid,
-)
+from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
+                           intersect_solid, plotly_trace, union_solid)
 
 
 class Shape:
@@ -846,6 +842,45 @@ class Shape:
         # BRepTools.Write_s(self.solid.toOCC(), str(path_filename))
 
         return str(path_filename)
+
+    def export_dagmc_h5m(
+        self,
+        filename: Union[List[str], str] = None,
+        min_mesh_size: float = 10,
+        max_mesh_size: float = 20,
+        names_not_included: List[str] = [],
+    ) -> str:
+        """Export a DAGMC compatible h5m file for use in neutronics simulations.
+        This method makes use of Gmsh to create a surface mesh of the geometry.
+        MOAB is used to convert the meshed geometry into a h5m with parts tagged by
+        using the reactor.shape_and_components.name properties. You will need
+        Gmsh installed and MOAB installed to use this function.
+
+        Args:
+            filename: the filename of the DAGMC h5m file to write
+            min_mesh_size: the minimum mesh element size to use in Gmsh. Passed
+                into gmsh.option.setNumber("Mesh.MeshSizeMin", min_mesh_size)
+            max_mesh_size: the maximum mesh element size to use in Gmsh. Passed
+                into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
+        """
+
+        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix=f"paramak_")[1]
+
+        # saves the reactor as a Brep file with merged surfaces
+        self.export_brep(tmp_brep_filename)
+
+        brep_to_h5m(
+            brep_filename=tmp_brep_filename,
+            volumes_with_tags={1: f'mat_'{self.name}},
+            h5m_filename=filename,
+            min_mesh_size=min_mesh_size,
+            max_mesh_size=max_mesh_size,
+        )
+
+        # temporary brep is deleted
+        os.remove(tmp_brep_filename)
+
+        return filename
 
     def export_stp(
         self,

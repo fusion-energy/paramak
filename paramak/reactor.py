@@ -4,6 +4,7 @@ import tempfile
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
+import warnings
 
 import brep_part_finder as bpf
 import cadquery as cq
@@ -246,7 +247,7 @@ class Reactor:
         This method makes use of Gmsh to create a surface mesh of the geometry.
         MOAB is used to convert the meshed geometry into a h5m with parts tagged by
         using the reactor.shape_and_components.name properties. You will need
-        Gmsh installed and MOAB installed to use this function
+        Gmsh installed and MOAB installed to use this function.
 
         Args:
             filename: the filename of the DAGMC h5m file to write
