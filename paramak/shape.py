@@ -1,5 +1,6 @@
 
 import numbers
+import os
 import tempfile
 from collections.abc import Iterable
 from pathlib import Path
