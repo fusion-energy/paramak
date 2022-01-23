@@ -241,7 +241,7 @@ class Reactor:
         filename: Union[List[str], str] = None,
         min_mesh_size: float = 10,
         max_mesh_size: float = 20,
-        names_not_included: List[str] = [],
+        exclude: List[str] = [],
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -255,6 +255,9 @@ class Reactor:
                 into gmsh.option.setNumber("Mesh.MeshSizeMin", min_mesh_size)
             max_mesh_size: the maximum mesh element size to use in Gmsh. Passed
                 into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
+            exclude: A list of shape names to not include in the exported
+                geometry. 'plasma' is often excluded as not many neutron
+                interactions occur within a low density plasma.
         """
 
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix=f"paramak_")[1]
@@ -287,7 +290,7 @@ class Reactor:
         )
 
         # allows components like the plasma to be removed
-        for name_to_remove in names_not_included:
+        for name_to_remove in exclude:
             key_and_part_id = {
                 key: val
                 for key, val in key_and_part_id.items()
