@@ -18,6 +18,8 @@ requirements:
     - setuptools
   run:
     - cadquery
+    - gmsh
+    - moab  # not available on windows
     - matplotlib
     - mpmath
     - numpy
@@ -30,7 +32,7 @@ requirements:
     - nbformat
     - nbconvert
     - ipywidgets
-    # - jupyter-cadquery not availalbe on conda
+    # - jupyter-cadquery not available on conda
 
 test:
   imports:
