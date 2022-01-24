@@ -83,7 +83,10 @@ class ExtrudeMixedShape(Shape):
 
         self.wire = wire
 
-        solid = wire.extrude(distance=extrusion_distance, both=self.extrude_both)
+        try: # CQ version 2.2
+            solid = wire.extrude(until=extrusion_distance, both=self.extrude_both)
+        except: # CQ version 2.1
+            solid = wire.extrude(distance=extrusion_distance, both=self.extrude_both)
 
         # filleting rectangular port cutter edges
         # must be done before azimuthal placement
