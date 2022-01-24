@@ -5,7 +5,7 @@ channels:
   - cadquery
 
 dependencies:
-  - cadquery=2.1
+  - cadquery=master
   - pytest
   - plotly
   - scipy
