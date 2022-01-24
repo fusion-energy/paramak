@@ -1,1 +1,2 @@
-python setup.py install     # Python command to install the script.
+python3 -m pip install --upgrade build
+python3 -m build
