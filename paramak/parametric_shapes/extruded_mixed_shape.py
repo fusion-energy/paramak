@@ -83,9 +83,9 @@ class ExtrudeMixedShape(Shape):
 
         self.wire = wire
 
-        try: # CQ version 2.2
+        try:  # CQ version 2.2
             solid = wire.extrude(until=extrusion_distance, both=self.extrude_both)
-        except: # CQ version 2.1
+        except:  # CQ version 2.1
             solid = wire.extrude(distance=extrusion_distance, both=self.extrude_both)
 
         # filleting rectangular port cutter edges

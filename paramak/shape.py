@@ -1,4 +1,3 @@
-
 import numbers
 import os
 import tempfile
@@ -9,15 +8,21 @@ from typing import List, Optional, Tuple, Union
 import brep_part_finder as bpf
 import matplotlib.pyplot as plt
 from brep_to_h5m import brep_to_h5m
-from cadquery import (Assembly, Color, Compound, Plane, Workplane, exporters,
-                      importers)
+from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
-                           intersect_solid, plotly_trace, union_solid)
+from paramak.utils import (
+    _replace,
+    cut_solid,
+    facet_wire,
+    get_hash,
+    intersect_solid,
+    plotly_trace,
+    union_solid,
+)
 
 
 class Shape:
@@ -872,7 +877,7 @@ class Shape:
 
         brep_to_h5m(
             brep_filename=tmp_brep_filename,
-            volumes_with_tags={1: f'mat_{self.name}'},
+            volumes_with_tags={1: f"mat_{self.name}"},
             h5m_filename=filename,
             min_mesh_size=min_mesh_size,
             max_mesh_size=max_mesh_size,
