@@ -851,10 +851,9 @@ class Shape:
 
     def export_dagmc_h5m(
         self,
-        filename: Union[List[str], str] = None,
+        filename: str = 'dagmc.h5m',
         min_mesh_size: float = 10,
         max_mesh_size: float = 20,
-        names_not_included: List[str] = [],
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
