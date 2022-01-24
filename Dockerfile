@@ -62,6 +62,8 @@ COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
 COPY examples examples/
 COPY setup.py setup.py
+COPY setup.cfg setup.cfg
+COPY pyproject.toml pyproject.toml
 COPY tests tests/
 COPY README.md README.md
 
