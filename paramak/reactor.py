@@ -303,6 +303,7 @@ class Reactor:
             h5m_filename=filename,
             min_mesh_size=min_mesh_size,
             max_mesh_size=max_mesh_size,
+            delete_intermediate_stl_files=True
         )
 
         # temporary brep is deleted
