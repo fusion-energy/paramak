@@ -32,7 +32,7 @@ FROM continuumio/miniconda3:4.9.2 as dependencies
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2.1
-
+ARG paramak_version=develop
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
@@ -68,7 +68,7 @@ COPY tests tests/
 COPY README.md README.md
 COPY LICENSE.txt LICENSE.txt
 
-RUN --mount=source=.git,target=.git,type=bind pip install --no-cache-dir -e .[tests,docs]
+RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install -e .[tests,docs]
 
 # this helps prevent the kernal failing
 RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
