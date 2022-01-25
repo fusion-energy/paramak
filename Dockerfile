@@ -67,8 +67,9 @@ COPY pyproject.toml pyproject.toml
 COPY tests tests/
 COPY README.md README.md
 COPY LICENSE.txt LICENSE.txt
+COPY .git .git/
 
-RUN --mount=source=.git,target=.git,type=bind pip install --no-cache-dir -e .[tests,docs]
+RUN pip install --no-cache-dir -e .[tests,docs]
 
 # this helps prevent the kernal failing
 RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
