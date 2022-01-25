@@ -20,6 +20,7 @@ __pycache__
 venv
 .eggs/
 paramak.egg-info/
+_version.py
 
 # test coverage files
 coverage.xml

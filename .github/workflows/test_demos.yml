@@ -22,7 +22,7 @@ jobs:
 
       - name: Setup paramak
         run: |
-          python3 setup.py develop
+          pip install -e .
 
 
       - name: Run the notebooks shapes
