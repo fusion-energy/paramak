@@ -66,6 +66,7 @@ COPY setup.cfg setup.cfg
 COPY pyproject.toml pyproject.toml
 COPY tests tests/
 COPY README.md README.md
+COPY LICENSE.txt LICENSE.txt
 
 RUN --mount=source=.git,target=.git,type=bind pip install --no-cache-dir -e .[tests,docs]
 
