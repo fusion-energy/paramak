@@ -269,17 +269,21 @@ class Reactor:
         brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
 
         shape_properties = {}
-        for part in self.shapes_and_components:
-            part_bb = part.solid.val().BoundingBox()
-            part_center = part.solid.val().Center()
-            shape_properties[part.name] = {
-                "volume": part.solid.val().Volume(),
-                "center": (part_center.x, part_center.y, part_center.z),
-                "bounding_box": (
-                    (part_bb.xmin, part_bb.ymin, part_bb.zmin),
-                    (part_bb.xmax, part_bb.ymax, part_bb.zmax),
-                ),
-            }
+        for shape_or_compound in self.shapes_and_components:
+            sub_solid_descriptions = []
+            for counter, sub_solid in enumerate(shape_or_compound.solid.val().Solids()):
+                part_bb = sub_solid.BoundingBox()
+                part_center = sub_solid.Center()
+                sub_solid_description = {
+                    "volume": sub_solid.Volume(),
+                    "center": (part_center.x, part_center.y, part_center.z),
+                    "bounding_box": (
+                        (part_bb.xmin, part_bb.ymin, part_bb.zmin),
+                        (part_bb.xmax, part_bb.ymax, part_bb.zmax),
+                    ),
+                }
+                sub_solid_descriptions.append(sub_solid_description)
+            shape_properties[shape_or_compound.name] = sub_solid_descriptions
 
         # request to find part ids that are mixed up in the Brep file
         # using the volume, center, bounding box that we know about when creating the
