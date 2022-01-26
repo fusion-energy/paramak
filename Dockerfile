@@ -62,6 +62,7 @@ WORKDIR /home/paramak
 FROM dependencies as final
 
 COPY examples examples/
+COPY tests tests/
 COPY run_tests.sh run_tests.sh
 COPY $wheel $wheel
 
