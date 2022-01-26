@@ -66,7 +66,7 @@ COPY tests tests/
 COPY run_tests.sh run_tests.sh
 COPY $wheel $wheel
 
-RUN pip install ${wheel}[tests]
+RUN pip install "$wheel"[tests]
 
 # this helps prevent the kernal failing
 RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
