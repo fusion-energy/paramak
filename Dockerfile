@@ -32,7 +32,6 @@ FROM continuumio/miniconda3:4.9.2 as dependencies
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2.1
-ARG paramak_version=develop
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
@@ -57,6 +56,8 @@ WORKDIR /home/paramak
 
 
 FROM dependencies as final
+
+ARG paramak_version=develop
 
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
