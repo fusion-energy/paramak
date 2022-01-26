@@ -33,6 +33,9 @@ FROM continuumio/miniconda3:4.9.2 as dependencies
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2.1
 
+# Docker must be passed "wheel" as a --build-arg
+# Call `python -m build .` in the root directory, then check the `dist/` directory to find the wheel
+ARG wheel
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
@@ -58,17 +61,11 @@ WORKDIR /home/paramak
 
 FROM dependencies as final
 
-COPY run_tests.sh run_tests.sh
-COPY paramak paramak/
 COPY examples examples/
-COPY setup.py setup.py
-COPY setup.cfg setup.cfg
-COPY pyproject.toml pyproject.toml
-COPY tests tests/
-COPY README.md README.md
-COPY LICENSE.txt LICENSE.txt
+COPY run_tests.sh run_tests.sh
+COPY $wheel $wheel
 
-RUN --mount=source=.git,target=.git,type=bind pip install --no-cache-dir -e .[tests,docs]
+RUN pip install ${wheel}[tests]
 
 # this helps prevent the kernal failing
 RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
