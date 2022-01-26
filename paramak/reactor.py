@@ -241,7 +241,7 @@ class Reactor:
         filename: str = "dagmc.h5m",
         min_mesh_size: float = 10,
         max_mesh_size: float = 20,
-        exclude: List[str] = [],
+        exclude: List[str] = None,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -260,7 +260,7 @@ class Reactor:
                 interactions occur within a low density plasma.
         """
 
-        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix=f"paramak_")[1]
+        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
         self.export_brep(tmp_brep_filename)
@@ -271,7 +271,7 @@ class Reactor:
         shape_properties = {}
         for shape_or_compound in self.shapes_and_components:
             sub_solid_descriptions = []
-            for counter, sub_solid in enumerate(shape_or_compound.solid.val().Solids()):
+            for sub_solid in shape_or_compound.solid.val().Solids():
                 part_bb = sub_solid.BoundingBox()
                 part_center = sub_solid.Center()
                 sub_solid_description = {
@@ -294,12 +294,13 @@ class Reactor:
         )
 
         # allows components like the plasma to be removed
-        for name_to_remove in exclude:
-            key_and_part_id = {
-                key: val
-                for key, val in key_and_part_id.items()
-                if val != name_to_remove
-            }
+        if isinstance(exclude, Iterable):
+            for name_to_remove in exclude:
+                key_and_part_id = {
+                    key: val
+                    for key, val in key_and_part_id.items()
+                    if val != name_to_remove
+                }
 
         brep_to_h5m(
             brep_filename=tmp_brep_filename,
