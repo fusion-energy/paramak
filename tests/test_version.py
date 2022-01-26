@@ -8,9 +8,9 @@ def test_version():
     # Ensure it is given as a string
     assert isinstance(version, str)
     # Ensure is has at least three parts -- major, minor and patch -- separated by '.'
-    
+
     # develop is used as the default version name in the dockerfile
-    if version != 'develop':
+    if version != "develop":
         version_bits = version.split(".")
         assert len(version_bits) >= 3
         # Ensure each of the first three parts is convertable to int
