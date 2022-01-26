@@ -8,13 +8,13 @@ on:
     branches:
       - develop
       - main
-    paths-ignore:
-      - 'docs/**'
-      - '.gitignore'
-      - '*.md'
-      - 'CITATION.cff'
-      - 'LICENSE.txt'
-      - 'readthedocs.yml'
+    paths:
+      - "**.py"
+      - "**.ipynb"
+      - "**.yml"
+      - "**.cfg"
+      - "**.toml"
+      - "**.sh"
 
 jobs:
   testing:
