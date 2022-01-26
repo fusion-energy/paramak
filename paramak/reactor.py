@@ -238,7 +238,7 @@ class Reactor:
 
     def export_dagmc_h5m(
         self,
-        filename: str = 'dagmc.h5m',
+        filename: str = "dagmc.h5m",
         min_mesh_size: float = 10,
         max_mesh_size: float = 20,
         exclude: List[str] = [],
