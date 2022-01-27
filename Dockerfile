@@ -4,9 +4,15 @@
 #
 # There are build args availalbe for specifying the:
 # - cq_version
-#   The version of CadQuery to use master or 2.1 
+#   The version of CadQuery to use master or 2.1
 #   Default is 2.1
 #   Options: [master, 2, 2.1]
+#
+# - paramak_version
+#   The version number applied to the paramak. The CI finds this version number
+#   from the release tag.
+#   Default is develop
+#   Options: version number with three numbers separated by . for example 0.7.1
 #
 # Example builds:
 # Building using the defaults (cq_version 2.1)
