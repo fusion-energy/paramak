@@ -23,8 +23,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build and test with Docker
-        env:
-          DOCKER_BUILDKIT: 1
         run: |
           docker build -t paramak --build-arg cq_version=2.1 .
           docker run --rm paramak  /bin/bash -c "bash run_tests.sh"
