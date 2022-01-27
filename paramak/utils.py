@@ -801,3 +801,16 @@ class EdgeLengthSelector(cq.Selector):
                 new_obj_list.append(obj)
         print("length(new_obj_list)", len(new_obj_list))
         return new_obj_list
+
+def patch_workplane():
+    """Going from CadQuery 2.1 to 2.2, the 'distance' arg to extrude was renamed 'until'.
+    This patch ensures that either version works fine using 'until'.
+    """
+    from cadquery import Workplane
+    if 'distance' in Workplane.extrude.__code__.co_varnames:
+        extrude_func = Workplane.extrude
+        def extrude( *args, **kwargs):
+            if "until" in kwargs.keys():
+                kwargs["distance"] = kwargs.pop("until")
+            return extrude_func( *args, **kwargs)
+        Workplane.extrude = extrude

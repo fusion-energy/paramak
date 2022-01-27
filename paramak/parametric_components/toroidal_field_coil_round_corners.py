@@ -4,7 +4,9 @@ import cadquery as cq
 import numpy as np
 
 from paramak.parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
-from paramak.utils import calculate_wedge_cut
+from paramak.utils import calculate_wedge_cut, patch_workplane
+
+patch_workplane()
 
 
 class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
@@ -362,7 +364,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             .consolidateWires()
         )
 
-        solid = wire.extrude(distance=-self._distance / 2, both=True)
+        solid = wire.extrude(until=-self._distance / 2, both=True)
         solid = self.rotate_solid(solid)
 
         cutting_wedge = calculate_wedge_cut(self)
@@ -375,7 +377,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             inner_leg_solid = (
                 inner_leg_solid.polyline(self._inner_leg_connection_points)
                 .close()
-                .extrude(distance=-self._distance / 2, both=True)
+                .extrude(until=-self._distance / 2, both=True)
             )
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
