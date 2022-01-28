@@ -1,5 +1,6 @@
-from typing import Tuple
+from typing import List, Optional, Tuple, Union
 
+from cadquery import Plane
 from paramak import ExtrudeStraightShape
 
 
@@ -20,13 +21,30 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         width: float,
         distance: float,
         casing_thickness: float,
-        center_point: Tuple[float, float] = (0, 0),
         name: str = "extrude_hollow_rectangle",
+        center_point: Tuple[float, float] = (0, 0),
+        extrude_both: bool = True,
+        color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5),
+        azimuth_placement_angle: Union[float, List[float]] = 0.0,
+        workplane: Union[str, Plane] = "XZ",
+        cut=None,
+        intersect=None,
+        union=None,
         **kwargs
     ) -> None:
 
-        self.distance = distance
-        super().__init__(name=name, distance=self.distance, **kwargs)
+        super().__init__(
+            name=name,
+            distance=distance,
+            extrude_both=extrude_both,
+            color=color,
+            azimuth_placement_angle=azimuth_placement_angle,
+            workplane=workplane,
+            cut=cut,
+            intersect=intersect,
+            union=union,
+            **kwargs
+        )
 
         self.center_point = center_point
         self.height = height
@@ -113,3 +131,36 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         ]
 
         self.points = points
+
+    def create_solid(self):
+
+        # creates a small box that surrounds the geometry
+        inner_box = ExtrudeStraightShape(
+            distance=self.distance,
+            points=self.points[:4],
+            extrude_both=self.extrude_both,
+            azimuth_placement_angle=self.azimuth_placement_angle,
+            workplane=self.workplane,
+            cut=self.cut,
+            intersect=self.intersect,
+            union=self.union,
+        )
+
+        # creates a large box that surrounds the smaller box
+        outer_box = ExtrudeStraightShape(
+            distance=self.distance,
+            points=self.points[5:9],
+            extrude_both=self.extrude_both,
+            azimuth_placement_angle=self.azimuth_placement_angle,
+            workplane=self.workplane,
+            cut=self.cut,
+            intersect=self.intersect,
+            union=self.union,
+        )
+
+        # subtracts the two boxes to leave a hollow box
+        new_shape = outer_box.solid.cut(inner_box.solid)
+
+        self.solid = new_shape
+
+        return new_shape

@@ -25,27 +25,16 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Autobump version
-      run: |
-        # from refs/tags/v1.2.3 get 1.2.3
-        VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
-        PLACEHOLDER='version="develop"'
-        VERSION_FILE='setup.py'
-        # Grep checks that the placeholder is in the file. If grep doesn't find
-        # the placeholder then it exits with exit code 1 and github actions fails.
-        grep "$PLACEHOLDER" "$VERSION_FILE"
-        sed -i "s@$PLACEHOLDER@version=\"${VERSION}\"@g" "$VERSION_FILE"
-      shell: bash
-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install setuptools wheel twine
+        pip install setuptools wheel build twine
 
     - name: Build and publish
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
-        python setup.py sdist bdist_wheel
+        python -m build
+        twine check dist/*
         twine upload dist/*

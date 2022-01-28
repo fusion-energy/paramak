@@ -8,13 +8,13 @@ on:
     branches:
       - develop
       - main
-    paths-ignore:
-      - 'docs/**'
-      - '.gitignore'
-      - '*.md'
-      - 'CITATION.cff'
-      - 'LICENSE.txt'
-      - 'readthedocs.yml'
+    paths:
+      - "**.py"
+      - "**.ipynb"
+      - "**.yml"
+      - "**.cfg"
+      - "**.toml"
+      - "**.sh"
 
 jobs:
   testing:
@@ -27,7 +27,7 @@ jobs:
 
       - name: install package
         run: |
-          python setup.py install
+          pip install -e .
 
       - name: Run test_utils
         run: |

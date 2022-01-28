@@ -4,9 +4,15 @@
 #
 # There are build args availalbe for specifying the:
 # - cq_version
-#   The version of CadQuery to use master or 2.1 
+#   The version of CadQuery to use master or 2.1
 #   Default is 2.1
 #   Options: [master, 2, 2.1]
+#
+# - paramak_version
+#   The version number applied to the paramak. The CI finds this version number
+#   from the release tag.
+#   Default is develop
+#   Options: version number with three numbers separated by . for example 0.7.1
 #
 # Example builds:
 # Building using the defaults (cq_version 2.1)
@@ -33,7 +39,6 @@ FROM continuumio/miniconda3:4.9.2 as dependencies
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2.1
 
-
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
 
@@ -51,15 +56,6 @@ RUN echo installing CadQuery version $cq_version && \
     pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
 
-# installs dependancies
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-
-# installs required packages for dependancies
-COPY requirements-test.txt requirements-test.txt
-RUN pip install -r requirements-test.txt
-
-
 RUN mkdir /home/paramak
 EXPOSE 8888
 WORKDIR /home/paramak
@@ -67,15 +63,19 @@ WORKDIR /home/paramak
 
 FROM dependencies as final
 
+ARG paramak_version=develop
+
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
 COPY examples examples/
 COPY setup.py setup.py
+COPY setup.cfg setup.cfg
+COPY pyproject.toml pyproject.toml
 COPY tests tests/
 COPY README.md README.md
+COPY LICENSE.txt LICENSE.txt
 
-# using setup.py instead of pip due to https://github.com/pypa/pip/issues/5816
-RUN python setup.py install
+RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install -e .[tests,docs]
 
 # this helps prevent the kernal failing
 RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh

@@ -59,7 +59,6 @@ class Reactor:
 
         self.graveyard = None
         self.solid = None
-
         self.reactor_hash_value = None
 
     @property
