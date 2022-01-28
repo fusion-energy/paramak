@@ -27,7 +27,7 @@ jobs:
 
       - name: install package
         run: |
-          pip install -e .
+          pip install -e .[tests] 
 
       - name: Run test_utils
         run: |
