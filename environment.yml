@@ -14,7 +14,7 @@ dependencies:
   - matplotlib
   - pillow
   - pip:
-      - pyparsing=2.4.7
+      - pyparsing==2.4.7
       - sympy
       - plasmaboundaries
       - sphinx-autodoc-typehints
