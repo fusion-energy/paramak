@@ -26,7 +26,7 @@ jobs:
         run: docker build -t paramak --build-arg cq_version=2.1 .
 
       - name: Run unit tests
-        run: docker run --rm paramak  pytest ./tests
+        run: docker run --rm paramak pytest ./tests
 
       - name: Test examples
-        run:  docker run --rm paramak pytest ./examples_tests
+        run: docker run --rm paramak pytest ./examples_tests

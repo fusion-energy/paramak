@@ -72,10 +72,11 @@ COPY setup.py setup.py
 COPY setup.cfg setup.cfg
 COPY pyproject.toml pyproject.toml
 COPY tests tests/
+COPY examples_tests examples_tests/
 COPY README.md README.md
 COPY LICENSE.txt LICENSE.txt
 
-RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install -e .[tests,docs]
+RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[tests,docs]
 
 # this helps prevent the kernal failing
 RUN echo "#!/bin/bash\n\njupyter lab --notebook-dir=/home/paramak/examples --port=8888 --no-browser --ip=0.0.0.0 --allow-root" >> docker-cmd.sh
