@@ -16,7 +16,7 @@ commands:
       - run:
           name: Install
           command: |
-            pip install -e .[tests]
+            python setup.py install
   codecov-upload:
     steps:
       - run:

@@ -1,10 +1,13 @@
+import collections
+import json
+from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-from cadquery import exporters
+from cadquery import Compound, exporters
 
 import paramak
 from paramak.utils import _replace, get_hash
@@ -474,6 +477,7 @@ class Reactor:
             height=height,
             radius=radius,
             rotation_angle=360 - rotation_angle,
+            surface_reflectivity=True,
             azimuth_placement_angle=rotation_angle,
         )
 
