@@ -5,7 +5,9 @@ import cadquery as cq
 import numpy as np
 
 from paramak import ExtrudeStraightShape
-from paramak.utils import calculate_wedge_cut, rotate
+from paramak.utils import calculate_wedge_cut, rotate, patch_workplane
+
+patch_workplane()
 
 
 class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
@@ -222,7 +224,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
 
         self.wire = wire
 
-        solid = wire.extrude(distance=-self.distance / 2.0, both=True)
+        solid = wire.extrude(until=-self.distance / 2.0, both=True)
 
         solid = self.rotate_solid(solid)
 
@@ -233,7 +235,7 @@ class ToroidalFieldCoilCoatHanger(ExtrudeStraightShape):
             inner_leg_solid = cq.Workplane(self.workplane)
             inner_leg_solid = inner_leg_solid.polyline(self.inner_leg_connection_points)
             inner_leg_solid = inner_leg_solid.close().extrude(
-                distance=-self.distance / 2.0, both=True
+                until=-self.distance / 2.0, both=True
             )
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
