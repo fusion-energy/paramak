@@ -22,8 +22,8 @@ jobs:
 
       - name: Setup paramak
         run: |
-          pip install -e .
+          pip install .[tests]
 
       - name: Run the notebooks
         run: |
-          pytest -v examples_tests/test_examples.py
+          pytest examples_tests -v
