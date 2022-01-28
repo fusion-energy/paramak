@@ -560,7 +560,6 @@ class Reactor:
             height=height,
             radius=radius,
             rotation_angle=360 - rotation_angle,
-            surface_reflectivity=True,
             azimuth_placement_angle=rotation_angle,
         )
 
