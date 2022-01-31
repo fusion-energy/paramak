@@ -97,11 +97,11 @@ def volume(outer_start_point, radius, thickness, angle):
     point9 = test_shape.points[8]
     point10 = test_shape.points[9]
 
-    outer_volume_cylinder = float(math.pi * (radius ** 2) * (point4[1] - point3[1]))
+    outer_volume_cylinder = float(math.pi * (radius**2) * (point4[1] - point3[1]))
     inner_volume_cylinder = float(
         math.pi * ((radius - thickness) ** 2) * (point9[1] - point10[1])
     )
-    outer_volume_sphere = float((4 / 3) * math.pi * (radius ** 3))
+    outer_volume_sphere = float((4 / 3) * math.pi * (radius**3))
     inner_volume_sphere = float((4 / 3) * math.pi * ((radius - thickness) ** 3))
     outer_volume = outer_volume_sphere + outer_volume_cylinder
     inner_volume = inner_volume_cylinder + inner_volume_sphere

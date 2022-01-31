@@ -64,7 +64,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         relative volume is correct"""
 
         assert self.test_shape.volume() == pytest.approx(
-            ((math.pi * (200 ** 2)) - (math.pi * (100 ** 2))) * 600
+            ((math.pi * (200**2)) - (math.pi * (100**2))) * 600
         )
 
     def test_absolute_area(self):
@@ -73,13 +73,13 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
 
         assert len(self.test_shape.areas) == 4
         assert self.test_shape.area == pytest.approx(
-            (((math.pi * (200 ** 2)) - (math.pi * (100 ** 2))) * 2)
+            (((math.pi * (200**2)) - (math.pi * (100**2))) * 2)
             + (math.pi * (2 * 200) * 600)
             + (math.pi * (2 * 100) * 600)
         )
         assert (
             self.test_shape.areas.count(
-                pytest.approx((math.pi * (200 ** 2)) - (math.pi * (100 ** 2)))
+                pytest.approx((math.pi * (200**2)) - (math.pi * (100**2)))
             )
             == 2
         )

@@ -1,5 +1,3 @@
-from typing import Optional
-
 import cadquery as cq
 
 from paramak import RotateStraightShape

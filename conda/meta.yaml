@@ -30,7 +30,7 @@ requirements:
     - nbformat
     - nbconvert
     - ipywidgets
-    # - jupyter-cadquery not availalbe on conda
+    # - jupyter-cadquery not available on conda
 
 test:
   imports:
