@@ -257,8 +257,6 @@ class Reactor:
                 interactions occur within a low density plasma.
         """
 
-
-
         from brep_to_h5m import brep_to_h5m
 
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]

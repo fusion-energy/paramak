@@ -869,7 +869,6 @@ class Shape:
 
         from brep_to_h5m import brep_to_h5m
 
-
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix=f"paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
