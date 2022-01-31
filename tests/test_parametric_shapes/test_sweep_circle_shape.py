@@ -54,7 +54,7 @@ class TestSweepCircleShape(unittest.TestCase):
 
         self.test_shape.path_points = [(50, 0), (50, 50), (50, 100)]
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume() == pytest.approx(math.pi * 10 ** 2 * 100)
+        assert self.test_shape.volume() == pytest.approx(math.pi * 10**2 * 100)
 
     def test_relative_shape_volume_radius(self):
         """Creates two SweepCircleShapes and checks that their relative volume
@@ -91,7 +91,7 @@ class TestSweepCircleShape(unittest.TestCase):
         self.test_shape.force_cross_section = True
 
         assert (
-            self.test_shape.areas.count(pytest.approx(math.pi * (10 ** 2), rel=0.01))
+            self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01))
             == 2
         )
 
@@ -101,7 +101,7 @@ class TestSweepCircleShape(unittest.TestCase):
         self.test_shape.cut = cutting_shape
 
         assert (
-            self.test_shape.areas.count(pytest.approx(math.pi * (10 ** 2), rel=0.01))
+            self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01))
             == 2
         )
 
@@ -111,7 +111,7 @@ class TestSweepCircleShape(unittest.TestCase):
         self.test_shape.cut = cutting_shape
 
         assert (
-            self.test_shape.areas.count(pytest.approx(math.pi * (10 ** 2), rel=0.01))
+            self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01))
             == 2
         )
 

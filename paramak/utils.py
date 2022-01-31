@@ -356,7 +356,7 @@ def add_thickness(
             nx *= -1
             ny *= -1
         # normalize normal vector
-        normal_vector_norm = (nx ** 2 + ny ** 2) ** 0.5
+        normal_vector_norm = (nx**2 + ny**2) ** 0.5
         nx /= normal_vector_norm
         ny /= normal_vector_norm
         # calculate outer points

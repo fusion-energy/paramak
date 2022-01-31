@@ -22,7 +22,7 @@ class TestExtrudeCircleShape(unittest.TestCase):
         """Creates an ExtrudeCircleShape and checks that its volume is correct."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume() == pytest.approx(math.pi * (10 ** 2) * 30)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (10**2) * 30)
 
     def test_relative_shape_volume(self):
         """Creates two ExtrudeCircleShapes and checks that their relative
@@ -37,10 +37,10 @@ class TestExtrudeCircleShape(unittest.TestCase):
         are correct."""
 
         assert self.test_shape.area == pytest.approx(
-            (math.pi * (10 ** 2) * 2) + (math.pi * (2 * 10) * 30)
+            (math.pi * (10**2) * 2) + (math.pi * (2 * 10) * 30)
         )
         assert len(self.test_shape.areas) == 3
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (10 ** 2))) == 2
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
         assert self.test_shape.areas.count(pytest.approx(math.pi * (2 * 10) * 30)) == 1
 
     def test_cut_volume(self):
@@ -52,7 +52,7 @@ class TestExtrudeCircleShape(unittest.TestCase):
         )
 
         assert shape_with_cut.volume() == pytest.approx(
-            (math.pi * (20 ** 2) * 40) - (math.pi * (10 ** 2) * 30)
+            (math.pi * (20**2) * 40) - (math.pi * (10**2) * 30)
         )
 
     def test_intersect_volume(self):
@@ -68,7 +68,7 @@ class TestExtrudeCircleShape(unittest.TestCase):
             intersect=[self.test_shape, intersect_shape],
         )
 
-        assert intersected_shape.volume() == pytest.approx(math.pi * 5 ** 2 * 30)
+        assert intersected_shape.volume() == pytest.approx(math.pi * 5**2 * 30)
 
     def test_rotation_angle(self):
         """Creates an ExtrudeCircleShape with a rotation_angle < 360 and checks
