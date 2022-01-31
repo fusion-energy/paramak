@@ -3,15 +3,24 @@ Test Suite and automation
 
 A series of unit and integration tests are run automatically with every pull
 request or merge to the Github repository. Running the tests locally is also
-possible by running pytest from the paramak based directory.
+possible by running pytest within a cloned Paramak repo. The testing
+dependencies may be installed alongside Paramak by calling:
 
 .. code-block:: bash
 
-   pip install pytest
+   pip install -e .[tests]
+
+Running the tests locally simply requires:
 
 .. code-block:: bash
 
    pytest tests
+
+Similarly, the examples notebooks may be tested by calling:
+
+.. code-block:: bash
+   
+   pytest examples_tests
 
 The status of the tests is available on the CircleCI account
 `CircleCI account. <https://app.circleci.com/pipelines/github/ukaea/paramak?branch=main>`_ 

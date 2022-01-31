@@ -15,7 +15,7 @@ def test_version():
     if version != "develop":
         version_bits = version.split(".")
         assert len(version_bits) >= 2, f"Version number is {version}"
-        # Ensure each of the first three parts is convertable to int
-        # (The fourth part, if it exists, may be a development version)
+        # Ensure both of the first two parts is convertable to int
+        # (The third/fourth part, if it exists, may be a development version)
         for bit in version_bits[:2]:
             assert bit.isdigit(), f"Version number is {version}"
