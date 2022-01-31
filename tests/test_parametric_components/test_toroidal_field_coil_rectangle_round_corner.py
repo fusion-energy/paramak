@@ -53,7 +53,7 @@ def surface_area(
     # The surface area of the face in XZ plane is divisible into 5 segments
     base_segment_area = thickness * (base - inner_rad)
     vertical_segment_area = thickness * (height - (inner_rad * 2))
-    corner_area = (pi / 4) * (outter_rad ** 2 - inner_rad ** 2)
+    corner_area = (pi / 4) * (outter_rad**2 - inner_rad**2)
 
     # XZ plane face area
     total_face_area = base_segment_area * 2 + vertical_segment_area + corner_area * 2

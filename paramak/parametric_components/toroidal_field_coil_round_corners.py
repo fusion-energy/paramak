@@ -98,7 +98,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self._outter_curve_radius = (
                 1 + (self._thickness / self._base_length)
             ) * self._thickness
-            self._inner_curve_radius = (self._thickness ** 2) / self._base_length
+            self._inner_curve_radius = (self._thickness**2) / self._base_length
 
         self._analyse_attributes[2] = self._inner_curve_radius
         self._analyse_attributes[3] = self._outter_curve_radius
@@ -243,11 +243,11 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         def shift_long(radius):
             """radius is the radius of curvature"""
-            return (2 ** 0.5) * 0.5 * radius
+            return (2**0.5) * 0.5 * radius
 
         def shift_short(radius):
             """radius is the radius of curvature"""
-            return (2 - (2 ** 0.5)) * 0.5 * radius
+            return (2 - (2**0.5)) * 0.5 * radius
 
         point11 = (point2[0] - inner_curve_radius, point2[1])
         point12 = (

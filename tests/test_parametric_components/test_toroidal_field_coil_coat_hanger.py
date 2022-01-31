@@ -214,8 +214,8 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
             + ((50 * 30) * 4)
             + ((400 * 30) * 4)
             + ((500 * 30) * 2)
-            + ((((50 ** 2 + 50 ** 2) ** 0.5) * 30) * 2)
-            + ((((100 ** 2 + 250 ** 2) ** 0.5) * 30) * 4)
+            + ((((50**2 + 50**2) ** 0.5) * 30) * 2)
+            + ((((100**2 + 250**2) ** 0.5) * 30) * 4)
             + ((50 * 1000) * 2)
             + ((1000 * 30) * 2),
             rel=0.1,
@@ -227,7 +227,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert self.test_shape.areas.count(pytest.approx(500 * 30)) == 2
         assert (
             self.test_shape.areas.count(
-                pytest.approx(((100 ** 2 + 250 ** 2) ** 0.5) * 30)
+                pytest.approx(((100**2 + 250**2) ** 0.5) * 30)
             )
             == 4
         )
@@ -248,8 +248,8 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
             + ((50 * 30) * 2)
             + ((400 * 30) * 4)
             + ((500 * 30) * 2)
-            + ((((50 ** 2 + 50 ** 2) ** 0.5) * 30) * 2)
-            + ((((100 ** 2 + 250 ** 2) ** 0.5) * 30) * 4),
+            + ((((50**2 + 50**2) ** 0.5) * 30) * 2)
+            + ((((100**2 + 250**2) ** 0.5) * 30) * 4),
             rel=0.1,
         )
 
