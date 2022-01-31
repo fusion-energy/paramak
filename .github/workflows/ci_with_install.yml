@@ -27,6 +27,7 @@ jobs:
 
       - name: install package
         run: |
+          pip install --upgrade pip
           pip install .[tests]
 
       - name: Run tests
