@@ -46,6 +46,7 @@ jobs:
           tags: ghcr.io/fusion-energy/paramak:dependencies
           build-args: |
             cq_version=2.1
+            paramak_version=${{ github.ref_name }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 

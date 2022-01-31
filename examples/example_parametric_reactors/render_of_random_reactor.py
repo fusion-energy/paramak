@@ -66,7 +66,7 @@ def create_reactor_renders(
     )
 
     # sets the position of the camera using a matrix
-    cam = 2 ** -0.5
+    cam = 2**-0.5
     camera_pose = np.array(
         [[1, 0, 0, 0], [0, cam, -cam, -350], [0, cam, cam, 350], [0, 0, 0, 1]]
     )

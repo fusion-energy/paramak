@@ -6,13 +6,13 @@ on:
     branches:
     - develop
     - main
-    paths-ignore:
-      - 'docs/**'
-      - '.gitignore'
-      - '*.md'
-      - 'CITATION.cff'
-      - 'LICENSE.txt'
-      - 'readthedocs.yml'
+    paths:
+      - "**.py"
+      - "**.ipynb"
+      - "**.yml"
+      - "**.cfg"
+      - "**.toml"
+      - "**.sh"
 
 jobs:
   build:
@@ -22,9 +22,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Build and test with Docker
-        env:
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker build -t paramak --build-arg cq_version=2.1 .
-          docker run --rm paramak  /bin/bash -c "bash run_tests.sh"
+      - name: Build with Docker
+        run: docker build -t paramak --build-arg cq_version=2.1 .
+
+      - name: Run unit tests
+        run: docker run --rm paramak pytest ./tests
+
+      - name: Test examples
+        run: docker run --rm paramak pytest ./examples_tests

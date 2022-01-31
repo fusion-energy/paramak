@@ -5,9 +5,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-import brep_part_finder as bpf
 import matplotlib.pyplot as plt
-from brep_to_h5m import brep_to_h5m
 from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
@@ -869,14 +867,21 @@ class Shape:
                 into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
         """
 
+        from brep_to_h5m import brep_to_h5m
+
+
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix=f"paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
         self.export_brep(tmp_brep_filename)
 
+        volumes_with_tags = {}
+        for counter, _ in enumerate(self.solid.val().Solids(), 1):
+            volumes_with_tags[counter] = f"mat_{self.name}"
+
         brep_to_h5m(
             brep_filename=tmp_brep_filename,
-            volumes_with_tags={1: f"mat_{self.name}"},
+            volumes_with_tags=volumes_with_tags,
             h5m_filename=filename,
             min_mesh_size=min_mesh_size,
             max_mesh_size=max_mesh_size,

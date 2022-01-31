@@ -1,15 +1,12 @@
 import os
 import tempfile
-
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
-import warnings
 
 import brep_part_finder as bpf
 import cadquery as cq
 import matplotlib.pyplot as plt
-from brep_to_h5m import brep_to_h5m
 from cadquery import exporters
 
 import paramak
@@ -260,6 +257,10 @@ class Reactor:
                 interactions occur within a low density plasma.
         """
 
+
+
+        from brep_to_h5m import brep_to_h5m
+
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
@@ -271,7 +272,14 @@ class Reactor:
         shape_properties = {}
         for shape_or_compound in self.shapes_and_components:
             sub_solid_descriptions = []
-            for sub_solid in shape_or_compound.solid.val().Solids():
+
+            # checks if the solid is a cq.Compound or not
+            if isinstance(shape_or_compound.solid, cq.occ_impl.shapes.Compound):
+                iterable_solids = shape_or_compound.solid.Solids()
+            else:
+                iterable_solids = shape_or_compound.solid.val().Solids()
+
+            for sub_solid in iterable_solids:
                 part_bb = sub_solid.BoundingBox()
                 part_center = sub_solid.Center()
                 sub_solid_description = {
@@ -422,7 +430,11 @@ class Reactor:
             bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
 
             for shape in self.shapes_and_components:
-                bldr.AddArgument(shape.solid.val().wrapped)
+                # checks if solid is a compound as .val() is not needed for compunds
+                if isinstance(shape.solid, cq.occ_impl.shapes.Compound):
+                    bldr.AddArgument(shape.solid.wrapped)
+                else:
+                    bldr.AddArgument(shape.solid.val().wrapped)
 
             bldr.SetNonDestructive(True)
 

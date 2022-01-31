@@ -1,7 +1,9 @@
 from typing import Optional, Tuple
 
 from paramak import Shape
-from paramak.utils import calculate_wedge_cut
+from paramak.utils import calculate_wedge_cut, patch_workplane
+
+patch_workplane()
 
 
 class ExtrudeMixedShape(Shape):
@@ -83,10 +85,7 @@ class ExtrudeMixedShape(Shape):
 
         self.wire = wire
 
-        try:  # CQ version 2.2
-            solid = wire.extrude(until=extrusion_distance, both=self.extrude_both)
-        except:  # CQ version 2.1
-            solid = wire.extrude(distance=extrusion_distance, both=self.extrude_both)
+        solid = wire.extrude(until=extrusion_distance, both=self.extrude_both)
 
         # filleting rectangular port cutter edges
         # must be done before azimuthal placement

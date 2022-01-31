@@ -7,6 +7,9 @@ import pytest
 
 from paramak import RotateStraightShape
 
+import dagmc_h5m_file_inspector as di
+
+
 
 class TestRotateStraightShape(unittest.TestCase):
     def setUp(self):
@@ -36,7 +39,7 @@ class TestRotateStraightShape(unittest.TestCase):
         """Creates a RotateStraightShape and checks that its volume is correct."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume() == pytest.approx(math.pi * (20 ** 2) * 20)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (20**2) * 20)
 
     def test_relative_shape_volume(self):
         """Creates two RotateStraightShapes and checks that their relative volumes
@@ -72,18 +75,18 @@ class TestRotateStraightShape(unittest.TestCase):
         are correct."""
 
         assert self.test_shape.area == pytest.approx(
-            (math.pi * (20 ** 2) * 2) + (math.pi * (20 * 2) * 20)
+            (math.pi * (20**2) * 2) + (math.pi * (20 * 2) * 20)
         )
         assert len(self.test_shape.areas) == 3
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (20 ** 2))) == 2
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (20**2))) == 2
         assert self.test_shape.areas.count(pytest.approx(math.pi * (20 * 2) * 20)) == 1
 
         self.test_shape.rotation_angle = 180
         assert self.test_shape.area == pytest.approx(
-            ((math.pi * (20 ** 2) / 2) * 2) + (20 * 40) + (math.pi * (20 * 2) * 20 / 2)
+            ((math.pi * (20**2) / 2) * 2) + (20 * 40) + (math.pi * (20 * 2) * 20 / 2)
         )
         assert len(self.test_shape.areas) == 4
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (20 ** 2) / 2)) == 2
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (20**2) / 2)) == 2
         assert self.test_shape.areas.count(pytest.approx(20 * 40)) == 1
         assert (
             self.test_shape.areas.count(pytest.approx((math.pi * (20 * 2) * 20) / 2))
@@ -95,14 +98,14 @@ class TestRotateStraightShape(unittest.TestCase):
         )
 
         assert test_shape.area == pytest.approx(
-            (((math.pi * (70 ** 2)) - (math.pi * (50 ** 2))) * 2)
+            (((math.pi * (70**2)) - (math.pi * (50**2))) * 2)
             + (math.pi * (50 * 2) * 50)
             + (math.pi * (70 * 2) * 50)
         )
         assert len(test_shape.areas) == 4
         assert (
             test_shape.areas.count(
-                pytest.approx((math.pi * (70 ** 2)) - (math.pi * (50 ** 2)))
+                pytest.approx((math.pi * (70**2)) - (math.pi * (50**2)))
             )
             == 2
         )
@@ -112,7 +115,7 @@ class TestRotateStraightShape(unittest.TestCase):
         test_shape.rotation_angle = 180
         assert test_shape.area == pytest.approx(
             (20 * 50 * 2)
-            + ((((math.pi * (70 ** 2)) / 2) - ((math.pi * (50 ** 2)) / 2)) * 2)
+            + ((((math.pi * (70**2)) / 2) - ((math.pi * (50**2)) / 2)) * 2)
             + ((math.pi * (50 * 2) * 50) / 2)
             + ((math.pi * (70 * 2) * 50) / 2)
         )
@@ -120,7 +123,7 @@ class TestRotateStraightShape(unittest.TestCase):
         assert test_shape.areas.count(pytest.approx(20 * 50)) == 2
         assert (
             test_shape.areas.count(
-                pytest.approx(((math.pi * (70 ** 2)) / 2) - ((math.pi * (50 ** 2)) / 2))
+                pytest.approx(((math.pi * (70**2)) / 2) - ((math.pi * (50**2)) / 2))
             )
             == 2
         )
@@ -214,7 +217,7 @@ class TestRotateStraightShape(unittest.TestCase):
         )
 
         assert shape_with_cut.volume() == pytest.approx(
-            (math.pi * (25 ** 2) * 30) - (math.pi * (20 ** 2) * 20)
+            (math.pi * (25**2) * 30) - (math.pi * (20**2) * 20)
         )
 
     def test_multiple_cut_volume(self):
@@ -239,9 +242,9 @@ class TestRotateStraightShape(unittest.TestCase):
         )
 
         assert main_shape_with_cuts.volume() == pytest.approx(
-            (math.pi * (200 ** 2) * 200)
-            - ((math.pi * (40 ** 2) * 200) - (math.pi * (20 ** 2) * 200))
-            - ((math.pi * (140 ** 2) * 200) - (math.pi * (120 ** 2) * 200))
+            (math.pi * (200**2) * 200)
+            - ((math.pi * (40**2) * 200) - (math.pi * (20**2) * 200))
+            - ((math.pi * (140**2) * 200) - (math.pi * (120**2) * 200))
         )
 
     def test_hash_value(self):
@@ -283,8 +286,8 @@ class TestRotateStraightShape(unittest.TestCase):
             == Path("test_solid2.stp").stat().st_size
         )
         assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
+            Path("test_solid.stp").stat().st_size
+            == Path("test_solid2.stp").stat().st_size
         )
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
@@ -319,6 +322,52 @@ class TestRotateStraightShape(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_points_definition)
 
+    def test_dagmc_h5m_export_multi_volume(self):
+        """Exports a shape with multiple volumes and checks that they all
+        exist (volume ids and material tags) in the resulting h5m file"""
+
+        self.test_shape.rotation_angle = 10
+        self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
+        self.test_shape.name = 'my_material_name'
+        self.test_shape.export_dagmc_h5m('dagmc_multi_volume.h5m')
+
+        vols = di.get_volumes_from_h5m("dagmc_multi_volume.h5m")
+        assert vols == [1,2,3,4]
+
+        mats = di.get_materials_from_h5m("dagmc_multi_volume.h5m")
+        assert mats == ['mat_my_material_name']
+
+        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_multi_volume.h5m")
+        assert vols_and_mats == {1: 'mat_my_material_name', 2: 'mat_my_material_name', 3: 'mat_my_material_name', 4: 'mat_my_material_name'}
+
+    def test_dagmc_h5m_export_single_volume(self):
+        """Exports a shape with a single volume and checks that it
+        exist (volume id and material tag) in the resulting h5m file"""
+
+        self.test_shape.rotation_angle = 180
+        self.test_shape.name = 'my_material_name_single'
+        self.test_shape.export_dagmc_h5m('dagmc_single_volume.h5m')
+
+        vols = di.get_volumes_from_h5m("dagmc_single_volume.h5m")
+        assert vols == [1]
+
+        mats = di.get_materials_from_h5m("dagmc_single_volume.h5m")
+        assert mats == ['mat_my_material_name_single']
+
+        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_single_volume.h5m")
+        assert vols_and_mats == {1: 'mat_my_material_name_single'}
+
+    def test_dagmc_h5m_export_mesh_size(self):
+        """Exports h5m file with higher resolution mesh and checks that the
+        file sizes increases"""
+
+        self.test_shape.export_dagmc_h5m('dagmc_default.h5m', min_mesh_size=10, max_mesh_size=20)
+        self.test_shape.export_dagmc_h5m('dagmc_bigger.h5m', min_mesh_size=2, max_mesh_size=9)
+
+        assert (
+                    Path("dagmc_bigger.h5m").stat().st_size
+                    > Path("dagmc_default.h5m").stat().st_size
+                )
 
 if __name__ == "__main__":
     unittest.main()
