@@ -1,6 +1,6 @@
 import cadquery as cq
 
-from paramak import CuttingWedgeFS, Shape
+from paramak import Shape
 
 
 class ShellFS(Shape):
