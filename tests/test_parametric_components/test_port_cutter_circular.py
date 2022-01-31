@@ -40,10 +40,10 @@ class TestPortCutterCircular(unittest.TestCase):
     def test_absolute_volume(self):
         """Creates a PortCutterCircular shape and checks that its volume is correct."""
 
-        assert self.test_shape.volume() == pytest.approx(math.pi * (20 ** 2) * 300)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (20**2) * 300)
 
         self.test_shape.extrusion_start_offset = 20
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         self.test_shape.radius = 10
 
-        assert self.test_shape.volume() == pytest.approx(math.pi * (10 ** 2) * 300 * 4)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (10**2) * 300 * 4)

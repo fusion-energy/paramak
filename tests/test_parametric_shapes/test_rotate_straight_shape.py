@@ -36,7 +36,7 @@ class TestRotateStraightShape(unittest.TestCase):
         """Creates a RotateStraightShape and checks that its volume is correct."""
 
         assert self.test_shape.solid is not None
-        assert self.test_shape.volume() == pytest.approx(math.pi * (20 ** 2) * 20)
+        assert self.test_shape.volume() == pytest.approx(math.pi * (20**2) * 20)
 
     def test_relative_shape_volume(self):
         """Creates two RotateStraightShapes and checks that their relative volumes
@@ -72,18 +72,18 @@ class TestRotateStraightShape(unittest.TestCase):
         are correct."""
 
         assert self.test_shape.area == pytest.approx(
-            (math.pi * (20 ** 2) * 2) + (math.pi * (20 * 2) * 20)
+            (math.pi * (20**2) * 2) + (math.pi * (20 * 2) * 20)
         )
         assert len(self.test_shape.areas) == 3
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (20 ** 2))) == 2
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (20**2))) == 2
         assert self.test_shape.areas.count(pytest.approx(math.pi * (20 * 2) * 20)) == 1
 
         self.test_shape.rotation_angle = 180
         assert self.test_shape.area == pytest.approx(
-            ((math.pi * (20 ** 2) / 2) * 2) + (20 * 40) + (math.pi * (20 * 2) * 20 / 2)
+            ((math.pi * (20**2) / 2) * 2) + (20 * 40) + (math.pi * (20 * 2) * 20 / 2)
         )
         assert len(self.test_shape.areas) == 4
-        assert self.test_shape.areas.count(pytest.approx(math.pi * (20 ** 2) / 2)) == 2
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (20**2) / 2)) == 2
         assert self.test_shape.areas.count(pytest.approx(20 * 40)) == 1
         assert (
             self.test_shape.areas.count(pytest.approx((math.pi * (20 * 2) * 20) / 2))
@@ -95,14 +95,14 @@ class TestRotateStraightShape(unittest.TestCase):
         )
 
         assert test_shape.area == pytest.approx(
-            (((math.pi * (70 ** 2)) - (math.pi * (50 ** 2))) * 2)
+            (((math.pi * (70**2)) - (math.pi * (50**2))) * 2)
             + (math.pi * (50 * 2) * 50)
             + (math.pi * (70 * 2) * 50)
         )
         assert len(test_shape.areas) == 4
         assert (
             test_shape.areas.count(
-                pytest.approx((math.pi * (70 ** 2)) - (math.pi * (50 ** 2)))
+                pytest.approx((math.pi * (70**2)) - (math.pi * (50**2)))
             )
             == 2
         )
@@ -112,7 +112,7 @@ class TestRotateStraightShape(unittest.TestCase):
         test_shape.rotation_angle = 180
         assert test_shape.area == pytest.approx(
             (20 * 50 * 2)
-            + ((((math.pi * (70 ** 2)) / 2) - ((math.pi * (50 ** 2)) / 2)) * 2)
+            + ((((math.pi * (70**2)) / 2) - ((math.pi * (50**2)) / 2)) * 2)
             + ((math.pi * (50 * 2) * 50) / 2)
             + ((math.pi * (70 * 2) * 50) / 2)
         )
@@ -120,7 +120,7 @@ class TestRotateStraightShape(unittest.TestCase):
         assert test_shape.areas.count(pytest.approx(20 * 50)) == 2
         assert (
             test_shape.areas.count(
-                pytest.approx(((math.pi * (70 ** 2)) / 2) - ((math.pi * (50 ** 2)) / 2))
+                pytest.approx(((math.pi * (70**2)) / 2) - ((math.pi * (50**2)) / 2))
             )
             == 2
         )
@@ -214,7 +214,7 @@ class TestRotateStraightShape(unittest.TestCase):
         )
 
         assert shape_with_cut.volume() == pytest.approx(
-            (math.pi * (25 ** 2) * 30) - (math.pi * (20 ** 2) * 20)
+            (math.pi * (25**2) * 30) - (math.pi * (20**2) * 20)
         )
 
     def test_multiple_cut_volume(self):
@@ -239,9 +239,9 @@ class TestRotateStraightShape(unittest.TestCase):
         )
 
         assert main_shape_with_cuts.volume() == pytest.approx(
-            (math.pi * (200 ** 2) * 200)
-            - ((math.pi * (40 ** 2) * 200) - (math.pi * (20 ** 2) * 200))
-            - ((math.pi * (140 ** 2) * 200) - (math.pi * (120 ** 2) * 200))
+            (math.pi * (200**2) * 200)
+            - ((math.pi * (40**2) * 200) - (math.pi * (20**2) * 200))
+            - ((math.pi * (140**2) * 200) - (math.pi * (120**2) * 200))
         )
 
     def test_hash_value(self):
