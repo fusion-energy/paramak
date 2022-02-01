@@ -1375,7 +1375,7 @@ class Shape:
         self.processed_points = new_points
         return new_points
 
-    def volume(self, split_compounds=False) -> Union[float, List[float]]:
+    def volume(self, split_compounds: bool = False) -> Union[float, List[float]]:
         """Get the total volume of the Shape.
 
         Args:
