@@ -71,7 +71,7 @@ class SubmersionTokamak(paramak.Reactor):
         elongation: float = 2.0,
         triangularity: float = 0.5,
         number_of_tf_coils: int = 16,
-        rotation_angle: float = 360.0,
+        rotation_angle: float = 180.0,
         outboard_tf_coil_radial_thickness: Optional[float] = None,
         rear_blanket_to_tf_gap: Optional[float] = None,
         outboard_tf_coil_poloidal_thickness: Optional[float] = None,

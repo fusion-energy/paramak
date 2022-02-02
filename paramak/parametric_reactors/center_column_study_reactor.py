@@ -58,7 +58,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         elongation: float = 2.3,
         triangularity: float = 0.45,
         plasma_gap_vertical_thickness: float = 40,
-        rotation_angle: float = 360.0,
+        rotation_angle: float = 180.0,
     ):
 
         super().__init__([])
