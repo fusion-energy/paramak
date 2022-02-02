@@ -49,16 +49,13 @@ RUN apt-get update -y && \
 RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
                        apt-get clean
 
-
 # Installing CadQuery
 RUN echo installing CadQuery version $cq_version && \
     conda install -c conda-forge -c python python=3.8 && \
     conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
+    conda install -c conda-forge moab && \
     pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
-
-
-RUN conda install -c conda-forge moab 
 
 # When installing gmsh inside docker containers 
 # apt install python3-gmsh -y
