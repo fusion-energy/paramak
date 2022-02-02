@@ -149,7 +149,7 @@ class TestPoloidalFieldCoilCaseSet(unittest.TestCase):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
         parametric component and checks that the areas are correct"""
         self.test_shape.rotation_angle = 180
-        assert len(self.test_shape.areas) == (4+4+2)*4
+        assert len(self.test_shape.areas) == (4 + 4 + 2) * 4
         assert len(set([round(i) for i in self.test_shape.areas])) == 16
         assert self.test_shape.areas.count(pytest.approx(10 * math.pi * 2 * 100)) == 6
         assert self.test_shape.areas.count(pytest.approx(40 * math.pi * 2 * 50)) == 4
