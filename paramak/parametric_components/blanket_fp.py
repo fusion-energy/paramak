@@ -245,7 +245,7 @@ class BlanketFP(RotateMixedShape):
             ny = -val_R_derivative
 
             # normalise normal vector
-            normal_vector_norm = (nx ** 2 + ny ** 2) ** 0.5
+            normal_vector_norm = (nx**2 + ny**2) ** 0.5
             nx /= normal_vector_norm
             ny /= normal_vector_norm
 

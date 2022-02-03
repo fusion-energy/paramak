@@ -4,7 +4,9 @@ import cadquery as cq
 import numpy as np
 
 from paramak.parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
-from paramak.utils import calculate_wedge_cut
+from paramak.utils import calculate_wedge_cut, patch_workplane
+
+patch_workplane()
 
 
 class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
@@ -98,7 +100,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self._outter_curve_radius = (
                 1 + (self._thickness / self._base_length)
             ) * self._thickness
-            self._inner_curve_radius = (self._thickness ** 2) / self._base_length
+            self._inner_curve_radius = (self._thickness**2) / self._base_length
 
         self._analyse_attributes[2] = self._inner_curve_radius
         self._analyse_attributes[3] = self._outter_curve_radius
@@ -243,11 +245,11 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         def shift_long(radius):
             """radius is the radius of curvature"""
-            return (2 ** 0.5) * 0.5 * radius
+            return (2**0.5) * 0.5 * radius
 
         def shift_short(radius):
             """radius is the radius of curvature"""
-            return (2 - (2 ** 0.5)) * 0.5 * radius
+            return (2 - (2**0.5)) * 0.5 * radius
 
         point11 = (point2[0] - inner_curve_radius, point2[1])
         point12 = (
@@ -362,7 +364,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             .consolidateWires()
         )
 
-        solid = wire.extrude(distance=-self._distance / 2, both=True)
+        solid = wire.extrude(until=-self._distance / 2, both=True)
         solid = self.rotate_solid(solid)
 
         cutting_wedge = calculate_wedge_cut(self)
@@ -375,7 +377,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             inner_leg_solid = (
                 inner_leg_solid.polyline(self._inner_leg_connection_points)
                 .close()
-                .extrude(distance=-self._distance / 2, both=True)
+                .extrude(until=-self._distance / 2, both=True)
             )
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
