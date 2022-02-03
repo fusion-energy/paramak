@@ -1,4 +1,5 @@
 import warnings
+from typing import Optional
 
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import add_thickness, cut_solid, union_solid

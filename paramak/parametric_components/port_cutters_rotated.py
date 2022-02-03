@@ -1,7 +1,7 @@
 import math
 
 from paramak import RotateStraightShape
-from paramak.utils import rotate
+from paramak.utils import coefficients_of_line_from_points, rotate
 
 
 class PortCutterRotated(RotateStraightShape):
