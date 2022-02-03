@@ -75,7 +75,7 @@ needed then this stage can be skipped.
 
 .. code-block:: bash
 
-   conda install -c cadquery -c conda-forge moab=5.3.0
+   conda install -c cadquery -c conda-forge moab=5.3.1
 
 Then pip install the Paramak.
 

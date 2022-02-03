@@ -259,6 +259,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             mid_radius=self._center_column_shield_end_radius_mid,
             outer_radius=self._center_column_shield_end_radius_upper,
             rotation_angle=self.rotation_angle,
+            name='center_column_shield'
         )
         return self._center_column_shield
 
@@ -268,6 +269,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             central_column_shield=self._center_column_shield,
             thickness=self.inboard_firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
+            name='inboard_first_wall'
         )
         return self._inboard_firstwall
 
@@ -296,11 +298,12 @@ class CenterColumnStudyReactor(paramak.Reactor):
             color=(0.0, 1.0, 0.498),
             rotation_angle=self.rotation_angle,
             cut=[self._center_column_cutter],
+            name='blanket'
         )
         return self._blanket
 
     def _make_divertor(self):
-        self._blanket_enveloppe = paramak.BlanketFP(
+        self._blanket_envelope = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=100.0,
             offset_from_plasma=[
@@ -322,9 +325,9 @@ class CenterColumnStudyReactor(paramak.Reactor):
             inner_radius=self._divertor_start_radius,
             outer_radius=self._divertor_end_radius,
             rotation_angle=self.rotation_angle,
-            name="divertor",
-            intersect=self._blanket_enveloppe,
+            intersect=self._blanket_envelope,
             color=(1.0, 0.667, 0.0),
+            name="divertor",
         )
         self._blanket.cut.append(self._divertor)
         return self._divertor

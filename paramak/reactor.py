@@ -1,5 +1,6 @@
 import os
 import tempfile
+import warnings
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -256,6 +257,11 @@ class Reactor:
                 geometry. 'plasma' is often excluded as not many neutron
                 interactions occur within a low density plasma.
         """
+
+        if cq.__version__ == '2.1':
+            msg = 'reactor.export_dagmc_h5m() requires CadQuery version 2.2 or greater'
+            warnings.warn(msg)
+            return None
 
         from brep_to_h5m import brep_to_h5m
 
