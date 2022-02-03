@@ -36,8 +36,8 @@ class TestReactor(unittest.TestCase):
         exist (volume id and material tag) in the resulting h5m file"""
 
         # TODO remove when moving to cq 2.2
-        if cq.__version__ == '2.1':
-            assert 1==1
+        if cq.__version__ == "2.1":
+            assert 1 == 1
         else:
             self.test_reactor_3.rotation_angle = 180
             self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m")
@@ -61,8 +61,8 @@ class TestReactor(unittest.TestCase):
         file sizes increases"""
 
         # TODO remove when moving to cq 2.2
-        if cq.__version__ == '2.1':
-            assert 1==1
+        if cq.__version__ == "2.1":
+            assert 1 == 1
         else:
             self.test_reactor_3.export_dagmc_h5m(
                 "dagmc_default.h5m", min_mesh_size=10, max_mesh_size=20

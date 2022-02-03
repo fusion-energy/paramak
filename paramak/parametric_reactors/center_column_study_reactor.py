@@ -259,7 +259,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             mid_radius=self._center_column_shield_end_radius_mid,
             outer_radius=self._center_column_shield_end_radius_upper,
             rotation_angle=self.rotation_angle,
-            name='center_column_shield'
+            name="center_column_shield",
         )
         return self._center_column_shield
 
@@ -269,7 +269,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             central_column_shield=self._center_column_shield,
             thickness=self.inboard_firstwall_radial_thickness,
             rotation_angle=self.rotation_angle,
-            name='inboard_first_wall'
+            name="inboard_first_wall",
         )
         return self._inboard_firstwall
 
@@ -298,7 +298,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             color=(0.0, 1.0, 0.498),
             rotation_angle=self.rotation_angle,
             cut=[self._center_column_cutter],
-            name='blanket'
+            name="blanket",
         )
         return self._blanket
 

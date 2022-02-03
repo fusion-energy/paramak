@@ -8,15 +8,21 @@ from typing import List, Optional, Tuple, Union
 
 import cadquery as cq
 import matplotlib.pyplot as plt
-from cadquery import (Assembly, Color, Compound, Plane, Workplane, exporters,
-                      importers)
+from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-from paramak.utils import (_replace, cut_solid, facet_wire, get_hash,
-                           intersect_solid, plotly_trace, union_solid)
+from paramak.utils import (
+    _replace,
+    cut_solid,
+    facet_wire,
+    get_hash,
+    intersect_solid,
+    plotly_trace,
+    union_solid,
+)
 
 
 class Shape:
@@ -863,8 +869,8 @@ class Shape:
                 into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
         """
 
-        if cq.__version__ == '2.1':
-            msg = 'reactor.export_dagmc_h5m() requires CadQuery version 2.2 or greater'
+        if cq.__version__ == "2.1":
+            msg = "reactor.export_dagmc_h5m() requires CadQuery version 2.2 or greater"
             warnings.warn(msg)
             return None
 

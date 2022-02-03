@@ -325,8 +325,8 @@ class TestRotateStraightShape(unittest.TestCase):
         exist (volume ids and material tags) in the resulting h5m file"""
 
         # TODO remove when moving to cq 2.2
-        if cq.__version__ == '2.1':
-            assert 1==1
+        if cq.__version__ == "2.1":
+            assert 1 == 1
         else:
             self.test_shape.rotation_angle = 10
             self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
@@ -339,7 +339,9 @@ class TestRotateStraightShape(unittest.TestCase):
             mats = di.get_materials_from_h5m("dagmc_multi_volume.h5m")
             assert mats == ["mat_my_material_name"]
 
-            vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_multi_volume.h5m")
+            vols_and_mats = di.get_volumes_and_materials_from_h5m(
+                "dagmc_multi_volume.h5m"
+            )
             assert vols_and_mats == {
                 1: "mat_my_material_name",
                 2: "mat_my_material_name",
@@ -352,8 +354,8 @@ class TestRotateStraightShape(unittest.TestCase):
         exist (volume id and material tag) in the resulting h5m file"""
 
         # TODO remove when moving to cq 2.2
-        if cq.__version__ == '2.1':
-            assert 1==1
+        if cq.__version__ == "2.1":
+            assert 1 == 1
         else:
             self.test_shape.rotation_angle = 180
             self.test_shape.name = "my_material_name_single"
@@ -365,7 +367,9 @@ class TestRotateStraightShape(unittest.TestCase):
             mats = di.get_materials_from_h5m("dagmc_single_volume.h5m")
             assert mats == ["mat_my_material_name_single"]
 
-            vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_single_volume.h5m")
+            vols_and_mats = di.get_volumes_and_materials_from_h5m(
+                "dagmc_single_volume.h5m"
+            )
             assert vols_and_mats == {1: "mat_my_material_name_single"}
 
     def test_dagmc_h5m_export_mesh_size(self):
@@ -373,8 +377,8 @@ class TestRotateStraightShape(unittest.TestCase):
         file sizes increases"""
 
         # TODO remove when moving to cq 2.2
-        if cq.__version__ == '2.1':
-            assert 1==1
+        if cq.__version__ == "2.1":
+            assert 1 == 1
         else:
             self.test_shape.export_dagmc_h5m(
                 "dagmc_default.h5m", min_mesh_size=10, max_mesh_size=20
