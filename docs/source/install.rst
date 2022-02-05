@@ -76,6 +76,22 @@ Then pip install the Paramak.
 Now you should be ready to import paramak from your new python environment.
 
 
+Optional Jupyter-CadQuery install
+---------------------------------
+
+Jupyter-Cadquery is an extension to CadQuery that allows objects to be
+rendered in JupyterLab. This can improve the visualization experience for
+Paramak users running Jupyter.
+
+ `Jupyter-Cadquery GitHub page <https://github.com/bernhard-42/jupyter-cadquery>`_
+
+Terminal command to install Jupyter-Cadquery
+
+.. code-block:: bash
+
+   pip install jupyter-cadquery
+
+
 Optional neutronics install
 ---------------------------
 
