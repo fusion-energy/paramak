@@ -18,6 +18,8 @@ requirements:
     - setuptools
   run:
     - cadquery
+    - gmsh  [not win]  
+    - moab  [not win]
     - matplotlib
     - mpmath
     - numpy

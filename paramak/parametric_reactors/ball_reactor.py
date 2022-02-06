@@ -86,7 +86,7 @@ class BallReactor(paramak.Reactor):
         outboard_tf_coil_radial_thickness: float = None,
         outboard_tf_coil_poloidal_thickness: float = None,
         divertor_position: Optional[str] = "both",
-        rotation_angle: Optional[str] = 360.0,
+        rotation_angle: Optional[str] = 180.0,
     ):
 
         super().__init__([])

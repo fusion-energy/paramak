@@ -1,3 +1,6 @@
+import os
+import tempfile
+import warnings
 import collections
 import json
 from collections import Counter
@@ -5,6 +8,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
+import brep_part_finder as bpf
 import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import Compound, exporters
@@ -233,6 +237,95 @@ class Reactor:
 
         return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
 
+    def export_dagmc_h5m(
+        self,
+        filename: str = "dagmc.h5m",
+        min_mesh_size: float = 5,
+        max_mesh_size: float = 20,
+        exclude: List[str] = None,
+    ) -> str:
+        """Export a DAGMC compatible h5m file for use in neutronics simulations.
+        This method makes use of Gmsh to create a surface mesh of the geometry.
+        MOAB is used to convert the meshed geometry into a h5m with parts tagged by
+        using the reactor.shape_and_components.name properties. You will need
+        Gmsh installed and MOAB installed to use this function.
+
+        Args:
+            filename: the filename of the DAGMC h5m file to write
+            min_mesh_size: the minimum mesh element size to use in Gmsh. Passed
+                into gmsh.option.setNumber("Mesh.MeshSizeMin", min_mesh_size)
+            max_mesh_size: the maximum mesh element size to use in Gmsh. Passed
+                into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
+            exclude: A list of shape names to not include in the exported
+                geometry. 'plasma' is often excluded as not many neutron
+                interactions occur within a low density plasma.
+        """
+
+        from brep_to_h5m import brep_to_h5m
+
+        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
+
+        # saves the reactor as a Brep file with merged surfaces
+        self.export_brep(tmp_brep_filename)
+
+        # brep file is imported
+        brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
+
+        shape_properties = {}
+        for shape_or_compound in self.shapes_and_components:
+            sub_solid_descriptions = []
+
+            # checks if the solid is a cq.Compound or not
+            if isinstance(shape_or_compound.solid, cq.occ_impl.shapes.Compound):
+                iterable_solids = shape_or_compound.solid.Solids()
+            else:
+                iterable_solids = shape_or_compound.solid.val().Solids()
+
+            for sub_solid in iterable_solids:
+                part_bb = sub_solid.BoundingBox()
+                part_center = sub_solid.Center()
+                sub_solid_description = {
+                    "volume": sub_solid.Volume(),
+                    "center": (part_center.x, part_center.y, part_center.z),
+                    "bounding_box": (
+                        (part_bb.xmin, part_bb.ymin, part_bb.zmin),
+                        (part_bb.xmax, part_bb.ymax, part_bb.zmax),
+                    ),
+                }
+                sub_solid_descriptions.append(sub_solid_description)
+            shape_properties[shape_or_compound.name] = sub_solid_descriptions
+
+        # request to find part ids that are mixed up in the Brep file
+        # using the volume, center, bounding box that we know about when creating the
+        # CAD geometry in the first place
+        key_and_part_id = bpf.get_dict_of_part_ids(
+            brep_part_properties=brep_file_part_properties,
+            shape_properties=shape_properties,
+        )
+
+        # allows components like the plasma to be removed
+        if isinstance(exclude, Iterable):
+            for name_to_remove in exclude:
+                key_and_part_id = {
+                    key: val
+                    for key, val in key_and_part_id.items()
+                    if val != name_to_remove
+                }
+
+        brep_to_h5m(
+            brep_filename=tmp_brep_filename,
+            volumes_with_tags=key_and_part_id,
+            h5m_filename=filename,
+            min_mesh_size=min_mesh_size,
+            max_mesh_size=max_mesh_size,
+            delete_intermediate_stl_files=True,
+        )
+
+        # temporary brep is deleted
+        os.remove(tmp_brep_filename)
+
+        return filename
+
     def export_stp(
         self,
         filename: Union[List[str], str] = None,
@@ -339,7 +432,11 @@ class Reactor:
             bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
 
             for shape in self.shapes_and_components:
-                bldr.AddArgument(shape.solid.val().wrapped)
+                # checks if solid is a compound as .val() is not needed for compunds
+                if isinstance(shape.solid, cq.occ_impl.shapes.Compound):
+                    bldr.AddArgument(shape.solid.wrapped)
+                else:
+                    bldr.AddArgument(shape.solid.val().wrapped)
 
             bldr.SetNonDestructive(True)
 

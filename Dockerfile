@@ -53,8 +53,16 @@ RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglu
 RUN echo installing CadQuery version $cq_version && \
     conda install -c conda-forge -c python python=3.8 && \
     conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
+    conda install -c conda-forge moab && \
     pip install jupyter-cadquery==2.2.0 && \
     conda clean -afy
+
+# When installing gmsh inside docker containers 
+# apt install python3-gmsh -y
+# appears to work better than
+# conda install -c conda-forge gmsh
+# which results in libxcursor1 errors
+RUN apt install python3-gmsh -y
 
 RUN mkdir /home/paramak
 EXPOSE 8888
