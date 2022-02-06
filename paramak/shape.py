@@ -870,7 +870,6 @@ class Shape:
                 into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
         """
 
-
         from brep_to_h5m import brep_to_h5m
 
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
