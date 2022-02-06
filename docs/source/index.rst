@@ -20,10 +20,10 @@ The Paramak python package allows rapid production of 3D CAD models of fusion
 reactors. The purpose of the Paramak is to provide geometry for parametric
 studies in a variety of CAD formats including STL, STP and Brep files.
 
-adQuery functions provide the majority of the features, and incorporating
+CadQuery functions provide the majority of the features, and incorporating
 additional capabilities is straightforward for developers with Python knowledge.
 
-Contributions are welcome. C
+Contributions are welcome.
 
 .. raw:: html
 
