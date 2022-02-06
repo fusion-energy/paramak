@@ -74,7 +74,7 @@ Then install the CadQuery.
 
 .. code-block:: bash
 
-   conda install -c cadquery -c conda-forge cadquery=2.2
+   conda install -c cadquery -c conda-forge cadquery=2.1
 
 MOAB and PyMoab are required for the export_dagmc_h5m() feature to work. The
 MOAB Conda install does not currently support Windows and therefore Windows
@@ -83,7 +83,7 @@ needed then this stage can be skipped.
 
 .. code-block:: bash
 
-   conda install -c cadquery -c conda-forge moab=5.3.1
+   conda install -c conda-forge moab=5.3.1
 
 Then pip install the Paramak.
 
