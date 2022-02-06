@@ -3,6 +3,14 @@ Installation
 ============
 
 
+
+.. raw:: html
+
+      <iframe width="280" height="157" src="https://www.youtube.com/embed/29nXEpAaELE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+      <iframe width="280" height="157" src="https://www.youtube.com/embed/HJfOrDM9Avo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 Prerequisites
 -------------
 
