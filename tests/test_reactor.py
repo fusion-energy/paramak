@@ -441,11 +441,11 @@ class TestReactor(unittest.TestCase):
         test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
-        assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 20)
+        assert pytest.approx(test_reactor.largest_dimension, rel=0.1) == 20
         test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (30, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
-        assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 30)
+        assert pytest.approx(test_reactor.largest_dimension, rel=0.1) == 30
 
     def test_shapes_and_components(self):
         """Attempts to make a reactor with a single shape instead of a list of
@@ -566,7 +566,7 @@ class TestReactor(unittest.TestCase):
         vol_2 = self.test_reactor_3.volume(split_compounds=True)[1][1]
         assert vol_1 == vol_2
         vol_3 = self.test_reactor_3.volume(split_compounds=False)[1]
-        assert pytest.approx(vol_3, vol_1 + vol_2)
+        assert pytest.approx(vol_3) == vol_1 + vol_2
 
     def test_reactor_names(self):
         "checks that the names attribute returns the expected results"

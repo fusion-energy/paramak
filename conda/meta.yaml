@@ -1,9 +1,9 @@
 {% set name = "paramak" %}
-{% set data = load_setup_py_data() %}
+{% set version = "0.6.6" %}
 
 package:
   name: "{{ name|lower }}"
-  version: {{ data.get('version') }}
+  version: {{ version }}
 
 source:
   path: ..
