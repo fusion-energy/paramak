@@ -7,6 +7,8 @@ import paramak
 
 
 class TestReactor(unittest.TestCase):
+    """testing the export_dagmc_h5m method of the TestReactor class"""
+
     def setUp(self):
         self.test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], name="test_shape"

@@ -303,7 +303,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         return self._blanket
 
     def _make_divertor(self):
-        self._blanket_envelope = paramak.BlanketFP(
+        blanket_envelope = paramak.BlanketFP(
             plasma=self._plasma,
             thickness=100.0,
             offset_from_plasma=[
@@ -325,7 +325,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
             inner_radius=self._divertor_start_radius,
             outer_radius=self._divertor_end_radius,
             rotation_angle=self.rotation_angle,
-            intersect=self._blanket_envelope,
+            intersect=blanket_envelope,
             color=(1.0, 0.667, 0.0),
             name="divertor",
         )

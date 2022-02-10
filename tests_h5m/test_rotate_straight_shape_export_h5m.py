@@ -7,6 +7,8 @@ from paramak import RotateStraightShape
 
 
 class TestRotateStraightShape(unittest.TestCase):
+    """testing the export_dagmc_h5m method of the RotateStraightShape class"""
+
     def setUp(self):
         self.test_shape = RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20), (20, 0)]
