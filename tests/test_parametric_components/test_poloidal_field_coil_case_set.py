@@ -173,7 +173,7 @@ class TestPoloidalFieldCoilCaseSet(unittest.TestCase):
         parametric component and checks that the areas are correct"""
         self.test_shape.rotation_angle = 180
         assert len(self.test_shape.areas) == (4 + 4 + 2) * 4
-        assert len({faces for faces in [round(i) for i in self.test_shape.areas]}) == 20
+        assert len(set([round(area) for area in self.test_shape.areas])) == 20
         assert self.test_shape.areas.count(pytest.approx(10 * math.pi * 100)) == 6
         assert self.test_shape.areas.count(pytest.approx(40 * math.pi * 50)) == 4
         assert self.test_shape.areas.count(pytest.approx(30 * math.pi * 100)) == 4
