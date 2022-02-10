@@ -1,4 +1,3 @@
-
 import unittest
 from pathlib import Path
 
@@ -27,9 +26,7 @@ class TestRotateStraightShape(unittest.TestCase):
         mats = di.get_materials_from_h5m("dagmc_multi_volume.h5m")
         assert mats == ["mat_my_material_name"]
 
-        vols_and_mats = di.get_volumes_and_materials_from_h5m(
-            "dagmc_multi_volume.h5m"
-        )
+        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_multi_volume.h5m")
         assert vols_and_mats == {
             1: "mat_my_material_name",
             2: "mat_my_material_name",
@@ -51,9 +48,7 @@ class TestRotateStraightShape(unittest.TestCase):
         mats = di.get_materials_from_h5m("dagmc_single_volume.h5m")
         assert mats == ["mat_my_material_name_single"]
 
-        vols_and_mats = di.get_volumes_and_materials_from_h5m(
-            "dagmc_single_volume.h5m"
-        )
+        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_single_volume.h5m")
         assert vols_and_mats == {1: "mat_my_material_name_single"}
 
     def test_dagmc_h5m_export_mesh_size(self):
