@@ -113,3 +113,4 @@ workflows:
       - quick-tests
       - parametric-components-tests
       - parametric-reactors-tests
+      - neutronics-tests
