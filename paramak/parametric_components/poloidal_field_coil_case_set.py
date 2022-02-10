@@ -178,28 +178,58 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
             iter_points,
         ):
 
-            solid = cq.Workplane(self.workplane).polyline(
+            # creates a small box that surrounds the geometry
+            inner_box = RotateStraightShape(
+                points=[p1, p2, p3, p4],
+                rotation_axis=self.rotation_axis,
+                rotation_angle=360,  # full rotated
+                azimuth_placement_angle=self.azimuth_placement_angle,
+                workplane=self.workplane,
+                cut=self.cut,
+                intersect=self.intersect,
+                union=self.union,
+            )
+
+            outer_box = RotateStraightShape(
+                points=[p7, p8, p9, p10],
+                rotation_axis=self.rotation_axis,
+                rotation_angle=self.rotation_angle,
+                azimuth_placement_angle=self.azimuth_placement_angle,
+                workplane=self.workplane,
+                cut=self.cut,
+                intersect=self.intersect,
+                union=self.union,
+            )
+
+            # subtracts the two boxes to leave a hollow box
+            new_shape = outer_box.solid.cut(inner_box.solid)
+
+            # makes wires for the inside and outside loops
+            wire = cq.Workplane(self.workplane).polyline(
                 [
                     p1[:2],
                     p2[:2],
                     p3[:2],
                     p4[:2],
                     p5[:2],
+                ]
+            ).close()
+
+            wires.append(wire)
+
+            wire = cq.Workplane(self.workplane).polyline(
+                [
                     p6[:2],
                     p7[:2],
                     p8[:2],
                     p9[:2],
                     p10[:2],
                 ]
-            )
-
-            wire = solid.close()
+            ).close()
 
             wires.append(wire)
 
-            solid = wire.revolve(self.rotation_angle)
-
-            pf_coils_set.append(solid)
+            pf_coils_set.append(new_shape)
 
         compound = cq.Compound.makeCompound([a.val() for a in pf_coils_set])
 
