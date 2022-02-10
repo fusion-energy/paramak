@@ -244,9 +244,9 @@ class Reactor:
         max_mesh_size: float = 20,
         exclude: List[str] = None,
         verbose=False,
-        volume_atol = 0.000001,
-        center_atol = 0.000001,
-        bounding_box_atol = 0.000001
+        volume_atol=0.000001,
+        center_atol=0.000001,
+        bounding_box_atol=0.000001,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -286,7 +286,7 @@ class Reactor:
         brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
 
         if verbose:
-            print('brep_file_part_properties', brep_file_part_properties)
+            print("brep_file_part_properties", brep_file_part_properties)
 
         shape_properties = {}
         for shape_or_compound in self.shapes_and_components:
@@ -313,7 +313,7 @@ class Reactor:
             shape_properties[shape_or_compound.name] = sub_solid_descriptions
 
         if verbose:
-            print('shape_properties', shape_properties)
+            print("shape_properties", shape_properties)
 
         # request to find part ids that are mixed up in the Brep file
         # using the volume, center, bounding box that we know about when creating the
@@ -321,13 +321,13 @@ class Reactor:
         key_and_part_id = bpf.get_dict_of_part_ids(
             brep_part_properties=brep_file_part_properties,
             shape_properties=shape_properties,
-            volume_atol = volume_atol,
-            center_atol = center_atol,
-            bounding_box_atol = bounding_box_atol
+            volume_atol=volume_atol,
+            center_atol=center_atol,
+            bounding_box_atol=bounding_box_atol,
         )
 
         if verbose:
-            print(f'key_and_part_id={key_and_part_id}')
+            print(f"key_and_part_id={key_and_part_id}")
 
         # allows components like the plasma to be removed
         if isinstance(exclude, Iterable):
