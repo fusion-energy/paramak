@@ -205,27 +205,35 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
             new_shape = outer_box.solid.cut(inner_box.solid)
 
             # makes wires for the inside and outside loops
-            wire = cq.Workplane(self.workplane).polyline(
-                [
-                    p1[:2],
-                    p2[:2],
-                    p3[:2],
-                    p4[:2],
-                    p5[:2],
-                ]
-            ).close()
+            wire = (
+                cq.Workplane(self.workplane)
+                .polyline(
+                    [
+                        p1[:2],
+                        p2[:2],
+                        p3[:2],
+                        p4[:2],
+                        p5[:2],
+                    ]
+                )
+                .close()
+            )
 
             wires.append(wire)
 
-            wire = cq.Workplane(self.workplane).polyline(
-                [
-                    p6[:2],
-                    p7[:2],
-                    p8[:2],
-                    p9[:2],
-                    p10[:2],
-                ]
-            ).close()
+            wire = (
+                cq.Workplane(self.workplane)
+                .polyline(
+                    [
+                        p6[:2],
+                        p7[:2],
+                        p8[:2],
+                        p9[:2],
+                        p10[:2],
+                    ]
+                )
+                .close()
+            )
 
             wires.append(wire)
 
