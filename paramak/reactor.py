@@ -243,12 +243,18 @@ class Reactor:
         min_mesh_size: float = 5,
         max_mesh_size: float = 20,
         exclude: List[str] = None,
+        verbose=False,
+        volume_atol = 0.000001,
+        center_atol = 0.000001,
+        bounding_box_atol = 0.000001
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
         MOAB is used to convert the meshed geometry into a h5m with parts tagged by
         using the reactor.shape_and_components.name properties. You will need
-        Gmsh installed and MOAB installed to use this function.
+        Gmsh installed and MOAB installed to use this function. Acceptable
+        tolerances may need increasing to match reactor parts with the parts
+        in the intermediate Brep file produced during the process
 
         Args:
             filename: the filename of the DAGMC h5m file to write
@@ -259,6 +265,14 @@ class Reactor:
             exclude: A list of shape names to not include in the exported
                 geometry. 'plasma' is often excluded as not many neutron
                 interactions occur within a low density plasma.
+            volume_atol: the absolute volume tolerance to allow when matching
+                parts in the intermediate brep file with the cadquery parts
+            center_atol: the absolute center coordinates tolerance to allow
+                when matching parts in the intermediate brep file with the
+                cadquery parts
+            bounding_box_atol: the absolute volume tolerance to allow when
+                matching parts in the intermediate brep file with the cadquery
+                parts
         """
 
         from brep_to_h5m import brep_to_h5m
@@ -270,6 +284,9 @@ class Reactor:
 
         # brep file is imported
         brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
+
+        if verbose:
+            print('brep_file_part_properties', brep_file_part_properties)
 
         shape_properties = {}
         for shape_or_compound in self.shapes_and_components:
@@ -295,13 +312,22 @@ class Reactor:
                 sub_solid_descriptions.append(sub_solid_description)
             shape_properties[shape_or_compound.name] = sub_solid_descriptions
 
+        if verbose:
+            print('shape_properties', shape_properties)
+
         # request to find part ids that are mixed up in the Brep file
         # using the volume, center, bounding box that we know about when creating the
         # CAD geometry in the first place
         key_and_part_id = bpf.get_dict_of_part_ids(
             brep_part_properties=brep_file_part_properties,
             shape_properties=shape_properties,
+            volume_atol = volume_atol,
+            center_atol = center_atol,
+            bounding_box_atol = bounding_box_atol
         )
+
+        if verbose:
+            print(f'key_and_part_id={key_and_part_id}')
 
         # allows components like the plasma to be removed
         if isinstance(exclude, Iterable):
