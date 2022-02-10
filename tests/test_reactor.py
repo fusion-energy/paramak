@@ -31,51 +31,6 @@ class TestReactor(unittest.TestCase):
         # this reactor has a compound shape in the geometry
         self.test_reactor_3 = paramak.Reactor([self.test_shape, test_shape_3])
 
-    def test_dagmc_h5m_export(self):
-        """Exports a shape with a single volume and checks that it
-        exist (volume id and material tag) in the resulting h5m file"""
-
-        # TODO remove when moving to cq 2.2
-        if cq.__version__ == "2.1":
-            assert 1 == 1
-        else:
-            self.test_reactor_3.rotation_angle = 180
-            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m")
-
-            vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
-            assert vols == [1, 2, 3]  # there are three volumes in test_reactor_3
-
-            mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
-            print(mats)
-            assert mats == ["mat_pf_coil", "mat_test_shape"]
-
-            vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_reactor.h5m")
-            assert vols_and_mats == {
-                1: "mat_test_shape",
-                2: "mat_pf_coil",
-                3: "mat_pf_coil",
-            }
-
-    def test_dagmc_h5m_export_mesh_size(self):
-        """Exports h5m file with higher resolution mesh and checks that the
-        file sizes increases"""
-
-        # TODO remove when moving to cq 2.2
-        if cq.__version__ == "2.1":
-            assert 1 == 1
-        else:
-            self.test_reactor_3.export_dagmc_h5m(
-                "dagmc_default.h5m", min_mesh_size=10, max_mesh_size=20
-            )
-            self.test_reactor_3.export_dagmc_h5m(
-                "dagmc_bigger.h5m", min_mesh_size=2, max_mesh_size=9
-            )
-
-            assert (
-                Path("dagmc_bigger.h5m").stat().st_size
-                > Path("dagmc_default.h5m").stat().st_size
-            )
-
     def test_reactor_export_stp_with_name_set_to_none(self):
         """Exports the reactor as separate files and as a single file"""
 
