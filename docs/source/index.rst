@@ -68,6 +68,7 @@ The Paramak source code is distributed with a permissive open-source license
 (MIT) and is available from the GitHub repository 
 `https://github.com/fusion-energy/paramak <https://github.com/fusion-energy/paramak>`_
 
+
 Publications and Presentations
 ------------------------------
 
@@ -79,6 +80,9 @@ Presented at the Spanish Fusion HPC Workshop and available in the 3rd video at m
 
 Slides from first released presentation.
 `Link <https://github.com/ukaea/paramak/files/5260982/UKAEA_Paramak_shimwell.pdf>`_
+
+Paramak used for geometry creation in an ARC reactor study.
+`https://iopscience.iop.org/article/10.1088/1741-4326/ac536a <https://iopscience.iop.org/article/10.1088/1741-4326/ac536a>`_
 
 
 Features

@@ -148,8 +148,8 @@ class TestPoloidalFieldCoilCaseSet(unittest.TestCase):
     def test_absolute_areas(self):
         """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
         parametric component and checks that the areas are correct"""
-
-        assert len(self.test_shape.areas) == 32
+        # self.test_shape.rotation_angle = 180
+        assert len(self.test_shape.areas) == (4 + 4) * 4
         assert len(set([round(i) for i in self.test_shape.areas])) == 16
         assert self.test_shape.areas.count(pytest.approx(10 * math.pi * 2 * 100)) == 6
         assert self.test_shape.areas.count(pytest.approx(40 * math.pi * 2 * 50)) == 4
@@ -167,6 +167,29 @@ class TestPoloidalFieldCoilCaseSet(unittest.TestCase):
         assert self.test_shape.areas.count(pytest.approx(20 * math.pi * 2 * 70)) == 1
         assert self.test_shape.areas.count(pytest.approx(20 * math.pi * 2 * 30)) == 1
         assert self.test_shape.areas.count(pytest.approx(40 * math.pi * 2 * 80)) == 1
+
+    def test_absolute_areas_180_rotation(self):
+        """Creates a set of pf coils using the PoloidalFieldCoilCaseSet
+        parametric component and checks that the areas are correct"""
+        self.test_shape.rotation_angle = 180
+        assert len(self.test_shape.areas) == (4 + 4 + 2) * 4
+        assert len(set([round(area) for area in self.test_shape.areas])) == 20
+        assert self.test_shape.areas.count(pytest.approx(10 * math.pi * 100)) == 6
+        assert self.test_shape.areas.count(pytest.approx(40 * math.pi * 50)) == 4
+        assert self.test_shape.areas.count(pytest.approx(30 * math.pi * 100)) == 4
+        assert self.test_shape.areas.count(pytest.approx(30 * math.pi * 50)) == 2
+        assert self.test_shape.areas.count(pytest.approx(10 * math.pi * 105)) == 3
+        assert self.test_shape.areas.count(pytest.approx(10 * math.pi * 95)) == 2
+        assert self.test_shape.areas.count(pytest.approx(20 * math.pi * 110)) == 1
+        assert self.test_shape.areas.count(pytest.approx(20 * math.pi * 90)) == 1
+        assert self.test_shape.areas.count(pytest.approx(30 * math.pi * 115)) == 1
+        assert self.test_shape.areas.count(pytest.approx(30 * math.pi * 85)) == 1
+        assert self.test_shape.areas.count(pytest.approx(20 * math.pi * 60)) == 1
+        assert self.test_shape.areas.count(pytest.approx(20 * math.pi * 40)) == 2
+        assert self.test_shape.areas.count(pytest.approx(30 * math.pi * 65)) == 1
+        assert self.test_shape.areas.count(pytest.approx(20 * math.pi * 70)) == 1
+        assert self.test_shape.areas.count(pytest.approx(20 * math.pi * 30)) == 1
+        assert self.test_shape.areas.count(pytest.approx(40 * math.pi * 80)) == 1
 
     def test_PoloidalFieldCoilCaseSet_incorrect_thicknesses_1(self):
         """Checks that an error is raised when a PoloidalFieldCoilCaseSet is made

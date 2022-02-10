@@ -7,7 +7,10 @@ version: 2.1
 executors:
   paramak:
     docker:
-      - image: ghcr.io/fusion-energy/paramak:dependencies
+      # could use this image but it has cq 2.1 instead of master
+      # therefore the export_dagmc_h5m methods won't
+      # - image: ghcr.io/fusion-energy/paramak:dependencies
+      - image: ghcr.io/fusion-energy/paramak_cq_master:dependencies
     resource_class: large
 
 commands:
@@ -88,6 +91,21 @@ jobs:
           path: test-reports
       - codecov-upload
 
+  neutronics-tests:
+    executor: paramak
+    resource_class: medium
+    steps:
+      - checkout
+      - install
+      - run:
+          name: run utils tests
+          command: pytest tests_h5m -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+      - store_test_results:
+          path: test-reports
+      - store_artifacts:
+          path: test-reports
+      - codecov-upload
+
 workflows:
   version: 2
   test-build-deploy:
@@ -95,3 +113,4 @@ workflows:
       - quick-tests
       - parametric-components-tests
       - parametric-reactors-tests
+      - neutronics-tests

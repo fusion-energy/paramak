@@ -4,3 +4,5 @@ python:
     - 3.6
 cadquery:
     - 2.1
+moab:
+    - 5.3.1
