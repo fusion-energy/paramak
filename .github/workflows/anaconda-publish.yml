@@ -1,0 +1,22 @@
+name: anaconda-publish
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: publish-to-conda
+      uses: shimwell/anaconda-publish@main
+      with:
+        subDir: 'conda'
+        channels: '-c fusion-energy -c cadquery -c conda-forge'
+        AnacondaToken: ${{ secrets.ANACONDA_TOKEN }}
+        publish: true
+        test_all: true
+        convert_win: true
+        convert_osx: true
