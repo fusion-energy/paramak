@@ -1,9 +1,8 @@
 {% set name = "paramak" %}
-{% set version = "0.6.6" %}
 
 package:
   name: "{{ name|lower }}"
-  version: {{ version }}
+  version: {{ GIT_DESCRIBE_TAG }}
 
 source:
   path: ..
@@ -18,8 +17,8 @@ requirements:
     - setuptools
   run:
     - cadquery
-    - gmsh [not win]
-    - moab [not win]
+    # - gmsh [not win] TODO include in next release
+    # - moab [not win] TODO include in next release
     - matplotlib
     - mpmath
     - numpy
