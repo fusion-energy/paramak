@@ -18,10 +18,6 @@ requirements:
     - setuptools
   run:
     - cadquery
-    # - gmsh [not win] TODO include in with cq 2.2 release
-    # - moab [not win] TODO include in with cq 2.2 release
-    # - brep_to_h5m import [not win] TODO include in with cq 2.2 release
-    # - brep_part_finder [not win] TODO include in with cq 2.2 release
     - matplotlib
     - mpmath
     - numpy
@@ -34,6 +30,10 @@ requirements:
     - nbformat
     - nbconvert
     - ipywidgets
+    - brep_to_h5m
+    - brep_part_finder
+    - gmsh [not win]
+    - moab [not win]
     # - jupyter-cadquery not available on conda
 
 test:
@@ -45,7 +45,7 @@ test:
     - tests
   requires:
     - pytest
-    # - dagmc_h5m_file_inspector [not win] TODO include in with cq 2.2 release
+    - dagmc_h5m_file_inspector [not win] TODO include in with cq 2.2 release
   source_files:
     - tests/
     # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
