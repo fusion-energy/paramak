@@ -7,7 +7,6 @@ import cadquery as cq
 import pytest
 
 import paramak
-import dagmc_h5m_file_inspector as di
 
 
 class TestReactor(unittest.TestCase):

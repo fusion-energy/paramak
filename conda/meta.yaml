@@ -19,6 +19,8 @@ requirements:
     - cadquery
     # - gmsh [not win] TODO include in next release
     # - moab [not win] TODO include in next release
+    # - brep_to_h5m import [not win] TODO include in next release
+    # - brep_part_finder [not win] TODO include in next release
     - matplotlib
     - mpmath
     - numpy
@@ -42,6 +44,7 @@ test:
     - tests
   requires:
     - pytest
+    # - dagmc_h5m_file_inspector [not win] TODO include in next release
   source_files:
     - tests/
     - examples/
