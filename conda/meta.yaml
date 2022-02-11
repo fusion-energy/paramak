@@ -47,6 +47,8 @@ test:
     # - dagmc_h5m_file_inspector [not win] TODO include in next release
   source_files:
     - tests/
+    - tests_examples/
+    # - tests_h5m/   # TODO include in next release
     - examples/
   commands:
     - pytest -v tests
