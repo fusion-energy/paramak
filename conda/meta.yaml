@@ -41,16 +41,13 @@ test:
     - paramak.parametric_shapes
     - tests
   requires:
-    - pytest-cov
-    - pytest-runner
+    - pytest
   source_files:
     - tests/
     - examples/
   commands:
-    - python tests/test_example_components.py
-    - python tests/test_example_reactors.py
-    - python tests/test_example_shapes.py
     - pytest -v tests
+    - pytest -v examples_tests
 
 
 about:
