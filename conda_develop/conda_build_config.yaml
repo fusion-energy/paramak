@@ -3,6 +3,6 @@ python:
     - 3.7
     - 3.6
 cadquery:
-    - 2.1
+    - master
 moab:
     - 5.3.1
