@@ -91,6 +91,7 @@ jobs:
           path: test-reports
       - codecov-upload
 
+  # Tests: tests_h5m
   neutronics-tests:
     executor: paramak
     resource_class: medium
@@ -100,6 +101,22 @@ jobs:
       - run:
           name: run utils tests
           command: pytest tests_h5m -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+      - store_test_results:
+          path: test-reports
+      - store_artifacts:
+          path: test-reports
+      - codecov-upload
+
+  # Tests: tests_show
+  neutronics-tests:
+    executor: paramak
+    resource_class: medium
+    steps:
+      - checkout
+      - install
+      - run:
+          name: run utils tests
+          command: pytest tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - store_test_results:
           path: test-reports
       - store_artifacts:
