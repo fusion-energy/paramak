@@ -8,6 +8,5 @@ version of CadQuery before it is released.
 This can be built with
 
 ```bash
- conda-build conda_develop/ -c cadquery -c conda-forge --croot /tmp/conda-build-develop --config-file conda_develop/conda_build_config.yaml
+ conda-build conda_develop/ -c fusion-energy -c cadquery -c conda-forge --croot /tmp/conda-build-develop --config-file conda_develop/conda_build_config.yaml
  ```
- 
