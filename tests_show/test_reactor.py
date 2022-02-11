@@ -10,6 +10,9 @@ import paramak
 
 
 class TestReactor(unittest.TestCase):
+    """Tests the show attribute of the Reactor class which requires
+    jupyter_cadquery"""
+
     def setUp(self):
         self.test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)], name="test_shape"

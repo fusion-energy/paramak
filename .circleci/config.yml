@@ -108,7 +108,7 @@ jobs:
       - codecov-upload
 
   # Tests: tests_show
-  neutronics-tests:
+  show-tests:
     executor: paramak
     resource_class: medium
     steps:
@@ -131,3 +131,4 @@ workflows:
       - parametric-components-tests
       - parametric-reactors-tests
       - neutronics-tests
+      - show-tests

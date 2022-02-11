@@ -41,4 +41,3 @@ jobs:
       # also cadquery master / 2.2 is needed
       # - name: Test neutronics
       #   run: docker run --rm paramak pytest ./tests_h5m
-

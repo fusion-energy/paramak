@@ -1,16 +1,15 @@
-import json
+
 import os
 import unittest
 from pathlib import Path
-
-import pytest
-from cadquery import Plane
-from numpy.testing._private.utils import assert_
 
 import paramak
 
 
 class TestShape(unittest.TestCase):
+    """Tests the show attribute of the Shape class which requires
+    jupyter_cadquery"""
+
     def setUp(self):
 
         self.my_shape = paramak.CenterColumnShieldHyperbola(
