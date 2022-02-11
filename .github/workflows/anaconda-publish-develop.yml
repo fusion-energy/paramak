@@ -25,7 +25,7 @@ jobs:
       env:
         ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
       run: |
-          conda-build conda/meta_develop.yaml -c fusion-energy -c conda-forge -c cadquery --config-file conda/conda_build_config_develop.yaml
+          conda-build conda_dev -c fusion-energy -c conda-forge -c cadquery --config-file conda/conda_build_config.yaml
 
 # this action does not currently convert to windows or OSX
 
