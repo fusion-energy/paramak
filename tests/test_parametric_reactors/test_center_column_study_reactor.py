@@ -94,13 +94,6 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
                 in str(w[-1].message)
             )
 
-    def test_html_file_creation(self):
-        """Creates a reactor with exports the step files and check they exist"""
-
-        os.system("rm *.html")
-        self.test_reactor.export_html_3d("cylinder.html")
-        assert Path("cylinder.html").is_file()
-
     def test_export_brep(self):
         """Exports a brep file and checks that the output exist"""
 
