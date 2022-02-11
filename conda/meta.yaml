@@ -50,8 +50,9 @@ test:
     - examples/
   commands:
     - pytest -v tests
-    - pytest -v examples_tests
-
+    - pytest -v tests_examples
+    # - tests_h5m   # TODO include in next release
+    # - tests_show  # TODO include if cadquery_jupyter gets a conda install
 
 about:
   home: "https://github.com/fusion-energy/paramak"
