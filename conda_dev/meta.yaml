@@ -1,0 +1,72 @@
+{% set name = "paramak_develop" %}
+
+package:
+  name: "{{ name|lower }}"
+  # version: {{ GIT_DESCRIBE_TAG }}
+  version: 0.7.0
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python {{ python }}
+    - setuptools
+  run:
+    - cadquery
+    - matplotlib
+    - mpmath
+    - numpy
+    - plasmaboundaries
+    - plotly
+    - pytest-cov
+    - python
+    - scipy
+    - sympy
+    - nbformat
+    - nbconvert
+    - ipywidgets
+    - brep_to_h5m
+    - brep_part_finder
+    - gmsh [not win]
+    - moab [not win]
+    # - jupyter-cadquery not available on conda
+
+test:
+  imports:
+    - paramak
+    - paramak.parametric_components
+    - paramak.parametric_reactors
+    - paramak.parametric_shapes
+    - tests
+  requires:
+    - pytest
+    - dagmc_h5m_file_inspector [not win]
+  source_files:
+    - tests/
+    # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
+    - tests_h5m/
+    - examples/
+  commands:
+    - pytest -v tests
+    - pytest -v tests_h5m
+    # - pytest -v tests_examples  # TODO include if cadquery_jupyter gets a conda install
+    # - tests_show  # TODO include if cadquery_jupyter gets a conda install
+
+about:
+  home: "https://github.com/fusion-energy/paramak"
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE.txt
+  summary: "Create 3D fusion reactor CAD models based on input parameters"
+  doc_url: https://paramak.readthedocs.io/
+  dev_url: https://github.com/fusion-energy/paramak
+  summary: Paramak - parameter driven fusion reactor model creation
+
+extra:
+  recipe-maintainers:
+    - shimwell
