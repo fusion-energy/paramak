@@ -1,4 +1,4 @@
-name: anaconda-publish
+name: anaconda-publish-develop
 
 on:
   workflow_dispatch:
