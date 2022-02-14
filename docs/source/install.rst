@@ -15,13 +15,13 @@ Prerequisites
 -------------
 
 To use the paramak tool you will need Python 3 installed using Miniconda or
-Anaconda
-
+Anaconda, or Miniforge
 
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
 * `Anaconda <https://www.anaconda.com/>`_
+* `Miniforge <https://github.com/conda-forge/miniforge>`_
 
-Once you have Anaconda or MiniConda installed then proceed with the OS specific
+Once you have a version of Conda installed then proceed with the OS specific
 steps.
 
 Install (conda)
@@ -76,14 +76,18 @@ Then install the CadQuery.
 
    conda install -c cadquery -c conda-forge cadquery=2.1
 
-MOAB and PyMoab are required for the export_dagmc_h5m() feature to work. The
-MOAB Conda install does not currently support Windows and therefore Windows
+If you want to make use of the prototype export_dagmc_h5m() method then you will
+need to modify the above command to target CaDQuery Master instead of 2.1.
+MOAB and PyMoab are also required for the export_dagmc_h5m() feature to work.
+The MOAB Conda install does not currently support Windows and therefore Windows
 users will have to compile MOAB. If the export_dagmc_h5m() feature is not
 needed then this stage can be skipped.
 
 .. code-block:: bash
 
    conda install -c conda-forge moab=5.3.1
+   conda install -c conda-forge gmsh=4.9.4
+   conda install -c conda-forge python-gmsh=4.9.4
 
 Then pip install the Paramak.
 
