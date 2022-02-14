@@ -8,7 +8,6 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-import brep_part_finder as bpf
 import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import Compound, exporters
@@ -275,7 +274,9 @@ class Reactor:
                 parts
         """
 
+        # a local import is used here as these packages need CQ master to work
         from brep_to_h5m import brep_to_h5m
+        import brep_part_finder as bpf
 
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 

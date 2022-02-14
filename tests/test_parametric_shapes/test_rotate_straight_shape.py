@@ -3,8 +3,6 @@ import os
 import unittest
 from pathlib import Path
 
-import cadquery as cq
-import dagmc_h5m_file_inspector as di
 import pytest
 from paramak import RotateStraightShape
 

@@ -72,8 +72,11 @@ ARG paramak_version=develop
 COPY run_tests.sh run_tests.sh
 COPY paramak paramak/
 COPY examples examples/
+
 COPY tests tests/
-COPY examples_tests examples_tests/
+COPY tests_h5m tests_h5m/
+COPY tests_show tests_show/
+COPY tests_examples tests_examples/
 
 COPY setup.py setup.py
 COPY setup.cfg setup.cfg

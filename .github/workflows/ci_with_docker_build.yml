@@ -29,4 +29,10 @@ jobs:
         run: docker run --rm paramak pytest ./tests
 
       - name: Test examples
-        run: docker run --rm paramak pytest ./examples_tests
+        run: docker run --rm paramak pytest ./tests_examples
+
+      # tests_show require jupyter_cadquery which is not available on conda
+      # therefore these tests have been separated out to help with the conda
+      # testing. The tests_h5m tests require CQ master which is tested elsewhere
+      - name: Test show
+        run: docker run --rm paramak pytest ./tests_show

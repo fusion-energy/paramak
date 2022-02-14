@@ -1,0 +1,44 @@
+# This CI will launch a Docker image that contains all the dependencies required
+# within that image the pytest test suite is run
+
+name: CI with install CQ master
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - "**.py"
+      - "**.ipynb"
+      - "**.yml"
+      - "**.cfg"
+      - "**.toml"
+      - "**.sh"
+
+jobs:
+  testing_cq_master:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/fusion-energy/paramak_cq_master:dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: install package
+        run: |
+          pip install --upgrade pip
+          pip install .[tests]
+
+      - name: Run tests
+        run: |
+          pytest tests -v --cov=paramak --cov-append --cov-report term --cov-report xml
+          pytest tests_h5m -v --cov=paramak --cov-append --cov-report term --cov-report xml
+
+# jupyter cadquery doesn't appear to work with the current version of CQ master
+# therefore the show() methods also don't work
+# pytest tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml
+# pytest tests_examples -v --cov=paramak --cov-append --cov-report term --cov-report xml
+
+      - name: Upload to codecov
+        uses: codecov/codecov-action@v2

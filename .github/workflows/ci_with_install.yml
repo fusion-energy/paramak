@@ -33,27 +33,8 @@ jobs:
       - name: Run tests
         run: |
           pytest tests -v --cov=paramak --cov-append --cov-report term --cov-report xml
-
-      - name: Upload to codecov
-        uses: codecov/codecov-action@v2
-
-  testing_cq_master:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/fusion-energy/paramak_cq_master:dependencies
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: install package
-        run: |
-          pip install --upgrade pip
-          pip install .[tests]
-
-      - name: Run tests
-        run: |
-          pytest tests -v --cov=paramak --cov-append --cov-report term --cov-report xml
-          pytest tests_h5m -v --cov=paramak --cov-append --cov-report term --cov-report xml
+          pytest tests_examples -v --cov=paramak --cov-append --cov-report term --cov-report xml
+          pytest tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml
 
       - name: Upload to codecov
         uses: codecov/codecov-action@v2
