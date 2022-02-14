@@ -1,5 +1,5 @@
-# This CI will lauch a Docker image that contains all the dependencies required
-# within that image the pytest test suite is run 
+# This CI will launch a Docker image that contains all the dependencies required
+# within that image the pytest test suite is run
 
 name: CI with install CQ master
 
