@@ -40,7 +40,7 @@ class FlfSystemCodeReactor(paramak.Reactor):
         upper_vv_thickness: Optional[float] = 10.0,
         vv_thickness: Optional[float] = 10.0,
         lower_vv_thickness: Optional[float] = 10.0,
-        rotation_angle: Optional[float] = 360,
+        rotation_angle: Optional[float] = 180.0,
     ):
 
         super().__init__([])

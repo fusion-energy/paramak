@@ -53,34 +53,6 @@ class TestReactor(unittest.TestCase):
         self.test_reactor_2.export_stp(filename="single_file.stp", units="cm")
         assert Path("single_file.stp").is_file()
 
-    def test_show_runs_without_error(self):
-        """checks that the jupyter notebook (with cadquery addition) runs
-        without error."""
-
-        self.test_reactor.show()
-
-    def test_show_runs_without_error_when_names_are_set(self):
-        """checks that the jupyter notebook (with cadquery addition) runs
-        without error even when the .name property is set"""
-
-        self.test_reactor.shapes_and_components[0].name = "test"
-        self.test_reactor.show()
-
-    def test_show_runs_without_error_when_compounds_are_used(self):
-        """checks that the jupyter notebook (with cadquery addition) runs
-        without error even when the .name property is set"""
-
-        test_shape = paramak.PoloidalFieldCoilCaseSet(
-            heights=[10, 20],
-            widths=[10, 20],
-            casing_thicknesses=10,
-            center_points=[(100, 200), (400, 400)],
-            name="test name",
-        )
-
-        test_reactor = paramak.Reactor([test_shape])
-        test_reactor.show()
-
     def test_incorrect_graveyard_offset_too_small(self):
         def incorrect_graveyard_offset_too_small():
             """Set graveyard_offset as a negative number which should raise an error"""
@@ -378,28 +350,15 @@ class TestReactor(unittest.TestCase):
         assert Path("test_html.html").exists() is True
         os.system("rm test_html.html")
 
-    def test_export_3d_html(self):
-        """Checks the 3d html file is exported by the export_html_3d method
-        with the correct filename"""
-
-        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
-        test_shape.rotation_angle = 360
-        test_reactor = paramak.Reactor([test_shape])
-
-        os.system("rm filename.html")
-        filename = test_reactor.export_html_3d("filename.html")
-        if filename is not None:
-            assert Path("filename.html").exists() is True
-
     def test_largest_dimension(self):
         test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
-        assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 20)
+        assert pytest.approx(test_reactor.largest_dimension, rel=0.1) == 20
         test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (30, 20)])
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape])
-        assert pytest.approx(test_reactor.largest_dimension, rel=0.1 == 30)
+        assert pytest.approx(test_reactor.largest_dimension, rel=0.1) == 30
 
     def test_shapes_and_components(self):
         """Attempts to make a reactor with a single shape instead of a list of
@@ -520,7 +479,7 @@ class TestReactor(unittest.TestCase):
         vol_2 = self.test_reactor_3.volume(split_compounds=True)[1][1]
         assert vol_1 == vol_2
         vol_3 = self.test_reactor_3.volume(split_compounds=False)[1]
-        assert pytest.approx(vol_3, vol_1 + vol_2)
+        assert pytest.approx(vol_3) == vol_1 + vol_2
 
     def test_reactor_names(self):
         "checks that the names attribute returns the expected results"

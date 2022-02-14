@@ -30,7 +30,7 @@ class TestExtrudeStraightShape(unittest.TestCase):
         )
 
         assert isinstance(test_shape_2.workplane, Plane)
-        assert pytest.approx(test_shape_2.volume, self.test_shape.volume)
+        assert pytest.approx(test_shape_2.volume()) == self.test_shape.volume()
 
     def test_default_parameters(self):
         """Checks that the default parameters of an ExtrudeStraightShape are

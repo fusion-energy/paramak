@@ -34,6 +34,6 @@ STL and Brep.
 
 :point_right: [Installation](https://paramak.readthedocs.io/en/main/#system-installation)
 
-:point_right: [Publication](https://f1000research.com/articles/10-27/v1)
+:point_right: [Publication](https://f1000research.com/articles/10-27)
 
 :point_right: [Docker images](https://github.com/fusion-energy/paramak/pkgs/container/paramak)

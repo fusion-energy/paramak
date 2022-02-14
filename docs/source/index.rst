@@ -20,10 +20,10 @@ The Paramak python package allows rapid production of 3D CAD models of fusion
 reactors. The purpose of the Paramak is to provide geometry for parametric
 studies in a variety of CAD formats including STL, STP and Brep files.
 
-adQuery functions provide the majority of the features, and incorporating
+CadQuery functions provide the majority of the features, and incorporating
 additional capabilities is straightforward for developers with Python knowledge.
 
-Contributions are welcome. C
+Contributions are welcome.
 
 .. raw:: html
 
@@ -68,6 +68,7 @@ The Paramak source code is distributed with a permissive open-source license
 (MIT) and is available from the GitHub repository 
 `https://github.com/fusion-energy/paramak <https://github.com/fusion-energy/paramak>`_
 
+
 Publications and Presentations
 ------------------------------
 
@@ -79,6 +80,9 @@ Presented at the Spanish Fusion HPC Workshop and available in the 3rd video at m
 
 Slides from first released presentation.
 `Link <https://github.com/ukaea/paramak/files/5260982/UKAEA_Paramak_shimwell.pdf>`_
+
+Paramak used for geometry creation in an ARC reactor study.
+`https://iopscience.iop.org/article/10.1088/1741-4326/ac536a <https://iopscience.iop.org/article/10.1088/1741-4326/ac536a>`_
 
 
 Features

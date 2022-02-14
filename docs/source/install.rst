@@ -3,17 +3,25 @@ Installation
 ============
 
 
+
+.. raw:: html
+
+      <iframe width="280" height="157" src="https://www.youtube.com/embed/29nXEpAaELE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+      <iframe width="280" height="157" src="https://www.youtube.com/embed/HJfOrDM9Avo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 Prerequisites
 -------------
 
 To use the paramak tool you will need Python 3 installed using Miniconda or
-Anaconda
-
+Anaconda, or Miniforge
 
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
 * `Anaconda <https://www.anaconda.com/>`_
+* `Miniforge <https://github.com/conda-forge/miniforge>`_
 
-Once you have Anaconda or MiniConda installed then proceed with the OS specific
+Once you have a version of Conda installed then proceed with the OS specific
 steps.
 
 Install (conda)
@@ -44,6 +52,7 @@ Then install the Paramak.
 Now you should be ready to import paramak from your new python environment.
 
 
+
 Install (conda + pip)
 ---------------------
 
@@ -67,6 +76,19 @@ Then install the CadQuery.
 
    conda install -c cadquery -c conda-forge cadquery=2.1
 
+If you want to make use of the prototype export_dagmc_h5m() method then you will
+need to modify the above command to target CaDQuery Master instead of 2.1.
+MOAB and PyMoab are also required for the export_dagmc_h5m() feature to work.
+The MOAB Conda install does not currently support Windows and therefore Windows
+users will have to compile MOAB. If the export_dagmc_h5m() feature is not
+needed then this stage can be skipped.
+
+.. code-block:: bash
+
+   conda install -c conda-forge moab=5.3.1
+   conda install -c conda-forge gmsh=4.9.4
+   conda install -c conda-forge python-gmsh=4.9.4
+
 Then pip install the Paramak.
 
 .. code-block:: bash
@@ -74,6 +96,22 @@ Then pip install the Paramak.
    pip install paramak
 
 Now you should be ready to import paramak from your new python environment.
+
+
+Optional Jupyter-CadQuery install
+---------------------------------
+
+Jupyter-Cadquery is an extension to CadQuery that allows objects to be
+rendered in JupyterLab. This can improve the visualization experience for
+Paramak users running Jupyter.
+
+ `Jupyter-Cadquery GitHub page <https://github.com/bernhard-42/jupyter-cadquery>`_
+
+Terminal command to install Jupyter-Cadquery
+
+.. code-block:: bash
+
+   pip install jupyter-cadquery
 
 
 Optional neutronics install

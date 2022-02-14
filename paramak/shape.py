@@ -1,10 +1,13 @@
 import json
 import numbers
+import os
+import tempfile
 import warnings
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
+import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes
@@ -847,6 +850,50 @@ class Shape:
 
         return str(path_filename)
 
+    def export_dagmc_h5m(
+        self,
+        filename: str = "dagmc.h5m",
+        min_mesh_size: float = 10,
+        max_mesh_size: float = 20,
+    ) -> str:
+        """Export a DAGMC compatible h5m file for use in neutronics simulations.
+        This method makes use of Gmsh to create a surface mesh of the geometry.
+        MOAB is used to convert the meshed geometry into a h5m with parts tagged by
+        using the reactor.shape_and_components.name properties. You will need
+        Gmsh installed and MOAB installed to use this function.
+
+        Args:
+            filename: the filename of the DAGMC h5m file to write
+            min_mesh_size: the minimum mesh element size to use in Gmsh. Passed
+                into gmsh.option.setNumber("Mesh.MeshSizeMin", min_mesh_size)
+            max_mesh_size: the maximum mesh element size to use in Gmsh. Passed
+                into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
+        """
+
+        from brep_to_h5m import brep_to_h5m
+
+        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
+
+        # saves the reactor as a Brep file with merged surfaces
+        self.export_brep(tmp_brep_filename)
+
+        volumes_with_tags = {}
+        for counter, _ in enumerate(self.solid.val().Solids(), 1):
+            volumes_with_tags[counter] = f"mat_{self.name}"
+
+        brep_to_h5m(
+            brep_filename=tmp_brep_filename,
+            volumes_with_tags=volumes_with_tags,
+            h5m_filename=filename,
+            min_mesh_size=min_mesh_size,
+            max_mesh_size=max_mesh_size,
+        )
+
+        # temporary brep is deleted
+        os.remove(tmp_brep_filename)
+
+        return filename
+
     def export_stp(
         self,
         filename: str,
@@ -1331,7 +1378,7 @@ class Shape:
         self.processed_points = new_points
         return new_points
 
-    def volume(self, split_compounds=False) -> Union[float, List[float]]:
+    def volume(self, split_compounds: bool = False) -> Union[float, List[float]]:
         """Get the total volume of the Shape.
 
         Args:
