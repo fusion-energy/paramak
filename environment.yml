@@ -16,7 +16,7 @@ dependencies:
   - pillow
   - pip:
       - sympy
-      - plasmaboundaries
+      - plasma_boundaries
       - sphinx-autodoc-typehints
       - sphinxcadquery
       - defusedxml

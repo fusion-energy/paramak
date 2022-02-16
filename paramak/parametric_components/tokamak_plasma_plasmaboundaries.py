@@ -1,16 +1,16 @@
-from plasmaboundaries import get_separatrix_coordinates
+from plasma_boundaries import get_separatrix_coordinates
 
 from paramak import Plasma
 
 
 class PlasmaBoundaries(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
-    by 5 shaping parameters using the plasmaboundaries package to calculate
+    by 5 shaping parameters using the plasma_boundaries package to calculate
     points. For more details see:
-    http://github.com/RemDelaporteMathurin/plasma-boundaries
+    http://github.com/fusion-energy/plasma_boundaries
 
     Args:
-        A (float, optional): plasma parameter see plasmaboundaries doc.
+        A (float, optional): plasma parameter see plasma_boundaries doc.
             Defaults to 0.05.
         elongation (float, optional): the elongation of the plasma.
             Defaults to 2.0.

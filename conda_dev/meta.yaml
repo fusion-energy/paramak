@@ -20,7 +20,7 @@ requirements:
     - python
     - matplotlib
     - mpmath
-    - plasmaboundaries
+    - plasma_boundaries
     - plotly
     - scipy
     - sympy

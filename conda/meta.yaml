@@ -24,7 +24,7 @@ requirements:
     - matplotlib
     - mpmath
     - numpy
-    # - plasmaboundaries
+    - plasma_boundaries
     - plotly
     - pytest-cov
     - python
