@@ -27,4 +27,4 @@ jobs:
             conda convert /opt/conda/conda-bld/linux-64/*.tar.bz2 --platform osx-64
             anaconda upload -f /opt/conda/conda-bld/*/*.tar.bz2
 
-# this action does not currently convert to windows or OSX
+# Note this action does not currently convert to windows as it requires moab
