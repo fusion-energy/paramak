@@ -17,7 +17,7 @@ requirements:
     - python {{ python }}
     - setuptools
   run:
-    - cadquery
+    - cadquery==master
     - matplotlib
     - mpmath
     - numpy
@@ -30,10 +30,11 @@ requirements:
     - nbformat
     - nbconvert
     - ipywidgets
-    - brep_to_h5m
     - brep_part_finder
-    - gmsh [not win]
-    - moab [not win]
+    - brep_to_h5m [not win]
+    # - gmsh is included in brep_to_h5m
+    # - moab is included in brep_to_h5m
+    # - stl_to_h5m is included in brep_to_h5m
     # - jupyter-cadquery not available on conda
 
 test:
