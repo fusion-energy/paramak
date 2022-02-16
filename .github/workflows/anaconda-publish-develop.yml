@@ -8,23 +8,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # This container includes libgl1-mesa-glx, anaconda-client and conda-build
+    # https://github.com/shimwell/miniconda3_docker_image/blob/main/Dockerfile
+    container: ghcr.io/shimwell/miniconda
+
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
       - name: Set up conda
         run: |
-            conda install -y anaconda-client conda-build
-            conda config --set anaconda_upload yes
+            conda config --set anaconda_upload no
       - name: Build and publish to conda
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
             conda build conda_dev -c fusion-energy -c cadquery -c conda-forge --config-file conda_dev/conda_build_config.yaml
+            conda convert /opt/conda/conda-bld/linux-64/*.tar.bz2 --platform osx-64
+            anaconda upload -f /opt/conda/conda-bld/*/*.tar.bz2
 
-# this action does not currently convert to windows or OSX
+# Note this action does not currently convert to windows as it requires moab
