@@ -18,12 +18,9 @@ requirements:
     - setuptools
   run:
     - python
-    - matplotlib
     - mpmath
     - plasma_boundaries
     - plotly
-    - scipy
-    - sympy
     - nbformat
     - nbconvert
     - ipywidgets
