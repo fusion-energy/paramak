@@ -10,20 +10,23 @@ jobs:
     runs-on: ubuntu-latest
     # This container includes libgl1-mesa-glx, anaconda-client and conda-build
     # https://github.com/shimwell/miniconda3_docker_image/blob/main/Dockerfile
-    container: ghcr.io/shimwell/miniconda
-
+    container: continuumio/miniconda3:4.10.3
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up conda
         run: |
+            apt-get --allow-releaseinfo-change update
+            apt install -y libgl1-mesa-glx
+            conda install -y anaconda-client conda-build
             conda config --set anaconda_upload no
+            conda install boa -c conda-forge
       - name: Build and publish to conda
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
-            conda build conda_dev -c fusion-energy -c cadquery -c conda-forge --config-file conda_dev/conda_build_config.yaml
+            conda mambabuild conda_dev -c fusion-energy -c cadquery -c conda-forge --config-file conda_dev/conda_build_config.yaml
             conda convert /opt/conda/conda-bld/linux-64/*.tar.bz2 --platform osx-64
             anaconda upload -f /opt/conda/conda-bld/*/*.tar.bz2
 
