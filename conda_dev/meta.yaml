@@ -17,16 +17,16 @@ requirements:
     - python {{ python }}
     - setuptools
   run:
-    - python
+    - python {{ python }}
     - mpmath
-    - plasma_boundaries
+    - plasma_boundaries # scipy numpy sympy matplotlib with versions pinned
     - plotly
-    - nbformat
-    - nbconvert
-    - ipywidgets
-    - brep_part_finder
-    - brep_to_h5m [not win]
-    # - cadquery==master is included in brep_part_finder
+    # - nbformat  # might be able to move this to tests
+    # - nbconvert  # might be able to move this to tests
+    # - ipywidgets
+    - brep_part_finder # numpy
+    - brep_to_h5m [not win]  # moab numpy trimesh networkx gmsh python-gmsh
+    # - cadquery * master *     is included in brep_part_finder
     # - gmsh is included in brep_to_h5m
     # - moab is included in brep_to_h5m
     # - stl_to_h5m is included in brep_to_h5m
@@ -50,7 +50,7 @@ test:
     # - tests_show/  # TODO include if cadquery_jupyter gets a conda install
   commands:
     - pytest -v tests
-    - pytest -v tests_h5m
+    - pytest -v tests_h5m [not win]
     # - pytest -v tests_examples  # TODO include if cadquery_jupyter gets a conda install
     # - pytest -v tests_show  # TODO include if cadquery_jupyter gets a conda install
 
