@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # This container includes libgl1-mesa-glx, anaconda-client and conda-build
-    # https://github.com/shimwell/miniconda3_docker_image/blob/main/Dockerfile
     container: continuumio/miniconda3:4.10.3
 
     steps:
