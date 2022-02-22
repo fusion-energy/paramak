@@ -28,4 +28,3 @@ jobs:
             conda convert /opt/conda/conda-bld/linux-64/*.tar.bz2 --platform osx-64
             conda convert /opt/conda/conda-bld/linux-64/*.tar.bz2 --platform win-64
             anaconda upload -f /opt/conda/conda-bld/*/*.tar.bz2
-
