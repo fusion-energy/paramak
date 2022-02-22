@@ -7,7 +7,7 @@ class PlasmaBoundaries(Plasma):
     """Creates a double null tokamak plasma shape that is controlled
     by 5 shaping parameters using the plasmaboundaries package to calculate
     points. For more details see:
-    http://github.com/RemDelaporteMathurin/plasma-boundaries
+    http://github.com/fusion-energy/plasmaboundaries
 
     Args:
         A (float, optional): plasma parameter see plasmaboundaries doc.

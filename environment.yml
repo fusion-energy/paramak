@@ -14,9 +14,9 @@ dependencies:
   - numpy
   - matplotlib
   - pillow
+  - plasmaboundaries
   - pip:
       - sympy
-      - plasmaboundaries
       - sphinx-autodoc-typehints
       - sphinxcadquery
       - defusedxml
