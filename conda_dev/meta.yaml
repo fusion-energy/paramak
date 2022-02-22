@@ -25,8 +25,9 @@ requirements:
     - nbconvert  # might be able to move this to tests
     - ipywidgets
     - brep_part_finder # numpy
-    - brep_to_h5m  # [not win]  # moab numpy trimesh networkx gmsh python-gmsh
-    # - cadquery * master *     is included in brep_part_finder
+    # brep_to_h5m includes moab numpy trimesh networkx gmsh python-gmsh
+    - brep_to_h5m  # [not win]
+    # - cadquery {{ cadquery }} is included in brep_part_finder
     # - gmsh is included in brep_to_h5m
     # - moab is included in brep_to_h5m
     # - stl_to_h5m is included in brep_to_h5m
