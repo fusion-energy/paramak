@@ -1,16 +1,24 @@
-{% set name = "paramak_develop" %}
+{% set name = "paramak" %}
+{% set build = 0 %}
 
 package:
   name: "{{ name|lower }}"
-  # version: {{ GIT_DESCRIBE_TAG }}
-  version: 0.7.0
+  version: {{ GIT_DESCRIBE_TAG }}
+  version: 0.1.0
 
 source:
   path: ..
 
 build:
-  number: 0
+  skip: true  # [win]
+  number: {{ build }}
   script: python setup.py install --single-version-externally-managed --record=record.txt
+
+  # add build string so packages can depend on
+  # dagmc or nodagmc variants explicitly:
+  # `paramak * _dagmc_*` for including dagmc export
+
+  string: dagmc_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}
 
 requirements:
   build:
@@ -19,19 +27,10 @@ requirements:
   run:
     - python {{ python }}
     - mpmath
-    - plasmaboundaries # scipy numpy sympy matplotlib with versions pinned
+    - plasmaboundaries
     - plotly
-    - nbformat  # might be able to move this to tests
-    - nbconvert  # might be able to move this to tests
-    - ipywidgets
-    - brep_part_finder # numpy
-    # brep_to_h5m includes moab numpy trimesh networkx gmsh python-gmsh
-    - brep_to_h5m  # [not win]
-    # - cadquery {{ cadquery }} is included in brep_part_finder
-    # - gmsh is included in brep_to_h5m
-    # - moab is included in brep_to_h5m
-    # - stl_to_h5m is included in brep_to_h5m
-    # - jupyter-cadquery not available on conda
+    - brep_part_finder
+    - brep_to_h5m 
 
 test:
   imports:
@@ -42,7 +41,7 @@ test:
     - tests
   requires:
     - pytest
-    - dagmc_h5m_file_inspector  # [not win]
+    - dagmc_h5m_file_inspector
   source_files:
     - tests/
     - tests_h5m/
