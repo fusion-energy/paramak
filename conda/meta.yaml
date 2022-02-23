@@ -5,7 +5,7 @@ package:
   version: {{ GIT_DESCRIBE_TAG }}
 
 source:
-  path: ..
+  path: ../..
 
 build:
   number: 0
@@ -18,16 +18,9 @@ requirements:
   run:
     - python {{ python }}
     - cadquery {{ cadquery }}
-    - matplotlib
     - mpmath
-    - numpy
     - plasmaboundaries
     - plotly
-    - scipy
-    - sympy
-    - nbformat
-    - nbconvert
-    - ipywidgets
     # - gmsh [not win] TODO include in with cq 2.2 release
     # - moab [not win] TODO include in with cq 2.2 release
     # - brep_to_h5m import [not win] TODO include in with cq 2.2 release
