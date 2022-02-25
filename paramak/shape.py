@@ -1048,9 +1048,10 @@ class Shape:
             str: filename of the created html file
         """
 
-        from ipywidgets.embed import embed_minimal_html
-
         view = self.show()
+
+        # ipywidgets is installed along with jupyter_cadquery
+        from ipywidgets.embed import embed_minimal_html
 
         if view is None:
             return None
