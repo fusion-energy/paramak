@@ -1,4 +1,5 @@
 {% set name = "paramak" %}
+{% set build = 0 %}
 
 package:
   name: "{{ name|lower }}"
@@ -8,8 +9,14 @@ source:
   path: ..
 
 build:
-  number: 0
+  number: {{ build }}
   script: python setup.py install --single-version-externally-managed --record=record.txt
+
+  # add build string so packages can depend on
+  # dagmc or nodagmc variants explicitly:
+  # `paramak * _nodagmc_*` for excluding dagmc export
+
+  string: nodagmc_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}
 
 requirements:
   build:
@@ -21,10 +28,10 @@ requirements:
     - mpmath
     - plasmaboundaries
     - plotly
-    # - gmsh [not win] TODO include in with cq 2.2 release
-    # - moab [not win] TODO include in with cq 2.2 release
-    # - brep_to_h5m import [not win] TODO include in with cq 2.2 release
-    # - brep_part_finder [not win] TODO include in with cq 2.2 release
+    # - gmsh  # [not win] TODO include in with cq 2.2 release
+    # - moab  # [not win] TODO include in with cq 2.2 release
+    # - brep_part_finder  # [not win] TODO include in with cq 2.2 release
+    # - brep_to_h5m import  # [not win] TODO include in with cq 2.2 release
     # - jupyter-cadquery not available on conda
 
 test:
@@ -40,14 +47,14 @@ test:
     # - dagmc_h5m_file_inspector [not win] TODO include in with cq 2.2 release
   source_files:
     - tests/
-    # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
-    # - tests_h5m/   # TODO include in with cq 2.2 release
     - examples/
+    # - tests_h5m/  # TODO include in with cq 2.2 release
+    # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
   commands:
     - pytest -v tests
+    # - pytest -v tests_h5m [not win] # TODO include in with cq 2.2 release
     # - pytest -v tests_examples  # TODO include if cadquery_jupyter gets a conda install
-    # - tests_h5m   # TODO include in with cq 2.2 release
-    # - tests_show  # TODO include if cadquery_jupyter gets a conda install
+    # - pytest -v tests_show  # TODO include if cadquery_jupyter gets a conda install
 
 about:
   home: "https://github.com/fusion-energy/paramak"

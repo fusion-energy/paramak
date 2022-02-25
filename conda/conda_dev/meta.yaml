@@ -4,7 +4,6 @@
 package:
   name: "{{ name|lower }}"
   version: {{ GIT_DESCRIBE_TAG }}
-  version: 0.1.0
 
 source:
   path: ../..
@@ -29,8 +28,8 @@ requirements:
     - mpmath
     - plasmaboundaries
     - plotly
-    - brep_part_finder
-    - brep_to_h5m 
+    - brep_part_finder  # [not win]
+    - brep_to_h5m  # [not win]
 
 test:
   imports:
@@ -46,8 +45,8 @@ test:
     - tests/
     - tests_h5m/
     - examples/
-    # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
-    # - tests_show/  # TODO include if cadquery_jupyter gets a conda install
+    # - pytest -v tests_show/  # TODO include if cadquery_jupyter gets a conda install
+    # - pytest -v tests_examples/  # TODO include if cadquery_jupyter gets a conda install
   commands:
     - pytest -v tests
     - pytest -v tests_h5m  # [not win]
