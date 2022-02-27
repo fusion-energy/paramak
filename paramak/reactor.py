@@ -185,15 +185,15 @@ class Reactor:
 
         return all_names
 
-    def show(self, default_edgecolor: Tuple[float, float, float] = (0, 0, 0)):
+    def show(self, **kwargs):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
         show from jupyter_cadquery.cadquery and returns show(Reactor.solid)
 
         Args:
-            default_edgecolor: the color to use for the edges, passed to
-                jupyter_cadquery.cadquery show. Tuple of three values expected
-                individual values in the tuple should be floats between 0. and
-                1.
+            kwargs: keyword arguments passed to jupyter-cadquery show()
+                function. See https://github.com/bernhard-42/jupyter-cadquery#usage
+                for more details on acceptable keywords
+
 
         Returns:
             jupyter_cadquery.cadquery.show object
@@ -218,7 +218,6 @@ class Reactor:
                 name = shape_or_compound.name
 
             scaled_color = [int(i * 255) for i in shape_or_compound.color[0:3]]
-            scaled_edge_color = [int(i * 255) for i in default_edgecolor[0:3]]
             if isinstance(
                 shape_or_compound.solid,
                 (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
@@ -234,7 +233,7 @@ class Reactor:
                     )
                 )
 
-        return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
+        return show(PartGroup(parts), **kwargs)
 
     def export_dagmc_h5m(
         self,
