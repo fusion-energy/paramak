@@ -823,9 +823,7 @@ class Reactor:
         return str(path_filename)
 
     def export_html_3d(
-        self,
-        filename: Optional[str] = "reactor_3d.html",
-        **kwargs
+        self, filename: Optional[str] = "reactor_3d.html", **kwargs
     ) -> Optional[str]:
         """Saves an interactive 3d html view of the Reactor to a html file.
 
