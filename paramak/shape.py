@@ -542,7 +542,7 @@ class Shape:
 
     def show(self, **kwargs):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Shape.solid)
+        show from jupyter_cadquery and returns show(Shape.solid, kwargs)
 
         Args:
             kwargs: keyword arguments passed to jupyter-cadquery show()
@@ -550,11 +550,11 @@ class Shape:
                 for more details on acceptable keywords
 
         Returns:
-            jupyter_cadquery.cadquery.show object
+            jupyter_cadquery show object
         """
 
         try:
-            from jupyter_cadquery.cadquery import Part, PartGroup, show
+            from jupyter_cadquery import Part, PartGroup, show
         except ImportError:
             msg = (
                 "To use Shape.show() you must install jupyter_cadquery. To"
