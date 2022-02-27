@@ -185,22 +185,22 @@ class Reactor:
 
         return all_names
 
-    def show(self, default_edgecolor: Tuple[float, float, float] = (0, 0, 0)):
+    def show(self, **kwargs):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Reactor.solid)
+        show from jupyter_cadquery and returns show(Reactor.solid, kwargs)
 
         Args:
-            default_edgecolor: the color to use for the edges, passed to
-                jupyter_cadquery.cadquery show. Tuple of three values expected
-                individual values in the tuple should be floats between 0. and
-                1.
+            kwargs: keyword arguments passed to jupyter-cadquery show()
+                function. See https://github.com/bernhard-42/jupyter-cadquery#usage
+                for more details on acceptable keywords
+
 
         Returns:
-            jupyter_cadquery.cadquery.show object
+            jupyter_cadquery show object
         """
 
         try:
-            from jupyter_cadquery.cadquery import Part, PartGroup, show
+            from jupyter_cadquery import Part, PartGroup, show
         except ImportError:
             msg = (
                 "To use Reactor.show() you must install jupyter_cadquery. To"
@@ -218,7 +218,6 @@ class Reactor:
                 name = shape_or_compound.name
 
             scaled_color = [int(i * 255) for i in shape_or_compound.color[0:3]]
-            scaled_edge_color = [int(i * 255) for i in default_edgecolor[0:3]]
             if isinstance(
                 shape_or_compound.solid,
                 (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
@@ -234,7 +233,7 @@ class Reactor:
                     )
                 )
 
-        return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
+        return show(PartGroup(parts), **kwargs)
 
     def export_dagmc_h5m(
         self,
@@ -824,28 +823,24 @@ class Reactor:
         return str(path_filename)
 
     def export_html_3d(
-        self,
-        filename: Optional[str] = "reactor_3d.html",
+        self, filename: Optional[str] = "reactor_3d.html", **kwargs
     ) -> Optional[str]:
         """Saves an interactive 3d html view of the Reactor to a html file.
 
         Args:
             filename: the filename used to save the html graph. Defaults to
                 reactor_3d.html
+            kwargs: keyword arguments passed to jupyter-cadquery show()
+                function. See https://github.com/bernhard-42/jupyter-cadquery#usage
+                for more details on acceptable keywords
 
         Returns:
             str: filename of the created html file
         """
 
-        view = self.show()
+        view = self.show(**kwargs)
 
-        # ipywidgets is installed along with jupyter_cadquery
-        from ipywidgets.embed import embed_minimal_html
-
-        if view is None:
-            return None
-
-        embed_minimal_html(filename, views=[view.cq_view.renderer], title="Renderer")
+        view.export_html(filename)
 
         return filename
 
