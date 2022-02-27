@@ -840,8 +840,6 @@ class Reactor:
             str: filename of the created html file
         """
 
-        view = self.show()
-
         view = self.show(**kwargs)
 
         view.export_html(filename)
