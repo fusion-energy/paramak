@@ -1035,26 +1035,24 @@ class Shape:
     def export_html_3d(
         self,
         filename: Optional[str] = "shape_3d.html",
+        **kwargs
     ):
         """Saves an interactive 3d html view of the Shape to a html file.
 
         Args:
             filename: the filename used to save the html graph. Defaults to
                 shape_3d.html
+            kwargs: keyword arguments passed to jupyter-cadquery show()
+                function. See https://github.com/bernhard-42/jupyter-cadquery#usage
+                for more details on acceptable keywords
 
         Returns:
             str: filename of the created html file
         """
 
-        view = self.show()
+        view = self.show(**kwargs)
 
-        # ipywidgets is installed along with jupyter_cadquery
-        from ipywidgets.embed import embed_minimal_html
-
-        if view is None:
-            return None
-
-        embed_minimal_html(filename, views=[view.cq_view.renderer], title="Renderer")
+        view.export_html(filename)
 
         return filename
 

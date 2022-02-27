@@ -825,12 +825,16 @@ class Reactor:
     def export_html_3d(
         self,
         filename: Optional[str] = "reactor_3d.html",
+        **kwargs
     ) -> Optional[str]:
         """Saves an interactive 3d html view of the Reactor to a html file.
 
         Args:
             filename: the filename used to save the html graph. Defaults to
                 reactor_3d.html
+            kwargs: keyword arguments passed to jupyter-cadquery show()
+                function. See https://github.com/bernhard-42/jupyter-cadquery#usage
+                for more details on acceptable keywords
 
         Returns:
             str: filename of the created html file
@@ -838,13 +842,9 @@ class Reactor:
 
         view = self.show()
 
-        # ipywidgets is installed along with jupyter_cadquery
-        from ipywidgets.embed import embed_minimal_html
+        view = self.show(**kwargs)
 
-        if view is None:
-            return None
-
-        embed_minimal_html(filename, views=[view.cq_view.renderer], title="Renderer")
+        view.export_html(filename)
 
         return filename
 
