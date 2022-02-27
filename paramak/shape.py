@@ -1032,11 +1032,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_html_3d(
-        self,
-        filename: Optional[str] = "shape_3d.html",
-        **kwargs
-    ):
+    def export_html_3d(self, filename: Optional[str] = "shape_3d.html", **kwargs):
         """Saves an interactive 3d html view of the Shape to a html file.
 
         Args:
