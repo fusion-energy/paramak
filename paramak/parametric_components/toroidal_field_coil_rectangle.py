@@ -114,7 +114,14 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         """Calculates the azimuth placement angles based on the number of tf
         coils"""
 
-        angles = list(np.linspace(self.azimuth_start_angle, 360+self.azimuth_start_angle, self.number_of_coils, endpoint=False))
+        angles = list(
+            np.linspace(
+                self.azimuth_start_angle,
+                360 + self.azimuth_start_angle,
+                self.number_of_coils,
+                endpoint=False,
+            )
+        )
 
         self.azimuth_placement_angle = angles
 
