@@ -1,9 +1,13 @@
 name: anaconda-publish-develop
 
 on:
-  workflow_dispatch:
-  release:
-    types: [published]
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - "**.py"
+      - "**.yml"
 
 jobs:
   build:
@@ -20,12 +24,8 @@ jobs:
             conda install -y anaconda-client conda-build
             conda config --set anaconda_upload no
             conda install boa -c conda-forge
-      - name: Build and publish to conda
-        env:
-          ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+      - name: Build conda package
         run: |
             conda mambabuild conda_dev -c fusion-energy -c cadquery -c conda-forge --config-file conda_dev/conda_build_config.yaml
             conda convert /opt/conda/conda-bld/linux-64/*.tar.bz2 --platform osx-64
-            anaconda upload -f /opt/conda/conda-bld/*/*.tar.bz2
-
-# Note this action does not currently convert to windows as it requires moab
+            conda convert /opt/conda/conda-bld/linux-64/*.tar.bz2 --platform win-64
