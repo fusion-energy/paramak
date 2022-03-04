@@ -339,7 +339,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
                 endpoint=False
             )
         )
-        
+
         self.azimuth_placement_angle = angles
 
     def create_solid(self):
