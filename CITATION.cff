@@ -40,8 +40,10 @@ authors:
   given-names: "Liam"
 - family-names: "Peter"
   given-names: "Hill"
-  orcid: "https://orcid.org/0000-0003-3092-1858 "
+  orcid: "https://orcid.org/0000-0003-3092-1858"
+- family-names: "Frank"
+  given-names: "Schoofs"
 title: "The Paramak: automated parametric geometry construction for fusion reactor designs"
-version: 0.6.5
+version: 0.7.1
 date-released: 2021-1-6
 url: "https://github.com/fusion-energy/paramak"
