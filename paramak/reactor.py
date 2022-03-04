@@ -203,9 +203,9 @@ class Reactor:
             from jupyter_cadquery import Part, PartGroup, show
         except ImportError:
             msg = (
-                "To use Reactor.show() you must install jupyter_cadquery. To"
-                'install jupyter_cadquery type "pip install jupyter_cadquery"'
-                " in the terminal"
+                'To use Reactor.show() you must install jupyter_cadquery. To '
+                'install jupyter_cadquery type "pip install jupyter_cadquery" '
+                'in the terminal'
             )
             raise ImportError(msg)
 
