@@ -39,6 +39,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         distance: float,
         number_of_coils: int = 1,
         with_inner_leg: Optional[bool] = False,
+        azimuth_start_angle: float = 0,
         **kwargs
     ) -> None:
 
@@ -56,6 +57,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self._height = 0
         self._inner_curve_radius = 0
         self._outter_curve_radius = 0
+        self.azimuth_start_angle = azimuth_start_angle
 
         if len(lower_inner_coordinates) != 2 or len(mid_point_coordinates) != 2:
             msg = (
@@ -329,7 +331,15 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         """Finds the placement angles from the number of coils
         given in a 360 degree"""
 
-        angles = list(np.linspace(0, 360, self._number_of_coils, endpoint=False))
+        angles = list(
+            np.linspace(
+                self.azimuth_start_angle,
+                360 + self.azimuth_start_angle,
+                self.number_of_coils,
+                endpoint=False
+            )
+        )
+        
         self.azimuth_placement_angle = angles
 
     def create_solid(self):
