@@ -34,6 +34,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         vertical_displacement: float = 0.0,
         with_inner_leg: bool = True,
         color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
+        azimuth_start_angle: float = 0,
         **kwargs
     ) -> None:
 
@@ -48,6 +49,7 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         self.number_of_coils = number_of_coils
         self.vertical_displacement = vertical_displacement
         self.with_inner_leg = with_inner_leg
+        self.azimuth_start_angle = azimuth_start_angle
 
     @property
     def azimuth_placement_angle(self):
@@ -164,6 +166,13 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         """Calculates the azimuth placement angles based on the number of tf
         coils"""
 
-        angles = list(np.linspace(0, 360, self.number_of_coils, endpoint=False))
+        angles = list(
+            np.linspace(
+                self.azimuth_start_angle,
+                360 + self.azimuth_start_angle,
+                self.number_of_coils,
+                endpoint=False
+            )
+        )
 
         self.azimuth_placement_angle = angles
