@@ -21,6 +21,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             coils.
         vertical_displacement: vertical displacement (cm). Defaults to 0.0.
         with_inner_leg: Include the inner tf leg. Defaults to True.
+        azimuth_start_angle: The azimuth angle to for the first TF coil which
+            offsets the placement of coils around the azimuthal angle
     """
 
     def __init__(
@@ -32,8 +34,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         number_of_coils: int,
         vertical_displacement: float = 0.0,
         with_inner_leg: bool = True,
-        color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         azimuth_start_angle: float = 0,
+        color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 

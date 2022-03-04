@@ -23,6 +23,8 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             azimuth_placement_angle dividing up 360 degrees by the number of
             coils.
         with_inner_leg: include the inner tf leg. Defaults to True.
+        azimuth_start_angle: The azimuth angle to for the first TF coil which
+            offsets the placement of coils around the azimuthal angle
     """
 
     def __init__(
@@ -33,8 +35,8 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
         distance: float,
         number_of_coils: int,
         with_inner_leg: bool = True,
-        color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         azimuth_start_angle: float = 0,
+        color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 

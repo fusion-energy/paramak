@@ -29,6 +29,8 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             given). Defaults to 1
         with_inner_leg: Boolean to include the inside of the Coils
             defaults to False
+        azimuth_start_angle: The azimuth angle to for the first TF coil which
+            offsets the placement of coils around the azimuthal angle
     """
 
     def __init__(
