@@ -28,6 +28,11 @@ jobs:
       - name: install package
         run: |
           pip install --upgrade pip
+          python -c "import paramak"
+          pip install .
+
+      - name: install package with tests
+        run: |
           pip install .[tests]
 
       - name: Run tests
