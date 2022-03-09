@@ -82,7 +82,7 @@ Slides from first released presentation.
 `Link <https://github.com/ukaea/paramak/files/5260982/UKAEA_Paramak_shimwell.pdf>`_
 
 Paramak used for geometry creation in an ARC reactor study.
-`https://iopscience.iop.org/article/10.1088/1741-4326/ac536a <https://iopscience.iop.org/article/10.1088/1741-4326/ac536a>`_
+`https://iopscience.iop.org/article/10.1088/1741-4326/ac5450 <https://iopscience.iop.org/article/10.1088/1741-4326/ac5450>`_
 
 
 Features
