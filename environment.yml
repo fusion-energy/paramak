@@ -6,7 +6,7 @@ channels:
 
 dependencies:
   - python=3.8
-  - pyparsing~=2.4.7
+  - pyparsing>=2.1.9
   - cadquery=master
   - pytest
   - plotly
