@@ -1,0 +1,27 @@
+name: conda-build-test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: continuumio/miniconda3:4.10.3
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up conda
+        run: |
+            apt-get --allow-releaseinfo-change update
+            apt install -y libgl1-mesa-glx
+            conda install -y anaconda-client conda-build
+            conda config --set anaconda_upload no
+            conda install boa -c conda-forge
+      - name: Build and test
+        run: |
+            conda mambabuild conda -c fusion-energy -c cadquery -c conda-forge --config-file conda/conda_build_config.yaml
