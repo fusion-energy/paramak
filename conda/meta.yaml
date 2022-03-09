@@ -18,20 +18,11 @@ requirements:
   run:
     - python {{ python }}
     - cadquery {{ cadquery }}
-    - matplotlib
     - mpmath
-    - numpy
     - plasmaboundaries
     - plotly
-    - scipy
-    - sympy
-    - nbformat
-    - nbconvert
-    - ipywidgets
-    # - gmsh [not win] TODO include in with cq 2.2 release
-    # - moab [not win] TODO include in with cq 2.2 release
-    # - brep_to_h5m import [not win] TODO include in with cq 2.2 release
-    # - brep_part_finder [not win] TODO include in with cq 2.2 release
+    - brep_part_finder  # [not win]
+    - brep_to_h5m  # [not win]
     # - jupyter-cadquery not available on conda
 
 test:
@@ -44,17 +35,17 @@ test:
   requires:
     - pytest
     - pytest-cov
-    # - dagmc_h5m_file_inspector [not win] TODO include in with cq 2.2 release
+    - dagmc_h5m_file_inspector  # [not win]
   source_files:
     - tests/
-    # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
-    # - tests_h5m/   # TODO include in with cq 2.2 release
     - examples/
+    - tests_h5m/  # [not win]
+    # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
   commands:
     - pytest -v tests
+    - pytest -v tests_h5m  # [not win]
+    # - pytest -v tests_show  # TODO include if cadquery_jupyter gets a conda install
     # - pytest -v tests_examples  # TODO include if cadquery_jupyter gets a conda install
-    # - tests_h5m   # TODO include in with cq 2.2 release
-    # - tests_show  # TODO include if cadquery_jupyter gets a conda install
 
 about:
   home: "https://github.com/fusion-energy/paramak"

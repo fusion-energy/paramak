@@ -20,7 +20,7 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/fusion-energy/paramak:dependencies
+      image: ghcr.io/fusion-energy/paramak_cq_master:dependencies
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

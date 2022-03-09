@@ -74,11 +74,10 @@ Then install the CadQuery.
 
 .. code-block:: bash
 
-   conda install -c cadquery -c conda-forge cadquery=2.1
+   conda install -c cadquery -c conda-forge cadquery=master
 
-If you want to make use of the prototype export_dagmc_h5m() method then you will
-need to modify the above command to target CaDQuery Master instead of 2.1.
-MOAB and PyMoab are also required for the export_dagmc_h5m() feature to work.
+If you want to make use of the prototype export_dagmc_h5m() method the you will need
+MOAB and PyMoab for the export_dagmc_h5m() feature to work.
 The MOAB Conda install does not currently support Windows and therefore Windows
 users will have to compile MOAB. If the export_dagmc_h5m() feature is not
 needed then this stage can be skipped.
