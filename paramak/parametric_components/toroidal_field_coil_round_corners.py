@@ -338,7 +338,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
                 self.azimuth_start_angle,
                 360 + self.azimuth_start_angle,
                 self.number_of_coils,
-                endpoint=False
+                endpoint=False,
             )
         )
 

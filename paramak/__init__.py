@@ -132,4 +132,6 @@ from .parametric_reactors.center_column_study_reactor import CenterColumnStudyRe
 from .parametric_reactors.sparc_paper_2020 import SparcFrom2020PaperDiagram
 from .parametric_reactors.iter_paper_2020 import IterFrom2020PaperDiagram
 from .parametric_reactors.flf_system_code_reactor import FlfSystemCodeReactor
-from .parametric_reactors.negative_triangularity_reactor import NegativeTriangularityReactor
+from .parametric_reactors.negative_triangularity_reactor import (
+    NegativeTriangularityReactor,
+)
