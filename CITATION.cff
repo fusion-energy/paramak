@@ -45,6 +45,7 @@ authors:
   given-names: "Schoofs"
 - family-names: "Steve"
   given-names: "Lilley"
+  orcid: "https://orcid.org/0000-0002-0547-9378"
 title: "The Paramak: automated parametric geometry construction for fusion reactor designs"
 version: 0.7.1
 date-released: 2021-1-6
