@@ -4,9 +4,9 @@ import numpy as np
 from scipy import integrate
 from scipy.optimize import minimize
 
-from paramak import ExtrudeMixedShape
+from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import add_thickness
-
+import cadquery as cq
 
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     """Toroidal field coil based on Princeton-D curve
@@ -94,7 +94,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             return abs(segment[1][-1])
 
         def get_segment(a, b, z_0):
-            a_R = np.linspace(a, b, num=70, endpoint=True)
+            a_R = np.linspace(a, b, num=10, endpoint=True)
             asol = integrate.odeint(solvr, [z_0, 0], a_R)
             return a_R, asol[:, 0], asol[:, 1]
 
@@ -150,27 +150,16 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         z_inner += self.vertical_displacement
 
         # extract helping points for inner leg
-        inner_leg_connection_points = [
+        self.inner_leg_connection_points = [
             (r_inner[0], z_inner[0]),
             (r_inner[-1], z_inner[-1]),
             (r_outer[0], z_outer[0]),
             (r_outer[-1], z_outer[-1]),
         ]
-        self.inner_leg_connection_points = inner_leg_connection_points
 
-        # add the leg to the points
-        if self.with_inner_leg:
-            r_inner = np.append(r_inner, r_inner[0])
-            z_inner = np.append(z_inner, z_inner[0])
-
-            r_outer = np.append(r_outer, r_outer[0])
-            z_outer = np.append(z_outer, z_outer[0])
         # add connections
         inner_points = [[r, z, "spline"] for r, z in zip(r_inner, z_inner)]
         outer_points = [[r, z, "spline"] for r, z in zip(r_outer, z_outer)]
-        if self.with_inner_leg:
-            outer_points[-2][2] = "straight"
-            inner_points[-2][2] = "straight"
 
         inner_points[-1][2] = "straight"
         outer_points[-1][2] = "straight"
@@ -178,7 +167,9 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         points = inner_points + outer_points
         self.outer_points = np.vstack((r_outer, z_outer)).T
         self.inner_points = np.vstack((r_inner, z_inner)).T
+
         self.points = points
+
 
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of tf
@@ -194,3 +185,30 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         )
 
         self.azimuth_placement_angle = angles
+
+
+    def create_solid(self):
+        """Creates a 3d solid using points with straight edges.
+
+        Returns:
+           A CadQuery solid: A 3D solid volume
+        """
+
+        solid= super().create_solid()
+        solids=[solid]
+        if self.with_inner_leg:
+            inner_leg = ExtrudeStraightShape(
+                points = self.inner_leg_connection_points,
+                distance=self.distance,
+                azimuth_placement_angle = self.azimuth_placement_angle,
+                azimuth_start_angle=self.azimuth_start_angle,
+                color=self.color,
+            )
+            solids.append(inner_leg.solid)
+ 
+        compound = cq.Compound.makeCompound([a.val() for a in solids])
+        self.solid = compound
+        return compound
+
+        # TODO check the wires are made correctly
+        # self.wire = wires
