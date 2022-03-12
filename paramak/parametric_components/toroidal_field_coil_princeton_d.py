@@ -4,12 +4,13 @@ import numpy as np
 from scipy import integrate
 from scipy.optimize import minimize
 
-from paramak import ExtrudeMixedShape, ExtrudeStraightShape
+from .toroidal_field_coil import ToroidalFieldCoil
+# from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import add_thickness
 import cadquery as cq
 
 
-class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
+class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
     """Toroidal field coil based on Princeton-D curve
 
     Args:
@@ -24,6 +25,8 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         with_inner_leg: Include the inner tf leg. Defaults to True.
         azimuth_start_angle: The azimuth angle to for the first TF coil which
             offsets the placement of coils around the azimuthal angle
+        rotation_angle: rotation angle of solid created. A cut is performed
+            from rotation_angle to 360 degrees. Defaults to 360.0.
     """
 
     def __init__(
@@ -36,20 +39,26 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
         vertical_displacement: float = 0.0,
         with_inner_leg: bool = True,
         azimuth_start_angle: float = 0,
+        rotation_angle: float = 360.0,
         color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 
-        super().__init__(distance=distance, color=color, **kwargs)
+        super().__init__(
+            thickness = thickness,
+            number_of_coils = number_of_coils,
+            vertical_displacement = vertical_displacement,
+            with_inner_leg = with_inner_leg,
+            azimuth_start_angle = azimuth_start_angle,
+            rotation_angle = rotation_angle,
+            distance=distance,
+            color=color,
+            **kwargs
+        )
 
         self.R1 = R1
         self.R2 = R2
-        self.thickness = thickness
-        self.distance = distance
-        self.number_of_coils = number_of_coils
-        self.vertical_displacement = vertical_displacement
-        self.with_inner_leg = with_inner_leg
-        self.azimuth_start_angle = azimuth_start_angle
+
 
     @property
     def inner_points(self):
@@ -186,27 +195,4 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
 
         self.azimuth_placement_angle = angles
 
-    def create_solid(self):
-        """Creates a 3d solid using points with straight edges.
 
-        Returns:
-           A CadQuery solid: A 3D solid volume
-        """
-
-        solid = super().create_solid()
-        solids = [solid]
-        if self.with_inner_leg:
-            inner_leg = ExtrudeStraightShape(
-                points=self.inner_leg_connection_points,
-                distance=self.distance,
-                azimuth_placement_angle=self.azimuth_placement_angle,
-                color=self.color,
-            )
-            solids.append(inner_leg.solid)
-
-        compound = cq.Compound.makeCompound([a.val() for a in solids])
-        self.solid = compound
-        return compound
-
-        # TODO check the wires are made correctly
-        # self.wire = wires
