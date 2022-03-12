@@ -8,6 +8,7 @@ from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import add_thickness
 import cadquery as cq
 
+
 class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
     """Toroidal field coil based on Princeton-D curve
 
@@ -170,7 +171,6 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
 
         self.points = points
 
-
     def find_azimuth_placement_angle(self):
         """Calculates the azimuth placement angles based on the number of tf
         coils"""
@@ -186,7 +186,6 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
 
         self.azimuth_placement_angle = angles
 
-
     def create_solid(self):
         """Creates a 3d solid using points with straight edges.
 
@@ -194,17 +193,17 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
            A CadQuery solid: A 3D solid volume
         """
 
-        solid= super().create_solid()
-        solids=[solid]
+        solid = super().create_solid()
+        solids = [solid]
         if self.with_inner_leg:
             inner_leg = ExtrudeStraightShape(
-                points = self.inner_leg_connection_points,
+                points=self.inner_leg_connection_points,
                 distance=self.distance,
                 azimuth_placement_angle = self.azimuth_placement_angle,
                 color=self.color,
             )
             solids.append(inner_leg.solid)
- 
+
         compound = cq.Compound.makeCompound([a.val() for a in solids])
         self.solid = compound
         return compound
