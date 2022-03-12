@@ -199,7 +199,7 @@ class ToroidalFieldCoilPrincetonD(ExtrudeMixedShape):
             inner_leg = ExtrudeStraightShape(
                 points=self.inner_leg_connection_points,
                 distance=self.distance,
-                azimuth_placement_angle = self.azimuth_placement_angle,
+                azimuth_placement_angle=self.azimuth_placement_angle,
                 color=self.color,
             )
             solids.append(inner_leg.solid)
