@@ -931,6 +931,15 @@ TFCoilCasing()
 ToroidalFieldCoilRectangle()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilRectangle()
+
+   cadquery_object = my_component.solid
+
 |ToroidalFieldCoilRectangleallstp| |ToroidalFieldCoilRectanglesvg| |ToroidalFieldCoilRectangleastp|
 
 .. |ToroidalFieldCoilRectangleallstp| image:: https://user-images.githubusercontent.com/8583900/86822598-bcdbed80-c083-11ea-820e-f6c13d639170.png
@@ -947,6 +956,15 @@ ToroidalFieldCoilRectangle()
 
 ToroidalFieldCoilCoatHanger()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilCoatHanger()
+
+   cadquery_object = my_component.solid
 
 |ToroidalFieldCoilCoatHangerallstp| |ToroidalFieldCoilCoatHangersvg| |ToroidalFieldCoilCoatHangerastp|
 
@@ -1039,7 +1057,7 @@ ToroidalFieldCoilRectangleRoundCorners()
 
    import paramak
    my_component = paramak.ToroidalFieldCoilRectangleRoundCorners(
-      with_inner_leg=False,
+      with_inner_leg=True,
       lower_inner_coordinates=(0, 0),
       mid_point_coordinates=(100, 100),
       thickness=30,
