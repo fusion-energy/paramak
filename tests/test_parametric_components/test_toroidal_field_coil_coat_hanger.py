@@ -31,22 +31,22 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
         given."""
 
         assert self.test_shape.points == [
-            (200, 500, 'straight'),
-            (600, 500, 'straight'),
-            (700, 250.0, 'straight'),
-            (700, -250.0, 'straight'),
-            (600, -500, 'straight'),
-            (200, -500, 'straight'),
-            (200, -550, 'straight'),
-            (600, -550, 'straight'),
-            (646.423834544263, -518.5695338177052, 'straight'),
-            (746.423834544263, -268.5695338177052, 'straight'),
-            (750, -250.0, 'straight'),
-            (750, 250.0, 'straight'),
-            (746.423834544263, 268.5695338177052, 'straight'),
-            (646.423834544263, 518.5695338177052, 'straight'),
-            (600, 550, 'straight'),
-            (200, 550, 'straight'),
+            (200, 500, "straight"),
+            (600, 500, "straight"),
+            (700, 250.0, "straight"),
+            (700, -250.0, "straight"),
+            (600, -500, "straight"),
+            (200, -500, "straight"),
+            (200, -550, "straight"),
+            (600, -550, "straight"),
+            (646.423834544263, -518.5695338177052, "straight"),
+            (746.423834544263, -268.5695338177052, "straight"),
+            (750, -250.0, "straight"),
+            (750, 250.0, "straight"),
+            (746.423834544263, 268.5695338177052, "straight"),
+            (646.423834544263, 518.5695338177052, "straight"),
+            (600, 550, "straight"),
+            (200, 550, "straight"),
         ]
 
     def test_processed_points_calculation(self):
