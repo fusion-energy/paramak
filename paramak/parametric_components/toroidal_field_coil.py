@@ -99,6 +99,7 @@ class ToroidalFieldCoil(ExtrudeMixedShape):
         """
 
         outer_leg = ExtrudeMixedShape(
+                name=self.name,
                 points=self.points,
                 distance=self.distance,
                 azimuth_placement_angle=self.azimuth_placement_angle,
@@ -109,6 +110,7 @@ class ToroidalFieldCoil(ExtrudeMixedShape):
         solids = [outer_leg.solid]
         if self.with_inner_leg:
             inner_leg = ExtrudeStraightShape(
+                name=self.name,
                 points=self.inner_leg_connection_points,
                 distance=self.distance,
                 azimuth_placement_angle=self.azimuth_placement_angle,

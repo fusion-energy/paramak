@@ -5,10 +5,7 @@ from scipy import integrate
 from scipy.optimize import minimize
 
 from .toroidal_field_coil import ToroidalFieldCoil
-# from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import add_thickness
-import cadquery as cq
-
 
 class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
     """Toroidal field coil based on Princeton-D curve
@@ -31,11 +28,12 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
 
     def __init__(
         self,
-        R1: float,
-        R2: float,
-        thickness: float,
-        distance: float,
-        number_of_coils: int,
+        name : str= 'toroidal_field_coil',
+        R1: float=100,
+        R2: float=300,
+        thickness: float = 30,
+        distance: float = 20,
+        number_of_coils: int = 12,
         vertical_displacement: float = 0.0,
         with_inner_leg: bool = True,
         azimuth_start_angle: float = 0,
@@ -45,6 +43,7 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
     ) -> None:
 
         super().__init__(
+            name=name,
             thickness = thickness,
             number_of_coils = number_of_coils,
             vertical_displacement = vertical_displacement,
@@ -179,20 +178,3 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
         self.inner_points = np.vstack((r_inner, z_inner)).T
 
         self.points = points
-
-    def find_azimuth_placement_angle(self):
-        """Calculates the azimuth placement angles based on the number of tf
-        coils"""
-
-        angles = list(
-            np.linspace(
-                self.azimuth_start_angle,
-                360 + self.azimuth_start_angle,
-                self.number_of_coils,
-                endpoint=False,
-            )
-        )
-
-        self.azimuth_placement_angle = angles
-
-
