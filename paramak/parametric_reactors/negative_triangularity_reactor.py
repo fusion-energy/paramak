@@ -1,6 +1,7 @@
 from typing import List, Union, Optional
 import paramak
 
+
 class NegativeTriangularityReactor(paramak.Reactor):
     """
     New class of reactor that builds a negative triangularity tokamak model.
