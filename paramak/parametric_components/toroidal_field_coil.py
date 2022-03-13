@@ -113,7 +113,7 @@ class ToroidalFieldCoil(ExtrudeMixedShape):
                 azimuth_placement_angle=self.azimuth_placement_angle,
                 color=self.color,
                 rotation_angle=self.rotation_angle,
-                union=[outer_leg]
+                union=[outer_leg],
             )
             solids = inner_leg.solid
         else:
@@ -132,4 +132,3 @@ class ToroidalFieldCoil(ExtrudeMixedShape):
 
         self.solid = solids
         return solids
-
