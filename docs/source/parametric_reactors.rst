@@ -211,6 +211,6 @@ low_aspect attribute is set to False, as well as the PF coils outside were moved
    :width: 400
    :align: center
 
-.. automodule:: paramak.parametric_reactors.NegativeTriangularityReactor
+.. automodule:: paramak.parametric_reactors.negative_triangularity_reactor
    :members:
    :show-inheritance:
