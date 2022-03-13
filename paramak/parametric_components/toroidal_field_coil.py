@@ -49,24 +49,6 @@ class ToroidalFieldCoil(ExtrudeMixedShape):
         self.inner_leg_connection_points = None
 
     @property
-    def inner_points(self):
-        self.points
-        return self._inner_points
-
-    @inner_points.setter
-    def inner_points(self, value):
-        self._inner_points = value
-
-    @property
-    def outer_points(self):
-        self.points
-        return self._outer_points
-
-    @outer_points.setter
-    def outer_points(self, value):
-        self._outer_points = value
-
-    @property
     def azimuth_placement_angle(self):
         self.find_azimuth_placement_angle()
         return self._azimuth_placement_angle
