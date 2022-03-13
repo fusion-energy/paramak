@@ -34,40 +34,39 @@ class ToroidalFieldCoilCoatHanger(ToroidalFieldCoil):
 
     def __init__(
         self,
-        name: str = 'toroidal_field_coil',
-        horizontal_start_point: Tuple[float, float]= (40, 200),
+        name: str = "toroidal_field_coil",
+        horizontal_start_point: Tuple[float, float] = (40, 200),
         horizontal_length: float = 200,
         vertical_mid_point: Tuple[float, float] = (400, 0),
         vertical_length: float = 250,
         thickness: float = 30,
         distance: float = 20,
-        number_of_coils: int =12,
+        number_of_coils: int = 12,
         with_inner_leg: bool = True,
         azimuth_start_angle: float = 0,
-        vertical_displacement:float = 0.0,
-        rotation_angle:float = 360.,
+        vertical_displacement: float = 0.0,
+        rotation_angle: float = 360.0,
         color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 
         super().__init__(
-                    name=name,
-                    thickness = thickness,
-                    number_of_coils = number_of_coils,
-                    vertical_displacement = vertical_displacement,
-                    with_inner_leg = with_inner_leg,
-                    azimuth_start_angle = azimuth_start_angle,
-                    rotation_angle = rotation_angle,
-                    distance=distance,
-                    color=color,
-                    **kwargs
-                )
+            name=name,
+            thickness=thickness,
+            number_of_coils=number_of_coils,
+            vertical_displacement=vertical_displacement,
+            with_inner_leg=with_inner_leg,
+            azimuth_start_angle=azimuth_start_angle,
+            rotation_angle=rotation_angle,
+            distance=distance,
+            color=color,
+            **kwargs
+        )
 
         self.horizontal_start_point = horizontal_start_point
         self.horizontal_length = horizontal_length
         self.vertical_mid_point = vertical_mid_point
         self.vertical_length = vertical_length
-
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe the
@@ -203,9 +202,11 @@ class ToroidalFieldCoilCoatHanger(ToroidalFieldCoil):
             (points[5][0] + self.thickness, points[5][1]),
             points[5],
         ]
-        
-        # adds any vertical displacement and the connection type to the points
-        points = [(point[0], point[1] + self.vertical_displacement, 'straight') for point in points]
 
+        # adds any vertical displacement and the connection type to the points
+        points = [
+            (point[0], point[1] + self.vertical_displacement, "straight")
+            for point in points
+        ]
 
         self.points = points

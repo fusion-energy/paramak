@@ -4,6 +4,7 @@ import numpy as np
 
 from .toroidal_field_coil import ToroidalFieldCoil
 
+
 class ToroidalFieldCoilTripleArc(ToroidalFieldCoil):
     """Toroidal field coil made of three arcs
 
@@ -25,34 +26,34 @@ class ToroidalFieldCoilTripleArc(ToroidalFieldCoil):
 
     def __init__(
         self,
-        name: str = 'toroidal_field_coil',
+        name: str = "toroidal_field_coil",
         R1: float = 80,
         h: float = 200,
         radii: Tuple[float, float] = (70, 100),
         coverages: Tuple[float, float] = (60, 60),
-        thickness: float=30,
-        distance: float=20,
-        number_of_coils: int=12,
+        thickness: float = 30,
+        distance: float = 20,
+        number_of_coils: int = 12,
         vertical_displacement: float = 0.0,
         with_inner_leg: bool = True,
         azimuth_start_angle: float = 0,
-        rotation_angle:float = 360.,
+        rotation_angle: float = 360.0,
         color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 
         super().__init__(
-                    name=name,
-                    thickness = thickness,
-                    number_of_coils = number_of_coils,
-                    vertical_displacement = vertical_displacement,
-                    with_inner_leg = with_inner_leg,
-                    azimuth_start_angle = azimuth_start_angle,
-                    rotation_angle = rotation_angle,
-                    distance=distance,
-                    color=color,
-                    **kwargs
-                )
+            name=name,
+            thickness=thickness,
+            number_of_coils=number_of_coils,
+            vertical_displacement=vertical_displacement,
+            with_inner_leg=with_inner_leg,
+            azimuth_start_angle=azimuth_start_angle,
+            rotation_angle=rotation_angle,
+            distance=distance,
+            color=color,
+            **kwargs
+        )
 
         self.R1 = R1
         self.h = h

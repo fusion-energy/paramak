@@ -36,7 +36,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
     def __init__(
         self,
-        name: str = 'toroidal_field_coil',
+        name: str = "toroidal_field_coil",
         lower_inner_coordinates: Tuple[float, float] = (100, 250),
         mid_point_coordinates: Tuple[float, float] = (500, 0),
         thickness: Union[float, int] = 30,
