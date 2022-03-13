@@ -23,6 +23,7 @@ requirements:
     - plotly
     - brep_part_finder  # [not win]
     - brep_to_h5m  # [not win]
+    - moab  # [not win]
     # - jupyter-cadquery not available on conda
 
 test:
