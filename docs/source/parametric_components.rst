@@ -121,6 +121,22 @@ Blanket Cutting Tools
 BlanketCutterParallels()
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketCutterParallels(
+        thickness=10.,
+        gap_size=30.,
+        height=200.,
+        width=200.,
+        name="blanket_cutter_parallels",
+        azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216., 252., 288., 324.],
+   )
+
+   cadquery_object = my_component.solid
+
 .. image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
    :width: 400
 
