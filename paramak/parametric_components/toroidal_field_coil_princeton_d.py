@@ -7,6 +7,7 @@ from scipy.optimize import minimize
 from .toroidal_field_coil import ToroidalFieldCoil
 from paramak.utils import add_thickness
 
+
 class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
     """Toroidal field coil based on Princeton-D curve
 
@@ -28,9 +29,9 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
 
     def __init__(
         self,
-        name : str= 'toroidal_field_coil',
-        R1: float=100,
-        R2: float=300,
+        name: str = "toroidal_field_coil",
+        R1: float = 100,
+        R2: float = 300,
         thickness: float = 30,
         distance: float = 20,
         number_of_coils: int = 12,
@@ -44,12 +45,12 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
 
         super().__init__(
             name=name,
-            thickness = thickness,
-            number_of_coils = number_of_coils,
-            vertical_displacement = vertical_displacement,
-            with_inner_leg = with_inner_leg,
-            azimuth_start_angle = azimuth_start_angle,
-            rotation_angle = rotation_angle,
+            thickness=thickness,
+            number_of_coils=number_of_coils,
+            vertical_displacement=vertical_displacement,
+            with_inner_leg=with_inner_leg,
+            azimuth_start_angle=azimuth_start_angle,
+            rotation_angle=rotation_angle,
             distance=distance,
             color=color,
             **kwargs
@@ -57,7 +58,6 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
 
         self.R1 = R1
         self.R2 = R2
-
 
     @property
     def inner_points(self):
