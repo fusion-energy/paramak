@@ -46,6 +46,7 @@ class ToroidalFieldCoil(ExtrudeMixedShape):
         self.with_inner_leg = with_inner_leg
         self.azimuth_start_angle = azimuth_start_angle
         self.rotation_angle = rotation_angle
+        self.inner_leg_connection_points = None
 
     @property
     def inner_points(self):

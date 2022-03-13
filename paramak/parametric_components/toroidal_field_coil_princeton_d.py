@@ -58,6 +58,7 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
 
         self.R1 = R1
         self.R2 = R2
+        self.inner_leg_connection_points = None
 
     @property
     def inner_points(self):
@@ -103,7 +104,7 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
             return abs(segment[1][-1])
 
         def get_segment(a, b, z_0):
-            a_R = np.linspace(a, b, num=10, endpoint=True)
+            a_R = np.linspace(a, b, num=70, endpoint=True)
             asol = integrate.odeint(solvr, [z_0, 0], a_R)
             return a_R, asol[:, 0], asol[:, 1]
 

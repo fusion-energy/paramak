@@ -58,6 +58,7 @@ class ToroidalFieldCoilRectangle(ToroidalFieldCoil):
 
         self.horizontal_start_point = horizontal_start_point
         self.vertical_mid_point = vertical_mid_point
+        self.inner_leg_connection_points = None
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe

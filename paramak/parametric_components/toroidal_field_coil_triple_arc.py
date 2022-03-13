@@ -59,6 +59,7 @@ class ToroidalFieldCoilTripleArc(ToroidalFieldCoil):
         self.h = h
         self.small_radius, self.mid_radius = radii
         self.small_coverage, self.mid_coverage = coverages
+        self.inner_leg_connection_points = None
 
     def _compute_curve(self, R1, h, radii, coverages):
         npoints = 500
