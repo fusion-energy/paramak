@@ -1,9 +1,5 @@
 from typing import List, Union, Optional
-import numpy as np
 import paramak
-from paramak import shape
-from paramak.utils import union_solid
-
 
 class NegativeTriangularityReactor(paramak.Reactor):
     """
@@ -804,7 +800,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             color=(0.2, 1, 0.2),
         )
 
-        self._tf_inner_leg.show()
         return [self._tf_inner_leg]
 
     def _make_vacuum_vessel_inner_wall(self):
