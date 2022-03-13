@@ -1,8 +1,6 @@
 from typing import Optional, Tuple
 
 import numpy as np
-from scipy import integrate
-from scipy.optimize import minimize
 
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
 from paramak.utils import add_thickness
@@ -98,17 +96,15 @@ class ToroidalFieldCoil(ExtrudeMixedShape):
            A CadQuery solid: A 3D solid volume
         """
 
-        outer_leg = ExtrudeMixedShape(
-            name=self.name,
-            points=self.points,
-            distance=self.distance,
-            azimuth_placement_angle=self.azimuth_placement_angle,
-            color=self.color,
-            rotation_angle=self.rotation_angle,
-        )
-
-        solids = [outer_leg.solid]
         if self.with_inner_leg:
+            outer_leg = ExtrudeMixedShape(
+                name=self.name,
+                points=self.points,
+                distance=self.distance,
+                azimuth_placement_angle=self.azimuth_placement_angle,
+                color=self.color,
+                rotation_angle=self.rotation_angle,
+            )
             inner_leg = ExtrudeStraightShape(
                 name=self.name,
                 points=self.inner_leg_connection_points,
@@ -116,12 +112,23 @@ class ToroidalFieldCoil(ExtrudeMixedShape):
                 azimuth_placement_angle=self.azimuth_placement_angle,
                 color=self.color,
                 rotation_angle=self.rotation_angle,
+                union=[outer_leg]
             )
-            solids.append(inner_leg.solid)
-
-        compound = cq.Compound.makeCompound([a.val() for a in solids])
-        self.solid = compound
-        return compound
+            solids = inner_leg.solid
+        else:
+            outer_leg = ExtrudeMixedShape(
+                name=self.name,
+                points=self.points,
+                distance=self.distance,
+                azimuth_placement_angle=self.azimuth_placement_angle,
+                color=self.color,
+                rotation_angle=self.rotation_angle,
+            )
+            solids = outer_leg.solid
 
         # TODO check the wires are made correctly
         # self.wire = wires
+
+        self.solid = solids
+        return solids
+
