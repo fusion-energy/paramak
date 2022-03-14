@@ -23,7 +23,6 @@ requirements:
     - plotly
     - brep_part_finder  # [not win]
     - brep_to_h5m  # [not win]
-    - moab  # [not win]
     # - jupyter-cadquery not available on conda
 
 test:
@@ -35,7 +34,6 @@ test:
     - tests
   requires:
     - pytest
-    - pytest-cov
     - dagmc_h5m_file_inspector  # [not win]
   source_files:
     - tests/
@@ -43,8 +41,8 @@ test:
     - tests_h5m/  # [not win]
     # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
   commands:
-    - pytest -v tests
     - pytest -v tests_h5m  # [not win]
+    - pytest -v tests
     # - pytest -v tests_show  # TODO include if cadquery_jupyter gets a conda install
     # - pytest -v tests_examples  # TODO include if cadquery_jupyter gets a conda install
 
