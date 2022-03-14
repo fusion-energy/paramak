@@ -81,7 +81,7 @@ def create_reactor_renders(
 
     # renders the scene
     my_render = pyrender.OffscreenRenderer(1000, 1000)
-    color, depth = my_render.render(scene)
+    color, _ = my_render.render(scene)
 
     # adds the render to the plot as a subplot in the correct location
     plt.plot()

@@ -43,9 +43,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         port_z_pos: List containing the Z position of the ports as Zero in the
             centre of the reactor (cm),
         outer_tf_coil_thickness: Outer Toroidal Field coil thickness (cm) -
-            defaults to the inner Toroidal Field coil thickness,
-        show_plasma: Boolean to include (True) or exlcude (False) plasma from
-            the model,
+            defaults to the inner Toroidal Field coil thickness,,
         low_aspect: Boolean allowing a swift switch between a lower
             aspect-ratio reactor (True) where the inner blanket is cut by the
             center column, whereas (False) non-low-aspect will produce a full
@@ -69,8 +67,8 @@ class NegativeTriangularityReactor(paramak.Reactor):
         divertor_height_full: float = 300,
         number_of_coils: int = 12,
         tf_width: float = 75,
-        pf_coil_heights: Optional[Union[float, list]] = [75, 75, 150, 75, 75],
-        pf_coil_widths: Optional[Union[float, list]] = [70, 70, 150, 70, 70],
+        pf_coil_heights: Optional[Union[float, List[float]]] = [75, 75, 150, 75, 75],
+        pf_coil_widths: Optional[Union[float, List[float]]] = [70, 70, 150, 70, 70],
         pf_coil_center_points: Optional[Union[list, tuple]] = [
             (350, 850),
             (1350, 650),
@@ -78,15 +76,14 @@ class NegativeTriangularityReactor(paramak.Reactor):
             (1350, -650),
             (350, -850),
         ],
-        pf_coil_casing_thickness: Optional[float] = [15, 15, 15, 15, 15],
+        pf_coil_casing_thickness: Optional[List[float]] = [15, 15, 15, 15, 15],
         rotation_angle: float = 180,
-        inner_bore_radius: Optional[float] = 50,
-        port_side_lengths: Optional[list] = [200, 200, 150],
-        port_heights: Optional[list] = [200, 100, 400],
-        port_angles: Optional[list] = [75, 170, 15],
-        port_z_pos: Optional[list] = [500, -500, 200],
-        outer_tf_coil_thickness: float = None,
-        show_plasma: bool = True,
+        inner_bore_radius: float = 50,
+        port_side_lengths: Optional[List[float]] = [200, 200, 150],
+        port_heights: Optional[List[float]] = [200, 100, 400],
+        port_angles: Optional[List[float]] = [75, 170, 15],
+        port_z_pos: Optional[List[float]] = [500, -500, 200],
+        outer_tf_coil_thickness: Optional[float] = None,
         low_aspect: bool = False,
     ):
 
@@ -116,7 +113,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._pf_casing_thickness = pf_coil_casing_thickness
 
         self._rotation_angle = rotation_angle
-        self.show_plasma = show_plasma
         self._low_aspect = low_aspect
         self._number_of_coils = number_of_coils
         self._tf_width = tf_width
@@ -151,7 +147,6 @@ class NegativeTriangularityReactor(paramak.Reactor):
             "port_angles",
             "port_z_pos",
             "outer_tf_coil_thickness",
-            "show_plasma",
             "low_aspect",
         ]
 
@@ -232,9 +227,9 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._tf_end_rad = 0
 
     def _plasma_geometry(self):
-        """Calculating plasma geometry from parameters
-        Adjust a gap between inner TF leg and vacuum vessel to accomodate a
-        wider range of thicknesses"""
+        """Calculating plasma geometry from parameters. Adjust a gap between
+        inner TF leg and vacuum vessel to accommodate a wider range of
+        thicknesses"""
         core_width = (
             self._inner_bore_radius
             + self._inner_tf_coil_thickness
@@ -568,10 +563,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._make_vertical_build()
         self._make_radial_build()
 
-        if self.show_plasma:
-            shapes_and_components.append(self._make_plasma())
-        else:
-            print("Plasma is excluded from the model.")
+        shapes_and_components.append(self._make_plasma())
 
         if self._ports_enable:
             self._make_ports()
