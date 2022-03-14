@@ -220,10 +220,6 @@ class TestRotateStraightShape(unittest.TestCase):
         """Creates a RotateStraightShape with multiple RotateStraightShapes
         cut out and checks that the volume is correct."""
 
-        main_shape = RotateStraightShape(
-            points=[(0, 0), (0, 200), (200, 200), (200, 0)],
-        )
-
         shape_to_cut_1 = RotateStraightShape(
             points=[(20, 0), (20, 200), (40, 200), (40, 0)],
         )

@@ -1,11 +1,8 @@
 import math
 from typing import Optional, Tuple
 
-import cadquery as cq
-import numpy as np
-
 from .toroidal_field_coil import ToroidalFieldCoil
-from paramak.utils import calculate_wedge_cut, rotate, patch_workplane
+from paramak.utils import rotate, patch_workplane
 
 patch_workplane()
 

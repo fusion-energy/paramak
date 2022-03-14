@@ -45,7 +45,7 @@ class TestToroidalFieldCoilPrincetonD(unittest.TestCase):
         test_inner_leg = paramak.ExtrudeStraightShape(
             points=self.test_shape.inner_leg_connection_points, distance=30
         )
-        inner_leg_volume = test_inner_leg.volume()
+        test_inner_leg.volume()
 
         self.test_shape.with_inner_leg = False
 

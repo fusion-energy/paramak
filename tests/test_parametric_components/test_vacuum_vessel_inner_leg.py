@@ -1,7 +1,5 @@
 import unittest
 
-import pytest
-
 import paramak
 
 

@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 import paramak
 from paramak import (

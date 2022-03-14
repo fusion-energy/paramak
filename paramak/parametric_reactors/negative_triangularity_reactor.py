@@ -592,7 +592,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
         return self._plasma
 
     def _make_vertical_build(self):
-        ### Above the plasma ###
+        # Above the plasma
         # Inner wall
         self._inner_wall_start_height = (
             self._plasma.high_point[1] + self._wall_to_plasma_gap
@@ -616,7 +616,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._divertor_start_height + self._divertor_height_full
         )
 
-        ### Diverter height check ###
+        # Diverter height check
         min_div_h = self._rear_wall_end_height_top - self._divertor_start_height
         if min_div_h > self._divertor_height_full:
             print(
@@ -670,7 +670,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             + self._inner_wall_thickness
         )
 
-        ### Run check for diverter parameters ###
+        # Run check for diverter parameters
         full_outer_blanket_rad = (
             self._major_radius
             + self._minor_radius
@@ -690,7 +690,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             )
             self._divertor_radial_thickness = width_parameter_difference
 
-        ### Divertor parts ###
+        # Divertor parts
         self._divertor_start_rad = self._plasma.high_point[0]
         self._divertor_end_rad = (
             self._divertor_start_rad + self._divertor_radial_thickness
@@ -825,7 +825,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
     def _make_blankets(self):
 
-        ### Cutters ###
+        # Cutters
 
         self._divertor_cutter_cutter = paramak.CenterColumnShieldCylinder(
             height=self._divertor_start_height * 2,
@@ -846,7 +846,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             outer_radius=self._inner_shield_end_rad,
         )
 
-        ### Blanket layers ###
+        # Blanket layers
 
         self._rear_wall = paramak.BlanketFP(
             thickness=self._rear_wall_thickness,

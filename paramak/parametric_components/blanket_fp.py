@@ -1,5 +1,5 @@
 import warnings
-from typing import Callable, List, Optional, Union
+from typing import Optional, Union
 
 import mpmath
 import numpy as np
@@ -7,10 +7,7 @@ import sympy as sp
 from scipy.interpolate import interp1d
 
 import paramak
-from paramak import RotateMixedShape, diff_between_angles
-from paramak.parametric_components.tokamak_plasma_plasmaboundaries import (
-    PlasmaBoundaries,
-)
+from paramak import RotateMixedShape
 
 
 class BlanketFP(RotateMixedShape):

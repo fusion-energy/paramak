@@ -4,7 +4,7 @@ import pytest
 
 import paramak
 
-"""This test evaluates the perimeter of the resultant points and asserts them agaist the known value"""
+"""This test evaluates the perimeter of the resultant points and asserts them against the known value"""
 
 
 def perimeter(outer_start_point, radius, thickness):
@@ -13,16 +13,16 @@ def perimeter(outer_start_point, radius, thickness):
         outer_start_point=outer_start_point, radius=radius, thickness=thickness
     )
     point1 = test_shape.points[0]
-    point2 = test_shape.points[1]
+    # point2 = test_shape.points[1]
     point3 = test_shape.points[2]
     point4 = test_shape.points[3]
-    point5 = test_shape.points[4]
+    # point5 = test_shape.points[4]
     point6 = test_shape.points[5]
     point7 = test_shape.points[6]
-    point8 = test_shape.points[7]
+    # point8 = test_shape.points[7]
     point9 = test_shape.points[8]
     point10 = test_shape.points[9]
-    point11 = test_shape.points[10]
+    # point11 = test_shape.points[10]
     point12 = test_shape.points[11]
 
     straightedges = float(
@@ -33,6 +33,8 @@ def perimeter(outer_start_point, radius, thickness):
     )
     curvededges = float((math.pi * radius) + (math.pi * (radius - thickness)))
     total = float(straightedges + curvededges)
+
+    # TODO add an assert statement to test something here
 
     return total
 

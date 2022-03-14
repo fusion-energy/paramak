@@ -1,7 +1,9 @@
 from math import pi
 
 import pytest
-from attr.setters import NO_OP
+
+# # removed due to flake 8 comment
+# from attr.setters import NO_OP
 
 from paramak import ToroidalFieldCoilRectangleRoundCorners
 
