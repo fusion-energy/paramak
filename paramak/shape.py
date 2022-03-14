@@ -1,13 +1,10 @@
-import json
 import numbers
 import os
 import tempfile
-import warnings
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes
@@ -540,27 +537,26 @@ class Shape:
         result = importers.importStep(filename)
         self.solid = result
 
-    def show(self, default_edgecolor: Tuple[float, float, float] = (0, 0, 0)):
+    def show(self, **kwargs):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
-        show from jupyter_cadquery.cadquery and returns show(Shape.solid)
+        show from jupyter_cadquery and returns show(Shape.solid, kwargs)
 
         Args:
-            default_edgecolor: the color to use for the edges, passed to
-                jupyter_cadquery.cadquery show. Tuple of three values expected
-                individual values in the tuple should be floats between 0. and
-                1.
+            kwargs: keyword arguments passed to jupyter-cadquery show()
+                function. See https://github.com/bernhard-42/jupyter-cadquery#usage
+                for more details on acceptable keywords
 
         Returns:
-            jupyter_cadquery.cadquery.show object
+            jupyter_cadquery show object
         """
 
         try:
-            from jupyter_cadquery.cadquery import Part, PartGroup, show
+            from jupyter_cadquery import Part, PartGroup, show
         except ImportError:
             msg = (
-                "To use Shape.show() you must install jupyter_cadquery. To"
-                'install jupyter_cadquery type "pip install jupyter_cadquery"'
-                " in the terminal"
+                "To use Reactor.show() you must install jupyter_cadquery version "
+                '3.0.0 or above. To install jupyter_cadquery type "pip install '
+                'jupyter_cadquery" in the terminal'
             )
             raise ImportError(msg)
 
@@ -571,7 +567,6 @@ class Shape:
             name = self.name
 
         scaled_color = [int(i * 255) for i in self.color[0:3]]
-        scaled_edge_color = [int(i * 255) for i in default_edgecolor[0:3]]
         if isinstance(self.solid, (shapes.Shape, shapes.Compound)):
             for i, solid in enumerate(self.solid.Solids()):
                 parts.append(
@@ -587,7 +582,7 @@ class Shape:
                 )
             )
 
-        return show(PartGroup(parts), default_edgecolor=scaled_edge_color)
+        return show(PartGroup(parts), **kwargs)
 
     def create_solid(self) -> Workplane:
         solid = None
@@ -1034,28 +1029,23 @@ class Shape:
 
         return str(path_filename)
 
-    def export_html_3d(
-        self,
-        filename: Optional[str] = "shape_3d.html",
-    ):
+    def export_html_3d(self, filename: Optional[str] = "shape_3d.html", **kwargs):
         """Saves an interactive 3d html view of the Shape to a html file.
 
         Args:
             filename: the filename used to save the html graph. Defaults to
                 shape_3d.html
+            kwargs: keyword arguments passed to jupyter-cadquery show()
+                function. See https://github.com/bernhard-42/jupyter-cadquery#usage
+                for more details on acceptable keywords
 
         Returns:
             str: filename of the created html file
         """
 
-        from ipywidgets.embed import embed_minimal_html
+        view = self.show(**kwargs)
 
-        view = self.show()
-
-        if view is None:
-            return None
-
-        embed_minimal_html(filename, views=[view.cq_view.renderer], title="Renderer")
+        view.export_html(filename)
 
         return filename
 

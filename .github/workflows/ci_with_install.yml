@@ -20,7 +20,7 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/fusion-energy/paramak:dependencies
+      image: ghcr.io/fusion-energy/paramak_cq_master:dependencies
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -28,6 +28,11 @@ jobs:
       - name: install package
         run: |
           pip install --upgrade pip
+          pip install .
+          python -c "import paramak"
+
+      - name: install package with tests
+        run: |
           pip install .[tests]
 
       - name: Run tests

@@ -56,7 +56,7 @@ RUN echo installing CadQuery version $cq_version && \
     conda install -c conda-forge moab && \
     conda install -c conda-forge gmsh && \
     conda install -c conda-forge python-gmsh && \
-    pip install jupyter-cadquery==2.2.0 && \
+    pip install jupyter-cadquery && \
     conda clean -afy
 
 

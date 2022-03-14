@@ -64,7 +64,7 @@ ball_reactor.ipynb
 
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor.ipynb>`__
 
 
 ball_reactor_single_null.ipynb
@@ -105,7 +105,7 @@ ball_reactor_single_null.ipynb
 
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor_single_null.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor_single_null.ipynb>`__
 
 
 center_column_study_reactor.ipynb
@@ -136,7 +136,7 @@ center_column_study_reactor.ipynb
 
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/center_column_study_reactor.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/center_column_study_reactor.ipynb>`__
 
 eu_demo_from_2015_paper.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -154,7 +154,7 @@ eu_demo_from_2015_paper.ipynb
    
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/eu_demo_from_2015_paper.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/eu_demo_from_2015_paper.ipynb>`__
 
 
 make_animation.ipynb
@@ -168,7 +168,7 @@ make_animation.ipynb
 .. |animation2| image:: https://user-images.githubusercontent.com/8583900/107030664-e2131480-67a8-11eb-84bb-59656e9e7722.gif
    :width: 300
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`__
 
 
 segmented_blanket_ball_reactor.ipynb
@@ -211,7 +211,7 @@ segmented_blanket_ball_reactor.ipynb
 
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/segmented_blanket_ball_reactor.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/segmented_blanket_ball_reactor.ipynb>`__
 
 sparc_from_2020_paper.ipynb
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -228,7 +228,7 @@ sparc_from_2020_paper.ipynb
 
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/sparc_from_2020_paper.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/sparc_from_2020_paper.ipynb>`__
 
 
 submersion_reactor.ipynb
@@ -268,7 +268,7 @@ submersion_reactor.ipynb
    )
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`__
 
 
 submersion_reactor_single_null.ipynb
@@ -311,7 +311,7 @@ submersion_reactor_single_null.ipynb
 
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor_single_null.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor_single_null.ipynb>`__
 
 
 iter_from_2020_paper.ipynb
@@ -329,4 +329,4 @@ iter_from_2020_paper.ipynb
    
    cadquery_object = my_reactor.solid
 
-`Link to notebook <https://github.com/ukaea/paramak/blob/develop/examples/example_parametric_reactors/iter_from_2020_paper_diagram.ipynb>`__
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/iter_from_2020_paper.ipynb>`__

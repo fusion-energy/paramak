@@ -48,14 +48,14 @@ jobs:
             cq_version=master
             paramak_version=${{ github.ref_name }}
 
-      - name: Build and push dependencies Docker image CQ=2.1
+      - name: Build and push dependencies Docker image CQ=master
         uses: docker/build-push-action@v2
         with:
           push: true
           target: dependencies
           tags: ghcr.io/fusion-energy/paramak:dependencies
           build-args: |
-            cq_version=2.1
+            cq_version=master
             paramak_version=${{ github.ref_name }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
@@ -74,4 +74,4 @@ jobs:
           push: true
           tags: ghcr.io/fusion-energy/paramak
           build-args: |
-            cq_version=2.1
+            cq_version=master

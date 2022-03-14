@@ -3,6 +3,7 @@ from typing import Optional, Tuple, Union
 import cadquery as cq
 import numpy as np
 
+
 from paramak.parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
 from paramak.utils import calculate_wedge_cut, patch_workplane
 
@@ -29,20 +30,27 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             given). Defaults to 1
         with_inner_leg: Boolean to include the inside of the Coils
             defaults to False
+        azimuth_start_angle: The azimuth angle to for the first TF coil which
+            offsets the placement of coils around the azimuthal angle
     """
 
     def __init__(
         self,
-        lower_inner_coordinates: Tuple[float, float],
-        mid_point_coordinates: Tuple[float, float],
-        thickness: Union[float, int],
-        distance: float,
-        number_of_coils: int = 1,
-        with_inner_leg: Optional[bool] = False,
+        name: str = "toroidal_field_coil",
+        lower_inner_coordinates: Tuple[float, float] = (100, 250),
+        mid_point_coordinates: Tuple[float, float] = (500, 0),
+        thickness: Union[float, int] = 30,
+        distance: float = 20,
+        number_of_coils: int = 12,
+        with_inner_leg: Optional[bool] = True,
+        azimuth_start_angle: float = 0,
+        # vertical_displacement:float = 0.0,
+        # rotation_angle:float = 360.,
+        color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 
-        super().__init__(distance=distance, **kwargs)
+        super().__init__(name=name, distance=distance, color=color, **kwargs)
 
         self._lower_inner_coordinates = lower_inner_coordinates
         self._mid_point_coordinates = mid_point_coordinates
@@ -50,13 +58,19 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         self._distance = distance
         self.number_of_coils = number_of_coils
         self._with_inner_leg = with_inner_leg
-        self._inner_leg_connection_points = []
+        self.inner_leg_connection_points = []
         self._analyse_attributes = [0, 0, 0, 0]
         self._base_length = 0
         self._height = 0
         self._inner_curve_radius = 0
         self._outter_curve_radius = 0
+        self.azimuth_start_angle = azimuth_start_angle
+        # TODO to the create points
+        # self.vertical_displacement = vertical_displacement
+        # TODO add to to the create solid part
+        # self.rotation_angle = rotation_angle
 
+        # TODO move to setters
         if len(lower_inner_coordinates) != 2 or len(mid_point_coordinates) != 2:
             msg = (
                 "The input tuples are too long or too short, they must be "
@@ -316,7 +330,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         inner_point3 = (point4[0] + thickness, point4[1])
         inner_point4 = (point4[0], point4[1])
 
-        self._inner_leg_connection_points = [
+        self.inner_leg_connection_points = [
             inner_point1,
             inner_point2,
             inner_point3,
@@ -329,7 +343,15 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         """Finds the placement angles from the number of coils
         given in a 360 degree"""
 
-        angles = list(np.linspace(0, 360, self._number_of_coils, endpoint=False))
+        angles = list(
+            np.linspace(
+                self.azimuth_start_angle,
+                360 + self.azimuth_start_angle,
+                self.number_of_coils,
+                endpoint=False,
+            )
+        )
+
         self.azimuth_placement_angle = angles
 
     def create_solid(self):
@@ -375,7 +397,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         if self._with_inner_leg:
             inner_leg_solid = cq.Workplane(self.workplane)
             inner_leg_solid = (
-                inner_leg_solid.polyline(self._inner_leg_connection_points)
+                inner_leg_solid.polyline(self.inner_leg_connection_points)
                 .close()
                 .extrude(until=-self._distance / 2, both=True)
             )

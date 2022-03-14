@@ -1,10 +1,6 @@
-import json
 import os
 import unittest
 from pathlib import Path
-
-import cadquery as cq
-import pytest
 
 import paramak
 

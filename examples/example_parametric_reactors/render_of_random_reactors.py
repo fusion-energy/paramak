@@ -43,7 +43,7 @@ def generate_random_reactor():
     ]:
         try:
             input_variables.remove(input_var)
-        except:
+        except ValueError:
             pass
 
     print(my_reactor.__dict__, "\n\n")

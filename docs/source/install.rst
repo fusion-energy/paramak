@@ -29,7 +29,7 @@ Install (conda)
 
 This is the recommended method.
 
-Create a new environment (Python 3.6, 3.7 or 3.8 are supported).
+Create a new environment (Python 3.8 and 3.9 are supported).
 
 .. code-block:: bash
 
@@ -56,7 +56,7 @@ Now you should be ready to import paramak from your new python environment.
 Install (conda + pip)
 ---------------------
 
-Create a new environment (Python 3.6, 3.7 or 3.8 are supported).
+Create a new environment (Python 3.8 and 3.9 are supported).
 
 .. code-block:: bash
 
@@ -74,20 +74,19 @@ Then install the CadQuery.
 
 .. code-block:: bash
 
-   conda install -c cadquery -c conda-forge cadquery=2.1
+   conda install -c cadquery -c conda-forge cadquery=master
 
-If you want to make use of the prototype export_dagmc_h5m() method then you will
-need to modify the above command to target CaDQuery Master instead of 2.1.
-MOAB and PyMoab are also required for the export_dagmc_h5m() feature to work.
+If you want to make use of the prototype export_dagmc_h5m() method the you will need
+MOAB and PyMoab for the export_dagmc_h5m() feature to work.
 The MOAB Conda install does not currently support Windows and therefore Windows
 users will have to compile MOAB. If the export_dagmc_h5m() feature is not
 needed then this stage can be skipped.
 
 .. code-block:: bash
 
-   conda install -c conda-forge moab=5.3.1
    conda install -c conda-forge gmsh=4.9.4
    conda install -c conda-forge python-gmsh=4.9.4
+   conda install -c conda-forge 'moab>=5.3.0'
 
 Then pip install the Paramak.
 
@@ -131,7 +130,7 @@ which includes other packages that might be of interest.
 
 * `OpenMC <https://github.com/openmc-dev/openmc>`_ The OpenMC project, a Monte Carlo particle transport code based on modern methods.
 
-* `DAGMC <https://github.com/svalinn/DAGMC>`_ Direct Accelerated Geometry Monte Carlo Toolkit 
+* `DAGMC <https://github.com/svalinn/DAGMC>`_ Direct Accelerated Geometry Monte Carlo Toolkit
 
 * `Svalinn Cubit Plugin <https://github.com/svalinn/Cubit-plugin/>`_ A plugin and command extensions for Cubit that allows h5m files to be exported.
 
@@ -143,7 +142,7 @@ which includes other packages that might be of interest.
 Developer Installation
 ----------------------
 
-If you want to contribute to the paramak or then you might want to install the 
+If you want to contribute to the paramak or then you might want to install the
 package using setup tools.
 
 Download and install MiniConda, create a new python environment and activate the
@@ -153,7 +152,7 @@ Then install CadQuery.
 
 .. code-block:: bash
 
-   conda install -c conda-forge -c cadquery cadquery=2.1
+   conda install -c conda-forge -c cadquery cadquery=master
 
 
 Then clone the repository
