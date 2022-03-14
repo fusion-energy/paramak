@@ -1,13 +1,10 @@
-import json
 import numbers
 import os
 import tempfile
-import warnings
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-import cadquery as cq
 import matplotlib.pyplot as plt
 from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes

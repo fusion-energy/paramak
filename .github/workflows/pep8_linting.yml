@@ -20,9 +20,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.x
-      - name: Install black
+      - name: Lint code
         run: |
           python -m pip install --upgrade pip
+          pip install flake8
+          flake8 . --show-source --statistics --max-line-length 120
+      - name: Install black
+        run: |
           pip install black==22.1.0
       - name: Run black
         run: |

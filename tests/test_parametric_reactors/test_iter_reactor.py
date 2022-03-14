@@ -37,7 +37,7 @@ class TestITERReactor(unittest.TestCase):
         checks the contruction runs"""
 
         my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
-        plasma = my_reactor.create_plasma()
+        my_reactor.create_plasma()
         vessel_components = my_reactor.create_vessel_components()
         for component in vessel_components:
             assert component.volume() > 0

@@ -1,8 +1,5 @@
-import os
 import unittest
-from pathlib import Path
 
-import numpy as np
 import plotly.graph_objects as go
 import pytest
 

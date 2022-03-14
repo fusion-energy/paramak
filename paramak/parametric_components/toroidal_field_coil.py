@@ -3,8 +3,6 @@ from typing import Optional, Tuple
 import numpy as np
 
 from paramak import ExtrudeMixedShape, ExtrudeStraightShape
-from paramak.utils import add_thickness
-import cadquery as cq
 
 
 class ToroidalFieldCoil(ExtrudeMixedShape):
