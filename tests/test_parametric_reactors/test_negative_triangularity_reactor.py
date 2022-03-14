@@ -42,7 +42,6 @@ class TestNegativeTriangularityReactor(unittest.TestCase):
                 (350, -850),
             ],
             pf_coil_casing_thickness=[5, 5, 5, 5, 5],
-            show_plasma=False,
             low_aspect=True,
         )
         self.test_reactor.create_solid()
