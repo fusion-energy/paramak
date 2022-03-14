@@ -121,6 +121,22 @@ Blanket Cutting Tools
 BlanketCutterParallels()
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.BlanketCutterParallels(
+        thickness=10.,
+        gap_size=30.,
+        height=200.,
+        width=200.,
+        name="blanket_cutter_parallels",
+        azimuth_placement_angle=[0., 36., 72., 108., 144., 180., 216., 252., 288., 324.],
+   )
+
+   cadquery_object = my_component.solid
+
 .. image:: https://user-images.githubusercontent.com/8583900/97329670-32580d80-186f-11eb-8b1a-b7712ddb0e83.png
    :width: 400
 
@@ -915,6 +931,15 @@ TFCoilCasing()
 ToroidalFieldCoilRectangle()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilRectangle()
+
+   cadquery_object = my_component.solid
+
 |ToroidalFieldCoilRectangleallstp| |ToroidalFieldCoilRectanglesvg| |ToroidalFieldCoilRectangleastp|
 
 .. |ToroidalFieldCoilRectangleallstp| image:: https://user-images.githubusercontent.com/8583900/86822598-bcdbed80-c083-11ea-820e-f6c13d639170.png
@@ -931,6 +956,15 @@ ToroidalFieldCoilRectangle()
 
 ToroidalFieldCoilCoatHanger()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ToroidalFieldCoilCoatHanger()
+
+   cadquery_object = my_component.solid
 
 |ToroidalFieldCoilCoatHangerallstp| |ToroidalFieldCoilCoatHangersvg| |ToroidalFieldCoilCoatHangerastp|
 
@@ -1023,7 +1057,7 @@ ToroidalFieldCoilRectangleRoundCorners()
 
    import paramak
    my_component = paramak.ToroidalFieldCoilRectangleRoundCorners(
-      with_inner_leg=False,
+      with_inner_leg=True,
       lower_inner_coordinates=(0, 0),
       mid_point_coordinates=(100, 100),
       thickness=30,

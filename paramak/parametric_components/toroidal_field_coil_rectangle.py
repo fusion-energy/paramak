@@ -3,13 +3,13 @@ from typing import Optional, Tuple
 import cadquery as cq
 import numpy as np
 
-from paramak import ExtrudeStraightShape
+from .toroidal_field_coil import ToroidalFieldCoil
 from paramak.utils import calculate_wedge_cut, patch_workplane
 
 patch_workplane()
 
 
-class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
+class ToroidalFieldCoilRectangle(ToroidalFieldCoil):
     """Creates a rectangular shaped toroidal field coil.
 
     Args:
@@ -29,35 +29,36 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
 
     def __init__(
         self,
-        horizontal_start_point: Tuple[float, float],
-        vertical_mid_point: Tuple[float, float],
-        thickness: float,
-        distance: float,
-        number_of_coils: int,
+        name: str = "toroidal_field_coil",
+        horizontal_start_point: Tuple[float, float] = (20, 200),
+        vertical_mid_point: Tuple[float, float] = (350, 0),
+        thickness: float = 30,
+        distance: float = 20,
+        number_of_coils: int = 12,
         with_inner_leg: bool = True,
         azimuth_start_angle: float = 0,
+        vertical_displacement: float = 0.0,
+        rotation_angle: float = 360.0,
         color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 
-        super().__init__(distance=distance, color=color, **kwargs)
+        super().__init__(
+            name=name,
+            thickness=thickness,
+            number_of_coils=number_of_coils,
+            vertical_displacement=vertical_displacement,
+            with_inner_leg=with_inner_leg,
+            azimuth_start_angle=azimuth_start_angle,
+            rotation_angle=rotation_angle,
+            distance=distance,
+            color=color,
+            **kwargs
+        )
 
         self.horizontal_start_point = horizontal_start_point
         self.vertical_mid_point = vertical_mid_point
-        self.thickness = thickness
-        self.distance = distance
-        self.number_of_coils = number_of_coils
-        self.with_inner_leg = with_inner_leg
-        self.azimuth_start_angle = azimuth_start_angle
-
-    @property
-    def azimuth_placement_angle(self):
-        self.find_azimuth_placement_angle()
-        return self._azimuth_placement_angle
-
-    @azimuth_placement_angle.setter
-    def azimuth_placement_angle(self, value):
-        self._azimuth_placement_angle = value
+        self.inner_leg_connection_points = None
 
     def find_points(self):
         """Finds the XZ points joined by straight connections that describe
@@ -108,63 +109,17 @@ class ToroidalFieldCoilRectangle(ExtrudeStraightShape):
             ),
         ]
 
-        self.inner_leg_connection_points = [points[0], points[1], points[4], points[5]]
+        # adds any vertical displacement and the connection type to the points
+        points = [
+            (point[0], point[1] + self.vertical_displacement, "straight")
+            for point in points
+        ]
+
+        self.inner_leg_connection_points = [
+            (points[0][0], points[0][1]),
+            (points[1][0], points[1][1]),
+            (points[4][0], points[4][1]),
+            (points[5][0], points[5][1]),
+        ]
 
         self.points = points
-
-    def find_azimuth_placement_angle(self):
-        """Calculates the azimuth placement angles based on the number of tf
-        coils"""
-
-        angles = list(
-            np.linspace(
-                self.azimuth_start_angle,
-                360 + self.azimuth_start_angle,
-                self.number_of_coils,
-                endpoint=False,
-            )
-        )
-
-        self.azimuth_placement_angle = angles
-
-    def create_solid(self):
-        """Creates a 3d solid using points with straight edges.
-
-        Returns:
-           A CadQuery solid: A 3D solid volume
-        """
-
-        # Creates a cadquery solid from points and revolves
-        points_without_connections = [p[:2] for p in self.points]
-        solid = cq.Workplane(self.workplane).polyline(points_without_connections)
-
-        wire = solid.close()
-
-        self.wire = wire
-
-        solid = wire.extrude(until=-self.distance / 2.0, both=True)
-
-        solid = self.rotate_solid(solid)
-
-        cutting_wedge = calculate_wedge_cut(self)
-        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
-
-        if self.with_inner_leg is True:
-            inner_leg_solid = cq.Workplane(self.workplane)
-            inner_leg_solid = inner_leg_solid.polyline(self.inner_leg_connection_points)
-            inner_leg_solid = inner_leg_solid.close().extrude(
-                until=-self.distance / 2.0, both=True
-            )
-
-            inner_leg_solid = self.rotate_solid(inner_leg_solid)
-            inner_leg_solid = self.perform_boolean_operations(
-                inner_leg_solid, wedge_cut=cutting_wedge
-            )
-
-            solid = cq.Compound.makeCompound(
-                [a.val() for a in [inner_leg_solid, solid]]
-            )
-
-        self.solid = solid  # not necessarily required as set in boolean_operations
-
-        return solid

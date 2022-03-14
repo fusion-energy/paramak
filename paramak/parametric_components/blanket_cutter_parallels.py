@@ -97,7 +97,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
 
         self.main_cutting_shape.points = points
 
-        self.points = points[:-1]
+        self.points = points
 
     def create_solid(self):
         solid = super().create_solid()

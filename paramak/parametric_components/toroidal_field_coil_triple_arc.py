@@ -2,10 +2,10 @@ from typing import Optional, Tuple
 
 import numpy as np
 
-from paramak import ExtrudeMixedShape
+from .toroidal_field_coil import ToroidalFieldCoil
 
 
-class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
+class ToroidalFieldCoilTripleArc(ToroidalFieldCoil):
     """Toroidal field coil made of three arcs
 
     Args:
@@ -26,41 +26,40 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
 
     def __init__(
         self,
-        R1: float,
-        h: float,
-        radii: Tuple[float, float],
-        coverages: Tuple[float, float],
-        thickness: float,
-        distance: float,
-        number_of_coils: int,
+        name: str = "toroidal_field_coil",
+        R1: float = 80,
+        h: float = 200,
+        radii: Tuple[float, float] = (70, 100),
+        coverages: Tuple[float, float] = (60, 60),
+        thickness: float = 30,
+        distance: float = 20,
+        number_of_coils: int = 12,
         vertical_displacement: float = 0.0,
         with_inner_leg: bool = True,
         azimuth_start_angle: float = 0,
+        rotation_angle: float = 360.0,
         color: Tuple[float, float, float, Optional[float]] = (0.0, 0.0, 1.0),
         **kwargs
     ) -> None:
 
-        super().__init__(distance=distance, color=color, **kwargs)
+        super().__init__(
+            name=name,
+            thickness=thickness,
+            number_of_coils=number_of_coils,
+            vertical_displacement=vertical_displacement,
+            with_inner_leg=with_inner_leg,
+            azimuth_start_angle=azimuth_start_angle,
+            rotation_angle=rotation_angle,
+            distance=distance,
+            color=color,
+            **kwargs
+        )
+
         self.R1 = R1
         self.h = h
         self.small_radius, self.mid_radius = radii
-
         self.small_coverage, self.mid_coverage = coverages
-        self.thickness = thickness
-        self.distance = distance
-        self.number_of_coils = number_of_coils
-        self.vertical_displacement = vertical_displacement
-        self.with_inner_leg = with_inner_leg
-        self.azimuth_start_angle = azimuth_start_angle
-
-    @property
-    def azimuth_placement_angle(self):
-        self.find_azimuth_placement_angle()
-        return self._azimuth_placement_angle
-
-    @azimuth_placement_angle.setter
-    def azimuth_placement_angle(self, value):
-        self._azimuth_placement_angle = value
+        self.inner_leg_connection_points = None
 
     def _compute_curve(self, R1, h, radii, coverages):
         npoints = 500
@@ -135,27 +134,16 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         Z_inner += self.vertical_displacement
 
         # extract helping points for inner leg
-        inner_leg_connection_points = [
+        self.inner_leg_connection_points = [
             (R_inner[0], Z_inner[0]),
             (R_inner[-1], Z_inner[-1]),
             (R_outer[0], Z_outer[0]),
             (R_outer[-1], Z_outer[-1]),
         ]
-        self.inner_leg_connection_points = inner_leg_connection_points
 
-        # add the leg to the points
-        if self.with_inner_leg:
-            R_inner = np.append(R_inner, R_inner[0])
-            Z_inner = np.append(Z_inner, Z_inner[0])
-
-            R_outer = np.append(R_outer, R_outer[0])
-            Z_outer = np.append(Z_outer, Z_outer[0])
         # add connections
         inner_points = [[r, z, "spline"] for r, z in zip(R_inner, Z_inner)]
         outer_points = [[r, z, "spline"] for r, z in zip(R_outer, Z_outer)]
-        if self.with_inner_leg:
-            outer_points[-2][2] = "straight"
-            inner_points[-2][2] = "straight"
 
         inner_points[-1][2] = "straight"
         outer_points[-1][2] = "straight"
@@ -163,18 +151,3 @@ class ToroidalFieldCoilTripleArc(ExtrudeMixedShape):
         points = inner_points + outer_points
 
         self.points = points
-
-    def find_azimuth_placement_angle(self):
-        """Calculates the azimuth placement angles based on the number of tf
-        coils"""
-
-        angles = list(
-            np.linspace(
-                self.azimuth_start_angle,
-                360 + self.azimuth_start_angle,
-                self.number_of_coils,
-                endpoint=False,
-            )
-        )
-
-        self.azimuth_placement_angle = angles

@@ -235,6 +235,7 @@ class SubmersionTokamak(paramak.Reactor):
             shapes_and_components = uncut_shapes
         else:
             for shape in uncut_shapes:
+                print(shape, shape.name)
                 for pf_coil in pf_coils:
                     shape.solid = shape.solid.cut(pf_coil.solid)
             shapes_and_components = pf_coils + uncut_shapes
@@ -498,11 +499,14 @@ class SubmersionTokamak(paramak.Reactor):
                 rotation_angle=self.rotation_angle,
             )
 
-        for component in [self._firstwall, self._inboard_firstwall]:
-            if self.divertor_position in ["upper", "both"]:
-                component.cut = [self._divertor_upper]
-            if self.divertor_position in ["lower", "both"]:
-                component.cut = [self._divertor_lower]
+        if self.divertor_position == "upper":
+            cut_list = [self._divertor_upper]
+        if self.divertor_position == "lower":
+            cut_list = [self._divertor_lower]
+        if self.divertor_position == "both":
+            cut_list = [self._divertor_lower, self._divertor_upper]
+        self._firstwall.cut = cut_list
+        self._inboard_firstwall.cut = cut_list
 
         if self.divertor_position == "upper":
             return [self._divertor_upper]
