@@ -1606,12 +1606,14 @@ RotatedIsoscelesTriangle
 Parametric Reactors
 ===================
 
-These are the current reactor designs that can be created using the Paramak.
+These some of the reactor designs that can be created using the Paramak.
 
 .. image:: https://user-images.githubusercontent.com/8583900/115291309-7fe17300-a14c-11eb-9859-be85075eb0b9.png
    :width: 713
    :align: center
 
+Inertial Confinement
+--------------------
 
 FlfSystemCodeReactor()
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -1822,7 +1824,7 @@ low_aspect attribute is set to False, as well as the PF coils outside were moved
 
 
 Shape() class
-=============
+-------------
 
 The Shape class is the container class for all Shapes and Components.
 
@@ -1835,7 +1837,7 @@ Shape()
 
 
 Reactor() class
-===============
+---------------
 
 The Reactor() class allows Shapes() to be grouped together and jointly operated
 on.
@@ -1849,7 +1851,7 @@ Reactor()
 
 
 Utils functions
-===============
+---------------
 
 Utility functions provides useful functions that are used by both the Shape()
 class and the Reactor class. They can also be used directly.

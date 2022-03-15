@@ -72,6 +72,10 @@ language = None
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# avoids this error
+# WARNING: html_static_path entry '_static' does not exist
+html_static_path = []
+
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
