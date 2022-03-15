@@ -34,9 +34,7 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         **kwargs
     ) -> None:
 
-        super().__init__(
-            distance=height, workplane=workplane, rotation_axis=rotation_axis, **kwargs
-        )
+        super().__init__(distance=height, workplane=workplane, rotation_axis=rotation_axis, **kwargs)
 
         self.azimuth_start_angle = azimuth_start_angle
         self.height = height
@@ -117,14 +115,14 @@ class InnerTfCoilsCircular(ExtrudeMixedShape):
         if self.gap_size * self.number_of_coils > 2 * math.pi * self.inner_radius:
             raise ValueError("gap_size is too large")
 
-        theta_inner = (
-            (2 * math.pi * self.inner_radius) - (self.gap_size * self.number_of_coils)
-        ) / (self.inner_radius * self.number_of_coils)
+        theta_inner = ((2 * math.pi * self.inner_radius) - (self.gap_size * self.number_of_coils)) / (
+            self.inner_radius * self.number_of_coils
+        )
         omega_inner = math.asin(self.gap_size / (2 * self.inner_radius))
 
-        theta_outer = (
-            (2 * math.pi * self.outer_radius) - (self.gap_size * self.number_of_coils)
-        ) / (self.outer_radius * self.number_of_coils)
+        theta_outer = ((2 * math.pi * self.outer_radius) - (self.gap_size * self.number_of_coils)) / (
+            self.outer_radius * self.number_of_coils
+        )
         omega_outer = math.asin(self.gap_size / (2 * self.outer_radius))
 
         # inner points

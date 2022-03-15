@@ -42,9 +42,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         **kwargs,
     ) -> None:
 
-        super().__init__(
-            distance=height, workplane=workplane, rotation_axis=rotation_axis, **kwargs
-        )
+        super().__init__(distance=height, workplane=workplane, rotation_axis=rotation_axis, **kwargs)
 
         self.azimuth_start_angle = azimuth_start_angle
         self.height = height
@@ -159,10 +157,7 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             distance_to_inner_corner = self.inner_radius / math.cos(math.radians(angle))
             distance_to_rear_corner = self.outer_radius / math.cos(math.radians(angle))
 
-        if (
-            self.gap_size * self.number_of_coils
-            > 2 * math.pi * distance_to_inner_corner
-        ):
+        if self.gap_size * self.number_of_coils > 2 * math.pi * distance_to_inner_corner:
             msg = (
                 "Gap_size is too large. The gap_size * number of coils must "
                 "be less than the circumference of the circle made by "
@@ -171,10 +166,9 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             raise ValueError(msg)
 
         if distance_to_inner_corner != 0.0:
-            theta_inner = (
-                (2 * math.pi * distance_to_inner_corner)
-                - (self.gap_size * self.number_of_coils)
-            ) / (distance_to_inner_corner * self.number_of_coils)
+            theta_inner = ((2 * math.pi * distance_to_inner_corner) - (self.gap_size * self.number_of_coils)) / (
+                distance_to_inner_corner * self.number_of_coils
+            )
             omega_inner = math.asin(self.gap_size / (2 * distance_to_inner_corner))
 
             # inner points
@@ -184,20 +178,12 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
             )
             point_2 = (
                 (
-                    distance_to_inner_corner
-                    * math.cos(theta_inner)
-                    * math.cos(-omega_inner)
-                    + distance_to_inner_corner
-                    * math.sin(theta_inner)
-                    * math.sin(-omega_inner)
+                    distance_to_inner_corner * math.cos(theta_inner) * math.cos(-omega_inner)
+                    + distance_to_inner_corner * math.sin(theta_inner) * math.sin(-omega_inner)
                 ),
                 (
-                    -distance_to_inner_corner
-                    * math.cos(theta_inner)
-                    * math.sin(-omega_inner)
-                    + distance_to_inner_corner
-                    * math.sin(theta_inner)
-                    * math.cos(-omega_inner)
+                    -distance_to_inner_corner * math.cos(theta_inner) * math.sin(-omega_inner)
+                    + distance_to_inner_corner * math.sin(theta_inner) * math.cos(-omega_inner)
                 ),
             )
             points = [(point_1[0], point_1[1]), (point_2[0], point_2[1])]
@@ -209,10 +195,9 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         # print(point_1)
         # print(point_2)
 
-        theta_outer = (
-            (2 * math.pi * distance_to_rear_corner)
-            - (self.gap_size * self.number_of_coils)
-        ) / (distance_to_rear_corner * self.number_of_coils)
+        theta_outer = ((2 * math.pi * distance_to_rear_corner) - (self.gap_size * self.number_of_coils)) / (
+            distance_to_rear_corner * self.number_of_coils
+        )
         omega_outer = math.asin(self.gap_size / (2 * distance_to_rear_corner))
 
         # outer points
@@ -223,17 +208,11 @@ class InnerTfCoilsFlat(ExtrudeStraightShape):
         point_6 = (
             (
                 distance_to_rear_corner * math.cos(theta_outer) * math.cos(-omega_outer)
-                + distance_to_rear_corner
-                * math.sin(theta_outer)
-                * math.sin(-omega_outer)
+                + distance_to_rear_corner * math.sin(theta_outer) * math.sin(-omega_outer)
             ),
             (
-                -distance_to_rear_corner
-                * math.cos(theta_outer)
-                * math.sin(-omega_outer)
-                + distance_to_rear_corner
-                * math.sin(theta_outer)
-                * math.cos(-omega_outer)
+                -distance_to_rear_corner * math.cos(theta_outer) * math.sin(-omega_outer)
+                + distance_to_rear_corner * math.sin(theta_outer) * math.cos(-omega_outer)
             ),
         )
         points.append((point_6[0], point_6[1]))

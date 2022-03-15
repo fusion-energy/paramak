@@ -179,9 +179,7 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
             self.test_shape.casing_thicknesses = [5, 5, 10]
             self.test_shape.solid
 
-        self.assertRaises(
-            ValueError, make_PoloidalFieldCoilCaseSetFC_incorrect_lengths_FC
-        )
+        self.assertRaises(ValueError, make_PoloidalFieldCoilCaseSetFC_incorrect_lengths_FC)
 
     def test_PoloidalFieldCoilCaseSetFC_incorrect_lengths(self):
         """Checks that an error is raised when a PoloidalFieldCoilCaseSetFC is made
@@ -211,21 +209,13 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
         """Creates a set of PF coil cases from a list of PF coils with a list
         of thicknesses."""
 
-        pf_coils_1 = paramak.PoloidalFieldCoil(
-            height=10, width=10, center_point=(100, 100)
-        )
+        pf_coils_1 = paramak.PoloidalFieldCoil(height=10, width=10, center_point=(100, 100))
 
-        pf_coils_2 = paramak.PoloidalFieldCoil(
-            height=10, width=10, center_point=(100, 150)
-        )
+        pf_coils_2 = paramak.PoloidalFieldCoil(height=10, width=10, center_point=(100, 150))
 
-        pf_coils_3 = paramak.PoloidalFieldCoil(
-            height=20, width=20, center_point=(50, 200)
-        )
+        pf_coils_3 = paramak.PoloidalFieldCoil(height=20, width=20, center_point=(50, 200))
 
-        pf_coils_4 = paramak.PoloidalFieldCoil(
-            height=20, width=40, center_point=(50, 50)
-        )
+        pf_coils_4 = paramak.PoloidalFieldCoil(height=20, width=40, center_point=(50, 50))
 
         test_shape = paramak.PoloidalFieldCoilCaseSetFC(
             pf_coils=[pf_coils_1, pf_coils_2, pf_coils_3, pf_coils_4],
@@ -239,21 +229,13 @@ class TestPoloidalFieldCoilCaseSetFC(unittest.TestCase):
         """Creates a set of PF coil cases from a list of PF coils with a
         single numerical thicknesses."""
 
-        pf_coils_1 = paramak.PoloidalFieldCoil(
-            height=10, width=10, center_point=(100, 100)
-        )
+        pf_coils_1 = paramak.PoloidalFieldCoil(height=10, width=10, center_point=(100, 100))
 
-        pf_coils_2 = paramak.PoloidalFieldCoil(
-            height=10, width=10, center_point=(100, 150)
-        )
+        pf_coils_2 = paramak.PoloidalFieldCoil(height=10, width=10, center_point=(100, 150))
 
-        pf_coils_3 = paramak.PoloidalFieldCoil(
-            height=20, width=20, center_point=(50, 200)
-        )
+        pf_coils_3 = paramak.PoloidalFieldCoil(height=20, width=20, center_point=(50, 200))
 
-        pf_coils_4 = paramak.PoloidalFieldCoil(
-            height=20, width=40, center_point=(50, 50)
-        )
+        pf_coils_4 = paramak.PoloidalFieldCoil(height=20, width=40, center_point=(50, 50))
 
         test_shape = paramak.PoloidalFieldCoilCaseSetFC(
             pf_coils=[pf_coils_1, pf_coils_2, pf_coils_3, pf_coils_4],

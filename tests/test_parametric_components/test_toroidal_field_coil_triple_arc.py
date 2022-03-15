@@ -32,9 +32,7 @@ class TestToroidalFieldCoilTripleArc(unittest.TestCase):
         assert self.test_shape.volume() > 1000
         assert self.test_shape.inner_leg_connection_points is not None
 
-        test_inner_leg = paramak.ExtrudeStraightShape(
-            points=self.test_shape.inner_leg_connection_points, distance=50
-        )
+        test_inner_leg = paramak.ExtrudeStraightShape(points=self.test_shape.inner_leg_connection_points, distance=50)
         assert test_inner_leg.solid is not None
 
     def test_creation_no_inner_leg(self):
@@ -43,9 +41,7 @@ class TestToroidalFieldCoilTripleArc(unittest.TestCase):
 
         test_volume = self.test_shape.volume()
 
-        test_inner_leg = paramak.ExtrudeStraightShape(
-            points=self.test_shape.inner_leg_connection_points, distance=50
-        )
+        test_inner_leg = paramak.ExtrudeStraightShape(points=self.test_shape.inner_leg_connection_points, distance=50)
         inner_leg_volume = test_inner_leg.volume()
 
         self.test_shape.with_inner_leg = False

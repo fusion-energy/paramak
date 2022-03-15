@@ -8,9 +8,7 @@ class TestPoloidalSegments(unittest.TestCase):
         """Checks the segmenter does not take a float as an input."""
 
         def create_shape():
-            test_shape_to_segment = paramak.PoloidalFieldCoil(
-                height=100, width=100, center_point=(500, 500)
-            )
+            test_shape_to_segment = paramak.PoloidalFieldCoil(height=100, width=100, center_point=(500, 500))
 
             paramak.PoloidalSegments(
                 shape_to_segment=test_shape_to_segment,
@@ -24,9 +22,7 @@ class TestPoloidalSegments(unittest.TestCase):
         """Checks the segmenter does not take a negative int as an input."""
 
         def create_shape():
-            test_shape_to_segment = paramak.PoloidalFieldCoil(
-                height=100, width=100, center_point=(500, 500)
-            )
+            test_shape_to_segment = paramak.PoloidalFieldCoil(height=100, width=100, center_point=(500, 500))
 
             paramak.PoloidalSegments(
                 shape_to_segment=test_shape_to_segment,
@@ -40,13 +36,9 @@ class TestPoloidalSegments(unittest.TestCase):
         """Creates a rotated hollow ring and segments it into poloidal
         sections."""
 
-        pf_coil = paramak.PoloidalFieldCoil(
-            height=100, width=100, center_point=(500, 500)
-        )
+        pf_coil = paramak.PoloidalFieldCoil(height=100, width=100, center_point=(500, 500))
 
-        test_shape_to_segment = paramak.PoloidalFieldCoilCaseFC(
-            pf_coil=pf_coil, casing_thickness=100
-        )
+        test_shape_to_segment = paramak.PoloidalFieldCoilCaseFC(pf_coil=pf_coil, casing_thickness=100)
 
         test_shape = paramak.PoloidalSegments(
             shape_to_segment=test_shape_to_segment,
@@ -60,9 +52,7 @@ class TestPoloidalSegments(unittest.TestCase):
     def test_solid_count2(self):
         """Creates a rotated ring and segments it into poloidal sections."""
 
-        test_shape_to_segment = paramak.PoloidalFieldCoil(
-            height=100, width=100, center_point=(500, 500)
-        )
+        test_shape_to_segment = paramak.PoloidalFieldCoil(height=100, width=100, center_point=(500, 500))
 
         test_shape = paramak.PoloidalSegments(
             shape_to_segment=test_shape_to_segment,

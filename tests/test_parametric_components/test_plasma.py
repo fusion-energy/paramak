@@ -49,16 +49,12 @@ class TestPlasma(unittest.TestCase):
     def test_plasma_points_of_interest(self):
         test_plasma = paramak.Plasma(vertical_displacement=2)
         assert test_plasma.high_point == (
-            test_plasma.major_radius
-            - test_plasma.triangularity * test_plasma.minor_radius,
-            test_plasma.elongation * test_plasma.minor_radius
-            + test_plasma.vertical_displacement,
+            test_plasma.major_radius - test_plasma.triangularity * test_plasma.minor_radius,
+            test_plasma.elongation * test_plasma.minor_radius + test_plasma.vertical_displacement,
         )
         assert test_plasma.low_point == (
-            test_plasma.major_radius
-            - test_plasma.triangularity * test_plasma.minor_radius,
-            -test_plasma.elongation * test_plasma.minor_radius
-            + test_plasma.vertical_displacement,
+            test_plasma.major_radius - test_plasma.triangularity * test_plasma.minor_radius,
+            -test_plasma.elongation * test_plasma.minor_radius + test_plasma.vertical_displacement,
         )
         assert test_plasma.outer_equatorial_point == (
             test_plasma.major_radius + test_plasma.minor_radius,
@@ -74,13 +70,7 @@ class TestPlasma(unittest.TestCase):
         Plasma parametric component and checks the location of the x point for
         each."""
 
-        for (
-            triangularity,
-            elongation,
-            minor_radius,
-            major_radius,
-            vertical_displacement,
-        ) in zip(
+        for (triangularity, elongation, minor_radius, major_radius, vertical_displacement,) in zip(
             [-0.7, 0, 0.5],  # triangularity
             [1, 1.5, 2],  # elongation
             [100, 200, 300],  # minor radius
@@ -104,19 +94,14 @@ class TestPlasma(unittest.TestCase):
                 expected_lower_x_point, expected_upper_x_point = None, None
                 if config == "single-null" or config == "double-null":
                     expected_lower_x_point = (
-                        1
-                        - (1 + test_plasma.x_point_shift)
-                        * triangularity
-                        * minor_radius,
-                        -(1 + test_plasma.x_point_shift) * elongation * minor_radius
-                        + vertical_displacement,
+                        1 - (1 + test_plasma.x_point_shift) * triangularity * minor_radius,
+                        -(1 + test_plasma.x_point_shift) * elongation * minor_radius + vertical_displacement,
                     )
 
                     if config == "double-null":
                         expected_upper_x_point = (
                             expected_lower_x_point[0],
-                            (1 + test_plasma.x_point_shift) * elongation * minor_radius
-                            + vertical_displacement,
+                            (1 + test_plasma.x_point_shift) * elongation * minor_radius + vertical_displacement,
                         )
 
                 # Check
@@ -155,10 +140,7 @@ class TestPlasma(unittest.TestCase):
                 expected_lower_x_point, expected_upper_x_point = None, None
                 if config == "single-null" or config == "double-null":
                     expected_lower_x_point = (
-                        1
-                        - (1 + test_plasma.x_point_shift)
-                        * triangularity
-                        * minor_radius,
+                        1 - (1 + test_plasma.x_point_shift) * triangularity * minor_radius,
                         -(1 + test_plasma.x_point_shift) * elongation * minor_radius,
                     )
 
@@ -213,9 +195,7 @@ class TestPlasma(unittest.TestCase):
         test_plasma.export_stp("plasma.stp")
         assert test_plasma.high_point[0] > test_plasma.inner_equatorial_x_point
         assert test_plasma.high_point[0] < test_plasma.outer_equatorial_x_point
-        assert (
-            test_plasma.outer_equatorial_x_point > test_plasma.inner_equatorial_x_point
-        )
+        assert test_plasma.outer_equatorial_x_point > test_plasma.inner_equatorial_x_point
         assert Path("plasma.stp").exists()
         os.system("rm plasma.stp")
 

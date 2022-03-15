@@ -91,12 +91,8 @@ class ToroidalFieldCoilCoatHanger(ToroidalFieldCoil):
         # -    -
         # 7---8
 
-        adjacent_length = self.vertical_mid_point[0] - (
-            self.horizontal_start_point[0] + self.horizontal_length
-        )
-        oppersite_length = self.horizontal_start_point[1] - (
-            self.vertical_mid_point[1] + 0.5 * self.vertical_length
-        )
+        adjacent_length = self.vertical_mid_point[0] - (self.horizontal_start_point[0] + self.horizontal_length)
+        oppersite_length = self.horizontal_start_point[1] - (self.vertical_mid_point[1] + 0.5 * self.vertical_length)
 
         point_rotation = math.atan(oppersite_length / adjacent_length)
         point_rotation_mid = math.radians(90) - point_rotation
@@ -201,9 +197,6 @@ class ToroidalFieldCoilCoatHanger(ToroidalFieldCoil):
         ]
 
         # adds any vertical displacement and the connection type to the points
-        points = [
-            (point[0], point[1] + self.vertical_displacement, "straight")
-            for point in points
-        ]
+        points = [(point[0], point[1] + self.vertical_displacement, "straight") for point in points]
 
         self.points = points

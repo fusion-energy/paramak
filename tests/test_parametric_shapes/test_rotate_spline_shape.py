@@ -47,13 +47,9 @@ class TestRotateSplineShape(unittest.TestCase):
         """Creates a RotateSplineShape with another RotateSplineShape cut out
         and checks that the volume is correct."""
 
-        inner_shape = RotateSplineShape(
-            points=[(5, 5), (5, 10), (10, 10), (10, 5)], rotation_angle=180
-        )
+        inner_shape = RotateSplineShape(points=[(5, 5), (5, 10), (10, 10), (10, 5)], rotation_angle=180)
 
-        outer_shape = RotateSplineShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3)], rotation_angle=180
-        )
+        outer_shape = RotateSplineShape(points=[(3, 3), (3, 12), (12, 12), (12, 3)], rotation_angle=180)
 
         outer_shape_with_cut = RotateSplineShape(
             points=[(3, 3), (3, 12), (12, 12), (12, 3)],
@@ -90,14 +86,8 @@ class TestRotateSplineShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

@@ -10,9 +10,7 @@ import paramak
 
 class TestReactor(unittest.TestCase):
     def setUp(self):
-        self.test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], name="test_shape"
-        )
+        self.test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], name="test_shape")
 
         self.test_shape2 = paramak.ExtrudeStraightShape(
             points=[(100, 100), (50, 100), (50, 50)], distance=20, name="test_shape2"
@@ -44,9 +42,7 @@ class TestReactor(unittest.TestCase):
     def test_reactor_export_stp(self):
         """Exports the reactor as separate files and as a single file"""
         os.system("rm *.stp")
-        self.test_reactor_2.export_stp(
-            filename=["RotateStraightShape.stp", "ExtrudeStraightShape.stp"]
-        )
+        self.test_reactor_2.export_stp(filename=["RotateStraightShape.stp", "ExtrudeStraightShape.stp"])
         assert Path("RotateStraightShape.stp").is_file()
         assert Path("ExtrudeStraightShape.stp").is_file()
         self.test_reactor_2.export_stp(filename="single_file.stp", units="cm")
@@ -85,16 +81,12 @@ class TestReactor(unittest.TestCase):
 
     def test_make_sector_wedge(self):
         """Checks that the wedge is not made when rotation angle is 360"""
-        sector_wedge = self.test_reactor.make_sector_wedge(
-            height=100, radius=100, rotation_angle=360
-        )
+        sector_wedge = self.test_reactor.make_sector_wedge(height=100, radius=100, rotation_angle=360)
         assert sector_wedge is None
 
     def test_wrong_number_of_filenames(self):
         def test_stl_filename_list_length():
-            test_shape = paramak.ExtrudeCircleShape(
-                points=[(20, 20)], radius=10, distance=10
-            )
+            test_shape = paramak.ExtrudeCircleShape(points=[(20, 20)], radius=10, distance=10)
             my_reactor = paramak.Reactor([test_shape])
             my_reactor.export_stl(["wrong.stl", "number_of.stl", "files.stl"])
 
@@ -191,9 +183,7 @@ class TestReactor(unittest.TestCase):
 
         test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         os.system("rm graveyard.stp")
-        test_reactor = paramak.Reactor(
-            [test_shape], graveyard_size=None, graveyard_offset=100
-        )
+        test_reactor = paramak.Reactor([test_shape], graveyard_size=None, graveyard_offset=100)
         test_reactor.make_graveyard()
 
         graveyard_volume_1 = test_reactor.graveyard.volume()
@@ -432,9 +422,7 @@ class TestReactor(unittest.TestCase):
         shape1 = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         shape2 = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         shape3 = paramak.Shape()
-        shape3.solid = cq.Compound.makeCompound(
-            [a.val() for a in [shape1.solid, shape2.solid]]
-        )
+        shape3.solid = cq.Compound.makeCompound([a.val() for a in [shape1.solid, shape2.solid]])
         test_reactor = paramak.Reactor([shape3])
         assert test_reactor.solid is not None
 

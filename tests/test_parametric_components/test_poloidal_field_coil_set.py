@@ -72,9 +72,7 @@ class TestPoloidalFieldCoilSet(unittest.TestCase):
 
         assert self.test_shape.volume() == (
             pytest.approx(
-                (10 * 20 * math.pi * (2 * 100))
-                + (15 * 25 * math.pi * (2 * 200))
-                + (5 * 30 * math.pi * (2 * 300))
+                (10 * 20 * math.pi * (2 * 100)) + (15 * 25 * math.pi * (2 * 200)) + (5 * 30 * math.pi * (2 * 300))
             )
         )
 
@@ -89,12 +87,8 @@ class TestPoloidalFieldCoilSet(unittest.TestCase):
         assert self.test_shape.areas.count(pytest.approx(30 * math.pi * (2 * 300))) == 2
         assert self.test_shape.areas.count(pytest.approx(10 * math.pi * (2 * 90))) == 1
         assert self.test_shape.areas.count(pytest.approx(10 * math.pi * (2 * 110))) == 1
-        assert (
-            self.test_shape.areas.count(pytest.approx(15 * math.pi * (2 * 187.5))) == 1
-        )
-        assert (
-            self.test_shape.areas.count(pytest.approx(15 * math.pi * (2 * 212.5))) == 1
-        )
+        assert self.test_shape.areas.count(pytest.approx(15 * math.pi * (2 * 187.5))) == 1
+        assert self.test_shape.areas.count(pytest.approx(15 * math.pi * (2 * 212.5))) == 1
         assert self.test_shape.areas.count(pytest.approx(5 * math.pi * (2 * 285))) == 1
         assert self.test_shape.areas.count(pytest.approx(5 * math.pi * (2 * 315))) == 1
 
@@ -129,9 +123,7 @@ class TestPoloidalFieldCoilSet(unittest.TestCase):
         with center_points passed as the wrong type."""
 
         def make_PoloidalFieldCoilSet_incorrect_center_points():
-            paramak.PoloidalFieldCoilSet(
-                heights=[10, 10, 10], widths=[20, 20, 20], center_points=100
-            )
+            paramak.PoloidalFieldCoilSet(heights=[10, 10, 10], widths=[20, 20, 20], center_points=100)
 
         self.assertRaises(ValueError, make_PoloidalFieldCoilSet_incorrect_center_points)
 

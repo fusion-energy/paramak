@@ -7,9 +7,7 @@ import paramak
 
 class TestExtrudeHollowRectangle(unittest.TestCase):
     def setUp(self):
-        self.test_shape = paramak.ExtrudeHollowRectangle(
-            height=10, width=15, casing_thickness=1, distance=2
-        )
+        self.test_shape = paramak.ExtrudeHollowRectangle(height=10, width=15, casing_thickness=1, distance=2)
 
     def test_default_parameters(self):
         """Checks that the default parameters of a ExtrudeHollowRectangle are
