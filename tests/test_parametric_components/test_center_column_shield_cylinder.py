@@ -10,9 +10,7 @@ import paramak
 
 class TestCenterColumnShieldCylinder(unittest.TestCase):
     def setUp(self):
-        self.test_shape = paramak.CenterColumnShieldCylinder(
-            height=600, inner_radius=100, outer_radius=200
-        )
+        self.test_shape = paramak.CenterColumnShieldCylinder(height=600, inner_radius=100, outer_radius=200)
 
     def test_default_parameters(self):
         """Checks that the default parameters of a CenterColumnShieldCylinder are correct."""
@@ -63,9 +61,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         """Creates a CenterColumnShieldCylinder shape and checks that its
         relative volume is correct"""
 
-        assert self.test_shape.volume() == pytest.approx(
-            ((math.pi * (200**2)) - (math.pi * (100**2))) * 600
-        )
+        assert self.test_shape.volume() == pytest.approx(((math.pi * (200**2)) - (math.pi * (100**2))) * 600)
 
     def test_absolute_area(self):
         """Creates a CenterColumnShieldCylinder shape and checks that the
@@ -77,18 +73,9 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
             + (math.pi * (2 * 200) * 600)
             + (math.pi * (2 * 100) * 600)
         )
-        assert (
-            self.test_shape.areas.count(
-                pytest.approx((math.pi * (200**2)) - (math.pi * (100**2)))
-            )
-            == 2
-        )
-        assert (
-            self.test_shape.areas.count(pytest.approx(math.pi * (2 * 200) * 600)) == 1
-        )
-        assert (
-            self.test_shape.areas.count(pytest.approx(math.pi * (2 * 100) * 600)) == 1
-        )
+        assert self.test_shape.areas.count(pytest.approx((math.pi * (200**2)) - (math.pi * (100**2)))) == 2
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (2 * 200) * 600)) == 1
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (2 * 100) * 600)) == 1
 
     def test_export_stp_CenterColumnShieldCylinder(self):
         """Creates a CenterColumnShieldCylinder shape and checks that a stp
@@ -152,9 +139,7 @@ class TestCenterColumnShieldCylinder(unittest.TestCase):
         """Makes a offset cyclinder using center_height that overlaps half of
         the default center_height=0 shape. Cuts shapes and checks volumes.
         """
-        test_shape1 = paramak.CenterColumnShieldCylinder(
-            inner_radius=3, outer_radius=3.3, height=5, color=(1, 0, 0)
-        )
+        test_shape1 = paramak.CenterColumnShieldCylinder(inner_radius=3, outer_radius=3.3, height=5, color=(1, 0, 0))
 
         test_shape2 = paramak.CenterColumnShieldCylinder(
             inner_radius=3,

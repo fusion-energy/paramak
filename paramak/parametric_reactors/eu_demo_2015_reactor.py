@@ -88,9 +88,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             ],
             distance=200,
             cut=[vac_vessel_inner, vac_vessel],
-            azimuth_placement_angle=np.linspace(
-                0, 360, self.number_of_tf_coils, endpoint=False
-            ),
+            azimuth_placement_angle=np.linspace(0, 360, self.number_of_tf_coils, endpoint=False),
             rotation_angle=self.rotation_angle,
             color=(1.0, 1.0, 0.498),
             name="tf_coil_casing",
@@ -337,9 +335,7 @@ class EuDemoFrom2015PaperDiagram(paramak.Reactor):
             684 - 563,
         ]
         outboard_pf_coils = []
-        for counter, (center_point, width, height) in enumerate(
-            zip(center_points, widths, heights), 1
-        ):
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights), 1):
             pf_coil = paramak.PoloidalFieldCoil(
                 height=height,
                 width=width,

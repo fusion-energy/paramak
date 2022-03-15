@@ -79,9 +79,7 @@ class TestShape(unittest.TestCase):
         """checks that the graveyard can be exported with the correct default
         parameters and that these parameters can be changed"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], graveyard_size=None
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], graveyard_size=None)
         os.system("rm graveyard.stp")
 
         test_shape.make_graveyard(graveyard_offset=50)
@@ -265,9 +263,7 @@ class TestShape(unittest.TestCase):
         """Creates a shape and checks that a cadquery solid with a unique hash
         value is created when .solid is called."""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360)
 
         assert test_shape.hash_value is None
         assert test_shape.solid is not None
@@ -279,9 +275,7 @@ class TestShape(unittest.TestCase):
         is returned when shape.solid is called again after no changes have been
         made to the Shape."""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360)
 
         assert test_shape.solid is not None
         initial_hash_value = test_shape.hash_value
@@ -293,9 +287,7 @@ class TestShape(unittest.TestCase):
         constructed when shape.solid is called after changes to the Shape have
         been made."""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360)
 
         assert test_shape.solid is not None
         assert test_shape.hash_value is not None
@@ -311,9 +303,7 @@ class TestShape(unittest.TestCase):
         """Checks that the hash value of a Shape is not updated until a new
         cadquery solid has been created."""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], rotation_angle=360)
         test_shape.solid
         assert test_shape.hash_value is not None
         initial_hash_value = test_shape.hash_value
@@ -327,9 +317,7 @@ class TestShape(unittest.TestCase):
         """Checks a plotly figure of the Shape is exported by the export_html
         method with the correct filename with RGB and RGBA colors."""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360)
 
         os.system("rm filename.html")
         test_shape.export_html("filename")
@@ -344,9 +332,7 @@ class TestShape(unittest.TestCase):
         """Checks a plotly figure of the Shape is exported by the export_html
         method with a range of different view_plane options."""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=180
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=180)
 
         for view_plane in ["XZ", "XY", "YZ", "YX", "ZY", "ZX", "RZ", "XYZ"]:
             os.system("rm *.html")
@@ -428,9 +414,7 @@ class TestShape(unittest.TestCase):
 
         def invalid_color_length():
 
-            paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)], color=(255, 255, 255, 1, 1)
-            )
+            paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], color=(255, 255, 255, 1, 1))
 
         self.assertRaises(ValueError, invalid_color_length)
 
@@ -438,42 +422,32 @@ class TestShape(unittest.TestCase):
         """Checks the volume and volumes attributes are correct types
         and that the volumes sum to equalt the volume for a Compound."""
 
-        test_shape = paramak.PoloidalFieldCoilSet(
-            heights=[10, 10], widths=[20, 20], center_points=[(15, 15), (50, 50)]
-        )
+        test_shape = paramak.PoloidalFieldCoilSet(heights=[10, 10], widths=[20, 20], center_points=[(15, 15), (50, 50)])
 
         assert isinstance(test_shape.volume(), float)
         assert isinstance(test_shape.volume(split_compounds=True), list)
         assert isinstance(test_shape.volume(split_compounds=True)[0], float)
         assert isinstance(test_shape.volume(split_compounds=True)[1], float)
         assert len(test_shape.volume(split_compounds=True)) == 2
-        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(
-            test_shape.volume()
-        )
+        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(test_shape.volume())
 
     def test_volumes_add_up_to_total_volume(self):
         """Checks the volume and volumes attributes are correct types
         and that the volumes sum to equalt the volume."""
 
-        test_shape = paramak.PoloidalFieldCoil(
-            center_point=(100, 100), height=50, width=50
-        )
+        test_shape = paramak.PoloidalFieldCoil(center_point=(100, 100), height=50, width=50)
 
         assert isinstance(test_shape.volume(), float)
         assert isinstance(test_shape.volume(split_compounds=True), list)
         assert isinstance(test_shape.volume(split_compounds=True)[0], float)
         assert len(test_shape.volume(split_compounds=True)) == 1
-        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(
-            test_shape.volume()
-        )
+        assert sum(test_shape.volume(split_compounds=True)) == pytest.approx(test_shape.volume())
 
     def test_areas_add_up_to_total_area_Compound(self):
         """Checks the area and areas attributes are correct types
         and that the areas sum to equalt the area for a Compound."""
 
-        test_shape = paramak.PoloidalFieldCoilSet(
-            heights=[10, 10], widths=[20, 20], center_points=[(15, 15), (50, 50)]
-        )
+        test_shape = paramak.PoloidalFieldCoilSet(heights=[10, 10], widths=[20, 20], center_points=[(15, 15), (50, 50)])
 
         assert isinstance(test_shape.area, float)
         assert isinstance(test_shape.areas, list)
@@ -492,9 +466,7 @@ class TestShape(unittest.TestCase):
         """Checks the area and areas attributes are correct types
         and that the areas sum to equalt the area."""
 
-        test_shape = paramak.PoloidalFieldCoil(
-            center_point=(100, 100), height=50, width=50
-        )
+        test_shape = paramak.PoloidalFieldCoil(center_point=(100, 100), height=50, width=50)
 
         assert isinstance(test_shape.area, float)
         assert isinstance(test_shape.areas, list)
@@ -518,9 +490,7 @@ class TestShape(unittest.TestCase):
     def test_create_patch_alpha(self):
         """Checks _create_patch returns a patch when alpha is given."""
 
-        test_shape = paramak.PoloidalFieldCoil(
-            center_point=(100, 100), height=50, width=50, color=(0.5, 0.5, 0.5, 0.1)
-        )
+        test_shape = paramak.PoloidalFieldCoil(center_point=(100, 100), height=50, width=50, color=(0.5, 0.5, 0.5, 0.1))
         assert test_shape._create_patch() is not None
 
     def test_azimuth_placement_angle_error(self):

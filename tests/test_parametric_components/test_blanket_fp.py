@@ -8,9 +8,7 @@ import paramak
 
 class TestBlanketFP(unittest.TestCase):
     def setUp(self):
-        self.plasma = paramak.Plasma(
-            major_radius=450, minor_radius=150, triangularity=0.55, elongation=2
-        )
+        self.plasma = paramak.Plasma(major_radius=450, minor_radius=150, triangularity=0.55, elongation=2)
 
         self.test_shape = paramak.BlanketFP(
             thickness=150,

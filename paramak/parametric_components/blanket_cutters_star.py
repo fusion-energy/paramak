@@ -42,11 +42,7 @@ class BlanketCutterStar(ExtrudeStraightShape):
     ) -> None:
 
         super().__init__(
-            extrude_both=True,
-            name=name,
-            azimuth_placement_angle=azimuth_placement_angle,
-            distance=distance,
-            **kwargs
+            extrude_both=True, name=name, azimuth_placement_angle=azimuth_placement_angle, distance=distance, **kwargs
         )
 
         self.azimuth_placement_angle = azimuth_placement_angle

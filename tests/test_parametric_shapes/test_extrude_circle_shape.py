@@ -36,9 +36,7 @@ class TestExtrudeCircleShape(unittest.TestCase):
         """Creates ExtrudeCircleShapes and checks that the areas of each face
         are correct."""
 
-        assert self.test_shape.area == pytest.approx(
-            (math.pi * (10**2) * 2) + (math.pi * (2 * 10) * 30)
-        )
+        assert self.test_shape.area == pytest.approx((math.pi * (10**2) * 2) + (math.pi * (2 * 10) * 30))
         assert len(self.test_shape.areas) == 3
         assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
         assert self.test_shape.areas.count(pytest.approx(math.pi * (2 * 10) * 30)) == 1
@@ -47,13 +45,9 @@ class TestExtrudeCircleShape(unittest.TestCase):
         """Creates an ExtrudeCircleShape with another ExtrudeCircleShape cut out
         and checks that the volume is correct."""
 
-        shape_with_cut = ExtrudeCircleShape(
-            points=[(30, 0)], radius=20, distance=40, cut=self.test_shape
-        )
+        shape_with_cut = ExtrudeCircleShape(points=[(30, 0)], radius=20, distance=40, cut=self.test_shape)
 
-        assert shape_with_cut.volume() == pytest.approx(
-            (math.pi * (20**2) * 40) - (math.pi * (10**2) * 30)
-        )
+        assert shape_with_cut.volume() == pytest.approx((math.pi * (20**2) * 40) - (math.pi * (10**2) * 30))
 
     def test_intersect_volume(self):
         """Creates ExtrudeCircleShapes with other ExtrudeCircleShapes
@@ -101,14 +95,8 @@ class TestExtrudeCircleShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

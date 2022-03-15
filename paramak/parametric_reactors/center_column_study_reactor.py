@@ -65,12 +65,8 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
         self.inner_bore_radial_thickness = inner_bore_radial_thickness
         self.inboard_tf_leg_radial_thickness = inboard_tf_leg_radial_thickness
-        self.center_column_shield_radial_thickness_mid = (
-            center_column_shield_radial_thickness_mid
-        )
-        self.center_column_shield_radial_thickness_upper = (
-            center_column_shield_radial_thickness_upper
-        )
+        self.center_column_shield_radial_thickness_mid = center_column_shield_radial_thickness_mid
+        self.center_column_shield_radial_thickness_upper = center_column_shield_radial_thickness_upper
         self.inboard_firstwall_radial_thickness = inboard_firstwall_radial_thickness
         self.divertor_radial_thickness = divertor_radial_thickness
         self.inner_plasma_gap_radial_thickness = inner_plasma_gap_radial_thickness
@@ -128,10 +124,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
     def _rotation_angle_check(self):
 
         if self.rotation_angle == 360:
-            msg = (
-                "360 degree rotation may result "
-                + "in a Standard_ConstructionError or AttributeError"
-            )
+            msg = "360 degree rotation may result " + "in a Standard_ConstructionError or AttributeError"
             warnings.warn(msg, UserWarning)
 
     def _make_plasma(self):
@@ -167,56 +160,38 @@ class CenterColumnStudyReactor(paramak.Reactor):
         # another starts
 
         self._inner_bore_start_radius = 0
-        self._inner_bore_end_radius = (
-            self._inner_bore_start_radius + self.inner_bore_radial_thickness
-        )
+        self._inner_bore_end_radius = self._inner_bore_start_radius + self.inner_bore_radial_thickness
 
         self._inboard_tf_coils_start_radius = self._inner_bore_end_radius
-        self._inboard_tf_coils_end_radius = (
-            self._inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
-        )
+        self._inboard_tf_coils_end_radius = self._inboard_tf_coils_start_radius + self.inboard_tf_leg_radial_thickness
 
         self._center_column_shield_start_radius = self._inboard_tf_coils_end_radius
         self._center_column_shield_end_radius_upper = (
-            self._center_column_shield_start_radius
-            + self.center_column_shield_radial_thickness_upper
+            self._center_column_shield_start_radius + self.center_column_shield_radial_thickness_upper
         )
         self._center_column_shield_end_radius_mid = (
-            self._center_column_shield_start_radius
-            + self.center_column_shield_radial_thickness_mid
+            self._center_column_shield_start_radius + self.center_column_shield_radial_thickness_mid
         )
 
-        self._inboard_firstwall_start_radius = (
-            self._center_column_shield_end_radius_upper
-        )
+        self._inboard_firstwall_start_radius = self._center_column_shield_end_radius_upper
         self._inboard_firstwall_end_radius = (
-            self._inboard_firstwall_start_radius
-            + self.inboard_firstwall_radial_thickness
+            self._inboard_firstwall_start_radius + self.inboard_firstwall_radial_thickness
         )
 
         self._divertor_start_radius = self._inboard_firstwall_end_radius
-        self._divertor_end_radius = (
-            self._divertor_start_radius + self.divertor_radial_thickness
-        )
+        self._divertor_end_radius = self._divertor_start_radius + self.divertor_radial_thickness
 
         self._inner_plasma_gap_start_radius = (
-            self._center_column_shield_end_radius_mid
-            + self.inboard_firstwall_radial_thickness
+            self._center_column_shield_end_radius_mid + self.inboard_firstwall_radial_thickness
         )
 
-        self._inner_plasma_gap_end_radius = (
-            self._inner_plasma_gap_start_radius + self.inner_plasma_gap_radial_thickness
-        )
+        self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + self.inner_plasma_gap_radial_thickness
 
         self._plasma_start_radius = self._inner_plasma_gap_end_radius
-        self._plasma_end_radius = (
-            self._plasma_start_radius + self.plasma_radial_thickness
-        )
+        self._plasma_end_radius = self._plasma_start_radius + self.plasma_radial_thickness
 
         self._outer_plasma_gap_start_radius = self._plasma_end_radius
-        self._outer_plasma_gap_end_radius = (
-            self._outer_plasma_gap_start_radius + self.outer_plasma_gap_radial_thickness
-        )
+        self._outer_plasma_gap_end_radius = self._outer_plasma_gap_start_radius + self.outer_plasma_gap_radial_thickness
 
         self._outboard_blanket_start_radius = self._outer_plasma_gap_end_radius
         self._outboard_blanket_end_radius = self._outboard_blanket_start_radius + 100.0
@@ -228,8 +203,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
 
         self._plasma_to_blanket_gap_start_height = self._plasma.high_point[1]
         self._plasma_to_blanket_gap_end_height = (
-            self._plasma_to_blanket_gap_start_height
-            + self.plasma_gap_vertical_thickness
+            self._plasma_to_blanket_gap_start_height + self.plasma_gap_vertical_thickness
         )
 
         self._blanket_start_height = self._plasma_to_blanket_gap_end_height
@@ -320,8 +294,7 @@ class CenterColumnStudyReactor(paramak.Reactor):
         )
 
         self._divertor = paramak.CenterColumnShieldCylinder(
-            height=self._center_column_shield_end_height
-            * 2.5,  # extra 0.5 to ensure overlap
+            height=self._center_column_shield_end_height * 2.5,  # extra 0.5 to ensure overlap
             inner_radius=self._divertor_start_radius,
             outer_radius=self._divertor_end_radius,
             rotation_angle=self.rotation_angle,

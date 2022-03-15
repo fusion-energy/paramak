@@ -46,9 +46,7 @@ class BlanketFP(RotateMixedShape):
         thickness,
         start_angle: float,
         stop_angle: float,
-        plasma: Optional[
-            Union[paramak.Plasma, paramak.PlasmaBoundaries, paramak.PlasmaFromPoints]
-        ] = None,
+        plasma: Optional[Union[paramak.Plasma, paramak.PlasmaBoundaries, paramak.PlasmaFromPoints]] = None,
         minor_radius: Optional[float] = 150.0,
         major_radius: Optional[float] = 450.0,
         triangularity: Optional[float] = 0.55,
@@ -155,9 +153,7 @@ class BlanketFP(RotateMixedShape):
             else:
                 # no list of angles is given
                 offset_values = attribute
-                list_of_angles = np.linspace(
-                    self.start_angle, self.stop_angle, len(offset_values), endpoint=True
-                )
+                list_of_angles = np.linspace(self.start_angle, self.stop_angle, len(offset_values), endpoint=True)
             interpolated_values = interp1d(list_of_angles, offset_values)
 
         def fun(theta):
@@ -202,10 +198,7 @@ class BlanketFP(RotateMixedShape):
         # assemble
         points = inner_points + outer_points
         if self._overlapping_shape and self.allow_overlapping_shape is False:
-            msg = (
-                "BlanketFP: Some points with negative R coordinate have "
-                "been ignored."
-            )
+            msg = "BlanketFP: Some points with negative R coordinate have " "been ignored."
             warnings.warn(msg)
 
         self.points = points
@@ -273,11 +266,6 @@ class BlanketFP(RotateMixedShape):
             theta = np.radians(theta)
         else:
             theta = mpmath.radians(theta)
-        R = self.major_radius + self.minor_radius * pkg.cos(
-            theta + self.triangularity * pkg.sin(theta)
-        )
-        Z = (
-            self.elongation * self.minor_radius * pkg.sin(theta)
-            + self.vertical_displacement
-        )
+        R = self.major_radius + self.minor_radius * pkg.cos(theta + self.triangularity * pkg.sin(theta))
+        Z = self.elongation * self.minor_radius * pkg.sin(theta) + self.vertical_displacement
         return R, Z

@@ -260,13 +260,9 @@ class Shape:
             if value in acceptable_values:
                 self._workplane = value
             else:
-                raise ValueError(
-                    "Shape.workplane must be one of ", acceptable_values, " not ", value
-                )
+                raise ValueError("Shape.workplane must be one of ", acceptable_values, " not ", value)
         else:
-            raise TypeError(
-                "Shape.workplane must be a string or a ", "cadquery.Plane object"
-            )
+            raise TypeError("Shape.workplane must be a string or a ", "cadquery.Plane object")
 
     @property
     def rotation_axis(self):
@@ -277,12 +273,7 @@ class Shape:
         if isinstance(value, str):
             acceptable_values = ["X", "Y", "Z", "-X", "-Y", "-Z", "+X", "+Y", "+Z"]
             if value not in acceptable_values:
-                msg = (
-                    "Shape.rotation_axis must be one of "
-                    + " ".join(acceptable_values)
-                    + " not "
-                    + value
-                )
+                msg = "Shape.rotation_axis must be one of " + " ".join(acceptable_values) + " not " + value
                 raise ValueError(msg)
         elif isinstance(value, Iterable):
             msg = "Shape.rotation_axis must be a tuple of three floats (X, Y, Z)"
@@ -353,15 +344,9 @@ class Shape:
             if len(value) in [3, 4]:
                 for i in value:
                     if not isinstance(i, (int, float)):
-                        raise ValueError(
-                            "Individual entries in the Shape.color must a "
-                            "number (float or int)"
-                        )
+                        raise ValueError("Individual entries in the Shape.color must a " "number (float or int)")
                     if i > 1 or i < 0:
-                        raise ValueError(
-                            "Individual entries in the Shape.color must be "
-                            "between 0 and 1"
-                        )
+                        raise ValueError("Individual entries in the Shape.color must be " "between 0 and 1")
             else:
                 raise ValueError("Shape.color must be a list or tuple of 3 or 4 floats")
         else:
@@ -420,9 +405,7 @@ class Shape:
             incorrect type: only list of lists or tuples are accepted
         """
         ignored_keys = ["_points", "_points_hash_value"]
-        if self.find_points() and self.points_hash_value != get_hash(
-            self, ignored_keys
-        ):
+        if self.find_points() and self.points_hash_value != get_hash(self, ignored_keys):
             self.find_points()
             self.points_hash_value = get_hash(self, ignored_keys)
 
@@ -440,18 +423,13 @@ class Shape:
 
             for value in values:
                 if not isinstance(value, (list, tuple)):
-                    msg = (
-                        f"individual points must be a tuple.{value} in of "
-                        f"type {type(value)}"
-                    )
+                    msg = f"individual points must be a tuple.{value} in of " f"type {type(value)}"
                     raise ValueError(msg)
 
             for counter, value in enumerate(values):
                 if self.connection_type == "mixed":
                     if len(value) != 3:
-                        if (
-                            counter != len(values) - 1
-                        ):  # last point doesn't need connections
+                        if counter != len(values) - 1:  # last point doesn't need connections
                             msg = (
                                 "individual points should contain 3 "
                                 "entries when the Shape.connection_type is "
@@ -492,17 +470,12 @@ class Shape:
                 # part of points
                 if len(value) == 3:
                     if value[2] not in ["straight", "spline", "circle"]:
-                        msg = (
-                            "individual connections must be either "
-                            '"straight", "circle" or "spline"'
-                        )
+                        msg = "individual connections must be either " '"straight", "circle" or "spline"'
                         raise ValueError(msg)
 
             if len(values) > 1:
                 if values[0][:2] == values[-1][:2]:
-                    msg = (
-                        "The coordinates of the last and first points are " "the same."
-                    )
+                    msg = "The coordinates of the last and first points are " "the same."
                     raise ValueError(msg)
 
         self._points = values
@@ -569,9 +542,7 @@ class Shape:
         scaled_color = [int(i * 255) for i in self.color[0:3]]
         if isinstance(self.solid, (shapes.Shape, shapes.Compound)):
             for i, solid in enumerate(self.solid.Solids()):
-                parts.append(
-                    Part(solid, name=f"{name}{i}", color=scaled_color, show_edges=True)
-                )
+                parts.append(Part(solid, name=f"{name}{i}", color=scaled_color, show_edges=True))
         else:
             parts.append(
                 Part(
@@ -621,26 +592,18 @@ class Shape:
 
                 if self.force_cross_section:
                     for point in self.path_points[:-1]:
-                        solid = (
-                            solid.workplane(offset=point[1] * factor)
-                            .center(point[0], 0)
-                            .workplane()
-                        )
+                        solid = solid.workplane(offset=point[1] * factor).center(point[0], 0).workplane()
                         for entry in instructions:
                             connection_type = list(entry.keys())[0]
                             if connection_type == "spline":
-                                solid = solid.spline(
-                                    listOfXYTuple=list(entry.values())[0]
-                                )
+                                solid = solid.spline(listOfXYTuple=list(entry.values())[0])
                             elif connection_type == "straight":
                                 solid = solid.polyline(list(entry.values())[0])
                             elif connection_type == "circle":
                                 p0, p1, p2 = list(entry.values())[0][:3]
                                 solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
                         solid = solid.close()
-                        solid = solid.center(-point[0], 0).workplane(
-                            offset=-point[1] * factor
-                        )
+                        solid = solid.center(-point[0], 0).workplane(offset=-point[1] * factor)
 
                 elif self.force_cross_section is False:
                     solid = (
@@ -1098,24 +1061,15 @@ class Shape:
             facet_splines=facet_splines,
             facet_circles=facet_circles,
             tolerance=tolerance,
-            title=(
-                f"coordinates of {self.__class__.__name__} shape, viewed "
-                "from the {view_plane} plane"
-            ),
+            title=(f"coordinates of {self.__class__.__name__} shape, viewed " "from the {view_plane} plane"),
         )
 
         if self.points is not None:
-            fig.add_trace(
-                plotly_trace(points=self.points, mode="markers", name="Shape.points")
-            )
+            fig.add_trace(plotly_trace(points=self.points, mode="markers", name="Shape.points"))
 
         # sweep shapes have .path_points but not .points attribute
         if self.path_points:
-            fig.add_trace(
-                plotly_trace(
-                    points=self.path_points, mode="markers", name="Shape.path_points"
-                )
-            )
+            fig.add_trace(plotly_trace(points=self.path_points, mode="markers", name="Shape.path_points"))
 
         if filename is not None:
 
@@ -1278,9 +1232,7 @@ class Shape:
 
         elif self.graveyard_offset is not None:
             self.solid
-            graveyard_size_to_use = (
-                self.largest_dimension * 2 + self.graveyard_offset * 2
-            )
+            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
 
         else:
             raise ValueError(
@@ -1350,9 +1302,7 @@ class Shape:
                 p_1 = self.processed_points[counter + 1][:2]
                 p_2 = self.processed_points[counter + 2][:2]
 
-                points = paramak.utils.convert_circle_to_spline(
-                    p_0, p_1, p_2, tolerance=tolerance
-                )
+                points = paramak.utils.convert_circle_to_spline(p_0, p_1, p_2, tolerance=tolerance)
 
                 # the last point needs to have the connection type of p2
                 for point in points[:-1]:

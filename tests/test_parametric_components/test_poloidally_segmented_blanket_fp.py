@@ -5,16 +5,12 @@ import paramak
 
 class TestBlanketFP(unittest.TestCase):
     def test_creation(self):
-        blanket = paramak.BlanketFPPoloidalSegments(
-            thickness=20, start_angle=0, stop_angle=180, rotation_angle=180
-        )
+        blanket = paramak.BlanketFPPoloidalSegments(thickness=20, start_angle=0, stop_angle=180, rotation_angle=180)
         assert blanket.solid is not None
 
     def test_creation_with_optimiser(self):
         # Default
-        blanket = paramak.BlanketFPPoloidalSegments(
-            thickness=20, start_angle=0, stop_angle=180, rotation_angle=180
-        )
+        blanket = paramak.BlanketFPPoloidalSegments(thickness=20, start_angle=0, stop_angle=180, rotation_angle=180)
         assert blanket.solid is not None
 
         # With limits
@@ -34,9 +30,7 @@ class TestBlanketFP(unittest.TestCase):
         assert blanket.solid is not None
 
     def test_optimiser(self):
-        blanket = paramak.BlanketFPPoloidalSegments(
-            thickness=20, start_angle=0, stop_angle=180, rotation_angle=180
-        )
+        blanket = paramak.BlanketFPPoloidalSegments(thickness=20, start_angle=0, stop_angle=180, rotation_angle=180)
 
         blanket.length_limits = (100, 300)
         blanket.nb_segments_limits = (2, 8)
@@ -53,9 +47,7 @@ class TestBlanketFP(unittest.TestCase):
         """creates a shape and checks that modifying the nb_segments_limits
         also modifies segmets_angles accordingly
         """
-        blanket1 = paramak.BlanketFPPoloidalSegments(
-            thickness=20, start_angle=0, stop_angle=180, rotation_angle=180
-        )
+        blanket1 = paramak.BlanketFPPoloidalSegments(thickness=20, start_angle=0, stop_angle=180, rotation_angle=180)
 
         blanket2 = paramak.BlanketFPPoloidalSegments(
             thickness=20,
@@ -71,9 +63,7 @@ class TestBlanketFP(unittest.TestCase):
         assert blanket2.volume() != 0
 
     def test_segments_angles_is_modified_num_segments(self):
-        blanket1 = paramak.BlanketFPPoloidalSegments(
-            thickness=20, start_angle=0, stop_angle=180, rotation_angle=180
-        )
+        blanket1 = paramak.BlanketFPPoloidalSegments(thickness=20, start_angle=0, stop_angle=180, rotation_angle=180)
 
         blanket2 = paramak.BlanketFPPoloidalSegments(
             thickness=20,
@@ -88,17 +78,13 @@ class TestBlanketFP(unittest.TestCase):
         assert blanket2.volume() != 0
 
     def test_num_point_is_affected(self):
-        blanket = paramak.BlanketFPPoloidalSegments(
-            thickness=20, start_angle=0, stop_angle=180, rotation_angle=180
-        )
+        blanket = paramak.BlanketFPPoloidalSegments(thickness=20, start_angle=0, stop_angle=180, rotation_angle=180)
         assert blanket.num_points == blanket.num_segments + 1
         blanket.num_segments = 60
         assert blanket.num_points == blanket.num_segments + 1
 
     def test_segment_angles_affects_solid(self):
-        blanket1 = paramak.BlanketFPPoloidalSegments(
-            thickness=20, start_angle=0, stop_angle=180, rotation_angle=180
-        )
+        blanket1 = paramak.BlanketFPPoloidalSegments(thickness=20, start_angle=0, stop_angle=180, rotation_angle=180)
         blanket2 = paramak.BlanketFPPoloidalSegments(
             thickness=20,
             start_angle=0,
@@ -110,9 +96,7 @@ class TestBlanketFP(unittest.TestCase):
         assert blanket2.volume() != 0
 
     def test_warning_segment_angles(self):
-        blanket = paramak.BlanketFPPoloidalSegments(
-            thickness=20, start_angle=1, stop_angle=50, rotation_angle=180
-        )
+        blanket = paramak.BlanketFPPoloidalSegments(thickness=20, start_angle=1, stop_angle=50, rotation_angle=180)
 
         def warning1():
             blanket.start_angle = 1

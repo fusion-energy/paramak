@@ -74,9 +74,7 @@ class FlfSystemCodeReactor(paramak.Reactor):
         """Creates a list of paramak.Shape for components and saves it in
         self.shapes_and_components
         """
-        inner_wall = (
-            self.inner_blanket_radius + self.blanket_thickness + self.blanket_vv_gap
-        )
+        inner_wall = self.inner_blanket_radius + self.blanket_thickness + self.blanket_vv_gap
         lower_vv = paramak.RotateStraightShape(
             points=[
                 (
@@ -85,13 +83,11 @@ class FlfSystemCodeReactor(paramak.Reactor):
                 ),
                 (
                     inner_wall,
-                    (-self.blanket_height / 2.0)
-                    - (self.lower_blanket_thickness + self.lower_vv_thickness),
+                    (-self.blanket_height / 2.0) - (self.lower_blanket_thickness + self.lower_vv_thickness),
                 ),
                 (
                     0,
-                    (-self.blanket_height / 2.0)
-                    - (self.lower_blanket_thickness + self.lower_vv_thickness),
+                    (-self.blanket_height / 2.0) - (self.lower_blanket_thickness + self.lower_vv_thickness),
                 ),
                 (0, (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
             ],
@@ -130,15 +126,11 @@ class FlfSystemCodeReactor(paramak.Reactor):
                 (inner_wall, (self.blanket_height / 2.0) + self.upper_vv_thickness),
                 (
                     inner_wall,
-                    (self.blanket_height / 2.0)
-                    + self.upper_vv_thickness
-                    + self.upper_blanket_thickness,
+                    (self.blanket_height / 2.0) + self.upper_vv_thickness + self.upper_blanket_thickness,
                 ),
                 (
                     0,
-                    (self.blanket_height / 2.0)
-                    + self.upper_vv_thickness
-                    + self.upper_blanket_thickness,
+                    (self.blanket_height / 2.0) + self.upper_vv_thickness + self.upper_blanket_thickness,
                 ),
                 (0, (self.blanket_height / 2.0) + self.upper_vv_thickness),
             ],
@@ -163,27 +155,19 @@ class FlfSystemCodeReactor(paramak.Reactor):
             points=[
                 (
                     inner_wall + self.vv_thickness,
-                    (self.blanket_height / 2.0)
-                    + self.upper_vv_thickness
-                    + self.upper_blanket_thickness,
+                    (self.blanket_height / 2.0) + self.upper_vv_thickness + self.upper_blanket_thickness,
                 ),
                 (
                     inner_wall,
-                    (self.blanket_height / 2.0)
-                    + self.upper_vv_thickness
-                    + self.upper_blanket_thickness,
+                    (self.blanket_height / 2.0) + self.upper_vv_thickness + self.upper_blanket_thickness,
                 ),
                 (
                     inner_wall,
-                    -(self.blanket_height / 2.0)
-                    - self.lower_blanket_thickness
-                    - self.lower_vv_thickness,
+                    -(self.blanket_height / 2.0) - self.lower_blanket_thickness - self.lower_vv_thickness,
                 ),
                 (
                     inner_wall + self.vv_thickness,
-                    -(self.blanket_height / 2.0)
-                    - self.lower_blanket_thickness
-                    - self.lower_vv_thickness,
+                    -(self.blanket_height / 2.0) - self.lower_blanket_thickness - self.lower_vv_thickness,
                 ),
             ],
             rotation_angle=self.rotation_angle,

@@ -53,16 +53,10 @@ class BlanketFPPoloidalSegments(BlanketFP):
     def segments_angles(self, value):
         if value is not None:
             if self.start_angle is not None or self.stop_angle is not None:
-                msg = (
-                    "start_angle and stop_angle attributes will be "
-                    + "ignored if segments_angles is not None"
-                )
+                msg = "start_angle and stop_angle attributes will be " + "ignored if segments_angles is not None"
                 warnings.warn(msg)
             elif self.num_segments is not None:
-                msg = (
-                    "num_segment attribute will be ignored if "
-                    + "segments_angles is not None"
-                )
+                msg = "num_segment attribute will be ignored if " + "segments_angles is not None"
                 warnings.warn(msg)
         self._segments_angles = value
 
@@ -100,9 +94,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
                 stop_on_success=True,
             )
         elif self.segments_angles is None:
-            angles = np.linspace(
-                self.start_angle, self.stop_angle, num=self.num_segments + 1
-            )
+            angles = np.linspace(self.start_angle, self.stop_angle, num=self.num_segments + 1)
         else:
             angles = self.segments_angles
         return angles
@@ -152,9 +144,7 @@ class BlanketFPPoloidalSegments(BlanketFP):
             ]
 
             # Create cutters for each gap
-            for inner_point, outer_point in zip(
-                self.inner_points[:-1], self.outer_points[-1::-1]
-            ):
+            for inner_point, outer_point in zip(self.inner_points[:-1], self.outer_points[-1::-1]):
                 # initialise cutter for gap
                 cutter = RotateStraightShape(
                     rotation_angle=self.rotation_angle,
@@ -205,9 +195,7 @@ def compute_lengths_from_angles(angles: List[float], distribution: Callable):
     return lengths
 
 
-def segments_optimiser(
-    length_limits, nb_segments_limits, distribution, angles, stop_on_success=True
-):
+def segments_optimiser(length_limits, nb_segments_limits, distribution, angles, stop_on_success=True):
     """Optimiser segmenting a given R(theta), Z(theta) distribution of points
     with constraints regarding the number of segments and the length of the
     segments.

@@ -70,17 +70,12 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
         outer_volume = (
             math.pi
             * math.pow(
-                self.test_reactor.inner_blanket_radius
-                + self.test_reactor.blanket_thickness,
+                self.test_reactor.inner_blanket_radius + self.test_reactor.blanket_thickness,
                 2,
             )
             * self.test_reactor.blanket_height
         )
-        inner_volume = (
-            math.pi
-            * math.pow(self.test_reactor.inner_blanket_radius, 2)
-            * self.test_reactor.blanket_height
-        )
+        inner_volume = math.pi * math.pow(self.test_reactor.inner_blanket_radius, 2) * self.test_reactor.blanket_height
         sector_fraction = 360.0 / self.test_reactor.rotation_angle
         blanket_volume = (outer_volume - inner_volume) / sector_fraction
 

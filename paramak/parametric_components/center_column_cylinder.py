@@ -65,10 +65,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     def inner_radius(self, value):
         if hasattr(self, "outer_radius"):
             if value >= self.outer_radius:
-                msg = (
-                    f"inner_radius ({value}) is larger than outer_radius "
-                    "({self.outer_radius})"
-                )
+                msg = f"inner_radius ({value}) is larger than outer_radius " "({self.outer_radius})"
                 raise ValueError(msg)
         self._inner_radius = value
 
@@ -80,10 +77,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
     def outer_radius(self, value):
         if hasattr(self, "inner_radius"):
             if value <= self.inner_radius:
-                msg = (
-                    f"inner_radius ({self.inner_radius}) is larger than "
-                    "outer_radius ({value})"
-                )
+                msg = f"inner_radius ({self.inner_radius}) is larger than " "outer_radius ({value})"
                 raise ValueError(msg)
 
         self._outer_radius = value

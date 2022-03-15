@@ -50,9 +50,7 @@ class PoloidalSegments(RotateStraightShape):
         if isinstance(value, int) is False:
             raise TypeError("PoloidalSegmenter.number_of_segments must be an int.")
         if value < 1:
-            raise ValueError(
-                "PoloidalSegmenter.number_of_segments must be a minimum of 1."
-            )
+            raise ValueError("PoloidalSegmenter.number_of_segments must be a minimum of 1.")
         self._number_of_segments = value
 
     @property
@@ -97,9 +95,7 @@ class PoloidalSegments(RotateStraightShape):
 
             points.append(self.center_point)
 
-            outer_point_1 = rotate(
-                self.center_point, outer_point, math.radians(current_angle)
-            )
+            outer_point_1 = rotate(self.center_point, outer_point, math.radians(current_angle))
 
             outer_point_2 = rotate(
                 self.center_point,
@@ -110,9 +106,7 @@ class PoloidalSegments(RotateStraightShape):
             # if the point goes beyond the zero line then set to zero
             for new_point in [outer_point_1, outer_point_2]:
                 if new_point[0] < 0:
-                    m, c = coefficients_of_line_from_points(
-                        new_point, self.center_point
-                    )
+                    m, c = coefficients_of_line_from_points(new_point, self.center_point)
                     points.append((0, c))
                 else:
                     points.append(new_point)
