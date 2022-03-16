@@ -10,7 +10,7 @@ Paramak
    import cadquery as cq
    text = cq.Workplane().text(
       txt="Paramak",
-      fontsize=0.5,
+      fontsize=0.8,
       distance=-0.5,
       cut=True,
       font="Sans"
@@ -30,7 +30,7 @@ Contributions are welcome.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/fXboew3U7rw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-.. toctree::
+ .. toctree::
    :maxdepth: 2
 
 Install
