@@ -24,9 +24,7 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         self.heights = heights
         self.widths = widths
 
-        if len(self.widths) != len(self.heights) or len(self.heights) != len(
-            self.center_points
-        ):
+        if len(self.widths) != len(self.heights) or len(self.heights) != len(self.center_points):
             raise ValueError(
                 "The length of widthts, height and center_points \
                 must be the same when making a PoloidalFieldCoilSet"
@@ -68,9 +66,7 @@ class PoloidalFieldCoilSet(RotateStraightShape):
 
         all_points = []
 
-        for height, width, center_point in zip(
-            self.heights, self.widths, self.center_points
-        ):
+        for height, width, center_point in zip(self.heights, self.widths, self.center_points):
 
             all_points = all_points + [
                 (
@@ -106,13 +102,9 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         iter_points = iter(self.points)
         pf_coils_set = []
         wires = []
-        for point_1, point_2, point_3, point_4 in zip(
-            iter_points, iter_points, iter_points, iter_points
-        ):
+        for point_1, point_2, point_3, point_4 in zip(iter_points, iter_points, iter_points, iter_points):
 
-            solid = cq.Workplane(self.workplane).polyline(
-                [point_1[:2], point_2[:2], point_3[:2], point_4[:2]]
-            )
+            solid = cq.Workplane(self.workplane).polyline([point_1[:2], point_2[:2], point_3[:2], point_4[:2]])
 
             wire = solid.close()
 

@@ -236,11 +236,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             + self._vacuum_vessel_thickness
             + self._central_shield_thickness
         )
-        blanket_width = (
-            self._inner_wall_thickness
-            + self._blanket_thickness
-            + self._rear_wall_thickness
-        )
+        blanket_width = self._inner_wall_thickness + self._blanket_thickness + self._rear_wall_thickness
         wdth_diff = blanket_width - core_width
 
         if wdth_diff > 0:
@@ -260,18 +256,12 @@ class NegativeTriangularityReactor(paramak.Reactor):
         )
         if not self._low_aspect:
             self._inner_equatorial_point += (
-                self._inner_wall_thickness
-                + self._blanket_thickness
-                + self._rear_wall_thickness
+                self._inner_wall_thickness + self._blanket_thickness + self._rear_wall_thickness
             )
 
-        self._outer_equatorial_point = (
-            self._inner_equatorial_point + self._plasma_radial_thickness
-        )
+        self._outer_equatorial_point = self._inner_equatorial_point + self._plasma_radial_thickness
 
-        self._major_radius = (
-            self._outer_equatorial_point + self._inner_equatorial_point
-        ) / 2
+        self._major_radius = (self._outer_equatorial_point + self._inner_equatorial_point) / 2
         self._minor_radius = self._major_radius - self._inner_equatorial_point
 
     # Getters
@@ -410,9 +400,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
     @central_shield_thickness.setter
     def central_shield_thickness(self, val):
         if not isinstance(val, (float, int)):
-            raise TypeError(
-                "Inbore heat shield thickness must be float or integer value!"
-            )
+            raise TypeError("Inbore heat shield thickness must be float or integer value!")
         self._central_shield_thickness = val
 
     @wall_to_plasma_gap.setter
@@ -479,54 +467,42 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
     @port_side_lengths.setter
     def port_side_lengths(self, val):
-        if not isinstance(val, list) or False in [
-            isinstance(x, (float, int)) for x in val
-        ]:
+        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
             raise TypeError("Port side lengths must be a list of numbers!")
         self._port_checks()
         self._port_side_lengths = val
 
     @port_heights.setter
     def port_heights(self, val):
-        if not isinstance(val, list) or False in [
-            isinstance(x, (float, int)) for x in val
-        ]:
+        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
             raise TypeError("Port heights must be a list of numbers!")
         self._port_checks()
         self._port_thickness = val
 
     @port_angles.setter
     def port_angles(self, val):
-        if not isinstance(val, list) or False in [
-            isinstance(x, (float, int)) for x in val
-        ]:
+        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
             raise TypeError("Port angles must be a list of numbers!")
         self._port_checks()
         self._ports_angles = val
 
     @port_z_pos.setter
     def port_z_pos(self, val):
-        if not isinstance(val, list) or False in [
-            isinstance(x, (float, int)) for x in val
-        ]:
+        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
             raise TypeError("Port Z positions must be a list of numbers!")
         self._port_checks()
         self._port_z_pos = val
 
     @pf_coil_heights.setter
     def pf_coil_heights(self, val):
-        if not isinstance(val, list) or False in [
-            isinstance(x, (float, int)) for x in val
-        ]:
+        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
             raise TypeError("Pf coil heights must be a list of numbers!")
         self._pf_checks(False)
         self._pf_coil_heights = val
 
     @pf_coil_widths.setter
     def pf_coil_widths(self, val):
-        if not isinstance(val, list) or False in [
-            isinstance(x, (float, int)) for x in val
-        ]:
+        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
             raise TypeError("Pf coil width must be a list of numbers!")
         self._pf_checks(False)
         self._pf_coil_widths = val
@@ -540,9 +516,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
     @pf_coil_casing_thickness.setter
     def pf_coil_casing_thickness(self, val):
-        if not isinstance(val, list) or False in [
-            isinstance(x, (float, int)) for x in val
-        ]:
+        if not isinstance(val, list) or False in [isinstance(x, (float, int)) for x in val]:
             raise TypeError("Pf coil heights must be a list of numbers!")
         self._pf_checks(False)
         self._pf_casing_thickness = val
@@ -594,27 +568,17 @@ class NegativeTriangularityReactor(paramak.Reactor):
     def _make_vertical_build(self):
         # Above the plasma
         # Inner wall
-        self._inner_wall_start_height = (
-            self._plasma.high_point[1] + self._wall_to_plasma_gap
-        )
-        self._inner_wall_end_height = (
-            self._inner_wall_start_height + self._inner_wall_thickness
-        )
+        self._inner_wall_start_height = self._plasma.high_point[1] + self._wall_to_plasma_gap
+        self._inner_wall_end_height = self._inner_wall_start_height + self._inner_wall_thickness
         # Blanket
         self._blanket_start_height_top = self._inner_wall_end_height
-        self._blanket_end_height_top = (
-            self._blanket_start_height_top + self._blanket_thickness
-        )
+        self._blanket_end_height_top = self._blanket_start_height_top + self._blanket_thickness
         # Rear wall
         self._rear_wall_start_height_top = self._blanket_end_height_top
-        self._rear_wall_end_height_top = (
-            self._rear_wall_start_height_top + self._rear_wall_thickness
-        )
+        self._rear_wall_end_height_top = self._rear_wall_start_height_top + self._rear_wall_thickness
         # Divertor
         self._divertor_start_height = self._plasma.high_point[1]
-        self._divertor_end_height_top = (
-            self._divertor_start_height + self._divertor_height_full
-        )
+        self._divertor_end_height_top = self._divertor_start_height + self._divertor_height_full
 
         # Diverter height check
         min_div_h = self._rear_wall_end_height_top - self._divertor_start_height
@@ -626,17 +590,13 @@ class NegativeTriangularityReactor(paramak.Reactor):
             self._divertor_end_height_top = self._divertor_start_height + min_div_h
         # Vacuum Vessel Inner Wall
         self._vacuum_vessel_start_height = self._divertor_end_height_top
-        self._vacuum_vessel_end_height = (
-            self._vacuum_vessel_start_height + self._vacuum_vessel_thickness
-        )
+        self._vacuum_vessel_end_height = self._vacuum_vessel_start_height + self._vacuum_vessel_thickness
         # Central Heights
         self._inner_tf_leg_height = self._vacuum_vessel_end_height * 2
         self._vacuum_vessel_height = self._vacuum_vessel_start_height * 2
         self._inner_shield_height = self._vacuum_vessel_start_height * 2
         # Outer Blanket Height
-        self._outer_blanket_height = self._inner_shield_height - (
-            2 * self._divertor_height_full
-        )
+        self._outer_blanket_height = self._inner_shield_height - (2 * self._divertor_height_full)
         if self._outer_blanket_height < 0:
             raise ValueError("The divertors are overlapping at the center plane.")
 
@@ -646,29 +606,17 @@ class NegativeTriangularityReactor(paramak.Reactor):
         self._inner_bore_stop_rad = self._inner_bore_radius
         # Inner TF Coil
         self._tf_inner_leg_start_rad = self._inner_bore_stop_rad
-        self._tf_inner_leg_end_rad = (
-            self._tf_inner_leg_start_rad + self._inner_tf_coil_thickness
-        )
+        self._tf_inner_leg_end_rad = self._tf_inner_leg_start_rad + self._inner_tf_coil_thickness
         # Vacuum Vessel Inner wall
-        self._vacuum_vessel_inwall_start_rad = (
-            self._tf_inner_leg_end_rad + self._inner_leg_to_vacuum_inner_wall_gap
-        )
-        self._vacuum_vessel_inwall_end_rad = (
-            self._vacuum_vessel_inwall_start_rad + self._vacuum_vessel_thickness
-        )
+        self._vacuum_vessel_inwall_start_rad = self._tf_inner_leg_end_rad + self._inner_leg_to_vacuum_inner_wall_gap
+        self._vacuum_vessel_inwall_end_rad = self._vacuum_vessel_inwall_start_rad + self._vacuum_vessel_thickness
         # Central Column Shield
         self._inner_shield_start_rad = self._vacuum_vessel_inwall_end_rad
-        self._inner_shield_end_rad = (
-            self._inner_shield_start_rad + self._central_shield_thickness
-        )
+        self._inner_shield_end_rad = self._inner_shield_start_rad + self._central_shield_thickness
         # Blanket Offset
         self._blanket_offset = self._wall_to_plasma_gap + self._inner_wall_thickness
         # Rear Wall offset
-        self._rear_wall_plasma_offset = (
-            self._wall_to_plasma_gap
-            + self._blanket_thickness
-            + self._inner_wall_thickness
-        )
+        self._rear_wall_plasma_offset = self._wall_to_plasma_gap + self._blanket_thickness + self._inner_wall_thickness
 
         # Run check for diverter parameters
         full_outer_blanket_rad = (
@@ -692,14 +640,10 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         # Divertor parts
         self._divertor_start_rad = self._plasma.high_point[0]
-        self._divertor_end_rad = (
-            self._divertor_start_rad + self._divertor_radial_thickness
-        )
+        self._divertor_end_rad = self._divertor_start_rad + self._divertor_radial_thickness
         # Vacuum Vessel Body
         self._vacuum_vessel_body_start_rad = self._divertor_end_rad
-        self._vacuum_vessel_body_end_rad = (
-            self._vacuum_vessel_body_start_rad + self._vacuum_vessel_thickness
-        )
+        self._vacuum_vessel_body_end_rad = self._vacuum_vessel_body_start_rad + self._vacuum_vessel_thickness
         # TF Coils
         # Getting small radius for inner corner
         self._tf_coils_init = paramak.ToroidalFieldCoilRectangleRoundCorners(
@@ -718,9 +662,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
 
         self._small_rad_displacement = self._tf_coils_init.analyse_attributes[2]
 
-        self._tf_start_rad = (
-            self._vacuum_vessel_body_end_rad + self._small_rad_displacement
-        )
+        self._tf_start_rad = self._vacuum_vessel_body_end_rad + self._small_rad_displacement
         self._tf_end_rad = self._tf_start_rad + self._inner_tf_coil_thickness
 
     def _make_pf_coils(self):
@@ -854,9 +796,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             stop_angle=360,
             plasma=self._make_plasma(),
             rotation_angle=self._rotation_angle,
-            offset_from_plasma=self._inner_wall_thickness
-            + self._blanket_thickness
-            + self._wall_to_plasma_gap,
+            offset_from_plasma=self._inner_wall_thickness + self._blanket_thickness + self._wall_to_plasma_gap,
             name="blanket_rear_wall",
             cut=[
                 central_cutter,
@@ -991,12 +931,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             or len(self._port_z_pos) != len(self._ports_angles)
         ):
             raise ValueError("Number of elements in Port Parameters don't match!")
-        _port_coord_list = (
-            self._port_side_lengths
-            + self._ports_angles
-            + self._port_heights
-            + self._ports_angles
-        )
+        _port_coord_list = self._port_side_lengths + self._ports_angles + self._port_heights + self._ports_angles
         for cord in _port_coord_list:
             if not isinstance(cord, (float, int)):
                 raise TypeError("Port parameters must be float or integer values!")
@@ -1011,15 +946,11 @@ class NegativeTriangularityReactor(paramak.Reactor):
         ):
             raise ValueError("Number of elements in PF Parameters don't match!")
         if not tuple_bool:
-            _pf_lists = (
-                self._pf_coil_heights + self._pf_coil_widths + self._pf_casing_thickness
-            )
+            _pf_lists = self._pf_coil_heights + self._pf_coil_widths + self._pf_casing_thickness
 
             for cord in _pf_lists:
                 if not isinstance(cord, (float, int)):
-                    raise TypeError(
-                        "PF parameters must be float or integer values! yay"
-                    )
+                    raise TypeError("PF parameters must be float or integer values! yay")
         else:
             _pf_lists = (
                 self._pf_coil_heights

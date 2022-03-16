@@ -66,15 +66,11 @@ def create_reactor_renders(
         render_mesh = pyrender.Mesh.from_trimesh(trimesh_obj, smooth=False)
         scene.add(render_mesh)
 
-    camera = pyrender.camera.PerspectiveCamera(
-        yfov=math.radians(90.0)  # aspectRatio=2.0 could be added here
-    )
+    camera = pyrender.camera.PerspectiveCamera(yfov=math.radians(90.0))  # aspectRatio=2.0 could be added here
 
     # sets the position of the camera using a matrix
     cam = 2**-0.5
-    camera_pose = np.array(
-        [[1, 0, 0, 0], [0, cam, -cam, -350], [0, cam, cam, 350], [0, 0, 0, 1]]
-    )
+    camera_pose = np.array([[1, 0, 0, 0], [0, cam, -cam, -350], [0, cam, cam, 350], [0, 0, 0, 1]])
 
     # adds a camera and a point light source at the same location
     scene.add(camera, pose=camera_pose)

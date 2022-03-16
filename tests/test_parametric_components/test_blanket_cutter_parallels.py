@@ -70,7 +70,4 @@ class TestBlanketCutterParallels(unittest.TestCase):
             test_shape.gap_size = gap_size
             test_shape.azimuth_placement_angle = angles
             assert test_shape.main_cutting_shape.distance == test_shape.gap_size / 2.0
-            assert (
-                test_shape.main_cutting_shape.azimuth_placement_angle
-                == test_shape.azimuth_placement_angle
-            )
+            assert test_shape.main_cutting_shape.azimuth_placement_angle == test_shape.azimuth_placement_angle

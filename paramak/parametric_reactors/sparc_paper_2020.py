@@ -56,9 +56,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
         widths = [27.7, 27.7, 27.7, 27.7, 27.7, 27.7]
 
         inboard_pf_coils = []
-        for counter, (center_point, width, height) in enumerate(
-            zip(center_points, widths, heights), 1
-        ):
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights), 1):
             pf_coil = paramak.PoloidalFieldCoil(
                 height=height,
                 width=width,
@@ -99,9 +97,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
             37,
         ]
         outboard_pf_coils = []
-        for counter, (center_point, width, height) in enumerate(
-            zip(center_points, widths, heights), 1
-        ):
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights), 1):
             pf_coil = paramak.PoloidalFieldCoil(
                 height=height,
                 width=width,
@@ -121,9 +117,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
         heights = [15, 15, 15, 15]
 
         div_coils = []
-        for counter, (center_point, width, height) in enumerate(
-            zip(center_points, widths, heights), 1
-        ):
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights), 1):
             pf_coil = paramak.PoloidalFieldCoil(
                 height=height,
                 width=width,
@@ -208,9 +202,7 @@ class SparcFrom2020PaperDiagram(paramak.Reactor):
         heights = [10, 10]
 
         vs_coils = []
-        for counter, (center_point, width, height) in enumerate(
-            zip(center_points, widths, heights), 1
-        ):
+        for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights), 1):
             pf_coil = paramak.PoloidalFieldCoil(
                 height=height,
                 width=width,

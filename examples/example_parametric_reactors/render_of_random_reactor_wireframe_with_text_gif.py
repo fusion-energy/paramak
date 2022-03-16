@@ -72,9 +72,7 @@ def create_reactor_renders(
     y_value = 50
     for line in lines_of_text_to_write:
         y_value = y_value + 40
-        svg_file_object.add(
-            svg_file_object.text(line, insert=(555, y_value), font_size=27)
-        )
+        svg_file_object.add(svg_file_object.text(line, insert=(555, y_value), font_size=27))
     svg_file_object.save()
 
     background = sg.fromfile(f"wireframe_{str(render_number).zfill(3)}.svg")

@@ -9,9 +9,7 @@ import paramak
 
 def perimeter(outer_start_point, radius, thickness):
 
-    test_shape = paramak.CapsuleVacuumVessel(
-        outer_start_point=outer_start_point, radius=radius, thickness=thickness
-    )
+    test_shape = paramak.CapsuleVacuumVessel(outer_start_point=outer_start_point, radius=radius, thickness=thickness)
     point1 = test_shape.points[0]
     # point2 = test_shape.points[1]
     point3 = test_shape.points[2]
@@ -26,10 +24,7 @@ def perimeter(outer_start_point, radius, thickness):
     point12 = test_shape.points[11]
 
     straightedges = float(
-        (point12[1] - point1[1])
-        + (point6[1] - point7[1])
-        + (point4[1] - point3[1])
-        + (point9[1] - point10[1])
+        (point12[1] - point1[1]) + (point6[1] - point7[1]) + (point4[1] - point3[1]) + (point9[1] - point10[1])
     )
     curvededges = float((math.pi * radius) + (math.pi * (radius - thickness)))
     total = float(straightedges + curvededges)
@@ -56,27 +51,21 @@ def test_perimeter3():
 
 def test_pointnum1():
     """this tests if the number of points returned are correct"""
-    shape = paramak.CapsuleVacuumVessel(
-        outer_start_point=(0, 0), radius=300, thickness=10
-    )
+    shape = paramak.CapsuleVacuumVessel(outer_start_point=(0, 0), radius=300, thickness=10)
     assert len(shape.points) == 12
     assert len(shape.processed_points) == 13
 
 
 def test_pointnum2():
     """this tests if the number of points returned are correct"""
-    shape = paramak.CapsuleVacuumVessel(
-        outer_start_point=(100, -100), radius=400, thickness=25
-    )
+    shape = paramak.CapsuleVacuumVessel(outer_start_point=(100, -100), radius=400, thickness=25)
     assert len(shape.points) == 12
     assert len(shape.processed_points) == 13
 
 
 def test_pointnum3():
     """this tests if the number of points returned are correct"""
-    shape = paramak.CapsuleVacuumVessel(
-        outer_start_point=(1000, -500), radius=5000, thickness=50
-    )
+    shape = paramak.CapsuleVacuumVessel(outer_start_point=(1000, -500), radius=5000, thickness=50)
     assert len(shape.points) == 12
     assert len(shape.processed_points) == 13
 
@@ -100,9 +89,7 @@ def volume(outer_start_point, radius, thickness, angle):
     point10 = test_shape.points[9]
 
     outer_volume_cylinder = float(math.pi * (radius**2) * (point4[1] - point3[1]))
-    inner_volume_cylinder = float(
-        math.pi * ((radius - thickness) ** 2) * (point9[1] - point10[1])
-    )
+    inner_volume_cylinder = float(math.pi * ((radius - thickness) ** 2) * (point9[1] - point10[1]))
     outer_volume_sphere = float((4 / 3) * math.pi * (radius**3))
     inner_volume_sphere = float((4 / 3) * math.pi * ((radius - thickness) ** 3))
     outer_volume = outer_volume_sphere + outer_volume_cylinder
@@ -123,7 +110,5 @@ def testvolume2():
 
 
 def testvolume3():
-    testvol = volume(
-        outer_start_point=(1000, -500), radius=5000, thickness=50, angle=90
-    )
+    testvol = volume(outer_start_point=(1000, -500), radius=5000, thickness=50, angle=90)
     assert testvol == pytest.approx(7795207671.41)

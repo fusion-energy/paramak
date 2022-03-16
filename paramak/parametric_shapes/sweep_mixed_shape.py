@@ -62,9 +62,7 @@ class SweepMixedShape(Shape):
     @path_workplane.setter
     def path_workplane(self, value):
         if value[0] != self.workplane[0]:
-            raise ValueError(
-                "workplane and path_workplane must start with the same letter"
-            )
+            raise ValueError("workplane and path_workplane must start with the same letter")
         elif value == self.workplane:
             raise ValueError("workplane and path_workplane must be different")
         else:

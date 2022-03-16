@@ -8,13 +8,9 @@ import paramak
 
 class TestPoloidalFieldCoilCaseFC(unittest.TestCase):
     def setUp(self):
-        self.pf_coil = paramak.PoloidalFieldCoil(
-            height=50, width=60, center_point=(1000, 500)
-        )
+        self.pf_coil = paramak.PoloidalFieldCoil(height=50, width=60, center_point=(1000, 500))
 
-        self.test_shape = paramak.PoloidalFieldCoilCaseFC(
-            pf_coil=self.pf_coil, casing_thickness=5
-        )
+        self.test_shape = paramak.PoloidalFieldCoilCaseFC(pf_coil=self.pf_coil, casing_thickness=5)
 
     def test_default_parameters(self):
         """Checks that the default parameters of a PoloidalFieldCoilCaseFC are correct."""
@@ -32,9 +28,7 @@ class TestPoloidalFieldCoilCaseFC(unittest.TestCase):
         """Creates a pf coil case using the PoloidalFieldCoilCaseFC parametric
         component and checks that its volume is correct."""
 
-        assert self.test_shape.volume() == pytest.approx(
-            (math.pi * 2 * 1000) * ((50 * 5 * 2) + (70 * 5 * 2))
-        )
+        assert self.test_shape.volume() == pytest.approx((math.pi * 2 * 1000) * ((50 * 5 * 2) + (70 * 5 * 2)))
 
     def test_absolute_areas(self):
         """Creates a pf coil case using the PoloidalFieldCoilCaseFC parametric

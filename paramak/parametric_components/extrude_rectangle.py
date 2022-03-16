@@ -14,12 +14,7 @@ class ExtrudeRectangle(ExtrudeStraightShape):
     """
 
     def __init__(
-        self,
-        height: float,
-        width: float,
-        center_point: Tuple[float, float],
-        name: str = "extrude_rectangle",
-        **kwargs
+        self, height: float, width: float, center_point: Tuple[float, float], name: str = "extrude_rectangle", **kwargs
     ) -> None:
 
         super().__init__(name=name, **kwargs)
