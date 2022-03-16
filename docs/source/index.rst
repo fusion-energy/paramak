@@ -30,9 +30,6 @@ Contributions are welcome.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/fXboew3U7rw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
- .. toctree::
-   :maxdepth: 2
-
 Install
 =======
 .. toctree::
