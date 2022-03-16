@@ -41,13 +41,6 @@ def create_reactor_renders(
         lower_vv_thickness=10,
     )
 
-    # exports line drawing of individual reactor
-    my_reactor.export_svg(
-        f"render_{str(render_number).zfill(3)}.svg",
-        projectionDir=[1, -1, -0.1],
-        strokeWidth=2,
-    )
-
     # saves the reactor geometry as separate stl files that are later read in
     # for the rendering
     my_reactor.export_stl()
@@ -115,5 +108,3 @@ for i in range(50):
 # The convert comand requires imagemagick
 # saves the rendered png files as a gif
 os.system("convert -delay 40 -loop 0 render_*.png reactors.gif")
-# saves the line drawing svg files as a gif
-os.system("convert -delay 40 -loop 0 render_*.svg reactors.gif")
