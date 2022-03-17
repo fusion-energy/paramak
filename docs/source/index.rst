@@ -195,7 +195,7 @@ Table Of Contents
 .. toctree::
    :maxdepth: 3
 
-   Install
-   Quick-tour
-   Examples
-   API-reference
+   install
+   quick-tour
+   examples
+   API-Reference
