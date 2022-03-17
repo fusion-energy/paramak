@@ -11,9 +11,7 @@ class TestCuttingWedgeFS(unittest.TestCase):
         volume of the cutter shape is larger than the shape it
         encompasses."""
 
-        hoop_shape = paramak.PoloidalFieldCoil(
-            height=20, width=20, center_point=(50, 200), rotation_angle=180
-        )
+        hoop_shape = paramak.PoloidalFieldCoil(height=20, width=20, center_point=(50, 200), rotation_angle=180)
 
         cutter = paramak.CuttingWedgeFS(
             shape=hoop_shape,
@@ -26,9 +24,7 @@ class TestCuttingWedgeFS(unittest.TestCase):
         """Checks that the correct errors are raised when invalid arguments are input as
         shape parameters."""
 
-        shape = paramak.ExtrudeStraightShape(
-            distance=1, points=[(0, 0), (0, 1), (1, 1)], rotation_angle=180
-        )
+        shape = paramak.ExtrudeStraightShape(distance=1, points=[(0, 0), (0, 1), (1, 1)], rotation_angle=180)
 
         cutter = paramak.CuttingWedgeFS(
             shape=shape,

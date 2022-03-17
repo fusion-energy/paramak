@@ -23,10 +23,4 @@ class RotateSplineShape(RotateMixedShape):
         **kwargs
     ):
 
-        super().__init__(
-            rotation_angle=rotation_angle,
-            color=color,
-            connection_type="spline",
-            name=name,
-            **kwargs
-        )
+        super().__init__(rotation_angle=rotation_angle, color=color, connection_type="spline", name=name, **kwargs)

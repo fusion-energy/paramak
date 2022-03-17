@@ -72,14 +72,10 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
     def casing_thicknesses(self, value):
         if isinstance(value, list):
             if not all(isinstance(x, (int, float)) for x in value):
-                raise ValueError(
-                    "Every entry in Casing_thicknesses must be a float or int"
-                )
+                raise ValueError("Every entry in Casing_thicknesses must be a float or int")
         else:
             if not isinstance(value, (float, int)):
-                raise ValueError(
-                    "Casing_thicknesses must be a list of numbers or a number"
-                )
+                raise ValueError("Casing_thicknesses must be a list of numbers or a number")
         self._casing_thicknesses = value
 
     def find_points(self):
@@ -93,16 +89,8 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         else:
             casing_thicknesses_list = [self.casing_thicknesses] * len(self.widths)
 
-        if (
-            not len(self.heights)
-            == len(self.widths)
-            == len(self.center_points)
-            == len(casing_thicknesses_list)
-        ):
-            raise ValueError(
-                "The number of heights, widths, center_points and "
-                "casing_thicknesses must be equal"
-            )
+        if not len(self.heights) == len(self.widths) == len(self.center_points) == len(casing_thicknesses_list):
+            raise ValueError("The number of heights, widths, center_points and " "casing_thicknesses must be equal")
 
         for height, width, center_point, casing_thickness in zip(
             self.heights, self.widths, self.center_points, casing_thicknesses_list

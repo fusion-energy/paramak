@@ -125,10 +125,7 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
 
         plasma_height = abs(plasma.high_point[1]) + abs(plasma.low_point[1])
         if self.height <= plasma_height:
-            msg = (
-                f"Center column height ({self.height}) is smaller than "
-                "plasma height ({plasma_height}"
-            )
+            msg = f"Center column height ({self.height}) is smaller than " "plasma height ({plasma_height}"
             raise ValueError(msg)
 
         if self.inner_radius >= plasma.inner_equatorial_point[0] - self.mid_offset:

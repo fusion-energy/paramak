@@ -12,15 +12,6 @@ class SingleNullSubmersionTokamak(paramak.SubmersionTokamak):
         support_position (str): Defaults to "upper".
     """
 
-    def __init__(
-        self,
-        divertor_position: str = "upper",
-        support_position: str = "upper",
-        **kwargs
-    ):
+    def __init__(self, divertor_position: str = "upper", support_position: str = "upper", **kwargs):
 
-        super().__init__(
-            divertor_position=divertor_position,
-            support_position=support_position,
-            **kwargs
-        )
+        super().__init__(divertor_position=divertor_position, support_position=support_position, **kwargs)

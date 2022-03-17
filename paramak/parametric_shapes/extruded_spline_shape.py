@@ -24,10 +24,4 @@ class ExtrudeSplineShape(ExtrudeMixedShape):
         **kwargs
     ):
 
-        super().__init__(
-            distance=distance,
-            connection_type="spline",
-            color=color,
-            name=name,
-            **kwargs
-        )
+        super().__init__(distance=distance, connection_type="spline", color=color, name=name, **kwargs)

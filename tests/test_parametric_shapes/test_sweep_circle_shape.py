@@ -10,9 +10,7 @@ from paramak import RotateStraightShape, SweepCircleShape
 
 class TestSweepCircleShape(unittest.TestCase):
     def setUp(self):
-        self.test_shape = SweepCircleShape(
-            radius=10, path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
-        )
+        self.test_shape = SweepCircleShape(radius=10, path_points=[(50, 0), (30, 50), (70, 100), (50, 150)])
 
     def test_default_parameters(self):
         """Checks that the default parameters of a SweepCircleShape are correct."""
@@ -90,30 +88,19 @@ class TestSweepCircleShape(unittest.TestCase):
 
         self.test_shape.force_cross_section = True
 
-        assert (
-            self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01))
-            == 2
-        )
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01)) == 2
 
         cutting_shape = RotateStraightShape(
             points=[(0, 50), (0, 200), (100, 200), (100, 50)],
         )
         self.test_shape.cut = cutting_shape
 
-        assert (
-            self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01))
-            == 2
-        )
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01)) == 2
 
-        cutting_shape = RotateStraightShape(
-            points=[(0, 100), (0, 200), (100, 200), (100, 100)]
-        )
+        cutting_shape = RotateStraightShape(points=[(0, 100), (0, 200), (100, 200), (100, 100)])
         self.test_shape.cut = cutting_shape
 
-        assert (
-            self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01))
-            == 2
-        )
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2), rel=0.01)) == 2
 
     def test_force_cross_section_volume(self):
         """Checks that a SweepCircleShape with a larger volume is created when
@@ -144,14 +131,8 @@ class TestSweepCircleShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

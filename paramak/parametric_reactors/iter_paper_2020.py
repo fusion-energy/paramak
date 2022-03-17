@@ -236,9 +236,7 @@ class IterFrom2020PaperDiagram(paramak.Reactor):
         )
 
         outboard_pf_coils = []
-        for counter, (top_right, lower_left) in enumerate(
-            zip(top_rights, lower_lefts), 1
-        ):
+        for counter, (top_right, lower_left) in enumerate(zip(top_rights, lower_lefts), 1):
             pf_coil = paramak.PoloidalFieldCoilFP(
                 corner_points=(top_right, lower_left),
                 rotation_angle=self.rotation_angle,
