@@ -1,5 +1,5 @@
 Install
-=======
+*******
 
 
 Video tutorials
