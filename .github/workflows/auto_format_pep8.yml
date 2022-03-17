@@ -26,7 +26,7 @@ jobs:
           pip install black==22.1.0
       - name: Run black
         run: |
-          black . --line-length=120
+          black .
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "[skip ci] Apply formatting changes"
