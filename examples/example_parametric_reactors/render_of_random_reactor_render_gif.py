@@ -1,6 +1,7 @@
 # This examples creates Gif animation of 50 reactors by creating individual
 # images of reactors and stiching them together using Imagemagick into a Gif
-# animation.
+# animation. Two animations are made, of of a 3D render and one of a wireframe
+# line drawing.
 
 import math
 import os
@@ -40,7 +41,8 @@ def create_reactor_renders(
         lower_vv_thickness=10,
     )
 
-    # saves the reactor geometry as separate stl files
+    # saves the reactor geometry as separate stl files that are later read in
+    # for the rendering
     my_reactor.export_stl()
 
     # assigns colours to each stl file
@@ -99,5 +101,6 @@ for i in range(50):
         blanket_vv_gap=np.random.uniform(low=10, high=90),
     )
 
-# saves the plot as a gif, the convert comand requires imagemagick
-os.system("convert -delay 20 -loop 0 render_*.png reactors.gif")
+# The convert comand requires imagemagick
+# saves the rendered png files as a gif
+os.system("convert -delay 40 -loop 0 render_*.png reactors.gif")
