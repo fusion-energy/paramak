@@ -95,8 +95,15 @@ html_theme = "default"
 # documentation.
 #
 html_theme_options = {
-    "collapse_navigation": True,
-    "navigation_depth": 3,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    # toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 3,
+    'includehidden': True,
+    'titles_only': False,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

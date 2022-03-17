@@ -30,28 +30,6 @@ Contributions are welcome.
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/fXboew3U7rw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-Install
-=======
-.. toctree::
-   :maxdepth: 2
-
-   install
-
-Examples
-========
-.. toctree::
-   :maxdepth: 2
-
-   examples
-
-API Reference
-=============
-.. toctree::
-   :maxdepth: 3
-
-   API-Reference
-
-
 
 History
 -------
@@ -211,3 +189,12 @@ are shown int he table below.
 |                                      |                                      |                                       |                                       |
 |                                      |     RotateMixedShape()               |     ExtrudeMixedShape()               |     SweepMixedShape()                 |
 +--------------------------------------+--------------------------------------+---------------------------------------+---------------------------------------+
+
+Table Of Contents
+
+.. toctree::
+   :maxdepth: 3
+
+   install
+   examples
+   API-Reference
