@@ -1,9 +1,9 @@
 Install
-=======
+*******
 
 
 Video tutorials
----------------
+===============
 
 .. raw:: html
 
