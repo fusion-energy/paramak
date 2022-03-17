@@ -74,7 +74,7 @@ class CircularPort(Shape):
         # placement rotation
         extrusion_offset = -self.extrusion_start_offset
         extrusion_distance = -self.distance
-        flange_thickness = -self.flange_thickness
+        flange_thickness = self.flange_thickness
 
         inner_wire = (
             Workplane(self.workplane)
@@ -83,7 +83,7 @@ class CircularPort(Shape):
             .circle(self.inner_radius)
         )
         inner_solid = inner_wire.extrude(
-            until=extrusion_distance + flange_thickness, both=False
+            until=extrusion_distance - flange_thickness, both=False
         )
 
         outer_wire = (
@@ -124,7 +124,7 @@ class CircularPort(Shape):
                 .circle(self.inner_radius + self.wall_thickness + self.flange_overhang)
             )
             blank_flange_solid = blank_flange_wire.extrude(
-                until=flange_thickness, both=False
+                until=blank_flange_thickness, both=False
             )
             solid = solid.union(blank_flange_solid)
         elif blank_flange_thickness < 0:
