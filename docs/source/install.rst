@@ -13,7 +13,7 @@ Video tutorials
 
 
 Prerequisites
--------------
+=============
 
 To use the paramak tool you will need Python 3 installed using Miniconda or
 Anaconda, or Miniforge
@@ -26,7 +26,7 @@ Once you have a version of Conda installed then proceed with the Paramak
 specific steps.
 
 Install (conda)
----------------
+==============
 
 This is the recommended method.
 
@@ -54,7 +54,7 @@ Now you should be ready to import paramak from your new python environment.
 
 
 Install (conda + pip)
----------------------
+=====================
 
 Create a new environment (Python 3.8 and 3.9 are supported).
 
@@ -98,7 +98,7 @@ Now you should be ready to import paramak from your new python environment.
 
 
 Optional Jupyter-CadQuery install
----------------------------------
+=================================
 
 Jupyter-Cadquery is an extension to CadQuery that allows objects to be rendered
 in JupyterLab. This can improve the visualization experience for Paramak users
@@ -114,39 +114,8 @@ Terminal command to install Jupyter-Cadquery
    pip install jupyter-cadquery
 
 
-Developer Installation
-----------------------
-
-If you want to contribute to the paramak or then you might want to install the
-package in a more dynamic manner.
-
-Download and install MiniConda, create a new python environment and activate the
-environment as covered in the installation procedure above.
-
-Then install CadQuery.
-
-.. code-block:: bash
-
-   conda install -c conda-forge -c cadquery cadquery=master
-
-
-Then clone the repository
-
-.. code-block:: bash
-
-   git clone https://github.com/fusion-energy/paramak.git
-
-Navigate to the paramak repository and within the terminal install the paramak
-package and the dependencies using pip with e -e (developer option).
-
-.. code-block:: bash
-
-   cd paramak
-   pip install -e .
-
-
 Docker Image Installation
--------------------------
+=========================
 
 Another option is to use the Docker image which contains all the required
 dependencies.
@@ -185,3 +154,34 @@ You may also want to make use of the
 `--volume <https://docs.docker.com/storage/volumes/>`_
 flag when running Docker so that you can retrieve files from the Docker
 environment to your base system.
+
+
+Developer Installation
+======================
+
+If you want to contribute to the paramak or then you might want to install the
+package in a more dynamic manner.
+
+Download and install MiniConda, create a new python environment and activate the
+environment as covered in the installation procedure above.
+
+Then install CadQuery.
+
+.. code-block:: bash
+
+   conda install -c conda-forge -c cadquery cadquery=master
+
+
+Then clone the repository
+
+.. code-block:: bash
+
+   git clone https://github.com/fusion-energy/paramak.git
+
+Navigate to the paramak repository and within the terminal install the paramak
+package and the dependencies using pip with e -e (developer option).
+
+.. code-block:: bash
+
+   cd paramak
+   pip install -e .
