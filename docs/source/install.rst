@@ -1,9 +1,9 @@
 Install
-*******
+=======
 
 
 Video tutorials
-===============
+---------------
 
 .. raw:: html
 
@@ -13,7 +13,7 @@ Video tutorials
 
 
 Prerequisites
-=============
+-------------
 
 To use the paramak tool you will need Python 3 installed using Miniconda or
 Anaconda, or Miniforge
@@ -26,7 +26,7 @@ Once you have a version of Conda installed then proceed with the Paramak
 specific steps.
 
 Install (conda)
-==============
+---------------
 
 This is the recommended method.
 
@@ -54,7 +54,7 @@ Now you should be ready to import paramak from your new python environment.
 
 
 Install (conda + pip)
-=====================
+---------------------
 
 Create a new environment (Python 3.8 and 3.9 are supported).
 
@@ -98,7 +98,7 @@ Now you should be ready to import paramak from your new python environment.
 
 
 Optional Jupyter-CadQuery install
-=================================
+---------------------------------
 
 Jupyter-Cadquery is an extension to CadQuery that allows objects to be rendered
 in JupyterLab. This can improve the visualization experience for Paramak users
@@ -115,7 +115,7 @@ Terminal command to install Jupyter-Cadquery
 
 
 Docker Image Installation
-=========================
+-------------------------
 
 Another option is to use the Docker image which contains all the required
 dependencies.
@@ -157,7 +157,7 @@ environment to your base system.
 
 
 Developer Installation
-======================
+----------------------
 
 If you want to contribute to the paramak or then you might want to install the
 package in a more dynamic manner.
