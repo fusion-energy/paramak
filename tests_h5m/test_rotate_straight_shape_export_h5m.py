@@ -9,9 +9,7 @@ class TestRotateStraightShape(unittest.TestCase):
     """testing the export_dagmc_h5m method of the RotateStraightShape class"""
 
     def setUp(self):
-        self.test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+        self.test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
 
     def test_dagmc_h5m_export_multi_volume(self):
         """Exports a shape with multiple volumes and checks that they all
@@ -57,17 +55,10 @@ class TestRotateStraightShape(unittest.TestCase):
         """Exports h5m file with higher resolution mesh and checks that the
         file sizes increases"""
 
-        self.test_shape.export_dagmc_h5m(
-            "dagmc_default.h5m", min_mesh_size=10, max_mesh_size=20
-        )
-        self.test_shape.export_dagmc_h5m(
-            "dagmc_bigger.h5m", min_mesh_size=2, max_mesh_size=9
-        )
+        self.test_shape.export_dagmc_h5m("dagmc_default.h5m", min_mesh_size=10, max_mesh_size=20)
+        self.test_shape.export_dagmc_h5m("dagmc_bigger.h5m", min_mesh_size=2, max_mesh_size=9)
 
-        assert (
-            Path("dagmc_bigger.h5m").stat().st_size
-            > Path("dagmc_default.h5m").stat().st_size
-        )
+        assert Path("dagmc_bigger.h5m").stat().st_size > Path("dagmc_default.h5m").stat().st_size
 
 
 if __name__ == "__main__":

@@ -63,13 +63,9 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
         volumes of all the components is double in the 180 reactor."""
 
         self.test_reactor.rotation_angle = 90
-        r90_comp_vols = [
-            comp.volume() for comp in self.test_reactor.shapes_and_components
-        ]
+        r90_comp_vols = [comp.volume() for comp in self.test_reactor.shapes_and_components]
         self.test_reactor.rotation_angle = 180
-        r180_comp_vols = [
-            comp.volume() for comp in self.test_reactor.shapes_and_components
-        ]
+        r180_comp_vols = [comp.volume() for comp in self.test_reactor.shapes_and_components]
         for r90_vol, r180_vol in zip(r90_comp_vols, r180_comp_vols):
             assert r90_vol == pytest.approx(r180_vol * 0.5, rel=0.1)
 
@@ -89,9 +85,8 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
             warning_trigger()
             assert len(w) == 1
             assert issubclass(w[-1].category, UserWarning)
-            assert (
-                "360 degree rotation may result in a Standard_ConstructionError or AttributeError"
-                in str(w[-1].message)
+            assert "360 degree rotation may result in a Standard_ConstructionError or AttributeError" in str(
+                w[-1].message
             )
 
     def test_export_brep(self):

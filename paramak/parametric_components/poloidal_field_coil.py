@@ -14,12 +14,7 @@ class PoloidalFieldCoil(RotateStraightShape):
     """
 
     def __init__(
-        self,
-        height: float,
-        width: float,
-        center_point: Tuple[float, float],
-        name: str = "pf_coil",
-        **kwargs
+        self, height: float, width: float, center_point: Tuple[float, float], name: str = "pf_coil", **kwargs
     ) -> None:
 
         super().__init__(name=name, **kwargs)

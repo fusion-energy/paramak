@@ -14,9 +14,7 @@ class PlasmaFromPoints(Plasma):
             of the plasma (cm).
     """
 
-    def __init__(
-        self, outer_equatorial_x_point, inner_equatorial_x_point, high_point, **kwargs
-    ):
+    def __init__(self, outer_equatorial_x_point, inner_equatorial_x_point, high_point, **kwargs):
 
         minor_radius = (outer_equatorial_x_point - inner_equatorial_x_point) / 2.0
         major_radius = inner_equatorial_x_point + minor_radius

@@ -73,9 +73,7 @@ class SweepCircleShape(Shape):
     @path_workplane.setter
     def path_workplane(self, value):
         if value[0] != self.workplane[0]:
-            raise ValueError(
-                "workplane and path_workplane must start with the same letter"
-            )
+            raise ValueError("workplane and path_workplane must start with the same letter")
         elif value == self.workplane:
             raise ValueError("workplane and path_workplane must be different")
         else:
@@ -98,11 +96,7 @@ class SweepCircleShape(Shape):
         if self.force_cross_section:
             wire = Workplane(self.workplane).center(0, 0)
             for point in self.path_points[:-1]:
-                wire = (
-                    wire.workplane(offset=point[1] * factor)
-                    .center(point[0], 0)
-                    .circle(self.radius)
-                )
+                wire = wire.workplane(offset=point[1] * factor).center(point[0], 0).circle(self.radius)
 
                 wires.append(wire)
 

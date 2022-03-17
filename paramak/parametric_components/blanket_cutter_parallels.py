@@ -50,12 +50,7 @@ class BlanketCutterParallels(ExtrudeStraightShape):
         )
         self.gap_size = gap_size
         self.thickness = thickness
-        super().__init__(
-            distance=self.distance,
-            azimuth_placement_angle=azimuth_placement_angle,
-            name=name,
-            **kwargs
-        )
+        super().__init__(distance=self.distance, azimuth_placement_angle=azimuth_placement_angle, name=name, **kwargs)
         self.height = height
         self.width = width
 

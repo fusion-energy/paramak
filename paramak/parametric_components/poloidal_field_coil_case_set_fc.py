@@ -45,14 +45,10 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
     def casing_thicknesses(self, value):
         if isinstance(value, list):
             if not all(isinstance(x, (int, float)) for x in value):
-                raise ValueError(
-                    "Every entry in Casing_thicknesses must be a float or int"
-                )
+                raise ValueError("Every entry in Casing_thicknesses must be a float or int")
         else:
             if not isinstance(value, (float, int)):
-                raise ValueError(
-                    "Casing_thicknesses must be a list of numbers or a number"
-                )
+                raise ValueError("Casing_thicknesses must be a list of numbers or a number")
         self._casing_thicknesses = value
 
     @property
@@ -90,9 +86,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         if isinstance(self.casing_thicknesses, list):
             if len(self.casing_thicknesses) != num_of_coils:
                 raise ValueError(
-                    "The number pf_coils is not equal to the "
-                    "number of thichnesses provided. "
-                    "casing_thicknesses=",
+                    "The number pf_coils is not equal to the " "number of thichnesses provided. " "casing_thicknesses=",
                     self.casing_thicknesses,
                     "num_of_coils=",
                     num_of_coils,

@@ -63,9 +63,7 @@ class TestLocalExamples(unittest.TestCase):
     def test_export_3d_image(self):
         """checks that export_3d_image() exports png files with the correct suffix"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
         test_shape.rotation_angle = 360
         os.system("rm filename.png")
         test_shape.export_3d_image("filename")

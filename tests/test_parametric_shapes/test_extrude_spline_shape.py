@@ -58,13 +58,9 @@ class TestExtrudeSplineShape(unittest.TestCase):
         """Creates an ExtrudeSplineShape with another ExtrudeSplineShape cut out
         and checks that the volume is correct."""
 
-        inner_shape = ExtrudeSplineShape(
-            points=[(5, 5), (5, 10), (10, 10), (10, 5)], distance=30
-        )
+        inner_shape = ExtrudeSplineShape(points=[(5, 5), (5, 10), (10, 10), (10, 5)], distance=30)
 
-        outer_shape = ExtrudeSplineShape(
-            points=[(3, 3), (3, 12), (12, 12), (12, 3)], distance=30
-        )
+        outer_shape = ExtrudeSplineShape(points=[(3, 3), (3, 12), (12, 12), (12, 3)], distance=30)
 
         outer_shape_with_cut = ExtrudeSplineShape(
             points=[(3, 3), (3, 12), (12, 12), (12, 3)],
@@ -107,14 +103,8 @@ class TestExtrudeSplineShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

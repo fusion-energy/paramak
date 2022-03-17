@@ -94,10 +94,7 @@ class CenterColumnShieldFlatTopHyperbola(RotateMixedShape):
             )
 
         if self.arc_height >= self.height:
-            msg = (
-                "arc_height ({self.arc_height}) is larger than height "
-                "({self.height})"
-            )
+            msg = "arc_height ({self.arc_height}) is larger than height " "({self.height})"
             raise ValueError(msg)
 
         points = [

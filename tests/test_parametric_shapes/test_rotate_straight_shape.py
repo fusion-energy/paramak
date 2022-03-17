@@ -9,9 +9,7 @@ from paramak import RotateStraightShape
 
 class TestRotateStraightShape(unittest.TestCase):
     def setUp(self):
-        self.test_shape = RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)]
-        )
+        self.test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
 
     def test_largest_dimension(self):
         """Checks that the largest_dimension is correct."""
@@ -62,17 +60,13 @@ class TestRotateStraightShape(unittest.TestCase):
             union=inner_box,
         )
 
-        assert inner_box.volume() + outer_box.volume() == pytest.approx(
-            outer_box_and_inner_box.volume(), rel=0.01
-        )
+        assert inner_box.volume() + outer_box.volume() == pytest.approx(outer_box_and_inner_box.volume(), rel=0.01)
 
     def test_absolute_shape_areas(self):
         """Creates RotateStraightShapes and checks that the areas of each face
         are correct."""
 
-        assert self.test_shape.area == pytest.approx(
-            (math.pi * (20**2) * 2) + (math.pi * (20 * 2) * 20)
-        )
+        assert self.test_shape.area == pytest.approx((math.pi * (20**2) * 2) + (math.pi * (20 * 2) * 20))
         assert len(self.test_shape.areas) == 3
         assert self.test_shape.areas.count(pytest.approx(math.pi * (20**2))) == 2
         assert self.test_shape.areas.count(pytest.approx(math.pi * (20 * 2) * 20)) == 1
@@ -84,10 +78,7 @@ class TestRotateStraightShape(unittest.TestCase):
         assert len(self.test_shape.areas) == 4
         assert self.test_shape.areas.count(pytest.approx(math.pi * (20**2) / 2)) == 2
         assert self.test_shape.areas.count(pytest.approx(20 * 40)) == 1
-        assert (
-            self.test_shape.areas.count(pytest.approx((math.pi * (20 * 2) * 20) / 2))
-            == 1
-        )
+        assert self.test_shape.areas.count(pytest.approx((math.pi * (20 * 2) * 20) / 2)) == 1
 
         test_shape = RotateStraightShape(
             points=[(50, 0), (50, 50), (70, 50), (70, 0)],
@@ -99,12 +90,7 @@ class TestRotateStraightShape(unittest.TestCase):
             + (math.pi * (70 * 2) * 50)
         )
         assert len(test_shape.areas) == 4
-        assert (
-            test_shape.areas.count(
-                pytest.approx((math.pi * (70**2)) - (math.pi * (50**2)))
-            )
-            == 2
-        )
+        assert test_shape.areas.count(pytest.approx((math.pi * (70**2)) - (math.pi * (50**2)))) == 2
         assert test_shape.areas.count(pytest.approx(math.pi * (50 * 2) * 50)) == 1
         assert test_shape.areas.count(pytest.approx(math.pi * (70 * 2) * 50)) == 1
 
@@ -117,12 +103,7 @@ class TestRotateStraightShape(unittest.TestCase):
         )
         assert len(test_shape.areas) == 6
         assert test_shape.areas.count(pytest.approx(20 * 50)) == 2
-        assert (
-            test_shape.areas.count(
-                pytest.approx(((math.pi * (70**2)) / 2) - ((math.pi * (50**2)) / 2))
-            )
-            == 2
-        )
+        assert test_shape.areas.count(pytest.approx(((math.pi * (70**2)) / 2) - ((math.pi * (50**2)) / 2))) == 2
         assert test_shape.areas.count(pytest.approx(math.pi * (50 * 2) * 50 / 2)) == 1
         assert test_shape.areas.count(pytest.approx(math.pi * (70 * 2) * 50 / 2)) == 1
 
@@ -208,13 +189,9 @@ class TestRotateStraightShape(unittest.TestCase):
         """Creates a RotateStraightShape with another RotateStraightShape
         cut out and checks that the volume is correct."""
 
-        shape_with_cut = RotateStraightShape(
-            points=[(0, -5), (0, 25), (25, 25), (25, -5)], cut=self.test_shape
-        )
+        shape_with_cut = RotateStraightShape(points=[(0, -5), (0, 25), (25, 25), (25, -5)], cut=self.test_shape)
 
-        assert shape_with_cut.volume() == pytest.approx(
-            (math.pi * (25**2) * 30) - (math.pi * (20**2) * 20)
-        )
+        assert shape_with_cut.volume() == pytest.approx((math.pi * (25**2) * 30) - (math.pi * (20**2) * 20))
 
     def test_multiple_cut_volume(self):
         """Creates a RotateStraightShape with multiple RotateStraightShapes
@@ -273,14 +250,8 @@ class TestRotateStraightShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

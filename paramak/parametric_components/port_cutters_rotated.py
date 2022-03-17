@@ -85,9 +85,7 @@ class PortCutterRotated(RotateStraightShape):
             self.center_point[1],
         )
 
-        outer_point_rotated = rotate(
-            self.center_point, outer_point, math.radians(self.polar_placement_angle)
-        )
+        outer_point_rotated = rotate(self.center_point, outer_point, math.radians(self.polar_placement_angle))
 
         outer_point_1 = rotate(
             self.center_point,

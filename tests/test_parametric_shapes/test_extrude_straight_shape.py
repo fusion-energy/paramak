@@ -10,9 +10,7 @@ from paramak import ExtrudeStraightShape
 
 class TestExtrudeStraightShape(unittest.TestCase):
     def setUp(self):
-        self.test_shape = ExtrudeStraightShape(
-            points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30
-        )
+        self.test_shape = ExtrudeStraightShape(points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30)
 
     def test_workplane_of_type_cadquery_plane(self):
         """Tests that a Cadquery.Plane is accepted as a workplane entry and
@@ -130,14 +128,8 @@ class TestExtrudeStraightShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

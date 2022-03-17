@@ -53,9 +53,7 @@ class TestShape(unittest.TestCase):
         """Checks the 3d html file is exported by the export_html_3d method
         with the correct filename"""
 
-        test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360
-        )
+        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)], rotation_angle=360)
 
         os.system("rm filename.html")
         filename = test_shape.export_html_3d("filename.html")

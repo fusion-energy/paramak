@@ -82,9 +82,7 @@ class CircularPort(Shape):
             .moveTo(self.points[0][0], self.points[0][1])
             .circle(self.inner_radius)
         )
-        inner_solid = inner_wire.extrude(
-            until=extrusion_distance + flange_thickness, both=False
-        )
+        inner_solid = inner_wire.extrude(until=extrusion_distance + flange_thickness, both=False)
 
         outer_wire = (
             Workplane(self.workplane)
@@ -115,17 +113,11 @@ class CircularPort(Shape):
         if blank_flange_thickness > 0:
             blank_flange_wire = (
                 Workplane(self.workplane)
-                .workplane(
-                    offset=extrusion_offset
-                    + extrusion_distance
-                    - self.blank_flange_thickness
-                )
+                .workplane(offset=extrusion_offset + extrusion_distance - self.blank_flange_thickness)
                 .moveTo(self.points[0][0], self.points[0][1])
                 .circle(self.inner_radius + self.wall_thickness + self.flange_overhang)
             )
-            blank_flange_solid = blank_flange_wire.extrude(
-                until=flange_thickness, both=False
-            )
+            blank_flange_solid = blank_flange_wire.extrude(until=flange_thickness, both=False)
             solid = solid.union(blank_flange_solid)
         elif blank_flange_thickness < 0:
             msg = f"blank_flange_thickness should be larger than 0 or None. Not {blank_flange_thickness}"
@@ -138,12 +130,7 @@ class CircularPort(Shape):
 
         # calculates the size of the component as these attributes are used
         # when making the cutting wedge
-        self.radius = (
-            self.extrusion_start_offset
-            + self.distance
-            + self.flange_thickness
-            + blank_flange_thickness
-        )
+        self.radius = self.extrusion_start_offset + self.distance + self.flange_thickness + blank_flange_thickness
         self.height = self.center_point[0] + self.inner_radius + self.wall_thickness
 
         cutting_wedge = calculate_wedge_cut(self)
