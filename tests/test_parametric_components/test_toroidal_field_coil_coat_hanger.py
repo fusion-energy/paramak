@@ -82,9 +82,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
         assert self.test_shape.volume() > 1000
         assert self.test_shape.inner_leg_connection_points is not None
 
-        test_inner_leg = paramak.ExtrudeStraightShape(
-            points=self.test_shape.inner_leg_connection_points, distance=30
-        )
+        test_inner_leg = paramak.ExtrudeStraightShape(points=self.test_shape.inner_leg_connection_points, distance=30)
         assert test_inner_leg.solid is not None
 
     def test_creation_with_inner_leg_with_overlap(self):
@@ -109,9 +107,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
         )
         inner_leg_volume = test_inner_leg.volume()
 
-        assert with_inner_leg_volume == pytest.approx(
-            without_inner_leg_volume + inner_leg_volume
-        )
+        assert with_inner_leg_volume == pytest.approx(without_inner_leg_volume + inner_leg_volume)
 
     def test_creation_no_inner_leg(self):
         """Creates a tf coil with no inner leg using the ToroidalFieldCoilRectangle
@@ -119,9 +115,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
 
         test_volume = self.test_shape.volume()
 
-        test_inner_leg = paramak.ExtrudeStraightShape(
-            points=self.test_shape.inner_leg_connection_points, distance=30
-        )
+        test_inner_leg = paramak.ExtrudeStraightShape(points=self.test_shape.inner_leg_connection_points, distance=30)
         inner_leg_volume = test_inner_leg.volume()
 
         self.test_shape.with_inner_leg = False
@@ -137,10 +131,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
             (400 * 50 * 30 * 2)
             + ((50 * 50 * 30 / 2) * 2)
             + (50 * 500 * 30)
-            + (
-                ((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30))
-                * 2
-            )
+            + (((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30)) * 2)
             + (50 * 1000 * 30),
             rel=0.1,
         )
@@ -150,10 +141,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
             (400 * 50 * 30 * 2)
             + ((50 * 50 * 30 / 2) * 2)
             + (50 * 500 * 30)
-            + (
-                ((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30))
-                * 2
-            ),
+            + (((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30)) * 2),
             rel=0.1,
         )
 
@@ -164,14 +152,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
                 (400 * 50 * 30 * 2)
                 + ((50 * 50 * 30 / 2) * 2)
                 + (50 * 500 * 30)
-                + (
-                    (
-                        (150 * 250 * 30)
-                        - (((100 * 250) / 2) * 30)
-                        - (((100 * 250) / 2) * 30)
-                    )
-                    * 2
-                )
+                + (((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30)) * 2)
                 + (50 * 1000 * 30)
             )
             * 8,
@@ -184,14 +165,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
                 (400 * 50 * 30 * 2)
                 + ((50 * 50 * 30 / 2) * 2)
                 + (50 * 500 * 30)
-                + (
-                    (
-                        (150 * 250 * 30)
-                        - (((100 * 250) / 2) * 30)
-                        - (((100 * 250) / 2) * 30)
-                    )
-                    * 2
-                )
+                + (((150 * 250 * 30) - (((100 * 250) / 2) * 30) - (((100 * 250) / 2) * 30)) * 2)
             )
             * 8,
             rel=0.1,
@@ -226,12 +200,7 @@ class TestToroidalFieldCoilCoatHanger(unittest.TestCase):
         # assert self.test_shape.areas.count(pytest.approx(50 * 30)) == 4
         # assert self.test_shape.areas.count(pytest.approx(400 * 30)) == 4
         assert self.test_shape.areas.count(pytest.approx(500 * 30)) == 2
-        assert (
-            self.test_shape.areas.count(
-                pytest.approx(((100**2 + 250**2) ** 0.5) * 30)
-            )
-            == 4
-        )
+        assert self.test_shape.areas.count(pytest.approx(((100**2 + 250**2) ** 0.5) * 30)) == 4
         # assert self.test_shape.areas.count(pytest.approx(50 * 1000)) == 2
         # assert self.test_shape.areas.count(pytest.approx(1000 * 30)) == 2
 

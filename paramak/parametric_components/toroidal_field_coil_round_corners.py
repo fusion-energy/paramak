@@ -72,10 +72,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
 
         # TODO move to setters
         if len(lower_inner_coordinates) != 2 or len(mid_point_coordinates) != 2:
-            msg = (
-                "The input tuples are too long or too short, they must be "
-                "2 element long"
-            )
+            msg = "The input tuples are too long or too short, they must be " "2 element long"
             raise ValueError(msg)
 
         if self._lower_inner_coordinates[0] > self._mid_point_coordinates[0]:
@@ -87,15 +84,11 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     def _find_base_and_height(self):
         # Adding hidden attributes for analyse list population
         # inner base length of the coil
-        self._base_length = (
-            self._mid_point_coordinates[0] - self._lower_inner_coordinates[0]
-        )
+        self._base_length = self._mid_point_coordinates[0] - self._lower_inner_coordinates[0]
         self._analyse_attributes[0] = self._base_length
 
         # height of the coil
-        self._height = (
-            abs(self.mid_point_coordinates[1] - self.lower_inner_coordinates[1]) * 2
-        )
+        self._height = abs(self.mid_point_coordinates[1] - self.lower_inner_coordinates[1]) * 2
         self._analyse_attributes[1] = self._height
 
     def _find_radii(self):
@@ -111,9 +104,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             self._inner_curve_radius = self._thickness * 0.1
             self._outter_curve_radius = self._thickness * 1.1
         else:
-            self._outter_curve_radius = (
-                1 + (self._thickness / self._base_length)
-            ) * self._thickness
+            self._outter_curve_radius = (1 + (self._thickness / self._base_length)) * self._thickness
             self._inner_curve_radius = (self._thickness**2) / self._base_length
 
         self._analyse_attributes[2] = self._inner_curve_radius
@@ -143,9 +134,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         if not isinstance(val[1], (float, int)):
             raise TypeError("Input Z Coordinates must be a number!")
         if val[0] > self._mid_point_coordinates[0]:
-            raise ValueError(
-                "Mid Point's x-coordinate, must be larger than lower point's!"
-            )
+            raise ValueError("Mid Point's x-coordinate, must be larger than lower point's!")
         self._lower_inner_coordinates = val
 
     @property
@@ -163,9 +152,7 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
         if not isinstance(val[1], (float, int)):
             raise TypeError("Input Z Coordinates must be a number!")
         if val[0] < self._lower_inner_coordinates[0]:
-            raise ValueError(
-                "Mid Point's x-coordinate, must be larger than lower point's!"
-            )
+            raise ValueError("Mid Point's x-coordinate, must be larger than lower point's!")
         self._mid_point_coordinates = val
 
     @property
@@ -373,13 +360,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             .lineTo(points[7][0], points[7][1])
             .lineTo(points[8][0], points[8][1])
             .lineTo(points[9][0], points[9][1])
-            .threePointArc(
-                (points[10][0], points[10][1]), (points[11][0], points[11][1])
-            )
+            .threePointArc((points[10][0], points[10][1]), (points[11][0], points[11][1]))
             .lineTo(points[12][0], points[12][1])
-            .threePointArc(
-                (points[13][0], points[13][1]), (points[14][0], points[14][1])
-            )
+            .threePointArc((points[13][0], points[13][1]), (points[14][0], points[14][1]))
             .lineTo(points[15][0], points[15][1])
             .lineTo(points[16][0], points[16][1])
             .close()
@@ -403,13 +386,9 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
             )
 
             inner_leg_solid = self.rotate_solid(inner_leg_solid)
-            inner_leg_solid = self.perform_boolean_operations(
-                inner_leg_solid, wedge_cut=cutting_wedge
-            )
+            inner_leg_solid = self.perform_boolean_operations(inner_leg_solid, wedge_cut=cutting_wedge)
 
-            solid = cq.Compound.makeCompound(
-                [a.val() for a in [inner_leg_solid, solid]]
-            )
+            solid = cq.Compound.makeCompound([a.val() for a in [inner_leg_solid, solid]])
 
             self.solid = solid
 

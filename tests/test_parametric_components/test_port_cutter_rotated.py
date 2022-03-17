@@ -27,9 +27,7 @@ class TestPortCutterRotated(unittest.TestCase):
             rotation_angle=10,
         )
 
-        vessel_with_out_ports = paramak.CenterColumnShieldCylinder(
-            height=500, inner_radius=200, outer_radius=300
-        )
+        vessel_with_out_ports = paramak.CenterColumnShieldCylinder(height=500, inner_radius=200, outer_radius=300)
 
         vessel_with_small_ports = paramak.CenterColumnShieldCylinder(
             height=500, inner_radius=200, outer_radius=300, cut=small_ports

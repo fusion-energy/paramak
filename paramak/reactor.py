@@ -122,9 +122,7 @@ class Reactor:
     @largest_shapes.setter
     def largest_shapes(self, value):
         if not isinstance(value, (list, tuple, type(None))):
-            raise ValueError(
-                "paramak.Reactor.largest_shapes should be a " "list of paramak.Shapes"
-            )
+            raise ValueError("paramak.Reactor.largest_shapes should be a " "list of paramak.Shapes")
         self._largest_shapes = value
 
     @property
@@ -328,11 +326,7 @@ class Reactor:
         # allows components like the plasma to be removed
         if isinstance(exclude, Iterable):
             for name_to_remove in exclude:
-                key_and_part_id = {
-                    key: val
-                    for key, val in key_and_part_id.items()
-                    if val != name_to_remove
-                }
+                key_and_part_id = {key: val for key, val in key_and_part_id.items() if val != name_to_remove}
 
         brep_to_h5m(
             brep_filename=tmp_brep_filename,
@@ -386,9 +380,7 @@ class Reactor:
             assembly.save(filename, exportType="STEP")
 
             if units == "cm":
-                _replace(
-                    filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)"
-                )
+                _replace(filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)")
 
             return [filename]
 
@@ -421,9 +413,7 @@ class Reactor:
             )
 
             if units == "cm":
-                _replace(
-                    stp_filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)"
-                )
+                _replace(stp_filename, "SI_UNIT(.MILLI.,.METRE.)", "SI_UNIT(.CENTI.,.METRE.)")
 
         return filename
 
@@ -572,10 +562,7 @@ class Reactor:
             if hasattr(self, "rotation_angle"):
                 rotation_angle = self.rotation_angle
             if rotation_angle is None:
-                Warning(
-                    "No sector_wedge can be made as rotation_angle"
-                    " or Reactor.rotation_angle have not been set"
-                )
+                Warning("No sector_wedge can be made as rotation_angle" " or Reactor.rotation_angle have not been set")
                 return None
 
         if rotation_angle > 360:
@@ -755,9 +742,7 @@ class Reactor:
 
         elif self.graveyard_offset is not None:
             self.solid
-            graveyard_size_to_use = (
-                self.largest_dimension * 2 + self.graveyard_offset * 2
-            )
+            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
 
         else:
             raise ValueError(
@@ -818,9 +803,7 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_html_3d(
-        self, filename: Optional[str] = "reactor_3d.html", **kwargs
-    ) -> Optional[str]:
+    def export_html_3d(self, filename: Optional[str] = "reactor_3d.html", **kwargs) -> Optional[str]:
         """Saves an interactive 3d html view of the Reactor to a html file.
 
         Args:

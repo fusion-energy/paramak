@@ -127,9 +127,7 @@ class TestRotateMixedShape(unittest.TestCase):
             union=inner_box,
         )
 
-        assert inner_box.volume() + outer_box.volume() == pytest.approx(
-            outer_box_and_inner_box.volume()
-        )
+        assert inner_box.volume() + outer_box.volume() == pytest.approx(outer_box_and_inner_box.volume())
 
     def test_incorrect_connections(self):
         """Checks that errors are raised when invalid connection arguments are
@@ -154,9 +152,7 @@ class TestRotateMixedShape(unittest.TestCase):
             """Checks ValueError is raised when an incorrect number of
             connections is specified."""
 
-            RotateMixedShape(
-                points=[(0, 200, "straight"), (200, 100), (0, 0, "spline")]
-            )
+            RotateMixedShape(points=[(0, 200, "straight"), (200, 100), (0, 0, "spline")])
 
         self.assertRaises(ValueError, incorrect_number_of_connections_function)
 
@@ -177,9 +173,7 @@ class TestRotateMixedShape(unittest.TestCase):
         )
         outer_shape_volume = outer_shape.volume()
         outer_shape.cut = self.test_shape
-        assert outer_shape.volume() == pytest.approx(
-            outer_shape_volume - self.test_shape.volume()
-        )
+        assert outer_shape.volume() == pytest.approx(outer_shape_volume - self.test_shape.volume())
 
     def test_mixed_shape_with_straight_and_circle(self):
         """Creates a RotateMixedShape with straight and circular connections and
@@ -231,14 +225,8 @@ class TestRotateMixedShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

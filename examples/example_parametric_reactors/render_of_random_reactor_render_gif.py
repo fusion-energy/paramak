@@ -1,7 +1,10 @@
-# This examples creates a 3 by 3 grid of random reactor renders and saves
-# them as a png image
+# This examples creates Gif animation of 50 reactors by creating individual
+# images of reactors and stiching them together using Imagemagick into a Gif
+# animation. Two animations are made, of of a 3D render and one of a wireframe
+# line drawing.
 
 import math
+import os
 
 # to run this example you will need all of the following packages installed
 import matplotlib.pyplot as plt
@@ -19,9 +22,10 @@ def create_reactor_renders(
     lower_blanket_thickness,
     upper_blanket_thickness,
     blanket_vv_gap,
-    number_of_images_in_x,
-    number_of_images_in_y,
 ):
+
+    # creates a blank figure for populating with subplots
+    plt.figure()
 
     # creates a reactor from the input arguments
     my_reactor = paramak.FlfSystemCodeReactor(
@@ -37,7 +41,8 @@ def create_reactor_renders(
         lower_vv_thickness=10,
     )
 
-    # saves the reactor geometry as separate stl files
+    # saves the reactor geometry as separate stl files that are later read in
+    # for the rendering
     my_reactor.export_stl()
 
     # assigns colours to each stl file
@@ -61,15 +66,11 @@ def create_reactor_renders(
         render_mesh = pyrender.Mesh.from_trimesh(trimesh_obj, smooth=False)
         scene.add(render_mesh)
 
-    camera = pyrender.camera.PerspectiveCamera(
-        yfov=math.radians(90.0)  # aspectRatio=2.0 could be added here
-    )
+    camera = pyrender.camera.PerspectiveCamera(yfov=math.radians(90.0))  # aspectRatio=2.0 could be added here
 
     # sets the position of the camera using a matrix
     cam = 2**-0.5
-    camera_pose = np.array(
-        [[1, 0, 0, 0], [0, cam, -cam, -350], [0, cam, cam, 350], [0, 0, 0, 1]]
-    )
+    camera_pose = np.array([[1, 0, 0, 0], [0, cam, -cam, -350], [0, cam, cam, 350], [0, 0, 0, 1]])
 
     # adds a camera and a point light source at the same location
     scene.add(camera, pose=camera_pose)
@@ -78,23 +79,20 @@ def create_reactor_renders(
 
     # renders the scene
     my_render = pyrender.OffscreenRenderer(1000, 1000)
-    color, depth = my_render.render(scene)
+    color, _ = my_render.render(scene)
 
     # adds the render to the plot as a subplot in the correct location
-    plt.subplot(number_of_images_in_y, number_of_images_in_x, render_number + 1)
+    plt.plot()
     plt.axis("off")
     plt.imshow(color)
+    # plt.show()
+    plt.savefig(f"render_{str(render_number).zfill(3)}.png", dpi=200)
 
-
-# creates a blank figure for populating with subplots
-plt.figure()
 
 # loops through adding a random reactor render to the figure with each iteration
-for i in range(4 * 3):
+for i in range(50):
     create_reactor_renders(
         render_number=i,
-        number_of_images_in_x=4,
-        number_of_images_in_y=3,
         inner_blanket_radius=np.random.uniform(low=50, high=90),
         blanket_thickness=np.random.uniform(low=50, high=140),
         blanket_height=np.random.uniform(low=400, high=550),
@@ -103,5 +101,6 @@ for i in range(4 * 3):
         blanket_vv_gap=np.random.uniform(low=10, high=90),
     )
 
-# saves the plot
-plt.savefig("render.png", dpi=200)
+# The convert comand requires imagemagick
+# saves the rendered png files as a gif
+os.system("convert -delay 40 -loop 0 render_*.png reactors.gif")

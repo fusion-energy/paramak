@@ -8,9 +8,7 @@ import paramak
 
 class TestPoloidalFieldCoil(unittest.TestCase):
     def setUp(self):
-        self.test_shape = paramak.PoloidalFieldCoil(
-            height=50, width=60, center_point=(1000, 500)
-        )
+        self.test_shape = paramak.PoloidalFieldCoil(height=50, width=60, center_point=(1000, 500))
 
     def test_default_parameters(self):
         """Checks that the default parameters of a PoloidalFieldCoil are correct."""

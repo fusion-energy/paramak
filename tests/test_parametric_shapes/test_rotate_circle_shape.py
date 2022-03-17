@@ -26,9 +26,7 @@ class TestRotateCircleShape(unittest.TestCase):
         #     2 * math.pi * 60 * math.pi * (10**2)
         # )
         self.test_shape.rotation_angle = 270
-        assert self.test_shape.volume() == pytest.approx(
-            2 * math.pi * 60 * math.pi * (10**2) * 0.75
-        )
+        assert self.test_shape.volume() == pytest.approx(2 * math.pi * 60 * math.pi * (10**2) * 0.75)
 
     def test_absolute_shape_areas(self):
         """Creates RotateCircleShapes and checks that the areas of each face are
@@ -48,12 +46,7 @@ class TestRotateCircleShape(unittest.TestCase):
         )
         assert len(self.test_shape.areas) == 3
         assert self.test_shape.areas.count(pytest.approx(math.pi * (10**2))) == 2
-        assert (
-            self.test_shape.areas.count(
-                pytest.approx(math.pi * (10 * 2) * math.pi * (60 * 2) / 2, rel=0.01)
-            )
-            == 1
-        )
+        assert self.test_shape.areas.count(pytest.approx(math.pi * (10 * 2) * math.pi * (60 * 2) / 2, rel=0.01)) == 1
 
     def test_relative_shape_volume_azimuth_placement_angle(self):
         """Creates two RotateCircleShapes with different
@@ -61,14 +54,10 @@ class TestRotateCircleShape(unittest.TestCase):
         correct."""
 
         self.test_shape.rotation_angle = 10
-        assert self.test_shape.volume() == pytest.approx(
-            (math.pi * 10**2) * ((2 * math.pi * 60) / 36)
-        )
+        assert self.test_shape.volume() == pytest.approx((math.pi * 10**2) * ((2 * math.pi * 60) / 36))
 
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
-        assert self.test_shape.volume() == pytest.approx(
-            (math.pi * 10**2) * ((2 * math.pi * 60) / 36) * 4
-        )
+        assert self.test_shape.volume() == pytest.approx((math.pi * 10**2) * ((2 * math.pi * 60) / 36) * 4)
 
     def test_cut_volume(self):
         """Creates a RotateCircleShape with another RotateCircleShape cut out
@@ -77,9 +66,7 @@ class TestRotateCircleShape(unittest.TestCase):
         outer_shape = RotateCircleShape(points=[(60, 0)], radius=15)
         outer_shape_volume = outer_shape.volume()
         outer_shape.cut = self.test_shape
-        assert outer_shape.volume() == pytest.approx(
-            outer_shape_volume - self.test_shape.volume()
-        )
+        assert outer_shape.volume() == pytest.approx(outer_shape_volume - self.test_shape.volume())
 
     def test_export_stp(self):
         """Exports and stp file with mode = solid and wire and checks
@@ -95,10 +82,7 @@ class TestRotateCircleShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
         # the circle wire file is actually larger than the circle solid file
         # assert Path("test_wire.stp").stat().st_size < \
         #     Path("test_solid2.stp").stat().st_size

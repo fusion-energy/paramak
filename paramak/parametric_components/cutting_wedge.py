@@ -13,13 +13,7 @@ class CuttingWedge(RotateStraightShape):
         rotation_angle: Defaults to 180.0.
     """
 
-    def __init__(
-        self,
-        height: float,
-        radius: float,
-        rotation_angle: Optional[float] = 180.0,
-        **kwargs
-    ) -> None:
+    def __init__(self, height: float, radius: float, rotation_angle: Optional[float] = 180.0, **kwargs) -> None:
 
         super().__init__(rotation_angle=rotation_angle, **kwargs)
 

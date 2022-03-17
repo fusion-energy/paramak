@@ -18,9 +18,7 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
         center_height = (corner_points[0][1] + corner_points[1][1]) / 2.0
         center_point = (center_width, center_height)
 
-        super().__init__(
-            height=height, width=width, center_point=center_point, **kwargs
-        )
+        super().__init__(height=height, width=width, center_point=center_point, **kwargs)
 
         self.corner_points = corner_points
 

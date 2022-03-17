@@ -106,9 +106,7 @@ class TestSweepMixedShape(unittest.TestCase):
 
         assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
 
-        cutting_shape = RotateStraightShape(
-            points=[(0, 50), (0, 200), (100, 200), (100, 50)]
-        )
+        cutting_shape = RotateStraightShape(points=[(0, 50), (0, 200), (100, 200), (100, 50)])
         self.test_shape.cut = cutting_shape
 
         assert self.test_shape.areas.count(pytest.approx(test_area, rel=0.01)) == 2
@@ -147,14 +145,8 @@ class TestSweepMixedShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

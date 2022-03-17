@@ -182,16 +182,14 @@ class Plasma(RotateSplineShape):
             # no X points for non-null config
             lower_x_point = (
                 1 - (1 + shift) * triangularity * self.minor_radius,
-                -(1 + shift) * elongation * self.minor_radius
-                + self.vertical_displacement,
+                -(1 + shift) * elongation * self.minor_radius + self.vertical_displacement,
             )
 
             if self.configuration == "double-null":
                 # upper_x_point is up-down symmetrical
                 upper_x_point = (
                     lower_x_point[0],
-                    (1 + shift) * elongation * self.minor_radius
-                    + self.vertical_displacement,
+                    (1 + shift) * elongation * self.minor_radius + self.vertical_displacement,
                 )
         self.lower_x_point = lower_x_point
         self.upper_x_point = upper_x_point
@@ -204,14 +202,9 @@ class Plasma(RotateSplineShape):
 
         # parametric equations for plasma
         def R(theta):
-            return self.major_radius + self.minor_radius * np.cos(
-                theta + self.triangularity * np.sin(theta)
-            )
+            return self.major_radius + self.minor_radius * np.cos(theta + self.triangularity * np.sin(theta))
 
         def Z(theta):
-            return (
-                self.elongation * self.minor_radius * np.sin(theta)
-                + self.vertical_displacement
-            )
+            return self.elongation * self.minor_radius * np.sin(theta) + self.vertical_displacement
 
         self.points = np.stack((R(theta), Z(theta)), axis=1).tolist()

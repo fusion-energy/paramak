@@ -52,11 +52,7 @@ class RotateCircleShape(Shape):
            A CadQuery solid: A 3D solid volume
         """
 
-        wire = (
-            Workplane(self.workplane)
-            .moveTo(self.points[0][0], self.points[0][1])
-            .circle(self.radius)
-        )
+        wire = Workplane(self.workplane).moveTo(self.points[0][0], self.points[0][1]).circle(self.radius)
 
         self.wire = wire
 
