@@ -25,12 +25,12 @@ class TestExtrudeStraightShape(unittest.TestCase):
 
         self.test_shape.translate = (1, 2, 3)
 
-        assert self.test_shape.solid.val().BoundingBox().xmax == 31
-        assert self.test_shape.solid.val().BoundingBox().xmin == 11
-        assert self.test_shape.solid.val().BoundingBox().ymax == 16
-        assert self.test_shape.solid.val().BoundingBox().ymin == -14
-        assert self.test_shape.solid.val().BoundingBox().zmax == 31
-        assert self.test_shape.solid.val().BoundingBox().zmin == 11
+        assert self.test_shape.solid.val().BoundingBox().xmax == 30 + 1
+        assert self.test_shape.solid.val().BoundingBox().xmin == 10 + 1
+        assert self.test_shape.solid.val().BoundingBox().ymax == 15 + 2
+        assert self.test_shape.solid.val().BoundingBox().ymin == -15 + 2
+        assert self.test_shape.solid.val().BoundingBox().zmax == 30 + 3
+        assert self.test_shape.solid.val().BoundingBox().zmin == 10 + 3
 
     def test_workplane_of_type_cadquery_plane(self):
         """Tests that a Cadquery.Plane is accepted as a workplane entry and

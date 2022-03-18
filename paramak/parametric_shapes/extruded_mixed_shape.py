@@ -107,6 +107,7 @@ class ExtrudeMixedShape(Shape):
 
         if self.translate:
             solid = solid.translate(self.translate)
+
         self.solid = solid
 
         return solid

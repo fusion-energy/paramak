@@ -64,5 +64,9 @@ class RotateMixedShape(Shape):
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)
+
+        if self.translate:
+            solid = solid.translate(self.translate)
+
         self.solid = solid
         return solid
