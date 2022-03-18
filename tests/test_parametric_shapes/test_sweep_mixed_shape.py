@@ -20,7 +20,7 @@ class TestSweepMixedShape(unittest.TestCase):
             ],
             path_points=[(50, 0), (30, 50), (70, 100), (50, 150)],
         )
-        
+
     def test_default_parameters(self):
         """Checks that the default parameters of a SweepMixedShape are correct."""
 

@@ -14,7 +14,6 @@ class TestSweepStraightShape(unittest.TestCase):
             path_points=[(50, 0), (30, 50), (70, 100), (50, 150)],
         )
 
-
     def test_translate(self):
         """Checks the shape extends to the bounding box and then translates
         the shape and checks it is extended to the new bounding box"""
@@ -30,11 +29,11 @@ class TestSweepStraightShape(unittest.TestCase):
 
         assert pytest.approx(self.test_shape.solid.val().BoundingBox().xmax) == 80.94405253029915 + 1
         assert pytest.approx(self.test_shape.solid.val().BoundingBox().xmin) == 19.055947469700666 + 1
-        assert pytest.approx(self.test_shape.solid.val().BoundingBox().ymax) == 10.000000100000012 +2
-        assert pytest.approx(self.test_shape.solid.val().BoundingBox().ymin) == -10.000000100000012 +2
-        assert pytest.approx(self.test_shape.solid.val().BoundingBox().zmax) == 150.00000010000002+3
-        assert pytest.approx(self.test_shape.solid.val().BoundingBox().zmin) == -1.0000000355271367e-07+3
-        
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().ymax) == 10.000000100000012 + 2
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().ymin) == -10.000000100000012 + 2
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().zmax) == 150.00000010000002 + 3
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().zmin) == -1.0000000355271367e-07 + 3
+
     def test_default_parameters(self):
         """Checks that the default parameters of a SweepStraightShape are
         correct."""

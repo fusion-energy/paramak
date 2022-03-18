@@ -30,7 +30,7 @@ class TestRotateStraightShape(unittest.TestCase):
         assert self.test_shape.solid.val().BoundingBox().ymin == -20 + 2
         assert self.test_shape.solid.val().BoundingBox().zmax == 20 + 3
         assert self.test_shape.solid.val().BoundingBox().zmin == 0 + 3
-        
+
     def test_largest_dimension(self):
         """Checks that the largest_dimension is correct."""
 
