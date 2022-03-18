@@ -12,6 +12,26 @@ class TestExtrudeStraightShape(unittest.TestCase):
     def setUp(self):
         self.test_shape = ExtrudeStraightShape(points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30)
 
+    def test_translate(self):
+        """Checks the shape extends to the bounding box and then translates
+        the shape and checks it is extended to the new bounding box"""
+
+        assert self.test_shape.solid.val().BoundingBox().xmax == 30
+        assert self.test_shape.solid.val().BoundingBox().xmin == 10
+        assert self.test_shape.solid.val().BoundingBox().ymax == 15
+        assert self.test_shape.solid.val().BoundingBox().ymin == -15
+        assert self.test_shape.solid.val().BoundingBox().zmax == 30
+        assert self.test_shape.solid.val().BoundingBox().zmin == 10
+        
+        self.test_shape.translate = (1,2,3)
+
+        assert self.test_shape.solid.val().BoundingBox().xmax == 31
+        assert self.test_shape.solid.val().BoundingBox().xmin == 9
+        assert self.test_shape.solid.val().BoundingBox().ymax == 16
+        assert self.test_shape.solid.val().BoundingBox().ymin == -14
+        assert self.test_shape.solid.val().BoundingBox().zmax == 31
+        assert self.test_shape.solid.val().BoundingBox().zmin == 11
+        
     def test_workplane_of_type_cadquery_plane(self):
         """Tests that a Cadquery.Plane is accepted as a workplane entry and
         makes a shape with the same volume as the default 'XY' workplane"""

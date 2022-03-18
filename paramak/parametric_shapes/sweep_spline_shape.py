@@ -19,6 +19,13 @@ class SweepSplineShape(SweepMixedShape):
         force_cross_section (bool, optional): If True, cross-setion of solid
             is forced to be shape defined by points in workplane at each
             path_point. Defaults to False.
+        color: the color to use when exporting the shape to CAD formats that
+            support color. A tuple of three floats each ranging between 0
+            and 1.
+        name: the name of the shape, used to name files when exporting and
+            as a legend in plots. 
+        translate: distance to translate / move the shape by. Specified as
+            a vector of (X,Y,Z) directions.
     """
 
     def __init__(

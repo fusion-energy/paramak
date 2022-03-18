@@ -10,6 +10,13 @@ class RotateMixedShape(Shape):
     Args:
         rotation_angle: The rotation_angle to use when revolving the solid
             (degrees). Defaults to 360.0.
+        color: the color to use when exporting the shape to CAD formats that
+            support color. A tuple of three floats each ranging between 0
+            and 1.
+        name: the name of the shape, used to name files when exporting and
+            as a legend in plots. 
+        translate: distance to translate / move the shape by. Specified as
+            a vector of (X,Y,Z) directions.
     """
 
     def __init__(
@@ -21,6 +28,7 @@ class RotateMixedShape(Shape):
             0.705,
         ),
         name: str = "rotatemixedshape",
+        translate: Optional[Tuple[float, float, float]] = None,
         **kwargs
     ):
 
@@ -28,6 +36,7 @@ class RotateMixedShape(Shape):
         self.rotation_angle = rotation_angle
         self.color = color
         self.name = name
+        self.translate = translate
 
     @property
     def rotation_angle(self):
