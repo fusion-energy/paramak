@@ -1827,7 +1827,7 @@ low_aspect attribute is set to False, as well as the PF coils outside were moved
 
 
 Shape() class
--------------
+=============
 
 The Shape class is the container class for all Shapes and Components.
 
@@ -1840,7 +1840,7 @@ Shape()
 
 
 Reactor() class
----------------
+===============
 
 The Reactor() class allows Shapes() to be grouped together and jointly operated
 on.
@@ -1854,7 +1854,7 @@ Reactor()
 
 
 Utils functions
----------------
+===============
 
 Utility functions provides useful functions that are used by both the Shape()
 class and the Reactor class. They can also be used directly.
