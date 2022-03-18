@@ -26,7 +26,7 @@ class TestExtrudeStraightShape(unittest.TestCase):
         self.test_shape.translate = (1, 2, 3)
 
         assert self.test_shape.solid.val().BoundingBox().xmax == 31
-        assert self.test_shape.solid.val().BoundingBox().xmin == 9
+        assert self.test_shape.solid.val().BoundingBox().xmin == 11
         assert self.test_shape.solid.val().BoundingBox().ymax == 16
         assert self.test_shape.solid.val().BoundingBox().ymin == -14
         assert self.test_shape.solid.val().BoundingBox().zmax == 31
