@@ -10,7 +10,7 @@ defaults:
     shell: bash
 
 jobs:
-  black:
+  flake8:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
