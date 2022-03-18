@@ -14,7 +14,7 @@ class RotateStraightShape(RotateMixedShape):
             support color. A tuple of three floats each ranging between 0
             and 1.
         name: the name of the shape, used to name files when exporting and
-            as a legend in plots. 
+            as a legend in plots.
         translate: distance to translate / move the shape by. Specified as
             a vector of (X,Y,Z) directions.
     """
