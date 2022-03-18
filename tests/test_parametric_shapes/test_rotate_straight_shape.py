@@ -11,6 +11,26 @@ class TestRotateStraightShape(unittest.TestCase):
     def setUp(self):
         self.test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
 
+    def test_translate(self):
+        """Checks the shape extends to the bounding box and then translates
+        the shape and checks it is extended to the new bounding box"""
+
+        assert self.test_shape.solid.val().BoundingBox().xmax == 20
+        assert self.test_shape.solid.val().BoundingBox().xmin == -20
+        assert self.test_shape.solid.val().BoundingBox().ymax == 20
+        assert self.test_shape.solid.val().BoundingBox().ymin == -20
+        assert self.test_shape.solid.val().BoundingBox().zmax == 20
+        assert self.test_shape.solid.val().BoundingBox().zmin == 0
+
+        self.test_shape.translate = (1, 2, 3)
+
+        assert self.test_shape.solid.val().BoundingBox().xmax == 20 + 1
+        assert self.test_shape.solid.val().BoundingBox().xmin == -20 + 1
+        assert self.test_shape.solid.val().BoundingBox().ymax == 20 + 2
+        assert self.test_shape.solid.val().BoundingBox().ymin == -20 + 2
+        assert self.test_shape.solid.val().BoundingBox().zmax == 20 + 3
+        assert self.test_shape.solid.val().BoundingBox().zmin == 0 + 3
+
     def test_largest_dimension(self):
         """Checks that the largest_dimension is correct."""
 
