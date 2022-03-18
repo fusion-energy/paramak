@@ -31,6 +31,7 @@ class ExtrudeMixedShape(Shape):
             0.172,
         ),
         name: str = "extrudemixedshape",
+        translate: Optional[Tuple[float, float, float]] = None,
         **kwargs
     ):
 
@@ -41,6 +42,7 @@ class ExtrudeMixedShape(Shape):
         self.extrusion_start_offset = extrusion_start_offset
         self.color = color
         self.name = name
+        self.translate = translate
 
     @property
     def distance(self):
@@ -95,6 +97,9 @@ class ExtrudeMixedShape(Shape):
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)
         solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+
+        if self.translate:
+            solid = solid.translate(self.translate)
         self.solid = solid
 
         return solid

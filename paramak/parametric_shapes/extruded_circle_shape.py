@@ -34,6 +34,7 @@ class ExtrudeCircleShape(Shape):
             0.6,
         ),
         name: str = "extrudecircleshape",
+        translate: Optional[Tuple[float, float, float]] = None,
         **kwargs
     ):
 
@@ -46,6 +47,7 @@ class ExtrudeCircleShape(Shape):
         self.extrude_both = extrude_both
         self.color = color
         self.name = name
+        self.translate = translate
 
     @property
     def radius(self):
@@ -109,6 +111,8 @@ class ExtrudeCircleShape(Shape):
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)
         solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+        if self.translate:
+            solid = solid.translate(self.translate)
         self.solid = solid
 
         return solid
