@@ -75,7 +75,7 @@ class CircularPort(Shape):
         # so a positive offset moves extrusion further from axis of azimuthal
         # placement rotation
         if self.extrusion_start_offset is None:
-            extrusion_offset = 0.
+            extrusion_offset = 0.0
         else:
             extrusion_offset = -self.extrusion_start_offset
         flange_gap = -self.flange_gap
