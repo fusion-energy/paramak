@@ -1041,8 +1041,55 @@ PoloidalFieldCoilCaseSetFC()
    :show-inheritance:
 
 
-Port Cutters
-------------
+Ports
+-----
+
+CircularPort()
+^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   component = paramak.CircularPort(
+      color = (0,1,0),
+      rotation_angle=45,
+      blank_flange_thickness=4,
+      flange_thickness=10,
+      wall_thickness=2,
+      distance = 50,
+   )
+
+   cadquery_object = my_component.solid
+
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   component = paramak.CircularPort(
+      inner_radius = 20,
+      azimuth_placement_angle= [0.,  30.,  60.,  90., 120., 150., 180., 210., 240., 270., 300., 330.],
+         color = (0,1,0),
+         rotation_angle=180,
+         blank_flange_thickness=4,
+         flange_thickness=10,
+         wall_thickness=2,
+         distance = 50,
+         flange_gap=0
+      )
+
+   cadquery_object = my_component.solid
+
+|CircularPortRotatedsvg|
+
+.. |CircularPortRotatedsvg| image:: https://user-images.githubusercontent.com/8583900/159140637-ee6c72f8-1094-4261-90a2-b137b2777c92.png
+    :width: 380px
+
+.. automodule:: paramak.parametric_components.circular_port
+   :members:
+   :show-inheritance:
+
 
 PortCutterRotated()
 ^^^^^^^^^^^^^^^^^^^
