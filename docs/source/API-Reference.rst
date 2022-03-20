@@ -1058,6 +1058,7 @@ CircularPort()
       flange_thickness=10,
       wall_thickness=2,
       distance = 50,
+      flange_gap=1,
    )
 
    cadquery_object = my_component.solid
