@@ -93,53 +93,53 @@ class ConstantThicknessDome(RotateMixedShape):
             self.chord_height / 2.0
         )
         center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
-        print('radius_of_sphere',radius_of_sphere)
-        print('center_point',center_point)
+        print("radius_of_sphere", radius_of_sphere)
+        print("center_point", center_point)
 
-        point_7 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere, 'straight')
-        point_6 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere + self.thickness, 'straight')
-        print('point_6',point_6)
-        print('point_7',point_7)
+        point_7 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere, "straight")
+        point_6 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere + self.thickness, "straight")
+        print("point_6", point_6)
+        print("point_7", point_7)
 
-        point_1 = (self.chord_center[0] + self.chord_width / 2 , self.chord_center[1], 'straight')
-        print('point_1',point_1)
-        
-        inner_tri_angle = math.atan((center_point[1]-self.chord_center[1])/(self.chord_width/2))
-        print('inner_tri_angle', inner_tri_angle)
-        outer_tri_adj = math.cos(inner_tri_angle)* self.thickness
-        print('outer_tri_adj',outer_tri_adj)
-        
-        point_2 = (point_1[0]+outer_tri_adj, point_1[1], 'straight')
-        print('point_2',point_2)
+        point_1 = (self.chord_center[0] + self.chord_width / 2, self.chord_center[1], "straight")
+        print("point_1", point_1)
+
+        inner_tri_angle = math.atan((center_point[1] - self.chord_center[1]) / (self.chord_width / 2))
+        print("inner_tri_angle", inner_tri_angle)
+        outer_tri_adj = math.cos(inner_tri_angle) * self.thickness
+        print("outer_tri_adj", outer_tri_adj)
+
+        point_2 = (point_1[0] + outer_tri_adj, point_1[1], "straight")
+        print("point_2", point_2)
         # self.points = None
 
-        outer_tri_opp = math.sqrt(math.pow(self.thickness,2 )- math.pow(outer_tri_adj, 2))
-        print('outer_tri_opp',outer_tri_opp)
-        point_3 = (point_2[0], point_2[1]+outer_tri_opp, 'straight')
+        outer_tri_opp = math.sqrt(math.pow(self.thickness, 2) - math.pow(outer_tri_adj, 2))
+        print("outer_tri_opp", outer_tri_opp)
+        point_3 = (point_2[0], point_2[1] + outer_tri_opp, "straight")
         # point_3 = extend(point_1, center_point, -self.thickness)
         # point_3 = (point_3[0], point_3[1], 'circle')
-        print('point_3',point_3)
+        print("point_3", point_3)
 
         # def rotate(origin: Tuple[float, float], point: Tuple[float, float], angle: float):
         # angle_between_two_points_on_circle(point_1, point_2, radius_of_circle):
 
-        rotaion_angle_upper = angle_between_two_points_on_circle(point_6, point_3, radius_of_sphere+self.thickness)
-        print('rotaion_angle_upper',rotaion_angle_upper)
+        rotaion_angle_upper = angle_between_two_points_on_circle(point_6, point_3, radius_of_sphere + self.thickness)
+        print("rotaion_angle_upper", rotaion_angle_upper)
         point_4 = rotate(center_point, point_3, rotaion_angle_upper)
-        point_4 = (point_4[0], point_4[1], 'straight')
-        print('point_4',point_4)
+        point_4 = (point_4[0], point_4[1], "straight")
+        print("point_4", point_4)
 
         rotaion_angle_lower = angle_between_two_points_on_circle(point_1, point_7, radius_of_sphere)
         point_8 = rotate(center_point, point_7, -rotaion_angle_lower)
-        point_8 = (point_8[0], point_8[1], 'straight')
+        point_8 = (point_8[0], point_8[1], "straight")
 
         # point_2 = (point_3[0], point_1[1], 'straight')
         # # for p in [point_1, point_2, point_3, point_4, point_6, point_7, point_8]:
         # #     print(p)
 
         # self.points = [point_1, point_2, point_3, point_4, point_6, point_7, point_8]
-        #check if 2 == 3
-        self.points = [point_1, point_2,point_3, point_4, point_6, point_7, point_8]
+        # check if 2 == 3
+        self.points = [point_1, point_2, point_3, point_4, point_6, point_7, point_8]
 
     # def create_solid(self):
 
