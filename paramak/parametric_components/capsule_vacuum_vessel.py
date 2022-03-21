@@ -6,7 +6,7 @@ from paramak import RotateMixedShape
 
 class CapsuleVacuumVessel(RotateMixedShape):
     """A cylindrical vessel volume with constant thickness that has addition
-    spherical edges.
+    hemispherical head.
 
     Arguments:
         outer_start_point: the x,z coordinates of the outer bottom of the

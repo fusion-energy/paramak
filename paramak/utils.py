@@ -146,6 +146,14 @@ def diff_between_angles(angle_a: float, angle_b: float) -> float:
     return delta_mod
 
 
+def angle_between_two_points_on_circle(point_1, point_2, radius_of_circle):
+
+    separation = distance_between_two_points(point_1, point_2)
+    isos_tri_term = (2 * math.pow(radius_of_circle, 2) - math.pow(separation, 2)) / (2 * math.pow(radius_of_circle, 2))
+    angle = math.acos(isos_tri_term)
+    return angle
+
+
 def distance_between_two_points(point_a: Tuple[float, float], point_b: Tuple[float, float]) -> float:
     """Computes the distance between two points.
 

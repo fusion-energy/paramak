@@ -13,7 +13,15 @@ __all__ = ["__version__"]
 
 from .shape import Shape
 from .reactor import Reactor
-from .utils import rotate, extend, distance_between_two_points, diff_between_angles
+from .utils import (
+    rotate,
+    extend,
+    distance_between_two_points,
+    diff_between_angles,
+    find_center_point_of_circle,
+    angle_between_two_points_on_circle,
+    find_radius_of_circle,
+)
 from .utils import EdgeLengthSelector, FaceAreaSelector
 
 from .parametric_shapes.extruded_mixed_shape import ExtrudeMixedShape
@@ -114,6 +122,7 @@ from .parametric_components.toroidal_field_coil_round_corners import (
 )
 
 from .parametric_components.vacuum_vessel import VacuumVessel
+from .parametric_components.dished_vacuum_vessel import DishedVacuumVessel
 from .parametric_components.vacuum_vessel_inner_leg import VacuumVesselInnerLeg
 from .parametric_components.capsule_vacuum_vessel import CapsuleVacuumVessel
 from .parametric_components.hollow_cube import HollowCube

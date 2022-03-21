@@ -1064,12 +1064,13 @@ class Shape:
             title=(f"coordinates of {self.__class__.__name__} shape, viewed " "from the {view_plane} plane"),
         )
 
-        if self.points is not None:
-            fig.add_trace(plotly_trace(points=self.points, mode="markers", name="Shape.points"))
+        # removed to avoid doulbe plot
+        # if self.points is not None:
+        #     fig.add_trace(plotly_trace(points=self.points, mode="markers", name="Shape.points"))
 
-        # sweep shapes have .path_points but not .points attribute
-        if self.path_points:
-            fig.add_trace(plotly_trace(points=self.path_points, mode="markers", name="Shape.path_points"))
+        # # sweep shapes have .path_points but not .points attribute
+        # if self.path_points:
+        #     fig.add_trace(plotly_trace(points=self.path_points, mode="markers", name="Shape.path_points"))
 
         if filename is not None:
 
