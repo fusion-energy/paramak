@@ -6,11 +6,4 @@ class ITERtypeDivertorNoDome(ITERtypeDivertor):
 
     def __init__(self, **kwargs):
 
-        super().__init__(
-            dome=False,
-            dome_height=None,
-            dome_length=None,
-            dome_thickness=None,
-            dome_pos=None,
-            **kwargs
-        )
+        super().__init__(dome=False, dome_height=None, dome_length=None, dome_thickness=None, dome_pos=None, **kwargs)

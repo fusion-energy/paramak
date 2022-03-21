@@ -7,9 +7,7 @@ import paramak
 
 class TestPortCutterRectangular(unittest.TestCase):
     def setUp(self):
-        self.test_shape = paramak.PortCutterRectangular(
-            width=20, height=40, distance=300
-        )
+        self.test_shape = paramak.PortCutterRectangular(width=20, height=40, distance=300)
 
     def test_default_parameters(self):
         """Checks that the default parameters of a PortCutterRectangular are correct."""

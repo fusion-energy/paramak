@@ -14,6 +14,26 @@ class TestSweepStraightShape(unittest.TestCase):
             path_points=[(50, 0), (30, 50), (70, 100), (50, 150)],
         )
 
+    def test_translate(self):
+        """Checks the shape extends to the bounding box and then translates
+        the shape and checks it is extended to the new bounding box"""
+
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().xmax) == 80.94405253029915
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().xmin) == 19.055947469700666
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().ymax) == 10.000000100000012
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().ymin) == -10.000000100000012
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().zmax) == 150.00000010000002
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().zmin) == -1.0000000355271367e-07
+
+        self.test_shape.translate = (1, 2, 3)
+
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().xmax) == 80.94405253029915 + 1
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().xmin) == 19.055947469700666 + 1
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().ymax) == 10.000000100000012 + 2
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().ymin) == -10.000000100000012 + 2
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().zmax) == 150.00000010000002 + 3
+        assert pytest.approx(self.test_shape.solid.val().BoundingBox().zmin) == -1.0000000355271367e-07 + 3
+
     def test_default_parameters(self):
         """Checks that the default parameters of a SweepStraightShape are
         correct."""
@@ -97,14 +117,8 @@ class TestSweepStraightShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 

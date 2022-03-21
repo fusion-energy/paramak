@@ -12,13 +12,20 @@ class ExtrudeCircleShape(Shape):
     """Extrudes a circular 3d CadQuery solid from a central point and a radius
 
     Args:
-        distance: the extrusion distance to use (cm units if used for
-            neutronics)
+        distance: the extrusion distance to use
         radius: radius of the shape.
+        extrusion_start_offset:
         rotation_angle: rotation_angle of solid created. a cut is performed
             from rotation_angle to 360 degrees. Defaults to 360.
         extrude_both: if set to True, the extrusion will occur in both
             directions. Defaults to True.
+        color: the color to use when exporting the shape to CAD formats that
+            support color. A tuple of three floats each ranging between 0
+            and 1.
+        name: the name of the shape, used to name files when exporting and
+            as a legend in plots.
+        translate: distance to translate / move the shape by. Specified as
+            a vector of (X,Y,Z) directions.
     """
 
     def __init__(
@@ -34,6 +41,7 @@ class ExtrudeCircleShape(Shape):
             0.6,
         ),
         name: str = "extrudecircleshape",
+        translate: Optional[Tuple[float, float, float]] = None,
         **kwargs
     ):
 
@@ -46,6 +54,7 @@ class ExtrudeCircleShape(Shape):
         self.extrude_both = extrude_both
         self.color = color
         self.name = name
+        self.translate = translate
 
     @property
     def radius(self):
@@ -109,6 +118,10 @@ class ExtrudeCircleShape(Shape):
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)
         solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+
+        if self.translate:
+            solid = solid.translate(self.translate)
+
         self.solid = solid
 
         return solid

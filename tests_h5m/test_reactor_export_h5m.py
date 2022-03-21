@@ -9,9 +9,7 @@ class TestReactor(unittest.TestCase):
     """testing the export_dagmc_h5m method of the TestReactor class"""
 
     def setUp(self):
-        self.test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], name="test_shape"
-        )
+        self.test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], name="test_shape")
 
         self.test_shape2 = paramak.ExtrudeStraightShape(
             points=[(100, 100), (50, 100), (50, 50)], distance=20, name="test_shape2"
@@ -53,17 +51,10 @@ class TestReactor(unittest.TestCase):
         """Exports h5m file with higher resolution mesh and checks that the
         file sizes increases"""
 
-        self.test_reactor_3.export_dagmc_h5m(
-            "dagmc_default.h5m", min_mesh_size=10, max_mesh_size=20
-        )
-        self.test_reactor_3.export_dagmc_h5m(
-            "dagmc_bigger.h5m", min_mesh_size=2, max_mesh_size=9
-        )
+        self.test_reactor_3.export_dagmc_h5m("dagmc_default.h5m", min_mesh_size=10, max_mesh_size=20)
+        self.test_reactor_3.export_dagmc_h5m("dagmc_bigger.h5m", min_mesh_size=2, max_mesh_size=9)
 
-        assert (
-            Path("dagmc_bigger.h5m").stat().st_size
-            > Path("dagmc_default.h5m").stat().st_size
-        )
+        assert Path("dagmc_bigger.h5m").stat().st_size > Path("dagmc_default.h5m").stat().st_size
 
 
 if __name__ == "__main__":

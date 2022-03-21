@@ -7,9 +7,7 @@ import paramak
 
 class TestExtrudeRectangle(unittest.TestCase):
     def setUp(self):
-        self.test_shape = paramak.ExtrudeRectangle(
-            height=50, width=60, center_point=(1000, 500), distance=333
-        )
+        self.test_shape = paramak.ExtrudeRectangle(height=50, width=60, center_point=(1000, 500), distance=333)
 
     def test_default_parameters(self):
         """Checks that the default parameters of a ExtrudeRectangle are

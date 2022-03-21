@@ -49,13 +49,7 @@ class TestTFCoilCasing(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            Path("test_solid.stp").stat().st_size
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert Path("test_solid.stp").stat().st_size == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")

@@ -19,12 +19,7 @@ class TFCoilCasing(ExtrudeMixedShape):
     """
 
     def __init__(
-        self,
-        magnet,
-        inner_offset: float,
-        outer_offset: float,
-        vertical_section_offset: float,
-        **kwargs
+        self, magnet, inner_offset: float, outer_offset: float, vertical_section_offset: float, **kwargs
     ) -> None:
 
         self.magnet = magnet
@@ -51,10 +46,7 @@ class TFCoilCasing(ExtrudeMixedShape):
     def azimuth_placement_angle(self, value):
         correct_angles = self.magnet.azimuth_placement_angle
         if value != correct_angles:
-            msg = (
-                "Casing azimuth_placement_angle should be the"
-                "same value as TFCoilCasing.magnet."
-            )
+            msg = "Casing azimuth_placement_angle should be the" "same value as TFCoilCasing.magnet."
             warnings.warn(msg, UserWarning)
         self._azimuth_placement_angle = correct_angles
 
@@ -71,9 +63,7 @@ class TFCoilCasing(ExtrudeMixedShape):
         outer_points = add_thickness(*outer_points_magnet, thickness=-self.outer_offset)
         curve_points = []
         for distrib_points in [inner_points, outer_points]:
-            curve_points.append(
-                [[R, Z, "spline"] for R, Z in zip(distrib_points[0], distrib_points[1])]
-            )
+            curve_points.append([[R, Z, "spline"] for R, Z in zip(distrib_points[0], distrib_points[1])])
 
         curve_points[0][-1][2] = "straight"
         curve_points[1][-1][2] = "straight"
@@ -81,11 +71,7 @@ class TFCoilCasing(ExtrudeMixedShape):
         points = curve_points[0] + curve_points[1]
         self.points = points
 
-        ya = outer_points[1][
-            outer_points[0].index(
-                min(outer_points[0], key=lambda x: abs(x - min(inner_points[0])))
-            )
-        ]
+        ya = outer_points[1][outer_points[0].index(min(outer_points[0], key=lambda x: abs(x - min(inner_points[0]))))]
         self.leg_points = [
             (
                 min(outer_points[0]) - self.vertical_section_offset + self.outer_offset,

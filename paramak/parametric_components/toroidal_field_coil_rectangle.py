@@ -107,10 +107,7 @@ class ToroidalFieldCoilRectangle(ToroidalFieldCoil):
         ]
 
         # adds any vertical displacement and the connection type to the points
-        points = [
-            (point[0], point[1] + self.vertical_displacement, "straight")
-            for point in points
-        ]
+        points = [(point[0], point[1] + self.vertical_displacement, "straight") for point in points]
 
         self.inner_leg_connection_points = [
             (points[0][0], points[0][1]),

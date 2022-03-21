@@ -81,7 +81,5 @@ class PlasmaBoundaries(Plasma):
             if self.configuration == "double-null":
                 upper_point_y = self.upper_x_point[1]
 
-        points = points[
-            (points[:, 1] >= lower_point_y) & (points[:, 1] <= upper_point_y)
-        ]
+        points = points[(points[:, 1] >= lower_point_y) & (points[:, 1] <= upper_point_y)]
         self.points = points.tolist()[:-1]

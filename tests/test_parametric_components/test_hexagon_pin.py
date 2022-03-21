@@ -8,9 +8,7 @@ import paramak
 
 class TestHexagonPin(unittest.TestCase):
     def setUp(self):
-        self.test_shape = paramak.HexagonPin(
-            length_of_side=5, distance=42.0, center_point=(0, 0)
-        )
+        self.test_shape = paramak.HexagonPin(length_of_side=5, distance=42.0, center_point=(0, 0))
 
     def test_setting_parameters(self):
         """Checks that the default parameters and user parameters are set"""
@@ -28,10 +26,7 @@ class TestHexagonPin(unittest.TestCase):
 
         hexagon_face_area = (3 * math.sqrt(3) / 2) * math.pow(length, 2)
         # this needs a pytest.approx() as the volumes are not exact
-        assert (
-            pytest.approx(self.test_shape.volume(), rel=0.1)
-            == hexagon_face_area * distance
-        )
+        assert pytest.approx(self.test_shape.volume(), rel=0.1) == hexagon_face_area * distance
 
     def test_distance_impacts_volume(self):
         """Checks that changing the distance argument results in the

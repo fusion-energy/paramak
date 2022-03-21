@@ -21,6 +21,13 @@ class SweepMixedShape(Shape):
         force_cross_section (bool, optional): If True, cross-section of solid
             is forced to be shape defined by points in workplane at each
             path_point. Defaults to False.
+        color: the color to use when exporting the shape to CAD formats that
+            support color. A tuple of three floats each ranging between 0
+            and 1.
+        name: the name of the shape, used to name files when exporting and
+            as a legend in plots.
+        translate: distance to translate / move the shape by. Specified as
+            a vector of (X,Y,Z) directions.
     """
 
     def __init__(
@@ -35,6 +42,7 @@ class SweepMixedShape(Shape):
             0.839,
         ),
         name: str = "sweepmixedshape",
+        translate: Optional[Tuple[float, float, float]] = None,
         **kwargs
     ):
 
@@ -46,6 +54,7 @@ class SweepMixedShape(Shape):
         self.force_cross_section = force_cross_section
         self.color = color
         self.name = name
+        self.translate = translate
 
     @property
     def path_points(self):
@@ -62,9 +71,7 @@ class SweepMixedShape(Shape):
     @path_workplane.setter
     def path_workplane(self, value):
         if value[0] != self.workplane[0]:
-            raise ValueError(
-                "workplane and path_workplane must start with the same letter"
-            )
+            raise ValueError("workplane and path_workplane must start with the same letter")
         elif value == self.workplane:
             raise ValueError("workplane and path_workplane must be different")
         else:
@@ -88,5 +95,9 @@ class SweepMixedShape(Shape):
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)
+
+        if self.translate:
+            solid = solid.translate(self.translate)
+
         self.solid = solid
         return solid

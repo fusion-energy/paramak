@@ -60,9 +60,7 @@ def surface_area(
     # XZ plane face area
     total_face_area = base_segment_area * 2 + vertical_segment_area + corner_area * 2
     # The surface area of the planes in YZ plane
-    contour_length = (
-        inner_rad * (pi - 8) + pi * outter_rad + 2 * (2 * base + thickness + height)
-    )
+    contour_length = inner_rad * (pi - 8) + pi * outter_rad + 2 * (2 * base + thickness + height)
     extrusion_area = contour_length * extrusion_length
     # Total Area
     total_bounding_surface = total_face_area * 2 + extrusion_area
@@ -72,9 +70,7 @@ def surface_area(
         total_face_area += thickness * height
         print(total_face_area)
         total_leg_surface_area = (
-            2 * height * thickness
-            + 2 * extrusion_length * height
-            + 2 * extrusion_length * thickness
+            2 * height * thickness + 2 * extrusion_length * height + 2 * extrusion_length * thickness
         )
 
         # Total bounding surface

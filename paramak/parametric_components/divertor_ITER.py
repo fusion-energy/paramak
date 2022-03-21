@@ -98,9 +98,7 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([c_coord[0], c_coord[1]])
         return points
 
-    def _create_dome_points(
-        self, c_coord, F, dome_length, dome_height, dome_thickness, dome_pos
-    ):
+    def _create_dome_points(self, c_coord, F, dome_length, dome_height, dome_thickness, dome_pos):
         """Creates a list of points for the dome alongside with their
         connectivity
 
@@ -118,12 +116,8 @@ class ITERtypeDivertor(RotateMixedShape):
         """
         points = []
 
-        dome_base = extend(
-            c_coord, F, dome_pos * distance_between_two_points(F, c_coord)
-        )
-        dome_lower_point = extend(
-            dome_base, rotate(dome_base, c_coord, -math.pi / 2), dome_height
-        )
+        dome_base = extend(c_coord, F, dome_pos * distance_between_two_points(F, c_coord))
+        dome_lower_point = extend(dome_base, rotate(dome_base, c_coord, -math.pi / 2), dome_height)
 
         d_prime = extend(dome_base, dome_lower_point, dome_height + dome_thickness)
         D = extend(

@@ -167,14 +167,8 @@ class TestExtrudeMixedShape(unittest.TestCase):
         assert Path("test_solid2.stp").exists() is True
         assert Path("test_wire.stp").exists() is True
 
-        assert (
-            pytest.approx(Path("test_solid.stp").stat().st_size, rel=1)
-            == Path("test_solid2.stp").stat().st_size
-        )
-        assert (
-            Path("test_wire.stp").stat().st_size
-            < Path("test_solid2.stp").stat().st_size
-        )
+        assert pytest.approx(Path("test_solid.stp").stat().st_size, rel=1) == Path("test_solid2.stp").stat().st_size
+        assert Path("test_wire.stp").stat().st_size < Path("test_solid2.stp").stat().st_size
 
         os.system("rm test_solid.stp test_solid2.stp test_wire.stp")
 
@@ -196,9 +190,7 @@ class TestExtrudeMixedShape(unittest.TestCase):
         assert self.test_shape_2.processed_points[-4] == (150, 100, "straight")
         assert self.test_shape_2.processed_points[-5] == (200, 100, "straight")
 
-        for point in self.test_shape_2.processed_points[
-            1 : len(self.test_shape_2.points) - 5
-        ]:
+        for point in self.test_shape_2.processed_points[1 : len(self.test_shape_2.points) - 5]:
             assert point[2] == "spline"
 
     def test_convert_circles_to_splines_volume(self):

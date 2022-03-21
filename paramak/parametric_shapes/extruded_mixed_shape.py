@@ -11,12 +11,19 @@ class ExtrudeMixedShape(Shape):
     straight and spline connections.
 
     Args:
-        distance: the extrusion distance to use (cm units if used for
-            neutronics)
+        distance: the extrusion distance to use
         extrude_both: If set to True, the extrusion will occur in both
             directions. Defaults to True.
         rotation_angle: rotation angle of solid created. A cut is performed
             from rotation_angle to 360 degrees. Defaults to 360.0.
+        extrusion_start_offset:
+        color: the color to use when exporting the shape to CAD formats that
+            support color. A tuple of three floats each ranging between 0
+            and 1.
+        name: the name of the shape, used to name files when exporting and
+            as a legend in plots.
+        translate: distance to translate / move the shape by. Specified as
+            a vector of (X,Y,Z) directions.
     """
 
     def __init__(
@@ -31,6 +38,7 @@ class ExtrudeMixedShape(Shape):
             0.172,
         ),
         name: str = "extrudemixedshape",
+        translate: Optional[Tuple[float, float, float]] = None,
         **kwargs
     ):
 
@@ -41,6 +49,7 @@ class ExtrudeMixedShape(Shape):
         self.extrusion_start_offset = extrusion_start_offset
         self.color = color
         self.name = name
+        self.translate = translate
 
     @property
     def distance(self):
@@ -95,6 +104,10 @@ class ExtrudeMixedShape(Shape):
         solid = self.rotate_solid(solid)
         cutting_wedge = calculate_wedge_cut(self)
         solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+
+        if self.translate:
+            solid = solid.translate(self.translate)
+
         self.solid = solid
 
         return solid

@@ -89,9 +89,7 @@ def facet_wire(
     return edges
 
 
-def coefficients_of_line_from_points(
-    point_a: Tuple[float, float], point_b: Tuple[float, float]
-) -> Tuple[float, float]:
+def coefficients_of_line_from_points(point_a: Tuple[float, float], point_b: Tuple[float, float]) -> Tuple[float, float]:
     """Computes the m and c coefficients of the equation (y=mx+c) for
     a straight line from two points.
 
@@ -148,9 +146,7 @@ def diff_between_angles(angle_a: float, angle_b: float) -> float:
     return delta_mod
 
 
-def distance_between_two_points(
-    point_a: Tuple[float, float], point_b: Tuple[float, float]
-) -> float:
+def distance_between_two_points(point_a: Tuple[float, float], point_b: Tuple[float, float]) -> float:
     """Computes the distance between two points.
 
     Args:
@@ -167,9 +163,7 @@ def distance_between_two_points(
     return np.linalg.norm(u_vec)
 
 
-def extend(
-    point_a: Tuple[float, float], point_b: Tuple[float, float], L: float
-) -> Tuple[float, float]:
+def extend(point_a: Tuple[float, float], point_b: Tuple[float, float], L: float) -> Tuple[float, float]:
     """Creates a point C in (ab) direction so that \\|aC\\| = L
 
     Args:
@@ -209,9 +203,7 @@ def find_center_point_of_circle(
     temp = point_b[0] * point_b[0] + point_b[1] * point_b[1]
     bc = (point_a[0] * point_a[0] + point_a[1] * point_a[1] - temp) / 2
     cd = (temp - point_3[0] * point_3[0] - point_3[1] * point_3[1]) / 2
-    det = (point_a[0] - point_b[0]) * (point_b[1] - point_3[1]) - (
-        point_b[0] - point_3[0]
-    ) * (point_a[1] - point_b[1])
+    det = (point_a[0] - point_b[0]) * (point_b[1] - point_3[1]) - (point_b[0] - point_3[0]) * (point_a[1] - point_b[1])
 
     if abs(det) < 1.0e-6:
         return None
@@ -239,9 +231,7 @@ def find_radius_of_circle(
     if center_point == edge_point:
         return np.inf
 
-    radius = np.sqrt(
-        (center_point[0] - edge_point[0]) ** 2 + (center_point[1] - edge_point[1]) ** 2
-    )
+    radius = np.sqrt((center_point[0] - edge_point[0]) ** 2 + (center_point[1] - edge_point[1]) ** 2)
 
     return radius
 
@@ -318,9 +308,7 @@ def calculate_wedge_cut(self):
     return cutting_wedge
 
 
-def add_thickness(
-    x: List[float], y: List[float], thickness: float, dy_dx: List[float] = None
-) -> Tuple[list, list]:
+def add_thickness(x: List[float], y: List[float], thickness: float, dy_dx: List[float] = None) -> Tuple[list, list]:
     """Computes outer curve points based on thickness
 
     Args:
@@ -535,9 +523,7 @@ def extract_points_from_edges(
             elif view_plane == "XYZ":
                 points.append((vertex.X, vertex.Y, vertex.Z))
             else:
-                raise ValueError(
-                    "view_plane value of ", view_plane, " is not supported"
-                )
+                raise ValueError("view_plane value of ", view_plane, " is not supported")
     return points
 
 
@@ -636,13 +622,9 @@ def export_wire_to_html(
             tolerance=tolerance,
         )
 
-        points = paramak.utils.extract_points_from_edges(
-            edges=edges, view_plane=view_plane
-        )
+        points = paramak.utils.extract_points_from_edges(edges=edges, view_plane=view_plane)
 
-        fig.add_trace(
-            plotly_trace(points=points, mode=mode, name="edge " + str(counter))
-        )
+        fig.add_trace(plotly_trace(points=points, mode=mode, name="edge " + str(counter)))
 
     for counter, wire in enumerate(list_of_wires):
 
@@ -656,15 +638,9 @@ def export_wire_to_html(
             # this is for cadquery generated solids
             edges = wire.val().Edges()
 
-        points = paramak.utils.extract_points_from_edges(
-            edges=edges, view_plane=view_plane
-        )
+        points = paramak.utils.extract_points_from_edges(edges=edges, view_plane=view_plane)
 
-        fig.add_trace(
-            plotly_trace(
-                points=points, mode="markers", name="points on wire " + str(counter)
-            )
-        )
+        fig.add_trace(plotly_trace(points=points, mode="markers", name="points on wire " + str(counter)))
 
     if filename is not None:
 
@@ -748,10 +724,7 @@ class FaceAreaSelector(cq.Selector):
             face_area = obj.Area()
 
             # Only return faces that meet the requirements
-            if (
-                face_area > self.area - self.tolerance
-                and face_area < self.area + self.tolerance
-            ):
+            if face_area > self.area - self.tolerance and face_area < self.area + self.tolerance:
                 new_obj_list.append(obj)
 
         return new_obj_list
@@ -793,10 +766,7 @@ class EdgeLengthSelector(cq.Selector):
             edge_len = obj.Length()
 
             # Only return edges that meet our requirements
-            if (
-                edge_len > self.length - self.tolerance
-                and edge_len < self.length + self.tolerance
-            ):
+            if edge_len > self.length - self.tolerance and edge_len < self.length + self.tolerance:
 
                 new_obj_list.append(obj)
         print("length(new_obj_list)", len(new_obj_list))

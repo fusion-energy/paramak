@@ -72,6 +72,10 @@ language = None
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# avoids this error
+# WARNING: html_static_path entry '_static' does not exist
+html_static_path = []
+
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
@@ -90,7 +94,17 @@ html_theme = "default"
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    "display_version": True,
+    "prev_next_buttons_location": "bottom",
+    "style_external_links": False,
+    # toc options
+    "collapse_navigation": True,
+    "sticky_navigation": True,
+    "navigation_depth": 3,
+    "includehidden": True,
+    "titles_only": False,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

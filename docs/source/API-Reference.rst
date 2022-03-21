@@ -1,8 +1,306 @@
+API-Reference
+*************
+
+Parametric Shapes
+=================
+
+
+Rotated Shapes
+--------------
+
+RotateStraightShape()
+^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotateStraightShape(
+      points=[
+        (400, 100),
+        (400, 200),
+        (600, 200),
+        (600, 100)
+           ],
+      rotation_angle = 180
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.rotate_straight_shape
+   :members:
+   :show-inheritance:
+
+RotateSplineShape()
+^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotateSplineShape(
+      points=[
+       (500, 0),
+       (500, -20),
+       (400, -300),
+       (300, -300),
+       (400, 0),
+       (300, 300),
+       (400, 300),
+       (500, 20),
+      ],
+      rotation_angle = 180
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.rotate_spline_shape
+   :members:
+   :show-inheritance:
+
+RotateMixedShape()
+^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotateMixedShape(
+      points=[
+        (100, 0, 'straight'),
+        (200, 0, 'circle'),
+        (250, 50, 'circle'),
+        (200, 100, 'straight'),
+        (150, 100, 'spline'),
+        (140, 75, 'spline'),
+        (110, 45, 'spline'),
+      ],
+      rotation_angle = 180
+   )
+
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.rotate_mixed_shape
+   :members:
+   :show-inheritance:
+
+RotateCircleShape()
+^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.RotateCircleShape(
+      points=[(50, 0)],
+      radius=5,
+      rotation_angle=180
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.rotate_circle_shape
+   :members:
+   :show-inheritance:
+
+
+Extruded Shapes
+---------------
+
+ExtrudeStraightShape()
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeStraightShape(
+      points=[
+         (300, -300),
+         (400, 0),
+         (300, 300),
+         (400, 300),
+         (500, 0),
+         (400, -300),
+        ],
+      distance=200
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.extruded_straight_shape
+   :members:
+   :show-inheritance:
+
+ExtrudeSplineShape()
+^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeSplineShape(
+      points=[
+         (500, 0),
+         (500, -20),
+         (400, -300),
+         (300, -300),
+         (400, 0),
+         (300, 300),
+         (400, 300),
+         (500, 20),
+      ],
+      distance=200,
+
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.extruded_spline_shape
+   :members:
+   :show-inheritance:
+
+ExtrudeMixedShape()
+^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeMixedShape(
+      points=[
+        (100, 0, 'straight'),
+        (200, 0, 'circle'),
+        (250, 50, 'circle'),
+        (200, 100, 'straight'),
+        (150, 100, 'spline'),
+        (140, 75, 'spline'),
+        (110, 45, 'spline'),
+      ],
+      distance=200
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.extruded_mixed_shape
+   :members:
+   :show-inheritance:
+
+ExtrudeCircleShape()
+^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ExtrudeCircleShape(
+      points=[(50, 0)],
+      radius=5,
+      distance=15
+   )
+
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.extruded_circle_shape
+   :members:
+   :show-inheritance:
+
+
+Swept Shapes
+------------
+
+SweepStraightShape()
+^^^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SweepStraightShape(
+      points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.sweep_straight_shape
+   :members:
+   :show-inheritance:
+
+SweepSplineShape()
+^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SweepSplineShape(
+      points=[(-10, 10), (10, 10), (10, -10), (-10, -10)],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.sweep_spline_shape
+   :members:
+   :show-inheritance:
+
+SweepMixedShape()
+^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SweepMixedShape(
+      points=[(-10, -10, "straight"), (-10, 10, "spline"), (0, 20, "spline"),
+      (10, 10, "circle"), (0, 0, "circle"), (10, -10, "straight")],
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.sweep_mixed_shape
+   :members:
+   :show-inheritance:
+
+SweepCircleShape()
+^^^^^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SweepCircleShape(
+      radius=10,
+      path_points=[(50, 0), (30, 50), (70, 100), (50, 150)]
+   )
+
+   cadquery_object = my_component.solid
+
+.. automodule:: paramak.parametric_shapes.sweep_circle_shape
+   :members:
+   :show-inheritance:
+
 Parametric Components
 =====================
 
 These are components that represent a selection of the components found in fusion
-reactors and are created from parameters. These components all inherit from the 
+reactors and are created from parameters. These components all inherit from the
 parametric Shape classes.
 
 Blankets
@@ -743,8 +1041,55 @@ PoloidalFieldCoilCaseSetFC()
    :show-inheritance:
 
 
-Port Cutters
-------------
+Ports
+-----
+
+CircularPort()
+^^^^^^^^^^^^^^
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   my_component = paramak.CircularPort(
+      color = (0,1,0),
+      rotation_angle=45,
+      blank_flange_thickness=4,
+      flange_thickness=10,
+      wall_thickness=2,
+      distance = 50,
+      flange_gap=1,
+   )
+
+   cadquery_object = my_component.solid
+
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   my_component = paramak.CircularPort(
+      inner_radius = 20,
+      azimuth_placement_angle= [0.,  30.,  60.,  90., 120., 150., 180., 210., 240., 270., 300., 330.],
+         color = (0,1,0),
+         rotation_angle=180,
+         blank_flange_thickness=4,
+         flange_thickness=10,
+         wall_thickness=2,
+         distance = 50,
+         flange_gap=0
+      )
+
+   cadquery_object = my_component.solid
+
+
+.. image:: https://user-images.githubusercontent.com/8583900/159140637-ee6c72f8-1094-4261-90a2-b137b2777c92.png
+    :width: 380px
+
+.. automodule:: paramak.parametric_components.circular_port
+   :members:
+   :show-inheritance:
+
 
 PortCutterRotated()
 ^^^^^^^^^^^^^^^^^^^
@@ -1305,5 +1650,265 @@ RotatedIsoscelesTriangle
    :width: 510px
 
 .. automodule:: paramak.parametric_components.rotated_isosceles_triangle
+   :members:
+   :show-inheritance:
+
+Parametric Reactors
+===================
+
+These some of the reactor designs that can be created using the Paramak.
+
+.. image:: https://user-images.githubusercontent.com/8583900/115291309-7fe17300-a14c-11eb-9859-be85075eb0b9.png
+   :width: 713
+   :align: center
+
+Inertial Confinement
+--------------------
+
+FlfSystemCodeReactor()
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/136050185-da7e3cc8-1ead-4e11-8c17-2cbe2e4a3ad2.png
+   :width: 450
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.flf_system_code_reactor
+   :members:
+   :show-inheritance:
+
+
+BallReactors
+------------
+
+BallReactor()
+^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/99136724-91af6f00-261e-11eb-9956-476b818a0ee3.png
+   :width: 400
+   :align: center
+
+The above image is colored by components. The TF coils are blue, the PF coils
+are red, PF coil cases are yellow, the center column shielding is dark green,
+the blanket is light green, the divertor is orange, the firstwall is grey
+and the rear wall of the blanket is teal.
+
+.. image:: https://user-images.githubusercontent.com/8583900/119011892-6458ca80-b98d-11eb-92b1-bbc370cb9c84.png
+   :width: 450
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.ball_reactor
+   :members:
+   :show-inheritance:
+
+SegmentedBlanketBallReactor()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/99136727-94aa5f80-261e-11eb-965d-0ccceb2743fc.png
+   :width: 400
+   :align: center
+
+The above image is colored by components. The TF coils are blue, the PF coils
+are red, PF coil cases are yellow, the center column shielding is dark green,
+the blanket is light green, the divertor is orange, the firstwall is grey
+and the rear wall of the blanket is teal.
+
+Note that there is an odd number of blanket segments in this diagram so that
+the blanket breeder zone and the first wall can be see in this 180 slice.
+
+.. image:: https://user-images.githubusercontent.com/8583900/99431100-1db4e580-2902-11eb-82ce-3f864d13524c.png
+   :width: 450
+   :align: center
+
+Note the above image has the plasma purposefully hidden on the right hand side
+so that the internal blanket structure can be seen.
+
+.. automodule:: paramak.parametric_reactors.segmented_blanket_ball_reactor
+   :members:
+   :show-inheritance:
+
+SingleNullBallReactor()
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/99136728-983de680-261e-11eb-8398-51ae433f5546.png
+   :width: 400
+   :align: center
+
+The above image is colored by components. The TF coils are blue, the PF coils
+are red, PF coil cases are yellow, the center column shielding is dark green,
+the blanket is light green, the divertor is orange, the firstwall is grey and
+the rear wall of the blanket is teal.
+
+.. automodule:: paramak.parametric_reactors.single_null_ball_reactor
+   :members:
+   :show-inheritance:
+
+
+Submersion Tokamaks
+-------------------
+
+SubmersionTokamak()
+^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/99136719-8e1be800-261e-11eb-907d-a9bafaebdbb8.png
+   :width: 400
+   :align: center
+
+The above image is colored by components, the TF coils are blue, the PF coils
+are red, PF coil cases are yellow, the center column shielding is dark green, the blanket is light green, the
+divertor is orange, the firstwall is grey and the rear wall of the blanket is
+teal and the support legs are black.
+
+.. image:: https://user-images.githubusercontent.com/8583900/116117207-e36f2180-a6b3-11eb-8c65-4263336b6a68.png
+   :width: 450
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.submersion_reactor
+   :members:
+   :show-inheritance:
+
+SingleNullSubmersionTokamak()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/99136731-9aa04080-261e-11eb-87a5-502708dfebcc.png
+   :width: 400
+   :align: center
+
+The above image is colored by component. The TF coils are blue, the PF coils
+are red, PF coil cases are yellow, the center column shielding is dark green,
+the blanket is light green, the divertor is orange, the firstwall is grey, the
+rear wall of the blanket is teal and the supports are black.
+
+.. automodule:: paramak.parametric_reactors.single_null_submersion_reactor
+   :members:
+   :show-inheritance:
+
+
+Specific use case reactors
+--------------------------
+
+CenterColumnStudyReactor()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/99136734-9e33c780-261e-11eb-837b-16a0bc59f8a7.png
+   :width: 400
+   :align: center
+
+The above image is colored by component. The center column shielding is dark
+green, the blanket is light green, the divertor is orange, the firstwall is
+grey and the blanket is teal.
+
+Note this reactor is purposefully simple so that center column parameter
+studies can be performed quickly.
+
+.. image:: https://user-images.githubusercontent.com/8583900/98946297-9e7f7600-24eb-11eb-92cd-1c3bd13ad49b.png
+   :width: 600
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.center_column_study_reactor
+   :members:
+   :show-inheritance:
+
+
+Reactors from publications
+--------------------------
+
+EuDemoFrom2015PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/110224418-4f62b400-7ed3-11eb-85f1-e40dc74f5671.png
+   :width: 400
+   :align: center
+
+The above image is colored by component.
+
+.. automodule:: paramak.parametric_reactors.eu_demo_2015_reactor
+   :members:
+   :show-inheritance:
+
+IterFrom2020PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/40028739/110248118-cf3e5c00-7f6f-11eb-9e68-864c1a1e8676.png
+   :width: 400
+   :align: center
+
+The above image is colored by component.
+
+.. automodule:: paramak.parametric_reactors.iter_paper_2020
+   :members:
+   :show-inheritance:
+
+
+SparcFrom2020PaperDiagram()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/100032191-5ae01280-2def-11eb-9654-47c3869b3a2c.png
+   :width: 400
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.sparc_paper_2020
+   :members:
+   :show-inheritance:
+
+NegativeTriangularityReactor()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/85617935/144302746-181689dd-a4a8-43d4-9ed5-33518f36d4de.png
+   :width: 300
+   :align: left
+
+.. image:: https://user-images.githubusercontent.com/85617935/144303187-8cb71e2d-fc35-450f-a8f4-88b6650d56b7.png
+   :width: 300
+   :align: right
+
+The above image is coloured by component. On the left the low_aspect attribute is True, whereas on the right, the
+low_aspect attribute is set to False, as well as the PF coils outside were moved +200 units from default outward.
+
+.. image:: https://user-images.githubusercontent.com/85617935/144302481-022bf072-c7f7-409e-9701-1e24b7a9a7de.jpg
+   :width: 400
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.negative_triangularity_reactor
+   :members:
+   :show-inheritance:
+
+
+Shape() class
+=============
+
+The Shape class is the container class for all Shapes and Components.
+
+Shape()
+^^^^^^^
+
+.. automodule:: paramak.shape
+   :members:
+   :show-inheritance:
+
+
+Reactor() class
+===============
+
+The Reactor() class allows Shapes() to be grouped together and jointly operated
+on.
+
+Reactor()
+^^^^^^^^^
+
+.. automodule:: paramak.reactor
+   :members:
+   :show-inheritance:
+
+
+Utils functions
+===============
+
+Utility functions provides useful functions that are used by both the Shape()
+class and the Reactor class. They can also be used directly.
+
+utils
+^^^^^
+
+.. automodule:: paramak.utils
    :members:
    :show-inheritance:

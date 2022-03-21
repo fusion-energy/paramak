@@ -34,9 +34,7 @@ class VacuumVesselInnerLeg(RotateStraightShape):
     @inner_height.setter
     def inner_height(self, value):
         if not isinstance(value, (float, int)):
-            raise ValueError(
-                "VacuumVesselInnerLeg.inner_height must be a number. Not", value
-            )
+            raise ValueError("VacuumVesselInnerLeg.inner_height must be a number. Not", value)
         if value <= 0:
             msg = f"VacuumVesselInnerLeg.inner_height must be a positive number above 0. Not {value}"
             raise ValueError(msg)
@@ -112,16 +110,10 @@ class VacuumVesselInnerLeg(RotateStraightShape):
 
         big_wire = (cq.Workplane(self.workplane).polyline(local_points[:4])).close()
 
-        small_wire = (
-            cq.Workplane(self.workplane).polyline(
-                local_points[4:8]
-            )  # list of points has 10 entries
-        ).close()
+        small_wire = (cq.Workplane(self.workplane).polyline(local_points[4:8])).close()  # list of points has 10 entries
 
         inner_wire = (
-            cq.Workplane(self.workplane).polyline(
-                [local_points[1], local_points[2], local_points[9], local_points[8]]
-            )
+            cq.Workplane(self.workplane).polyline([local_points[1], local_points[2], local_points[9], local_points[8]])
         ).close()
 
         inner_solid = inner_wire.revolve(self.rotation_angle)

@@ -1,5 +1,154 @@
-Examples - Parametric Reactors
-==============================
+Examples
+========
+
+Parametric Shapes
+-----------------
+
+make_CAD_from_points.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/88064585-641c5280-cb63-11ea-97b1-1b7dcfabc07c.gif
+   :width: 450
+   :height: 275
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_shapes/make_CAD_from_points.ipynb>`__
+
+
+make_blanket_from_parameters.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/87058944-9e4f3100-c200-11ea-8bd3-669b3705c179.png
+   :width: 400
+   :height: 400
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_shapes/make_blanket_from_parameters.ipynb>`__
+
+
+make_blanket_from_points.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/87058930-998a7d00-c200-11ea-846e-4084dbf82748.png
+   :width: 400
+   :height: 400
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_shapes/make_blanket_from_points.ipynb>`__
+
+
+make_can_reactor_from_parameters.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/87060447-74970980-c202-11ea-8720-403c24dbabcc.gif
+   :width: 1300
+   :height: 450
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_shapes/make_can_reactor_from_parameters.ipynb>`__
+
+
+make_can_reactor_from_points.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/56687624/87060447-74970980-c202-11ea-8720-403c24dbabcc.gif
+   :width: 1300
+   :height: 450
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_shapes/make_can_reactor_from_points.ipynb>`__
+
+
+make_html_diagram_from_stp_file.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/117488160-fb705c00-af63-11eb-882e-27e284ceb79f.png
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_shapes/make_html_diagram_from_stp_file.ipynb>`__
+
+Parametric Components
+---------------------
+
+make_components_blankets.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_components_blankets.ipynb>`__
+
+
+make_components_center_column.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_components_center_column.ipynb>`__
+
+make_components_magnets.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_components_center_column.ipynb>`__
+
+make_components_other.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_components_other.ipynb>`__
+
+
+make_demo_style_blankets.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93619812-02e0f600-f9d1-11ea-903c-913c8bcb0f1b.png
+   :width: 1050
+   :height: 350
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_demo_style_blankets.ipynb>`__
+
+
+make_firstwall_for_neutron_wall_loading.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93807581-bc92cd80-fc42-11ea-8522-7fe14287b3c4.png
+   :width: 437
+   :height: 807
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_firstwall_for_neutron_wall_loading.ipynb>`__
+
+
+make_magnet_set.ipynb
+^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/99276201-5088ac00-2824-11eb-9927-a7ea1094b1e5.png
+   :width: 500
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_magnet_set.ipynb>`__
+
+
+make_plasmas.ipynb
+^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/8583900/93624384-2e1b1380-f9d8-11ea-99d1-9bf9e4e5b838.png
+   :width: 1050
+   :height: 700
+   :align: center
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_plasmas.ipynb>`__
+
+
+make_vacuum_vessel_with_ports.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_vacuum_vessel_with_ports.ipynb>`__
+
+
+make_varible_offset_firstwall.ipynb
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+`Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_components/make_varible_offset_firstwall.ipynb>`__
+
+
+Parametric Reactors
+-------------------
 
 
 FlfSystemCodeReactor
@@ -27,8 +176,8 @@ FlfSystemCodeReactor
    cadquery_object = my_reactor.solid
 
 
-ball_reactor.ipynb
-^^^^^^^^^^^^^^^^^^
+ball_reactor
+^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
@@ -67,8 +216,8 @@ ball_reactor.ipynb
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor.ipynb>`__
 
 
-ball_reactor_single_null.ipynb
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ball_reactor_single_null
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
@@ -108,8 +257,8 @@ ball_reactor_single_null.ipynb
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/ball_reactor_single_null.ipynb>`__
 
 
-center_column_study_reactor.ipynb
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+center_column_study_reactor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
@@ -138,8 +287,8 @@ center_column_study_reactor.ipynb
 
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/center_column_study_reactor.ipynb>`__
 
-eu_demo_from_2015_paper.ipynb
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+eu_demo_from_2015_paper
+^^^^^^^^^^^^^^^^^^^^^^^
 
 
 .. cadquery::
@@ -151,14 +300,14 @@ eu_demo_from_2015_paper.ipynb
    my_reactor = paramak.EuDemoFrom2015PaperDiagram(
       rotation_angle=90
    )
-   
+
    cadquery_object = my_reactor.solid
 
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/eu_demo_from_2015_paper.ipynb>`__
 
 
-make_animation.ipynb
-^^^^^^^^^^^^^^^^^^^^
+make_animation
+^^^^^^^^^^^^^^
 
 
 |animation1| |animation2|
@@ -171,8 +320,8 @@ make_animation.ipynb
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`__
 
 
-segmented_blanket_ball_reactor.ipynb
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+segmented_blanket_ball_reactor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
@@ -207,14 +356,14 @@ segmented_blanket_ball_reactor.ipynb
       gap_between_blankets=30,
       number_of_blanket_segments=15,
       blanket_fillet_radius=15,
-   ) 
+   )
 
    cadquery_object = my_reactor.solid
 
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/segmented_blanket_ball_reactor.ipynb>`__
 
-sparc_from_2020_paper.ipynb
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sparc_from_2020_paper
+^^^^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
@@ -224,15 +373,15 @@ sparc_from_2020_paper.ipynb
    import paramak
    my_reactor = paramak.SparcFrom2020PaperDiagram(
       rotation_angle=90
-   ) 
+   )
 
    cadquery_object = my_reactor.solid
 
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/sparc_from_2020_paper.ipynb>`__
 
 
-submersion_reactor.ipynb
-^^^^^^^^^^^^^^^^^^^^^^^^
+submersion_reactor
+^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
@@ -271,8 +420,8 @@ submersion_reactor.ipynb
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor.ipynb>`__
 
 
-submersion_reactor_single_null.ipynb
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+submersion_reactor_single_null
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
@@ -314,8 +463,8 @@ submersion_reactor_single_null.ipynb
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/submersion_reactor_single_null.ipynb>`__
 
 
-iter_from_2020_paper.ipynb
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+iter_from_2020_paper
+^^^^^^^^^^^^^^^^^^^^
 
 .. cadquery::
    :select: cadquery_object
@@ -326,7 +475,7 @@ iter_from_2020_paper.ipynb
    my_reactor = paramak.IterFrom2020PaperDiagram(
       rotation_angle=90
    )
-   
+
    cadquery_object = my_reactor.solid
 
 `Link to notebook <https://github.com/fusion-energy/paramak/blob/develop/examples/example_parametric_reactors/iter_from_2020_paper.ipynb>`__

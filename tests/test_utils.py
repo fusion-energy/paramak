@@ -41,9 +41,7 @@ class TestUtilityFunctions(unittest.TestCase):
         correct len and contains the correct types"""
 
         test_points = [(1, 1), (3, 1), (4, 2)]
-        test_shape = paramak.ExtrudeStraightShape(
-            points=test_points, distance=6, workplane="YZ"
-        )
+        test_shape = paramak.ExtrudeStraightShape(points=test_points, distance=6, workplane="YZ")
 
         edges = facet_wire(wire=test_shape.wire)
 
@@ -127,9 +125,7 @@ class TestUtilityFunctions(unittest.TestCase):
     def test_FaceAreaSelector_with_fillet_areas(self):
         """tests the filleting of a ExtrudeStraightShape"""
 
-        test_shape = paramak.ExtrudeStraightShape(
-            distance=5, points=[(1, 1), (2, 1), (2, 2)]
-        )
+        test_shape = paramak.ExtrudeStraightShape(distance=5, points=[(1, 1), (2, 1), (2, 2)])
 
         assert len(test_shape.areas) == 5
 

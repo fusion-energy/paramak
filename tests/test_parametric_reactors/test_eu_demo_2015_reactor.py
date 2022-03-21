@@ -95,9 +95,7 @@ class TestDemo2015Reactor(unittest.TestCase):
         ]
 
         os.system("rm *.stp")
-        my_reactor = paramak.EuDemoFrom2015PaperDiagram(
-            number_of_tf_coils=1, rotation_angle=90
-        )
+        my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1, rotation_angle=90)
         my_reactor.export_stp(filename=output_filenames)
         for output_filename in output_filenames:
             assert Path(output_filename).exists() is True

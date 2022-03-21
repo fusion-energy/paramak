@@ -12,6 +12,13 @@ class RotateCircleShape(Shape):
         radius: radius of the shape
         rotation_angle: The rotation_angle to use when revolving the solid
             (degrees). Defaults to 360.0.
+        color: the color to use when exporting the shape to CAD formats that
+            support color. A tuple of three floats each ranging between 0
+            and 1.
+        name: the name of the shape, used to name files when exporting and
+            as a legend in plots.
+        translate: distance to translate / move the shape by. Specified as
+            a vector of (X,Y,Z) directions.
     """
 
     def __init__(
@@ -20,6 +27,7 @@ class RotateCircleShape(Shape):
         rotation_angle: float = 360.0,
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.6),
         name: str = "rotatecircleshape",
+        translate: Optional[Tuple[float, float, float]] = None,
         **kwargs
     ):
 
@@ -28,6 +36,7 @@ class RotateCircleShape(Shape):
         self.rotation_angle = rotation_angle
         self.color = color
         self.name = name
+        self.translate = translate
 
     @property
     def rotation_angle(self):
@@ -52,11 +61,7 @@ class RotateCircleShape(Shape):
            A CadQuery solid: A 3D solid volume
         """
 
-        wire = (
-            Workplane(self.workplane)
-            .moveTo(self.points[0][0], self.points[0][1])
-            .circle(self.radius)
-        )
+        wire = Workplane(self.workplane).moveTo(self.points[0][0], self.points[0][1]).circle(self.radius)
 
         self.wire = wire
 
@@ -64,5 +69,9 @@ class RotateCircleShape(Shape):
 
         solid = self.rotate_solid(solid)
         solid = self.perform_boolean_operations(solid)
+
+        if self.translate:
+            solid = solid.translate(self.translate)
+
         self.solid = solid
         return solid

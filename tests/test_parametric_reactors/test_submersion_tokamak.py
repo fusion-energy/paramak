@@ -210,10 +210,7 @@ class TestSubmersionTokamak(unittest.TestCase):
             except BaseException:
                 pass
 
-        msg = (
-            "360 degree rotation may result in a "
-            + "Standard_ConstructionError or AttributeError"
-        )
+        msg = "360 degree rotation may result in a " + "Standard_ConstructionError or AttributeError"
         with pytest.warns(UserWarning, match=msg):
             warning_trigger()
 

@@ -10,7 +10,7 @@ defaults:
     shell: bash
 
 jobs:
-  black:
+  flake8:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,12 +25,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8
           flake8 . --show-source --statistics --max-line-length 120
-      - name: Install black
-        run: |
-          pip install black==22.1.0
-      - name: Run black
-        run: |
-          black .
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "[skip ci] Apply formatting changes"

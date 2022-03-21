@@ -38,9 +38,7 @@ class CapsuleVacuumVessel(RotateMixedShape):
         if not isinstance(value, (float, int)):
             raise ValueError("VacuumVessel.radius must be a number. Not", value)
         if value <= 0:
-            msg = (
-                "VacuumVessel.radius must be a positive number above 0. " f"Not {value}"
-            )
+            msg = "VacuumVessel.radius must be a positive number above 0. " f"Not {value}"
             raise ValueError(msg)
         self._radius = value
 
@@ -54,9 +52,7 @@ class CapsuleVacuumVessel(RotateMixedShape):
             msg = f"VacuumVessel.thickness must be a number. Not {value}"
             raise ValueError(msg)
         if value <= 0:
-            msg = (
-                f"VacuumVessel.thickness must be a positive number above 0. Not {value}"
-            )
+            msg = f"VacuumVessel.thickness must be a positive number above 0. Not {value}"
             raise ValueError(msg)
         self._thickness = value
 
@@ -72,15 +68,7 @@ class CapsuleVacuumVessel(RotateMixedShape):
         top_outer_y = bottom_outer_y + (4 * radius)
         top_outer_x = bottom_outer_x
         inner_r = radius - thickness
-        (
-            bottom_outer_x,
-            bottom_outer_y,
-            thickness,
-            radius,
-            top_outer_x,
-            top_outer_y,
-            inner_r,
-        ) = (
+        (bottom_outer_x, bottom_outer_y, thickness, radius, top_outer_x, top_outer_y, inner_r,) = (
             float(bottom_outer_x),
             float(bottom_outer_y),
             float(thickness),

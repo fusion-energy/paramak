@@ -6,9 +6,7 @@ import paramak
 class TestShellFS(unittest.TestCase):
     def setUp(self):
         # this is the shape that gets shelled
-        self.test_shape = paramak.PoloidalFieldCoil(
-            height=50, width=50, rotation_angle=90, center_point=(100, 100)
-        )
+        self.test_shape = paramak.PoloidalFieldCoil(height=50, width=50, rotation_angle=90, center_point=(100, 100))
 
     def test_creation_with_different_kinds(self):
 

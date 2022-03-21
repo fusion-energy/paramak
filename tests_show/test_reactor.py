@@ -10,9 +10,7 @@ class TestReactor(unittest.TestCase):
     jupyter_cadquery"""
 
     def setUp(self):
-        self.test_shape = paramak.RotateStraightShape(
-            points=[(0, 0), (0, 20), (20, 20)], name="test_shape"
-        )
+        self.test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], name="test_shape")
 
         self.test_shape2 = paramak.ExtrudeStraightShape(
             points=[(100, 100), (50, 100), (50, 50)], distance=20, name="test_shape2"
