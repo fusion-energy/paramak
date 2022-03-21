@@ -146,7 +146,9 @@ def diff_between_angles(angle_a: float, angle_b: float) -> float:
     return delta_mod
 
 
-def angle_between_two_points_on_circle(point_1, point_2, radius_of_circle):
+def angle_between_two_points_on_circle(
+    point_1: Tuple[float, float], point_2: Tuple[float, float], radius_of_circle: float
+):
 
     separation = distance_between_two_points(point_1, point_2)
     isos_tri_term = (2 * math.pow(radius_of_circle, 2) - math.pow(separation, 2)) / (2 * math.pow(radius_of_circle, 2))
@@ -165,8 +167,8 @@ def distance_between_two_points(point_a: Tuple[float, float], point_b: Tuple[flo
         float: distance between A and B
     """
 
-    xa, ya = point_a
-    xb, yb = point_b
+    xa, ya = point_a[0], point_a[1]
+    xb, yb = point_b[0], point_b[1]
     u_vec = [xb - xa, yb - ya]
     return np.linalg.norm(u_vec)
 
@@ -182,8 +184,8 @@ def extend(point_a: Tuple[float, float], point_b: Tuple[float, float], L: float)
         float, float: point C coordinates
     """
 
-    xa, ya = point_a
-    xb, yb = point_b
+    xa, ya = point_a[0], point_a[1]
+    xb, yb = point_b[0], point_b[1]
     u_vec = [xb - xa, yb - ya]
     u_vec /= np.linalg.norm(u_vec)
 
@@ -278,7 +280,7 @@ def rotate(origin: Tuple[float, float], point: Tuple[float, float], angle: float
     """
 
     ox, oy = origin
-    px, py = point
+    px, py = point[0], point[1]
 
     qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
     qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
@@ -456,9 +458,9 @@ def plotly_trace(
     text_values = []
 
     for i, point in enumerate(points):
-        text = "point number= {i} <br> x={point[0]} <br> y= {point[1]}"
+        text = f"point number= {i} <br> x={point[0]} <br> y= {point[1]}"
         if len(point) == 3:
-            text = text + "<br> z= {point[2]} <br>"
+            text = text + f"<br> z= {point[2]} <br>"
 
         text_values.append(text)
 

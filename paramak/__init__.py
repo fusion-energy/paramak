@@ -121,8 +121,10 @@ from .parametric_components.toroidal_field_coil_round_corners import (
     ToroidalFieldCoilRectangleRoundCorners,
 )
 
+from .parametric_components.constant_thickness_dome import ConstantThicknessDome
 from .parametric_components.vacuum_vessel import VacuumVessel
-from .parametric_components.dished_vacuum_vessel import DishedVacuumVessel
+
+# from .parametric_components.dished_vacuum_vessel import DishedVacuumVessel
 from .parametric_components.vacuum_vessel_inner_leg import VacuumVesselInnerLeg
 from .parametric_components.capsule_vacuum_vessel import CapsuleVacuumVessel
 from .parametric_components.hollow_cube import HollowCube
