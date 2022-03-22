@@ -117,8 +117,8 @@ class ConstantThicknessDome(RotateMixedShape):
 
         center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
 
-        big_sphere = cq.Workplane("XZ").sphere(radius_of_sphere + self.thickness).translate(center_point)
-        small_sphere = cq.Workplane("XZ").sphere(radius_of_sphere).translate(center_point)
+        big_sphere = cq.Workplane(self.workplane).sphere(radius_of_sphere + self.thickness).translate(center_point)
+        small_sphere = cq.Workplane(self.workplane).sphere(radius_of_sphere).translate(center_point)
 
         max_z = 1000
         min_radius = self.points[1][0]
@@ -126,6 +126,7 @@ class ConstantThicknessDome(RotateMixedShape):
         # min_z =
 
         outer_cylinder_cutter = RotateStraightShape(
+            workplane=self.workplane,
             points=(
                 (min_radius, -max_z),
                 (min_radius, max_z),
@@ -135,14 +136,17 @@ class ConstantThicknessDome(RotateMixedShape):
             translate=center_point,
         )
 
+        print("center_point", center_point)
+
         inner_cylinder_cutter = RotateStraightShape(
             points=(
-                (0, -max_z),
-                (0, max_z),
-                (self.points[1][0], max_z),
-                (self.points[1][0], -max_z),
+                (0, 0),
+                (0, self.points[0][1]),
+                (100, self.points[0][1]),
+                (100, 0),
             ),
-            translate=center_point,
+            # translate=center_point,
+            union=outer_cylinder_cutter,
         )
 
         solid = big_sphere.cut(outer_cylinder_cutter.solid)
