@@ -1,14 +1,6 @@
 from typing import Tuple
 import math
 from paramak import RotateMixedShape, RotateStraightShape
-from paramak import (
-    find_center_point_of_circle,
-    rotate,
-    distance_between_two_points,
-    angle_between_two_points_on_circle,
-    find_radius_of_circle,
-    extend,
-)
 import cadquery as cq
 
 
@@ -75,11 +67,14 @@ class ConstantThicknessDome(RotateMixedShape):
         Finds the XZ points joined by straight and circle connections that
         describe the 2D profile of the vessel shape.
         """
+
+        # Note these points are not used in the normal way when constructing
+        # the solid
         #
         #          6   -
         #          |       -
-        #          7  -       4
-        #                8       -
+        #          7  -       -
+        #                -       -
         #                  -       3
         #                    -     |
         #         cc          1 -- 2
@@ -89,82 +84,69 @@ class ConstantThicknessDome(RotateMixedShape):
         #          cp
         #     center point
         #
-        radius_of_sphere = ((self.chord_width * self.chord_width) / (8.0 * self.chord_height)) + (
-            self.chord_height / 2.0
+
+        radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (
+            8 * self.chord_height
         )
+
         center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
-        print("radius_of_sphere", radius_of_sphere)
-        print("center_point", center_point)
 
         point_7 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere, "straight")
-        point_6 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere + self.thickness, "straight")
-        print("point_6", point_6)
-        print("point_7", point_7)
 
-        point_1 = (self.chord_center[0] + self.chord_width / 2, self.chord_center[1], "straight")
-        print("point_1", point_1)
+        point_6 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere + self.thickness, "straight")
+
+        point_1 = (self.chord_center[0] + (self.chord_width / 2), self.chord_center[1], "straight")
 
         inner_tri_angle = math.atan((center_point[1] - self.chord_center[1]) / (self.chord_width / 2))
-        print("inner_tri_angle", inner_tri_angle)
+
         outer_tri_adj = math.cos(inner_tri_angle) * self.thickness
-        print("outer_tri_adj", outer_tri_adj)
 
         point_2 = (point_1[0] + outer_tri_adj, point_1[1], "straight")
-        print("point_2", point_2)
-        # self.points = None
 
         outer_tri_opp = math.sqrt(math.pow(self.thickness, 2) - math.pow(outer_tri_adj, 2))
-        print("outer_tri_opp", outer_tri_opp)
+
         point_3 = (point_2[0], point_2[1] + outer_tri_opp, "straight")
-        # point_3 = extend(point_1, center_point, -self.thickness)
-        # point_3 = (point_3[0], point_3[1], 'circle')
-        print("point_3", point_3)
 
-        # def rotate(origin: Tuple[float, float], point: Tuple[float, float], angle: float):
-        # angle_between_two_points_on_circle(point_1, point_2, radius_of_circle):
+        self.points = [point_1, point_2, point_3, point_6, point_7]
 
-        rotaion_angle_upper = angle_between_two_points_on_circle(point_6, point_3, radius_of_sphere + self.thickness)
-        print("rotaion_angle_upper", rotaion_angle_upper)
-        point_4 = rotate(center_point, point_3, rotaion_angle_upper)
-        point_4 = (point_4[0], point_4[1], "straight")
-        print("point_4", point_4)
+    def create_solid(self):
 
-        rotaion_angle_lower = angle_between_two_points_on_circle(point_1, point_7, radius_of_sphere)
-        point_8 = rotate(center_point, point_7, -rotaion_angle_lower)
-        point_8 = (point_8[0], point_8[1], "straight")
+        radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (
+            8 * self.chord_height
+        )
 
-        # point_2 = (point_3[0], point_1[1], 'straight')
-        # # for p in [point_1, point_2, point_3, point_4, point_6, point_7, point_8]:
-        # #     print(p)
+        center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
 
-        # self.points = [point_1, point_2, point_3, point_4, point_6, point_7, point_8]
-        # check if 2 == 3
-        self.points = [point_1, point_2, point_3, point_4, point_6, point_7, point_8]
+        big_sphere = cq.Workplane("XZ").sphere(radius_of_sphere + self.thickness).translate(center_point)
+        small_sphere = cq.Workplane("XZ").sphere(radius_of_sphere).translate(center_point)
 
-    # def create_solid(self):
+        max_z = 1000
+        min_radius = self.points[1][0]
+        max_radius = 1000
+        # min_z =
 
-    #     radius_of_sphere = ((self.chord_width * self.chord_width) / (8.0 * self.chord_height)) + (
-    #         self.chord_height / 2.0
-    #     )
-    #     center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
-    #     big_sphere = cq.Workplane("XZ").sphere(radius_of_sphere + self.thickness).translate(center_point)
-    #     small_sphere = cq.Workplane("XZ").sphere(radius_of_sphere).translate(center_point)
+        outer_cylinder_cutter = RotateStraightShape(
+            points=(
+                (min_radius, -max_z),
+                (min_radius, max_z),
+                (max_radius, max_z),
+                (max_radius, -max_z),
+            ),
+            translate=center_point,
+        )
 
-    #     max_z = max(
-    #         center_point[1] + radius_of_sphere + self.thickness, center_point[1] - (radius_of_sphere + self.thickness)
-    #     )
-    #     # min_z =
+        inner_cylinder_cutter = RotateStraightShape(
+            points=(
+                (0, -max_z),
+                (0, max_z),
+                (self.points[1][0], max_z),
+                (self.points[1][0], -max_z),
+            ),
+            translate=center_point,
+        )
 
-    #     cylinder_cutter = RotateStraightShape(
-    #         points=(
-    #             (10, -max_z),
-    #             (10, max_z),
-    #             (10 + 100, max_z),
-    #             (10 + 100, -max_z),
-    #         ),
-    #         translate=center_point,
-    #     )
+        solid = big_sphere.cut(outer_cylinder_cutter.solid)
 
-    #     solid = big_sphere.cut(cylinder_cutter.solid)
+        solid = solid.cut(inner_cylinder_cutter.solid)
 
-    #     self.solid = solid.cut(small_sphere)
+        self.solid = solid.cut(small_sphere)
