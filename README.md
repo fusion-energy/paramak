@@ -17,6 +17,9 @@
 [![Upload Python Package](https://github.com/fusion-energy/paramak/actions/workflows/python-publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/python-publish.yml)
 [![PyPI](https://img.shields.io/pypi/v/paramak?color=brightgreen&label=pypi&logo=grebrightgreenen&logoColor=green)](https://pypi.org/project/paramak/)
 
+[![anaconda-publish](https://github.com/fusion-energy/paramak/actions/workflows/anaconda-publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/anaconda-publish.yml)
+[![anaconda.org](https://anaconda.org/fusion-energy/paramak/badges/version.svg)](https://anaconda.org/fusion-energy/paramak)
+
 [![docker-publish-release](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml)
 
 [![DOI](https://zenodo.org/badge/269635577.svg)](https://zenodo.org/badge/latestdoi/269635577)
