@@ -7,8 +7,8 @@
 
 [![codecov](https://codecov.io/gh/fusion-energy/paramak/branch/main/graph/badge.svg)](https://codecov.io/gh/fusion-energy/paramak)
 
-[![Code Grade](https://www.code-inspector.com/project/25342/score/svg)](https://frontend.code-inspector.com/public/project/25342/paramak/dashboard)
-[![Code Grade](https://www.code-inspector.com/project/25342/status/svg)](https://frontend.code-inspector.com/public/project/25342/paramak/dashboard)
+[![Code Grade](https://api.codiga.io/project/25342/score/svg)](https://app.codiga.io/public/project/25342/paramak/dashboard)
+[![Code Grade](https://api.codiga.io/project/25342/status/svg)](https://app.codiga.io/public/project/25342/paramak/dashboard)
 
 
 [![Documentation Status](https://readthedocs.org/projects/paramak/badge/?version=main)](https://paramak.readthedocs.io/en/main/?badge=main)
