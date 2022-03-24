@@ -38,13 +38,13 @@ class TestReactor(unittest.TestCase):
 
         mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
         print(mats)
-        assert mats == ["mat_pf_coil", "mat_test_shape"]
+        assert mats == ["pf_coil", "test_shape"]
 
         vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_reactor.h5m")
         assert vols_and_mats == {
-            1: "mat_test_shape",
-            2: "mat_pf_coil",
-            3: "mat_pf_coil",
+            1: "test_shape",
+            2: "pf_coil",
+            3: "pf_coil",
         }
 
     def test_dagmc_h5m_export_mesh_size(self):

@@ -3,11 +3,9 @@
 # animation. Two animations are made, of of a 3D render and one of a wireframe
 # line drawing.
 
-import math
 import os
 
 # to run this example you will need all of the following packages installed
-import matplotlib.pyplot as plt
 import numpy as np
 import paramak
 
