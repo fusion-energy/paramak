@@ -281,18 +281,21 @@ class Shape:
                 raise ValueError(msg)
             for point in value:
                 if not isinstance(point, Iterable):
+                    msg = f"Shape.rotation_axis must be an iterable of iterables, not {type(point)}"
                     raise ValueError(msg)
                 if len(point) != 3:
+                    msg = f"Shape.rotation_axis must be an iterable of iterables with 3 entries, not {len(point)}"
                     raise ValueError(msg)
                 for val in point:
                     if not isinstance(val, (int, float)):
+                        msg = f"Shape.rotation_axis should be an iterable of iterables where the nested iterables are numerical, not {type(val)}"
                         raise ValueError(msg)
 
             if value[0] == value[1]:
-                msg = "The two points must be different"
+                msg = "The two coordinates points for rotation_axis must be different"
                 raise ValueError(msg)
         elif value is not None:
-            msg = "Shape.rotation_axis must be a list or a string or None"
+            msg = "Shape.rotation_axis must be an iterable or a string or None"
             raise ValueError(msg)
         self._rotation_axis = value
 
