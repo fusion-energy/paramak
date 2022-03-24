@@ -280,7 +280,7 @@ class Shape:
             if len(value) != 2:
                 raise ValueError(msg)
             for point in value:
-                if not isinstance(point, tuple):
+                if not isinstance(point, Iterable):
                     raise ValueError(msg)
                 if len(point) != 3:
                     raise ValueError(msg)
