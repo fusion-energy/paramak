@@ -20,17 +20,16 @@
 [![anaconda-publish](https://github.com/fusion-energy/paramak/actions/workflows/anaconda-publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/anaconda-publish.yml)
 [![anaconda.org](https://anaconda.org/fusion-energy/paramak/badges/version.svg)](https://anaconda.org/fusion-energy/paramak)
 
-
 [![docker-publish-release](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml/badge.svg)](https://github.com/fusion-energy/paramak/actions/workflows/docker_publish.yml)
 
 [![DOI](https://zenodo.org/badge/269635577.svg)](https://zenodo.org/badge/latestdoi/269635577)
 
 # Paramak
 
-The Paramak python package allows rapid production of 3D CAD models of fusion
-reactors. The purpose of the Paramak is to provide geometry for parametric
-studies. The paramak can create geometry in standard CAD formats such as STP,
-STL and Brep.
+Paramak python package allows rapid production of 3D CAD models and neutronics
+models of fusion reactors. The purpose of Paramak is to provide geometry for
+parametric studies. Paramak can create geometry in standard CAD formats such as
+STP, STL, BRep, HTML and DAGMC h5m.
 
 :point_right: [Documentation](https://paramak.readthedocs.io)
 
