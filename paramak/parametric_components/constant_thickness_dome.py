@@ -1,6 +1,6 @@
 from typing import Tuple
 import math
-from paramak import RotateMixedShape, RotateStraightShape
+from paramak import RotateMixedShape, RotateStraightShape, Shape, CuttingWedge
 import cadquery as cq
 
 
@@ -21,10 +21,12 @@ class ConstantThicknessDome(RotateMixedShape):
 
     def __init__(
         self,
-        thickness: float,
-        chord_center: Tuple[float, float],
-        chord_width: float,
-        chord_height: float,
+        thickness: float=10,
+        chord_center: Tuple[float, float]=(0,50),
+        chord_width: float= 100,
+        chord_height: float=40,
+        upper_or_lower: str='lower',
+        name='constant_thickness_dome',
         **kwargs,
     ):
 
@@ -32,8 +34,10 @@ class ConstantThicknessDome(RotateMixedShape):
         self.chord_center = chord_center
         self.chord_width = chord_width
         self.chord_height = chord_height
+        self.upper_or_lower = upper_or_lower
+        self.name = name
 
-        super().__init__(**kwargs)
+        super().__init__(name=name,**kwargs)
 
     @property
     def radius(self):
@@ -84,16 +88,37 @@ class ConstantThicknessDome(RotateMixedShape):
         #          cp
         #     center point
         #
+        #
+        #
+        # 
+        #         cc           1 -- 2
+        #                    -      |
+        #                  -        3
+        #                -       -
+        #          7  -       -
+        #          |       -
+        #          6   -
+        # 
 
-        radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (
-            8 * self.chord_height
-        )
 
-        center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
+        if self.chord_height * 2 >= self.chord_width:
+            raise ValueError('ConstantThicknessDome requires that the self.chord_width is at least 2 times as large as the chord height')
 
-        point_7 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere, "straight")
+        radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (8 * self.chord_height)
 
-        point_6 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere + self.thickness, "straight")
+        if self.upper_or_lower == 'upper':
+            center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
+            point_7 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere, "straight")
+            point_6 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere + self.thickness, "straight")
+            self.far_side = (center_point[0], center_point[1] - (radius_of_sphere+self.thickness))
+        elif self.upper_or_lower == 'lower':
+            center_point = (self.chord_center[0], self.chord_center[1] - self.chord_height + radius_of_sphere)
+            point_7 = (self.chord_center[0], self.chord_center[1] - radius_of_sphere, "straight")
+            point_6 = (self.chord_center[0], self.chord_center[1] - (radius_of_sphere + self.thickness), "straight")
+            self.far_side = (center_point[0], center_point[1] + radius_of_sphere+self.thickness)
+        elif self.upper_or_lower not in ['upper', 'lower']:
+            raise ValueError('self.upper_or_lower')
+
 
         point_1 = (self.chord_center[0] + (self.chord_width / 2), self.chord_center[1], "straight")
 
@@ -105,52 +130,55 @@ class ConstantThicknessDome(RotateMixedShape):
 
         outer_tri_opp = math.sqrt(math.pow(self.thickness, 2) - math.pow(outer_tri_adj, 2))
 
-        point_3 = (point_2[0], point_2[1] + outer_tri_opp, "straight")
+        if self.upper_or_lower == 'upper':
+            point_3 = (point_2[0], point_2[1] + outer_tri_opp, "straight")
+        elif self.upper_or_lower == 'lower':
+            point_3 = (point_2[0], point_2[1] - outer_tri_opp, "straight")
+        else:
+            raise ValueError('self.upper_or_lower')
 
         self.points = [point_1, point_2, point_3, point_6, point_7]
 
     def create_solid(self):
 
-        radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (
-            8 * self.chord_height
+        radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (8 * self.chord_height)
+
+        if self.upper_or_lower == 'upper':
+            center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
+            self.far_side = (center_point[0], center_point[1] - (radius_of_sphere+self.thickness))
+        elif self.upper_or_lower == 'lower':
+            center_point = (self.chord_center[0], self.chord_center[1] - self.chord_height + radius_of_sphere)
+            self.far_side = (center_point[0], center_point[1] + radius_of_sphere+self.thickness)
+        else:
+            raise ValueError('self.upper_or_lower')
+
+
+        big_sphere = cq.Workplane(self.workplane).moveTo(center_point[0],center_point[1]).sphere(radius_of_sphere + self.thickness)
+        small_sphere = cq.Workplane(self.workplane).moveTo(center_point[0],center_point[1]).sphere(radius_of_sphere)
+
+        points = (
+            (self.chord_center[0],self.chord_center[1]), # cc
+            (self.points[1][0],self.points[1][1]),  # point 2
+            (self.points[2][0],self.points[2][1]),  # point 3
+            (self.points[2][0]+radius_of_sphere,self.points[2][1]), # point 3 wider
+            (self.points[2][0]+radius_of_sphere,self.far_side[1]),
+            self.far_side
         )
-
-        center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
-
-        big_sphere = cq.Workplane(self.workplane).sphere(radius_of_sphere + self.thickness).translate(center_point)
-        small_sphere = cq.Workplane(self.workplane).sphere(radius_of_sphere).translate(center_point)
-
-        max_z = 1000
-        min_radius = self.points[1][0]
-        max_radius = 1000
-        # min_z =
-
         outer_cylinder_cutter = RotateStraightShape(
             workplane=self.workplane,
-            points=(
-                (min_radius, -max_z),
-                (min_radius, max_z),
-                (max_radius, max_z),
-                (max_radius, -max_z),
-            ),
-            translate=center_point,
+            points=points,
+            # translate=self.chord_center,
+            rotation_angle=self.rotation_angle
         )
+        cap = Shape()
+        cap.solid = big_sphere.cut(small_sphere)
 
-        print("center_point", center_point)
+        height = 2*(radius_of_sphere + center_point[1])
+        radius =  radius_of_sphere + center_point[0]
+        cutter =CuttingWedge(height=1000,radius=1000, rotation_angle=self.rotation_angle)
+        # cutter.show()
 
-        inner_cylinder_cutter = RotateStraightShape(
-            points=(
-                (0, 0),
-                (0, self.points[0][1]),
-                (100, self.points[0][1]),
-                (100, 0),
-            ),
-            # translate=center_point,
-            union=outer_cylinder_cutter,
-        )
+        cap.solid =cap.solid.intersect(cutter.solid)
+        cap.solid =cap.solid.cut(outer_cylinder_cutter.solid)
 
-        solid = big_sphere.cut(outer_cylinder_cutter.solid)
-
-        solid = solid.cut(inner_cylinder_cutter.solid)
-
-        self.solid = solid.cut(small_sphere)
+        self.solid = cap.solid
