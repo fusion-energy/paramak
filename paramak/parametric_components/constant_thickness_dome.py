@@ -6,32 +6,35 @@ import cadquery as cq
 
 class ConstantThicknessDome(RotateMixedShape):
     """A cylindrical vessel volume with constant thickness with a simple dished
-    head. This style of tank head has no knuckle radius or straight flange.
+    head. This style of tank head has no knuckle radius or straight flange. The
+    dished shape is made from a chord of a circle.
 
     Arguments:
-        dish_height: the height of the dish section. This is also the chord
-            heigh of the circle used to make the dish.
-        cylinder_height: the height of the cylindrical section of the vacuum
-            vessel.
-        center_point: the x,z coordinates of the center of the vessel
-        radius: the radius from which the centres of the vessel meets the outer
-            circumference.
-        thickness: the radial thickness of the vessel in cm.
+        thickness: the radial thickness of the dome.
+        chord_center_height: the vertical position of the chord center
+        chord_width: the width of the chord base
+        chord_height: the height of the chord which is also distance between
+            the chord_center_height and the inner surface of the dome
+        upper_or_lower: Curves the dish with a positive or negative direction
+            to allow the upper section or lower section of vacuum vessel
+            domes to be made.
+        name:
+        rotation_angle
     """
 
     def __init__(
         self,
         thickness: float = 10,
-        chord_center: Tuple[float, float] = (0, 50),
+        chord_center_height: float = 50,
         chord_width: float = 100,
         chord_height: float = 20,
-        upper_or_lower: str = "lower",
+        upper_or_lower: str = "upper",
         name="constant_thickness_dome",
         **kwargs,
     ):
 
         self.thickness = thickness
-        self.chord_center = chord_center
+        self.chord_center_height = chord_center_height
         self.chord_width = chord_width
         self.chord_height = chord_height
         self.upper_or_lower = upper_or_lower
@@ -107,6 +110,9 @@ class ConstantThicknessDome(RotateMixedShape):
         radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (
             8 * self.chord_height
         )
+        
+        # TODO set to 0 for now, add ability to shift the center of the chord left and right
+        self.chord_center = (0, self.chord_center_height)
 
         point_1 = (self.chord_center[0] + (self.chord_width / 2), self.chord_center[1], "straight")
 
@@ -137,10 +143,18 @@ class ConstantThicknessDome(RotateMixedShape):
         self.points = [point_1, point_2, point_3, point_6, point_7]
 
     def create_solid(self):
+        """Creates a rotated 3d solid using points with circular edges.
 
+        Returns:
+           A CadQuery solid: A 3D solid volume
+        """
+    
         radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (
             8 * self.chord_height
         )
+        
+        # TODO set to 0 for now, add ability to shift the center of the chord left and right
+        self.chord_center = (0, self.chord_center_height)
 
         if self.upper_or_lower == "upper":
             center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
@@ -158,20 +172,19 @@ class ConstantThicknessDome(RotateMixedShape):
         )
         small_sphere = cq.Workplane(self.workplane).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere)
 
-        points = (
-            (self.chord_center[0], self.chord_center[1]),  # cc
-            (self.points[1][0], self.points[1][1]),  # point 2
-            (self.points[2][0], self.points[2][1]),  # point 3
-            (self.points[2][0] + radius_of_sphere, self.points[2][1]),  # point 3 wider
-            (self.points[2][0] + radius_of_sphere, self.far_side[1]),
-            self.far_side,
-        )
         outer_cylinder_cutter = RotateStraightShape(
             workplane=self.workplane,
-            points=points,
-            # translate=self.chord_center,
-            rotation_angle=self.rotation_angle,
+            points=(
+                (self.chord_center[0], self.chord_center[1]),  # cc
+                (self.points[1][0], self.points[1][1]),  # point 2
+                (self.points[2][0], self.points[2][1]),  # point 3
+                (self.points[2][0] + radius_of_sphere, self.points[2][1]),  # point 3 wider
+                (self.points[2][0] + radius_of_sphere, self.far_side[1]),
+                self.far_side,
+            ),
+            rotation_angle=360,
         )
+
         cap = Shape()
         cap.solid = big_sphere.cut(small_sphere)
 
