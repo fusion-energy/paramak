@@ -17,18 +17,18 @@ class ConstantThicknessDome(RotateMixedShape):
         upper_or_lower: Curves the dish with a positive or negative direction
             to allow the upper section or lower section of vacuum vessel
             domes to be made.
-        name:
-        rotation_angle
+        name: the name of the shape, used in the graph legend and as a
+            filename prefix when exporting.
     """
 
     def __init__(
         self,
         thickness: float = 10,
-        chord_center_height: float = 50,
+        chord_center_height: float = 0,
         chord_width: float = 100,
         chord_height: float = 20,
         upper_or_lower: str = "upper",
-        name="constant_thickness_dome",
+        name: str = "constant_thickness_dome",
         **kwargs,
     ):
 
@@ -42,17 +42,30 @@ class ConstantThicknessDome(RotateMixedShape):
         super().__init__(name=name, **kwargs)
 
     @property
-    def radius(self):
-        return self._radius
+    def chord_width(self):
+        return self._chord_width
 
-    @radius.setter
-    def radius(self, value):
+    @chord_width.setter
+    def chord_width(self, value):
         if not isinstance(value, (float, int)):
-            raise ValueError("VacuumVessel.radius must be a number. Not", value)
+            raise ValueError("ConstantThicknessDome.chord_width must be a number. Not", value)
         if value <= 0:
-            msg = "VacuumVessel.radius must be a positive number above 0. " f"Not {value}"
+            msg = "ConstantThicknessDome.chord_width must be a positive number above 0. " f"Not {value}"
             raise ValueError(msg)
-        self._radius = value
+        self._chord_width = value
+
+    @property
+    def chord_height(self):
+        return self._chord_height
+
+    @chord_height.setter
+    def chord_height(self, value):
+        if not isinstance(value, (float, int)):
+            raise ValueError("ConstantThicknessDome.chord_height must be a number. Not", value)
+        if value <= 0:
+            msg = "ConstantThicknessDome.chord_height must be a positive number above 0. " f"Not {value}"
+            raise ValueError(msg)
+        self._chord_height = value
 
     @property
     def thickness(self):

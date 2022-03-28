@@ -1,4 +1,3 @@
-from typing import Tuple
 
 from paramak import RotateMixedShape, CenterColumnShieldCylinder, ConstantThicknessDome
 
@@ -8,13 +7,13 @@ class DishedVacuumVessel(RotateMixedShape):
     head. This style of tank head has no knuckle radius or straight flange.
 
     Arguments:
+        radius: the radius from which the centres of the vessel meets the outer
+            circumference.
+        center_point: the x,z coordinates of the center of the vessel
         dish_height: the height of the dish section. This is also the chord
             heigh of the circle used to make the dish.
         cylinder_height: the height of the cylindrical section of the vacuum
             vessel.
-        center_point: the x,z coordinates of the center of the vessel
-        radius: the radius from which the centres of the vessel meets the outer
-            circumference.
         thickness: the radial thickness of the vessel in cm.
     """
 
@@ -25,15 +24,17 @@ class DishedVacuumVessel(RotateMixedShape):
         dish_height: float=50,
         cylinder_height: float=400,
         thickness: float=15,
+        name: str='dished_vacuum_vessel',
         **kwargs,
     ):
         self.radius = radius
-        self.thickness = thickness
         self.center_point = center_point
         self.dish_height = dish_height
         self.cylinder_height = cylinder_height
+        self.thickness = thickness
+        self.name = name
 
-        super().__init__(**kwargs)
+        super().__init__(name=name, **kwargs)
 
     @property
     def radius(self):
@@ -62,33 +63,6 @@ class DishedVacuumVessel(RotateMixedShape):
             raise ValueError(msg)
         self._thickness = value
 
-    def find_points(self):
-        """
-        Finds the XZ points joined by straight and circle connections that
-        describe the 2D profile of the vessel shape.
-        """
-        #          Top of dished vv
-        #          6   -
-        #                  -
-        #          7  -       4
-        #                8       -
-        #                  -       3
-        #                    -     |
-        #                     9 -- 2
-        #                     |    |
-        #                     |    |
-        #          c,p        |    |
-        #                     |    |
-        #                     |    |
-        #                    10    1
-        #                    -     |
-        #                  -      15
-        #                11       -
-        #          12  -       14
-        #                  -
-        #          13   -
-        #          Bottom of dished vv
-        #
 
     def create_solid(self):
         """Creates a rotated 3d solid using points with circular edges.
@@ -96,15 +70,29 @@ class DishedVacuumVessel(RotateMixedShape):
         Returns:
            A CadQuery solid: A 3D solid volume
         """
-    
-    
-        #     radius: float,
-        # center_point: Tuple[float, float],
-        # dish_height: float,
-        # cylinder_height: float,
-        # thickness: float,
-        # **kwargs,
-        
+
+        #
+        #          -   -
+        #                  -
+        #          -  -       -
+        #                -       -
+        #                  -       -
+        #                    -     |
+        #                     |    |
+        #                     |    |
+        #                     |    |
+        #          c,p        |    |
+        #                     |    |
+        #                     |    |
+        #                     |    |
+        #                    -     |
+        #                  -      -
+        #                -       -
+        #          -  -       -
+        #                  -
+        #          -   -
+        #
+
         cylinder_section =CenterColumnShieldCylinder(
             height=self.cylinder_height,
             inner_radius=self.radius - self.thickness,
@@ -130,9 +118,6 @@ class DishedVacuumVessel(RotateMixedShape):
             upper_or_lower = "lower", 
             rotation_angle=self.rotation_angle
         )
-        
-        # lower_dome_section = 
-        
+
         upper_dome_section.solid = upper_dome_section.solid.union(cylinder_section.solid)
         self.solid = lower_dome_section.solid.union(upper_dome_section.solid)
-        # self.solid = lower_dome_section.solid
