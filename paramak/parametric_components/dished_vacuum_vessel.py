@@ -1,13 +1,6 @@
 from typing import Tuple
 
-from paramak import RotateMixedShape
-from paramak import (
-    find_center_point_of_circle,
-    rotate,
-    distance_between_two_points,
-    angle_between_two_points_on_circle,
-    find_radius_of_circle,
-)
+from paramak import RotateMixedShape, CenterColumnShieldCylinder, ConstantThicknessDome
 
 
 class DishedVacuumVessel(RotateMixedShape):
@@ -27,11 +20,11 @@ class DishedVacuumVessel(RotateMixedShape):
 
     def __init__(
         self,
-        radius: float,
-        center_point: Tuple[float, float],
-        dish_height: float,
-        cylinder_height: float,
-        thickness: float,
+        radius: float=300,
+        center_point: float=0,
+        dish_height: float=50,
+        cylinder_height: float=400,
+        thickness: float=15,
         **kwargs,
     ):
         self.radius = radius
@@ -96,3 +89,50 @@ class DishedVacuumVessel(RotateMixedShape):
         #          13   -
         #          Bottom of dished vv
         #
+
+    def create_solid(self):
+        """Creates a rotated 3d solid using points with circular edges.
+
+        Returns:
+           A CadQuery solid: A 3D solid volume
+        """
+    
+    
+        #     radius: float,
+        # center_point: Tuple[float, float],
+        # dish_height: float,
+        # cylinder_height: float,
+        # thickness: float,
+        # **kwargs,
+        
+        cylinder_section =CenterColumnShieldCylinder(
+            height=self.cylinder_height,
+            inner_radius=self.radius - self.thickness,
+            outer_radius=self.radius,
+            center_height=self.center_point,
+            rotation_angle=self.rotation_angle
+        )
+
+        upper_dome_section = ConstantThicknessDome(
+            thickness=self.thickness,
+            chord_center_height=self.center_point+0.5*self.cylinder_height,
+            chord_width=(self.radius - self.thickness)*2,
+            chord_height=self.dish_height,
+            upper_or_lower = "upper", 
+            rotation_angle=self.rotation_angle
+        )
+
+        lower_dome_section = ConstantThicknessDome(
+            thickness=self.thickness,
+            chord_center_height=self.center_point-0.5*self.cylinder_height,
+            chord_width=(self.radius - self.thickness)*2,
+            chord_height=self.dish_height,
+            upper_or_lower = "lower", 
+            rotation_angle=self.rotation_angle
+        )
+        
+        # lower_dome_section = 
+        
+        upper_dome_section.solid = upper_dome_section.solid.union(cylinder_section.solid)
+        self.solid = lower_dome_section.solid.union(upper_dome_section.solid)
+        # self.solid = lower_dome_section.solid

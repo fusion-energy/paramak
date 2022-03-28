@@ -1,4 +1,3 @@
-from typing import Tuple
 import math
 from paramak import RotateMixedShape, RotateStraightShape, Shape, CuttingWedge
 import cadquery as cq
@@ -120,7 +119,9 @@ class ConstantThicknessDome(RotateMixedShape):
             center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
             inner_tri_angle = math.atan((center_point[1] - self.chord_center[1]) / (self.chord_width / 2))
             outer_tri_adj = math.cos(inner_tri_angle) * self.thickness
-            point_2 = (point_1[0] + outer_tri_adj, point_1[1], "straight")
+            # original ending type
+            # point_2 = (point_1[0] + outer_tri_adj, point_1[1], "straight")
+            point_2 = (point_1[0] + self.thickness, point_1[1], "straight")
             outer_tri_opp = math.sqrt(math.pow(self.thickness, 2) - math.pow(outer_tri_adj, 2))
             point_7 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere, "straight")
             point_6 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere + self.thickness, "straight")
@@ -130,7 +131,9 @@ class ConstantThicknessDome(RotateMixedShape):
             center_point = (self.chord_center[0], self.chord_center[1] - self.chord_height + radius_of_sphere)
             inner_tri_angle = math.atan((center_point[1] - self.chord_center[1]) / (self.chord_width / 2))
             outer_tri_adj = math.cos(inner_tri_angle) * self.thickness
-            point_2 = (point_1[0] + outer_tri_adj, point_1[1], "straight")
+            # original ending type
+            # point_2 = (point_1[0] + outer_tri_adj, point_1[1], "straight")
+            point_2 = (point_1[0] + self.thickness, point_1[1], "straight")
             outer_tri_opp = math.sqrt(math.pow(self.thickness, 2) - math.pow(outer_tri_adj, 2))
             point_7 = (self.chord_center[0], self.chord_center[1] - radius_of_sphere, "straight")
             point_6 = (self.chord_center[0], self.chord_center[1] - (radius_of_sphere + self.thickness), "straight")
