@@ -20,11 +20,11 @@ class DishedVacuumVessel(RotateMixedShape):
 
     def __init__(
         self,
-        radius: float=300,
-        center_point: float=0,
-        dish_height: float=50,
-        cylinder_height: float=400,
-        thickness: float=15,
+        radius: float = 300,
+        center_point: float = 0,
+        dish_height: float = 50,
+        cylinder_height: float = 400,
+        thickness: float = 15,
         **kwargs,
     ):
         self.radius = radius
@@ -96,43 +96,42 @@ class DishedVacuumVessel(RotateMixedShape):
         Returns:
            A CadQuery solid: A 3D solid volume
         """
-    
-    
+
         #     radius: float,
         # center_point: Tuple[float, float],
         # dish_height: float,
         # cylinder_height: float,
         # thickness: float,
         # **kwargs,
-        
-        cylinder_section =CenterColumnShieldCylinder(
+
+        cylinder_section = CenterColumnShieldCylinder(
             height=self.cylinder_height,
             inner_radius=self.radius - self.thickness,
             outer_radius=self.radius,
             center_height=self.center_point,
-            rotation_angle=self.rotation_angle
+            rotation_angle=self.rotation_angle,
         )
 
         upper_dome_section = ConstantThicknessDome(
             thickness=self.thickness,
-            chord_center_height=self.center_point+0.5*self.cylinder_height,
-            chord_width=(self.radius - self.thickness)*2,
+            chord_center_height=self.center_point + 0.5 * self.cylinder_height,
+            chord_width=(self.radius - self.thickness) * 2,
             chord_height=self.dish_height,
-            upper_or_lower = "upper", 
-            rotation_angle=self.rotation_angle
+            upper_or_lower="upper",
+            rotation_angle=self.rotation_angle,
         )
 
         lower_dome_section = ConstantThicknessDome(
             thickness=self.thickness,
-            chord_center_height=self.center_point-0.5*self.cylinder_height,
-            chord_width=(self.radius - self.thickness)*2,
+            chord_center_height=self.center_point - 0.5 * self.cylinder_height,
+            chord_width=(self.radius - self.thickness) * 2,
             chord_height=self.dish_height,
-            upper_or_lower = "lower", 
-            rotation_angle=self.rotation_angle
+            upper_or_lower="lower",
+            rotation_angle=self.rotation_angle,
         )
-        
-        # lower_dome_section = 
-        
+
+        # lower_dome_section =
+
         upper_dome_section.solid = upper_dome_section.solid.union(cylinder_section.solid)
         self.solid = lower_dome_section.solid.union(upper_dome_section.solid)
         # self.solid = lower_dome_section.solid
