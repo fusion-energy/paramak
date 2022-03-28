@@ -109,7 +109,7 @@ class ConstantThicknessDome(RotateMixedShape):
         radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (
             8 * self.chord_height
         )
-        
+
         # TODO set to 0 for now, add ability to shift the center of the chord left and right
         self.chord_center = (0, self.chord_center_height)
 
@@ -151,11 +151,11 @@ class ConstantThicknessDome(RotateMixedShape):
         Returns:
            A CadQuery solid: A 3D solid volume
         """
-    
+
         radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (
             8 * self.chord_height
         )
-        
+
         # TODO set to 0 for now, add ability to shift the center of the chord left and right
         self.chord_center = (0, self.chord_center_height)
 
