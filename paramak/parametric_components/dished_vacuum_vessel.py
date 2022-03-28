@@ -98,25 +98,25 @@ class DishedVacuumVessel(RotateMixedShape):
             inner_radius=self.radius - self.thickness,
             outer_radius=self.radius,
             center_height=self.center_point,
-            rotation_angle=self.rotation_angle
+            rotation_angle=self.rotation_angle,
         )
 
         upper_dome_section = ConstantThicknessDome(
             thickness=self.thickness,
-            chord_center_height=self.center_point+0.5*self.cylinder_height,
-            chord_width=(self.radius - self.thickness)*2,
+            chord_center_height=self.center_point + 0.5 * self.cylinder_height,
+            chord_width=(self.radius - self.thickness) * 2,
             chord_height=self.dish_height,
-            upper_or_lower = "upper", 
-            rotation_angle=self.rotation_angle
+            upper_or_lower="upper",
+            rotation_angle=self.rotation_angle,
         )
 
         lower_dome_section = ConstantThicknessDome(
             thickness=self.thickness,
-            chord_center_height=self.center_point-0.5*self.cylinder_height,
-            chord_width=(self.radius - self.thickness)*2,
+            chord_center_height=self.center_point - 0.5 * self.cylinder_height,
+            chord_width=(self.radius - self.thickness) * 2,
             chord_height=self.dish_height,
-            upper_or_lower = "lower", 
-            rotation_angle=self.rotation_angle
+            upper_or_lower="lower",
+            rotation_angle=self.rotation_angle,
         )
 
         upper_dome_section.solid = upper_dome_section.solid.union(cylinder_section.solid)
