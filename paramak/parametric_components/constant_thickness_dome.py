@@ -124,33 +124,33 @@ class ConstantThicknessDome(RotateMixedShape):
         )
 
         # TODO set to 0 for now, add ability to shift the center of the chord left and right
-        self.chord_center = (0, self.chord_center_height)
+        chord_center = (0, self.chord_center_height)
 
-        point_1 = (self.chord_center[0] + (self.chord_width / 2), self.chord_center[1], "straight")
+        point_1 = (chord_center[0] + (self.chord_width / 2), chord_center[1], "straight")
 
         if self.upper_or_lower == "upper":
-            center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
-            inner_tri_angle = math.atan((center_point[1] - self.chord_center[1]) / (self.chord_width / 2))
+            center_point = (chord_center[0], chord_center[1] + self.chord_height - radius_of_sphere)
+            inner_tri_angle = math.atan((center_point[1] - chord_center[1]) / (self.chord_width / 2))
             outer_tri_adj = math.cos(inner_tri_angle) * self.thickness
             # original ending type
             # point_2 = (point_1[0] + outer_tri_adj, point_1[1], "straight")
             point_2 = (point_1[0] + self.thickness, point_1[1], "straight")
             outer_tri_opp = math.sqrt(math.pow(self.thickness, 2) - math.pow(outer_tri_adj, 2))
-            point_7 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere, "straight")
-            point_6 = (self.chord_center[0], self.chord_center[1] + radius_of_sphere + self.thickness, "straight")
-            self.far_side = (center_point[0], center_point[1] - (radius_of_sphere + self.thickness))
+            point_7 = (chord_center[0], chord_center[1] + radius_of_sphere, "straight")
+            point_6 = (chord_center[0], chord_center[1] + radius_of_sphere + self.thickness, "straight")
+            far_side = (center_point[0], center_point[1] - (radius_of_sphere + self.thickness))
             point_3 = (point_2[0], point_2[1] + outer_tri_opp, "straight")
         elif self.upper_or_lower == "lower":
-            center_point = (self.chord_center[0], self.chord_center[1] - self.chord_height + radius_of_sphere)
-            inner_tri_angle = math.atan((center_point[1] - self.chord_center[1]) / (self.chord_width / 2))
+            center_point = (chord_center[0], chord_center[1] - self.chord_height + radius_of_sphere)
+            inner_tri_angle = math.atan((center_point[1] - chord_center[1]) / (self.chord_width / 2))
             outer_tri_adj = math.cos(inner_tri_angle) * self.thickness
             # original ending type
             # point_2 = (point_1[0] + outer_tri_adj, point_1[1], "straight")
             point_2 = (point_1[0] + self.thickness, point_1[1], "straight")
             outer_tri_opp = math.sqrt(math.pow(self.thickness, 2) - math.pow(outer_tri_adj, 2))
-            point_7 = (self.chord_center[0], self.chord_center[1] - radius_of_sphere, "straight")
-            point_6 = (self.chord_center[0], self.chord_center[1] - (radius_of_sphere + self.thickness), "straight")
-            self.far_side = (center_point[0], center_point[1] + radius_of_sphere + self.thickness)
+            point_7 = (chord_center[0], chord_center[1] - radius_of_sphere, "straight")
+            point_6 = (chord_center[0], chord_center[1] - (radius_of_sphere + self.thickness), "straight")
+            far_side = (center_point[0], center_point[1] + radius_of_sphere + self.thickness)
             point_3 = (point_2[0], point_2[1] - outer_tri_opp, "straight")
         else:
             msg = f'upper_or_lower should be either "upper"  or "lower". Not {self.upper_or_lower}'
@@ -170,14 +170,14 @@ class ConstantThicknessDome(RotateMixedShape):
         )
 
         # TODO set to 0 for now, add ability to shift the center of the chord left and right
-        self.chord_center = (0, self.chord_center_height)
+        chord_center = (0, self.chord_center_height)
 
         if self.upper_or_lower == "upper":
-            center_point = (self.chord_center[0], self.chord_center[1] + self.chord_height - radius_of_sphere)
-            self.far_side = (center_point[0], center_point[1] - (radius_of_sphere + self.thickness))
+            center_point = (chord_center[0], chord_center[1] + self.chord_height - radius_of_sphere)
+            far_side = (center_point[0], center_point[1] - (radius_of_sphere + self.thickness))
         elif self.upper_or_lower == "lower":
-            center_point = (self.chord_center[0], self.chord_center[1] - self.chord_height + radius_of_sphere)
-            self.far_side = (center_point[0], center_point[1] + radius_of_sphere + self.thickness)
+            center_point = (chord_center[0], chord_center[1] - self.chord_height + radius_of_sphere)
+            far_side = (center_point[0], center_point[1] + radius_of_sphere + self.thickness)
         else:
             raise ValueError("self.upper_or_lower")
 
@@ -191,12 +191,12 @@ class ConstantThicknessDome(RotateMixedShape):
         outer_cylinder_cutter = RotateStraightShape(
             workplane=self.workplane,
             points=(
-                (self.chord_center[0], self.chord_center[1]),  # cc
+                (chord_center[0], chord_center[1]),  # cc
                 (self.points[1][0], self.points[1][1]),  # point 2
                 (self.points[2][0], self.points[2][1]),  # point 3
                 (self.points[2][0] + radius_of_sphere, self.points[2][1]),  # point 3 wider
-                (self.points[2][0] + radius_of_sphere, self.far_side[1]),
-                self.far_side,
+                (self.points[2][0] + radius_of_sphere, far_side[1]),
+                far_side,
             ),
             rotation_angle=360,
         )
