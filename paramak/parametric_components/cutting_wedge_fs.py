@@ -94,7 +94,10 @@ class CuttingWedgeFS(CuttingWedge):
     def find_radius_height(self):
         shape = self.shape
         if shape.rotation_angle == 360:
-            msg = "cutting_wedge cannot be created, rotation_angle must be " "less than 360 degrees"
+            msg = (
+                "cutting_wedge cannot be created, the shapes rotation_angle "
+                f"must be less than 360 degrees. shape.rotation_angle is {shape.rotation_angle}"
+            )
             raise ValueError(msg)
         shape_points = shape.points
         if hasattr(shape, "radius") and len(shape_points) == 1:

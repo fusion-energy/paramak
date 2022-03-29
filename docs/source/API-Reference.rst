@@ -1516,6 +1516,43 @@ CapsuleVacuumVessel()
    :show-inheritance:
 
 
+DishedVacuumVessel()
+^^^^^^^^^^^^^^^^^^^^
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.DishedVacuumVessel(rotation_angle=180)
+
+   cadquery_object = my_component.solid
+
+.. image:: https://user-images.githubusercontent.com/8583900/160503281-3aabf145-22b0-4953-bc4f-3f75a6696b5e.png
+
+.. automodule:: paramak.parametric_components.dished_vacuum_vessel
+   :members:
+   :show-inheritance:
+
+ConstantThicknessDome()
+^^^^^^^^^^^^^^^^^^^^^^^
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.ConstantThicknessDome(rotation_angle=180)
+
+   cadquery_object = my_component.solid
+
+.. image:: https://user-images.githubusercontent.com/8583900/160503286-71a6d771-1d47-476e-a0cf-85fb94c9389c.png
+
+.. automodule:: paramak.parametric_components.constant_thickness_dome
+   :members:
+   :show-inheritance:
+
+
+
+
 Other components
 ----------------
 
