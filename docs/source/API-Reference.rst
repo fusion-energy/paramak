@@ -1523,7 +1523,7 @@ DishedVacuumVessel()
    :gridsize: 0
 
    import paramak
-   my_component = paramak.DishedVacuumVessel(rotatation_angle=180)
+   my_component = paramak.DishedVacuumVessel(rotation_angle=180)
 
    cadquery_object = my_component.solid
 
@@ -1540,7 +1540,7 @@ ConstantThicknessDome()
    :gridsize: 0
 
    import paramak
-   my_component = paramak.ConstantThicknessDome(rotatation_angle=180)
+   my_component = paramak.ConstantThicknessDome(rotation_angle=180)
 
    cadquery_object = my_component.solid
 
