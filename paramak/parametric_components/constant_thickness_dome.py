@@ -50,7 +50,7 @@ class ConstantThicknessDome(RotateMixedShape):
         if not isinstance(value, (float, int)):
             raise ValueError("ConstantThicknessDome.chord_width must be a number. Not", value)
         if value <= 0:
-            msg = "ConstantThicknessDome.chord_width must be a positive number above 0. " f"Not {value}"
+            msg = f"ConstantThicknessDome.chord_width must be a positive number above 0. Not {value}"
             raise ValueError(msg)
         self._chord_width = value
 
@@ -63,7 +63,7 @@ class ConstantThicknessDome(RotateMixedShape):
         if not isinstance(value, (float, int)):
             raise ValueError("ConstantThicknessDome.chord_height must be a number. Not", value)
         if value <= 0:
-            msg = "ConstantThicknessDome.chord_height must be a positive number above 0. " f"Not {value}"
+            msg = f"ConstantThicknessDome.chord_height must be a positive number above 0. Not {value}"
             raise ValueError(msg)
         self._chord_height = value
 
