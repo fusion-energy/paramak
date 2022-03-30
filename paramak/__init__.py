@@ -121,6 +121,7 @@ from .parametric_components.toroidal_field_coil_round_corners import (
     ToroidalFieldCoilRectangleRoundCorners,
 )
 
+from .parametric_components.domed_extrusion import DomedExtrusion
 from .parametric_components.constant_thickness_dome import ConstantThicknessDome
 from .parametric_components.vacuum_vessel import VacuumVessel
 
