@@ -119,10 +119,9 @@ class ExtrudeCircleShape(Shape):
         solid = wire.extrude(until=extrusion_distance, both=self.extrude_both)
 
         solid = self.rotate_solid(solid)
-        from paramak import CuttingWedge
 
-        cutting_wedge = CuttingWedge(radius=100, height=10, rotation_angle=-self.rotation_angle)
-        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+        # todo add a wedge_cut to perform_boolean_operations
+        solid = self.perform_boolean_operations(solid)
 
         if self.translate:
             solid = solid.translate(self.translate)
