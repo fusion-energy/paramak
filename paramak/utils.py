@@ -632,7 +632,7 @@ def export_wire_to_html(
             tolerance=tolerance,
         )
 
-        points = paramak.utils.extract_points_from_edges(edges=edges, view_plane=view_plane)
+        points = extract_points_from_edges(edges=edges, view_plane=view_plane)
 
         fig.add_trace(plotly_trace(points=points, mode=mode, name="edge " + str(counter)))
 
@@ -648,7 +648,7 @@ def export_wire_to_html(
             # this is for cadquery generated solids
             edges = wire.val().Edges()
 
-        points = paramak.utils.extract_points_from_edges(edges=edges, view_plane=view_plane)
+        points = extract_points_from_edges(edges=edges, view_plane=view_plane)
 
         fig.add_trace(plotly_trace(points=points, mode="markers", name="points on wire " + str(counter)))
 
@@ -694,9 +694,9 @@ def convert_circle_to_spline(
     solid = solid.moveTo(p_0[0], p_0[1]).threePointArc(p_1, p_2)
     edge = solid.vals()[0]
 
-    new_edge = paramak.utils.transform_curve(edge, tolerance=tolerance)
+    new_edge = transform_curve(edge, tolerance=tolerance)
 
-    points = paramak.utils.extract_points_from_edges(edges=new_edge, view_plane="XZ")
+    points = extract_points_from_edges(edges=new_edge, view_plane="XZ")
 
     return points
 
