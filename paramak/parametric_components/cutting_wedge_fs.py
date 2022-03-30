@@ -15,9 +15,10 @@ class CuttingWedgeFS(CuttingWedge):
             height and radius of the wedge
     """
 
-    def __init__(self, shape, **kwargs):
+    def __init__(self, shape, name="cuttingwedge", **kwargs):
         self.shape = shape
-        super().__init__(height=self.height, radius=self.radius, **kwargs)
+        super().__init__(name=name, height=self.height, radius=self.radius, **kwargs)
+        self.name = name
 
     @property
     def shape(self):
