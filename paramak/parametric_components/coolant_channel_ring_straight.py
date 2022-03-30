@@ -16,6 +16,7 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         ring radius: radius of coolant channel ring.
         start_angle: angle at which the first channel in the ring is placed.
             Defaults to 0.0.
+        extrusion_start_offset: the postion to start the extrusion from
         rotation_axis (str, optional): azimuthal axis around which the separate
             coolant channels are placed.
         workplane (str, optional): plane in which the cross-sections of the
@@ -28,19 +29,23 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         channel_radius: float,
         number_of_coolant_channels: int,
         ring_radius: float,
+        extrusion_start_offset: float = 0.0,
         start_angle: Optional[float] = 0.0,
         **kwargs
     ) -> None:
 
         # passes in None for points but provides a find points method that
         # provides the points when required
-        super().__init__(points=None, distance=height, radius=channel_radius, **kwargs)
+        super().__init__(
+            points=None, extrusion_start_offset=extrusion_start_offset, distance=height, radius=channel_radius, **kwargs
+        )
 
         self.height = height
         self.channel_radius = channel_radius
         self.number_of_coolant_channels = number_of_coolant_channels
         self.ring_radius = ring_radius
         self.start_angle = start_angle
+        self.extrusion_start_offset = extrusion_start_offset
 
     @property
     def azimuth_placement_angle(self):
