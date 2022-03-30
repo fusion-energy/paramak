@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 from cadquery import Workplane
 
 from paramak import Shape
-from paramak.utils import calculate_wedge_cut, patch_workplane
+from paramak.utils import patch_workplane
 
 patch_workplane()
 
@@ -12,6 +12,7 @@ class ExtrudeCircleShape(Shape):
     """Extrudes a circular 3d CadQuery solid from a central point and a radius
 
     Args:
+        points: the coordinates of the center of the circle face to extrude from
         distance: the extrusion distance to use
         radius: radius of the shape.
         extrusion_start_offset:
@@ -30,6 +31,7 @@ class ExtrudeCircleShape(Shape):
 
     def __init__(
         self,
+        points: Tuple[float, float],
         distance: float,
         radius: float,
         extrusion_start_offset: float = 0.0,
@@ -45,8 +47,9 @@ class ExtrudeCircleShape(Shape):
         **kwargs
     ):
 
-        super().__init__(color=color, name=name, **kwargs)
+        super().__init__(points=points, color=color, name=name, **kwargs)
 
+        self.points = points
         self.distance = distance
         self.radius = radius
         self.extrusion_start_offset = extrusion_start_offset
@@ -116,7 +119,9 @@ class ExtrudeCircleShape(Shape):
         solid = wire.extrude(until=extrusion_distance, both=self.extrude_both)
 
         solid = self.rotate_solid(solid)
-        cutting_wedge = calculate_wedge_cut(self)
+        from paramak import CuttingWedge
+
+        cutting_wedge = CuttingWedge(radius=100, height=10, rotation_angle=-self.rotation_angle)
         solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
 
         if self.translate:

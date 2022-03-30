@@ -9,6 +9,7 @@ class RotateCircleShape(Shape):
     """Rotates a circular 3d CadQuery solid from a central point and a radius
 
     Args:
+        points: the coordinates of the center of the circle face to rotate from
         radius: radius of the shape
         rotation_angle: The rotation_angle to use when revolving the solid
             (degrees). Defaults to 360.0.
@@ -23,6 +24,7 @@ class RotateCircleShape(Shape):
 
     def __init__(
         self,
+        points: Tuple[float, float],
         radius: float,
         rotation_angle: float = 360.0,
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.6),
@@ -31,7 +33,9 @@ class RotateCircleShape(Shape):
         **kwargs
     ):
 
-        super().__init__(color=color, name=name, **kwargs)
+        super().__init__(points=points, color=color, name=name, **kwargs)
+
+        self.points = points
         self.radius = radius
         self.rotation_angle = rotation_angle
         self.color = color
