@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 from cadquery import Workplane
 
 from paramak import Shape
-from paramak.utils import patch_workplane
+from paramak.utils import patch_workplane, calculate_wedge_cut
 
 patch_workplane()
 
@@ -120,7 +120,10 @@ class ExtrudeCircleShape(Shape):
 
         solid = self.rotate_solid(solid)
 
-        # todo add a wedge_cut to perform_boolean_operations
+        cutting_wedge = calculate_wedge_cut(self)
+        # TODO this rotation finds the wrong radius and height, it is not clear
+        # how to do a rotation cut on an extruded shape
+        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
         solid = self.perform_boolean_operations(solid)
 
         if self.translate:
