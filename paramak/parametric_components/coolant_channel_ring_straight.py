@@ -32,7 +32,9 @@ class CoolantChannelRingStraight(ExtrudeCircleShape):
         **kwargs
     ) -> None:
 
-        super().__init__(distance=height, radius=channel_radius, **kwargs)
+        # passes in None for points but provides a find points method that
+        # provides the points when required
+        super().__init__(points=None, distance=height, radius=channel_radius, **kwargs)
 
         self.height = height
         self.channel_radius = channel_radius
