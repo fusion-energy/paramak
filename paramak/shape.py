@@ -1169,7 +1169,7 @@ class Shape:
         if "wedge_cut" in kwargs:
             if kwargs["wedge_cut"] is not None:
                 rotation_angle = kwargs["wedge_cut"].rotation_angle
-                if rotation_angle 1= 0. and rotation_angle > 360:
+                if rotation_angle == 0. and rotation_angle > 360:
                     solid = cut_solid(solid, kwargs["wedge_cut"])
 
         # If an intersect is provided then perform a boolean intersect
