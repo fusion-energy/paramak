@@ -1,7 +1,7 @@
 import math
 from paramak import Shape, CuttingWedge
 
-# from paramak.utils import calculate_wedge_cut
+from paramak.utils import get_largest_dimension
 import cadquery as cq
 
 
@@ -38,31 +38,22 @@ class DomedExtrusion(Shape):
         self.upper_or_lower = upper_or_lower
         self.workplane = workplane
         self.rotation_angle = rotation_angle
-        # self.rotation_axis = rotation_axis
 
-    # def find_points(self):
-    #     """
-    #     Finds the XZ points joined by straight and circle connections that
-    #     describe the 2D profile of the vessel shape.
-    #     """
-
-    # Note these points are not used in the normal way when constructing
-    # the solid
     #
-    #
-    #
-    #          p3  -
+    #          -  -
     #                -
     #                  -
     #                    -
-    #         cc          p2
+    #         cc          -
     #     chord center    |
     #                     |
     #         sc          |
     #     sphere center   |
     #                     |
-    #        p0 ----------p1
+    #        ------------- workplane offset
     #
+    #
+    #     workplane 0
 
     def create_solid(self):
         """Creates a rotated 3d solid using points with circular edges.
@@ -70,9 +61,6 @@ class DomedExtrusion(Shape):
         Returns:
            A CadQuery solid: A 3D solid volume
         """
-
-        # so a positive offset moves extrusion further from axis of azimuthal
-        # placement rotation
 
         self.points = [(0, self.extrusion_start_offset)]
 
@@ -109,16 +97,13 @@ class DomedExtrusion(Shape):
 
         solid = self.rotate_solid(solid)
 
-        print(solid.val().BoundingBox())
-        # cutting_wedge = calculate_wedge_cut(self)
-        cutting_wedge = CuttingWedge(height=1000, radius=1000)
+        solid = solid.union(sphere)
+        
+        largest_dim = get_largest_dimension(solid)
+        cutting_wedge = CuttingWedge(height=largest_dim*2, radius=largest_dim*2, rotation_angle=360.-self.rotation_angle)
+        
         solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
 
-        # if self.translate:
-        #     solid = solid.translate(self.translate)
-
-        self.solid = solid.union(sphere)
-        # self.solid = solid.cut(sphereorg)
-        # self.solid = solid
+        self.solid = solid
 
         return solid
