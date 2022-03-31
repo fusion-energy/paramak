@@ -40,8 +40,8 @@ class TestSingleNullSubmersionTokamak(unittest.TestCase):
     def test_input_variable_names(self):
         """tests that the number of inputs variables is correct"""
 
-        assert len(self.test_reactor.input_variables.keys()) == 29
-        assert len(self.test_reactor.input_variable_names) == 29
+        assert len(self.test_reactor.input_variables.keys()) == 28
+        assert len(self.test_reactor.input_variable_names) == 28
 
     def test_single_null_submersion_tokamak_with_pf_and_tf_coils(self):
         """Creates a SingleNullSubmersionTokamak with pf and tf coils and checks

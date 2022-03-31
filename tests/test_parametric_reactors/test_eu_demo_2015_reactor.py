@@ -12,8 +12,8 @@ class TestDemo2015Reactor(unittest.TestCase):
         """tests that the number of inputs variables is correct"""
 
         my_reactor = paramak.EuDemoFrom2015PaperDiagram(number_of_tf_coils=1)
-        assert len(my_reactor.input_variables.keys()) == 5
-        assert len(my_reactor.input_variable_names) == 5
+        assert len(my_reactor.input_variables.keys()) == 4
+        assert len(my_reactor.input_variable_names) == 4
 
     def test_plasma_construction(self):
         """Creates the plasma part of the EuDemoFrom2015PaperDiagram and checks

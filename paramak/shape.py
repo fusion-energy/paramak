@@ -18,8 +18,9 @@ from paramak.utils import (
     facet_wire,
     get_hash,
     intersect_solid,
-    plotly_trace,
     union_solid,
+    get_largest_dimension,
+    get_bounding_box,
 )
 
 
@@ -214,38 +215,27 @@ class Shape:
         self._union = value
 
     @property
-    def largest_dimension(self):
-        """Calculates a bounding box for the Shape and returns the largest
-        absolute value of the largest dimension of the bounding box"""
-        largest_dimension = 0
-        if isinstance(self.solid, (Compound, shapes.Solid)):
-            for solid in self.solid.Solids():
-                bound_box = solid.BoundingBox()
-                largest_dimension = max(
-                    abs(bound_box.xmax),
-                    abs(bound_box.xmin),
-                    abs(bound_box.ymax),
-                    abs(bound_box.ymin),
-                    abs(bound_box.zmax),
-                    abs(bound_box.zmin),
-                    largest_dimension,
-                )
-        else:
-            bound_box = self.solid.val().BoundingBox()
-            largest_dimension = max(
-                abs(bound_box.xmax),
-                abs(bound_box.xmin),
-                abs(bound_box.ymax),
-                abs(bound_box.ymin),
-                abs(bound_box.zmax),
-                abs(bound_box.zmin),
-            )
-        self.largest_dimension = largest_dimension
-        return largest_dimension
+    def largest_dimension(self) -> float:
+        """Calculates the distance from (0, 0, 0) to the furthest part of
+        the geometry. This distance is returned as an positive value."""
+
+        return get_largest_dimension(self.solid)
 
     @largest_dimension.setter
     def largest_dimension(self, value):
         self._largest_dimension = value
+
+    @property
+    def bounding_box(self):
+        """Calculates a bounding box for the Shape and returns the coordinates of
+           the corners lower-left and upper-right. This function is useful when
+           creating OpenMC mesh tallies as the bounding box is required in this form"""
+
+        return get_bounding_box(self.solid)
+
+    @bounding_box.setter
+    def bounding_box(self, value):
+        self._bounding_box = value
 
     @property
     def workplane(self):
