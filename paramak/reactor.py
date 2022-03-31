@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from cadquery import exporters
 
 import paramak
-from paramak.utils import _replace, get_hash
+from paramak.utils import _replace, get_hash, get_bounding_box, get_largest_dimension
 
 
 class Reactor:
@@ -25,12 +25,6 @@ class Reactor:
             graveyard_offset.
         graveyard_offset: The distance between the graveyard and the largest
             shape. If graveyard_size is set the this is ignored.
-        largest_shapes: Identifying the shape(s) with the largest size in each
-            dimension (x,y,z) can speed up the production of the graveyard.
-            Defaults to None which finds the largest shapes by looping through
-            all the shapes and creating bounding boxes. This can be slow and
-            that is why the user is able to provide a subsection of shapes to
-            use when calculating the graveyard dimensions.
     """
 
     def __init__(
@@ -38,19 +32,16 @@ class Reactor:
         shapes_and_components: List[paramak.Shape] = [],
         graveyard_size: float = 20_000.0,
         graveyard_offset: Optional[float] = None,
-        largest_shapes: Optional[List[paramak.Shape]] = None,
     ):
 
         self.shapes_and_components = shapes_and_components
         self.graveyard_offset = graveyard_offset
         self.graveyard_size = graveyard_size
-        self.largest_shapes = largest_shapes
 
         self.input_variable_names: List[str] = [
             # 'shapes_and_components', commented out to avoid calculating solids
             "graveyard_size",
             "graveyard_offset",
-            "largest_shapes",
         ]
 
         self.stp_filenames: List[str] = []
@@ -99,31 +90,22 @@ class Reactor:
     def largest_dimension(self):
         """Calculates a bounding box for the Reactor and returns the largest
         absolute value of the largest dimension of the bounding box"""
-        largest_dimension = 0
-
-        if self.largest_shapes is None:
-            shapes_to_bound = self.shapes_and_components
-        else:
-            shapes_to_bound = self.largest_shapes
-
-        for component in shapes_to_bound:
-            largest_dimension = max(largest_dimension, component.largest_dimension)
-        # self._largest_dimension = largest_dimension
-        return largest_dimension
+        return get_largest_dimension(self.solid)
 
     @largest_dimension.setter
     def largest_dimension(self, value):
         self._largest_dimension = value
 
     @property
-    def largest_shapes(self):
-        return self._largest_shapes
+    def bounding_box(self):
+        """Calculates returns the largest distance from the origin (0,0,0)
+        coordinate as an absolute value"""
 
-    @largest_shapes.setter
-    def largest_shapes(self, value):
-        if not isinstance(value, (list, tuple, type(None))):
-            raise ValueError("paramak.Reactor.largest_shapes should be a " "list of paramak.Shapes")
-        self._largest_shapes = value
+        return get_bounding_box(self.solid)
+
+    @bounding_box.setter
+    def bounding_box(self, value):
+        self._bounding_box = value
 
     @property
     def shapes_and_components(self):

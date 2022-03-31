@@ -12,35 +12,48 @@ import numpy as np
 import plotly.graph_objects as go
 from cadquery import importers
 from OCP.GCPnts import GCPnts_QuasiUniformDeflection
+from cadquery.occ_impl import shapes
 
 
-def largest_dimension(solid):
-    """Calculates a bounding box for the Shape and returns the largest
-    absolute value of the largest dimension of the bounding box"""
+def get_bounding_box(solid) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:
+    """Calculates a bounding box for the Shape and returns the coordinates of
+    the corners lower-left and upper-right. This function is useful when
+    creating OpenMC mesh tallies as the bounding box is required in this form"""
 
-    largest_dimension = 0
     if isinstance(solid, (cq.Compound, shapes.Solid)):
-        for solid in solid.Solids():
-            bound_box = solid.BoundingBox()
-            largest_dimension = max(
-                abs(bound_box.xmax),
-                abs(bound_box.xmin),
-                abs(bound_box.ymax),
-                abs(bound_box.ymin),
-                abs(bound_box.zmax),
-                abs(bound_box.zmin),
-                largest_dimension,
-            )
+
+        bound_box = solid.BoundingBox()
+        # previous method lopped though solids but this is not needed
+        # for single_solid in solid.Solids():
+        #     bound_box = single_solid.BoundingBox()
+
     else:
         bound_box = solid.val().BoundingBox()
-        largest_dimension = max(
-            abs(bound_box.xmax),
-            abs(bound_box.xmin),
-            abs(bound_box.ymax),
-            abs(bound_box.ymin),
-            abs(bound_box.zmax),
-            abs(bound_box.zmin),
+
+    lower_left = (bound_box.xmin, bound_box.ymin, bound_box.zmin)
+
+    upper_right = (bound_box.xmax, bound_box.ymax, bound_box.zmax)
+
+    return (lower_left, upper_right)
+
+
+def get_largest_dimension(solid):
+    """Calculates returns the largest distance from the origin (0,0,0)
+    coordinate as an absolute value"""
+
+    bounding_box = get_bounding_box(solid)
+
+    largest_dimension = max(
+        (
+            abs(bounding_box[0][0]),
+            abs(bounding_box[0][1]),
+            abs(bounding_box[0][2]),
+            abs(bounding_box[1][0]),
+            abs(bounding_box[1][1]),
+            abs(bounding_box[1][2]),
         )
+    )
+
     return largest_dimension
 
 

@@ -12,7 +12,16 @@ from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-from paramak.utils import _replace, cut_solid, facet_wire, get_hash, intersect_solid, union_solid, largest_dimension
+from paramak.utils import (
+    _replace,
+    cut_solid,
+    facet_wire,
+    get_hash,
+    intersect_solid,
+    union_solid,
+    get_largest_dimension,
+    get_bounding_box,
+)
 
 
 class Shape:
@@ -210,11 +219,22 @@ class Shape:
         """Calculates a bounding box for the Shape and returns the largest
         absolute value of the largest dimension of the bounding box"""
 
-        return largest_dimension(self.solid)
+        return get_largest_dimension(self.solid)
 
     @largest_dimension.setter
     def largest_dimension(self, value):
         self._largest_dimension = value
+
+    @property
+    def bounding_box(self):
+        """Calculates returns the largest distance from the origin (0,0,0)
+        coordinate as an absolute value"""
+
+        return get_bounding_box(self.solid)
+
+    @bounding_box.setter
+    def bounding_box(self, value):
+        self._bounding_box = value
 
     @property
     def workplane(self):
