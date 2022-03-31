@@ -32,8 +32,8 @@ class TestSubmersionTokamak(unittest.TestCase):
     def test_input_variable_names(self):
         """tests that the number of inputs variables is correct"""
 
-        assert len(self.test_reactor.input_variables.keys()) == 29
-        assert len(self.test_reactor.input_variable_names) == 29
+        assert len(self.test_reactor.input_variables.keys()) == 28
+        assert len(self.test_reactor.input_variable_names) == 28
 
     def test_svg_creation(self):
         """Creates a SubmersionTokamak and checks that an svg file of the
