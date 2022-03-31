@@ -88,8 +88,8 @@ class Reactor:
 
     @property
     def largest_dimension(self):
-        """Calculates a bounding box for the Reactor and returns the largest
-        absolute value of the largest dimension of the bounding box"""
+        """Calculates the distance from (0, 0, 0) to the furthest part of
+        the geometry. This distance is returned as an positive value."""
         return get_largest_dimension(self.solid)
 
     @largest_dimension.setter
@@ -98,8 +98,9 @@ class Reactor:
 
     @property
     def bounding_box(self):
-        """Calculates returns the largest distance from the origin (0,0,0)
-        coordinate as an absolute value"""
+        """Calculates a bounding box for the Shape and returns the coordinates of
+           the corners lower-left and upper-right. This function is useful when
+           creating OpenMC mesh tallies as the bounding box is required in this form"""
 
         return get_bounding_box(self.solid)
 

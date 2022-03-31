@@ -215,9 +215,9 @@ class Shape:
         self._union = value
 
     @property
-    def largest_dimension(self):
-        """Calculates a bounding box for the Shape and returns the largest
-        absolute value of the largest dimension of the bounding box"""
+    def largest_dimension(self) -> float:
+        """Calculates the distance from (0, 0, 0) to the furthest part of
+        the geometry. This distance is returned as an positive value."""
 
         return get_largest_dimension(self.solid)
 
