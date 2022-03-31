@@ -12,15 +12,7 @@ from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 import paramak
-from paramak.utils import (
-    _replace,
-    cut_solid,
-    facet_wire,
-    get_hash,
-    intersect_solid,
-    plotly_trace,
-    union_solid,
-)
+from paramak.utils import _replace, cut_solid, facet_wire, get_hash, intersect_solid, union_solid, largest_dimension
 
 
 class Shape:
@@ -217,31 +209,8 @@ class Shape:
     def largest_dimension(self):
         """Calculates a bounding box for the Shape and returns the largest
         absolute value of the largest dimension of the bounding box"""
-        largest_dimension = 0
-        if isinstance(self.solid, (Compound, shapes.Solid)):
-            for solid in self.solid.Solids():
-                bound_box = solid.BoundingBox()
-                largest_dimension = max(
-                    abs(bound_box.xmax),
-                    abs(bound_box.xmin),
-                    abs(bound_box.ymax),
-                    abs(bound_box.ymin),
-                    abs(bound_box.zmax),
-                    abs(bound_box.zmin),
-                    largest_dimension,
-                )
-        else:
-            bound_box = self.solid.val().BoundingBox()
-            largest_dimension = max(
-                abs(bound_box.xmax),
-                abs(bound_box.xmin),
-                abs(bound_box.ymax),
-                abs(bound_box.ymin),
-                abs(bound_box.zmax),
-                abs(bound_box.zmin),
-            )
-        self.largest_dimension = largest_dimension
-        return largest_dimension
+
+        return largest_dimension(self.solid)
 
     @largest_dimension.setter
     def largest_dimension(self, value):
