@@ -13,8 +13,6 @@ import plotly.graph_objects as go
 from cadquery import importers
 from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 
-from paramak import CuttingWedgeFS
-
 
 def largest_dimension(solid):
     """Calculates a bounding box for the Shape and returns the largest
@@ -343,6 +341,8 @@ def calculate_wedge_cut(self):
 
     if self.rotation_angle == 360:
         return None
+
+    from paramak import CuttingWedgeFS
 
     cutting_wedge = CuttingWedgeFS(self)
     return cutting_wedge
