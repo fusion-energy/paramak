@@ -12,8 +12,49 @@ import numpy as np
 import plotly.graph_objects as go
 from cadquery import importers
 from OCP.GCPnts import GCPnts_QuasiUniformDeflection
+from cadquery.occ_impl import shapes
 
-import paramak
+
+def get_bounding_box(solid) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:
+    """Calculates a bounding box for the Shape and returns the coordinates of
+    the corners lower-left and upper-right. This function is useful when
+    creating OpenMC mesh tallies as the bounding box is required in this form"""
+
+    if isinstance(solid, (cq.Compound, shapes.Solid)):
+
+        bound_box = solid.BoundingBox()
+        # previous method lopped though solids but this is not needed
+        # for single_solid in solid.Solids():
+        #     bound_box = single_solid.BoundingBox()
+
+    else:
+        bound_box = solid.val().BoundingBox()
+
+    lower_left = (bound_box.xmin, bound_box.ymin, bound_box.zmin)
+
+    upper_right = (bound_box.xmax, bound_box.ymax, bound_box.zmax)
+
+    return (lower_left, upper_right)
+
+
+def get_largest_dimension(solid):
+    """Calculates the distance from (0, 0, 0) to the furthest part of
+        the geometry. This distance is returned as an positive value."""
+
+    bounding_box = get_bounding_box(solid)
+
+    largest_dimension = max(
+        (
+            abs(bounding_box[0][0]),
+            abs(bounding_box[0][1]),
+            abs(bounding_box[0][2]),
+            abs(bounding_box[1][0]),
+            abs(bounding_box[1][1]),
+            abs(bounding_box[1][2]),
+        )
+    )
+
+    return largest_dimension
 
 
 def transform_curve(edge, tolerance: Optional[float] = 1e-3):
@@ -314,7 +355,9 @@ def calculate_wedge_cut(self):
     if self.rotation_angle == 360:
         return None
 
-    cutting_wedge = paramak.CuttingWedgeFS(self)
+    from paramak import CuttingWedgeFS
+
+    cutting_wedge = CuttingWedgeFS(self)
     return cutting_wedge
 
 
@@ -632,7 +675,7 @@ def export_wire_to_html(
             tolerance=tolerance,
         )
 
-        points = paramak.utils.extract_points_from_edges(edges=edges, view_plane=view_plane)
+        points = extract_points_from_edges(edges=edges, view_plane=view_plane)
 
         fig.add_trace(plotly_trace(points=points, mode=mode, name="edge " + str(counter)))
 
@@ -648,7 +691,7 @@ def export_wire_to_html(
             # this is for cadquery generated solids
             edges = wire.val().Edges()
 
-        points = paramak.utils.extract_points_from_edges(edges=edges, view_plane=view_plane)
+        points = extract_points_from_edges(edges=edges, view_plane=view_plane)
 
         fig.add_trace(plotly_trace(points=points, mode="markers", name="points on wire " + str(counter)))
 
@@ -694,9 +737,9 @@ def convert_circle_to_spline(
     solid = solid.moveTo(p_0[0], p_0[1]).threePointArc(p_1, p_2)
     edge = solid.vals()[0]
 
-    new_edge = paramak.utils.transform_curve(edge, tolerance=tolerance)
+    new_edge = transform_curve(edge, tolerance=tolerance)
 
-    points = paramak.utils.extract_points_from_edges(edges=new_edge, view_plane="XZ")
+    points = extract_points_from_edges(edges=new_edge, view_plane="XZ")
 
     return points
 

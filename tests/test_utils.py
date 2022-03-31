@@ -12,10 +12,96 @@ from paramak.utils import (
     find_center_point_of_circle,
     plotly_trace,
     find_radius_of_circle,
+    get_bounding_box,
+    get_largest_dimension,
 )
+import cadquery as cq
 
 
 class TestUtilityFunctions(unittest.TestCase):
+    """"tests the utility functions"""
+
+    def test_bounding_box_with_single_shape_at_origin(self):
+        """checks the type and values of the bounding box returned"""
+
+        test_sphere = cq.Workplane("XY").moveTo(0, 0).sphere(10)
+
+        bounding_box = get_bounding_box(test_sphere)
+
+        assert len(bounding_box) == 2
+        assert len(bounding_box[0]) == 3
+        assert len(bounding_box[1]) == 3
+        assert bounding_box[0][0] == -10
+        assert bounding_box[0][1] == -10
+        assert bounding_box[0][2] == -10
+        assert bounding_box[1][0] == 10
+        assert bounding_box[1][1] == 10
+        assert bounding_box[1][2] == 10
+
+    def test_bounding_box_with_single_shape(self):
+        """checks the type and values of the bounding box returned"""
+
+        test_sphere = cq.Workplane("XY").moveTo(100, 50).sphere(10)
+
+        bounding_box = get_bounding_box(test_sphere)
+
+        assert len(bounding_box) == 2
+        assert len(bounding_box[0]) == 3
+        assert len(bounding_box[1]) == 3
+        assert bounding_box[0][0] == 90
+        assert bounding_box[0][1] == 40
+        assert bounding_box[0][2] == -10
+        assert bounding_box[1][0] == 110
+        assert bounding_box[1][1] == 60
+        assert bounding_box[1][2] == 10
+
+    def test_bounding_box_with_compound(self):
+        """checks the type and values of the bounding box returned"""
+
+        test_sphere_1 = cq.Workplane("XY").moveTo(100, 50).sphere(10)
+        test_sphere_2 = cq.Workplane("XY").moveTo(-100, -50).sphere(10)
+
+        both_shapes = cq.Compound.makeCompound([test_sphere_1.val(), test_sphere_2.val()])
+
+        bounding_box = get_bounding_box(both_shapes)
+
+        assert len(bounding_box) == 2
+        assert len(bounding_box[0]) == 3
+        assert len(bounding_box[1]) == 3
+        assert bounding_box[0][0] == -110
+        assert bounding_box[0][1] == -60
+        assert bounding_box[0][2] == -10
+        assert bounding_box[1][0] == 110
+        assert bounding_box[1][1] == 60
+        assert bounding_box[1][2] == 10
+
+    def test_largest_dimension_with_single_solid_at_origin(self):
+
+        test_sphere = cq.Workplane("XY").moveTo(0, 0).sphere(10)
+
+        largest_dimension = get_largest_dimension(test_sphere)
+
+        assert largest_dimension == 10
+
+    def test_largest_dimension_with_single_solid(self):
+
+        test_sphere = cq.Workplane("XY").moveTo(100, 0).sphere(10)
+
+        largest_dimension = get_largest_dimension(test_sphere)
+
+        assert largest_dimension == 110
+
+    def test_largest_dimension_with_compound(self):
+
+        test_sphere_1 = cq.Workplane("XY").moveTo(100, 50).sphere(10)
+        test_sphere_2 = cq.Workplane("XY").moveTo(-200, -50).sphere(10)
+
+        both_shapes = cq.Compound.makeCompound([test_sphere_1.val(), test_sphere_2.val()])
+
+        largest_dimension = get_largest_dimension(both_shapes)
+
+        assert largest_dimension == 210
+
     def test_convert_circle_to_spline(self):
         """Tests the conversion of 3 points on a circle into points on a spline
         curve."""

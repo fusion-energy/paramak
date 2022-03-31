@@ -28,8 +28,8 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
     def test_input_variable_names(self):
         """tests that the number of inputs variables is correct"""
 
-        assert len(self.test_reactor.input_variables.keys()) == 13
-        assert len(self.test_reactor.input_variable_names) == 13
+        assert len(self.test_reactor.input_variables.keys()) == 12
+        assert len(self.test_reactor.input_variable_names) == 12
 
     def test_stp_file_creation(self):
         """Exports a step file and checks that it was saved successfully"""
