@@ -32,8 +32,8 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
     def test_input_variable_names(self):
         """tests that the number of inputs variables is correct"""
 
-        assert len(self.test_reactor.input_variables.keys()) == 17
-        assert len(self.test_reactor.input_variable_names) == 17
+        assert len(self.test_reactor.input_variables.keys()) == 16
+        assert len(self.test_reactor.input_variable_names) == 16
 
     def test_creation(self):
         """Creates a ball reactor using the CenterColumnStudyReactor parametric_reactor and checks
