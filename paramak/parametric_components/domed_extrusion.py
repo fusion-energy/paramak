@@ -67,43 +67,94 @@ class DomedExtrusion(Shape):
         radius_of_sphere = ((math.pow(self.radius * 2, 2)) + (4.0 * math.pow(self.dome_height, 2))) / (
             8 * self.dome_height
         )
+        print("radius_of_sphere", radius_of_sphere)
 
-        cutting_cylinder_wire = (
-            cq.Workplane(self.workplane).workplane(offset=-self.extrusion_start_offset).circle(radius_of_sphere)
-        )
-        cutting_cylinder = cutting_cylinder_wire.extrude(until=-self.extrusion_distance, both=False)
-
-        if self.upper_or_lower == "upper":
-            center_of_sphere_offset = -(
-                self.extrusion_distance - self.extrusion_start_offset + radius_of_sphere - self.dome_height
-            )
-        elif self.upper_or_lower == "lower":
-            center_of_sphere_offset = (
-                -self.extrusion_distance - self.extrusion_start_offset + radius_of_sphere - self.dome_height
-            )
+        if self.upper_or_lower == "upper" and self.extrusion_distance > 0:
+            center_of_sphere_offset = self.extrusion_start_offset - self.dome_height + radius_of_sphere
+        elif self.upper_or_lower == "upper" and self.extrusion_distance < 0:
+            center_of_sphere_offset = self.extrusion_start_offset + self.dome_height - radius_of_sphere
+        elif self.upper_or_lower == "lower" and self.extrusion_distance > 0:
+            # not sure why this one is not working
+            print(self.extrusion_start_offset, self.extrusion_distance, self.dome_height, radius_of_sphere)
+            center_of_sphere_offset = self.extrusion_start_offset - self.dome_height + radius_of_sphere
+        elif self.upper_or_lower == "lower" and self.extrusion_distance < 0:
+            center_of_sphere_offset = self.extrusion_start_offset + self.dome_height - radius_of_sphere
         else:
-            raise ValueError("self.upper_or_lower")
+            raise ValueError(f"upper_or_lower should be set to 'upper' or 'lower' not {self.upper_or_lower}")
 
         sphere = (
             cq.Workplane(self.workplane)
             .workplane(offset=center_of_sphere_offset)
             .sphere(radius_of_sphere)
-            .cut(cutting_cylinder)
+            # .cut(cutting_cylinder)
         )
 
-        wire = cq.Workplane(self.workplane).workplane(offset=-self.extrusion_start_offset).circle(self.radius)
+        wire_cutter = (
+            cq.Workplane(self.workplane).workplane(offset=self.extrusion_start_offset).circle(radius_of_sphere)
+        )
 
-        solid = wire.extrude(until=-self.extrusion_distance, both=False)
+        # negative or not
+        solid_cutter = wire_cutter.extrude(until=self.extrusion_distance * radius_of_sphere * 3, both=False)
+
+        wire = cq.Workplane(self.workplane).workplane(offset=self.extrusion_start_offset).circle(self.radius)
+
+        solid = wire.extrude(until=self.extrusion_distance, both=False)
 
         solid = self.rotate_solid(solid)
 
-        solid = solid.union(sphere)
-        
-        largest_dim = get_largest_dimension(solid)
-        cutting_wedge = CuttingWedge(height=largest_dim*2, radius=largest_dim*2, rotation_angle=360.-self.rotation_angle)
-        
-        solid = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+        solid = sphere.cut(solid_cutter).union(solid)
 
-        self.solid = solid
+        # solid = sphere.cut(solid)
+
+        # largest_dim = get_largest_dimension(solid)
+        # cutting_wedge = CuttingWedge(height=largest_dim*2, radius=largest_dim*2, rotation_angle=360.-self.rotation_angle)
+
+        # solid2 = self.perform_boolean_operations(solid, wedge_cut=cutting_wedge)
+
+        self.solid = solid  # cutting_cylinder.union(sphere)
 
         return solid
+
+
+# pool0 = paramak.DomedExtrusion(
+#     extrusion_distance = 100,
+#     dome_height = 50,
+#     extrusion_start_offset = -20,
+#     radius=200,
+#     name='lower_20',
+#     upper_or_lower='lower',
+#     rotation_angle=180
+# )
+# pool0.export_html_3d(f'{pool0.name}.html')
+
+# pool1 = paramak.DomedExtrusion(
+#     extrusion_distance = 100,
+#     dome_height = 50,
+#     extrusion_start_offset = -20,
+#     radius=200,
+#     name='upper_20',
+#     upper_or_lower='upper',
+#     rotation_angle=180
+# )
+# pool1.export_html_3d(f'{pool1.name}.html')
+
+# pool2 = paramak.DomedExtrusion(
+#     extrusion_distance = -100,
+#     dome_height = 50,
+#     extrusion_start_offset = -20,
+#     radius=200,
+#     name='upper_-20',
+#     upper_or_lower='upper',
+#     rotation_angle=180
+# )
+# pool2.export_html_3d(f'{pool2.name}.html')
+
+# pool3 = paramak.DomedExtrusion(
+#     extrusion_distance = -100,
+#     dome_height = 50,
+#     extrusion_start_offset = -20,
+#     radius=200,
+#     name='lower_-20',
+#     upper_or_lower='lower',
+#     rotation_angle=180
+# )
