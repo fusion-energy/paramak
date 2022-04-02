@@ -19,7 +19,7 @@ import cadquery as cq
 
 
 class TestUtilityFunctions(unittest.TestCase):
-    """"tests the utility functions"""
+    """ "tests the utility functions"""
 
     def test_bounding_box_with_single_shape_at_origin(self):
         """checks the type and values of the bounding box returned"""

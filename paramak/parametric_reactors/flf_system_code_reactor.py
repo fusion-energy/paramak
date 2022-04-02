@@ -77,19 +77,16 @@ class FlfSystemCodeReactor(paramak.Reactor):
         inner_wall = self.inner_blanket_radius + self.blanket_thickness + self.blanket_vv_gap
         lower_vv = paramak.RotateStraightShape(
             points=[
+                (inner_wall, 0),
                 (
                     inner_wall,
-                    (-self.blanket_height / 2.0) - self.lower_blanket_thickness,
-                ),
-                (
-                    inner_wall,
-                    (-self.blanket_height / 2.0) - (self.lower_blanket_thickness + self.lower_vv_thickness),
+                    self.lower_vv_thickness,
                 ),
                 (
                     0,
-                    (-self.blanket_height / 2.0) - (self.lower_blanket_thickness + self.lower_vv_thickness),
+                    self.lower_vv_thickness,
                 ),
-                (0, (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
+                (0, 0),
             ],
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),
@@ -98,13 +95,10 @@ class FlfSystemCodeReactor(paramak.Reactor):
 
         lower_blanket = paramak.RotateStraightShape(
             points=[
-                (inner_wall, -self.blanket_height / 2.0),
-                (
-                    inner_wall,
-                    (-self.blanket_height / 2.0) - self.lower_blanket_thickness,
-                ),
-                (0, (-self.blanket_height / 2.0) - self.lower_blanket_thickness),
-                (0, -self.blanket_height / 2.0),
+                (inner_wall, self.lower_vv_thickness),
+                (inner_wall, self.lower_vv_thickness + self.lower_blanket_thickness),
+                (0, self.lower_vv_thickness + self.lower_blanket_thickness),
+                (0, self.lower_vv_thickness),
             ],
             rotation_angle=self.rotation_angle,
             color=(0.0, 1.0, 0.498),
@@ -113,6 +107,7 @@ class FlfSystemCodeReactor(paramak.Reactor):
 
         blanket = paramak.CenterColumnShieldCylinder(
             height=self.blanket_height,
+            center_height=self.lower_vv_thickness + self.lower_blanket_thickness + 0.5 * self.blanket_height,
             inner_radius=self.inner_blanket_radius,
             outer_radius=self.blanket_thickness + self.inner_blanket_radius,
             rotation_angle=self.rotation_angle,
@@ -121,54 +116,88 @@ class FlfSystemCodeReactor(paramak.Reactor):
             name="blanket",
         )
 
-        upper_blanket = paramak.RotateStraightShape(
+        upper_vv = paramak.RotateStraightShape(
             points=[
-                (inner_wall, (self.blanket_height / 2.0) + self.upper_vv_thickness),
+                (inner_wall, self.lower_vv_thickness + self.lower_blanket_thickness + self.blanket_height),
                 (
                     inner_wall,
-                    (self.blanket_height / 2.0) + self.upper_vv_thickness + self.upper_blanket_thickness,
+                    self.lower_vv_thickness
+                    + self.lower_blanket_thickness
+                    + self.blanket_height
+                    + self.upper_vv_thickness,
                 ),
                 (
                     0,
-                    (self.blanket_height / 2.0) + self.upper_vv_thickness + self.upper_blanket_thickness,
+                    self.lower_vv_thickness
+                    + self.lower_blanket_thickness
+                    + self.blanket_height
+                    + self.upper_vv_thickness,
                 ),
-                (0, (self.blanket_height / 2.0) + self.upper_vv_thickness),
-            ],
-            rotation_angle=self.rotation_angle,
-            color=(0.0, 1.0, 0.498),
-            name="upper_blanket",
-        )
-
-        upper_vv = paramak.RotateStraightShape(
-            points=[
-                (inner_wall, self.blanket_height / 2.0),
-                (inner_wall, (self.blanket_height / 2.0) + self.upper_vv_thickness),
-                (0, (self.blanket_height / 2.0) + self.upper_vv_thickness),
-                (0, self.blanket_height / 2.0),
+                (0, self.lower_vv_thickness + self.lower_blanket_thickness + self.blanket_height),
             ],
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),
             name="upper_vacuum_vessel",
         )
 
-        vac_ves = paramak.RotateStraightShape(
+        upper_blanket = paramak.RotateStraightShape(
             points=[
                 (
-                    inner_wall + self.vv_thickness,
-                    (self.blanket_height / 2.0) + self.upper_vv_thickness + self.upper_blanket_thickness,
+                    inner_wall,
+                    self.lower_vv_thickness
+                    + self.lower_blanket_thickness
+                    + self.blanket_height
+                    + self.upper_vv_thickness,
                 ),
                 (
                     inner_wall,
-                    (self.blanket_height / 2.0) + self.upper_vv_thickness + self.upper_blanket_thickness,
+                    self.lower_vv_thickness
+                    + self.lower_blanket_thickness
+                    + self.blanket_height
+                    + self.upper_vv_thickness
+                    + self.upper_blanket_thickness,
                 ),
                 (
+                    0,
+                    self.lower_vv_thickness
+                    + self.lower_blanket_thickness
+                    + self.blanket_height
+                    + self.upper_vv_thickness
+                    + self.upper_blanket_thickness,
+                ),
+                (
+                    0,
+                    self.lower_vv_thickness
+                    + self.lower_blanket_thickness
+                    + self.blanket_height
+                    + self.upper_vv_thickness,
+                ),
+            ],
+            rotation_angle=self.rotation_angle,
+            color=(0.0, 1.0, 0.498),
+            name="upper_blanket",
+        )
+
+        vac_ves = paramak.RotateStraightShape(
+            points=[
+                (inner_wall, 0),
+                (
                     inner_wall,
-                    -(self.blanket_height / 2.0) - self.lower_blanket_thickness - self.lower_vv_thickness,
+                    self.lower_vv_thickness
+                    + self.lower_blanket_thickness
+                    + self.blanket_height
+                    + self.upper_vv_thickness
+                    + self.upper_blanket_thickness,
                 ),
                 (
                     inner_wall + self.vv_thickness,
-                    -(self.blanket_height / 2.0) - self.lower_blanket_thickness - self.lower_vv_thickness,
+                    self.lower_vv_thickness
+                    + self.lower_blanket_thickness
+                    + self.blanket_height
+                    + self.upper_vv_thickness
+                    + self.upper_blanket_thickness,
                 ),
+                (inner_wall + self.vv_thickness, 0),
             ],
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),

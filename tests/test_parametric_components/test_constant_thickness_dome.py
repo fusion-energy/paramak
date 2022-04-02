@@ -1,18 +1,19 @@
-
 import unittest
 import pytest
 
 import paramak
 
+
 class TestConstantThicknessDome(unittest.TestCase):
     """tests for the ConstantThicknessDome class"""
+
     def test_volume_increases_with_rotation_angle(self):
         """Tests that the volume doubles when rotation angle doubles"""
 
         test_shape_1 = paramak.ConstantThicknessDome(rotation_angle=180)
         test_shape_2 = paramak.ConstantThicknessDome(rotation_angle=360)
-        
-        assert test_shape_1.volume() *2 == pytest.approx(test_shape_2.volume())
+
+        assert test_shape_1.volume() * 2 == pytest.approx(test_shape_2.volume())
 
     def test_upper_lower_flips_points(self):
         """Checks that the coords of the flips version are the same for p1 and p2

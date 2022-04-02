@@ -228,8 +228,8 @@ class Shape:
     @property
     def bounding_box(self):
         """Calculates a bounding box for the Shape and returns the coordinates of
-           the corners lower-left and upper-right. This function is useful when
-           creating OpenMC mesh tallies as the bounding box is required in this form"""
+        the corners lower-left and upper-right. This function is useful when
+        creating OpenMC mesh tallies as the bounding box is required in this form"""
 
         return get_bounding_box(self.solid)
 
