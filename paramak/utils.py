@@ -39,7 +39,7 @@ def get_bounding_box(solid) -> Tuple[Tuple[float, float, float], Tuple[float, fl
 
 def get_largest_dimension(solid):
     """Calculates the distance from (0, 0, 0) to the furthest part of
-        the geometry. This distance is returned as an positive value."""
+    the geometry. This distance is returned as an positive value."""
 
     bounding_box = get_bounding_box(solid)
 

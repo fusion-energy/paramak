@@ -1,4 +1,3 @@
-
 from paramak import RotateMixedShape, CenterColumnShieldCylinder, ConstantThicknessDome
 
 
@@ -19,12 +18,12 @@ class DishedVacuumVessel(RotateMixedShape):
 
     def __init__(
         self,
-        radius: float=300,
-        center_point: float=0,
-        dish_height: float=50,
-        cylinder_height: float=400,
-        thickness: float=15,
-        name: str='dished_vacuum_vessel',
+        radius: float = 300,
+        center_point: float = 0,
+        dish_height: float = 50,
+        cylinder_height: float = 400,
+        thickness: float = 15,
+        name: str = "dished_vacuum_vessel",
         **kwargs,
     ):
         self.radius = radius
@@ -63,7 +62,6 @@ class DishedVacuumVessel(RotateMixedShape):
             raise ValueError(msg)
         self._thickness = value
 
-
     def create_solid(self):
         """Creates a rotated 3d solid using points with circular edges.
 
@@ -93,7 +91,7 @@ class DishedVacuumVessel(RotateMixedShape):
         #          -   -
         #
 
-        cylinder_section =CenterColumnShieldCylinder(
+        cylinder_section = CenterColumnShieldCylinder(
             height=self.cylinder_height,
             inner_radius=self.radius - self.thickness,
             outer_radius=self.radius,
