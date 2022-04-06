@@ -82,15 +82,16 @@ class TestReactor(unittest.TestCase):
 
         def too_few_tags():
             self.test_reactor_3.rotation_angle = 180
-            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1"])          
-        
+            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1"])
+
         self.assertRaises(ValueError, too_few_tags)
-        
+
         def too_many_tags():
             self.test_reactor_3.rotation_angle = 180
-            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2", "3"])          
+            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2", "3"])
 
         self.assertRaises(ValueError, too_many_tags)
+
 
 if __name__ == "__main__":
     unittest.main()
