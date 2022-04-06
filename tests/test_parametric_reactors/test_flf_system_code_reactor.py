@@ -50,11 +50,11 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
         assert Path("upper_blanket.stp").is_file()
         assert Path("upper_vacuum_vessel.stp").is_file()
         assert Path("vacuum_vessel.stp").is_file()
-    
+
     def test_graveyard_volume_in_brep_export(self):
         """Exports the reactor as a brep file and checks the number of volumes
         with and without the optional graveyard"""
-        
+
         my_reactor = paramak.FlfSystemCodeReactor()
 
         my_reactor.export_brep(filename='without_graveyard.brep', include_graveyard=False, merged=True)
@@ -72,7 +72,6 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
         my_reactor.export_brep(filename='with_graveyard.brep', include_graveyard=True, merged=False)
         brep_shapes = Shape.importBrep('with_graveyard.brep').Solids()
         assert len(brep_shapes) == 7
-
 
     def test_order_of_names_in_reactor(self):
         """tests the order of Shapes in the reactor is as expected"""

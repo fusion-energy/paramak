@@ -451,7 +451,6 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-
         if not merged:
             if include_graveyard:
                 self.make_graveyard()
@@ -467,7 +466,7 @@ class Reactor:
             geometry_to_save = self.shapes_and_components
             if include_graveyard:
                 self.make_graveyard()
-                geometry_to_save.append(self.graveyard)              
+                geometry_to_save.append(self.graveyard)
 
             for shape in geometry_to_save:
                 # checks if solid is a compound as .val() is not needed for compunds
