@@ -31,7 +31,7 @@ class TestReactor(unittest.TestCase):
         named in the resulting h5m file"""
 
         self.test_reactor_3.rotation_angle = 180
-        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=['1','2'])
+        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2"])
 
         vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
         assert vols == [1, 2, 3]  # there are three volumes in test_reactor_3

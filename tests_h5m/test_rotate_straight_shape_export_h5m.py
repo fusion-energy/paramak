@@ -41,7 +41,7 @@ class TestRotateStraightShape(unittest.TestCase):
         self.test_shape.rotation_angle = 10
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         self.test_shape.name = "my_material_name"
-        self.test_shape.export_dagmc_h5m("dagmc_multi_volume.h5m", tags=['1'])
+        self.test_shape.export_dagmc_h5m("dagmc_multi_volume.h5m", tags=["1"])
 
         vols = di.get_volumes_from_h5m("dagmc_multi_volume.h5m")
         assert vols == [1, 2, 3, 4]
@@ -79,7 +79,7 @@ class TestRotateStraightShape(unittest.TestCase):
         exist (volume id and custom material tag) in the resulting h5m file"""
 
         self.test_shape.rotation_angle = 180
-        self.test_shape.export_dagmc_h5m("dagmc_custom_tag_single_volume.h5m", tags=['1'])
+        self.test_shape.export_dagmc_h5m("dagmc_custom_tag_single_volume.h5m", tags=["1"])
 
         vols = di.get_volumes_from_h5m("dagmc_custom_tag_single_volume.h5m")
         assert vols == [1]
