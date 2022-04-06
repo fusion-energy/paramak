@@ -277,7 +277,7 @@ class Reactor:
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
-        self.export_brep(filename=tmp_brep_filename, merged=True, include_graveyard=include_graveyard)
+        self.export_brep(filename=tmp_brep_filename, merge=True, include_graveyard=include_graveyard)
 
         # brep file is imported
         brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
@@ -423,12 +423,12 @@ class Reactor:
 
         return filename
 
-    def export_brep(self, filename: str = "reactor.brep", merged: bool = True, include_graveyard: bool = False) -> str:
+    def export_brep(self, filename: str = "reactor.brep", merge: bool = True, include_graveyard: bool = False) -> str:
         """Exports a brep file for the Reactor.solid.
 
         Args:
             filename: the filename of exported the brep file.
-            merged: if the surfaces should be merged (True) or not (False).
+            merge: if the surfaces should be merged (True) or not (False).
             include_graveyard: specify if the graveyard will be included or
                 not. If True the the Reactor.make_graveyard will be called
                 using Reactor.graveyard_size and Reactor.graveyard_offset
@@ -446,7 +446,7 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        if not merged:
+        if not merge:
             if include_graveyard:
                 self.make_graveyard()
                 geometry_to_save = cq.Compound.makeCompound([self.solid, self.graveyard.solid.val()])

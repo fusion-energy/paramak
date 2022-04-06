@@ -57,19 +57,19 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
 
         my_reactor = paramak.FlfSystemCodeReactor()
 
-        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False, merged=True)
+        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False, merge=True)
         brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
         assert len(brep_shapes) == 6
 
-        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True, merged=True)
+        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True, merge=True)
         brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
         assert len(brep_shapes) == 7
 
-        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False, merged=False)
+        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False, merge=False)
         brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
         assert len(brep_shapes) == 6
 
-        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True, merged=False)
+        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True, merge=False)
         brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
         assert len(brep_shapes) == 7
 
