@@ -426,7 +426,7 @@ class Reactor:
     def export_brep(
         self,
         filename: str='reactor.brep',
-        merge: bool = True,
+        merged: bool = True,
         include_graveyard:bool=False
     ) -> str:
         """Exports a brep file for the Reactor.solid.
@@ -452,8 +452,8 @@ class Reactor:
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
 
-        if not merge:
-            if graveyard:
+        if not merged:
+            if include_graveyard:
                 self.make_graveyard()
                 geometry_to_save = cq.Compound.makeCompound([self.solid, self.graveyard.solid.val()])
             else:
@@ -465,7 +465,7 @@ class Reactor:
             bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
 
             geometry_to_save = self.shapes_and_components
-            if graveyard:
+            if include_graveyard:
                 self.make_graveyard()
                 geometry_to_save.append(self.graveyard)              
 
@@ -482,9 +482,9 @@ class Reactor:
 
             bldr.Images()
 
-            merged = cq.Compound(bldr.Shape())
+            merged_solid = cq.Compound(bldr.Shape())
 
-            merged.exportBrep(str(path_filename))
+            merged_solid.exportBrep(str(path_filename))
 
         return str(path_filename)
 
