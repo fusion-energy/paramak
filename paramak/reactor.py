@@ -423,12 +423,7 @@ class Reactor:
 
         return filename
 
-    def export_brep(
-        self,
-        filename: str='reactor.brep',
-        merge: bool = True,
-        include_graveyard:bool=False
-    ) -> str:
+    def export_brep(self, filename: str = "reactor.brep", merge: bool = True, include_graveyard: bool = False) -> str:
         """Exports a brep file for the Reactor.solid.
 
         Args:
@@ -451,7 +446,6 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-
         if not merge:
             if graveyard:
                 self.make_graveyard()
@@ -467,7 +461,7 @@ class Reactor:
             geometry_to_save = self.shapes_and_components
             if graveyard:
                 self.make_graveyard()
-                geometry_to_save.append(self.graveyard)              
+                geometry_to_save.append(self.graveyard)
 
             for shape in geometry_to_save:
                 # checks if solid is a compound as .val() is not needed for compunds

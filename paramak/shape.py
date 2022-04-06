@@ -779,7 +779,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_brep(self, filename='shape.brep', include_graveyard=False):
+    def export_brep(self, filename="shape.brep", include_graveyard=False):
         """Exports a brep file for the Shape.solid.
 
         Args:
@@ -806,7 +806,7 @@ class Shape:
 
         geometry_to_save.exportBrep(str(path_filename))
         # self.solid.val().exportBrep(str(path_filename))
-        
+
         # alternative method is to use BRepTools that might support imprinting
         # and merging https://github.com/CadQuery/cadquery/issues/449
         # from OCP.BRepTools import BRepTools
@@ -854,7 +854,7 @@ class Shape:
         volumes_with_tags = {}
         for counter, _ in enumerate(self.solid.val().Solids(), 1):
             if tag:
-                volumes_with_tags[counter] = tags[counter-1]
+                volumes_with_tags[counter] = tags[counter - 1]
             else:
                 volumes_with_tags[counter] = self.name
 
