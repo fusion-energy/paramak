@@ -265,7 +265,7 @@ class Reactor:
                     "When specifying tags then there must be one tag for "
                     "every shape in the reactor. Currently there are "
                     f"{len(tags)} tags provided and "
-                    f"{len(shapes_and_components)} shapes in the reactor"
+                    f"{len(self.shapes_and_components)} shapes in the reactor"
                 )
                 raise ValueError(msg)
 
