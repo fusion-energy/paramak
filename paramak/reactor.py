@@ -425,9 +425,9 @@ class Reactor:
 
     def export_brep(
         self,
-        filename: str='reactor.brep',
+        filename: str = 'reactor.brep',
         merged: bool = True,
-        include_graveyard:bool=False
+        include_graveyard: bool = False
     ) -> str:
         """Exports a brep file for the Reactor.solid.
 

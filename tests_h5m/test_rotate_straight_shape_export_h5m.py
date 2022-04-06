@@ -1,4 +1,4 @@
-from fileinput import filename
+
 import unittest
 from pathlib import Path
 
@@ -42,7 +42,7 @@ class TestRotateStraightShape(unittest.TestCase):
         self.test_shape.rotation_angle = 10
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         self.test_shape.name = "my_material_name"
-        self.test_shape.export_dagmc_h5m("dagmc_multi_volume.h5m", tag="1")
+        self.test_shape.export_dagmc_h5m("dagmc_multi_volume.h5m", tags=["1", "2", "3", "4"])
 
         vols = di.get_volumes_from_h5m("dagmc_multi_volume.h5m")
         assert vols == [1, 2, 3, 4]
@@ -53,9 +53,9 @@ class TestRotateStraightShape(unittest.TestCase):
         vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_multi_volume.h5m")
         assert vols_and_mats == {
             1: "1",
-            2: "1",
-            3: "1",
-            4: "1",
+            2: "2",
+            3: "3",
+            4: "4",
         }
 
     def test_dagmc_h5m_export_custom_tag_multi_volume_with_graveyard(self):
@@ -81,7 +81,7 @@ class TestRotateStraightShape(unittest.TestCase):
             2: "2",
             3: "3",
             4: "4",
-            4: "graveyard",
+            5: "graveyard",
         }
 
     def test_dagmc_h5m_export_single_volume(self):

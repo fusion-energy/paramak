@@ -853,7 +853,7 @@ class Shape:
 
         volumes_with_tags = {}
         for counter, _ in enumerate(self.solid.val().Solids(), 1):
-            if tag:
+            if tags:
                 volumes_with_tags[counter] = tags[counter - 1]
             else:
                 volumes_with_tags[counter] = self.name
