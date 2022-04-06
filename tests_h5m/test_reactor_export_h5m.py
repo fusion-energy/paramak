@@ -77,6 +77,20 @@ class TestReactor(unittest.TestCase):
 
         assert Path("dagmc_bigger.h5m").stat().st_size > Path("dagmc_default.h5m").stat().st_size
 
+    def test_dagmc_h5m_export_error_handling(self):
+        """Exports a shape with the wrong amount of tags"""
+
+        def too_few_tags():
+            self.test_reactor_3.rotation_angle = 180
+            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1"])          
+        
+        self.assertRaises(ValueError, too_few_tags)
+        
+        def too_many_tags():
+            self.test_reactor_3.rotation_angle = 180
+            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2", "3"])          
+
+        self.assertRaises(ValueError, too_many_tags)
 
 if __name__ == "__main__":
     unittest.main()

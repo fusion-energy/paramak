@@ -99,6 +99,6 @@ class TestRotateStraightShape(unittest.TestCase):
 
         assert Path("dagmc_bigger.h5m").stat().st_size > Path("dagmc_default.h5m").stat().st_size
 
-
+        
 if __name__ == "__main__":
     unittest.main()
