@@ -68,6 +68,48 @@ class TestReactor(unittest.TestCase):
             3: "pf_coil",
         }
 
+    def test_dagmc_h5m_custom_tags_export_with_graveyard(self):
+        """Exports a reactor with two shapes checks that the tags are correctly
+        named in the resulting h5m file, includes the optional graveyard"""
+
+        self.test_reactor_3.rotation_angle = 180
+        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2"], graveyard=True)
+
+        vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
+        assert vols == [1, 2, 3, 4]  # there are three volumes in test_reactor_3
+
+        mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
+        print(mats)
+        assert mats == ["1", "2", "graveyard"]
+
+        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_reactor.h5m")
+        assert vols_and_mats == {
+            1: "1",
+            2: "2",
+            3: "2",
+        }
+
+    def test_dagmc_h5m_export_with_graveyard(self):
+        """Exports a reactor with two shapes checks that the tags are correctly
+        named in the resulting h5m file, includes the optional graveyard"""
+
+        self.test_reactor_3.rotation_angle = 180
+        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m")
+
+        vols = di.get_volumes_from_h5m("dagmc_reactor.h5m", graveyard=True)
+        assert vols == [1, 2, 3, 4]  # there are three volumes in test_reactor_3
+
+        mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
+        print(mats)
+        assert mats == ["pf_coil", "test_shape", "graveyard"]
+
+        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_reactor.h5m")
+        assert vols_and_mats == {
+            1: "test_shape",
+            2: "pf_coil",
+            3: "pf_coil",
+        }
+
     def test_dagmc_h5m_export_mesh_size(self):
         """Exports h5m file with higher resolution mesh and checks that the
         file sizes increases"""
