@@ -218,11 +218,11 @@ class Reactor:
         min_mesh_size: float = 5,
         max_mesh_size: float = 20,
         exclude: List[str] = None,
-        verbose: bool=False,
-        volume_atol: float=0.000001,
-        center_atol: float=0.000001,
-        bounding_box_atol: float=0.000001,
-        tags: Optional[List[str]] = None
+        verbose: bool = False,
+        volume_atol: float = 0.000001,
+        center_atol: float = 0.000001,
+        bounding_box_atol: float = 0.000001,
+        tags: Optional[List[str]] = None,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -258,14 +258,14 @@ class Reactor:
         # a local import is used here as these packages need CQ master to work
         from brep_to_h5m import brep_to_h5m
         import brep_part_finder as bpf
-        
+
         if tags:
             if len(tags) != len(self.shapes_and_components):
                 msg = (
-                    'When specifying tags then there must be one tag for '
-                    'every shape in the reactor. Currently there are '
-                    f'{len(tags)} tags provided and '
-                    f'{len(shapes_and_components)} shapes in the reactor'
+                    "When specifying tags then there must be one tag for "
+                    "every shape in the reactor. Currently there are "
+                    f"{len(tags)} tags provided and "
+                    f"{len(shapes_and_components)} shapes in the reactor"
                 )
                 raise ValueError(msg)
 
@@ -306,7 +306,7 @@ class Reactor:
                 shape_properties[tags[counter]] = sub_solid_descriptions
             else:
                 shape_properties[shape_or_compound.name] = sub_solid_descriptions
-            
+
         if verbose:
             print("shape_properties", shape_properties)
 

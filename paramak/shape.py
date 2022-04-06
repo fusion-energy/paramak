@@ -806,7 +806,7 @@ class Shape:
         filename: str = "dagmc.h5m",
         min_mesh_size: float = 10,
         max_mesh_size: float = 20,
-        tag: Optional[str] = None
+        tag: Optional[str] = None,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
