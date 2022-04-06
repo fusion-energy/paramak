@@ -218,10 +218,11 @@ class Reactor:
         min_mesh_size: float = 5,
         max_mesh_size: float = 20,
         exclude: List[str] = None,
-        verbose=False,
-        volume_atol=0.000001,
-        center_atol=0.000001,
-        bounding_box_atol=0.000001,
+        verbose: bool = False,
+        volume_atol: float = 0.000001,
+        center_atol: float = 0.000001,
+        bounding_box_atol: float = 0.000001,
+        tags: Optional[List[str]] = None,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -248,11 +249,25 @@ class Reactor:
             bounding_box_atol: the absolute volume tolerance to allow when
                 matching parts in the intermediate brep file with the cadquery
                 parts
+            tags: the dagmc tag to use in when naming the shape in the h5m file.
+                If left as None then the Shape.name will be used. This allows
+                the DAGMC geometry created to be compatible with a wider range
+                of neutronics codes that have specific DAGMC tag requirements.
         """
 
         # a local import is used here as these packages need CQ master to work
         from brep_to_h5m import brep_to_h5m
         import brep_part_finder as bpf
+
+        if tags:
+            if len(tags) != len(self.shapes_and_components):
+                msg = (
+                    "When specifying tags then there must be one tag for "
+                    "every shape in the reactor. Currently there are "
+                    f"{len(tags)} tags provided and "
+                    f"{len(self.shapes_and_components)} shapes in the reactor"
+                )
+                raise ValueError(msg)
 
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 
@@ -266,7 +281,7 @@ class Reactor:
             print("brep_file_part_properties", brep_file_part_properties)
 
         shape_properties = {}
-        for shape_or_compound in self.shapes_and_components:
+        for counter, shape_or_compound in enumerate(self.shapes_and_components):
             sub_solid_descriptions = []
 
             # checks if the solid is a cq.Compound or not
@@ -287,7 +302,10 @@ class Reactor:
                     ),
                 }
                 sub_solid_descriptions.append(sub_solid_description)
-            shape_properties[shape_or_compound.name] = sub_solid_descriptions
+            if tags:
+                shape_properties[tags[counter]] = sub_solid_descriptions
+            else:
+                shape_properties[shape_or_compound.name] = sub_solid_descriptions
 
         if verbose:
             print("shape_properties", shape_properties)

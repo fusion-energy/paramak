@@ -806,6 +806,7 @@ class Shape:
         filename: str = "dagmc.h5m",
         min_mesh_size: float = 10,
         max_mesh_size: float = 20,
+        tag: Optional[str] = None,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -819,6 +820,10 @@ class Shape:
                 into gmsh.option.setNumber("Mesh.MeshSizeMin", min_mesh_size)
             max_mesh_size: the maximum mesh element size to use in Gmsh. Passed
                 into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
+            tag: the dagmc tag to use in when naming the shape in the h5m file.
+                If left as None then the Shape.name will be used. This allows
+                the DAGMC geometry created to be compatible with a wider range
+                of neutronics codes that have specific DAGMC tag requirements.
         """
 
         from brep_to_h5m import brep_to_h5m
@@ -830,7 +835,10 @@ class Shape:
 
         volumes_with_tags = {}
         for counter, _ in enumerate(self.solid.val().Solids(), 1):
-            volumes_with_tags[counter] = f"mat_{self.name}"
+            if tag:
+                volumes_with_tags[counter] = f"{tag}"
+            else:
+                volumes_with_tags[counter] = f"{self.name}"
 
         brep_to_h5m(
             brep_filename=tmp_brep_filename,

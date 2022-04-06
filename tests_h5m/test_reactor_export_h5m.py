@@ -26,9 +26,30 @@ class TestReactor(unittest.TestCase):
         # this reactor has a compound shape in the geometry
         self.test_reactor_3 = paramak.Reactor([self.test_shape, test_shape_3])
 
+    def test_dagmc_h5m_custom_tags_export(self):
+        """Exports a reactor with two shapes checks that the tags are correctly
+        named in the resulting h5m file"""
+
+        self.test_reactor_3.rotation_angle = 180
+        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2"])
+
+        vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
+        assert vols == [1, 2, 3]  # there are three volumes in test_reactor_3
+
+        mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
+        print(mats)
+        assert mats == ["1", "2"]
+
+        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_reactor.h5m")
+        assert vols_and_mats == {
+            1: "1",
+            2: "2",
+            3: "2",
+        }
+
     def test_dagmc_h5m_export(self):
-        """Exports a shape with a single volume and checks that it
-        exist (volume id and material tag) in the resulting h5m file"""
+        """Exports a reactor with two shapes checks that the tags are correctly
+        named in the resulting h5m file"""
 
         self.test_reactor_3.rotation_angle = 180
         self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m")
@@ -55,6 +76,21 @@ class TestReactor(unittest.TestCase):
         self.test_reactor_3.export_dagmc_h5m("dagmc_bigger.h5m", min_mesh_size=2, max_mesh_size=9)
 
         assert Path("dagmc_bigger.h5m").stat().st_size > Path("dagmc_default.h5m").stat().st_size
+
+    def test_dagmc_h5m_export_error_handling(self):
+        """Exports a shape with the wrong amount of tags"""
+
+        def too_few_tags():
+            self.test_reactor_3.rotation_angle = 180
+            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1"])
+
+        self.assertRaises(ValueError, too_few_tags)
+
+        def too_many_tags():
+            self.test_reactor_3.rotation_angle = 180
+            self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2", "3"])
+
+        self.assertRaises(ValueError, too_many_tags)
 
 
 if __name__ == "__main__":
