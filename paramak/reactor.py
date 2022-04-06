@@ -223,6 +223,7 @@ class Reactor:
         center_atol: float = 0.000001,
         bounding_box_atol: float = 0.000001,
         tags: Optional[List[str]] = None,
+        include_graveyard: bool = False,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -253,9 +254,13 @@ class Reactor:
                 If left as None then the Shape.name will be used. This allows
                 the DAGMC geometry created to be compatible with a wider range
                 of neutronics codes that have specific DAGMC tag requirements.
+            include_graveyard: specify if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
         """
 
-        # a local import is used here as these packages need CQ master to work
+        # a local import is used here as these packages need Moab to work
         from brep_to_h5m import brep_to_h5m
         import brep_part_finder as bpf
 
@@ -272,7 +277,7 @@ class Reactor:
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
-        self.export_brep(tmp_brep_filename)
+        self.export_brep(filename=tmp_brep_filename, merged=True, include_graveyard=include_graveyard)
 
         # brep file is imported
         brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
@@ -418,12 +423,21 @@ class Reactor:
 
         return filename
 
-    def export_brep(self, filename: str, merge: bool = True):
+    def export_brep(
+        self,
+        filename: str='reactor.brep',
+        merge: bool = True,
+        include_graveyard:bool=False
+    ) -> str:
         """Exports a brep file for the Reactor.solid.
 
         Args:
             filename: the filename of exported the brep file.
             merged: if the surfaces should be merged (True) or not (False).
+            include_graveyard: specify if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
 
         Returns:
             filename of the brep created
@@ -437,14 +451,25 @@ class Reactor:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
+
         if not merge:
-            self.solid.exportBrep(str(path_filename))
+            if graveyard:
+                self.make_graveyard()
+                geometry_to_save = cq.Compound.makeCompound([self.solid, self.graveyard.solid.val()])
+            else:
+                geometry_to_save = self.solid
+            geometry_to_save.exportBrep(str(path_filename))
         else:
             import OCP
 
             bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
 
-            for shape in self.shapes_and_components:
+            geometry_to_save = self.shapes_and_components
+            if graveyard:
+                self.make_graveyard()
+                geometry_to_save.append(self.graveyard)              
+
+            for shape in geometry_to_save:
                 # checks if solid is a compound as .val() is not needed for compunds
                 if isinstance(shape.solid, cq.occ_impl.shapes.Compound):
                     bldr.AddArgument(shape.solid.wrapped)

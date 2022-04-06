@@ -2,7 +2,7 @@ import math
 import os
 import unittest
 from pathlib import Path
-
+from cadquery.occ_impl.shapes import Shape
 import pytest
 from paramak import RotateStraightShape
 
@@ -305,6 +305,41 @@ class TestRotateStraightShape(unittest.TestCase):
 
         self.assertRaises(ValueError, incorrect_points_definition)
 
+    def test_graveyard_volume_in_brep_export(self):
+        """Exports the reactor as a brep file and checks the number of volumes
+        with and without the optional graveyard"""
 
+        my_shape = RotateStraightShape(
+            rotation_angle = 20,
+            points=[
+                (10, 0),
+                (10, 20),
+                (20, 20),
+                (20, 0)]
+            )
+        
+        my_shape.export_brep(filename='without_graveyard.brep', include_graveyard=True)
+        brep_shapes = Shape.importBrep('without_graveyard.brep').Solids()
+        assert len(brep_shapes) == 2
+        
+        my_shape.export_brep(filename='without_graveyard.brep', include_graveyard=False)
+        brep_shapes = Shape.importBrep('without_graveyard.brep').Solids()
+        assert len(brep_shapes) == 1
+
+        my_shape.azimuth_placement_angle = [0,90, 180]
+
+
+        my_shape.export_brep(filename='with_graveyard.brep', include_graveyard=True)
+        brep_shapes = Shape.importBrep('with_graveyard.brep').Solids()
+        assert len(brep_shapes) == 4
+
+        my_shape.export_brep(filename='without_graveyard.brep', include_graveyard=False)
+        brep_shapes = Shape.importBrep('without_graveyard.brep').Solids()
+        assert len(brep_shapes) == 3
+
+        my_shape.export_brep(filename='with_graveyard.brep', include_graveyard=True)
+        brep_shapes = Shape.importBrep('with_graveyard.brep').Solids()
+        assert len(brep_shapes) == 4
+        
 if __name__ == "__main__":
     unittest.main()

@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
+import cadquery as cq
 from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
@@ -778,11 +779,15 @@ class Shape:
 
         return str(path_filename)
 
-    def export_brep(self, filename):
+    def export_brep(self, filename='shape.brep', include_graveyard=False):
         """Exports a brep file for the Shape.solid.
 
         Args:
             filename: the filename of exported the brep file.
+            include_graveyard: specify if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
         """
 
         path_filename = Path(filename)
@@ -793,7 +798,15 @@ class Shape:
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        self.solid.val().exportBrep(str(path_filename))
+        if include_graveyard:
+            self.make_graveyard()
+            geometry_to_save = cq.Compound.makeCompound([self.solid.val(), self.graveyard.solid.val()])
+        else:
+            geometry_to_save = self.solid.val()
+
+        geometry_to_save.exportBrep(str(path_filename))
+        # self.solid.val().exportBrep(str(path_filename))
+        
         # alternative method is to use BRepTools that might support imprinting
         # and merging https://github.com/CadQuery/cadquery/issues/449
         # from OCP.BRepTools import BRepTools
@@ -806,12 +819,13 @@ class Shape:
         filename: str = "dagmc.h5m",
         min_mesh_size: float = 10,
         max_mesh_size: float = 20,
-        tag: Optional[str] = None,
+        tags: Optional[List[str]] = None,
+        include_graveyard: bool = False,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
-        MOAB is used to convert the meshed geometry into a h5m with parts tagged by
-        using the reactor.shape_and_components.name properties. You will need
+        MOAB is used to convert the meshed geometry into a h5m with parts tagged
+        by using the reactor.shape_and_components.name properties. You will need
         Gmsh installed and MOAB installed to use this function.
 
         Args:
@@ -820,10 +834,14 @@ class Shape:
                 into gmsh.option.setNumber("Mesh.MeshSizeMin", min_mesh_size)
             max_mesh_size: the maximum mesh element size to use in Gmsh. Passed
                 into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
-            tag: the dagmc tag to use in when naming the shape in the h5m file.
+            tags: the dagmc tags to use in when naming the shape in the h5m file.
                 If left as None then the Shape.name will be used. This allows
                 the DAGMC geometry created to be compatible with a wider range
                 of neutronics codes that have specific DAGMC tag requirements.
+            include_graveyard: specify if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
         """
 
         from brep_to_h5m import brep_to_h5m
@@ -831,14 +849,14 @@ class Shape:
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
-        self.export_brep(tmp_brep_filename)
+        self.export_brep(filename=tmp_brep_filename, merged=True, include_graveyard=include_graveyard)
 
         volumes_with_tags = {}
         for counter, _ in enumerate(self.solid.val().Solids(), 1):
             if tag:
-                volumes_with_tags[counter] = f"{tag}"
+                volumes_with_tags[counter] = tags[counter-1]
             else:
-                volumes_with_tags[counter] = f"{self.name}"
+                volumes_with_tags[counter] = self.name
 
         brep_to_h5m(
             brep_filename=tmp_brep_filename,
