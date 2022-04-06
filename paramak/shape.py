@@ -849,7 +849,7 @@ class Shape:
         tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 
         # saves the reactor as a Brep file with merged surfaces
-        self.export_brep(filename=tmp_brep_filename, merge=True, include_graveyard=include_graveyard)
+        self.export_brep(filename=tmp_brep_filename, include_graveyard=include_graveyard)
 
         volumes_with_tags = {}
         for counter, _ in enumerate(self.solid.val().Solids(), 1):

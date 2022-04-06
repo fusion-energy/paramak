@@ -122,7 +122,7 @@ class TestRotateStraightShape(unittest.TestCase):
         exist (volume id and custom material tag) in the resulting h5m file"""
 
         self.test_shape.rotation_angle = 180
-        self.test_shape.export_dagmc_h5m("dagmc_custom_tag_single_volume.h5m", tag="1")
+        self.test_shape.export_dagmc_h5m("dagmc_custom_tag_single_volume.h5m", tags=["1"])
 
         vols = di.get_volumes_from_h5m("dagmc_custom_tag_single_volume.h5m")
         assert vols == [1]
