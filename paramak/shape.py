@@ -26,6 +26,7 @@ from paramak.utils import (
     export_solids_to_dagmc_h5m,
 )
 
+
 class Shape:
     """A shape object that represents a 3d volume and can have materials and
     neutronics tallies assigned. Shape objects are not intended to be used
@@ -780,11 +781,7 @@ class Shape:
 
         return str(path_filename)
 
-    def export_brep(
-        self,
-        filename="shape.brep",
-        include_graveyard=False
-    ) -> str:
+    def export_brep(self, filename="shape.brep", include_graveyard=False) -> str:
         """Exports a brep file for the Shape. Optionally including a DAGMC
         graveyard.
 
@@ -804,14 +801,13 @@ class Shape:
         if include_graveyard:
             self.make_graveyard()
             geometry_to_save.append(self.graveyard.solid)
-        
-        output_filename = export_solids_to_brep(
-            solids = geometry_to_save,
-            filename = filename,
-        )
-        
-        return output_filename
 
+        output_filename = export_solids_to_brep(
+            solids=geometry_to_save,
+            filename=filename,
+        )
+
+        return output_filename
 
     def export_dagmc_h5m(
         self,
@@ -879,7 +875,7 @@ class Shape:
             bounding_box_atol=bounding_box_atol,
             tags=tags,
         )
-        
+
         return output_filename
 
     def export_stp(

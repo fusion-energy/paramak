@@ -1,4 +1,3 @@
-
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -8,7 +7,15 @@ import matplotlib.pyplot as plt
 from cadquery import exporters
 
 import paramak
-from paramak.utils import _replace, get_hash, get_bounding_box, get_largest_dimension, export_solids_to_brep, export_solids_to_dagmc_h5m
+from paramak.utils import (
+    _replace,
+    get_hash,
+    get_bounding_box,
+    get_largest_dimension,
+    export_solids_to_brep,
+    export_solids_to_dagmc_h5m,
+)
+
 
 class Reactor:
     """The Reactor object allows shapes and components to be added and then
@@ -259,14 +266,14 @@ class Reactor:
         """
 
         shapes_to_convert = []
-        
+
         for shape in self.shapes_and_components:
             # allows components like the plasma to be removed
             if exclude:
                 if shape.name not in exclude:
-                    shapes_to_convert.append(shape) 
+                    shapes_to_convert.append(shape)
             else:
-                shapes_to_convert.append(shape) 
+                shapes_to_convert.append(shape)
 
         if include_graveyard:
             self.make_graveyard()
@@ -288,7 +295,7 @@ class Reactor:
             bounding_box_atol=bounding_box_atol,
             tags=tags,
         )
-        
+
         return output_filename
 
     def export_stp(
@@ -366,11 +373,7 @@ class Reactor:
 
         return filename
 
-    def export_brep(
-        self,
-        filename: str = "reactor.brep",
-        include_graveyard: bool = False
-    ) -> str:
+    def export_brep(self, filename: str = "reactor.brep", include_graveyard: bool = False) -> str:
         """Exports a brep file for the Reactor. Optionally including a DAGMC
         graveyard.
 
@@ -384,20 +387,19 @@ class Reactor:
         Returns:
             filename of the brep created
         """
-        
+
         geometry_to_save = [shape.solid for shape in self.shapes_and_components]
         if include_graveyard:
-        
+
             self.make_graveyard()
             geometry_to_save.append(self.graveyard.solid)
-        
-        output_filename = export_solids_to_brep(
-            solids = geometry_to_save,
-            filename = filename,
-        )
-        
-        return output_filename
 
+        output_filename = export_solids_to_brep(
+            solids=geometry_to_save,
+            filename=filename,
+        )
+
+        return output_filename
 
     def export_stl(
         self,

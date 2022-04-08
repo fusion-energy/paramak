@@ -16,6 +16,7 @@ from OCP.GCPnts import GCPnts_QuasiUniformDeflection
 from cadquery.occ_impl import shapes
 import OCP
 
+
 def export_solids_to_brep(
     solids,
     filename: str = "reactor.brep",
@@ -72,99 +73,97 @@ def export_solids_to_brep(
 
     return str(path_filename)
 
+
 def export_solids_to_dagmc_h5m(
-        solids: List,
-        filename: str = "dagmc.h5m",
-        min_mesh_size: float = 5,
-        max_mesh_size: float = 20,
-        verbose: bool = False,   
-        volume_atol: float = 0.000001,
-        center_atol: float = 0.000001,
-        bounding_box_atol: float = 0.000001,
-        tags: List[str] = None,
+    solids: List,
+    filename: str = "dagmc.h5m",
+    min_mesh_size: float = 5,
+    max_mesh_size: float = 20,
+    verbose: bool = False,
+    volume_atol: float = 0.000001,
+    center_atol: float = 0.000001,
+    bounding_box_atol: float = 0.000001,
+    tags: List[str] = None,
 ):
-        if len(tags) != len(solids):
-            msg = (
-                "When specifying tags then there must be one tag for "
-                f"every shape. Currently there are {len(tags)} tags "
-                f"provided and {len(solids)} shapes"
-            )
-            raise ValueError(msg)
-
-        # a local import is used here as these packages need Moab to work
-        from brep_to_h5m import brep_to_h5m
-        import brep_part_finder as bpf
-
-
-        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
-
-        # saves the reactor as a Brep file with merged surfaces
-        export_solids_to_brep(
-            solids=solids,
-            filename=tmp_brep_filename
+    if len(tags) != len(solids):
+        msg = (
+            "When specifying tags then there must be one tag for "
+            f"every shape. Currently there are {len(tags)} tags "
+            f"provided and {len(solids)} shapes"
         )
+        raise ValueError(msg)
 
-        # brep file is imported
-        brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
+    # a local import is used here as these packages need Moab to work
+    from brep_to_h5m import brep_to_h5m
+    import brep_part_finder as bpf
 
-        if verbose:
-            print("brep_file_part_properties", brep_file_part_properties)
+    tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
 
-        shape_properties = {}
-        for counter, solid in enumerate(solids):
-            sub_solid_descriptions = []
+    # saves the reactor as a Brep file with merged surfaces
+    export_solids_to_brep(solids=solids, filename=tmp_brep_filename)
 
-            # checks if the solid is a cq.Compound or not
-            if isinstance(solid, cq.occ_impl.shapes.Compound):
-                iterable_solids = solid.Solids()
-            else:
-                iterable_solids = solid.val().Solids()
+    # brep file is imported
+    brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
 
-            for sub_solid in iterable_solids:
-                part_bb = sub_solid.BoundingBox()
-                part_center = sub_solid.Center()
-                sub_solid_description = {
-                    "volume": sub_solid.Volume(),
-                    "center": (part_center.x, part_center.y, part_center.z),
-                    "bounding_box": (
-                        (part_bb.xmin, part_bb.ymin, part_bb.zmin),
-                        (part_bb.xmax, part_bb.ymax, part_bb.zmax),
-                    ),
-                }
-                sub_solid_descriptions.append(sub_solid_description)
+    if verbose:
+        print("brep_file_part_properties", brep_file_part_properties)
 
-                shape_properties[tags[counter]] = sub_solid_descriptions
+    shape_properties = {}
+    for counter, solid in enumerate(solids):
+        sub_solid_descriptions = []
 
-        if verbose:
-            print("shape_properties", shape_properties)
+        # checks if the solid is a cq.Compound or not
+        if isinstance(solid, cq.occ_impl.shapes.Compound):
+            iterable_solids = solid.Solids()
+        else:
+            iterable_solids = solid.val().Solids()
 
-        # request to find part ids that are mixed up in the Brep file
-        # using the volume, center, bounding box that we know about when creating the
-        # CAD geometry in the first place
-        key_and_part_id = bpf.get_dict_of_part_ids(
-            brep_part_properties=brep_file_part_properties,
-            shape_properties=shape_properties,
-            volume_atol=volume_atol,
-            center_atol=center_atol,
-            bounding_box_atol=bounding_box_atol,
-        )
+        for sub_solid in iterable_solids:
+            part_bb = sub_solid.BoundingBox()
+            part_center = sub_solid.Center()
+            sub_solid_description = {
+                "volume": sub_solid.Volume(),
+                "center": (part_center.x, part_center.y, part_center.z),
+                "bounding_box": (
+                    (part_bb.xmin, part_bb.ymin, part_bb.zmin),
+                    (part_bb.xmax, part_bb.ymax, part_bb.zmax),
+                ),
+            }
+            sub_solid_descriptions.append(sub_solid_description)
 
-        if verbose:
-            print(f"key_and_part_id={key_and_part_id}")
+            shape_properties[tags[counter]] = sub_solid_descriptions
 
-        brep_to_h5m(
-            brep_filename=tmp_brep_filename,
-            volumes_with_tags=key_and_part_id,
-            h5m_filename=filename,
-            min_mesh_size=min_mesh_size,
-            max_mesh_size=max_mesh_size,
-            delete_intermediate_stl_files=True,
-        )
+    if verbose:
+        print("shape_properties", shape_properties)
 
-        # temporary brep is deleted using os.remove
-        remove(tmp_brep_filename)
+    # request to find part ids that are mixed up in the Brep file
+    # using the volume, center, bounding box that we know about when creating the
+    # CAD geometry in the first place
+    key_and_part_id = bpf.get_dict_of_part_ids(
+        brep_part_properties=brep_file_part_properties,
+        shape_properties=shape_properties,
+        volume_atol=volume_atol,
+        center_atol=center_atol,
+        bounding_box_atol=bounding_box_atol,
+    )
 
-        return filename
+    if verbose:
+        print(f"key_and_part_id={key_and_part_id}")
+
+    brep_to_h5m(
+        brep_filename=tmp_brep_filename,
+        volumes_with_tags=key_and_part_id,
+        h5m_filename=filename,
+        min_mesh_size=min_mesh_size,
+        max_mesh_size=max_mesh_size,
+        delete_intermediate_stl_files=True,
+    )
+
+    # temporary brep is deleted using os.remove
+    remove(tmp_brep_filename)
+
+    return filename
+
 
 def get_bounding_box(solid) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:
     """Calculates a bounding box for the Shape and returns the coordinates of
