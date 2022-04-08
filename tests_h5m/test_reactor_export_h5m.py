@@ -73,14 +73,14 @@ class TestReactor(unittest.TestCase):
         named in the resulting h5m file, includes the optional graveyard"""
 
         self.test_reactor_3.rotation_angle = 180
-        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2"], include_graveyard=True)
+        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2", "grave"], include_graveyard=True)
 
         vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
-        assert vols == [1, 2, 3, 4]  # there are three volumes in test_reactor_3
+        assert vols == [1, 2, 3]  # there are 2 volumes in test_reactor_3
 
         mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
         print(mats)
-        assert mats == ["1", "2", "graveyard"]
+        assert mats == ["1", "2", "grave"]
 
         vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_reactor.h5m")
         assert vols_and_mats == {
@@ -96,8 +96,8 @@ class TestReactor(unittest.TestCase):
         self.test_reactor_3.rotation_angle = 180
         self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m")
 
-        vols = di.get_volumes_from_h5m("dagmc_reactor.h5m", include_graveyard=True)
-        assert vols == [1, 2, 3, 4]  # there are three volumes in test_reactor_3
+        vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
+        assert vols == [1, 2]  # there are 2 volumes in test_reactor_3
 
         mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
         print(mats)

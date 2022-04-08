@@ -21,6 +21,8 @@ from .utils import (
     find_center_point_of_circle,
     angle_between_two_points_on_circle,
     find_radius_of_circle,
+    export_solids_to_brep,
+    export_solids_to_dagmc_h5m,
 )
 from .utils import EdgeLengthSelector, FaceAreaSelector
 
