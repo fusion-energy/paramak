@@ -57,21 +57,22 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
 
         my_reactor = paramak.FlfSystemCodeReactor()
 
-        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False, merge=True)
+        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False)
         brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
         assert len(brep_shapes) == 6
 
-        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True, merge=True)
+        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True)
         brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
         assert len(brep_shapes) == 7
 
-        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False, merge=False)
-        brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
-        assert len(brep_shapes) == 6
+        # TODO uncomment if ability to not merge surfaces is brought back
+        # my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False, merge=False)
+        # brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
+        # assert len(brep_shapes) == 6
 
-        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True, merge=False)
-        brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
-        assert len(brep_shapes) == 7
+        # my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True, merge=False)
+        # brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
+        # assert len(brep_shapes) == 7
 
     def test_order_of_names_in_reactor(self):
         """tests the order of Shapes in the reactor is as expected"""
