@@ -92,19 +92,13 @@ class TestCenterColumnStudyReactor(unittest.TestCase):
     def test_export_brep(self):
         """Exports a brep file and checks that the output exist"""
 
-        os.system("rm test_reactor.brep")
+        os.system("rm merged.brep")
 
-        self.test_reactor.export_brep(filename="merged.brep", merge=True)
-        self.test_reactor.export_brep(filename="not_merged.brep", merge=False)
+        self.test_reactor.export_brep(filename="merged.brep")
 
         assert Path("merged.brep").exists() is True
-        assert Path("not_merged.brep").exists() is True
-        # not always true
-        # assert Path("not_merged.brep").stat().st_size > Path(
-        #     "merged.brep").stat().st_size
 
         os.system("rm merged.brep")
-        os.system("rm not_merged.brep")
 
     def test_export_brep_without_extention(self):
         """Exports a brep file without the extention and checks that the

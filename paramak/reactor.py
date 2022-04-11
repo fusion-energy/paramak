@@ -1,5 +1,3 @@
-import os
-import tempfile
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -9,7 +7,14 @@ import matplotlib.pyplot as plt
 from cadquery import exporters
 
 import paramak
-from paramak.utils import _replace, get_hash, get_bounding_box, get_largest_dimension
+from paramak.utils import (
+    _replace,
+    get_hash,
+    get_bounding_box,
+    get_largest_dimension,
+    export_solids_to_brep,
+    export_solids_to_dagmc_h5m,
+)
 
 
 class Reactor:
@@ -223,6 +228,7 @@ class Reactor:
         center_atol: float = 0.000001,
         bounding_box_atol: float = 0.000001,
         tags: Optional[List[str]] = None,
+        include_graveyard: bool = False,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -253,95 +259,44 @@ class Reactor:
                 If left as None then the Shape.name will be used. This allows
                 the DAGMC geometry created to be compatible with a wider range
                 of neutronics codes that have specific DAGMC tag requirements.
+            include_graveyard: specify if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
         """
 
-        # a local import is used here as these packages need CQ master to work
-        from brep_to_h5m import brep_to_h5m
-        import brep_part_finder as bpf
+        shapes_to_convert = []
 
-        if tags:
-            if len(tags) != len(self.shapes_and_components):
-                msg = (
-                    "When specifying tags then there must be one tag for "
-                    "every shape in the reactor. Currently there are "
-                    f"{len(tags)} tags provided and "
-                    f"{len(self.shapes_and_components)} shapes in the reactor"
-                )
-                raise ValueError(msg)
-
-        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
-
-        # saves the reactor as a Brep file with merged surfaces
-        self.export_brep(tmp_brep_filename)
-
-        # brep file is imported
-        brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
-
-        if verbose:
-            print("brep_file_part_properties", brep_file_part_properties)
-
-        shape_properties = {}
-        for counter, shape_or_compound in enumerate(self.shapes_and_components):
-            sub_solid_descriptions = []
-
-            # checks if the solid is a cq.Compound or not
-            if isinstance(shape_or_compound.solid, cq.occ_impl.shapes.Compound):
-                iterable_solids = shape_or_compound.solid.Solids()
+        for shape in self.shapes_and_components:
+            # allows components like the plasma to be removed
+            if exclude:
+                if shape.name not in exclude:
+                    shapes_to_convert.append(shape)
             else:
-                iterable_solids = shape_or_compound.solid.val().Solids()
+                shapes_to_convert.append(shape)
 
-            for sub_solid in iterable_solids:
-                part_bb = sub_solid.BoundingBox()
-                part_center = sub_solid.Center()
-                sub_solid_description = {
-                    "volume": sub_solid.Volume(),
-                    "center": (part_center.x, part_center.y, part_center.z),
-                    "bounding_box": (
-                        (part_bb.xmin, part_bb.ymin, part_bb.zmin),
-                        (part_bb.xmax, part_bb.ymax, part_bb.zmax),
-                    ),
-                }
-                sub_solid_descriptions.append(sub_solid_description)
-            if tags:
-                shape_properties[tags[counter]] = sub_solid_descriptions
-            else:
-                shape_properties[shape_or_compound.name] = sub_solid_descriptions
+        if include_graveyard:
+            self.make_graveyard()
+            shapes_to_convert.append(self.graveyard)
 
-        if verbose:
-            print("shape_properties", shape_properties)
+        if tags is None:
+            tags = []
+            for shape in shapes_to_convert:
+                tags.append(shape.name)
 
-        # request to find part ids that are mixed up in the Brep file
-        # using the volume, center, bounding box that we know about when creating the
-        # CAD geometry in the first place
-        key_and_part_id = bpf.get_dict_of_part_ids(
-            brep_part_properties=brep_file_part_properties,
-            shape_properties=shape_properties,
+        output_filename = export_solids_to_dagmc_h5m(
+            solids=[shape.solid for shape in shapes_to_convert],
+            filename=filename,
+            min_mesh_size=min_mesh_size,
+            max_mesh_size=max_mesh_size,
+            verbose=verbose,
             volume_atol=volume_atol,
             center_atol=center_atol,
             bounding_box_atol=bounding_box_atol,
+            tags=tags,
         )
 
-        if verbose:
-            print(f"key_and_part_id={key_and_part_id}")
-
-        # allows components like the plasma to be removed
-        if isinstance(exclude, Iterable):
-            for name_to_remove in exclude:
-                key_and_part_id = {key: val for key, val in key_and_part_id.items() if val != name_to_remove}
-
-        brep_to_h5m(
-            brep_filename=tmp_brep_filename,
-            volumes_with_tags=key_and_part_id,
-            h5m_filename=filename,
-            min_mesh_size=min_mesh_size,
-            max_mesh_size=max_mesh_size,
-            delete_intermediate_stl_files=True,
-        )
-
-        # temporary brep is deleted
-        os.remove(tmp_brep_filename)
-
-        return filename
+        return output_filename
 
     def export_stp(
         self,
@@ -418,50 +373,33 @@ class Reactor:
 
         return filename
 
-    def export_brep(self, filename: str, merge: bool = True):
-        """Exports a brep file for the Reactor.solid.
+    def export_brep(self, filename: str = "reactor.brep", include_graveyard: bool = False) -> str:
+        """Exports a brep file for the Reactor. Optionally including a DAGMC
+        graveyard.
 
         Args:
             filename: the filename of exported the brep file.
-            merged: if the surfaces should be merged (True) or not (False).
+            include_graveyard: specify if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
 
         Returns:
             filename of the brep created
         """
 
-        path_filename = Path(filename)
+        geometry_to_save = [shape.solid for shape in self.shapes_and_components]
+        if include_graveyard:
 
-        if path_filename.suffix != ".brep":
-            msg = "When exporting a brep file the filename must end with .brep"
-            raise ValueError(msg)
+            self.make_graveyard()
+            geometry_to_save.append(self.graveyard.solid)
 
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+        output_filename = export_solids_to_brep(
+            solids=geometry_to_save,
+            filename=filename,
+        )
 
-        if not merge:
-            self.solid.exportBrep(str(path_filename))
-        else:
-            import OCP
-
-            bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
-
-            for shape in self.shapes_and_components:
-                # checks if solid is a compound as .val() is not needed for compunds
-                if isinstance(shape.solid, cq.occ_impl.shapes.Compound):
-                    bldr.AddArgument(shape.solid.wrapped)
-                else:
-                    bldr.AddArgument(shape.solid.val().wrapped)
-
-            bldr.SetNonDestructive(True)
-
-            bldr.Perform()
-
-            bldr.Images()
-
-            merged = cq.Compound(bldr.Shape())
-
-            merged.exportBrep(str(path_filename))
-
-        return str(path_filename)
+        return output_filename
 
     def export_stl(
         self,
