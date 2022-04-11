@@ -25,6 +25,7 @@ class TestReactor(unittest.TestCase):
 
         # this reactor has a compound shape in the geometry
         self.test_reactor_3 = paramak.Reactor([self.test_shape, test_shape_3])
+        self.test_reactor_3.graveyard_size = 250
 
     def test_dagmc_h5m_custom_tags_export(self):
         """Exports a reactor with two shapes checks that the tags are correctly
