@@ -10,6 +10,7 @@ class TestRotateStraightShape(unittest.TestCase):
 
     def setUp(self):
         self.test_shape = RotateStraightShape(points=[(0, 0), (0, 20), (20, 20), (20, 0)])
+        self.test_shape.graveyard_size = 100
 
     def test_dagmc_h5m_export_multi_volume(self):
         """Exports a shape with multiple volumes and checks that they all

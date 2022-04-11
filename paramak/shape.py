@@ -1,12 +1,9 @@
 import numbers
-import os
-import tempfile
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-import cadquery as cq
 from cadquery import Assembly, Color, Compound, Plane, Workplane, exporters, importers
 from cadquery.occ_impl import shapes
 from matplotlib.collections import PatchCollection
