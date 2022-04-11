@@ -42,20 +42,20 @@ class TestRotateStraightShape(unittest.TestCase):
         self.test_shape.rotation_angle = 10
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         self.test_shape.name = "my_material_name"
-        self.test_shape.export_dagmc_h5m("dagmc_multi_volume.h5m", tags=["1", "2", "3", "4"])
+        self.test_shape.export_dagmc_h5m("dagmc_multi_volume.h5m", tags=["1"])
 
         vols = di.get_volumes_from_h5m("dagmc_multi_volume.h5m")
         assert vols == [1, 2, 3, 4]
 
         mats = di.get_materials_from_h5m("dagmc_multi_volume.h5m")
-        assert mats == ["my_material_name"]
+        assert mats == ["1"]
 
         vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_multi_volume.h5m")
         assert vols_and_mats == {
             1: "1",
-            2: "2",
-            3: "3",
-            4: "4",
+            2: "1",
+            3: "1",
+            4: "1",
         }
 
     def test_dagmc_h5m_export_custom_tag_multi_volume_with_graveyard(self):
@@ -65,22 +65,20 @@ class TestRotateStraightShape(unittest.TestCase):
         self.test_shape.rotation_angle = 10
         self.test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         self.test_shape.name = "my_material_name"
-        self.test_shape.export_dagmc_h5m(
-            "dagmc_multi_volume.h5m", tags=["1", "2", "3", "4", "graveyard"], include_graveyard=True
-        )
+        self.test_shape.export_dagmc_h5m("dagmc_multi_volume.h5m", tags=["1", "graveyard"], include_graveyard=True)
 
         vols = di.get_volumes_from_h5m("dagmc_multi_volume.h5m")
         assert vols == [1, 2, 3, 4, 5]
 
         mats = di.get_materials_from_h5m("dagmc_multi_volume.h5m")
-        assert mats == ["my_material_name", "graveyard"]
+        assert mats == ["1", "graveyard"]
 
         vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_multi_volume.h5m")
         assert vols_and_mats == {
             1: "1",
-            2: "2",
-            3: "3",
-            4: "4",
+            2: "1",
+            3: "1",
+            4: "1",
             5: "graveyard",
         }
 
@@ -113,7 +111,9 @@ class TestRotateStraightShape(unittest.TestCase):
         assert vols == [1, 2]
 
         mats = di.get_materials_from_h5m("dagmc_single_volume.h5m")
-        assert mats == ["my_material_name_single", "graveyard"]
+        assert "my_material_name_single" in mats
+        assert "graveyard" in mats
+        assert len(mats) == 2
 
         vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_single_volume.h5m")
         assert vols_and_mats == {1: "my_material_name_single", 2: "graveyard"}
