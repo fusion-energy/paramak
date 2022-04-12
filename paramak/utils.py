@@ -59,7 +59,7 @@ def export_solids_to_brep(
         if isinstance(solid, cq.occ_impl.shapes.Compound):
             bldr.AddArgument(solid.wrapped)
         else:
-            bldr.AddArgument(solid.val().wrapped)
+            bldr.AddArgument(solid.wrapped)
 
     bldr.SetNonDestructive(True)
 
@@ -139,6 +139,13 @@ def export_solids_to_dagmc_h5m(
     # request to find part ids that are mixed up in the Brep file
     # using the volume, center, bounding box that we know about when creating the
     # CAD geometry in the first place
+    print()
+    print()
+    print()
+    print(brep_file_part_properties)
+    print()
+    print()
+    print()
     key_and_part_id = bpf.get_dict_of_part_ids(
         brep_part_properties=brep_file_part_properties,
         shape_properties=shape_properties,

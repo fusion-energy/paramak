@@ -1,5 +1,5 @@
 import cadquery as cq
-
+from typing import Tuple
 from paramak import Shape
 
 
@@ -8,14 +8,22 @@ class HollowCube(Shape):
     Graveyard.
 
     Arguments:
-        length (float): The length to use for the height, width, depth of the
+        length: The length to use for the height, width, depth of the
             inner dimensions of the cube.
-        thickness (float, optional): thickness of the vessel. Defaults to 10.0.
+        thickness: thickness of the vessel.
+        center_coordinate: the location the center of the cube.
     """
 
-    def __init__(self, length, thickness=10.0, **kwargs):
+    def __init__(
+        self,
+        length: float,
+        thickness: float = 10.0,
+        center_coordinate: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+        **kwargs
+    ):
         self.length = length
         self.thickness = thickness
+        self.center_coordinate = center_coordinate
         super().__init__(**kwargs)
 
     @property
@@ -37,13 +45,17 @@ class HollowCube(Shape):
     def create_solid(self):
 
         # creates a small box that surrounds the geometry
-        inner_box = cq.Workplane("front").box(self.length, self.length, self.length)
+        inner_box = cq.Workplane("front").box(self.length, self.length, self.length).translate(self.center_coordinate)
 
         # creates a large box that surrounds the smaller box
-        outer_box = cq.Workplane("front").box(
-            self.length + self.thickness,
-            self.length + self.thickness,
-            self.length + self.thickness,
+        outer_box = (
+            cq.Workplane("front")
+            .box(
+                self.length + self.thickness,
+                self.length + self.thickness,
+                self.length + self.thickness,
+            )
+            .translate(self.center_coordinate)
         )
 
         # subtracts the two boxes to leave a hollow box

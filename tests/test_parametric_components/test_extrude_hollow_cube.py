@@ -5,19 +5,19 @@ import pytest
 import paramak
 
 
-class TestExtrudeHollowRectangle(unittest.TestCase):
+class TestHollowCube(unittest.TestCase):
     def setUp(self):
-        self.test_shape = paramak.ExtrudeHollowRectangle(height=10, width=15, casing_thickness=1, distance=2)
+        self.test_shape = paramak.HollowCube(height=10, width=15, casing_thickness=1, distance=2)
 
     def test_default_parameters(self):
-        """Checks that the default parameters of a ExtrudeHollowRectangle are
+        """Checks that the default parameters of a HollowCube are
         correct."""
 
         assert self.test_shape.center_point == (0, 0)
 
     def test_processed_points_calculation(self):
         """Checks that the processed_points used to construct the
-        ExtrudeHollowRectangle are calculated correctly from the parameters given."""
+        HollowCube are calculated correctly from the parameters given."""
 
         assert self.test_shape.processed_points == [
             (7.5, 5.0, "straight"),
@@ -34,7 +34,7 @@ class TestExtrudeHollowRectangle(unittest.TestCase):
         ]
 
     def test_points_calculation(self):
-        """Checks that the points used to construct the ExtrudeHollowRectangle are
+        """Checks that the points used to construct the HollowCube are
         calculated correctly from the parameters given."""
 
         assert self.test_shape.points == [
@@ -51,20 +51,20 @@ class TestExtrudeHollowRectangle(unittest.TestCase):
         ]
 
     def test_creation(self):
-        """Creates a rectangular extrusion using the ExtrudeHollowRectangle
+        """Creates a rectangular extrusion using the HollowCube
         parametric component and checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
         assert self.test_shape.volume() > 100
 
     def test_absolute_volume(self):
-        """Creates a rectangular extrusion using the ExtrudeHollowRectangle
+        """Creates a rectangular extrusion using the HollowCube
         parametric component and checks that the volume is correct"""
 
         assert self.test_shape.volume() == pytest.approx((17 * 12 * 2) - (15 * 10 * 2))
 
     def test_absolute_areas(self):
-        """Creates a rectangular extrusion using the ExtrudeHollowRectangle
+        """Creates a rectangular extrusion using the HollowCube
         parametric component and checks that the areas are correct"""
 
         assert len(self.test_shape.areas) == 10
