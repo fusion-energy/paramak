@@ -35,7 +35,7 @@ class Reactor:
     def __init__(
         self,
         shapes_and_components: List[paramak.Shape] = [],
-        graveyard_size: float = 20_000.0,
+        graveyard_size: Optional[float] = None,
         graveyard_offset: Optional[float] = None,
     ):
 
@@ -690,10 +690,15 @@ class Reactor:
                 Please specify at least one of these attributes or arguments"
             )
 
-        graveyard_shape = paramak.HollowCube(
-            length=graveyard_size_to_use,
-            name="graveyard",
+        # makes the graveyard around the center of the geometry
+        bb = self.bounding_box
+        center = (
+            (bb[0][0] + bb[1][0]) / 2,
+            (bb[0][1] + bb[1][1]) / 2,
+            (bb[0][2] + bb[1][2]) / 2,
         )
+
+        graveyard_shape = paramak.HollowCube(length=graveyard_size_to_use, name="graveyard", center_coordinate=center)
 
         self.graveyard = graveyard_shape
 

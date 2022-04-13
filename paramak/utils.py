@@ -59,7 +59,7 @@ def export_solids_to_brep(
         if isinstance(solid, cq.occ_impl.shapes.Compound):
             bldr.AddArgument(solid.wrapped)
         else:
-            bldr.AddArgument(solid.wrapped)
+            bldr.AddArgument(solid.val().wrapped)
 
     bldr.SetNonDestructive(True)
 
