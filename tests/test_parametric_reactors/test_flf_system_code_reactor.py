@@ -28,8 +28,8 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
     def test_input_variable_names(self):
         """tests that the number of inputs variables is correct"""
 
-        assert len(self.test_reactor.input_variables.keys()) == 12
-        assert len(self.test_reactor.input_variable_names) == 12
+        assert len(self.test_reactor.input_variables.keys()) == 10
+        assert len(self.test_reactor.input_variable_names) == 10
 
     def test_stp_file_creation(self):
         """Exports a step file and checks that it was saved successfully"""
@@ -57,11 +57,11 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
 
         my_reactor = paramak.FlfSystemCodeReactor()
 
-        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False)
+        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=None)
         brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
         assert len(brep_shapes) == 6
 
-        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True)
+        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard={"size": 2000})
         brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
         assert len(brep_shapes) == 7
 

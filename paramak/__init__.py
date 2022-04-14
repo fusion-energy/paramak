@@ -23,6 +23,7 @@ from .utils import (
     find_radius_of_circle,
     export_solids_to_brep,
     export_solids_to_dagmc_h5m,
+    get_center_of_bounding_box,
 )
 from .utils import EdgeLengthSelector, FaceAreaSelector
 
