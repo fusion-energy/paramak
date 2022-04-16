@@ -5,6 +5,7 @@ import paramak
 
 class TestHollowCube(unittest.TestCase):
     """tests the hoolw cube shape that is used as a graveyard"""
+
     def setUp(self):
         self.test_shape = paramak.HollowCube(length=10, thickness=2)
 
