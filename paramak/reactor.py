@@ -616,44 +616,6 @@ class Reactor:
 
         return str(path_filename)
 
-    # def export_stp_graveyard(
-    #     self,
-    #     filename: Optional[str] = "graveyard.stp",
-    #     graveyard_size: Optional[float] = None,
-    #     graveyard_offset: Optional[float] = None,
-    # ) -> str:
-    #     """Writes a stp file (CAD geometry) for the reactor graveyard. This
-    #     is needed for DAGMC simulations. This method also calls
-    #     Reactor.make_graveyard() with the graveyard_size and graveyard_size
-    #     values.
-
-    #     Args:
-    #         filename (str): the filename for saving the stp file. Appends
-    #             .stp to the filename if it is missing.
-    #         graveyard_size: directly sets the size of the graveyard. Defaults
-    #             to None which then uses the Reactor.graveyard_size attribute.
-    #         graveyard_offset: the offset between the largest edge of the
-    #             geometry and inner bounding shell created. Defaults to None
-    #             which then uses Reactor.graveyard_offset attribute.
-
-    #     Returns:
-    #         str: the stp filename created
-    #     """
-
-    #     graveyard = self.make_graveyard(
-    #         offset=graveyard_offset,
-    #         size=graveyard_size,
-    #     )
-
-    #     path_filename = Path(filename)
-
-    #     if path_filename.suffix != ".stp":
-    #         path_filename = path_filename.with_suffix(".stp")
-
-    #     graveyard.export_stp(filename=str(path_filename))
-
-    #     return str(path_filename)
-
     def make_graveyard(
         self,
         size: Optional[float] = None,

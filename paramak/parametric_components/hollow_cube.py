@@ -1,5 +1,6 @@
-import cadquery as cq
 from typing import Tuple
+
+import cadquery as cq
 from paramak import Shape
 
 
