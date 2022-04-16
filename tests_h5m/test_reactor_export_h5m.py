@@ -25,7 +25,6 @@ class TestReactor(unittest.TestCase):
 
         # this reactor has a compound shape in the geometry
         self.test_reactor_3 = paramak.Reactor([self.test_shape, test_shape_3])
-        self.test_reactor_3.graveyard_size = 250
 
     def test_dagmc_h5m_custom_tags_export(self):
         """Exports a reactor with two shapes checks that the tags are correctly
@@ -74,7 +73,9 @@ class TestReactor(unittest.TestCase):
         named in the resulting h5m file, includes the optional graveyard"""
 
         self.test_reactor_3.rotation_angle = 180
-        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2", "grave"], include_graveyard=True)
+        self.test_reactor_3.export_dagmc_h5m(
+            "dagmc_reactor.h5m", tags=["1", "2", "grave"], include_graveyard={"size": 250}
+        )
 
         vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
         assert vols == [1, 2, 3, 4]
@@ -96,7 +97,7 @@ class TestReactor(unittest.TestCase):
         named in the resulting h5m file, includes the optional graveyard"""
 
         self.test_reactor_3.rotation_angle = 180
-        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", include_graveyard=True)
+        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", include_graveyard={"size": 250})
 
         vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
         assert vols == [1, 2, 3, 4]

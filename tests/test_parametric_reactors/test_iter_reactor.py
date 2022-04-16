@@ -12,8 +12,8 @@ class TestITERReactor(unittest.TestCase):
         """tests that the number of inputs variables is correct"""
 
         my_reactor = paramak.IterFrom2020PaperDiagram(number_of_tf_coils=1)
-        assert len(my_reactor.input_variables.keys()) == 4
-        assert len(my_reactor.input_variable_names) == 4
+        assert len(my_reactor.input_variables.keys()) == 2
+        assert len(my_reactor.input_variable_names) == 2
 
     def test_plasma_construction(self):
         """Creates the plasma part of the ITERTokamak and checks

@@ -8,9 +8,10 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
     """Creates a rectangular with a hollow section extrusion.
 
     Args:
-        height: the vertical (z axis) height of the rectangle (cm).
-        width: the horizontal (x axis) width of the rectangle (cm).
-        casing_thickness: the thickness of the casing (cm).
+        height: the height of the internal hollow section.
+        width: the width of the internal hollow section.
+        distance: the depth of the internal hollow section.
+        casing_thickness: the thickness of the casing around the hollow section.
         center_point: the center of the rectangle (x,z) values (cm).
         name: defaults to "extrude_rectangle".
     """
@@ -82,7 +83,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         #   9-------------6
         #   | 4 -------5,1|
         #   | |         | |
-        #   | |  (0,0)  | |
+        #   | |   cp    | |
         #   | |         | |
         #   | 3 ------- 2 |
         #   8-------------7

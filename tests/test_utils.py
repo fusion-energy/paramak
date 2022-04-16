@@ -14,6 +14,7 @@ from paramak.utils import (
     find_radius_of_circle,
     get_bounding_box,
     get_largest_dimension,
+    get_largest_distance_from_origin,
 )
 import cadquery as cq
 
@@ -81,13 +82,21 @@ class TestUtilityFunctions(unittest.TestCase):
 
         largest_dimension = get_largest_dimension(test_sphere)
 
+        assert largest_dimension == 20
+
+    def test_largest_dimension__from_origin_with_single_solid_at_origin(self):
+
+        test_sphere = cq.Workplane("XY").moveTo(0, 0).sphere(10)
+
+        largest_dimension = get_largest_distance_from_origin(test_sphere)
+
         assert largest_dimension == 10
 
     def test_largest_dimension_with_single_solid(self):
 
         test_sphere = cq.Workplane("XY").moveTo(100, 0).sphere(10)
 
-        largest_dimension = get_largest_dimension(test_sphere)
+        largest_dimension = get_largest_distance_from_origin(test_sphere)
 
         assert largest_dimension == 110
 
@@ -98,7 +107,7 @@ class TestUtilityFunctions(unittest.TestCase):
 
         both_shapes = cq.Compound.makeCompound([test_sphere_1.val(), test_sphere_2.val()])
 
-        largest_dimension = get_largest_dimension(both_shapes)
+        largest_dimension = get_largest_distance_from_origin(both_shapes)
 
         assert largest_dimension == 210
 

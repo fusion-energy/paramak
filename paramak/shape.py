@@ -216,8 +216,8 @@ class Shape:
 
     @property
     def largest_dimension(self) -> float:
-        """Calculates the distance from (0, 0, 0) to the furthest part of
-        the geometry. This distance is returned as an positive value."""
+        """Calculates a bounding box for the Reactor and returns the largest
+        absolute value of the largest dimension of the bounding box"""
 
         return get_largest_dimension(self.solid)
 

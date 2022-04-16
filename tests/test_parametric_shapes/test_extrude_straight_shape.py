@@ -23,7 +23,7 @@ class TestExtrudeStraightShape(unittest.TestCase):
     def test_largest_dimension(self):
         """checks the largest dimension value"""
 
-        assert self.test_shape.largest_dimension == 30.0
+        assert self.test_shape.largest_dimension == 25.0
 
     def test_translate(self):
         """Checks the shape extends to the bounding box and then translates

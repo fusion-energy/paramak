@@ -18,18 +18,14 @@ import OCP
 
 
 def export_solids_to_brep(
-    solids,
+    solids: Iterable,
     filename: str = "reactor.brep",
 ):
     """Exports a brep file for the Reactor.solid.
 
     Args:
+        solids: a list of cadquery solids
         filename: the filename of exported the brep file.
-        merge: if the surfaces should be merged (True) or not (False).
-        include_graveyard: specify if the graveyard will be included or
-            not. If True the the Reactor.make_graveyard will be called
-            using Reactor.graveyard_size and Reactor.graveyard_offset
-            attribute values.
 
     Returns:
         filename of the brep created
@@ -139,6 +135,7 @@ def export_solids_to_dagmc_h5m(
     # request to find part ids that are mixed up in the Brep file
     # using the volume, center, bounding box that we know about when creating the
     # CAD geometry in the first place
+
     key_and_part_id = bpf.get_dict_of_part_ids(
         brep_part_properties=brep_file_part_properties,
         shape_properties=shape_properties,
@@ -187,7 +184,36 @@ def get_bounding_box(solid) -> Tuple[Tuple[float, float, float], Tuple[float, fl
     return (lower_left, upper_right)
 
 
+def get_center_of_bounding_box(solid):
+    """Calculates the geometric center of the solids bounding box"""
+
+    bounding_box = get_bounding_box(solid)
+
+    center = (
+        (bounding_box[0][0] + bounding_box[1][0]) / 2,
+        (bounding_box[0][1] + bounding_box[1][1]) / 2,
+        (bounding_box[0][2] + bounding_box[1][2]) / 2,
+    )
+
+    return center
+
+
 def get_largest_dimension(solid):
+    """Calculates the extent of the geometry in the x,y and z axis and returns
+    the largest of the three."""
+
+    bounding_box = get_bounding_box(solid)
+
+    largest_dimension = max(
+        abs(bounding_box[0][0] - bounding_box[0][1]),
+        abs(bounding_box[0][2] - bounding_box[1][0]),
+        abs(bounding_box[1][1] - bounding_box[1][2]),
+    )
+
+    return largest_dimension
+
+
+def get_largest_distance_from_origin(solid):
     """Calculates the distance from (0, 0, 0) to the furthest part of
     the geometry. This distance is returned as an positive value."""
 
