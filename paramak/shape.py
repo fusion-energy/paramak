@@ -1,6 +1,4 @@
 import numbers
-import os
-import tempfile
 from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
@@ -18,8 +16,11 @@ from paramak.utils import (
     facet_wire,
     get_hash,
     intersect_solid,
-    plotly_trace,
     union_solid,
+    get_largest_dimension,
+    get_bounding_box,
+    export_solids_to_brep,
+    export_solids_to_dagmc_h5m,
 )
 
 
@@ -214,38 +215,27 @@ class Shape:
         self._union = value
 
     @property
-    def largest_dimension(self):
-        """Calculates a bounding box for the Shape and returns the largest
+    def largest_dimension(self) -> float:
+        """Calculates a bounding box for the Reactor and returns the largest
         absolute value of the largest dimension of the bounding box"""
-        largest_dimension = 0
-        if isinstance(self.solid, (Compound, shapes.Solid)):
-            for solid in self.solid.Solids():
-                bound_box = solid.BoundingBox()
-                largest_dimension = max(
-                    abs(bound_box.xmax),
-                    abs(bound_box.xmin),
-                    abs(bound_box.ymax),
-                    abs(bound_box.ymin),
-                    abs(bound_box.zmax),
-                    abs(bound_box.zmin),
-                    largest_dimension,
-                )
-        else:
-            bound_box = self.solid.val().BoundingBox()
-            largest_dimension = max(
-                abs(bound_box.xmax),
-                abs(bound_box.xmin),
-                abs(bound_box.ymax),
-                abs(bound_box.ymin),
-                abs(bound_box.zmax),
-                abs(bound_box.zmin),
-            )
-        self.largest_dimension = largest_dimension
-        return largest_dimension
+
+        return get_largest_dimension(self.solid)
 
     @largest_dimension.setter
     def largest_dimension(self, value):
         self._largest_dimension = value
+
+    @property
+    def bounding_box(self):
+        """Calculates a bounding box for the Shape and returns the coordinates of
+        the corners lower-left and upper-right. This function is useful when
+        creating OpenMC mesh tallies as the bounding box is required in this form"""
+
+        return get_bounding_box(self.solid)
+
+    @bounding_box.setter
+    def bounding_box(self, value):
+        self._bounding_box = value
 
     @property
     def workplane(self):
@@ -280,19 +270,22 @@ class Shape:
             if len(value) != 2:
                 raise ValueError(msg)
             for point in value:
-                if not isinstance(point, tuple):
+                if not isinstance(point, Iterable):
+                    msg = f"Shape.rotation_axis must be an iterable of iterables, not {type(point)}"
                     raise ValueError(msg)
                 if len(point) != 3:
+                    msg = f"Shape.rotation_axis must be an iterable of iterables with 3 entries, not {len(point)}"
                     raise ValueError(msg)
                 for val in point:
                     if not isinstance(val, (int, float)):
+                        msg = f"Shape.rotation_axis should be an iterable of iterables where the nested iterables are numerical, not {type(val)}"
                         raise ValueError(msg)
 
             if value[0] == value[1]:
-                msg = "The two points must be different"
+                msg = "The two coordinates points for rotation_axis must be different"
                 raise ValueError(msg)
         elif value is not None:
-            msg = "Shape.rotation_axis must be a list or a string or None"
+            msg = "Shape.rotation_axis must be an iterable or a string or None"
             raise ValueError(msg)
         self._rotation_axis = value
 
@@ -785,40 +778,53 @@ class Shape:
 
         return str(path_filename)
 
-    def export_brep(self, filename):
-        """Exports a brep file for the Shape.solid.
+    def export_brep(self, filename="shape.brep", include_graveyard=False) -> str:
+        """Exports a brep file for the Shape. Optionally including a DAGMC
+        graveyard.
 
         Args:
             filename: the filename of exported the brep file.
+            include_graveyard: specify if the graveyard will be included or
+                not. If True the the Shape.make_graveyard will be called
+                using Shape.graveyard_size and Shape.graveyard_offset
+                attribute values.
+
+        Returns:
+            filename of the brep created
         """
 
-        path_filename = Path(filename)
+        geometry_to_save = [self.solid]
 
-        if path_filename.suffix != ".brep":
-            msg = "When exporting a brep file the filename must end with .brep"
-            raise ValueError(msg)
+        if include_graveyard:
+            self.make_graveyard()
+            geometry_to_save.append(self.graveyard.solid)
 
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+        output_filename = export_solids_to_brep(
+            solids=geometry_to_save,
+            filename=filename,
+        )
 
-        self.solid.val().exportBrep(str(path_filename))
-        # alternative method is to use BRepTools that might support imprinting
-        # and merging https://github.com/CadQuery/cadquery/issues/449
-        # from OCP.BRepTools import BRepTools
-        # BRepTools.Write_s(self.solid.toOCC(), str(path_filename))
-
-        return str(path_filename)
+        return output_filename
 
     def export_dagmc_h5m(
         self,
         filename: str = "dagmc.h5m",
-        min_mesh_size: float = 10,
+        min_mesh_size: float = 5,
         max_mesh_size: float = 20,
+        verbose: bool = False,
+        volume_atol: float = 0.000001,
+        center_atol: float = 0.000001,
+        bounding_box_atol: float = 0.000001,
+        tags: Optional[List[str]] = None,
+        include_graveyard: bool = False,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
         MOAB is used to convert the meshed geometry into a h5m with parts tagged by
         using the reactor.shape_and_components.name properties. You will need
-        Gmsh installed and MOAB installed to use this function.
+        Gmsh installed and MOAB installed to use this function. Acceptable
+        tolerances may need increasing to match reactor parts with the parts
+        in the intermediate Brep file produced during the process
 
         Args:
             filename: the filename of the DAGMC h5m file to write
@@ -826,31 +832,48 @@ class Shape:
                 into gmsh.option.setNumber("Mesh.MeshSizeMin", min_mesh_size)
             max_mesh_size: the maximum mesh element size to use in Gmsh. Passed
                 into gmsh.option.setNumber("Mesh.MeshSizeMax", max_mesh_size)
+            volume_atol: the absolute volume tolerance to allow when matching
+                parts in the intermediate brep file with the cadquery parts
+            center_atol: the absolute center coordinates tolerance to allow
+                when matching parts in the intermediate brep file with the
+                cadquery parts
+            bounding_box_atol: the absolute volume tolerance to allow when
+                matching parts in the intermediate brep file with the cadquery
+                parts
+            tags: the dagmc tag to use in when naming the shape in the h5m file.
+                If left as None then the Shape.name will be used. This allows
+                the DAGMC geometry created to be compatible with a wider range
+                of neutronics codes that have specific DAGMC tag requirements.
+            include_graveyard: specify if the graveyard will be included or
+                not. If True the the Reactor.make_graveyard will be called
+                using Reactor.graveyard_size and Reactor.graveyard_offset
+                attribute values.
         """
 
-        from brep_to_h5m import brep_to_h5m
+        shapes_to_convert = [self.solid]
 
-        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
+        if include_graveyard:
+            self.make_graveyard()
+            shapes_to_convert.append(self.graveyard.solid)
 
-        # saves the reactor as a Brep file with merged surfaces
-        self.export_brep(tmp_brep_filename)
+        if tags is None:
+            tags = [self.name]
+            if include_graveyard:
+                tags.append(self.graveyard.name)
 
-        volumes_with_tags = {}
-        for counter, _ in enumerate(self.solid.val().Solids(), 1):
-            volumes_with_tags[counter] = f"mat_{self.name}"
-
-        brep_to_h5m(
-            brep_filename=tmp_brep_filename,
-            volumes_with_tags=volumes_with_tags,
-            h5m_filename=filename,
+        output_filename = export_solids_to_dagmc_h5m(
+            solids=shapes_to_convert,
+            filename=filename,
             min_mesh_size=min_mesh_size,
             max_mesh_size=max_mesh_size,
+            verbose=verbose,
+            volume_atol=volume_atol,
+            center_atol=center_atol,
+            bounding_box_atol=bounding_box_atol,
+            tags=tags,
         )
 
-        # temporary brep is deleted
-        os.remove(tmp_brep_filename)
-
-        return filename
+        return output_filename
 
     def export_stp(
         self,
@@ -1061,15 +1084,8 @@ class Shape:
             facet_splines=facet_splines,
             facet_circles=facet_circles,
             tolerance=tolerance,
-            title=(f"coordinates of {self.__class__.__name__} shape, viewed " "from the {view_plane} plane"),
+            title=f"coordinates of {self.__class__.__name__} shape, viewed from the {view_plane} plane",
         )
-
-        if self.points is not None:
-            fig.add_trace(plotly_trace(points=self.points, mode="markers", name="Shape.points"))
-
-        # sweep shapes have .path_points but not .points attribute
-        if self.path_points:
-            fig.add_trace(plotly_trace(points=self.path_points, mode="markers", name="Shape.path_points"))
 
         if filename is not None:
 

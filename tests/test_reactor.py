@@ -27,6 +27,18 @@ class TestReactor(unittest.TestCase):
         # this reactor has a compound shape in the geometry
         self.test_reactor_3 = paramak.Reactor([self.test_shape, test_shape_3])
 
+    def test_bounding_box(self):
+        """checks the bounding box value"""
+
+        bounding_box = self.test_reactor_2.bounding_box
+
+        assert bounding_box[0][0] == pytest.approx(-20.0)
+        assert bounding_box[0][1] == pytest.approx(-20.0)
+        assert bounding_box[0][2] == pytest.approx(0.0)
+        assert bounding_box[1][0] == pytest.approx(100.0)
+        assert bounding_box[1][1] == pytest.approx(20.0)
+        assert bounding_box[1][2] == pytest.approx(100.0)
+
     def test_reactor_export_stp_with_name_set_to_none(self):
         """Exports the reactor as separate files and as a single file"""
 
@@ -50,17 +62,16 @@ class TestReactor(unittest.TestCase):
 
     def test_incorrect_graveyard_offset_too_small(self):
         def incorrect_graveyard_offset_too_small():
-            """Set graveyard_offset as a negative number which should raise an error"""
+            """Set graveyard offset as a negative number which should raise an error"""
 
-            self.test_reactor.graveyard_offset = -3
+            self.test_reactor.make_graveyard(offset=-3)
 
         self.assertRaises(ValueError, incorrect_graveyard_offset_too_small)
 
     def test_incorrect_graveyard_offset_wrong_type(self):
         def incorrect_graveyard_offset_wrong_type():
-            """Set graveyard_offset as a string which should raise an error"""
-
-            self.test_reactor.graveyard_offset = "coucou"
+            """Set graveyard offset as a string which should raise an error"""
+            self.test_reactor.make_graveyard(offset="coucou")
 
         self.assertRaises(TypeError, incorrect_graveyard_offset_wrong_type)
 
@@ -68,16 +79,14 @@ class TestReactor(unittest.TestCase):
         """Makes a neutronics model and checks the default largest_dimension
         and that largest_dimension changes with largest_shapes"""
 
-        assert self.test_reactor.largest_dimension == 20.0
+        assert pytest.approx(self.test_reactor.largest_dimension) == 20.0
+        assert self.test_reactor_2.largest_dimension == 100.0
 
         test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         test_shape2 = paramak.RotateStraightShape(points=[(0, 0), (0, 40), (40, 40)])
 
         test_reactor = paramak.Reactor([test_shape, test_shape2])
-        assert test_reactor.largest_dimension == 40
-
-        test_reactor.largest_shapes = [test_shape]
-        assert test_reactor.largest_dimension == 20
+        assert pytest.approx(test_reactor.largest_dimension) == 40
 
     def test_make_sector_wedge(self):
         """Checks that the wedge is not made when rotation angle is 360"""
@@ -94,7 +103,7 @@ class TestReactor(unittest.TestCase):
 
     def test_make_graveyard_accepts_offset_from_graveyard(self):
         """Creates a graveyard for a reactor and sets the graveyard_offset.
-        Checks that the Reactor.graveyard_offset property is set"""
+        Checks that the Reactor.graveyard property is set"""
 
         test_shape = paramak.RotateStraightShape(
             points=[(0, 0), (0, 20), (20, 20)],
@@ -104,9 +113,10 @@ class TestReactor(unittest.TestCase):
         )
         test_shape.rotation_angle = 360
         test_reactor = paramak.Reactor([test_shape, test_shape2])
-        test_reactor.graveyard_offset == 101
-        graveyard = test_reactor.make_graveyard()
+
+        graveyard = test_reactor.make_graveyard(offset=101)
         assert graveyard.volume() > 0
+        assert test_reactor.graveyard.volume() > 0
 
     def test_reactor_creation_with_default_properties(self):
         """creates a Reactor object and checks that it has no default properties"""
@@ -134,7 +144,7 @@ class TestReactor(unittest.TestCase):
         test_shape.rotation_angle = 360
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
-        test_reactor.make_graveyard()
+        test_reactor.make_graveyard(size=100)
 
         assert isinstance(test_reactor.graveyard, paramak.Shape)
 
@@ -148,7 +158,7 @@ class TestReactor(unittest.TestCase):
         test_shape.create_solid()
         test_reactor = paramak.Reactor([test_shape])
         test_reactor.shapes_and_components[0].solid = None
-        test_reactor.make_graveyard()
+        test_reactor.make_graveyard(size=100)
 
         assert isinstance(test_reactor.graveyard, paramak.Shape)
 
@@ -162,14 +172,15 @@ class TestReactor(unittest.TestCase):
         os.system("rm graveyard.stp")
         test_reactor = paramak.Reactor([test_shape])
 
-        test_reactor.export_stp_graveyard()
-        test_reactor.export_stp_graveyard(filename="my_graveyard.stp")
-        test_reactor.export_stp_graveyard(filename="my_graveyard_without_ext")
+        test_reactor.make_graveyard(size=100)
+        test_reactor.graveyard.export_stp(filename="graveyard.stp")
+        test_reactor.graveyard.export_stp(filename="my_graveyard.stp")
+        test_reactor.graveyard.export_stp(filename="my_graveyard_without_ext.step")
 
         for filepath in [
             "graveyard.stp",
             "my_graveyard.stp",
-            "my_graveyard_without_ext.stp",
+            "my_graveyard_without_ext.step",
         ]:
             assert Path(filepath).exists() is True
             os.system("rm " + filepath)
@@ -183,16 +194,16 @@ class TestReactor(unittest.TestCase):
 
         test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
         os.system("rm graveyard.stp")
-        test_reactor = paramak.Reactor([test_shape], graveyard_size=None, graveyard_offset=100)
-        test_reactor.make_graveyard()
+        test_reactor = paramak.Reactor([test_shape])
+        test_reactor.make_graveyard(offset=100)
 
         graveyard_volume_1 = test_reactor.graveyard.volume()
 
-        test_reactor.make_graveyard(graveyard_offset=50)
+        test_reactor.make_graveyard(offset=50)
         assert test_reactor.graveyard.volume() < graveyard_volume_1
         graveyard_volume_2 = test_reactor.graveyard.volume()
 
-        test_reactor.make_graveyard(graveyard_offset=200)
+        test_reactor.make_graveyard(offset=200)
         assert test_reactor.graveyard.volume() > graveyard_volume_1
         assert test_reactor.graveyard.volume() > graveyard_volume_2
 
@@ -375,27 +386,30 @@ class TestReactor(unittest.TestCase):
 
         def incorrect_graveyard_size_size():
             test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
-            paramak.Reactor([test_shape], graveyard_size=-10)
+            test_reactor = paramak.Reactor([test_shape])
+            test_reactor.make_graveyard(size=-10)
 
         self.assertRaises(ValueError, incorrect_graveyard_size_size)
 
     def test_graveyard_offset_setting_type_checking(self):
-        """Attempts to make a reactor with a graveyard_offset that is an float
+        """Attempts to make a reactor with a graveyard offset that is an float
         which should raise a ValueError"""
 
         def incorrect_graveyard_offset_type():
             test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
-            paramak.Reactor([test_shape], graveyard_offset="coucou")
+            test_reactor = paramak.Reactor([test_shape])
+            test_reactor.make_graveyard(offset="coucou")
 
         self.assertRaises(TypeError, incorrect_graveyard_offset_type)
 
     def test_graveyard_offset_setting_magnitude_checking(self):
-        """Attempts to make a reactor with a graveyard_offset that is an int
+        """Attempts to make a reactor with a graveyard offset that is an int
         which should raise a ValueError"""
 
         def incorrect_graveyard_offset_size():
             test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])
-            paramak.Reactor([test_shape], graveyard_offset=-10)
+            test_reactor = paramak.Reactor([test_shape])
+            test_reactor.make_graveyard(size=-10)
 
         self.assertRaises(ValueError, incorrect_graveyard_offset_size)
 
@@ -404,17 +418,17 @@ class TestReactor(unittest.TestCase):
         test_reactor = paramak.Reactor([test_shape])
 
         def str_graveyard_offset():
-            test_reactor.graveyard_offset = "coucou"
+            test_reactor.make_graveyard(offset="coucou")
 
         self.assertRaises(TypeError, str_graveyard_offset)
 
         def negative_graveyard_offset():
-            test_reactor.graveyard_offset = -2
+            test_reactor.make_graveyard(offset=-2)
 
         self.assertRaises(ValueError, negative_graveyard_offset)
 
         def list_graveyard_offset():
-            test_reactor.graveyard_offset = [1.2]
+            test_reactor.make_graveyard(offset=[1.2])
 
         self.assertRaises(TypeError, list_graveyard_offset)
 
@@ -427,7 +441,7 @@ class TestReactor(unittest.TestCase):
         assert test_reactor.solid is not None
 
     def test_sector_wedge_with_360_returns_none(self):
-        """Trys to make a sector wedge with full 360 degree rotation and checks
+        """Tries to make a sector wedge with full 360 degree rotation and checks
         that None is returned"""
 
         test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)])

@@ -1,6 +1,5 @@
-import os
-import tempfile
 from collections.abc import Iterable
+from logging import warning
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
@@ -9,7 +8,15 @@ import matplotlib.pyplot as plt
 from cadquery import exporters
 
 import paramak
-from paramak.utils import _replace, get_hash
+from paramak.utils import (
+    _replace,
+    get_hash,
+    get_bounding_box,
+    get_largest_dimension,
+    export_solids_to_brep,
+    export_solids_to_dagmc_h5m,
+    get_center_of_bounding_box,
+)
 
 
 class Reactor:
@@ -20,37 +27,17 @@ class Reactor:
 
     Args:
         shapes_and_components: list of paramak.Shape objects
-        graveyard_size: The dimension of cube shaped the graveyard region used
-            by DAGMC. This attribute is used preferentially over
-            graveyard_offset.
-        graveyard_offset: The distance between the graveyard and the largest
-            shape. If graveyard_size is set the this is ignored.
-        largest_shapes: Identifying the shape(s) with the largest size in each
-            dimension (x,y,z) can speed up the production of the graveyard.
-            Defaults to None which finds the largest shapes by looping through
-            all the shapes and creating bounding boxes. This can be slow and
-            that is why the user is able to provide a subsection of shapes to
-            use when calculating the graveyard dimensions.
     """
 
     def __init__(
         self,
         shapes_and_components: List[paramak.Shape] = [],
-        graveyard_size: float = 20_000.0,
-        graveyard_offset: Optional[float] = None,
-        largest_shapes: Optional[List[paramak.Shape]] = None,
     ):
 
         self.shapes_and_components = shapes_and_components
-        self.graveyard_offset = graveyard_offset
-        self.graveyard_size = graveyard_size
-        self.largest_shapes = largest_shapes
 
         self.input_variable_names: List[str] = [
             # 'shapes_and_components', commented out to avoid calculating solids
-            "graveyard_size",
-            "graveyard_offset",
-            "largest_shapes",
         ]
 
         self.stp_filenames: List[str] = []
@@ -99,16 +86,9 @@ class Reactor:
     def largest_dimension(self):
         """Calculates a bounding box for the Reactor and returns the largest
         absolute value of the largest dimension of the bounding box"""
-        largest_dimension = 0
 
-        if self.largest_shapes is None:
-            shapes_to_bound = self.shapes_and_components
-        else:
-            shapes_to_bound = self.largest_shapes
+        largest_dimension = get_largest_dimension(self.solid)
 
-        for component in shapes_to_bound:
-            largest_dimension = max(largest_dimension, component.largest_dimension)
-        # self._largest_dimension = largest_dimension
         return largest_dimension
 
     @largest_dimension.setter
@@ -116,14 +96,16 @@ class Reactor:
         self._largest_dimension = value
 
     @property
-    def largest_shapes(self):
-        return self._largest_shapes
+    def bounding_box(self):
+        """Calculates a bounding box for the Shape and returns the coordinates of
+        the corners lower-left and upper-right. This function is useful when
+        creating OpenMC mesh tallies as the bounding box is required in this form"""
 
-    @largest_shapes.setter
-    def largest_shapes(self, value):
-        if not isinstance(value, (list, tuple, type(None))):
-            raise ValueError("paramak.Reactor.largest_shapes should be a " "list of paramak.Shapes")
-        self._largest_shapes = value
+        return get_bounding_box(self.solid)
+
+    @bounding_box.setter
+    def bounding_box(self, value):
+        self._bounding_box = value
 
     @property
     def shapes_and_components(self):
@@ -235,10 +217,12 @@ class Reactor:
         min_mesh_size: float = 5,
         max_mesh_size: float = 20,
         exclude: List[str] = None,
-        verbose=False,
-        volume_atol=0.000001,
-        center_atol=0.000001,
-        bounding_box_atol=0.000001,
+        verbose: bool = False,
+        volume_atol: float = 0.000001,
+        center_atol: float = 0.000001,
+        bounding_box_atol: float = 0.000001,
+        tags: Optional[List[str]] = None,
+        include_graveyard: Optional[dict] = None,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -265,82 +249,55 @@ class Reactor:
             bounding_box_atol: the absolute volume tolerance to allow when
                 matching parts in the intermediate brep file with the cadquery
                 parts
+            tags: the dagmc tag to use in when naming the shape in the h5m file.
+                If left as None then the Shape.name will be used. This allows
+                the DAGMC geometry created to be compatible with a wider range
+                of neutronics codes that have specific DAGMC tag requirements.
+            include_graveyard: specify if the graveyard box will be included or
+                not and how it will be sized. Leave as None if a graveyard is
+                not included. If a graveyard is required then set
+                include_graveyard to a dictionary with a key and value.
+                Acceptable keys are 'offset' and 'size'. Each key must have a
+                float value associated. For example {'size': 1000} or
+                {'offset': 10}. The size simple sets the height, width, depth
+                of the graveyard while the offset adds to the geometry to get
+                the graveyard box size.
         """
 
-        # a local import is used here as these packages need CQ master to work
-        from brep_to_h5m import brep_to_h5m
-        import brep_part_finder as bpf
+        shapes_to_convert = []
 
-        tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
-
-        # saves the reactor as a Brep file with merged surfaces
-        self.export_brep(tmp_brep_filename)
-
-        # brep file is imported
-        brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
-
-        if verbose:
-            print("brep_file_part_properties", brep_file_part_properties)
-
-        shape_properties = {}
-        for shape_or_compound in self.shapes_and_components:
-            sub_solid_descriptions = []
-
-            # checks if the solid is a cq.Compound or not
-            if isinstance(shape_or_compound.solid, cq.occ_impl.shapes.Compound):
-                iterable_solids = shape_or_compound.solid.Solids()
+        for shape in self.shapes_and_components:
+            # allows components like the plasma to be removed
+            if exclude:
+                if shape.name not in exclude:
+                    shapes_to_convert.append(shape)
             else:
-                iterable_solids = shape_or_compound.solid.val().Solids()
+                shapes_to_convert.append(shape)
 
-            for sub_solid in iterable_solids:
-                part_bb = sub_solid.BoundingBox()
-                part_center = sub_solid.Center()
-                sub_solid_description = {
-                    "volume": sub_solid.Volume(),
-                    "center": (part_center.x, part_center.y, part_center.z),
-                    "bounding_box": (
-                        (part_bb.xmin, part_bb.ymin, part_bb.zmin),
-                        (part_bb.xmax, part_bb.ymax, part_bb.zmax),
-                    ),
-                }
-                sub_solid_descriptions.append(sub_solid_description)
-            shape_properties[shape_or_compound.name] = sub_solid_descriptions
+        if include_graveyard:
+            graveyard = self.make_graveyard(**include_graveyard)
+            shapes_to_convert.append(graveyard)
 
-        if verbose:
-            print("shape_properties", shape_properties)
+        if tags is None:
+            tags = []
+            for shape in shapes_to_convert:
+                tags.append(shape.name)
 
-        # request to find part ids that are mixed up in the Brep file
-        # using the volume, center, bounding box that we know about when creating the
-        # CAD geometry in the first place
-        key_and_part_id = bpf.get_dict_of_part_ids(
-            brep_part_properties=brep_file_part_properties,
-            shape_properties=shape_properties,
+        print(tags)
+
+        output_filename = export_solids_to_dagmc_h5m(
+            solids=[shape.solid for shape in shapes_to_convert],
+            filename=filename,
+            min_mesh_size=min_mesh_size,
+            max_mesh_size=max_mesh_size,
+            verbose=verbose,
             volume_atol=volume_atol,
             center_atol=center_atol,
             bounding_box_atol=bounding_box_atol,
+            tags=tags,
         )
 
-        if verbose:
-            print(f"key_and_part_id={key_and_part_id}")
-
-        # allows components like the plasma to be removed
-        if isinstance(exclude, Iterable):
-            for name_to_remove in exclude:
-                key_and_part_id = {key: val for key, val in key_and_part_id.items() if val != name_to_remove}
-
-        brep_to_h5m(
-            brep_filename=tmp_brep_filename,
-            volumes_with_tags=key_and_part_id,
-            h5m_filename=filename,
-            min_mesh_size=min_mesh_size,
-            max_mesh_size=max_mesh_size,
-            delete_intermediate_stl_files=True,
-        )
-
-        # temporary brep is deleted
-        os.remove(tmp_brep_filename)
-
-        return filename
+        return output_filename
 
     def export_stp(
         self,
@@ -417,50 +374,41 @@ class Reactor:
 
         return filename
 
-    def export_brep(self, filename: str, merge: bool = True):
-        """Exports a brep file for the Reactor.solid.
+    def export_brep(
+        self,
+        filename: str = "reactor.brep",
+        include_graveyard: Optional[dict] = None,
+    ) -> str:
+        """Exports a brep file for the Reactor. Optionally including a DAGMC
+        graveyard.
 
         Args:
             filename: the filename of exported the brep file.
-            merged: if the surfaces should be merged (True) or not (False).
+            include_graveyard: specify if the graveyard box will be included or
+                not and how it will be sized. Leave as None if a graveyard is
+                not included. If a graveyard is required then set
+                include_graveyard to a dictionary with a key and value.
+                Acceptable keys are 'offset' and 'size'. Each key must have a
+                float value associated. For example {'size': 1000} or
+                {'offset': 10}. The size simple sets the height, width, depth
+                of the graveyard while the offset adds to the geometry to get
+                the graveyard box size.
 
         Returns:
             filename of the brep created
         """
 
-        path_filename = Path(filename)
+        geometry_to_save = [shape.solid for shape in self.shapes_and_components]
+        if include_graveyard:
+            graveyard = self.make_graveyard(**include_graveyard)
+            geometry_to_save.append(graveyard.solid)
 
-        if path_filename.suffix != ".brep":
-            msg = "When exporting a brep file the filename must end with .brep"
-            raise ValueError(msg)
+        output_filename = export_solids_to_brep(
+            solids=geometry_to_save,
+            filename=filename,
+        )
 
-        path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-
-        if not merge:
-            self.solid.exportBrep(str(path_filename))
-        else:
-            import OCP
-
-            bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
-
-            for shape in self.shapes_and_components:
-                # checks if solid is a compound as .val() is not needed for compunds
-                if isinstance(shape.solid, cq.occ_impl.shapes.Compound):
-                    bldr.AddArgument(shape.solid.wrapped)
-                else:
-                    bldr.AddArgument(shape.solid.val().wrapped)
-
-            bldr.SetNonDestructive(True)
-
-            bldr.Perform()
-
-            bldr.Images()
-
-            merged = cq.Compound(bldr.Shape())
-
-            merged.exportBrep(str(path_filename))
-
-        return str(path_filename)
+        return output_filename
 
     def export_stl(
         self,
@@ -573,6 +521,8 @@ class Reactor:
             print("No sector wedge made as rotation angle is 360")
             return None
 
+        # todo this should be cetered around the center point
+
         if height is None:
             height = self.largest_dimension * 2
 
@@ -666,83 +616,48 @@ class Reactor:
 
         return str(path_filename)
 
-    def export_stp_graveyard(
-        self,
-        filename: Optional[str] = "graveyard.stp",
-        graveyard_size: Optional[float] = None,
-        graveyard_offset: Optional[float] = None,
-    ) -> str:
-        """Writes a stp file (CAD geometry) for the reactor graveyard. This
-        is needed for DAGMC simulations. This method also calls
-        Reactor.make_graveyard() with the graveyard_size and graveyard_size
-        values.
-
-        Args:
-            filename (str): the filename for saving the stp file. Appends
-                .stp to the filename if it is missing.
-            graveyard_size: directly sets the size of the graveyard. Defaults
-                to None which then uses the Reactor.graveyard_size attribute.
-            graveyard_offset: the offset between the largest edge of the
-                geometry and inner bounding shell created. Defaults to None
-                which then uses Reactor.graveyard_offset attribute.
-
-        Returns:
-            str: the stp filename created
-        """
-
-        graveyard = self.make_graveyard(
-            graveyard_offset=graveyard_offset,
-            graveyard_size=graveyard_size,
-        )
-
-        path_filename = Path(filename)
-
-        if path_filename.suffix != ".stp":
-            path_filename = path_filename.with_suffix(".stp")
-
-        graveyard.export_stp(filename=str(path_filename))
-
-        return str(path_filename)
-
     def make_graveyard(
         self,
-        graveyard_size: Optional[float] = None,
-        graveyard_offset: Optional[float] = None,
+        size: Optional[float] = None,
+        offset: Optional[float] = None,
     ) -> paramak.Shape:
         """Creates a graveyard volume (bounding box) that encapsulates all
         volumes. This is required by DAGMC when performing neutronics
         simulations. The graveyard size can be ascertained in two ways. Either
-        the size can be set directly using the graveyard_size which is the
+        the size can be set directly using the size which is the
         quickest method. Alternativley the graveyard can be automatically sized
-        to the geometry by setting a graveyard_offset value. If both options
-        are set then the method will default to using the graveyard_size
+        to the geometry by setting a offset value. If both options
+        are set then the method will default to using the size
         preferentially.
 
         Args:
-            graveyard_size: directly sets the size of the graveyard. Defaults
-                to None which then uses the Reactor.graveyard_size attribute.
-            graveyard_offset: the offset between the largest edge of the
-                geometry and inner bounding shell created. Defaults to None
-                which then uses Reactor.graveyard_offset attribute.
+            size: directly sets the size of the graveyard.
+            offset: the offset between the largest edge of the geometry and
+                inner surface of the graveyard
 
         Returns:
             CadQuery solid: a shell volume that bounds the geometry, referred
             to as a graveyard in DAGMC
         """
 
-        if graveyard_size is not None:
-            graveyard_size_to_use = graveyard_size
+        solid = self.solid
 
-        elif self.graveyard_size is not None:
-            graveyard_size_to_use = self.graveyard_size
+        # makes the graveyard around the center of the geometry
+        center = get_center_of_bounding_box(solid)
 
-        elif graveyard_offset is not None:
-            self.solid
-            graveyard_size_to_use = self.largest_dimension * 2 + graveyard_offset * 2
+        if size is not None:
+            graveyard_size_to_use = size
+            if size <= 0:
+                raise ValueError("Graveyard size should be larger than 0")
+            largest_dim = get_largest_dimension(solid)
+            if size < largest_dim:
+                msg = f"Graveyard size should be larger than the largest shape in the Reactor. Which is {largest_dim}"
+                raise ValueError(msg)
 
-        elif self.graveyard_offset is not None:
-            self.solid
-            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
+        elif offset is not None:
+            graveyard_size_to_use = get_largest_dimension(solid) * 2 + offset * 2
+            if offset <= 0:
+                raise ValueError("Graveyard size should be larger than 0")
 
         else:
             raise ValueError(
@@ -751,10 +666,7 @@ class Reactor:
                 Please specify at least one of these attributes or arguments"
             )
 
-        graveyard_shape = paramak.HollowCube(
-            length=graveyard_size_to_use,
-            name="graveyard",
-        )
+        graveyard_shape = paramak.HollowCube(length=graveyard_size_to_use, name="graveyard", center_coordinate=center)
 
         self.graveyard = graveyard_shape
 

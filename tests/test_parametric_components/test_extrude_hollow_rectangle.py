@@ -37,7 +37,6 @@ class TestExtrudeHollowRectangle(unittest.TestCase):
         """Checks that the points used to construct the ExtrudeHollowRectangle are
         calculated correctly from the parameters given."""
 
-        print(self.test_shape.points)
         assert self.test_shape.points == [
             (7.5, 5.0),
             (7.5, -5.0),
@@ -72,3 +71,15 @@ class TestExtrudeHollowRectangle(unittest.TestCase):
         assert len(set([round(i) for i in self.test_shape.areas])) == 5
         assert self.test_shape.areas.count(pytest.approx(15 * 2)) == 2
         assert self.test_shape.areas.count(pytest.approx(10 * 2)) == 2
+
+    def test_center_point_changes_bounding_box(self):
+
+        default_shape_bb = ((-(15 + 2) / 2, -1.0, -(10 + 2) / 2), ((15 + 2) / 2, 1.0, (10 + 2) / 2))
+        assert self.test_shape.bounding_box == default_shape_bb
+
+        self.test_shape.center_point = (1, 1)
+
+        assert self.test_shape.bounding_box == (
+            (default_shape_bb[0][0] + 1, default_shape_bb[0][1], default_shape_bb[0][2] + 1),
+            (default_shape_bb[1][0] + 1, default_shape_bb[1][1], default_shape_bb[1][2] + 1),
+        )

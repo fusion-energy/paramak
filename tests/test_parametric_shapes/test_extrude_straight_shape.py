@@ -12,15 +12,28 @@ class TestExtrudeStraightShape(unittest.TestCase):
     def setUp(self):
         self.test_shape = ExtrudeStraightShape(points=[(10, 10), (10, 30), (30, 30), (30, 10)], distance=30)
 
+    def test_bounding_box(self):
+        """checks the bounding box value"""
+
+        assert self.test_shape.bounding_box == (
+            (10.0, -15.0, 10.0),
+            (30.0, 15.0, 30.0),
+        )
+
+    def test_largest_dimension(self):
+        """checks the largest dimension value"""
+
+        assert self.test_shape.largest_dimension == 25.0
+
     def test_translate(self):
         """Checks the shape extends to the bounding box and then translates
         the shape and checks it is extended to the new bounding box"""
 
         assert self.test_shape.solid.val().BoundingBox().xmax == 30
-        assert self.test_shape.solid.val().BoundingBox().xmin == 10
         assert self.test_shape.solid.val().BoundingBox().ymax == 15
-        assert self.test_shape.solid.val().BoundingBox().ymin == -15
         assert self.test_shape.solid.val().BoundingBox().zmax == 30
+        assert self.test_shape.solid.val().BoundingBox().xmin == 10
+        assert self.test_shape.solid.val().BoundingBox().ymin == -15
         assert self.test_shape.solid.val().BoundingBox().zmin == 10
 
         self.test_shape.translate = (1, 2, 3)

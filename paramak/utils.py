@@ -7,13 +7,230 @@ from shutil import copymode, move
 from tempfile import mkstemp
 from typing import List, Optional, Tuple, Union
 
+import tempfile
 import cadquery as cq
 import numpy as np
 import plotly.graph_objects as go
 from cadquery import importers
 from OCP.GCPnts import GCPnts_QuasiUniformDeflection
+from cadquery.occ_impl import shapes
+import OCP
 
-import paramak
+
+def export_solids_to_brep(
+    solids: Iterable,
+    filename: str = "reactor.brep",
+):
+    """Exports a brep file for the Reactor.solid.
+
+    Args:
+        solids: a list of cadquery solids
+        filename: the filename of exported the brep file.
+
+    Returns:
+        filename of the brep created
+    """
+
+    path_filename = Path(filename)
+
+    if path_filename.suffix != ".brep":
+        msg = "When exporting a brep file the filename must end with .brep"
+        raise ValueError(msg)
+
+    path_filename.parents[0].mkdir(parents=True, exist_ok=True)
+
+    # TODO bring non merge capability back
+    # if not merge:
+    #     geometry_to_save = cq.Compound.makeCompound([self.solid, self.graveyard.solid.val()])
+    #     geometry_to_save.exportBrep(str(path_filename))
+
+    bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
+
+    if len(solids) == 1:
+        solids[0].val().exportBrep(str(path_filename))
+        return str(path_filename)
+
+    for solid in solids:
+        # checks if solid is a compound as .val() is not needed for compounds
+        if isinstance(solid, cq.occ_impl.shapes.Compound):
+            bldr.AddArgument(solid.wrapped)
+        else:
+            bldr.AddArgument(solid.val().wrapped)
+
+    bldr.SetNonDestructive(True)
+
+    bldr.Perform()
+
+    bldr.Images()
+
+    merged_solid = cq.Compound(bldr.Shape())
+
+    merged_solid.exportBrep(str(path_filename))
+
+    return str(path_filename)
+
+
+def export_solids_to_dagmc_h5m(
+    solids: List,
+    filename: str = "dagmc.h5m",
+    min_mesh_size: float = 5,
+    max_mesh_size: float = 20,
+    verbose: bool = False,
+    volume_atol: float = 0.000001,
+    center_atol: float = 0.000001,
+    bounding_box_atol: float = 0.000001,
+    tags: List[str] = None,
+):
+    if len(tags) != len(solids):
+        msg = (
+            "When specifying tags then there must be one tag for "
+            f"every shape. Currently there are {len(tags)} tags "
+            f"provided and {len(solids)} shapes"
+        )
+        raise ValueError(msg)
+
+    # a local import is used here as these packages need Moab to work
+    from brep_to_h5m import brep_to_h5m
+    import brep_part_finder as bpf
+
+    tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
+
+    # saves the reactor as a Brep file with merged surfaces
+    export_solids_to_brep(solids=solids, filename=tmp_brep_filename)
+
+    # brep file is imported
+    brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
+
+    if verbose:
+        print("brep_file_part_properties", brep_file_part_properties)
+
+    shape_properties = {}
+    for counter, solid in enumerate(solids):
+        sub_solid_descriptions = []
+
+        # checks if the solid is a cq.Compound or not
+        if isinstance(solid, cq.occ_impl.shapes.Compound):
+            iterable_solids = solid.Solids()
+        else:
+            iterable_solids = solid.val().Solids()
+
+        for sub_solid in iterable_solids:
+            part_bb = sub_solid.BoundingBox()
+            part_center = sub_solid.Center()
+            sub_solid_description = {
+                "volume": sub_solid.Volume(),
+                "center": (part_center.x, part_center.y, part_center.z),
+                "bounding_box": (
+                    (part_bb.xmin, part_bb.ymin, part_bb.zmin),
+                    (part_bb.xmax, part_bb.ymax, part_bb.zmax),
+                ),
+            }
+            sub_solid_descriptions.append(sub_solid_description)
+
+            shape_properties[tags[counter]] = sub_solid_descriptions
+
+    if verbose:
+        print("shape_properties", shape_properties)
+
+    # request to find part ids that are mixed up in the Brep file
+    # using the volume, center, bounding box that we know about when creating the
+    # CAD geometry in the first place
+
+    key_and_part_id = bpf.get_dict_of_part_ids(
+        brep_part_properties=brep_file_part_properties,
+        shape_properties=shape_properties,
+        volume_atol=volume_atol,
+        center_atol=center_atol,
+        bounding_box_atol=bounding_box_atol,
+    )
+
+    if verbose:
+        print(f"key_and_part_id={key_and_part_id}")
+
+    brep_to_h5m(
+        brep_filename=tmp_brep_filename,
+        volumes_with_tags=key_and_part_id,
+        h5m_filename=filename,
+        min_mesh_size=min_mesh_size,
+        max_mesh_size=max_mesh_size,
+        delete_intermediate_stl_files=True,
+    )
+
+    # temporary brep is deleted using os.remove
+    remove(tmp_brep_filename)
+
+    return filename
+
+
+def get_bounding_box(solid) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:
+    """Calculates a bounding box for the Shape and returns the coordinates of
+    the corners lower-left and upper-right. This function is useful when
+    creating OpenMC mesh tallies as the bounding box is required in this form"""
+
+    if isinstance(solid, (cq.Compound, shapes.Solid)):
+
+        bound_box = solid.BoundingBox()
+        # previous method lopped though solids but this is not needed
+        # for single_solid in solid.Solids():
+        #     bound_box = single_solid.BoundingBox()
+
+    else:
+        bound_box = solid.val().BoundingBox()
+
+    lower_left = (bound_box.xmin, bound_box.ymin, bound_box.zmin)
+
+    upper_right = (bound_box.xmax, bound_box.ymax, bound_box.zmax)
+
+    return (lower_left, upper_right)
+
+
+def get_center_of_bounding_box(solid):
+    """Calculates the geometric center of the solids bounding box"""
+
+    bounding_box = get_bounding_box(solid)
+
+    center = (
+        (bounding_box[0][0] + bounding_box[1][0]) / 2,
+        (bounding_box[0][1] + bounding_box[1][1]) / 2,
+        (bounding_box[0][2] + bounding_box[1][2]) / 2,
+    )
+
+    return center
+
+
+def get_largest_dimension(solid):
+    """Calculates the extent of the geometry in the x,y and z axis and returns
+    the largest of the three."""
+
+    bounding_box = get_bounding_box(solid)
+
+    largest_dimension = max(
+        abs(bounding_box[0][0] - bounding_box[0][1]),
+        abs(bounding_box[0][2] - bounding_box[1][0]),
+        abs(bounding_box[1][1] - bounding_box[1][2]),
+    )
+
+    return largest_dimension
+
+
+def get_largest_distance_from_origin(solid):
+    """Calculates the distance from (0, 0, 0) to the furthest part of
+    the geometry. This distance is returned as an positive value."""
+
+    bounding_box = get_bounding_box(solid)
+
+    largest_dimension = max(
+        (
+            abs(bounding_box[0][0]),
+            abs(bounding_box[0][1]),
+            abs(bounding_box[0][2]),
+            abs(bounding_box[1][0]),
+            abs(bounding_box[1][1]),
+            abs(bounding_box[1][2]),
+        )
+    )
+
+    return largest_dimension
 
 
 def transform_curve(edge, tolerance: Optional[float] = 1e-3):
@@ -146,6 +363,16 @@ def diff_between_angles(angle_a: float, angle_b: float) -> float:
     return delta_mod
 
 
+def angle_between_two_points_on_circle(
+    point_1: Tuple[float, float], point_2: Tuple[float, float], radius_of_circle: float
+):
+
+    separation = distance_between_two_points(point_1, point_2)
+    isos_tri_term = (2 * math.pow(radius_of_circle, 2) - math.pow(separation, 2)) / (2 * math.pow(radius_of_circle, 2))
+    angle = math.acos(isos_tri_term)
+    return angle
+
+
 def distance_between_two_points(point_a: Tuple[float, float], point_b: Tuple[float, float]) -> float:
     """Computes the distance between two points.
 
@@ -157,8 +384,8 @@ def distance_between_two_points(point_a: Tuple[float, float], point_b: Tuple[flo
         float: distance between A and B
     """
 
-    xa, ya = point_a
-    xb, yb = point_b
+    xa, ya = point_a[0], point_a[1]
+    xb, yb = point_b[0], point_b[1]
     u_vec = [xb - xa, yb - ya]
     return np.linalg.norm(u_vec)
 
@@ -174,8 +401,8 @@ def extend(point_a: Tuple[float, float], point_b: Tuple[float, float], L: float)
         float, float: point C coordinates
     """
 
-    xa, ya = point_a
-    xb, yb = point_b
+    xa, ya = point_a[0], point_a[1]
+    xb, yb = point_b[0], point_b[1]
     u_vec = [xb - xa, yb - ya]
     u_vec /= np.linalg.norm(u_vec)
 
@@ -270,7 +497,7 @@ def rotate(origin: Tuple[float, float], point: Tuple[float, float], angle: float
     """
 
     ox, oy = origin
-    px, py = point
+    px, py = point[0], point[1]
 
     qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
     qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
@@ -304,7 +531,9 @@ def calculate_wedge_cut(self):
     if self.rotation_angle == 360:
         return None
 
-    cutting_wedge = paramak.CuttingWedgeFS(self)
+    from paramak import CuttingWedgeFS
+
+    cutting_wedge = CuttingWedgeFS(self)
     return cutting_wedge
 
 
@@ -448,9 +677,9 @@ def plotly_trace(
     text_values = []
 
     for i, point in enumerate(points):
-        text = "point number= {i} <br> x={point[0]} <br> y= {point[1]}"
+        text = f"point number= {i} <br> x={point[0]} <br> y= {point[1]}"
         if len(point) == 3:
-            text = text + "<br> z= {point[2]} <br>"
+            text = text + f"<br> z= {point[2]} <br>"
 
         text_values.append(text)
 
@@ -622,7 +851,7 @@ def export_wire_to_html(
             tolerance=tolerance,
         )
 
-        points = paramak.utils.extract_points_from_edges(edges=edges, view_plane=view_plane)
+        points = extract_points_from_edges(edges=edges, view_plane=view_plane)
 
         fig.add_trace(plotly_trace(points=points, mode=mode, name="edge " + str(counter)))
 
@@ -638,7 +867,7 @@ def export_wire_to_html(
             # this is for cadquery generated solids
             edges = wire.val().Edges()
 
-        points = paramak.utils.extract_points_from_edges(edges=edges, view_plane=view_plane)
+        points = extract_points_from_edges(edges=edges, view_plane=view_plane)
 
         fig.add_trace(plotly_trace(points=points, mode="markers", name="points on wire " + str(counter)))
 
@@ -684,9 +913,9 @@ def convert_circle_to_spline(
     solid = solid.moveTo(p_0[0], p_0[1]).threePointArc(p_1, p_2)
     edge = solid.vals()[0]
 
-    new_edge = paramak.utils.transform_curve(edge, tolerance=tolerance)
+    new_edge = transform_curve(edge, tolerance=tolerance)
 
-    points = paramak.utils.extract_points_from_edges(edges=new_edge, view_plane="XZ")
+    points = extract_points_from_edges(edges=new_edge, view_plane="XZ")
 
     return points
 
