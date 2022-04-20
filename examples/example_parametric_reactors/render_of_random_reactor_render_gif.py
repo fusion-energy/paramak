@@ -48,11 +48,11 @@ def create_reactor_renders(
     # assigns colours to each stl file
     stl_files_with_colors = {
         "blanket.stl": (255, 255, 0),
-        "vacuum_vessel.stl": (128, 128, 128),
+        "vessel.stl": (128, 128, 128),
         "upper_blanket.stl": (255, 255, 0),
         "lower_blanket.stl": (255, 255, 0),
-        "lower_vacuum_vessel.stl": (128, 128, 128),
-        "upper_vacuum_vessel.stl": (128, 128, 128),
+        "lower_vessel.stl": (128, 128, 128),
+        "upper_vessel.stl": (128, 128, 128),
     }
 
     scene = pyrender.Scene()
