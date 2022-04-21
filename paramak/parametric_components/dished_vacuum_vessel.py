@@ -23,7 +23,7 @@ class DishedVacuumVessel(RotateMixedShape):
         dish_height: float = 50,
         cylinder_height: float = 400,
         thickness: float = 15,
-        name: str = "dished_vacuum_vessel",
+        name: str = "dished_vessel",
         **kwargs,
     ):
         self.radius = radius

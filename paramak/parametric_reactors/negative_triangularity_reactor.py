@@ -744,7 +744,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             inner_radius=self._vacuum_vessel_inwall_start_rad,
             outer_radius=self._vacuum_vessel_inwall_end_rad,
             rotation_angle=self._rotation_angle,
-            name="vacuum_vessel_inner_wall",
+            name="vessel_inner_wall",
             color=(0.5, 0.5, 0.5),
             cut=[self._pf_coils, self._pf_casing],
         )
@@ -896,7 +896,7 @@ class NegativeTriangularityReactor(paramak.Reactor):
             inner_radius=self._vacuum_vessel_inwall_start_rad,
             outer_radius=self._vacuum_vessel_body_end_rad,
             rotation_angle=self._rotation_angle,
-            name="vacuum_vessel_body",
+            name="vessel_body",
             cut=cutting_list,
             color=(0.5, 0.5, 0.5),
         )
