@@ -49,7 +49,7 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
         assert Path("blanket.stp").is_file()
         assert Path("upper_blanket.stp").is_file()
         assert Path("upper_vessel.stp").is_file()
-        assert Path("vacuum_vessel.stp").is_file()
+        assert Path("vessel.stp").is_file()
 
     def test_graveyard_volume_in_brep_export(self):
         """Exports the reactor as a brep file and checks the number of volumes
@@ -79,7 +79,7 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
 
         assert self.test_reactor.name == [
             "blanket",
-            "vacuum_vessel",
+            "vessel",
             "upper_blanket",
             "lower_blanket",
             "lower_vessel",
