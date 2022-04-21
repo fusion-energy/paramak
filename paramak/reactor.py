@@ -1,5 +1,4 @@
 from collections.abc import Iterable
-from logging import warning
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 

@@ -90,7 +90,7 @@ class FlfSystemCodeReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),
-            name="lower_vacuum_vessel",
+            name="lower_vessel",
         )
 
         lower_blanket = paramak.RotateStraightShape(
@@ -137,7 +137,7 @@ class FlfSystemCodeReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),
-            name="upper_vacuum_vessel",
+            name="upper_vessel",
         )
 
         upper_blanket = paramak.RotateStraightShape(
@@ -201,7 +201,7 @@ class FlfSystemCodeReactor(paramak.Reactor):
             ],
             rotation_angle=self.rotation_angle,
             color=(0.5, 0.5, 0.5),
-            name="vacuum_vessel",
+            name="vessel",
         )
 
         self.shapes_and_components = [
