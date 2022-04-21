@@ -116,7 +116,10 @@ class ConstantThicknessDome(RotateMixedShape):
         #       far side
 
         if self.chord_height * 2 >= self.chord_width:
-            msg = "ConstantThicknessDome requires that the self.chord_width is at least 2 times as large as the chord height"
+            msg = (
+                "ConstantThicknessDome requires that the self.chord_width "
+                "is at least 2 times as large as the chord height"
+            )
             raise ValueError(msg)
 
         radius_of_sphere = ((math.pow(self.chord_width, 2)) + (4.0 * math.pow(self.chord_height, 2))) / (

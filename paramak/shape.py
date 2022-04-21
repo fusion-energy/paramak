@@ -278,7 +278,11 @@ class Shape:
                     raise ValueError(msg)
                 for val in point:
                     if not isinstance(val, (int, float)):
-                        msg = f"Shape.rotation_axis should be an iterable of iterables where the nested iterables are numerical, not {type(val)}"
+                        msg = (
+                            "Shape.rotation_axis should be an iterable of "
+                            "iterables where the nested iterables are "
+                            f"numerical, not {type(val)}"
+                        )
                         raise ValueError(msg)
 
             if value[0] == value[1]:
