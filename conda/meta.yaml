@@ -14,7 +14,8 @@ build:
 requirements:
   build:
     - python {{ python }}
-    - setuptools
+    - setuptools>=46.4.0
+    - setuptools_scm>=6.3.1
   run:
     - python {{ python }}
     - cadquery {{ cadquery }}
