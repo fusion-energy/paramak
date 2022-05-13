@@ -48,7 +48,7 @@ Then install mamba.
 
 .. code-block:: bash
 
-   mamba install -c conda-forge mamba
+   conda install -c conda-forge mamba
 
 Then install the Paramak.
 
