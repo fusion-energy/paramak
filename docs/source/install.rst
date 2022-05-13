@@ -25,10 +25,41 @@ Anaconda, or Miniforge
 Once you have a version of Conda installed then proceed with the Paramak
 specific steps.
 
-Install (conda)
+
+Install (mamba)
 ---------------
 
 This is the recommended method.
+
+Create a new environment (Python 3.8 and 3.9 are supported).
+
+.. code-block:: bash
+
+   conda create --name paramak_env python=3.8
+
+
+Then activate the new environment.
+
+.. code-block:: bash
+
+   conda activate paramak_env
+
+Then install mamba.
+
+.. code-block:: bash
+
+   mamba install -c conda-forge mamba
+
+Then install the Paramak.
+
+.. code-block:: bash
+
+   mamba install -c fusion-energy -c cadquery -c conda-forge paramak
+
+Now you should be ready to import paramak from your new python environment.
+
+Install (conda)
+---------------
 
 Create a new environment (Python 3.8 and 3.9 are supported).
 
