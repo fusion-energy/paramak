@@ -36,16 +36,16 @@ jobs:
       - install
       - run:
           name: run utils tests
-          command: pytest tests/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/tests_unit/test_utils.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - run:
           name: run shape tests
-          command: pytest tests/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/tests_unit/test_shape.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - run:
           name: run Reactor tests
-          command: pytest tests/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/tests_unit/test_reactor.py -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - run:
           name: run parametric_shapes tests
-          command: pytest tests/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/tests_unit/test_parametric_shapes/ -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - store_test_results:
           path: test-reports
       - store_artifacts:
@@ -64,7 +64,7 @@ jobs:
           name: run parametric_components tests
           command: |
             set -e
-            TEST_FILES=$(circleci tests glob "tests/test_parametric_components/**/*.py" | circleci tests split)
+            TEST_FILES=$(circleci tests glob "tests/test_units/test_parametric_components/**/*.py" | circleci tests split)
             pytest -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml $TEST_FILES
       - store_test_results:
           path: test-reports
@@ -83,7 +83,7 @@ jobs:
           name: run parametric_reactors tests
           command: |
             set -e
-            TEST_FILES=$(circleci tests glob "tests/test_parametric_reactors/**/*.py" | circleci tests split)
+            TEST_FILES=$(circleci tests glob "tests/test_units/test_parametric_reactors/**/*.py" | circleci tests split)
             pytest -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml $TEST_FILES
       - store_test_results:
           path: test-reports
@@ -100,7 +100,7 @@ jobs:
       - install
       - run:
           name: run utils tests
-          command: pytest tests_h5m -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/tests_h5m -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - store_test_results:
           path: test-reports
       - store_artifacts:
@@ -116,7 +116,7 @@ jobs:
       - install
       - run:
           name: run utils tests
-          command: pytest tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
+          command: pytest tests/tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml --junitxml=test-reports/junit.xml
       - store_test_results:
           path: test-reports
       - store_artifacts:

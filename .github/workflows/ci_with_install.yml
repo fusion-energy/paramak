@@ -1,5 +1,5 @@
 # This CI will lauch a Docker image that contains all the dependencies required
-# within that image the pytest test suite is run 
+# within that image the pytest test suite is run
 
 name: CI with install
 
@@ -37,9 +37,9 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests -v --cov=paramak --cov-append --cov-report term --cov-report xml
-          pytest tests_examples -v --cov=paramak --cov-append --cov-report term --cov-report xml
-          pytest tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml
+          pytest tests/test_units -v --cov=paramak --cov-append --cov-report term --cov-report xml
+          pytest tests/tests_examples -v --cov=paramak --cov-append --cov-report term --cov-report xml
+          pytest tests/tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml
 
       - name: Upload to codecov
         uses: codecov/codecov-action@v2
