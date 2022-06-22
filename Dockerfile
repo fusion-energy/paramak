@@ -74,9 +74,6 @@ COPY paramak paramak/
 COPY examples examples/
 
 COPY tests tests/
-COPY tests_h5m tests_h5m/
-COPY tests_show tests_show/
-COPY tests_examples tests_examples/
 
 COPY setup.py setup.py
 COPY setup.cfg setup.cfg
