@@ -33,6 +33,6 @@ jobs:
 
       # tests_show require jupyter_cadquery which is not available on conda
       # therefore these tests have been separated out to help with the conda
-      # testing. The tests_h5m tests require CQ master which is tested elsewhere
+      # testing. The tests_h5m tests require CQ master which is tested separately as well
       - name: Test show
         run: docker run --rm paramak pytest ./tests/tests_show
