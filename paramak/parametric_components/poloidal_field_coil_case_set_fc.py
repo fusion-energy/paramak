@@ -22,7 +22,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         self,
         pf_coils: Iterable[PoloidalFieldCoil],
         casing_thicknesses: float,
-        name: str="pf_coil_case_set_fc",
+        name: str = "pf_coil_case_set_fc",
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
         **kwargs
     ):

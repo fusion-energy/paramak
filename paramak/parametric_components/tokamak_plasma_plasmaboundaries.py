@@ -22,14 +22,14 @@ class PlasmaBoundaries(Plasma):
 
     def __init__(
         self,
-        A: float=0.05,
-        elongation: float=2.0,
-        major_radius: float=450.0,
-        minor_radius: float=150.0,
-        triangularity: float=0.55,
-        vertical_displacement: float=0.0,
-        configuration:str="non-null",
-        x_point_shift: float=0.1,
+        A: float = 0.05,
+        elongation: float = 2.0,
+        major_radius: float = 450.0,
+        minor_radius: float = 150.0,
+        triangularity: float = 0.55,
+        vertical_displacement: float = 0.0,
+        configuration: str = "non-null",
+        x_point_shift: float = 0.1,
         **kwargs
     ):
 

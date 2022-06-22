@@ -45,7 +45,8 @@ class CircularPort(Shape):
             0.6,
         ),
         rotation_angle: float = 360,
-        **kwargs,    ):
+        **kwargs,
+    ):
         super().__init__(color=color, name=name, **kwargs)
 
         self.inner_radius = inner_radius

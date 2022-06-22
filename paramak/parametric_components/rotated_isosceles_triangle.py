@@ -17,7 +17,15 @@ class RotatedIsoscelesTriangle(RotateStraightShape):
         name: defaults to "rotated_triangle".
     """
 
-    def __init__(self, base_length: float, height: float, pivot_point: Tuple[float, float], pivot_angle: float=0.0, name: str="rotated_triangle", **kwargs):
+    def __init__(
+        self,
+        base_length: float,
+        height: float,
+        pivot_point: Tuple[float, float],
+        pivot_angle: float = 0.0,
+        name: str = "rotated_triangle",
+        **kwargs
+    ):
 
         super().__init__(name=name, **kwargs)
 
