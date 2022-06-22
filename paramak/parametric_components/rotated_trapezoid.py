@@ -18,7 +18,16 @@ class RotatedTrapezoid(RotateStraightShape):
         name: defaults to "rotated_trapezoid".
     """
 
-    def __init__(self, length_1: float, length_2: float, length_3: float, pivot_point: Tuple[float, float], pivot_angle: float=0.0, name: str="rotated_trapezoid", **kwargs):
+    def __init__(
+        self,
+        length_1: float,
+        length_2: float,
+        length_3: float,
+        pivot_point: Tuple[float, float],
+        pivot_angle: float = 0.0,
+        name: str = "rotated_trapezoid",
+        **kwargs
+    ):
 
         super().__init__(name=name, **kwargs)
 

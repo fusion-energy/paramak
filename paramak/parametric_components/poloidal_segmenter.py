@@ -26,10 +26,10 @@ class PoloidalSegments(RotateStraightShape):
     def __init__(
         self,
         center_point: Tuple[float, float],
-        shape_to_segment: Optional[Shape]=None,
-        number_of_segments: int=10,
-        max_distance_from_center: float=1000.0,
-        name: str="poloidal_segmenter",
+        shape_to_segment: Optional[Shape] = None,
+        number_of_segments: int = 10,
+        max_distance_from_center: float = 1000.0,
+        name: str = "poloidal_segmenter",
         **kwargs
     ):
 

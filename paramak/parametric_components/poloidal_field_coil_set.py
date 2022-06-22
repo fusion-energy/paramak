@@ -14,7 +14,14 @@ class PoloidalFieldCoilSet(RotateStraightShape):
         name: defaults to "pf_coil".
     """
 
-    def __init__(self, heights: Iterable[float], widths: Iterable[float], center_points:Iterable[Tuple[float, float]], name="pf_coil", **kwargs):
+    def __init__(
+        self,
+        heights: Iterable[float],
+        widths: Iterable[float],
+        center_points: Iterable[Tuple[float, float]],
+        name="pf_coil",
+        **kwargs
+    ):
 
         super().__init__(name=name, **kwargs)
 

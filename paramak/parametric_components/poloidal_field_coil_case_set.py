@@ -5,6 +5,7 @@ import cadquery as cq
 from paramak import RotateStraightShape
 from typing import Iterable
 
+
 class PoloidalFieldCoilCaseSet(RotateStraightShape):
     """Creates a series of rectangular poloidal field coils.
 
@@ -28,7 +29,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         widths: Iterable[float],
         casing_thicknesses: Iterable[float],
         center_points: Iterable[float],
-        name: str="pf_coil_case_set",
+        name: str = "pf_coil_case_set",
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
         **kwargs
     ):

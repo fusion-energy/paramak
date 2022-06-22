@@ -20,7 +20,7 @@ class ShellFS(Shape):
             CadQuery.shell(). Defaults to intersection.
     """
 
-    def __init__(self, shape: Shape, thickness: float=10.0, kind: str="intersection", **kwargs):
+    def __init__(self, shape: Shape, thickness: float = 10.0, kind: str = "intersection", **kwargs):
 
         super().__init__(**kwargs)
 

@@ -21,15 +21,15 @@ class Plasma(RotateSplineShape):
 
     def __init__(
         self,
-        elongation:float=2.0,
-        major_radius:float=450.0,
-        minor_radius:float=150.0,
-        triangularity:float=0.55,
-        vertical_displacement:float=0.0,
-        num_points:float=50,
-        configuration:str="non-null",
-        x_point_shift:float=0.1,
-        name:str="plasma",
+        elongation: float = 2.0,
+        major_radius: float = 450.0,
+        minor_radius: float = 150.0,
+        triangularity: float = 0.55,
+        vertical_displacement: float = 0.0,
+        num_points: float = 50,
+        configuration: str = "non-null",
+        x_point_shift: float = 0.1,
+        name: str = "plasma",
         **kwargs
     ):
 

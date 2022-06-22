@@ -2,8 +2,7 @@ import math
 from typing import Tuple
 
 import numpy as np
-from paramak import (RotateMixedShape, distance_between_two_points, extend,
-                     rotate)
+from paramak import RotateMixedShape, distance_between_two_points, extend, rotate
 
 
 class ITERtypeDivertor(RotateMixedShape):
@@ -29,16 +28,16 @@ class ITERtypeDivertor(RotateMixedShape):
 
     def __init__(
         self,
-        anchors: Tuple[Tuple[float, float], Tuple[float, float]]=((450, -300), (561, -367)),
-        coverages: Tuple[float, float]=(90, 180),
-        radii: Tuple[float, float]=(50, 25),
-        lengths: Tuple[float, float]=(78, 87),
-        dome: bool=True,
-        dome_height: float=43,
-        dome_length: float=66,
-        dome_thickness: float=10,
-        dome_pos: float=0.5,
-        tilts: Tuple[float, float]=(-27, 0),
+        anchors: Tuple[Tuple[float, float], Tuple[float, float]] = ((450, -300), (561, -367)),
+        coverages: Tuple[float, float] = (90, 180),
+        radii: Tuple[float, float] = (50, 25),
+        lengths: Tuple[float, float] = (78, 87),
+        dome: bool = True,
+        dome_height: float = 43,
+        dome_length: float = 66,
+        dome_thickness: float = 10,
+        dome_pos: float = 0.5,
+        tilts: Tuple[float, float] = (-27, 0),
         **kwargs
     ):
 
@@ -55,7 +54,9 @@ class ITERtypeDivertor(RotateMixedShape):
         self.dome_pos = dome_pos
         self.dome_thickness = dome_thickness
 
-    def _create_vertical_target_points(self, anchor: Tuple[float, float], coverage: float, tilt: float, radius: float, length: float):
+    def _create_vertical_target_points(
+        self, anchor: Tuple[float, float], coverage: float, tilt: float, radius: float, length: float
+    ):
         """Creates a list of points for a vertical target
 
         Args:
@@ -88,9 +89,15 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([c_coord[0], c_coord[1]])
         return points
 
-    def _create_dome_points(self, c_coord: Tuple[float, float],
-        F: Tuple[float, float], dome_length: float, dome_height: float,
-        dome_thickness: float, dome_pos: float):
+    def _create_dome_points(
+        self,
+        c_coord: Tuple[float, float],
+        F: Tuple[float, float],
+        dome_length: float,
+        dome_height: float,
+        dome_thickness: float,
+        dome_pos: float,
+    ):
         """Creates a list of points for the dome alongside with their
         connectivity
 
@@ -133,9 +140,13 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([E[0], E[1], "straight"])
         return points
 
-    def _create_casing_points(self, anchors: Tuple[float, float],
-        c_coord: Tuple[float, float], F: Tuple[float, float],
-        targets_lengths: Tuple[float, float]):
+    def _create_casing_points(
+        self,
+        anchors: Tuple[float, float],
+        c_coord: Tuple[float, float],
+        F: Tuple[float, float],
+        targets_lengths: Tuple[float, float],
+    ):
         """Creates a list of points for the casing alongside with their
         connectivity
 
