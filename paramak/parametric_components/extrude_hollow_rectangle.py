@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union, Iterable
 
 from cadquery import Plane
 from paramak import ExtrudeStraightShape
@@ -12,8 +12,8 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         width: the width of the internal hollow section.
         distance: the depth of the internal hollow section.
         casing_thickness: the thickness of the casing around the hollow section.
-        center_point: the center of the rectangle (x,z) values (cm).
         name: defaults to "extrude_rectangle".
+        center_point: the center of the rectangle (x,z) values (cm).
     """
 
     def __init__(
@@ -26,7 +26,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         center_point: Tuple[float, float] = (0, 0),
         extrude_both: bool = True,
         color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5),
-        azimuth_placement_angle: Union[float, List[float]] = 0.0,
+        azimuth_placement_angle: Union[float, Iterable[float]] = 0.0,
         workplane: Union[str, Plane] = "XZ",
         cut=None,
         intersect=None,

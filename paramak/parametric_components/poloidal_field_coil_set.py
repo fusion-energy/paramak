@@ -1,5 +1,5 @@
 import cadquery as cq
-
+from typing import Iterable, Tuple
 from paramak import RotateStraightShape
 
 
@@ -7,16 +7,14 @@ class PoloidalFieldCoilSet(RotateStraightShape):
     """Creates a series of rectangular poloidal field coils.
 
     Args:
-        heights (list of floats): the vertical (z axis) heights of the coils
-            (cm).
-        widths (list of floats): the horizontal (x axis) widths of the coils
-            (cm).
-        center_points (list of tuple of floats): the center of the coil (x,z)
-            values e.g. [(100,100), (100,200)] (cm).
-        name (str, optional): defaults to "pf_coil".
+        heights: the vertical (z axis) heights of the coils (cm).
+        widths: the horizontal (x axis) widths of the coils (cm).
+        center_points: the center of the coil (x,z) values e.g. [(100,100),
+            (100,200)] (cm).
+        name: defaults to "pf_coil".
     """
 
-    def __init__(self, heights, widths, center_points, name="pf_coil", **kwargs):
+    def __init__(self, heights: Iterable[float], widths: Iterable[float], center_points:Iterable[Tuple[float, float]], name="pf_coil", **kwargs):
 
         super().__init__(name=name, **kwargs)
 

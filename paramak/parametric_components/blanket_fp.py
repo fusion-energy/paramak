@@ -1,5 +1,5 @@
 import warnings
-from typing import Optional, Union
+from typing import Optional, Union, Iterable
 
 import mpmath
 import numpy as np
@@ -47,13 +47,13 @@ class BlanketFP(RotateMixedShape):
         start_angle: float,
         stop_angle: float,
         plasma: Optional[Union[paramak.Plasma, paramak.PlasmaBoundaries, paramak.PlasmaFromPoints]] = None,
-        minor_radius: Optional[float] = 150.0,
-        major_radius: Optional[float] = 450.0,
-        triangularity: Optional[float] = 0.55,
-        elongation: Optional[float] = 2.0,
-        vertical_displacement: Optional[float] = 0.0,
-        offset_from_plasma: Union[float, list] = 0.0,
-        num_points: Optional[int] = 50,
+        minor_radius: float = 150.0,
+        major_radius: float = 450.0,
+        triangularity: float = 0.55,
+        elongation: float = 2.0,
+        vertical_displacement: float = 0.0,
+        offset_from_plasma: Union[float, Iterable[float]] = 0.0,
+        num_points: int = 50,
         allow_overlapping_shape=False,
         **kwargs
     ):

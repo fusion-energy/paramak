@@ -46,9 +46,9 @@ class ConstantThicknessDome(RotateMixedShape):
         return self._chord_width
 
     @chord_width.setter
-    def chord_width(self, value):
-        if not isinstance(value, (float, int)):
-            raise ValueError("ConstantThicknessDome.chord_width must be a number. Not", value)
+    def chord_width(self, value: float):
+        if not isinstance(value, float):
+            raise ValueError("ConstantThicknessDome.chord_width must be a float. Not", value)
         if value <= 0:
             msg = f"ConstantThicknessDome.chord_width must be a positive number above 0. Not {value}"
             raise ValueError(msg)
@@ -59,9 +59,9 @@ class ConstantThicknessDome(RotateMixedShape):
         return self._chord_height
 
     @chord_height.setter
-    def chord_height(self, value):
-        if not isinstance(value, (float, int)):
-            raise ValueError("ConstantThicknessDome.chord_height must be a number. Not", value)
+    def chord_height(self, value: float):
+        if not isinstance(value, float):
+            raise ValueError("ConstantThicknessDome.chord_height must be a float. Not", value)
         if value <= 0:
             msg = f"ConstantThicknessDome.chord_height must be a positive number above 0. Not {value}"
             raise ValueError(msg)
@@ -72,9 +72,9 @@ class ConstantThicknessDome(RotateMixedShape):
         return self._thickness
 
     @thickness.setter
-    def thickness(self, value):
-        if not isinstance(value, (float, int)):
-            msg = f"VacuumVessel.thickness must be a number. Not {value}"
+    def thickness(self, value: float):
+        if not isinstance(value, float):
+            msg = f"VacuumVessel.thickness must be a float. Not {value}"
             raise ValueError(msg)
         if value <= 0:
             msg = f"VacuumVessel.thickness must be a positive number above 0. Not {value}"

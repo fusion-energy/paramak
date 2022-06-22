@@ -11,16 +11,16 @@ class ShellFS(Shape):
     to the original rotation angle of the shape.
 
     Args:
-        shape (paramak.Shape): the shape to create a shell / 3D offset around
-        thickness (float): the thickness of the shell casing around the shape
-            (cm). Passed directly to CadQuery.shell(). Defaults to 10.0.
-        kind (str, optional) : the method used to connect gaps in the resulting
-            shelled shape. Options include 'arc' or 'intersection'. Use 'arc'
-            for rounded edges 'intersection' for sharp edges. Passed directly
-            to CadQuery.shell(). Defaults to intersection.
+        shape: the shape to create a shell / 3D offset around
+        thickness: the thickness of the shell casing around the shape (cm).
+            Passed directly to CadQuery.shell(). Defaults to 10.0.
+        kind: the method used to connect gaps in the resulting shelled shape.
+            Options include 'arc' or 'intersection'. Use 'arc' for rounded
+            edges 'intersection' for sharp edges. Passed directly to
+            CadQuery.shell(). Defaults to intersection.
     """
 
-    def __init__(self, shape, thickness=10.0, kind="intersection", **kwargs):
+    def __init__(self, shape: Shape, thickness: float=10.0, kind: str="intersection", **kwargs):
 
         super().__init__(**kwargs)
 

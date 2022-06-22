@@ -20,7 +20,7 @@ class HollowCube(Shape):
         length: float,
         thickness: float = 10.0,
         center_coordinate: Tuple[float, float, float] = (0.0, 0.0, 0.0),
-        name="hollow_cube",
+        name: str="hollow_cube",
         **kwargs
     ):
         super().__init__(name=name, **kwargs)

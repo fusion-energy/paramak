@@ -1,5 +1,5 @@
 import math
-
+from typing import Tuple
 from paramak import RotateStraightShape
 from paramak.utils import rotate
 
@@ -8,21 +8,17 @@ class RotatedTrapezoid(RotateStraightShape):
     """Creates a rotated trapezoid (truncated triangle) shape.
 
     Args:
-        length_1 (float): the length of the top parrallel edge of the trapezoid
-            (cm).
-        length_2 (float): the length of the base parrallel edge of the
-            trapezoid (cm).
-        length_3 (float): the height of the trapezoid, the distances from top
-            to base (cm).
-        pivot_point ((float, float)): the coordinates of the center of
-            rotation (x,z). The piviot point is located in the center of the
-            length_1 edge (cm).
-        pivot_angle (float, optional): the angle (in degrees) to pivot (rotate)
-            the shape by around the pivot point. Defaults to 0.
-        name (str, optional): defaults to "rotated_trapezoid".
+        length_1: the length of the top parallel edge of the trapezoid (cm).
+        length_2: the length of the base parallel edge of the trapezoid (cm).
+        length_3: the height of the trapezoid, the distances from top to base (cm).
+        pivot_point: the coordinates of the center of rotation (x,z). The
+            pivot point is located in the center of the length_1 edge (cm).
+        pivot_angle: the angle (in degrees) to pivot (rotate) the shape by
+            around the pivot point. Defaults to 0.
+        name: defaults to "rotated_trapezoid".
     """
 
-    def __init__(self, length_1, length_2, length_3, pivot_point, pivot_angle=0.0, name="rotated_trapezoid", **kwargs):
+    def __init__(self, length_1: float, length_2: float, length_3: float, pivot_point: Tuple[float, float], pivot_angle: float=0.0, name: str="rotated_trapezoid", **kwargs):
 
         super().__init__(name=name, **kwargs)
 

@@ -40,7 +40,7 @@ class DishedVacuumVessel(RotateMixedShape):
         return self._radius
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value: float):
         if not isinstance(value, (float, int)):
             raise ValueError("VacuumVessel.radius must be a number. Not", value)
         if value <= 0:
@@ -53,7 +53,7 @@ class DishedVacuumVessel(RotateMixedShape):
         return self._thickness
 
     @thickness.setter
-    def thickness(self, value):
+    def thickness(self, value: float):
         if not isinstance(value, (float, int)):
             msg = f"VacuumVessel.thickness must be a number. Not {value}"
             raise ValueError(msg)

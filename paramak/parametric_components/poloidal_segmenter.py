@@ -1,8 +1,8 @@
 import math
 
 import cadquery as cq
-
-from paramak import RotateStraightShape
+from typing import Tuple, Optional
+from paramak import Shape, RotateStraightShape
 from paramak.utils import coefficients_of_line_from_points, intersect_solid, rotate
 
 
@@ -13,10 +13,9 @@ class PoloidalSegments(RotateStraightShape):
     firstwall geometry for using in neutron wall loading simulations.
 
     Args:
-        center_point (tuple of floats): the center of the segmentation wedges
-            (x,z) values (cm).
-        shape_to_segment (paramak.Shape, optional): the Shape to segment, if
-            None then the segmenting solids will be returned. Defaults to None.
+        center_point: the center of the segmentation wedges (x,z) values (cm).
+        shape_to_segment: the Shape to segment, if None then the segmenting
+            solids will be returned. Defaults to None.
         number_of_segments (int, optional): the number of equal angles
             segments in 360 degrees. Defaults to 10.
         max_distance_from_center (float): the maximum distance from the center
@@ -26,11 +25,11 @@ class PoloidalSegments(RotateStraightShape):
 
     def __init__(
         self,
-        center_point,
-        shape_to_segment=None,
-        number_of_segments=10,
-        max_distance_from_center=1000.0,
-        name="poloidal_segmenter",
+        center_point: Tuple[float, float],
+        shape_to_segment: Optional[Shape]=None,
+        number_of_segments: int=10,
+        max_distance_from_center: float=1000.0,
+        name: str="poloidal_segmenter",
         **kwargs
     ):
 
@@ -46,7 +45,7 @@ class PoloidalSegments(RotateStraightShape):
         return self._number_of_segments
 
     @number_of_segments.setter
-    def number_of_segments(self, value):
+    def number_of_segments(self, value: int):
         if isinstance(value, int) is False:
             raise TypeError("PoloidalSegmenter.number_of_segments must be an int.")
         if value < 1:

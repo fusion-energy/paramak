@@ -8,37 +8,28 @@ class Plasma(RotateSplineShape):
     shaping parameters.
 
     Args:
-        elongation (float, optional): the elongation of the plasma.
-            Defaults to 2.0.
-        major_radius (float, optional): the major radius of the plasma (cm).
-            Defaults to 450.0.
-        minor_radius (int, optional): the minor radius of the plasma (cm).
-            Defaults to 150.0.
-        triangularity (float, optional): the triangularity of the plasma.
-            Defaults to 0.55.
-        vertical_displacement (float, optional): the vertical_displacement
-            of the plasma (cm). Defaults to 0.0.
-        num_points (int, optional): number of points to describe the
-            shape. Defaults to 50.
-        configuration (str, optional): plasma configuration
-            ("non-null", "single-null", "double-null").
-            Defaults to "non-null".
-        x_point_shift (float, optional): shift parameters for locating the
-            X points in [0, 1]. Defaults to 0.1.
-        name (str, optional): Defaults to "plasma".
+        elongation: the elongation of the plasma.
+        major_radius: the major radius of the plasma (cm).
+        minor_radius: the minor radius of the plasma (cm).
+        triangularity: the triangularity of the plasma.
+        vertical_displacement: the vertical_displacement of the plasma (cm)..
+        num_points: number of points to describe the shape.
+        configuration: plasma configuration ("non-null", "single-null", "double-null").
+        x_point_shift: shift parameters for locating the X points in [0, 1]..
+        name:
     """
 
     def __init__(
         self,
-        elongation=2.0,
-        major_radius=450.0,
-        minor_radius=150.0,
-        triangularity=0.55,
-        vertical_displacement=0.0,
-        num_points=50,
-        configuration="non-null",
-        x_point_shift=0.1,
-        name="plasma",
+        elongation:float=2.0,
+        major_radius:float=450.0,
+        minor_radius:float=150.0,
+        triangularity:float=0.55,
+        vertical_displacement:float=0.0,
+        num_points:float=50,
+        configuration:str="non-null",
+        x_point_shift:float=0.1,
+        name:str="plasma",
         **kwargs
     ):
 

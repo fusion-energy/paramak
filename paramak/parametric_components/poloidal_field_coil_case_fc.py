@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
 
-from paramak import RotateStraightShape
+from paramak import RotateStraightShape, PoloidalFieldCoil
 
 
 class PoloidalFieldCoilCaseFC(RotateStraightShape):
@@ -8,15 +8,14 @@ class PoloidalFieldCoilCaseFC(RotateStraightShape):
     around an existing coil (which is passed as an argument on construction).
 
     Args:
-        pf_coil (paramak.PoloidalFieldCoil): a pf coil object with a set width,
-            height and center point.
-        casing_thickness (float): the thickness of the coil casing (cm).
+        pf_coil: a pf coil object with a set width, height and center point.
+        casing_thickness: the thickness of the coil casing (cm).
     """
 
     def __init__(
         self,
-        pf_coil,
-        casing_thickness,
+        pf_coil: PoloidalFieldCoil,
+        casing_thickness: float,
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
         **kwargs
     ):
