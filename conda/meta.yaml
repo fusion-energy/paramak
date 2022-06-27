@@ -32,20 +32,19 @@ test:
     - paramak.parametric_components
     - paramak.parametric_reactors
     - paramak.parametric_shapes
-    - tests
   requires:
     - pytest
     - dagmc_h5m_file_inspector  # [not win]
   source_files:
-    - tests/
+    - tests/test_units
     - examples/
-    - tests_h5m/  # [not win]
-    # - tests_examples/  # TODO include if cadquery_jupyter gets a conda install
+    - tests/tests_h5m/  # [not win]
+    # - tests/tests_examples/  # TODO include if cadquery_jupyter gets a conda install
   commands:
-    - pytest -v tests_h5m  # [not win]
-    - pytest -v tests
-    # - pytest -v tests_show  # TODO include if cadquery_jupyter gets a conda install
-    # - pytest -v tests_examples  # TODO include if cadquery_jupyter gets a conda install
+    - pytest -v tests/tests_h5m  # [not win]
+    - pytest -v tests/tests_units
+    # - pytest -v tests/tests_show  # TODO include if cadquery_jupyter gets a conda install
+    # - pytest -v tests/tests_examples  # TODO include if cadquery_jupyter gets a conda install
 
 about:
   home: "https://github.com/fusion-energy/paramak"

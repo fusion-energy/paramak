@@ -37,7 +37,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/test_units -v --cov=paramak --cov-append --cov-report term --cov-report xml
+          pytest tests/tests_units -v --cov=paramak --cov-append --cov-report term --cov-report xml
           pytest tests/tests_examples -v --cov=paramak --cov-append --cov-report term --cov-report xml
           pytest tests/tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml
 
