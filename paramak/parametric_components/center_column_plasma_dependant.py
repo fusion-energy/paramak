@@ -1,5 +1,3 @@
-from typing import Optional
-
 from paramak import Plasma, RotateMixedShape
 
 

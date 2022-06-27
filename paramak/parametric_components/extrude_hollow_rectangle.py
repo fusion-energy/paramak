@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, Union, Iterable
+from typing import Optional, Tuple, Union, Iterable
 
 from cadquery import Plane
 from paramak import ExtrudeStraightShape
