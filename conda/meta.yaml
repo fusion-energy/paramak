@@ -36,7 +36,7 @@ test:
     - pytest
     - dagmc_h5m_file_inspector  # [not win]
   source_files:
-    - tests/test_units
+    - tests/tests_units
     - examples/
     - tests/tests_h5m/  # [not win]
     # - tests/tests_examples/  # TODO include if cadquery_jupyter gets a conda install
