@@ -1,8 +1,8 @@
 from typing import Optional, Tuple
 
 import cadquery as cq
-
-from paramak import PoloidalFieldCoilSet, RotateStraightShape
+from typing import Iterable
+from paramak import PoloidalFieldCoilSet, RotateStraightShape, PoloidalFieldCoil
 
 
 class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
@@ -20,9 +20,9 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
 
     def __init__(
         self,
-        pf_coils,
-        casing_thicknesses,
-        name="pf_coil_case_set_fc",
+        pf_coils: Iterable[PoloidalFieldCoil],
+        casing_thicknesses: float,
+        name: str = "pf_coil_case_set_fc",
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
         **kwargs
     ):
@@ -42,7 +42,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         return self._casing_thicknesses
 
     @casing_thicknesses.setter
-    def casing_thicknesses(self, value):
+    def casing_thicknesses(self, value: float):
         if isinstance(value, list):
             if not all(isinstance(x, (int, float)) for x in value):
                 raise ValueError("Every entry in Casing_thicknesses must be a float or int")
@@ -56,7 +56,7 @@ class PoloidalFieldCoilCaseSetFC(RotateStraightShape):
         return self._pf_coils
 
     @pf_coils.setter
-    def pf_coils(self, value):
+    def pf_coils(self, value: float):
         if not isinstance(value, (list, PoloidalFieldCoilSet)):
             msg = (
                 "PoloidalFieldCoilCaseSetFC.pf_coils must be either a list "

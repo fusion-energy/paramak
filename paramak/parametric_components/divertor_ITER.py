@@ -1,7 +1,7 @@
 import math
+from typing import Tuple
 
 import numpy as np
-
 from paramak import RotateMixedShape, distance_between_two_points, extend, rotate
 
 
@@ -10,42 +10,34 @@ class ITERtypeDivertor(RotateMixedShape):
     dome
 
     Args:
-        anchors ((float, float), (float, float), optional): xz coordinates of
-            points at the top of vertical targets.
-            Defaults to ((450, -300), (561, -367)).
-        coverages ((float, float), optional): coverages (anticlockwise) in
-            degrees of the circular parts of vertical targets.
-            Defaults to (90, 180).
-        radii ((float, float), optional): radii (cm) of circular parts of the
-            vertical targets. Defaults to (50, 25).
-        lengths ((float, float), optional): leg length (cm) of the vertical
-            targets. Defaults to (78, 87).
-        dome (bool, optional): if set to False, the dome will not be created.
-            Defaults to True.
-        dome_height (float, optional): distance (cm) between the dome base and
-            lower points. Defaults to 43.
-        dome_length (float, optional): length of the dome. Defaults to 66.
-        dome_thickness (float, optional): thickness of the dome.
-            Defaults to 10.
-        dome_pos (float, optional): relative location of the dome between
-            vertical targets (0 inner, 1 outer). Ex: 0.5 will place the dome
-            in between the targets. Defaults to 0.5.
+        anchors: xz coordinates of points at the top of vertical targets.
+        coverages: coverages (anticlockwise) in degrees of the circular parts
+            of vertical targets.
+        radii: radii (cm) of circular parts of the vertical targets.
+        lengths: leg length (cm) of the vertical targets.
+        dome: if set to False, the dome will not be created.
+        dome_height: distance (cm) between the dome base and lower points.
+        dome_length: length of the dome.
+        dome_thickness: thickness of the dome.
+        dome_pos: relative location of the dome between vertical targets
+            (0 inner, 1 outer). Ex: 0.5 will place the dome in between the
+            targets.
         tilts ((float, float), optional): tilt angles (anticlockwise) in
-            degrees for the vertical targets. Defaults to (-27, 0).
+            degrees for the vertical targets.
     """
 
     def __init__(
         self,
-        anchors=((450, -300), (561, -367)),
-        coverages=(90, 180),
-        radii=(50, 25),
-        lengths=(78, 87),
-        dome=True,
-        dome_height=43,
-        dome_length=66,
-        dome_thickness=10,
-        dome_pos=0.5,
-        tilts=(-27, 0),
+        anchors: Tuple[Tuple[float, float], Tuple[float, float]] = ((450, -300), (561, -367)),
+        coverages: Tuple[float, float] = (90, 180),
+        radii: Tuple[float, float] = (50, 25),
+        lengths: Tuple[float, float] = (78, 87),
+        dome: bool = True,
+        dome_height: float = 43,
+        dome_length: float = 66,
+        dome_thickness: float = 10,
+        dome_pos: float = 0.5,
+        tilts: Tuple[float, float] = (-27, 0),
         **kwargs
     ):
 
@@ -62,19 +54,18 @@ class ITERtypeDivertor(RotateMixedShape):
         self.dome_pos = dome_pos
         self.dome_thickness = dome_thickness
 
-    def _create_vertical_target_points(self, anchor, coverage, tilt, radius, length):
+    def _create_vertical_target_points(
+        self, anchor: Tuple[float, float], coverage: float, tilt: float, radius: float, length: float
+    ):
         """Creates a list of points for a vertical target
 
         Args:
-            anchor (float, float): xz coordinates of point at
-                the top of the vertical target.
-            coverage (float): coverages (anticlockwise) in degrees of the
-                circular part of the vertical target.
-            tilt (float): tilt angle (anticlockwise) in
-                degrees for the vertical target.
-            radius (float): radius (cm) of circular part of the vertical
-                target.
-            length (float): leg length (cm) of the vertical target.
+            anchor: xz coordinates of point at the top of the vertical target.
+            coverage: coverages (anticlockwise) in degrees of the circular part
+                of the vertical target.
+            tilt: tilt angle (anticlockwise) in degrees for the vertical target.
+            radius: radius (cm) of circular part of the vertical target.
+            length: leg length (cm) of the vertical target.
 
         Returns:
             list: list of x y coordinates
@@ -98,17 +89,25 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([c_coord[0], c_coord[1]])
         return points
 
-    def _create_dome_points(self, c_coord, F, dome_length, dome_height, dome_thickness, dome_pos):
+    def _create_dome_points(
+        self,
+        c_coord: Tuple[float, float],
+        F: Tuple[float, float],
+        dome_length: float,
+        dome_height: float,
+        dome_thickness: float,
+        dome_pos: float,
+    ):
         """Creates a list of points for the dome alongside with their
         connectivity
 
         Args:
-            c_coord (float, float): coordinate of inner end of the dome
-            F (float, float): coordinate of outer end of the dome
-            dome_length (float): dome length (cm)
-            dome_height (float): dome height (cm)
-            dome_thickness (float): dome thickness (cm)
-            dome_pos (float): position of the dome between the two ends.
+            c_coord: coordinate of inner end of the dome
+            F: coordinate of outer end of the dome
+            dome_length: dome length (cm)
+            dome_height: dome height (cm)
+            dome_thickness: dome thickness (cm)
+            dome_pos: position of the dome between the two ends.
 
         Returns:
             list: list of points with connectivity
@@ -141,16 +140,21 @@ class ITERtypeDivertor(RotateMixedShape):
         points.append([E[0], E[1], "straight"])
         return points
 
-    def _create_casing_points(self, anchors, c_coord, F, targets_lengths):
+    def _create_casing_points(
+        self,
+        anchors: Tuple[float, float],
+        c_coord: Tuple[float, float],
+        F: Tuple[float, float],
+        targets_lengths: Tuple[float, float],
+    ):
         """Creates a list of points for the casing alongside with their
         connectivity
 
         Args:
-            anchors ((float, float), (float, float)): xz coordinates of points
-                at the top of vertical targets.
-            c_coord (float, float): coordinate of inner end of the dome
-            F (float, float): coordinate of outer end of the dome
-            targets_lengths (float, float): leg lengths of the vertical targets
+            anchors: xz coordinates of points at the top of vertical targets.
+            c_coord: coordinate of inner end of the dome
+            F: coordinate of outer end of the dome
+            targets_lengths: leg lengths of the vertical targets
 
         Returns:
             list: list of points with connectivity

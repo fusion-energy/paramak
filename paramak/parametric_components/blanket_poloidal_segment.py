@@ -1,5 +1,5 @@
 import warnings
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Callable, Iterable, Optional, Tuple, Union
 
 import numpy as np
 from scipy.optimize import minimize
@@ -29,8 +29,8 @@ class BlanketFPPoloidalSegments(BlanketFP):
 
     def __init__(
         self,
-        segments_angles: Optional[List[float]] = None,
-        num_segments: Optional[int] = 7,
+        segments_angles: Optional[Iterable[float]] = None,
+        num_segments: int = 7,
         length_limits: Optional[Tuple[Union[float, None], Union[float, None]]] = None,
         nb_segments_limits: Optional[Tuple[float, float]] = None,
         segments_gap: Optional[float] = 0.0,
@@ -173,14 +173,14 @@ class BlanketFPPoloidalSegments(BlanketFP):
             self.segments_cutters = cutting_shape
 
 
-def compute_lengths_from_angles(angles: List[float], distribution: Callable):
+def compute_lengths_from_angles(angles: Iterable[float], distribution: Callable):
     """Computes the length of segments between a set of points on a (x,y)
     distribution.
 
     Args:
-        angles (list): Contains the angles of the points (degree)
-        distribution (callable): function taking an angle as argument and
-            returning (x,y) coordinates.
+        angles: Contains the angles of the points (degrees)
+        distribution: function taking an angle as argument and returning (x,y)
+            coordinates.
 
     Returns:
         list: contains the lengths of the segments.

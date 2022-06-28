@@ -45,7 +45,7 @@ class CuttingWedgeFS(CuttingWedge):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value: float):
         self._height = value
 
     @property
@@ -54,7 +54,7 @@ class CuttingWedgeFS(CuttingWedge):
         return self._rotation_angle
 
     @rotation_angle.setter
-    def rotation_angle(self, value):
+    def rotation_angle(self, value: float):
         self._rotation_angle = value
 
     @property
@@ -67,7 +67,7 @@ class CuttingWedgeFS(CuttingWedge):
         return self._workplane
 
     @workplane.setter
-    def workplane(self, value):
+    def workplane(self, value: str):
         self._workplane = value
 
     @property
@@ -76,7 +76,7 @@ class CuttingWedgeFS(CuttingWedge):
         return self._rotation_axis
 
     @rotation_axis.setter
-    def rotation_axis(self, value):
+    def rotation_axis(self, value: str):
         self._rotation_axis = value
 
     @property

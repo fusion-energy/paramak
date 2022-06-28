@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Iterable, Union
 
 from paramak import ExtrudeStraightShape
 
@@ -25,7 +25,7 @@ class BlanketCutterStar(ExtrudeStraightShape):
         distance: float,
         height: float = 2000.0,
         width: float = 2000.0,
-        azimuth_placement_angle: Union[float, List[float]] = [
+        azimuth_placement_angle: Union[float, Iterable[float]] = [
             0.0,
             36.0,
             72.0,
