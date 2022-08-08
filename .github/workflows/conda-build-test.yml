@@ -21,7 +21,7 @@ jobs:
             apt install -y libgl1-mesa-glx
             conda install -y anaconda-client conda-build
             conda config --set anaconda_upload no
-            conda install boa -c conda-forge
+            conda install -c conda-forge boa==0.6.2
       - name: Build and test
         env:
           GIT_DESCRIBE_TAG: 0.1
