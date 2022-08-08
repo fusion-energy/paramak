@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Union, Iterable
+from typing import List, Optional, Tuple, Union
 
 from cadquery import Plane
 from paramak import ExtrudeStraightShape
@@ -26,11 +26,12 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         center_point: Tuple[float, float] = (0, 0),
         extrude_both: bool = True,
         color: Tuple[float, float, float, Optional[float]] = (0.5, 0.5, 0.5),
-        azimuth_placement_angle: Union[float, Iterable[float]] = 0.0,
+        azimuth_placement_angle: Union[float, List[float]] = 0.0,
         workplane: Union[str, Plane] = "XZ",
         cut=None,
         intersect=None,
         union=None,
+        extrusion_start_offset: float = 0.0,
         **kwargs
     ) -> None:
 
@@ -44,6 +45,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
             cut=cut,
             intersect=intersect,
             union=union,
+            extrusion_start_offset=extrusion_start_offset,
             **kwargs
         )
 
@@ -145,6 +147,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
             cut=self.cut,
             intersect=self.intersect,
             union=self.union,
+            extrusion_start_offset=self.extrusion_start_offset,
         )
 
         # creates a large box that surrounds the smaller box
@@ -157,6 +160,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
             cut=self.cut,
             intersect=self.intersect,
             union=self.union,
+            extrusion_start_offset=self.extrusion_start_offset,
         )
 
         # subtracts the two boxes to leave a hollow box
