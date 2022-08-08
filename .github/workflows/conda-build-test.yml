@@ -19,7 +19,7 @@ jobs:
         run: |
             apt-get --allow-releaseinfo-change update
             apt install -y libgl1-mesa-glx
-            conda install -y anaconda-client conda-build
+            conda install -y anaconda-client conda-build==3.21.8
             conda config --set anaconda_upload no
             conda install -c conda-forge boa==0.6.2
       - name: Build and test
