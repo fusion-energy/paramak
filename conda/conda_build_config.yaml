@@ -1,5 +1,5 @@
 python:
-    - 3.8
+    # - 3.8
     - 3.9
     # - 3.10 can't solve environment currently as not all dependencies support 3.10
 cadquery:
