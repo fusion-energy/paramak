@@ -33,4 +33,4 @@ jobs:
 
       - name: Run the notebooks
         run: |
-          pytest tests_examples -v
+          pytest tests/tests_examples -v

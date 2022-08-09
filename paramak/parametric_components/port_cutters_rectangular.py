@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Tuple
 
 from paramak import ExtrudeStraightShape
 
@@ -28,12 +28,12 @@ class PortCutterRectangular(ExtrudeStraightShape):
         height: float,
         width: float,
         distance: float,
-        center_point: Optional[tuple] = (0, 0),
-        workplane: Optional[str] = "ZY",
-        rotation_axis: Optional[str] = "Z",
-        extrusion_start_offset: Optional[float] = 1.0,
-        fillet_radius: Optional[float] = None,
-        name: Optional[str] = "rectangular_port_cutter",
+        center_point: Tuple[float, float] = (0, 0),
+        workplane: str = "ZY",
+        rotation_axis: str = "Z",
+        extrusion_start_offset: float = 1.0,
+        fillet_radius: float = None,
+        name: str = "rectangular_port_cutter",
         **kwargs
     ):
 

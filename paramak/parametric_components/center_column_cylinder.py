@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 from paramak import RotateStraightShape
 
@@ -40,7 +40,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         return self._center_height
 
     @center_height.setter
-    def center_height(self, value):
+    def center_height(self, value: Union[float, int]):
         if not isinstance(value, (int, float)):
             msg = f"CenterColumnShieldBlock.center_height should be a float or int. Not a {type(value)}"
             raise TypeError(msg)
@@ -52,7 +52,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value: float):
         if value is None:
             raise ValueError("height of the CenterColumnShieldBlock cannot be None")
         self._height = value
@@ -62,7 +62,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         return self._inner_radius
 
     @inner_radius.setter
-    def inner_radius(self, value):
+    def inner_radius(self, value: float):
         if hasattr(self, "outer_radius"):
             if value >= self.outer_radius:
                 msg = f"inner_radius ({value}) is larger than outer_radius " "({self.outer_radius})"
@@ -74,7 +74,7 @@ class CenterColumnShieldCylinder(RotateStraightShape):
         return self._outer_radius
 
     @outer_radius.setter
-    def outer_radius(self, value):
+    def outer_radius(self, value: float):
         if hasattr(self, "inner_radius"):
             if value <= self.inner_radius:
                 msg = f"inner_radius ({self.inner_radius}) is larger than " "outer_radius ({value})"

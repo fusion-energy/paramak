@@ -12,8 +12,8 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         width: the width of the internal hollow section.
         distance: the depth of the internal hollow section.
         casing_thickness: the thickness of the casing around the hollow section.
-        center_point: the center of the rectangle (x,z) values (cm).
         name: defaults to "extrude_rectangle".
+        center_point: the center of the rectangle (x,z) values (cm).
     """
 
     def __init__(
@@ -31,6 +31,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
         cut=None,
         intersect=None,
         union=None,
+        extrusion_start_offset: float = 0.0,
         **kwargs
     ) -> None:
 
@@ -44,6 +45,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
             cut=cut,
             intersect=intersect,
             union=union,
+            extrusion_start_offset=extrusion_start_offset,
             **kwargs
         )
 
@@ -145,6 +147,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
             cut=self.cut,
             intersect=self.intersect,
             union=self.union,
+            extrusion_start_offset=self.extrusion_start_offset,
         )
 
         # creates a large box that surrounds the smaller box
@@ -157,6 +160,7 @@ class ExtrudeHollowRectangle(ExtrudeStraightShape):
             cut=self.cut,
             intersect=self.intersect,
             union=self.union,
+            extrusion_start_offset=self.extrusion_start_offset,
         )
 
         # subtracts the two boxes to leave a hollow box

@@ -1,5 +1,5 @@
 import math
-
+from typing import Tuple
 from paramak import RotateStraightShape
 from paramak.utils import rotate
 
@@ -8,16 +8,24 @@ class RotatedIsoscelesTriangle(RotateStraightShape):
     """Creates a rotated triangle (truncated triangle) shape.
 
     Args:
-        base_length (float): the length of the base of the triangle (cm).
-        height (float): the height of the triangle (cm).
-        pivot_point ((float, float)): the coordinates of the tip of the
-            triangle at the opposite side to the base of the triangle.
-        pivot_angle (float, optional): the angle (in degrees) to pivot (rotate)
-            the shape by around the pivot point. Defaults to 0.
-        name (str, optional): defaults to "rotated_triangle".
+        base_length: the length of the base of the triangle (cm).
+        height: the height of the triangle (cm).
+        pivot_point: the coordinates of the tip of the triangle at the opposite
+            side to the base of the triangle.
+        pivot_angle: the angle (in degrees) to pivot (rotate) the shape by
+            around the pivot point. Defaults to 0.
+        name: defaults to "rotated_triangle".
     """
 
-    def __init__(self, base_length, height, pivot_point, pivot_angle=0.0, name="rotated_triangle", **kwargs):
+    def __init__(
+        self,
+        base_length: float,
+        height: float,
+        pivot_point: Tuple[float, float],
+        pivot_angle: float = 0.0,
+        name: str = "rotated_triangle",
+        **kwargs
+    ):
 
         super().__init__(name=name, **kwargs)
 

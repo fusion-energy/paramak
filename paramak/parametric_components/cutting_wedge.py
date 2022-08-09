@@ -1,5 +1,3 @@
-from typing import Optional
-
 from paramak import RotateStraightShape
 
 
@@ -13,7 +11,7 @@ class CuttingWedge(RotateStraightShape):
         rotation_angle: Defaults to 180.0.
     """
 
-    def __init__(self, height: float, radius: float, rotation_angle: Optional[float] = 180.0, **kwargs) -> None:
+    def __init__(self, height: float, radius: float, rotation_angle: float = 180.0, **kwargs) -> None:
 
         super().__init__(rotation_angle=rotation_angle, **kwargs)
 
@@ -25,7 +23,7 @@ class CuttingWedge(RotateStraightShape):
         return self._height
 
     @height.setter
-    def height(self, value):
+    def height(self, value: float):
         self._height = value
 
     @property
@@ -33,7 +31,7 @@ class CuttingWedge(RotateStraightShape):
         return self._radius
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value: float):
         self._radius = value
 
     def find_points(self):

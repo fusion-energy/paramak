@@ -15,6 +15,7 @@ dependencies:
   - matplotlib
   - pillow
   - plasmaboundaries
+  - pip
   - pip:
       - sympy
       - sphinx-autodoc-typehints

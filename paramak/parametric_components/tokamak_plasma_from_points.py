@@ -1,3 +1,4 @@
+from typing import Tuple
 from paramak import Plasma
 
 
@@ -6,15 +7,21 @@ class PlasmaFromPoints(Plasma):
     coordinates.
 
     Args:
-        outer_equatorial_x_point (float): the x value of the outer equatorial
-            of the plasma (cm).
-        inner_equatorial_x_point (float): the x value of the inner equatorial
-            of the plasma (cm).
+        outer_equatorial_x_point: the x value of the outer equatorial of the
+            plasma (cm).
+        inner_equatorial_x_point: the x value of the inner equatorial of the
+            plasma (cm).
         high_point (tuple of 2 floats): the (x,z) coordinate values of the top
             of the plasma (cm).
     """
 
-    def __init__(self, outer_equatorial_x_point, inner_equatorial_x_point, high_point, **kwargs):
+    def __init__(
+        self,
+        outer_equatorial_x_point: Tuple[float, float],
+        inner_equatorial_x_point: Tuple[float, float],
+        high_point: Tuple[float, float],
+        **kwargs
+    ):
 
         minor_radius = (outer_equatorial_x_point - inner_equatorial_x_point) / 2.0
         major_radius = inner_equatorial_x_point + minor_radius
