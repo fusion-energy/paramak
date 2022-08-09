@@ -21,8 +21,9 @@ jobs:
             apt install -y libgl1-mesa-glx
             conda install -y anaconda-client conda-build
             conda config --set anaconda_upload no
+            conda install boa -c conda-forge
       - name: Build and test
         env:
           GIT_DESCRIBE_TAG: 0.1
         run: |
-            conda build conda -c fusion-energy -c cadquery -c conda-forge --config-file conda/conda_build_config.yaml
+            conda mambabuild conda -c fusion-energy -c cadquery -c conda-forge --config-file conda/conda_build_config.yaml
