@@ -184,7 +184,7 @@ class Reactor:
             )
             raise ImportError(msg)
 
-        parts = []
+        reactor_assembly = cq.Assembly(name="reactor")
         for shape_or_compound in self.shapes_and_components:
 
             if shape_or_compound.name is None:
@@ -198,17 +198,15 @@ class Reactor:
                 (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
             ):
                 for i, solid in enumerate(shape_or_compound.solid.Solids()):
-                    parts.append(Part(solid, name=f"{name}{i}", color=scaled_color))
+                    reactor_assembly.add(solid, name=f"{name}{i}", color=scaled_color)
             else:
-                parts.append(
-                    Part(
-                        shape_or_compound.solid.val(),
-                        name=f"{name}",
-                        color=scaled_color,
-                    )
+                reactor_assembly.add(
+                    shape_or_compound.solid.val(),
+                    name=f"{name}",
+                    color=scaled_color,
                 )
 
-        return show(PartGroup(parts), **kwargs)
+        return show(reactor_assembly, **kwargs)
 
     def export_dagmc_h5m(
         self,
