@@ -11,7 +11,9 @@ from paramak import RotateMixedShape
 
 
 class BlanketFP(RotateMixedShape):
-    """A blanket volume created from plasma parameters.
+    """A blanket volume created from plasma parameters. In might be nessecary
+    to increase the num_points when making long but thin geometry with this
+    component.
 
     Args:
         thickness (float or [float] or callable or [(float), (float)]):
