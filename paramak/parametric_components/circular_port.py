@@ -33,12 +33,12 @@ class CircularPort(Shape):
         flange_overhang: float = 10,
         flange_thickness: float = 5,
         flange_gap: float = 0,
-        blank_flange_thickness: Optional[float] = 5,
-        workplane: Optional[str] = "ZY",
-        rotation_axis: Optional[str] = "Z",
-        extrusion_start_offset: Optional[float] = 100,
-        center_point: Optional[tuple] = (0, 0),
-        name: Optional[str] = "circular_port_cutter",
+        blank_flange_thickness: float = 5,
+        workplane: str = "ZY",
+        rotation_axis: str = "Z",
+        extrusion_start_offset: float = 100,
+        center_point: tuple = (0, 0),
+        name: str = "circular_port_cutter",
         color: Tuple[float, float, float, Optional[float]] = (
             0.984,
             0.603,
@@ -72,12 +72,7 @@ class CircularPort(Shape):
            A CadQuery solid: A 3D solid volume
         """
 
-        # so a positive offset moves extrusion further from axis of azimuthal
-        # placement rotation
-        if self.extrusion_start_offset is None:
-            extrusion_offset = 0.0
-        else:
-            extrusion_offset = -self.extrusion_start_offset
+        extrusion_offset = -self.extrusion_start_offset
         flange_gap = -self.flange_gap
         extrusion_distance = -self.distance
         flange_thickness = self.flange_thickness
@@ -110,11 +105,7 @@ class CircularPort(Shape):
         flange_solid = flange_solid.cut(inner_solid)
         solid = solid.union(flange_solid)
 
-        # changing value internally so that 0 can be used in additions
-        if self.blank_flange_thickness is None:
-            blank_flange_thickness = 0
-        else:
-            blank_flange_thickness = self.blank_flange_thickness
+        blank_flange_thickness = self.blank_flange_thickness
 
         if blank_flange_thickness > 0:
             blank_flange_wire = (

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from paramak import Plasma, RotateMixedShape
 
 
@@ -28,10 +26,10 @@ class CenterColumnShieldPlasmaHyperbola(RotateMixedShape):
         inner_radius: float,
         mid_offset: float,
         edge_offset: float,
-        major_radius: Optional[float] = 450.0,
-        minor_radius: Optional[float] = 150.0,
-        triangularity: Optional[float] = 0.55,
-        elongation: Optional[float] = 2.0,
+        major_radius: float = 450.0,
+        minor_radius: float = 150.0,
+        triangularity: float = 0.55,
+        elongation: float = 2.0,
         **kwargs,
     ) -> None:
 

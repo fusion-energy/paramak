@@ -56,7 +56,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         return self._arc_height
 
     @arc_height.setter
-    def arc_height(self, arc_height):
+    def arc_height(self, arc_height: float):
         self._arc_height = arc_height
 
     @property
@@ -64,7 +64,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         return self._inner_radius
 
     @inner_radius.setter
-    def inner_radius(self, inner_radius):
+    def inner_radius(self, inner_radius: float):
         self._inner_radius = inner_radius
 
     @property
@@ -72,7 +72,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         return self._mid_radius
 
     @mid_radius.setter
-    def mid_radius(self, mid_radius):
+    def mid_radius(self, mid_radius: float):
         self._mid_radius = mid_radius
 
     @property
@@ -80,7 +80,7 @@ class CenterColumnShieldFlatTopCircular(RotateMixedShape):
         return self._outer_radius
 
     @outer_radius.setter
-    def outer_radius(self, outer_radius):
+    def outer_radius(self, outer_radius: float):
         self._outer_radius = outer_radius
 
     def find_points(self):

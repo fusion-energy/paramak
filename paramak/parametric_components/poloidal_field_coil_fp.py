@@ -1,3 +1,4 @@
+from typing import Iterable, Tuple
 from paramak import PoloidalFieldCoil
 
 
@@ -9,7 +10,7 @@ class PoloidalFieldCoilFP(PoloidalFieldCoil):
             corners of the rectangular shaped coil e.g [(x1, y1), (x2, y2)]
     """
 
-    def __init__(self, corner_points, **kwargs):
+    def __init__(self, corner_points: Iterable[Tuple[float, float]], **kwargs):
 
         height = abs(corner_points[0][1] - corner_points[1][1])
         width = abs(corner_points[0][0] - corner_points[1][0])

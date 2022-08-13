@@ -10,35 +10,26 @@ class PlasmaBoundaries(Plasma):
     http://github.com/fusion-energy/plasmaboundaries
 
     Args:
-        A (float, optional): plasma parameter see plasmaboundaries doc.
-            Defaults to 0.05.
-        elongation (float, optional): the elongation of the plasma.
-            Defaults to 2.0.
-        major_radius (float, optional): the major radius of the plasma
-            (cm). Defaults to 450.0.
-        minor_radius (float, optional): the minor radius of the plasma
-            (cm). Defaults to 150.0.
-        triangularity (float, optional): the triangularity of the plasma.
-            Defaults to 0.55.
-        vertical_displacement (float, optional): the vertical_displacement
-            of the plasma (cm). Defaults to 0.0.
-        configuration (str, optional): plasma configuration
-            ("non-null", "single-null", "double-null").
-            Defaults to "non-null".
-        x_point_shift (float, optional): Shift parameters for locating the
-            X points in [0, 1]. Defaults to 0.1.
+        A: plasma parameter see plasmaboundaries doc.
+        elongation: the elongation of the plasma.
+        major_radius: the major radius of the plasma (cm).
+        minor_radius: the minor radius of the plasma (cm).
+        triangularity: the triangularity of the plasma.
+        vertical_displacement: the vertical_displacement of the plasma (cm).
+        configuration (str, optional): plasma configuration ("non-null", "single-null", "double-null").
+        x_point_shift: Shift parameters for locating the X points in [0, 1]. Defaults to 0.1.
     """
 
     def __init__(
         self,
-        A=0.05,
-        elongation=2.0,
-        major_radius=450.0,
-        minor_radius=150.0,
-        triangularity=0.55,
-        vertical_displacement=0.0,
-        configuration="non-null",
-        x_point_shift=0.1,
+        A: float = 0.05,
+        elongation: float = 2.0,
+        major_radius: float = 450.0,
+        minor_radius: float = 150.0,
+        triangularity: float = 0.55,
+        vertical_displacement: float = 0.0,
+        configuration: str = "non-null",
+        x_point_shift: float = 0.1,
         **kwargs
     ):
 

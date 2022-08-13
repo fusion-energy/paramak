@@ -5,12 +5,12 @@ class VacuumVessel(RotateStraightShape):
     """A cylindrical vessel volume with constant thickness.
 
     Arguments:
-        height (float): height of the vessel.
-        inner_radius (float): the inner radius of the vessel.
-        thickness (float): thickness of the vessel
+        height: height of the vessel.
+        inner_radius: the inner radius of the vessel.
+        thickness: thickness of the vessel
     """
 
-    def __init__(self, height, inner_radius, thickness, **kwargs):
+    def __init__(self, height: float, inner_radius: float, thickness: float, **kwargs):
         self.height = height
         self.inner_radius = inner_radius
         self.thickness = thickness

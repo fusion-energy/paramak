@@ -1,7 +1,6 @@
-from typing import Optional, Tuple
+from typing import Iterable, Optional, Tuple, Union
 
 import cadquery as cq
-
 from paramak import RotateStraightShape
 
 
@@ -24,11 +23,11 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
 
     def __init__(
         self,
-        heights,
-        widths,
-        casing_thicknesses,
-        center_points,
-        name="pf_coil_case_set",
+        heights: Iterable[float],
+        widths: Iterable[float],
+        casing_thicknesses: Iterable[float],
+        center_points: Iterable[float],
+        name: str = "pf_coil_case_set",
         color: Tuple[float, float, float, Optional[float]] = (1.0, 1.0, 0.498),
         **kwargs
     ):
@@ -69,7 +68,7 @@ class PoloidalFieldCoilCaseSet(RotateStraightShape):
         return self._casing_thicknesses
 
     @casing_thicknesses.setter
-    def casing_thicknesses(self, value):
+    def casing_thicknesses(self, value: Union[Iterable[float], float]):
         if isinstance(value, list):
             if not all(isinstance(x, (int, float)) for x in value):
                 raise ValueError("Every entry in Casing_thicknesses must be a float or int")

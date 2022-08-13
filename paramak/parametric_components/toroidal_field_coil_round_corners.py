@@ -17,19 +17,18 @@ class ToroidalFieldCoilRectangleRoundCorners(ExtrudeMixedShape):
     parameters, and takes three additional boolean arguments.
 
     Arguments:
-        lower_inner_coordinates (Tuple): the (X,Z) coordinate of the inner
-            corner of the lower end of the coil (cm)
-        mid_point_coordinates (Tuple): the (X,Z) coordinate of the mid
-            point of the vertical section (cm)
-        thickness: The thickness in the (X,Z) plane of the toroidal
-        field coils (cm)
-        extrusiondistance: The total extruded thickness of the coils
-            when in the y-direction (centered extrusion)
+        lower_inner_coordinates: the (X,Z) coordinate of the inner corner of
+            the lower end of the coil (cm)
+        mid_point_coordinates: the (X,Z) coordinate of the mid point of the
+            vertical section (cm)
+        thickness: The thickness in the (X,Z) plane of the toroidal field coils
+            (cm)
+        extrusiondistance: The total extruded thickness of the coils when in
+            the y-direction (centered extrusion)
         coil_count: The number of coils placed in the model
             (changing azimuth_placement_angle by dividing 360 by the amount
             given). Defaults to 1
         with_inner_leg: Boolean to include the inside of the Coils
-            defaults to False
         azimuth_start_angle: The azimuth angle to for the first TF coil which
             offsets the placement of coils around the azimuthal angle
     """

@@ -19,11 +19,10 @@ jobs:
             apt install -y libgl1-mesa-glx
             conda install -y anaconda-client conda-build
             conda config --set anaconda_upload no
-            conda install boa -c conda-forge
       - name: Build and publish to conda
         env:
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
         run: |
-            conda mambabuild conda -c fusion-energy -c cadquery -c conda-forge --config-file conda/conda_build_config.yaml
+            conda build conda -c fusion-energy -c cadquery -c conda-forge --config-file conda/conda_build_config.yaml
             conda convert /opt/conda/conda-bld/linux-64/*.tar.bz2 --platform osx-64 --platform win-64 -o /opt/conda/conda-bld/
             anaconda upload -f /opt/conda/conda-bld/*/*.tar.bz2
