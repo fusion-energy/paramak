@@ -187,9 +187,9 @@ class Reactor:
         assembly = cq.Assembly(name="reactor")
         for entry in self.shapes_and_components:
             if entry.color is None:
-                assembly.add(entry.solid, name=entry.name)
+                assembly.add(entry.solid)
             else:
-                assembly.add(entry.solid, name=entry.name, color=cq.Color(*entry.color))
+                assembly.add(entry.solid, color=cq.Color(*entry.color))
 
         return show(assembly, **kwargs)
 
