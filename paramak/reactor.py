@@ -175,40 +175,27 @@ class Reactor:
         """
 
         try:
-            from jupyter_cadquery import Part, PartGroup, show
+            from jupyter_cadquery import show
         except ImportError:
             msg = (
                 "To use Reactor.show() you must install jupyter_cadquery version "
-                '3.0.0 or above. To install jupyter_cadquery type "pip install '
+                '3.2.0 or above. To install jupyter_cadquery type "pip install '
                 'jupyter_cadquery" in the terminal'
             )
             raise ImportError(msg)
 
-        parts = []
-        for shape_or_compound in self.shapes_and_components:
-
-            if shape_or_compound.name is None:
+        assembly = cq.Assembly(name="reactor")
+        for entry in self.shapes_and_components:
+            if entry.name is None:
                 name = "Shape.name not set"
             else:
-                name = shape_or_compound.name
-
-            scaled_color = [int(i * 255) for i in shape_or_compound.color[0:3]]
-            if isinstance(
-                shape_or_compound.solid,
-                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
-            ):
-                for i, solid in enumerate(shape_or_compound.solid.Solids()):
-                    parts.append(Part(solid, name=f"{name}{i}", color=scaled_color))
+                name = entry.name
+            if entry.color is None:
+                assembly.add(entry.solid, name=name)
             else:
-                parts.append(
-                    Part(
-                        shape_or_compound.solid.val(),
-                        name=f"{name}",
-                        color=scaled_color,
-                    )
-                )
+                assembly.add(entry.solid, name=name, color=cq.Color(*entry.color))
 
-        return show(PartGroup(parts), **kwargs)
+        return show(assembly, **kwargs)
 
     def export_dagmc_h5m(
         self,
