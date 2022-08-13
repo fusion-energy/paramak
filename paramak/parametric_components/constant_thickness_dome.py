@@ -1,7 +1,8 @@
 import math
-from paramak import RotateMixedShape, RotateStraightShape, Shape, CuttingWedge
-import cadquery as cq
 import numbers
+
+import cadquery as cq
+from paramak import CuttingWedge, RotateMixedShape, RotateStraightShape, Shape
 
 
 class ConstantThicknessDome(RotateMixedShape):

@@ -1,9 +1,7 @@
-from typing import Optional, Tuple, Union
+from typing import Iterable, Optional, Tuple, Union
 
 import cadquery as cq
-
 from paramak import RotateStraightShape
-from typing import Iterable
 
 
 class PoloidalFieldCoilCaseSet(RotateStraightShape):
