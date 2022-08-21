@@ -7,7 +7,6 @@ from shutil import copymode, move
 from tempfile import mkstemp
 from typing import List, Optional, Tuple, Union
 
-import tempfile
 import cadquery as cq
 import numpy as np
 import plotly.graph_objects as go
@@ -93,7 +92,7 @@ def export_solids_to_dagmc_h5m(
     from brep_to_h5m import brep_to_h5m
     import brep_part_finder as bpf
 
-    tmp_brep_filename = tempfile.mkstemp(suffix=".brep", prefix="paramak_")[1]
+    tmp_brep_filename = mkstemp(suffix=".brep", prefix="paramak_")[1]
 
     # saves the reactor as a Brep file with merged surfaces
     export_solids_to_brep(solids=solids, filename=tmp_brep_filename)
