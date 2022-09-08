@@ -22,7 +22,7 @@ requirements:
     - mpmath
     - plasmaboundaries >=0.1.8
     - plotly
-    - brep_part_finder >=0.4.2 # [not win]
+    - brep_part_finder >=0.4.4 # [not win]
     - brep_to_h5m >=0.3.1 # [not win]
     - moab * nompi_tempest_*
     # - jupyter-cadquery not available on conda
