@@ -16,6 +16,46 @@ from cadquery.occ_impl import shapes
 import OCP
 
 
+def export_solids_to_brep_object(
+    solids: Iterable,
+):
+    """Returns a brep object from a iterable of solids with merged surfaces.
+
+    Args:
+        solids: a list of cadquery solids
+
+    Returns:
+        brep cadquery object
+    """
+
+    # TODO bring non merge capability back
+    # if not merge:
+    #     geometry_to_save = cq.Compound.makeCompound([self.solid, self.graveyard.solid.val()])
+    #     geometry_to_save.exportBrep(str(path_filename))
+
+    bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
+
+    if len(solids) == 1:
+        return solids[0].val()
+
+    for solid in solids:
+        # checks if solid is a compound as .val() is not needed for compounds
+        if isinstance(solid, cq.occ_impl.shapes.Compound):
+            bldr.AddArgument(solid.wrapped)
+        else:
+            bldr.AddArgument(solid.val().wrapped)
+
+    bldr.SetNonDestructive(True)
+
+    bldr.Perform()
+
+    bldr.Images()
+
+    merged_solid = cq.Compound(bldr.Shape())
+
+    return merged_solid
+
+
 def export_solids_to_brep(
     solids: Iterable,
     filename: str = "reactor.brep",
@@ -38,31 +78,7 @@ def export_solids_to_brep(
 
     path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-    # TODO bring non merge capability back
-    # if not merge:
-    #     geometry_to_save = cq.Compound.makeCompound([self.solid, self.graveyard.solid.val()])
-    #     geometry_to_save.exportBrep(str(path_filename))
-
-    bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
-
-    if len(solids) == 1:
-        solids[0].val().exportBrep(str(path_filename))
-        return str(path_filename)
-
-    for solid in solids:
-        # checks if solid is a compound as .val() is not needed for compounds
-        if isinstance(solid, cq.occ_impl.shapes.Compound):
-            bldr.AddArgument(solid.wrapped)
-        else:
-            bldr.AddArgument(solid.val().wrapped)
-
-    bldr.SetNonDestructive(True)
-
-    bldr.Perform()
-
-    bldr.Images()
-
-    merged_solid = cq.Compound(bldr.Shape())
+    merged_solid = export_solids_to_brep_object(solids)
 
     merged_solid.exportBrep(str(path_filename))
 
@@ -92,13 +108,11 @@ def export_solids_to_dagmc_h5m(
     from brep_to_h5m import brep_to_h5m
     import brep_part_finder as bpf
 
-    tmp_brep_filename = mkstemp(suffix=".brep", prefix="paramak_")[1]
-
     # saves the reactor as a Brep file with merged surfaces
-    export_solids_to_brep(solids=solids, filename=tmp_brep_filename)
+    brep_shape = export_solids_to_brep_object(solids=solids)
 
     # brep file is imported
-    brep_file_part_properties = bpf.get_brep_part_properties(tmp_brep_filename)
+    brep_file_part_properties = bpf.get_brep_part_properties_from_shape(brep_shape)
 
     if verbose:
         print("brep_file_part_properties", brep_file_part_properties)
