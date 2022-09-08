@@ -111,7 +111,6 @@ def export_solids_to_dagmc_h5m(
     # saves the reactor as a Brep file with merged surfaces
     brep_shape = export_solids_to_brep_object(solids=solids)
 
-    # brep file is imported
     brep_file_part_properties = bpf.get_brep_part_properties_from_shape(brep_shape)
 
     if verbose:
@@ -159,6 +158,10 @@ def export_solids_to_dagmc_h5m(
 
     if verbose:
         print(f"key_and_part_id={key_and_part_id}")
+
+    # gmsh requires an actual brep file to load
+    tmp_brep_filename = mkstemp(suffix=".brep", prefix="paramak_")[1]
+    brep_shape.exportBrep(tmp_brep_filename)
 
     brep_to_h5m(
         brep_filename=tmp_brep_filename,
