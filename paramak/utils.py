@@ -105,7 +105,7 @@ def export_solids_to_dagmc_h5m(
         raise ValueError(msg)
 
     # a local import is used here as these packages need Moab to work
-    from brep_to_h5m import brep_to_h5m
+    from brep_to_h5m import mesh_brep, mesh_to_h5m_in_memory_method
     import brep_part_finder as bpf
 
     # saves the reactor as a Brep file with merged surfaces
@@ -163,19 +163,30 @@ def export_solids_to_dagmc_h5m(
     tmp_brep_filename = mkstemp(suffix=".brep", prefix="paramak_")[1]
     brep_shape.exportBrep(tmp_brep_filename)
 
-    brep_to_h5m(
+    gmsh, volumes = mesh_brep(
         brep_filename=tmp_brep_filename,
-        volumes_with_tags=key_and_part_id,
-        h5m_filename=filename,
         min_mesh_size=min_mesh_size,
         max_mesh_size=max_mesh_size,
-        delete_intermediate_stl_files=True,
+        volumes_with_tags=key_and_part_id,
     )
 
-    # temporary brep is deleted using os.remove
-    remove(tmp_brep_filename)
+    if verbose:
+        gmsh_filename = mkstemp(suffix=".msh", prefix="paramak_")[1]
+        print(f"written gmsh file to {gmsh_filename}")
+        gmsh.write(gmsh_filename)
 
-    return filename
+    h5m_filename = mesh_to_h5m_in_memory_method(
+        volumes=volumes,
+        volumes_with_tags=key_and_part_id,
+        h5m_filename=filename,
+    )
+
+    if not verbose:
+        print(f"written brep file to {tmp_brep_filename}")
+        # temporary brep is deleted using os.remove
+        remove(tmp_brep_filename)
+
+    return h5m_filename
 
 
 def get_bounding_box(solid) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:

@@ -265,8 +265,6 @@ class Reactor:
             for shape in shapes_to_convert:
                 tags.append(shape.name)
 
-        print(tags)
-
         output_filename = export_solids_to_dagmc_h5m(
             solids=[shape.solid for shape in shapes_to_convert],
             filename=filename,
