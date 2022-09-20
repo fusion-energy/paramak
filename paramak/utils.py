@@ -111,35 +111,15 @@ def export_solids_to_dagmc_h5m(
     # saves the reactor as a Brep file with merged surfaces
     brep_shape = export_solids_to_brep_object(solids=solids)
 
-    brep_file_part_properties = bpf.get_brep_part_properties_from_shape(brep_shape)
+    brep_file_part_properties = bpf.get_part_properties_from_shapes(brep_shape)
 
     if verbose:
         print("brep_file_part_properties", brep_file_part_properties)
 
-    shape_properties = {}
-    for counter, solid in enumerate(solids):
-        sub_solid_descriptions = []
+    shape_properties = bpf.get_part_properties_from_shapes(solids)
+    # for counter, solid in enumerate(solids):
 
-        # checks if the solid is a cq.Compound or not
-        if isinstance(solid, cq.occ_impl.shapes.Compound):
-            iterable_solids = solid.Solids()
-        else:
-            iterable_solids = solid.val().Solids()
-
-        for sub_solid in iterable_solids:
-            part_bb = sub_solid.BoundingBox()
-            part_center = sub_solid.Center()
-            sub_solid_description = {
-                "volume": sub_solid.Volume(),
-                "center": (part_center.x, part_center.y, part_center.z),
-                "bounding_box": (
-                    (part_bb.xmin, part_bb.ymin, part_bb.zmin),
-                    (part_bb.xmax, part_bb.ymax, part_bb.zmax),
-                ),
-            }
-            sub_solid_descriptions.append(sub_solid_description)
-
-            shape_properties[tags[counter]] = sub_solid_descriptions
+    #     shape_properties[counter] = bpf.get_part_properties_from_shape(solid)
 
     if verbose:
         print("shape_properties", shape_properties)
@@ -148,16 +128,22 @@ def export_solids_to_dagmc_h5m(
     # using the volume, center, bounding box that we know about when creating the
     # CAD geometry in the first place
 
-    key_and_part_id = bpf.get_dict_of_part_ids(
+    brep_and_shape_part_ids = bpf.get_matching_part_ids(
         brep_part_properties=brep_file_part_properties,
         shape_properties=shape_properties,
         volume_atol=volume_atol,
         center_atol=center_atol,
         bounding_box_atol=bounding_box_atol,
     )
+    if verbose:
+        print(f"brep_and_shape_part_ids={brep_and_shape_part_ids}")
+
+    material_tags_in_brep_order = []
+    for (brep_id, shape_id) in brep_and_shape_part_ids:
+        material_tags_in_brep_order.append(tag[shape_id - 1])
 
     if verbose:
-        print(f"key_and_part_id={key_and_part_id}")
+        print(f"material_tags_in_brep_order={material_tags_in_brep_order}")
 
     # gmsh requires an actual brep file to load
     tmp_brep_filename = mkstemp(suffix=".brep", prefix="paramak_")[1]
@@ -167,7 +153,6 @@ def export_solids_to_dagmc_h5m(
         brep_filename=tmp_brep_filename,
         min_mesh_size=min_mesh_size,
         max_mesh_size=max_mesh_size,
-        volumes_with_tags=key_and_part_id,
     )
 
     if verbose:
@@ -177,7 +162,7 @@ def export_solids_to_dagmc_h5m(
 
     h5m_filename = mesh_to_h5m_in_memory_method(
         volumes=volumes,
-        volumes_with_tags=key_and_part_id,
+        material_tags=material_tags_in_brep_order,
         h5m_filename=filename,
     )
 
