@@ -140,7 +140,7 @@ def export_solids_to_dagmc_h5m(
 
     material_tags_in_brep_order = []
     for (brep_id, shape_id) in brep_and_shape_part_ids:
-        material_tags_in_brep_order.append(tag[shape_id - 1])
+        material_tags_in_brep_order.append(tags[shape_id - 1])
 
     if verbose:
         print(f"material_tags_in_brep_order={material_tags_in_brep_order}")
