@@ -96,6 +96,9 @@ def export_solids_to_dagmc_h5m(
     bounding_box_atol: float = 0.000001,
     tags: List[str] = None,
 ):
+    if verbose:
+        print("solids", solids, "\n")
+        print("tags", tags, "\n")
     if len(tags) != len(solids):
         msg = (
             "When specifying tags then there must be one tag for "
@@ -111,9 +114,19 @@ def export_solids_to_dagmc_h5m(
         if hasattr(solid, "val"):
             # if it is a compound then we need more material tags
             if isinstance(solid.val(), cq.occ_impl.shapes.Compound):
-                compound_expanded_tags = compound_expanded_tags + [tag] * len(solid.val().Solids())
+                additional_tags = [tag] * len(solid.val().Solids())
+                compound_expanded_tags = compound_expanded_tags + additional_tags
             else:
                 compound_expanded_tags.append(tag)
+            # if it is a compound then we need more material tags
+        elif isinstance(solid, cq.occ_impl.shapes.Compound):
+            additional_tags = [tag] * len(solid.Solids())
+            compound_expanded_tags = compound_expanded_tags + additional_tags
+        else:
+            compound_expanded_tags.append(tag)
+
+    if verbose:
+        print("compound_expanded_tags", compound_expanded_tags, "\n")
 
     # a local import is used here as these packages need Moab to work
     from brep_to_h5m import mesh_brep, mesh_to_h5m_in_memory_method
@@ -125,7 +138,7 @@ def export_solids_to_dagmc_h5m(
     brep_file_part_properties = bpf.get_part_properties_from_shapes(brep_shape)
 
     if verbose:
-        print("brep_file_part_properties", brep_file_part_properties)
+        print("brep_file_part_properties", brep_file_part_properties, "\n")
 
     shape_properties = bpf.get_part_properties_from_shapes(solids)
     # for counter, solid in enumerate(solids):

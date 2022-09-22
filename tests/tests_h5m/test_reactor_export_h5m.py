@@ -97,7 +97,7 @@ class TestReactor(unittest.TestCase):
         named in the resulting h5m file, includes the optional graveyard"""
 
         self.test_reactor_3.rotation_angle = 180
-        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", include_graveyard={"size": 250})
+        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", include_graveyard={"size": 250}, verbose=True)
 
         vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
         assert vols == [1, 2, 3, 4]
