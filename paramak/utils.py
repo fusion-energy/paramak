@@ -104,6 +104,17 @@ def export_solids_to_dagmc_h5m(
         )
         raise ValueError(msg)
 
+    compound_expanded_tags = []
+    # solids could contain compounds
+    for tag, solid in zip(tags, solids):
+        # before accessing the .val() check it exists
+        if hasattr(solid, "val"):
+            # if it is a compound then we need more material tags
+            if isinstance(solid.val(), cq.occ_impl.shapes.Compound):
+                compound_expanded_tags = compound_expanded_tags + [tag] * len(solid.val().Solids())
+            else:
+                compound_expanded_tags.append(tag)
+
     # a local import is used here as these packages need Moab to work
     from brep_to_h5m import mesh_brep, mesh_to_h5m_in_memory_method
     import brep_part_finder as bpf
@@ -140,7 +151,7 @@ def export_solids_to_dagmc_h5m(
 
     material_tags_in_brep_order = []
     for (brep_id, shape_id) in brep_and_shape_part_ids:
-        material_tags_in_brep_order.append(tags[shape_id - 1])
+        material_tags_in_brep_order.append(compound_expanded_tags[shape_id - 1])
 
     if verbose:
         print(f"material_tags_in_brep_order={material_tags_in_brep_order}")
