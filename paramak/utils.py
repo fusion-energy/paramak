@@ -190,8 +190,9 @@ def export_solids_to_dagmc_h5m(
         h5m_filename=filename,
     )
 
-    if not verbose:
+    if verbose:
         print(f"written brep file to {tmp_brep_filename}")
+    else:
         # temporary brep is deleted using os.remove
         remove(tmp_brep_filename)
 
