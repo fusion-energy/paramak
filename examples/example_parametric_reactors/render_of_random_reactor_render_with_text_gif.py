@@ -92,7 +92,7 @@ def create_reactor_renders(
     # plt.show()
     plt.savefig("tempfile.png", dpi=400)
 
-    my_image = Image.open(f"tempfile.png")
+    my_image = Image.open("tempfile.png")
     title_text = f"""
     inner_blanket_radius={round(inner_blanket_radius,1)}
     blanket_thickness={round(blanket_thickness,1)}
