@@ -1,13 +1,63 @@
 [build-system]
 requires = [
-    "setuptools >= 46.4.0",
-    "wheel",
-    "setuptools_scm[toml] >= 6.3.1",
+    "setuptools>=65.4.0",
+    "setuptools_scm[toml]>=7.0.5"
 ]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "paramak"
+authors = [
+  { name="Jonathan Shimwell", email="mail@jshimwell.com" }
+]
+license = {file = "LICENSE.txt"}
+description = "Create 3D fusion reactor CAD models based on input parameters"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["python", "geometry", "reactor", "model", "cad", "fusion", "parametric", "dagmc", "openmc"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "plotly>=5.1.0",
+    "scipy>=1.7.0",
+    "sympy>=1.8",
+    "numpy>=1.21.1",
+    "matplotlib>=3.4.2",
+    "plasmaboundaries>=0.1.8",
+    "jupyter-client<7",
+    "jupyter-cadquery>= 3.2.0",
+    "brep_part_finder>=0.5.0",
+    "brep_to_h5m>=0.4.0",
+    "setuptools_scm[toml]>=7.0.5"
+]
+dynamic = ["version"]
+
 [tool.setuptools_scm]
 write_to = "paramak/_version.py"
+
+[project.optional-dependencies]
+tests = [
+    "pytest>=5.4.3",
+    "pytest-cov>=2.12.1",
+    "pytest-runner>=5.3.1",
+    "dagmc_h5m_file_inspector>=0.5.0"
+]
+docs = [
+    "sphinx>=4.1.2",
+    "sphinx_rtd_theme",
+    "sphinx_autodoc_typehints",
+    "sphinxcadquery"
+]
+
+[tool.setuptools.packages.find]
+where = ["paramak"]
+
+[project.urls]
+    "Homepage" = "https://github.com/fusion-energy/paramak"
+    "Bug Tracker" = "https://github.com/fusion-energy/paramak/issues"
 
 [tool.black]
 line-length = 120
