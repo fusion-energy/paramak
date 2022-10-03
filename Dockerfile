@@ -75,8 +75,6 @@ COPY examples examples/
 
 COPY tests tests/
 
-COPY setup.py setup.py
-COPY setup.cfg setup.cfg
 COPY pyproject.toml pyproject.toml
 
 COPY README.md README.md
