@@ -5,8 +5,32 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "paramak"
+dynamic = ["version"]
+description = "Create 3D fusion reactor CAD models based on input parameters"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+authors = [
+  { name="The Paramak Development Team" },
+]
+license = {file = "LICENSE.txt"}
+requires-python = ">=3.8"
+
+[project.urls]
+"Homepage" = "https://github.com/fusion-energy/paramak"
+"Bug Tracker" = "https://github.com/fusion-energy/paramak/issues"
+"Documentation" = "https://paramak.readthedocs.io"
+
 [tool.setuptools_scm]
-write_to = "paramak/_version.py"
+write_to = "src/_version.py"
 
 [tool.black]
 line-length = 120
+
+[tool.setuptools]
+package-dir = {"" = "src"}
