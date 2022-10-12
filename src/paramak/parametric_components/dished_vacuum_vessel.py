@@ -1,3 +1,4 @@
+from cadquery import Compound
 from paramak import RotateMixedShape, CenterColumnShieldCylinder, ConstantThicknessDome
 
 
@@ -117,5 +118,5 @@ class DishedVacuumVessel(RotateMixedShape):
             rotation_angle=self.rotation_angle,
         )
 
-        upper_dome_section.solid = upper_dome_section.solid.union(cylinder_section.solid)
-        self.solid = lower_dome_section.solid.union(upper_dome_section.solid)
+        shapes = [lower_dome_section.solid.val(), upper_dome_section.solid.val(), cylinder_section.solid.val()]
+        self.solid = Compound.makeCompound(shapes)
