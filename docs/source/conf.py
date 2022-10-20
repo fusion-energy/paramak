@@ -24,10 +24,12 @@ sys.path.insert(0, os.path.abspath("../../examples"))
 project = "Paramak"
 author = "Paramak contributors"
 
+import paramak
+
 # The short X.Y version
-version = ""
+version = ".".join(paramak.__version__.split(".")[0:2])
 # The full version, including alpha/beta/rc tags
-release = "1.0"
+release = openmc.__version__
 
 
 # -- General configuration ---------------------------------------------------
