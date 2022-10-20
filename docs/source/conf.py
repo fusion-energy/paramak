@@ -14,6 +14,7 @@
 #
 import os
 import sys
+import paramak
 
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("../../tests"))
@@ -24,7 +25,6 @@ sys.path.insert(0, os.path.abspath("../../examples"))
 project = "Paramak"
 author = "Paramak contributors"
 
-import paramak
 
 # The short X.Y version
 version = ".".join(paramak.__version__.split(".")[0:2])
