@@ -289,7 +289,7 @@ class Reactor:
 
         Args:
             filename: Accepts a single filename as a string which exports the
-                full reactor model to a single file. Alternativley filename can
+                full reactor model to a single file. Alternatively filename can
                 also accept a list of strings where each string is the filename
                 of the the individual shapes that make it up. This will result
                 in separate files for each shape in the reactor. Defaults to
@@ -394,19 +394,20 @@ class Reactor:
         self,
         filename: Union[List[str], str] = None,
         tolerance: float = 0.001,
-        angular_tolerance: float = 0.1,
+        angularTolerance: float = 0.1,
     ) -> Union[str, List[str]]:
         """Writes stl files (CAD geometry) for each Shape object in the reactor
 
         Args:
             filename: Accepts a single filename as a string which exports the
-                full reactor model to a single file. Alternativley filename can
+                full reactor model to a single file. Alternatively filename can
                 also accept a list of strings where each string is the filename
                 of the the individual shapes that make it up. This will result
                 in separate files for each shape in the reactor. Defaults to
                 None which uses the Reactor.name with '.stl' appended to the end
                 of each entry.
-            tolerance (float):  the precision of the faceting
+            tolerance:  the precision of the faceting
+            angularTolerance: the angular tolerance, in radians
             include_graveyard: specify if the graveyard will be included or
                 not. If True the the Reactor.make_graveyard will be called
                 using Reactor.graveyard_size and Reactor.graveyard_offset
@@ -418,22 +419,17 @@ class Reactor:
 
         if isinstance(filename, str):
 
-            path_filename = Path(filename)
+            # exports a single file for the whole model
+            assembly = cq.Assembly(name="paramak")
+            for entry in self.shapes_and_components:
+                if entry.color is None:
+                    assembly.add(entry.solid)
+                else:
+                    assembly.add(entry.solid, color=cq.Color(*entry.color))
 
-            if path_filename.suffix != ".stl":
-                path_filename = path_filename.with_suffix(".stl")
+            assembly.save(path=filename, exportType="STL", tolerance=tolerance, angularTolerance=angularTolerance)
 
-            path_filename.parents[0].mkdir(parents=True, exist_ok=True)
-
-            # add an include_graveyard that add graveyard if requested
-            exporters.export(
-                self.solid,
-                str(path_filename),
-                exportType="STL",
-                tolerance=tolerance,
-                angularTolerance=angular_tolerance,
-            )
-            return str(path_filename)
+            return [filename]
 
         if filename is None:
             if None in self.name:

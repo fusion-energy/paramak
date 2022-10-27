@@ -739,14 +739,14 @@ class Shape:
 
     def find_points(self):
         """Calculates the shape points. Empty method which some components
-        overright when inheritting."""
+        overright when inheriting."""
         return None
 
     def export_stl(
         self,
         filename: str,
         tolerance: float = 0.001,
-        angular_tolerance: float = 0.1,
+        angularTolerance: float = 0.1,
         verbose: bool = True,
     ) -> str:
         """Exports an stl file for the Shape.solid.
@@ -756,26 +756,27 @@ class Shape:
                 which will attempt to use the Shape.stl_filename. If both are
                 None then a valueError will be raised.
             tolerance: the deflection tolerance of the faceting
-            angular_tolerance: the angular tolerance, in radians
+            angularTolerance: the angular tolerance, in radians
             verbose: Enables (True) or disables (False) the printing of the
                 file produced.
         """
 
         path_filename = Path(filename)
 
-        if path_filename.suffix != ".stl":
+        if not path_filename.suffix == ".stl":
             msg = f"filename should end with .stl, not {path_filename.suffix}"
             raise ValueError(msg)
 
         path_filename.parents[0].mkdir(parents=True, exist_ok=True)
 
-        exporters.export(
-            self.solid,
-            str(path_filename),
-            exportType="STL",
-            tolerance=tolerance,
-            angularTolerance=angular_tolerance,
-        )
+        assembly = Assembly(name=self.name)
+
+        if self.color is None:
+            assembly.add(self.solid)
+        else:
+            assembly.add(self.solid, color=Color(*self.color))
+
+        assembly.save(path=str(path_filename), exportType="STL", tolerance=tolerance, angularTolerance=angularTolerance)
 
         if verbose:
             print("Saved file as ", path_filename)
@@ -918,10 +919,7 @@ class Shape:
             else:
                 assembly.add(self.solid, color=Color(*self.color))
 
-            assembly.save(str(path_filename), exportType="STEP")
-
-            # previous method does not support colours but puts the solid in the base file level
-            # exporters.export(self.solid, str(path_filename), exportType='STEP')
+            assembly.save(path=str(path_filename), exportType="STEP")
 
         elif mode == "wire":
             exporters.export(self.wire, str(path_filename), exportType="STEP")
