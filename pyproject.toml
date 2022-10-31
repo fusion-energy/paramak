@@ -60,10 +60,6 @@ docs = [
 [tool.setuptools.packages.find]
 where = ["paramak"]
 
-[project.urls]
-    "Homepage" = "https://github.com/fusion-energy/paramak"
-    "Bug Tracker" = "https://github.com/fusion-energy/paramak/issues"
-
 [tool.black]
 line-length = 120
 
