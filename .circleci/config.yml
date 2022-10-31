@@ -19,6 +19,7 @@ commands:
       - run:
           name: Install
           command: |
+            pip install --upgrade pip
             pip install .[tests]
   codecov-upload:
     steps:

@@ -34,7 +34,7 @@
 # docker run --rm paramak pytest /tests
 # docker run --rm paramak  /bin/bash -c "bash run_tests.sh"
 
-FROM continuumio/miniconda3:4.9.2 as dependencies
+FROM continuumio/miniconda3:4.12.0 as dependencies
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=2.1
@@ -72,11 +72,7 @@ ARG paramak_version=develop
 COPY run_tests.sh run_tests.sh
 COPY src src/
 COPY examples examples/
-
 COPY tests tests/
-
-COPY setup.py setup.py
-COPY setup.cfg setup.cfg
 COPY pyproject.toml pyproject.toml
 
 COPY README.md README.md
