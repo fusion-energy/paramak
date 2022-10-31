@@ -70,7 +70,7 @@ FROM dependencies as final
 ARG paramak_version=develop
 
 COPY run_tests.sh run_tests.sh
-COPY paramak paramak/
+COPY src src/
 COPY examples examples/
 
 COPY tests tests/
