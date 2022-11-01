@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "setuptools>=65.4.1",
+    "setuptools>=65.5.0",
     "setuptools_scm[toml]>=7.0.5"
 ]
 build-backend = "setuptools.build_meta"
@@ -56,9 +56,6 @@ docs = [
     "sphinx_autodoc_typehints",
     "sphinxcadquery"
 ]
-
-[tool.setuptools.packages.find]
-where = ["paramak"]
 
 [tool.black]
 line-length = 120
