@@ -763,7 +763,7 @@ class Shape:
 
         path_filename = Path(filename)
 
-        if not path_filename.suffix == ".stl":
+        if path_filename.suffix != ".stl":
             msg = f"filename should end with .stl, not {path_filename.suffix}"
             raise ValueError(msg)
 
