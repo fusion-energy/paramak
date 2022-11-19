@@ -56,9 +56,16 @@ docs = [
     "sphinx_autodoc_typehints",
     "sphinxcadquery"
 ]
+gui = [
+    "streamlit>=1.14.1",
+    "streamlit-image-select",
+]
 
 [tool.black]
 line-length = 120
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+
+[project.scripts]
+paramak = "paramak.gui.launch:main"
