@@ -1,7 +1,8 @@
-import streamlit
+import streamlit as st
 import paramak
 from streamlit_image_select import image_select
-
+import os
+from pathlib import Path
 
 reactor_image_links = [
   'https://user-images.githubusercontent.com/8583900/99136724-91af6f00-261e-11eb-9956-476b818a0ee3.png',
@@ -29,13 +30,30 @@ reactor_names=[
 selected_reactor_link = image_select(
     label="Select a cat",
     images=reactor_image_links,
-    captions=reactor_names
+    captions=reactor_names,
+    # index=2
 )
 
 # gets the caption name of the selected image
-selected_reactor = reactor_names[reactor_image_links.index(selected_reactor)]
-
+selected_reactor = reactor_names[reactor_image_links.index(selected_reactor_link)]
+st.write(selected_reactor)
 if selected_reactor:
   if selected_reactor=='FlfSystemCodeReactor':
     # st.number_input
-    
+    pass
+  
+  generate_model = st.button('Generate model')
+  
+  if generate_model:
+    with st.spinner('Building the 3d model'):
+      paramak_reactor = paramak.FlfSystemCodeReactor()
+      save_path = Path(os.path.realpath(__file__)).parent
+      save_html_file = save_path/'reactor_3d.html'
+
+      with open(save_html_file, 'r') as file:
+        html_data = file.read()
+
+      st.components.v1.html(html_data, width=1100, height=800)
+      
+      st.download_button('Download CAD (STP format)', )
+      # https://docs.streamlit.io/library/api-reference/widgets/st.download_button
