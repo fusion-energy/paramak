@@ -39,28 +39,27 @@ selected_reactor = reactor_names[reactor_image_links.index(selected_reactor_link
 st.write(selected_reactor)
 if selected_reactor:
 
-  if selected_reactor=='FlfSystemCodeReactor':
-    # st.number_input
-    pass
-  
-  generate_model = st.button('Generate model')
-  
-  if generate_model:
-    with st.spinner('Building the 3d model'):
-      paramak_reactor = paramak.FlfSystemCodeReactor()
-      save_path = Path(os.path.realpath(__file__)).parent
-      save_html_file = save_path/'reactor.html'
-      save_stp_file = save_path/'reactor.stp'
-      
+    if selected_reactor == "FlfSystemCodeReactor":
+        # st.number_input
+        pass
 
-      paramak_reactor.export_html_3d(save_html_file)
-      with open(save_html_file, 'r') as file:
-        html_data = file.read()
+    generate_model = st.button("Generate model")
 
-      st.components.v1.html(html_data, width=1100, height=800)
-      
-      paramak_reactor.export_stp(str(save_stp_file))
-      with open(save_stp_file, 'r') as file2:
-        stp_data = file2.read()
-      st.download_button('Download CAD (STP format)', stp_data, file_name='paramak.stp')
-      #TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
+    if generate_model:
+        with st.spinner("Building the 3d model"):
+            paramak_reactor = paramak.FlfSystemCodeReactor()
+            save_path = Path(os.path.realpath(__file__)).parent
+            save_html_file = save_path / "reactor.html"
+            save_stp_file = save_path / "reactor.stp"
+
+            paramak_reactor.export_html_3d(save_html_file)
+            with open(save_html_file, "r") as file:
+                html_data = file.read()
+
+            st.components.v1.html(html_data, width=1100, height=800)
+
+            paramak_reactor.export_stp(str(save_stp_file))
+            with open(save_stp_file, "r") as file2:
+                stp_data = file2.read()
+            st.download_button("Download CAD (STP format)", stp_data, file_name="paramak.stp")
+            # TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
