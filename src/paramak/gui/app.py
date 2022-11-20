@@ -5,10 +5,10 @@ import os
 from pathlib import Path
 
 st.set_page_config(
-        page_title="Paramak",
-        page_icon="⚛",
-        layout="wide",
-    )
+    page_title="Paramak",
+    page_icon="⚛",
+    layout="wide",
+)
 
 hide_streamlit_style = """
                 <style>
@@ -18,7 +18,7 @@ hide_streamlit_style = """
                     }
                 </style>
                 """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # TODO get images names from https://paramak.readthedocs.io/en/main/API-Reference.html#parametric-reactors
 reactor_image_links = [
@@ -51,7 +51,7 @@ selected_reactor_index = image_select(
     images=reactor_image_links,
     captions=reactor_names,
     return_value="index",  # function returns index instead of image
-    index=0 # initial selected image is 0 which is blank
+    index=0,  # initial selected image is 0 which is blank
 )
 
 # gets the caption name of the selected image
@@ -59,9 +59,9 @@ selected_reactor = reactor_names[selected_reactor_index]
 
 st.write(selected_reactor)
 if selected_reactor_index not in [0, None]:
-    
+
     if selected_reactor == "FlfSystemCodeReactor":
-        angle = st.number_input('Angle', 180)
+        angle = st.number_input("Angle", 180)
 
     with st.spinner("Building the 3d model"):
         paramak_reactor = paramak.FlfSystemCodeReactor(rotation_angle=angle)
