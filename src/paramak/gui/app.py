@@ -88,7 +88,7 @@ if selected_reactor_index not in [0, None]:
         # paramak_reactor.export_dagmc_h5m(str(save_h5m_file))
         # with open(save_h5m_file, "r") as file4:
         #     h5m_data = file4.read()
-    
+
     # TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
     st.download_button(
         "Download CAD (STP format)",
@@ -100,7 +100,7 @@ if selected_reactor_index not in [0, None]:
         stl_data,
         file_name="paramak.stl",
     )
-    
+
     # TODO fix so that it works
     st.download_button(
         "Download DAGMC (h5m format)",
