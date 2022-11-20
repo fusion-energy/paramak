@@ -58,7 +58,7 @@ docs = [
 ]
 gui = [
     "streamlit>=1.14.1",
-    "streamlit-image-select",
+    "streamlit-image-select>=0.5.1",
 ]
 
 [tool.black]
