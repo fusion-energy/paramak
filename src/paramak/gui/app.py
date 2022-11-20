@@ -5,10 +5,10 @@ import os
 from pathlib import Path
 
 st.set_page_config(
-        page_title="Paramak",
-        page_icon="⚛",
-        layout="wide",
-    )
+    page_title="Paramak",
+    page_icon="⚛",
+    layout="wide",
+)
 
 hide_streamlit_style = """
                 <style>
@@ -18,7 +18,7 @@ hide_streamlit_style = """
                     }
                 </style>
                 """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 reactor_image_links = [
     "",
@@ -50,21 +50,20 @@ selected_reactor_index = image_select(
     images=reactor_image_links,
     captions=reactor_names,
     return_value="index",  # function returns index instead of image
-    index=0 # initial selected image is 0 which is blank
+    index=0,  # initial selected image is 0 which is blank
 )
 
 # def export_stp(paramak_reactor, save_stp_file):
-    
+
 
 # gets the caption name of the selected image
 selected_reactor = reactor_names[selected_reactor_index]
 
 st.write(selected_reactor)
 if selected_reactor_index not in [0, None]:
-    
-    if selected_reactor == "FlfSystemCodeReactor":
-        angle = st.number_input('Angle', 180)
 
+    if selected_reactor == "FlfSystemCodeReactor":
+        angle = st.number_input("Angle", 180)
 
     # generate_model = st.button("Generate model")
     # stp_data=None
@@ -93,7 +92,7 @@ if selected_reactor_index not in [0, None]:
         paramak_reactor.export_dagmc_h5m(str(save_h5m_file))
         with open(save_h5m_file, "r") as file3:
             h5m_data = file3.read()
-    
+
     st.download_button(
         "Download CAD (STP format)",
         stp_data,
@@ -112,4 +111,4 @@ if selected_reactor_index not in [0, None]:
         file_name="paramak.h5m",
         # on_click=export_stp(paramak_reactor, save_stp_file)
     )
-            # TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
+    # TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
