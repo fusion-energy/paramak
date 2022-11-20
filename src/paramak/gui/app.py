@@ -20,6 +20,7 @@ hide_streamlit_style = """
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
+# TODO get images names from https://paramak.readthedocs.io/en/main/API-Reference.html#parametric-reactors
 reactor_image_links = [
     "",
     "https://user-images.githubusercontent.com/8583900/99136724-91af6f00-261e-11eb-9956-476b818a0ee3.png",
@@ -53,9 +54,6 @@ selected_reactor_index = image_select(
     index=0 # initial selected image is 0 which is blank
 )
 
-# def export_stp(paramak_reactor, save_stp_file):
-    
-
 # gets the caption name of the selected image
 selected_reactor = reactor_names[selected_reactor_index]
 
@@ -65,10 +63,6 @@ if selected_reactor_index not in [0, None]:
     if selected_reactor == "FlfSystemCodeReactor":
         angle = st.number_input('Angle', 180)
 
-
-    # generate_model = st.button("Generate model")
-    # stp_data=None
-    # if generate_model:
     with st.spinner("Building the 3d model"):
         paramak_reactor = paramak.FlfSystemCodeReactor(rotation_angle=angle)
         save_path = Path(os.path.realpath(__file__)).parent
@@ -89,27 +83,27 @@ if selected_reactor_index not in [0, None]:
         with open(save_stl_file, "r") as file3:
             stl_data = file3.read()
 
-        save_h5m_file = save_path / "reactor.h5m"
-        paramak_reactor.export_dagmc_h5m(str(save_h5m_file))
-        with open(save_h5m_file, "r") as file3:
-            h5m_data = file3.read()
+        # TODO fix so that it works
+        # save_h5m_file = save_path / "reactor.h5m"
+        # paramak_reactor.export_dagmc_h5m(str(save_h5m_file))
+        # with open(save_h5m_file, "r") as file4:
+        #     h5m_data = file4.read()
     
+    # TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
     st.download_button(
         "Download CAD (STP format)",
         stp_data,
         file_name="paramak.stp",
-        # on_click=export_stp(paramak_reactor, save_stp_file)
     )
     st.download_button(
         "Download CAD (STL format)",
         stl_data,
         file_name="paramak.stl",
-        # on_click=export_stp(paramak_reactor, save_stp_file)
     )
+    
+    # TODO fix so that it works
     st.download_button(
         "Download DAGMC (h5m format)",
         stl_data,
         file_name="paramak.h5m",
-        # on_click=export_stp(paramak_reactor, save_stp_file)
     )
-            # TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
