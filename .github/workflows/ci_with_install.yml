@@ -37,9 +37,9 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/tests_units -v --cov=paramak --cov-append --cov-report term --cov-report xml
-          pytest tests/tests_examples -v --cov=paramak --cov-append --cov-report term --cov-report xml
-          pytest tests/tests_show -v --cov=paramak --cov-append --cov-report term --cov-report xml
+          pytest tests/tests_units -v --cov=src/paramak --cov-append --cov-report term --cov-report xml
+          pytest tests/tests_examples -v --cov=src/paramak --cov-append --cov-report term --cov-report xml
+          pytest tests/tests_show -v --cov=src/paramak --cov-append --cov-report term --cov-report xml
 
       - name: Upload to codecov
         uses: codecov/codecov-action@v2

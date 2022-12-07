@@ -72,11 +72,7 @@ ARG paramak_version=develop
 COPY run_tests.sh run_tests.sh
 COPY src src/
 COPY examples examples/
-
 COPY tests tests/
-
-COPY setup.py setup.py
-COPY setup.cfg setup.cfg
 COPY pyproject.toml pyproject.toml
 
 COPY README.md README.md
