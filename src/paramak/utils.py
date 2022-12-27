@@ -129,74 +129,13 @@ def export_solids_to_dagmc_h5m(
         print("compound_expanded_tags", compound_expanded_tags, "\n")
 
     # a local import is used here as these packages need Moab to work
-    from brep_to_h5m import mesh_brep, mesh_to_h5m_in_memory_method
-    import brep_part_finder as bpf
+    from cad_to_dagmc import CadToDagmc
+    my_model = CadToDagmc()
+    my_model.add_cadquery_object(object=solid, material_tags=compound_expanded_tags)
+    
+    my_model.export_dagmc_h5m_file(max_mesh_size=max_mesh_size, min_mesh_size=min_mesh_size, filename=filename)
 
-    # saves the reactor as a Brep file with merged surfaces
-    brep_shape = export_solids_to_brep_object(solids=solids)
-
-    brep_file_part_properties = bpf.get_part_properties_from_shapes(brep_shape)
-
-    if verbose:
-        print("brep_file_part_properties", brep_file_part_properties, "\n")
-
-    shape_properties = bpf.get_part_properties_from_shapes(solids)
-    # for counter, solid in enumerate(solids):
-
-    #     shape_properties[counter] = bpf.get_part_properties_from_shape(solid)
-
-    if verbose:
-        print("shape_properties", shape_properties)
-
-    # request to find part ids that are mixed up in the Brep file
-    # using the volume, center, bounding box that we know about when creating the
-    # CAD geometry in the first place
-
-    brep_and_shape_part_ids = bpf.get_matching_part_ids(
-        brep_part_properties=brep_file_part_properties,
-        shape_properties=shape_properties,
-        volume_atol=volume_atol,
-        center_atol=center_atol,
-        bounding_box_atol=bounding_box_atol,
-    )
-    if verbose:
-        print(f"brep_and_shape_part_ids={brep_and_shape_part_ids}")
-
-    material_tags_in_brep_order = []
-    for (brep_id, shape_id) in brep_and_shape_part_ids:
-        material_tags_in_brep_order.append(compound_expanded_tags[shape_id - 1])
-
-    if verbose:
-        print(f"material_tags_in_brep_order={material_tags_in_brep_order}")
-
-    # gmsh requires an actual brep file to load
-    tmp_brep_filename = mkstemp(suffix=".brep", prefix="paramak_")[1]
-    brep_shape.exportBrep(tmp_brep_filename)
-
-    gmsh, volumes = mesh_brep(
-        brep_filename=tmp_brep_filename,
-        min_mesh_size=min_mesh_size,
-        max_mesh_size=max_mesh_size,
-    )
-
-    if verbose:
-        gmsh_filename = mkstemp(suffix=".msh", prefix="paramak_")[1]
-        print(f"written gmsh file to {gmsh_filename}")
-        gmsh.write(gmsh_filename)
-
-    h5m_filename = mesh_to_h5m_in_memory_method(
-        volumes=volumes,
-        material_tags=material_tags_in_brep_order,
-        h5m_filename=filename,
-    )
-
-    if verbose:
-        print(f"written brep file to {tmp_brep_filename}")
-    else:
-        # temporary brep is deleted using os.remove
-        remove(tmp_brep_filename)
-
-    return h5m_filename
+    return filename
 
 
 def get_bounding_box(solid) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:
