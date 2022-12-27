@@ -43,53 +43,6 @@ class TestShape(unittest.TestCase):
             ],
         )
 
-    def test_graveyard_size_setting_type_checking(self):
-        """Attempts to make a shape with a graveyard_size that is an float
-        which should raise a ValueError"""
-
-        def incorrect_graveyard_size_type():
-            self.my_shape.graveyard_size = "coucou"
-
-        self.assertRaises(TypeError, incorrect_graveyard_size_type)
-
-    def test_graveyard_size_setting_magnitude_checking(self):
-        """Attempts to make a shape with a graveyard_size that is an int
-        which should raise a ValueError"""
-
-        def incorrect_graveyard_size_size():
-            self.my_shape.graveyard_size = -10
-
-        self.assertRaises(ValueError, incorrect_graveyard_size_size)
-
-    def test_graveyard_error_when_no_offset_or_size(self):
-        """Attempts to make a shape with a graveyard_size that is an int
-        which should raise a ValueError"""
-
-        def incorrect_graveyard():
-            test_shape = paramak.RotateStraightShape(
-                points=[(0, 0), (0, 20), (20, 20)],
-                graveyard_size=None,
-                graveyard_offset=None,
-            )
-            test_shape.make_graveyard()
-
-        self.assertRaises(ValueError, incorrect_graveyard)
-
-    def test_make_graveyard_offset(self):
-        """checks that the graveyard can be exported with the correct default
-        parameters and that these parameters can be changed"""
-
-        test_shape = paramak.RotateStraightShape(points=[(0, 0), (0, 20), (20, 20)], graveyard_size=None)
-        os.system("rm graveyard.stp")
-
-        test_shape.make_graveyard(graveyard_offset=50)
-        graveyard_volume_1 = test_shape.graveyard.volume()
-
-        test_shape.make_graveyard(graveyard_offset=200)
-        graveyard_volume_2 = test_shape.graveyard.volume()
-
-        assert graveyard_volume_2 > graveyard_volume_1
-
     def test_shape_default_properties(self):
         """Creates a Shape object and checks that the points attribute has
         a default of None."""
@@ -109,23 +62,6 @@ class TestShape(unittest.TestCase):
         assert test_shape.azimuth_placement_angle == 180
         test_shape.azimuth_placement_angle = [0, 90, 180, 270]
         assert test_shape.azimuth_placement_angle == [0, 90, 180, 270]
-
-    def test_incorrect_graveyard_offset_too_small(self):
-        def incorrect_graveyard_offset_too_small():
-            """Set graveyard_offset as a negative number which should raise an
-            error"""
-
-            self.my_shape.graveyard_offset = -3
-
-        self.assertRaises(ValueError, incorrect_graveyard_offset_too_small)
-
-    def test_incorrect_graveyard_offset_wrong_type(self):
-        def incorrect_graveyard_offset_wrong_type():
-            """Set graveyard_offset as a string which should raise an error"""
-
-            self.my_shape.graveyard_offset = "coucou"
-
-        self.assertRaises(TypeError, incorrect_graveyard_offset_wrong_type)
 
     def test_missing_filename_arg_in_export_stp(self):
         """Checks that an error is raised when a stp export is requested

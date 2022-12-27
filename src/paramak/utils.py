@@ -28,11 +28,6 @@ def export_solids_to_brep_object(
         brep cadquery object
     """
 
-    # TODO bring non merge capability back
-    # if not merge:
-    #     geometry_to_save = cq.Compound.makeCompound([self.solid, self.graveyard.solid.val()])
-    #     geometry_to_save.exportBrep(str(path_filename))
-
     bldr = OCP.BOPAlgo.BOPAlgo_Splitter()
 
     if len(solids) == 1:

@@ -62,11 +62,6 @@ class Shape:
         union (paramak.shape or list, optional): If set, the current solid
             will be united with the provided solid or iterable of solids.
             Defaults to None.
-        graveyard_size: The dimension of cube shaped the graveyard region used
-            by DAGMC. This attribute is used preferentially over
-            graveyard_offset.
-        graveyard_offset: The distance between the graveyard and the largest
-            shape. If graveyard_size is set the this is ignored.
     """
 
     def __init__(
@@ -82,8 +77,6 @@ class Shape:
         cut=None,
         intersect=None,
         union=None,
-        graveyard_size: Optional[float] = 20_000,
-        graveyard_offset: Optional[float] = None,
     ):
 
         self.connection_type = connection_type
@@ -102,10 +95,6 @@ class Shape:
         # initialise to something different than self.points
         # old_points is used in the processed_points getter
         self.old_points = 0
-
-        # neutronics specific properties
-        self.graveyard_offset = graveyard_offset
-        self.graveyard_size = graveyard_size
 
         # properties calculated internally by the class
         self.solid = None
@@ -127,36 +116,7 @@ class Shape:
         self.x_max = None
         self.z_min = None
         self.z_max = None
-        self.graveyard_offset = None  # set by the make_graveyard method
         self.patch = None
-
-    @property
-    def graveyard_size(self):
-        return self._graveyard_size
-
-    @graveyard_size.setter
-    def graveyard_size(self, value):
-        if value is None:
-            self._graveyard_size = None
-        elif not isinstance(value, (float, int)):
-            raise TypeError("graveyard_size must be a number")
-        elif value < 0:
-            raise ValueError("graveyard_size must be positive")
-        self._graveyard_size = value
-
-    @property
-    def graveyard_offset(self):
-        return self._graveyard_offset
-
-    @graveyard_offset.setter
-    def graveyard_offset(self, value):
-        if value is None:
-            self._graveyard_offset = None
-        elif not isinstance(value, (float, int)):
-            raise TypeError("graveyard_offset must be a number")
-        elif value < 0:
-            raise ValueError("graveyard_offset must be positive")
-        self._graveyard_offset = value
 
     @property
     def solid(self):
@@ -782,26 +742,17 @@ class Shape:
 
         return str(path_filename)
 
-    def export_brep(self, filename="shape.brep", include_graveyard=False) -> str:
-        """Exports a brep file for the Shape. Optionally including a DAGMC
-        graveyard.
+    def export_brep(self, filename="shape.brep") -> str:
+        """Exports a brep file for the Shape.
 
         Args:
             filename: the filename of exported the brep file.
-            include_graveyard: specify if the graveyard will be included or
-                not. If True the the Shape.make_graveyard will be called
-                using Shape.graveyard_size and Shape.graveyard_offset
-                attribute values.
 
         Returns:
             filename of the brep created
         """
 
         geometry_to_save = [self.solid]
-
-        if include_graveyard:
-            self.make_graveyard()
-            geometry_to_save.append(self.graveyard.solid)
 
         output_filename = export_solids_to_brep(
             solids=geometry_to_save,
@@ -820,7 +771,6 @@ class Shape:
         center_atol: float = 0.000001,
         bounding_box_atol: float = 0.000001,
         tags: Optional[List[str]] = None,
-        include_graveyard: bool = False,
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
@@ -848,22 +798,12 @@ class Shape:
                 If left as None then the Shape.name will be used. This allows
                 the DAGMC geometry created to be compatible with a wider range
                 of neutronics codes that have specific DAGMC tag requirements.
-            include_graveyard: specify if the graveyard will be included or
-                not. If True the the Reactor.make_graveyard will be called
-                using Reactor.graveyard_size and Reactor.graveyard_offset
-                attribute values.
         """
 
         shapes_to_convert = [self.solid]
 
-        if include_graveyard:
-            self.make_graveyard()
-            shapes_to_convert.append(self.graveyard.solid)
-
         if tags is None:
             tags = [self.name]
-            if include_graveyard:
-                tags.append(self.graveyard.name)
 
         output_filename = export_solids_to_dagmc_h5m(
             solids=shapes_to_convert,
@@ -1213,86 +1153,6 @@ class Shape:
             solid = union_solid(solid, self.union)
 
         return solid
-
-    def make_graveyard(
-        self,
-        graveyard_size: Optional[float] = None,
-        graveyard_offset: Optional[float] = None,
-    ):
-        """Creates a graveyard volume (bounding box) that encapsulates all
-        volumes. This is required by DAGMC when performing neutronics
-        simulations. The graveyard size can be ascertained in two ways. Either
-        the size can be set directly using the graveyard_size which is the
-        quickest method. Alternativley the graveyard can be automatically sized
-        to the geometry by setting a graveyard_offset value. If both options
-        are set then the method will default to using the graveyard_size
-        preferentially.
-
-        Args:
-            graveyard_size: directly sets the size of the graveyard. Defaults
-                to None which then uses the Reactor.graveyard_size attribute.
-            graveyard_offset: the offset between the largest edge of the
-                geometry and inner bounding shell created. Defaults to None
-                which then uses Reactor.graveyard_offset attribute.
-
-        Returns:
-            paramak.HollowCube: a shell volume that bounds the geometry,
-                referred to as a graveyard in DAGMC.
-        """
-
-        if graveyard_size is not None:
-            graveyard_size_to_use = graveyard_size
-
-        elif self.graveyard_size is not None:
-            graveyard_size_to_use = self.graveyard_size
-
-        elif graveyard_offset is not None:
-            self.solid
-            graveyard_size_to_use = self.largest_dimension * 2 + graveyard_offset * 2
-
-        elif self.graveyard_offset is not None:
-            self.solid
-            graveyard_size_to_use = self.largest_dimension * 2 + self.graveyard_offset * 2
-
-        else:
-            raise ValueError(
-                "the graveyard_size, Shape.graveyard_size, "
-                "graveyard_offset and Shape.graveyard_offset are all None. "
-                "Please specify at least one of these attributes or arguments"
-            )
-
-        graveyard_shape = paramak.HollowCube(
-            length=graveyard_size_to_use,
-            name="graveyard",
-        )
-
-        self.graveyard = graveyard_shape
-
-        return graveyard_shape
-
-    def export_graveyard(
-        self,
-        filename: Optional[str] = "graveyard.stp",
-        graveyard_offset: Optional[float] = 100,
-    ) -> str:
-        """Writes an stp file (CAD geometry) for the reactor graveyard. This
-        is needed for DAGMC simulations. This method also calls
-        Reactor.make_graveyard with the offset.
-
-        Args:
-            filename (str): the filename for saving the stp file
-            graveyard_offset (float): the offset between the largest edge of
-                the geometry and inner bounding shell created. Defaults to
-                Reactor.graveyard_offset
-
-        Returns:
-            str: the stp filename created
-        """
-
-        self.make_graveyard(graveyard_offset=graveyard_offset)
-        new_filename = self.graveyard.export_stp(str(Path(filename)))
-
-        return new_filename
 
     def convert_all_circle_connections_to_splines(
         self, tolerance: Optional[float] = 0.1

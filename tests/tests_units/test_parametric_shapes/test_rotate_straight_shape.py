@@ -283,14 +283,6 @@ class TestRotateStraightShape(unittest.TestCase):
 
         self.assertRaises(ValueError, export_mode_incorrect)
 
-    def test_graveyard_filename(self):
-        """Checks the name of the stp file for the Graveyard is correct"""
-        output_filename = self.test_shape.export_graveyard()
-        assert "graveyard.stp" == output_filename
-
-        output_filename = self.test_shape.export_graveyard(filename="test.stp")
-        assert "test.stp" == output_filename
-
     def test_incorrect_points_input(self):
         """Checks that an error is raised when the points are input with the
         connection"""
@@ -304,34 +296,6 @@ class TestRotateStraightShape(unittest.TestCase):
             ]
 
         self.assertRaises(ValueError, incorrect_points_definition)
-
-    def test_graveyard_volume_in_brep_export(self):
-        """Exports the reactor as a brep file and checks the number of volumes
-        with and without the optional graveyard"""
-
-        my_shape = RotateStraightShape(rotation_angle=20, points=[(10, 0), (10, 20), (20, 20), (20, 0)])
-
-        my_shape.export_brep(filename="without_graveyard.brep", include_graveyard=True)
-        brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
-        assert len(brep_shapes) == 2
-
-        my_shape.export_brep(filename="without_graveyard.brep", include_graveyard=False)
-        brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
-        assert len(brep_shapes) == 1
-
-        my_shape.azimuth_placement_angle = [0, 90, 180]
-
-        my_shape.export_brep(filename="with_graveyard.brep", include_graveyard=True)
-        brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
-        assert len(brep_shapes) == 4
-
-        my_shape.export_brep(filename="without_graveyard.brep", include_graveyard=False)
-        brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
-        assert len(brep_shapes) == 3
-
-        my_shape.export_brep(filename="with_graveyard.brep", include_graveyard=True)
-        brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
-        assert len(brep_shapes) == 4
 
 
 if __name__ == "__main__":
