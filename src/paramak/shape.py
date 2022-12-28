@@ -803,6 +803,7 @@ class Shape:
         if tags is None:
             tags = [self.name]
         import cadquery as cq
+
         assembly = cq.Assembly(name="shape")
         assembly.add(self.solid)
 
@@ -813,15 +814,15 @@ class Shape:
             if isinstance(self.solid.val(), cq.occ_impl.shapes.Compound):
                 required_num_tags = len(self.solid.val().Solids())
             else:
-                required_num_tags =1
+                required_num_tags = 1
         elif isinstance(self.solid, cq.occ_impl.shapes.Compound):
             required_num_tags = len(self.solid.Solids())
         else:
             required_num_tags = 1
-        
+
         if len(tags) != required_num_tags:
             tags = tags * required_num_tags
-            
+
         output_filename = export_solids_to_dagmc_h5m(
             solids=assembly,
             filename=filename,

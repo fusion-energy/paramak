@@ -91,14 +91,14 @@ def export_solids_to_dagmc_h5m(
     bounding_box_atol: float = 0.000001,
     tags: List[str] = None,
 ):
-                
+
     # a local import is used here as these packages need Moab to work
     from cad_to_dagmc import CadToDagmc
 
     my_model = CadToDagmc()
 
     my_model.add_cadquery_object(object=solids, material_tags=tags)
-    
+
     my_model.export_dagmc_h5m_file(max_mesh_size=max_mesh_size, min_mesh_size=min_mesh_size, filename=filename)
 
     return filename

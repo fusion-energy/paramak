@@ -226,10 +226,12 @@ class Reactor:
                 tags.append(shape.name)
 
         expamded_tags = []
-        
+
         if len(tags) != len(self.shapes_and_components):
-            raise ValueError(f'Number of tags {len(tags)} is not equal to the number of shapes_and_components {len(self.shapes_and_components)}')
-        
+            raise ValueError(
+                f"Number of tags {len(tags)} is not equal to the number of shapes_and_components {len(self.shapes_and_components)}"
+            )
+
         for tag, s_c in zip(tags, self.shapes_and_components):
             # solids could contain compounds
             # before accessing the .val() check it exists
@@ -238,13 +240,12 @@ class Reactor:
                 if isinstance(s_c.solid.val(), cq.occ_impl.shapes.Compound):
                     required_num_tags = len(s_c.solid.val().Solids())
                 else:
-                    required_num_tags =1
+                    required_num_tags = 1
             elif isinstance(s_c.solid, cq.occ_impl.shapes.Compound):
                 required_num_tags = len(s_c.solid.Solids())
             else:
                 required_num_tags = 1
-            expamded_tags = expamded_tags + [tag]*required_num_tags
-
+            expamded_tags = expamded_tags + [tag] * required_num_tags
 
         output_filename = export_solids_to_dagmc_h5m(
             solids=assembly,
