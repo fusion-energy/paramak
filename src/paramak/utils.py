@@ -81,52 +81,21 @@ def export_solids_to_brep(
 
 
 def export_solids_to_dagmc_h5m(
-    solids: List,
+    solids,
     filename: str = "dagmc.h5m",
     min_mesh_size: float = 5,
     max_mesh_size: float = 20,
-    verbose: bool = False,
+    verbose: bool = True,
     volume_atol: float = 0.000001,
     center_atol: float = 0.000001,
     bounding_box_atol: float = 0.000001,
     tags: List[str] = None,
 ):
-    if verbose:
-        print("solids", solids, "\n")
-        print("tags", tags, "\n")
-    if len(tags) != len(solids):
-        msg = (
-            "When specifying tags then there must be one tag for "
-            f"every shape. Currently there are {len(tags)} tags "
-            f"provided and {len(solids)} shapes"
-        )
-        raise ValueError(msg)
-
-    compound_expanded_tags = []
-    # solids could contain compounds
-    for tag, solid in zip(tags, solids):
-        # before accessing the .val() check it exists
-        if hasattr(solid, "val"):
-            # if it is a compound then we need more material tags
-            if isinstance(solid.val(), cq.occ_impl.shapes.Compound):
-                additional_tags = [tag] * len(solid.val().Solids())
-                compound_expanded_tags = compound_expanded_tags + additional_tags
-            else:
-                compound_expanded_tags.append(tag)
-            # if it is a compound then we need more material tags
-        elif isinstance(solid, cq.occ_impl.shapes.Compound):
-            additional_tags = [tag] * len(solid.Solids())
-            compound_expanded_tags = compound_expanded_tags + additional_tags
-        else:
-            compound_expanded_tags.append(tag)
-
-    if verbose:
-        print("compound_expanded_tags", compound_expanded_tags, "\n")
-
+                
     # a local import is used here as these packages need Moab to work
     from cad_to_dagmc import CadToDagmc
     my_model = CadToDagmc()
-    my_model.add_cadquery_object(object=solid, material_tags=compound_expanded_tags)
+    my_model.add_cadquery_object(object=solids, material_tags=tags)
     
     my_model.export_dagmc_h5m_file(max_mesh_size=max_mesh_size, min_mesh_size=min_mesh_size, filename=filename)
 

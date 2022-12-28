@@ -800,13 +800,30 @@ class Shape:
                 of neutronics codes that have specific DAGMC tag requirements.
         """
 
-        shapes_to_convert = [self.solid]
-
         if tags is None:
             tags = [self.name]
+        import cadquery as cq
+        assembly = cq.Assembly(name="shape")
+        assembly.add(self.solid)
 
+        # solids could contain compounds
+        # before accessing the .val() check it exists
+        if hasattr(self.solid, "val"):
+            # if it is a compound then we may need more material tags
+            if isinstance(self.solid.val(), cq.occ_impl.shapes.Compound):
+                required_num_tags = len(self.solid.val().Solids())
+            else:
+                required_num_tags =1
+        elif isinstance(self.solid, cq.occ_impl.shapes.Compound):
+            required_num_tags = len(self.solid.Solids())
+        else:
+            required_num_tags = 1
+        
+        if len(tags) != required_num_tags:
+            tags = tags * required_num_tags
+            
         output_filename = export_solids_to_dagmc_h5m(
-            solids=shapes_to_convert,
+            solids=assembly,
             filename=filename,
             min_mesh_size=min_mesh_size,
             max_mesh_size=max_mesh_size,

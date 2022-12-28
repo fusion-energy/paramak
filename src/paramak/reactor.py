@@ -216,13 +216,38 @@ class Reactor:
             else:
                 shapes_to_convert.append(shape)
 
+        assembly = cq.Assembly(name="reactor")
+        for solid in self.shapes_and_components:
+            assembly.add(solid.solid)
+
         if tags is None:
             tags = []
-            for shape in shapes_to_convert:
+            for shape in self.shapes_and_components:
                 tags.append(shape.name)
 
+        expamded_tags = []
+        
+        if len(tags) != len(self.shapes_and_components):
+            raise ValueError(f'Number of tags {len(tags)} is not equal to the number of shapes_and_components {len(self.shapes_and_components)}')
+        
+        for tag, s_c in zip(tags, self.shapes_and_components):
+            # solids could contain compounds
+            # before accessing the .val() check it exists
+            if hasattr(s_c.solid, "val"):
+                # if it is a compound then we may need more material tags
+                if isinstance(s_c.solid.val(), cq.occ_impl.shapes.Compound):
+                    required_num_tags = len(s_c.solid.val().Solids())
+                else:
+                    required_num_tags =1
+            elif isinstance(s_c.solid, cq.occ_impl.shapes.Compound):
+                required_num_tags = len(s_c.solid.Solids())
+            else:
+                required_num_tags = 1
+            expamded_tags = expamded_tags + [tag]*required_num_tags
+
+
         output_filename = export_solids_to_dagmc_h5m(
-            solids=[shape.solid for shape in shapes_to_convert],
+            solids=assembly,
             filename=filename,
             min_mesh_size=min_mesh_size,
             max_mesh_size=max_mesh_size,
@@ -230,7 +255,7 @@ class Reactor:
             volume_atol=volume_atol,
             center_atol=center_atol,
             bounding_box_atol=bounding_box_atol,
-            tags=tags,
+            tags=expamded_tags,
         )
 
         return output_filename
