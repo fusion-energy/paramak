@@ -13,7 +13,7 @@ from paramak.utils import (
     get_bounding_box,
     get_largest_dimension,
     export_solids_to_brep,
-    export_solids_to_dagmc_h5m
+    export_solids_to_dagmc_h5m,
 )
 
 
@@ -227,8 +227,10 @@ class Reactor:
         expamded_tags = []
 
         if len(tags) != len(self.shapes_and_components):
-            msg = (f"Number of tags {len(tags)} is not equal to the number of "
-                   "shapes_and_components {len(self.shapes_and_components)}")
+            msg = (
+                f"Number of tags {len(tags)} is not equal to the number of "
+                "shapes_and_components {len(self.shapes_and_components)}"
+            )
             raise ValueError(msg)
 
         for tag, s_c in zip(tags, self.shapes_and_components):
