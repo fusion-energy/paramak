@@ -105,7 +105,7 @@ class ToroidalFieldCoilPrincetonD(ToroidalFieldCoil):
 
         def get_segment(a, b, z_0):
             a_R = np.linspace(a, b, num=70, endpoint=True)
-            asol = integrate.odeint(solvr, [z_0, 0], a_R)
+            asol = integrate.odeint(solvr, [z_0[0], 0], a_R)
             return a_R, asol[:, 0], asol[:, 1]
 
         def solvr(Y, R):
