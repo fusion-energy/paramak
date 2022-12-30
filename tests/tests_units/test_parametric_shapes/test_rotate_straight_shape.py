@@ -2,7 +2,6 @@ import math
 import os
 import unittest
 from pathlib import Path
-from cadquery.occ_impl.shapes import Shape
 import pytest
 from paramak import RotateStraightShape
 
