@@ -68,55 +68,6 @@ class TestReactor(unittest.TestCase):
             3: "pf_coil",
         }
 
-    def test_dagmc_h5m_custom_tags_export_with_graveyard(self):
-        """Exports a reactor with two shapes checks that the tags are correctly
-        named in the resulting h5m file, includes the optional graveyard"""
-
-        self.test_reactor_3.rotation_angle = 180
-        self.test_reactor_3.export_dagmc_h5m(
-            "dagmc_reactor.h5m", tags=["1", "2", "grave"], include_graveyard={"size": 250}
-        )
-
-        vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
-        assert vols == [1, 2, 3, 4]
-
-        mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
-        print(mats)
-        assert mats == ["1", "2", "grave"]
-
-        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_reactor.h5m")
-        assert vols_and_mats == {
-            1: "1",
-            2: "2",
-            3: "2",
-            4: "grave",
-        }
-
-    def test_dagmc_h5m_export_with_graveyard(self):
-        """Exports a reactor with two shapes checks that the tags are correctly
-        named in the resulting h5m file, includes the optional graveyard"""
-
-        self.test_reactor_3.rotation_angle = 180
-        self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", include_graveyard={"size": 250}, verbose=True)
-
-        vols = di.get_volumes_from_h5m("dagmc_reactor.h5m")
-        assert vols == [1, 2, 3, 4]
-
-        mats = di.get_materials_from_h5m("dagmc_reactor.h5m")
-        print(mats)
-        assert "test_shape" in mats
-        assert "pf_coil" in mats
-        assert "graveyard" in mats
-        assert len(mats) == 3
-
-        vols_and_mats = di.get_volumes_and_materials_from_h5m("dagmc_reactor.h5m")
-        assert vols_and_mats == {
-            1: "test_shape",
-            2: "pf_coil",
-            3: "pf_coil",
-            4: "graveyard",
-        }
-
     def test_dagmc_h5m_export_mesh_size(self):
         """Exports h5m file with higher resolution mesh and checks that the
         file sizes increases"""
@@ -140,6 +91,20 @@ class TestReactor(unittest.TestCase):
             self.test_reactor_3.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2", "3"])
 
         self.assertRaises(ValueError, too_many_tags)
+
+    def test_center_column_study_reactor(self):
+        """Exports the CenterColumnStudyReactor with default parameters"""
+        reactor = paramak.CenterColumnStudyReactor()
+        reactor.export_dagmc_h5m("CenterColumnStudyReactor.h5m")
+        di.get_volumes_and_materials_from_h5m("CenterColumnStudyReactor.h5m") == {
+            1: "plasma",
+            2: "inboard_tf_coils",
+            3: "center_column_shield",
+            4: "inboard_first_wall",
+            5: "blanket",
+            6: "divertor",
+            7: "divertor",
+        }
 
 
 if __name__ == "__main__":
