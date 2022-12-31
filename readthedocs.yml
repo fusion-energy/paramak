@@ -8,9 +8,8 @@ version: 2
 sphinx:
   configuration: docs/source/conf.py
 
-# Optional additional build formats
-# formats:
-#   - pdf
+# Optional additional build formats no enabled to reduce memory
+formats: []
 
 # this is not needed if using conda environment
 python:

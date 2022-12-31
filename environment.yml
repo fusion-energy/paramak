@@ -10,7 +10,6 @@ dependencies:
   - cadquery=master
   - pip
   - pip:
-      - pytest
       - plotly
       - scipy
       - numpy
