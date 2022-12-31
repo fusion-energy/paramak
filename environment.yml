@@ -8,15 +8,15 @@ dependencies:
   - python=3.8
   - pyparsing~=2.4.7
   - cadquery=master
-  - pytest
-  - plotly
-  - scipy
-  - numpy
-  - matplotlib
-  - pillow
-  - plasmaboundaries
   - pip
   - pip:
+      - pytest
+      - plotly
+      - scipy
+      - numpy
+      - matplotlib
+      - pillow
+      - plasmaboundaries
       - sympy
       - sphinx-autodoc-typehints
       - sphinxcadquery
