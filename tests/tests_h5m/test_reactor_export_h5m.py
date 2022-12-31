@@ -96,7 +96,7 @@ class TestReactor(unittest.TestCase):
         """Exports the CenterColumnStudyReactor with default parameters"""
         reactor = paramak.CenterColumnStudyReactor()
         reactor.export_dagmc_h5m("CenterColumnStudyReactor.h5m")
-        di.get_volumes_and_materials_from_h5m("CenterColumnStudyReactor.h5m") == {
+        assert di.get_volumes_and_materials_from_h5m("CenterColumnStudyReactor.h5m") == {
             1: "plasma",
             2: "inboard_tf_coils",
             3: "center_column_shield",
