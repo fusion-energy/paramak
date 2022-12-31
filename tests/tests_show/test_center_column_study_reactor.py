@@ -4,7 +4,7 @@ from pathlib import Path
 import paramak
 
 
-def test_html_file_creation(self):
+def test_html_file_creation():
     """Creates a reactor with exports the step files and check they exist"""
 
     os.system("rm *.html")
