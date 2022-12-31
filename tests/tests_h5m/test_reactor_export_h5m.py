@@ -97,7 +97,6 @@ def test_dagmc_h5m_export_error_handling(reactor_1):
         reactor_1.rotation_angle = 180
         reactor_1.export_dagmc_h5m("dagmc_reactor.h5m", tags=["1", "2", "3"])
 
-
 def test_center_column_study_reactor():
     """Exports the CenterColumnStudyReactor with default parameters"""
     reactor = paramak.CenterColumnStudyReactor()
