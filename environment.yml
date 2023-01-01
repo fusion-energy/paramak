@@ -6,7 +6,6 @@ channels:
 
 dependencies:
   - python=3.8
-  - pyparsing~=2.4.7
   - cadquery=master
   - pip
   - pip:
