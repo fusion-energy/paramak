@@ -80,7 +80,7 @@ class Shape:
     ):
 
         self.connection_type = connection_type
-        self.points = points
+        self.points =   points
         self.color = color
         self.name = name
 
