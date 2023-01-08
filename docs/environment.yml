@@ -5,12 +5,10 @@ channels:
   - cadquery
 
 dependencies:
-  - python=3.8
-  - pyparsing~=2.4.7
+  - python=3.9
   - cadquery=master
   - pip
   - pip:
-      - pytest
       - plotly
       - scipy
       - numpy
