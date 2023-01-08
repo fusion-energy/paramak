@@ -54,7 +54,7 @@ Then install the Paramak.
 
 .. code-block:: bash
 
-   mamba install -c fusion-energy -c cadquery -c conda-forge paramak=0.8.2
+   mamba install -c fusion-energy -c cadquery -c conda-forge paramak=0.8.7
 
 Now you should be ready to import paramak from your new python environment.
 
@@ -79,7 +79,7 @@ Then install the Paramak.
 
 .. code-block:: bash
 
-   conda install -c fusion-energy -c cadquery -c conda-forge paramak=0.8.2
+   conda install -c fusion-energy -c cadquery -c conda-forge paramak=0.8.7
 
 Now you should be ready to import paramak from your new python environment.
 
