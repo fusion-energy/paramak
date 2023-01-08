@@ -1709,6 +1709,10 @@ FlfSystemCodeReactor()
    :width: 450
    :align: center
 
+.. image:: https://user-images.githubusercontent.com/8583900/211223396-41ed8628-5352-4e7a-8c4a-97914174954e.png
+   :width: 450
+   :align: center
+
 .. automodule:: paramak.parametric_reactors.flf_system_code_reactor
    :members:
    :show-inheritance:
