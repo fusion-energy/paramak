@@ -29,7 +29,7 @@ specific steps.
 Install (mamba)
 ---------------
 
-This is the recommended method.
+This is the recommended method as it installs all the dependencies and Mamba is faster and requires less RAM than the pure Conda method.
 
 Create a new environment (Python 3.8 and 3.9 are supported).
 
