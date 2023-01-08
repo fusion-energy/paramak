@@ -1845,6 +1845,28 @@ studies can be performed quickly.
    :members:
    :show-inheritance:
 
+NegativeTriangularityReactor()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: https://user-images.githubusercontent.com/85617935/144302746-181689dd-a4a8-43d4-9ed5-33518f36d4de.png
+   :width: 300
+   :align: left
+
+.. image:: https://user-images.githubusercontent.com/85617935/144303187-8cb71e2d-fc35-450f-a8f4-88b6650d56b7.png
+   :width: 300
+   :align: right
+
+The above image is coloured by component. On the left the low_aspect attribute is True, whereas on the right, the
+low_aspect attribute is set to False, as well as the PF coils outside were moved +200 units from default outward.
+
+.. image:: https://user-images.githubusercontent.com/85617935/144302481-022bf072-c7f7-409e-9701-1e24b7a9a7de.jpg
+   :width: 400
+   :align: center
+
+.. automodule:: paramak.parametric_reactors.negative_triangularity_reactor
+   :members:
+   :show-inheritance:
+
 
 Reactors from publications
 --------------------------
@@ -1875,7 +1897,6 @@ The above image is colored by component.
    :members:
    :show-inheritance:
 
-
 SparcFrom2020PaperDiagram()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1884,28 +1905,6 @@ SparcFrom2020PaperDiagram()
    :align: center
 
 .. automodule:: paramak.parametric_reactors.sparc_paper_2020
-   :members:
-   :show-inheritance:
-
-NegativeTriangularityReactor()
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: https://user-images.githubusercontent.com/85617935/144302746-181689dd-a4a8-43d4-9ed5-33518f36d4de.png
-   :width: 300
-   :align: left
-
-.. image:: https://user-images.githubusercontent.com/85617935/144303187-8cb71e2d-fc35-450f-a8f4-88b6650d56b7.png
-   :width: 300
-   :align: right
-
-The above image is coloured by component. On the left the low_aspect attribute is True, whereas on the right, the
-low_aspect attribute is set to False, as well as the PF coils outside were moved +200 units from default outward.
-
-.. image:: https://user-images.githubusercontent.com/85617935/144302481-022bf072-c7f7-409e-9701-1e24b7a9a7de.jpg
-   :width: 400
-   :align: center
-
-.. automodule:: paramak.parametric_reactors.negative_triangularity_reactor
    :members:
    :show-inheritance:
 
