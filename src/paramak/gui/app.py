@@ -26,14 +26,14 @@ reactor_image_links = [
     "https://user-images.githubusercontent.com/8583900/211223396-41ed8628-5352-4e7a-8c4a-97914174954e.png",
     "https://user-images.githubusercontent.com/8583900/99136724-91af6f00-261e-11eb-9956-476b818a0ee3.png",
     "https://user-images.githubusercontent.com/8583900/99136728-983de680-261e-11eb-8398-51ae433f5546.png",
-    'https://user-images.githubusercontent.com/8583900/99136727-94aa5f80-261e-11eb-965d-0ccceb2743fc.png',
-    'https://user-images.githubusercontent.com/8583900/99136719-8e1be800-261e-11eb-907d-a9bafaebdbb8.png',
-    'https://user-images.githubusercontent.com/8583900/99136731-9aa04080-261e-11eb-87a5-502708dfebcc.png',
-    'https://user-images.githubusercontent.com/8583900/99136734-9e33c780-261e-11eb-837b-16a0bc59f8a7.png',
-    'https://user-images.githubusercontent.com/8583900/110224418-4f62b400-7ed3-11eb-85f1-e40dc74f5671.png',
-    'https://user-images.githubusercontent.com/40028739/110248118-cf3e5c00-7f6f-11eb-9e68-864c1a1e8676.png',
-    'https://user-images.githubusercontent.com/8583900/100032191-5ae01280-2def-11eb-9654-47c3869b3a2c.png',
-    'https://user-images.githubusercontent.com/85617935/144303187-8cb71e2d-fc35-450f-a8f4-88b6650d56b7.png',
+    "https://user-images.githubusercontent.com/8583900/99136727-94aa5f80-261e-11eb-965d-0ccceb2743fc.png",
+    "https://user-images.githubusercontent.com/8583900/99136719-8e1be800-261e-11eb-907d-a9bafaebdbb8.png",
+    "https://user-images.githubusercontent.com/8583900/99136731-9aa04080-261e-11eb-87a5-502708dfebcc.png",
+    "https://user-images.githubusercontent.com/8583900/99136734-9e33c780-261e-11eb-837b-16a0bc59f8a7.png",
+    "https://user-images.githubusercontent.com/8583900/110224418-4f62b400-7ed3-11eb-85f1-e40dc74f5671.png",
+    "https://user-images.githubusercontent.com/40028739/110248118-cf3e5c00-7f6f-11eb-9e68-864c1a1e8676.png",
+    "https://user-images.githubusercontent.com/8583900/100032191-5ae01280-2def-11eb-9654-47c3869b3a2c.png",
+    "https://user-images.githubusercontent.com/85617935/144303187-8cb71e2d-fc35-450f-a8f4-88b6650d56b7.png",
 ]
 
 reactor_names = [
@@ -49,7 +49,6 @@ reactor_names = [
     "IterFrom2020PaperDiagram",
     "SparcFrom2020PaperDiagram",
     "NegativeTriangularityReactor",
-
 ]
 
 
@@ -66,37 +65,37 @@ selected_reactor_index = image_select(
 selected_reactor = reactor_names[selected_reactor_index]
 
 st.write(selected_reactor)
-write_cad_buttons=True
-col1, col2, col3 = st.columns([1, 1,1])
+write_cad_buttons = True
+col1, col2, col3 = st.columns([1, 1, 1])
 
 if selected_reactor_index not in [0, None]:
 
     if selected_reactor == "FlfSystemCodeReactor":
-        inner_blanket_radius = col1.number_input("inner blanket radius", 100.)
-            
-        blanket_thickness = col1.number_input("blanket thickness", 70.)
-        
-        blanket_height = col1.number_input("blanket height", 500.)
-        
-        lower_blanket_thickness = col1.number_input("lower blanket thickness", 50.)
-        
-        upper_blanket_thickness = col2.number_input("upper blanket thickness", 40.)
-        
-        blanket_vv_gap = col2.number_input("blanket vv gap", 20.)
-        
-        upper_vv_thickness = col2.number_input("upper vv thickness", 10.)
-        
-        vv_thickness = col3.number_input("vv thickness", 10.)
-        
-        lower_vv_thickness = col3.number_input("lower vv thickness", 10.)
-        
-        rotation_angle = col3.number_input("rotation angle", 180.)
+        inner_blanket_radius = col1.number_input("inner blanket radius", 100.0)
+
+        blanket_thickness = col1.number_input("blanket thickness", 70.0)
+
+        blanket_height = col1.number_input("blanket height", 500.0)
+
+        lower_blanket_thickness = col1.number_input("lower blanket thickness", 50.0)
+
+        upper_blanket_thickness = col2.number_input("upper blanket thickness", 40.0)
+
+        blanket_vv_gap = col2.number_input("blanket vv gap", 20.0)
+
+        upper_vv_thickness = col2.number_input("upper vv thickness", 10.0)
+
+        vv_thickness = col3.number_input("vv thickness", 10.0)
+
+        lower_vv_thickness = col3.number_input("lower vv thickness", 10.0)
+
+        rotation_angle = col3.number_input("rotation angle", 180.0)
 
     else:
-        write_cad_buttons=False
-        st.write(f'{selected_reactor} not implemented in GUI yet.')
+        write_cad_buttons = False
+        st.write(f"{selected_reactor} not implemented in GUI yet.")
 
-    if write_cad_buttons: 
+    if write_cad_buttons:
         with st.spinner("Building the 3d model"):
             if selected_reactor == "FlfSystemCodeReactor":
                 paramak_reactor = paramak.FlfSystemCodeReactor(
@@ -134,9 +133,8 @@ if selected_reactor_index not in [0, None]:
             # paramak_reactor.export_dagmc_h5m(str(save_h5m_file))
             # with open(save_h5m_file, "r") as file4:
             #     h5m_data = file4.read()
-        
 
-            col1_buttons, col2_buttons = st.columns([1,1])
+            col1_buttons, col2_buttons = st.columns([1, 1])
             # TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
             col1_buttons.download_button(
                 "Download CAD (STP format)",
