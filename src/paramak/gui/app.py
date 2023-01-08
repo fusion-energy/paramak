@@ -40,9 +40,18 @@ reactor_image_links = [
 
 reactor_names = [
     "0",
-    "1",
-    "2",
     "FlfSystemCodeReactor",
+    "BallReactor",
+    "SingleNullBallReactor",
+    "SegmentedBlanketBallReactor",
+    "SubmersionTokamak",
+    "SingleNullSubmersionTokamak",
+    "CenterColumnStudyReactor",
+    "EuDemoFrom2015PaperDiagram",
+    "IterFrom2020PaperDiagram",
+    "SparcFrom2020PaperDiagram",
+    "NegativeTriangularityReactor",
+
 ]
 
 
@@ -61,10 +70,41 @@ st.write(selected_reactor)
 if selected_reactor_index not in [0, None]:
 
     if selected_reactor == "FlfSystemCodeReactor":
-        angle = st.number_input("Angle", 180)
+        inner_blanket_radius = st.number_input("inner_blanket_radius", 100.)
+            
+        blanket_thickness = st.number_input("blanket_thickness", 70.)
+        
+        blanket_height = st.number_input("blanket_height", 500.)
+        
+        lower_blanket_thickness = st.number_input("lower_blanket_thickness", 50.)
+        
+        upper_blanket_thickness = st.number_input("upper_blanket_thickness", 40.)
+        
+        blanket_vv_gap = st.number_input("blanket_vv_gap", 20.)
+        
+        upper_vv_thickness = st.number_input("upper_vv_thickness", 10.)
+        
+        vv_thickness = st.number_input("vv_thickness", 10.)
+        
+        lower_vv_thickness = st.number_input("lower_vv_thickness", 10.)
+        
+        rotation_angle = st.number_input("rotation angle", 180.)
 
     with st.spinner("Building the 3d model"):
-        paramak_reactor = paramak.FlfSystemCodeReactor(rotation_angle=angle)
+        if selected_reactor == "FlfSystemCodeReactor":
+            paramak_reactor = paramak.FlfSystemCodeReactor(
+                inner_blanket_radius=inner_blanket_radius,
+                blanket_thickness=blanket_thickness,
+                blanket_height=blanket_height,
+                lower_blanket_thickness=lower_blanket_thickness,
+                upper_blanket_thickness=upper_blanket_thickness,
+                blanket_vv_gap=blanket_vv_gap,
+                upper_vv_thickness=upper_vv_thickness,
+                vv_thickness=vv_thickness,
+                lower_vv_thickness=lower_vv_thickness,
+                rotation_angle=rotation_angle,
+            )
+
         save_path = Path(os.path.realpath(__file__)).parent
         save_html_file = save_path / "reactor.html"
 
@@ -102,8 +142,8 @@ if selected_reactor_index not in [0, None]:
     )
 
     # TODO fix so that it works
-    st.download_button(
-        "Download DAGMC (h5m format)",
-        stl_data,
-        file_name="paramak.h5m",
-    )
+    # st.download_button(
+    #     "Download DAGMC (h5m format)",
+    #     stl_data,
+    #     file_name="paramak.h5m",
+    # )
