@@ -14,6 +14,7 @@
 #
 import os
 import sys
+import paramak
 
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("../../tests"))
@@ -25,9 +26,9 @@ project = "Paramak"
 author = "Paramak contributors"
 
 # The short X.Y version
-version = ""
+version = ".".join(paramak.__version__.split(".")[0:2])
 # The full version, including alpha/beta/rc tags
-release = "1.0"
+release = paramak.__version__
 
 
 # -- General configuration ---------------------------------------------------
