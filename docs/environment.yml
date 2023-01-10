@@ -5,18 +5,16 @@ channels:
   - cadquery
 
 dependencies:
-  - python=3.8
-  - pyparsing~=2.4.7
+  - python=3.9
   - cadquery=master
-  - pytest
-  - plotly
-  - scipy
-  - numpy
-  - matplotlib
-  - pillow
-  - plasmaboundaries
   - pip
   - pip:
+      - plotly
+      - scipy
+      - numpy
+      - matplotlib
+      - pillow
+      - plasmaboundaries
       - sympy
       - sphinx-autodoc-typehints
       - sphinxcadquery

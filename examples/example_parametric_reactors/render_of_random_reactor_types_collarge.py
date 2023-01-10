@@ -34,8 +34,6 @@ def generate_random_reactor():
     my_reactor.rotation_angle = 180
 
     for input_var in [
-        "graveyard_size",
-        "graveyard_offset",
         "largest_shapes",
         "elongation",
         "triangularity",
