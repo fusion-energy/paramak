@@ -5,7 +5,7 @@
 # There are build args availalbe for specifying the:
 # - cq_version
 #   The version of CadQuery to use master or 2.1
-#   Default is 2.1
+#   Default is master
 #   Options: [master, 2, 2.1]
 #
 # - paramak_version
@@ -37,7 +37,7 @@
 FROM continuumio/miniconda3:4.9.2 as dependencies
 
 # By default this Dockerfile builds with the latest release of CadQuery 2
-ARG cq_version=2.1
+ARG cq_version=master
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
