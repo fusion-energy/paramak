@@ -2,7 +2,6 @@ import math
 import os
 import unittest
 from pathlib import Path
-from cadquery.occ_impl.shapes import Shape
 import pytest
 
 import paramak
@@ -50,29 +49,6 @@ class TestFlfSystemCodeReactor(unittest.TestCase):
         assert Path("upper_blanket.stp").is_file()
         assert Path("upper_vessel.stp").is_file()
         assert Path("vessel.stp").is_file()
-
-    def test_graveyard_volume_in_brep_export(self):
-        """Exports the reactor as a brep file and checks the number of volumes
-        with and without the optional graveyard"""
-
-        my_reactor = paramak.FlfSystemCodeReactor()
-
-        my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=None)
-        brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
-        assert len(brep_shapes) == 6
-
-        my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard={"size": 2000})
-        brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
-        assert len(brep_shapes) == 7
-
-        # TODO uncomment if ability to not merge surfaces is brought back
-        # my_reactor.export_brep(filename="without_graveyard.brep", include_graveyard=False, merge=False)
-        # brep_shapes = Shape.importBrep("without_graveyard.brep").Solids()
-        # assert len(brep_shapes) == 6
-
-        # my_reactor.export_brep(filename="with_graveyard.brep", include_graveyard=True, merge=False)
-        # brep_shapes = Shape.importBrep("with_graveyard.brep").Solids()
-        # assert len(brep_shapes) == 7
 
     def test_order_of_names_in_reactor(self):
         """tests the order of Shapes in the reactor is as expected"""
