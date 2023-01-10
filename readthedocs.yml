@@ -4,17 +4,21 @@
 # Required
 version: 2
 
+build:
+  os: "ubuntu-20.04"
+  tools:
+    python: "mambaforge-4.10"
+
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
   configuration: docs/source/conf.py
 
-# Optional additional build formats
-# formats:
-#   - pdf
+# Optional additional build formats no enabled to reduce memory
+formats: []
 
-# this is not needed if using conda environment
+# installs paramak package
 python:
-  version: 3.8
+  # version: 3.8
   install:
     - method: pip
       path: .
@@ -23,4 +27,4 @@ python:
 
 # specify conda environment needed for build
 conda:
-  environment: environment.yml
+  environment: docs/environment.yml
