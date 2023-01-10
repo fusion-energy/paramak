@@ -1,8 +1,9 @@
-import streamlit as st
-import paramak
-from streamlit_image_select import image_select
 import os
 from pathlib import Path
+
+import paramak
+import streamlit as st
+from streamlit_image_select import image_select
 
 st.set_page_config(
     page_title="Paramak",
@@ -193,7 +194,8 @@ if selected_reactor_index not in [0, None]:
 
             col1_buttons, col2_buttons = st.columns([1, 1])
 
-            # TODO see if on_click arg can be used to make stp file on demand https://docs.streamlit.io/library/api-reference/widgets/st.download_button
+            # TODO see if on_click arg can be used to make stp file on demand
+            # https://docs.streamlit.io/library/api-reference/widgets/st.download_button
             col1_buttons.download_button(
                 "Download CAD (STP format)",
                 stp_data,
