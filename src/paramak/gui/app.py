@@ -23,7 +23,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown('# Paramak GUI')
 st.markdown('## A Graphical User Interface to [Paramak](https://github.com/fusion-energy/paramak) for parametric fusion reactor geometry creation')
 
-# TODO get images names from https://paramak.readthedocs.io/en/main/API-Reference.html#parametric-reactors
+# FIXME get images names from https://paramak.readthedocs.io/en/main/API-Reference.html#parametric-reactors
 reactor_image_links = [
     "",
     "https://user-images.githubusercontent.com/8583900/211223396-41ed8628-5352-4e7a-8c4a-97914174954e.png",
@@ -188,7 +188,7 @@ if selected_reactor_index not in [0, None]:
             # with open(save_stl_file, "r") as file3:
             #     stl_data = file3.read()
 
-            # TODO fix so that it works
+            # FIXME fix so that it works
             # save_h5m_file = save_path / "reactor.h5m"
             # paramak_reactor.export_dagmc_h5m(str(save_h5m_file))
             # with open(save_h5m_file, "r") as file4:
@@ -196,7 +196,7 @@ if selected_reactor_index not in [0, None]:
 
             col1_buttons, col2_buttons = st.columns([1, 1])
 
-            # TODO see if on_click arg can be used to make stp file on demand
+            # FIXME see if on_click arg can be used to make stp file on demand
             # https://docs.streamlit.io/library/api-reference/widgets/st.download_button
             col1_buttons.download_button(
                 "Download CAD (STP format)",
@@ -216,7 +216,7 @@ if selected_reactor_index not in [0, None]:
             #     file_name="paramak.stl",
             # )
 
-            # TODO fix so that it works
+            # FIXME fix so that it works
             # st.download_button(
             #     "Download DAGMC (h5m format)",
             #     stl_data,
