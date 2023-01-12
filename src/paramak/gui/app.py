@@ -173,12 +173,12 @@ if selected_reactor_index not in [0, None]:
 
             save_html_file = save_path / "reactor.html"
             paramak_reactor.export_html_3d(save_html_file)
-            with open(save_html_file, "r", encoding='UTF-8') as file1:
+            with open(save_html_file, "r", encoding="UTF-8") as file1:
                 html_data = file1.read()
 
             save_stp_file = save_path / "reactor.stp"
             paramak_reactor.export_stp(str(save_stp_file))
-            with open(save_stp_file, "r", encoding='UTF-8') as file2:
+            with open(save_stp_file, "r", encoding="UTF-8") as file2:
                 stp_data = file2.read()
 
             # save_stl_file = save_path / "reactor.stl"
