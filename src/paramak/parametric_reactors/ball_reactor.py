@@ -36,13 +36,12 @@ class BallReactor(paramak.Reactor):
         divertor_to_tf_gap_vertical_thickness: the vertical thickness of the
             gap between the divertor and the TF coils.
         number_of_tf_coils: the number of tf coils
+        rear_blanket_to_tf_gap: the radial distance between the back of the
+            blankets and the start of the TF coils.
         pf_coil_radial_thicknesses: the radial
             thickness of each poloidal field coil.
         pf_coil_vertical_thicknesses: the vertical
             thickness of each poloidal field coil.
-        pf_coil_to_tf_coil_radial_gap: the radial distance
-            between the rear of the poloidal field coil and the toroidal field
-            coil.
         pf_coil_radial_position: The radial (x) position(s) of the centers of
             the poloidal field coils.
         pf_coil_vertical_position: The vertical (z) position(s) of the centers
@@ -69,13 +68,13 @@ class BallReactor(paramak.Reactor):
         inner_plasma_gap_radial_thickness: float = 30.0,
         plasma_radial_thickness: float = 300.0,
         outer_plasma_gap_radial_thickness: float = 30.0,
-        plasma_gap_vertical_thickness: float = 50.0,
         firstwall_radial_thickness: float = 30.0,
         blanket_radial_thickness: float = 50.0,
         blanket_rear_wall_radial_thickness: float = 30.0,
         elongation: float = 2.0,
         triangularity: float = 0.55,
-        divertor_to_tf_gap_vertical_thickness: Optional[float] = 0,
+        plasma_gap_vertical_thickness: float = 50.0,
+        divertor_to_tf_gap_vertical_thickness: Optional[float] = 0.0,
         number_of_tf_coils: Optional[int] = 12,
         rear_blanket_to_tf_gap: Optional[float] = None,
         pf_coil_radial_thicknesses: List[float] = [],
