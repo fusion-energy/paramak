@@ -1,0 +1,87 @@
+# This Dockerfile creates a paramak Graphical User Interface that forms part
+# of the xsplot.com webapps
+#
+# There are build args availalbe for specifying the:
+# - cq_version
+#   The version of CadQuery to use master or 2.1
+#   Default is 2.1
+#   Options: [master, 2, 2.1]
+#
+# - paramak_version
+#   The version number applied to the paramak. The CI finds this version number
+#   from the release tag.
+#   Default is develop
+#   Options: version number with three numbers separated by . for example 0.7.1
+#
+# Example builds:
+# Building using the defaults (cq_version master)
+# docker build -t paramak .
+#
+# Building to include cadquery master.
+# Run command from within the base repository directory
+# docker build -t paramak --build-arg cq_version=master .
+#
+# Once build the dockerimage can be run in a few different ways.
+#
+# Run with the following command for a jupyter notebook interface
+# docker run -p 8050:8050 paramak
+
+
+FROM continuumio/miniconda3:4.9.2 as dependencies
+
+# By default this Dockerfile builds with the latest release of CadQuery 2
+ARG cq_version=master
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get --allow-releaseinfo-change update
+RUN apt-get update -y && \
+    apt-get upgrade -y
+
+RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
+                       apt-get clean
+
+# Installing CadQuery and Gmsh
+RUN echo installing CadQuery version $cq_version && \
+    conda install -c conda-forge -c python python=3.8 && \
+    conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
+    conda install -c conda-forge moab && \
+    conda install -c conda-forge gmsh && \
+    conda install -c conda-forge python-gmsh && \
+    pip install jupyter-cadquery && \
+    conda clean -afy
+
+
+RUN mkdir /home/paramak
+EXPOSE 8888
+WORKDIR /home/paramak
+
+
+FROM dependencies as install
+
+ARG paramak_version=develop
+
+COPY run_tests.sh run_tests.sh
+COPY src src/
+COPY examples examples/
+COPY tests tests/
+COPY pyproject.toml pyproject.toml
+
+COPY README.md README.md
+COPY LICENSE.txt LICENSE.txt
+
+
+RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[tests,docs,gui]
+
+
+FROM install as gui
+
+ENV PORT 8501
+
+EXPOSE 8501
+
+# solves bug of streamlit not running in container
+# https://github.com/streamlit/streamlit/issues/4842
+ENTRYPOINT [ "streamlit", "run" ]
+CMD [ "app.py", "--server.headless", "true", "--server.fileWatcherType", "none", "--browser.gatherUsageStats", "false"]
