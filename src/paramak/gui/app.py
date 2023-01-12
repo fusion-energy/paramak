@@ -22,7 +22,8 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown("# Paramak GUI")
 st.markdown(
-    "## A Graphical User Interface to [Paramak](https://github.com/fusion-energy/paramak) for parametric fusion reactor geometry creation"
+    "## A Graphical User Interface to [Paramak](https://github.com/fusion-energy/paramak) "
+    "for parametric fusion reactor geometry creation"
 )
 
 # FIXME get images names from https://paramak.readthedocs.io/en/main/API-Reference.html#parametric-reactors
