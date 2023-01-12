@@ -20,6 +20,8 @@ hide_streamlit_style = """
                 </style>
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown('# Paramak GUI')
+st.markdown('## A Graphical User Interface to [Paramak](https://github.com/fusion-energy/paramak) for parametric fusion reactor geometry creation')
 
 # TODO get images names from https://paramak.readthedocs.io/en/main/API-Reference.html#parametric-reactors
 reactor_image_links = [
@@ -123,7 +125,7 @@ if selected_reactor_index not in [0, None]:
         rotation_angle = col3.number_input("rotation angle", value=180.0)
     else:
         write_cad_buttons = False
-        st.write(f"{selected_reactor} not implemented in GUI yet.")
+        st.write(f"{selected_reactor} not implemented in GUI yet. Contributions are welcome")
 
     if write_cad_buttons:
         with st.spinner("Building the 3d model"):

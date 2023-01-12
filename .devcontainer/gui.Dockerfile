@@ -7,28 +7,22 @@
 #   Default is 2.1
 #   Options: [master, 2, 2.1]
 #
-# - paramak_version
-#   The version number applied to the paramak. The CI finds this version number
-#   from the release tag.
-#   Default is develop
-#   Options: version number with three numbers separated by . for example 0.7.1
-#
 # Example builds:
 # Building using the defaults (cq_version master)
-# docker build -t paramak .
+# docker build -t paramak_gui .
 #
 # Building to include cadquery master.
 # Run command from within the base repository directory
-# docker build -t paramak --build-arg cq_version=master .
+# docker build -t paramak_gui --build-arg cq_version=master .
 #
 # Once build the dockerimage can be run in a few different ways.
 #
 # Run with the following command for a jupyter notebook interface
-# docker run -p 8050:8050 paramak
+# docker run -p 8050:8050 paramak_gui
 
 
 FROM continuumio/miniconda3:4.9.2 as dependencies
-
+# 
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=master
 
@@ -53,29 +47,19 @@ RUN echo installing CadQuery version $cq_version && \
     conda clean -afy
 
 
-RUN mkdir /home/paramak
-EXPOSE 8888
-WORKDIR /home/paramak
-
-
 FROM dependencies as install
 
 ARG paramak_version=develop
 
-COPY run_tests.sh run_tests.sh
-COPY src src/
-COPY examples examples/
-COPY tests tests/
-COPY pyproject.toml pyproject.toml
+RUN mkdir paramak
+COPY src paramak/src/
+COPY pyproject.toml paramak/pyproject.toml
 
-COPY README.md README.md
-COPY LICENSE.txt LICENSE.txt
+COPY README.md paramak/README.md
+COPY LICENSE.txt paramak/LICENSE.txt
 
-
-RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[tests,docs,gui]
-
-
-FROM install as gui
+RUN cd paramak && \
+    SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[gui]
 
 ENV PORT 8501
 
@@ -84,4 +68,4 @@ EXPOSE 8501
 # solves bug of streamlit not running in container
 # https://github.com/streamlit/streamlit/issues/4842
 ENTRYPOINT [ "streamlit", "run" ]
-CMD [ "app.py", "--server.headless", "true", "--server.fileWatcherType", "none", "--browser.gatherUsageStats", "false"]
+CMD [ "paramak/src/paramak/gui/app.py", "--server.headless", "true", "--server.fileWatcherType", "none", "--browser.gatherUsageStats", "false"]
