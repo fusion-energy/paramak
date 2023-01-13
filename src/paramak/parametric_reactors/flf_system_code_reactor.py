@@ -44,13 +44,12 @@ class FlfSystemCodeReactor(paramak.Reactor):
     ):
 
         super().__init__(
-            obj = None,
-            loc = None,
-            name = None,
-            color = None,
+            obj=None,
+            loc=None,
+            name=None,
+            color=None,
             metadata=None,
         )
-            
 
         self.rotation_angle = rotation_angle
         self.inner_blanket_radius = inner_blanket_radius
