@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
@@ -9,125 +9,46 @@ from cadquery import exporters
 import paramak
 from paramak.utils import (
     _replace,
-    get_hash,
-    get_bounding_box,
-    get_largest_dimension,
     export_solids_to_brep,
     export_solids_to_dagmc_h5m,
 )
 
+from typing import Union, Optional, List, Dict, Any
+from cadquery.occ_impl.geom import Location
+from cadquery.occ_impl.assembly import Color
 
-class Reactor:
-    """The Reactor object allows shapes and components to be added and then
-    collective operations to be performed on them. Combining all the shapes is
-    required for creating images of the whole reactor.
+from cadquery import Workplane
+from cadquery.occ_impl.shapes import Shape, Compound
+AssemblyObjects = Union[Shape, Workplane, None]
+
+class Reactor(cq.Assembly):
+    """The Reactor object is an extended CadQuery Assembly object. The
+    additional functionality allows shapes and components to be exported to
+    a variety of additional formats
 
     Args:
         shapes_and_components: list of paramak.Shape objects
     """
-
+    
+        
     def __init__(
         self,
-        shapes_and_components: List[paramak.Shape] = [],
-    ):
+        obj: AssemblyObjects = None,
+        loc: Optional[Location] = None,
+        name: Optional[str] = None,
+        color: Optional[Color] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+        ):
 
-        self.shapes_and_components = shapes_and_components
+            super().__init__(
+                obj, loc, name, color, metadata     
+            ) 
+        # def __init__(
+        #     self
+        # ):
 
-        self.input_variable_names: List[str] = [
-            # 'shapes_and_components', commented out to avoid calculating solids
-        ]
-
-        self.stp_filenames: List[str] = []
-        self.stl_filenames: List[str] = []
-
-        self.solid = None
-        self.reactor_hash_value = None
-
-    @property
-    def input_variables(self):
-        all_input_variables = {}
-        for name in self.input_variable_names:
-            all_input_variables[name] = getattr(self, name)
-        return all_input_variables
-
-    @property
-    def largest_dimension(self):
-        """Calculates a bounding box for the Reactor and returns the largest
-        absolute value of the largest dimension of the bounding box"""
-
-        largest_dimension = get_largest_dimension(self.solid)
-
-        return largest_dimension
-
-    @largest_dimension.setter
-    def largest_dimension(self, value):
-        self._largest_dimension = value
-
-    @property
-    def bounding_box(self):
-        """Calculates a bounding box for the Shape and returns the coordinates of
-        the corners lower-left and upper-right. This function is useful when
-        creating OpenMC mesh tallies as the bounding box is required in this form"""
-
-        return get_bounding_box(self.solid)
-
-    @bounding_box.setter
-    def bounding_box(self, value):
-        self._bounding_box = value
-
-    @property
-    def shapes_and_components(self):
-        """Adds a list of parametric shape(s) and or parametric component(s)
-        to the Reactor object. This allows collective operations to be
-        performed on all the shapes in the reactor."""
-        if hasattr(self, "create_solids"):
-            ignored_keys = ["reactor_hash_value"]
-            if get_hash(self, ignored_keys) != self.reactor_hash_value:
-                self.create_solids()
-                self.reactor_hash_value = get_hash(self, ignored_keys)
-        return self._shapes_and_components
-
-    @shapes_and_components.setter
-    def shapes_and_components(self, value):
-        if not isinstance(value, (Iterable, str)):
-            raise ValueError("shapes_and_components must be a list")
-        self._shapes_and_components = value
-
-    @property
-    def solid(self):
-        """This combines all the parametric shapes and components in the
-        reactor object.
-        """
-
-        list_of_cq_vals = []
-        for shape_or_compound in self.shapes_and_components:
-            if isinstance(
-                shape_or_compound.solid,
-                (cq.occ_impl.shapes.Shape, cq.occ_impl.shapes.Compound),
-            ):
-                for solid in shape_or_compound.solid.Solids():
-                    list_of_cq_vals.append(solid)
-            else:
-                list_of_cq_vals.append(shape_or_compound.solid.val())
-
-        compound = cq.Compound.makeCompound(list_of_cq_vals)
-
-        return compound
-
-    @solid.setter
-    def solid(self, value):
-        self._solid = value
-
-    @property
-    def name(self):
-        """Returns a list of names of the individual Shapes that make up the
-        reactor"""
-
-        all_names = []
-        for shape in self.shapes_and_components:
-            all_names.append(shape.name)
-
-        return all_names
+            # self.name="reactor"
+            # super().__init__()
 
     def show(self, **kwargs):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
@@ -153,14 +74,7 @@ class Reactor:
             )
             raise ImportError(msg)
 
-        assembly = cq.Assembly(name="reactor")
-        for entry in self.shapes_and_components:
-            if entry.color is None:
-                assembly.add(entry.solid)
-            else:
-                assembly.add(entry.solid, color=cq.Color(*entry.color))
-
-        return show(assembly, **kwargs)
+        return show(self, **kwargs)
 
     def export_dagmc_h5m(
         self,
@@ -428,63 +342,6 @@ class Reactor:
 
         return filename
 
-    def make_sector_wedge(
-        self,
-        height: Optional[float] = None,
-        radius: Optional[float] = None,
-        rotation_angle: Optional[float] = None,
-    ) -> Union[paramak.Shape, None]:
-        """Creates a rotated wedge shaped object that is useful for creating
-        sector models in DAGMC where reflecting surfaces are needed. If the
-        rotation
-
-        Args:
-            height: The height of the rotated wedge. If None then the
-                largest_dimension of the model will be used.
-            radius: The radius of the rotated wedge. If None then the
-                largest_dimension of the model will be used
-            rotation_angle: The rotation angle of the wedge will be the
-                inverse of the sector
-
-        Returns:
-            the paramak.Shape object created
-        """
-
-        if rotation_angle is None:
-            if hasattr(self, "rotation_angle"):
-                rotation_angle = self.rotation_angle
-            if rotation_angle is None:
-                Warning("No sector_wedge can be made as rotation_angle" " or Reactor.rotation_angle have not been set")
-                return None
-
-        if rotation_angle > 360:
-            Warning("No wedge can be made for a rotation angle of 360 or above")
-            return None
-
-        if rotation_angle == 360:
-            print("No sector wedge made as rotation angle is 360")
-            return None
-
-        # todo this should be cetered around the center point
-
-        if height is None:
-            height = self.largest_dimension * 2
-
-        if radius is None:
-            radius = self.largest_dimension * 2
-
-        sector_cutting_wedge = paramak.CuttingWedge(
-            height=height,
-            radius=radius,
-            rotation_angle=360 - rotation_angle,
-            surface_reflectivity=True,
-            azimuth_placement_angle=rotation_angle,
-        )
-
-        self.sector_wedge = sector_cutting_wedge
-
-        return sector_cutting_wedge
-
     def export_svg(
         self,
         filename: Optional[str] = "reactor.svg",
@@ -664,21 +521,3 @@ class Reactor:
         )
 
         return fig
-
-    def volume(self, split_compounds: bool = False) -> List[float]:
-        """Get the volumes of the Shapes in the Reactor.
-
-        Args:
-            split_compounds: If the Shape is a compound of Shapes and therefore
-                contains multiple volumes. This option allows access to the separate
-                volumes of each component within a Shape (True) or the volumes of
-                compounds can be summed (False).
-
-        Returns:
-            The the volumes of the Shapes
-        """
-
-        all_volumes = []
-        for shape in self.shapes_and_components:
-            all_volumes.append(shape.volume(split_compounds=split_compounds))
-        return all_volumes

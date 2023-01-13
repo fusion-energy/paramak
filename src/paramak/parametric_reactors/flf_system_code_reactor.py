@@ -43,7 +43,14 @@ class FlfSystemCodeReactor(paramak.Reactor):
         rotation_angle: Optional[float] = 180.0,
     ):
 
-        super().__init__([])
+        super().__init__(
+            obj = None,
+            loc = None,
+            name = None,
+            color = None,
+            metadata=None,
+        )
+            
 
         self.rotation_angle = rotation_angle
         self.inner_blanket_radius = inner_blanket_radius
@@ -57,18 +64,18 @@ class FlfSystemCodeReactor(paramak.Reactor):
         self.lower_vv_thickness = lower_vv_thickness
 
         # adds self.input_variable_names from the Reactor class
-        self.input_variable_names: List[str] = self.input_variable_names + [
-            "inner_blanket_radius",
-            "blanket_thickness",
-            "blanket_height",
-            "lower_blanket_thickness",
-            "upper_blanket_thickness",
-            "blanket_vv_gap",
-            "upper_vv_thickness",
-            "vv_thickness",
-            "lower_vv_thickness",
-            "rotation_angle",
-        ]
+        # self.input_variable_names: List[str] = self.input_variable_names + [
+        #     "inner_blanket_radius",
+        #     "blanket_thickness",
+        #     "blanket_height",
+        #     "lower_blanket_thickness",
+        #     "upper_blanket_thickness",
+        #     "blanket_vv_gap",
+        #     "upper_vv_thickness",
+        #     "vv_thickness",
+        #     "lower_vv_thickness",
+        #     "rotation_angle",
+        # ]
 
     def create_solids(self):
         """Creates a list of paramak.Shape for components and saves it in
