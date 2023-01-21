@@ -5,6 +5,7 @@ from paramak.utils import patch_workplane
 
 patch_workplane()
 
+
 class SphericalShell(RotateMixedShape):
 
     """Create a 3d CadQuery solid spherical shell from an inner radius and a shell thickness
@@ -46,7 +47,7 @@ class SphericalShell(RotateMixedShape):
     @property
     def inner_radius(self):
         return self._inner_radius
-    
+
     @inner_radius.setter
     def inner_radius(self, value):
         if value is None:
@@ -58,7 +59,7 @@ class SphericalShell(RotateMixedShape):
     @property
     def shell_thickness(self):
         return self._shell_thickness
-    
+
     @shell_thickness.setter
     def shell_thickness(self, value):
         if value is None:
@@ -66,34 +67,29 @@ class SphericalShell(RotateMixedShape):
         if value <= 0:
             raise ValueError("Shell thickness of SphericalShell needs to be > 0")
         self._shell_thickness = value
-    
 
     def find_points(self):
 
         if not 0 <= self.inner_radius:
-            raise ValueError(
-                "inner_radius must be 0 or greater.less than outer_radius."
-            )
-        
+            raise ValueError("inner_radius must be 0 or greater.less than outer_radius.")
+
         if not 0 < self.shell_thickness:
-            raise ValueError(
-                "shell_tickness must be greater than 0."
-            )
+            raise ValueError("shell_tickness must be greater than 0.")
 
         if self.inner_radius == 0:
             # solid sphere
             self.points = [
-                (0,-self.shell_thickness,"straight"),
-                (0,self.shell_thickness,"circle"),
-                (self.shell_thickness,0,"circle")
+                (0, -self.shell_thickness, "straight"),
+                (0, self.shell_thickness, "circle"),
+                (self.shell_thickness, 0, "circle"),
             ]
         else:
             # shell
             self.points = [
-                (0,-self.inner_radius,"straight"),
-                (0,-self.inner_radius-self.shell_thickness,"circle"),
-                (self.inner_radius+self.shell_thickness,0,"circle"),
-                (0,self.inner_radius+self.shell_thickness,"straight"),
-                (0,self.inner_radius,"circle"),
-                (self.inner_radius,0,"circle")
+                (0, -self.inner_radius, "straight"),
+                (0, -self.inner_radius - self.shell_thickness, "circle"),
+                (self.inner_radius + self.shell_thickness, 0, "circle"),
+                (0, self.inner_radius + self.shell_thickness, "straight"),
+                (0, self.inner_radius, "circle"),
+                (self.inner_radius, 0, "circle"),
             ]
