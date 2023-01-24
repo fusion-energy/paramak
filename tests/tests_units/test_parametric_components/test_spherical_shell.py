@@ -12,4 +12,3 @@ class TestSphericalShell(unittest.TestCase):
         checks that a cadquery solid is created."""
 
         assert self.test_shape.solid is not None
-    
