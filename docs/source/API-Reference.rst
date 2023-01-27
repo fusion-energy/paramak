@@ -1690,6 +1690,28 @@ RotatedIsoscelesTriangle
    :members:
    :show-inheritance:
 
+
+SphericalShell
+
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.SphericalShell(
+      inner_radius = 5,
+      shell_thickness = 1,
+      rotation_angle=180,
+      workplane='XY'
+   )
+
+   cadquery_object = my_component.solid
+
+   .. automodule:: paramak.parametric_components.spherical_shell
+   :members:
+   :show-inheritance:
+
+
 Parametric Reactors
 ===================
 
