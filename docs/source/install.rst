@@ -115,9 +115,7 @@ needed then this stage can be skipped.
 
 .. code-block:: bash
 
-   conda install -c conda-forge gmsh=4.11.0
-   conda install -c conda-forge python-gmsh=4.11.0
-   conda install -c conda-forge 'moab>=5.3.0'
+   conda install -c fusion-energy -c conda-forge cad-to-dagmc
 
 Then pip install the Paramak.
 
