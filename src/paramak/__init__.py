@@ -15,7 +15,7 @@ __all__ = ["__version__"]
 
 
 from .shape import Shape
-from .reactor import Reactor
+from .reactor import *
 from .utils import (
     rotate,
     extend,
@@ -136,27 +136,27 @@ from .parametric_components.capsule_vacuum_vessel import CapsuleVacuumVessel
 from .parametric_components.hollow_cube import HollowCube
 from .parametric_components.shell_fs import ShellFS
 
-from .parametric_reactors.eu_demo_2015_reactor import EuDemoFrom2015PaperDiagram
-from .parametric_reactors.ball_reactor import BallReactor
-from .parametric_reactors.submersion_reactor import SubmersionTokamak
-from .parametric_reactors.single_null_submersion_reactor import (
-    SingleNullSubmersionTokamak,
-)
-from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
-from .parametric_reactors.segmented_blanket_ball_reactor import (
-    SegmentedBlanketBallReactor,
-)
-from .parametric_reactors.center_column_study_reactor import CenterColumnStudyReactor
-from .parametric_reactors.sparc_paper_2020 import SparcFrom2020PaperDiagram
-from .parametric_reactors.iter_paper_2020 import IterFrom2020PaperDiagram
+# from .parametric_reactors.eu_demo_2015_reactor import EuDemoFrom2015PaperDiagram
+# from .parametric_reactors.ball_reactor import BallReactor
+# from .parametric_reactors.submersion_reactor import SubmersionTokamak
+# from .parametric_reactors.single_null_submersion_reactor import (
+#     SingleNullSubmersionTokamak,
+# )
+# from .parametric_reactors.single_null_ball_reactor import SingleNullBallReactor
+# from .parametric_reactors.segmented_blanket_ball_reactor import (
+#     SegmentedBlanketBallReactor,
+# )
+# from .parametric_reactors.center_column_study_reactor import CenterColumnStudyReactor
+# from .parametric_reactors.sparc_paper_2020 import SparcFrom2020PaperDiagram
+# from .parametric_reactors.iter_paper_2020 import IterFrom2020PaperDiagram
 from .parametric_reactors.flf_system_code_reactor import FlfSystemCodeReactor
-from .parametric_reactors.negative_triangularity_reactor import (
-    NegativeTriangularityReactor,
-)
+# from .parametric_reactors.negative_triangularity_reactor import (
+#     NegativeTriangularityReactor,
+# )
 
 __all__ = [
     Shape,
-    Reactor,
+    # Reactor,
     rotate,
     extend,
     distance_between_two_points,
@@ -235,15 +235,15 @@ __all__ = [
     CapsuleVacuumVessel,
     HollowCube,
     ShellFS,
-    EuDemoFrom2015PaperDiagram,
-    BallReactor,
-    SubmersionTokamak,
-    SingleNullSubmersionTokamak,
-    SingleNullBallReactor,
-    SegmentedBlanketBallReactor,
-    CenterColumnStudyReactor,
-    SparcFrom2020PaperDiagram,
-    IterFrom2020PaperDiagram,
+    # EuDemoFrom2015PaperDiagram,
+    # BallReactor,
+    # SubmersionTokamak,
+    # SingleNullSubmersionTokamak,
+    # SingleNullBallReactor,
+    # SegmentedBlanketBallReactor,
+    # CenterColumnStudyReactor,
+    # SparcFrom2020PaperDiagram,
+    # IterFrom2020PaperDiagram,
     FlfSystemCodeReactor,
-    NegativeTriangularityReactor,
+    # NegativeTriangularityReactor,
 ]
