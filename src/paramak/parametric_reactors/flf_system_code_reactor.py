@@ -157,16 +157,16 @@ def FlfSystemCodeReactor(
         name="vessel",
     )
 
-    colors=[(0.5, 0.5, 0.5)]
+    colors = [(0.5, 0.5, 0.5)]
 
     assembly = (
-        cq.Assembly(name='FlfSystemCodeReactor')
-        .add(blanket.solid,name='blanket', color=cq.Color(*colors[0]))
-        .add(vac_vessel.solid,name='vac_vessel')   
-        .add(upper_blanket.solid,name='upper_blanket')
-        .add(lower_blanket.solid,name='lower_blanket')
-        .add(lower_vac_vessel.solid,name='lower_vac_vessel')
-        .add(upper_vac_vessel.solid,name='upper_vac_vessel')
+        cq.Assembly(name="FlfSystemCodeReactor")
+        .add(blanket.solid, name="blanket", color=cq.Color(*colors[0]))
+        .add(vac_vessel.solid, name="vac_vessel")
+        .add(upper_blanket.solid, name="upper_blanket")
+        .add(lower_blanket.solid, name="lower_blanket")
+        .add(lower_vac_vessel.solid, name="lower_vac_vessel")
+        .add(upper_vac_vessel.solid, name="upper_vac_vessel")
     )
 
     return assembly

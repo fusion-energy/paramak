@@ -17,7 +17,6 @@ from cadquery.occ_impl.geom import Location
 from cadquery.occ_impl.assembly import Color
 
 
-
 def export_dagmc_h5m(
     self,
     filename: str = "dagmc.h5m",
@@ -70,6 +69,7 @@ def export_dagmc_h5m(
     )
 
     return output_filename
+
 
 # patches cadquery assembly to have this addtional function
 cq.assembly.Assembly.export_dagmc_h5m = export_dagmc_h5m
