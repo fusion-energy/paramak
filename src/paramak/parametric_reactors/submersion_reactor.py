@@ -1,5 +1,5 @@
 import warnings
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import cadquery as cq
 
@@ -60,7 +60,7 @@ class SubmersionTokamak(paramak.Reactor):
         inboard_tf_leg_radial_thickness: float = 30,
         center_column_shield_radial_thickness: float = 30,
         inboard_blanket_radial_thickness: float = 80,
-        firstwall_radial_thickness: float = 20,
+        firstwall_radial_thickness: Union[float, list[float]] = 20,
         inner_plasma_gap_radial_thickness: float = 50,
         plasma_radial_thickness: float = 200,
         divertor_radial_thickness: float = 80,
@@ -208,6 +208,16 @@ class SubmersionTokamak(paramak.Reactor):
         else:
             msg = "support_position must be 'upper', 'lower' or 'both'"
             raise ValueError(msg)
+            
+    @property
+    def firstwall_radial_thickness(self):
+        return self._firstwall_radial_thickness
+
+    @firstwall_radial_thickness.setter
+    def firstwall_radial_thickness(self, value):
+        if isinstance(value, (float, int)):
+            value = [value]
+        self._firstwall_radial_thickness = value
 
     def create_solids(self):
         """Creates a list of paramak.Shape for components and saves it in
@@ -221,7 +231,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._make_radial_build()
         self._make_vertical_build()
         uncut_shapes.append(self._make_center_column_shield())
-        uncut_shapes.append(self._make_firstwall())
+        first_wall = self._make_firstwall()
         uncut_shapes.append(self._make_blanket())
         uncut_shapes += self._make_divertor()
         uncut_shapes.append(self._make_supports())
@@ -236,7 +246,7 @@ class SubmersionTokamak(paramak.Reactor):
                 print(shape, shape.name)
                 for pf_coil in pf_coils:
                     shape.solid = shape.solid.cut(pf_coil.solid)
-            shapes_and_components = pf_coils + uncut_shapes
+            shapes_and_components = pf_coils + first_wall + uncut_shapes
 
         self.shapes_and_components = shapes_and_components
 
@@ -247,7 +257,6 @@ class SubmersionTokamak(paramak.Reactor):
             warnings.warn(msg, UserWarning)
 
     def _make_radial_build(self):
-
         # this is the radial build sequence, where one component stops and
         # another starts
 
@@ -266,7 +275,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._inboard_blanket_end_radius = self._inboard_blanket_start_radius + self.inboard_blanket_radial_thickness
 
         self._inboard_firstwall_start_radius = self._inboard_blanket_end_radius
-        self._inboard_firstwall_end_radius = self._inboard_firstwall_start_radius + self.firstwall_radial_thickness
+        self._inboard_firstwall_end_radius = self._inboard_firstwall_start_radius + sum(self.firstwall_radial_thickness)
 
         self._inner_plasma_gap_start_radius = self._inboard_firstwall_end_radius
         self._inner_plasma_gap_end_radius = self._inner_plasma_gap_start_radius + self.inner_plasma_gap_radial_thickness
@@ -278,7 +287,7 @@ class SubmersionTokamak(paramak.Reactor):
         self._outer_plasma_gap_end_radius = self._outer_plasma_gap_start_radius + self.outer_plasma_gap_radial_thickness
 
         self._outboard_firstwall_start_radius = self._outer_plasma_gap_end_radius
-        self._outboard_firstwall_end_radius = self._outboard_firstwall_start_radius + self.firstwall_radial_thickness
+        self._outboard_firstwall_end_radius = self._outboard_firstwall_start_radius + sum(self.firstwall_radial_thickness)
 
         self._outboard_blanket_start_radius = self._outboard_firstwall_end_radius
         self._outboard_blanket_end_radius = self._outboard_blanket_start_radius + self.outboard_blanket_radial_thickness
@@ -321,7 +330,7 @@ class SubmersionTokamak(paramak.Reactor):
 
         # the firstwall is cut by the divertor but uses the same control points
         self._firstwall_start_height = self._plasma_to_divertor_gap_end_height
-        self._firstwall_end_height = self._firstwall_start_height + self.firstwall_radial_thickness
+        self._firstwall_end_height = self._firstwall_start_height + sum(self.firstwall_radial_thickness)
 
         self._blanket_start_height = self._firstwall_end_height
         self._blanket_end_height = self._blanket_start_height + self.outboard_blanket_radial_thickness
@@ -356,7 +365,7 @@ class SubmersionTokamak(paramak.Reactor):
             + self.inboard_tf_leg_radial_thickness
             + self.center_column_shield_radial_thickness
             + self.inboard_blanket_radial_thickness
-            + self.firstwall_radial_thickness
+            + sum(self.firstwall_radial_thickness)
             + self.inner_plasma_gap_radial_thickness
         )
         outer_equatorial_point = inner_equatorial_point + self.plasma_radial_thickness
@@ -375,30 +384,38 @@ class SubmersionTokamak(paramak.Reactor):
         return self._plasma
 
     def _make_firstwall(self):
-
         # this is used to cut the inboard blanket and then fused / unioned with
         # the firstwall
-        self._inboard_firstwall = paramak.BlanketFP(
-            plasma=self._plasma,
-            offset_from_plasma=self.inner_plasma_gap_radial_thickness,
-            start_angle=90,
-            stop_angle=270,
-            thickness=self.firstwall_radial_thickness,
-            rotation_angle=self.rotation_angle,
-            color=(0.5, 0.5, 0.5),
-        )
+        offset_from_firstwall = 0
+        self._inboard_firstwall = []
+        self._firstwall = []
+        for i, val in enumerate(self.firstwall_radial_thickness):
+            inboard_firstwall = paramak.BlanketFP(
+                plasma=self._plasma,
+                offset_from_plasma=self.inner_plasma_gap_radial_thickness + offset_from_firstwall,
+                start_angle=90,
+                stop_angle=270,
+                thickness=val,
+                rotation_angle=self.rotation_angle,
+                #name=f"inboard_firstwall{i}",
+                color=(0.5, 0.5, 0.5),
+            )
 
-        self._firstwall = paramak.BlanketFP(
-            plasma=self._plasma,
-            offset_from_plasma=self.outer_plasma_gap_radial_thickness,
-            start_angle=90,
-            stop_angle=-90,
-            thickness=self.firstwall_radial_thickness,
-            rotation_angle=self.rotation_angle,
-            name="outboard_firstwall",
-            union=self._inboard_firstwall,
-            color=(0.5, 0.5, 0.5),
-        )
+            first_wall = paramak.BlanketFP(
+                plasma=self._plasma,
+                offset_from_plasma=self.outer_plasma_gap_radial_thickness + offset_from_firstwall,
+                start_angle=90,
+                stop_angle=-90,
+                thickness=val,
+                rotation_angle=self.rotation_angle,
+                name=f"outboard_firstwall{i}",
+                union= inboard_firstwall,
+                color=(0.5, 0.5, 0.5),
+            )
+            self._inboard_firstwall.append(inboard_firstwall)
+            self._firstwall.append(first_wall)
+            print(offset_from_firstwall, '|', val)
+            offset_from_firstwall += val
         return self._firstwall
 
     def _make_divertor(self):
@@ -407,7 +424,7 @@ class SubmersionTokamak(paramak.Reactor):
             offset_from_plasma=self.inner_plasma_gap_radial_thickness,
             start_angle=90,
             stop_angle=270,
-            thickness=self.firstwall_radial_thickness,
+            thickness=sum(self.firstwall_radial_thickness),
             rotation_angle=self.rotation_angle,
         )
 
@@ -416,7 +433,7 @@ class SubmersionTokamak(paramak.Reactor):
             offset_from_plasma=self.outer_plasma_gap_radial_thickness,
             start_angle=90,
             stop_angle=-90,
-            thickness=self.firstwall_radial_thickness,
+            thickness=sum(self.firstwall_radial_thickness),
             rotation_angle=self.rotation_angle,
             name="outboard_firstwall",
             union=fw_envelope_inboard,
@@ -459,8 +476,9 @@ class SubmersionTokamak(paramak.Reactor):
             cut_list = [self._divertor_lower]
         if self.divertor_position == "both":
             cut_list = [self._divertor_lower, self._divertor_upper]
-        self._firstwall.cut = cut_list
-        self._inboard_firstwall.cut = cut_list
+        for i, val in enumerate(self.firstwall_radial_thickness): 
+            self._firstwall[i].cut = cut_list
+            self._inboard_firstwall[i].cut = cut_list
 
         if self.divertor_position == "upper":
             return [self._divertor_upper]
@@ -473,9 +491,9 @@ class SubmersionTokamak(paramak.Reactor):
         self._inboard_blanket = paramak.CenterColumnShieldCylinder(
             height=self._blanket_end_height * 2,
             inner_radius=self._inboard_blanket_start_radius,
-            outer_radius=max(self._inboard_firstwall.points)[0],
+            outer_radius=max(self._inboard_firstwall[-1].points)[0],
             rotation_angle=self.rotation_angle,
-            cut=self._inboard_firstwall,
+            cut=self._inboard_firstwall[-1],
         )
 
         # this takes a single solid from a compound of solids by finding the
@@ -489,7 +507,7 @@ class SubmersionTokamak(paramak.Reactor):
             plasma=self._plasma,
             start_angle=90,
             stop_angle=-90,
-            offset_from_plasma=self.outer_plasma_gap_radial_thickness + self.firstwall_radial_thickness,
+            offset_from_plasma=self.outer_plasma_gap_radial_thickness + sum(self.firstwall_radial_thickness),
             thickness=self.outboard_blanket_radial_thickness,
             rotation_angle=self.rotation_angle,
             name="blanket",
@@ -503,7 +521,7 @@ class SubmersionTokamak(paramak.Reactor):
             plasma=self._plasma,
             start_angle=90,
             stop_angle=-90,
-            offset_from_plasma=self.outer_plasma_gap_radial_thickness + self.firstwall_radial_thickness,
+            offset_from_plasma=self.outer_plasma_gap_radial_thickness + sum(self.firstwall_radial_thickness),
             thickness=self.outboard_blanket_radial_thickness,
             rotation_angle=self.rotation_angle,
             union=self._inboard_blanket,
@@ -546,11 +564,11 @@ class SubmersionTokamak(paramak.Reactor):
                     self._blanket_rear_wall_end_height,
                 ),
                 (
-                    max(self._inboard_firstwall.points)[0],
+                    max(self._inboard_firstwall[-1].points)[0],
                     self._blanket_rear_wall_end_height,
                 ),
                 (
-                    max(self._inboard_firstwall.points)[0],
+                    max(self._inboard_firstwall[-1].points)[0],
                     self._blanket_rear_wall_start_height,
                 ),
             ],
@@ -568,11 +586,11 @@ class SubmersionTokamak(paramak.Reactor):
                     -self._blanket_rear_wall_end_height,
                 ),
                 (
-                    max(self._inboard_firstwall.points)[0],
+                    max(self._inboard_firstwall[-1].points)[0],
                     -self._blanket_rear_wall_end_height,
                 ),
                 (
-                    max(self._inboard_firstwall.points)[0],
+                    max(self._inboard_firstwall[-1].points)[0],
                     -self._blanket_rear_wall_start_height,
                 ),
             ],
@@ -584,7 +602,7 @@ class SubmersionTokamak(paramak.Reactor):
             start_angle=90,
             stop_angle=-90,
             offset_from_plasma=self.outer_plasma_gap_radial_thickness
-            + self.firstwall_radial_thickness
+            + sum(self.firstwall_radial_thickness)
             + self.outboard_blanket_radial_thickness,
             thickness=self.blanket_rear_wall_radial_thickness,
             rotation_angle=self.rotation_angle,
@@ -701,3 +719,4 @@ class SubmersionTokamak(paramak.Reactor):
                 list_of_components.append(self._tf_coil)
 
         return list_of_components
+
