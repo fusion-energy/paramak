@@ -1,4 +1,3 @@
-
 import cadquery as cq
 from paramak import RotateStraightShape, CenterColumnShieldCylinder
 
@@ -87,17 +86,11 @@ def FlfSystemCodeReactor(
             (inner_wall, lower_vv_thickness + lower_blanket_thickness + blanket_height),
             (
                 inner_wall,
-                lower_vv_thickness
-                + lower_blanket_thickness
-                + blanket_height
-                + upper_vv_thickness,
+                lower_vv_thickness + lower_blanket_thickness + blanket_height + upper_vv_thickness,
             ),
             (
                 0,
-                lower_vv_thickness
-                + lower_blanket_thickness
-                + blanket_height
-                + upper_vv_thickness,
+                lower_vv_thickness + lower_blanket_thickness + blanket_height + upper_vv_thickness,
             ),
             (0, lower_vv_thickness + lower_blanket_thickness + blanket_height),
         ],
@@ -110,10 +103,7 @@ def FlfSystemCodeReactor(
         points=[
             (
                 inner_wall,
-                lower_vv_thickness
-                + lower_blanket_thickness
-                + blanket_height
-                + upper_vv_thickness,
+                lower_vv_thickness + lower_blanket_thickness + blanket_height + upper_vv_thickness,
             ),
             (
                 inner_wall,
@@ -133,10 +123,7 @@ def FlfSystemCodeReactor(
             ),
             (
                 0,
-                lower_vv_thickness
-                + lower_blanket_thickness
-                + blanket_height
-                + upper_vv_thickness,
+                lower_vv_thickness + lower_blanket_thickness + blanket_height + upper_vv_thickness,
             ),
         ],
         rotation_angle=rotation_angle,
@@ -169,6 +156,7 @@ def FlfSystemCodeReactor(
         color=(0.5, 0.5, 0.5),
         name="vessel",
     )
+
     colors=[(0.5, 0.5, 0.5)]
 
     assembly = (
