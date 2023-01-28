@@ -1,4 +1,3 @@
-
 import cadquery as cq
 from paramak import RotateStraightShape, CenterColumnShieldCylinder
 
@@ -87,17 +86,11 @@ def FlfSystemCodeReactor(
             (inner_wall, lower_vv_thickness + lower_blanket_thickness + blanket_height),
             (
                 inner_wall,
-                lower_vv_thickness
-                + lower_blanket_thickness
-                + blanket_height
-                + upper_vv_thickness,
+                lower_vv_thickness + lower_blanket_thickness + blanket_height + upper_vv_thickness,
             ),
             (
                 0,
-                lower_vv_thickness
-                + lower_blanket_thickness
-                + blanket_height
-                + upper_vv_thickness,
+                lower_vv_thickness + lower_blanket_thickness + blanket_height + upper_vv_thickness,
             ),
             (0, lower_vv_thickness + lower_blanket_thickness + blanket_height),
         ],
@@ -110,10 +103,7 @@ def FlfSystemCodeReactor(
         points=[
             (
                 inner_wall,
-                lower_vv_thickness
-                + lower_blanket_thickness
-                + blanket_height
-                + upper_vv_thickness,
+                lower_vv_thickness + lower_blanket_thickness + blanket_height + upper_vv_thickness,
             ),
             (
                 inner_wall,
@@ -133,10 +123,7 @@ def FlfSystemCodeReactor(
             ),
             (
                 0,
-                lower_vv_thickness
-                + lower_blanket_thickness
-                + blanket_height
-                + upper_vv_thickness,
+                lower_vv_thickness + lower_blanket_thickness + blanket_height + upper_vv_thickness,
             ),
         ],
         rotation_angle=rotation_angle,
@@ -169,15 +156,15 @@ def FlfSystemCodeReactor(
         color=(0.5, 0.5, 0.5),
         name="vessel",
     )
-    
+
     assembly = (
         cq.Assembly()
-        .add(blanket.solid,name='blanket')
-        .add(vac_vessel.solid,name='vac_vessel')   
-        .add(upper_blanket.solid,name='upper_blanket')
-        .add(lower_blanket.solid,name='lower_blanket')
-        .add(lower_vv.solid,name='lower_vv')
-        .add(upper_vv.solid,name='upper_vv')
+        .add(blanket.solid, name="blanket")
+        .add(vac_vessel.solid, name="vac_vessel")
+        .add(upper_blanket.solid, name="upper_blanket")
+        .add(lower_blanket.solid, name="lower_blanket")
+        .add(lower_vv.solid, name="lower_vv")
+        .add(upper_vv.solid, name="upper_vv")
     )
 
     return assembly
