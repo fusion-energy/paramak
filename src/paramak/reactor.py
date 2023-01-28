@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
@@ -19,7 +18,9 @@ from cadquery.occ_impl.assembly import Color
 
 from cadquery import Workplane
 from cadquery.occ_impl.shapes import Shape, Compound
+
 AssemblyObjects = Union[Shape, Workplane, None]
+
 
 class Reactor(cq.Assembly):
     """The Reactor object is an extended CadQuery Assembly object. The
@@ -29,8 +30,7 @@ class Reactor(cq.Assembly):
     Args:
         shapes_and_components: list of paramak.Shape objects
     """
-    
-        
+
     def __init__(
         self,
         obj: AssemblyObjects = None,
@@ -38,17 +38,16 @@ class Reactor(cq.Assembly):
         name: Optional[str] = None,
         color: Optional[Color] = None,
         metadata: Optional[Dict[str, Any]] = None,
-        ):
+    ):
 
-            super().__init__(
-                obj, loc, name, color, metadata     
-            ) 
-        # def __init__(
-        #     self
-        # ):
+        super().__init__(obj, loc, name, color, metadata)
 
-            # self.name="reactor"
-            # super().__init__()
+    # def __init__(
+    #     self
+    # ):
+
+    # self.name="reactor"
+    # super().__init__()
 
     def show(self, **kwargs):
         """Shows / renders the CadQuery the 3d object in Jupyter Lab. Imports
