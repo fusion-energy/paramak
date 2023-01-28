@@ -30,18 +30,18 @@ def FlfSystemCodeReactor(
         upper_blanket_thickness: The thickness (z axis direction) of the
             upper blanket pool (cm).
         blanket_vv_gap: The radial distance between the outer edge of the
-            blanket and the inner edge of the vaccum vessel (cm).
+            blanket and the inner edge of the vacuum vessel (cm).
         upper_vv_thickness: The thickness (z axis direction) of the
-            upper section of vaccum vessel (cm).
-        vv_thickness: The radial thickness of the vaccum vessel (cm)
+            upper section of vacuum vessel (cm).
+        vv_thickness: The radial thickness of the vacuum vessel (cm)
         lower_vv_thickness: The thickness (z axis direction) of the
-            lower section of vaccum vessel (cm).
+            lower section of vacuum vessel (cm).
         rotation_angle: The angle of the sector simulated. Set to 360 for
             simulations and less when creating models for visualization.
     """
 
     inner_wall = inner_blanket_radius + blanket_thickness + blanket_vv_gap
-    lower_vv = RotateStraightShape(
+    lower_vac_vessel = RotateStraightShape(
         points=[
             (inner_wall, 0),
             (
@@ -82,7 +82,7 @@ def FlfSystemCodeReactor(
         name="blanket",
     )
 
-    upper_vv = RotateStraightShape(
+    upper_vac_vessel = RotateStraightShape(
         points=[
             (inner_wall, lower_vv_thickness + lower_blanket_thickness + blanket_height),
             (
@@ -169,15 +169,16 @@ def FlfSystemCodeReactor(
         color=(0.5, 0.5, 0.5),
         name="vessel",
     )
-    
+    colors=[(0.5, 0.5, 0.5)]
+
     assembly = (
-        cq.Assembly()
-        .add(blanket.solid,name='blanket')
+        cq.Assembly(name='FlfSystemCodeReactor')
+        .add(blanket.solid,name='blanket', color=cq.Color(*colors[0]))
         .add(vac_vessel.solid,name='vac_vessel')   
         .add(upper_blanket.solid,name='upper_blanket')
         .add(lower_blanket.solid,name='lower_blanket')
-        .add(lower_vv.solid,name='lower_vv')
-        .add(upper_vv.solid,name='upper_vv')
+        .add(lower_vac_vessel.solid,name='lower_vac_vessel')
+        .add(upper_vac_vessel.solid,name='upper_vac_vessel')
     )
 
     return assembly
