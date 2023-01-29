@@ -1,4 +1,3 @@
-
 from typing import List, Optional
 
 import paramak
@@ -158,9 +157,7 @@ def BallReactor(
         _blanket_rear_wall = paramak.BlanketFP(
             plasma=plasma,
             thickness=blanket_rear_wall_radial_thickness,
-            offset_from_plasma=[
-                e + firstwall_radial_thickness + blanket_radial_thickness for e in offset_from_plasma
-            ],
+            offset_from_plasma=[e + firstwall_radial_thickness + blanket_radial_thickness for e in offset_from_plasma],
             start_angle=-180,
             stop_angle=180,
             rotation_angle=rotation_angle,
@@ -185,9 +182,7 @@ def BallReactor(
         # used as an intersect when making the divertor
         _blanket_fw_rear_wall_envelope = paramak.BlanketFP(
             plasma=plasma,
-            thickness=firstwall_radial_thickness
-            + blanket_radial_thickness
-            + blanket_rear_wall_radial_thickness,
+            thickness=firstwall_radial_thickness + blanket_radial_thickness + blanket_rear_wall_radial_thickness,
             offset_from_plasma=offset_from_plasma,
             start_angle=-180,
             stop_angle=180,
@@ -353,10 +348,8 @@ def BallReactor(
         triangularity=triangularity,
         rotation_angle=rotation_angle,
     )
-        
+
     uncut_shapes.append(plasma)
-    
-    
 
     # this is the radial build sequence, where one component stops and
     # another starts
@@ -368,9 +361,7 @@ def BallReactor(
     _inboard_tf_coils_end_radius = _inboard_tf_coils_start_radius + inboard_tf_leg_radial_thickness
 
     _center_column_shield_start_radius = _inboard_tf_coils_end_radius
-    _center_column_shield_end_radius = (
-        _center_column_shield_start_radius + center_column_shield_radial_thickness
-    )
+    _center_column_shield_end_radius = _center_column_shield_start_radius + center_column_shield_radial_thickness
 
     _divertor_start_radius = _center_column_shield_end_radius
     _divertor_end_radius = _center_column_shield_end_radius + divertor_radial_thickness
@@ -387,10 +378,7 @@ def BallReactor(
     _blanket_end_radius = _blanket_start_radius + blanket_radial_thickness
 
     _blanket_rear_wall_start_radius = _blanket_end_radius
-    _blanket_rear_wall_end_radius = (
-        _blanket_rear_wall_start_radius + blanket_rear_wall_radial_thickness
-    )
-        
+    _blanket_rear_wall_end_radius = _blanket_rear_wall_start_radius + blanket_rear_wall_radial_thickness
 
     # this is the vertical build sequence, components build on each other
     # in a similar manner to the radial build
@@ -402,9 +390,7 @@ def BallReactor(
     _blanket_end_height = _blanket_start_height + blanket_radial_thickness
 
     _blanket_rear_wall_start_height = _blanket_end_height
-    _blanket_rear_wall_end_height = (
-        _blanket_rear_wall_start_height + blanket_rear_wall_radial_thickness
-    )
+    _blanket_rear_wall_end_height = _blanket_rear_wall_start_height + blanket_rear_wall_radial_thickness
 
     _tf_coil_start_height = _blanket_rear_wall_end_height + divertor_to_tf_gap_vertical_thickness
 
@@ -414,20 +400,19 @@ def BallReactor(
         _tf_coil_start_radius = _blanket_rear_wall_end_radius + rear_blanket_to_tf_gap
         _tf_coil_end_radius = _tf_coil_start_radius + outboard_tf_coil_radial_thickness
 
-
     inboard_tf_coils = _make_inboard_tf_coils()
     uncut_shapes.append(inboard_tf_coils)
     center_column_shield = _make_center_column_shield()
     firstwall, blanket, blanket_rear_wall = _make_blankets_layers()
     divertors = _make_divertor()
-    
-    for divertor in divertors: 
+
+    for divertor in divertors:
         for component in [firstwall, blanket, blanket_rear_wall]:
             component.solid.cut(divertor.solid)
-    
+
         uncut_shapes.append(divertor)
     uncut_shapes += [firstwall, blanket, blanket_rear_wall]
-    
+
     uncut_shapes += _make_tf_coils()
     pf_coils = _make_pf_coils()
 
@@ -441,16 +426,15 @@ def BallReactor(
 
     shapes_and_components = shapes_and_components
 
-    colors=[(0.5, 0.5, 0.5)]
+    colors = [(0.5, 0.5, 0.5)]
 
-    assembly = cq.Assembly(name='BallReactor')
-    
+    assembly = cq.Assembly(name="BallReactor")
+
     for i, shape in enumerate(shapes_and_components):
         assembly.add(shape.solid, name=str(i))
-    
-    
+
     #     .add(blanket.solid,name='blanket', color=cq.Color(*colors[0]))
-    #     .add(vac_vessel.solid,name='vac_vessel')   
+    #     .add(vac_vessel.solid,name='vac_vessel')
     #     .add(upper_blanket.solid,name='upper_blanket')
     #     .add(lower_blanket.solid,name='lower_blanket')
     #     .add(lower_vac_vessel.solid,name='lower_vac_vessel')
