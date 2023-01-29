@@ -1707,7 +1707,7 @@ SphericalShell
 
    cadquery_object = my_component.solid
 
-   .. automodule:: paramak.parametric_components.spherical_shell
+.. automodule:: paramak.parametric_components.spherical_shell
    :members:
    :show-inheritance:
 
