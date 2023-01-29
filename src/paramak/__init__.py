@@ -45,6 +45,7 @@ from .parametric_shapes.sweep_spline_shape import SweepSplineShape
 from .parametric_shapes.sweep_straight_shape import SweepStraightShape
 from .parametric_shapes.sweep_circle_shape import SweepCircleShape
 
+from .parametric_components.spherical_shell import SphericalShell
 from .parametric_components.circular_port import CircularPort
 from .parametric_components.hexagon_pin import HexagonPin
 
@@ -177,6 +178,7 @@ __all__ = [
     RotateSplineShape,
     RotateStraightShape,
     RotateCircleShape,
+    SphericalShell,
     SweepMixedShape,
     SweepSplineShape,
     SweepStraightShape,
