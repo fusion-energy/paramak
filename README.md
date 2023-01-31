@@ -41,4 +41,6 @@ STP, STL, BRep, HTML and DAGMC h5m.
 
 :point_right: [Docker images](https://github.com/fusion-energy/paramak/pkgs/container/paramak)
 
+:point_right: [Web app](https://xsplot.com)
+
 :point_right: Examples with Neutronics [1](https://github.com/fusion-energy/magnetic_fusion_openmc_dagmc_paramak_example), [2](https://github.com/fusion-energy/inertial_fusion_openmc_dagmc_paramak_example), [3](https://github.com/fusion-energy/neutronics-workshop)
