@@ -122,7 +122,7 @@ def export_solids_to_dagmc_h5m(
         verbose=verbose,
         volume_atol=volume_atol,
         center_atol=center_atol,
-        bounding_box_atol=bounding_box_atol
+        bounding_box_atol=bounding_box_atol,
     )
 
     return filename
