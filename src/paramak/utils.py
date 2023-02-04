@@ -91,6 +91,22 @@ def export_solids_to_dagmc_h5m(
     bounding_box_atol: float = 0.000001,
     tags: List[str] = None,
 ):
+    """Exports a solid(s) to a DAGMC model
+
+    Args:
+        solids (_type_): _description_
+        filename (str, optional): _description_. Defaults to "dagmc.h5m".
+        min_mesh_size (float, optional): _description_. Defaults to 5.
+        max_mesh_size (float, optional): _description_. Defaults to 20.
+        verbose (bool, optional): _description_. Defaults to True.
+        volume_atol (float, optional): _description_. Defaults to 0.000001.
+        center_atol (float, optional): _description_. Defaults to 0.000001.
+        bounding_box_atol (float, optional): _description_. Defaults to 0.000001.
+        tags (List[str], optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
 
     # a local import is used here as these packages need Moab to work
     from cad_to_dagmc import CadToDagmc
@@ -103,7 +119,10 @@ def export_solids_to_dagmc_h5m(
         max_mesh_size=max_mesh_size,
         min_mesh_size=min_mesh_size,
         filename=filename,
-        verbose=verbose
+        verbose=verbose,
+        volume_atol=volume_atol,
+        center_atol=center_atol,
+        bounding_box_atol=bounding_box_atol
     )
 
     return filename
