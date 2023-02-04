@@ -99,7 +99,12 @@ def export_solids_to_dagmc_h5m(
 
     my_model.add_cadquery_object(object=solids, material_tags=tags)
 
-    my_model.export_dagmc_h5m_file(max_mesh_size=max_mesh_size, min_mesh_size=min_mesh_size, filename=filename)
+    my_model.export_dagmc_h5m_file(
+        max_mesh_size=max_mesh_size,
+        min_mesh_size=min_mesh_size,
+        filename=filename,
+        verbose=verbose
+    )
 
     return filename
 
