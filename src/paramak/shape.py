@@ -774,8 +774,8 @@ class Shape:
     ) -> str:
         """Export a DAGMC compatible h5m file for use in neutronics simulations.
         This method makes use of Gmsh to create a surface mesh of the geometry.
-        MOAB is used to convert the meshed geometry into a h5m with parts tagged by
-        using the reactor.shape_and_components.name properties. You will need
+        MOAB is used to convert the meshed geometry into a h5m with parts tagged
+        by using the reactor.shape_and_components.name properties. You will need
         Gmsh installed and MOAB installed to use this function. Acceptable
         tolerances may need increasing to match reactor parts with the parts
         in the intermediate Brep file produced during the process
@@ -798,6 +798,8 @@ class Shape:
                 If left as None then the Shape.name will be used. This allows
                 the DAGMC geometry created to be compatible with a wider range
                 of neutronics codes that have specific DAGMC tag requirements.
+            verbose: Print out additional information on the process. Useful
+                for debugging.
         """
 
         if tags is None:
