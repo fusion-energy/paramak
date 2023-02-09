@@ -203,6 +203,8 @@ class Reactor:
                 If left as None then the Shape.name will be used. This allows
                 the DAGMC geometry created to be compatible with a wider range
                 of neutronics codes that have specific DAGMC tag requirements.
+            verbose: Print out additional information on the process. Useful
+                for debugging.
         """
 
         shapes_to_convert = []
