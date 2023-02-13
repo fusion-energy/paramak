@@ -1,7 +1,8 @@
 from typing import Optional, Tuple
 
-from paramak import RotateMixedShape
+from paramak import RotateMixedShape, Shape
 from paramak.utils import patch_workplane
+import cadquery as cq
 
 patch_workplane()
 
@@ -93,3 +94,21 @@ class SphericalShell(RotateMixedShape):
                 (0, self.inner_radius, "circle"),
                 (self.inner_radius, 0, "circle"),
             ]
+
+    def create_solid(self):
+        """Creates a extruded 3d solid using points with circular edges.
+
+        Returns:
+           A CadQuery solid: A 3D solid volume
+        """
+
+        if self.rotation_angle == 360.0:
+            "The prevents a 360 sphere from getting additional surfaces from the rotation"
+            self.solid = (
+                cq.Workplane()
+                .sphere(self.inner_radius + self.shell_thickness)
+                .cut(cq.Workplane().sphere(self.inner_radius))
+            )
+            return self
+        else:
+            return super().create_solid()
