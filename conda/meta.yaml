@@ -22,7 +22,7 @@ requirements:
     - mpmath
     - plasmaboundaries >=0.1.8
     - plotly
-    - cad_to_dagmc >=0.1.2 # [not win]
+    - cad_to_dagmc >=0.2.0 # [not win]
     - moab * nompi_tempest_*
     # - jupyter-cadquery not available on conda
 
