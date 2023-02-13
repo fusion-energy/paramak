@@ -223,11 +223,11 @@ def BallReactor(
             )
 
         if divertor_position == "upper":
-            return [(_divertor_upper, 'divertor_upper')]
+            return [(_divertor_upper, "divertor_upper")]
         if divertor_position == "lower":
-            return [(_divertor_lower, 'divertor_lower')]
+            return [(_divertor_lower, "divertor_lower")]
         if divertor_position == "both":
-            return [(_divertor_lower, 'divertor_lower'),(_divertor_upper, 'divertor_upper')]
+            return [(_divertor_lower, "divertor_lower"), (_divertor_upper, "divertor_upper")]
 
     def _make_pf_coils():
 
@@ -262,7 +262,7 @@ def BallReactor(
                     rotation_angle=rotation_angle,
                     name=f"pf_coil_{counter}",
                 )
-                _pf_coils.append((pf_coil, 'pf_coils'))
+                _pf_coils.append((pf_coil, "pf_coils"))
 
             if pf_coil_case_thicknesses == []:
                 return _pf_coils
@@ -278,7 +278,7 @@ def BallReactor(
                         rotation_angle=rotation_angle,
                         name=f"pf_coil_case_{counter}",
                     )
-                    _pf_coils_casing.append((pf_coils_casing, 'pf_coils_casing'))
+                    _pf_coils_casing.append((pf_coils_casing, "pf_coils_casing"))
             else:
                 raise ValueError(
                     "pf_coil_case_thicknesses is not the same length as the other "
@@ -322,7 +322,7 @@ def BallReactor(
                 name="tf_coil",
                 rotation_angle=rotation_angle,
             )
-            comp = (_tf_coil, 'tf_coil')
+            comp = (_tf_coil, "tf_coil")
         return comp
 
     uncut_shapes = []
@@ -349,7 +349,7 @@ def BallReactor(
         rotation_angle=rotation_angle,
     )
 
-    uncut_shapes.append((plasma, 'plasma'))
+    uncut_shapes.append((plasma, "plasma"))
 
     # this is the radial build sequence, where one component stops and
     # another starts
@@ -401,7 +401,7 @@ def BallReactor(
         _tf_coil_end_radius = _tf_coil_start_radius + outboard_tf_coil_radial_thickness
 
     inboard_tf_coils = _make_inboard_tf_coils()
-    uncut_shapes.append((inboard_tf_coils, 'inboard_tf_coils'))
+    uncut_shapes.append((inboard_tf_coils, "inboard_tf_coils"))
     center_column_shield = _make_center_column_shield()
     firstwall, blanket, blanket_rear_wall = _make_blankets_layers()
     divertors = _make_divertor()
@@ -412,14 +412,14 @@ def BallReactor(
 
         uncut_shapes.append((divertor, name))
 
-    uncut_shapes.append((firstwall, 'firstwall'))
-    uncut_shapes.append((blanket, 'blanket'))
-    uncut_shapes.append((blanket_rear_wall, 'blanket_rear_wall'))
+    uncut_shapes.append((firstwall, "firstwall"))
+    uncut_shapes.append((blanket, "blanket"))
+    uncut_shapes.append((blanket_rear_wall, "blanket_rear_wall"))
 
     tf_coils = _make_tf_coils()
     if tf_coils:
-        uncut_shapes.append((tf_coils, 'tf_coils'))
-        
+        uncut_shapes.append((tf_coils, "tf_coils"))
+
     pf_coils = _make_pf_coils()
 
     if pf_coils is None:
