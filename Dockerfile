@@ -46,18 +46,18 @@ RUN apt-get --allow-releaseinfo-change update
 RUN apt-get update -y && \
     apt-get upgrade -y
 
-# RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
-#                        apt-get clean
+RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
+                       apt-get clean
 
-# # Installing CadQuery and Gmsh
-# RUN echo installing CadQuery version $cq_version && \
-#     conda install -c conda-forge -c python python=3.8 && \
-#     conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
-#     conda install -c conda-forge moab && \
-#     conda install -c conda-forge gmsh && \
-#     conda install -c conda-forge python-gmsh && \
-#     pip install jupyter-cadquery && \
-#     conda clean -afy
+# Installing CadQuery and Gmsh
+RUN echo installing CadQuery version $cq_version && \
+    conda install -c conda-forge -c python python=3.8 && \
+    conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
+    conda install -c conda-forge moab && \
+    conda install -c conda-forge gmsh && \
+    conda install -c conda-forge python-gmsh && \
+    pip install jupyter-cadquery && \
+    conda clean -afy
 
 
 RUN mkdir /home/paramak
