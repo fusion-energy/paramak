@@ -60,7 +60,7 @@ class SubmersionTokamak(paramak.Reactor):
         inboard_tf_leg_radial_thickness: float = 30,
         center_column_shield_radial_thickness: float = 30,
         inboard_blanket_radial_thickness: float = 80,
-        firstwall_radial_thickness: Union[float, list[float]] = 20,
+        firstwall_radial_thickness: Union[float, List[float]] = 20,
         inner_plasma_gap_radial_thickness: float = 50,
         plasma_radial_thickness: float = 200,
         divertor_radial_thickness: float = 80,
