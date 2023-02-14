@@ -21,8 +21,8 @@
 # docker run -p 8050:8050 paramak_gui
 
 
-FROM continuumio/miniconda3:4.9.2 as dependencies
-# 
+FROM continuumio/miniconda3:4.12.0 as dependencies
+#
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=master
 
@@ -49,8 +49,6 @@ RUN echo installing CadQuery version $cq_version && \
 
 FROM dependencies as install
 
-ARG paramak_version=develop
-
 RUN mkdir paramak
 COPY src paramak/src/
 COPY pyproject.toml paramak/pyproject.toml
@@ -58,8 +56,11 @@ COPY pyproject.toml paramak/pyproject.toml
 COPY README.md paramak/README.md
 COPY LICENSE.txt paramak/LICENSE.txt
 
+ARG paramak_version=1.0.0
+# SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK is used to allow versioning
+# https://github.com/pypa/setuptools_scm/blob/main/README.rst#usage-from-dockerZ
 RUN cd paramak && \
-    SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[gui]
+    SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[tests,docs]
 
 ENV PORT 8501
 
