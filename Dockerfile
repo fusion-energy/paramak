@@ -46,18 +46,18 @@ RUN apt-get --allow-releaseinfo-change update
 RUN apt-get update -y && \
     apt-get upgrade -y
 
-RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
-                       apt-get clean
+# RUN apt-get install -y libgl1-mesa-glx libgl1-mesa-dev libglu1-mesa-dev  freeglut3-dev libosmesa6 libosmesa6-dev  libgles2-mesa-dev curl imagemagick && \
+#                        apt-get clean
 
-# Installing CadQuery and Gmsh
-RUN echo installing CadQuery version $cq_version && \
-    conda install -c conda-forge -c python python=3.8 && \
-    conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
-    conda install -c conda-forge moab && \
-    conda install -c conda-forge gmsh && \
-    conda install -c conda-forge python-gmsh && \
-    pip install jupyter-cadquery && \
-    conda clean -afy
+# # Installing CadQuery and Gmsh
+# RUN echo installing CadQuery version $cq_version && \
+#     conda install -c conda-forge -c python python=3.8 && \
+#     conda install -c conda-forge -c cadquery cadquery="$cq_version" && \
+#     conda install -c conda-forge moab && \
+#     conda install -c conda-forge gmsh && \
+#     conda install -c conda-forge python-gmsh && \
+#     pip install jupyter-cadquery && \
+#     conda clean -afy
 
 
 RUN mkdir /home/paramak
@@ -66,8 +66,6 @@ WORKDIR /home/paramak
 
 
 FROM dependencies as final
-
-ARG paramak_version=develop
 
 COPY run_tests.sh run_tests.sh
 COPY src src/
@@ -78,7 +76,9 @@ COPY pyproject.toml pyproject.toml
 COPY README.md README.md
 COPY LICENSE.txt LICENSE.txt
 
-
-RUN pip install .[tests,docs]
+ARG paramak_version=1.0.0
+# SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK is used to allow versioning
+# https://github.com/pypa/setuptools_scm/blob/main/README.rst#usage-from-docker
+RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[tests,docs]
 
 CMD ["jupyter", "lab", "--notebook-dir=/home/paramak/examples", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
