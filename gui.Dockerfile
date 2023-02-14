@@ -22,7 +22,7 @@
 
 
 FROM continuumio/miniconda3:4.9.2 as dependencies
-# 
+#
 # By default this Dockerfile builds with the latest release of CadQuery 2
 ARG cq_version=master
 
@@ -59,7 +59,7 @@ COPY README.md paramak/README.md
 COPY LICENSE.txt paramak/LICENSE.txt
 
 RUN cd paramak && \
-    SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[gui]
+    pip install .[gui]
 
 ENV PORT 8501
 

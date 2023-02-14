@@ -79,6 +79,6 @@ COPY README.md README.md
 COPY LICENSE.txt LICENSE.txt
 
 
-RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PARAMAK=${paramak_version} pip install .[tests,docs]
+RUN pip install .[tests,docs]
 
 CMD ["jupyter", "lab", "--notebook-dir=/home/paramak/examples", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
