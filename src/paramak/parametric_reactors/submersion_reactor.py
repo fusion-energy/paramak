@@ -469,9 +469,7 @@ def SubmersionTokamak(
     _inboard_tf_coils_end_radius = _inboard_tf_coils_start_radius + inboard_tf_leg_radial_thickness
 
     _center_column_shield_start_radius = _inboard_tf_coils_end_radius
-    _center_column_shield_end_radius = (
-        _center_column_shield_start_radius + center_column_shield_radial_thickness
-    )
+    _center_column_shield_end_radius = _center_column_shield_start_radius + center_column_shield_radial_thickness
 
     _inboard_blanket_start_radius = _center_column_shield_end_radius
     _inboard_blanket_end_radius = _inboard_blanket_start_radius + inboard_blanket_radial_thickness
@@ -495,9 +493,7 @@ def SubmersionTokamak(
     _outboard_blanket_end_radius = _outboard_blanket_start_radius + outboard_blanket_radial_thickness
 
     _blanket_rear_wall_start_radius = _outboard_blanket_end_radius
-    _blanket_rear_wall_end_radius = (
-        _blanket_rear_wall_start_radius + blanket_rear_wall_radial_thickness
-    )
+    _blanket_rear_wall_end_radius = _blanket_rear_wall_start_radius + blanket_rear_wall_radial_thickness
 
     _tf_info_provided = False
     if (
@@ -507,17 +503,13 @@ def SubmersionTokamak(
     ):
         _tf_info_provided = True
         _outboard_tf_coil_start_radius = _blanket_rear_wall_end_radius + rear_blanket_to_tf_gap
-        _outboard_tf_coil_end_radius = (
-            _outboard_tf_coil_start_radius + outboard_tf_coil_radial_thickness
-        )
+        _outboard_tf_coil_end_radius = _outboard_tf_coil_start_radius + outboard_tf_coil_radial_thickness
 
     _divertor_start_radius = _plasma.high_point[0] - 0.5 * divertor_radial_thickness
     _divertor_end_radius = _plasma.high_point[0] + 0.5 * divertor_radial_thickness
 
     _support_start_radius = _plasma.high_point[0] - 0.5 * support_radial_thickness
     _support_end_radius = _plasma.high_point[0] + 0.5 * support_radial_thickness
-
-
 
     # this is the vertical build sequence, componets build on each other in
     # a similar manner to the radial build
@@ -526,9 +518,7 @@ def SubmersionTokamak(
     _plasma_end_height = _plasma.high_point[1]
 
     _plasma_to_divertor_gap_start_height = _plasma_end_height
-    _plasma_to_divertor_gap_end_height = (
-        _plasma_to_divertor_gap_start_height + outer_plasma_gap_radial_thickness
-    )
+    _plasma_to_divertor_gap_end_height = _plasma_to_divertor_gap_start_height + outer_plasma_gap_radial_thickness
 
     # the firstwall is cut by the divertor but uses the same control points
     _firstwall_start_height = _plasma_to_divertor_gap_end_height
@@ -538,14 +528,11 @@ def SubmersionTokamak(
     _blanket_end_height = _blanket_start_height + outboard_blanket_radial_thickness
 
     _blanket_rear_wall_start_height = _blanket_end_height
-    _blanket_rear_wall_end_height = (
-        _blanket_rear_wall_start_height + blanket_rear_wall_radial_thickness
-    )
+    _blanket_rear_wall_end_height = _blanket_rear_wall_start_height + blanket_rear_wall_radial_thickness
 
     if _tf_info_provided:
         _outboard_tf_coils_vertical_height = _blanket_rear_wall_end_height * 1.5
         _outboard_tf_coils_horizontal_length = _blanket_rear_wall_end_radius * 0.75
-
 
     uncut_shapes.append(_make_center_column_shield())
     uncut_shapes.append(_make_firstwall())
@@ -566,4 +553,3 @@ def SubmersionTokamak(
         shapes_and_components = pf_coils + uncut_shapes
 
     shapes_and_components = shapes_and_components
-
