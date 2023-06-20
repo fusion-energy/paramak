@@ -716,6 +716,19 @@ Cutting Tools
 CuttingWedge()
 ^^^^^^^^^^^^^^
 
+.. cadquery::
+   :select: cadquery_object
+   :gridsize: 0
+
+   import paramak
+   my_component = paramak.CuttingWedge(
+      height=10.0,
+      radius=10.0,
+      rotation_angle=270
+   )
+
+   cadquery_object = my_component.solid
+
 |CuttingWedgestp| |CuttingWedgesvg|
 
 .. |CuttingWedgestp| image:: https://user-images.githubusercontent.com/8583900/94726081-a678c180-0354-11eb-93f2-98d4b4a6839e.png
