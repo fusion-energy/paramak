@@ -100,12 +100,12 @@ Then activate the new environment.
 
    conda activate paramak_env
 
-
-Then install the CadQuery.
+Then pip install the Paramak.
 
 .. code-block:: bash
 
-   conda install -c cadquery -c conda-forge cadquery=master
+   pip install paramak
+
 
 If you want to make use of the prototype export_dagmc_h5m() method the you will need
 MOAB and PyMoab for the export_dagmc_h5m() feature to work.
@@ -115,13 +115,8 @@ needed then this stage can be skipped.
 
 .. code-block:: bash
 
-   conda install -c fusion-energy -c conda-forge cad-to-dagmc
+   conda install -c conda-forge moab
 
-Then pip install the Paramak.
-
-.. code-block:: bash
-
-   pip install paramak
 
 Now you should be ready to import paramak from your new python environment.
 
