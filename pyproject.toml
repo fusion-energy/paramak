@@ -28,7 +28,7 @@ dependencies = [
     "numpy>=1.21.1",
     "matplotlib>=3.4.2",
     "plasmaboundaries>=0.1.8",
-    "jupyter-client<7",
+    "jupyter-client",
     "jupyter-cadquery>=3.2.0",
     "cad_to_dagmc>=0.1.2",
     "setuptools_scm[toml]>=7.0.5"
