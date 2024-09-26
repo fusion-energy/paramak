@@ -1,0 +1,20 @@
+name: paramak-dev-environment
+
+dependencies:
+  - openmc=0.15.0=dagmc*
+  - ocp=7.7.2.1
+  - cadquery=2.4.0
+  - gmsh
+  - python-gmsh
+  - numpy<=1.26.4
+  - pytest
+  - pip
+  - mpmath
+  - sympy
+  - cad_to_dagmc
+  - sphinx
+  - pydata-sphinx-theme
+  - pip:
+    - sphinx_autodoc_typehints
+    - openmc_data_downloader
+    - sphinxcadquery
