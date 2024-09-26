@@ -55,7 +55,7 @@ jobs:
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build
+          publish_dir: _build/docs
           # with next rlease of actions-gh-pages
           # issue to allow force_orphan will be fixed
           # https://github.com/peaceiris/actions-gh-pages/issues/455
