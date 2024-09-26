@@ -48,10 +48,6 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 )
 my_reactor.save(f"spherical_tokamak_from_plasma_with_pf_magnets_and_divertor.step")
 
-# needed to downgrade pip with ... python -m pip  install pip==24.0
-# from jupyter_cadquery import show
-# view = show(my_reactor)
-# view.export_html('3d.html')
 
 
 # my_model = CadToDagmc()

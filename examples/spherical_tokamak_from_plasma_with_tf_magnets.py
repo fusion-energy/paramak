@@ -34,17 +34,6 @@ result = paramak.spherical_tokamak_from_plasma(
 
 result.save(f"spherical_tokamak_minimal.step")
 
-# visualization options
-#
-# pip install jupyter_cadquery
-# needed to downgrade pip with ... python -m pip  install pip==24.0
-# from jupyter_cadquery import show
-# view = show(result)
-# view.export_html("3d.html")
-#
-# from cadquery.vis import show
-# show(result)
-
 my_model = CadToDagmc()
 material_tags = ["mat1"] * 7
 my_model.add_cadquery_object(cadquery_object=result, material_tags=material_tags)

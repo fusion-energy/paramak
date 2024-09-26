@@ -35,12 +35,6 @@ my_reactor = paramak.spherical_tokamak(
 )
 my_reactor.save(f"spherical_tokamak_minimal.step")
 
-# needed to downgrade pip with ... python -m pip  install pip==24.0
-from jupyter_cadquery import show
-
-view = show(my_reactor)
-view.export_html("3d.html")
-
 
 my_model = CadToDagmc()
 material_tags = ["mat1"] * 6

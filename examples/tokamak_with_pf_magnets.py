@@ -54,9 +54,6 @@ my_reactor = paramak.tokamak(
     add_extra_cut_shapes=add_extra_cut_shapes,
 )
 
-from cadquery.vis import show
-show(my_reactor)
-
 my_reactor.save(f"tokamak_minimal.step")
 print(f"Saved as tokamak_minimal.step")
 

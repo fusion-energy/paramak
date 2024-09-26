@@ -28,11 +28,6 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 my_reactor.save("spherical_tokamak_from_plasma_with_divertor.step")
 print('written spherical_tokamak_from_plasma_with_divertor.step')
 
-# needed to downgrade pip with ... python -m pip  install pip==24.0
-# from jupyter_cadquery import show
-# view = show(my_reactor)
-# view.export_html("3d.html")
-
 
 # my_model = CadToDagmc()
 # material_tags = ["mat1"] * 21 # the two divertors split the 3 blanket layers into 9 and the magnets also splt the blanket.
