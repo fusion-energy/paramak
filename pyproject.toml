@@ -18,6 +18,9 @@ authors = [
 license = {file = "LICENSE.txt"}
 requires-python = ">=3.8"
 keywords = ["python", "geometry", "reactor", "model", "cad", "fusion", "parametric", "dagmc", "openmc"]
+dependencies = [
+    "cadquery"
+]
 
 [project.urls]
 "Homepage" = "https://github.com/fusion-energy/paramak"
