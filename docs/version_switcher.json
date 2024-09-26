@@ -1,0 +1,17 @@
+[
+    {
+        "name": "dev",
+        "version": "dev",
+        "url": "https://fusion-energy.github.io/paramak2/dev"
+    },
+    {
+        "name": "0.9.1",
+        "version": "0.9.1",
+        "url": "https://fusion-energy.github.io/paramak2/0.9.1"
+    },
+    {
+        "name": "0.9.0",
+        "version": "0.9.0",
+        "url": "https://fusion-energy.github.io/paramak2/0.9.0"
+    }
+]
