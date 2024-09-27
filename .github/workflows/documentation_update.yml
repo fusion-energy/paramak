@@ -44,18 +44,18 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           sphinx-build docs _build/${{ github.ref_name }}
-          sphinx-build docs _build
+          sphinx-build docs _build/docs
       - name: Sphinx build dev version
         if: (github.event_name == 'push' || github.event_name == 'pull_request') && !startsWith(github.ref, 'refs/tags/')
         run: |
           sphinx-build docs _build/dev
-      - name: Deploy to GitHub Pages
-        if: github.event_name == 'push'
+      - name: Deploy docs to GitHub Pages
+        if: github.event_name == 'push' || startsWith(github.ref, 'refs/tags/')
         uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build/docs
+          publish_dir: _build
           # with next rlease of actions-gh-pages
           # issue to allow force_orphan will be fixed
           # https://github.com/peaceiris/actions-gh-pages/issues/455
