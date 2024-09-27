@@ -44,10 +44,14 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           sphinx-build docs _build/${{ github.ref_name }}
-          sphinx-build docs _build/docs
+          rm -rf _build/stable
+          mkdir _build/stable
+          sphinx-build docs _build/stable
       - name: Sphinx build dev version
         if: (github.event_name == 'push' || github.event_name == 'pull_request') && !startsWith(github.ref, 'refs/tags/')
         run: |
+          rm -rf _build/dev
+          mkdir _build/dev
           sphinx-build docs _build/dev
       - name: Deploy docs to GitHub Pages
         if: github.event_name == 'push' || startsWith(github.ref, 'refs/tags/')
