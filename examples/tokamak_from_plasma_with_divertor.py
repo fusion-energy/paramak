@@ -1,9 +1,9 @@
-from cad_to_dagmc import CadToDagmc
+
 from example_util_functions import transport_particles_on_h5m_geometry
 
 import paramak
 
-my_reactor = paramak.tokamak(
+my_reactor = paramak.tokamak_from_plasma(
     radial_builds=[
         [
             (paramak.LayerType.GAP, 10),
@@ -28,6 +28,7 @@ my_reactor = paramak.tokamak(
 my_reactor.save(f"tokamak_with_divertor.step")
 print(f"Saved as tokamak_with_divertor.step")
 
+# from cad_to_dagmc import CadToDagmc
 # my_model = CadToDagmc()
 # material_tags = ["mat1"] * 6  # as inner and outer layers are one solid there are only 6 solids in model
 # my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)
