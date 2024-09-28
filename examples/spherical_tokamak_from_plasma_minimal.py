@@ -9,14 +9,14 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
     radial_builds=[
         [
             (paramak.LayerType.GAP, 10),
-            (LayerType.SOLID, 50),
-            (LayerType.SOLID, 15),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
             (paramak.LayerType.GAP, 50),
             (paramak.LayerType.PLASMA, 300),
             (paramak.LayerType.GAP, 60),
-            (LayerType.SOLID, 15),
-            (LayerType.SOLID, 60),
-            (LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
         ]
     ],
     elongation=2,
