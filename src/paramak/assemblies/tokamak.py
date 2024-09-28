@@ -2,7 +2,7 @@ from typing import Optional, Sequence, Tuple, Union
 
 import cadquery as cq
 
-from ..utils import build_divertor_modify_blanket, extract_radial_builds, get_plasma_index, sum_after_plasma
+from ..utils import build_divertor_modify_blanket, extract_radial_builds, get_plasma_index, sum_after_plasma, LayerType
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
@@ -15,9 +15,9 @@ def count_cylinder_layers(radial_build):
     found_plasma = False
 
     for item in radial_build:
-        if item[0] == "plasma":
+        if item[0] == LayerType.PLASMA:
             found_plasma = True
-        elif item[0] == "layer":
+        elif item[0] == LayerType.SOLID:
             if not found_plasma:
                 before_plasma += 1
             else:
@@ -34,10 +34,10 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
     number_of_cylinder_layers = count_cylinder_layers(radial_build)
 
     for index, item in enumerate(radial_build):
-        if item[0] == "plasma":
+        if item[0] == LayerType.PLASMA:
             break
 
-        if item[0] == "gap":
+        if item[0] == LayerType.GAP:
             total_sum += item[1]
             continue
 
@@ -62,7 +62,7 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
 def distance_to_plasma(radial_build, index):
     distance = 0
     for item in radial_build[index + 1 :]:
-        if item[0] == "plasma":
+        if item[0] == LayerType.PLASMA:
             break
         distance += item[1]
     return distance
@@ -83,14 +83,14 @@ def create_layers_from_plasma(
     cumulative_thickness_lvb = 0
     for index_delta in range(indexes_from_plamsa_to_end):
 
-        if radial_build[plasma_index_rb + index_delta][0] == "plasma":
+        if radial_build[plasma_index_rb + index_delta][0] == LayerType.PLASMA:
             continue
         outer_layer_thickness = radial_build[plasma_index_rb + index_delta][1]
         inner_layer_thickness = radial_build[plasma_index_rb - index_delta][1]
         upper_layer_thickness = vertical_build[plasma_index_vb - index_delta][1]
         lower_layer_thickness = vertical_build[plasma_index_vb + index_delta][1]
 
-        if radial_build[plasma_index_rb + index_delta][0] == "gap":
+        if radial_build[plasma_index_rb + index_delta][0] == LayerType.GAP:
             cumulative_thickness_orb += outer_layer_thickness
             cumulative_thickness_irb += inner_layer_thickness
             cumulative_thickness_uvb += upper_layer_thickness
@@ -98,7 +98,7 @@ def create_layers_from_plasma(
             continue
 
         # build outer layer
-        if radial_build[plasma_index_rb + index_delta][0] == "layer":
+        if radial_build[plasma_index_rb + index_delta][0] == LayerType.SOLID:
             outer_layer = blanket_from_plasma(
                 minor_radius=minor_radius,
                 major_radius=major_radius,
@@ -182,7 +182,7 @@ def tokamak_from_plasma(
 
     plasma_height = 2 * minor_radius * elongation
     # slice opperation reverses the list and removes the last value to avoid two plasmas
-    vertical_build = upper_vertical_build[::-1][:-1] + [("plasma", plasma_height)] + upper_vertical_build[1:]
+    vertical_build = upper_vertical_build[::-1][:-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build[1:]
 
     return tokamak(
         radial_builds=radial_builds,

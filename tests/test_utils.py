@@ -8,46 +8,47 @@ from paramak.utils import (
     sum_up_to_plasma,
     validate_divertor_radial_build,
     validate_plasma_radial_build,
+    LayerType
 )
 
 
 def test_validate_divertor_radial_build_valid():
-    radial_build = [("gap", 10), ("lower_divertor", 20)]
+    radial_build = [(LayerType.GAP, 10), ("lower_divertor", 20)]
     assert validate_divertor_radial_build(radial_build) is None
 
 
 def test_validate_divertor_radial_build_invalid_length():
-    radial_build = [("gap", 10)]
+    radial_build = [(LayerType.GAP, 10)]
     with pytest.raises(ValidationError, match="should only contain two entries"):
         validate_divertor_radial_build(radial_build)
 
 
 def test_validate_divertor_radial_build_invalid_tuple_length():
-    radial_build = [("gap", 10, 5), ("lower_divertor", 20)]
+    radial_build = [(LayerType.GAP, 10, 5), ("lower_divertor", 20)]
     with pytest.raises(ValidationError, match="should only contain tuples of length 2"):
         validate_divertor_radial_build(radial_build)
 
 
 def test_validate_divertor_radial_build_invalid_second_entry():
-    radial_build = [("gap", 10), ("divertor", 20)]
+    radial_build = [(LayerType.GAP, 10), ("divertor", 20)]
     with pytest.raises(ValidationError, match='should be either "lower_divertor" or "upper_divertor"'):
         validate_divertor_radial_build(radial_build)
 
 
 def test_validate_divertor_radial_build_invalid_first_entry():
-    radial_build = [("layer", 10), ("lower_divertor", 20)]
-    with pytest.raises(ValidationError, match='should be a "gap"'):
+    radial_build = [(LayerType.SOLID, 10), ("lower_divertor", 20)]
+    with pytest.raises(ValidationError, match='should be a LayerType.GAP'):
         validate_divertor_radial_build(radial_build)
 
 
 def test_validate_divertor_radial_build_non_positive_thickness():
-    radial_build = [("gap", -10), ("lower_divertor", 20)]
+    radial_build = [(LayerType.GAP, -10), ("lower_divertor", 20)]
     with pytest.raises(ValidationError, match="should both be positive values"):
         validate_divertor_radial_build(radial_build)
 
 
 def test_validate_divertor_radial_build_invalid_thickness_type():
-    radial_build = [("gap", "10"), ("lower_divertor", 20)]
+    radial_build = [(LayerType.GAP, "10"), ("lower_divertor", 20)]
     with pytest.raises(ValidationError, match="should both be integers or floats"):
         validate_divertor_radial_build(radial_build)
 
@@ -55,43 +56,43 @@ def test_validate_divertor_radial_build_invalid_thickness_type():
 def test_get_plasma_value():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
@@ -101,86 +102,86 @@ def test_get_plasma_value():
 def test_get_plasma_value_not_found():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValueError, match="'plasma' entry not found"):
+    with pytest.raises(ValueError, match="LayerType.PLASMA entry not found"):
         get_plasma_value(radial_build)
 
 
 def test_valid_case():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
@@ -190,176 +191,176 @@ def test_valid_case():
 def test_plasma_not_preceded_by_gap():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="'plasma' entry must be preceded and followed by a 'gap'"):
+    with pytest.raises(ValidationError, match="LayerType.PLASMA entry must be preceded and followed by a LayerType.GAP"):
         validate_plasma_radial_build(radial_build)
 
 
 def test_plasma_not_followed_by_gap():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             5,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="'plasma' entry must be preceded and followed by a 'gap'"):
+    with pytest.raises(ValidationError, match="LayerType.PLASMA entry must be preceded and followed by a LayerType.GAP"):
         validate_plasma_radial_build(radial_build)
 
 
 def test_missing_plasma():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="'plasma' entry not found or found multiple times"):
+    with pytest.raises(ValidationError, match="LayerType.PLASMA entry not found or found multiple times"):
         validate_plasma_radial_build(radial_build)
 
 
 def test_multiple_plasma():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="Multiple 'plasma' entries found"):
+    with pytest.raises(ValidationError, match="Multiple LayerType.PLASMA entries found"):
         validate_plasma_radial_build(radial_build)
 
 
@@ -370,101 +371,101 @@ def test_first_entry_not_string():
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="Invalid tuple structure at index 0"):
+    with pytest.raises(ValidationError, match="First entry in each radial build Tuple should be a paramak.LayerType"):
         validate_plasma_radial_build(radial_build)
 
 
 def test_second_entry_not_number():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             "50",
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="Invalid tuple structure at index 1"):
+    with pytest.raises(ValidationError, match="Second entry in each radial build Tuple should be a Float"):
         validate_plasma_radial_build(radial_build)
 
 
 def test_invalid_string():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
@@ -472,172 +473,172 @@ def test_invalid_string():
             5,
         ),  # Invalid string
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="Invalid string 'invalid' at index 2"):
+    with pytest.raises(ValidationError, match="First entry in each radial build Tuple should be a paramak.LayerType"):
         validate_plasma_radial_build(radial_build)
 
 
 def test_plasma_first_entry():
     radial_build = [
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="'plasma' entry must have at least one entry before and after it"):
+    with pytest.raises(ValidationError, match="LayerType.PLASMA entry must have at least one entry before and after it"):
         validate_plasma_radial_build(radial_build)
 
 
 def test_plasma_last_entry():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
     ]
-    with pytest.raises(ValidationError, match="'plasma' entry must have at least one entry before and after it"):
+    with pytest.raises(ValidationError, match="LayerType.PLASMA entry must have at least one entry before and after it"):
         validate_plasma_radial_build(radial_build)
 
 
 def test_non_positive_values():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             0,
         ),  # Non-positive value
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
@@ -648,43 +649,43 @@ def test_non_positive_values():
 def test_sum_up_to_plasma_middle():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
@@ -694,43 +695,43 @@ def test_sum_up_to_plasma_middle():
 def test_sum_up_to_plasma_first():
     radial_build = [
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
@@ -740,43 +741,43 @@ def test_sum_up_to_plasma_first():
 def test_sum_up_to_plasma_last():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
     ]
@@ -786,39 +787,39 @@ def test_sum_up_to_plasma_last():
 def test_sum_up_to_plasma_not_present():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             5,
         ),
         (
-            "gap",
+            LayerType.GAP,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
@@ -833,43 +834,43 @@ def test_sum_up_to_plasma_empty():
 def test_sum_up_to_plasma_multiple_entries():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             20,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             30,
         ),
         (
-            "gap",
+            LayerType.GAP,
             40,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
@@ -879,125 +880,125 @@ def test_sum_up_to_plasma_multiple_entries():
 def test_get_gap_after_plasma_not_followed_by_gap():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             5,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValueError, match="'plasma' entry is not followed by a 'gap'"):
+    with pytest.raises(ValueError, match="LayerType.PLASMA entry is not followed by a 'gap'"):
         get_gap_after_plasma(radial_build)
 
 
 def test_get_gap_after_plasma_not_found():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             5,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValueError, match="'plasma' entry not found"):
+    with pytest.raises(ValueError, match="LayerType.PLASMA entry not found"):
         get_gap_after_plasma(radial_build)
 
 
 def test_sum_after_gap_following_plasma():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             5,
         ),
         (
-            "plasma",
+            LayerType.PLASMA,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
@@ -1007,41 +1008,41 @@ def test_sum_after_gap_following_plasma():
 def test_sum_after_gap_following_plasma_not_found():
     radial_build = [
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             5,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             50,
         ),
         (
-            "gap",
+            LayerType.GAP,
             60,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "layer",
+            LayerType.SOLID,
             2,
         ),
         (
-            "gap",
+            LayerType.GAP,
             10,
         ),
     ]
-    with pytest.raises(ValueError, match="'plasma' entry not found"):
+    with pytest.raises(ValueError, match="LayerType.PLASMA entry not found"):
         sum_after_gap_following_plasma(radial_build)

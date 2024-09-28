@@ -11,6 +11,7 @@ from ..utils import (
     sum_up_to_gap_before_plasma,
     sum_up_to_plasma,
     sum_before_after_plasma,
+    LayerType
 )
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
@@ -33,7 +34,7 @@ def create_blanket_layers_after_plasma(
         lower_thicknees = vertical_build[plasma_index_vertical - 1 - i][1]
         radial_thickness = item[1]
 
-        if item[0] == "gap":
+        if item[0] == LayerType.GAP:
             cumulative_thickness_rb += radial_thickness
             cumulative_thickness_uvb += upper_thicknees
             cumulative_thickness_lvb += lower_thicknees
@@ -80,11 +81,11 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
     center_column_shield_height = sum([item[1] for item in vertical_build])
 
     for index, item in enumerate(radial_build):
-        if item[0] == "plasma":
+        if item[0] == LayerType.PLASMA:
             break
-        if item[0] == "gap" and radial_build[index + 1][0] == "plasma":
+        if item[0] == LayerType.GAP and radial_build[index + 1][0] == LayerType.PLASMA:
             break
-        if item[0] == "gap":
+        if item[0] == LayerType.GAP:
             total_sum += item[1]
             continue
 
@@ -142,7 +143,7 @@ def spherical_tokamak_from_plasma(
 
     plasma_height = 2 * minor_radius * elongation
     # slice opperation reverses the list and removes the last value to avoid two plasmas
-    vertical_build = upper_vertical_build[::-1][:-1] + [("plasma", plasma_height)] + upper_vertical_build[1:]
+    vertical_build = upper_vertical_build[::-1][:-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build[1:]
 
     return spherical_tokamak(
         radial_builds=radial_builds,
