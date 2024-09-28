@@ -33,9 +33,6 @@ my_reactor = paramak.tokamak(
     rotation_angle=180,
 )
 
-from cadquery.vis import show
-show(my_reactor)
-
 my_reactor.save(f"tokamak_minimal.step")
 print(f"Saved as tokamak_minimal.step")
 
