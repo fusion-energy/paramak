@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Usage &#8212; Paramak 0.1.dev1+gb7bb30f documentation</title>
+    <title>Usage &#8212; Paramak 0.1.dev1+g2540637 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=9e87c7fa"></script>
+    <script src="_static/documentation_options.js?v=6e59c42d"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/sphinxcadquerystatic/three.js"></script>
@@ -413,13 +413,9 @@ document.write(`
   <section id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
 <p>There are two main reactors to choose from, Tokamak and Spherical Tokamak.
-These can be built with:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>A radial and vertical build</p></li>
-<li><p>A radial build and plasma elongation.</p></li>
-</ul>
-</div></blockquote>
+These can be built with:
+- A radial and vertical build
+- A radial build and plasma elongation.</p>
 <p>The former gives the user more control of the size of components allowing reactor blankets to vary both radially and vertically.
 The later allows reactors to be built with a minimal number of parameters.
 In all cases it is possible to add additional components such as divertors, poloidal and toroidal magnets and any self made geometry as a CadQuery Workplane.
@@ -463,18 +459,18 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 </div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">tokamak_from_plasma</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">elongation</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
@@ -501,15 +497,15 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 </div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">elongation</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
@@ -538,29 +534,29 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">tokamak</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">vertical_build</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
     <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
@@ -590,27 +586,27 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
         <span class="p">[</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
         <span class="p">]</span>
     <span class="p">],</span>
     <span class="n">vertical_build</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
     <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
@@ -637,18 +633,18 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 </div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
         <span class="p">[</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
         <span class="p">],</span>
-        <span class="p">[(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">75</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;lower_divertor&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)],</span>  <span class="c1"># this divertor connects to the center column</span>
-        <span class="p">[(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;upper_divertor&quot;</span><span class="p">,</span> <span class="mi">140</span><span class="p">)],</span>  <span class="c1"># this divertor has some blanket between the center colum and itself</span>
+        <span class="p">[(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">75</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;lower_divertor&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)],</span>  <span class="c1"># this divertor connects to the center column</span>
+        <span class="p">[(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;upper_divertor&quot;</span><span class="p">,</span> <span class="mi">140</span><span class="p">)],</span>  <span class="c1"># this divertor has some blanket between the center colum and itself</span>
     <span class="p">],</span>
     <span class="n">elongation</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
@@ -696,15 +692,15 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">elongation</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
@@ -745,15 +741,15 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">elongation</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
     <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
@@ -783,29 +779,29 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">tokamak</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">vertical_build</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">triangularity</span><span class="o">=-</span><span class="mf">0.55</span><span class="p">,</span>
     <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
@@ -834,27 +830,27 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak</span><span class="p">(</span>
     <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
         <span class="p">[</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
         <span class="p">]</span>
     <span class="p">],</span>
     <span class="n">vertical_build</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
     <span class="n">triangularity</span><span class="o">=-</span><span class="mf">0.55</span><span class="p">,</span>

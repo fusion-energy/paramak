@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.spherical_tokamak &#8212; Paramak 0.1.dev1+gb7bb30f documentation</title>
+    <title>paramak.assemblies.spherical_tokamak &#8212; Paramak 0.1.dev1+g2540637 documentation</title>
   
   
   
@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=9e87c7fa"></script>
+    <script src="../../../_static/documentation_options.js?v=6e59c42d"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/sphinxcadquerystatic/three.js"></script>
@@ -413,6 +413,7 @@ document.write(`
     <span class="n">sum_up_to_gap_before_plasma</span><span class="p">,</span>
     <span class="n">sum_up_to_plasma</span><span class="p">,</span>
     <span class="n">sum_before_after_plasma</span><span class="p">,</span>
+    <span class="n">LayerType</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..workplanes.blanket_from_plasma</span> <span class="kn">import</span> <span class="n">blanket_from_plasma</span>
 <span class="kn">from</span> <span class="nn">..workplanes.center_column_shield_cylinder</span> <span class="kn">import</span> <span class="n">center_column_shield_cylinder</span>
@@ -435,7 +436,7 @@ document.write(`
         <span class="n">lower_thicknees</span> <span class="o">=</span> <span class="n">vertical_build</span><span class="p">[</span><span class="n">plasma_index_vertical</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">radial_thickness</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;gap&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">:</span>
             <span class="n">cumulative_thickness_rb</span> <span class="o">+=</span> <span class="n">radial_thickness</span>
             <span class="n">cumulative_thickness_uvb</span> <span class="o">+=</span> <span class="n">upper_thicknees</span>
             <span class="n">cumulative_thickness_lvb</span> <span class="o">+=</span> <span class="n">lower_thicknees</span>
@@ -482,11 +483,11 @@ document.write(`
     <span class="n">center_column_shield_height</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">vertical_build</span><span class="p">])</span>
 
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">radial_build</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;plasma&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">:</span>
             <span class="k">break</span>
-        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;gap&quot;</span> <span class="ow">and</span> <span class="n">radial_build</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;plasma&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span> <span class="ow">and</span> <span class="n">radial_build</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">:</span>
             <span class="k">break</span>
-        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;gap&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">:</span>
             <span class="n">total_sum</span> <span class="o">+=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">continue</span>
 
@@ -546,7 +547,7 @@ document.write(`
 
     <span class="n">plasma_height</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">elongation</span>
     <span class="c1"># slice opperation reverses the list and removes the last value to avoid two plasmas</span>
-    <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">upper_vertical_build</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="n">plasma_height</span><span class="p">)]</span> <span class="o">+</span> <span class="n">upper_vertical_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">upper_vertical_build</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="n">plasma_height</span><span class="p">)]</span> <span class="o">+</span> <span class="n">upper_vertical_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="k">return</span> <span class="n">spherical_tokamak</span><span class="p">(</span>
         <span class="n">radial_builds</span><span class="o">=</span><span class="n">radial_builds</span><span class="p">,</span>
