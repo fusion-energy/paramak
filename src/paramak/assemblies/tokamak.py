@@ -290,45 +290,39 @@ def tokamak_from_vertical_build(
 
 
 def tokamak(
-    radial_builds: Union[Sequence[Sequence[Tuple[str, float]]], Sequence[Tuple[str, float]]],
-    vertical_build: Sequence[Tuple[str, float]],
+    radial_builds: Union[Sequence[Sequence[Tuple[LayerType, float]]], Sequence[Tuple[LayerType, float]]],
+    vertical_build_or_elongation: Union[float, Sequence[Tuple[LayerType, float]]] = 2.0,
     rotation_angle: float = 180.0,
     triangularity: float = 0.55,
-    elongation: float = 2.0,
     add_extra_cut_shapes: Sequence[cq.Workplane]  = [],
 ):
     """
-    Creates a tokamak fusion reactor from a radial build and plasma parameters.
+    Creates tokamak fusion reactor geometry from a radial build, plasma parameters and optional vertical builds and extra components.
 
     Args:
-        radial_builds (Sequence[tuple[str, float]]): A list of tuples containing the radial build of the reactor.
-        vertical_build (Sequence[tuple[str, float]]): A list of tuples containing the vertical build of the reactor.
-        rotation_angle (float, optional): The rotation angle of the plasma. Defaults to 180.0.
-        triangularity (float, optional): The triangularity of the plasma. Defaults to 0.55.
-        elongation (float, optional): The elongation of the plasma. Defaults to 2.0.
-        add_extra_cut_shapes (Sequence, optional): A list of extra shapes to cut the reactor with. Defaults to [].
+        radial_builds: A list of tuples each with a LayerType and a float describing the radial build of the reactor.
+        vertical_build_or_elongation: Either a float describing the elongation of the plasma or a list of tuples each with a LayerType and a float describing the vertical build of the reactor.
+        rotation_angle: The rotation angle of the plasma. Defaults to 180.0.
+        triangularity: The triangularity of the plasma. Defaults to 0.55.
+        add_extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
     """
 
-    if elongation is None and vertical_build is not None:
-        assembly = tokamak_from_vertical_build(
+    if isinstance(vertical_build_or_elongation, float):
+        return tokamak_from_vertical_build(
             radial_builds=radial_builds,
             triangularity=triangularity,
             rotation_angle=rotation_angle,
             add_extra_cut_shapes=add_extra_cut_shapes,
-            vertical_build=vertical_build
+            vertical_build=vertical_build_or_elongation
         )
-    elif elongation is not None and vertical_build is None:
-        assembly = tokamak_from_plasma(
-            radial_builds=radial_builds,
-            triangularity=triangularity,
-            rotation_angle=rotation_angle,
-            add_extra_cut_shapes=add_extra_cut_shapes,
-            elongation=elongation,
-        )
-    else:
-        raise ValueError("Either elongation or vertical_build must be provided but not both")
 
-    return assembly
+    return tokamak_from_plasma(
+        radial_builds=radial_builds,
+        triangularity=triangularity,
+        rotation_angle=rotation_angle,
+        add_extra_cut_shapes=add_extra_cut_shapes,
+        elongation=vertical_build_or_elongation,
+    )
