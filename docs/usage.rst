@@ -38,10 +38,10 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
     view.export_html("3d.html")
 
 
-Tokamak from plasma
--------------------
+Tokamak
+-------
 
-- The tokamak_from_plasma function provides a parametric tokamak shaped reactor.
+- The tokamak function provides a parametric tokamak shaped reactor.
 - This is characterized by a continuous blanket that goes around the inboard and outboard sides of the plasma.
 - This reactor requires few arguments to create as it keeps the vertical build of the blanket layers the same thickness as the radial build.
 
