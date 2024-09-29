@@ -1,6 +1,3 @@
-from cad_to_dagmc import CadToDagmc
-from example_util_functions import transport_particles_on_h5m_geometry
-
 import paramak
 
 add_extra_cut_shapes = []
@@ -24,7 +21,7 @@ for case_thickness, height, width, center_point in zip(
     )
 
 
-my_reactor = paramak.spherical_tokamak_from_plasma(
+my_reactor = paramak.spherical_tokamak(
     radial_builds=[
         (paramak.LayerType.GAP, 10),
         (paramak.LayerType.SOLID, 50),
@@ -43,7 +40,8 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 )
 my_reactor.save(f"spherical_tokamak_from_plasma_with_pf_magnets.step")
 
-
+# from cad_to_dagmc import CadToDagmc
+# from example_util_functions import transport_particles_on_h5m_geometry
 # my_model = CadToDagmc()
 # material_tags = ["mat1"] * 5
 # my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)

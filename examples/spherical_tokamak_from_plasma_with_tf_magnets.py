@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from cad_to_dagmc import CadToDagmc
 from example_util_functions import transport_particles_on_h5m_geometry
 
@@ -14,7 +12,7 @@ tf = paramak.toroidal_field_coil_rectangle(
     azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
 )
 
-result = paramak.spherical_tokamak_from_plasma(
+result = paramak.spherical_tokamak(
     radial_builds=[
         (paramak.LayerType.GAP, 70),
         (paramak.LayerType.SOLID, 10),

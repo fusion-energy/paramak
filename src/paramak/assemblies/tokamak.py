@@ -156,6 +156,7 @@ def create_layers_from_plasma(
 
     return layers
 
+
 def tokamak_from_plasma(
     radial_builds: Union[Sequence[Sequence[Tuple[str, float]]], Sequence[Tuple[str, float]]],
     elongation: float = 2.0,
@@ -184,7 +185,7 @@ def tokamak_from_plasma(
     # slice opperation reverses the list and removes the last value to avoid two plasmas
     vertical_build = upper_vertical_build[::-1][:-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build[1:]
 
-    return tokamak(
+    return tokamak_from_vertical_build(
         radial_builds=radial_builds,
         vertical_build=vertical_build,
         triangularity=triangularity,
@@ -192,7 +193,7 @@ def tokamak_from_plasma(
         add_extra_cut_shapes=add_extra_cut_shapes,
     )
 
-def tokamak(
+def tokamak_from_vertical_build(
     radial_builds: Union[Sequence[Sequence[Tuple[str, float]]], Sequence[Tuple[str, float]]],
     vertical_build: Sequence[Tuple[str, float]],
     triangularity: float = 0.55,
@@ -286,3 +287,48 @@ def tokamak(
     my_assembly.add(plasma, name="plasma")
 
     return my_assembly
+
+
+def tokamak(
+    radial_builds: Union[Sequence[Sequence[Tuple[str, float]]], Sequence[Tuple[str, float]]],
+    vertical_build: Sequence[Tuple[str, float]],
+    rotation_angle: float = 180.0,
+    triangularity: float = 0.55,
+    elongation: float = 2.0,
+    add_extra_cut_shapes: Sequence[cq.Workplane]  = [],
+):
+    """
+    Creates a tokamak fusion reactor from a radial build and plasma parameters.
+
+    Args:
+        radial_builds (Sequence[tuple[str, float]]): A list of tuples containing the radial build of the reactor.
+        vertical_build (Sequence[tuple[str, float]]): A list of tuples containing the vertical build of the reactor.
+        rotation_angle (float, optional): The rotation angle of the plasma. Defaults to 180.0.
+        triangularity (float, optional): The triangularity of the plasma. Defaults to 0.55.
+        elongation (float, optional): The elongation of the plasma. Defaults to 2.0.
+        add_extra_cut_shapes (Sequence, optional): A list of extra shapes to cut the reactor with. Defaults to [].
+
+    Returns:
+        CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
+    """
+
+    if elongation is None and vertical_build is not None:
+        assembly = tokamak_from_vertical_build(
+            radial_builds=radial_builds,
+            triangularity=triangularity,
+            rotation_angle=rotation_angle,
+            add_extra_cut_shapes=add_extra_cut_shapes,
+            vertical_build=vertical_build
+        )
+    elif elongation is not None and vertical_build is None:
+        assembly = tokamak_from_plasma(
+            radial_builds=radial_builds,
+            triangularity=triangularity,
+            rotation_angle=rotation_angle,
+            add_extra_cut_shapes=add_extra_cut_shapes,
+            elongation=elongation,
+        )
+    else:
+        raise ValueError("Either elongation or vertical_build must be provided but not both")
+
+    return assembly

@@ -1,7 +1,7 @@
 from importlib.metadata import version
 
-from .assemblies.spherical_tokamak import spherical_tokamak, spherical_tokamak_from_plasma
-from .assemblies.tokamak import tokamak, tokamak_from_plasma
+from .assemblies.spherical_tokamak import spherical_tokamak
+from .assemblies.tokamak import tokamak
 
 from .workplanes.blanket_constant_thickness_arc_h import blanket_constant_thickness_arc_h
 from .workplanes.blanket_from_plasma import blanket_from_plasma

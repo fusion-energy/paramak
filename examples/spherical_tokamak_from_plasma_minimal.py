@@ -1,11 +1,7 @@
-from pathlib import Path
-
-from cad_to_dagmc import CadToDagmc
-from example_util_functions import transport_particles_on_h5m_geometry
 
 import paramak
 
-my_reactor = paramak.spherical_tokamak_from_plasma(
+my_reactor = paramak.spherical_tokamak(
     radial_builds=[
         [
             (paramak.LayerType.GAP, 10),
@@ -26,7 +22,8 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 my_reactor.save(f"spherical_tokamak_from_plasma_minimal.step")
 
 
-
+# from cad_to_dagmc import CadToDagmc
+# from example_util_functions import transport_particles_on_h5m_geometry
 # my_model = CadToDagmc()
 # material_tags = [
 #     "mat1"
