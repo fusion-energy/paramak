@@ -8,18 +8,18 @@ import paramak
 my_reactor = paramak.spherical_tokamak_from_plasma(
     radial_builds=[
         [
-            ("gap", 10),
-            ("layer", 50),
-            ("layer", 15),
-            ("gap", 50),
-            ("plasma", 300),
-            ("gap", 60),
-            ("layer", 15),
-            ("layer", 60),
-            ("layer", 10),
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
         ],
-        [("gap", 75), ("lower_divertor", 100)],  # this divertor connects to the center column
-        [("gap", 120), ("upper_divertor", 140)],  # this divertor has some blanket between the center colum and itself
+        [(paramak.LayerType.GAP, 75), ("lower_divertor", 100)],  # this divertor connects to the center column
+        [(paramak.LayerType.GAP, 120), ("upper_divertor", 140)],  # this divertor has some blanket between the center colum and itself
     ],
     elongation=2,
     triangularity=0.55,

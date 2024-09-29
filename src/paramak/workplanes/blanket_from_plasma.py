@@ -106,7 +106,6 @@ def find_points(
 
     # assemble
     points = inner_points + outer_points
-    print(overlapping_shape, allow_overlapping_shape)
     if overlapping_shape and allow_overlapping_shape is False:
         msg = "blanket_from_plasma: Some points with negative R coordinate have " "been ignored."
         warnings.warn(msg, category=UserWarning)

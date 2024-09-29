@@ -49,7 +49,7 @@ jobs:
           python examples/spherical_tokamak_from_plasma_with_pf_magnets.py
           python examples/spherical_tokamak_from_plasma_with_tf_magnets.py
           python examples/spherical_tokamak_minimal.py
-          python examples/tokamak_from_plasma_minimal.py
-          python examples/tokamak_minimal.py
           python examples/tokamak_from_plasma_with_divertor.py
+          python examples/tokamak_minimal.py
+          python examples/tokamak_from_plasma_minimal.py
 

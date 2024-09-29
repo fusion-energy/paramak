@@ -15,7 +15,7 @@ from .workplanes.poloidal_field_coil_case import poloidal_field_coil_case
 from .workplanes.toroidal_field_coil_rectangle import toroidal_field_coil_rectangle
 from .workplanes.u_shaped_dome import u_shaped_dome
 
-# from .utils import *
+from .utils import LayerType
 
 __version__ = version("paramak")
 
