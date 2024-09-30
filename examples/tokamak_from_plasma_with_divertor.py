@@ -1,7 +1,21 @@
 
 from example_util_functions import transport_particles_on_h5m_geometry
-
+from paramak.utils import create_wire_workplane_from_points
 import paramak
+from cadquery import vis, Workplane
+
+radial_start = 300
+radial_thickness = 100
+height = 700
+points = [
+    (radial_start, height),
+    (radial_start, 0),
+    (radial_start+radial_thickness, 0),
+    (radial_start+radial_thickness, height),
+]
+points.append(points[0])
+divertor_solid = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
+
 
 my_reactor = paramak.tokamak_from_plasma(
     radial_builds=[
@@ -19,14 +33,16 @@ my_reactor = paramak.tokamak_from_plasma(
             (paramak.LayerType.SOLID, 120),
             (paramak.LayerType.SOLID, 10),
         ],
-        [(paramak.LayerType.GAP, 300), ("lower_divertor", 150)],
+        # [(paramak.LayerType.GAP, 300), ("lower_divertor", 150)],
     ],
     elongation=2,
     triangularity=0.55,
     rotation_angle=180,
+    extra_intersect_shapes=[divertor_solid]
 )
 my_reactor.save(f"tokamak_with_divertor.step")
 print(f"Saved as tokamak_with_divertor.step")
+vis.show(my_reactor)
 
 # from cad_to_dagmc import CadToDagmc
 # my_model = CadToDagmc()

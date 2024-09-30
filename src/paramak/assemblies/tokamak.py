@@ -157,11 +157,12 @@ def create_layers_from_plasma(
     return layers
 
 def tokamak_from_plasma(
-    radial_builds: Union[Sequence[Sequence[Tuple[str, float]]], Sequence[Tuple[str, float]]],
+    radial_builds: Sequence[Tuple[str, float]],
     elongation: float = 2.0,
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
     add_extra_cut_shapes: Sequence[cq.Workplane] = [],
+    extra_intersect_shapes: Sequence[cq.Workplane] = [],
 ):
     
     plasma_radial_build, _ = extract_radial_builds(radial_builds)
@@ -190,6 +191,7 @@ def tokamak_from_plasma(
         triangularity=triangularity,
         rotation_angle=rotation_angle,
         add_extra_cut_shapes=add_extra_cut_shapes,
+        extra_intersect_shapes=extra_intersect_shapes,
     )
 
 def tokamak(
@@ -198,6 +200,7 @@ def tokamak(
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
     add_extra_cut_shapes: Sequence[cq.Workplane]  = [],
+    extra_intersect_shapes: Sequence[cq.Workplane]  = [],
 ):
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
@@ -261,8 +264,21 @@ def tokamak(
             my_assembly.add(entry, name=f"add_extra_cut_shape_{i+1}")
         else:
             raise ValueError(f"add_extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
+    
+    intersect_shapes_to_cut = []
+    if len(extra_intersect_shapes)>0:
+        # make a large comp
+        all_shapes = []
+        for shape in inner_radial_build + blanket_layers:
+            all_shapes.extend(shape[0])
+        reactor_compound = cq.Compound.makeCompound(all_shapes)
 
-    if len(add_extra_cut_shapes) == 0:
+        for i, entry in enumerate(extra_intersect_shapes):
+                reactor_entry_intersection = entry.intersect(reactor_compound)
+                if reactor_entry_intersection.val().Volume() > 0:
+                    intersect_shapes_to_cut.append(reactor_entry_intersection)
+
+    if len(add_extra_cut_shapes) == 0 and len(intersect_shapes_to_cut) == 0:
         for i, entry in enumerate(inner_radial_build):
             my_assembly.add(entry, name=f"inboard_layer_{i+1})")
         for i, entry in enumerate(blanket_layers):
@@ -272,7 +288,7 @@ def tokamak(
     else:
         shapes_and_components = []
         for i, entry in enumerate(inner_radial_build + blanket_layers + divertor_layers):
-            for cutter in add_extra_cut_shapes:
+            for cutter in add_extra_cut_shapes + intersect_shapes_to_cut:
                 entry = entry.cut(cutter)
                 # TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple
                 # for subentry in entry.objects:
