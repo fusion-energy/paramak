@@ -328,6 +328,8 @@ Reactor with divertor(s)
     :width: 100%
     :height: 600px
 
+    from cadquery import Workplane
+
     # makes a rectangle that overlaps the lower blanket under the plasma
     # the intersection of this and the layers will form the lower divertor
     points = [(300, -700), (300, 0), (400, 0), (400, -700)]
@@ -352,6 +354,8 @@ Reactor with divertor(s)
 
 
 .. code-block:: python
+
+    from cadquery import Workplane
 
     # makes a rectangle that overlaps the lower blanket under the plasma
     # the intersection of this and the layers will form the lower divertor
@@ -800,13 +804,12 @@ Tokamak with several customizations
         rotation_angle=180,
         add_extra_cut_shapes=add_extra_cut_shapes,
         extra_intersect_shapes=[divertor_lower]
-    )
-    result.toCompound()
+    ).toCompound()
 
 .. code-block:: python
 
     import paramak
-    from cadquery import vis, Workplane
+    from cadquery import Workplane
 
     # makes a rectangle that overlaps the lower blanket under the plasma
     # the intersection of this and the layers will form the lower divertor
@@ -880,4 +883,4 @@ Tokamak with several customizations
         add_extra_cut_shapes=add_extra_cut_shapes,
         extra_intersect_shapes=[divertor_lower]
     )
-    my_reactor.save(f"tokamak_with_divertor.step")
+    my_reactor.save(f"tokamak_with_customizations.step")
