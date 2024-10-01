@@ -33,7 +33,7 @@ def test_transport_with_magnets(rotation_angle):
         )
 
     my_reactor = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 50),
             (paramak.LayerType.SOLID, 15),
@@ -70,7 +70,7 @@ def test_transport_with_magnets(rotation_angle):
 
 def test_transport_without_magnets():
     reactor = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 50),
             (paramak.LayerType.SOLID, 15),

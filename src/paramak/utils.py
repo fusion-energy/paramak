@@ -178,30 +178,6 @@ def create_divertor_envelope(divertor_radial_build, blanket_height, rotation_ang
     return divertor_solid
 
 
-def build_divertor_modify_blanket(outer_layers, divertor_radial_builds, blanket_rear_wall_end_height, rotation_angle):
-
-    divertor_layers = []
-    for divertor_radial_build in divertor_radial_builds:
-
-        divertor_solid = create_divertor_envelope(divertor_radial_build, blanket_rear_wall_end_height, rotation_angle)
-
-        # finds the intersection of the blanket and divertor rectangle envelope.
-        outer_layer_envelope = outer_layers[0]
-        for outer_layer in outer_layers[1:]:
-            outer_layer_envelope = outer_layer_envelope.union(outer_layer)
-
-        divertor_solid = divertor_solid.intersect(outer_layer_envelope)
-        # we reapply this name as it appears to get lost and we might need it when adding to assembly
-        divertor_solid.name = is_lower_or_upper_divertor(divertor_radial_build)
-
-        # cuts the diverter out of the outer layers of the blanket
-        for i, layer in enumerate(outer_layers):
-            layer = layer.cut(divertor_solid)
-            outer_layers[i] = layer
-        divertor_layers.append(divertor_solid)
-    return divertor_layers, outer_layers
-
-
 def is_plasma_radial_build(radial_build):
     for entry in radial_build:
         # if entry == LayerType.PLASMA:
@@ -209,28 +185,6 @@ def is_plasma_radial_build(radial_build):
         if entry[0] == LayerType.PLASMA:
             return True
     return False
-
-
-def extract_radial_builds(radial_build):
-    # TODO more rubust method of finding if it is a single list of tupes or multiple lists
-    # only one radial build so it should be a plasma based radial build
-    divertor_radial_builds = []
-    if isinstance(radial_build[0][0], LayerType) and (
-        isinstance(radial_build[0][1], float) or isinstance(radial_build[0][1], int)
-    ):
-        plasma_radial_build = radial_build
-    else:
-        for entry in radial_build:
-            if is_plasma_radial_build(entry):
-                # TODO this assumes there is only one radial build, which needs to e checked
-                plasma_radial_build = entry
-            else:
-                divertor_radial_builds.append(entry)
-
-    validate_plasma_radial_build(plasma_radial_build)
-    for divertor_radial_build in divertor_radial_builds:
-        validate_divertor_radial_build(divertor_radial_build)
-    return plasma_radial_build, divertor_radial_builds
 
 
 def validate_divertor_radial_build(radial_build):

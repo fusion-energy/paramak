@@ -4,21 +4,14 @@ from paramak.utils import create_wire_workplane_from_points
 import paramak
 from cadquery import vis, Workplane
 
-radial_start = 300
-radial_thickness = 100
-height = 700
-points = [
-    (radial_start, height),
-    (radial_start, 0),
-    (radial_start+radial_thickness, 0),
-    (radial_start+radial_thickness, height),
-]
-points.append(points[0])
-divertor_solid = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
+# makes a rectangle that overlaps the lower blanket under the plasma
+# the intersection of this and the layers will form the lower divertor
+points = [(300, -700), (300, 0), (400, 0), (400, -700)]
+divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
 
 
 my_reactor = paramak.tokamak_from_plasma(
-    radial_builds=[
+    radial_build=[
         [
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 30),
@@ -38,11 +31,11 @@ my_reactor = paramak.tokamak_from_plasma(
     elongation=2,
     triangularity=0.55,
     rotation_angle=180,
-    extra_intersect_shapes=[divertor_solid]
+    extra_intersect_shapes=[divertor_lower]
 )
 my_reactor.save(f"tokamak_with_divertor.step")
 print(f"Saved as tokamak_with_divertor.step")
-vis.show(my_reactor)
+# vis.show(my_reactor)
 
 # from cad_to_dagmc import CadToDagmc
 # my_model = CadToDagmc()

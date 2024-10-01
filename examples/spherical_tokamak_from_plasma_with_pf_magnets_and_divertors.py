@@ -25,21 +25,19 @@ for case_thickness, height, width, center_point in zip(
         )
     )
 
-
+#TODO
+# [(paramak.LayerType.GAP, 75), ("lower_divertor", 100)],
 my_reactor = paramak.spherical_tokamak_from_plasma(
-    radial_builds=[
-        [
-            (paramak.LayerType.GAP, 10),
-            (paramak.LayerType.SOLID, 50),
-            (paramak.LayerType.SOLID, 15),
-            (paramak.LayerType.GAP, 50),
-            (paramak.LayerType.PLASMA, 300),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.SOLID, 15),
-            (paramak.LayerType.SOLID, 60),
-            (paramak.LayerType.SOLID, 10),
-        ],
-        [(paramak.LayerType.GAP, 75), ("lower_divertor", 100)],
+    radial_build=[
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 15),
+        (paramak.LayerType.GAP, 50),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 15),
+        (paramak.LayerType.SOLID, 60),
+        (paramak.LayerType.SOLID, 10),
     ],
     elongation=2,
     triangularity=0.55,

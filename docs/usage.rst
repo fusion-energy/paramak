@@ -54,7 +54,7 @@ Tokamak from plasma
 
     import paramak
     result = paramak.tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 30),
             (paramak.LayerType.SOLID, 50),
@@ -78,7 +78,7 @@ Tokamak from plasma
 
     import paramak
     result = paramak.tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 30),
             (paramak.LayerType.SOLID, 50),
@@ -115,7 +115,7 @@ Spherical tokamak from plasma
 
     import paramak
     result = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 60),
             (paramak.LayerType.SOLID, 20),
@@ -136,7 +136,7 @@ Spherical tokamak from plasma
 
     import paramak
     result = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 60),
             (paramak.LayerType.SOLID, 20),
@@ -172,7 +172,7 @@ Tokamak
     import paramak
 
     result = paramak.tokamak(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 30),
             (paramak.LayerType.SOLID, 50),
@@ -206,7 +206,7 @@ Tokamak
     import paramak
 
     result = paramak.tokamak(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 30),
             (paramak.LayerType.SOLID, 50),
@@ -256,18 +256,16 @@ Spherical tokamak
     import paramak
 
     result = paramak.spherical_tokamak(
-        radial_builds=[
-            [
-                (paramak.LayerType.GAP, 10),
-                (paramak.LayerType.SOLID, 50),
-                (paramak.LayerType.SOLID, 10),
-                (paramak.LayerType.GAP, 50),
-                (paramak.LayerType.PLASMA, 300),
-                (paramak.LayerType.GAP, 60),
-                (paramak.LayerType.SOLID, 10),
-                (paramak.LayerType.SOLID, 60),
-                (paramak.LayerType.SOLID, 10),
-            ]
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
         ],
         vertical_build=[
             (paramak.LayerType.SOLID, 15),
@@ -289,8 +287,7 @@ Spherical tokamak
     import paramak
 
     result = paramak.spherical_tokamak(
-        radial_builds=[
-            [
+        radial_build=[
                 (paramak.LayerType.GAP, 10),
                 (paramak.LayerType.SOLID, 50),
                 (paramak.LayerType.SOLID, 10),
@@ -300,7 +297,6 @@ Spherical tokamak
                 (paramak.LayerType.SOLID, 10),
                 (paramak.LayerType.SOLID, 60),
                 (paramak.LayerType.SOLID, 10),
-            ]
         ],
         vertical_build=[
             (paramak.LayerType.SOLID, 15),
@@ -332,49 +328,51 @@ Reactor with divertor(s)
     :width: 100%
     :height: 600px
 
+    # makes a rectangle that overlaps the lower blanket under the plasma
+    # the intersection of this and the layers will form the lower divertor
+    points = [(300, -700), (300, 0), (400, 0), (400, -700)]
+    divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
     result = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
-            [
-                (paramak.LayerType.GAP, 10),
-                (paramak.LayerType.SOLID, 50),
-                (paramak.LayerType.SOLID, 15),
-                (paramak.LayerType.GAP, 50),
-                (paramak.LayerType.PLASMA, 300),
-                (paramak.LayerType.GAP, 60),
-                (paramak.LayerType.SOLID, 15),
-                (paramak.LayerType.SOLID, 60),
-                (paramak.LayerType.SOLID, 10),
-            ],
-            [(paramak.LayerType.GAP, 75), ("lower_divertor", 100)],  # this divertor connects to the center column
-            [(paramak.LayerType.GAP, 120), ("upper_divertor", 100)],  # this divertor has some blanket between the center colum and itself
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
         ],
         elongation=2,
         triangularity=0.55,
         rotation_angle=180,
+        extra_intersect_shapes=[divertor_lower]
     ).toCompound()
 
 
 .. code-block:: python
 
+    # makes a rectangle that overlaps the lower blanket under the plasma
+    # the intersection of this and the layers will form the lower divertor
+    points = [(300, -700), (300, 0), (400, 0), (400, -700)]
+    divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
     result = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
-            [
-                (paramak.LayerType.GAP, 10),
-                (paramak.LayerType.SOLID, 50),
-                (paramak.LayerType.SOLID, 15),
-                (paramak.LayerType.GAP, 50),
-                (paramak.LayerType.PLASMA, 300),
-                (paramak.LayerType.GAP, 60),
-                (paramak.LayerType.SOLID, 15),
-                (paramak.LayerType.SOLID, 60),
-                (paramak.LayerType.SOLID, 10),
-            ],
-            [(paramak.LayerType.GAP, 75), ("lower_divertor", 100)],  # this divertor connects to the center column
-            [(paramak.LayerType.GAP, 120), ("upper_divertor", 140)],  # this divertor has some blanket between the center colum and itself
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
         ],
         elongation=2,
         triangularity=0.55,
         rotation_angle=180,
+        extra_intersect_shapes=[divertor_lower]
     )
     result.save('reactor.step')
 
@@ -415,7 +413,7 @@ Reactor with poloidal field coils
         )
 
     result = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 50),
             (paramak.LayerType.SOLID, 15),
@@ -458,7 +456,7 @@ Reactor with poloidal field coils
         )
 
     result = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 50),
             (paramak.LayerType.SOLID, 15),
@@ -506,7 +504,7 @@ Reactor with toroidal field coils
     )
 
     result = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 70),
             (paramak.LayerType.SOLID, 10),
             (paramak.LayerType.SOLID, 10),
@@ -537,7 +535,7 @@ Reactor with toroidal field coils
     )
 
     result = paramak.spherical_tokamak_from_plasma(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 70),
             (paramak.LayerType.SOLID, 10),
             (paramak.LayerType.SOLID, 10),
@@ -573,7 +571,7 @@ Tokamak with negative triangularity
     import paramak
 
     result = paramak.tokamak(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 30),
             (paramak.LayerType.SOLID, 50),
@@ -607,7 +605,7 @@ Tokamak with negative triangularity
     import paramak
 
     result = paramak.tokamak(
-        radial_builds=[
+        radial_build=[
             (paramak.LayerType.GAP, 10),
             (paramak.LayerType.SOLID, 30),
             (paramak.LayerType.SOLID, 50),
@@ -656,18 +654,16 @@ Spherical tokamak with negative triangularity
     import paramak
 
     result = paramak.spherical_tokamak(
-        radial_builds=[
-            [
-                (paramak.LayerType.GAP, 10),
-                (paramak.LayerType.SOLID, 50),
-                (paramak.LayerType.SOLID, 15),
-                (paramak.LayerType.GAP, 50),
-                (paramak.LayerType.PLASMA, 300),
-                (paramak.LayerType.GAP, 60),
-                (paramak.LayerType.SOLID, 40),
-                (paramak.LayerType.SOLID, 60),
-                (paramak.LayerType.SOLID, 10),
-            ]
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 40),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
         ],
         vertical_build=[
             (paramak.LayerType.SOLID, 15),
@@ -689,18 +685,16 @@ Spherical tokamak with negative triangularity
     import paramak
 
     result = paramak.spherical_tokamak(
-        radial_builds=[
-            [
-                (paramak.LayerType.GAP, 10),
-                (paramak.LayerType.SOLID, 50),
-                (paramak.LayerType.SOLID, 15),
-                (paramak.LayerType.GAP, 50),
-                (paramak.LayerType.PLASMA, 300),
-                (paramak.LayerType.GAP, 60),
-                (paramak.LayerType.SOLID, 10),
-                (paramak.LayerType.SOLID, 60),
-                (paramak.LayerType.SOLID, 10),
-            ]
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
         ],
         vertical_build=[
             (paramak.LayerType.SOLID, 15),

@@ -4,7 +4,7 @@ from example_util_functions import transport_particles_on_h5m_geometry
 import paramak
 
 my_reactor = paramak.tokamak(
-    radial_builds=[
+    radial_build=[
         (paramak.LayerType.GAP, 10),
         (paramak.LayerType.SOLID, 30),
         (paramak.LayerType.SOLID, 50),
