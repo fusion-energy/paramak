@@ -711,3 +711,173 @@ Spherical tokamak with negative triangularity
         triangularity=-0.55,
     )
     result.save(f"spherical_tokamak_minimal.step")
+
+
+Tokamak with several customizations
+-----------------------------------
+
+- Combining many of the examples together to produce a Tokamak
+    with extra blanket layers, a lower divertor, PF and TF coils.
+
+.. cadquery::
+    :gridsize: 0
+    :select: result
+    :color: #00cd00
+    :width: 100%
+    :height: 600px
+
+    import paramak
+    from cadquery import vis, Workplane
+
+    # makes a rectangle that overlaps the lower blanket under the plasma
+    # the intersection of this and the layers will form the lower divertor
+    points = [(300, -700), (300, 0), (400, 0), (400, -700)]
+    divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
+
+    # creates a toroidal 
+    tf = paramak.toroidal_field_coil_rectangle(
+        horizontal_start_point = (10, 520),
+        vertical_mid_point = (860, 0),
+        thickness = 50,
+        distance = 40,
+        with_inner_leg = True,
+        azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
+    )
+
+    add_extra_cut_shapes = [tf]
+
+    # creates pf coil
+    for case_thickness, height, width, center_point in zip(
+        [10, 15, 15, 10], [20, 50, 50, 20], [20, 50, 50, 20],
+        [(730, 370), (810, 235), (810, -235), (730, -370)]
+    ):
+        add_extra_cut_shapes.append(
+            paramak.poloidal_field_coil(
+                height=height, width=width, center_point=center_point, rotation_angle=180
+            )
+        )
+        add_extra_cut_shapes.append(
+            paramak.poloidal_field_coil_case(
+                coil_height=height,
+                coil_width=width,
+                casing_thickness=case_thickness,
+                rotation_angle=180,
+                center_point=center_point,
+            )
+        )
+
+    result = paramak.tokamak(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 30),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        vertical_build=[
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 650),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        triangularity=0.55,
+        rotation_angle=180,
+        add_extra_cut_shapes=add_extra_cut_shapes,
+        extra_intersect_shapes=[divertor_lower]
+    )
+    result.toCompound()
+
+.. code-block:: python
+
+    import paramak
+    from cadquery import vis, Workplane
+
+    # makes a rectangle that overlaps the lower blanket under the plasma
+    # the intersection of this and the layers will form the lower divertor
+    points = [(300, -700), (300, 0), (400, 0), (400, -700)]
+    divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
+
+    # creates a toroidal 
+    tf = paramak.toroidal_field_coil_rectangle(
+        horizontal_start_point = (10, 520),
+        vertical_mid_point = (860, 0),
+        thickness = 50,
+        distance = 40,
+        with_inner_leg = True,
+        azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
+    )
+
+    add_extra_cut_shapes = [tf]
+
+    # creates pf coil
+    for case_thickness, height, width, center_point in zip(
+        [10, 15, 15, 10], [20, 50, 50, 20], [20, 50, 50, 20],
+        [(730, 370), (810, 235), (810, -235), (730, -370)]
+    ):
+        add_extra_cut_shapes.append(
+            paramak.poloidal_field_coil(
+                height=height, width=width, center_point=center_point, rotation_angle=180
+            )
+        )
+        add_extra_cut_shapes.append(
+            paramak.poloidal_field_coil_case(
+                coil_height=height,
+                coil_width=width,
+                casing_thickness=case_thickness,
+                rotation_angle=180,
+                center_point=center_point,
+            )
+        )
+
+    my_reactor = paramak.tokamak(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 30),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        vertical_build=[
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 650),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        triangularity=0.55,
+        rotation_angle=180,
+        add_extra_cut_shapes=add_extra_cut_shapes,
+        extra_intersect_shapes=[divertor_lower]
+    )
+    my_reactor.save(f"tokamak_with_divertor.step")

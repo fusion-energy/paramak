@@ -283,7 +283,7 @@ def tokamak(
             my_assembly.add(entry, name=f"outboard_layer_{i+1})")
     else:
         shapes_and_components = []
-        for i, entry in enumerate(inner_radial_build + blanket_layers + divertor_layers):
+        for i, entry in enumerate(inner_radial_build + blanket_layers):
             for cutter in add_extra_cut_shapes + extra_intersect_shapes:
                 entry = entry.cut(cutter)
                 # TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple
