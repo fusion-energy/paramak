@@ -1,0 +1,13 @@
+python example_util_functions.py
+python plasma.py
+python spherical_tokamak_from_plasma_minimal.py
+python spherical_tokamak_from_plasma_with_divertor.py
+python spherical_tokamak_from_plasma_with_pf_magnets_and_divertors.py
+python spherical_tokamak_from_plasma_with_pf_magnets.py
+python spherical_tokamak_from_plasma_with_tf_magnets.py
+python spherical_tokamak_minimal.py
+python tokamak_from_plasma_minimal.py
+python tokamak_from_plasma_with_divertor.py
+python tokamak_minimal.py
+python tokamak_with_pf_magnets.py
+python tokamak_with_pf_tf_magnets_divertor.py

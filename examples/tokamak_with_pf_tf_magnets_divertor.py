@@ -78,7 +78,7 @@ my_reactor = paramak.tokamak(
 )
 my_reactor.save(f"tokamak_with_divertor.step")
 print(f"Saved as tokamak_with_divertor.step")
-vis.show(my_reactor)
+# vis.show(my_reactor)
 
 # from cad_to_dagmc import CadToDagmc
 # my_model = CadToDagmc()
