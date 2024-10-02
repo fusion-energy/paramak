@@ -32,7 +32,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 my_reactor.save("spherical_tokamak_from_plasma_with_divertor.step")
 print('written spherical_tokamak_from_plasma_with_divertor.step')
 
-vis.show(my_reactor)
+# vis.show(my_reactor)
 # my_model = CadToDagmc()
 # material_tags = ["mat1"] * 21 # the two divertors split the 3 blanket layers into 9 and the magnets also splt the blanket.
 # my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)
