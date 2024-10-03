@@ -3,17 +3,17 @@ from example_util_functions import transport_particles_on_h5m_geometry
 
 import paramak
 
-add_extra_cut_shapes = []
+extra_cut_shapes = []
 for case_thickness, height, width, center_point in zip(
     [10, 15, 15, 10], [20, 50, 50, 20], [20, 50, 50, 20],
     [(500, 300), (560, 100), (560, -100), (500, -300)]
 ):
-    add_extra_cut_shapes.append(
+    extra_cut_shapes.append(
         paramak.poloidal_field_coil(
             height=height, width=width, center_point=center_point, rotation_angle=270
         )
     )
-    add_extra_cut_shapes.append(
+    extra_cut_shapes.append(
         paramak.poloidal_field_coil_case(
             coil_height=height,
             coil_width=width,
@@ -39,7 +39,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
     elongation=2,
     triangularity=0.55,
     rotation_angle=270,
-    add_extra_cut_shapes=add_extra_cut_shapes,
+    extra_cut_shapes=extra_cut_shapes,
 )
 my_reactor.save(f"spherical_tokamak_from_plasma_with_pf_magnets.step")
 

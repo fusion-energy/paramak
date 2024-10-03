@@ -107,7 +107,7 @@ def spherical_tokamak_from_plasma(
     elongation: float = 2.0,
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    add_extra_cut_shapes: Sequence[cq.Workplane] = [],
+    extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
 ):
     """_summary_
@@ -117,7 +117,7 @@ def spherical_tokamak_from_plasma(
         elongation (float, optional): _description_. Defaults to 2.0.
         triangularity (float, optional): _description_. Defaults to 0.55.
         rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
-        add_extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
+        extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
 
     Returns:
         _type_: _description_
@@ -146,7 +146,7 @@ def spherical_tokamak_from_plasma(
         vertical_build=vertical_build,
         triangularity=triangularity,
         rotation_angle=rotation_angle,
-        add_extra_cut_shapes=add_extra_cut_shapes,
+        extra_cut_shapes=extra_cut_shapes,
         extra_intersect_shapes=extra_intersect_shapes
     )
 
@@ -156,7 +156,7 @@ def spherical_tokamak(
     vertical_build: Sequence[Tuple[str, float]],
     triangularity: float = 0.55,
     rotation_angle: Optional[str] = 180.0,
-    add_extra_cut_shapes: Sequence[cq.Workplane] = [],
+    extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
 ):
     """_summary_
@@ -167,7 +167,7 @@ def spherical_tokamak(
         elongation (float, optional): _description_. Defaults to 2.0.
         triangularity (float, optional): _description_. Defaults to 0.55.
         rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
-        add_extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
+        extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
 
     Returns:
         _type_: _description_
@@ -223,12 +223,12 @@ def spherical_tokamak(
 
     my_assembly = cq.Assembly()
 
-    for i, entry in enumerate(add_extra_cut_shapes):
+    for i, entry in enumerate(extra_cut_shapes):
 
         if isinstance(entry, cq.Workplane):
             my_assembly.add(entry, name=f"add_extra_cut_shape_{i+1}")
         else:
-            raise ValueError(f"add_extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
+            raise ValueError(f"extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
 
     # builds up the intersect shapes
     intersect_shapes_to_cut = []
@@ -249,7 +249,7 @@ def spherical_tokamak(
             my_assembly.add(reactor_entry_intersection, name=f"extra_intersect_shapes_{i+1}")
 
     # builds just the core if there are no extra parts
-    if len(add_extra_cut_shapes) == 0 and len(intersect_shapes_to_cut) == 0:
+    if len(extra_cut_shapes) == 0 and len(intersect_shapes_to_cut) == 0:
         for i, entry in enumerate(inner_radial_build):
             my_assembly.add(entry, name=f"inboard_layer_{i+1})")
         for i, entry in enumerate(blanket_layers):
@@ -257,7 +257,7 @@ def spherical_tokamak(
     else:
         shapes_and_components = []
         for i, entry in enumerate(inner_radial_build + blanket_layers):
-            for cutter in add_extra_cut_shapes + extra_intersect_shapes:
+            for cutter in extra_cut_shapes + extra_intersect_shapes:
                 entry = entry.cut(cutter)
                 # TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple
                 # for subentry in entry.objects:

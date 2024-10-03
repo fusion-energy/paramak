@@ -13,6 +13,14 @@ The reactors can be varied in terms of their radial build, vertical build, elong
 These examples show how to make various reactors with and without different components, each example is minimal and aims to show a single feature, you will have to combine examples to make a complete model. 
 
 
+
+.. toctree::
+   :maxdepth: 3
+
+   usage_tokamak
+   usage_spherical_tokamak
+
+
 Visualization options
 =====================
 

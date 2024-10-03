@@ -48,7 +48,7 @@ def test_transport_with_magnets(rotation_angle):
         elongation=2,
         triangularity=0.55,
         rotation_angle=rotation_angle,
-        add_extra_cut_shapes=poloidal_field_coils,
+        extra_cut_shapes=poloidal_field_coils,
     )
     my_reactor.save(f"spherical_tokamak_with_magnets_{rotation_angle}.step")
     assert Path(f"spherical_tokamak_with_magnets_{rotation_angle}.step").exists()

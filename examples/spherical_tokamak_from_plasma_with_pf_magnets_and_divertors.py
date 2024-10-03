@@ -42,7 +42,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
     elongation=2,
     triangularity=0.55,
     rotation_angle=rotation_angle,
-    add_extra_cut_shapes=poloidal_field_coils,
+    extra_cut_shapes=poloidal_field_coils,
 )
 my_reactor.save(f"spherical_tokamak_from_plasma_with_pf_magnets_and_divertor.step")
 

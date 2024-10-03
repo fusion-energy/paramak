@@ -19,19 +19,19 @@ tf = paramak.toroidal_field_coil_rectangle(
     azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
 )
 
-add_extra_cut_shapes = [tf]
+extra_cut_shapes = [tf]
 
 # creates pf coil
 for case_thickness, height, width, center_point in zip(
     [10, 15, 15, 10], [20, 50, 50, 20], [20, 50, 50, 20],
     [(730, 370), (810, 235), (810, -235), (730, -370)]
 ):
-    add_extra_cut_shapes.append(
+    extra_cut_shapes.append(
         paramak.poloidal_field_coil(
             height=height, width=width, center_point=center_point, rotation_angle=180
         )
     )
-    add_extra_cut_shapes.append(
+    extra_cut_shapes.append(
         paramak.poloidal_field_coil_case(
             coil_height=height,
             coil_width=width,
@@ -73,7 +73,7 @@ my_reactor = paramak.tokamak(
     ],
     triangularity=0.55,
     rotation_angle=180,
-    add_extra_cut_shapes=add_extra_cut_shapes,
+    extra_cut_shapes=extra_cut_shapes,
     extra_intersect_shapes=[divertor_lower]
 )
 my_reactor.save(f"tokamak_with_divertor.step")

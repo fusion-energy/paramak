@@ -29,7 +29,7 @@ result = paramak.spherical_tokamak_from_plasma(
     elongation=2.5,
     rotation_angle=180,
     triangularity=0.55,
-    add_extra_cut_shapes=[tf]
+    extra_cut_shapes=[tf]
 )
 
 result.save(f"spherical_tokamak_minimal.step")
