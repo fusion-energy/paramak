@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.tokamak &#8212; Paramak 0.1.dev1+g2540637 documentation</title>
+    <title>paramak.assemblies.tokamak &#8212; Paramak 0.1.dev1+gb055c72 documentation</title>
   
   
   
@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=6e59c42d"></script>
+    <script src="../../../_static/documentation_options.js?v=4473a399"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/sphinxcadquerystatic/three.js"></script>
@@ -404,7 +404,7 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">cadquery</span> <span class="k">as</span> <span class="nn">cq</span>
 
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">build_divertor_modify_blanket</span><span class="p">,</span> <span class="n">extract_radial_builds</span><span class="p">,</span> <span class="n">get_plasma_index</span><span class="p">,</span> <span class="n">sum_after_plasma</span><span class="p">,</span> <span class="n">LayerType</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">get_plasma_index</span><span class="p">,</span> <span class="n">LayerType</span>
 <span class="kn">from</span> <span class="nn">..workplanes.blanket_from_plasma</span> <span class="kn">import</span> <span class="n">blanket_from_plasma</span>
 <span class="kn">from</span> <span class="nn">..workplanes.center_column_shield_cylinder</span> <span class="kn">import</span> <span class="n">center_column_shield_cylinder</span>
 <span class="kn">from</span> <span class="nn">..workplanes.plasma_simplified</span> <span class="kn">import</span> <span class="n">plasma_simplified</span>
@@ -561,17 +561,16 @@ document.write(`
 <div class="viewcode-block" id="tokamak_from_plasma">
 <a class="viewcode-back" href="../../../python_api.html#paramak.tokamak_from_plasma">[docs]</a>
 <span class="k">def</span> <span class="nf">tokamak_from_plasma</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span>
+    <span class="n">radial_build</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">LayerType</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
     <span class="n">elongation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
     <span class="n">triangularity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.55</span><span class="p">,</span>
     <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">180.0</span><span class="p">,</span>
-    <span class="n">add_extra_cut_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">extra_cut_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">extra_intersect_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
 <span class="p">):</span>
-    
-    <span class="n">plasma_radial_build</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">extract_radial_builds</span><span class="p">(</span><span class="n">radial_builds</span><span class="p">)</span>
 
-    <span class="n">inner_equatorial_point</span> <span class="o">=</span> <span class="n">sum_up_to_plasma</span><span class="p">(</span><span class="n">plasma_radial_build</span><span class="p">)</span>
-    <span class="n">plasma_radial_thickness</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">plasma_radial_build</span><span class="p">)</span>
+    <span class="n">inner_equatorial_point</span> <span class="o">=</span> <span class="n">sum_up_to_plasma</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
+    <span class="n">plasma_radial_thickness</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
     <span class="n">outer_equatorial_point</span> <span class="o">=</span> <span class="n">inner_equatorial_point</span> <span class="o">+</span> <span class="n">plasma_radial_thickness</span>
 
     <span class="c1"># sets major radius and minor radius from equatorial_points to allow a</span>
@@ -581,49 +580,50 @@ document.write(`
     <span class="n">minor_radius</span> <span class="o">=</span> <span class="n">major_radius</span> <span class="o">-</span> <span class="n">inner_equatorial_point</span>
 
     <span class="c1"># make vertical build from outer radial build</span>
-    <span class="n">pi</span> <span class="o">=</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">plasma_radial_build</span><span class="p">)</span>
-    <span class="n">upper_vertical_build</span> <span class="o">=</span> <span class="n">plasma_radial_build</span><span class="p">[</span><span class="n">pi</span><span class="p">:]</span>
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
+    <span class="n">upper_vertical_build</span> <span class="o">=</span> <span class="n">radial_build</span><span class="p">[</span><span class="n">pi</span><span class="p">:]</span>
 
     <span class="n">plasma_height</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">elongation</span>
     <span class="c1"># slice opperation reverses the list and removes the last value to avoid two plasmas</span>
     <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">upper_vertical_build</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="n">plasma_height</span><span class="p">)]</span> <span class="o">+</span> <span class="n">upper_vertical_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="k">return</span> <span class="n">tokamak</span><span class="p">(</span>
-        <span class="n">radial_builds</span><span class="o">=</span><span class="n">radial_builds</span><span class="p">,</span>
+        <span class="n">radial_build</span><span class="o">=</span><span class="n">radial_build</span><span class="p">,</span>
         <span class="n">vertical_build</span><span class="o">=</span><span class="n">vertical_build</span><span class="p">,</span>
         <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
         <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
-        <span class="n">add_extra_cut_shapes</span><span class="o">=</span><span class="n">add_extra_cut_shapes</span><span class="p">,</span>
+        <span class="n">extra_cut_shapes</span><span class="o">=</span><span class="n">extra_cut_shapes</span><span class="p">,</span>
+        <span class="n">extra_intersect_shapes</span><span class="o">=</span><span class="n">extra_intersect_shapes</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="tokamak">
 <a class="viewcode-back" href="../../../python_api.html#paramak.tokamak">[docs]</a>
 <span class="k">def</span> <span class="nf">tokamak</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span>
+    <span class="n">radial_build</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span>
     <span class="n">vertical_build</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
     <span class="n">triangularity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.55</span><span class="p">,</span>
     <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">180.0</span><span class="p">,</span>
-    <span class="n">add_extra_cut_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span>  <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">extra_cut_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span>  <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">extra_intersect_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span>  <span class="o">=</span> <span class="p">[],</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a tokamak fusion reactor from a radial build and plasma parameters.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        radial_builds (Sequence[tuple[str, float]]): A list of tuples containing the radial build of the reactor.</span>
-<span class="sd">        elongation (float, optional): The elongation of the plasma. Defaults to 2.0.</span>
-<span class="sd">        triangularity (float, optional): The triangularity of the plasma. Defaults to 0.55.</span>
-<span class="sd">        rotation_angle (float, optional): The rotation angle of the plasma. Defaults to 180.0.</span>
-<span class="sd">        add_extra_cut_shapes (Sequence, optional): A list of extra shapes to cut the reactor with. Defaults to [].</span>
+<span class="sd">        radial_build: A list of tuples containing the radial build of the reactor.</span>
+<span class="sd">        elongation: The elongation of the plasma. Defaults to 2.0.</span>
+<span class="sd">        triangularity: The triangularity of the plasma. Defaults to 0.55.</span>
+<span class="sd">        rotation_angle: The rotation angle of the plasma. Defaults to 180.0.</span>
+<span class="sd">        extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].</span>
+<span class="sd">        extra_intersect_shapes: A list of extra shapes to intersect the reactor with. Defaults to [].</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">plasma_radial_build</span><span class="p">,</span> <span class="n">divertor_radial_builds</span> <span class="o">=</span> <span class="n">extract_radial_builds</span><span class="p">(</span><span class="n">radial_builds</span><span class="p">)</span>
-
-    <span class="n">inner_equatorial_point</span> <span class="o">=</span> <span class="n">sum_up_to_plasma</span><span class="p">(</span><span class="n">plasma_radial_build</span><span class="p">)</span>
-    <span class="n">plasma_radial_thickness</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">plasma_radial_build</span><span class="p">)</span>
+    <span class="n">inner_equatorial_point</span> <span class="o">=</span> <span class="n">sum_up_to_plasma</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
+    <span class="n">plasma_radial_thickness</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
     <span class="n">plasma_vertical_thickness</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">)</span>
     <span class="n">outer_equatorial_point</span> <span class="o">=</span> <span class="n">inner_equatorial_point</span> <span class="o">+</span> <span class="n">plasma_radial_thickness</span>
 
@@ -642,11 +642,11 @@ document.write(`
     <span class="p">)</span>
 
     <span class="n">inner_radial_build</span> <span class="o">=</span> <span class="n">create_center_column_shield_cylinders</span><span class="p">(</span>
-        <span class="n">plasma_radial_build</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">blanket_rear_wall_end_height</span>
+        <span class="n">radial_build</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">blanket_rear_wall_end_height</span>
     <span class="p">)</span>
 
     <span class="n">blanket_layers</span> <span class="o">=</span> <span class="n">create_layers_from_plasma</span><span class="p">(</span>
-        <span class="n">radial_build</span><span class="o">=</span><span class="n">plasma_radial_build</span><span class="p">,</span>
+        <span class="n">radial_build</span><span class="o">=</span><span class="n">radial_build</span><span class="p">,</span>
         <span class="n">vertical_build</span><span class="o">=</span><span class="n">vertical_build</span><span class="p">,</span>
         <span class="n">minor_radius</span><span class="o">=</span><span class="n">minor_radius</span><span class="p">,</span>
         <span class="n">major_radius</span><span class="o">=</span><span class="n">major_radius</span><span class="p">,</span>
@@ -656,30 +656,42 @@ document.write(`
         <span class="n">center_column</span><span class="o">=</span><span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># blanket_cutting_cylinder,</span>
     <span class="p">)</span>
 
-    <span class="n">divertor_layers</span><span class="p">,</span> <span class="n">blanket_layers</span> <span class="o">=</span> <span class="n">build_divertor_modify_blanket</span><span class="p">(</span>
-        <span class="n">blanket_layers</span><span class="p">,</span> <span class="n">divertor_radial_builds</span><span class="p">,</span> <span class="n">blanket_rear_wall_end_height</span><span class="p">,</span> <span class="n">rotation_angle</span>
-    <span class="p">)</span>
-
     <span class="n">my_assembly</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Assembly</span><span class="p">()</span>
 
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">add_extra_cut_shapes</span><span class="p">):</span>
-
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">extra_cut_shapes</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">):</span>
             <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;add_extra_cut_shape_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;add_extra_cut_shapes should only contain cadquery Workplanes, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;extra_cut_shapes should only contain cadquery Workplanes, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">add_extra_cut_shapes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># builds up the intersect shapes</span>
+    <span class="n">intersect_shapes_to_cut</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">all_shapes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">:</span>
+            <span class="n">all_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># makes a union of the the radial build to use as a base for the intersect shapes</span>
+        <span class="n">reactor_compound</span><span class="o">=</span><span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">):</span>
+            <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">reactor_compound</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+        <span class="c1"># adds the extra intersect shapes to the assembly</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">):</span>
+            <span class="n">reactor_entry_intersection</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">reactor_compound</span><span class="p">)</span>
+            <span class="n">intersect_shapes_to_cut</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reactor_entry_intersection</span><span class="p">)</span>
+            <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">reactor_entry_intersection</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;extra_intersect_shapes_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># builds just the core if there are no extra parts</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extra_cut_shapes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">intersect_shapes_to_cut</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inner_radial_build</span><span class="p">):</span>
             <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;inboard_layer_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">blanket_layers</span><span class="p">):</span>
             <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;outboard_layer_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">divertor_layers</span><span class="p">):</span>
-            <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>  <span class="c1"># gets upper or lower name</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">shapes_and_components</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span> <span class="o">+</span> <span class="n">divertor_layers</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">cutter</span> <span class="ow">in</span> <span class="n">add_extra_cut_shapes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">cutter</span> <span class="ow">in</span> <span class="n">extra_cut_shapes</span> <span class="o">+</span> <span class="n">extra_intersect_shapes</span><span class="p">:</span>
                 <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutter</span><span class="p">)</span>
                 <span class="c1"># TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple</span>
                 <span class="c1"># for subentry in entry.objects:</span>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Usage &#8212; Paramak 0.1.dev1+g2540637 documentation</title>
+    <title>Usage &#8212; Paramak 0.1.dev1+gb055c72 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=6e59c42d"></script>
+    <script src="_static/documentation_options.js?v=4473a399"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/sphinxcadquerystatic/three.js"></script>
@@ -56,7 +56,7 @@
         </script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Python API reference" href="python_api.html" />
+    <link rel="next" title="Tokamak from plasma" href="usage_tokamak.html" />
     <link rel="prev" title="Install" href="install.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -357,7 +357,19 @@ document.write(`
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"></div>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="usage_tokamak.html">Tokamak from plasma</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="usage_spherical_tokamak.html">Spherical tokamak from plasma</a></li>
+
+
+
+
+
+</ul>
+</div>
 </nav></div>
     </div>
   
@@ -421,6 +433,20 @@ The later allows reactors to be built with a minimal number of parameters.
 In all cases it is possible to add additional components such as divertors, poloidal and toroidal magnets and any self made geometry as a CadQuery Workplane.
 The reactors can be varied in terms of their radial build, vertical build, elongation and triangularity which gives a lot of variability.
 These examples show how to make various reactors with and without different components, each example is minimal and aims to show a single feature, you will have to combine examples to make a complete model.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage_tokamak.html">Tokamak from plasma</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_tokamak.html#tokamak">Tokamak</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_tokamak.html#tokamak-with-negative-triangularity">Tokamak with negative triangularity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_tokamak.html#tokamak-with-several-customizations">Tokamak with several customizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_spherical_tokamak.html">Spherical tokamak from plasma</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak">Spherical tokamak</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_spherical_tokamak.html#reactor-with-divertor-s">Reactor with divertor(s)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_spherical_tokamak.html#reactor-with-poloidal-field-coils">Reactor with poloidal field coils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_spherical_tokamak.html#reactor-with-toroidal-field-coils">Reactor with toroidal field coils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-negative-triangularity">Spherical tokamak with negative triangularity</a></li>
+</ul>
+</div>
 </section>
 <section id="visualization-options">
 <h1>Visualization options<a class="headerlink" href="#visualization-options" title="Link to this heading">#</a></h1>
@@ -441,424 +467,6 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
 <span class="n">view</span><span class="o">.</span><span class="n">export_html</span><span class="p">(</span><span class="s2">&quot;3d.html&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<section id="tokamak-from-plasma">
-<h2>Tokamak from plasma<a class="headerlink" href="#tokamak-from-plasma" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>The tokamak_from_plasma function provides a parametric tokamak shaped reactor.</p></li>
-<li><p>This is characterized by a continuous blanket that goes around the inboard and outboard sides of the plasma.</p></li>
-<li><p>This reactor requires few arguments to create as it keeps the vertical build of the blanket layers the same thickness as the radial build.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/ab2e3cf6ef1fb839561fe5be9ef7b997dc64f66158e75e58d1f2865a9138dc9e.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">tokamak_from_plasma</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">elongation</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="spherical-tokamak-from-plasma">
-<h2>Spherical tokamak from plasma<a class="headerlink" href="#spherical-tokamak-from-plasma" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>The spherical_tokamak_from_plasma function provides a parametric tokamak shaped reactor.</p></li>
-<li><p>This is characterized by a blanket that only goes around the outboard sides of the plasma.</p></li>
-<li><p>This reactor requires few arguments to create as it keeps the vertical build of the blanket layers the same thickness as the radial build.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/87bdb4852d622bec108cfb01b26de20c1bf78fe2daca923ecda146375e8483ca.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">elongation</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;reactor.step&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="tokamak">
-<h2>Tokamak<a class="headerlink" href="#tokamak" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>The spherical_tokamak function provides a parametric tokamak shaped reactor.</p></li>
-<li><p>This is characterized by a blanket that only goes around the outboard sides of the plasma.</p></li>
-<li><p>This reactor allows for a separate vertical and radial build which allows different thickness layers in the blanket.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/9cbf5e6e744e46ab0082435222a5f16ad5ed219593282104f76ea854fb3d9f37.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">tokamak</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">vertical_build</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tokamak_minimal.step&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="spherical-tokamak">
-<h2>Spherical tokamak<a class="headerlink" href="#spherical-tokamak" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>The spherical_tokamak function provides a parametric tokamak shaped reactor.</p></li>
-<li><p>This is characterized by a blanket that only goes around the outboard sides of the plasma.</p></li>
-<li><p>This reactor allows for a separate vertical and radial build which allows different thickness layers in the blanket.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/a17b81f2744ac6022a85f9d0bf152b73f6783a3dc18d1b7c7037fff600d77e84.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">[</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">]</span>
-    <span class="p">],</span>
-    <span class="n">vertical_build</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
-    <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spherical_tokamak_minimal.step&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="reactor-with-divertor-s">
-<h2>Reactor with divertor(s)<a class="headerlink" href="#reactor-with-divertor-s" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>ll reactors support adding additional radial builds for the lower_divertor and or the upper_divertor.</p></li>
-<li><p>This example adds two divertors to a spherical_tokamak_from_plasma reactor but and other reactor would also work.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/e41dd0a3453ebabfe58f0db6eedcd1f78d775a35f5f24d1689913b25699a50d7.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">[</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">],</span>
-        <span class="p">[(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">75</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;lower_divertor&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)],</span>  <span class="c1"># this divertor connects to the center column</span>
-        <span class="p">[(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;upper_divertor&quot;</span><span class="p">,</span> <span class="mi">140</span><span class="p">)],</span>  <span class="c1"># this divertor has some blanket between the center colum and itself</span>
-    <span class="p">],</span>
-    <span class="n">elongation</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;reactor.step&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="reactor-with-poloidal-field-coils">
-<h2>Reactor with poloidal field coils<a class="headerlink" href="#reactor-with-poloidal-field-coils" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>All reactors support adding a sequence of CadQuery shapes (e.g. workplanes) to the reactor using the add_extra_cut_shapes argument</p></li>
-<li><p>This example adds PF coils to a spherical_tokamak_from_plasma reactor but and other reactor would also work.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/fc8135272ed66c556ee6339c7ecc328f8fd3e52034f70434e9c11541d27989db.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
-
-<span class="n">add_extra_cut_shapes</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">case_thickness</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">center_point</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-    <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
-    <span class="p">[(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="p">(</span><span class="mi">560</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="p">(</span><span class="mi">560</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">),</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">)]</span>
-<span class="p">):</span>
-    <span class="n">add_extra_cut_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-        <span class="n">paramak</span><span class="o">.</span><span class="n">poloidal_field_coil</span><span class="p">(</span>
-            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">center_point</span><span class="o">=</span><span class="n">center_point</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">270</span>
-        <span class="p">)</span>
-    <span class="p">)</span>
-    <span class="n">add_extra_cut_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-        <span class="n">paramak</span><span class="o">.</span><span class="n">poloidal_field_coil_case</span><span class="p">(</span>
-            <span class="n">coil_height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-            <span class="n">coil_width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
-            <span class="n">casing_thickness</span><span class="o">=</span><span class="n">case_thickness</span><span class="p">,</span>
-            <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span>
-            <span class="n">center_point</span><span class="o">=</span><span class="n">center_point</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">elongation</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span>
-    <span class="n">add_extra_cut_shapes</span><span class="o">=</span><span class="n">add_extra_cut_shapes</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spherical_tokamak_from_plasma_with_pf_magnets.step&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="reactor-with-toroidal-field-coils">
-<h2>Reactor with toroidal field coils<a class="headerlink" href="#reactor-with-toroidal-field-coils" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>In a similar way to adding poloidal field coils one can also add toroidal field coils by making use of the add_extra_cut_shapes argument.</p></li>
-<li><p>All reactors support adding a sequence of CadQuery shapes (e.g. workplanes) to the reactor using the add_extra_cut_shapes argument</p></li>
-<li><p>This example adds TF coils to a spherical_tokamak_from_plasma reactor but and other reactor would also work.</p></li>
-<li><p>Also these are rectangle shaped TF coils but other shapes are also available.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/8f61f94c90790e109a1d456d9c4e7f9f1163712b4801c5d0e45b663dc6c6f3e6.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
-
-<span class="n">tf</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">toroidal_field_coil_rectangle</span><span class="p">(</span>
-    <span class="n">horizontal_start_point</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">520</span><span class="p">),</span>
-    <span class="n">vertical_mid_point</span> <span class="o">=</span> <span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-    <span class="n">thickness</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-    <span class="n">distance</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
-    <span class="n">with_inner_leg</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">azimuthal_placement_angles</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">180</span><span class="p">],</span>
-<span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">elongation</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
-    <span class="n">triangularity</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
-    <span class="n">add_extra_cut_shapes</span><span class="o">=</span><span class="p">[</span><span class="n">tf</span><span class="p">]</span>
-<span class="p">)</span>
-
-<span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spherical_tokamak_minimal.step&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="tokamak-with-negative-triangularity">
-<h2>Tokamak with negative triangularity<a class="headerlink" href="#tokamak-with-negative-triangularity" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>The triangularity argument can be set to a negative value to make a plasma with a negative triangularity.</p></li>
-<li><p>This example makes a tokamak with a negative but this would work on any reactor.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/b93fae06542fa5addfba6d7a758100c6dbad1b8d610b5af18121b140fd01a894.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">tokamak</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">vertical_build</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">triangularity</span><span class="o">=-</span><span class="mf">0.55</span><span class="p">,</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tokamak_minimal.step&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="spherical-tokamak-with-negative-triangularity">
-<h2>Spherical tokamak with negative triangularity<a class="headerlink" href="#spherical-tokamak-with-negative-triangularity" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>The triangularity argument can be set to a negative value to make a plasma with a negative triangularity.</p></li>
-<li><p>This example makes a spherical tokamak with a negative but this would work on any reactor.</p></li>
-</ul>
-<div class="sphinxcadqueryview", style="width:100%;height:600px">
-    <script>
-        var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/3807bc34e5f8b340af66507b74deb9ed2d53b7ab64b65204f5d19164c9aff568.tjs";
-        parent.color = "#00cd00";
-        parent.gridsize = "0.0";
-        parent.griddivisions = "20";
-    </script>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">paramak</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak</span><span class="p">(</span>
-    <span class="n">radial_builds</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">[</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">]</span>
-    <span class="p">],</span>
-    <span class="n">vertical_build</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="mi">700</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">paramak</span><span class="o">.</span><span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
-    <span class="n">triangularity</span><span class="o">=-</span><span class="mf">0.55</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">result</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spherical_tokamak_minimal.step&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
 </section>
 
 
@@ -881,11 +489,11 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
       </div>
     </a>
     <a class="right-next"
-       href="python_api.html"
+       href="usage_tokamak.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Python API reference</p>
+        <p class="prev-next-title">Tokamak from plasma</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -908,18 +516,7 @@ or the jupyter_cadquery package which allows for interactive 3D visualization in
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Usage</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-options">Visualization options</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tokamak-from-plasma">Tokamak from plasma</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak-from-plasma">Spherical tokamak from plasma</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tokamak">Tokamak</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak">Spherical tokamak</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reactor-with-divertor-s">Reactor with divertor(s)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reactor-with-poloidal-field-coils">Reactor with poloidal field coils</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reactor-with-toroidal-field-coils">Reactor with toroidal field coils</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tokamak-with-negative-triangularity">Tokamak with negative triangularity</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak-with-negative-triangularity">Spherical tokamak with negative triangularity</a></li>
-</ul>
-</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-options">Visualization options</a></li>
 </ul>
 
   </nav></div>
