@@ -235,7 +235,7 @@ def spherical_tokamak(
     if len(extra_intersect_shapes)>0:
         all_shapes = []
         for shape in inner_radial_build + blanket_layers:
-            all_shapes.extend(shape)
+            all_shapes.append(shape)
 
         # makes a union of the the radial build to use as a base for the intersect shapes
         reactor_compound=inner_radial_build[0]
