@@ -15,7 +15,7 @@ tf = paramak.toroidal_field_coil_rectangle(
 )
 
 result = paramak.spherical_tokamak_from_plasma(
-    radial_builds=[
+    radial_build=[
         (paramak.LayerType.GAP, 70),
         (paramak.LayerType.SOLID, 10),
         (paramak.LayerType.SOLID, 10),
@@ -29,7 +29,7 @@ result = paramak.spherical_tokamak_from_plasma(
     elongation=2.5,
     rotation_angle=180,
     triangularity=0.55,
-    add_extra_cut_shapes=[tf]
+    extra_cut_shapes=[tf]
 )
 
 result.save(f"spherical_tokamak_minimal.step")
