@@ -45,7 +45,8 @@ docs = [
     "numpy<=1.26.4",
     "mpmath",
     "sympy",
-    "scipy"
+    "scipy",
+    "ipython"
 ]
 
 [tool.black]
