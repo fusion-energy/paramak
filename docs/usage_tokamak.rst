@@ -17,8 +17,8 @@ These examples show how to make various reactors with and without different comp
 .. toctree::
    :maxdepth: 3
 
-   usage-tokamak
-   usage-spherical-tokamak
+   usage_tokamak
+   usage_spherical_tokamak
 
 
 
