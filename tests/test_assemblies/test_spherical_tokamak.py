@@ -1,15 +1,17 @@
 from pathlib import Path
 
 import pytest
-from cad_to_dagmc import CadToDagmc
 
 import paramak
 
 from .test_utils import transport_particles_on_h5m_geometry
 
+import importlib
 
 @pytest.mark.parametrize("rotation_angle", [30, 360])
+@pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
 def test_transport_with_magnets(rotation_angle):
+    from cad_to_dagmc import CadToDagmc
     poloidal_field_coils = []
     for case_thickness, height, width, center_point in zip(
         [10, 15],
@@ -68,7 +70,9 @@ def test_transport_with_magnets(rotation_angle):
     assert flux > 0.0
 
 
+@pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
 def test_transport_without_magnets():
+    from cad_to_dagmc import CadToDagmc
     reactor = paramak.spherical_tokamak_from_plasma(
         radial_build=[
             (paramak.LayerType.GAP, 10),

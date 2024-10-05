@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from cad_to_dagmc import CadToDagmc
 from example_util_functions import transport_particles_on_h5m_geometry
 
 import paramak
@@ -32,6 +31,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 my_reactor.save("spherical_tokamak_from_plasma_with_divertor.step")
 print('written spherical_tokamak_from_plasma_with_divertor.step')
 
+# from cad_to_dagmc import CadToDagmc
 # vis.show(my_reactor)
 # my_model = CadToDagmc()
 # material_tags = ["mat1"] * 21 # the two divertors split the 3 blanket layers into 9 and the magnets also splt the blanket.
