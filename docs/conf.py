@@ -61,9 +61,9 @@ else:
     version_match = version
 
 html_theme_options = {
-    "github_url": "https://github.com/fusion-energy/paramak2",
+    "github_url": "https://github.com/fusion-energy/paramak",
     "switcher": {
-        "json_url": "https://raw.githubusercontent.com/fusion-energy/paramak2/main/docs/version_switcher.json",
+        "json_url": "https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json",
         "version_match": version_match,
     },
     "navbar_start": ["version-switcher", "navbar-icon-links"],
