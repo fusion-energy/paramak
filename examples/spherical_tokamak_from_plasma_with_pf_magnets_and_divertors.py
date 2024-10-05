@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from cad_to_dagmc import CadToDagmc
 from example_util_functions import transport_particles_on_h5m_geometry
 
 import paramak
@@ -47,7 +46,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 my_reactor.save(f"spherical_tokamak_from_plasma_with_pf_magnets_and_divertor.step")
 
 
-
+# from cad_to_dagmc import CadToDagmc
 # my_model = CadToDagmc()
 # material_tags = ["mat1"] * 5
 # my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)

@@ -1,8 +1,7 @@
 from pathlib import Path
-
+import importlib
 import cadquery as cq
 import pytest
-from cad_to_dagmc import CadToDagmc
 
 import paramak
 
@@ -19,7 +18,9 @@ def test_creation_different_angles(rotation_angle):
 
 
 @pytest.mark.parametrize("rotation_angle", [60, 360])
+@pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
 def test_transport_different_angles(rotation_angle):
+    from cad_to_dagmc import CadToDagmc
     test_shape = paramak.plasma_simplified(rotation_angle=rotation_angle)
 
     my_model = CadToDagmc()
