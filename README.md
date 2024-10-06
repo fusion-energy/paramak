@@ -17,4 +17,4 @@ The purpose of Paramak is to provide geometry for parameter studies and therefor
 
 Paramak produces [CadQuery](https://github.com/CadQuery/CadQuery) objects which can easily be saved to CAD files in several formats (STEP, STL, BRep) and also readily convertable to DAGMC h5m neutronics geometry using tools such as [Cad-to_DAGMC](https://github.com/fusion-energy/cad_to_dagmc).
 
-:point_right: Please see the [Online documentation](https://fusion-energy.github.io/paramak) for installation, usage and API documentation.
+:point_right: Please see the [online documentation](https://fusion-energy.github.io/paramak) for installation, usage and API documentation.
