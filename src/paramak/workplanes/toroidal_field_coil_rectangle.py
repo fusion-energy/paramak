@@ -10,7 +10,7 @@ def toroidal_field_coil_rectangle(
     distance: float = 20,
     name: str = "toroidal_field_coil",
     with_inner_leg: bool = True,
-    azimuthal_placement_angles: typing.Sequence[float] = [0, 90, 180],
+    azimuthal_placement_angles: typing.Sequence[float] = [0],
     vertical_displacement: float = 0.0,
     color: typing.Tuple[float, float, float, typing.Optional[float]] = (0.0, 0.0, 1.0),
     plane: str = "XZ",
