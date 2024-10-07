@@ -1,63 +1,8 @@
 
-Tokamak from plasma
--------------------
+Tokamak
+=======
 
-- The tokamak_from_plasma function provides a parametric tokamak shaped reactor.
 - This is characterized by a continuous blanket that goes around the inboard and outboard sides of the plasma.
-- This reactor requires few arguments to create as it keeps the vertical build of the blanket layers the same thickness as the radial build.
-
-.. cadquery::
-    :gridsize: 0
-    :select: result
-    :color: #00cd00
-    :width: 100%
-    :height: 600px
-
-    import paramak
-    result = paramak.tokamak_from_plasma(
-        radial_build=[
-            (paramak.LayerType.GAP, 10),
-            (paramak.LayerType.SOLID, 30),
-            (paramak.LayerType.SOLID, 50),
-            (paramak.LayerType.SOLID, 10),
-            (paramak.LayerType.SOLID, 120),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.PLASMA, 300),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.SOLID, 120),
-            (paramak.LayerType.SOLID, 10),
-        ],
-        elongation=2,
-        triangularity=0.55,
-        rotation_angle=90,
-    ).toCompound()
-
-
-.. code-block:: python
-
-    import paramak
-    result = paramak.tokamak_from_plasma(
-        radial_build=[
-            (paramak.LayerType.GAP, 10),
-            (paramak.LayerType.SOLID, 30),
-            (paramak.LayerType.SOLID, 50),
-            (paramak.LayerType.SOLID, 10),
-            (paramak.LayerType.SOLID, 120),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.PLASMA, 300),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.SOLID, 120),
-            (paramak.LayerType.SOLID, 10),
-        ],
-        elongation=2,
-        triangularity=0.55,
-        rotation_angle=90,
-    )
-
 
 Tokamak
 -------
@@ -141,6 +86,76 @@ Tokamak
 
     result.save(f"tokamak_minimal.step")
 
+
+Tokamak from plasma
+-------------------
+
+- The tokamak_from_plasma function provides a parametric tokamak shaped reactor.
+- This reactor requires few arguments to create as it keeps the vertical build of the blanket layers the same thickness as the radial build.
+
+.. cadquery::
+    :gridsize: 0
+    :select: result
+    :color: #00cd00
+    :width: 100%
+    :height: 600px
+
+    import paramak
+    result = paramak.tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 30),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=90,
+    ).toCompound()
+
+
+.. code-block:: python
+
+    import paramak
+    result = paramak.tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 30),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=90,
+    )
+
+Tokamak with divertor(s)
+------------------------
+TODO
+
+Tokamak with poloidal field coils
+---------------------------------
+TODO
+
+Tokamak with toroidal field coils
+---------------------------------
+TODO
 
 
 Tokamak with negative triangularity
