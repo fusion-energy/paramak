@@ -1,61 +1,7 @@
+Spherical Tokamak
+=================
 
-Spherical tokamak from plasma
------------------------------
-
-- The spherical_tokamak_from_plasma function provides a parametric tokamak shaped reactor.
-- This is characterized by a blanket that only goes around the outboard sides of the plasma.
-- This reactor requires few arguments to create as it keeps the vertical build of the blanket layers the same thickness as the radial build.
-
-
-.. cadquery::
-    :gridsize: 0
-    :select: result
-    :color: #00cd00
-    :width: 100%
-    :height: 600px
-
-    import paramak
-    result = paramak.spherical_tokamak_from_plasma(
-        radial_build=[
-            (paramak.LayerType.GAP, 10),
-            (paramak.LayerType.SOLID, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.PLASMA, 300),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.SOLID, 120),
-            (paramak.LayerType.SOLID, 10),
-        ],
-        elongation=2,
-        triangularity=0.55,
-        rotation_angle=90,
-    ).toCompound()
-
-
-.. code-block:: python
-
-    import paramak
-    result = paramak.spherical_tokamak_from_plasma(
-        radial_build=[
-            (paramak.LayerType.GAP, 10),
-            (paramak.LayerType.SOLID, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.PLASMA, 300),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.SOLID, 120),
-            (paramak.LayerType.SOLID, 10),
-        ],
-        elongation=2,
-        triangularity=0.55,
-        rotation_angle=90,
-    )
-    result.save('reactor.step')
-
-
-
+- This is characterized by a blanket that only goes around the outboard sides of the plasma and the center column has no inboard breeding.
 
 Spherical tokamak
 -----------------
@@ -133,8 +79,64 @@ Spherical tokamak
 
     result.save(f"spherical_tokamak_minimal.step")
 
-Reactor with divertor(s)
-------------------------
+
+Spherical tokamak from plasma
+-----------------------------
+
+- The spherical_tokamak_from_plasma function provides a parametric tokamak shaped reactor.
+- This reactor requires minimal arguments to create as it keeps the vertical build of the blanket layers the same thickness as the radial build.
+
+
+.. cadquery::
+    :gridsize: 0
+    :select: result
+    :color: #00cd00
+    :width: 100%
+    :height: 600px
+
+    import paramak
+    result = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=90,
+    ).toCompound()
+
+
+.. code-block:: python
+
+    import paramak
+    result = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=90,
+    )
+    result.save('reactor.step')
+
+
+Spherical tokamak with divertor(s)
+----------------------------------
 
 - ll reactors support adding additional radial builds for the lower_divertor and or the upper_divertor.
 - This example adds two divertors to a spherical_tokamak_from_plasma reactor but and other reactor would also work.
@@ -198,8 +200,8 @@ Reactor with divertor(s)
     )
     result.save('reactor.step')
 
-Reactor with poloidal field coils
----------------------------------
+Spherical tokamak with poloidal field coils
+-------------------------------------------
 
 - All reactors support adding a sequence of CadQuery shapes (e.g. workplanes) to the reactor using the extra_cut_shapes argument
 - This example adds PF coils to a spherical_tokamak_from_plasma reactor but and other reactor would also work.
@@ -298,8 +300,8 @@ Reactor with poloidal field coils
     result.save(f"spherical_tokamak_from_plasma_with_pf_magnets.step")
 
 
-Reactor with toroidal field coils
----------------------------------
+Spherical tokamak with toroidal field coils
+-------------------------------------------
 
 - In a similar way to adding poloidal field coils one can also add toroidal field coils by making use of the extra_cut_shapes argument.
 - All reactors support adding a sequence of CadQuery shapes (e.g. workplanes) to the reactor using the extra_cut_shapes argument
@@ -316,7 +318,7 @@ Reactor with toroidal field coils
 
     import paramak
 
-    tf = paramak.toroidal_field_coil_rectangle(
+    tf_style_1 = paramak.toroidal_field_coil_rectangle(
         horizontal_start_point = (10, 520),
         vertical_mid_point = (600, 0),
         thickness = 50,
@@ -325,7 +327,7 @@ Reactor with toroidal field coils
         azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
     )
 
-    result = paramak.spherical_tokamak_from_plasma(
+    result1 = paramak.spherical_tokamak_from_plasma(
         radial_build=[
             (paramak.LayerType.GAP, 70),
             (paramak.LayerType.SOLID, 10),
@@ -340,14 +342,47 @@ Reactor with toroidal field coils
         elongation=2.5,
         rotation_angle=180,
         triangularity=0.55,
-        extra_cut_shapes=[tf]
-    ).toCompound()
+        extra_cut_shapes=[tf_style_1]
+    ).toCompound().translate((700, 0, 0))
+
+    tf_style_2 = paramak.toroidal_field_coil_princeton_d(
+        r1=5,
+        r2=610,
+        azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
+        thickness = 50,
+        distance = 40
+    )
+
+    result2 = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 70),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2.5,
+        rotation_angle=180,
+        triangularity=0.55,
+        extra_cut_shapes=[tf_style_2]
+    ).toCompound().translate((-700, 0, 0))
+
+    import cadquery as cq
+    result = cq.Assembly()
+    result.add(result1)
+    result.add(result2)
+    result = result.toCompound()
+
 
 .. code-block:: python
 
     import paramak
 
-    tf = paramak.toroidal_field_coil_rectangle(
+    tf_style_1 = paramak.toroidal_field_coil_rectangle(
         horizontal_start_point = (10, 520),
         vertical_mid_point = (600, 0),
         thickness = 50,
@@ -371,10 +406,38 @@ Reactor with toroidal field coils
         elongation=2.5,
         rotation_angle=180,
         triangularity=0.55,
+        extra_cut_shapes=[tf_style_1]
+    )
+
+    result.save(f"spherical_tokamak_with_rectangular_tf.step")
+
+    tf_style_2 = paramak.toroidal_field_coil_princeton_d(
+        r1=5,
+        r2=610,
+        azimuthal_placement_angles = [120, 150, 180],
+        thickness = 50,
+        distance = 40
+    )
+
+    result2 = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 70),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2.5,
+        rotation_angle=180,
+        triangularity=0.55,
         extra_cut_shapes=[tf]
     )
 
-    result.save(f"spherical_tokamak_minimal.step")
+    result2.save(f"spherical_tokamak_with_princeton_tf.step")
 
 
 Spherical tokamak with negative triangularity
