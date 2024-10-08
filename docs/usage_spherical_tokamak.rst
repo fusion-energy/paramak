@@ -323,6 +323,7 @@ Spherical tokamak with toroidal field coils
         vertical_mid_point = (600, 0),
         thickness = 50,
         distance = 40,
+        rotation_angle = 180,
         with_inner_leg = True,
         azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
     )
@@ -349,6 +350,7 @@ Spherical tokamak with toroidal field coils
         r1=5,
         r2=610,
         azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
+        rotation_angle = 180,
         thickness = 50,
         distance = 40
     )
@@ -388,6 +390,7 @@ Spherical tokamak with toroidal field coils
         thickness = 50,
         distance = 40,
         with_inner_leg = True,
+        rotation_angle = 180,
         azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
     )
 
@@ -415,6 +418,7 @@ Spherical tokamak with toroidal field coils
         r1=5,
         r2=610,
         azimuthal_placement_angles = [120, 150, 180],
+        rotation_angle = 180,
         thickness = 50,
         distance = 40
     )

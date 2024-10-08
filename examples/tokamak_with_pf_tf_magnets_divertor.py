@@ -2,12 +2,12 @@
 from example_util_functions import transport_particles_on_h5m_geometry
 
 import paramak
-from cadquery import vis, Workplane
+import cadquery as cq
 
 # makes a rectangle that overlaps the lower blanket under the plasma
 # the intersection of this and the layers will form the lower divertor
 points = [(300, -700), (300, 0), (400, 0), (400, -700)]
-divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
+divertor_lower = cq.Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
 
 # creates a toroidal 
 tf = paramak.toroidal_field_coil_rectangle(
@@ -15,6 +15,7 @@ tf = paramak.toroidal_field_coil_rectangle(
     vertical_mid_point = (860, 0),
     thickness = 50,
     distance = 40,
+    rotation_angle=180,
     with_inner_leg = True,
     azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
 )
@@ -78,6 +79,8 @@ my_reactor = paramak.tokamak(
 )
 my_reactor.save(f"tokamak_with_divertor.step")
 print(f"Saved as tokamak_with_divertor.step")
+
+# from cadquery import vis
 # vis.show(my_reactor)
 
 # from cad_to_dagmc import CadToDagmc
