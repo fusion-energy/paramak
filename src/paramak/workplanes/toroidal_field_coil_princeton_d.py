@@ -4,6 +4,8 @@ from ..utils import create_wire_workplane_from_points, rotate_solid
 from scipy import integrate
 from scipy.optimize import minimize
 from typing import List, Tuple
+from ..workplanes.cutting_wedge import cutting_wedge
+
 
 def _compute_inner_points(R1, R2):
     """Computes the inner curve points
@@ -152,6 +154,7 @@ def toroidal_field_coil_princeton_d(
     r2: float = 300,
     thickness: float = 30,
     distance: float = 20,
+    rotation_angle: float = 360.0,
     name: str = "toroidal_field_coil",
     with_inner_leg: bool = True,
     azimuthal_placement_angles: typing.Sequence[float] = [0],
@@ -169,6 +172,7 @@ def toroidal_field_coil_princeton_d(
         r2 (float, optional): Outer radius of the coil. Defaults to 300.
         thickness (float, optional): Thickness of the coil. Defaults to 30.
         distance (float, optional): Distance to extrude the coil. Defaults to 20.
+        rotation_angle (float): angle of rotation in degrees, this cuts the resulting shape with a wedge. Useful for sector models.
         name (str, optional): Name of the coil. Defaults to "toroidal_field_coil".
         with_inner_leg (bool, optional): Whether to include the inner leg of the coil. Defaults to True.
         azimuthal_placement_angles (typing.Sequence[float], optional): Angles for azimuthal placement. Defaults to [0].
@@ -192,14 +196,19 @@ def toroidal_field_coil_princeton_d(
         inner_leg_connection_points=[(x,z,'straight') for x,z in inner_leg_connection_points]
         # need to get square end, it appears to miss the last point in the solid, TODO fix so this append is not needed
         inner_leg_connection_points.append(inner_leg_connection_points[-1])
-        for i in inner_leg_connection_points:
-            print('inner_leg_connection_points' , i)
         inner_wire = create_wire_workplane_from_points(
             points=inner_leg_connection_points, plane=plane, origin=origin, obj=obj
         )
         inner_solid = inner_wire.extrude(until=distance / 2, both=True)
         inner_solid = rotate_solid(angles=azimuthal_placement_angles, solid=inner_solid)
         solid = solid.union(inner_solid)
+
+    if rotation_angle < 360.:
+        bb=solid.val().BoundingBox()
+        radius = max(bb.xmax, bb.ymax)*2.1 # larger than the bounding box to ensure clean cut
+        height = max(bb.zmax, bb.zmin)*2.1 # larger than the bounding box to ensure clean cut
+        cutting_shape = cutting_wedge(height=height, radius=radius, rotation_angle=rotation_angle)
+        solid = solid.intersect(cutting_shape)
 
     solid.name = name
     solid.color = color

@@ -22,3 +22,12 @@ def test_volume_rotation_angle():
     assert math.isclose(
         half_toroidal_field_coil_rectangle.val().Volume(), toroidal_field_coil_rectangle.val().Volume() / 2
     )
+
+def test_rotation_angle():
+    solid_360_uncut = paramak.toroidal_field_coil_rectangle(azimuthal_placement_angles=[0,180], rotation_angle=360)
+    solid_180_uncut = paramak.toroidal_field_coil_rectangle(azimuthal_placement_angles=[0,180], rotation_angle=360)
+    solid_180_cut = paramak.toroidal_field_coil_rectangle(azimuthal_placement_angles=[0,180], rotation_angle=180)
+
+    assert solid_360_uncut.val().Volume() == solid_180_uncut.val().Volume()
+    # checks relative volume difference
+    assert abs(solid_180_cut.val().Volume() - 0.5 * solid_180_uncut.val().Volume()) / (0.5 * solid_180_uncut.val().Volume()) < 0.00001

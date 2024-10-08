@@ -268,6 +268,7 @@ Tokamak with several customizations
         thickness = 50,
         distance = 40,
         with_inner_leg = True,
+        rotation_angle = 180,
         azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
     )
 
@@ -346,6 +347,7 @@ Tokamak with several customizations
         thickness = 50,
         distance = 40,
         with_inner_leg = True,
+        rotation_angle = 180,
         azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
     )
 
