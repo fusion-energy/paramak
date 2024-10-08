@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.1.dev1+gca09343 documentation</title>
+    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.1.dev1+ge7fe4b3 documentation</title>
   
   
   
@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=580583a4"></script>
+    <script src="../../../_static/documentation_options.js?v=eaa56400"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/sphinxcadquerystatic/three.js"></script>
@@ -403,6 +403,7 @@ document.write(`
 <span></span><span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">create_wire_workplane_from_points</span><span class="p">,</span> <span class="n">rotate_solid</span>
+<span class="kn">from</span> <span class="nn">..workplanes.cutting_wedge</span> <span class="kn">import</span> <span class="n">cutting_wedge</span>
 
 
 <div class="viewcode-block" id="toroidal_field_coil_rectangle">
@@ -412,6 +413,7 @@ document.write(`
     <span class="n">vertical_mid_point</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">350</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
     <span class="n">thickness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
     <span class="n">distance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">360.0</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;toroidal_field_coil&quot;</span><span class="p">,</span>
     <span class="n">with_inner_leg</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">azimuthal_placement_angles</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -430,9 +432,7 @@ document.write(`
 <span class="sd">            vertical section (cm).</span>
 <span class="sd">        thickness: the thickness of the toroidal field coil.</span>
 <span class="sd">        distance: the extrusion distance.</span>
-<span class="sd">        number_of_coils: the number of tf coils. This changes by the</span>
-<span class="sd">            azimuth_placement_angle dividing up 360 degrees by the number of</span>
-<span class="sd">            coils.</span>
+<span class="sd">        rotation_angle (float): angle of rotation in degrees, this cuts the resulting shape with a wedge. Useful for sector models.</span>
 <span class="sd">        with_inner_leg: include the inner tf leg. Defaults to True.</span>
 <span class="sd">        azimuth_start_angle: The azimuth angle to for the first TF coil which</span>
 <span class="sd">            offsets the placement of coils around the azimuthal angle</span>
@@ -504,6 +504,13 @@ document.write(`
         <span class="n">inner_solid</span> <span class="o">=</span> <span class="n">inner_wire</span><span class="o">.</span><span class="n">extrude</span><span class="p">(</span><span class="n">until</span><span class="o">=</span><span class="n">distance</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">both</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">inner_solid</span> <span class="o">=</span> <span class="n">rotate_solid</span><span class="p">(</span><span class="n">angles</span><span class="o">=</span><span class="n">azimuthal_placement_angles</span><span class="p">,</span> <span class="n">solid</span><span class="o">=</span><span class="n">inner_solid</span><span class="p">)</span>
         <span class="n">solid</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">inner_solid</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rotation_angle</span> <span class="o">&lt;</span> <span class="mf">360.</span><span class="p">:</span>
+        <span class="n">bb</span><span class="o">=</span><span class="n">solid</span><span class="o">.</span><span class="n">val</span><span class="p">()</span><span class="o">.</span><span class="n">BoundingBox</span><span class="p">()</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">xmax</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">ymax</span><span class="p">)</span><span class="o">*</span><span class="mf">1.1</span> <span class="c1"># 10% larger than the bounding box to ensure clean cut</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">zmax</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">zmin</span><span class="p">)</span><span class="o">*</span><span class="mf">2.1</span> <span class="c1"># 10% larger than the bounding box to ensure clean cut</span>
+        <span class="n">cutting_shape</span> <span class="o">=</span> <span class="n">cutting_wedge</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">)</span>
+        <span class="n">solid</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">cutting_shape</span><span class="p">)</span>
 
     <span class="n">solid</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="n">solid</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
