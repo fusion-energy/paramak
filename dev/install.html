@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Install &#8212; Paramak 0.1.dev1+ge1316d5 documentation</title>
+    <title>Install &#8212; Paramak 0.1.dev1+g833b4a2 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=4440523d"></script>
+    <script src="_static/documentation_options.js?v=c9d5cfca"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/sphinxcadquerystatic/three.js"></script>
@@ -412,61 +412,16 @@ document.write(`
                   
   <section id="install">
 <h1>Install<a class="headerlink" href="#install" title="Link to this heading">#</a></h1>
-<section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
-<p>To use of Paramak you will need Python 3 installed using Miniconda or Anaconda, or Miniforge</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/conda-forge/miniforge">Miniforge</a> recommended as it includes Mamba</p></li>
-<li><p><a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a></p></li>
-<li><p><a class="reference external" href="https://www.anaconda.com/">Anaconda</a></p></li>
-</ul>
-<p>Once you have a version of Mamba or Conda installed then proceed with the Paramak specific steps.</p>
-</section>
-<section id="install-mamba">
-<h2>Install (mamba)<a class="headerlink" href="#install-mamba" title="Link to this heading">#</a></h2>
-<p>This is the recommended method as it installs all the dependencies and Mamba is faster and requires less RAM than the pure Conda method.</p>
-<p>Create a new environment (with your preferred python version).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>paramak_env<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.11
+<p>Paramak is distributed via PyPI and can be installed using pip.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>paramak
 </pre></div>
 </div>
-<p>Then activate the new environment.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>activate<span class="w"> </span>paramak_env
-</pre></div>
-</div>
-<p>Then install the Paramak.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>paramak
-</pre></div>
-</div>
-<p>Now you should be ready to import paramak from your new python environment.</p>
-</section>
-<section id="install-conda">
-<h2>Install (conda)<a class="headerlink" href="#install-conda" title="Link to this heading">#</a></h2>
-<p>Create a new environment (with your preferred python version).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>paramak_env<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.11
-</pre></div>
-</div>
-<p>Then activate the new environment.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>paramak_env
-</pre></div>
-</div>
-<p>Then install the Paramak.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>paramak
-</pre></div>
-</div>
-<p>Now you should be ready to import paramak from your new python environment.</p>
-</section>
 <section id="developer-installation">
 <h2>Developer Installation<a class="headerlink" href="#developer-installation" title="Link to this heading">#</a></h2>
 <p>If you want to contribute to the paramak or then you might want to install the
-package in a more dynamic manner.</p>
+package in a more dynamic manner so that your changes to the code are readily available.</p>
 <p>Download and install MiniConda, create a new python environment and activate the
 environment as covered in the installation procedure above.</p>
-<p>Then install CadQuery with Conda, Mamba or pip.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>cadquery
-mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>cadquery
-pip<span class="w"> </span>install<span class="w"> </span>cadquery
-</pre></div>
-</div>
 <p>Then clone the repository</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/fusion-energy/paramak.git
 </pre></div>
@@ -526,9 +481,6 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-mamba">Install (mamba)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-conda">Install (conda)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#developer-installation">Developer Installation</a></li>
 </ul>
   </nav></div>
