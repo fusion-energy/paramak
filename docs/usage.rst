@@ -1,17 +1,25 @@
 Usage
 =====
 
-There are two main reactors to choose from, Tokamak and Spherical Tokamak.
-These can be built with:
-- A radial and vertical build
-- A radial build and plasma elongation.
+There are two main reactors to choose from:
 
-The former gives the user more control of the size of components allowing reactor blankets to vary both radially and vertically.
-The later allows reactors to be built with a minimal number of parameters.
-In all cases it is possible to add additional components such as divertors, poloidal and toroidal magnets and any self made geometry as a CadQuery Workplane.
+* Tokamak
+* Spherical Tokamak.
+
 The reactors can be varied in terms of their radial build, vertical build, elongation and triangularity which gives a lot of variability.
-These examples show how to make various reactors with and without different components, each example is minimal and aims to show a single feature, you will have to combine examples to make a complete model. 
+All reactors can be built with either:
 
+* A radial and vertical build which gives more control of the size of components allowing reactor blankets to vary both radially and vertically.
+* A radial build and plasma elongation which assumes the vertical build matches the radial build and allows the reactors to be built with a minimal number of parameters.
+
+It is also easy to add additional components such as:
+
+* divertors
+* poloidal magnets
+* toroidal magnets
+* your own CadQuery shapes / workplanes
+
+These examples show how to make various reactors with different options.
 
 
 .. toctree::
