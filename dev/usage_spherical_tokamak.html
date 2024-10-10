@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Spherical Tokamak &#8212; Paramak 0.1.dev1+ge7fe4b3 documentation</title>
+    <title>Spherical Tokamak &#8212; Paramak 0.1.dev1+gec05bb6 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=eaa56400"></script>
+    <script src="_static/documentation_options.js?v=65622ee5"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/sphinxcadquerystatic/three.js"></script>
@@ -421,7 +421,7 @@ document.write(`
   <section id="spherical-tokamak">
 <h1>Spherical Tokamak<a class="headerlink" href="#spherical-tokamak" title="Link to this heading">#</a></h1>
 <ul class="simple">
-<li><p>This is characterized by a blanket that only goes around the outboard sides of the plasma and the center column has no inboard breeding.</p></li>
+<li><p>This is characterized by a blanket that only goes around the outboard sides of the plasma and a center column that has no inboard breeding.</p></li>
 </ul>
 <section id="id1">
 <h2>Spherical tokamak<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
@@ -506,16 +506,16 @@ document.write(`
 </pre></div>
 </div>
 </section>
-<section id="spherical-tokamak-with-divertor-s">
-<h2>Spherical tokamak with divertor(s)<a class="headerlink" href="#spherical-tokamak-with-divertor-s" title="Link to this heading">#</a></h2>
+<section id="spherical-tokamak-with-divertor">
+<h2>Spherical tokamak with divertor<a class="headerlink" href="#spherical-tokamak-with-divertor" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>ll reactors support adding additional radial builds for the lower_divertor and or the upper_divertor.</p></li>
-<li><p>This example adds two divertors to a spherical_tokamak_from_plasma reactor but and other reactor would also work.</p></li>
+<li><p>Reactors support adding additional extra intersect shapes that can be_divertor.</p></li>
+<li><p>This example adds a divertor to a spherical_tokamak_from_plasma reactor.</p></li>
 </ul>
 <div class="sphinxcadqueryview", style="width:100%;height:600px">
     <script>
         var parent = document.scripts[ document.scripts.length - 1 ].parentNode;
-        parent.fname = "_static/sphinxcadquery/117d3b2aaf3ed182d24c75a7f964467a28d489d316b1f5ba6e1667af5cd59ebd.tjs";
+        parent.fname = "_static/sphinxcadquery/56ad3415868734bc6e8ce3e043f875acf52588d39109f4222fd9a023e205caf6.tjs";
         parent.color = "#00cd00";
         parent.gridsize = "0.0";
         parent.griddivisions = "20";
@@ -524,7 +524,7 @@ document.write(`
 
 <span class="c1"># makes a rectangle that overlaps the lower blanket under the plasma</span>
 <span class="c1"># the intersection of this and the layers will form the lower divertor</span>
-<span class="n">points</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">300</span><span class="p">,</span> <span class="o">-</span><span class="mi">700</span><span class="p">),</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="o">-</span><span class="mi">700</span><span class="p">)]</span>
+<span class="n">points</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">700</span><span class="p">),</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="o">-</span><span class="mi">700</span><span class="p">)]</span>
 <span class="n">divertor_lower</span> <span class="o">=</span> <span class="n">Workplane</span><span class="p">(</span><span class="s1">&#39;XZ&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">polyline</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span><span class="o">.</span><span class="n">revolve</span><span class="p">(</span><span class="mi">180</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">paramak</span><span class="o">.</span><span class="n">spherical_tokamak_from_plasma</span><span class="p">(</span>
     <span class="n">radial_build</span><span class="o">=</span><span class="p">[</span>
@@ -780,7 +780,7 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Spherical tokamak</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak-from-plasma">Spherical tokamak from plasma</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak-with-divertor-s">Spherical tokamak with divertor(s)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak-with-divertor">Spherical tokamak with divertor</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak-with-poloidal-field-coils">Spherical tokamak with poloidal field coils</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak-with-toroidal-field-coils">Spherical tokamak with toroidal field coils</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-tokamak-with-negative-triangularity">Spherical tokamak with negative triangularity</a></li>

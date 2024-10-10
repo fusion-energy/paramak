@@ -145,8 +145,8 @@ Tokamak from plasma
         rotation_angle=90,
     )
 
-Tokamak with divertor(s)
-------------------------
+Tokamak with divertor
+---------------------
 TODO
 
 Tokamak with poloidal field coils

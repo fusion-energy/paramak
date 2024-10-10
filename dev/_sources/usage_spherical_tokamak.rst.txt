@@ -1,7 +1,7 @@
 Spherical Tokamak
 =================
 
-- This is characterized by a blanket that only goes around the outboard sides of the plasma and the center column has no inboard breeding.
+- This is characterized by a blanket that only goes around the outboard sides of the plasma and a center column that has no inboard breeding.
 
 Spherical tokamak
 -----------------
@@ -135,11 +135,11 @@ Spherical tokamak from plasma
     result.save('reactor.step')
 
 
-Spherical tokamak with divertor(s)
-----------------------------------
+Spherical tokamak with divertor
+-------------------------------
 
-- ll reactors support adding additional radial builds for the lower_divertor and or the upper_divertor.
-- This example adds two divertors to a spherical_tokamak_from_plasma reactor but and other reactor would also work.
+- Reactors support adding additional extra intersect shapes that can be_divertor.
+- This example adds a divertor to a spherical_tokamak_from_plasma reactor.
 
 .. cadquery::
     :gridsize: 0
@@ -152,7 +152,7 @@ Spherical tokamak with divertor(s)
 
     # makes a rectangle that overlaps the lower blanket under the plasma
     # the intersection of this and the layers will form the lower divertor
-    points = [(300, -700), (300, 0), (400, 0), (400, -700)]
+    points = [(200, -700), (200, 0), (300, 0), (300, -700)]
     divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
     result = paramak.spherical_tokamak_from_plasma(
         radial_build=[
@@ -179,7 +179,7 @@ Spherical tokamak with divertor(s)
 
     # makes a rectangle that overlaps the lower blanket under the plasma
     # the intersection of this and the layers will form the lower divertor
-    points = [(300, -700), (300, 0), (400, 0), (400, -700)]
+    points = [(200, -700), (200, 0), (300, 0), (300, -700)]
     divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
     result = paramak.spherical_tokamak_from_plasma(
         radial_build=[

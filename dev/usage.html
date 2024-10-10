@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Usage &#8212; Paramak 0.1.dev1+ge7fe4b3 documentation</title>
+    <title>Usage &#8212; Paramak 0.1.dev1+gec05bb6 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=eaa56400"></script>
+    <script src="_static/documentation_options.js?v=65622ee5"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/sphinxcadquerystatic/three.js"></script>
@@ -417,22 +417,32 @@ document.write(`
                   
   <section id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
-<p>There are two main reactors to choose from, Tokamak and Spherical Tokamak.
-These can be built with:
-- A radial and vertical build
-- A radial build and plasma elongation.</p>
-<p>The former gives the user more control of the size of components allowing reactor blankets to vary both radially and vertically.
-The later allows reactors to be built with a minimal number of parameters.
-In all cases it is possible to add additional components such as divertors, poloidal and toroidal magnets and any self made geometry as a CadQuery Workplane.
-The reactors can be varied in terms of their radial build, vertical build, elongation and triangularity which gives a lot of variability.
-These examples show how to make various reactors with and without different components, each example is minimal and aims to show a single feature, you will have to combine examples to make a complete model.</p>
+<p>There are two main reactors to choose from:</p>
+<ul class="simple">
+<li><p>Tokamak</p></li>
+<li><p>Spherical Tokamak.</p></li>
+</ul>
+<p>The reactors can be varied in terms of their radial build, vertical build, elongation and triangularity which gives a lot of variability.
+All reactors can be built with either:</p>
+<ul class="simple">
+<li><p>A radial and vertical build which gives more control of the size of components allowing reactor blankets to vary both radially and vertically.</p></li>
+<li><p>A radial build and plasma elongation which assumes the vertical build matches the radial build and allows the reactors to be built with a minimal number of parameters.</p></li>
+</ul>
+<p>It is also easy to add additional components such as:</p>
+<ul class="simple">
+<li><p>divertors</p></li>
+<li><p>poloidal magnets</p></li>
+<li><p>toroidal magnets</p></li>
+<li><p>your own CadQuery shapes / workplanes</p></li>
+</ul>
+<p>These examples show how to make various reactors with different options.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage_vis.html">Visualization options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage_tokamak.html">Tokamak</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage_tokamak.html#id1">Tokamak</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage_tokamak.html#tokamak-from-plasma">Tokamak from plasma</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage_tokamak.html#tokamak-with-divertor-s">Tokamak with divertor(s)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage_tokamak.html#tokamak-with-divertor">Tokamak with divertor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage_tokamak.html#tokamak-with-poloidal-field-coils">Tokamak with poloidal field coils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage_tokamak.html#tokamak-with-toroidal-field-coils">Tokamak with toroidal field coils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage_tokamak.html#tokamak-with-negative-triangularity">Tokamak with negative triangularity</a></li>
@@ -442,7 +452,7 @@ These examples show how to make various reactors with and without different comp
 <li class="toctree-l1"><a class="reference internal" href="usage_spherical_tokamak.html">Spherical Tokamak</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage_spherical_tokamak.html#id1">Spherical tokamak</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-from-plasma">Spherical tokamak from plasma</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-divertor-s">Spherical tokamak with divertor(s)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-divertor">Spherical tokamak with divertor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-poloidal-field-coils">Spherical tokamak with poloidal field coils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-toroidal-field-coils">Spherical tokamak with toroidal field coils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-negative-triangularity">Spherical tokamak with negative triangularity</a></li>
