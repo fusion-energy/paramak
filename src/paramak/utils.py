@@ -38,43 +38,45 @@ def instructions_from_points(points):
 
 def create_wire_workplane_from_instructions(
     instructions,
-    plane="XY",
-    origin=(0, 0, 0),
-    obj=None,
+    workplane,
 ):
-    solid = Workplane(plane, origin=origin, obj=obj)  # offset=extrusion_offset
-
-    all_spline = all(list(entry.keys())[0] == "spline" for entry in instructions)
-    if all_spline:
-        entry_values = [(list(entry.values())[0]) for entry in instructions][0][:-1]
-        res = solid.spline(
-            entry_values, makeWire=True, tol=1e-1, periodic=True
-        )  # period smooths out the connecting joint
-        return res
 
     for entry in instructions:
         if list(entry.keys())[0] == "spline":
-            solid = solid.spline(listOfXYTuple=list(entry.values())[0])
+            workplane = workplane.spline(listOfXYTuple=list(entry.values())[0])
         if list(entry.keys())[0] == "straight":
-            solid = solid.polyline(list(entry.values())[0])
+            workplane = workplane.polyline(list(entry.values())[0])
         if list(entry.keys())[0] == "circle":
             p0 = list(entry.values())[0][0]
             p1 = list(entry.values())[0][1]
             p2 = list(entry.values())[0][2]
-            solid = solid.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+            workplane = workplane.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
-    return solid.close()
+    return workplane.close()
 
 
 def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None):
-    instructions = instructions_from_points(points)
 
-    return create_wire_workplane_from_instructions(
-        instructions,
-        plane=plane,
-        origin=origin,
-        obj=obj,
-    )
+    workplane = Workplane(plane, origin=origin, obj=obj)  # offset=extrusion_offset
+
+    all_spline = all(entry[-1] == "spline" for entry in points)
+
+    #TODO add check for all straights and do polyline
+
+    if all_spline:
+        entry_values = [entry[:2] for entry in points[:-1]]
+        result = workplane.spline(
+            entry_values, makeWire=True, tol=1e-1, periodic=True
+        )  # period smooths out the connecting joint
+    else:
+        instructions = instructions_from_points(points)
+
+        result = create_wire_workplane_from_instructions(
+            instructions=instructions,
+            workplane=workplane,
+        )
+
+    return result
 
 
 def rotate_solid(angles: typing.Sequence[float], solid: Workplane) -> Workplane:
