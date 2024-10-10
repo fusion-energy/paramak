@@ -74,7 +74,6 @@ def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None)
         result = create_wire_workplane_from_instructions(
             instructions=instructions,
             workplane=workplane,
-            plane=plane,
         )
 
     return result
