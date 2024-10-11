@@ -62,23 +62,20 @@ else:
     version_match = version
 
 html_theme_options = {
-    # "primary_sidebar_end": ["sidebar-ethical-ads"],
+    # "primary_sidebar_end": ["sidebar-nav-bs"],
     "github_url": "https://github.com/fusion-energy/paramak",
     "switcher": {
         "json_url": "https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json",
         "version_match": version_match,
     },
-    "navbar_start": ["version-switcher", "navbar-icon-links"],
-    "show_nav_level": 2,
-    "collapse_navigation": True,
-    "show_version_warning_banner": True,
-}
-html_sidebars = {
-    "**": ["sidebar-nav-bs", "sidebar-ethical-ads"]
+    # "navbar_start": ["version-switcher", "navbar-icon-links"],
+    # "show_nav_level": 3,
+    # "collapse_navigation": True,
+    # "show_version_warning_banner": True,
 }
 # html_sidebars = {
-#     "**": ["sidebar-nav-bs"]
+#     "**": ["sidebar-nav-bs", "sidebar-ethical-ads"]
 # }
-# html_sidebars = {"**": []}
+
 html_favicon = '_static/favicon.ico'
 master_doc = "index"

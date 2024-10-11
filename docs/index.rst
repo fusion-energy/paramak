@@ -2,19 +2,23 @@
 Paramak documentation
 =====================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   Install <install>
-   Usage <usage>
-   Python API <python_api>
-
 **Version**: |version|
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+
+.. toctree::
+   :maxdepth: 1
+
+   install
+
+.. toctree::
+   :maxdepth: 3
+
+   examples
+
+.. toctree::
+   :maxdepth: 1
+
+   python_api
 
 Parameter driven CAD creation for fusion reactors.
 
@@ -34,8 +38,6 @@ The style of reaction, sizes of components, plasma shape and number of radial or
         Installation
         ^^^
 
-        +++
-
         .. button-ref:: install
             :expand:
             :color: secondary
@@ -49,10 +51,8 @@ The style of reaction, sizes of components, plasma shape and number of radial or
 
         Examples
         ^^^
-
-        +++
-
-        .. button-ref:: usage
+\
+        .. button-ref:: examples
             :expand:
             :color: secondary
             :click-parent:
@@ -65,8 +65,6 @@ The style of reaction, sizes of components, plasma shape and number of radial or
 
         API reference
         ^^^
-
-        +++
 
         .. button-ref:: python_api
             :expand:
