@@ -2,13 +2,26 @@
 Paramak documentation
 =====================
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   Install <install>
+   Usage <usage>
+   Python API <python_api>
+
 **Version**: |version|
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
 Parameter driven CAD creation for fusion reactors.
 
 Paramak provides parameter driven creation of Tokamak and Spherical Tokamak CAD models as well as DAGMC compatible neutronics models.
 
 The style of reaction, sizes of components, plasma shape and number of radial or vertical layers can be specified,  
+
 
 
 .. grid:: 12 12 3 3
