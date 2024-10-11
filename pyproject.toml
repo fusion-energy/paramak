@@ -46,7 +46,8 @@ docs = [
     "sphinx",
     "pydata-sphinx-theme",
     "cadquery",
-    "ipython"
+    "ipython",
+    "sphinx_design"
 ]
 
 [tool.black]
