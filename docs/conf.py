@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath("../src"))
 
 
 project = "Paramak"
-copyright = "2024, J. Shimwell"
+copyright = "2024, Fusion Energy"
 author = "J. Shimwell"
 
 import paramak
@@ -34,6 +34,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.viewcode",
     "sphinxcadquery.sphinxcadquery",
+    "sphinx_design",
 ]
 
 templates_path = ["_templates"]
@@ -45,7 +46,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
-
+html_css_files = ["paramak.css"]
 
 # TODO add logo
 # html_favicon = "favicon.ico"
@@ -61,10 +62,20 @@ else:
     version_match = version
 
 html_theme_options = {
+    # "primary_sidebar_end": ["sidebar-nav-bs"],
     "github_url": "https://github.com/fusion-energy/paramak",
     "switcher": {
         "json_url": "https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json",
         "version_match": version_match,
     },
     "navbar_start": ["version-switcher", "navbar-icon-links"],
+    "show_nav_level": 3,
+    "collapse_navigation": True,
+    "show_version_warning_banner": True,
 }
+html_sidebars = {
+    "**": ["sidebar-nav-bs"]
+}
+
+html_favicon = '_static/favicon.ico'
+master_doc = "index"
