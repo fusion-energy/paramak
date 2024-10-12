@@ -1,5 +1,5 @@
-Usage
-=====
+Examples
+========
 
 There are two main reactors to choose from:
 
@@ -25,7 +25,7 @@ These examples show how to make various reactors with different options.
 .. toctree::
    :maxdepth: 3
 
-   usage_vis
-   usage_tokamak
-   usage_spherical_tokamak
+   examples_vis
+   examples_tokamak
+   examples_spherical_tokamak
 

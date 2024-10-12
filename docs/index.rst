@@ -2,22 +2,18 @@
 Paramak documentation
 =====================
 
+
+
 **Version**: |version|
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
+   :caption: Contents:
+   :hidden:
 
    install
-
-.. toctree::
-   :maxdepth: 3
-
    examples
-
-.. toctree::
-   :maxdepth: 1
-
    python_api
 
 Parameter driven CAD creation for fusion reactors.
@@ -51,7 +47,7 @@ The style of reaction, sizes of components, plasma shape and number of radial or
 
         Examples
         ^^^
-\
+
         .. button-ref:: examples
             :expand:
             :color: secondary
@@ -72,3 +68,4 @@ The style of reaction, sizes of components, plasma shape and number of radial or
             :click-parent:
 
             To the reference guide
+

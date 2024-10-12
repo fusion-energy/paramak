@@ -8,11 +8,8 @@ Assemblies
 ----------
 
 .. autofunction:: tokamak
-
 .. autofunction:: tokamak_from_plasma
-    
 .. autofunction:: spherical_tokamak
-
 .. autofunction:: spherical_tokamak_from_plasma
 
 Workplanes

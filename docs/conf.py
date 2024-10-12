@@ -68,14 +68,14 @@ html_theme_options = {
         "json_url": "https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json",
         "version_match": version_match,
     },
-    # "navbar_start": ["version-switcher", "navbar-icon-links"],
-    # "show_nav_level": 3,
-    # "collapse_navigation": True,
-    # "show_version_warning_banner": True,
+    "navbar_start": ["version-switcher", "navbar-icon-links"],
+    "show_nav_level": 3,
+    "collapse_navigation": True,
+    "show_version_warning_banner": True,
 }
-# html_sidebars = {
-#     "**": ["sidebar-nav-bs", "sidebar-ethical-ads"]
-# }
+html_sidebars = {
+    "**": ["sidebar-nav-bs"]
+}
 
 html_favicon = '_static/favicon.ico'
 master_doc = "index"
