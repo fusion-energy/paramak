@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Paramak documentation &#8212; Paramak 0.1.dev1+ge29dd7c documentation</title>
+    <title>Paramak documentation &#8212; Paramak 0.1.dev1+g25191c0 documentation</title>
   
   
   
@@ -30,13 +30,15 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/sphinxcadquerystatic/main.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/paramak.css?v=4dcb5d39" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=30ab5125"></script>
+    <script src="_static/documentation_options.js?v=b4a4ccab"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/sphinxcadquerystatic/three.js"></script>
@@ -47,13 +49,15 @@
     <script src="_static/sphinxcadquerystatic/OrbitControls.js"></script>
     <script src="_static/sphinxcadquerystatic/WebGL.js"></script>
     <script src="_static/sphinxcadquerystatic/main.js"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.1';
-        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
+    <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Install" href="install.html" />
@@ -177,8 +181,8 @@ document.write(`
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="usage.html">
-    Usage
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
   </a>
 </li>
 
@@ -299,8 +303,8 @@ document.write(`
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="usage.html">
-    Usage
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
   </a>
 </li>
 
@@ -378,63 +382,48 @@ document.write(`
                   
   <section id="paramak-documentation">
 <h1>Paramak documentation<a class="headerlink" href="#paramak-documentation" title="Link to this heading">#</a></h1>
-<p><strong>Version</strong>: 0.1.dev1+ge29dd7c</p>
+<p><strong>Version</strong>: 0.1.dev1+g25191c0</p>
+<div class="toctree-wrapper compound">
+</div>
 <p>Parameter driven CAD creation for fusion reactors.</p>
 <p>Paramak provides parameter driven creation of Tokamak and Spherical Tokamak CAD models as well as DAGMC compatible neutronics models.</p>
 <p>The style of reaction, sizes of components, plasma shape and number of radial or vertical layers can be specified,</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#developer-installation">Developer Installation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage_vis.html">Visualization options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage_tokamak.html">Tokamak</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage_tokamak.html#id1">Tokamak</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_tokamak.html#tokamak-from-plasma">Tokamak from plasma</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_tokamak.html#tokamak-with-divertor">Tokamak with divertor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_tokamak.html#tokamak-with-poloidal-field-coils">Tokamak with poloidal field coils</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_tokamak.html#tokamak-with-toroidal-field-coils">Tokamak with toroidal field coils</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_tokamak.html#tokamak-with-negative-triangularity">Tokamak with negative triangularity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_tokamak.html#tokamak-with-several-customizations">Tokamak with several customizations</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="usage_spherical_tokamak.html">Spherical Tokamak</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage_spherical_tokamak.html#id1">Spherical tokamak</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-from-plasma">Spherical tokamak from plasma</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-divertor">Spherical tokamak with divertor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-poloidal-field-coils">Spherical tokamak with poloidal field coils</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-toroidal-field-coils">Spherical tokamak with toroidal field coils</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage_spherical_tokamak.html#spherical-tokamak-with-negative-triangularity">Spherical tokamak with negative triangularity</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="python_api.html">Python API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="python_api.html#assemblies">Assemblies</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.tokamak"><code class="docutils literal notranslate"><span class="pre">tokamak()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">tokamak_from_plasma()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.spherical_tokamak"><code class="docutils literal notranslate"><span class="pre">spherical_tokamak()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.spherical_tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">spherical_tokamak_from_plasma()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="python_api.html#workplanes">Workplanes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.blanket_from_plasma"><code class="docutils literal notranslate"><span class="pre">blanket_from_plasma()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.center_column_shield_cylinder"><code class="docutils literal notranslate"><span class="pre">center_column_shield_cylinder()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.constant_thickness_dome"><code class="docutils literal notranslate"><span class="pre">constant_thickness_dome()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.cutting_wedge"><code class="docutils literal notranslate"><span class="pre">cutting_wedge()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.dished_vacuum_vessel"><code class="docutils literal notranslate"><span class="pre">dished_vacuum_vessel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.plasma_simplified"><code class="docutils literal notranslate"><span class="pre">plasma_simplified()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.poloidal_field_coil_case"><code class="docutils literal notranslate"><span class="pre">poloidal_field_coil_case()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.poloidal_field_coil"><code class="docutils literal notranslate"><span class="pre">poloidal_field_coil()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.toroidal_field_coil_rectangle"><code class="docutils literal notranslate"><span class="pre">toroidal_field_coil_rectangle()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="python_api.html#paramak.u_shaped_dome"><code class="docutils literal notranslate"><span class="pre">u_shaped_dome()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-12 sd-row-cols-xs-12 sd-row-cols-sm-12 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-center docutils">
+<img alt="" class="sd-card-img-top" src="_images/getting_started.svg" />
+<div class="sd-card-header docutils">
+<p class="sd-card-text">Installation</p>
+</div>
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><span class="sd-d-grid"><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary sd-stretched-link reference internal" href="install.html"><span class="doc">To the installation guide</span></a></span></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-center docutils">
+<img alt="" class="sd-card-img-top" src="_images/user_guide.svg" />
+<div class="sd-card-header docutils">
+<p class="sd-card-text">Examples</p>
+</div>
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><span class="sd-d-grid"><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary sd-stretched-link reference internal" href="examples.html"><span class="doc">To the examples</span></a></span></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-center docutils">
+<img alt="" class="sd-card-img-top" src="_images/api.svg" />
+<div class="sd-card-header docutils">
+<p class="sd-card-text">API reference</p>
+</div>
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><span class="sd-d-grid"><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary sd-stretched-link reference internal" href="python_api.html"><span class="doc">To the reference guide</span></a></span></p>
+</div>
+</div>
+</div>
+</div>
 </div>
 </section>
 
@@ -501,7 +490,7 @@ document.write(`
 
   <p class="copyright">
     
-      © Copyright 2024, J. Shimwell.
+      © Copyright 2024, Fusion Energy.
       <br/>
     
   </p>
@@ -510,7 +499,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.0.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.1.
     <br/>
   </p>
 </div>
