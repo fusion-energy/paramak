@@ -40,7 +40,7 @@ jobs:
         env:
           PATH: "/openmc_venv/bin:$PATH"
         run: |
-          python3 -m venv openmc_venv
+          python -m venv openmc_venv
           pip install --upgrade pip
           pip install .[docs]
       - name: Sphinx build tagged version
