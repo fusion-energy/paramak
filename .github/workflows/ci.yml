@@ -35,7 +35,10 @@ jobs:
 
       - name: install dependencies run tests
         shell: bash -el {0}
+        env:
+          PATH: "/openmc_venv/bin:$PATH"
         run: |
+          python3 -m venv openmc_venv
           python -m pip install .[tests]
         
       - name: Test with pytest
