@@ -24,7 +24,7 @@ The style of reaction, sizes of components, plasma shape and number of radial or
 
 
 
-.. grid:: 12 12 3 3
+.. grid:: 1 1 3 3
     :gutter: 2
 
     .. grid-item-card::
