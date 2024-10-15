@@ -175,13 +175,14 @@ def tokamak_from_plasma(
     major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
     minor_radius = major_radius - inner_equatorial_point
 
-    # make vertical build from outer radial build
+    # make vertical build from inner radial build
     pi = get_plasma_index(radial_build)
-    upper_vertical_build = radial_build[pi:]
-
+    rbi = len(radial_build)-1 - pi  # number of unique entries in outer or inner radial build 
+    upper_vertical_build = radial_build[pi-rbi:pi][::-1] #get the inner radial build
+    
     plasma_height = 2 * minor_radius * elongation
     # slice opperation reverses the list and removes the last value to avoid two plasmas
-    vertical_build = upper_vertical_build[::-1][:-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build[1:]
+    vertical_build = upper_vertical_build[::-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build
 
     return tokamak(
         radial_build=radial_build,
