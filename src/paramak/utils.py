@@ -5,9 +5,10 @@ from cadquery import Workplane
 
 
 class LayerType(Enum):
-    GAP = 'gap'
-    SOLID = 'solid'
-    PLASMA = 'plasma'
+    GAP = "gap"
+    SOLID = "solid"
+    PLASMA = "plasma"
+
 
 def instructions_from_points(points):
     # obtains the first two values of the points list
@@ -61,7 +62,7 @@ def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None)
 
     all_spline = all(entry[-1] == "spline" for entry in points)
 
-    #TODO add check for all straights and do polyline
+    # TODO add check for all straights and do polyline
 
     if all_spline:
         entry_values = [entry[:2] for entry in points[:-1]]
@@ -197,7 +198,7 @@ def validate_divertor_radial_build(radial_build):
 
     if len(radial_build[0]) != 2 or len(radial_build[1]) != 2:
         raise ValidationError(
-            'The radial build for the divertor should only contain tuples of length 2,, for example (LayerType.GAP,10)'
+            "The radial build for the divertor should only contain tuples of length 2,, for example (LayerType.GAP,10)"
         )
 
     if radial_build[1][0] not in {"lower_divertor", "upper_divertor"}:
@@ -207,7 +208,7 @@ def validate_divertor_radial_build(radial_build):
 
     if radial_build[0][0] != LayerType.GAP:
         raise ValidationError(
-            f'The first entry in the radial build for the divertor should be a LayerType.GAP not {radial_build[0][0]}'
+            f"The first entry in the radial build for the divertor should be a LayerType.GAP not {radial_build[0][0]}"
         )
 
     if not isinstance(radial_build[0][1], (int, float)) or not isinstance(radial_build[1][1], (int, float)):

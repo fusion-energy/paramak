@@ -9,7 +9,7 @@ from cadquery import Workplane, vis
 # makes a rectangle that overlaps the lower blanket under the plasma
 # the intersection of this and the layers will form the lower divertor
 points = [(150, -700), (150, 0), (270, 0), (270, -700)]
-divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
+divertor_lower = Workplane("XZ", origin=(0, 0, 0)).polyline(points).close().revolve(180)
 
 my_reactor = paramak.spherical_tokamak_from_plasma(
     radial_build=[
@@ -26,10 +26,10 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
     elongation=2,
     triangularity=0.55,
     rotation_angle=180,
-    extra_intersect_shapes=[divertor_lower]
+    extra_intersect_shapes=[divertor_lower],
 )
 my_reactor.save("spherical_tokamak_from_plasma_with_divertor.step")
-print('written spherical_tokamak_from_plasma_with_divertor.step')
+print("written spherical_tokamak_from_plasma_with_divertor.step")
 
 # from cad_to_dagmc import CadToDagmc
 # vis.show(my_reactor)

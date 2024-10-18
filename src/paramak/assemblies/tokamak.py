@@ -104,16 +104,8 @@ def create_layers_from_plasma(
                 major_radius=major_radius,
                 triangularity=triangularity,
                 elongation=elongation,
-                thickness=[
-                    upper_layer_thickness,
-                    outer_layer_thickness,
-                    lower_layer_thickness
-                ],
-                offset_from_plasma=[
-                    cumulative_thickness_uvb,
-                    cumulative_thickness_orb,
-                    cumulative_thickness_lvb
-                ],
+                thickness=[upper_layer_thickness, outer_layer_thickness, lower_layer_thickness],
+                offset_from_plasma=[cumulative_thickness_uvb, cumulative_thickness_orb, cumulative_thickness_lvb],
                 start_angle=90,
                 stop_angle=-90,
                 rotation_angle=rotation_angle,
@@ -156,6 +148,7 @@ def create_layers_from_plasma(
 
     return layers
 
+
 def tokamak_from_plasma(
     radial_build: Sequence[Tuple[LayerType, float]],
     elongation: float = 2.0,
@@ -177,9 +170,9 @@ def tokamak_from_plasma(
 
     # make vertical build from inner radial build
     pi = get_plasma_index(radial_build)
-    rbi = len(radial_build)-1 - pi  # number of unique entries in outer or inner radial build 
-    upper_vertical_build = radial_build[pi-rbi:pi][::-1] #get the inner radial build
-    
+    rbi = len(radial_build) - 1 - pi  # number of unique entries in outer or inner radial build
+    upper_vertical_build = radial_build[pi - rbi : pi][::-1]  # get the inner radial build
+
     plasma_height = 2 * minor_radius * elongation
     # slice opperation reverses the list and removes the last value to avoid two plasmas
     vertical_build = upper_vertical_build[::-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build
@@ -193,13 +186,14 @@ def tokamak_from_plasma(
         extra_intersect_shapes=extra_intersect_shapes,
     )
 
+
 def tokamak(
     radial_build: Union[Sequence[Sequence[Tuple[str, float]]], Sequence[Tuple[str, float]]],
     vertical_build: Sequence[Tuple[str, float]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    extra_cut_shapes: Sequence[cq.Workplane]  = [],
-    extra_intersect_shapes: Sequence[cq.Workplane]  = [],
+    extra_cut_shapes: Sequence[cq.Workplane] = [],
+    extra_intersect_shapes: Sequence[cq.Workplane] = [],
 ):
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
@@ -260,13 +254,13 @@ def tokamak(
 
     # builds up the intersect shapes
     intersect_shapes_to_cut = []
-    if len(extra_intersect_shapes)>0:
+    if len(extra_intersect_shapes) > 0:
         all_shapes = []
         for shape in inner_radial_build + blanket_layers:
             all_shapes.append(shape)
 
         # makes a union of the the radial build to use as a base for the intersect shapes
-        reactor_compound=inner_radial_build[0]
+        reactor_compound = inner_radial_build[0]
         for i, entry in enumerate(inner_radial_build[1:] + blanket_layers):
             reactor_compound = reactor_compound.union(entry)
 
@@ -293,8 +287,9 @@ def tokamak(
             shapes_and_components.append(entry)
 
         for i, entry in enumerate(shapes_and_components):
-            my_assembly.add(entry, name=f"layer_{i+1})")  #TODO track the names of shapes, even when extra shapes are made due to splitting
-
+            my_assembly.add(
+                entry, name=f"layer_{i+1})"
+            )  # TODO track the names of shapes, even when extra shapes are made due to splitting
 
     my_assembly.add(plasma, name="plasma")
 

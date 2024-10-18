@@ -8,7 +8,7 @@ from ..utils import (
     sum_up_to_gap_before_plasma,
     sum_up_to_plasma,
     sum_before_after_plasma,
-    LayerType
+    LayerType,
 )
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
@@ -147,7 +147,7 @@ def spherical_tokamak_from_plasma(
         triangularity=triangularity,
         rotation_angle=rotation_angle,
         extra_cut_shapes=extra_cut_shapes,
-        extra_intersect_shapes=extra_intersect_shapes
+        extra_intersect_shapes=extra_intersect_shapes,
     )
 
 
@@ -220,7 +220,6 @@ def spherical_tokamak(
         center_column=blanket_cutting_cylinder,
     )
 
-
     my_assembly = cq.Assembly()
 
     for i, entry in enumerate(extra_cut_shapes):
@@ -232,13 +231,13 @@ def spherical_tokamak(
 
     # builds up the intersect shapes
     intersect_shapes_to_cut = []
-    if len(extra_intersect_shapes)>0:
+    if len(extra_intersect_shapes) > 0:
         all_shapes = []
         for shape in inner_radial_build + blanket_layers:
             all_shapes.append(shape)
 
         # makes a union of the the radial build to use as a base for the intersect shapes
-        reactor_compound=inner_radial_build[0]
+        reactor_compound = inner_radial_build[0]
         for i, entry in enumerate(inner_radial_build[1:] + blanket_layers):
             reactor_compound = reactor_compound.union(entry)
 
@@ -265,7 +264,9 @@ def spherical_tokamak(
             shapes_and_components.append(entry)
 
         for i, entry in enumerate(shapes_and_components):
-            my_assembly.add(entry, name=f"layer_{i+1})")  #TODO track the names of shapes, even when extra shapes are made due to splitting
+            my_assembly.add(
+                entry, name=f"layer_{i+1})"
+            )  # TODO track the names of shapes, even when extra shapes are made due to splitting
 
     my_assembly.add(plasma, name="plasma")
 

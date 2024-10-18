@@ -23,7 +23,7 @@ def _compute_inner_points(R1, R2):
         segment = get_segment(R0, R2, z_0)
         return abs(segment[1][-1])
 
-    def get_segment(a, b, z_0,num=5):
+    def get_segment(a, b, z_0, num=5):
         a_R = np.linspace(a, b, num=num, endpoint=True)
         asol = integrate.odeint(solvr, [z_0[0], 0], a_R)
         return a_R, asol[:, 0], asol[:, 1]
@@ -111,7 +111,7 @@ def add_thickness(x: List[float], y: List[float], thickness: float, dy_dx: List[
     return x_outer, y_outer
 
 
-def find_points(R1, R2, thickness,vertical_displacement):
+def find_points(R1, R2, thickness, vertical_displacement):
     """Finds the XZ points joined by connections that describe the 2D
     profile of the toroidal field coil shape."""
     # compute inner points
@@ -149,6 +149,7 @@ def find_points(R1, R2, thickness,vertical_displacement):
 
     return points, inner_leg_connection_points, inner_points, outer_points
 
+
 def toroidal_field_coil_princeton_d(
     r1: float = 100,
     r2: float = 300,
@@ -185,7 +186,9 @@ def toroidal_field_coil_princeton_d(
     Returns:
         solid: The created toroidal field coil solid.
     """
-    points, inner_leg_connection_points, inner_points, outer_points = find_points(r1, r2, thickness, vertical_displacement)
+    points, inner_leg_connection_points, inner_points, outer_points = find_points(
+        r1, r2, thickness, vertical_displacement
+    )
     # need to get square end, it appears to miss the last point in the solid, TODO fix so this append is not needed
     points.append(points[-1])
     wire = create_wire_workplane_from_points(points=points, plane=plane, origin=origin, obj=obj)
@@ -193,7 +196,7 @@ def toroidal_field_coil_princeton_d(
     solid = rotate_solid(angles=azimuthal_placement_angles, solid=solid)
 
     if with_inner_leg:
-        inner_leg_connection_points=[(x,z,'straight') for x,z in inner_leg_connection_points]
+        inner_leg_connection_points = [(x, z, "straight") for x, z in inner_leg_connection_points]
         # need to get square end, it appears to miss the last point in the solid, TODO fix so this append is not needed
         inner_leg_connection_points.append(inner_leg_connection_points[-1])
         inner_wire = create_wire_workplane_from_points(
@@ -203,10 +206,10 @@ def toroidal_field_coil_princeton_d(
         inner_solid = rotate_solid(angles=azimuthal_placement_angles, solid=inner_solid)
         solid = solid.union(inner_solid)
 
-    if rotation_angle < 360.:
-        bb=solid.val().BoundingBox()
-        radius = max(bb.xmax, bb.ymax)*2.1 # larger than the bounding box to ensure clean cut
-        height = max(bb.zmax, bb.zmin)*2.1 # larger than the bounding box to ensure clean cut
+    if rotation_angle < 360.0:
+        bb = solid.val().BoundingBox()
+        radius = max(bb.xmax, bb.ymax) * 2.1  # larger than the bounding box to ensure clean cut
+        height = max(bb.zmax, bb.zmin) * 2.1  # larger than the bounding box to ensure clean cut
         cutting_shape = cutting_wedge(height=height, radius=radius, rotation_angle=rotation_angle)
         solid = solid.intersect(cutting_shape)
 

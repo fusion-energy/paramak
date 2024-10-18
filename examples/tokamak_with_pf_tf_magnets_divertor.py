@@ -1,4 +1,3 @@
-
 from example_util_functions import transport_particles_on_h5m_geometry
 
 import paramak
@@ -7,30 +6,27 @@ import cadquery as cq
 # makes a rectangle that overlaps the lower blanket under the plasma
 # the intersection of this and the layers will form the lower divertor
 points = [(300, -700), (300, 0), (400, 0), (400, -700)]
-divertor_lower = cq.Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
+divertor_lower = cq.Workplane("XZ", origin=(0, 0, 0)).polyline(points).close().revolve(180)
 
-# creates a toroidal 
+# creates a toroidal
 tf = paramak.toroidal_field_coil_rectangle(
-    horizontal_start_point = (10, 520),
-    vertical_mid_point = (860, 0),
-    thickness = 50,
-    distance = 40,
+    horizontal_start_point=(10, 520),
+    vertical_mid_point=(860, 0),
+    thickness=50,
+    distance=40,
     rotation_angle=180,
-    with_inner_leg = True,
-    azimuthal_placement_angles = [0, 30, 60, 90, 120, 150, 180],
+    with_inner_leg=True,
+    azimuthal_placement_angles=[0, 30, 60, 90, 120, 150, 180],
 )
 
 extra_cut_shapes = [tf]
 
 # creates pf coil
 for case_thickness, height, width, center_point in zip(
-    [10, 15, 15, 10], [20, 50, 50, 20], [20, 50, 50, 20],
-    [(730, 370), (810, 235), (810, -235), (730, -370)]
+    [10, 15, 15, 10], [20, 50, 50, 20], [20, 50, 50, 20], [(730, 370), (810, 235), (810, -235), (730, -370)]
 ):
     extra_cut_shapes.append(
-        paramak.poloidal_field_coil(
-            height=height, width=width, center_point=center_point, rotation_angle=180
-        )
+        paramak.poloidal_field_coil(height=height, width=width, center_point=center_point, rotation_angle=180)
     )
     extra_cut_shapes.append(
         paramak.poloidal_field_coil_case(
@@ -75,7 +71,7 @@ my_reactor = paramak.tokamak(
     triangularity=0.55,
     rotation_angle=180,
     extra_cut_shapes=extra_cut_shapes,
-    extra_intersect_shapes=[divertor_lower]
+    extra_intersect_shapes=[divertor_lower],
 )
 my_reactor.save(f"tokamak_with_divertor.step")
 print(f"Saved as tokamak_with_divertor.step")
