@@ -24,7 +24,7 @@ for case_thickness, height, width, center_point in zip(
         )
     )
 
-#TODO
+# TODO
 # [(paramak.LayerType.GAP, 75), ("lower_divertor", 100)],
 my_reactor = paramak.spherical_tokamak_from_plasma(
     radial_build=[

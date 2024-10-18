@@ -101,10 +101,10 @@ def toroidal_field_coil_rectangle(
         inner_solid = rotate_solid(angles=azimuthal_placement_angles, solid=inner_solid)
         solid = solid.union(inner_solid)
 
-    if rotation_angle < 360.:
-        bb=solid.val().BoundingBox()
-        radius = max(bb.xmax, bb.ymax)*1.1 # 10% larger than the bounding box to ensure clean cut
-        height = max(bb.zmax, bb.zmin)*2.1 # 10% larger than the bounding box to ensure clean cut
+    if rotation_angle < 360.0:
+        bb = solid.val().BoundingBox()
+        radius = max(bb.xmax, bb.ymax) * 1.1  # 10% larger than the bounding box to ensure clean cut
+        height = max(bb.zmax, bb.zmin) * 2.1  # 10% larger than the bounding box to ensure clean cut
         cutting_shape = cutting_wedge(height=height, radius=radius, rotation_angle=rotation_angle)
         solid = solid.intersect(cutting_shape)
 

@@ -4,13 +4,10 @@ import paramak
 
 extra_cut_shapes = []
 for case_thickness, height, width, center_point in zip(
-    [10, 15, 15, 10], [20, 50, 50, 20], [20, 50, 50, 20],
-    [(500, 300), (560, 100), (560, -100), (500, -300)]
+    [10, 15, 15, 10], [20, 50, 50, 20], [20, 50, 50, 20], [(500, 300), (560, 100), (560, -100), (500, -300)]
 ):
     extra_cut_shapes.append(
-        paramak.poloidal_field_coil(
-            height=height, width=width, center_point=center_point, rotation_angle=270
-        )
+        paramak.poloidal_field_coil(height=height, width=width, center_point=center_point, rotation_angle=270)
     )
     extra_cut_shapes.append(
         paramak.poloidal_field_coil_case(

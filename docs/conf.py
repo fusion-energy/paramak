@@ -73,9 +73,7 @@ html_theme_options = {
     "collapse_navigation": True,
     "show_version_warning_banner": True,
 }
-html_sidebars = {
-    "**": ["sidebar-nav-bs"]
-}
+html_sidebars = {"**": ["sidebar-nav-bs"]}
 
-html_favicon = '_static/favicon.ico'
+html_favicon = "_static/favicon.ico"
 master_doc = "index"

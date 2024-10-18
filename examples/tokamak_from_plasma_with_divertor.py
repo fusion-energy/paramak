@@ -1,4 +1,3 @@
-
 from example_util_functions import transport_particles_on_h5m_geometry
 from paramak.utils import create_wire_workplane_from_points
 import paramak
@@ -7,7 +6,7 @@ from cadquery import vis, Workplane
 # makes a rectangle that overlaps the lower blanket under the plasma
 # the intersection of this and the layers will form the lower divertor
 points = [(300, -700), (300, 0), (400, 0), (400, -700)]
-divertor_lower = Workplane('XZ', origin=(0,0,0)).polyline(points).close().revolve(180)
+divertor_lower = Workplane("XZ", origin=(0, 0, 0)).polyline(points).close().revolve(180)
 
 
 my_reactor = paramak.tokamak_from_plasma(
@@ -28,7 +27,7 @@ my_reactor = paramak.tokamak_from_plasma(
     elongation=2,
     triangularity=0.55,
     rotation_angle=180,
-    extra_intersect_shapes=[divertor_lower]
+    extra_intersect_shapes=[divertor_lower],
 )
 my_reactor.save(f"tokamak_with_divertor.step")
 print(f"Saved as tokamak_with_divertor.step")

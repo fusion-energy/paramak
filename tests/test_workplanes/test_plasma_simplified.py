@@ -21,6 +21,7 @@ def test_creation_different_angles(rotation_angle):
 @pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
 def test_transport_different_angles(rotation_angle):
     from cad_to_dagmc import CadToDagmc
+
     test_shape = paramak.plasma_simplified(rotation_angle=rotation_angle)
 
     my_model = CadToDagmc()

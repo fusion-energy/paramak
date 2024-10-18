@@ -23,7 +23,6 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 my_reactor.save(f"spherical_tokamak_from_plasma_minimal.step")
 
 
-
 # from cad_to_dagmc import CadToDagmc
 # my_model = CadToDagmc()
 # material_tags = [
