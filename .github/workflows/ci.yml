@@ -1,0 +1,55 @@
+name: CI testing
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - name: Install system packages
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libgl1 libglx-mesa0 libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev libosmesa6 libosmesa6-dev libgles2-mesa-dev libarchive-dev libpangocairo-1.0-0
+
+      - name: checkout actions
+        uses: actions/checkout@v4
+
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: '1.5.8-0' # any version from https://github.com/mamba-org/micromamba-releases
+          environment-file: environment_dev.yml
+          init-shell: bash
+          cache-environment: true
+          post-cleanup: 'all'
+
+      - name: install dependencies run tests
+        shell: bash -el {0}
+        run: |
+          python -m pip install .[tests]
+        
+      - name: Test with pytest
+        shell: bash -el {0}
+        run: |
+          pytest -v
+          python examples/plasma.py
+          python examples/spherical_tokamak_from_plasma_minimal.py
+          python examples/spherical_tokamak_from_plasma_with_divertor.py
+          python examples/spherical_tokamak_from_plasma_with_pf_magnets_and_divertors.py
+          python examples/spherical_tokamak_from_plasma_with_pf_magnets.py
+          python examples/spherical_tokamak_from_plasma_with_tf_magnets.py
+          python examples/spherical_tokamak_minimal.py
+          python examples/tokamak_from_plasma_with_divertor.py
+          python examples/tokamak_minimal.py
+          python examples/tokamak_from_plasma_minimal.py
+
