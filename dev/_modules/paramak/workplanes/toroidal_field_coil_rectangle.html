@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.1.dev1+g2fe55cb documentation</title>
+    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.1.dev1+g71e9bb9 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../../_static/documentation_options.js?v=f1016d45"></script>
+    <script src="../../../_static/documentation_options.js?v=9045835f"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/sphinxcadquerystatic/three.js"></script>
@@ -509,10 +509,10 @@ document.write(`
         <span class="n">inner_solid</span> <span class="o">=</span> <span class="n">rotate_solid</span><span class="p">(</span><span class="n">angles</span><span class="o">=</span><span class="n">azimuthal_placement_angles</span><span class="p">,</span> <span class="n">solid</span><span class="o">=</span><span class="n">inner_solid</span><span class="p">)</span>
         <span class="n">solid</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">inner_solid</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">rotation_angle</span> <span class="o">&lt;</span> <span class="mf">360.</span><span class="p">:</span>
-        <span class="n">bb</span><span class="o">=</span><span class="n">solid</span><span class="o">.</span><span class="n">val</span><span class="p">()</span><span class="o">.</span><span class="n">BoundingBox</span><span class="p">()</span>
-        <span class="n">radius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">xmax</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">ymax</span><span class="p">)</span><span class="o">*</span><span class="mf">1.1</span> <span class="c1"># 10% larger than the bounding box to ensure clean cut</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">zmax</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">zmin</span><span class="p">)</span><span class="o">*</span><span class="mf">2.1</span> <span class="c1"># 10% larger than the bounding box to ensure clean cut</span>
+    <span class="k">if</span> <span class="n">rotation_angle</span> <span class="o">&lt;</span> <span class="mf">360.0</span><span class="p">:</span>
+        <span class="n">bb</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">val</span><span class="p">()</span><span class="o">.</span><span class="n">BoundingBox</span><span class="p">()</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">xmax</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">ymax</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span>  <span class="c1"># 10% larger than the bounding box to ensure clean cut</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">zmax</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">zmin</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.1</span>  <span class="c1"># 10% larger than the bounding box to ensure clean cut</span>
         <span class="n">cutting_shape</span> <span class="o">=</span> <span class="n">cutting_wedge</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">)</span>
         <span class="n">solid</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">cutting_shape</span><span class="p">)</span>
 
