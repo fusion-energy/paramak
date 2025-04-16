@@ -29,7 +29,7 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/fusion-energy/paramak"
 "Bug Tracker" = "https://github.com/fusion-energy/paramak/issues"
-"Documentation" = "https://paramak.readthedocs.io"
+"Documentation" = "https://fusion-energy.github.io/paramak"
 
 
 [project.optional-dependencies]
