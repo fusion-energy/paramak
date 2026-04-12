@@ -42,7 +42,6 @@ tests = [
 docs = [
     "sphinx_autodoc_typehints",
     "openmc_data_downloader",
-    "sphinxcadquery",
     "sphinx",
     "pydata-sphinx-theme",
     "cadquery",

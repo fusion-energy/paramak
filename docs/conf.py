@@ -9,24 +9,8 @@
 import os
 import re
 import sys
-from importlib import resources
 
 sys.path.insert(0, os.path.abspath("../src"))
-
-# sphinxcadquery uses pkg_resources.resource_filename which was removed from
-# modern setuptools/Python. Provide a shim so the extension can load without it.
-try:
-    import pkg_resources  # noqa: F401
-except ImportError:
-    import types
-
-    pkg_resources = types.ModuleType("pkg_resources")
-
-    def _resource_filename(package_name, resource_name):
-        return str(resources.files(package_name).joinpath(resource_name))
-
-    pkg_resources.resource_filename = _resource_filename
-    sys.modules["pkg_resources"] = pkg_resources
 
 
 project = "Paramak"
@@ -49,7 +33,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.doctest",
     "sphinx.ext.viewcode",
-    "sphinxcadquery.sphinxcadquery",
+    "cadquery.cq_directive",
     "sphinx_design",
 ]
 

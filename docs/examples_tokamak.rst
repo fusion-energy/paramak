@@ -12,9 +12,7 @@ Tokamak
 - This reactor allows for a separate vertical and radial build which allows different thickness layers in the blanket.
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
@@ -94,9 +92,7 @@ Tokamak from plasma
 - This reactor requires few arguments to create as it keeps the vertical build of the blanket layers the same thickness as the radial build.
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
@@ -165,9 +161,7 @@ Tokamak with negative triangularity
 - This example makes a tokamak with a negative but this would work on any reactor.
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
@@ -247,9 +241,7 @@ Tokamak with several customizations
     with extra blanket layers, a lower divertor, PF and TF coils.
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
