@@ -48,7 +48,6 @@ docs = [
     "cadquery",
     "ipython",
     "sphinx_design",
-    "setuptools",
 ]
 
 [tool.black]
