@@ -26,7 +26,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
 )
 my_reactor.save(f"spherical_tokamak_from_plasma_with_colors.step")
 
-# show colors with inbuild vtk viewer
+# show colors with built-in vtk viewer
 # from cadquery.vis import show
 # show(my_reactor)
 

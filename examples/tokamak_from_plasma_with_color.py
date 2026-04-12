@@ -31,7 +31,7 @@ my_reactor.save(f"tokamak_with_colors.step")
 print(f"Saved as tokamak_with_colors.step")
 
 
-# show colors with inbuild vtk viewer
+# show colors with built-in vtk viewer
 # from cadquery.vis import show
 # show(my_reactor)
 

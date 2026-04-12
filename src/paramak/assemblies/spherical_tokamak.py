@@ -28,14 +28,14 @@ def create_blanket_layers_after_plasma(
     plasma_index_vertical = get_plasma_index(vertical_build)
 
     for i, item in enumerate(radial_build[plasma_index_radial + 1 :]):
-        upper_thicknees = vertical_build[plasma_index_vertical + 1 + i][1]
-        lower_thicknees = vertical_build[plasma_index_vertical - 1 - i][1]
+        upper_thickness = vertical_build[plasma_index_vertical + 1 + i][1]
+        lower_thickness = vertical_build[plasma_index_vertical - 1 - i][1]
         radial_thickness = item[1]
 
         if item[0] == LayerType.GAP:
             cumulative_thickness_rb += radial_thickness
-            cumulative_thickness_uvb += upper_thicknees
-            cumulative_thickness_lvb += lower_thicknees
+            cumulative_thickness_uvb += upper_thickness
+            cumulative_thickness_lvb += lower_thickness
             continue
 
         layer = blanket_from_plasma(
@@ -44,9 +44,9 @@ def create_blanket_layers_after_plasma(
             triangularity=triangularity,
             elongation=elongation,
             thickness=[
-                lower_thicknees,
+                lower_thickness,
                 radial_thickness,
-                upper_thicknees,
+                upper_thickness,
             ],
             offset_from_plasma=[
                 cumulative_thickness_lvb,
@@ -63,8 +63,8 @@ def create_blanket_layers_after_plasma(
         )
         layer = layer.cut(center_column)
         cumulative_thickness_rb += radial_thickness
-        cumulative_thickness_uvb += upper_thicknees
-        cumulative_thickness_lvb += lower_thicknees
+        cumulative_thickness_uvb += upper_thickness
+        cumulative_thickness_lvb += lower_thickness
         layers.append(layer)
 
     return layers
@@ -145,7 +145,7 @@ def spherical_tokamak_from_plasma(
     upper_vertical_build = radial_build[pi:]
 
     plasma_height = 2 * minor_radius * elongation
-    # slice opperation reverses the list and removes the last value to avoid two plasmas
+    # slice operation reverses the list and removes the last value to avoid two plasmas
     vertical_build = upper_vertical_build[::-1][:-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build[1:]
 
     return spherical_tokamak(

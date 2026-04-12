@@ -1,5 +1,5 @@
 # Creates an assembly class that inherits from cadquery's assembly class
-# and adds a few conveniences methods remove() and names()
+# and adds a few convenience methods remove() and names()
 
 import warnings
 import cadquery as cq

@@ -22,7 +22,7 @@ def u_shaped_dome(
     Arguments:
         radius: the radius from which the centres of the vessel meets the outer
             circumference.
-        reference_point: the x,z coordinates to build te vessel from. Can be
+        reference_point: the x,z coordinates to build the vessel from. Can be
             either the 'center' with a value or 'lower' with a
             value. For example
         dish_height: the height of the lower and upper dish sections.

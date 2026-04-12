@@ -75,14 +75,14 @@ def create_layers_from_plasma(
 
     plasma_index_rb = get_plasma_index(radial_build)
     plasma_index_vb = get_plasma_index(vertical_build)
-    indexes_from_plamsa_to_end = len(radial_build) - plasma_index_rb
+    indexes_from_plasma_to_end = len(radial_build) - plasma_index_rb
     layers = []
 
     cumulative_thickness_orb = 0
     cumulative_thickness_irb = 0
     cumulative_thickness_uvb = 0
     cumulative_thickness_lvb = 0
-    for index_delta in range(indexes_from_plamsa_to_end):
+    for index_delta in range(indexes_from_plasma_to_end):
 
         if radial_build[plasma_index_rb + index_delta][0] == LayerType.PLASMA:
             continue
@@ -195,7 +195,7 @@ def tokamak_from_plasma(
     upper_vertical_build = radial_build[pi - rbi : pi][::-1]  # get the inner radial build
 
     plasma_height = 2 * minor_radius * elongation
-    # slice opperation reverses the list and removes the last value to avoid two plasmas
+    # slice operation reverses the list and removes the last value to avoid two plasmas
     vertical_build = upper_vertical_build[::-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build
 
     return tokamak(
