@@ -165,7 +165,7 @@ def spherical_tokamak(
     radial_build: Sequence[Tuple[LayerType, float]],
     vertical_build: Sequence[Tuple[str, float]],
     triangularity: float = 0.55,
-    rotation_angle: Optional[str] = 180.0,
+    rotation_angle: float = 180.0,
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
     colors: dict = {},

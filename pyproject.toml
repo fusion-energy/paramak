@@ -15,7 +15,7 @@ classifiers = [
 authors = [
   { name="The Paramak Development Team" },
 ]
-license = {file = "LICENSE.txt"}
+license = {file = "LICENSE"}
 requires-python = ">=3.8"
 keywords = ["python", "geometry", "reactor", "model", "cad", "fusion", "parametric", "dagmc", "openmc"]
 dependencies = [

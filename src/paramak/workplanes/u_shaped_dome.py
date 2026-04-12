@@ -40,7 +40,7 @@ def u_shaped_dome(
         msg = f"VacuumVessel.thickness must be a number. Not {type(thickness)}"
         raise ValueError(msg)
     if thickness <= 0:
-        msg = f"VacuumVessel.thickness must be a positive number above 0. Not {value}"
+        msg = f"VacuumVessel.thickness must be a positive number above 0. Not {thickness}"
         raise ValueError(msg)
 
         #
