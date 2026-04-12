@@ -179,3 +179,5 @@ src/_version.py
 *.png
 *.gif
 *.svg
+
+_build

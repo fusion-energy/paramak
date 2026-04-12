@@ -15,11 +15,11 @@ classifiers = [
 authors = [
   { name="The Paramak Development Team" },
 ]
-license = {file = "LICENSE.txt"}
+license = {file = "LICENSE"}
 requires-python = ">=3.8"
 keywords = ["python", "geometry", "reactor", "model", "cad", "fusion", "parametric", "dagmc", "openmc"]
 dependencies = [
-    "cadquery>=2.5.2",
+    "cadquery>=2.6.0",
     "numpy",
     "mpmath",
     "sympy",
@@ -42,13 +42,11 @@ tests = [
 docs = [
     "sphinx_autodoc_typehints",
     "openmc_data_downloader",
-    "sphinxcadquery",
     "sphinx",
     "pydata-sphinx-theme",
     "cadquery",
     "ipython",
     "sphinx_design",
-    "setuptools",
 ]
 
 [tool.black]

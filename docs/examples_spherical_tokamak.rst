@@ -11,9 +11,7 @@ Spherical tokamak
 - This reactor allows for a separate vertical and radial build which allows different thickness layers in the blanket. 
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
@@ -88,9 +86,7 @@ Spherical tokamak from plasma
 
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
@@ -142,12 +138,11 @@ Spherical tokamak with divertor
 - This example adds a divertor to a spherical_tokamak_from_plasma reactor.
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
+    import paramak
     from cadquery import Workplane
 
     # makes a rectangle that overlaps the lower blanket under the plasma
@@ -208,9 +203,7 @@ Spherical tokamak with poloidal field coils
 
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
@@ -310,9 +303,7 @@ Spherical tokamak with toroidal field coils
 
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 
@@ -451,9 +442,7 @@ Spherical tokamak with negative triangularity
 - This example makes a spherical tokamak with a negative but this would work on any reactor.
 
 .. cadquery::
-    :gridsize: 0
     :select: result
-    :color: #00cd00
     :width: 100%
     :height: 600px
 

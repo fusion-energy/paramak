@@ -28,14 +28,14 @@ def create_blanket_layers_after_plasma(
     plasma_index_vertical = get_plasma_index(vertical_build)
 
     for i, item in enumerate(radial_build[plasma_index_radial + 1 :]):
-        upper_thicknees = vertical_build[plasma_index_vertical + 1 + i][1]
-        lower_thicknees = vertical_build[plasma_index_vertical - 1 - i][1]
+        upper_thickness = vertical_build[plasma_index_vertical + 1 + i][1]
+        lower_thickness = vertical_build[plasma_index_vertical - 1 - i][1]
         radial_thickness = item[1]
 
         if item[0] == LayerType.GAP:
             cumulative_thickness_rb += radial_thickness
-            cumulative_thickness_uvb += upper_thicknees
-            cumulative_thickness_lvb += lower_thicknees
+            cumulative_thickness_uvb += upper_thickness
+            cumulative_thickness_lvb += lower_thickness
             continue
 
         layer = blanket_from_plasma(
@@ -44,9 +44,9 @@ def create_blanket_layers_after_plasma(
             triangularity=triangularity,
             elongation=elongation,
             thickness=[
-                lower_thicknees,
+                lower_thickness,
                 radial_thickness,
-                upper_thicknees,
+                upper_thickness,
             ],
             offset_from_plasma=[
                 cumulative_thickness_lvb,
@@ -63,8 +63,8 @@ def create_blanket_layers_after_plasma(
         )
         layer = layer.cut(center_column)
         cumulative_thickness_rb += radial_thickness
-        cumulative_thickness_uvb += upper_thicknees
-        cumulative_thickness_lvb += lower_thicknees
+        cumulative_thickness_uvb += upper_thickness
+        cumulative_thickness_lvb += lower_thickness
         layers.append(layer)
 
     return layers
@@ -114,22 +114,20 @@ def spherical_tokamak_from_plasma(
 ) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.
 
-
     Args:
-
         radial_build: sequence of tuples containing the radial build of the
-            reactor. Each tuple should contain a LayerType and a float 
-        elongation (float, optional): _description_. Defaults to 2.0.
-        triangularity (float, optional): _description_. Defaults to 0.55.
-        rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
-        extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
-        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
+            reactor. Each tuple should contain a LayerType and a float.
+        elongation: The elongation of the plasma. Defaults to 2.0.
+        triangularity: The triangularity of the plasma. Defaults to 0.55.
+        rotation_angle: The rotation angle of the reactor in degrees. Defaults to 180.0.
+        extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
+        colors: the colors to assign to the assembly parts. Defaults to {}.
             Each dictionary entry should be a key that matches the assembly part name
             (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
             representing the RGB or RGBA values.
 
     Returns:
-        _type_: _description_
+        CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
     """
 
     inner_equatorial_point = sum_up_to_plasma(radial_build)
@@ -147,7 +145,7 @@ def spherical_tokamak_from_plasma(
     upper_vertical_build = radial_build[pi:]
 
     plasma_height = 2 * minor_radius * elongation
-    # slice opperation reverses the list and removes the last value to avoid two plasmas
+    # slice operation reverses the list and removes the last value to avoid two plasmas
     vertical_build = upper_vertical_build[::-1][:-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build[1:]
 
     return spherical_tokamak(
@@ -165,7 +163,7 @@ def spherical_tokamak(
     radial_build: Sequence[Tuple[LayerType, float]],
     vertical_build: Sequence[Tuple[str, float]],
     triangularity: float = 0.55,
-    rotation_angle: Optional[str] = 180.0,
+    rotation_angle: float = 180.0,
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
     colors: dict = {},

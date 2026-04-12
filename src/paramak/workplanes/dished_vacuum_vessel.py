@@ -1,6 +1,7 @@
 import typing
 
-from paramak import center_column_shield_cylinder, constant_thickness_dome
+from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
+from ..workplanes.constant_thickness_dome import constant_thickness_dome
 
 
 def dished_vacuum_vessel(
@@ -19,7 +20,7 @@ def dished_vacuum_vessel(
     Arguments:
         radius: the radius from which the centres of the vessel meets the outer
             circumference.
-        reference_point: the x,z coordinates to build te vessel from. Can be
+        reference_point: the x,z coordinates to build the vessel from. Can be
             either the 'center' with a value or 'lower' with a
             value. For example
         dish_height: the height of the lower and upper dish sections.
@@ -38,7 +39,7 @@ def dished_vacuum_vessel(
         msg = f"VacuumVessel.thickness must be a number. Not {type(thickness)}"
         raise ValueError(msg)
     if thickness <= 0:
-        msg = f"VacuumVessel.thickness must be a positive number above 0. Not {value}"
+        msg = f"VacuumVessel.thickness must be a positive number above 0. Not {thickness}"
         raise ValueError(msg)
 
         #

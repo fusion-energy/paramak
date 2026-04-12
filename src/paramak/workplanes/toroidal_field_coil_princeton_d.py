@@ -1,9 +1,11 @@
 import typing
+from typing import List, Tuple
+
 import numpy as np
-from ..utils import create_wire_workplane_from_points, rotate_solid
 from scipy import integrate
 from scipy.optimize import brentq
-from typing import List, Tuple
+
+from ..utils import create_wire_workplane_from_points, rotate_solid
 from ..workplanes.cutting_wedge import cutting_wedge
 
 

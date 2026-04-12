@@ -33,7 +33,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.doctest",
     "sphinx.ext.viewcode",
-    "sphinxcadquery.sphinxcadquery",
+    "cadquery.cq_directive",
     "sphinx_design",
 ]
 

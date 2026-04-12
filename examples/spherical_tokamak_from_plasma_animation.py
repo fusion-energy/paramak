@@ -1,8 +1,8 @@
 import os
 import paramak
-import cadquery_png_plugin.plugin
 import numpy as np
 import cadquery as cq
+from cadquery.vis import show
 
 # Original radial build values
 original_radial_build = [
@@ -118,16 +118,8 @@ def create_reactor(
 def export_reactor_to_png(reactor, file_path):
     reactor.add(
         cq.Workplane('XZ').text("Paramak", fontsize=200, distance=10
-    ).translate((0, 0, -615)))
-    reactor.exportPNG(
-        options={
-            "width": int(1280/2),
-            "height": int(1024/2),
-            "zoom": 1.4,
-            "background_color": (1.0, 1.0, 1.0),
-        },
-        file_path=file_path
-    )
+    ).translate((0, 0, -615)), name="watermark")
+    show(reactor, screenshot=file_path, interact=False, width=640, height=512, zoom=1.4, bgcolor=(1.0, 1.0, 1.0))
     print(f'written {file_path}')
 
 # Generate reactors with varying radial build values
