@@ -35,18 +35,7 @@ my_reactor.save(f"spherical_tokamak_from_plasma_with_colors.step")
 # lots of options https://cadquery.readthedocs.io/en/latest/importexport.html#exporting-svg
 my_reactor.toCompound().export("spherical_tokamak_from_plasma_with_colors.svg")
 
-# show colors with png file export
-# first install plugin with
-# pip install git+https://github.com/jmwright/cadquery-png-plugin
-import cadquery_png_plugin.plugin
-# lots of options
-# https://github.com/jmwright/cadquery-png-plugin/blob/d2dd6e8a51b7e165ee80240a701c5b434dfe0733/cadquery_png_plugin/plugin.py#L276-L298
-my_reactor.exportPNG(
-    options={
-        "width":1280,
-        "height":1024,
-        "zoom":1.4,
-    },
-    file_path='spherical_tokamak_from_plasma_with_colors.png'
-)
+# show colors with png file export using cadquery's built-in screenshot support
+from cadquery.vis import show
+show(my_reactor, screenshot='spherical_tokamak_from_plasma_with_colors.png', interact=False, width=1280, height=1024, zoom=1.4)
 
