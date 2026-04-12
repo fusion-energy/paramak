@@ -1,6 +1,7 @@
 import typing
 
-from paramak import center_column_shield_cylinder, constant_thickness_dome
+from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
+from ..workplanes.constant_thickness_dome import constant_thickness_dome
 
 
 def dished_vacuum_vessel(

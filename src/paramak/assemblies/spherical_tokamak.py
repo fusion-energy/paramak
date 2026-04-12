@@ -114,22 +114,20 @@ def spherical_tokamak_from_plasma(
 ) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.
 
-
     Args:
-
         radial_build: sequence of tuples containing the radial build of the
-            reactor. Each tuple should contain a LayerType and a float 
-        elongation (float, optional): _description_. Defaults to 2.0.
-        triangularity (float, optional): _description_. Defaults to 0.55.
-        rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
-        extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
-        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
+            reactor. Each tuple should contain a LayerType and a float.
+        elongation: The elongation of the plasma. Defaults to 2.0.
+        triangularity: The triangularity of the plasma. Defaults to 0.55.
+        rotation_angle: The rotation angle of the reactor in degrees. Defaults to 180.0.
+        extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
+        colors: the colors to assign to the assembly parts. Defaults to {}.
             Each dictionary entry should be a key that matches the assembly part name
             (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
             representing the RGB or RGBA values.
 
     Returns:
-        _type_: _description_
+        CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
     """
 
     inner_equatorial_point = sum_up_to_plasma(radial_build)
