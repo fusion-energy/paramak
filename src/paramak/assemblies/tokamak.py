@@ -3,7 +3,7 @@ from typing import Sequence, Tuple
 import cadquery as cq
 from .assembly import Assembly
 
-from ..utils import get_plasma_index, LayerType
+from ..utils import get_plasma_index, get_layer_type, is_layer_cut, LayerType
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
@@ -16,9 +16,9 @@ def count_cylinder_layers(radial_build):
     found_plasma = False
 
     for item in radial_build:
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             found_plasma = True
-        elif item[0] == LayerType.SOLID:
+        elif get_layer_type(item[0]) == LayerType.SOLID:
             if not found_plasma:
                 before_plasma += 1
             else:
@@ -35,10 +35,10 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
     number_of_cylinder_layers = count_cylinder_layers(radial_build)
 
     for _, item in enumerate(radial_build):
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             break
 
-        if item[0] == LayerType.GAP:
+        if get_layer_type(item[0]) == LayerType.GAP:
             total_sum += item[1]
             continue
 
@@ -63,7 +63,7 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
 def distance_to_plasma(radial_build, index):
     distance = 0
     for item in radial_build[index + 1 :]:
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             break
         distance += item[1]
     return distance
@@ -84,14 +84,17 @@ def create_layers_from_plasma(
     cumulative_thickness_lvb = 0
     for index_delta in range(indexes_from_plasma_to_end):
 
-        if radial_build[plasma_index_rb + index_delta][0] == LayerType.PLASMA:
+        outer_layer_entry = radial_build[plasma_index_rb + index_delta][0]
+        inner_layer_entry = radial_build[plasma_index_rb - index_delta][0]
+        radial_layer_type = get_layer_type(outer_layer_entry)
+        if radial_layer_type == LayerType.PLASMA:
             continue
         outer_layer_thickness = radial_build[plasma_index_rb + index_delta][1]
         inner_layer_thickness = radial_build[plasma_index_rb - index_delta][1]
         upper_layer_thickness = vertical_build[plasma_index_vb - index_delta][1]
         lower_layer_thickness = vertical_build[plasma_index_vb + index_delta][1]
 
-        if radial_build[plasma_index_rb + index_delta][0] == LayerType.GAP:
+        if radial_layer_type == LayerType.GAP:
             cumulative_thickness_orb += outer_layer_thickness
             cumulative_thickness_irb += inner_layer_thickness
             cumulative_thickness_uvb += upper_layer_thickness
@@ -99,7 +102,8 @@ def create_layers_from_plasma(
             continue
 
         # build outer layer
-        if radial_build[plasma_index_rb + index_delta][0] == LayerType.SOLID:
+        if radial_layer_type == LayerType.SOLID:
+            cut_layer = is_layer_cut(outer_layer_entry) or is_layer_cut(inner_layer_entry)
             outer_layer = blanket_from_plasma(
                 minor_radius=minor_radius,
                 major_radius=major_radius,
@@ -136,8 +140,11 @@ def create_layers_from_plasma(
                 name=f"layer_{index_delta}",
                 allow_overlapping_shape=True,
             )
-            layer = outer_layer.union(inner_layer)
-            layers.append(layer)
+            if cut_layer:
+                layers.append({"cut": True, "shapes": [outer_layer, inner_layer]})
+            else:
+                layer = outer_layer.union(inner_layer)
+                layers.append({"cut": False, "shapes": [layer]})
             # layers.append(inner_layer)
         cumulative_thickness_orb += outer_layer_thickness
         cumulative_thickness_irb += inner_layer_thickness
@@ -273,6 +280,19 @@ def tokamak(
         center_column=inner_radial_build[0],  # blanket_cutting_cylinder,
     )
 
+    layer_entries = []
+    for i, entry in enumerate(inner_radial_build):
+        layer_entries.append((f"layer_{i+1}", entry))
+
+    next_layer_index = len(inner_radial_build) + 1
+    for layer in blanket_layers:
+        if layer["cut"]:
+            layer_entries.append((f"layer_{next_layer_index}.1", layer["shapes"][0]))
+            layer_entries.append((f"layer_{next_layer_index}.2", layer["shapes"][1]))
+        else:
+            layer_entries.append((f"layer_{next_layer_index}", layer["shapes"][0]))
+        next_layer_index += 1
+
     my_assembly = Assembly()
 
     for i, entry in enumerate(extra_cut_shapes):
@@ -286,12 +306,12 @@ def tokamak(
     intersect_shapes_to_cut = []
     if len(extra_intersect_shapes) > 0:
         all_shapes = []
-        for shape in inner_radial_build + blanket_layers:
+        for _, shape in layer_entries:
             all_shapes.append(shape)
 
         # makes a union of the the radial build to use as a base for the intersect shapes
-        reactor_compound = inner_radial_build[0]
-        for i, entry in enumerate(inner_radial_build[1:] + blanket_layers):
+        reactor_compound = layer_entries[0][1]
+        for _, entry in layer_entries[1:]:
             reactor_compound = reactor_compound.union(entry)
 
         # adds the extra intersect shapes to the assembly
@@ -303,12 +323,11 @@ def tokamak(
 
     # builds just the core if there are no extra parts
     if len(extra_cut_shapes) == 0 and len(intersect_shapes_to_cut) == 0:
-        for i, entry in enumerate(inner_radial_build+blanket_layers):
-            name=f"layer_{i+1}"
+        for name, entry in layer_entries:
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
     else:
         shapes_and_components = []
-        for i, entry in enumerate(inner_radial_build + blanket_layers):
+        for _, entry in layer_entries:
             for cutter in extra_cut_shapes + extra_intersect_shapes:
                 entry = entry.cut(cutter)
                 # TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple
@@ -316,8 +335,7 @@ def tokamak(
                 #     print(i, subentry)
             shapes_and_components.append(entry)
 
-        for i, entry in enumerate(shapes_and_components):
-            name=f"layer_{i+1}"
+        for (name, _), entry in zip(layer_entries, shapes_and_components):
             # TODO track the names of shapes, even when extra shapes are made due to splitting
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
