@@ -35,3 +35,32 @@ class Assembly(cq.Assembly):
         for part in self:
             names.append(part[1].split('/')[-1])
         return names
+
+    def fuse_solids(self):
+        """Combines multi-solid parts into single solids for export."""
+        new_assembly = Assembly()
+        for part in self:
+            obj, name, loc, color = part
+            if isinstance(obj, cq.Workplane):
+                solids = obj.solids().vals()
+                if len(solids) > 1:
+                    fused_shape = solids[0]
+                    for solid in solids[1:]:
+                        fused_shape = fused_shape.fuse(solid)
+                    if hasattr(fused_shape, "removeSplitter"):
+                        fused_shape = fused_shape.removeSplitter()
+                    obj = cq.Workplane(obj.plane).add(fused_shape).clean()
+                    if len(obj.solids().vals()) > 1:
+                        compound = cq.Compound.makeCompound(solids)
+                        obj = cq.Workplane(obj.plane).add(compound).combine()
+                    if len(obj.solids().vals()) > 1:
+                        warnings.warn(f"Part {name} still has {len(obj.solids().vals())} solids after fusing")
+                else:
+                    obj = obj.combine()
+            new_assembly.add(obj, name=name, color=color, loc=loc)
+
+        new_assembly.elongation = self.elongation
+        new_assembly.triangularity = self.triangularity
+        new_assembly.major_radius = self.major_radius
+        new_assembly.minor_radius = self.minor_radius
+        return new_assembly

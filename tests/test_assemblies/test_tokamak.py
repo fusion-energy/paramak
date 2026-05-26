@@ -1,4 +1,5 @@
 import paramak
+import pytest
 
 
 def test_colors():
@@ -31,3 +32,26 @@ def test_colors():
             "layer_5": (0.5, 0.5, 0.8),
         }
     )
+
+
+def test_tokamak_no_inner_layers_error():
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.PLASMA, 100),
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 20),
+    ]
+    vertical_build = [
+        (paramak.LayerType.GAP, 20),
+        (paramak.LayerType.PLASMA, 200),
+        (paramak.LayerType.GAP, 20),
+    ]
+
+    with pytest.raises(ValueError, match="No inner SOLID layers found before the plasma"):
+        paramak.tokamak(
+            radial_build=radial_build,
+            vertical_build=vertical_build,
+            rotation_angle=180,
+        )

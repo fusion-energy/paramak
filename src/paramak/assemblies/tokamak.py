@@ -87,6 +87,7 @@ def create_layers_from_plasma(
         outer_layer_entry = radial_build[plasma_index_rb + index_delta][0]
         inner_layer_entry = radial_build[plasma_index_rb - index_delta][0]
         radial_layer_type = get_layer_type(outer_layer_entry)
+        inner_layer_type = get_layer_type(inner_layer_entry)
         if radial_layer_type == LayerType.PLASMA:
             continue
         outer_layer_thickness = radial_build[plasma_index_rb + index_delta][1]
@@ -103,7 +104,10 @@ def create_layers_from_plasma(
 
         # build outer layer
         if radial_layer_type == LayerType.SOLID:
-            cut_layer = is_layer_cut(outer_layer_entry) or is_layer_cut(inner_layer_entry)
+            cut_layer = (
+                inner_layer_type == LayerType.SOLID
+                and (is_layer_cut(outer_layer_entry) or is_layer_cut(inner_layer_entry))
+            )
             outer_layer = blanket_from_plasma(
                 minor_radius=minor_radius,
                 major_radius=major_radius,
@@ -268,6 +272,11 @@ def tokamak(
     inner_radial_build = create_center_column_shield_cylinders(
         radial_build, rotation_angle, blanket_rear_wall_end_height
     )
+
+    if len(inner_radial_build) == 0:
+        raise ValueError(
+            "No inner SOLID layers found before the plasma; add more inner SOLID layers or remove outer ones."
+        )
 
     blanket_layers = create_layers_from_plasma(
         radial_build=radial_build,
