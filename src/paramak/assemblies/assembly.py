@@ -8,10 +8,10 @@ import cadquery as cq
 class Assembly(cq.Assembly):
     """Nested assembly of Workplane and Shape objects defining their relative positions."""
 
-    elongation=None
-    triangularity=None
-    major_radius=None
-    minor_radius=None
+    elongation = None
+    triangularity = None
+    major_radius = None
+    minor_radius = None
 
     def remove(self, name: str):
         new_assembly = Assembly()

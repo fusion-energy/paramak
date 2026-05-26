@@ -1,4 +1,5 @@
 import typing
+from dataclasses import dataclass
 from enum import Enum
 
 from cadquery import Workplane
@@ -8,6 +9,25 @@ class LayerType(Enum):
     GAP = "gap"
     SOLID = "solid"
     PLASMA = "plasma"
+
+    def __call__(self, cut: bool = False):
+        return LayerSpec(layer_type=self, cut=cut)
+
+
+@dataclass(frozen=True)
+class LayerSpec:
+    layer_type: LayerType
+    cut: bool = False
+
+
+def get_layer_type(layer_entry):
+    if isinstance(layer_entry, LayerSpec):
+        return layer_entry.layer_type
+    return layer_entry
+
+
+def is_layer_cut(layer_entry) -> bool:
+    return isinstance(layer_entry, LayerSpec) and layer_entry.cut
 
 
 def instructions_from_points(points):
@@ -108,9 +128,13 @@ def rotate_solid(angles: typing.Sequence[float], solid: Workplane) -> Workplane:
 def sum_up_to_gap_before_plasma(radial_build):
     total_sum = 0
     for i, item in enumerate(radial_build):
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             return total_sum
-        if item[0] == LayerType.GAP and i + 1 < len(radial_build) and radial_build[i + 1][0] == LayerType.PLASMA:
+        if (
+            get_layer_type(item[0]) == LayerType.GAP
+            and i + 1 < len(radial_build)
+            and get_layer_type(radial_build[i + 1][0]) == LayerType.PLASMA
+        ):
             return total_sum
         total_sum += item[1]
     return total_sum
@@ -119,7 +143,7 @@ def sum_up_to_gap_before_plasma(radial_build):
 def sum_up_to_plasma(radial_build):
     total_sum = 0
     for item in radial_build:
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             break
         total_sum += item[1]
     return total_sum
@@ -131,7 +155,7 @@ def sum_after_plasma(radial_build):
     for item in radial_build:
         if plasma_found:
             total_sum += item[1]
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             plasma_found = True
     return total_sum
 
@@ -147,7 +171,7 @@ def sum_before_after_plasma(vertical_build):
     plasma_found = False
 
     for item in vertical_build:
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             plasma_value = item[1] / 2
             plasma_found = True
             continue
@@ -188,7 +212,7 @@ def is_plasma_radial_build(radial_build):
     for entry in radial_build:
         # if entry == LayerType.PLASMA:
         #     return True
-        if entry[0] == LayerType.PLASMA:
+        if get_layer_type(entry[0]) == LayerType.PLASMA:
             return True
     return False
 
@@ -231,15 +255,19 @@ def validate_plasma_radial_build(radial_build):
     plasma_count = 0
     plasma_index = -1
     for index, item in enumerate(radial_build):
-        if not isinstance(item[0], LayerType):
-            raise ValidationError(f"First entry in each radial build Tuple should be a paramak.LayerType")
+        layer_entry = item[0]
+        layer_type = get_layer_type(layer_entry)
+        if not isinstance(layer_type, LayerType):
+            raise ValidationError("First entry in each radial build Tuple should be a paramak.LayerType")
+        if is_layer_cut(layer_entry) and layer_type != LayerType.SOLID:
+            raise ValidationError("Only LayerType.SOLID entries can set cut=True")
         if not isinstance(item[1], (int, float)):
             raise ValidationError(f"Second entry in each radial build Tuple should be a Float")
-        if item[0] not in valid_strings:
-            raise ValidationError(f"Invalid entry '{item[0]}' at index {index}")
+        if layer_type not in valid_strings:
+            raise ValidationError(f"Invalid entry '{layer_type}' at index {index}")
         if item[1] <= 0:
             raise ValidationError(f"Non-positive value '{item[1]}' at index {index}")
-        if item[0] == LayerType.PLASMA:
+        if layer_type == LayerType.PLASMA:
             plasma_count += 1
             plasma_index = index
             if plasma_count > 1:
@@ -248,7 +276,10 @@ def validate_plasma_radial_build(radial_build):
         raise ValidationError("LayerType.PLASMA entry not found or found multiple times")
     if plasma_index == 0 or plasma_index == len(radial_build) - 1:
         raise ValidationError("LayerType.PLASMA entry must have at least one entry before and after it")
-    if radial_build[plasma_index - 1][0] != LayerType.GAP or radial_build[plasma_index + 1][0] != LayerType.GAP:
+    if (
+        get_layer_type(radial_build[plasma_index - 1][0]) != LayerType.GAP
+        or get_layer_type(radial_build[plasma_index + 1][0]) != LayerType.GAP
+    ):
         raise ValidationError("LayerType.PLASMA entry must be preceded and followed by a LayerType.GAP")
 
 
@@ -263,22 +294,22 @@ def is_lower_or_upper_divertor(radial_build):
 
 def get_plasma_value(radial_build):
     for item in radial_build:
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             return item[1]
     raise ValueError("LayerType.PLASMA entry not found")
 
 
 def get_plasma_index(radial_build):
     for i, item in enumerate(radial_build):
-        if item[0] == LayerType.PLASMA:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
             return i
     raise ValueError("LayerType.PLASMA entry not found")
 
 
 def get_gap_after_plasma(radial_build):
     for index, item in enumerate(radial_build):
-        if item[0] == LayerType.PLASMA:
-            if index + 1 < len(radial_build) and radial_build[index + 1][0] == LayerType.GAP:
+        if get_layer_type(item[0]) == LayerType.PLASMA:
+            if index + 1 < len(radial_build) and get_layer_type(radial_build[index + 1][0]) == LayerType.GAP:
                 return radial_build[index + 1][1]
             else:
                 raise ValueError("LayerType.PLASMA entry is not followed by a 'gap'")
@@ -293,9 +324,9 @@ def sum_after_gap_following_plasma(radial_build):
     for item in radial_build:
         if found_gap_after_plasma:
             total_sum += item[1]
-        elif found_plasma and item[0] == LayerType.GAP:
+        elif found_plasma and get_layer_type(item[0]) == LayerType.GAP:
             found_gap_after_plasma = True
-        elif item[0] == LayerType.PLASMA:
+        elif get_layer_type(item[0]) == LayerType.PLASMA:
             found_plasma = True
 
     if not found_plasma:

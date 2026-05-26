@@ -509,6 +509,79 @@ def test_invalid_string():
         validate_plasma_radial_build(radial_build)
 
 
+def test_cut_on_solid_valid():
+    radial_build = [
+        (
+            LayerType.GAP,
+            10,
+        ),
+        (
+            LayerType.SOLID,
+            50,
+        ),
+        (
+            LayerType.GAP,
+            5,
+        ),
+        (
+            LayerType.SOLID(cut=True),
+            50,
+        ),
+        (
+            LayerType.GAP,
+            5,
+        ),
+        (
+            LayerType.PLASMA,
+            50,
+        ),
+        (
+            LayerType.GAP,
+            60,
+        ),
+        (
+            LayerType.SOLID,
+            2,
+        ),
+    ]
+    validate_plasma_radial_build(radial_build)
+
+
+def test_cut_on_gap_invalid():
+    radial_build = [
+        (
+            LayerType.GAP(cut=True),
+            10,
+        ),
+        (
+            LayerType.SOLID,
+            50,
+        ),
+        (
+            LayerType.GAP,
+            5,
+        ),
+        (
+            LayerType.PLASMA,
+            50,
+        ),
+        (
+            LayerType.GAP,
+            60,
+        ),
+        (
+            LayerType.SOLID,
+            2,
+        ),
+        (
+            LayerType.GAP,
+            10,
+        ),
+    ]
+    with pytest.raises(ValidationError, match="Only LayerType.SOLID entries can set cut=True"):
+        validate_plasma_radial_build(radial_build)
+
+
 def test_plasma_first_entry():
     radial_build = [
         (
