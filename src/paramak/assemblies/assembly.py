@@ -23,7 +23,11 @@ class Assembly(cq.Assembly):
                 new_assembly.add(part[0], name=part[1], color=part[3], loc=part[2])
         if not part_found:
             warnings.warn(f'Part with name {name} not found')
-        self._copy_metadata(new_assembly)
+
+        new_assembly.elongation = self.elongation
+        new_assembly.triangularity = self.triangularity
+        new_assembly.major_radius = self.major_radius
+        new_assembly.minor_radius = self.minor_radius
         return new_assembly
 
     def names(self):
