@@ -155,9 +155,9 @@ def tokamak_from_plasma(
     elongation: float = 2.0,
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    extra_cut_shapes: Sequence[cq.Workplane] = [],
-    extra_intersect_shapes: Sequence[cq.Workplane] = [],
-    colors: dict = {}
+    extra_cut_shapes: Sequence[cq.Workplane] = None,
+    extra_intersect_shapes: Sequence[cq.Workplane] = None,
+    colors: dict = None,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
@@ -178,6 +178,13 @@ def tokamak_from_plasma(
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
     """
+
+    if extra_cut_shapes is None:
+        extra_cut_shapes = []
+    if extra_intersect_shapes is None:
+        extra_intersect_shapes = []
+    if colors is None:
+        colors = {}
 
     inner_equatorial_point = sum_up_to_plasma(radial_build)
     plasma_radial_thickness = get_plasma_value(radial_build)
@@ -214,9 +221,9 @@ def tokamak(
     vertical_build: Sequence[Tuple[str, float]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    extra_cut_shapes: Sequence[cq.Workplane] = [],
-    extra_intersect_shapes: Sequence[cq.Workplane] = [],
-    colors: dict = {}
+    extra_cut_shapes: Sequence[cq.Workplane] = None,
+    extra_intersect_shapes: Sequence[cq.Workplane] = None,
+    colors: dict = None,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial and vertical build.
@@ -238,6 +245,13 @@ def tokamak(
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
     """
+
+    if extra_cut_shapes is None:
+        extra_cut_shapes = []
+    if extra_intersect_shapes is None:
+        extra_intersect_shapes = []
+    if colors is None:
+        colors = {}
 
     inner_equatorial_point = sum_up_to_plasma(radial_build)
     plasma_radial_thickness = get_plasma_value(radial_build)
