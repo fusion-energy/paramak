@@ -291,7 +291,12 @@ def tokamak(
 
     for i, entry in enumerate(extra_cut_shapes):
         if isinstance(entry, cq.Workplane):
-            name = f"add_extra_cut_shape_{i+1}"
+            # Use the object's name attribute if it exists, otherwise fallback
+            base_name = getattr(entry, 'name', None)
+            if base_name:
+                name = f"{base_name}_{i+1}"
+            else:
+                name = f"add_extra_cut_shape_{i+1}"
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
         else:
             raise ValueError(f"extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
@@ -312,7 +317,12 @@ def tokamak(
         for i, entry in enumerate(extra_intersect_shapes):
             reactor_entry_intersection = entry.intersect(reactor_compound)
             intersect_shapes_to_cut.append(reactor_entry_intersection)
-            name=f"extra_intersect_shapes_{i+1}"
+            # Use the object's name attribute if it exists, otherwise fallback
+            base_name = getattr(entry, 'name', None)
+            if base_name:
+                name = f"{base_name}_{i+1}"
+            else:
+                name=f"extra_intersect_shapes_{i+1}"
             my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     # builds just the core if there are no extra parts
