@@ -266,8 +266,7 @@ Tokamak with negative triangularity
 Tokamak with several customizations
 -----------------------------------
 
-- Combining many of the examples together to produce a Tokamak
-    with extra blanket layers, a lower divertor, PF and TF coils.
+- Combining many of the examples together to produce a Tokamak with extra blanket layers, a lower divertor, PF and TF coils.
 
 .. cadquery::
     :select: result
