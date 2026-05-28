@@ -112,6 +112,56 @@ Spherical tokamak with divertor
         extra_intersect_shapes=[divertor_lower]
     ).toCompound()
 
+.. _spherical_custom_divertor:
+
+Spherical tokamak with custom divertor
+--------------------------------------
+
+- The revolved_shape function builds a solid by revolving a custom 2D (R, Z, connection) profile. Here straight segments make a small V-shaped divertor plate.
+- This example adds the revolved shape directly to the reactor assembly with ``assembly.add``, rather than passing it to ``extra_intersect_shapes``. The plate therefore keeps its full shape and can sit anywhere inside the vessel, **outside the blanket envelope** — it is not clipped to the blanket.
+- For the alternative approach, where the revolved shape is intersected with the blanket so the divertor is confined to the blanket envelope, see the :ref:`tokamak_custom_divertor` example.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import cadquery as cq
+    import paramak
+
+    # small V-shaped divertor plate from straight segments, sitting in the
+    # lower cavity between the plasma and the lower blanket
+    points = [
+        (160, -312, "straight"),
+        (220, -336, "straight"),
+        (280, -312, "straight"),
+        (280, -330, "straight"),
+        (220, -354, "straight"),
+        (160, -330, "straight"),
+    ]
+    divertor = paramak.revolved_shape(points=points, rotation_angle=180, plane="XZ")
+
+    result = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=180,
+    )
+
+    # add the divertor plate directly to the assembly so it is not clipped to the blanket
+    result.add(divertor, name="divertor", color=cq.Color("red"))
+    result = result.toCompound()
+
 Spherical tokamak with poloidal field coils
 -------------------------------------------
 

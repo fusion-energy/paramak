@@ -120,13 +120,14 @@ Tokamak with divertor
         extra_intersect_shapes=[divertor_lower]
     ).toCompound()
 
+.. _tokamak_custom_divertor:
+
 Tokamak with custom divertor
 ----------------------------
 
-- The revolved_shape function builds a solid by revolving a custom 2D profile, which can be used as a divertor.
-- Each point is a (R, Z, connection) tuple where connection is "straight", "spline" or "circle", so splines produce a smooth curved profile rather than a blocky rectangle.
-- The profile is closed automatically, so the first point does not need to be repeated.
-- This example adds a curved divertor to a tokamak_from_plasma reactor.
+- The revolved_shape function builds a solid by revolving a custom 2D (R, Z, connection) profile, where connection is "straight", "spline" or "circle". Splines produce a smooth curved profile rather than a blocky rectangle, and the profile is closed automatically.
+- This example passes the revolved shape to ``extra_intersect_shapes``, so it is intersected with the blanket layers. The divertor is therefore **confined to the blanket envelope** and cannot extend into the plasma cavity.
+- For the alternative approach, where a revolved shape is added directly to the assembly so it can sit outside the blanket envelope, see the :ref:`spherical_custom_divertor` example.
 
 .. cadquery::
     :select: result
