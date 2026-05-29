@@ -12,6 +12,7 @@ from .workplanes.dished_vacuum_vessel import dished_vacuum_vessel
 from .workplanes.plasma_simplified import plasma_simplified
 from .workplanes.poloidal_field_coil import poloidal_field_coil
 from .workplanes.poloidal_field_coil_case import poloidal_field_coil_case
+from .workplanes.revolved_shape import revolved_shape
 from .workplanes.toroidal_field_coil_rectangle import toroidal_field_coil_rectangle
 from .workplanes.u_shaped_dome import u_shaped_dome
 from .workplanes.toroidal_field_coil_princeton_d import toroidal_field_coil_princeton_d
@@ -33,6 +34,7 @@ __all__ = [
     "plasma_simplified",
     "poloidal_field_coil",
     "poloidal_field_coil_case",
+    "revolved_shape",
     "spherical_tokamak",
     "spherical_tokamak_from_plasma",
     "tokamak",

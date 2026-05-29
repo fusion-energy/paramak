@@ -120,6 +120,54 @@ Tokamak with divertor
         extra_intersect_shapes=[divertor_lower]
     ).toCompound()
 
+.. _tokamak_custom_divertor:
+
+Tokamak with custom divertor
+----------------------------
+
+- The revolved_shape function builds a solid by revolving a custom 2D (R, Z, connection) profile, where connection is "straight", "spline" or "circle". Splines produce a smooth curved profile rather than a blocky rectangle, and the profile is closed automatically.
+- This example passes the revolved shape to ``extra_intersect_shapes``, so it is intersected with the blanket layers. The divertor is therefore **confined to the blanket envelope** and cannot extend into the plasma cavity.
+- For the alternative approach, where a revolved shape is added directly to the assembly so it can sit outside the blanket envelope, see the :ref:`spherical_custom_divertor` example.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    # curved divertor profile in the XZ plane, each point is (R, Z, connection)
+    points = [
+        (300, -700, "straight"),
+        (300, -300, "spline"),
+        (370, -180, "spline"),
+        (470, -240, "spline"),
+        (560, -180, "spline"),
+        (600, -700, "straight"),
+    ]
+    divertor_lower = paramak.revolved_shape(points=points, rotation_angle=180, plane="XZ")
+
+    result = paramak.tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 30),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=180,
+        extra_intersect_shapes=[divertor_lower]
+    ).toCompound()
+
 Tokamak with poloidal field coils
 ---------------------------------
 
