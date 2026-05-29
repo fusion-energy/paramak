@@ -18,7 +18,7 @@ This package can also be used to export portable html files with the 3D visualiz
 .. code-block:: python
 
     # pip install jupyter_cadquery
-    # might need to downgrade pip with ... python -m pip install pip==24.0
+    # might needed to downgrade pip with ... python -m pip  install pip==24.0
     from jupyter_cadquery import show
     view = show(result)  # where result is the returned reactor or component object
     view.export_html("3d.html")
