@@ -12,7 +12,7 @@ def toroidal_field_coil_rectangle(
     rotation_angle: float = 360.0,
     name: str = "toroidal_field_coil",
     with_inner_leg: bool = True,
-    azimuthal_placement_angles: typing.Sequence[float] = None,
+    azimuthal_placement_angles: typing.Sequence[float] = [0],
     vertical_displacement: float = 0.0,
     color: typing.Tuple[float, float, float, typing.Optional[float]] = (0.0, 0.0, 1.0),
     plane: str = "XZ",
@@ -34,8 +34,6 @@ def toroidal_field_coil_rectangle(
             offsets the placement of coils around the azimuthal angle
     """
 
-    if azimuthal_placement_angles is None:
-        azimuthal_placement_angles = [0]
     if horizontal_start_point[0] >= vertical_mid_point[0]:
         raise ValueError(
             "horizontal_start_point x should be smaller than the \

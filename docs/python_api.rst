@@ -23,6 +23,5 @@ Workplanes
 .. autofunction:: plasma_simplified
 .. autofunction:: poloidal_field_coil_case
 .. autofunction:: poloidal_field_coil
-.. autofunction:: revolved_shape
 .. autofunction:: toroidal_field_coil_rectangle
 .. autofunction:: u_shaped_dome

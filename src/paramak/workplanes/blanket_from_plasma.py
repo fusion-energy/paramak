@@ -110,6 +110,7 @@ def find_points(
         msg = "blanket_from_plasma: Some points with negative R coordinate have " "been ignored."
         warnings.warn(msg, category=UserWarning)
 
+    # input()
     return points
 
 
@@ -201,7 +202,7 @@ def distribution(major_radius, minor_radius, triangularity, elongation, vertical
 
     Args:
         theta (float or np.array or sp.Symbol): the angle(s) in degrees.
-        pkg (module, optional): Module to use in the function. If sp, as
+        pkg (module, optional): Module to use in the funciton. If sp, as
             sympy object will be returned. If np, a np.array or a float
             will be returned. Defaults to np.
 
@@ -229,7 +230,7 @@ def blanket_from_plasma(
     elongation: float = 2.0,
     vertical_displacement: float = 0.0,
     offset_from_plasma: typing.Union[float, typing.Iterable[float]] = 0.0,
-    num_points: int = 200,
+    num_points: int = 50,
     name: str = "blanket_from_plasma",
     color: typing.Tuple[float, float, float, typing.Optional[float]] = (
         0.333,
@@ -243,7 +244,7 @@ def blanket_from_plasma(
     allow_overlapping_shape=False,
     connect_to_center=False,
 ):
-    """A blanket volume created from plasma parameters. It might be necessary
+    """A blanket volume created from plasma parameters. In might be nessecary
     to increase the num_points when making long but thin geometry with this
     component.
 
