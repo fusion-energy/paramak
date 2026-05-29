@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Examples &#8212; Paramak 0.1.dev1+g42ff5be documentation</title>
+    <title>Examples &#8212; Paramak 0.1.dev1+g36f3f42fe documentation</title>
   
   
   
@@ -27,40 +27,194 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcadquerystatic/main.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/paramak.css?v=67693341" />
   
   <!-- So that users can add custom icons -->
-  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="_static/documentation_options.js?v=c9d1dedc"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/sphinxcadquerystatic/three.js"></script>
-    <script src="_static/sphinxcadquerystatic/AMFLoader.js"></script>
-    <script src="_static/sphinxcadquerystatic/STLLoader.js"></script>
-    <script src="_static/sphinxcadquerystatic/LegacyJSONLoader.js"></script>
-    <script src="_static/sphinxcadquerystatic/jszip.min.js"></script>
-    <script src="_static/sphinxcadquerystatic/OrbitControls.js"></script>
-    <script src="_static/sphinxcadquerystatic/WebGL.js"></script>
-    <script src="_static/sphinxcadquerystatic/main.js"></script>
+    <script src="_static/documentation_options.js?v=b62845fb"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/vtk.js?v=415cc427"></script>
+    <script>
+const RENDERERS = {};
+var ID =  0;
+
+const renderWindow = vtk.Rendering.Core.vtkRenderWindow.newInstance();
+const openglRenderWindow = vtk.Rendering.OpenGL.vtkRenderWindow.newInstance();
+renderWindow.addView(openglRenderWindow);
+
+const rootContainer = document.createElement('div');
+rootContainer.style.position = 'fixed';
+//rootContainer.style.zIndex = -1;
+rootContainer.style.left = 0;
+rootContainer.style.top = 0;
+rootContainer.style.pointerEvents = 'none';
+rootContainer.style.width = '100%';
+rootContainer.style.height = '100%';
+
+openglRenderWindow.setContainer(rootContainer);
+
+const interact_style = vtk.Interaction.Style.vtkInteractorStyleManipulator.newInstance();
+
+const manips = {
+    rot: vtk.Interaction.Manipulators.vtkMouseCameraTrackballRotateManipulator.newInstance(),
+    pan: vtk.Interaction.Manipulators.vtkMouseCameraTrackballPanManipulator.newInstance(),
+    zoom1: vtk.Interaction.Manipulators.vtkMouseCameraTrackballZoomManipulator.newInstance(),
+    zoom2: vtk.Interaction.Manipulators.vtkMouseCameraTrackballZoomManipulator.newInstance(),
+    roll: vtk.Interaction.Manipulators.vtkMouseCameraTrackballRollManipulator.newInstance(),
+};
+
+manips.rot.setUseFocalPointAsCenterOfRotation(true);
+manips.zoom1.setControl(true);
+manips.zoom2.setButton(3);
+manips.roll.setShift(true);
+manips.pan.setButton(2);
+
+for (var k in manips){{
+    interact_style.addMouseManipulator(manips[k]);
+}};
+
+const interactor = vtk.Rendering.Core.vtkRenderWindowInteractor.newInstance();
+interactor.setView(openglRenderWindow);
+interactor.initialize();
+interactor.setInteractorStyle(interact_style);
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.body.appendChild(rootContainer);
+});
+
+function updateViewPort(element, renderer) {
+  const { innerHeight, innerWidth } = window;
+  const { x, y, width, height } = element.getBoundingClientRect();
+  const viewport = [
+    x / innerWidth,
+    1 - (y + height) / innerHeight,
+    (x + width) / innerWidth,
+    1 - y / innerHeight,
+  ];
+  renderer.setViewport(...viewport);
+}
+
+function recomputeViewports() {
+  const rendererElems = document.querySelectorAll('.renderer');
+  for (let i = 0; i < rendererElems.length; i++) {
+    const elem = rendererElems[i];
+    const { id } = elem;
+    const renderer = RENDERERS[id];
+    updateViewPort(elem, renderer);
+  }
+  renderWindow.render();
+}
+
+function resize() {
+  rootContainer.style.width = `${window.innerWidth}px`;
+  openglRenderWindow.setSize(window.innerWidth, window.innerHeight);
+  recomputeViewports();
+}
+
+window.addEventListener('resize', resize);
+document.addEventListener('scroll', recomputeViewports);
+
+
+function enterCurrentRenderer(e) {
+  interactor.bindEvents(document.body);
+  interact_style.setEnabled(true);
+  interactor.setCurrentRenderer(RENDERERS[e.target.id]);
+}
+
+function exitCurrentRenderer(e) {
+  interactor.setCurrentRenderer(null);
+  interact_style.setEnabled(false);
+  interactor.unbindEvents();
+}
+
+
+function applyStyle(element) {
+  element.classList.add('renderer');
+  element.style.width = '100%';
+  element.style.height = '100%';
+  element.style.display = 'inline-block';
+  element.style.boxSizing = 'border';
+  return element;
+}
+
+window.addEventListener('load', resize);
+
+function render(data, parent_element, ratio){
+
+    // Initial setup
+    const renderer = vtk.Rendering.Core.vtkRenderer.newInstance({ background: [1, 1, 1 ] });
+
+    // iterate over all children children
+    for (var el of data){
+        var trans = el.position;
+        var rot = el.orientation;
+        var rgba = el.color;
+        var shape = el.shape;
+
+        // load the inline data
+        var reader = vtk.IO.XML.vtkXMLPolyDataReader.newInstance();
+        const textEncoder = new TextEncoder();
+        reader.parseAsArrayBuffer(textEncoder.encode(shape));
+
+        // setup actor,mapper and add
+        const mapper = vtk.Rendering.Core.vtkMapper.newInstance();
+        mapper.setInputConnection(reader.getOutputPort());
+        mapper.setResolveCoincidentTopologyToPolygonOffset();
+        mapper.setResolveCoincidentTopologyPolygonOffsetParameters(0.5,100);
+
+        const actor = vtk.Rendering.Core.vtkActor.newInstance();
+        actor.setMapper(mapper);
+
+        // set color and position
+        actor.getProperty().setColor(rgba.slice(0,3));
+        actor.getProperty().setOpacity(rgba[3]);
+
+        actor.rotateZ(rot[2]*180/Math.PI);
+        actor.rotateY(rot[1]*180/Math.PI);
+        actor.rotateX(rot[0]*180/Math.PI);
+
+        actor.setPosition(trans);
+
+        renderer.addActor(actor);
+
+    };
+
+    //add the container
+    const container = applyStyle(document.createElement("div"));
+    parent_element.appendChild(container);
+    container.addEventListener('mouseenter', enterCurrentRenderer);
+    container.addEventListener('mouseleave', exitCurrentRenderer);
+    container.id = ID;
+
+    renderWindow.addRenderer(renderer);
+    updateViewPort(container, renderer);
+    renderer.getActiveCamera().set({ position: [1, -1, 1], viewUp: [0, 0, 1] });
+    renderer.resetCamera();
+
+    RENDERERS[ID] = renderer;
+    ID++;
+};
+</script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'examples';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_version = '0.18.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -68,21 +222,27 @@
     <link rel="prev" title="Install" href="install.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g42ff5be" />
+  <meta name="docsearch:version" content="0.1.dev1+g36f3f42fe" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -108,7 +268,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -148,8 +308,7 @@
           
           
           
-          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
     
@@ -204,11 +363,18 @@
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -221,8 +387,7 @@
           
           
           
-          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
       
@@ -304,11 +469,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -321,8 +493,7 @@
           
           
           
-          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         
@@ -332,6 +503,7 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -424,6 +596,7 @@ All reactors can be built with either:</p>
 <li class="toctree-l2"><a class="reference internal" href="examples_tokamak.html#id1">Tokamak</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_tokamak.html#tokamak-from-plasma">Tokamak from plasma</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_tokamak.html#tokamak-with-divertor">Tokamak with divertor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_tokamak.html#tokamak-with-custom-divertor">Tokamak with custom divertor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_tokamak.html#tokamak-with-poloidal-field-coils">Tokamak with poloidal field coils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_tokamak.html#tokamak-with-toroidal-field-coils">Tokamak with toroidal field coils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_tokamak.html#tokamak-with-negative-triangularity">Tokamak with negative triangularity</a></li>
@@ -434,6 +607,7 @@ All reactors can be built with either:</p>
 <li class="toctree-l2"><a class="reference internal" href="examples_spherical_tokamak.html#id1">Spherical tokamak</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_spherical_tokamak.html#spherical-tokamak-from-plasma">Spherical tokamak from plasma</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_spherical_tokamak.html#spherical-tokamak-with-divertor">Spherical tokamak with divertor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_spherical_tokamak.html#spherical-tokamak-with-custom-divertor">Spherical tokamak with custom divertor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_spherical_tokamak.html#spherical-tokamak-with-poloidal-field-coils">Spherical tokamak with poloidal field coils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_spherical_tokamak.html#spherical-tokamak-with-toroidal-field-coils">Spherical tokamak with toroidal field coils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples_spherical_tokamak.html#spherical-tokamak-with-negative-triangularity">Spherical tokamak with negative triangularity</a></li>
@@ -483,13 +657,13 @@ All reactors can be built with either:</p>
 
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/examples.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/examples.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
 
 </div></div>
               
@@ -504,8 +678,8 @@ All reactors can be built with either:</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -525,7 +699,7 @@ All reactors can be built with either:</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
@@ -539,7 +713,7 @@ All reactors can be built with either:</p>
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
 </p></div>
       
     </div>

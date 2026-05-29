@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Python API reference &#8212; Paramak 0.1.dev1+g42ff5be documentation</title>
+    <title>Python API reference &#8212; Paramak 0.1.dev1+g36f3f42fe documentation</title>
   
   
   
@@ -27,61 +27,221 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcadquerystatic/main.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/paramak.css?v=67693341" />
   
   <!-- So that users can add custom icons -->
-  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="_static/documentation_options.js?v=c9d1dedc"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/sphinxcadquerystatic/three.js"></script>
-    <script src="_static/sphinxcadquerystatic/AMFLoader.js"></script>
-    <script src="_static/sphinxcadquerystatic/STLLoader.js"></script>
-    <script src="_static/sphinxcadquerystatic/LegacyJSONLoader.js"></script>
-    <script src="_static/sphinxcadquerystatic/jszip.min.js"></script>
-    <script src="_static/sphinxcadquerystatic/OrbitControls.js"></script>
-    <script src="_static/sphinxcadquerystatic/WebGL.js"></script>
-    <script src="_static/sphinxcadquerystatic/main.js"></script>
+    <script src="_static/documentation_options.js?v=b62845fb"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/vtk.js?v=415cc427"></script>
+    <script>
+const RENDERERS = {};
+var ID =  0;
+
+const renderWindow = vtk.Rendering.Core.vtkRenderWindow.newInstance();
+const openglRenderWindow = vtk.Rendering.OpenGL.vtkRenderWindow.newInstance();
+renderWindow.addView(openglRenderWindow);
+
+const rootContainer = document.createElement('div');
+rootContainer.style.position = 'fixed';
+//rootContainer.style.zIndex = -1;
+rootContainer.style.left = 0;
+rootContainer.style.top = 0;
+rootContainer.style.pointerEvents = 'none';
+rootContainer.style.width = '100%';
+rootContainer.style.height = '100%';
+
+openglRenderWindow.setContainer(rootContainer);
+
+const interact_style = vtk.Interaction.Style.vtkInteractorStyleManipulator.newInstance();
+
+const manips = {
+    rot: vtk.Interaction.Manipulators.vtkMouseCameraTrackballRotateManipulator.newInstance(),
+    pan: vtk.Interaction.Manipulators.vtkMouseCameraTrackballPanManipulator.newInstance(),
+    zoom1: vtk.Interaction.Manipulators.vtkMouseCameraTrackballZoomManipulator.newInstance(),
+    zoom2: vtk.Interaction.Manipulators.vtkMouseCameraTrackballZoomManipulator.newInstance(),
+    roll: vtk.Interaction.Manipulators.vtkMouseCameraTrackballRollManipulator.newInstance(),
+};
+
+manips.rot.setUseFocalPointAsCenterOfRotation(true);
+manips.zoom1.setControl(true);
+manips.zoom2.setButton(3);
+manips.roll.setShift(true);
+manips.pan.setButton(2);
+
+for (var k in manips){{
+    interact_style.addMouseManipulator(manips[k]);
+}};
+
+const interactor = vtk.Rendering.Core.vtkRenderWindowInteractor.newInstance();
+interactor.setView(openglRenderWindow);
+interactor.initialize();
+interactor.setInteractorStyle(interact_style);
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.body.appendChild(rootContainer);
+});
+
+function updateViewPort(element, renderer) {
+  const { innerHeight, innerWidth } = window;
+  const { x, y, width, height } = element.getBoundingClientRect();
+  const viewport = [
+    x / innerWidth,
+    1 - (y + height) / innerHeight,
+    (x + width) / innerWidth,
+    1 - y / innerHeight,
+  ];
+  renderer.setViewport(...viewport);
+}
+
+function recomputeViewports() {
+  const rendererElems = document.querySelectorAll('.renderer');
+  for (let i = 0; i < rendererElems.length; i++) {
+    const elem = rendererElems[i];
+    const { id } = elem;
+    const renderer = RENDERERS[id];
+    updateViewPort(elem, renderer);
+  }
+  renderWindow.render();
+}
+
+function resize() {
+  rootContainer.style.width = `${window.innerWidth}px`;
+  openglRenderWindow.setSize(window.innerWidth, window.innerHeight);
+  recomputeViewports();
+}
+
+window.addEventListener('resize', resize);
+document.addEventListener('scroll', recomputeViewports);
+
+
+function enterCurrentRenderer(e) {
+  interactor.bindEvents(document.body);
+  interact_style.setEnabled(true);
+  interactor.setCurrentRenderer(RENDERERS[e.target.id]);
+}
+
+function exitCurrentRenderer(e) {
+  interactor.setCurrentRenderer(null);
+  interact_style.setEnabled(false);
+  interactor.unbindEvents();
+}
+
+
+function applyStyle(element) {
+  element.classList.add('renderer');
+  element.style.width = '100%';
+  element.style.height = '100%';
+  element.style.display = 'inline-block';
+  element.style.boxSizing = 'border';
+  return element;
+}
+
+window.addEventListener('load', resize);
+
+function render(data, parent_element, ratio){
+
+    // Initial setup
+    const renderer = vtk.Rendering.Core.vtkRenderer.newInstance({ background: [1, 1, 1 ] });
+
+    // iterate over all children children
+    for (var el of data){
+        var trans = el.position;
+        var rot = el.orientation;
+        var rgba = el.color;
+        var shape = el.shape;
+
+        // load the inline data
+        var reader = vtk.IO.XML.vtkXMLPolyDataReader.newInstance();
+        const textEncoder = new TextEncoder();
+        reader.parseAsArrayBuffer(textEncoder.encode(shape));
+
+        // setup actor,mapper and add
+        const mapper = vtk.Rendering.Core.vtkMapper.newInstance();
+        mapper.setInputConnection(reader.getOutputPort());
+        mapper.setResolveCoincidentTopologyToPolygonOffset();
+        mapper.setResolveCoincidentTopologyPolygonOffsetParameters(0.5,100);
+
+        const actor = vtk.Rendering.Core.vtkActor.newInstance();
+        actor.setMapper(mapper);
+
+        // set color and position
+        actor.getProperty().setColor(rgba.slice(0,3));
+        actor.getProperty().setOpacity(rgba[3]);
+
+        actor.rotateZ(rot[2]*180/Math.PI);
+        actor.rotateY(rot[1]*180/Math.PI);
+        actor.rotateX(rot[0]*180/Math.PI);
+
+        actor.setPosition(trans);
+
+        renderer.addActor(actor);
+
+    };
+
+    //add the container
+    const container = applyStyle(document.createElement("div"));
+    parent_element.appendChild(container);
+    container.addEventListener('mouseenter', enterCurrentRenderer);
+    container.addEventListener('mouseleave', exitCurrentRenderer);
+    container.id = ID;
+
+    renderWindow.addRenderer(renderer);
+    updateViewPort(container, renderer);
+    renderer.getActiveCamera().set({ position: [1, -1, 1], viewUp: [0, 0, 1] });
+    renderer.resetCamera();
+
+    RENDERERS[ID] = renderer;
+    ID++;
+};
+</script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'python_api';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_version = '0.18.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Spherical Tokamak" href="examples_spherical_tokamak.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g42ff5be" />
+  <meta name="docsearch:version" content="0.1.dev1+g36f3f42fe" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -107,7 +267,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -147,8 +307,7 @@
           
           
           
-          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
     
@@ -203,11 +362,18 @@
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -220,8 +386,7 @@
           
           
           
-          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
       
@@ -303,11 +468,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -320,8 +492,7 @@
           
           
           
-          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         
@@ -331,6 +502,7 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -396,7 +568,7 @@
 <h2>Assemblies<a class="headerlink" href="#assemblies" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.tokamak">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak" title="Link to this definition">#</a></dt>
 <dd><p>Creates a tokamak fusion reactor from a radial and vertical build.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -429,7 +601,7 @@ representing the RGB or RGBA values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.tokamak_from_plasma">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak_from_plasma" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak_from_plasma" title="Link to this definition">#</a></dt>
 <dd><p>Creates a tokamak fusion reactor from a radial build and plasma parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -461,64 +633,64 @@ representing the RGB or RGBA values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.spherical_tokamak">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak" title="Link to this definition">#</a></dt>
 <dd><p>Creates a spherical tokamak fusion reactor from a radial build and vertical build.</p>
-<p>Args:
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
-<blockquote>
-<div><dl class="simple">
-<dt>radial_build: sequence of tuples containing the radial build of the</dt><dd><p>reactor. Each tuple should contain a LayerType and a float</p>
-</dd>
-</dl>
-<p>elongation (float, optional): _description_. Defaults to 2.0.
-triangularity (float, optional): _description_. Defaults to 0.55.
-rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
-extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
-colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.</p>
-<blockquote>
-<div><p>Each dictionary entry should be a key that matches the assembly part name
-(e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
-representing the RGB or RGBA values.</p>
-</div></blockquote>
-</div></blockquote>
 <dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>radial_build</strong> – sequence of tuples containing the radial build of the
+reactor. Each tuple should contain a LayerType and a float.</p></li>
+<li><p><strong>vertical_build</strong> – sequence of tuples containing the vertical build of the
+reactor. Each tuple should contain a LayerType and a float.</p></li>
+<li><p><strong>triangularity</strong> – The triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>rotation_angle</strong> – The rotation angle of the reactor in degrees. Defaults to 180.0.</p></li>
+<li><p><strong>extra_cut_shapes</strong> – A list of extra shapes to cut the reactor with. Defaults to [].</p></li>
+<li><p><strong>extra_intersect_shapes</strong> – A list of extra shapes to intersect the reactor with. Defaults to [].</p></li>
+<li><p><strong>colors</strong> – the colors to assign to the assembly parts. Defaults to {}.
+Each dictionary entry should be a key that matches the assembly part name
+(e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
+representing the RGB or RGBA values.</p></li>
+</ul>
+</dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_description_</p>
+<dd class="field-odd"><p>A CadQuery Assembly object representing the spherical tokamak fusion reactor.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>_type_</p>
+<dd class="field-even"><p>CadQuery.Assembly</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.spherical_tokamak_from_plasma">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak_from_plasma" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak_from_plasma" title="Link to this definition">#</a></dt>
 <dd><p>Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.</p>
-<p>Args:
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
-<blockquote>
-<div><dl class="simple">
-<dt>radial_build: sequence of tuples containing the radial build of the</dt><dd><p>reactor. Each tuple should contain a LayerType and a float</p>
-</dd>
-</dl>
-<p>elongation (float, optional): _description_. Defaults to 2.0.
-triangularity (float, optional): _description_. Defaults to 0.55.
-rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
-extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
-colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.</p>
-<blockquote>
-<div><p>Each dictionary entry should be a key that matches the assembly part name
-(e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
-representing the RGB or RGBA values.</p>
-</div></blockquote>
-</div></blockquote>
 <dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>radial_build</strong> – sequence of tuples containing the radial build of the
+reactor. Each tuple should contain a LayerType and a float.</p></li>
+<li><p><strong>elongation</strong> – The elongation of the plasma. Defaults to 2.0.</p></li>
+<li><p><strong>triangularity</strong> – The triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>rotation_angle</strong> – The rotation angle of the reactor in degrees. Defaults to 180.0.</p></li>
+<li><p><strong>extra_cut_shapes</strong> – A list of extra shapes to cut the reactor with. Defaults to [].</p></li>
+<li><p><strong>colors</strong> – the colors to assign to the assembly parts. Defaults to {}.
+Each dictionary entry should be a key that matches the assembly part name
+(e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
+representing the RGB or RGBA values.</p></li>
+</ul>
+</dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_description_</p>
+<dd class="field-odd"><p>A CadQuery Assembly object representing the spherical tokamak fusion reactor.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>_type_</p>
+<dd class="field-even"><p>CadQuery.Assembly</p>
 </dd>
 </dl>
 </dd></dl>
@@ -528,8 +700,8 @@ representing the RGB or RGBA values.</p>
 <h2>Workplanes<a class="headerlink" href="#workplanes" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.blanket_from_plasma">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">blanket_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">major_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">450.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_from_plasma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blanket_from_plasma'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.333,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlapping_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_to_center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/blanket_from_plasma.html#blanket_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.blanket_from_plasma" title="Link to this definition">#</a></dt>
-<dd><p>A blanket volume created from plasma parameters. In might be nessecary
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">blanket_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">major_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">450.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_from_plasma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blanket_from_plasma'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.333,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlapping_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_to_center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/blanket_from_plasma.html#blanket_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.blanket_from_plasma" title="Link to this definition">#</a></dt>
+<dd><p>A blanket volume created from plasma parameters. It might be necessary
 to increase the num_points when making long but thin geometry with this
 component.</p>
 <dl class="field-list simple">
@@ -576,7 +748,7 @@ overlaps itself.</p></li>
 <li><p><strong>height</strong> – height of the center column shield.</p></li>
 <li><p><strong>inner_radius</strong> – the inner radius of the center column shield.</p></li>
 <li><p><strong>thickness</strong> – the outer radius of the center column shield.</p></li>
-<li><p><strong>reference_point</strong> – the vertical coordinates to build te vessel from and
+<li><p><strong>reference_point</strong> – the vertical coordinates to build the vessel from and
 description of the reference point. Can be either the ‘center’
 with a numerical value or ‘lower’ with a numerical value.</p></li>
 </ul>
@@ -634,7 +806,7 @@ head. This style of tank head has no knuckle radius or straight flange.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> – the radius from which the centres of the vessel meets the outer
 circumference.</p></li>
-<li><p><strong>reference_point</strong> – the x,z coordinates to build te vessel from. Can be
+<li><p><strong>reference_point</strong> – the x,z coordinates to build the vessel from. Can be
 either the ‘center’ with a value or ‘lower’ with a
 value. For example</p></li>
 <li><p><strong>dish_height</strong> – the height of the lower and upper dish sections.</p></li>
@@ -648,7 +820,7 @@ vessel.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.plasma_simplified">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">plasma_simplified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">major_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">450.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tokamak_plasma'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.333,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/plasma_simplified.html#plasma_simplified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.plasma_simplified" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">plasma_simplified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">major_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">450.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tokamak_plasma'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.333,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/plasma_simplified.html#plasma_simplified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.plasma_simplified" title="Link to this definition">#</a></dt>
 <dd><p>Creates a double null tokamak plasma shape that is controlled by 4
 shaping parameters.</p>
 <dl class="field-list simple">
@@ -697,8 +869,46 @@ shaping parameters.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="paramak.revolved_shape">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">revolved_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">360.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'revolved_shape'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/revolved_shape.html#revolved_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.revolved_shape" title="Link to this definition">#</a></dt>
+<dd><p>Creates a solid by revolving an arbitrary closed 2D profile around the axis.</p>
+<p>The profile is described by a list of points where each point is a
+<code class="docutils literal notranslate"><span class="pre">(R,</span> <span class="pre">Z,</span> <span class="pre">connection)</span></code> tuple. <code class="docutils literal notranslate"><span class="pre">connection</span></code> is one of <code class="docutils literal notranslate"><span class="pre">&quot;straight&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;spline&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;circle&quot;</span></code> and describes how that point joins to the next
+one. This is the same profile description used internally by paramak’s
+blanket and dome components, so splines and arcs produce smooth curved
+profiles rather than blocky polylines.</p>
+<p>The profile is closed automatically, so the first point should not be
+repeated at the end of the list. This is convenient for building custom
+shapes to pass to the <code class="docutils literal notranslate"><span class="pre">extra_intersect_shapes</span></code> or <code class="docutils literal notranslate"><span class="pre">extra_cut_shapes</span></code>
+arguments of the reactor assemblies, for example a curved divertor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>points</strong> – the profile points as <code class="docutils literal notranslate"><span class="pre">(R,</span> <span class="pre">Z,</span> <span class="pre">connection)</span></code> tuples, ordered
+around the outline. Do not repeat the first point; the profile is
+closed automatically.</p></li>
+<li><p><strong>rotation_angle</strong> – the angle in degrees to revolve the profile around the
+axis. Defaults to 360.</p></li>
+<li><p><strong>name</strong> – the name assigned to the resulting solid.</p></li>
+<li><p><strong>color</strong> – the RGB(A) color assigned to the resulting solid.</p></li>
+<li><p><strong>plane</strong> – the plane to build the profile on, e.g. “XZ”.</p></li>
+<li><p><strong>origin</strong> – the origin of the workplane.</p></li>
+<li><p><strong>obj</strong> – an optional existing CadQuery object to build upon.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A CadQuery Workplane containing the revolved solid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="paramak.toroidal_field_coil_rectangle">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">toroidal_field_coil_rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">horizontal_start_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(20,</span> <span class="pre">200)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_mid_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(350,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">360.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'toroidal_field_coil'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_inner_leg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuthal_placement_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/toroidal_field_coil_rectangle.html#toroidal_field_coil_rectangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.toroidal_field_coil_rectangle" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">toroidal_field_coil_rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">horizontal_start_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(20,</span> <span class="pre">200)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_mid_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(350,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">360.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'toroidal_field_coil'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_inner_leg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuthal_placement_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/toroidal_field_coil_rectangle.html#toroidal_field_coil_rectangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.toroidal_field_coil_rectangle" title="Link to this definition">#</a></dt>
 <dd><p>Creates a rectangular shaped toroidal field coil.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -727,7 +937,7 @@ offsets the placement of coils around the azimuthal angle</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> – the radius from which the centres of the vessel meets the outer
 circumference.</p></li>
-<li><p><strong>reference_point</strong> – the x,z coordinates to build te vessel from. Can be
+<li><p><strong>reference_point</strong> – the x,z coordinates to build the vessel from. Can be
 either the ‘center’ with a value or ‘lower’ with a
 value. For example</p></li>
 <li><p><strong>dish_height</strong> – the height of the lower and upper dish sections.</p></li>
@@ -778,8 +988,8 @@ vessel.</p></li>
     class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assemblies">Assemblies</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.tokamak"><code class="docutils literal notranslate"><span class="pre">tokamak()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">tokamak_from_plasma()</span></code></a></li>
@@ -796,6 +1006,7 @@ vessel.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.plasma_simplified"><code class="docutils literal notranslate"><span class="pre">plasma_simplified()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.poloidal_field_coil_case"><code class="docutils literal notranslate"><span class="pre">poloidal_field_coil_case()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.poloidal_field_coil"><code class="docutils literal notranslate"><span class="pre">poloidal_field_coil()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.revolved_shape"><code class="docutils literal notranslate"><span class="pre">revolved_shape()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.toroidal_field_coil_rectangle"><code class="docutils literal notranslate"><span class="pre">toroidal_field_coil_rectangle()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.u_shaped_dome"><code class="docutils literal notranslate"><span class="pre">u_shaped_dome()</span></code></a></li>
 </ul>
@@ -804,13 +1015,13 @@ vessel.</p></li>
   </nav></div>
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/python_api.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/python_api.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
 
 </div></div>
               
@@ -825,8 +1036,8 @@ vessel.</p></li>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -846,7 +1057,7 @@ vessel.</p></li>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
@@ -860,7 +1071,7 @@ vessel.</p></li>
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
 </p></div>
       
     </div>
