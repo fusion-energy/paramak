@@ -17,3 +17,21 @@ def test_remove_and_names():
     assert assembly2.names() == ['box1']
     assert assembly3.names() == ['sphere']
     assert assembly4.names() == ['box1', 'sphere']
+
+def test_split_solids():
+    # A compound with 2 solids (two spheres at different positions)
+    multi_solid = cq.Compound.makeCompound([
+        cq.Workplane().moveTo(0, 0).sphere(1).val(),
+        cq.Workplane().moveTo(10, 0).sphere(1).val(),
+    ])
+    single_solid = cq.Workplane().box(1, 1, 1)
+
+    assembly = Assembly()
+    assembly.add(multi_solid, name="multi")
+    assembly.add(single_solid, name="single")
+
+    split = assembly.split_solids()
+
+    # single-solid part keeps its name unchanged
+    # multi-solid part becomes multi_1 and multi_2
+    assert split.names() == ['multi_1', 'multi_2', 'single']
