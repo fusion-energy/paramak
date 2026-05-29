@@ -88,6 +88,7 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
             continue
 
         layer_count += 1
+        # print('inner_radius', total_sum, 'item thickness', item[1], 'layer_count', layer_count)
         cylinder = center_column_shield_cylinder(
             inner_radius=total_sum,
             thickness=item[1],
@@ -107,9 +108,9 @@ def spherical_tokamak_from_plasma(
     elongation: float = 2.0,
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    extra_cut_shapes: Sequence[cq.Workplane] = None,
-    extra_intersect_shapes: Sequence[cq.Workplane] = None,
-    colors: dict = None,
+    extra_cut_shapes: Sequence[cq.Workplane] = [],
+    extra_intersect_shapes: Sequence[cq.Workplane] = [],
+    colors: dict = {},
 ) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.
 
@@ -128,13 +129,6 @@ def spherical_tokamak_from_plasma(
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
     """
-
-    if extra_cut_shapes is None:
-        extra_cut_shapes = []
-    if extra_intersect_shapes is None:
-        extra_intersect_shapes = []
-    if colors is None:
-        colors = {}
 
     inner_equatorial_point = sum_up_to_plasma(radial_build)
     plasma_radial_thickness = get_plasma_value(radial_build)
@@ -170,36 +164,28 @@ def spherical_tokamak(
     vertical_build: Sequence[Tuple[str, float]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    extra_cut_shapes: Sequence[cq.Workplane] = None,
-    extra_intersect_shapes: Sequence[cq.Workplane] = None,
-    colors: dict = None,
+    extra_cut_shapes: Sequence[cq.Workplane] = [],
+    extra_intersect_shapes: Sequence[cq.Workplane] = [],
+    colors: dict = {},
 ) -> Assembly:
-    """Creates a spherical tokamak fusion reactor from a radial build and vertical build.
+    """  Creates a spherical tokamak fusion reactor from a radial build and vertical build.
 
     Args:
+
         radial_build: sequence of tuples containing the radial build of the
-            reactor. Each tuple should contain a LayerType and a float.
-        vertical_build: sequence of tuples containing the vertical build of the
-            reactor. Each tuple should contain a LayerType and a float.
-        triangularity: The triangularity of the plasma. Defaults to 0.55.
-        rotation_angle: The rotation angle of the reactor in degrees. Defaults to 180.0.
-        extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
-        extra_intersect_shapes: A list of extra shapes to intersect the reactor with. Defaults to [].
-        colors: the colors to assign to the assembly parts. Defaults to {}.
+            reactor. Each tuple should contain a LayerType and a float 
+        elongation (float, optional): _description_. Defaults to 2.0.
+        triangularity (float, optional): _description_. Defaults to 0.55.
+        rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
+        extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
+        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
             Each dictionary entry should be a key that matches the assembly part name
             (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
             representing the RGB or RGBA values.
 
     Returns:
-        CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
+        _type_: _description_
     """
-
-    if extra_cut_shapes is None:
-        extra_cut_shapes = []
-    if extra_intersect_shapes is None:
-        extra_intersect_shapes = []
-    if colors is None:
-        colors = {}
 
     inner_equatorial_point = sum_up_to_plasma(radial_build)
     plasma_radial_thickness = get_plasma_value(radial_build)
@@ -253,12 +239,7 @@ def spherical_tokamak(
     for i, entry in enumerate(extra_cut_shapes):
 
         if isinstance(entry, cq.Workplane):
-            # Use the object's name attribute if it exists, otherwise fallback
-            base_name = getattr(entry, 'name', None)
-            if base_name:
-                name = f"{base_name}_{i+1}"
-            else:
-                name = f"add_extra_cut_shape_{i+1}"
+            name = f"add_extra_cut_shape_{i+1}"
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
         else:
             raise ValueError(f"extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
@@ -279,12 +260,7 @@ def spherical_tokamak(
         for i, entry in enumerate(extra_intersect_shapes):
             reactor_entry_intersection = entry.intersect(reactor_compound)
             intersect_shapes_to_cut.append(reactor_entry_intersection)
-            # Use the object's name attribute if it exists, otherwise fallback
-            base_name = getattr(entry, 'name', None)
-            if base_name:
-                name = f"{base_name}_{i+1}"
-            else:
-                name=f"extra_intersect_shapes_{i+1}"
+            name = f"extra_intersect_shapes_{i+1}"
             my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     # builds just the core if there are no extra parts
