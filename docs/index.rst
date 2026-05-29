@@ -20,7 +20,7 @@ Parameter driven CAD creation for fusion reactors.
 
 Paramak provides parameter driven creation of Tokamak and Spherical Tokamak CAD models as well as DAGMC compatible neutronics models.
 
-The style of reaction, sizes of components, plasma shape and number of radial or vertical layers can be specified,  
+The style of reactor, sizes of components, plasma shape and number of radial or vertical layers can be specified.
 
 .. raw:: html
 
@@ -36,7 +36,7 @@ The style of reaction, sizes of components, plasma shape and number of radial or
     </div>
 
 .. video:: _static/tokamak_animation.mp4
-   :alt: Spherical Tokamak Animation
+   :alt: Tokamak Animation
    :align: center
    :autoplay: true
    :loop: true

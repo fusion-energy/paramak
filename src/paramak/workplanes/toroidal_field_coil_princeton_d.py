@@ -163,7 +163,7 @@ def toroidal_field_coil_princeton_d(
     rotation_angle: float = 360.0,
     name: str = "toroidal_field_coil",
     with_inner_leg: bool = True,
-    azimuthal_placement_angles: typing.Sequence[float] = [0],
+    azimuthal_placement_angles: typing.Sequence[float] = None,
     vertical_displacement: float = 0.0,
     color: typing.Tuple[float, float, float, typing.Optional[float]] = (0.0, 0.0, 1.0),
     plane: str = "XZ",
@@ -191,6 +191,8 @@ def toroidal_field_coil_princeton_d(
     Returns:
         solid: The created toroidal field coil solid.
     """
+    if azimuthal_placement_angles is None:
+        azimuthal_placement_angles = [0]
     points, inner_leg_connection_points, inner_points, outer_points = find_points(
         r1, r2, thickness, vertical_displacement
     )
