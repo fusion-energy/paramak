@@ -2,7 +2,7 @@ Install
 =======
 
 
-Paramak is distributed via `PyPI <https://pypi.org/project/paramak/>`_ and `Conda Forge <https://anaconda.org/conda-forge/paramak>`_ can be installed using pip or Conda / Mamba.
+Paramak is distributed via `PyPI <https://pypi.org/project/paramak/>`_ and `Conda Forge <https://anaconda.org/conda-forge/paramak>`_ and can be installed using pip or Conda / Mamba.
 
 
 Install from PyPI using pip
@@ -25,7 +25,7 @@ Prerequisites
 
 It is recommended to create a virtual environment to install Paramak into.
 
-This can be done using the `venv module <https://docs.python.org/3/library/venv.html>`_ in or a Conda or Mamba environment.
+This can be done using the `venv module <https://docs.python.org/3/library/venv.html>`_ or a Conda or Mamba environment.
 
 To create a virtual environment using the venv module
 
@@ -40,7 +40,7 @@ To create a virtual environment using Conda or Mamba
 
 First install Miniconda or Anaconda, or Miniforge
 
-* `Miniforge <https://github.com/conda-forge/miniforge>`_ recommended as it includes Mamba 
+* `Miniforge <https://github.com/conda-forge/miniforge>`_ is recommended as it includes Mamba
 * `Miniconda <https://docs.conda.io/en/latest/miniconda.html>`_
 * `Anaconda <https://www.anaconda.com/>`_
 
@@ -64,7 +64,7 @@ Or with Conda
 Developer Installation
 ----------------------
 
-If you want to contribute to Paramak or then you might want to install the
+If you want to contribute to Paramak then you might want to install the
 package in a more dynamic manner so that your changes to the code are readily
 available.
 
@@ -78,7 +78,7 @@ Then clone the repository
    git clone https://github.com/fusion-energy/paramak.git
 
 Navigate to the paramak repository and within the terminal install the paramak
-package and the dependencies using pip with e -e (developer option).
+package and the dependencies using pip with -e (developer option).
 
 .. code-block:: bash
 

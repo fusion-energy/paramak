@@ -58,8 +58,7 @@ def create_wire_workplane_from_instructions(
 
 def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None):
 
-    workplane = Workplane(plane, origin=origin, obj=obj)  # offset=extrusion_offset
-
+    workplane = Workplane(plane, origin=origin, obj=obj)
 
     all_straight = all(entry[-1] == "straight" for entry in points)
     all_spline = all(entry[-1] == "spline" for entry in points)
@@ -71,7 +70,7 @@ def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None)
         entry_values = [entry[:2] for entry in points[:-1]]
         result = workplane.spline(
             entry_values, makeWire=True, tol=1e-1, periodic=True
-        )  # period smooths out the connecting joint
+        )  # periodic smooths out the connecting joint
     else:
         instructions = instructions_from_points(points)
 
@@ -125,17 +124,6 @@ def sum_up_to_plasma(radial_build):
     return total_sum
 
 
-def sum_after_plasma(radial_build):
-    plasma_found = False
-    total_sum = 0
-    for item in radial_build:
-        if plasma_found:
-            total_sum += item[1]
-        if item[0] == LayerType.PLASMA:
-            plasma_found = True
-    return total_sum
-
-
 class ValidationError(Exception):
     pass
 
@@ -160,37 +148,6 @@ def sum_before_after_plasma(vertical_build):
     after_plasma += plasma_value
 
     return before_plasma, after_plasma
-
-
-def create_divertor_envelope(divertor_radial_build, blanket_height, rotation_angle):
-    divertor_name = is_lower_or_upper_divertor(divertor_radial_build)
-    if divertor_name == "lower_divertor":
-        z_value_sigh = -1
-    elif divertor_name == "upper_divertor":
-        z_value_sigh = 1
-
-    points = [
-        (divertor_radial_build[0][1], z_value_sigh * blanket_height, "straight"),
-        (divertor_radial_build[0][1], 0, "straight"),
-        (divertor_radial_build[0][1] + divertor_radial_build[1][1], 0, "straight"),
-        (divertor_radial_build[0][1] + divertor_radial_build[1][1], z_value_sigh * blanket_height, "straight"),
-    ]
-    points.append(points[0])
-
-    wire = create_wire_workplane_from_points(points=points, plane="XZ", origin=(0, 0, 0), obj=None)
-
-    divertor_solid = wire.revolve(rotation_angle)
-    divertor_solid.name = divertor_name
-    return divertor_solid
-
-
-def is_plasma_radial_build(radial_build):
-    for entry in radial_build:
-        # if entry == LayerType.PLASMA:
-        #     return True
-        if entry[0] == LayerType.PLASMA:
-            return True
-    return False
 
 
 def validate_divertor_radial_build(radial_build):

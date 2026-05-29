@@ -11,7 +11,7 @@ def plasma_simplified(
     minor_radius: float = 150.0,
     triangularity: float = 0.55,
     vertical_displacement: float = 0.0,
-    num_points: int = 50,
+    num_points: int = 200,
     name: str = "tokamak_plasma",
     color: typing.Tuple[float, float, float, typing.Optional[float]] = (
         0.333,
