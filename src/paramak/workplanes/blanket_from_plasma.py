@@ -286,8 +286,6 @@ def blanket_from_plasma(
         raise ValueError(f"elongation must be positive, got {elongation}.")
     if not (-1.0 <= triangularity <= 1.0):
         raise ValueError(f"triangularity must be between -1 and 1, got {triangularity}.")
-    if start_angle >= stop_angle:
-        raise ValueError(f"start_angle ({start_angle}) must be less than stop_angle ({stop_angle}).")
 
     points = find_points(
         thickness=thickness,
