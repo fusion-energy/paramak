@@ -23,6 +23,14 @@ def poloidal_field_coil_case(
         center_point: the center of the coil (x,z) values (cm).
         casing_thickness: the thickness of the coil casing (cm).
     """
+    if coil_height <= 0:
+        raise ValueError(f"coil_height must be positive, got {coil_height}.")
+    if coil_width <= 0:
+        raise ValueError(f"coil_width must be positive, got {coil_width}.")
+    if len(casing_thickness) != 2:
+        raise ValueError(f"casing_thickness must contain exactly two values, got {casing_thickness}.")
+    if any(t <= 0 for t in casing_thickness):
+        raise ValueError(f"All values in casing_thickness must be positive, got {casing_thickness}.")
 
     inner_points = [
         (center_point[0] + coil_width / 2.0, center_point[1] + coil_height / 2.0, "straight"),  # upper right
