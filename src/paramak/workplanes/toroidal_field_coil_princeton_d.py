@@ -201,8 +201,9 @@ def toroidal_field_coil_princeton_d(
         raise ValueError(f"thickness must be positive, got {thickness}.")
     if distance <= 0:
         raise ValueError(f"distance must be positive, got {distance}.")
-    if not (0 < rotation_angle <= 360):
-        raise ValueError(f"rotation_angle must be in range (0, 360], got {rotation_angle}.")
+    # TODO consider if we should limit the rotation angle. Is there a use case for negative rotation angle
+    # if not (0 < rotation_angle <= 360):
+    #    raise ValueError(f"rotation_angle must be in range (0, 360], got {rotation_angle}.")
         
     if azimuthal_placement_angles is None:
         azimuthal_placement_angles = [0]
