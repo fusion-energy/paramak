@@ -34,6 +34,16 @@ def plasma_simplified(
         vertical_displacement: the vertical_displacement of the plasma (cm)..
         num_points: number of points to describe the shape.
     """
+    if elongation <= 0:
+        raise ValueError(f"elongation must be positive, got {elongation}.")
+    if major_radius <= 0:
+        raise ValueError(f"major_radius must be positive, got {major_radius}.")
+    if minor_radius <= 0:
+        raise ValueError(f"minor_radius must be positive, got {minor_radius}.")
+    if minor_radius >= major_radius:
+        raise ValueError(f"minor_radius ({minor_radius}) must be less than major_radius ({major_radius}).")
+    if not (-1.0 <= triangularity <= 1.0):
+        raise ValueError(f"triangularity must be between -1 and 1, got {triangularity}.")
 
     # create array of angles theta
     theta = np.linspace(0, 2 * np.pi, num=num_points, endpoint=False)
