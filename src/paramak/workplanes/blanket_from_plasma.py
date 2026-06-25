@@ -276,6 +276,14 @@ def blanket_from_plasma(
         allow_overlapping_shape: allows parameters to create a shape that
             overlaps itself.
     """
+    if major_radius <= 0:
+        raise ValueError(f"major_radius must be positive, got {major_radius}.")
+    if minor_radius <= 0:
+        raise ValueError(f"minor_radius must be positive, got {minor_radius}.")
+    if elongation <= 0:
+        raise ValueError(f"elongation must be positive, got {elongation}.")
+    if not (-1.0 <= triangularity <= 1.0):
+        raise ValueError(f"triangularity must be between -1 and 1, got {triangularity}.")
 
     points = find_points(
         thickness=thickness,

@@ -25,6 +25,10 @@ def poloidal_field_coil(
         width: the horizontal (x axis) width of the coil.
         center_point: the center of the coil (x,z) values.
     """
+    if height <= 0:
+        raise ValueError(f"height must be positive, got {height}.")
+    if width <= 0:
+        raise ValueError(f"width must be positive, got {width}.")
 
     points = [
         (center_point[0] + width / 2.0, center_point[1] + height / 2.0, "straight"),  # upper right

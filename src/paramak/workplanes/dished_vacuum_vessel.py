@@ -28,6 +28,12 @@ def dished_vacuum_vessel(
             vessel.
         thickness: the radial thickness of the vessel in cm.
     """
+    if cylinder_height <= 0:
+        raise ValueError(f"cylinder_height must be positive, got {cylinder_height}.")
+    if len(dish_height) != 2:
+        raise ValueError(f"dish_height must contain exactly two values, got {dish_height}.")
+    if any(h <= 0 for h in dish_height):
+        raise ValueError(f"All values in dish_height must be positive, got {dish_height}.")
 
     if not isinstance(radius, (float, int)):
         raise ValueError(f"radius must be a number. Not {type(radius)}")

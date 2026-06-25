@@ -29,6 +29,19 @@ def center_column_shield_cylinder(
             description of the reference point. Can be either the 'center'
             with a numerical value or 'lower' with a numerical value.
     """
+    if height <= 0:
+        raise ValueError(f"height must be positive, got {height}.")
+    if inner_radius < 0:
+        raise ValueError(f"inner_radius must be greater than zero, got {inner_radius}.")
+    if thickness <= 0:
+        raise ValueError(f"thickness must be positive, got {thickness}.")
+    if not isinstance(reference_point, tuple) or len(reference_point) != 2:
+        raise ValueError("reference_point must be a tuple of the form ('center', value) or ('lower', value).")
+    if reference_point[0] not in ("center", "lower"):
+        raise ValueError(f"reference_point location must be 'center' or 'lower', got '{reference_point[0]}'.")
+    if not isinstance(reference_point[1], (int, float)):
+        raise TypeError(
+            f"reference_point value must be numeric, got {type(reference_point[1]).__name__}.")
 
     outer_radius = inner_radius + thickness
 

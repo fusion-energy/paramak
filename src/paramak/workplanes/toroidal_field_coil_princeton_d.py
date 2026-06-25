@@ -191,6 +191,20 @@ def toroidal_field_coil_princeton_d(
     Returns:
         solid: The created toroidal field coil solid.
     """
+    if r1 <= 0:
+        raise ValueError(f"r1 must be positive, got {r1}.")
+    if r2 <= 0:
+        raise ValueError(f"r2 must be positive, got {r2}.")
+    if r2 <= r1:
+        raise ValueError(f"r2 ({r2}) must be greater than r1 ({r1}).")
+    if thickness <= 0:
+        raise ValueError(f"thickness must be positive, got {thickness}.")
+    if distance <= 0:
+        raise ValueError(f"distance must be positive, got {distance}.")
+    # TODO consider if we should limit the rotation angle. Is there a use case for negative rotation angle
+    # if not (0 < rotation_angle <= 360):
+    #    raise ValueError(f"rotation_angle must be in range (0, 360], got {rotation_angle}.")
+        
     if azimuthal_placement_angles is None:
         azimuthal_placement_angles = [0]
     points, inner_leg_connection_points, inner_points, outer_points = find_points(
