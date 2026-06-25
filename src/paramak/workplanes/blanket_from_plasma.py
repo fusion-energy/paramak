@@ -280,8 +280,6 @@ def blanket_from_plasma(
         raise ValueError(f"major_radius must be positive, got {major_radius}.")
     if minor_radius <= 0:
         raise ValueError(f"minor_radius must be positive, got {minor_radius}.")
-    if minor_radius >= major_radius:
-        raise ValueError(f"minor_radius ({minor_radius}) must be less than major_radius ({major_radius}).")
     if elongation <= 0:
         raise ValueError(f"elongation must be positive, got {elongation}.")
     if not (-1.0 <= triangularity <= 1.0):
