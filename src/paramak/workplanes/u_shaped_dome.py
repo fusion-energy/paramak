@@ -30,6 +30,12 @@ def u_shaped_dome(
             vessel.
         thickness: the radial thickness of the vessel in cm.
     """
+    if radius <= 0:
+        raise ValueError(f"radius must be positive, got {radius}.")
+    if thickness <= 0:
+        raise ValueError(f"thickness must be positive, got {thickness}.")
+    if cylinder_height <= 0:
+        raise ValueError(f"cylinder_height must be positive, got {cylinder_height}.")
 
     if not isinstance(radius, (float, int)):
         raise ValueError(f"radius must be a number. Not {type(radius)}")
