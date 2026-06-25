@@ -31,8 +31,8 @@ def center_column_shield_cylinder(
     """
     if height <= 0:
         raise ValueError(f"height must be positive, got {height}.")
-    if inner_radius <= 0:
-        raise ValueError(f"inner_radius must be positive, got {inner_radius}.")
+    if inner_radius < 0:
+        raise ValueError(f"inner_radius must be greater than zero, got {inner_radius}.")
     if thickness <= 0:
         raise ValueError(f"thickness must be positive, got {thickness}.")
     if not isinstance(reference_point, tuple) or len(reference_point) != 2:
