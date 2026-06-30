@@ -17,7 +17,7 @@ from ..workplanes.plasma_simplified import plasma_simplified
 
 
 def create_blanket_layers_after_plasma(
-    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column
+    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column, starting_layer_count=0
 ):
     layers = []
     cumulative_thickness_rb = 0
@@ -38,6 +38,12 @@ def create_blanket_layers_after_plasma(
             cumulative_thickness_lvb += lower_thickness
             continue
 
+        starting_layer_count += 1
+        if len(item) == 2:
+            layer_name = f"layer_{starting_layer_count}"
+        else:
+            layer_name = item[2]
+
         layer = blanket_from_plasma(
             minor_radius=minor_radius,
             major_radius=major_radius,
@@ -57,11 +63,12 @@ def create_blanket_layers_after_plasma(
             stop_angle=90,
             rotation_angle=rotation_angle,
             color=(0.5, 0.5, 0.5),
-            name=f"layer_{plasma_index_radial+i+1}",
+            name=layer_name,
             allow_overlapping_shape=True,
             connect_to_center=True,
         )
         layer = layer.cut(center_column)
+        layer.name = layer_name
         cumulative_thickness_rb += radial_thickness
         cumulative_thickness_uvb += upper_thickness
         cumulative_thickness_lvb += lower_thickness
@@ -86,12 +93,17 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
         if item[0] == LayerType.GAP:
             total_sum += item[1]
             continue
-
+        
         layer_count += 1
+        if len(item) == 2:
+            layer_name = f"layer_{layer_count}"
+        else:
+            layer_name = item[2]
+
         cylinder = center_column_shield_cylinder(
             inner_radius=total_sum,
             thickness=item[1],
-            name=f"layer_{layer_count}",
+            name=layer_name,
             rotation_angle=rotation_angle,
             height=center_column_shield_height,
             reference_point=("lower", -before),
@@ -103,7 +115,7 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
 
 
 def spherical_tokamak_from_plasma(
-    radial_build: Sequence[Tuple[LayerType, float]],
+    radial_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
     elongation: float = 2.0,
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
@@ -115,7 +127,7 @@ def spherical_tokamak_from_plasma(
 
     Args:
         radial_build: sequence of tuples containing the radial build of the
-            reactor. Each tuple should contain a LayerType and a float.
+            reactor. Each tuple should contain a LayerType, a float and the string is optional.
         elongation: The elongation of the plasma. Defaults to 2.0.
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the reactor in degrees. Defaults to 180.0.
@@ -166,8 +178,8 @@ def spherical_tokamak_from_plasma(
 
 
 def spherical_tokamak(
-    radial_build: Sequence[Tuple[LayerType, float]],
-    vertical_build: Sequence[Tuple[str, float]],
+    radial_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
+    vertical_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
     extra_cut_shapes: Sequence[cq.Workplane] = None,
@@ -178,9 +190,9 @@ def spherical_tokamak(
 
     Args:
         radial_build: sequence of tuples containing the radial build of the
-            reactor. Each tuple should contain a LayerType and a float.
+            reactor. Each tuple should contain a LayerType, a float and the string is optional.
         vertical_build: sequence of tuples containing the vertical build of the
-            reactor. Each tuple should contain a LayerType and a float.
+            reactor. Each tuple should contain a LayerType, a float and the string is optional.
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the reactor in degrees. Defaults to 180.0.
         extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
@@ -246,6 +258,7 @@ def spherical_tokamak(
         elongation=elongation,
         rotation_angle=rotation_angle,
         center_column=blanket_cutting_cylinder,
+        starting_layer_count=len(inner_radial_build)
     )
 
     my_assembly = Assembly()
@@ -290,21 +303,22 @@ def spherical_tokamak(
     # builds just the core if there are no extra parts
     if len(extra_cut_shapes) == 0 and len(intersect_shapes_to_cut) == 0:
         for i, entry in enumerate(inner_radial_build+blanket_layers):
-            name = f"layer_{i+1}"
+            base_name = getattr(entry, 'name', None)
+            name = base_name if base_name else f"layer_{i+1}"
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
     else:
         shapes_and_components = []
+        names = []
         for i, entry in enumerate(inner_radial_build + blanket_layers):
+            base_name = getattr(entry, 'name', None)
+            name = base_name if base_name else f"layer_{i+1}"
             for cutter in extra_cut_shapes + extra_intersect_shapes:
                 entry = entry.cut(cutter)
-                # TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple
-                # for subentry in entry.objects:
-                #     print(i, subentry)
             shapes_and_components.append(entry)
+            names.append(name)
 
-        for i, entry in enumerate(shapes_and_components):
+        for entry, name in zip(shapes_and_components, names):
             # TODO track the names of shapes, even when extra shapes are made due to splitting
-            name=f"layer_{i+1}"
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*colors.get("plasma", (0.5,0.5,0.5))))

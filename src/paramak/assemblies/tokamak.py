@@ -48,10 +48,15 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
         if layer_count > number_of_cylinder_layers:
             break
 
+        if len(item) == 2:
+            layer_name = f"layer_{layer_count}"
+        else:
+            layer_name = item[2]
+
         cylinder = center_column_shield_cylinder(
             inner_radius=total_sum,
             thickness=item[1],
-            name=f"layer_{layer_count}",
+            name=layer_name,
             rotation_angle=rotation_angle,
             height=center_column_shield_height,
         )
@@ -70,7 +75,7 @@ def distance_to_plasma(radial_build, index):
 
 
 def create_layers_from_plasma(
-    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column
+    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column, starting_layer_count=0
 ):
 
     plasma_index_rb = get_plasma_index(radial_build)
@@ -82,7 +87,18 @@ def create_layers_from_plasma(
     cumulative_thickness_irb = 0
     cumulative_thickness_uvb = 0
     cumulative_thickness_lvb = 0
+
+    layer_count = starting_layer_count - 1
+
     for index_delta in range(indexes_from_plasma_to_end):
+        
+        if len(radial_build[plasma_index_rb - index_delta]) == 3:
+            layer_name = radial_build[plasma_index_rb - index_delta][2]
+        elif len(radial_build[plasma_index_rb + index_delta]) == 3:
+            layer_name = radial_build[plasma_index_rb + index_delta][2]
+        else:
+            layer_name = f"layer_{layer_count}"
+        layer_count += 1
 
         if radial_build[plasma_index_rb + index_delta][0] == LayerType.PLASMA:
             continue
@@ -111,7 +127,7 @@ def create_layers_from_plasma(
                 stop_angle=-90,
                 rotation_angle=rotation_angle,
                 color=(0.5, 0.5, 0.5),
-                name=f"layer_{index_delta}",
+                name=layer_name,
                 allow_overlapping_shape=True,
             )
             inner_layer = blanket_from_plasma(
@@ -133,10 +149,11 @@ def create_layers_from_plasma(
                 stop_angle=-270,
                 rotation_angle=rotation_angle,
                 color=(0.5, 0.5, 0.5),
-                name=f"layer_{index_delta}",
+                name=layer_name,
                 allow_overlapping_shape=True,
             )
             layer = outer_layer.union(inner_layer)
+            layer.name = layer_name
             layers.append(layer)
             # layers.append(inner_layer)
         cumulative_thickness_orb += outer_layer_thickness
@@ -151,7 +168,7 @@ def create_layers_from_plasma(
 
 
 def tokamak_from_plasma(
-    radial_build: Sequence[Tuple[LayerType, float]],
+    radial_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
     elongation: float = 2.0,
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
@@ -164,7 +181,7 @@ def tokamak_from_plasma(
 
     Args:
         radial_build: sequence of tuples containing the radial build of the
-            reactor. Each tuple should contain a LayerType and a float
+            reactor. Each tuple should contain a LayerType, a float and a string.
         elongation: The elongation of the plasma. Defaults to 2.0.
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the plasma. Defaults to 180.0.
@@ -217,8 +234,8 @@ def tokamak_from_plasma(
 
 
 def tokamak(
-    radial_build: Sequence[Tuple[str, float]],
-    vertical_build: Sequence[Tuple[str, float]],
+    radial_build: Sequence[Tuple[str, float] | Tuple[str, float, str]],
+    vertical_build: Sequence[Tuple[str, float] | Tuple[str, float, str]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
     extra_cut_shapes: Sequence[cq.Workplane] = None,
@@ -230,9 +247,9 @@ def tokamak(
 
     Args:
         radial_build: sequence of tuples containing the radial build of the
-            reactor. Each tuple should contain a LayerType and a float 
+            reactor. Each tuple should contain a LayerType, a float and the string is optional.
         vertical_build: sequence of tuples containing the vertical build of the
-            reactor. Each tuple should contain a LayerType and a float 
+            reactor. Each tuple should contain a LayerType, a float and the string is optional.
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the plasma. Defaults to 180.0.
         extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
@@ -285,6 +302,7 @@ def tokamak(
         elongation=elongation,
         rotation_angle=rotation_angle,
         center_column=inner_radial_build[0],  # blanket_cutting_cylinder,
+        starting_layer_count=len(inner_radial_build)
     )
 
     my_assembly = Assembly()
@@ -328,20 +346,21 @@ def tokamak(
     # builds just the core if there are no extra parts
     if len(extra_cut_shapes) == 0 and len(intersect_shapes_to_cut) == 0:
         for i, entry in enumerate(inner_radial_build+blanket_layers):
-            name=f"layer_{i+1}"
+            base_name = getattr(entry, 'name', None)
+            name = base_name if base_name else f"layer_{i+1}"
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
     else:
         shapes_and_components = []
+        names = []
         for i, entry in enumerate(inner_radial_build + blanket_layers):
+            base_name = getattr(entry, 'name', None)
+            name = base_name if base_name else f"layer_{i+1}"
             for cutter in extra_cut_shapes + extra_intersect_shapes:
                 entry = entry.cut(cutter)
-                # TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple
-                # for subentry in entry.objects:
-                #     print(i, subentry)
             shapes_and_components.append(entry)
+            names.append(name)
 
-        for i, entry in enumerate(shapes_and_components):
-            name=f"layer_{i+1}"
+        for entry, name in zip(shapes_and_components, names):
             # TODO track the names of shapes, even when extra shapes are made due to splitting
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
