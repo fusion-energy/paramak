@@ -3,7 +3,7 @@ from typing import Sequence, Tuple
 import cadquery as cq
 from .assembly import Assembly
 
-from ..utils import get_plasma_index, get_layer_name, LayerType
+from ..utils import get_plasma_index, get_layer_name, validate_vertical_build_names, validate_unique_assembly_names, LayerType
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
@@ -267,6 +267,8 @@ def tokamak(
     if colors is None:
         colors = {}
 
+    validate_vertical_build_names(vertical_build, "tokamak()")
+
     inner_equatorial_point = sum_up_to_plasma(radial_build)
     plasma_radial_thickness = get_plasma_value(radial_build)
     plasma_vertical_thickness = get_plasma_value(vertical_build)
@@ -301,6 +303,24 @@ def tokamak(
         center_column=inner_radial_build[0],  # blanket_cutting_cylinder,
         layer_count=len(inner_radial_build)
     )
+
+    assembly_names = [
+        *[
+            f"{getattr(entry, 'name', None)}_{i + 1}" if getattr(entry, 'name', None) else f"add_extra_cut_shape_{i + 1}"
+            for i, entry in enumerate(extra_cut_shapes)
+        ],
+        *[
+            f"{getattr(entry, 'name', None)}_{i + 1}" if getattr(entry, 'name', None) else f"extra_intersect_shapes_{i + 1}"
+            for i, entry in enumerate(extra_intersect_shapes)
+        ],
+        *[
+            getattr(entry, 'name', None) if getattr(entry, 'name', None) else f"layer_{i + 1}"
+            for i, entry in enumerate(inner_radial_build + blanket_layers)
+        ],
+        "plasma",
+    ]
+
+    validate_unique_assembly_names(assembly_names, "tokamak()")
 
     my_assembly = Assembly()
 

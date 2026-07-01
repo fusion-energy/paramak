@@ -1,5 +1,6 @@
 import typing
 from enum import Enum
+from collections import Counter
 
 from cadquery import Workplane
 
@@ -268,3 +269,23 @@ def get_layer_name(item, index):
     else:
         layer_name = item[2]
     return layer_name
+
+def validate_vertical_build_names(vertical_build, reactor_name):
+    named_layers = [item[2] for item in vertical_build if len(item) == 3]
+    if named_layers:
+        unique_names = ", ".join(dict.fromkeys(named_layers))
+        raise ValueError(
+            f"Names are not supported in vertical_build for {reactor_name}. "
+            f"Found named entries: {unique_names}. Please define names in radial_build only."
+        )
+
+
+def validate_unique_assembly_names(names, reactor_name):
+    duplicates = [name for name, count in Counter(names).items() if count > 1]
+    if duplicates:
+        duplicate_names = ", ".join(sorted(duplicates))
+        raise ValueError(
+            f"Unique names are required for {reactor_name}. "
+            f"The following names are duplicated in the assembly: {duplicate_names}. "
+            "Please rename the repeated layers in radial_build."
+        )

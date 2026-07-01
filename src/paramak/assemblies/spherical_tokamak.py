@@ -10,6 +10,8 @@ from ..utils import (
     sum_up_to_gap_before_plasma,
     sum_up_to_plasma,
     sum_before_after_plasma,
+    validate_vertical_build_names,
+    validate_unique_assembly_names,
     LayerType,
 )
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
@@ -208,6 +210,8 @@ def spherical_tokamak(
     if colors is None:
         colors = {}
 
+    validate_vertical_build_names(vertical_build, "spherical_tokamak()")
+
     inner_equatorial_point = sum_up_to_plasma(radial_build)
     plasma_radial_thickness = get_plasma_value(radial_build)
     plasma_vertical_thickness = get_plasma_value(vertical_build)
@@ -255,6 +259,24 @@ def spherical_tokamak(
         center_column=blanket_cutting_cylinder,
         layer_count=len(inner_radial_build)
     )
+
+    assembly_names = [
+        *[
+            f"{getattr(entry, 'name', None)}_{i + 1}" if getattr(entry, 'name', None) else f"add_extra_cut_shape_{i + 1}"
+            for i, entry in enumerate(extra_cut_shapes)
+        ],
+        *[
+            f"{getattr(entry, 'name', None)}_{i + 1}" if getattr(entry, 'name', None) else f"extra_intersect_shapes_{i + 1}"
+            for i, entry in enumerate(extra_intersect_shapes)
+        ],
+        *[
+            getattr(entry, 'name', None) if getattr(entry, 'name', None) else f"layer_{i + 1}"
+            for i, entry in enumerate(inner_radial_build + blanket_layers)
+        ],
+        "plasma",
+    ]
+
+    validate_unique_assembly_names(assembly_names, "spherical_tokamak()")
 
     my_assembly = Assembly()
 
