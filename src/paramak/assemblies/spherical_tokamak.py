@@ -6,6 +6,7 @@ from .assembly import Assembly
 from ..utils import (
     get_plasma_index,
     get_plasma_value,
+    get_layer_name,
     sum_up_to_gap_before_plasma,
     sum_up_to_plasma,
     sum_before_after_plasma,
@@ -17,7 +18,7 @@ from ..workplanes.plasma_simplified import plasma_simplified
 
 
 def create_blanket_layers_after_plasma(
-    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column, starting_layer_count=0
+    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column, layer_count=0
 ):
     layers = []
     cumulative_thickness_rb = 0
@@ -38,11 +39,8 @@ def create_blanket_layers_after_plasma(
             cumulative_thickness_lvb += lower_thickness
             continue
 
-        starting_layer_count += 1
-        if len(item) == 2:
-            layer_name = f"layer_{starting_layer_count}"
-        else:
-            layer_name = item[2]
+        layer_count += 1
+        layer_name = get_layer_name(item, layer_count)
 
         layer = blanket_from_plasma(
             minor_radius=minor_radius,
@@ -95,10 +93,7 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
             continue
         
         layer_count += 1
-        if len(item) == 2:
-            layer_name = f"layer_{layer_count}"
-        else:
-            layer_name = item[2]
+        layer_name = get_layer_name(item, layer_count)
 
         cylinder = center_column_shield_cylinder(
             inner_radius=total_sum,
@@ -258,7 +253,7 @@ def spherical_tokamak(
         elongation=elongation,
         rotation_angle=rotation_angle,
         center_column=blanket_cutting_cylinder,
-        starting_layer_count=len(inner_radial_build)
+        layer_count=len(inner_radial_build)
     )
 
     my_assembly = Assembly()

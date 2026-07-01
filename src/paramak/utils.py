@@ -261,3 +261,10 @@ def sum_after_gap_following_plasma(radial_build):
         raise ValueError("LayerType.PLASMA entry is not followed by a 'gap'")
 
     return total_sum
+
+def get_layer_name(item, index):
+    if len(item) == 2:
+        layer_name = f"layer_{index}"
+    else:
+        layer_name = item[2]
+    return layer_name

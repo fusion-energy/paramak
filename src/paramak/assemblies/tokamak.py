@@ -3,7 +3,7 @@ from typing import Sequence, Tuple
 import cadquery as cq
 from .assembly import Assembly
 
-from ..utils import get_plasma_index, LayerType
+from ..utils import get_plasma_index, get_layer_name, LayerType
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
@@ -48,10 +48,7 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
         if layer_count > number_of_cylinder_layers:
             break
 
-        if len(item) == 2:
-            layer_name = f"layer_{layer_count}"
-        else:
-            layer_name = item[2]
+        layer_name = get_layer_name(item, layer_count)
 
         cylinder = center_column_shield_cylinder(
             inner_radius=total_sum,
@@ -75,7 +72,7 @@ def distance_to_plasma(radial_build, index):
 
 
 def create_layers_from_plasma(
-    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column, starting_layer_count=0
+    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column, layer_count=0
 ):
 
     plasma_index_rb = get_plasma_index(radial_build)
@@ -88,7 +85,7 @@ def create_layers_from_plasma(
     cumulative_thickness_uvb = 0
     cumulative_thickness_lvb = 0
 
-    layer_count = starting_layer_count - 1
+    layer_count = layer_count - 1
 
     for index_delta in range(indexes_from_plasma_to_end):
         
@@ -302,7 +299,7 @@ def tokamak(
         elongation=elongation,
         rotation_angle=rotation_angle,
         center_column=inner_radial_build[0],  # blanket_cutting_cylinder,
-        starting_layer_count=len(inner_radial_build)
+        layer_count=len(inner_radial_build)
     )
 
     my_assembly = Assembly()
