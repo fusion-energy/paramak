@@ -50,4 +50,5 @@ jobs:
           python examples/divertor_curved.py
           python examples/tokamak_minimal.py
           python examples/tokamak_from_plasma_minimal.py
+          python examples/naming.py
 
