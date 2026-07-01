@@ -146,7 +146,6 @@ A recommended workflow is:
     5. Rerun the script and generate the final DAGMC mesh using `cad_to_dagmc()`.
 
 This is recommended because `split_solids()` separates a shape into multiple individual solids. While this is useful for inspecting names, it is generally not desirable when generating the final DAGMC geometry.
-
 '''
 my_reactor = my_reactor.split_solids()
 print(my_reactor.names())
