@@ -289,3 +289,21 @@ def validate_unique_assembly_names(names, reactor_name):
             f"The following names are duplicated in the assembly: {duplicate_names}. "
             "Please rename the repeated layers in radial_build."
         )
+    
+def get_assembly_names(extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers):
+    assembly_names = [
+        *[
+            f"{getattr(entry, 'name', None)}_{i + 1}" if getattr(entry, 'name', None) else f"add_extra_cut_shape_{i + 1}"
+            for i, entry in enumerate(extra_cut_shapes)
+        ],
+        *[
+            f"{getattr(entry, 'name', None)}_{i + 1}" if getattr(entry, 'name', None) else f"extra_intersect_shapes_{i + 1}"
+            for i, entry in enumerate(extra_intersect_shapes)
+        ],
+        *[
+            getattr(entry, 'name', None) if getattr(entry, 'name', None) else f"layer_{i + 1}"
+            for i, entry in enumerate(inner_radial_build + blanket_layers)
+        ],
+        "plasma",
+    ]
+    return assembly_names
