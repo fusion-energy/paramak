@@ -85,17 +85,7 @@ def create_layers_from_plasma(
     cumulative_thickness_uvb = 0
     cumulative_thickness_lvb = 0
 
-    layer_count = layer_count - 1
-
     for index_delta in range(indexes_from_plasma_to_end):
-        
-        if len(radial_build[plasma_index_rb - index_delta]) == 3:
-            layer_name = radial_build[plasma_index_rb - index_delta][2]
-        elif len(radial_build[plasma_index_rb + index_delta]) == 3:
-            layer_name = radial_build[plasma_index_rb + index_delta][2]
-        else:
-            layer_name = f"layer_{layer_count}"
-        layer_count += 1
 
         if radial_build[plasma_index_rb + index_delta][0] == LayerType.PLASMA:
             continue
@@ -110,6 +100,14 @@ def create_layers_from_plasma(
             cumulative_thickness_uvb += upper_layer_thickness
             cumulative_thickness_lvb += lower_layer_thickness
             continue
+
+        layer_count += 1
+        if len(radial_build[plasma_index_rb - index_delta]) == 3:
+            layer_name = radial_build[plasma_index_rb - index_delta][2]
+        elif len(radial_build[plasma_index_rb + index_delta]) == 3:
+            layer_name = radial_build[plasma_index_rb + index_delta][2]
+        else:
+            layer_name = f"layer_{layer_count}"
 
         # build outer layer
         if radial_build[plasma_index_rb + index_delta][0] == LayerType.SOLID:
