@@ -8,11 +8,11 @@ divertor_lower.name = "divertor"  # We can directly assign the name for any cadq
 
 '''
 For extra_cut_shapes,
-these shapes already has a default name, but we can also pass a custom name to the shape, which will be used in extra_cut_shapes().
-If we have multiple tf coil or pf coil or any other shape, we need to pass the base name of the shape to extra_cut_shapes().
+For extra_cut_shapes, these shapes already have a default name, but you can also provide a custom name, which will be used by extra_cut_shapes().
+If there are multiple TF coils, PF coils, or any other shapes, you should pass the base name of the shape to extra_cut_shapes().
 for example:
-    if we define name = "toroidal_coil" for toroidal_field_coil_rectangle(),
-    and we have 2 separate tf coils, then the names of the shapes will be autometically defined as "toroidal_coil_1" and "toroidal_coil_2".
+    if name="toroidal_coil" is specified for toroidal_field_coil_rectangle() and two separate TF coils are created,
+    their names will automatically become toroidal_coil_1 and toroidal_coil_2.
 '''
 
 # Create toroidal field coils
@@ -55,18 +55,21 @@ for case_thickness, height, width, center_point in zip(
 
 '''
 For tokamak,
-we need to define names only for the radial_build.
-If we don't define names for any layer then the default name will be assigned as "layer_1", "layer_2", "layer_3" and so on.
-We can also define names for some layers and the rest of the layers will be assigned default names.
-Now, if we define a SOLID layer only in one side of the plasma, then this solid does not revolve around the plasma.
+We need to define names only for the radial_build.
+If no names are provided, default names will be assigned automatically as layer_1, layer_2, layer_3, and so on. 
+We may also define names for only some layers; any unnamed layers will receive default names.
+Now, if we define a SOLID layer only on one side of the plasma, then this solid does not revolve around the plasma.
 Suppose we have a radial build like this:
     "7-SOLID-inner-layer, plasma, 5-SOLID-outer-layer"
-    here, there are 2 extra layers on the inner side of plasma. So, the first 2 layers('2'+5, plasma, 5) of inner-layer won't revolve around the plasma,
+    Here, there are 2 extra layers on the inner side of plasma. So, the first 2 layers('2'+5, plasma, 5) of inner-layer won't revolve around the plasma,
     but the remaining 5 SOLID layer will revolve around the plasma.
     In the example below, "CS Coil" and "TF Coil" layer won't revolve around the plasma.
-We can define names for the revolved layers on both inner and outer layers, but the inner and outer layers will create one single solid, 
-so there will be only one name for the solid. If we define names for the both layers, then the name of the inner layer will be used for the solid. 
-If we don't define any name for the inner layer, then the name of the outer layer will be used for the solid.
+Names can be defined for both the inner and outer portions of a revolved layer. However, the inner and outer portions are combined into a single solid, 
+so only one name is assigned to the resulting solid. 
+The naming rules are:
+    1. If both the inner and outer layers have names, the name of the inner layer is used.
+    2. If the inner layer is unnamed and the outer layer has a name, the outer layer's name is used.
+    3. If neither layer has a name, the default layer name is used.
 For example:
     radial_build=[
         (paramak.LayerType.GAP, 10),
@@ -85,13 +88,11 @@ For example:
         (paramak.LayerType.SOLID, 100),                   # layer_6
     ]
 
-    Here, we have defined names for all the inner build layers.
-    The balnket layer will be assigned the name "Blanket-1".
-    But suppose if we don't define any name for the inner blanket layer like (paramak.LayerType.SOLID, 60), 
-    then the name of the blanket layer will be assigned as "Blanket-2" as we have defined the outer layer name, and
-    the rest of the layers will be assigned given names.
-    Again suppose if we don't define any name for first wall layer on both inner and outer side, then the name of the first wall layer will be assigned as "layer_4", 
-    which is the default name for the first wall layer.
+    In this example, names are defined for all inner-side layers. Therefore, the blanket solid is assigned the name "Blanket-1".
+    If the inner blanket layer is left unnamed: (paramak.LayerType.SOLID, 60)
+    then the blanket solid is assigned the name "Blanket-2" because the outer blanket layer has a defined name.
+    Similarly, if no name is provided for the first wall layer on either the inner or outer side, 
+    the resulting solid is assigned the default name "layer_4", which corresponds to the default name of that layer.
 '''
 
 my_reactor = paramak.tokamak(
@@ -131,12 +132,21 @@ my_reactor = paramak.tokamak(
 )
 
 '''
-We can get all the names of the shapes in the reactor using my_reactor.names() function.
-If we have shapes which contains multiple soilds, then we need to use the my_reactor.split_solids() function to get all the names sequentially.
-Like there can be 8 separate TF coils. It is recommended to use my_reactor.split_solids() function to get all the names of the shapes in the reactor.
-If we want to convert the reactor to a DAGMC mesh using cad_to_dagmc(), then we should not use my_reactor.split_solids() function.
-After getting the names, we should remove or comment the my_reactor.split_solids() function, as it will create multiple solids for each shape, which is not recommended 
-and then rerun the script to generate the final mesh.
+We can obtain the names of all shapes in a reactor using the `my_reactor.names()` function.
+Some shapes may contain multiple solids. In such cases, use the `my_reactor.split_solids()` function before calling `my_reactor.names()` to obtain the names of all solids individually and in sequence.
+For example, a toroidal field coil set may consist of eight separate TF coils. In this case, it is recommended to use `my_reactor.split_solids()` to inspect the names of all resulting solids.
+If we intend to convert the reactor geometry to a DAGMC mesh using `cad_to_dagmc()`, we should not keep `my_reactor.split_solids()` in the final workflow. 
+The purpose of `split_solids()` is primarily to inspect and identify individual solid names.
+
+A recommended workflow is:
+    1. Call `my_reactor.split_solids()`.
+    2. Use `my_reactor.names()` to inspect the generated solid names.
+    3. Assign or verify the desired material tags and names.
+    4. Remove or comment out the `my_reactor.split_solids()` call.
+    5. Rerun the script and generate the final DAGMC mesh using `cad_to_dagmc()`.
+
+This is recommended because `split_solids()` separates a shape into multiple individual solids. While this is useful for inspecting names, it is generally not desirable when generating the final DAGMC geometry.
+
 '''
 my_reactor = my_reactor.split_solids()
 print(my_reactor.names())
