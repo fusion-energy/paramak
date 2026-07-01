@@ -8,7 +8,7 @@ divertor_lower.name = "divertor"  # We can directly assign the name for any cadq
 
 '''
 For extra_cut_shapes,
-For extra_cut_shapes, these shapes already have a default name, but you can also provide a custom name, which will be used by extra_cut_shapes().
+these shapes already have a default name, but you can also provide a custom name, which will be used by extra_cut_shapes().
 If there are multiple TF coils, PF coils, or any other shapes, you should pass the base name of the shape to extra_cut_shapes().
 for example:
     if name="toroidal_coil" is specified for toroidal_field_coil_rectangle() and two separate TF coils are created,
