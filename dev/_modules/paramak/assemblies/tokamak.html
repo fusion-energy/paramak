@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.tokamak &#8212; Paramak 0.1.dev1+g7deb16730 documentation</title>
+    <title>paramak.assemblies.tokamak &#8212; Paramak 0.1.dev1+g120b03fb2 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="../../../_static/documentation_options.js?v=ae07fcf3"></script>
+    <script src="../../../_static/documentation_options.js?v=4916b071"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -219,7 +219,7 @@ function render(data, parent_element, ratio){
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g7deb16730" />
+  <meta name="docsearch:version" content="0.1.dev1+g120b03fb2" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -861,21 +861,15 @@ function render(data, parent_element, ratio){
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;extra_cut_shapes should only contain cadquery Workplanes, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># builds up the intersect shapes</span>
-    <span class="n">intersect_shapes_to_cut</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">all_shapes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">:</span>
-            <span class="n">all_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
-
         <span class="c1"># makes a union of the the radial build to use as a base for the intersect shapes</span>
         <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">:</span>
             <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">reactor_compound</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
 
         <span class="c1"># adds the extra intersect shapes to the assembly</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">):</span>
             <span class="n">reactor_entry_intersection</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">reactor_compound</span><span class="p">)</span>
-            <span class="n">intersect_shapes_to_cut</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reactor_entry_intersection</span><span class="p">)</span>
             <span class="c1"># Use the object&#39;s name attribute if it exists, otherwise fallback</span>
             <span class="n">base_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">base_name</span><span class="p">:</span>
@@ -884,25 +878,14 @@ function render(data, parent_element, ratio){
                 <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;extra_intersect_shapes_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">reactor_entry_intersection</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))))</span>
 
-    <span class="c1"># builds just the core if there are no extra parts</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extra_cut_shapes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">intersect_shapes_to_cut</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inner_radial_build</span><span class="o">+</span><span class="n">blanket_layers</span><span class="p">):</span>
-            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;layer_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">shapes_and_components</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">cutter</span> <span class="ow">in</span> <span class="n">extra_cut_shapes</span> <span class="o">+</span> <span class="n">extra_intersect_shapes</span><span class="p">:</span>
-                <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutter</span><span class="p">)</span>
-                <span class="c1"># TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple</span>
-                <span class="c1"># for subentry in entry.objects:</span>
-                <span class="c1">#     print(i, subentry)</span>
-            <span class="n">shapes_and_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shapes_and_components</span><span class="p">):</span>
-            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;layer_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="c1"># TODO track the names of shapes, even when extra shapes are made due to splitting</span>
-            <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))))</span>
+    <span class="c1"># adds the core layers, cutting each with any extra shapes (a no-op when there are none)</span>
+    <span class="n">cutters</span> <span class="o">=</span> <span class="n">extra_cut_shapes</span> <span class="o">+</span> <span class="n">extra_intersect_shapes</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">cutter</span> <span class="ow">in</span> <span class="n">cutters</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutter</span><span class="p">)</span>
+        <span class="c1"># TODO track the names of shapes, even when extra shapes are made due to splitting</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;layer_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))))</span>
 
     <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">plasma</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))))</span>
 
