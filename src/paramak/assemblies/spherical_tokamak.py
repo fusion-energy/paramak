@@ -264,21 +264,15 @@ def spherical_tokamak(
             raise ValueError(f"extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
 
     # builds up the intersect shapes
-    intersect_shapes_to_cut = []
     if len(extra_intersect_shapes) > 0:
-        all_shapes = []
-        for shape in inner_radial_build + blanket_layers:
-            all_shapes.append(shape)
-
         # makes a union of the the radial build to use as a base for the intersect shapes
         reactor_compound = inner_radial_build[0]
-        for i, entry in enumerate(inner_radial_build[1:] + blanket_layers):
+        for entry in inner_radial_build[1:] + blanket_layers:
             reactor_compound = reactor_compound.union(entry)
 
         # adds the extra intersect shapes to the assembly
         for i, entry in enumerate(extra_intersect_shapes):
             reactor_entry_intersection = entry.intersect(reactor_compound)
-            intersect_shapes_to_cut.append(reactor_entry_intersection)
             # Use the object's name attribute if it exists, otherwise fallback
             base_name = getattr(entry, 'name', None)
             if base_name:
@@ -287,25 +281,14 @@ def spherical_tokamak(
                 name=f"extra_intersect_shapes_{i+1}"
             my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
-    # builds just the core if there are no extra parts
-    if len(extra_cut_shapes) == 0 and len(intersect_shapes_to_cut) == 0:
-        for i, entry in enumerate(inner_radial_build+blanket_layers):
-            name = f"layer_{i+1}"
-            my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
-    else:
-        shapes_and_components = []
-        for i, entry in enumerate(inner_radial_build + blanket_layers):
-            for cutter in extra_cut_shapes + extra_intersect_shapes:
-                entry = entry.cut(cutter)
-                # TODO use something like this to return a list of material tags for the solids in order, as some solids get split into multiple
-                # for subentry in entry.objects:
-                #     print(i, subentry)
-            shapes_and_components.append(entry)
-
-        for i, entry in enumerate(shapes_and_components):
-            # TODO track the names of shapes, even when extra shapes are made due to splitting
-            name=f"layer_{i+1}"
-            my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
+    # adds the core layers, cutting each with any extra shapes (a no-op when there are none)
+    cutters = extra_cut_shapes + extra_intersect_shapes
+    for i, entry in enumerate(inner_radial_build + blanket_layers):
+        for cutter in cutters:
+            entry = entry.cut(cutter)
+        # TODO track the names of shapes, even when extra shapes are made due to splitting
+        name = f"layer_{i+1}"
+        my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*colors.get("plasma", (0.5,0.5,0.5))))
 
