@@ -332,3 +332,60 @@ Spherical tokamak with negative triangularity
         rotation_angle=180,
         triangularity=-0.55,
     ).toCompound()
+
+
+Naming spherical tokamak parts
+------------------------------
+
+- Every part in the assembly has a name, used when assigning material tags and per-part colors. By default layers are named ``layer_1``, ``layer_2`` ... working outwards and the plasma is named ``plasma``. The name of every part can be listed with ``my_reactor.names()``.
+- There are two ways to give layers meaningful names: add an optional name (a string) as the third element of a ``radial_build`` layer tuple, or rename parts after building with ``rename(old, new)``.
+- Unlike the tokamak, the layers of a spherical tokamak do not revolve around the plasma: the inboard layers are concentric cylinders (the central column) and the outboard layers are the blanket. Every radial solid layer is therefore its own part and is named directly from its ``radial_build`` entry. Names are only supported in the ``radial_build``, not the ``vertical_build``.
+
+.. code-block:: python
+
+    import paramak
+
+    # Option 1 - name the layers in the radial build
+    my_reactor = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50, "central column"),
+            (paramak.LayerType.SOLID, 15, "tf coil"),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 10, "first wall"),
+            (paramak.LayerType.SOLID, 30, "blanket"),
+        ],
+        rotation_angle=180,
+    )
+    print(my_reactor.names())
+    # ['central column', 'tf coil', 'first wall', 'blanket', 'plasma']
+
+.. code-block:: python
+
+    import paramak
+
+    # Option 2 - rename parts after building the reactor (chainable)
+    my_reactor = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 30),
+        ],
+        rotation_angle=180,
+    )
+    my_reactor = (
+        my_reactor
+        .rename("layer_1", "central column")
+        .rename("layer_2", "tf coil")
+        .rename("layer_3", "first wall")
+        .rename("layer_4", "blanket")
+    )
+    print(my_reactor.names())
+    # ['central column', 'tf coil', 'first wall', 'blanket', 'plasma']

@@ -74,3 +74,44 @@ def test_layer_names_are_contiguous_with_interior_gaps():
     )
 
     assert my_reactor.names() == ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "plasma"]
+
+
+def test_named_layers_tokamak():
+    "layers can be named in the radial_build, or with rename() after building"
+
+    from_radial_build = paramak.tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 30, "central column"),
+            (paramak.LayerType.SOLID, 20, "blanket"),
+            (paramak.LayerType.SOLID, 10, "first wall"),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        rotation_angle=180,
+    )
+    assert from_radial_build.names() == ["central column", "first wall", "blanket", "plasma"]
+
+    renamed = (
+        paramak.tokamak_from_plasma(
+            radial_build=[
+                (paramak.LayerType.GAP, 10),
+                (paramak.LayerType.SOLID, 30),
+                (paramak.LayerType.SOLID, 20),
+                (paramak.LayerType.SOLID, 10),
+                (paramak.LayerType.GAP, 60),
+                (paramak.LayerType.PLASMA, 300),
+                (paramak.LayerType.GAP, 60),
+                (paramak.LayerType.SOLID, 20),
+                (paramak.LayerType.SOLID, 10),
+            ],
+            rotation_angle=180,
+        )
+        .rename("layer_1", "central column")
+        .rename("layer_2", "first wall")
+        .rename("layer_3", "blanket")
+    )
+    assert renamed.names() == ["central column", "first wall", "blanket", "plasma"]
