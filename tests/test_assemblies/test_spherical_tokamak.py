@@ -158,3 +158,43 @@ def test_attributes():
     assert my_reactor.triangularity == 0.55
     assert my_reactor.major_radius == 275
     assert my_reactor.minor_radius == 150
+
+
+def test_named_layers_spherical_tokamak():
+    "layers can be named in the radial_build, or with rename() after building"
+
+    from_radial_build = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50, "central column"),
+            (paramak.LayerType.SOLID, 15, "tf coil"),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 10, "first wall"),
+            (paramak.LayerType.SOLID, 30, "blanket"),
+        ],
+        rotation_angle=180,
+    )
+    assert from_radial_build.names() == ["central column", "tf coil", "first wall", "blanket", "plasma"]
+
+    renamed = (
+        paramak.spherical_tokamak_from_plasma(
+            radial_build=[
+                (paramak.LayerType.GAP, 10),
+                (paramak.LayerType.SOLID, 50),
+                (paramak.LayerType.SOLID, 15),
+                (paramak.LayerType.GAP, 50),
+                (paramak.LayerType.PLASMA, 300),
+                (paramak.LayerType.GAP, 60),
+                (paramak.LayerType.SOLID, 10),
+                (paramak.LayerType.SOLID, 30),
+            ],
+            rotation_angle=180,
+        )
+        .rename("layer_1", "central column")
+        .rename("layer_2", "tf coil")
+        .rename("layer_3", "first wall")
+        .rename("layer_4", "blanket")
+    )
+    assert renamed.names() == ["central column", "tf coil", "first wall", "blanket", "plasma"]

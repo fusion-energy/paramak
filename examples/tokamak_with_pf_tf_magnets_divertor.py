@@ -38,8 +38,7 @@ for case_thickness, height, width, center_point in zip(
 
 my_reactor = paramak.tokamak(
     radial_build=[
-        (paramak.LayerType.GAP, 10),
-        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.GAP, 50),
         (paramak.LayerType.SOLID, 50),
         (paramak.LayerType.SOLID, 10),
         (paramak.LayerType.SOLID, 60),

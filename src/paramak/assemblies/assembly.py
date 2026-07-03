@@ -39,6 +39,56 @@ class Assembly(cq.Assembly):
             names.append(part[1].split('/')[-1])
         return names
 
+    def rename(self, old: str, new: str):
+        """Returns a new Assembly with the part(s) named ``old`` renamed to ``new``.
+
+        Matches either a single part whose name equals ``old``, or a group of
+        solids produced by :meth:`split_solids` that share ``old`` as a base
+        name (``old_1``, ``old_2`` ...). In the group case each member is
+        renamed to ``new_1``, ``new_2`` ... preserving the original numbering.
+
+        Args:
+            old: the existing part name (or split-solid base name) to replace.
+            new: the replacement name (or base name for a split-solid group).
+
+        Raises:
+            ValueError: if a resulting name would collide with another part,
+                because cadquery assembly names must be unique.
+        """
+        leaf_names = self.names()
+
+        if old in leaf_names:
+            remap = {old: new}
+        else:
+            # fall back to a split_solids() group sharing ``old`` as base name
+            remap = {}
+            for leaf in leaf_names:
+                base, separator, suffix = leaf.rpartition('_')
+                if separator and base == old and suffix.isdigit():
+                    remap[leaf] = f'{new}_{suffix}'
+
+        if not remap:
+            warnings.warn(f'Part with name {old} not found')
+            return self
+
+        # assembly names must stay unique
+        unchanged = [name for name in leaf_names if name not in remap]
+        targets = list(remap.values())
+        for target in targets:
+            if target in unchanged or targets.count(target) > 1:
+                raise ValueError(
+                    f'Cannot rename to {target!r}, that name already exists in the '
+                    'assembly and assembly names must be unique.'
+                )
+
+        new_assembly = Assembly()
+        for obj, full_path, loc, color in self:
+            leaf = full_path.split('/')[-1]
+            new_assembly.add(obj, name=remap.get(leaf, leaf), color=color, loc=loc)
+
+        self._copy_metadata(new_assembly)
+        return new_assembly
+
     def split_solids(self):
         """
         Explodes any part containing multiple solids into individually named parts.

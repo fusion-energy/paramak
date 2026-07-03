@@ -1,5 +1,6 @@
 import typing
 from enum import Enum
+from collections import Counter
 
 from cadquery import Workplane
 
@@ -261,3 +262,45 @@ def sum_after_gap_following_plasma(radial_build):
         raise ValueError("LayerType.PLASMA entry is not followed by a 'gap'")
 
     return total_sum
+
+def get_layer_name(item, index):
+    if len(item) == 2:
+        layer_name = f"layer_{index}"
+    else:
+        layer_name = item[2]
+    return layer_name
+
+def validate_vertical_build_names(vertical_build, reactor_name):
+    named_layers = [item[2] for item in vertical_build if len(item) == 3]
+    if named_layers:
+        unique_names = ", ".join(dict.fromkeys(named_layers))
+        raise ValueError(
+            f"Names are not supported in vertical_build for {reactor_name}. "
+            f"Found named entries: {unique_names}. Please define names in radial_build only."
+        )
+
+
+def validate_unique_assembly_names(names, reactor_name):
+    duplicates = [name for name, count in Counter(names).items() if count > 1]
+    if duplicates:
+        duplicate_names = ", ".join(sorted(duplicates))
+        raise ValueError(
+            f"Unique names are required for {reactor_name}. "
+            f"The following names are duplicated in the assembly: {duplicate_names}. "
+            "Please rename the repeated layers in radial_build."
+        )
+    
+def get_assembly_names(extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers):
+    cut_names = [
+        f"{name}_{i + 1}" if (name := getattr(entry, 'name', None)) else f"add_extra_cut_shape_{i + 1}"
+        for i, entry in enumerate(extra_cut_shapes)
+    ]
+    intersect_names = [
+        f"{name}_{i + 1}" if (name := getattr(entry, 'name', None)) else f"extra_intersect_shapes_{i + 1}"
+        for i, entry in enumerate(extra_intersect_shapes)
+    ]
+    layer_names = [
+        name if (name := getattr(entry, 'name', None)) else f"layer_{i + 1}"
+        for i, entry in enumerate(inner_radial_build + blanket_layers)
+    ]
+    return cut_names, intersect_names, layer_names
