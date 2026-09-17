@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.1.dev1+gcd4ecfff4 documentation</title>
+    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.1.dev1+gaac971755 documentation</title>
   
   
   
@@ -26,20 +26,20 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/paramak.css?v=67693341" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../_static/scripts/fontawesome.js?digest=a95f357e85573c9b56d5"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=3e48818c"></script>
+    <script src="../../../_static/documentation_options.js?v=7d66f28b"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -207,7 +207,7 @@ function render(data, parent_element, ratio){
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/paramak/workplanes/blanket_from_plasma';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.19.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -219,7 +219,7 @@ function render(data, parent_element, ratio){
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gcd4ecfff4" />
+  <meta name="docsearch:version" content="0.1.dev1+gaac971755" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -563,9 +563,9 @@ function render(data, parent_element, ratio){
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">make_callable</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">start_angle</span><span class="p">,</span> <span class="n">stop_angle</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function transforms an attribute (thickness or offset) into a</span>
+<span class="w">    </span><span class="sd">"""This function transforms an attribute (thickness or offset) into a</span>
 <span class="sd">    callable function of theta</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># if the attribute is a list, create a interpolated object of the</span>
     <span class="c1"># values</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
@@ -573,8 +573,8 @@ function render(data, parent_element, ratio){
             <span class="c1"># attribute is a list of 2 lists</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attribute</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">attribute</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;The length of angles list must equal </span><span class="se">\</span>
-<span class="s2">                    the length of values list&quot;</span>
+                    <span class="s2">"The length of angles list must equal </span><span class="se">\</span>
+<span class="s2">                    the length of values list"</span>
                 <span class="p">)</span>
             <span class="n">list_of_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">attribute</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">offset_values</span> <span class="o">=</span> <span class="n">attribute</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -632,7 +632,7 @@ function render(data, parent_element, ratio){
         <span class="n">thetas</span><span class="o">=</span><span class="n">thetas</span><span class="p">,</span>
         <span class="n">offset</span><span class="o">=</span><span class="n">inner_offset</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">inner_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;straight&quot;</span>
+    <span class="n">inner_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"straight"</span>
 
     <span class="c1"># create outer points</span>
     <span class="n">thickness</span> <span class="o">=</span> <span class="n">make_callable</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="n">start_angle</span><span class="p">,</span> <span class="n">stop_angle</span><span class="p">)</span>
@@ -650,18 +650,18 @@ function render(data, parent_element, ratio){
         <span class="n">offset</span><span class="o">=</span><span class="n">outer_offset</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">outer_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;straight&quot;</span>
+    <span class="n">outer_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"straight"</span>
 
     <span class="k">if</span> <span class="n">connect_to_center</span><span class="p">:</span>
-        <span class="n">inner_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">inner_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;straight&quot;</span><span class="p">])</span>
-        <span class="n">inner_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="n">inner_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;straight&quot;</span><span class="p">]]</span> <span class="o">+</span> <span class="n">inner_points</span>
-        <span class="n">outer_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">outer_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;straight&quot;</span><span class="p">])</span>
-        <span class="n">outer_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="n">outer_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;straight&quot;</span><span class="p">]]</span> <span class="o">+</span> <span class="n">outer_points</span>
+        <span class="n">inner_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">inner_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"straight"</span><span class="p">])</span>
+        <span class="n">inner_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="n">inner_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"straight"</span><span class="p">]]</span> <span class="o">+</span> <span class="n">inner_points</span>
+        <span class="n">outer_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">outer_points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"straight"</span><span class="p">])</span>
+        <span class="n">outer_points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="n">outer_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"straight"</span><span class="p">]]</span> <span class="o">+</span> <span class="n">outer_points</span>
 
     <span class="c1"># assemble</span>
     <span class="n">points</span> <span class="o">=</span> <span class="n">inner_points</span> <span class="o">+</span> <span class="n">outer_points</span>
     <span class="k">if</span> <span class="n">overlapping_shape</span> <span class="ow">and</span> <span class="n">allow_overlapping_shape</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;blanket_from_plasma: Some points with negative R coordinate have &quot;</span> <span class="s2">&quot;been ignored.&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">"blanket_from_plasma: Some points with negative R coordinate have "</span> <span class="s2">"been ignored."</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">points</span>
@@ -676,7 +676,7 @@ function render(data, parent_element, ratio){
     <span class="n">thetas</span><span class="p">,</span>
     <span class="n">offset</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;generates a list of points following parametric equations with an</span>
+<span class="w">    </span><span class="sd">"""generates a list of points following parametric equations with an</span>
 <span class="sd">    offset</span>
 
 <span class="sd">    Args:</span>
@@ -687,11 +687,11 @@ function render(data, parent_element, ratio){
 <span class="sd">    Returns:</span>
 <span class="sd">        list: list of points [[R1, Z1, connection1], [R2, Z2, connection2],</span>
 <span class="sd">        ...]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># create sympy objects and derivatives</span>
 
     <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">theta_sp</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;theta&quot;</span><span class="p">)</span>
+    <span class="n">theta_sp</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">)</span>
 
     <span class="n">R_sp</span><span class="p">,</span> <span class="n">Z_sp</span> <span class="o">=</span> <span class="n">distribution</span><span class="p">(</span>
         <span class="n">major_radius</span><span class="p">,</span>
@@ -708,8 +708,8 @@ function render(data, parent_element, ratio){
 
     <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">thetas</span><span class="p">:</span>
         <span class="c1"># get local value of derivatives</span>
-        <span class="n">val_R_derivative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">R_derivative</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s2">&quot;theta&quot;</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
-        <span class="n">val_Z_derivative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">Z_derivative</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s2">&quot;theta&quot;</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
+        <span class="n">val_R_derivative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">R_derivative</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
+        <span class="n">val_Z_derivative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">Z_derivative</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
 
         <span class="c1"># get normal vector components</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="n">val_Z_derivative</span>
@@ -744,14 +744,14 @@ function render(data, parent_element, ratio){
             <span class="o">+</span> <span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">ny</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_R_outer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">val_R_outer</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_Z_outer</span><span class="p">),</span> <span class="s2">&quot;spline&quot;</span><span class="p">])</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">val_R_outer</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_Z_outer</span><span class="p">),</span> <span class="s2">"spline"</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">points</span><span class="p">,</span> <span class="n">overlapping_shape</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">distribution</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">pkg</span><span class="o">=</span><span class="n">np</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plasma distribution theta in degrees</span>
+<span class="w">    </span><span class="sd">"""Plasma distribution theta in degrees</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        theta (float or np.array or sp.Symbol): the angle(s) in degrees.</span>
@@ -763,7 +763,7 @@ function render(data, parent_element, ratio){
 <span class="sd">        (float, float) or (sympy.Add, sympy.Mul) or</span>
 <span class="sd">            (numpy.array, numpy.array): The R and Z coordinates of the</span>
 <span class="sd">            point with angle theta</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">pkg</span> <span class="o">==</span> <span class="n">np</span><span class="p">:</span>
         <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -786,20 +786,20 @@ function render(data, parent_element, ratio){
     <span class="n">vertical_displacement</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">offset_from_plasma</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blanket_from_plasma&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"blanket_from_plasma"</span><span class="p">,</span>
     <span class="n">color</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
         <span class="mf">0.333</span><span class="p">,</span>
         <span class="mf">0.0</span><span class="p">,</span>
         <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">90.0</span><span class="p">,</span>
-    <span class="n">plane</span><span class="o">=</span><span class="s2">&quot;XZ&quot;</span><span class="p">,</span>
+    <span class="n">plane</span><span class="o">=</span><span class="s2">"XZ"</span><span class="p">,</span>
     <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
     <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">allow_overlapping_shape</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">connect_to_center</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A blanket volume created from plasma parameters. It might be necessary</span>
+<span class="w">    </span><span class="sd">"""A blanket volume created from plasma parameters. It might be necessary</span>
 <span class="sd">    to increase the num_points when making long but thin geometry with this</span>
 <span class="sd">    component.</span>
 
@@ -813,9 +813,9 @@ function render(data, parent_element, ratio){
 <span class="sd">            a list of two lists (thicknesses and angles) then these will be</span>
 <span class="sd">            used together with linear interpolation.</span>
 <span class="sd">        start_angle: the angle in degrees to start the blanket, measured anti</span>
-<span class="sd">            clockwise from 3 o&#39;clock.</span>
+<span class="sd">            clockwise from 3 o'clock.</span>
 <span class="sd">        stop_angle: the angle in degrees to stop the blanket, measured anti</span>
-<span class="sd">            clockwise from 3 o&#39;clock.</span>
+<span class="sd">            clockwise from 3 o'clock.</span>
 <span class="sd">        plasma: If not None, the parameters of the plasma Object will be used.</span>
 <span class="sd">        minor_radius: the minor radius of the plasma (cm).</span>
 <span class="sd">        major_radius: the major radius of the plasma (cm).</span>
@@ -831,15 +831,15 @@ function render(data, parent_element, ratio){
 <span class="sd">        num_points: number of points that will describe the shape.</span>
 <span class="sd">        allow_overlapping_shape: allows parameters to create a shape that</span>
 <span class="sd">            overlaps itself.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">major_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;major_radius must be positive, got </span><span class="si">{</span><span class="n">major_radius</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"major_radius must be positive, got </span><span class="si">{</span><span class="n">major_radius</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">minor_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;minor_radius must be positive, got </span><span class="si">{</span><span class="n">minor_radius</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"minor_radius must be positive, got </span><span class="si">{</span><span class="n">minor_radius</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">elongation</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;elongation must be positive, got </span><span class="si">{</span><span class="n">elongation</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"elongation must be positive, got </span><span class="si">{</span><span class="n">elongation</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">&lt;=</span> <span class="n">triangularity</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;triangularity must be between -1 and 1, got </span><span class="si">{</span><span class="n">triangularity</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"triangularity must be between -1 and 1, got </span><span class="si">{</span><span class="n">triangularity</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 
     <span class="n">points</span> <span class="o">=</span> <span class="n">find_points</span><span class="p">(</span>
         <span class="n">thickness</span><span class="o">=</span><span class="n">thickness</span><span class="p">,</span>
@@ -893,8 +893,8 @@ function render(data, parent_element, ratio){
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -928,7 +928,7 @@ function render(data, parent_element, ratio){
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.19.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>
