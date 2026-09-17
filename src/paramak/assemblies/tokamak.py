@@ -237,8 +237,8 @@ def tokamak_from_plasma(
 
 
 def tokamak(
-    radial_build: Sequence[Tuple[str, float] | Tuple[str, float, str]],
-    vertical_build: Sequence[Tuple[str, float] | Tuple[str, float, str]],
+    radial_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
+    vertical_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
     extra_cut_shapes: Sequence[cq.Workplane] = None,
