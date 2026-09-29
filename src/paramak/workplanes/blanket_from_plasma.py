@@ -6,6 +6,7 @@ import warnings
 import mpmath
 import numpy as np
 import sympy as sp
+from OCP.StdFail import StdFail_NotDone
 from scipy.interpolate import interp1d
 
 from ..utils import create_wire_workplane_from_points
@@ -306,7 +307,13 @@ def blanket_from_plasma(
 
     wire = create_wire_workplane_from_points(points=points, plane=plane, origin=origin, obj=obj)
 
-    solid = wire.revolve(rotation_angle)
+    try:
+        solid = wire.revolve(rotation_angle)
+    except StdFail_NotDone as e:
+        raise ValueError(
+            "blanket_from_plasma: could not revolve the profile, "
+            "the geometry is probably self-overlapping"
+        ) from e
     solid.name = name
     solid.color = color
     return solid
