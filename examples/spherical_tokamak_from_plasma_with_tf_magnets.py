@@ -1,6 +1,5 @@
 import paramak
 
-
 rotation_angle = 90
 tf_style_1 = paramak.toroidal_field_coil_rectangle(
     horizontal_start_point=(10, 520),

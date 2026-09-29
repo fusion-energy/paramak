@@ -1,8 +1,10 @@
 import os
-import paramak
-import numpy as np
+
 import cadquery as cq
+import numpy as np
 from cadquery.vis import show
+
+import paramak
 
 original_radial_build=[
     (paramak.LayerType.GAP, 40),

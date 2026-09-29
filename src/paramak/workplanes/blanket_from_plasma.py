@@ -1,11 +1,12 @@
-import warnings
 import typing
+import warnings
 
-from ..utils import create_wire_workplane_from_points
 import mpmath
 import numpy as np
 import sympy as sp
 from scipy.interpolate import interp1d
+
+from ..utils import create_wire_workplane_from_points
 
 
 def make_callable(attribute, start_angle, stop_angle):

@@ -1,3 +1,4 @@
+import importlib
 from pathlib import Path
 
 import pytest
@@ -5,8 +6,6 @@ import pytest
 import paramak
 
 from .test_utils import transport_particles_on_h5m_geometry
-
-import importlib
 
 
 @pytest.mark.parametrize("rotation_angle", [30, 180])

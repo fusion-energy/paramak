@@ -9,11 +9,12 @@ uses minimal materials, tallies, source to keep the example concise.
 """
 
 
-import paramak
-import openmc
-from cad_to_dagmc import CadToDagmc
 from pathlib import Path
 
+import openmc
+from cad_to_dagmc import CadToDagmc
+
+import paramak
 
 openmc.config["cross_sections"] = "/nuclear_data/cross_sections.xml"
 

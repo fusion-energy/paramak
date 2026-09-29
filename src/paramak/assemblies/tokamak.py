@@ -1,19 +1,19 @@
 from typing import Sequence, Tuple
 
 import cadquery as cq
-from .assembly import Assembly
 
 from ..utils import (
-    get_plasma_index, 
-    get_layer_name, 
-    get_assembly_names, 
-    validate_vertical_build_names, 
-    validate_unique_assembly_names, 
-    LayerType
+    LayerType,
+    get_assembly_names,
+    get_layer_name,
+    get_plasma_index,
+    validate_unique_assembly_names,
+    validate_vertical_build_names,
 )
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
+from .assembly import Assembly
 from .spherical_tokamak import get_plasma_value, sum_up_to_plasma
 
 

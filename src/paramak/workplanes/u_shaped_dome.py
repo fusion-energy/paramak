@@ -3,8 +3,6 @@ import typing
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.constant_thickness_dome import constant_thickness_dome
 
-from ..utils import create_wire_workplane_from_points
-
 
 def u_shaped_dome(
     radius: float = 310,

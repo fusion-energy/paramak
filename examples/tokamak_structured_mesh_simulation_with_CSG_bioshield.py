@@ -21,12 +21,12 @@ It performs the following steps:
 """
 
 from pathlib import Path
-import openmc
+
 import numpy as np
-import math
-import paramak
-import cadquery as cq
+import openmc
 from cad_to_dagmc import CadToDagmc
+
+import paramak
 
 # change this path to the cross_sections.xml to the path of your cross_sections.xml
 openmc.config["cross_sections"] = "/nuclear_data/cross_sections.xml"

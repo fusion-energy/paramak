@@ -1,6 +1,6 @@
 import typing
-from enum import Enum
 from collections import Counter
+from enum import Enum
 
 from cadquery import Workplane
 
@@ -190,9 +190,9 @@ def validate_plasma_radial_build(radial_build):
     plasma_index = -1
     for index, item in enumerate(radial_build):
         if not isinstance(item[0], LayerType):
-            raise ValidationError(f"First entry in each radial build Tuple should be a paramak.LayerType")
+            raise ValidationError("First entry in each radial build Tuple should be a paramak.LayerType")
         if not isinstance(item[1], (int, float)):
-            raise ValidationError(f"Second entry in each radial build Tuple should be a Float")
+            raise ValidationError("Second entry in each radial build Tuple should be a Float")
         if item[0] not in valid_strings:
             raise ValidationError(f"Invalid entry '{item[0]}' at index {index}")
         if item[1] <= 0:

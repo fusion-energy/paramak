@@ -1,6 +1,8 @@
 import cadquery as cq
 import pytest
+
 from paramak.assemblies.assembly import Assembly
+
 
 def test_remove_and_names():
 

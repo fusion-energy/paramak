@@ -1,23 +1,23 @@
-from typing import Optional, Sequence, Tuple, Union
+from typing import Sequence, Tuple
 
 import cadquery as cq
-from .assembly import Assembly
 
 from ..utils import (
+    LayerType,
+    get_assembly_names,
+    get_layer_name,
     get_plasma_index,
     get_plasma_value,
-    get_layer_name,
-    get_assembly_names,
+    sum_before_after_plasma,
     sum_up_to_gap_before_plasma,
     sum_up_to_plasma,
-    sum_before_after_plasma,
-    validate_vertical_build_names,
     validate_unique_assembly_names,
-    LayerType,
+    validate_vertical_build_names,
 )
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
+from .assembly import Assembly
 
 
 def create_blanket_layers_after_plasma(
