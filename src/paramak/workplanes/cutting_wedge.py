@@ -1,4 +1,4 @@
-import typing
+from __future__ import annotations
 
 import cadquery as cq
 
@@ -12,7 +12,7 @@ def cutting_wedge(
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.0,
         0.333,
         0.0,

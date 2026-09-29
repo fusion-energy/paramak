@@ -1,4 +1,4 @@
-import typing
+from __future__ import annotations
 
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.constant_thickness_dome import constant_thickness_dome
@@ -7,7 +7,7 @@ from ..workplanes.constant_thickness_dome import constant_thickness_dome
 def dished_vacuum_vessel(
     radius: float = 300,
     reference_point: tuple = ("center", 0),
-    dish_height: typing.Tuple[float, float] = (20, 50),
+    dish_height: tuple[float, float] = (20, 50),
     cylinder_height: float = 400,
     thickness: float = 15,
     rotation_angle: float = 90,
@@ -36,14 +36,14 @@ def dished_vacuum_vessel(
         raise ValueError(f"All values in dish_height must be positive, got {dish_height}.")
 
     if not isinstance(radius, (float, int)):
-        raise ValueError(f"radius must be a number. Not {type(radius)}")
+        raise TypeError(f"radius must be a number. Not {type(radius)}")
     if radius <= 0:
         msg = "radius must be a positive number above 0. " f"Not {radius}"
         raise ValueError(msg)
 
     if not isinstance(thickness, (float, int)):
         msg = f"VacuumVessel.thickness must be a number. Not {type(thickness)}"
-        raise ValueError(msg)
+        raise TypeError(msg)
     if thickness <= 0:
         msg = f"VacuumVessel.thickness must be a positive number above 0. Not {thickness}"
         raise ValueError(msg)

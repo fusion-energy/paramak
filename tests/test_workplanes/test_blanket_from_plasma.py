@@ -142,14 +142,15 @@ def test_full_cov_full_rotation():
 def test_overlapping():
     """Creates an overlapping geometry and checks that a warning is raised."""
 
-    with pytest.warns(UserWarning, match="blanket_from_plasma: Some points with negative R"):
-        with pytest.raises(Exception):
-            paramak.blanket_from_plasma(
-                major_radius=100,
-                minor_radius=100,
-                triangularity=0.5,
-                elongation=2,
-                thickness=200,
-                stop_angle=360,
-                start_angle=0,
-            )
+    with pytest.warns(UserWarning, match="blanket_from_plasma: Some points with negative R"), pytest.raises(
+        (ValueError, RuntimeError)
+    ):
+        paramak.blanket_from_plasma(
+            major_radius=100,
+            minor_radius=100,
+            triangularity=0.5,
+            elongation=2,
+            thickness=200,
+            stop_angle=360,
+            start_angle=0,
+        )

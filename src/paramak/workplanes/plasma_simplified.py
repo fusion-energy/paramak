@@ -1,4 +1,4 @@
-import typing
+from __future__ import annotations
 
 import numpy as np
 
@@ -13,7 +13,7 @@ def plasma_simplified(
     vertical_displacement: float = 0.0,
     num_points: int = 200,
     name: str = "tokamak_plasma",
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.333,
         0.0,
         0.0,

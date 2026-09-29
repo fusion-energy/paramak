@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import typing
 import warnings
 
@@ -229,10 +231,10 @@ def blanket_from_plasma(
     triangularity: float = 0.55,
     elongation: float = 2.0,
     vertical_displacement: float = 0.0,
-    offset_from_plasma: typing.Union[float, typing.Iterable[float]] = 0.0,
+    offset_from_plasma: float | typing.Iterable[float] = 0.0,
     num_points: int = 200,
     name: str = "blanket_from_plasma",
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.333,
         0.0,
         0.0,

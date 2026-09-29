@@ -1,4 +1,6 @@
-from typing import Sequence, Tuple
+from __future__ import annotations
+
+from typing import Sequence
 
 import cadquery as cq
 
@@ -113,13 +115,13 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
 
 
 def spherical_tokamak_from_plasma(
-    radial_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
+    radial_build: Sequence[tuple[LayerType, float] | tuple[LayerType, float, str]],
     elongation: float = 2.0,
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    extra_cut_shapes: Sequence[cq.Workplane] = None,
-    extra_intersect_shapes: Sequence[cq.Workplane] = None,
-    colors: dict = None,
+    extra_cut_shapes: Sequence[cq.Workplane] | None = None,
+    extra_intersect_shapes: Sequence[cq.Workplane] | None = None,
+    colors: dict | None = None,
 ) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.
 
@@ -177,13 +179,13 @@ def spherical_tokamak_from_plasma(
 
 
 def spherical_tokamak(
-    radial_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
-    vertical_build: Sequence[Tuple[LayerType, float] | Tuple[LayerType, float, str]],
+    radial_build: Sequence[tuple[LayerType, float] | tuple[LayerType, float, str]],
+    vertical_build: Sequence[tuple[LayerType, float] | tuple[LayerType, float, str]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    extra_cut_shapes: Sequence[cq.Workplane] = None,
-    extra_intersect_shapes: Sequence[cq.Workplane] = None,
-    colors: dict = None,
+    extra_cut_shapes: Sequence[cq.Workplane] | None = None,
+    extra_intersect_shapes: Sequence[cq.Workplane] | None = None,
+    colors: dict | None = None,
 ) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and vertical build.
 
@@ -272,7 +274,7 @@ def spherical_tokamak(
 
     for entry, name in zip(extra_cut_shapes, cut_names):
         if not isinstance(entry, cq.Workplane):
-            raise ValueError(f"extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
+            raise TypeError(f"extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
         my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     # builds up the intersect shapes

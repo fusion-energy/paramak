@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import typing
 
 from ..utils import create_wire_workplane_from_points, rotate_solid
@@ -5,18 +7,18 @@ from ..workplanes.cutting_wedge import cutting_wedge
 
 
 def toroidal_field_coil_rectangle(
-    horizontal_start_point: typing.Tuple[float, float] = (20, 200),
-    vertical_mid_point: typing.Tuple[float, float] = (350, 0),
+    horizontal_start_point: tuple[float, float] = (20, 200),
+    vertical_mid_point: tuple[float, float] = (350, 0),
     thickness: float = 30,
     distance: float = 20,
     rotation_angle: float = 360.0,
     name: str = "toroidal_field_coil",
     with_inner_leg: bool = True,
-    azimuthal_placement_angles: typing.Sequence[float] = None,
+    azimuthal_placement_angles: typing.Sequence[float] | None = None,
     vertical_displacement: float = 0.0,
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (0.0, 0.0, 1.0),
+    color: tuple[float, float, float, float | None] = (0.0, 0.0, 1.0),
     plane: str = "XZ",
-    origin: typing.Tuple[float, float, float] = (0.0, 0.0, 0.0),
+    origin: tuple[float, float, float] = (0.0, 0.0, 0.0),
     obj=None,
 ):
     """Creates a rectangular shaped toroidal field coil.

@@ -1,4 +1,4 @@
-import typing
+from __future__ import annotations
 
 import cadquery as cq
 
@@ -6,15 +6,15 @@ from ..utils import create_wire_workplane_from_points
 
 
 def blanket_constant_thickness_arc_h(
-    inner_mid_point: typing.Tuple[float, float],
-    inner_upper_point: typing.Tuple[float, float],
-    inner_lower_point: typing.Tuple[float, float],
+    inner_mid_point: tuple[float, float],
+    inner_upper_point: tuple[float, float],
+    inner_lower_point: tuple[float, float],
     thickness: float,
     rotation_angle=90,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.0,
         0.333,
         0.0,

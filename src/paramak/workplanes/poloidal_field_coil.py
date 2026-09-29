@@ -1,4 +1,4 @@
-import typing
+from __future__ import annotations
 
 from ..utils import create_wire_workplane_from_points
 
@@ -8,7 +8,7 @@ def poloidal_field_coil(
     width: float,
     center_point: float,
     name: str = "poloidal_field_coil",
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.0,
         0.333,
         0.0,

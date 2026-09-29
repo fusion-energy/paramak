@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import math
 import numbers
-import typing
 
 import cadquery as cq
 
@@ -16,7 +17,7 @@ def constant_thickness_dome(
     upper_or_lower: str = "upper",
     name: str = "constant_thickness_dome",
     plane="XZ",
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.0,
         0.333,
         0.0,
@@ -44,20 +45,20 @@ def constant_thickness_dome(
     """
 
     if not isinstance(chord_width, numbers.Number):
-        raise ValueError("ConstantThicknessDome.chord_width must be a float. Not", chord_width)
+        raise TypeError("ConstantThicknessDome.chord_width must be a float. Not", chord_width)
     if chord_width <= 0:
         msg = f"ConstantThicknessDome.chord_width must be a positive number above 0. Not {chord_width}"
         raise ValueError(msg)
 
     if not isinstance(chord_height, numbers.Number):
-        raise ValueError("ConstantThicknessDome.chord_height must be a float. Not", chord_height)
+        raise TypeError("ConstantThicknessDome.chord_height must be a float. Not", chord_height)
     if chord_height <= 0:
         msg = f"ConstantThicknessDome.chord_height must be a positive number above 0. Not {chord_height}"
         raise ValueError(msg)
 
     if not isinstance(thickness, numbers.Number):
         msg = f"VacuumVessel.thickness must be a float. Not {thickness}"
-        raise ValueError(msg)
+        raise TypeError(msg)
     if thickness <= 0:
         msg = f"VacuumVessel.thickness must be a positive number above 0. Not {thickness}"
         raise ValueError(msg)

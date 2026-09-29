@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import typing
-from typing import List, Tuple
 
 import numpy as np
 from scipy import integrate
@@ -68,7 +69,12 @@ def _compute_inner_points(R1, R2):
     return r_values, z_values
 
 
-def add_thickness(x: List[float], y: List[float], thickness: float, dy_dx: List[float] = None) -> Tuple[list, list]:
+def add_thickness(
+    x: list[float],
+    y: list[float],
+    thickness: float,
+    dy_dx: list[float] | None = None,
+) -> tuple[list, list]:
     """Computes outer curve points based on thickness
 
     Args:
@@ -163,11 +169,11 @@ def toroidal_field_coil_princeton_d(
     rotation_angle: float = 360.0,
     name: str = "toroidal_field_coil",
     with_inner_leg: bool = True,
-    azimuthal_placement_angles: typing.Sequence[float] = None,
+    azimuthal_placement_angles: typing.Sequence[float] | None = None,
     vertical_displacement: float = 0.0,
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (0.0, 0.0, 1.0),
+    color: tuple[float, float, float, float | None] = (0.0, 0.0, 1.0),
     plane: str = "XZ",
-    origin: typing.Tuple[float, float, float] = (0.0, 0.0, 0.0),
+    origin: tuple[float, float, float] = (0.0, 0.0, 0.0),
     obj=None,
 ):
     """
@@ -207,7 +213,7 @@ def toroidal_field_coil_princeton_d(
         
     if azimuthal_placement_angles is None:
         azimuthal_placement_angles = [0]
-    points, inner_leg_connection_points, inner_points, outer_points = find_points(
+    points, inner_leg_connection_points, _inner_points, _outer_points = find_points(
         r1, r2, thickness, vertical_displacement
     )
     # need to get square end, it appears to miss the last point in the solid, TODO fix so this append is not needed
