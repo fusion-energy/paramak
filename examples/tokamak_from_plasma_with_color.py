@@ -27,7 +27,7 @@ my_reactor = paramak.tokamak_from_plasma(
         "layer_5": (0.5, 0.5, 0.8),
     }
 )
-my_reactor.save("tokamak_with_colors.step")
+my_reactor.export("tokamak_with_colors.step")
 print("Saved as tokamak_with_colors.step")
 
 

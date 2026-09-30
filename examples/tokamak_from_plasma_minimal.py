@@ -19,5 +19,5 @@ my_reactor = paramak.tokamak_from_plasma(
     triangularity=0.55,
     rotation_angle=180,
 )
-my_reactor.save("tokamak_minimal.step")
+my_reactor.export("tokamak_minimal.step")
 print("Saved as tokamak_minimal.step")

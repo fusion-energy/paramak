@@ -28,6 +28,6 @@ my_reactor = paramak.tokamak_from_plasma(
     rotation_angle=180,
     extra_intersect_shapes=[divertor_lower],
 )
-my_reactor.save("tokamak_with_divertor.step")
+my_reactor.export("tokamak_with_divertor.step")
 print("Saved as tokamak_with_divertor.step")
 

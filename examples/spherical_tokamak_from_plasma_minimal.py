@@ -17,4 +17,4 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
     triangularity=0.55,
     rotation_angle=180,
 )
-my_reactor.save("spherical_tokamak_from_plasma_minimal.step")
+my_reactor.export("spherical_tokamak_from_plasma_minimal.step")

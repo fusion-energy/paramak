@@ -71,5 +71,5 @@ my_reactor = paramak.tokamak(
     extra_cut_shapes=extra_cut_shapes,
     extra_intersect_shapes=[divertor_lower],
 )
-my_reactor.save("tokamak_with_pf_tf_magnets_divertor.step")
+my_reactor.export("tokamak_with_pf_tf_magnets_divertor.step")
 print("Saved as tokamak_with_pf_tf_magnets_divertor.step")

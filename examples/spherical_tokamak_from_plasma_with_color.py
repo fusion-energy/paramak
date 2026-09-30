@@ -24,7 +24,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
         "layer_5": (0.5, 0.5, 0.8),
     },
 )
-my_reactor.save("spherical_tokamak_from_plasma_with_colors.step")
+my_reactor.export("spherical_tokamak_from_plasma_with_colors.step")
 
 # show colors with built-in vtk viewer
 # from cadquery.vis import show

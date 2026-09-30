@@ -24,5 +24,5 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
     rotation_angle=180,
     extra_intersect_shapes=[divertor_lower],
 )
-my_reactor.save("spherical_tokamak_from_plasma_with_divertor.step")
+my_reactor.export("spherical_tokamak_from_plasma_with_divertor.step")
 print("written spherical_tokamak_from_plasma_with_divertor.step")

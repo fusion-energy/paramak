@@ -26,4 +26,4 @@ my_reactor = paramak.spherical_tokamak(
     rotation_angle=180,
     triangularity=-0.55,
 )
-my_reactor.save("spherical_tokamak_minimal.step")
+my_reactor.export("spherical_tokamak_minimal.step")

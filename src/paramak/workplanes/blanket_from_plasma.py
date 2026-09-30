@@ -6,6 +6,7 @@ import warnings
 import mpmath
 import numpy as np
 import sympy as sp
+from OCP.Standard import Standard_Failure
 from OCP.StdFail import StdFail_NotDone
 from scipy.interpolate import interp1d
 
@@ -309,7 +310,7 @@ def blanket_from_plasma(
 
     try:
         solid = wire.revolve(rotation_angle)
-    except StdFail_NotDone as e:
+    except (Standard_Failure, StdFail_NotDone) as e:
         raise ValueError(
             "blanket_from_plasma: could not revolve the profile, "
             "the geometry is probably self-overlapping"
