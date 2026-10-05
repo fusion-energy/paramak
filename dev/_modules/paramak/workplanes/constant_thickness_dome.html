@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.constant_thickness_dome &#8212; Paramak 0.1.dev1+g2b4e24c1a documentation</title>
+    <title>paramak.workplanes.constant_thickness_dome &#8212; Paramak 0.1.dev1+g2e267f183 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../../_static/documentation_options.js?v=22d9ea22"></script>
+    <script src="../../../_static/documentation_options.js?v=6f176852"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -218,7 +218,7 @@ function render(data, parent_element, ratio){
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g2b4e24c1a" />
+  <meta name="docsearch:version" content="0.1.dev1+g2e267f183" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -600,22 +600,22 @@ function render(data, parent_element, ratio){
 <span class="sd">    """</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">chord_width</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"ConstantThicknessDome.chord_width must be a float. Not"</span><span class="p">,</span> <span class="n">chord_width</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"chord_width must be a number. Not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">chord_width</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">chord_width</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"ConstantThicknessDome.chord_width must be a positive number above 0. Not </span><span class="si">{</span><span class="n">chord_width</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"chord_width must be a positive number above 0. Not </span><span class="si">{</span><span class="n">chord_width</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">chord_height</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"ConstantThicknessDome.chord_height must be a float. Not"</span><span class="p">,</span> <span class="n">chord_height</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"chord_height must be a number. Not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">chord_height</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">chord_height</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"ConstantThicknessDome.chord_height must be a positive number above 0. Not </span><span class="si">{</span><span class="n">chord_height</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"chord_height must be a positive number above 0. Not </span><span class="si">{</span><span class="n">chord_height</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"VacuumVessel.thickness must be a float. Not </span><span class="si">{</span><span class="n">thickness</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"thickness must be a number. Not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">thickness</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">thickness</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"VacuumVessel.thickness must be a positive number above 0. Not </span><span class="si">{</span><span class="n">thickness</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"thickness must be a positive number above 0. Not </span><span class="si">{</span><span class="n">thickness</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="c1"># Note these points are not used in the normal way when constructing</span>
@@ -647,7 +647,7 @@ function render(data, parent_element, ratio){
     <span class="c1">#       far side</span>
 
     <span class="k">if</span> <span class="n">chord_height</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">&gt;=</span> <span class="n">chord_width</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s2">"ConstantThicknessDome requires that the chord_width "</span> <span class="s2">"is at least 2 times as large as the chord height"</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">"constant_thickness_dome requires that the chord_width "</span> <span class="s2">"is at least 2 times as large as the chord height"</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="n">radius_of_sphere</span> <span class="o">=</span> <span class="p">((</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">chord_width</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">chord_height</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">chord_height</span><span class="p">)</span>
