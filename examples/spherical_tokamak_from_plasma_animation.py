@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import cadquery as cq
 import numpy as np
@@ -35,7 +36,9 @@ def create_reactor(
     triangularity = original_triangularity,
     n_tf_coils = original_n_tf_coils,
     coil_height_factor = original_coil_height_factor,
-    divertor_thickness=original_divertor_thickness
+    divertor_thickness=original_divertor_thickness,
+    n_modules=None,
+    segment_blanket=False,
 ):
 
     reactor_diameter = sum([layer[1] for layer in radial_build])
@@ -92,15 +95,39 @@ def create_reactor(
             )
         )
 
+    # optionally splits the first wall (layer_3) into tiles, and optionally the
+    # blanket (layer_4) into modules with the same segments so they line up
+    poloidal_build = None
+    module_colors = {}
+    plasma_color = (1., 0.7, 0.8, 0.6)
+    if n_modules is not None:
+        module_gap = 15  # gap between neighbouring segments
+        arc_length = paramak.spherical_poloidal_arc_length(
+            radial_build, elongation=elongation, triangularity=triangularity
+        )
+        module_length = (arc_length - n_modules * module_gap) / n_modules
+        modules = [("module", module_length), ("gap", module_gap)] * n_modules
+        poloidal_build = [None, modules, modules if segment_blanket else None, None]
+        # alternating colors so neighbouring segments can be told apart
+        layer_colors = {"layer_3": [(0.1, 0.1, 0.9), (0.5, 0.75, 1.0)], "layer_4": [(0.4, 0.4, 0.8), (0.75, 0.75, 0.95)]}
+        for layer_name, colors in layer_colors.items():
+            for i in range(n_modules):
+                name = f"{layer_name}_module" if n_modules == 1 else f"{layer_name}_module_{i + 1}"
+                module_colors[name] = colors[i % 2]
+        # a more transparent plasma so the segments behind it can be seen
+        plasma_color = (1., 0.7, 0.8, 0.3)
+
     return paramak.spherical_tokamak_from_plasma(
         radial_build=radial_build,
         elongation=elongation,
         triangularity=triangularity,
         rotation_angle=180,
+        poloidal_build=poloidal_build,
         colors={
+            **module_colors,
             "layer_1": (0.4, 0.9, 0.4),
             "layer_2": (0.6, 0.8, 0.6),
-            "plasma": (1., 0.7, 0.8, 0.6),
+            "plasma": plasma_color,
             "layer_3": (0.1, 0.1, 0.9),
             "layer_4": (0.4, 0.4, 0.8),
             "layer_5": (0.5, 0.5, 0.8),
@@ -222,6 +249,27 @@ for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.5
     reactor = create_reactor(triangularity=modified_triangularity)
     export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png', f'spherical_tokamak_alpha_frame_{frame:03d}.png')
     frame += 1
+
+# the segmentation frames are each shown for three frames so these sequences play more slowly
+segmentation_frame_repeats = 3
+
+# first wall tiles only
+for modified_n_modules in [None, 2, 4, 6, 8, 10, 12, 14, 16, 16, 16, 14, 12, 10, 8, 6, 4, 2, None]:
+    reactor = create_reactor(n_modules=modified_n_modules)
+    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png', f'spherical_tokamak_alpha_frame_{frame:03d}.png')
+    for repeat in range(1, segmentation_frame_repeats):
+        shutil.copy(f'spherical_tokamak_frame_{frame:03d}.png', f'spherical_tokamak_frame_{frame + repeat:03d}.png')
+        shutil.copy(f'spherical_tokamak_alpha_frame_{frame:03d}.png', f'spherical_tokamak_alpha_frame_{frame + repeat:03d}.png')
+    frame += segmentation_frame_repeats
+
+# first wall tiles and blanket modules with the same poloidal segments
+for modified_n_modules in [None, 2, 3, 4, 5, 6, 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, None]:
+    reactor = create_reactor(n_modules=modified_n_modules, segment_blanket=True)
+    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png', f'spherical_tokamak_alpha_frame_{frame:03d}.png')
+    for repeat in range(1, segmentation_frame_repeats):
+        shutil.copy(f'spherical_tokamak_frame_{frame:03d}.png', f'spherical_tokamak_frame_{frame + repeat:03d}.png')
+        shutil.copy(f'spherical_tokamak_alpha_frame_{frame:03d}.png', f'spherical_tokamak_alpha_frame_{frame + repeat:03d}.png')
+    frame += segmentation_frame_repeats
 
 # mp4 on a white background, and webm with a transparent background for
 # browsers that support it
