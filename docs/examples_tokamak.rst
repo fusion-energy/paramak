@@ -311,6 +311,60 @@ Tokamak with negative triangularity
     ).toCompound()
 
 
+Tokamak with poloidal segments
+------------------------------
+
+- The poloidal_build argument splits layers into poloidal segments, for example to model blanket modules separated by assembly gaps.
+- poloidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards. Each entry covers the matching inboard and outboard layer pair.
+- Entries are None for layers that are not segmented, otherwise a list of (name, arc_length) tuples.
+- Arc lengths are measured along the inner surface of the layer, starting at the outboard midplane and going counter clockwise (upwards on the outboard side). They must sum to the arc length of that layer, which paramak.poloidal_arc_lengths returns.
+- Segments named "gap" produce no solid. Other segments are named "<layer name>_<segment name>", with a "_1", "_2" suffix when a name is repeated within a layer.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 10),
+    ]
+
+    # arc length of the inner surface of each layer, ordered from the plasma
+    # outwards with None for gaps
+    arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=2.0, triangularity=0.55)
+
+    # splits the blanket (third entry after the plasma) into six modules with 30 cm gaps
+    gap = 30
+    number_of_modules = 6
+    module = (arc_lengths[2] - number_of_modules * gap) / number_of_modules
+
+    result = paramak.tokamak_from_plasma(
+        radial_build=radial_build,
+        poloidal_build=[
+            None,  # gap after the plasma
+            None,  # first wall
+            [("module", module), ("gap", gap)] * number_of_modules,  # blanket
+            None,  # rear wall
+        ],
+        elongation=2.0,
+        triangularity=0.55,
+        rotation_angle=180,
+    ).toCompound()
+
+
 Tokamak with several customizations
 -----------------------------------
 

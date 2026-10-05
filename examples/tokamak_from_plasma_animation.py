@@ -34,7 +34,8 @@ def create_reactor(
     triangularity = original_triangularity,
     n_tf_coils = original_n_tf_coils,
     coil_height_factor = original_coil_height_factor,
-    divertor_thickness=original_divertor_thickness
+    divertor_thickness=original_divertor_thickness,
+    n_blanket_modules=None,
 ):
     
     reactor_diameter = sum([layer[1] for layer in radial_build])
@@ -93,12 +94,30 @@ def create_reactor(
             )
         )
 
+    # optionally splits the blanket (layer_3) into poloidal modules separated by gaps
+    poloidal_build = None
+    module_colors = {}
+    if n_blanket_modules is not None:
+        module_gap = 20
+        arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=elongation, triangularity=triangularity)
+        module_arc_length = (arc_lengths[2] - n_blanket_modules * module_gap) / n_blanket_modules
+        poloidal_build = [None, None, [("module", module_arc_length), ("gap", module_gap)] * n_blanket_modules, None]
+        if n_blanket_modules == 1:
+            module_colors = {"layer_3_module": (0.1, 0.1, 0.9)}
+        else:
+            module_colors = {
+                f"layer_3_module_{i + 1}": (0.1, 0.1, 0.9) if i % 2 == 0 else (0.5, 0.75, 1.0)
+                for i in range(n_blanket_modules)
+            }
+
     return paramak.tokamak_from_plasma(
         radial_build=radial_build,
         elongation=elongation,
         triangularity=triangularity,
         rotation_angle=180,
+        poloidal_build=poloidal_build,
         colors={
+            **module_colors,
             "layer_1": (0.4, 0.9, 0.4),
             "layer_2": (0.6, 0.8, 0.6),
             "plasma": (1., 0.7, 0.8, 0.6),
@@ -158,14 +177,19 @@ for factor in factors:
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
 
-for factor in factors:
-    modified_elongation = original_elongation * factor[:-2]
+for factor in [1.0, 0.9, 0.8, 0.7, 0.8, 0.9, 1.0]:
+    modified_elongation = original_elongation * factor
     reactor = create_reactor(elongation=modified_elongation)
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
 
 for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.55, -0.3667, -0.1833, 0.0, 0.1833, 0.3667, 0.55]:
     reactor = create_reactor(triangularity=modified_triangularity)
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    frame += 1
+
+for modified_n_blanket_modules in [None, 1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, 1, None]:
+    reactor = create_reactor(n_blanket_modules=modified_n_blanket_modules)
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
 

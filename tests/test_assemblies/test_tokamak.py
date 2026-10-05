@@ -1,3 +1,7 @@
+import math
+
+import pytest
+
 import paramak
 
 
@@ -115,3 +119,217 @@ def test_named_layers_tokamak():
         .rename("layer_3", "blanket")
     )
     assert renamed.names() == ["central column", "first wall", "blanket", "plasma"]
+
+POLOIDAL_RADIAL_BUILD = [
+    (paramak.LayerType.GAP, 10),
+    (paramak.LayerType.SOLID, 30),
+    (paramak.LayerType.SOLID, 50),
+    (paramak.LayerType.SOLID, 10),
+    (paramak.LayerType.SOLID, 120),
+    (paramak.LayerType.SOLID, 20),
+    (paramak.LayerType.GAP, 60),
+    (paramak.LayerType.PLASMA, 300),
+    (paramak.LayerType.GAP, 60),
+    (paramak.LayerType.SOLID, 20),
+    (paramak.LayerType.SOLID, 120),
+    (paramak.LayerType.SOLID, 10),
+]
+
+
+def volumes(assembly):
+    return {child.name: child.toCompound().Volume() for child in assembly.children}
+
+
+def test_poloidal_arc_lengths_circular_plasma():
+    "a circular plasma has circular offset surfaces, so the arc lengths are 2 pi r"
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD, elongation=1.0, triangularity=0.0)
+
+    minor_radius = 150
+    assert arc_lengths[0] is None  # the gap after the plasma
+    assert arc_lengths[1] == pytest.approx(2 * math.pi * (minor_radius + 60), rel=1e-6)
+    assert arc_lengths[2] == pytest.approx(2 * math.pi * (minor_radius + 80), rel=1e-6)
+    assert arc_lengths[3] == pytest.approx(2 * math.pi * (minor_radius + 200), rel=1e-6)
+
+
+def test_poloidal_arc_lengths_with_vertical_build():
+    "the vertical build changes the elongation and so the arc lengths"
+
+    vertical_build = [
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 20),
+    ]
+    from_vertical_build = paramak.poloidal_arc_lengths(
+        POLOIDAL_RADIAL_BUILD, triangularity=0.0, vertical_build=vertical_build
+    )
+    # the vertical build has a plasma height equal to the plasma width so elongation is 1
+    from_elongation = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD, elongation=1.0, triangularity=0.0)
+    assert from_vertical_build[1] == pytest.approx(from_elongation[1])
+
+    with pytest.raises(ValueError, match="elongation can not be set"):
+        paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD, elongation=2.0, vertical_build=vertical_build)
+
+
+def test_poloidal_build_names_and_volumes():
+    "segments without gaps should fill the same volume as the unsegmented layer"
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD, elongation=2.0, triangularity=0.55)
+    arc = arc_lengths[2]
+
+    unsegmented = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD, elongation=2.0, triangularity=0.55, rotation_angle=90
+    )
+    segmented = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        elongation=2.0,
+        triangularity=0.55,
+        rotation_angle=90,
+        poloidal_build=[
+            None,
+            None,
+            [("outboard", arc * 0.2), ("inboard", arc * 0.6), ("outboard", arc * 0.2)],
+            None,
+        ],
+    )
+
+    assert segmented.names() == [
+        "layer_1",
+        "layer_2",
+        "layer_3",
+        "layer_4_outboard_1",
+        "layer_4_inboard",
+        "layer_4_outboard_2",
+        "layer_5",
+        "plasma",
+    ]
+
+    unsegmented_volumes = volumes(unsegmented)
+    segmented_volumes = volumes(segmented)
+    segment_volume = sum(segmented_volumes[name] for name in segmented_volumes if name.startswith("layer_4_"))
+    assert segment_volume == pytest.approx(unsegmented_volumes["layer_4"], rel=1e-3)
+    # the inboard segment is three times the arc length of each outboard segment
+    # but is closer to the axis, so it has less than three times the volume
+    assert segmented_volumes["layer_4_inboard"] < 3 * segmented_volumes["layer_4_outboard_1"]
+    # other layers are unchanged
+    for name in ["layer_1", "layer_2", "layer_3", "layer_5", "plasma"]:
+        assert segmented_volumes[name] == pytest.approx(unsegmented_volumes[name])
+
+
+def test_poloidal_build_gaps_remove_volume():
+    "gap segments produce no solid so the segments have less volume than the layer"
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)
+    gap = 50
+    number_of_modules = 4
+    module = (arc_lengths[1] - number_of_modules * gap) / number_of_modules
+
+    segmented = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        poloidal_build=[None, [("module", module), ("gap", gap)] * number_of_modules, None, None],
+    )
+    unsegmented = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90)
+
+    assert segmented.names() == [
+        "layer_1",
+        "layer_2",
+        "layer_3_module_1",
+        "layer_3_module_2",
+        "layer_3_module_3",
+        "layer_3_module_4",
+        "layer_4",
+        "layer_5",
+        "plasma",
+    ]
+    segmented_volumes = volumes(segmented)
+    segment_volume = sum(segmented_volumes[name] for name in segmented_volumes if name.startswith("layer_3_"))
+    assert segment_volume < volumes(unsegmented)["layer_3"]
+
+
+def test_poloidal_build_single_full_segment():
+    "a single segment covering the whole loop should match the unsegmented layer"
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)
+    segmented = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        poloidal_build=[None, None, None, [("rear", arc_lengths[3])]],
+    )
+    unsegmented = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90)
+    assert "layer_5_rear" in segmented.names()
+    assert volumes(segmented)["layer_5_rear"] == pytest.approx(volumes(unsegmented)["layer_5"], rel=1e-3)
+
+
+def test_poloidal_build_with_named_layer_and_tokamak():
+    "segment names use the layer name from the radial build, and tokamak() supports poloidal_build"
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.SOLID, 20, "blanket"),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),
+    ]
+    vertical_build = [
+        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.GAP, 50),
+        (paramak.LayerType.PLASMA, 700),
+        (paramak.LayerType.GAP, 50),
+        (paramak.LayerType.SOLID, 30),
+    ]
+    arc_lengths = paramak.poloidal_arc_lengths(radial_build, vertical_build=vertical_build)
+    reactor = paramak.tokamak(
+        radial_build=radial_build,
+        vertical_build=vertical_build,
+        rotation_angle=90,
+        poloidal_build=[None, [("upper", arc_lengths[1] / 2), ("lower", arc_lengths[1] / 2)]],
+    )
+    assert reactor.names() == ["layer_1", "blanket_upper", "blanket_lower", "plasma"]
+
+
+@pytest.mark.parametrize(
+    "poloidal_build, error, match",
+    [
+        ([None, None], ValueError, "expected 4 entries but got 2"),
+        ([[("a", 1)], None, None, None], ValueError, "corresponds to a LayerType.GAP"),
+        ([None, [("a", 1)], None, None], ValueError, "Use paramak.poloidal_arc_lengths"),
+        ([None, [("gap", 2000)], None, None], ValueError, "at least one segment that is not a gap"),
+        ([None, [("a", -1)], None, None], ValueError, "positive arc_length"),
+        ([None, [("a", 1000), ("gap", -1)], None, None], ValueError, "0 or more"),
+        ([None, [], None, None], TypeError, "non empty list"),
+        ([None, [(1, 100)], None, None], TypeError, "string name and a numeric arc_length"),
+        ([None, [("a", "100")], None, None], TypeError, "string name and a numeric arc_length"),
+        ("not a list", TypeError, "must be a list"),
+    ],
+)
+def test_poloidal_build_validation(poloidal_build, error, match):
+    with pytest.raises(error, match=match):
+        paramak.tokamak_from_plasma(
+            radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90, poloidal_build=poloidal_build
+        )
+
+
+def test_poloidal_build_sum_tolerance():
+    "arc lengths slightly off the total are accepted, larger differences are not"
+
+    arc = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)[1]
+    paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        poloidal_build=[None, [("a", arc * 0.5), ("b", arc * 0.5005)], None, None],
+    )
+    with pytest.raises(ValueError, match=f"{arc}"):
+        paramak.tokamak_from_plasma(
+            radial_build=POLOIDAL_RADIAL_BUILD,
+            rotation_angle=90,
+            poloidal_build=[None, [("a", arc * 0.5), ("b", arc * 0.51)], None, None],
+        )

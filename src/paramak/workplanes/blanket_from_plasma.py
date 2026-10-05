@@ -201,6 +201,71 @@ def create_offset_points(
     return points, overlapping_shape
 
 
+def offset_curve_coordinates(
+    major_radius: float,
+    minor_radius: float,
+    triangularity: float,
+    elongation: float,
+    vertical_displacement: float,
+    thetas,
+    offsets,
+):
+    """Vectorised equivalent of create_offset_points. Returns the R and Z
+    coordinates of the plasma surface offset along its outward normal.
+
+    Args:
+        thetas (np.array): the angles in degrees.
+        offsets (float or np.array): the offset distance at each angle.
+
+    Returns:
+        (np.array, np.array): the R and Z coordinates.
+    """
+    R, Z = distribution(major_radius, minor_radius, triangularity, elongation, vertical_displacement, thetas)
+    thetas = np.radians(np.asarray(thetas, dtype=float))
+    # derivatives with respect to theta, the scale factor between degrees
+    # and radians cancels when the normal is normalised
+    R_derivative = -minor_radius * np.sin(thetas + triangularity * np.sin(thetas)) * (
+        1 + triangularity * np.cos(thetas)
+    )
+    Z_derivative = elongation * minor_radius * np.cos(thetas)
+    normal_vector_norm = np.hypot(Z_derivative, R_derivative)
+    nx = Z_derivative / normal_vector_norm
+    ny = -R_derivative / normal_vector_norm
+    return R + offsets * nx, Z + offsets * ny
+
+
+def poloidal_arc_length_table(
+    major_radius: float,
+    minor_radius: float,
+    triangularity: float,
+    elongation: float,
+    offset,
+    vertical_displacement: float = 0.0,
+    num_points: int = 7201,
+):
+    """Computes the cumulative arc length around a full poloidal loop of the
+    plasma surface offset by a distance that can vary with poloidal angle.
+
+    The loop starts at the outboard midplane (theta = 0) and proceeds counter
+    clockwise (upwards on the outboard side) to theta = 360.
+
+    Args:
+        offset (callable): the offset from the plasma surface as a function of
+            poloidal angle in degrees. Must accept a np.array of angles.
+        num_points: number of points used to discretise the loop.
+
+    Returns:
+        (np.array, np.array): the angles in degrees and the cumulative arc
+        length at each angle. The last arc length value is the total.
+    """
+    thetas = np.linspace(0.0, 360.0, num_points)
+    R, Z = offset_curve_coordinates(
+        major_radius, minor_radius, triangularity, elongation, vertical_displacement, thetas, offset(thetas)
+    )
+    arc_lengths = np.concatenate([[0.0], np.cumsum(np.hypot(np.diff(R), np.diff(Z)))])
+    return thetas, arc_lengths
+
+
 def distribution(major_radius, minor_radius, triangularity, elongation, vertical_displacement, theta, pkg=np):
     """Plasma distribution theta in degrees
 
