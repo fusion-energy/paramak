@@ -45,22 +45,22 @@ def constant_thickness_dome(
     """
 
     if not isinstance(chord_width, numbers.Number):
-        raise TypeError("ConstantThicknessDome.chord_width must be a float. Not", chord_width)
+        raise TypeError(f"chord_width must be a number. Not {type(chord_width)}")
     if chord_width <= 0:
-        msg = f"ConstantThicknessDome.chord_width must be a positive number above 0. Not {chord_width}"
+        msg = f"chord_width must be a positive number above 0. Not {chord_width}"
         raise ValueError(msg)
 
     if not isinstance(chord_height, numbers.Number):
-        raise TypeError("ConstantThicknessDome.chord_height must be a float. Not", chord_height)
+        raise TypeError(f"chord_height must be a number. Not {type(chord_height)}")
     if chord_height <= 0:
-        msg = f"ConstantThicknessDome.chord_height must be a positive number above 0. Not {chord_height}"
+        msg = f"chord_height must be a positive number above 0. Not {chord_height}"
         raise ValueError(msg)
 
     if not isinstance(thickness, numbers.Number):
-        msg = f"VacuumVessel.thickness must be a float. Not {thickness}"
+        msg = f"thickness must be a number. Not {type(thickness)}"
         raise TypeError(msg)
     if thickness <= 0:
-        msg = f"VacuumVessel.thickness must be a positive number above 0. Not {thickness}"
+        msg = f"thickness must be a positive number above 0. Not {thickness}"
         raise ValueError(msg)
 
     # Note these points are not used in the normal way when constructing
@@ -92,7 +92,7 @@ def constant_thickness_dome(
     #       far side
 
     if chord_height * 2 >= chord_width:
-        msg = "ConstantThicknessDome requires that the chord_width " "is at least 2 times as large as the chord height"
+        msg = "constant_thickness_dome requires that the chord_width " "is at least 2 times as large as the chord height"
         raise ValueError(msg)
 
     radius_of_sphere = ((math.pow(chord_width, 2)) + (4.0 * math.pow(chord_height, 2))) / (8 * chord_height)
