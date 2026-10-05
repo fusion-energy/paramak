@@ -1,3 +1,5 @@
+from cadquery.vis import show
+
 import paramak
 
 my_reactor = paramak.spherical_tokamak_from_plasma(
@@ -36,7 +38,5 @@ my_reactor.export("spherical_tokamak_from_plasma_with_colors.step")
 my_reactor.toCompound().export("spherical_tokamak_from_plasma_with_colors.svg")
 
 # show colors with png file export using cadquery's built-in screenshot support
-from cadquery.vis import show
-
 show(my_reactor, screenshot='spherical_tokamak_from_plasma_with_colors.png', interact=False, width=1280, height=1024, zoom=1.4)
 
