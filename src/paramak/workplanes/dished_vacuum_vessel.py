@@ -42,10 +42,10 @@ def dished_vacuum_vessel(
         raise ValueError(msg)
 
     if not isinstance(thickness, (float, int)):
-        msg = f"VacuumVessel.thickness must be a number. Not {type(thickness)}"
+        msg = f"thickness must be a number. Not {type(thickness)}"
         raise TypeError(msg)
     if thickness <= 0:
-        msg = f"VacuumVessel.thickness must be a positive number above 0. Not {thickness}"
+        msg = f"thickness must be a positive number above 0. Not {thickness}"
         raise ValueError(msg)
 
         #
