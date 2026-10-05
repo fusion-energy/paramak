@@ -17,7 +17,7 @@ project = "Paramak"
 copyright = "2024, Fusion Energy"
 author = "J. Shimwell"
 
-import paramak
+import paramak  # noqa: E402
 
 version = paramak.__version__
 release = paramak.__version__
