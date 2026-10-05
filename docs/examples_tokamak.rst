@@ -314,7 +314,8 @@ Tokamak with negative triangularity
 Tokamak with poloidal segments
 ------------------------------
 
-- The poloidal_build argument splits layers into poloidal segments, for example to model blanket modules separated by assembly gaps.
+- The poloidal_build argument splits layers into poloidal segments, for example first wall tiles or blanket modules separated by assembly gaps.
+- This example splits only the first wall into tiles.
 - poloidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards. Each entry covers the matching inboard and outboard layer pair.
 - Entries are None for layers that are not segmented, otherwise a list of (name, arc_length) tuples.
 - Arc lengths are measured along the inner surface of the layer, starting at the outboard midplane and going counter clockwise (upwards on the outboard side). They must sum to the arc length of that layer, which paramak.poloidal_arc_lengths returns.
@@ -346,17 +347,17 @@ Tokamak with poloidal segments
     # outwards with None for gaps
     arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=2.0, triangularity=0.55)
 
-    # splits the blanket (third entry after the plasma) into six modules with 30 cm gaps
-    gap = 30
-    number_of_modules = 6
-    module = (arc_lengths[2] - number_of_modules * gap) / number_of_modules
+    # splits the first wall (first solid layer after the plasma) into 16 tiles with 5 cm gaps
+    gap = 5
+    number_of_tiles = 16
+    tile = (arc_lengths[1] - number_of_tiles * gap) / number_of_tiles
 
     result = paramak.tokamak_from_plasma(
         radial_build=radial_build,
         poloidal_build=[
             None,  # gap after the plasma
-            None,  # first wall
-            [("module", module), ("gap", gap)] * number_of_modules,  # blanket
+            [("tile", tile), ("gap", gap)] * number_of_tiles,  # first wall
+            None,  # blanket
             None,  # rear wall
         ],
         elongation=2.0,

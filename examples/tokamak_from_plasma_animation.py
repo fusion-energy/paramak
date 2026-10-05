@@ -3,8 +3,11 @@ import os
 import cadquery as cq
 import numpy as np
 from cadquery.vis import show
+from matplotlib.path import Path
+from PIL import Image
 
 import paramak
+from paramak.workplanes.toroidal_field_coil_princeton_d import find_points
 
 original_radial_build=[
     (paramak.LayerType.GAP, 40),
@@ -27,6 +30,51 @@ original_n_tf_coils = 8
 original_coil_height_factor = 1
 original_divertor_thickness = 55
 
+def blanket_outer_surface(radial_build, major_radius, minor_radius, elongation, triangularity, num_points=360):
+    """R and Z points on the outer surface of the blanket, found by offsetting
+    the plasma surface along its normal by the total blanket thickness."""
+    plasma_index = [layer[0] for layer in radial_build].index(paramak.LayerType.PLASMA)
+    outboard_thickness = sum(layer[1] for layer in radial_build[plasma_index + 1 :])
+    number_of_outboard_layers = len(radial_build) - plasma_index - 1
+    inboard_thickness = sum(layer[1] for layer in radial_build[plasma_index - number_of_outboard_layers : plasma_index])
+
+    theta = np.linspace(0, 2 * np.pi, num_points)
+    R = major_radius + minor_radius * np.cos(theta + triangularity * np.sin(theta))
+    Z = elongation * minor_radius * np.sin(theta)
+    dR = np.gradient(R, theta)
+    dZ = np.gradient(Z, theta)
+    norm = np.hypot(dR, dZ)
+    # the thickness varies from the outboard value at the outboard midplane
+    # to the inboard value at the top, inboard midplane and bottom
+    thickness = np.interp(
+        np.degrees(theta), [0, 90, 180, 270, 360],
+        [outboard_thickness, inboard_thickness, inboard_thickness, inboard_thickness, outboard_thickness],
+    )
+    return R + thickness * dZ / norm, Z - thickness * dR / norm
+
+
+def tf_coil_outer_radius(blanket_points, r1, thickness, start_r2, clearance=20, step=10):
+    """Finds the smallest Princeton-D outer radius (r2) at or above start_r2
+    whose inner profile encloses the blanket with some clearance. This avoids
+    the coils overlapping the blanket, for example with negative triangularity."""
+    R, Z = blanket_points
+    theta = np.linspace(0, 2 * np.pi, 36, endpoint=False)
+    # points around each blanket point so the clearance is kept in every direction
+    test_points = np.column_stack(
+        [
+            (R[:, None] + clearance * np.cos(theta)).ravel(),
+            (Z[:, None] + clearance * np.sin(theta)).ravel(),
+        ]
+    )
+    test_points = test_points[test_points[:, 0] > r1 + thickness]
+    r2 = start_r2
+    while True:
+        _, _, inner_points, _ = find_points(r1, r2, thickness, vertical_displacement=0)
+        if Path(inner_points).contains_points(test_points).all():
+            return r2
+        r2 += step
+
+
 # Function to create a reactor with modified radial build
 def create_reactor(
     radial_build=original_radial_build,
@@ -35,7 +83,8 @@ def create_reactor(
     n_tf_coils = original_n_tf_coils,
     coil_height_factor = original_coil_height_factor,
     divertor_thickness=original_divertor_thickness,
-    n_blanket_modules=None,
+    n_modules=None,
+    segment_blanket=False,
 ):
     
     reactor_diameter = sum([layer[1] for layer in radial_build])
@@ -54,8 +103,14 @@ def create_reactor(
     divertor = cq.Workplane("XZ", origin=(0, 0, 0)).polyline(points).close().revolve(180)
 
 
+    tf_r2 = tf_coil_outer_radius(
+        blanket_outer_surface(radial_build, major_radius, minor_radius, elongation, triangularity),
+        r1=10,
+        thickness=40,
+        start_r2=reactor_diameter + 30,
+    )
     tf_coils = paramak.toroidal_field_coil_princeton_d(
-        r2=reactor_diameter+30,
+        r2=tf_r2,
         r1=10,
         thickness = 40,
         distance = 50 ,
@@ -72,8 +127,9 @@ def create_reactor(
         [20, 50, 50, 20],
         [
             (pf_radial_position, reactor_height),
-            (reactor_diameter+5+50+15+50/2, 150*coil_height_factor),
-            (reactor_diameter+5+50+15+50/2, -150*coil_height_factor),
+            # outboard coils sit outside the tf coil outer leg
+            (tf_r2+40+15+50/2, 150*coil_height_factor),
+            (tf_r2+40+15+50/2, -150*coil_height_factor),
             (pf_radial_position, -reactor_height)
         ]
     ):
@@ -94,21 +150,30 @@ def create_reactor(
             )
         )
 
-    # optionally splits the blanket (layer_3) into poloidal modules separated by gaps
+    # optionally splits the first wall (layer_2) into tiles, and optionally
+    # the blanket (layer_3) into modules that line up with the first wall tiles
     poloidal_build = None
     module_colors = {}
-    if n_blanket_modules is not None:
-        module_gap = 20
+    plasma_color = (1., 0.7, 0.8, 0.6)
+    if n_modules is not None:
+        module_gap = 15
         arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=elongation, triangularity=triangularity)
-        module_arc_length = (arc_lengths[2] - n_blanket_modules * module_gap) / n_blanket_modules
-        poloidal_build = [None, None, [("module", module_arc_length), ("gap", module_gap)] * n_blanket_modules, None]
-        if n_blanket_modules == 1:
-            module_colors = {"layer_3_module": (0.1, 0.1, 0.9)}
-        else:
-            module_colors = {
-                f"layer_3_module_{i + 1}": (0.1, 0.1, 0.9) if i % 2 == 0 else (0.5, 0.75, 1.0)
-                for i in range(n_blanket_modules)
-            }
+        module_arc_length = (arc_lengths[1] - n_modules * module_gap) / n_modules
+        poloidal_build = paramak.aligned_poloidal_build(
+            radial_build,
+            segments=[("module", module_arc_length), ("gap", module_gap)] * n_modules,
+            layers=[1, 2] if segment_blanket else [1],
+            elongation=elongation,
+            triangularity=triangularity,
+        )
+        # alternating colors so neighbouring segments can be told apart
+        layer_colors = {"layer_2": [(0.75, 0.95, 0.75), (0.2, 0.5, 0.2)], "layer_3": [(0.1, 0.1, 0.9), (0.5, 0.75, 1.0)]}
+        for layer_name, colors in layer_colors.items():
+            for i in range(n_modules):
+                name = f"{layer_name}_module" if n_modules == 1 else f"{layer_name}_module_{i + 1}"
+                module_colors[name] = colors[i % 2]
+        # a more transparent plasma so the segments behind it can be seen
+        plasma_color = (1., 0.7, 0.8, 0.3)
 
     return paramak.tokamak_from_plasma(
         radial_build=radial_build,
@@ -120,32 +185,43 @@ def create_reactor(
             **module_colors,
             "layer_1": (0.4, 0.9, 0.4),
             "layer_2": (0.6, 0.8, 0.6),
-            "plasma": (1., 0.7, 0.8, 0.6),
+            "plasma": plasma_color,
             "layer_3": (0.1, 0.1, 0.9),
             "layer_4": (0.4, 0.4, 0.8),
             "layer_5": (0.5, 0.5, 0.8),
-            "add_extra_cut_shape_1": (0.6, 0.3, 0.4), # tf coils
-            "add_extra_cut_shape_2": (0.4, 0.9, 0.4), # pf coil
-            "add_extra_cut_shape_3": (0.9, 0.4, 0.4), # pf coil case
-            "add_extra_cut_shape_4": (0.4, 0.9, 0.4), # pf coil
-            "add_extra_cut_shape_5": (0.9, 0.4, 0.4), # pf coil case
-            "add_extra_cut_shape_6": (0.4, 0.9, 0.4), # pf coil
-            "add_extra_cut_shape_7": (0.9, 0.4, 0.4), # pf coil case
-            "add_extra_cut_shape_8": (0.4, 0.9, 0.4), # pf coil
-            "add_extra_cut_shape_9": (0.9, 0.4, 0.4), # pf coil case
-            "extra_intersect_shapes": (0.1, 0.1, 0.4), # divertor lower
-            
+            "toroidal_field_coil_1": (0.6, 0.3, 0.4),
+            "poloidal_field_coil_2": (0.4, 0.9, 0.4),
+            "poloidal_field_coil_case_3": (0.9, 0.4, 0.4),
+            "poloidal_field_coil_4": (0.4, 0.9, 0.4),
+            "poloidal_field_coil_case_5": (0.9, 0.4, 0.4),
+            "poloidal_field_coil_6": (0.4, 0.9, 0.4),
+            "poloidal_field_coil_case_7": (0.9, 0.4, 0.4),
+            "poloidal_field_coil_8": (0.4, 0.9, 0.4),
+            "poloidal_field_coil_case_9": (0.9, 0.4, 0.4),
+            "extra_intersect_shapes_1": (0.1, 0.1, 0.4), # divertor lower
         },
         extra_cut_shapes=coils,
         extra_intersect_shapes=[divertor]
     )
 
-# Function to export reactor to PNG
+# Function to export reactor to a PNG with a transparent background
 def export_reactor_to_png(reactor, file_path):
     reactor.add(
         cq.Workplane('XZ').text("Paramak", fontsize=200, distance=10
-    ).translate((0, 0, -1215)), name="watermark")
-    show(reactor, screenshot=file_path, interact=False, width=640, height=512, zoom=1.25, bgcolor=(1.0, 1.0, 1.0))
+    ).translate((0, 0, -1215)), name="watermark", color=cq.Color(0.5, 0.5, 0.5))
+    # renders on a black and a white background, the difference between the
+    # two gives the transparency of each pixel (including anti aliased edges
+    # and the partly transparent plasma)
+    renders = []
+    for bgcolor in [(0.0, 0.0, 0.0), (1.0, 1.0, 1.0)]:
+        show(reactor, screenshot=file_path, interact=False, width=640, height=512, zoom=1.25,
+             bgcolor=bgcolor, gradient=False, trihedron=False)
+        renders.append(np.asarray(Image.open(file_path).convert("RGB"), dtype=float))
+    on_black, on_white = renders
+    alpha = np.clip(1 - (on_white - on_black).mean(axis=2) / 255, 0, 1)
+    rgb = on_black / np.maximum(alpha, 1e-6)[..., None]
+    rgba = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
+    Image.fromarray(rgba, "RGBA").save(file_path)
     print(f'written {file_path}')
 
 
@@ -188,9 +264,17 @@ for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.5
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
 
-for modified_n_blanket_modules in [None, 1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, 1, None]:
-    reactor = create_reactor(n_blanket_modules=modified_n_blanket_modules)
+# first wall tiles only
+for modified_n_modules in [None, 2, 4, 6, 8, 10, 12, 14, 16, 16, 16, 14, 12, 10, 8, 6, 4, 2, None]:
+    reactor = create_reactor(n_modules=modified_n_modules)
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
 
-os.system('ffmpeg -r 10 -i tokamak_frame_%3d.png -c:v libx264 -r 30 -pix_fmt yuv420p tokamak_animation.mp4')
+# first wall tiles and blanket modules with the same poloidal segments
+for modified_n_modules in [None, 2, 3, 4, 5, 6, 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, None]:
+    reactor = create_reactor(n_modules=modified_n_modules, segment_blanket=True)
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    frame += 1
+
+# animated webp keeps the transparent background, so the animation works on light and dark pages
+os.system('ffmpeg -framerate 10 -i tokamak_frame_%03d.png -c:v libwebp_anim -lossless 0 -q:v 80 -loop 0 tokamak_animation.webp')

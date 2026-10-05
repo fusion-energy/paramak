@@ -21,22 +21,17 @@ radial_build = [
 arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=2.0, triangularity=0.55)
 print(arc_lengths)
 
-# Step 2: design the segments for the thick blanket layer (third entry after
-# the plasma). Segments start at the outboard midplane and go counter
-# clockwise, so this gives an upper and lower outboard module either side of
-# the midplane and one inboard module, separated by 50 cm gaps.
-gap = 50
-blanket = arc_lengths[2] - 2 * gap
+# Step 2: split the first wall (first solid layer after the plasma) into
+# tiles. Segments start at the outboard midplane and go counter clockwise.
+# Here there are 16 tiles separated by 5 cm gaps, the other layers are not
+# segmented.
+gap = 5
+number_of_tiles = 16
+tile = (arc_lengths[1] - number_of_tiles * gap) / number_of_tiles
 poloidal_build = [
     None,  # gap after the plasma
-    None,  # first wall, not segmented
-    [  # blanket
-        ("outboard", blanket * 0.2),
-        ("gap", gap),
-        ("inboard", blanket * 0.6),
-        ("gap", gap),
-        ("outboard", blanket * 0.2),
-    ],
+    [("tile", tile), ("gap", gap)] * number_of_tiles,  # first wall
+    None,  # blanket, not segmented
     None,  # rear wall, not segmented
 ]
 
@@ -48,8 +43,8 @@ my_reactor = paramak.tokamak_from_plasma(
     rotation_angle=180,
 )
 print(my_reactor.names())
-my_reactor.export("tokamak_from_plasma_with_poloidal_segments.step")
-print("Saved as tokamak_from_plasma_with_poloidal_segments.step")
+my_reactor.export("tokamak_from_plasma_with_first_wall_tiles.step")
+print("Saved as tokamak_from_plasma_with_first_wall_tiles.step")
 
 # Segments sized separately on each layer do not line up between layers.
 # aligned_poloidal_build gives several layers the same segment boundaries so
