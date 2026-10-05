@@ -499,3 +499,48 @@ def test_poloidal_build_with_divertor_and_gaps():
     assert 0 < divertor_with_gaps < divertor_without_segments * 0.99
     for child in with_gaps.children:
         assert child.toCompound().isValid()
+
+
+@pytest.mark.parametrize(
+    "layers, number_of_modules",
+    [
+        ([1], 16),  # first wall tiles next to an unsegmented blanket
+        ([2], 3),  # blanket modules between an unsegmented first wall and rear wall
+        ([1, 2], 3),  # aligned first wall and blanket next to an unsegmented rear wall
+    ],
+)
+def test_poloidal_build_next_to_unsegmented_layers_with_divertor(layers, number_of_modules):
+    "segmented layers next to unsegmented layers share faces exactly, so the divertor can be made"
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)
+    gap = 15
+    module = (arc_lengths[layers[0]] - number_of_modules * gap) / number_of_modules
+    poloidal_build = paramak.aligned_poloidal_build(
+        POLOIDAL_RADIAL_BUILD, [("module", module), ("gap", gap)] * number_of_modules, layers=layers
+    )
+    reactor = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        extra_intersect_shapes=[lower_divertor_shape(90)],
+        poloidal_build=poloidal_build,
+    )
+    assert volumes(reactor)["extra_intersect_shapes_1"] > 0
+    for child in reactor.children:
+        assert child.toCompound().isValid()
+
+
+def test_poloidal_segments_without_gaps_fill_the_layer_exactly():
+    "segments are cut from the full layer, so without gaps they fill it exactly"
+
+    arc = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)[2]
+    segmented = volumes(
+        paramak.tokamak_from_plasma(
+            radial_build=POLOIDAL_RADIAL_BUILD,
+            rotation_angle=90,
+            poloidal_build=[None, None, [("a", arc / 3), ("b", arc / 3), ("c", arc / 3)], None],
+        )
+    )
+    unsegmented = volumes(paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90))
+    assert segmented["layer_4_a"] + segmented["layer_4_b"] + segmented["layer_4_c"] == pytest.approx(
+        unsegmented["layer_4"], rel=1e-6
+    )

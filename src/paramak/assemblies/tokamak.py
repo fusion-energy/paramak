@@ -16,7 +16,11 @@ from ..utils import (
     validate_unique_assembly_names,
     validate_vertical_build_names,
 )
-from ..workplanes.blanket_from_plasma import blanket_from_plasma, poloidal_arc_length_table
+from ..workplanes.blanket_from_plasma import (
+    blanket_from_plasma,
+    offset_curve_coordinates,
+    poloidal_arc_length_table,
+)
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
 from .assembly import Assembly
@@ -256,46 +260,88 @@ def get_poloidal_segment_angles(segments, arc_thetas, arc_lengths, index):
     return segment_angles
 
 
+def create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle):
+    """Builds the full (unsegmented) solid of a layer pair from an outboard
+    and an inboard half."""
+    outer_offset, upper_offset, inner_offset, lower_offset = pair["offsets"]
+    outer_thickness, upper_thickness, inner_thickness, lower_thickness = pair["thicknesses"]
+    outer_layer = blanket_from_plasma(
+        minor_radius=minor_radius,
+        major_radius=major_radius,
+        triangularity=triangularity,
+        elongation=elongation,
+        thickness=[upper_thickness, outer_thickness, lower_thickness],
+        offset_from_plasma=[upper_offset, outer_offset, lower_offset],
+        start_angle=90,
+        stop_angle=-90,
+        rotation_angle=rotation_angle,
+        color=(0.5, 0.5, 0.5),
+        name=pair["name"],
+        allow_overlapping_shape=True,
+    )
+    inner_layer = blanket_from_plasma(
+        minor_radius=minor_radius,
+        major_radius=major_radius,
+        triangularity=triangularity,
+        elongation=elongation,
+        thickness=[lower_thickness, inner_thickness, upper_thickness],
+        offset_from_plasma=[lower_offset, inner_offset, upper_offset],
+        start_angle=-90,
+        stop_angle=-270,
+        rotation_angle=rotation_angle,
+        color=(0.5, 0.5, 0.5),
+        name=pair["name"],
+        allow_overlapping_shape=True,
+    )
+    layer = outer_layer.union(inner_layer)
+    layer.name = pair["name"]
+    return layer
+
+
 def create_poloidal_segments(
     pair, segment_angles, minor_radius, major_radius, triangularity, elongation, rotation_angle
 ):
-    """Builds one solid per poloidal segment of a layer pair."""
+    """Builds one solid per poloidal segment of a layer pair.
+
+    The full layer is built as it would be without segmentation and each
+    segment is cut out of it, so the faces of the segments are the faces of
+    the full layer. This keeps them coincident with the neighbouring layers,
+    which boolean operations (such as making a divertor) rely on.
+    """
+    layer = create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle)
+
+    # a single segment covering the whole loop is the full layer
+    if len(segment_angles) == 1 and segment_angles[0][2] - segment_angles[0][1] >= 360.0 - 1e-9:
+        layer.name = f"{pair['name']}_{segment_angles[0][0]}"
+        return [layer]
+
     offset = poloidal_profile(*pair["offsets"])
     thickness = poloidal_profile(*pair["thicknesses"])
+    # the cutting regions extend past the inner and outer surfaces of the layer
+    margin = 0.05 * minor_radius
 
     solids = []
     for segment_name, start_angle, stop_angle in segment_angles:
-        name = f"{pair['name']}_{segment_name}"
-        # a single segment covering the full loop would give a profile whose
-        # start and end faces coincide, so it is built in two halves
-        if stop_angle - start_angle >= 360.0 - 1e-9:
-            angle_ranges = [(start_angle, start_angle + 180.0), (start_angle + 180.0, stop_angle)]
-        else:
-            angle_ranges = [(start_angle, stop_angle)]
+        # the sides of the cutting region follow the normal to the plasma surface
+        # at the start and stop angles, the same direction the layers are offset in
+        thetas = np.linspace(start_angle, stop_angle, max(10, math.ceil(400 * (stop_angle - start_angle) / 360)))
+        inner_r, inner_z = offset_curve_coordinates(
+            major_radius, minor_radius, triangularity, elongation, 0.0, thetas, offset(thetas) - margin
+        )
+        outer_r, outer_z = offset_curve_coordinates(
+            major_radius,
+            minor_radius,
+            triangularity,
+            elongation,
+            0.0,
+            thetas[::-1],
+            offset(thetas[::-1]) + thickness(thetas[::-1]) + margin,
+        )
+        points = list(zip(np.concatenate([inner_r, outer_r]), np.concatenate([inner_z, outer_z])))
+        cutting_region = cq.Workplane("XZ").polyline(points).close().revolve(360)
 
-        pieces = []
-        for piece_start, piece_stop in angle_ranges:
-            pieces.append(
-                blanket_from_plasma(
-                    minor_radius=minor_radius,
-                    major_radius=major_radius,
-                    triangularity=triangularity,
-                    elongation=elongation,
-                    thickness=thickness,
-                    offset_from_plasma=offset,
-                    start_angle=piece_start,
-                    stop_angle=piece_stop,
-                    # keeps the point density of an unsegmented layer (200 points per 180 degrees)
-                    num_points=max(10, math.ceil(200 * (piece_stop - piece_start) / 180)),
-                    rotation_angle=rotation_angle,
-                    color=(0.5, 0.5, 0.5),
-                    name=name,
-                    allow_overlapping_shape=True,
-                )
-            )
-        solid = pieces[0]
-        for piece in pieces[1:]:
-            solid = solid.union(piece)
+        name = f"{pair['name']}_{segment_name}"
+        solid = layer.intersect(cutting_region)
         solid.name = name
         solids.append(solid)
     return solids
@@ -330,39 +376,9 @@ def create_layers_from_plasma(
             )
             continue
 
-        outer_offset, upper_offset, inner_offset, lower_offset = pair["offsets"]
-        outer_thickness, upper_thickness, inner_thickness, lower_thickness = pair["thicknesses"]
-        outer_layer = blanket_from_plasma(
-            minor_radius=minor_radius,
-            major_radius=major_radius,
-            triangularity=triangularity,
-            elongation=elongation,
-            thickness=[upper_thickness, outer_thickness, lower_thickness],
-            offset_from_plasma=[upper_offset, outer_offset, lower_offset],
-            start_angle=90,
-            stop_angle=-90,
-            rotation_angle=rotation_angle,
-            color=(0.5, 0.5, 0.5),
-            name=pair["name"],
-            allow_overlapping_shape=True,
+        layers.append(
+            create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle)
         )
-        inner_layer = blanket_from_plasma(
-            minor_radius=minor_radius,
-            major_radius=major_radius,
-            triangularity=triangularity,
-            elongation=elongation,
-            thickness=[lower_thickness, inner_thickness, upper_thickness],
-            offset_from_plasma=[lower_offset, inner_offset, upper_offset],
-            start_angle=-90,
-            stop_angle=-270,
-            rotation_angle=rotation_angle,
-            color=(0.5, 0.5, 0.5),
-            name=pair["name"],
-            allow_overlapping_shape=True,
-        )
-        layer = outer_layer.union(inner_layer)
-        layer.name = pair["name"]
-        layers.append(layer)
 
     return layers
 
@@ -572,6 +588,16 @@ def aligned_poloidal_build(
     return poloidal_build
 
 
+def intersect_with_each_part(shape, parts):
+    """Intersects a shape with each part and returns the non empty pieces
+    together in a compound."""
+    pieces = []
+    for part in parts:
+        intersection = shape.intersect(part).val()
+        pieces.extend(intersection.Solids())
+    return cq.Workplane().add(cq.Compound.makeCompound(pieces))
+
+
 def tokamak_from_plasma(
     radial_build: Sequence[tuple[LayerType, float] | tuple[LayerType, float, str]],
     elongation: float = 2.0,
@@ -745,14 +771,21 @@ def tokamak(
 
     # builds up the intersect shapes
     if len(extra_intersect_shapes) > 0:
-        # makes a union of the the radial build to use as a base for the intersect shapes
-        reactor_compound = inner_radial_build[0]
-        for entry in inner_radial_build[1:] + blanket_layers:
-            reactor_compound = reactor_compound.union(entry)
+        if poloidal_build is None:
+            # makes a union of the the radial build to use as a base for the intersect shapes
+            reactor_compound = inner_radial_build[0]
+            for entry in inner_radial_build[1:] + blanket_layers:
+                reactor_compound = reactor_compound.union(entry)
 
         # adds the extra intersect shapes to the assembly
         for entry, name in zip(extra_intersect_shapes, intersect_names):
-            reactor_entry_intersection = entry.intersect(reactor_compound)
+            if poloidal_build is None:
+                reactor_entry_intersection = entry.intersect(reactor_compound)
+            else:
+                # poloidal segments share many faces with their neighbours, which
+                # makes fusing all the parts unreliable, so the shape is intersected
+                # with each part and the pieces are kept together in a compound
+                reactor_entry_intersection = intersect_with_each_part(entry, inner_radial_build + blanket_layers)
             my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     # cut the core layers with any extra shapes (a no-op when there are none)
