@@ -23,10 +23,19 @@ arc_length = paramak.poloidal_arc_length(radial_build, elongation=2.0, triangula
 print(f"poloidal arc length {arc_length}")
 
 # First wall tiles: only the first wall is segmented.
-number_of_tiles = 16
+number_of_tiles = 4
 tile_gap = 5  # gap between neighbouring tiles
 tile_length = (arc_length - number_of_tiles * tile_gap) / number_of_tiles
-first_wall_tiles = [("tile", tile_length), ("gap", tile_gap)] * number_of_tiles
+first_wall_tiles = [
+    ("tile", tile_length),
+    ("gap", tile_gap),
+    ("tile", tile_length),
+    ("gap", tile_gap),
+    ("tile", tile_length),
+    ("gap", tile_gap),
+    ("tile", tile_length),
+    ("gap", tile_gap),
+]
 
 # poloidal_build has one entry per radial_build entry after the plasma,
 # ordered from the plasma outwards, with None for layers that are not segmented
@@ -71,7 +80,7 @@ print("Saved as tokamak_from_plasma_with_first_wall_and_blanket_modules.step")
 
 # Each layer can also have different segments, for example first wall tiles
 # in front of the blanket modules. Boundaries at the same arc length line up,
-# here the end of every second tile gap lines up with the end of a module gap.
+# here the end of each tile gap lines up with the end of every second module gap.
 my_reactor = paramak.tokamak_from_plasma(
     radial_build=radial_build,
     poloidal_build=[

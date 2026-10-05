@@ -346,10 +346,19 @@ Tokamak with poloidal segments
     # arc length that the segments of each layer must sum to
     arc_length = paramak.poloidal_arc_length(radial_build, elongation=2.0, triangularity=0.55)
 
-    number_of_tiles = 16
+    number_of_tiles = 4
     tile_gap = 5  # gap between neighbouring tiles
     tile_length = (arc_length - number_of_tiles * tile_gap) / number_of_tiles
-    first_wall_tiles = [("tile", tile_length), ("gap", tile_gap)] * number_of_tiles
+    first_wall_tiles = [
+        ("tile", tile_length),
+        ("gap", tile_gap),
+        ("tile", tile_length),
+        ("gap", tile_gap),
+        ("tile", tile_length),
+        ("gap", tile_gap),
+        ("tile", tile_length),
+        ("gap", tile_gap),
+    ]
 
     result = paramak.tokamak_from_plasma(
         radial_build=radial_build,
