@@ -7,7 +7,7 @@ from ..workplanes.constant_thickness_dome import constant_thickness_dome
 def u_shaped_dome(
     radius: float = 310,
     reference_point: tuple = ("lower", 0),
-    dish_height: tuple[float, float] = 50,
+    dish_height: float = 50,
     cylinder_height: float = 400,
     thickness: float = 16,
     rotation_angle: float = 180,
@@ -23,7 +23,7 @@ def u_shaped_dome(
         reference_point: the x,z coordinates to build the vessel from. Can be
             either the 'center' with a value or 'lower' with a
             value. For example
-        dish_height: the height of the lower and upper dish sections.
+        dish_height: the height of the dish section.
         cylinder_height: the height of the cylindrical section of the vacuum
             vessel.
         thickness: the radial thickness of the vessel in cm.
