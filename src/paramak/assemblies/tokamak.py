@@ -235,9 +235,9 @@ def get_poloidal_segment_angles(segments, arc_thetas, arc_lengths, index):
     requested_arc_length = sum(segment[1] for segment in segments)
     if not math.isclose(requested_arc_length, total_arc_length, rel_tol=POLOIDAL_ARC_LENGTH_RTOL):
         raise ValueError(
-            f"The arc lengths in poloidal_build entry {index} sum to {requested_arc_length}, but the arc length "
-            f"of the inner surface of that layer is {total_arc_length}. Use paramak.poloidal_arc_lengths() to "
-            "get the arc length of each layer."
+            f"The arc lengths in poloidal_build entry {index} sum to {requested_arc_length}, but they must sum to "
+            f"the poloidal arc length of the plasma facing surface, which is {total_arc_length}. Use "
+            "paramak.poloidal_arc_length() to get this value."
         )
     scale = total_arc_length / requested_arc_length
 
@@ -410,45 +410,55 @@ def vertical_build_from_radial_build(radial_build, elongation):
     return upper_vertical_build[::-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build
 
 
+def get_reference_arc_length_table(radial_build, vertical_build, triangularity):
+    """Returns the (angles, cumulative arc lengths) table of the reference
+    surface that poloidal_build arc lengths are measured on. This is the
+    plasma facing surface, the inner surface of the first solid layer after
+    the plasma."""
+    for pair in get_layer_pairs(radial_build, vertical_build):
+        if pair["type"] == LayerType.SOLID:
+            major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
+            return poloidal_arc_length_table(
+                major_radius=major_radius,
+                minor_radius=minor_radius,
+                triangularity=triangularity,
+                elongation=elongation,
+                offset=poloidal_profile(*pair["offsets"]),
+            )
+    raise ValueError("The radial_build has no LayerType.SOLID entries after the plasma to segment.")
+
+
 def get_poloidal_build_segment_angles(
     poloidal_build, radial_build, vertical_build, triangularity, layer_count=0
 ):
     """Validates poloidal_build and converts the segment arc lengths into
-    poloidal angles for each layer pair."""
+    poloidal angles for each layer pair. All arc lengths are measured on the
+    same reference surface, so layers with the same segments line up."""
     pairs = get_layer_pairs(radial_build, vertical_build, layer_count)
     validate_poloidal_build(poloidal_build, pairs)
-    major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
+    if all(segments is None for segments in poloidal_build):
+        return list(poloidal_build)
 
-    all_segment_angles = []
-    for index, (pair, segments) in enumerate(zip(pairs, poloidal_build)):
-        if segments is None:
-            all_segment_angles.append(None)
-            continue
-        arc_thetas, arc_lengths = poloidal_arc_length_table(
-            major_radius=major_radius,
-            minor_radius=minor_radius,
-            triangularity=triangularity,
-            elongation=elongation,
-            offset=poloidal_profile(*pair["offsets"]),
-        )
-        all_segment_angles.append(get_poloidal_segment_angles(segments, arc_thetas, arc_lengths, index))
-    return all_segment_angles
+    arc_thetas, arc_lengths = get_reference_arc_length_table(radial_build, vertical_build, triangularity)
+    return [
+        None if segments is None else get_poloidal_segment_angles(segments, arc_thetas, arc_lengths, index)
+        for index, segments in enumerate(poloidal_build)
+    ]
 
 
-def poloidal_arc_lengths(
+def poloidal_arc_length(
     radial_build: Sequence[tuple[LayerType, float] | tuple[LayerType, float, str]],
     elongation: float | None = None,
     triangularity: float = 0.55,
     vertical_build: Sequence[tuple[LayerType, float]] | None = None,
-) -> list[float | None]:
-    """Returns the poloidal arc length of the inner surface of each layer of a
-    tokamak, for use when designing a poloidal_build.
+) -> float:
+    """Returns the poloidal arc length that the segments in a poloidal_build
+    must sum to.
 
-    The values are ordered from the plasma outwards, in the same order as
-    poloidal_build, so there is one value per radial_build entry after the
-    plasma. Entries that correspond to a LayerType.GAP are None. The arc
-    length is measured around the full poloidal loop of the inner surface of
-    the layer (the surface closest to the plasma).
+    The arc length is measured around the full poloidal loop of the plasma
+    facing surface, which is the inner surface of the first solid layer after
+    the plasma. All poloidal_build entries are measured on this surface, so
+    layers given the same segments line up.
 
     Args:
         radial_build: the radial build of the reactor, as passed to
@@ -462,16 +472,8 @@ def poloidal_arc_lengths(
             tokamak. Leave as None for tokamak_from_plasma.
 
     Returns:
-        list of float or None: the arc length of each layer pair.
+        float: the poloidal arc length of the plasma facing surface.
     """
-    tables = get_arc_length_tables(radial_build, elongation, triangularity, vertical_build)
-    return [None if table is None else float(table[1][-1]) for table in tables]
-
-
-def get_arc_length_tables(radial_build, elongation, triangularity, vertical_build):
-    """Returns the (angles, cumulative arc lengths) table of the inner surface
-    of each layer pair, or None for GAP pairs, ordered from the plasma
-    outwards."""
     if vertical_build is None:
         vertical_build = vertical_build_from_radial_build(radial_build, 2.0 if elongation is None else elongation)
     elif elongation is not None:
@@ -479,113 +481,8 @@ def get_arc_length_tables(radial_build, elongation, triangularity, vertical_buil
             "elongation can not be set when a vertical_build is provided, "
             "the elongation is calculated from the radial_build and vertical_build."
         )
-
-    major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
-
-    tables = []
-    for pair in get_layer_pairs(radial_build, vertical_build):
-        if pair["type"] == LayerType.GAP:
-            tables.append(None)
-            continue
-        tables.append(
-            poloidal_arc_length_table(
-                major_radius=major_radius,
-                minor_radius=minor_radius,
-                triangularity=triangularity,
-                elongation=elongation,
-                offset=poloidal_profile(*pair["offsets"]),
-            )
-        )
-    return tables
-
-
-def aligned_poloidal_build(
-    radial_build: Sequence[tuple[LayerType, float] | tuple[LayerType, float, str]],
-    segments: Sequence[tuple[str, float]],
-    layers: Sequence[int],
-    reference_layer: int | None = None,
-    elongation: float | None = None,
-    triangularity: float = 0.55,
-    vertical_build: Sequence[tuple[LayerType, float]] | None = None,
-) -> list[list[tuple[str, float]] | None]:
-    """Makes a poloidal_build where several layers share the same segment
-    boundaries, so the gaps between segments line up through the layers.
-
-    The segments are defined by arc length on the inner surface of the
-    reference layer. Each segment boundary is converted to a poloidal angle,
-    and the arc lengths of the other layers are calculated so their segments
-    start and stop at the same angles. As the cuts between segments follow
-    the normal to the plasma surface, this gives gaps that run straight
-    through the layers. The arc length of a gap is therefore slightly larger
-    on layers further from the plasma.
-
-    Args:
-        radial_build: the radial build of the reactor, as passed to
-            tokamak_from_plasma or tokamak.
-        segments: list of (name, arc_length) tuples for the reference layer,
-            in the same format as a poloidal_build entry. The arc lengths must
-            sum to the arc length of the reference layer, which
-            paramak.poloidal_arc_lengths returns.
-        layers: the poloidal_build indexes (ordered from the plasma outwards,
-            one per radial_build entry after the plasma) of the layers to
-            segment.
-        reference_layer: the poloidal_build index of the layer the segment
-            arc lengths are measured on. Defaults to the first of layers.
-        elongation: the elongation of the plasma, as passed to
-            tokamak_from_plasma. Defaults to 2.0. Must not be set when a
-            vertical_build is provided.
-        triangularity: the triangularity of the plasma. Defaults to 0.55.
-        vertical_build: the vertical build of the reactor, as passed to
-            tokamak. Leave as None for tokamak_from_plasma.
-
-    Returns:
-        list: a poloidal_build to pass to tokamak_from_plasma or tokamak.
-    """
-    tables = get_arc_length_tables(radial_build, elongation, triangularity, vertical_build)
-
-    if len(layers) == 0:
-        raise ValueError("layers must contain at least one poloidal_build index.")
-    if reference_layer is None:
-        reference_layer = layers[0]
-    for index in [*layers, reference_layer]:
-        if not isinstance(index, numbers.Integral) or isinstance(index, bool):
-            raise TypeError(f"layers and reference_layer must be integers, not {index!r}.")
-        if not 0 <= index < len(tables):
-            raise ValueError(
-                f"Layer index {index} is out of range, the poloidal_build for this radial_build has "
-                f"{len(tables)} entries (indexes 0 to {len(tables) - 1})."
-            )
-        if tables[index] is None:
-            raise ValueError(f"Layer index {index} corresponds to a LayerType.GAP and can not be segmented.")
-
-    # reuses the poloidal_build checks on the reference layer segments
-    placeholder_build = [None] * len(tables)
-    placeholder_build[reference_layer] = segments
-    validate_poloidal_build(placeholder_build, [{"type": LayerType.SOLID}] * len(tables))
-
-    reference_thetas, reference_arc_lengths = tables[reference_layer]
-    total_arc_length = reference_arc_lengths[-1]
-    requested_arc_length = sum(segment[1] for segment in segments)
-    if not math.isclose(requested_arc_length, total_arc_length, rel_tol=POLOIDAL_ARC_LENGTH_RTOL):
-        raise ValueError(
-            f"The arc lengths in segments sum to {requested_arc_length}, but the arc length of the inner surface "
-            f"of reference layer {reference_layer} is {total_arc_length}. Use paramak.poloidal_arc_lengths() to "
-            "get the arc length of each layer."
-        )
-    scale = total_arc_length / requested_arc_length
-
-    # poloidal angle of each segment boundary
-    boundaries = np.concatenate([[0.0], np.cumsum([segment[1] * scale for segment in segments])])
-    boundary_angles = np.interp(boundaries, reference_arc_lengths, reference_thetas)
-
-    poloidal_build = [None] * len(tables)
-    for index in layers:
-        thetas, arc_lengths = tables[index]
-        layer_boundaries = np.interp(boundary_angles, thetas, arc_lengths)
-        poloidal_build[index] = [
-            (segment[0], float(length)) for segment, length in zip(segments, np.diff(layer_boundaries))
-        ]
-    return poloidal_build
+    _, arc_lengths = get_reference_arc_length_table(radial_build, vertical_build, triangularity)
+    return float(arc_lengths[-1])
 
 
 def intersect_with_each_part(shape, parts):
@@ -629,16 +526,16 @@ def tokamak_from_plasma(
             inboard and outboard layer pair. Entries are None for layers that
             are not segmented (and must be None for LayerType.GAP entries),
             otherwise a list of (name, arc_length) tuples. Arc lengths are
-            measured along the inner surface of the layer, starting at the
-            outboard midplane and proceeding counter clockwise (upwards on
-            the outboard side), and must sum to the arc length of that layer
-            (within 0.1 percent), which paramak.poloidal_arc_lengths returns.
-            Segments named "gap" produce no solid, all other segments produce
-            a solid named "<layer name>_<segment name>". Repeated segment
-            names within a layer get a "_1", "_2" suffix. To give several
-            layers the same segment boundaries, so gaps line up through the
-            layers, make the poloidal_build with
-            paramak.aligned_poloidal_build. Defaults to None.
+            measured along the plasma facing surface (the inner surface of
+            the first solid layer after the plasma) for every layer, starting
+            at the outboard midplane and proceeding counter clockwise
+            (upwards on the outboard side). Each entry must sum to the arc
+            length returned by paramak.poloidal_arc_length (within 0.1
+            percent). Cuts between segments follow the normal to the plasma
+            surface, so layers given the same segments line up. Segments
+            named "gap" produce no solid, all other segments produce a solid
+            named "<layer name>_<segment name>". Repeated segment names
+            within a layer get a "_1", "_2" suffix. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
@@ -697,16 +594,16 @@ def tokamak(
             inboard and outboard layer pair. Entries are None for layers that
             are not segmented (and must be None for LayerType.GAP entries),
             otherwise a list of (name, arc_length) tuples. Arc lengths are
-            measured along the inner surface of the layer, starting at the
-            outboard midplane and proceeding counter clockwise (upwards on
-            the outboard side), and must sum to the arc length of that layer
-            (within 0.1 percent), which paramak.poloidal_arc_lengths returns.
-            Segments named "gap" produce no solid, all other segments produce
-            a solid named "<layer name>_<segment name>". Repeated segment
-            names within a layer get a "_1", "_2" suffix. To give several
-            layers the same segment boundaries, so gaps line up through the
-            layers, make the poloidal_build with
-            paramak.aligned_poloidal_build. Defaults to None.
+            measured along the plasma facing surface (the inner surface of
+            the first solid layer after the plasma) for every layer, starting
+            at the outboard midplane and proceeding counter clockwise
+            (upwards on the outboard side). Each entry must sum to the arc
+            length returned by paramak.poloidal_arc_length (within 0.1
+            percent). Cuts between segments follow the normal to the plasma
+            surface, so layers given the same segments line up. Segments
+            named "gap" produce no solid, all other segments produce a solid
+            named "<layer name>_<segment name>". Repeated segment names
+            within a layer get a "_1", "_2" suffix. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.

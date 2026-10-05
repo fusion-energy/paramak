@@ -15,8 +15,7 @@ Assemblies
 Utilities
 ---------
 
-.. autofunction:: poloidal_arc_lengths
-.. autofunction:: aligned_poloidal_build
+.. autofunction:: poloidal_arc_length
 
 Workplanes
 ----------

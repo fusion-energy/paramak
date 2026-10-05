@@ -314,12 +314,12 @@ Tokamak with negative triangularity
 Tokamak with poloidal segments
 ------------------------------
 
-- The poloidal_build argument splits layers into poloidal segments, for example first wall tiles or blanket modules separated by assembly gaps.
-- This example splits only the first wall into tiles.
+- The poloidal_build argument splits layers into poloidal segments, for example first wall tiles or blanket modules separated by gaps.
 - poloidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards. Each entry covers the matching inboard and outboard layer pair.
 - Entries are None for layers that are not segmented, otherwise a list of (name, arc_length) tuples.
-- Arc lengths are measured along the inner surface of the layer, starting at the outboard midplane and going counter clockwise (upwards on the outboard side). They must sum to the arc length of that layer, which paramak.poloidal_arc_lengths returns.
+- Arc lengths are measured along the plasma facing surface for every layer, starting at the outboard midplane and going counter clockwise (upwards on the outboard side). Each entry must sum to the arc length returned by paramak.poloidal_arc_length.
 - Segments named "gap" produce no solid. Other segments are named "<layer name>_<segment name>", with a "_1", "_2" suffix when a name is repeated within a layer.
+- This example splits only the first wall into tiles. The plasma is removed from the result so the tiles can be seen.
 
 .. cadquery::
     :select: result
@@ -338,40 +338,39 @@ Tokamak with poloidal segments
         (paramak.LayerType.GAP, 60),
         (paramak.LayerType.PLASMA, 300),
         (paramak.LayerType.GAP, 60),
-        (paramak.LayerType.SOLID, 20),
-        (paramak.LayerType.SOLID, 120),
-        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 20),  # first wall
+        (paramak.LayerType.SOLID, 120),  # blanket
+        (paramak.LayerType.SOLID, 10),  # rear wall
     ]
 
-    # arc length of the inner surface of each layer, ordered from the plasma
-    # outwards with None for gaps
-    arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=2.0, triangularity=0.55)
+    # arc length that the segments of each layer must sum to
+    arc_length = paramak.poloidal_arc_length(radial_build, elongation=2.0, triangularity=0.55)
 
-    # splits the first wall (first solid layer after the plasma) into 16 tiles with 5 cm gaps
-    gap = 5
     number_of_tiles = 16
-    tile = (arc_lengths[1] - number_of_tiles * gap) / number_of_tiles
+    tile_gap = 5  # gap between neighbouring tiles
+    tile_length = (arc_length - number_of_tiles * tile_gap) / number_of_tiles
+    first_wall_tiles = [("tile", tile_length), ("gap", tile_gap)] * number_of_tiles
 
     result = paramak.tokamak_from_plasma(
         radial_build=radial_build,
         poloidal_build=[
             None,  # gap after the plasma
-            [("tile", tile), ("gap", gap)] * number_of_tiles,  # first wall
+            first_wall_tiles,  # first wall
             None,  # blanket
             None,  # rear wall
         ],
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=180,
-    ).toCompound()
+    ).remove("plasma").toCompound()
 
 
-Tokamak with aligned poloidal segments
---------------------------------------
+Tokamak with first wall and blanket segments
+--------------------------------------------
 
-- Segments sized by arc length on each layer separately do not line up between layers, as each layer has a different arc length.
-- paramak.aligned_poloidal_build makes a poloidal_build where several layers share the same segment boundary angles, so the gaps run straight through the layers.
-- The segments are defined by arc length on a reference layer (the first of layers by default). The arc lengths of the other layers are calculated to match, so gaps are slightly larger on layers further from the plasma.
+- Cuts between segments follow the normal to the plasma surface and all arc lengths are measured on the same surface, so layers given the same segments line up and the gaps run straight through them.
+- Each layer can also be given different segments, boundaries at the same arc length still line up.
+- This example splits the first wall and the blanket into the same modules. The plasma is removed from the result so the modules can be seen.
 
 .. cadquery::
     :select: result
@@ -390,34 +389,30 @@ Tokamak with aligned poloidal segments
         (paramak.LayerType.GAP, 60),
         (paramak.LayerType.PLASMA, 300),
         (paramak.LayerType.GAP, 60),
-        (paramak.LayerType.SOLID, 20),
-        (paramak.LayerType.SOLID, 120),
-        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 20),  # first wall
+        (paramak.LayerType.SOLID, 120),  # blanket
+        (paramak.LayerType.SOLID, 10),  # rear wall
     ]
 
-    arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=2.0, triangularity=0.55)
+    arc_length = paramak.poloidal_arc_length(radial_build, elongation=2.0, triangularity=0.55)
 
-    # eight modules with 20 cm gaps, sized on the first wall (first solid layer after the plasma)
-    gap = 20
     number_of_modules = 8
-    module = (arc_lengths[1] - number_of_modules * gap) / number_of_modules
-
-    # the first wall and blanket share the same segment boundaries
-    poloidal_build = paramak.aligned_poloidal_build(
-        radial_build,
-        segments=[("module", module), ("gap", gap)] * number_of_modules,
-        layers=[1, 2],
-        elongation=2.0,
-        triangularity=0.55,
-    )
+    module_gap = 20  # gap between neighbouring modules
+    module_length = (arc_length - number_of_modules * module_gap) / number_of_modules
+    modules = [("module", module_length), ("gap", module_gap)] * number_of_modules
 
     result = paramak.tokamak_from_plasma(
         radial_build=radial_build,
-        poloidal_build=poloidal_build,
+        poloidal_build=[
+            None,  # gap after the plasma
+            modules,  # first wall
+            modules,  # blanket, the same modules so the gaps line up
+            None,  # rear wall
+        ],
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=180,
-    ).toCompound()
+    ).remove("plasma").toCompound()
 
 
 Tokamak with several customizations
