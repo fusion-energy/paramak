@@ -27,14 +27,14 @@ number_of_tiles = 4
 tile_gap = 5  # gap between neighbouring tiles
 tile_length = (arc_length - number_of_tiles * tile_gap) / number_of_tiles
 first_wall_tiles = [
-    ("tile", tile_length),
-    ("gap", tile_gap),
-    ("tile", tile_length),
-    ("gap", tile_gap),
-    ("tile", tile_length),
-    ("gap", tile_gap),
-    ("tile", tile_length),
-    ("gap", tile_gap),
+    (paramak.LayerType.SOLID, tile_length, "tile"),
+    (paramak.LayerType.GAP, tile_gap),
+    (paramak.LayerType.SOLID, tile_length, "tile"),
+    (paramak.LayerType.GAP, tile_gap),
+    (paramak.LayerType.SOLID, tile_length, "tile"),
+    (paramak.LayerType.GAP, tile_gap),
+    (paramak.LayerType.SOLID, tile_length, "tile"),
+    (paramak.LayerType.GAP, tile_gap),
 ]
 
 # poloidal_build has one entry per radial_build entry after the plasma,
@@ -60,7 +60,7 @@ print("Saved as tokamak_from_plasma_with_first_wall_tiles.step")
 number_of_modules = 8
 module_gap = 20  # gap between neighbouring modules
 module_length = (arc_length - number_of_modules * module_gap) / number_of_modules
-modules = [("module", module_length), ("gap", module_gap)] * number_of_modules
+modules = [(paramak.LayerType.SOLID, module_length, "module"), (paramak.LayerType.GAP, module_gap)] * number_of_modules
 
 my_reactor = paramak.tokamak_from_plasma(
     radial_build=radial_build,

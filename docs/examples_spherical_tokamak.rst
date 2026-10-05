@@ -338,7 +338,7 @@ Spherical tokamak with poloidal segments
 ----------------------------------------
 
 - The poloidal_build argument splits the layers after the plasma into poloidal segments, for example first wall tiles or blanket modules separated by gaps.
-- poloidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards. Entries are None for layers that are not segmented, otherwise a list of (name, arc_length) tuples.
+- poloidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards. Entries are None for layers that are not segmented, otherwise a list of segments in the same format as radial_build entries: (paramak.LayerType.SOLID, arc_length, name) for a solid segment (the name is optional) or (paramak.LayerType.GAP, arc_length) for a gap.
 - Arc lengths are measured along the plasma facing surface for every layer. This surface starts where the layer meets the centre column at the bottom, runs along the bottom, up the outboard side and along the top back to the centre column. Each entry must sum to the arc length returned by paramak.spherical_poloidal_arc_length.
 - Cuts are vertical along the top and bottom and follow the normal to the plasma surface on the outboard side, so layers given the same segments line up.
 - This example splits the first wall and blanket into the same modules. The plasma is removed from the result so the modules can be seen.
@@ -368,7 +368,7 @@ Spherical tokamak with poloidal segments
     number_of_modules = 8
     module_gap = 15  # gap between neighbouring modules
     module_length = (arc_length - number_of_modules * module_gap) / number_of_modules
-    modules = [("module", module_length), ("gap", module_gap)] * number_of_modules
+    modules = [(paramak.LayerType.SOLID, module_length, "module"), (paramak.LayerType.GAP, module_gap)] * number_of_modules
 
     result = paramak.spherical_tokamak_from_plasma(
         radial_build=radial_build,

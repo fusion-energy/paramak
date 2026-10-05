@@ -163,7 +163,7 @@ def create_reactor(
         module_gap = 15  # gap between neighbouring segments
         arc_length = paramak.poloidal_arc_length(radial_build, elongation=elongation, triangularity=triangularity)
         module_length = (arc_length - n_modules * module_gap) / n_modules
-        modules = [("module", module_length), ("gap", module_gap)] * n_modules
+        modules = [(paramak.LayerType.SOLID, module_length, "module"), (paramak.LayerType.GAP, module_gap)] * n_modules
         # the same segments in the first wall and blanket line up
         poloidal_build = [None, modules, modules if segment_blanket else None, None]
         # alternating colors so neighbouring segments can be told apart

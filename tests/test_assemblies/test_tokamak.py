@@ -150,7 +150,7 @@ def lower_divertor_shape(rotation_angle):
 def equal_segments(arc_length, number_of_segments, gap, name="module"):
     "a poloidal_build entry of equally sized segments separated by gaps"
     segment = (arc_length - number_of_segments * gap) / number_of_segments
-    return [(name, segment), ("gap", gap)] * number_of_segments
+    return [(paramak.LayerType.SOLID, segment, name), (paramak.LayerType.GAP, gap)] * number_of_segments
 
 
 def test_poloidal_arc_length_circular_plasma():
@@ -204,7 +204,11 @@ def test_poloidal_build_names_and_volumes():
         poloidal_build=[
             None,
             None,
-            [("outboard", arc_length * 0.2), ("inboard", arc_length * 0.6), ("outboard", arc_length * 0.2)],
+            [
+                (paramak.LayerType.SOLID, arc_length * 0.2, "outboard"),
+                (paramak.LayerType.SOLID, arc_length * 0.6, "inboard"),
+                (paramak.LayerType.SOLID, arc_length * 0.2, "outboard"),
+            ],
             None,
         ],
     )
@@ -269,7 +273,7 @@ def test_poloidal_build_single_full_segment():
     segmented = paramak.tokamak_from_plasma(
         radial_build=POLOIDAL_RADIAL_BUILD,
         rotation_angle=90,
-        poloidal_build=[None, None, None, [("rear", arc_length)]],
+        poloidal_build=[None, None, None, [(paramak.LayerType.SOLID, arc_length, "rear")]],
     )
     unsegmented = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90)
     assert "layer_5_rear" in segmented.names()
@@ -300,7 +304,7 @@ def test_poloidal_build_with_named_layer_and_tokamak():
         radial_build=radial_build,
         vertical_build=vertical_build,
         rotation_angle=90,
-        poloidal_build=[None, [("upper", arc_length / 2), ("lower", arc_length / 2)]],
+        poloidal_build=[None, [(paramak.LayerType.SOLID, arc_length / 2, "upper"), (paramak.LayerType.SOLID, arc_length / 2, "lower")]],
     )
     assert reactor.names() == ["layer_1", "blanket_upper", "blanket_lower", "plasma"]
 
@@ -359,18 +363,46 @@ def test_different_segments_per_layer():
     ]
 
 
+def test_unnamed_segments():
+    "solid segments without a name are called segment"
+
+    arc_length = paramak.poloidal_arc_length(POLOIDAL_RADIAL_BUILD)
+    reactor = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        poloidal_build=[
+            None,
+            [(paramak.LayerType.SOLID, arc_length / 2), (paramak.LayerType.SOLID, arc_length / 2)],
+            [(paramak.LayerType.SOLID, arc_length)],
+            None,
+        ],
+    )
+    assert reactor.names() == [
+        "layer_1",
+        "layer_2",
+        "layer_3_segment_1",
+        "layer_3_segment_2",
+        "layer_4_segment",
+        "layer_5",
+        "plasma",
+    ]
+
+
 @pytest.mark.parametrize(
     "poloidal_build, error, match",
     [
         ([None, None], ValueError, "expected 4 entries but got 2"),
-        ([[("a", 1)], None, None, None], ValueError, "corresponds to a LayerType.GAP"),
-        ([None, [("a", 1)], None, None], ValueError, "Use paramak.poloidal_arc_length"),
-        ([None, [("gap", 2000)], None, None], ValueError, "at least one segment that is not a gap"),
-        ([None, [("a", -1)], None, None], ValueError, "positive arc_length"),
-        ([None, [("a", 1000), ("gap", -1)], None, None], ValueError, "0 or more"),
+        ([[(paramak.LayerType.SOLID, 1)], None, None, None], ValueError, "corresponds to a LayerType.GAP"),
+        ([None, [(paramak.LayerType.SOLID, 1)], None, None], ValueError, "Use paramak.poloidal_arc_length"),
+        ([None, [(paramak.LayerType.GAP, 2000)], None, None], ValueError, "at least one LayerType.SOLID segment"),
+        ([None, [(paramak.LayerType.SOLID, -1)], None, None], ValueError, "positive arc_length"),
+        ([None, [(paramak.LayerType.SOLID, 1000), (paramak.LayerType.GAP, -1)], None, None], ValueError, "0 or more"),
+        ([None, [(paramak.LayerType.SOLID, 1000), (paramak.LayerType.GAP, 10, "named")], None, None], ValueError, "can not be named"),
+        ([None, [(paramak.LayerType.PLASMA, 1000)], None, None], ValueError, "must be LayerType.SOLID or"),
         ([None, [], None, None], TypeError, "non empty list"),
-        ([None, [(1, 100)], None, None], TypeError, "string name and a numeric arc_length"),
-        ([None, [("a", "100")], None, None], TypeError, "string name and a numeric arc_length"),
+        ([None, [("tile", 100)], None, None], TypeError, "paramak.LayerType, arc_length"),
+        ([None, [(paramak.LayerType.SOLID, "100")], None, None], TypeError, "numeric arc_length"),
+        ([None, [(paramak.LayerType.SOLID, 100, 5)], None, None], TypeError, "string"),
         ("not a list", TypeError, "must be a list"),
     ],
 )
@@ -388,13 +420,13 @@ def test_poloidal_build_sum_tolerance():
     paramak.tokamak_from_plasma(
         radial_build=POLOIDAL_RADIAL_BUILD,
         rotation_angle=90,
-        poloidal_build=[None, [("a", arc_length * 0.5), ("b", arc_length * 0.5005)], None, None],
+        poloidal_build=[None, [(paramak.LayerType.SOLID, arc_length * 0.5), (paramak.LayerType.SOLID, arc_length * 0.5005)], None, None],
     )
     with pytest.raises(ValueError, match=f"{arc_length}"):
         paramak.tokamak_from_plasma(
             radial_build=POLOIDAL_RADIAL_BUILD,
             rotation_angle=90,
-            poloidal_build=[None, [("a", arc_length * 0.5), ("b", arc_length * 0.51)], None, None],
+            poloidal_build=[None, [(paramak.LayerType.SOLID, arc_length * 0.5), (paramak.LayerType.SOLID, arc_length * 0.51)], None, None],
         )
 
 
@@ -459,7 +491,11 @@ def test_poloidal_build_with_divertor_and_gaps():
     arc_length = paramak.poloidal_arc_length(POLOIDAL_RADIAL_BUILD)
     # the gap runs from 70 to 80 percent of the way around the loop, which is
     # under the plasma where the divertor is
-    segments = [("upper", arc_length * 0.7), ("gap", arc_length * 0.1), ("lower", arc_length * 0.2)]
+    segments = [
+        (paramak.LayerType.SOLID, arc_length * 0.7, "upper"),
+        (paramak.LayerType.GAP, arc_length * 0.1),
+        (paramak.LayerType.SOLID, arc_length * 0.2, "lower"),
+    ]
 
     with_gaps = paramak.tokamak_from_plasma(
         radial_build=POLOIDAL_RADIAL_BUILD,

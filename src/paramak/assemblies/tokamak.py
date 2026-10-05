@@ -422,17 +422,20 @@ def tokamak_from_plasma(
             from the plasma outwards, so each entry covers the matching
             inboard and outboard layer pair. Entries are None for layers that
             are not segmented (and must be None for LayerType.GAP entries),
-            otherwise a list of (name, arc_length) tuples. Arc lengths are
+            otherwise a list of segments in the same format as radial_build
+            entries: (paramak.LayerType.SOLID, arc_length, name) for a solid
+            segment (the name is optional) or (paramak.LayerType.GAP,
+            arc_length) for a gap that produces no solid. Arc lengths are
             measured along the plasma facing surface (the inner surface of
             the first solid layer after the plasma) for every layer, starting
             at the outboard midplane and proceeding counter clockwise
             (upwards on the outboard side). Each entry must sum to the arc
             length returned by paramak.poloidal_arc_length (within 0.1
             percent). Cuts between segments follow the normal to the plasma
-            surface, so layers given the same segments line up. Segments
-            named "gap" produce no solid, all other segments produce a solid
-            named "<layer name>_<segment name>". Repeated segment names
-            within a layer get a "_1", "_2" suffix. Defaults to None.
+            surface, so layers given the same segments line up. Solid
+            segments are named "<layer name>_<segment name>", unnamed solid
+            segments are called "segment", and repeated names within a layer
+            get a "_1", "_2" suffix. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
@@ -490,17 +493,20 @@ def tokamak(
             from the plasma outwards, so each entry covers the matching
             inboard and outboard layer pair. Entries are None for layers that
             are not segmented (and must be None for LayerType.GAP entries),
-            otherwise a list of (name, arc_length) tuples. Arc lengths are
+            otherwise a list of segments in the same format as radial_build
+            entries: (paramak.LayerType.SOLID, arc_length, name) for a solid
+            segment (the name is optional) or (paramak.LayerType.GAP,
+            arc_length) for a gap that produces no solid. Arc lengths are
             measured along the plasma facing surface (the inner surface of
             the first solid layer after the plasma) for every layer, starting
             at the outboard midplane and proceeding counter clockwise
             (upwards on the outboard side). Each entry must sum to the arc
             length returned by paramak.poloidal_arc_length (within 0.1
             percent). Cuts between segments follow the normal to the plasma
-            surface, so layers given the same segments line up. Segments
-            named "gap" produce no solid, all other segments produce a solid
-            named "<layer name>_<segment name>". Repeated segment names
-            within a layer get a "_1", "_2" suffix. Defaults to None.
+            surface, so layers given the same segments line up. Solid
+            segments are named "<layer name>_<segment name>", unnamed solid
+            segments are called "segment", and repeated names within a layer
+            get a "_1", "_2" suffix. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.

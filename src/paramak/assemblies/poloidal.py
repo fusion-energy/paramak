@@ -16,8 +16,17 @@ from ..utils import LayerType
 POLOIDAL_ARC_LENGTH_RTOL = 1e-3
 
 
+# name given to solid segments that are not named in the poloidal_build
+DEFAULT_SEGMENT_NAME = "segment"
+
+
 def validate_poloidal_build(poloidal_build, pairs):
-    """Checks the structure of poloidal_build against the layer pairs."""
+    """Checks the structure of poloidal_build against the layer pairs.
+
+    Each segment uses the same format as a radial_build entry: a
+    (LayerType.SOLID, arc_length) or (LayerType.SOLID, arc_length, name) tuple
+    for a solid segment, or a (LayerType.GAP, arc_length) tuple for a gap.
+    """
     if not isinstance(poloidal_build, (list, tuple)):
         raise TypeError(f"poloidal_build must be a list, not {type(poloidal_build)}")
     if len(poloidal_build) != len(pairs):
@@ -35,46 +44,61 @@ def validate_poloidal_build(poloidal_build, pairs):
             )
         if not isinstance(segments, (list, tuple)) or len(segments) == 0:
             raise TypeError(
-                f"poloidal_build entry {index} must be None or a non empty list of (name, arc_length) tuples, "
-                f"not {segments}."
+                f"poloidal_build entry {index} must be None or a non empty list of segments such as "
+                f"(paramak.LayerType.SOLID, arc_length) or (paramak.LayerType.GAP, arc_length), not {segments}."
             )
         for segment in segments:
             if (
                 not isinstance(segment, (list, tuple))
-                or len(segment) != 2
-                or not isinstance(segment[0], str)
+                or len(segment) not in (2, 3)
+                or not isinstance(segment[0], LayerType)
                 or not isinstance(segment[1], numbers.Real)
+                or isinstance(segment[1], bool)
+                or (len(segment) == 3 and not isinstance(segment[2], str))
             ):
                 raise TypeError(
-                    f"Each segment in poloidal_build entry {index} must be a (name, arc_length) tuple "
-                    f"with a string name and a numeric arc_length, not {segment}."
+                    f"Each segment in poloidal_build entry {index} must be a (paramak.LayerType, arc_length) "
+                    f"or (paramak.LayerType, arc_length, name) tuple with a numeric arc_length and a string "
+                    f"name, not {segment}."
                 )
-            name, arc_length = segment
-            if name == "gap":
+            layer_type, arc_length = segment[0], segment[1]
+            if layer_type == LayerType.GAP:
+                if len(segment) == 3:
+                    raise ValueError(
+                        f"LayerType.GAP segments in poloidal_build entry {index} produce no solid and can not "
+                        f"be named, not {segment}."
+                    )
                 if arc_length < 0:
                     raise ValueError(
-                        f"gap segments in poloidal_build entry {index} must have an arc_length of 0 or more, "
-                        f"not {arc_length}."
+                        f"LayerType.GAP segments in poloidal_build entry {index} must have an arc_length of 0 "
+                        f"or more, not {arc_length}."
                     )
-            elif arc_length <= 0:
+            elif layer_type == LayerType.SOLID:
+                if arc_length <= 0:
+                    raise ValueError(
+                        f"LayerType.SOLID segments in poloidal_build entry {index} must have a positive "
+                        f"arc_length, not {arc_length}."
+                    )
+            else:
                 raise ValueError(
-                    f"Segment '{name}' in poloidal_build entry {index} must have a positive arc_length, "
-                    f"not {arc_length}."
+                    f"Segments in poloidal_build entry {index} must be LayerType.SOLID or LayerType.GAP, "
+                    f"not {layer_type}."
                 )
-        if all(segment[0] == "gap" for segment in segments):
-            raise ValueError(f"poloidal_build entry {index} must contain at least one segment that is not a gap.")
+        if all(segment[0] == LayerType.GAP for segment in segments):
+            raise ValueError(f"poloidal_build entry {index} must contain at least one LayerType.SOLID segment.")
 
 
 def get_poloidal_segment_angles(segments, arc_positions, arc_lengths, index, arc_length_function):
-    """Converts a list of (name, arc_length) segments into a list of
-    (name, start, stop) for the solid segments, where start and stop are
-    positions along the segmented path (poloidal angles for a tokamak) found
-    by interpolating the cumulative arc_lengths at arc_positions.
+    """Converts a list of segments into a list of (name, start, stop) for the
+    solid segments, where start and stop are positions along the segmented
+    path (poloidal angles for a tokamak) found by interpolating the
+    cumulative arc_lengths at arc_positions.
 
-    Segments start at the outboard midplane and proceed counter clockwise.
-    The arc lengths must sum to the total arc length of the loop (within
+    The arc lengths must sum to the total arc length of the path (within
     POLOIDAL_ARC_LENGTH_RTOL), small differences are scaled out so the last
-    segment always closes the loop.
+    segment always reaches the end of the path. Solid segments without a name
+    are called DEFAULT_SEGMENT_NAME, and repeated names get a "_1", "_2"
+    suffix.
     """
     total_arc_length = arc_lengths[-1]
     requested_arc_length = sum(segment[1] for segment in segments)
@@ -86,15 +110,19 @@ def get_poloidal_segment_angles(segments, arc_positions, arc_lengths, index, arc
         )
     scale = total_arc_length / requested_arc_length
 
-    name_counts = Counter(segment[0] for segment in segments if segment[0] != "gap")
+    names = [
+        (segment[2] if len(segment) == 3 else DEFAULT_SEGMENT_NAME) if segment[0] == LayerType.SOLID else None
+        for segment in segments
+    ]
+    name_counts = Counter(name for name in names if name is not None)
     name_seen = Counter()
 
     segment_angles = []
     position = 0.0
-    for name, arc_length in segments:
+    for segment, name in zip(segments, names):
         start_position = position
-        position += arc_length * scale
-        if name == "gap":
+        position += segment[1] * scale
+        if name is None:
             continue
         if name_counts[name] > 1:
             name_seen[name] += 1

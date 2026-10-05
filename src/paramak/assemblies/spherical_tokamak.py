@@ -393,8 +393,11 @@ def spherical_tokamak_from_plasma(
             the plasma. A list with one entry per radial_build entry after the
             plasma, ordered from the plasma outwards. Entries are None for
             layers that are not segmented (and must be None for
-            LayerType.GAP entries), otherwise a list of (name, arc_length)
-            tuples. Arc lengths are measured along the plasma facing surface
+            LayerType.GAP entries), otherwise a list of segments in the same
+            format as radial_build entries: (paramak.LayerType.SOLID,
+            arc_length, name) for a solid segment (the name is optional) or
+            (paramak.LayerType.GAP, arc_length) for a gap that produces no
+            solid. Arc lengths are measured along the plasma facing surface
             (the inner surface of the first solid layer after the plasma) for
             every layer, starting where the layer meets the centre column at
             the bottom and going along the bottom, up the outboard side and
@@ -402,10 +405,10 @@ def spherical_tokamak_from_plasma(
             the arc length returned by paramak.spherical_poloidal_arc_length
             (within 0.1 percent). Cuts between segments are vertical along the
             top and bottom and follow the normal to the plasma surface on the
-            outboard side, so layers given the same segments line up.
-            Segments named "gap" produce no solid, all other segments produce
-            a solid named "<layer name>_<segment name>". Repeated segment
-            names within a layer get a "_1", "_2" suffix. Defaults to None.
+            outboard side, so layers given the same segments line up. Solid
+            segments are named "<layer name>_<segment name>", unnamed solid
+            segments are called "segment", and repeated names within a layer
+            get a "_1", "_2" suffix. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
@@ -461,8 +464,11 @@ def spherical_tokamak(
             the plasma. A list with one entry per radial_build entry after the
             plasma, ordered from the plasma outwards. Entries are None for
             layers that are not segmented (and must be None for
-            LayerType.GAP entries), otherwise a list of (name, arc_length)
-            tuples. Arc lengths are measured along the plasma facing surface
+            LayerType.GAP entries), otherwise a list of segments in the same
+            format as radial_build entries: (paramak.LayerType.SOLID,
+            arc_length, name) for a solid segment (the name is optional) or
+            (paramak.LayerType.GAP, arc_length) for a gap that produces no
+            solid. Arc lengths are measured along the plasma facing surface
             (the inner surface of the first solid layer after the plasma) for
             every layer, starting where the layer meets the centre column at
             the bottom and going along the bottom, up the outboard side and
@@ -470,10 +476,10 @@ def spherical_tokamak(
             the arc length returned by paramak.spherical_poloidal_arc_length
             (within 0.1 percent). Cuts between segments are vertical along the
             top and bottom and follow the normal to the plasma surface on the
-            outboard side, so layers given the same segments line up.
-            Segments named "gap" produce no solid, all other segments produce
-            a solid named "<layer name>_<segment name>". Repeated segment
-            names within a layer get a "_1", "_2" suffix. Defaults to None.
+            outboard side, so layers given the same segments line up. Solid
+            segments are named "<layer name>_<segment name>", unnamed solid
+            segments are called "segment", and repeated names within a layer
+            get a "_1", "_2" suffix. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.

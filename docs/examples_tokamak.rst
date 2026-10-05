@@ -316,9 +316,9 @@ Tokamak with poloidal segments
 
 - The poloidal_build argument splits layers into poloidal segments, for example first wall tiles or blanket modules separated by gaps.
 - poloidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards. Each entry covers the matching inboard and outboard layer pair.
-- Entries are None for layers that are not segmented, otherwise a list of (name, arc_length) tuples.
+- Entries are None for layers that are not segmented, otherwise a list of segments in the same format as radial_build entries: (paramak.LayerType.SOLID, arc_length, name) for a solid segment (the name is optional) or (paramak.LayerType.GAP, arc_length) for a gap.
 - Arc lengths are measured along the plasma facing surface for every layer, starting at the outboard midplane and going counter clockwise (upwards on the outboard side). Each entry must sum to the arc length returned by paramak.poloidal_arc_length.
-- Segments named "gap" produce no solid. Other segments are named "<layer name>_<segment name>", with a "_1", "_2" suffix when a name is repeated within a layer.
+- LayerType.GAP segments produce no solid. Solid segments are named "<layer name>_<segment name>" ("segment" when no name is given), with a "_1", "_2" suffix when a name is repeated within a layer.
 - This example splits only the first wall into tiles. The plasma is removed from the result so the tiles can be seen.
 
 .. cadquery::
@@ -350,14 +350,14 @@ Tokamak with poloidal segments
     tile_gap = 5  # gap between neighbouring tiles
     tile_length = (arc_length - number_of_tiles * tile_gap) / number_of_tiles
     first_wall_tiles = [
-        ("tile", tile_length),
-        ("gap", tile_gap),
-        ("tile", tile_length),
-        ("gap", tile_gap),
-        ("tile", tile_length),
-        ("gap", tile_gap),
-        ("tile", tile_length),
-        ("gap", tile_gap),
+        (paramak.LayerType.SOLID, tile_length, "tile"),
+        (paramak.LayerType.GAP, tile_gap),
+        (paramak.LayerType.SOLID, tile_length, "tile"),
+        (paramak.LayerType.GAP, tile_gap),
+        (paramak.LayerType.SOLID, tile_length, "tile"),
+        (paramak.LayerType.GAP, tile_gap),
+        (paramak.LayerType.SOLID, tile_length, "tile"),
+        (paramak.LayerType.GAP, tile_gap),
     ]
 
     result = paramak.tokamak_from_plasma(
@@ -408,7 +408,7 @@ Tokamak with first wall and blanket segments
     number_of_modules = 8
     module_gap = 20  # gap between neighbouring modules
     module_length = (arc_length - number_of_modules * module_gap) / number_of_modules
-    modules = [("module", module_length), ("gap", module_gap)] * number_of_modules
+    modules = [(paramak.LayerType.SOLID, module_length, "module"), (paramak.LayerType.GAP, module_gap)] * number_of_modules
 
     result = paramak.tokamak_from_plasma(
         radial_build=radial_build,

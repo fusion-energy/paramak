@@ -220,7 +220,7 @@ def volumes(assembly):
 def equal_segments(arc_length, number_of_segments, gap, name="module"):
     "a poloidal_build entry of equally sized segments separated by gaps"
     segment = (arc_length - number_of_segments * gap) / number_of_segments
-    return [(name, segment), ("gap", gap)] * number_of_segments
+    return [(paramak.LayerType.SOLID, segment, name), (paramak.LayerType.GAP, gap)] * number_of_segments
 
 
 def test_spherical_poloidal_arc_length_circular_plasma():
@@ -301,7 +301,7 @@ def test_spherical_poloidal_build_gaps_and_single_segment():
     segmented = paramak.spherical_tokamak_from_plasma(
         radial_build=SPHERICAL_RADIAL_BUILD,
         rotation_angle=90,
-        poloidal_build=[None, equal_segments(arc_length, 4, gap=30), None, [("rear", arc_length)]],
+        poloidal_build=[None, equal_segments(arc_length, 4, gap=30), None, [(paramak.LayerType.SOLID, arc_length, "rear")]],
     )
     unsegmented = volumes(paramak.spherical_tokamak_from_plasma(radial_build=SPHERICAL_RADIAL_BUILD, rotation_angle=90))
     segmented_volumes = volumes(segmented)
@@ -355,7 +355,7 @@ def test_spherical_poloidal_build_with_named_layer_and_spherical_tokamak():
         radial_build=radial_build,
         vertical_build=vertical_build,
         rotation_angle=90,
-        poloidal_build=[None, [("lower", arc_length / 2), ("upper", arc_length / 2)]],
+        poloidal_build=[None, [(paramak.LayerType.SOLID, arc_length / 2, "lower"), (paramak.LayerType.SOLID, arc_length / 2, "upper")]],
     )
     assert reactor.names() == ["layer_1", "blanket_lower", "blanket_upper", "plasma"]
 
@@ -364,9 +364,9 @@ def test_spherical_poloidal_build_with_named_layer_and_spherical_tokamak():
     "poloidal_build, error, match",
     [
         ([None, None], ValueError, "expected 4 entries but got 2"),
-        ([[("a", 1)], None, None, None], ValueError, "corresponds to a LayerType.GAP"),
-        ([None, [("a", 1)], None, None], ValueError, "Use paramak.spherical_poloidal_arc_length"),
-        ([None, [("a", -1)], None, None], ValueError, "positive arc_length"),
+        ([[(paramak.LayerType.SOLID, 1)], None, None, None], ValueError, "corresponds to a LayerType.GAP"),
+        ([None, [(paramak.LayerType.SOLID, 1)], None, None], ValueError, "Use paramak.spherical_poloidal_arc_length"),
+        ([None, [(paramak.LayerType.SOLID, -1)], None, None], ValueError, "positive arc_length"),
         ("not a list", TypeError, "must be a list"),
     ],
 )

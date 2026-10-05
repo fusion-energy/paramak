@@ -106,7 +106,7 @@ def create_reactor(
             radial_build, elongation=elongation, triangularity=triangularity
         )
         module_length = (arc_length - n_modules * module_gap) / n_modules
-        modules = [("module", module_length), ("gap", module_gap)] * n_modules
+        modules = [(paramak.LayerType.SOLID, module_length, "module"), (paramak.LayerType.GAP, module_gap)] * n_modules
         poloidal_build = [None, modules, modules if segment_blanket else None, None]
         # alternating colors so neighbouring segments can be told apart
         layer_colors = {"layer_3": [(0.1, 0.1, 0.9), (0.5, 0.75, 1.0)], "layer_4": [(0.4, 0.4, 0.8), (0.75, 0.75, 0.95)]}

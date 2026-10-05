@@ -24,14 +24,14 @@ print(f"poloidal arc length {arc_length}")
 number_of_tiles = 16
 tile_gap = 5  # gap between neighbouring tiles
 tile_length = (arc_length - number_of_tiles * tile_gap) / number_of_tiles
-first_wall_tiles = [("tile", tile_length), ("gap", tile_gap)] * number_of_tiles
+first_wall_tiles = [(paramak.LayerType.SOLID, tile_length, "tile"), (paramak.LayerType.GAP, tile_gap)] * number_of_tiles
 
 # Blanket modules, the end of every second tile gap lines up with the end of a
 # module gap
 number_of_modules = 8
 module_gap = 15  # gap between neighbouring modules
 module_length = (arc_length - number_of_modules * module_gap) / number_of_modules
-modules = [("module", module_length), ("gap", module_gap)] * number_of_modules
+modules = [(paramak.LayerType.SOLID, module_length, "module"), (paramak.LayerType.GAP, module_gap)] * number_of_modules
 
 # poloidal_build has one entry per radial_build entry after the plasma,
 # ordered from the plasma outwards, with None for layers that are not segmented
