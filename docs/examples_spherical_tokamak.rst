@@ -334,6 +334,56 @@ Spherical tokamak with negative triangularity
     ).toCompound()
 
 
+Spherical tokamak with poloidal segments
+----------------------------------------
+
+- The poloidal_build argument splits the layers after the plasma into poloidal segments, for example first wall tiles or blanket modules separated by gaps.
+- poloidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards. Entries are None for layers that are not segmented, otherwise a list of (name, arc_length) tuples.
+- Arc lengths are measured along the plasma facing surface for every layer. This surface starts where the layer meets the centre column at the bottom, runs along the bottom, up the outboard side and along the top back to the centre column. Each entry must sum to the arc length returned by paramak.spherical_poloidal_arc_length.
+- Cuts are vertical along the top and bottom and follow the normal to the plasma surface on the outboard side, so layers given the same segments line up.
+- This example splits the first wall and blanket into the same modules. The plasma is removed from the result so the modules can be seen.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 15),
+        (paramak.LayerType.GAP, 50),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 15),  # first wall
+        (paramak.LayerType.SOLID, 60),  # blanket
+        (paramak.LayerType.SOLID, 10),  # rear wall
+    ]
+
+    # arc length that the segments of each layer must sum to
+    arc_length = paramak.spherical_poloidal_arc_length(radial_build, elongation=2.0, triangularity=0.55)
+
+    number_of_modules = 8
+    module_gap = 15  # gap between neighbouring modules
+    module_length = (arc_length - number_of_modules * module_gap) / number_of_modules
+    modules = [("module", module_length), ("gap", module_gap)] * number_of_modules
+
+    result = paramak.spherical_tokamak_from_plasma(
+        radial_build=radial_build,
+        poloidal_build=[
+            None,  # gap after the plasma
+            modules,  # first wall
+            modules,  # blanket, the same modules so the gaps line up
+            None,  # rear wall
+        ],
+        elongation=2.0,
+        triangularity=0.55,
+        rotation_angle=180,
+    ).remove("plasma").toCompound()
+
+
 Naming spherical tokamak parts
 ------------------------------
 

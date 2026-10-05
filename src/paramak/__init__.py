@@ -1,6 +1,7 @@
 from importlib.metadata import version
 
 from .assemblies.spherical_tokamak import (
+    spherical_poloidal_arc_length,
     spherical_tokamak,
     spherical_tokamak_from_plasma,
 )
@@ -39,6 +40,7 @@ __all__ = [
     "poloidal_field_coil",
     "poloidal_field_coil_case",
     "revolved_shape",
+    "spherical_poloidal_arc_length",
     "spherical_tokamak",
     "spherical_tokamak_from_plasma",
     "tokamak",
