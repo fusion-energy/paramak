@@ -1,4 +1,3 @@
-
 import paramak
 
 my_reactor = paramak.spherical_tokamak_from_plasma(
