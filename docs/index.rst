@@ -25,11 +25,16 @@ The style of reactor, sizes of components, plasma shape and number of radial or 
 .. raw:: html
 
     <div style="display: flex; justify-content: center;">
-        <video width="45%" controls autoplay loop>
+        <video width="45%" controls autoplay loop muted playsinline>
+            <source src="_static/spherical_tokamak_animation.webm" type="video/webm">
             <source src="_static/spherical_tokamak_animation.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <img width="45%" src="_static/tokamak_animation.webp" alt="Tokamak animation">
+        <video width="45%" controls autoplay loop muted playsinline>
+            <source src="_static/tokamak_animation.webm" type="video/webm">
+            <source src="_static/tokamak_animation.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     </div>
 
 .. grid:: 1 1 3 3

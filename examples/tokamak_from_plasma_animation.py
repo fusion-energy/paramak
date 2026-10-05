@@ -1,11 +1,14 @@
-import glob
+import os
 import shutil
 
 import cadquery as cq
 import numpy as np
-from cadquery.vis import show
+from cadquery.occ_impl.assembly import toVTKAssy
 from matplotlib.path import Path
 from PIL import Image
+from vtkmodules.vtkIOImage import vtkPNGWriter
+from vtkmodules.vtkRenderingCore import vtkRenderer, vtkRenderWindow, vtkWindowToImageFilter
+from vtkmodules.vtkRenderingOpenGL2 import vtkOpenGLRenderer  # noqa: F401 loads the OpenGL backend
 
 import paramak
 from paramak.workplanes.toroidal_field_coil_princeton_d import find_points
@@ -157,16 +160,12 @@ def create_reactor(
     module_colors = {}
     plasma_color = (1., 0.7, 0.8, 0.6)
     if n_modules is not None:
-        module_gap = 15
-        arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=elongation, triangularity=triangularity)
-        module_arc_length = (arc_lengths[1] - n_modules * module_gap) / n_modules
-        poloidal_build = paramak.aligned_poloidal_build(
-            radial_build,
-            segments=[("module", module_arc_length), ("gap", module_gap)] * n_modules,
-            layers=[1, 2] if segment_blanket else [1],
-            elongation=elongation,
-            triangularity=triangularity,
-        )
+        module_gap = 15  # gap between neighbouring segments
+        arc_length = paramak.poloidal_arc_length(radial_build, elongation=elongation, triangularity=triangularity)
+        module_length = (arc_length - n_modules * module_gap) / n_modules
+        modules = [("module", module_length), ("gap", module_gap)] * n_modules
+        # the same segments in the first wall and blanket line up
+        poloidal_build = [None, modules, modules if segment_blanket else None, None]
         # alternating colors so neighbouring segments can be told apart
         layer_colors = {"layer_2": [(0.75, 0.95, 0.75), (0.2, 0.5, 0.2)], "layer_3": [(0.1, 0.1, 0.9), (0.5, 0.75, 1.0)]}
         for layer_name, colors in layer_colors.items():
@@ -205,25 +204,69 @@ def create_reactor(
         extra_intersect_shapes=[divertor]
     )
 
-# Function to export reactor to a PNG with a transparent background
-def export_reactor_to_png(reactor, file_path):
+ZOOM = 1.2
+WATERMARK_Z = -1215
+
+
+# Rendering is done with VTK directly (using the cadquery assembly to VTK
+# conversion) to control the anti aliasing, lighting and camera framing
+def render_png(reactor, file_path, bgcolor, zoom):
+    renderer = vtkRenderer()
+    for actor in toVTKAssy(reactor, edges=True, linewidth=1, tolerance=1e-3):
+        actor.GetProperty().SetAmbient(0.1)
+        actor.GetProperty().SetSpecular(0.3)
+        actor.GetProperty().SetSpecularPower(100)
+        renderer.AddActor(actor)
+    renderer.SetBackground(*bgcolor)
+    renderer.SetUseFXAA(True)
+    window = vtkRenderWindow()
+    window.SetOffScreenRendering(1)
+    window.SetSize(640, 512)
+    window.AddRenderer(renderer)
+    camera = renderer.GetActiveCamera()
+    camera.Roll(-35)
+    camera.Elevation(-60)
+    renderer.ResetCamera()  # fits the reactor in the view after rotating
+    camera.Zoom(zoom)
+    renderer.ResetCameraClippingRange()
+    window.Render()
+    grab = vtkWindowToImageFilter()
+    grab.SetInput(window)
+    grab.ReadFrontBufferOff()
+    grab.Update()
+    writer = vtkPNGWriter()
+    writer.SetFileName(file_path)
+    writer.SetInputConnection(grab.GetOutputPort())
+    writer.Write()
+
+
+# Saves a frame on a white background (used for the mp4) and a frame with a
+# transparent background (used for the webm, so the animation also works on
+# dark pages)
+def export_reactor_to_png(reactor, file_path, alpha_file_path):
+    # the watermark goes below the reactor, lower than usual if the reactor is tall
+    watermark_z = min(WATERMARK_Z, reactor.toCompound().BoundingBox().zmin - 250)
     reactor.add(
         cq.Workplane('XZ').text("Paramak", fontsize=200, distance=10
-    ).translate((0, 0, -1215)), name="watermark", color=cq.Color(0.5, 0.5, 0.5))
-    # renders on a black and a white background, the difference between the
-    # two gives the transparency of each pixel (including anti aliased edges
-    # and the partly transparent plasma)
-    renders = []
-    for bgcolor in [(0.0, 0.0, 0.0), (1.0, 1.0, 1.0)]:
-        show(reactor, screenshot=file_path, interact=False, width=640, height=512, zoom=1.25,
-             bgcolor=bgcolor, gradient=False, trihedron=False)
-        renders.append(np.asarray(Image.open(file_path).convert("RGB"), dtype=float))
-    on_black, on_white = renders
-    alpha = np.clip(1 - (on_white - on_black).mean(axis=2) / 255, 0, 1)
+    ).translate((0, 0, watermark_z)), name="watermark", color=cq.Color(0.4, 0.4, 0.4))
+    # the difference between renders on black and white backgrounds gives the
+    # transparency of each pixel (including anti aliased edges and the partly
+    # transparent plasma), the view is zoomed out if the reactor touches the edge
+    zoom = ZOOM
+    while True:
+        render_png(reactor, alpha_file_path, (0.0, 0.0, 0.0), zoom)
+        render_png(reactor, file_path, (1.0, 1.0, 1.0), zoom)
+        on_black = np.asarray(Image.open(alpha_file_path).convert("RGB"), dtype=float)
+        on_white = np.asarray(Image.open(file_path).convert("RGB"), dtype=float)
+        alpha = np.clip(1 - (on_white - on_black).mean(axis=2) / 255, 0, 1)
+        border = np.concatenate([alpha[0], alpha[-1], alpha[:, 0], alpha[:, -1]])
+        if border.max() < 0.05 or zoom < 0.8:
+            break
+        zoom *= 0.95
     rgb = on_black / np.maximum(alpha, 1e-6)[..., None]
     rgba = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
-    Image.fromarray(rgba, "RGBA").save(file_path)
-    print(f'written {file_path}')
+    Image.fromarray(rgba, "RGBA").save(alpha_file_path)
+    print(f'written {file_path} and {alpha_file_path}')
 
 
 # Generate reactors with varying radial build values
@@ -235,34 +278,34 @@ for i in range(len(original_radial_build)):
         modified_radial_build = original_radial_build.copy()
         modified_radial_build[i] = (layer_type, original_value * factor)
         reactor = create_reactor(modified_radial_build, original_elongation, original_triangularity, original_n_tf_coils, original_coil_height_factor)
-        export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+        export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
         frame += 1
 
 for modified_n_tf_coils in [original_n_tf_coils, original_n_tf_coils -1 , original_n_tf_coils -2, original_n_tf_coils-3, original_n_tf_coils-2, original_n_tf_coils-1,original_n_tf_coils]:
     reactor = create_reactor(n_tf_coils=modified_n_tf_coils)
-    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
     frame += 1
 
 for modified_coil_height_factor in [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1.1, 1]:
     reactor = create_reactor(coil_height_factor=modified_coil_height_factor)
-    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
     frame += 1
 
 for factor in factors:
     modified_divertor_thickness = original_divertor_thickness * factor
     reactor = create_reactor(divertor_thickness=modified_divertor_thickness)
-    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
     frame += 1
 
 for factor in [1.0, 0.9, 0.8, 0.7, 0.8, 0.9, 1.0]:
     modified_elongation = original_elongation * factor
     reactor = create_reactor(elongation=modified_elongation)
-    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
     frame += 1
 
 for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.55, -0.3667, -0.1833, 0.0, 0.1833, 0.3667, 0.55]:
     reactor = create_reactor(triangularity=modified_triangularity)
-    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
     frame += 1
 
 # the segmentation frames are each shown for three frames so these sequences play more slowly
@@ -271,29 +314,22 @@ segmentation_frame_repeats = 3
 # first wall tiles only
 for modified_n_modules in [None, 2, 4, 6, 8, 10, 12, 14, 16, 16, 16, 14, 12, 10, 8, 6, 4, 2, None]:
     reactor = create_reactor(n_modules=modified_n_modules)
-    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
     for repeat in range(1, segmentation_frame_repeats):
         shutil.copy(f'tokamak_frame_{frame:03d}.png', f'tokamak_frame_{frame + repeat:03d}.png')
+        shutil.copy(f'tokamak_alpha_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame + repeat:03d}.png')
     frame += segmentation_frame_repeats
 
 # first wall tiles and blanket modules with the same poloidal segments
 for modified_n_modules in [None, 2, 3, 4, 5, 6, 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, None]:
     reactor = create_reactor(n_modules=modified_n_modules, segment_blanket=True)
-    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
     for repeat in range(1, segmentation_frame_repeats):
         shutil.copy(f'tokamak_frame_{frame:03d}.png', f'tokamak_frame_{frame + repeat:03d}.png')
+        shutil.copy(f'tokamak_alpha_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame + repeat:03d}.png')
     frame += segmentation_frame_repeats
 
-# animated webp keeps the transparent background, so the animation works on light and dark pages
-frames = [Image.open(path) for path in sorted(glob.glob('tokamak_frame_*.png'))]
-frames[0].save(
-    'tokamak_animation.webp',
-    save_all=True,
-    append_images=frames[1:],
-    duration=100,  # milliseconds per frame, 10 frames per second
-    loop=0,
-    quality=70,
-    method=6,  # slowest and smallest encoding
-    background=(0, 0, 0, 0),
-)
-print('written tokamak_animation.webp')
+# mp4 on a white background, and webm with a transparent background for
+# browsers that support it
+os.system('ffmpeg -y -r 10 -i tokamak_frame_%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p tokamak_animation.mp4')
+os.system('ffmpeg -y -r 10 -i tokamak_alpha_frame_%03d.png -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 32 -r 30 tokamak_animation.webm')
