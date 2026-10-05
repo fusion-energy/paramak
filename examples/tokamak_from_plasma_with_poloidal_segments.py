@@ -50,3 +50,29 @@ my_reactor = paramak.tokamak_from_plasma(
 print(my_reactor.names())
 my_reactor.export("tokamak_from_plasma_with_poloidal_segments.step")
 print("Saved as tokamak_from_plasma_with_poloidal_segments.step")
+
+# Segments sized separately on each layer do not line up between layers.
+# aligned_poloidal_build gives several layers the same segment boundaries so
+# the gaps run straight through them. Here the first wall and blanket are
+# split into eight modules with 20 cm gaps, sized on the first wall.
+gap = 20
+number_of_modules = 8
+module = (arc_lengths[1] - number_of_modules * gap) / number_of_modules
+aligned_poloidal_build = paramak.aligned_poloidal_build(
+    radial_build,
+    segments=[("module", module), ("gap", gap)] * number_of_modules,
+    layers=[1, 2],
+    elongation=2.0,
+    triangularity=0.55,
+)
+
+my_reactor = paramak.tokamak_from_plasma(
+    radial_build=radial_build,
+    poloidal_build=aligned_poloidal_build,
+    elongation=2.0,
+    triangularity=0.55,
+    rotation_angle=180,
+)
+print(my_reactor.names())
+my_reactor.export("tokamak_from_plasma_with_aligned_poloidal_segments.step")
+print("Saved as tokamak_from_plasma_with_aligned_poloidal_segments.step")

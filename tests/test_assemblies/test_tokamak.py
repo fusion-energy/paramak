@@ -333,3 +333,72 @@ def test_poloidal_build_sum_tolerance():
             rotation_angle=90,
             poloidal_build=[None, [("a", arc * 0.5), ("b", arc * 0.51)], None, None],
         )
+
+
+def test_aligned_poloidal_build_shares_segment_angles():
+    "segments made with aligned_poloidal_build start and stop at the same poloidal angles in every layer"
+
+    from paramak.assemblies.tokamak import get_poloidal_build_segment_angles, vertical_build_from_radial_build
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)
+    gap = 20
+    number_of_modules = 8
+    module = (arc_lengths[1] - number_of_modules * gap) / number_of_modules
+
+    poloidal_build = paramak.aligned_poloidal_build(
+        POLOIDAL_RADIAL_BUILD, [("module", module), ("gap", gap)] * number_of_modules, layers=[1, 2, 3]
+    )
+    assert poloidal_build[0] is None
+    for index in [1, 2, 3]:
+        assert sum(length for _, length in poloidal_build[index]) == pytest.approx(arc_lengths[index])
+    # the reference layer keeps the requested arc lengths
+    assert poloidal_build[1][0][1] == pytest.approx(module)
+    assert poloidal_build[1][1][1] == pytest.approx(gap)
+    # layers further from the plasma have longer segments and gaps
+    assert poloidal_build[1][1][1] < poloidal_build[2][1][1] < poloidal_build[3][1][1]
+
+    segment_angles = get_poloidal_build_segment_angles(
+        poloidal_build, POLOIDAL_RADIAL_BUILD, vertical_build_from_radial_build(POLOIDAL_RADIAL_BUILD, 2.0), 0.55
+    )
+    for first, second, third in zip(segment_angles[1], segment_angles[2], segment_angles[3]):
+        assert first[1:] == pytest.approx(second[1:], abs=1e-9)
+        assert first[1:] == pytest.approx(third[1:], abs=1e-9)
+
+    reactor = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90, poloidal_build=poloidal_build
+    )
+    assert len([name for name in reactor.names() if "_module_" in name]) == 3 * number_of_modules
+
+
+def test_aligned_poloidal_build_reference_layer():
+    "the segment arc lengths can be measured on a layer other than the first"
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)
+    poloidal_build = paramak.aligned_poloidal_build(
+        POLOIDAL_RADIAL_BUILD,
+        [("upper", arc_lengths[3] / 2), ("lower", arc_lengths[3] / 2)],
+        layers=[1, 2],
+        reference_layer=3,
+    )
+    assert poloidal_build[3] is None
+    # the boundary at half the loop is the inboard midplane in every layer
+    assert poloidal_build[1][0][1] == pytest.approx(arc_lengths[1] / 2, rel=1e-3)
+    assert poloidal_build[2][0][1] == pytest.approx(arc_lengths[2] / 2, rel=1e-3)
+
+
+@pytest.mark.parametrize(
+    "kwargs, error, match",
+    [
+        ({"layers": []}, ValueError, "at least one"),
+        ({"layers": [0]}, ValueError, "LayerType.GAP"),
+        ({"layers": [9]}, ValueError, "out of range"),
+        ({"layers": [1.0]}, TypeError, "must be integers"),
+        ({"layers": [1], "segments": [("a", 1)]}, ValueError, "Use paramak.poloidal_arc_lengths"),
+        ({"layers": [1], "segments": [("a", -1)]}, ValueError, "positive arc_length"),
+    ],
+)
+def test_aligned_poloidal_build_validation(kwargs, error, match):
+    arc = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)[1]
+    kwargs = {"segments": [("a", arc)], **kwargs}
+    with pytest.raises(error, match=match):
+        paramak.aligned_poloidal_build(POLOIDAL_RADIAL_BUILD, **kwargs)

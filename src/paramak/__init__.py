@@ -4,7 +4,7 @@ from .assemblies.spherical_tokamak import (
     spherical_tokamak,
     spherical_tokamak_from_plasma,
 )
-from .assemblies.tokamak import poloidal_arc_lengths, tokamak, tokamak_from_plasma
+from .assemblies.tokamak import aligned_poloidal_build, poloidal_arc_lengths, tokamak, tokamak_from_plasma
 from .utils import LayerType
 from .workplanes.blanket_constant_thickness_arc_h import (
     blanket_constant_thickness_arc_h,
@@ -28,6 +28,7 @@ __version__ = version("paramak")
 __all__ = [
     "LayerType",
     "__version__",
+    "aligned_poloidal_build",
     "blanket_constant_thickness_arc_h",
     "blanket_from_plasma",
     "center_column_shield_cylinder",

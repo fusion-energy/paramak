@@ -365,6 +365,60 @@ Tokamak with poloidal segments
     ).toCompound()
 
 
+Tokamak with aligned poloidal segments
+--------------------------------------
+
+- Segments sized by arc length on each layer separately do not line up between layers, as each layer has a different arc length.
+- paramak.aligned_poloidal_build makes a poloidal_build where several layers share the same segment boundary angles, so the gaps run straight through the layers.
+- The segments are defined by arc length on a reference layer (the first of layers by default). The arc lengths of the other layers are calculated to match, so gaps are slightly larger on layers further from the plasma.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 10),
+    ]
+
+    arc_lengths = paramak.poloidal_arc_lengths(radial_build, elongation=2.0, triangularity=0.55)
+
+    # eight modules with 20 cm gaps, sized on the first wall (first solid layer after the plasma)
+    gap = 20
+    number_of_modules = 8
+    module = (arc_lengths[1] - number_of_modules * gap) / number_of_modules
+
+    # the first wall and blanket share the same segment boundaries
+    poloidal_build = paramak.aligned_poloidal_build(
+        radial_build,
+        segments=[("module", module), ("gap", gap)] * number_of_modules,
+        layers=[1, 2],
+        elongation=2.0,
+        triangularity=0.55,
+    )
+
+    result = paramak.tokamak_from_plasma(
+        radial_build=radial_build,
+        poloidal_build=poloidal_build,
+        elongation=2.0,
+        triangularity=0.55,
+        rotation_angle=180,
+    ).toCompound()
+
+
 Tokamak with several customizations
 -----------------------------------
 
