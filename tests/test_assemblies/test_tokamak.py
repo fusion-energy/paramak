@@ -1,5 +1,6 @@
 import math
 
+import cadquery as cq
 import pytest
 
 import paramak
@@ -402,3 +403,99 @@ def test_aligned_poloidal_build_validation(kwargs, error, match):
     kwargs = {"segments": [("a", arc)], **kwargs}
     with pytest.raises(error, match=match):
         paramak.aligned_poloidal_build(POLOIDAL_RADIAL_BUILD, **kwargs)
+
+
+def lower_divertor_shape(rotation_angle):
+    "a shape overlapping the layers under the plasma, intersected with the layers to make a divertor"
+    points = [(300, -700), (300, 0), (400, 0), (400, -700)]
+    return cq.Workplane("XZ").polyline(points).close().revolve(rotation_angle)
+
+
+def test_poloidal_build_with_divertor_conserves_volume():
+    "the divertor is cut out of the segments, and segments plus divertor fill the same volume as without segments"
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)
+    number_of_modules = 6
+    poloidal_build = paramak.aligned_poloidal_build(
+        POLOIDAL_RADIAL_BUILD,
+        [("module", arc_lengths[1] / number_of_modules)] * number_of_modules,
+        layers=[1, 2, 3],
+    )
+
+    unsegmented = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        extra_intersect_shapes=[lower_divertor_shape(90)],
+    )
+    segmented = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        extra_intersect_shapes=[lower_divertor_shape(90)],
+        poloidal_build=poloidal_build,
+    )
+    segmented_no_divertor = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90, poloidal_build=poloidal_build
+    )
+
+    assert "extra_intersect_shapes_1" in segmented.names()
+    assert len([name for name in segmented.names() if "_module_" in name]) == 3 * number_of_modules
+
+    unsegmented_volumes = volumes(unsegmented)
+    segmented_volumes = volumes(segmented)
+    no_divertor_volumes = volumes(segmented_no_divertor)
+
+    # the divertor is the same shape whether or not the layers are segmented
+    assert segmented_volumes["extra_intersect_shapes_1"] == pytest.approx(
+        unsegmented_volumes["extra_intersect_shapes_1"], rel=1e-3
+    )
+    assert segmented_volumes["extra_intersect_shapes_1"] > 0
+
+    # the divertor volume is removed from the segments it overlaps and no others
+    reduced = [
+        name
+        for name in no_divertor_volumes
+        if "_module_" in name and segmented_volumes[name] < no_divertor_volumes[name] * (1 - 1e-6)
+    ]
+    assert 0 < len(reduced) < 3 * number_of_modules
+    removed = sum(no_divertor_volumes[name] - segmented_volumes[name] for name in no_divertor_volumes if "_module_" in name)
+    removed_from_layers = sum(
+        no_divertor_volumes[name] - segmented_volumes[name] for name in ["layer_1", "layer_2"]
+    )
+    assert removed + removed_from_layers == pytest.approx(segmented_volumes["extra_intersect_shapes_1"], rel=1e-3)
+
+    # total volume of layers and divertor matches the unsegmented reactor
+    def total(volume_dict):
+        return sum(value for name, value in volume_dict.items() if name != "plasma")
+
+    assert total(segmented_volumes) == pytest.approx(total(unsegmented_volumes), rel=1e-3)
+
+
+def test_poloidal_build_with_divertor_and_gaps():
+    "gaps between segments are not filled by the divertor"
+
+    arc_lengths = paramak.poloidal_arc_lengths(POLOIDAL_RADIAL_BUILD)
+    arc = arc_lengths[1]
+    # the gap runs from 70 to 80 percent of the way around the loop, which is
+    # under the plasma where the divertor is
+    poloidal_build = paramak.aligned_poloidal_build(
+        POLOIDAL_RADIAL_BUILD,
+        [("upper", arc * 0.7), ("gap", arc * 0.1), ("lower", arc * 0.2)],
+        layers=[1, 2, 3],
+    )
+
+    with_gaps = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        extra_intersect_shapes=[lower_divertor_shape(90)],
+        poloidal_build=poloidal_build,
+    )
+    without_segments = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        rotation_angle=90,
+        extra_intersect_shapes=[lower_divertor_shape(90)],
+    )
+    divertor_with_gaps = volumes(with_gaps)["extra_intersect_shapes_1"]
+    divertor_without_segments = volumes(without_segments)["extra_intersect_shapes_1"]
+    assert 0 < divertor_with_gaps < divertor_without_segments * 0.99
+    for child in with_gaps.children:
+        assert child.toCompound().isValid()
