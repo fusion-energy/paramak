@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import typing
 
 import cadquery as cq
@@ -6,16 +8,16 @@ from ..utils import create_wire_workplane_from_points
 
 
 def revolved_shape(
-    points: typing.Sequence[typing.Tuple[float, float, str]],
+    points: typing.Sequence[tuple[float, float, str]],
     rotation_angle: float = 360.0,
     name: str = "revolved_shape",
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.5,
         0.5,
         0.5,
     ),
     plane: str = "XZ",
-    origin: typing.Tuple[float, float, float] = (0, 0, 0),
+    origin: tuple[float, float, float] = (0, 0, 0),
     obj=None,
 ) -> cq.Workplane:
     """Creates a solid by revolving an arbitrary closed 2D profile around the axis.

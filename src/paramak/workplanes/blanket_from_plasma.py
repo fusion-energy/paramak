@@ -1,11 +1,16 @@
-import warnings
-import typing
+from __future__ import annotations
 
-from ..utils import create_wire_workplane_from_points
+import typing
+import warnings
+
 import mpmath
 import numpy as np
 import sympy as sp
+from OCP.Standard import Standard_Failure
+from OCP.StdFail import StdFail_NotDone
 from scipy.interpolate import interp1d
+
+from ..utils import create_wire_workplane_from_points
 
 
 def make_callable(attribute, start_angle, stop_angle):
@@ -228,10 +233,10 @@ def blanket_from_plasma(
     triangularity: float = 0.55,
     elongation: float = 2.0,
     vertical_displacement: float = 0.0,
-    offset_from_plasma: typing.Union[float, typing.Iterable[float]] = 0.0,
+    offset_from_plasma: float | typing.Iterable[float] = 0.0,
     num_points: int = 200,
     name: str = "blanket_from_plasma",
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.333,
         0.0,
         0.0,
@@ -303,7 +308,13 @@ def blanket_from_plasma(
 
     wire = create_wire_workplane_from_points(points=points, plane=plane, origin=origin, obj=obj)
 
-    solid = wire.revolve(rotation_angle)
+    try:
+        solid = wire.revolve(rotation_angle)
+    except (Standard_Failure, StdFail_NotDone) as e:
+        raise ValueError(
+            "blanket_from_plasma: could not revolve the profile, "
+            "the geometry is probably self-overlapping"
+        ) from e
     solid.name = name
     solid.color = color
     return solid

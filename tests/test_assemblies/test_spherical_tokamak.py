@@ -1,3 +1,4 @@
+import importlib
 from pathlib import Path
 
 import pytest
@@ -5,8 +6,6 @@ import pytest
 import paramak
 
 from .test_utils import transport_particles_on_h5m_geometry
-
-import importlib
 
 
 @pytest.mark.parametrize("rotation_angle", [30, 180])
@@ -54,7 +53,7 @@ def test_transport_with_magnets(rotation_angle):
         rotation_angle=rotation_angle,
         extra_cut_shapes=poloidal_field_coils,
     )
-    my_reactor.save(f"spherical_tokamak_with_magnets_{rotation_angle}.step")
+    my_reactor.export(f"spherical_tokamak_with_magnets_{rotation_angle}.step")
     assert Path(f"spherical_tokamak_with_magnets_{rotation_angle}.step").exists()
 
     my_model = CadToDagmc()
@@ -92,7 +91,7 @@ def test_transport_without_magnets():
         elongation=2,
         triangularity=0.55,
     )
-    reactor.save("spherical_tokamak.step")
+    reactor.export("spherical_tokamak.step")
 
     my_model = CadToDagmc()
     material_tags = ["mat1"] * 6

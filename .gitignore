@@ -179,5 +179,10 @@ src/_version.py
 *.png
 *.gif
 *.svg
+*.mp4
 
 _build
+
+# IDE files and folders
+.idea
+.vscode

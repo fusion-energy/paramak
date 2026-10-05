@@ -2,6 +2,7 @@
 # and adds a few convenience methods remove() and names()
 
 import warnings
+
 import cadquery as cq
 
 

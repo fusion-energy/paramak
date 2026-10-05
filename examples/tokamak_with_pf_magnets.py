@@ -48,6 +48,6 @@ my_reactor = paramak.tokamak(
     extra_cut_shapes=extra_cut_shapes,
 )
 
-my_reactor.save(f"tokamak_with_pf_magnets.step")
-print(f"Saved as tokamak_with_pf_magnets.step")
+my_reactor.export("tokamak_with_pf_magnets.step")
+print("Saved as tokamak_with_pf_magnets.step")
 

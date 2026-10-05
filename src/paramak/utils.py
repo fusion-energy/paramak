@@ -1,6 +1,6 @@
 import typing
-from enum import Enum
 from collections import Counter
+from enum import Enum
 
 from cadquery import Workplane
 
@@ -32,8 +32,8 @@ def instructions_from_points(points):
             current_points_list = [XZ_points[i]]
     instructions.append({current_linetype: current_points_list})
 
-    if list(instructions[-1].values())[0][-1] != XZ_points[0]:
-        keyname = list(instructions[-1].keys())[0]
+    if next(iter(instructions[-1].values()))[-1] != XZ_points[0]:
+        keyname = next(iter(instructions[-1].keys()))
         instructions[-1][keyname].append(XZ_points[0])
     return instructions
 
@@ -44,14 +44,15 @@ def create_wire_workplane_from_instructions(
 ):
 
     for entry in instructions:
-        if list(entry.keys())[0] == "spline":
-            workplane = workplane.spline(listOfXYTuple=list(entry.values())[0])
-        if list(entry.keys())[0] == "straight":
-            workplane = workplane.polyline(list(entry.values())[0])
-        if list(entry.keys())[0] == "circle":
-            p0 = list(entry.values())[0][0]
-            p1 = list(entry.values())[0][1]
-            p2 = list(entry.values())[0][2]
+        instruction_type, points = next(iter(entry.items()))
+        if instruction_type == "spline":
+            workplane = workplane.spline(listOfXYTuple=points)
+        if instruction_type == "straight":
+            workplane = workplane.polyline(points)
+        if instruction_type == "circle":
+            p0 = points[0]
+            p1 = points[1]
+            p2 = points[2]
             workplane = workplane.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
 
     return workplane.close()
@@ -190,9 +191,9 @@ def validate_plasma_radial_build(radial_build):
     plasma_index = -1
     for index, item in enumerate(radial_build):
         if not isinstance(item[0], LayerType):
-            raise ValidationError(f"First entry in each radial build Tuple should be a paramak.LayerType")
+            raise ValidationError("First entry in each radial build Tuple should be a paramak.LayerType")
         if not isinstance(item[1], (int, float)):
-            raise ValidationError(f"Second entry in each radial build Tuple should be a Float")
+            raise ValidationError("Second entry in each radial build Tuple should be a Float")
         if item[0] not in valid_strings:
             raise ValidationError(f"Invalid entry '{item[0]}' at index {index}")
         if item[1] <= 0:

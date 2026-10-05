@@ -1,5 +1,6 @@
-from pathlib import Path
 import importlib
+from pathlib import Path
+
 import cadquery as cq
 import pytest
 

@@ -1,15 +1,13 @@
-import typing
+from __future__ import annotations
 
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.constant_thickness_dome import constant_thickness_dome
-
-from ..utils import create_wire_workplane_from_points
 
 
 def u_shaped_dome(
     radius: float = 310,
     reference_point: tuple = ("lower", 0),
-    dish_height: typing.Tuple[float, float] = 50,
+    dish_height: tuple[float, float] = 50,
     cylinder_height: float = 400,
     thickness: float = 16,
     rotation_angle: float = 180,
@@ -34,14 +32,14 @@ def u_shaped_dome(
         raise ValueError(f"cylinder_height must be positive, got {cylinder_height}.")
 
     if not isinstance(radius, (float, int)):
-        raise ValueError(f"radius must be a number. Not {type(radius)}")
+        raise TypeError(f"radius must be a number. Not {type(radius)}")
     if radius <= 0:
         msg = "radius must be a positive number above 0. " f"Not {radius}"
         raise ValueError(msg)
 
     if not isinstance(thickness, (float, int)):
         msg = f"VacuumVessel.thickness must be a number. Not {type(thickness)}"
-        raise ValueError(msg)
+        raise TypeError(msg)
     if thickness <= 0:
         msg = f"VacuumVessel.thickness must be a positive number above 0. Not {thickness}"
         raise ValueError(msg)

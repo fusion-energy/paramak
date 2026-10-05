@@ -11,19 +11,19 @@ def test_creation():
 
 
 def test_reference_point():
-    lower_dome_section, cylinder_section, upper_dome_section = paramak.dished_vacuum_vessel(
+    lower_dome_section, _cylinder_section, upper_dome_section = paramak.dished_vacuum_vessel(
         dish_height=(50, 50), cylinder_height=400, thickness=15, reference_point=("center", 0)
     )
     assert lower_dome_section.val().BoundingBox().zmin == -265
     assert upper_dome_section.val().BoundingBox().zmax == 265
 
-    lower_dome_section, cylinder_section, upper_dome_section = paramak.dished_vacuum_vessel(
+    lower_dome_section, _cylinder_section, upper_dome_section = paramak.dished_vacuum_vessel(
         dish_height=(50, 50), cylinder_height=400, thickness=15, reference_point=("lower", 200)
     )
     assert lower_dome_section.val().BoundingBox().zmin == 200
     assert upper_dome_section.val().BoundingBox().zmax == 730
 
-    lower_dome_section, cylinder_section, upper_dome_section = paramak.dished_vacuum_vessel(
+    lower_dome_section, _cylinder_section, upper_dome_section = paramak.dished_vacuum_vessel(
         dish_height=(50, 50), cylinder_height=400, thickness=15, reference_point=("center", -200)
     )
     assert lower_dome_section.val().BoundingBox().zmin == -465

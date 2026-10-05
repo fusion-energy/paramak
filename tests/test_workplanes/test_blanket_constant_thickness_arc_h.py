@@ -30,8 +30,8 @@ def test_relative_shape_volume():
     assert len(test_shape_360.val().Faces()) == 4
 
     areas = [face.Area() for face in test_shape_360.val().Faces()]
-    assert len(set([round(i) for i in areas])) == 3
+    assert len({round(i) for i in areas}) == 3
 
     areas = [face.Area() for face in test_shape_180.val().Faces()]
     assert len(areas) == 6
-    assert len(set([round(i) for i in areas])) == 4
+    assert len({round(i) for i in areas}) == 4

@@ -1,4 +1,4 @@
-import typing
+from __future__ import annotations
 
 from ..utils import create_wire_workplane_from_points
 
@@ -6,10 +6,10 @@ from ..utils import create_wire_workplane_from_points
 def poloidal_field_coil_case(
     coil_height: float,
     coil_width: float,
-    casing_thickness: typing.Tuple[float, float],
-    center_point: typing.Tuple[float, float],
+    casing_thickness: tuple[float, float],
+    center_point: tuple[float, float],
     name: str = "poloidal_field_coil_case",
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (1.0, 1.0, 0.498),
+    color: tuple[float, float, float, float | None] = (1.0, 1.0, 0.498),
     rotation_angle=90,
     plane="XZ",
     origin=(0, 0, 0),

@@ -1,6 +1,7 @@
 import pytest
 
 from paramak.utils import (
+    LayerType,
     ValidationError,
     get_gap_after_plasma,
     get_plasma_value,
@@ -8,7 +9,6 @@ from paramak.utils import (
     sum_up_to_plasma,
     validate_divertor_radial_build,
     validate_plasma_radial_build,
-    LayerType,
 )
 
 

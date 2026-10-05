@@ -1,4 +1,4 @@
-import typing
+from __future__ import annotations
 
 from ..utils import create_wire_workplane_from_points
 
@@ -9,7 +9,7 @@ def center_column_shield_cylinder(
     thickness: float,
     reference_point: tuple = ("center", 0),
     name: str = "center_column_shield_cylinder",
-    color: typing.Tuple[float, float, float, typing.Optional[float]] = (
+    color: tuple[float, float, float, float | None] = (
         0.0,
         0.333,
         0.0,
