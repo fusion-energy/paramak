@@ -1,4 +1,5 @@
-import os
+import glob
+import shutil
 
 import cadquery as cq
 import numpy as np
@@ -264,17 +265,35 @@ for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.5
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
 
+# the segmentation frames are each shown for three frames so these sequences play more slowly
+segmentation_frame_repeats = 3
+
 # first wall tiles only
 for modified_n_modules in [None, 2, 4, 6, 8, 10, 12, 14, 16, 16, 16, 14, 12, 10, 8, 6, 4, 2, None]:
     reactor = create_reactor(n_modules=modified_n_modules)
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
-    frame += 1
+    for repeat in range(1, segmentation_frame_repeats):
+        shutil.copy(f'tokamak_frame_{frame:03d}.png', f'tokamak_frame_{frame + repeat:03d}.png')
+    frame += segmentation_frame_repeats
 
 # first wall tiles and blanket modules with the same poloidal segments
 for modified_n_modules in [None, 2, 3, 4, 5, 6, 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, None]:
     reactor = create_reactor(n_modules=modified_n_modules, segment_blanket=True)
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
-    frame += 1
+    for repeat in range(1, segmentation_frame_repeats):
+        shutil.copy(f'tokamak_frame_{frame:03d}.png', f'tokamak_frame_{frame + repeat:03d}.png')
+    frame += segmentation_frame_repeats
 
 # animated webp keeps the transparent background, so the animation works on light and dark pages
-os.system('ffmpeg -framerate 10 -i tokamak_frame_%03d.png -c:v libwebp_anim -lossless 0 -q:v 80 -loop 0 tokamak_animation.webp')
+frames = [Image.open(path) for path in sorted(glob.glob('tokamak_frame_*.png'))]
+frames[0].save(
+    'tokamak_animation.webp',
+    save_all=True,
+    append_images=frames[1:],
+    duration=100,  # milliseconds per frame, 10 frames per second
+    loop=0,
+    quality=70,
+    method=6,  # slowest and smallest encoding
+    background=(0, 0, 0, 0),
+)
+print('written tokamak_animation.webp')
