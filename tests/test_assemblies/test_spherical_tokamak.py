@@ -407,3 +407,27 @@ def test_spherical_poloidal_build_with_divertor():
     assert total(segmented_volumes) == pytest.approx(total(unsegmented), rel=1e-3)
     for child in segmented.children:
         assert child.toCompound().isValid()
+
+
+def test_spherical_poloidal_build_with_thin_centre_column():
+    "segments reaching a centre column thinner than the cutting margin are still built correctly"
+
+    radial_build = [
+        (paramak.LayerType.GAP, 2),
+        (paramak.LayerType.SOLID, 3),
+        (paramak.LayerType.GAP, 50),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),
+    ]
+    arc_length = paramak.spherical_poloidal_arc_length(radial_build)
+    modules = [(paramak.LayerType.SOLID, arc_length / 4, "module")] * 4
+    unsegmented = volumes(paramak.spherical_tokamak_from_plasma(radial_build=radial_build, rotation_angle=90))
+    segmented = paramak.spherical_tokamak_from_plasma(
+        radial_build=radial_build, rotation_angle=90, poloidal_build=[None, modules]
+    )
+    segmented_volumes = volumes(segmented)
+    segment_volume = sum(value for name, value in segmented_volumes.items() if name.startswith("layer_2_"))
+    assert segment_volume == pytest.approx(unsegmented["layer_2"], rel=1e-6)
+    for child in segmented.children:
+        assert child.toCompound().isValid()

@@ -7,6 +7,7 @@ import cadquery as cq
 import numpy as np
 
 from ..utils import (
+    get_plasma_geometry,
     LayerType,
     get_assembly_names,
     get_layer_name,
@@ -14,7 +15,6 @@ from ..utils import (
     get_plasma_value,
     sum_before_after_plasma,
     sum_up_to_gap_before_plasma,
-    sum_up_to_plasma,
     validate_unique_assembly_names,
     validate_vertical_build_names,
 )
@@ -22,7 +22,13 @@ from ..workplanes.blanket_from_plasma import blanket_from_plasma, offset_curve_c
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
 from .assembly import Assembly
-from .poloidal import get_poloidal_segment_angles, intersect_with_each_part, validate_poloidal_build
+from .poloidal import (
+    check_not_empty,
+    get_poloidal_segment_angles,
+    intersect_with_each_part,
+    resolve_vertical_build,
+    validate_poloidal_build,
+)
 
 
 def get_spherical_layer_pairs(radial_build, vertical_build, layer_count=0):
@@ -181,17 +187,20 @@ def create_spherical_poloidal_segments(pair, segment_positions, geometry, rotati
         inner_r, inner_z = spherical_path_coordinates(path_positions, inner_offset, geometry)
         outer_r, outer_z = spherical_path_coordinates(path_positions[::-1], outer_offset, geometry)
         # segments that reach the centre column extend past it so the layer end is included
+        # the region must not cross the axis it is revolved around
+        column_end = max(column_radius - margin, 0.0)
         if start <= 1e-9:
-            inner_r[0] = column_radius - margin
-            outer_r[-1] = column_radius - margin
+            inner_r[0] = column_end
+            outer_r[-1] = column_end
         if stop >= 3.0 - 1e-9:
-            inner_r[-1] = column_radius - margin
-            outer_r[0] = column_radius - margin
-        points = list(zip(np.concatenate([inner_r, outer_r]), np.concatenate([inner_z, outer_z])))
+            inner_r[-1] = column_end
+            outer_r[0] = column_end
+        points = list(zip(np.maximum(np.concatenate([inner_r, outer_r]), 0.0), np.concatenate([inner_z, outer_z])))
         cutting_region = cq.Workplane("XZ").polyline(points).close().revolve(360)
 
         name = f"{pair['name']}_{segment_name}"
         solid = layer.intersect(cutting_region)
+        check_not_empty(solid, f"Poloidal segment {name}")
         solid.name = name
         solids.append(solid)
     return solids
@@ -232,17 +241,6 @@ def create_blanket_layers_after_plasma(
     return layers
 
 
-def get_spherical_plasma_geometry(radial_build, vertical_build):
-    """Returns the major radius, minor radius and elongation of the plasma
-    defined by the radial and vertical builds."""
-    inner_equatorial_point = sum_up_to_plasma(radial_build)
-    outer_equatorial_point = inner_equatorial_point + get_plasma_value(radial_build)
-    major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
-    minor_radius = major_radius - inner_equatorial_point
-    elongation = (get_plasma_value(vertical_build) / 2) / minor_radius
-    return major_radius, minor_radius, elongation
-
-
 def spherical_vertical_build_from_radial_build(radial_build, elongation):
     """Makes the vertical build used by spherical_tokamak_from_plasma, where
     the layers above and below the plasma have the same thickness as the
@@ -260,7 +258,7 @@ def get_spherical_reference_arc_length_table(radial_build, vertical_build, trian
     """Returns the (path positions, cumulative arc lengths) table of the plasma
     facing surface, the inner surface of the first solid layer after the
     plasma, which poloidal_build arc lengths are measured on."""
-    major_radius, minor_radius, elongation = get_spherical_plasma_geometry(radial_build, vertical_build)
+    major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
     geometry = (major_radius, minor_radius, triangularity, elongation, sum_up_to_gap_before_plasma(radial_build))
     for pair in get_spherical_layer_pairs(radial_build, vertical_build):
         if pair["type"] == LayerType.SOLID:
@@ -319,15 +317,9 @@ def spherical_poloidal_arc_length(
     Returns:
         float: the arc length of the plasma facing surface.
     """
-    if vertical_build is None:
-        vertical_build = spherical_vertical_build_from_radial_build(
-            radial_build, 2.0 if elongation is None else elongation
-        )
-    elif elongation is not None:
-        raise ValueError(
-            "elongation can not be set when a vertical_build is provided, "
-            "the elongation is calculated from the radial_build and vertical_build."
-        )
+    vertical_build = resolve_vertical_build(
+        radial_build, elongation, vertical_build, spherical_vertical_build_from_radial_build
+    )
     _, arc_lengths = get_spherical_reference_arc_length_table(radial_build, vertical_build, triangularity)
     return float(arc_lengths[-1])
 
@@ -494,19 +486,7 @@ def spherical_tokamak(
 
     validate_vertical_build_names(vertical_build, "spherical_tokamak()")
 
-    inner_equatorial_point = sum_up_to_plasma(radial_build)
-    plasma_radial_thickness = get_plasma_value(radial_build)
-    plasma_vertical_thickness = get_plasma_value(vertical_build)
-    outer_equatorial_point = inner_equatorial_point + plasma_radial_thickness
-
-    # sets major radius and minor radius from equatorial_points to allow a
-    # radial build. This helps avoid the plasma overlapping the center
-    # column and other components
-    major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
-    minor_radius = major_radius - inner_equatorial_point
-
-    # vertical build
-    elongation = (plasma_vertical_thickness / 2) / minor_radius
+    major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
     blanket_rear_wall_end_height = sum([item[1] for item in vertical_build])
 
     plasma = plasma_simplified(
