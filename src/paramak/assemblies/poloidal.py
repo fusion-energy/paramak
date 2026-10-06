@@ -120,8 +120,7 @@ def get_poloidal_segment_angles(segments, arc_positions, arc_lengths, index, arc
         (segment[2] if len(segment) == 3 else DEFAULT_SEGMENT_NAME) if segment[0] == LayerType.SOLID else None
         for segment in segments
     ]
-    name_counts = Counter(name for name in names if name is not None)
-    name_seen = Counter()
+    unique_names = make_unique_names(names, f"poloidal_build entry {index}")
 
     segment_angles = []
     position = 0.0
@@ -130,20 +129,79 @@ def get_poloidal_segment_angles(segments, arc_positions, arc_lengths, index, arc
         position += segment[1] * scale
         if name is None:
             continue
-        if name_counts[name] > 1:
-            name_seen[name] += 1
-            name = f"{name}_{name_seen[name]}"
+        name = unique_names.pop(0)
         start = float(np.interp(start_position, arc_lengths, arc_positions))
         stop = float(np.interp(position, arc_lengths, arc_positions))
         segment_angles.append((name, start, stop))
     return segment_angles
 
 
+def make_unique_names(names, description):
+    """Adds a "_1", "_2" suffix to names that are repeated, ignoring None
+    entries (gaps), and returns the names of the solid segments in order.
+    Raises an error if a suffixed name clashes with a name given directly."""
+    counts = Counter(name for name in names if name is not None)
+    seen = Counter()
+    unique_names = []
+    for name in names:
+        if name is None:
+            continue
+        if counts[name] > 1:
+            seen[name] += 1
+            name = f"{name}_{seen[name]}"
+        unique_names.append(name)
+    duplicates = sorted(name for name, count in Counter(unique_names).items() if count > 1)
+    if duplicates:
+        raise ValueError(
+            f"The segment names in {description} give the same name more than once ({', '.join(duplicates)}) "
+            f"after repeated names get a _1, _2 suffix. Use names that do not end in such a suffix."
+        )
+    return unique_names
+
+
+def check_not_empty(solid, description):
+    """Raises an error if a segment has no volume, for example because its
+    gaps are wider than the segment where it is cut."""
+    if not solid.val().Solids():
+        raise ValueError(
+            f"{description} is empty, the gaps around it remove all of it. Use smaller gaps or fewer segments."
+        )
+
+
+def resolve_vertical_build(radial_build, elongation, vertical_build, vertical_build_from_radial_build):
+    """Returns the vertical build used by the arc length helpers, made from
+    the radial build and elongation when no vertical build is given."""
+    if vertical_build is None:
+        return vertical_build_from_radial_build(radial_build, 2.0 if elongation is None else elongation)
+    if elongation is not None:
+        raise ValueError(
+            "elongation can not be set when a vertical_build is provided, "
+            "the elongation is calculated from the radial_build and vertical_build."
+        )
+    return vertical_build
+
+
+def bounding_boxes_overlap(first, second):
+    """Whether two cadquery bounding boxes overlap."""
+    return (
+        first.xmin <= second.xmax
+        and second.xmin <= first.xmax
+        and first.ymin <= second.ymax
+        and second.ymin <= first.ymax
+        and first.zmin <= second.zmax
+        and second.zmin <= first.zmax
+    )
+
+
 def intersect_with_each_part(shape, parts):
     """Intersects a shape with each part and returns the non empty pieces
-    together in a compound."""
+    together in a compound. Parts whose bounding box does not overlap the
+    shape are skipped."""
+    shape_box = cq.Compound.makeCompound(shape.vals()).BoundingBox()
     pieces = []
     for part in parts:
+        if not bounding_boxes_overlap(shape_box, cq.Compound.makeCompound(part.vals()).BoundingBox()):
+            continue
         intersection = shape.intersect(part).val()
         pieces.extend(intersection.Solids())
     return cq.Workplane().add(cq.Compound.makeCompound(pieces))

@@ -538,3 +538,24 @@ def test_poloidal_build_next_to_unsegmented_layers_with_divertor(segmented_layer
     assert volumes(reactor)["extra_intersect_shapes_1"] > 0
     for child in reactor.children:
         assert child.toCompound().isValid()
+
+
+def test_segment_names_that_clash_after_suffixes():
+    "a name given directly that matches a suffixed repeated name raises a clear error"
+
+    arc_length = paramak.poloidal_arc_length(POLOIDAL_RADIAL_BUILD)
+    with pytest.raises(ValueError, match="tile_1"):
+        paramak.tokamak_from_plasma(
+            radial_build=POLOIDAL_RADIAL_BUILD,
+            rotation_angle=90,
+            poloidal_build=[
+                None,
+                [
+                    (paramak.LayerType.SOLID, arc_length / 3, "tile"),
+                    (paramak.LayerType.SOLID, arc_length / 3, "tile"),
+                    (paramak.LayerType.SOLID, arc_length / 3, "tile_1"),
+                ],
+                None,
+                None,
+            ],
+        )

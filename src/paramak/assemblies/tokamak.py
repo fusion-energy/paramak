@@ -7,6 +7,7 @@ import cadquery as cq
 import numpy as np
 
 from ..utils import (
+    get_plasma_geometry,
     LayerType,
     get_assembly_names,
     get_layer_name,
@@ -22,9 +23,16 @@ from ..workplanes.blanket_from_plasma import (
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
 from .assembly import Assembly
+from .poloidal import (
+    SegmentBuild,
+    check_not_empty,
+    get_poloidal_segment_angles,
+    intersect_with_each_part,
+    resolve_vertical_build,
+    validate_segment_build,
+)
+from .spherical_tokamak import get_plasma_value
 from .toroidal import apply_toroidal_sectors, get_toroidal_build_sectors
-from .poloidal import SegmentBuild, get_poloidal_segment_angles, intersect_with_each_part, validate_segment_build
-from .spherical_tokamak import get_plasma_value, sum_up_to_plasma
 
 def count_cylinder_layers(radial_build):
     before_plasma = 0
@@ -245,11 +253,13 @@ def create_poloidal_segments(
             thetas[::-1],
             offset(thetas[::-1]) + thickness(thetas[::-1]) + margin,
         )
-        points = list(zip(np.concatenate([inner_r, outer_r]), np.concatenate([inner_z, outer_z])))
+        # the region must not cross the axis it is revolved around
+        points = list(zip(np.maximum(np.concatenate([inner_r, outer_r]), 0.0), np.concatenate([inner_z, outer_z])))
         cutting_region = cq.Workplane("XZ").polyline(points).close().revolve(360)
 
         name = f"{pair['name']}_{segment_name}"
         solid = layer.intersect(cutting_region)
+        check_not_empty(solid, f"Poloidal segment {name}")
         solid.name = name
         solids.append(solid)
     return solids
@@ -292,17 +302,6 @@ def create_layers_from_plasma(
         layers.extend(pair_solids)
 
     return layers
-
-
-def get_plasma_geometry(radial_build, vertical_build):
-    """Returns the major radius, minor radius and elongation of the plasma
-    defined by the radial and vertical builds."""
-    inner_equatorial_point = sum_up_to_plasma(radial_build)
-    outer_equatorial_point = inner_equatorial_point + get_plasma_value(radial_build)
-    major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
-    minor_radius = major_radius - inner_equatorial_point
-    elongation = (get_plasma_value(vertical_build) / 2) / minor_radius
-    return major_radius, minor_radius, elongation
 
 
 def vertical_build_from_radial_build(radial_build, elongation):
@@ -385,13 +384,9 @@ def poloidal_arc_length(
     Returns:
         float: the poloidal arc length of the plasma facing surface.
     """
-    if vertical_build is None:
-        vertical_build = vertical_build_from_radial_build(radial_build, 2.0 if elongation is None else elongation)
-    elif elongation is not None:
-        raise ValueError(
-            "elongation can not be set when a vertical_build is provided, "
-            "the elongation is calculated from the radial_build and vertical_build."
-        )
+    vertical_build = resolve_vertical_build(
+        radial_build, elongation, vertical_build, vertical_build_from_radial_build
+    )
     _, arc_lengths = get_reference_arc_length_table(radial_build, vertical_build, triangularity)
     return float(arc_lengths[-1])
 
