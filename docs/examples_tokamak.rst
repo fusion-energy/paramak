@@ -432,7 +432,7 @@ Tokamak with toroidal sectors
 - Arc lengths are measured around the plasma facing surface at the outboard midplane, starting at the XZ plane, and each entry must sum to the arc length returned by paramak.toroidal_arc_length.
 - Gaps are slots with parallel sides, so a gap has the same width at every radius.
 - Sectors are named "<layer name>_<sector name>". toroidal_build can be combined with poloidal_build, in which case each poloidal segment is split into sectors.
-- This example splits the first wall, blanket and rear wall into the same six sectors, so the gaps run straight through them.
+- This example splits the first wall, blanket and rear wall into the same six sectors, so the gaps run straight through them. The plasma is removed from the result so the sectors can be seen.
 
 .. cadquery::
     :select: result
@@ -480,7 +480,7 @@ Tokamak with toroidal sectors
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=rotation_angle,
-    ).toCompound()
+    ).remove("plasma").toCompound()  # plasma removed so the sectors can be seen
 
 
 Tokamak with several customizations
