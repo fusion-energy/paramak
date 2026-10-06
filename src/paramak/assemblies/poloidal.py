@@ -1,10 +1,11 @@
-"""Functions shared by the reactors that support poloidal_build."""
+"""Functions shared by the reactors that support poloidal_build and toroidal_build."""
 
 from __future__ import annotations
 
 import math
 import numbers
 from collections import Counter
+from typing import Optional, Sequence, Union
 
 import cadquery as cq
 import numpy as np
@@ -16,35 +17,40 @@ from ..utils import LayerType
 POLOIDAL_ARC_LENGTH_RTOL = 1e-3
 
 
+# a poloidal_build or toroidal_build: one entry per radial_build entry after
+# the plasma, each None or a list of segments in the radial_build tuple format
+SegmentBuild = Sequence[Optional[Sequence[Union[tuple[LayerType, float], tuple[LayerType, float, str]]]]]
+
 # name given to solid segments that are not named in the poloidal_build
 DEFAULT_SEGMENT_NAME = "segment"
 
 
-def validate_poloidal_build(poloidal_build, pairs):
-    """Checks the structure of poloidal_build against the layer pairs.
+def validate_segment_build(build, pairs, build_name="poloidal_build"):
+    """Checks the structure of a poloidal_build or toroidal_build (named by
+    build_name in error messages) against the layer pairs.
 
     Each segment uses the same format as a radial_build entry: a
     (LayerType.SOLID, arc_length) or (LayerType.SOLID, arc_length, name) tuple
     for a solid segment, or a (LayerType.GAP, arc_length) tuple for a gap.
     """
-    if not isinstance(poloidal_build, (list, tuple)):
-        raise TypeError(f"poloidal_build must be a list, not {type(poloidal_build)}")
-    if len(poloidal_build) != len(pairs):
+    if not isinstance(build, (list, tuple)):
+        raise TypeError(f"{build_name} must be a list, not {type(build)}")
+    if len(build) != len(pairs):
         raise ValueError(
-            f"poloidal_build must have one entry per radial_build entry after the plasma "
-            f"(ordered from the plasma outwards), expected {len(pairs)} entries but got {len(poloidal_build)}."
+            f"{build_name} must have one entry per radial_build entry after the plasma "
+            f"(ordered from the plasma outwards), expected {len(pairs)} entries but got {len(build)}."
         )
-    for index, (pair, segments) in enumerate(zip(pairs, poloidal_build)):
+    for index, (pair, segments) in enumerate(zip(pairs, build)):
         if segments is None:
             continue
         if pair["type"] == LayerType.GAP:
             raise ValueError(
-                f"poloidal_build entry {index} corresponds to a LayerType.GAP in the radial_build "
+                f"{build_name} entry {index} corresponds to a LayerType.GAP in the radial_build "
                 f"and must be None, not {segments}."
             )
         if not isinstance(segments, (list, tuple)) or len(segments) == 0:
             raise TypeError(
-                f"poloidal_build entry {index} must be None or a non empty list of segments such as "
+                f"{build_name} entry {index} must be None or a non empty list of segments such as "
                 f"(paramak.LayerType.SOLID, arc_length) or (paramak.LayerType.GAP, arc_length), not {segments}."
             )
         for segment in segments:
@@ -57,7 +63,7 @@ def validate_poloidal_build(poloidal_build, pairs):
                 or (len(segment) == 3 and not isinstance(segment[2], str))
             ):
                 raise TypeError(
-                    f"Each segment in poloidal_build entry {index} must be a (paramak.LayerType, arc_length) "
+                    f"Each segment in {build_name} entry {index} must be a (paramak.LayerType, arc_length) "
                     f"or (paramak.LayerType, arc_length, name) tuple with a numeric arc_length and a string "
                     f"name, not {segment}."
                 )
@@ -65,27 +71,27 @@ def validate_poloidal_build(poloidal_build, pairs):
             if layer_type == LayerType.GAP:
                 if len(segment) == 3:
                     raise ValueError(
-                        f"LayerType.GAP segments in poloidal_build entry {index} produce no solid and can not "
+                        f"LayerType.GAP segments in {build_name} entry {index} produce no solid and can not "
                         f"be named, not {segment}."
                     )
                 if arc_length < 0:
                     raise ValueError(
-                        f"LayerType.GAP segments in poloidal_build entry {index} must have an arc_length of 0 "
+                        f"LayerType.GAP segments in {build_name} entry {index} must have an arc_length of 0 "
                         f"or more, not {arc_length}."
                     )
             elif layer_type == LayerType.SOLID:
                 if arc_length <= 0:
                     raise ValueError(
-                        f"LayerType.SOLID segments in poloidal_build entry {index} must have a positive "
+                        f"LayerType.SOLID segments in {build_name} entry {index} must have a positive "
                         f"arc_length, not {arc_length}."
                     )
             else:
                 raise ValueError(
-                    f"Segments in poloidal_build entry {index} must be LayerType.SOLID or LayerType.GAP, "
+                    f"Segments in {build_name} entry {index} must be LayerType.SOLID or LayerType.GAP, "
                     f"not {layer_type}."
                 )
         if all(segment[0] == LayerType.GAP for segment in segments):
-            raise ValueError(f"poloidal_build entry {index} must contain at least one LayerType.SOLID segment.")
+            raise ValueError(f"{build_name} entry {index} must contain at least one LayerType.SOLID segment.")
 
 
 def get_poloidal_segment_angles(segments, arc_positions, arc_lengths, index, arc_length_function):

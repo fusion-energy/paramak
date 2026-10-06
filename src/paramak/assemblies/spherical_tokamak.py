@@ -22,7 +22,8 @@ from ..workplanes.blanket_from_plasma import blanket_from_plasma, offset_curve_c
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
 from .assembly import Assembly
-from .poloidal import get_poloidal_segment_angles, intersect_with_each_part, validate_poloidal_build
+from .toroidal import apply_toroidal_sectors, get_toroidal_build_sectors
+from .poloidal import SegmentBuild, get_poloidal_segment_angles, intersect_with_each_part, validate_segment_build
 
 
 def get_spherical_layer_pairs(radial_build, vertical_build, layer_count=0):
@@ -208,26 +209,33 @@ def create_blanket_layers_after_plasma(
     center_column,
     layer_count=0,
     poloidal_segment_positions=None,
+    toroidal_sectors=None,
+    toroidal_region_size=None,
 ):
     pairs = get_spherical_layer_pairs(radial_build, vertical_build, layer_count)
     if poloidal_segment_positions is None:
         poloidal_segment_positions = [None] * len(pairs)
+    if toroidal_sectors is None:
+        toroidal_sectors = [None] * len(pairs)
     geometry = (major_radius, minor_radius, triangularity, elongation, sum_up_to_gap_before_plasma(radial_build))
 
     layers = []
-    for pair, segment_positions in zip(pairs, poloidal_segment_positions):
+    for pair, segment_positions, sectors in zip(pairs, poloidal_segment_positions, toroidal_sectors):
         if pair["type"] == LayerType.GAP:
             continue
         if segment_positions is not None:
-            layers.extend(
-                create_spherical_poloidal_segments(pair, segment_positions, geometry, rotation_angle, center_column)
+            pair_solids = create_spherical_poloidal_segments(
+                pair, segment_positions, geometry, rotation_angle, center_column
             )
-            continue
-        layers.append(
-            create_spherical_layer(
-                pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column
-            )
-        )
+        else:
+            pair_solids = [
+                create_spherical_layer(
+                    pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column
+                )
+            ]
+        if sectors is not None:
+            pair_solids = apply_toroidal_sectors(pair_solids, sectors, rotation_angle, toroidal_region_size)
+        layers.extend(pair_solids)
 
     return layers
 
@@ -274,7 +282,7 @@ def get_spherical_poloidal_build_segment_positions(
     """Validates poloidal_build and converts the segment arc lengths into
     positions along the layer path for each layer."""
     pairs = get_spherical_layer_pairs(radial_build, vertical_build, layer_count)
-    validate_poloidal_build(poloidal_build, pairs)
+    validate_segment_build(poloidal_build, pairs)
     if all(segments is None for segments in poloidal_build):
         return list(poloidal_build)
 
@@ -374,7 +382,8 @@ def spherical_tokamak_from_plasma(
     extra_cut_shapes: Sequence[cq.Workplane] | None = None,
     extra_intersect_shapes: Sequence[cq.Workplane] | None = None,
     colors: dict | None = None,
-    poloidal_build: Sequence[Sequence[tuple[str, float]] | None] | None = None,
+    poloidal_build: SegmentBuild | None = None,
+    toroidal_build: SegmentBuild | None = None,
 ) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.
 
@@ -409,6 +418,22 @@ def spherical_tokamak_from_plasma(
             segments are named "<layer name>_<segment name>", unnamed solid
             segments are called "segment", and repeated names within a layer
             get a "_1", "_2" suffix. Defaults to None.
+        toroidal_build: optional toroidal segmentation of the layers, for
+            example into sectors separated by assembly gaps. A list with one
+            entry per radial_build entry after the plasma, ordered from the
+            plasma outwards, like poloidal_build. Entries are None for layers
+            that are not segmented (and must be None for LayerType.GAP
+            entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+            arc_length, name) for a sector (the name is optional) or
+            (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+            around the plasma facing surface at the outboard midplane,
+            starting at the XZ plane and going in the direction the reactor is
+            revolved, and each entry must sum to the arc length returned by
+            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+            with parallel sides, so a gap has the same width at every radius.
+            Sectors are named "<layer name>_<sector name>", or
+            "<layer name>_<poloidal segment name>_<sector name>" when the
+            layer also has a poloidal_build entry. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
@@ -432,6 +457,7 @@ def spherical_tokamak_from_plasma(
         extra_intersect_shapes=extra_intersect_shapes,
         colors=colors,
         poloidal_build=poloidal_build,
+        toroidal_build=toroidal_build,
     )
 
 
@@ -443,7 +469,8 @@ def spherical_tokamak(
     extra_cut_shapes: Sequence[cq.Workplane] | None = None,
     extra_intersect_shapes: Sequence[cq.Workplane] | None = None,
     colors: dict | None = None,
-    poloidal_build: Sequence[Sequence[tuple[str, float]] | None] | None = None,
+    poloidal_build: SegmentBuild | None = None,
+    toroidal_build: SegmentBuild | None = None,
 ) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and vertical build.
 
@@ -480,6 +507,22 @@ def spherical_tokamak(
             segments are named "<layer name>_<segment name>", unnamed solid
             segments are called "segment", and repeated names within a layer
             get a "_1", "_2" suffix. Defaults to None.
+        toroidal_build: optional toroidal segmentation of the layers, for
+            example into sectors separated by assembly gaps. A list with one
+            entry per radial_build entry after the plasma, ordered from the
+            plasma outwards, like poloidal_build. Entries are None for layers
+            that are not segmented (and must be None for LayerType.GAP
+            entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+            arc_length, name) for a sector (the name is optional) or
+            (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+            around the plasma facing surface at the outboard midplane,
+            starting at the XZ plane and going in the direction the reactor is
+            revolved, and each entry must sum to the arc length returned by
+            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+            with parallel sides, so a gap has the same width at every radius.
+            Sectors are named "<layer name>_<sector name>", or
+            "<layer name>_<poloidal segment name>_<sector name>" when the
+            layer also has a poloidal_build entry. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
@@ -536,6 +579,11 @@ def spherical_tokamak(
         poloidal_segment_positions = get_spherical_poloidal_build_segment_positions(
             poloidal_build, radial_build, vertical_build, triangularity, layer_count=len(inner_radial_build)
         )
+    toroidal_sectors = None
+    if toroidal_build is not None:
+        toroidal_sectors = get_toroidal_build_sectors(
+            toroidal_build, get_spherical_layer_pairs(radial_build, vertical_build), radial_build, rotation_angle
+        )
 
     blanket_layers = create_blanket_layers_after_plasma(
         radial_build=radial_build,
@@ -548,6 +596,8 @@ def spherical_tokamak(
         center_column=blanket_cutting_cylinder,
         layer_count=len(inner_radial_build),
         poloidal_segment_positions=poloidal_segment_positions,
+        toroidal_sectors=toroidal_sectors,
+        toroidal_region_size=4 * max(sum(item[1] for item in radial_build), blanket_rear_wall_end_height),
     )
 
     cut_names, intersect_names, layer_names = get_assembly_names(
@@ -564,8 +614,9 @@ def spherical_tokamak(
         my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     # builds up the intersect shapes
+    segmented = poloidal_build is not None or toroidal_build is not None
     if len(extra_intersect_shapes) > 0:
-        if poloidal_build is None:
+        if not segmented:
             # makes a union of the the radial build to use as a base for the intersect shapes
             reactor_compound = inner_radial_build[0]
             for entry in inner_radial_build[1:] + blanket_layers:
@@ -573,10 +624,10 @@ def spherical_tokamak(
 
         # adds the extra intersect shapes to the assembly
         for entry, name in zip(extra_intersect_shapes, intersect_names):
-            if poloidal_build is None:
+            if not segmented:
                 reactor_entry_intersection = entry.intersect(reactor_compound)
             else:
-                # poloidal segments share many faces with their neighbours, which
+                # segments share many faces with their neighbours, which
                 # makes fusing all the parts unreliable, so the shape is intersected
                 # with each part and the pieces are kept together in a compound
                 reactor_entry_intersection = intersect_with_each_part(entry, inner_radial_build + blanket_layers)

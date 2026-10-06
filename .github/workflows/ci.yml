@@ -68,4 +68,5 @@ jobs:
           python examples/tokamak_minimal.py
           python examples/tokamak_from_plasma_minimal.py
           python examples/tokamak_from_plasma_with_poloidal_segments.py
+          python examples/tokamak_from_plasma_with_toroidal_sectors.py
 

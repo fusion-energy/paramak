@@ -6,6 +6,7 @@ from .assemblies.spherical_tokamak import (
     spherical_tokamak_from_plasma,
 )
 from .assemblies.tokamak import poloidal_arc_length, tokamak, tokamak_from_plasma
+from .assemblies.toroidal import toroidal_arc_length
 from .utils import LayerType
 from .workplanes.blanket_constant_thickness_arc_h import (
     blanket_constant_thickness_arc_h,
@@ -45,6 +46,7 @@ __all__ = [
     "spherical_tokamak_from_plasma",
     "tokamak",
     "tokamak_from_plasma",
+    "toroidal_arc_length",
     "toroidal_field_coil_princeton_d",
     "toroidal_field_coil_rectangle",
     "u_shaped_dome",
