@@ -40,7 +40,7 @@ my_reactor = paramak.tokamak_from_plasma(
         None,  # gap after the plasma
         sectors,  # first wall
         sectors,  # blanket
-        sectors,  # rear wall
+        None,  # rear wall, not split so it stays a continuous ring
     ],
     elongation=2.0,
     triangularity=0.55,
