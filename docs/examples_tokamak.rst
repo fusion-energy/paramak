@@ -483,6 +483,66 @@ Tokamak with toroidal sectors
     ).remove("plasma").toCompound()  # plasma removed so the sectors can be seen
 
 
+Tokamak with first wall tiles in both directions
+------------------------------------------------
+
+- poloidal_build and toroidal_build can be used together on the same layer. Each poloidal segment is split into the toroidal sectors, giving a grid of tiles.
+- This example splits the first wall into rows of tiles poloidally and columns of tiles toroidally. Tiles are named "<layer name>_<poloidal name>_<toroidal name>", for example layer_3_tile_row_2_tile_column_5.
+- The plasma is removed from the result so the tiles can be seen.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),  # first wall
+        (paramak.LayerType.SOLID, 120),  # blanket
+        (paramak.LayerType.SOLID, 10),  # rear wall
+    ]
+    rotation_angle = 180
+
+    # rows of tiles going poloidally around the plasma
+    poloidal_arc = paramak.poloidal_arc_length(radial_build, elongation=2.0, triangularity=0.55)
+    number_of_rows = 12
+    row_gap = 5  # gap between neighbouring rows of tiles
+    row_length = (poloidal_arc - number_of_rows * row_gap) / number_of_rows
+    tile_rows = [
+        (paramak.LayerType.SOLID, row_length, "tile_row"),
+        (paramak.LayerType.GAP, row_gap),
+    ] * number_of_rows
+
+    # columns of tiles going toroidally around the reactor
+    toroidal_arc = paramak.toroidal_arc_length(radial_build, rotation_angle=rotation_angle)
+    number_of_columns = 8
+    column_gap = 5  # width of the gap between neighbouring columns of tiles
+    column_length = (toroidal_arc - number_of_columns * column_gap) / number_of_columns
+    tile_columns = [
+        (paramak.LayerType.SOLID, column_length, "tile_column"),
+        (paramak.LayerType.GAP, column_gap),
+    ] * number_of_columns
+
+    result = paramak.tokamak_from_plasma(
+        radial_build=radial_build,
+        poloidal_build=[None, tile_rows, None, None],  # only the first wall is split
+        toroidal_build=[None, tile_columns, None, None],
+        elongation=2.0,
+        triangularity=0.55,
+        rotation_angle=rotation_angle,
+    ).remove("plasma").toCompound()  # plasma removed so the tiles can be seen
+
+
 Tokamak with several customizations
 -----------------------------------
 
