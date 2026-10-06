@@ -22,9 +22,9 @@ rotation_angle = 180
 toroidal_arc = paramak.toroidal_arc_length(radial_build, rotation_angle=rotation_angle)
 print(f"toroidal arc length {toroidal_arc}")
 
-# Six sectors separated by gaps. Gaps have parallel sides, so a 20 cm gap is
+# Eight sectors separated by gaps. Gaps have parallel sides, so a 20 cm gap is
 # 20 cm wide at every radius.
-number_of_sectors = 6
+number_of_sectors = 8
 sector_gap = 20  # width of the gap between neighbouring sectors
 sector_length = (toroidal_arc - number_of_sectors * sector_gap) / number_of_sectors
 sectors = [
@@ -64,7 +64,7 @@ tile_rows = [
     (paramak.LayerType.GAP, row_gap),
 ] * number_of_rows
 
-number_of_columns = 8
+number_of_columns = 10
 column_gap = 5  # width of the gap between neighbouring columns of tiles
 column_length = (toroidal_arc - number_of_columns * column_gap) / number_of_columns
 tile_columns = [
